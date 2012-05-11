@@ -3,8 +3,8 @@ from django.db import models
 #from django.contrib.localflavor.us.models import USStateField
 
 class State(models.Model):
-   state_key = models.IntegerField(primary_key=True)
-   fips_state_abbr = models.CharField(max_length=2)
+   state_key = models.IntegerField()
+   fips_state_abbr = models.CharField(max_length=2, primary_key=True)
    def __unicode__(self):
        return self.fips_state_abbr
 
