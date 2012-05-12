@@ -7,8 +7,8 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^plots_7d/$', 'plots_7d.views.index', name='index'),
-    url(r'^plots_7d/results$', 'plots_7d.views.results', name='results'),
-    url(r'^plots_7d/(?P<state_name>[A-Z][A-Z])/$', 'plots_7d.views.stations', name='stations'),
+    url(r'^plots_7d/(?P<state_name>[A|C][L|A|K])/$', 'plots_7d.views.stations', name='stations'),
+    url(r'^plots_7d/(?P<state_name>[A|C][L|A|K])/(?P<ucan_id>[1-6])/$', 'plots_7d.views.results', name='results'),
     # url(r'^$', 'graph_retrieval.views.home', name='home'),
     # url(r'^graph_retrieval/', include('graph_retrieval.foo.urls')),
 
