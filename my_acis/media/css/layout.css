@@ -1,0 +1,36 @@
+/************************************************/
+/* layout.css 					*/
+/* Define the way things are layed out		*/
+/* on the page.					*/
+/************************************************/
+
+    body {
+	margin:0px;
+	padding:0px;
+    }
+
+    #left{
+	position: absolute;
+	top:150px;
+	width:245px;
+    }
+
+    #center{
+	margin-left: 249px;
+	margin-right:199px;
+	voice-family: "\"}\"";
+	voice-family: inherit;
+	margin-left: 251px;
+	margin-right:201px;
+    }
+    html>body #center{
+	margin-left: 251px;
+	margin-right:201px;
+    }
+
+    #right{
+	position: absolute;
+	right:0px;
+	top:150px;
+	width:195px;
+    }
