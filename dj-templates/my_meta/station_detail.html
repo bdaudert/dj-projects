@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block breadcrumbs %}
+{{ block.super }}
+| Station detail
+{% endblock %}
+
+{% block content %}
+
+<h1>{{title}}</h1>
+
+<p>UCAN station ID</p>
+<form action="." method="get">
+    <input type="text" name="ucan_id" value="{{ucan_station_id}}" />
+    <input type="submit" value="Submit" />
+</form>
+{% if ucan_station_id %}
+<h2>Station</h2>
+    <table class="sortable"> {{station|safe}} </table>
+<h2>Station Location</h2>
+    <a href="add">add</a>
+    <table class="sortable"> {{station_location|safe}} </table>
+<h2>Station Maintenance</h2>
+    <a href="{{URL_PREFIX}}meta/maintenance/{{ucan_station_id}}/">add</a>
+    <table class="sortable"> {{station_maintenance|safe}} </table>
+<h2>Station Equipment</h2>
+    <a href="{{URL_PREFIX}}meta/equipment/{{ucan_station_id}}/">add</a>
+    <table class="sortable"> {{station_equipment|safe}} </table>
+<h2>Station Physical</h2>
+    <a href="{{URL_PREFIX}}meta/physical/{{ucan_station_id}}/">add</a>
+    <table class="sortable"> {{station_physical|safe}} </table>
+{% endif %}
+
+{% endblock %}

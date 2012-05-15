@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block breadcrumbs %}
+{{ block.super }}
+| Results
+{% endblock %}
+
+{% block content %}
+
+<h1>{{title}}</h1>
+
+{% if stations %}
+    <h2>{{stations.count}} results</h2>
+    <ul>
+    {% for s in stations %}
+	<li><a href="{{URL_PREFIX}}my_meta/station_detail/?ucan_id={{s.ucan_station_id}}">{{s}}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No stations found</p>
+{% endif %}
+
+{% endblock %}
+
