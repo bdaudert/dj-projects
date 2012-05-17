@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block breadcrumbs %}
+{{ block.super }}
+| Station tables
+{% endblock %}
+
+{% block content %}
+
+<h1>{{title}}</h1>
+
+<p>UCAN station ID</p>
+<form action="." method="get">
+    <input type="text" name="ucan_id" value="{{ucan_station_id}}" />
+    <input type="submit" value="Submit" />
+</form>
+{% if ucan_station_id %}
+
+<TABLE BORDER=0>
+
+   <TR><TD>
+      <TABLE BORDER=0><TR><TD><A onClick="Toggle(this)"><IMG SRC="{{ MEDIA_URL }}img/plus.gif"> Station</A><DIV>
+          
+          {% for key, value in station.items %}
+
+              <TABLE BORDER=0><TR><TD WIDTH=10></TD><TD><IMG SRC="{{ MEDIA_URL }}img/leaf.gif">{{ key }}<DIV>
+              </DIV></TD></TR></TABLE>
+         
+           {% endfor %}
+          
+      </DIV></TD></TR></TABLE>
+   </TR></TD>
+
+</TABLE>
+
+{% endif %}
+
+{% endblock %}

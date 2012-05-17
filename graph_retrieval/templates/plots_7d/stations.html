@@ -1,0 +1,13 @@
+<p>Available stations for this state</p>
+
+{% if stations %}
+    <ul>
+    <p>Please pick a station of interest</p>
+    {% for station in stations %}
+        <li><a href="/plots_7d/{{ state_name }}/{{ station.ucan_station_id }}/">{{ station.station_alt_name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No stations are available in this US state</p>
+{% endif %}
+            

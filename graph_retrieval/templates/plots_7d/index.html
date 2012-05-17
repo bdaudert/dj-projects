@@ -1,0 +1,11 @@
+{% if states %}
+    <ul>
+    <p>Please pick a US state of interest</p>
+    {% for state in states %}
+        <li><a href="/plots_7d/{{ state }}">{{ state.fips_state_abbr }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No states are available to choose from</p>
+{% endif %}
+            

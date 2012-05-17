@@ -1,0 +1,9 @@
+{% if station %}
+
+<!--Comments -->        
+<li><a href="http://www.raws.dri.edu/cgi-bin/wea_graph2.pl?stn={{ wrcc_id }}&mon={{ month }}&day={{ day }}&yea={{ year }}&ndy=07&graphset=M&imagesize=S&scale=A&pcodes=AVA">Average Air temp for {{ station.station_alt_name }}</a></li>
+<!--<li><a href="/plots_7d/{{ state_name }}/{{ ucan_id }}/">Average Air temps for {{ station.station_alt_name }}</a></li>-->
+{% else %}
+    <p>No plots are available for the station.</p>
+{% endif %}
+            

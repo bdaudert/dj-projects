@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{% if LANGUAGE_CODE %}{{ LANGUAGE_CODE }}{% else %}en-US{% endif %}" xml:lang="{% if LANGUAGE_CODE %}{{ LANGUAGE_CODE }}{% else %}en-US{% endif %}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+<title>BRITTA's ACIS
+{% if title %} [ {% endif %} 
+{{ title|escape }}
+{% if title %} ] {% endif %}
+</title>
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/base.css"></link>
+<!--<script type="text/javascript" src="{{ MEDIA_URL }}js/collapse.js"></script>-->
+{% block extrahead %}{% endblock %}
+{% block extrastyle %}{% endblock %}
+</head>
+<body {% if bodyclass %}class="{% block bodyclass %}{% endblock %}" {% endif %} {% if bodyid %} id="{% block bodyid %}{% endblock %}"{% endif %}>
+    <!-- Header -->
+    <div id="header">
+	<h1>Britta's attempt at ACIS metadata</h1>
+    </div> <!-- END Header -->
+
+    <div id="breadcrumbs">
+    {% block breadcrumbs %}
+	    <a href="/my_meta">Metadata Home</a>
+    {% endblock %}
+    </div>
+
+    <div id="content">
+    {% block content %} {% endblock %}
+    </div> <!-- END content -->
+
+    {% block footer %}
+	<div id="footer-wrapper">
+	<div id="footer">
+	    <p>Created by <a href="http://www.wrcc.dri.edu/">WRCC</a></p>
+	</div><!-- END footer -->
+	</div> <!--END footer-wrapper-->
+    {% endblock %}
+</body>
+</html>
