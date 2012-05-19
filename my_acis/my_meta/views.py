@@ -92,8 +92,7 @@ def station_tables(request):
         'title': "Available tables"
     }
     if ucan_id:
-        d = defaultdict(lambda: defaultdict(list)) #holds table name, instance_name, instance
-        key_list =[]
+        #d = defaultdict(lambda: defaultdict(list)) #holds table name, instance_name, instance
         #ucan_id = int(ucan_id)
         #for name, obj in inspect.getmembers(acis_models):
         #    if inspect.isclass(obj) and hasattr(obj, 'pk'):
@@ -105,18 +104,18 @@ def station_tables(request):
         ucan_id = int(ucan_id)
         table_dir = defaultdict(list)
         key_dir = defaultdict(list)
+        key_list=[]
         for name, obj in inspect.getmembers(acis_models):
             if inspect.isclass(obj) and hasattr(obj, 'pk'):
                 instances = obj.objects.filter(pk=ucan_id)
                 for i, instance in enumerate(instances):
-                    inst_name='%s_%d' % (name, i)
-                    table_dir[name].append(inst_name)
                     key_list = get_keys(instance)
-                    key_dir[name].append(key_list)
+                    inst_name='%s_%d' % (name, i+1)
+                    table_dir[name].append(inst_name)
+                    key_dir[inst_name] = key_list
 
         context['ucan_station_id'] = ucan_id
         #context['tables'] = dict(d) #template does not loop over defaultdict
-
         context['table_dir'] = dict(table_dir)
         context['key_dir'] = dict(key_dir)
     return render_to_response('my_meta/station_tables.html', context, context_instance=RequestContext(request))

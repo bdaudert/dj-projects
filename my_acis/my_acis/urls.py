@@ -18,9 +18,6 @@ urlpatterns = patterns('',
     (r'^my_meta/by_location/$', 'my_meta.views.by_location'),
     (r'^my_meta/station_detail/$', 'my_meta.views.station_detail'),
     (r'^my_meta/station_tables/$', 'my_meta.views.station_tables'),
-    (r'^my_meta/maintenance/(?P<ucan_id>\d+)/$', 'my_meta.views.station_maintenance'),
-    (r'^my_meta/physical/(?P<ucan_id>\d+)/$', 'my_meta.views.station_physical'),
-    (r'^my_meta/equipment/(?P<ucan_id>\d+)/$', 'my_meta.views.station_equipment'),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
@@ -32,5 +29,10 @@ if settings.DEBUG:
     urlpatterns += patterns('',
         url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
             'document_root': settings.MEDIA_ROOT,
+        }),
+   )
+    urlpatterns += patterns('',
+        url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.STATIC_ROOT,
         }),
    )

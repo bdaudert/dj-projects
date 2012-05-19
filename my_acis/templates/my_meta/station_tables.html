@@ -11,7 +11,7 @@
 
 
  <!-- [client side code for collapsing and unfolding branches] -->
- <SCRIPT LANGUAGE="JavaScript">
+<SCRIPT LANGUAGE="JavaScript">
 // ---------------------------------------------
 // --- Name:    Easy DHTML Treeview           --
 // --- Author:  D.D. de Kerf                  --
@@ -51,7 +51,7 @@ function Toggle(node)
 
 }
 
-</SCRIPT>
+</SCRIPT> 
 
 <p>UCAN station ID</p>
 <form action="." method="get">
@@ -63,16 +63,26 @@ function Toggle(node)
 
 <TABLE BORDER=0>
 <TR><TD>
-{% for key, value in table_dir.items %}
-    <TABLE BORDER=0><TR><TD><A onClick="Toggle(this)"><IMG SRC="{{ MEDIA_URL }}img/plus.gif"> {{ key }}</A><DIV style='display:none'>
-    {%for value2 in value %}     
-        <TABLE BORDER=0><TR><TD><A onClick="Toggle(this)"><IMG SRC="{{ MEDIA_URL }}img/plus.gif"> {{ value2 }}</A><DIV style='display:none'>
-        </DIV></TD></TR></TABLE>
+{% for tbl_name, tbl_instances in table_dir.items %}
+    <TABLE BORDER=0><TR><TD><A onClick="Toggle(this)"><IMG SRC="{{ MEDIA_URL }}img/plus.gif"> {{ tbl_name }}</A><DIV style='display:none'>
+    		
+    {%for tbl_instance in tbl_instances %}
+         <DIV ID="hideThis">
+         <TABLE BORDER=0><TR><TD><A><IMG src="{{ MEDIA_URL }}img/leaf.gif">{{ tbl_instance }}</A><DIV>
+                 <TABLE BORDER=0>
+                 {% for tbl_key in key_dir.tbl_instance %}
+                 <TR><TD>
+                     {{ tbl_key }}    
+                 </TR></TD>
+                 {% endfor%}
+                 </TABLE>
+          </DIV>
+         <A HREF="#" onclick="show_table('hideThis')">Show / Hide</A>
+         </DIV></TD></TR></TABLE>
     {% endfor%}
     </DIV></TD></TR></TABLE>
 {% endfor %}
-<TD><TR>
-</TABLE>    
+</TD></TR></TABLE>    
 
 {% endif %}
 
