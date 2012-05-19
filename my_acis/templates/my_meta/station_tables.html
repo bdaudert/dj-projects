@@ -60,22 +60,19 @@ function Toggle(node)
 </form>
 {% if ucan_station_id %}
 
+
 <TABLE BORDER=0>
-
-   <TR><TD>
-      <TABLE BORDER=0><TR><TD><A onClick="Toggle(this)"><IMG SRC="{{ MEDIA_URL }}img/plus.gif"> Station</A><DIV style='display:none'>
-          
-          {% for key, value in station.items %}
-
-              <TABLE BORDER=0><TR><TD WIDTH=10></TD><TD><IMG SRC="{{ MEDIA_URL }}img/leaf.gif">{{ key }}<DIV>
-              </DIV></TD></TR></TABLE>
-         
-           {% endfor %}
-          
-      </DIV></TD></TR></TABLE>
-   </TR></TD>
-
-</TABLE>
+<TR><TD>
+{% for key, value in table_dir.items %}
+    <TABLE BORDER=0><TR><TD><A onClick="Toggle(this)"><IMG SRC="{{ MEDIA_URL }}img/plus.gif"> {{ key }}</A><DIV style='display:none'>
+    {%for value2 in value %}     
+        <TABLE BORDER=0><TR><TD><A onClick="Toggle(this)"><IMG SRC="{{ MEDIA_URL }}img/plus.gif"> {{ value2 }}</A><DIV style='display:none'>
+        </DIV></TD></TR></TABLE>
+    {% endfor%}
+    </DIV></TD></TR></TABLE>
+{% endfor %}
+<TD><TR>
+</TABLE>    
 
 {% endif %}
 

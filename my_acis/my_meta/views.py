@@ -10,7 +10,12 @@ from django.views.generic.list_detail import object_detail, object_list
 from django.db.models.query import QuerySet
 
 from my_meta.models import *
-#from my_meta.forms import *
+from my_meta.forms import *
+
+#My  additions. FIX ME: get rid of from import *
+from collections import defaultdict
+import inspect
+from models import acis_models
 
 
 def home_view(request):
@@ -81,6 +86,40 @@ def by_location(request):
     }
     return render_to_response('my_meta/results.html', context, context_instance=RequestContext(request))
 
+def station_tables(request):
+    ucan_id = request.GET.get('ucan_id', None)
+    context = {
+        'title': "Available tables"
+    }
+    if ucan_id:
+        d = defaultdict(lambda: defaultdict(list)) #holds table name, instance_name, instance
+        key_list =[]
+        #ucan_id = int(ucan_id)
+        #for name, obj in inspect.getmembers(acis_models):
+        #    if inspect.isclass(obj) and hasattr(obj, 'pk'):
+        #        instances = obj.objects.filter(pk=ucan_id)
+        #        for i, instance in enumerate(instances):
+        #            inst_name='%s_%d' % (name, i)
+        #            key_list = get_keys(instance)
+        #            d[name][inst_name].append(key_list)
+        ucan_id = int(ucan_id)
+        table_dir = defaultdict(list)
+        key_dir = defaultdict(list)
+        for name, obj in inspect.getmembers(acis_models):
+            if inspect.isclass(obj) and hasattr(obj, 'pk'):
+                instances = obj.objects.filter(pk=ucan_id)
+                for i, instance in enumerate(instances):
+                    inst_name='%s_%d' % (name, i)
+                    table_dir[name].append(inst_name)
+                    key_list = get_keys(instance)
+                    key_dir[name].append(key_list)
+
+        context['ucan_station_id'] = ucan_id
+        #context['tables'] = dict(d) #template does not loop over defaultdict
+
+        context['table_dir'] = dict(table_dir)
+        context['key_dir'] = dict(key_dir)
+    return render_to_response('my_meta/station_tables.html', context, context_instance=RequestContext(request))
 
 def station_detail(request):
     ucan_id = request.GET.get('ucan_id', None)
@@ -189,6 +228,16 @@ def set_as_table(qs):
     else:
         raise
     return "\n".join(headers + rows)
+
+def get_keys(q):
+    """
+    Return the keys of a query as list
+    """
+    L = []
+    if hasattr(q, '_meta'):
+       for f in q._meta.fields:
+           L.append(f.name)
+    return L
 
 def break_text(s,num=60,sep="<br />"):
     """ Return string s with separator every num words."""

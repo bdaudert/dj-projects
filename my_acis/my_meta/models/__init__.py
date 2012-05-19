@@ -16,7 +16,7 @@ from acis_models import (
     StationCounty,
     StationNetwork,
     StationSubnetwork,
-    GlobalVariableMajMin,
+#    GlobalVariableMajMin,
     StationTimeZone,
     ClimDiv,
     StationClimDiv,

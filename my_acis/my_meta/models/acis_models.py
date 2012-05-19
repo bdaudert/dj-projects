@@ -185,20 +185,20 @@ class StationNetwork(models.Model):
 	app_label = 'meta'
         db_table = 'station_network'
 
-class GlobalVariableMajMin(models.Model):
-    major_id = models.SmallIntegerField()
-    minor_id = models.SmallIntegerField()
-    long_name = models.CharField(max_length=127)
-    method = models.CharField(max_length=8)
-    measure_interval = models.CharField(max_length=8)
-    report_interval = models.CharField(max_length=8)
-    default_units = models.CharField(max_length=20)
-    data_source = models.CharField(max_length=20)
-    remark = models.CharField(max_length=254)
-    class Admin: pass
-    class Meta:
-	app_label = 'meta'
-        db_table = 'global_variable_maj_min'
+#class GlobalVariableMajMin(models.Model):
+#    major_id = models.SmallIntegerField()
+#    minor_id = models.SmallIntegerField()
+#    long_name = models.CharField(max_length=127)
+#    method = models.CharField(max_length=8)
+#    measure_interval = models.CharField(max_length=8)
+#    report_interval = models.CharField(max_length=8)
+#    default_units = models.CharField(max_length=20)
+#    data_source = models.CharField(max_length=20)
+#    remark = models.CharField(max_length=254)
+#    class Admin: pass
+#    class Meta:
+#	app_label = 'meta'
+#        db_table = 'global_variable_maj_min'
 
 class StationTimeZone(models.Model):
     ucan_station_id = models.IntegerField(primary_key=True) # Not the real pk
@@ -297,8 +297,8 @@ class Subnetwork(models.Model):
 	sql = "SELECT ucan_station_id, network_station_id FROM subnetwork_stations WHERE subnetwork_key = %s"
 	cursor.execute(sql, (self.subnetwork_key,))
 	return cursor.fetchall()
-	    
-	    
+
+
 class StationSubnetwork(models.Model):
     subnetwork_key = models.IntegerField(primary_key=True)
     ucan_station_id = models.IntegerField()
