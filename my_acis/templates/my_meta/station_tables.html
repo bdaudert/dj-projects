@@ -7,51 +7,63 @@
 
 {% block content %}
 
-<h1>{{title}}</h1>
+<!--my_filters enables variable key  dictionary lookup-->
+{% load my_filters %}
 
-
- <!-- [client side code for collapsing and unfolding branches] -->
+<!-- Java utility funtions FIX ME: should be sourced in base.html from jsutils--> 
 <SCRIPT LANGUAGE="JavaScript">
-// ---------------------------------------------
-// --- Name:    Easy DHTML Treeview           --
-// --- Author:  D.D. de Kerf                  --
-// --- Version: 0.1           Date: 6-6-2001  --
-// ---------------------------------------------
 function Toggle(node)
 {
-	// Unfold the branch if it isn't visible
-	if (node.nextSibling.style.display == 'none')
-	{
-		// Change the image (if there is an image)
-		if (node.children.length > 0)
-		{
-			if (node.children.item(0).tagName == "IMG")
-			{
-				node.children.item(0).src = "{{ MEDIA_URL }}img/minus.gif";
-			}
+        // Unfold the branch if it isn't visible
+        if (node.nextSibling.style.display == 'none')
+        {
+                // Change the image (if there is an image)
+                if (node.children.length > 0)
+                {
+                        if (node.children.item(0).tagName == "IMG")
+                        {
+                                node.children.item(0).src = "{{ MEDIA_URL }}img/minus.gif";
+                        }
                       
-		}
+                }
 
-		node.nextSibling.style.display = '';
-	}
-	// Collapse the branch if it IS visible
-	else
-	{
-		// Change the image (if there is an image)
-		if (node.children.length > 0)
-		{
-			if (node.children.item(0).tagName == "IMG")
-			{
-				node.children.item(0).src = "{{ MEDIA_URL }}img/plus.gif";
-			}
-		}
+                node.nextSibling.style.display = '';
+        }
+        // Collapse the branch if it IS visible
+        else
+        {
+                // Change the image (if there is an image)
+                if (node.children.length > 0)
+                {
+                        if (node.children.item(0).tagName == "IMG")
+                        {
+                                node.children.item(0).src = "{{ MEDIA_URL }}img/plus.gif";
+                        }
+                }
 
-		node.nextSibling.style.display = 'none';
-	}
+                node.nextSibling.style.display = 'none';
+        }
 
 }
+// [client side code for showing/hiding conteny]
+function ShowHide(divId)
+{
+        obj = document.getElementById(divId);
+        if (obj.style.display == 'none')
+        {
+                obj.style.display = 'block';
+        } 
+        else 
+        {
+                obj.style.display = 'none';
+        }
+}
 
-</SCRIPT> 
+</SCRIPT>
+
+
+
+<h1>{{title}}</h1>
 
 <p>UCAN station ID</p>
 <form action="." method="get">
@@ -61,23 +73,15 @@ function Toggle(node)
 {% if ucan_station_id %}
 
 
-<TABLE BORDER=0>
-<TR><TD>
+<TABLE BORDER=0><TR><TD>
 {% for tbl_name, tbl_instances in table_dir.items %}
     <TABLE BORDER=0><TR><TD><A onClick="Toggle(this)"><IMG SRC="{{ MEDIA_URL }}img/plus.gif"> {{ tbl_name }}</A><DIV style='display:none'>
-    		
+    
     {%for tbl_instance in tbl_instances %}
-         <DIV ID="hideThis">
-         <TABLE BORDER=0><TR><TD><A><IMG src="{{ MEDIA_URL }}img/leaf.gif">{{ tbl_instance }}</A><DIV>
-                 <TABLE BORDER=0>
-                 {% for tbl_key in key_dir.tbl_instance %}
-                 <TR><TD>
-                     {{ tbl_key }}    
-                 </TR></TD>
-                 {% endfor%}
-                 </TABLE>
-          </DIV>
-         <A HREF="#" onclick="show_table('hideThis')">Show / Hide</A>
+          <TABLE BORDER=0><TR><TD><A HREF="#" onclick="ShowHide('{{tbl_instance}}')"><IMG src="{{ MEDIA_URL }}img/leaf.gif">{{ tbl_instance }} Show/Hide</A>
+         <DIV>
+          <TR><TD><DIV ID='{{tbl_instance}}' STYLE='display:none'>
+             <TABLE STYLE="float:right; width:25%; height:25%; background-color:yellow" CLASS="sortable">{{ table|lookup:tbl_instance|safe }}</TABLE>
          </DIV></TD></TR></TABLE>
     {% endfor%}
     </DIV></TD></TR></TABLE>

@@ -92,32 +92,19 @@ def station_tables(request):
         'title': "Available tables"
     }
     if ucan_id:
-        #d = defaultdict(lambda: defaultdict(list)) #holds table name, instance_name, instance
-        #ucan_id = int(ucan_id)
-        #for name, obj in inspect.getmembers(acis_models):
-        #    if inspect.isclass(obj) and hasattr(obj, 'pk'):
-        #        instances = obj.objects.filter(pk=ucan_id)
-        #        for i, instance in enumerate(instances):
-        #            inst_name='%s_%d' % (name, i)
-        #            key_list = get_keys(instance)
-        #            d[name][inst_name].append(key_list)
         ucan_id = int(ucan_id)
         table_dir = defaultdict(list)
-        key_dir = defaultdict(list)
-        key_list=[]
+        table = {}
         for name, obj in inspect.getmembers(acis_models):
             if inspect.isclass(obj) and hasattr(obj, 'pk'):
                 instances = obj.objects.filter(pk=ucan_id)
                 for i, instance in enumerate(instances):
-                    key_list = get_keys(instance)
                     inst_name='%s_%d' % (name, i+1)
                     table_dir[name].append(inst_name)
-                    key_dir[inst_name] = key_list
-
+                    table[inst_name] = set_as_table2(instance)
         context['ucan_station_id'] = ucan_id
-        #context['tables'] = dict(d) #template does not loop over defaultdict
+        context['table'] = table
         context['table_dir'] = dict(table_dir)
-        context['key_dir'] = dict(key_dir)
     return render_to_response('my_meta/station_tables.html', context, context_instance=RequestContext(request))
 
 def station_detail(request):
@@ -227,6 +214,34 @@ def set_as_table(qs):
     else:
         raise
     return "\n".join(headers + rows)
+
+def set_as_table2(qs):
+    """
+    Return a query set as an HTML table without <table> tags.
+    """
+    first = True
+    headers = ["<tr>", "<th>KEY</th>", "<th>VALUE</th>", "</tr>"]
+    rows = []
+
+    if isinstance(qs, QuerySet):
+        for i in qs:
+            if first:
+                first = False
+                for f in i._meta.fields:
+                    rows.append("<tr>")
+                    rows.append("<td><b>%s</b></td>" % f.name)
+                    rows.append("<td>%s</td>" % break_text(getattr(i, f.name)))
+                    rows.append("</tr>")
+    elif hasattr(qs, '_meta'):
+        for f in qs._meta.fields:
+            rows.append("<tr>")
+            rows.append("<td><b>%s</b></td>" % f.name)
+            rows.append("<td>%s</td>" % break_text(getattr(qs, f.name)))
+            rows.append("</tr>")
+    else:
+        raise
+    return "\n".join(headers + rows)
+
 
 def get_keys(q):
     """
