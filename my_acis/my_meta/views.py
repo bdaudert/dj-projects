@@ -15,7 +15,7 @@ from my_meta.forms import *
 #My  additions. FIX ME: get rid of from import *
 from collections import defaultdict
 import inspect
-from models import acis_models
+from models import acis_models, common
 
 
 def home_view(request):
@@ -95,7 +95,7 @@ def station_tables(request):
         ucan_id = int(ucan_id)
         table_dir = defaultdict(list)
         table = {}
-        for name, obj in inspect.getmembers(acis_models):
+        for name, obj in (inspect.getmembers(acis_models) or inspect.getmembers(common)):
             if inspect.isclass(obj) and hasattr(obj, 'pk'):
                 instances = obj.objects.filter(pk=ucan_id)
                 for i, instance in enumerate(instances):
