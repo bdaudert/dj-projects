@@ -10,7 +10,7 @@
 <!--my_filters enables variable key  dictionary lookup-->
 {% load my_filters %}
 
-<!-- Java utility funtions FIX ME: should be sourced in base.html from jsutils--> 
+
 <SCRIPT LANGUAGE="JavaScript">
 function Toggle(node)
 {
@@ -24,7 +24,6 @@ function Toggle(node)
                         {
                                 node.children.item(0).src = "{{ MEDIA_URL }}img/minus.gif";
                         }
-                      
                 }
 
                 node.nextSibling.style.display = '';
@@ -45,22 +44,20 @@ function Toggle(node)
         }
 
 }
-// [client side code for showing/hiding conteny]
+
 function ShowHide(divId)
 {
         obj = document.getElementById(divId);
         if (obj.style.display == 'none')
         {
                 obj.style.display = 'block';
-        } 
-        else 
+        }
+        else
         {
                 obj.style.display = 'none';
         }
 }
-
 </SCRIPT>
-
 
 
 <h1>{{title}}</h1>
@@ -72,22 +69,22 @@ function ShowHide(divId)
 </form>
 {% if ucan_station_id %}
 
-
-<TABLE BORDER=0><TR><TD>
 {% for tbl_name, tbl_instances in table_dir.items %}
-    <TABLE BORDER=0><TR><TD><A onClick="Toggle(this)"><IMG SRC="{{ MEDIA_URL }}img/plus.gif"> {{ tbl_name }}</A><DIV style='display:none'>
-    
+    <TABLE STYLE="width:100%; border:0" ><TR><TD><A onClick="Toggle(this)"><IMG SRC="{{ MEDIA_URL }}img/plus.gif"> {{ tbl_name }}</A><DIV style='display:none'>
+
     {%for tbl_instance in tbl_instances %}
           <TABLE BORDER=0><TR><TD><A HREF="#" onclick="ShowHide('{{tbl_instance}}')"><IMG src="{{ MEDIA_URL }}img/leaf.gif">{{ tbl_instance }} Show/Hide</A>
-         <DIV>
-          <TR><TD><DIV ID='{{tbl_instance}}' STYLE='display:none'>
-             <TABLE STYLE="float:right; width:25%; height:25%; background-color:yellow" CLASS="sortable">{{ table|lookup:tbl_instance|safe }}</TABLE>
-         </DIV></TD></TR></TABLE>
+          <DIV></DIV></TD></TR></TABLE>
+    
+         <DIV ALIGN="right" ID='{{tbl_instance}}' STYLE='display:none'>
+             <TABLE STYLE="width:50%; height:100%; background-color:yellow" CLASS="sortable">{{ table|lookup:tbl_instance|safe }}</TABLE>
+         </DIV>
+          
     {% endfor%}
     </DIV></TD></TR></TABLE>
 {% endfor %}
-</TD></TR></TABLE>    
 
 {% endif %}
 
 {% endblock %}
+

@@ -7,7 +7,8 @@
 {% if title %} ] {% endif %}
 </title>
 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/base.css"></link>
-<!--<script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>-->
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js">var MEDIA_URL = "{{ MEDIA_URL }}"</script>
+<!--<SCRIPT LANGUAGE="JavaScript" SRC="{{ MEDIA_URL }}js/jutils.js"> var MEDIA_URL = "{{ MEDIA_URL }} "</SCRIPT>-->
 {% block extrahead %}{% endblock %}
 {% block extrastyle %}{% endblock %}
 </head>

@@ -1,8 +1,3 @@
-// ---------------------------------------------
-// --- Name:    Easy DHTML Treeview           --
-// --- Author:  D.D. de Kerf                  --
-// --- Version: 0.1           Date: 6-6-2001  --
-// ---------------------------------------------
 function Toggle(node)
 {
 	// Unfold the branch if it isn't visible
@@ -13,7 +8,7 @@ function Toggle(node)
 		{
 			if (node.children.item(0).tagName == "IMG")
 			{
-				node.children.item(0).src = "{{ STATIC_URL }}img/minus.gif";
+				node.children.item(0).src = MEDIA_URL + "img/minus.gif";
 			}
 		}
 
@@ -27,7 +22,7 @@ function Toggle(node)
 		{
 			if (node.children.item(0).tagName == "IMG")
 			{
-				node.children.item(0).src = "{{ STATIC_URL }}img/plus.gif";
+				node.children.item(0).src = MEDIA_URL + "img/plus.gif"; 
 			}
 		}
 
@@ -38,14 +33,21 @@ function Toggle(node)
 
 function popup(mylink, windowname)
 {
-    if (! window.focus)return true;
-    var href;
-    if (typeof(mylink) == 'string')
-       href=mylink;
-    else
-       href=mylink.href;
-window.open(href, windowname, 'width=400,height=200,scrollbars=yes');
-return false;
+	if (! window.focus)
+	{
+		return true;
+		var href;
+	}
+	if (typeof(mylink) == 'string')
+	{
+		href=mylink;
+	}
+	else
+	{
+		href=mylink.href;
+	}
+	window.open(href, windowname, 'width=400,height=200,scrollbars=yes');
+	return false;
 }
 
 // [client side code for showing/hiding conteny]
