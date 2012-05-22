@@ -7,8 +7,9 @@
 {% if title %} ] {% endif %}
 </title>
 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/base.css"></link>
-<script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js">var MEDIA_URL = "{{ MEDIA_URL }}"</script>
-<!--<SCRIPT LANGUAGE="JavaScript" SRC="{{ MEDIA_URL }}js/jutils.js"> var MEDIA_URL = "{{ MEDIA_URL }} "</SCRIPT>-->
+<input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>
+{% load my_filters %}
 {% block extrahead %}{% endblock %}
 {% block extrastyle %}{% endblock %}
 </head>

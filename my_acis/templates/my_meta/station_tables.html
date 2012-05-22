@@ -7,59 +7,6 @@
 
 {% block content %}
 
-<!--my_filters enables variable key  dictionary lookup-->
-{% load my_filters %}
-
-
-<SCRIPT LANGUAGE="JavaScript">
-function Toggle(node)
-{
-        // Unfold the branch if it isn't visible
-        if (node.nextSibling.style.display == 'none')
-        {
-                // Change the image (if there is an image)
-                if (node.children.length > 0)
-                {
-                        if (node.children.item(0).tagName == "IMG")
-                        {
-                                node.children.item(0).src = "{{ MEDIA_URL }}img/minus.gif";
-                        }
-                }
-
-                node.nextSibling.style.display = '';
-        }
-        // Collapse the branch if it IS visible
-        else
-        {
-                // Change the image (if there is an image)
-                if (node.children.length > 0)
-                {
-                        if (node.children.item(0).tagName == "IMG")
-                        {
-                                node.children.item(0).src = "{{ MEDIA_URL }}img/plus.gif";
-                        }
-                }
-
-                node.nextSibling.style.display = 'none';
-        }
-
-}
-
-function ShowHide(divId)
-{
-        obj = document.getElementById(divId);
-        if (obj.style.display == 'none')
-        {
-                obj.style.display = 'block';
-        }
-        else
-        {
-                obj.style.display = 'none';
-        }
-}
-</SCRIPT>
-
-
 <h1>{{title}}</h1>
 
 <p>UCAN station ID</p>

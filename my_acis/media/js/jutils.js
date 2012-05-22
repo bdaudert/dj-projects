@@ -1,3 +1,5 @@
+var MEDIA_URL = document.getElementById("MEDIA_URL").value;
+
 function Toggle(node)
 {
 	// Unfold the branch if it isn't visible
@@ -12,7 +14,7 @@ function Toggle(node)
 			}
 		}
 
-		node.nextSibling.style.displa
+		node.nextSibling.style.display = '';
 	}
 	// Collapse the branch if it IS visible
 	else
