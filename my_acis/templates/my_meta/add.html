@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block breadcrumbs %}
+{{ block.super }}
+| ADD
+{% endblock %}
+
+{% block content %}
+
+<h1>{{title}}</h1>
+
+<h2>Add a {{ tbl_name }}</h2>
+<form method="post" action=".">
+<table>
+{{ form }}
+</table>
+<!--
+<input type="submit" value="Submit" />
+-->
+</form>
+
+{% endblock %}
+

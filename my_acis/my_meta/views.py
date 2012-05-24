@@ -107,6 +107,25 @@ def station_tables(request):
         context['table_dir'] = dict(table_dir)
     return render_to_response('my_meta/station_tables.html', context, context_instance=RequestContext(request))
 
+def add(request):
+    tbl_name = request.GET.get('tbl_name', None)
+    context = {
+        'title': tbl_name,
+    }
+    if request.POST:
+        form_call = "%sForm(request.POST)" % tbl_name
+        form = eval(form_call)
+        if form.is_valid():
+            form.save()
+            context['saved'] = "Information saved."
+    else:
+        form_call = "%sForm(initial={'tble_name': %s})" % ( tbl_name, tbl_name )
+        form = eval(form_call)
+    context['tbl_name'] = tbl_name
+    context['form'] = form
+    return render_to_response('my_meta/add.html', context, context_instance=RequestContext(request))
+
+
 def station_detail(request):
     ucan_id = request.GET.get('ucan_id', None)
     context = {
@@ -258,4 +277,3 @@ def break_text(s,num=60,sep="<br />"):
     from django.utils.text import wrap
     from django.utils.safestring import mark_safe
     return wrap(mark_safe(s), num).replace('\n', sep)
-
