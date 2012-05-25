@@ -9,7 +9,7 @@
 
 <h1>{{title}}</h1>
 
-<p>UCAN station ID</p>
+<p>UCAN station id</p>
 <form action="." method="get">
     <input type="text" name="ucan_id" value="{{ucan_station_id}}" />
     <input type="submit" value="Submit" />
@@ -17,18 +17,32 @@
 {% if ucan_station_id %}
 
 {% for tbl_name, tbl_instances in table_dir.items %}
-    <TABLE STYLE="width:100%; border:0" ><TR><TD><A onClick="Toggle(this)"><IMG SRC="{{ MEDIA_URL }}img/plus.gif"> {{ tbl_name }}</A><DIV style='display:none'>
+    <table style="width:100%; border:0" ><tr><td><a onClick="Toggle(this)"><img src="{{ MEDIA_URL }}img/plus.gif"> {{ tbl_name }}</a><div style='display:none'>
 
     {%for tbl_instance in tbl_instances %}
-          <TABLE BORDER=0><TR><TD><A HREF="#" onclick="ShowHide('{{tbl_instance}}')"><IMG src="{{ MEDIA_URL }}img/leaf.gif">{{ tbl_instance }} Show/Hide</A>
-          <DIV></DIV></TD></TR></TABLE>
+          <table border=0><tr><td><a href="#" onclick="ShowHide('{{tbl_instance}}')"><img src="{{ MEDIA_URL }}img/leaf.gif">{{ tbl_instance }} Show/Hide</a>
+          <div></div></td></tr></table>
     
-         <DIV ALIGN="right" ID='{{tbl_instance}}' STYLE='display:none'>
-             <TABLE STYLE="width:50%; height:100%; background-color:yellow" CLASS="sortable">{{ table|lookup:tbl_instance|safe }}</TABLE>
-         </DIV>
+         <div align="right" id='{{tbl_instance}}' style='display:none'>
+             <table style="width:50%; height:100%; background-color:yellow" class="sortable">{{ table|lookup:tbl_instance|safe }}</table>
+         </div>
     {% endfor%}
+
     <a href="add/?tbl_name={{tbl_name}}">add</a>
-    </DIV></TD></TR></TABLE>
+
+<!--
+    <li><a href="#" onclick="ShowHide('add_form')">Add</a></li> 
+        <div align="left" id='add_form' style='display:none'>
+            <h2>Add {{ tbl_name }}</h2>
+            <form method="post" action=".">
+            <table>
+            {{ form }}
+            </table>
+              <input type="submit" value="Submit" />
+            </form>
+         </div>
+-->      
+    </div></td></tr></table>
 {% endfor %}
 
 {% endif %}

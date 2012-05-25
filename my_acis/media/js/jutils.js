@@ -8,7 +8,7 @@ function Toggle(node)
 		// Change the image (if there is an image)
 		if (node.children.length > 0)
 		{
-			if (node.children.item(0).tagName == "IMG")
+			if (node.children.item(0).tagName == "img")
 			{
 				node.children.item(0).src = MEDIA_URL + "img/minus.gif";
 			}
@@ -22,7 +22,7 @@ function Toggle(node)
 		// Change the image (if there is an image)
 		if (node.children.length > 0)
 		{
-			if (node.children.item(0).tagName == "IMG")
+			if (node.children.item(0).tagName == "img")
 			{
 				node.children.item(0).src = MEDIA_URL + "img/plus.gif"; 
 			}
