@@ -86,6 +86,22 @@ def by_location(request):
     }
     return render_to_response('my_meta/results.html', context, context_instance=RequestContext(request))
 
+def station_detail(request):
+    ucan_id = request.GET.get('ucan_id', None)
+    context = {
+        'title': "Station Detail",
+    }
+
+    if ucan_id:
+        ucan_id = int(ucan_id)
+        context['ucan_station_id'] = ucan_id
+        context['station'] = set_as_table(Station.objects.get(pk=ucan_id))
+        context['station_location'] = set_as_table(StationLocation.objects.filter(ucan_station_id=ucan_id))
+        context['station_maintenance'] = set_as_table(StationMaintenance.objects.filter(ucan_station_id=ucan_id))
+        context['station_equipment'] = set_as_table(StationEquipment.objects.filter(ucan_station_id=ucan_id))
+        context['station_physical'] = set_as_table(StationPhysical.objects.filter(ucan_station_id=ucan_id))
+    return render_to_response('my_meta/station_detail.html', context, context_instance=RequestContext(request))
+
 def station_tables(request):
     ucan_id = request.GET.get('ucan_id', None)
     context = {
@@ -125,22 +141,6 @@ def add(request):
     context['form'] = form
     return render_to_response('my_meta/add.html', context, context_instance=RequestContext(request))
 
-
-def station_detail(request):
-    ucan_id = request.GET.get('ucan_id', None)
-    context = {
-        'title': "Station Detail",
-    }
-
-    if ucan_id:
-        ucan_id = int(ucan_id)
-        context['ucan_station_id'] = ucan_id
-        context['station'] = set_as_table(Station.objects.get(pk=ucan_id))
-        context['station_location'] = set_as_table(StationLocation.objects.filter(ucan_station_id=ucan_id))
-        context['station_maintenance'] = set_as_table(StationMaintenance.objects.filter(ucan_station_id=ucan_id))
-        context['station_equipment'] = set_as_table(StationEquipment.objects.filter(ucan_station_id=ucan_id))
-        context['station_physical'] = set_as_table(StationPhysical.objects.filter(ucan_station_id=ucan_id))
-    return render_to_response('my_meta/station_detail.html', context, context_instance=RequestContext(request))
 
 #@login_required
 def station_maintenance(request, ucan_id):
