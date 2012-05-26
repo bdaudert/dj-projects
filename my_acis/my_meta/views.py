@@ -128,17 +128,18 @@ def add(request):
     context = {
         'title': tbl_name,
     }
-    if request.POST:
-        form_call = "%sForm(request.POST)" % tbl_name
-        form = eval(form_call)
-        if form.is_valid():
-            form.save()
-            context['saved'] = "Information saved."
-    else:
-        form_call = "%sForm(initial={'tble_name': %s})" % ( tbl_name, tbl_name )
-        form = eval(form_call)
-    context['tbl_name'] = tbl_name
-    context['form'] = form
+    if tbl_name:
+        if request.POST:
+            form_call = "%sForm(request.POST)" % tbl_name
+            form = eval(form_call)
+            if form.is_valid():
+                form.save()
+                context['saved'] = "Information saved."
+        else:
+            form_call = "%sForm(initial={'tble_name': %s})" % ( tbl_name, tbl_name )
+            form = eval(form_call)
+        context['tbl_name'] = tbl_name
+        context['form'] = form
     return render_to_response('my_meta/add.html', context, context_instance=RequestContext(request))
 
 
@@ -154,6 +155,8 @@ def station_maintenance(request, ucan_id):
         if form.is_valid():
             form.save()
             context['saved'] = "Information saved."
+        else:
+            context['saved'] = "Information NOT saved."
     else:
         form = StationMaintenanceForm(initial={'ucan_station_id': ucan_id})
 

@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% include "my_meta/station_tables.html" %}
 
 {% block breadcrumbs %}
 {{ block.super }}
@@ -11,14 +10,14 @@
 <h1>{{title}}</h1>
 
 <h2>Add {{ tbl_name }}</h2>
-<form method="post" action=".">
+<form method="post" action=".">{% csrf_token %}
 <table>
 {{ form }}
 </table>
-<!--
 <input type="submit" value="Submit" />
--->
 </form>
+
+<p>{{ safed }}</p>
 
 {% endblock %}
 
