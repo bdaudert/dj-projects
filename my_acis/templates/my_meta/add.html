@@ -10,9 +10,10 @@
 <h1>{{title}}</h1>
 
 <h2>Add {{ tbl_name }}</h2>
-<form method="post" action=".">{% csrf_token %}
-<table>
-{{ form }}
+
+<form method="post" action="">{% csrf_token %}
+<table style="align:left">
+    {{ form }}
 </table>
 <input type="submit" value="Submit" />
 </form>

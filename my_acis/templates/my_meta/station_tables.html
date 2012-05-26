@@ -20,7 +20,7 @@
     <table style="width:100%; border:0" ><tr><td><a onClick="Toggle(this)"><img src="{{ MEDIA_URL }}img/plus.gif">{{ tbl_name }}</a><div style='display:none'>
 
     {%for tbl_instance in tbl_instances %}
-          <table border=0><tr><td><a href="#" onclick="ShowHide('{{tbl_instance}}')"><img src="{{ MEDIA_URL }}img/leaf.gif">{{ tbl_instance }} Show/Hide</a>
+          <table border=0><tr><td><a href="javascript:void(0)" onclick="ShowHide('{{tbl_instance}}')"><img src="{{ MEDIA_URL }}img/leaf.gif">{{ tbl_instance }} Show/Hide</a>
           <div></div></td></tr></table>
     
          <div align="right" id='{{tbl_instance}}' style='display:none'>

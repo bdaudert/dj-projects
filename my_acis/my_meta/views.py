@@ -16,7 +16,8 @@ from my_meta.forms import *
 from collections import defaultdict
 import inspect
 from models import acis_models, common
-
+import models
+from django.forms.models import modelformset_factory
 
 def home_view(request):
 #    return HttpResponse("Hello, you. You're at the my_acis/my_meta home page.")
@@ -111,7 +112,8 @@ def station_tables(request):
         ucan_id = int(ucan_id)
         table_dir = defaultdict(list)
         table = {}
-        for name, obj in (inspect.getmembers(acis_models) or inspect.getmembers(common)):
+        #for name, obj in (inspect.getmembers(acis_models) or inspect.getmembers(common)):
+        for name, obj in inspect.getmembers(models):
             if inspect.isclass(obj) and hasattr(obj, 'pk'):
                 instances = obj.objects.filter(pk=ucan_id)
                 for i, instance in enumerate(instances):
@@ -128,18 +130,22 @@ def add(request):
     context = {
         'title': tbl_name,
     }
-    if tbl_name:
-        if request.POST:
-            form_call = "%sForm(request.POST)" % tbl_name
-            form = eval(form_call)
-            if form.is_valid():
-                form.save()
-                context['saved'] = "Information saved."
-        else:
-            form_call = "%sForm(initial={'tble_name': %s})" % ( tbl_name, tbl_name )
-            form = eval(form_call)
-        context['tbl_name'] = tbl_name
-        context['form'] = form
+    #obj_call="%s.objects.all()" % tbl_name
+    #obj = eval(obj_call)
+    #example_tbl = set_as_table2(obj)
+    #context['example_tbl'] = example_tbl
+    if request.POST:
+        form_call = "%sForm(request.POST)" % tbl_name
+        form = eval(form_call)
+        form_name = "%sForm"
+        if form.is_valid():
+            form.save()
+            context['saved'] = "Information saved."
+    else:
+        form_call = "%sForm(initial={'tble_name': %s})" % ( tbl_name, tbl_name )
+        form = eval(form_call)
+    context['tbl_name'] = tbl_name
+    context['form'] = form
     return render_to_response('my_meta/add.html', context, context_instance=RequestContext(request))
 
 
@@ -264,6 +270,25 @@ def set_as_table2(qs):
         raise
     return "\n".join(headers + rows)
 
+def set_as_dict(qs):
+    """
+    Return a query set as a dictionary of key value pairs.
+    """
+    first = True
+    dic = {}
+
+    if isinstance(qs, QuerySet):
+        for i in qs:
+            if first:
+                first = False
+                for f in i._meta.fields:
+                    dic[f.name] = getattr(i, f.name)
+    elif hasattr(qs, '_meta'):
+        for f in qs._meta.fields:
+            dic[f.name] = getattr(qs, f.name)
+    else:
+        raise
+    return dic
 
 def get_keys(q):
     """

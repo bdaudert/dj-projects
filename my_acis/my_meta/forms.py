@@ -9,7 +9,7 @@ class StationMaintenanceForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         sm = StationMaintenance(**data)
-        sm.save(commit=False)
+        sm.save()
 
 
 class StationPhysicalForm(ModelForm):
@@ -18,7 +18,7 @@ class StationPhysicalForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         sp = StationPhysical(**data)
-        sp.save(commit=False)
+        sp.save()
 
 class StationEquipmentForm(ModelForm):
     class Meta:
@@ -26,7 +26,7 @@ class StationEquipmentForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         se = StationEquipment(**data)
-        se.save(commit=False)
+        se.save()
 
 class StationNetworkForm(ModelForm):
     class Meta:
@@ -34,7 +34,7 @@ class StationNetworkForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         sn = StationNetwork(**data)
-        sn.save(commit=False)
+        sn.save()
 
 class StationAltNameForm(ModelForm):
     class Meta:
@@ -42,7 +42,7 @@ class StationAltNameForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         san = StationAltName(**data)
-        san.save(commit=False)
+        san.save()
 
 class StationDigitalForm(ModelForm):
     class Meta:
@@ -50,7 +50,7 @@ class StationDigitalForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         sd = StationDigital(**data)
-        sd.save(commit=False)
+        sd.save()
 
 class StationClimDivForm(ModelForm):
     class Meta:
@@ -58,7 +58,7 @@ class StationClimDivForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         scd = StationClimDiv(**data)
-        scd.save(commit=False)
+        scd.save()
 
 class ClimDivForm(ModelForm):
     class Meta:
@@ -66,7 +66,7 @@ class ClimDivForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         cd = ClimDiv(**data)
-        cd.save(commit=False)
+        cd.save()
 
 class CountyForm(ModelForm):
     class Meta:
@@ -74,7 +74,7 @@ class CountyForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         c = County(**data)
-        c.save(commit=False)
+        c.save()
 
 class StationCountyForm(ModelForm):
     class Meta:
@@ -82,7 +82,7 @@ class StationCountyForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         sc = StationCounty(**data)
-        sc.save(commit=False)
+        sc.save()
 
 class StationForm(ModelForm):
     class Meta:
@@ -90,7 +90,7 @@ class StationForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         s = Station(**data)
-        s.save(commit=False)
+        s.save()
 
 class StationLocationForm(ModelForm):
     class Meta:
@@ -98,7 +98,7 @@ class StationLocationForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         sl = StationLocation(**data)
-        sl.save(commit=False)
+        sl.save()
 
 class VariableForm(ModelForm):
     class Meta:
@@ -106,7 +106,7 @@ class VariableForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         v = Variable(**data)
-        v.save(commit=False)
+        v.save()
 
 class StationTimeZoneForm(ModelForm):
     class Meta:
@@ -114,7 +114,7 @@ class StationTimeZoneForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         tz = StationTimeZone(**data)
-        tz.save(commit=False)
+        tz.save()
 
 class IdTypeForm(ModelForm):
     class Meta:
@@ -122,7 +122,7 @@ class IdTypeForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         it = IdType(**data)
-        it.save(commit=False)
+        it.save()
 
 class StateForm(ModelForm):
     class Meta:
@@ -130,7 +130,7 @@ class StateForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         st = State(**data)
-        st.save(commit=False)
+        st.save()
 
 class StationSubnetworkForm(ModelForm):
     class Meta:
@@ -138,7 +138,7 @@ class StationSubnetworkForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         ssn = StationSubnetwork(**data)
-        ssn.save(commit=False)
+        ssn.save()
 
 class SubnetworkForm(ModelForm):
     class Meta:
@@ -146,7 +146,7 @@ class SubnetworkForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         sn = Subnetwork(**data)
-        sn.save(commit=False)
+        sn.save()
 
 class ZipcodeForm(ModelForm):
     class Meta:
@@ -154,7 +154,7 @@ class ZipcodeForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         zc = Zipcode(**data)
-        zc.save(commit=False)
+        zc.save()
 
 class NetworkForm(ModelForm):
     class Meta:
@@ -162,4 +162,4 @@ class NetworkForm(ModelForm):
     def save(self):
         data = self.cleaned_data
         n = Network(**data)
-        n.save(commit=False)
+        n.save()
