@@ -24,15 +24,15 @@
           <div></div></td></tr></table>
     
          <div align="right" id='{{tbl_instance}}' style='display:none'>
+             <!--
              <table style="width:50%; height:100%; background-color:yellow" class="sortable">{{ table|lookup:tbl_instance|safe }}</table>
-             <!--             
+             --> 
              <form method="post" action="">{% csrf_token %}
-             <table style="align:right">
-             {{ table.tbl_instance }}
+             <table>
+             {{ table|lookup:tbl_instance }}
              </table>
              <input type="submit" value="Submit" />
              </form>
-             -->
          </div>
     {% endfor%}
 

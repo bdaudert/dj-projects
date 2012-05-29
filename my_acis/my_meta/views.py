@@ -119,8 +119,12 @@ def station_tables(request):
                     if "ucan_station_id" in [ f.name for f in instance._meta.fields ]:
                         inst_name='%s_%d' % (name, i+1)
                         table_dir[name].append(inst_name)
-                        table[inst_name] = set_as_table2(instance)
-                        #table[inst_name] = set_as_form(request, name, ucan_id)
+                        #table[inst_name] = set_as_table2(instance)
+                        form = set_as_form(request, name, instance, ucan_id)
+                        table[inst_name] = form
+                        if form.is_valid():
+                            form.save()
+                            content['safed'] = "Information safed"
         context['ucan_station_id'] = ucan_id
         context['table'] = table
         context['table_dir'] = dict(table_dir)
@@ -162,8 +166,8 @@ def station_maintenance(request, ucan_id):
         else:
             context['saved'] = "Information NOT saved."
     else:
-        form = StationMaintenanceForm(initial={'ucan_station_id': ucan_id})
-
+        (form, ucan_found) = StationMaintenanceForm(initial={'ucan_station_id': ucan_id})
+    context['ucan_found'] = ucan_found
     context['form'] = form
     context['station_maintenance'] = set_as_table(StationMaintenance.objects.filter(ucan_station_id=ucan_id))
     return render_to_response('my_meta/station_maintenance.html', context, context_instance=RequestContext(request))
@@ -268,23 +272,18 @@ def set_as_table2(qs):
         raise
     return "\n".join(headers + rows)
 
-def set_as_form(request, tbl_name, ucan_station_id = None):
+def set_as_form(request, tbl_name, instance = None, ucan_station_id = None):
     if ucan_station_id is None:
         if request.POST:
             form_call = "%sForm(request.POST)" % tbl_name
         else:
             form_call = "%sForm(initial={'tble_name': %s})" % ( tbl_name, tbl_name )
     else:
-        tbl_call = "%s.objects.get(ucan_station_id=%s)" % ( tbl_name, ucan_station_id )
-        tbl = eval(tbl_call)
         if request.POST:
-            form_call = "%sForm(request.POST, instance = %s )" % ( tbl_name, tbl )
+            form_call = "%sForm(request.POST, instance=instance)" % tbl_name
         else:
             form_call = "%sForm(initial={'tble_name': %s})" % ( tbl_name, tbl_name )
-    form = eval(form_call)
-    if form.is_valid():
-        form.save()
-        print "Information safed"
+    form =  eval(form_call)
     return form
 
 def set_as_dict(qs):
