@@ -15,8 +15,8 @@ from my_meta.forms import *
 #My  additions. FIX ME: get rid of from import *
 from collections import defaultdict
 import inspect
-from models import acis_models, common
 import models
+import my_meta.forms
 from django.forms.models import modelformset_factory
 
 def home_view(request):
@@ -117,14 +117,13 @@ def station_tables(request):
                 instances = obj.objects.filter(pk=ucan_id)
                 for i, instance in enumerate(instances):
                     if "ucan_station_id" in [ f.name for f in instance._meta.fields ]:
-                        inst_name='%s_%d' % (name, i+1)
+                        inst_name = '%s_%d' % (name, i+1)
                         table_dir[name].append(inst_name)
-                        #table[inst_name] = set_as_table2(instance)
-                        form = set_as_form(request, name, instance, ucan_id)
+                        #FIX ME: can't get set_as table to work with instance
+                        form = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
                         table[inst_name] = form
-                        if form.is_valid():
-                            form.save()
-                            content['safed'] = "Information safed"
+                        #table[inst_name] = set_as_form2(instance)
+                        #table[inst_name] = set_as_table2(instance)
         context['ucan_station_id'] = ucan_id
         context['table'] = table
         context['table_dir'] = dict(table_dir)
@@ -136,16 +135,6 @@ def add(request):
         'title': tbl_name,
     }
     form = set_as_form(request, tbl_name)
-    #if request.POST:
-    #    form_call = "%sForm(request.POST)" % tbl_name
-    #    form = eval(form_call)
-    #    form_name = "%sForm"
-    #    if form.is_valid():
-    #        form.save()
-    #        context['saved'] = "Information saved."
-    #else:
-    #    form_call = "%sForm(initial={'tble_name': %s})" % ( tbl_name, tbl_name )
-    #    form = eval(form_call)
     context['tbl_name'] = tbl_name
     context['form'] = form
     return render_to_response('my_meta/add.html', context, context_instance=RequestContext(request))
@@ -272,19 +261,37 @@ def set_as_table2(qs):
         raise
     return "\n".join(headers + rows)
 
-def set_as_form(request, tbl_name, instance = None, ucan_station_id = None):
+def set_as_form(request, tbl_name, q= None,  ucan_station_id = None):
+
+    form_name = "%sForm" % tbl_name
+    form_class = getattr(my_meta.forms, form_name)
     if ucan_station_id is None:
         if request.POST:
-            form_call = "%sForm(request.POST)" % tbl_name
+            form = form_class(request.POST)
         else:
-            form_call = "%sForm(initial={'tble_name': %s})" % ( tbl_name, tbl_name )
+            form = form_class(initial={'tble_name': tbl_name})
     else:
+        if q is None or ucan_station_id is None:
+            raise
+
         if request.POST:
-            form_call = "%sForm(request.POST, instance=instance)" % tbl_name
+            form = form_class(request.POST,instance=q)
         else:
-            form_call = "%sForm(initial={'tble_name': %s})" % ( tbl_name, tbl_name )
-    form =  eval(form_call)
+            form = form_class(instance=q)
+    if form.is_valid():
+        form.save()
     return form
+
+def set_as_form2(qs):
+    first = True
+    rows = []
+    if hasattr(qs, '_meta'):
+        for f in qs._meta.fields:
+            rows.append("%s: <input name=\" %s \" value=\" %s \" /><br />" % ( f.name, f.name, break_text(getattr(qs, f.name))))
+    else:
+        raise
+    return "\n".join(rows)
+
 
 def set_as_dict(qs):
     """
