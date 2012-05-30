@@ -11,14 +11,17 @@
 
 <h2>Add {{ tbl_name }}</h2>
 
+{% if saved %}
+<p>{{saved|safe}}</p>
+{% endif %}
+
+
 <form method="post" action="">{% csrf_token %}
 <table style="align:left">
     {{ form }}
 </table>
 <input type="submit" value="Submit" />
 </form>
-
-<p>{{ safed }}</p>
 
 {% endblock %}
 

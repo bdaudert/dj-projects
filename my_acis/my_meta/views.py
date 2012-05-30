@@ -118,7 +118,13 @@ def station_tables(request):
                     if "ucan_station_id" in [ f.name for f in instance._meta.fields ]:
                         inst_name = '%s_%d' % (name, i+1)
                         table_dir[name].append(inst_name)
-                        table[inst_name] = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
+                        form = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
+                        table[inst_name] = form
+                        if form.is_valid():
+                            form.save()
+                            context['safed'] = "Information saved"
+                        else:
+                            context['safed'] = "Information not saved"
         context['ucan_station_id'] = ucan_id
         context['table'] = table
         context['table_dir'] = dict(table_dir)
@@ -130,6 +136,11 @@ def add(request):
         'title': tbl_name,
     }
     form = set_as_form(request, tbl_name)
+    if form.is_valid():
+        form.save()
+        context['saved'] = "Information saved"
+    else:
+        context['saved'] = "Information NOT saved."
     context['tbl_name'] = tbl_name
     context['form'] = form
     return render_to_response('my_meta/add.html', context, context_instance=RequestContext(request))
@@ -273,8 +284,8 @@ def set_as_form(request, tbl_name, q= None,  ucan_station_id = None):
             form = form_class(request.POST,instance=q)
         else:
             form = form_class(instance=q)
-    if form.is_valid():
-        form.save()
+    #if form.is_valid():
+    #    form.save()
     return form
 
 def break_text(s,num=60,sep="<br />"):
