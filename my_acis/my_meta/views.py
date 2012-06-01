@@ -126,14 +126,14 @@ def station_tables(request):
                     table[inst_name] = form
                     #table[inst_name]  =  set_as_table2(instance)
         for inst, frm in table.iteritems():
-            if frm.is_valid():
+            if inst in request.POST and frm.is_valid():
                 frm.save()
                 saved.append("Information for %s saved" % inst)
             else:
-                errors.append("Could not save information for %s"  % inst)
+                #errors.append("Could not save information for %s"  % inst)
                 context['error'] = True
-        context['saved'] = saved
-        context['errors'] = errors
+        #context['saved'] = saved
+        #context['errors'] = errors
         context['ucan_station_id'] = ucan_id
         context['table'] = table
         context['table_dir'] = dict(table_dir)
