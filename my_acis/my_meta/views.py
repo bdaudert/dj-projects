@@ -18,6 +18,7 @@ from django.db.models.query import QuerySet
 import models
 import my_meta.forms as mforms
 
+
 def home_view(request):
     context = {
         'state_choices': mforms.STATE_CHOICES,
