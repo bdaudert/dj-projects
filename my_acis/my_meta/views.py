@@ -105,30 +105,44 @@ def station_detail(request):
 
 def station_tables(request):
     ucan_id = request.GET.get('ucan_id', None)
+    errors = []
+    error =  False
+    saved = []
     context = {
         'title': "Available tables"
     }
+    context['saved'] = "Please feel free to edit an existing record or add a new one!"
     if ucan_id:
         ucan_id = int(ucan_id)
         table_dir = defaultdict(list)
         table = {}
         for name, obj in inspect.getmembers(models):
-            if inspect.isclass(obj) and hasattr(obj, 'pk'):
-                instances = obj.objects.filter(pk=ucan_id)
+            if inspect.isclass(obj) and hasattr(obj, '_meta') and "ucan_station_id" in [ f.name for f in obj._meta.fields ]:
+                instances = obj.objects.filter(ucan_station_id=ucan_id)
                 for i, instance in enumerate(instances):
-                    if "ucan_station_id" in [ f.name for f in instance._meta.fields ]:
-                        inst_name = '%s_%d' % (name, i+1)
-                        table_dir[name].append(inst_name)
-                        form = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
-                        table[inst_name] = form
-                        if form.is_valid():
-                            form.save()
-                            context['safed'] = "Information saved"
-                        else:
-                            context['safed'] = "Information not saved"
+                    inst_name = '%s_%d' % (name, i+1)
+                    table_dir[name].append(inst_name)
+                    form = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
+                    table[inst_name] = form
+                    #table[inst_name]  =  set_as_table2(instance)
+        for inst, frm in table.iteritems():
+            if frm.is_valid():
+                frm.save()
+                saved.append("Information for %s saved" % inst)
+            else:
+                errors.append("Could not save information for %s"  % inst)
+                context['error'] = True
+        context['saved'] = saved
+        context['errors'] = errors
         context['ucan_station_id'] = ucan_id
         context['table'] = table
         context['table_dir'] = dict(table_dir)
+    return render_to_response('my_meta/station_tables.html', context, context_instance=RequestContext(request))
+
+def submit(request):
+    context = {
+        'title': "Submited",
+    }
     return render_to_response('my_meta/station_tables.html', context, context_instance=RequestContext(request))
 
 def add(request):
@@ -269,7 +283,6 @@ def set_as_table2(qs):
     return "\n".join(headers + rows)
 
 def set_as_form(request, tbl_name, q= None,  ucan_station_id = None):
-
     form_name = "%sForm" % tbl_name
     form_class = getattr(mforms, form_name)
     if ucan_station_id is None:

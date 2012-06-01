@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     (r'^my_meta/station_detail/$', 'my_meta.views.station_detail'),
     (r'^my_meta/station_tables/$', 'my_meta.views.station_tables'),
     (r'^my_meta/station_tables/add/$', 'my_meta.views.add'),
+    (r'^my_meta/station_tables/submit/$', 'my_meta.views.submit'),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

@@ -14,3 +14,11 @@ def in_double_quotes(d_name):
 @register.filter(name='in_single_quotes')
 def in_single_quotes(d_name):
     return '%s' % d_name
+
+@register.filter
+def is_false(arg):
+    return arg is False
+
+@register.filter
+def is_true(arg):
+    return arg is True
