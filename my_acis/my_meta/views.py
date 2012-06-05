@@ -105,9 +105,6 @@ def station_detail(request):
 
 def station_tables(request):
     ucan_id = request.GET.get('ucan_id', None)
-    errors = []
-    error =  False
-    saved = []
     context = {
         'title': "Available tables"
     }
@@ -122,18 +119,10 @@ def station_tables(request):
                 for i, instance in enumerate(instances):
                     inst_name = '%s_%d' % (name, i+1)
                     table_dir[name].append(inst_name)
-                    form = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
-                    table[inst_name] = form
                     #table[inst_name]  =  set_as_table2(instance)
-        for inst, frm in table.iteritems():
-            if inst in request.POST and frm.is_valid():
-                frm.save()
-                saved.append("Information for %s saved" % inst)
-            else:
-                #errors.append("Could not save information for %s"  % inst)
-                context['error'] = True
-        #context['saved'] = saved
-        #context['errors'] = errors
+                    (form, err) = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
+                    table[inst_name] = form
+        context['error'] = err
         context['ucan_station_id'] = ucan_id
         context['table'] = table
         context['table_dir'] = dict(table_dir)
@@ -150,12 +139,11 @@ def add(request):
     context = {
         'title': tbl_name,
     }
-    form = set_as_form(request, tbl_name)
-    if form.is_valid():
-        form.save()
-        context['saved'] = "Information saved"
+    (form, err) = set_as_form(request, tbl_name)
+    if err:
+        context['saved'] = "Information NOT saved :-(."
     else:
-        context['saved'] = "Information NOT saved."
+        context['saved'] = "Information saved :-)."
     context['tbl_name'] = tbl_name
     context['form'] = form
     return render_to_response('my_meta/add.html', context, context_instance=RequestContext(request))
@@ -283,11 +271,16 @@ def set_as_table2(qs):
     return "\n".join(headers + rows)
 
 def set_as_form(request, tbl_name, q= None,  ucan_station_id = None):
+    err = False
     form_name = "%sForm" % tbl_name
     form_class = getattr(mforms, form_name)
-    if ucan_station_id is None:
+    if ucan_station_id is None and q is None:
         if request.POST:
             form = form_class(request.POST)
+            if form.is_valid():
+                form.save()
+            else:
+                err = True
         else:
             form = form_class(initial={'tble_name': tbl_name})
     else:
@@ -296,11 +289,13 @@ def set_as_form(request, tbl_name, q= None,  ucan_station_id = None):
 
         if request.POST:
             form = form_class(request.POST,instance=q)
+            if form.is_valid():
+                form.save()
+            else:
+                err = True
         else:
             form = form_class(instance=q)
-    #if form.is_valid():
-    #    form.save()
-    return form
+    return form, err
 
 def break_text(s,num=60,sep="<br />"):
     """ Return string s with separator every num words."""
