@@ -31,6 +31,7 @@ class StationEquipmentForm(ModelForm):
 class StationNetworkForm(ModelForm):
     class Meta:
         model = StationNetwork
+        exclude = ('begin_date', 'begin_date_flag', 'end_date', 'end_date_flag',)
     def save(self):
         data = self.cleaned_data
         sn = StationNetwork(**data)
@@ -39,6 +40,7 @@ class StationNetworkForm(ModelForm):
 class StationAltNameForm(ModelForm):
     class Meta:
         model = StationAltName
+        exclude = ('begin_date', 'begin_date_flag', 'end_date', 'end_date_flag',)
     def save(self):
         data = self.cleaned_data
         san = StationAltName(**data)
@@ -47,6 +49,7 @@ class StationAltNameForm(ModelForm):
 class StationDigitalForm(ModelForm):
     class Meta:
         model = StationDigital
+        exclude = ('begin_date', 'end_date',)
     def save(self):
         data = self.cleaned_data
         sd = StationDigital(**data)
@@ -71,6 +74,7 @@ class ClimDivForm(ModelForm):
 class CountyForm(ModelForm):
     class Meta:
         model = County
+        exclude = ('begin_date', 'begin_date_flag', 'end_date', 'end_date_flag',)
     def save(self):
         data = self.cleaned_data
         c = County(**data)
@@ -79,6 +83,7 @@ class CountyForm(ModelForm):
 class StationCountyForm(ModelForm):
     class Meta:
         model = StationCounty
+        exclude = ('begin_date', 'begin_date_flag', 'end_date', 'end_date_flag',)
     def save(self):
         data = self.cleaned_data
         sc = StationCounty(**data)
@@ -96,6 +101,7 @@ class StationForm(ModelForm):
 class StationLocationForm(ModelForm):
     class Meta:
         model = StationLocation
+        exclude = ('begin_date', 'begin_date_flag', 'end_date', 'end_date_flag',)
     def save(self):
         data = self.cleaned_data
         sl = StationLocation(**data)
@@ -104,6 +110,7 @@ class StationLocationForm(ModelForm):
 class VariableForm(ModelForm):
     class Meta:
         model = Variable
+        exclude = ('begin_date', 'end_date',)
     def save(self):
         data = self.cleaned_data
         v = Variable(**data)
@@ -112,6 +119,7 @@ class VariableForm(ModelForm):
 class StationTimeZoneForm(ModelForm):
     class Meta:
         model = StationTimeZone
+        exclude = ('begin_date', 'begin_date_flag', 'end_date', 'end_date_flag',)
     def save(self):
         data = self.cleaned_data
         tz = StationTimeZone(**data)
@@ -164,3 +172,11 @@ class NetworkForm(ModelForm):
         data = self.cleaned_data
         n = Network(**data)
         n.save()
+
+class StationTimeZoneForm(ModelForm):
+    class Meta:
+        model = StationTimeZone
+    def save(self):
+        data = self.cleaned_data
+        stz = StationTimeZone(**data)
+        stz.save()

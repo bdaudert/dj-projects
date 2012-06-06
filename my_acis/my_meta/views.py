@@ -19,6 +19,7 @@ import models
 import my_meta.forms as mforms
 
 
+
 def home_view(request):
     context = {
         'state_choices': mforms.STATE_CHOICES,
@@ -104,35 +105,35 @@ def station_detail(request):
     return render_to_response('my_meta/station_detail.html', context, context_instance=RequestContext(request))
 
 def station_tables(request):
+    primary_tables = {'Station': models.Station, 'StationLocation': models.StationLocation, 'StationNetwork': models.StationNetwork, 'StationAltName': models.StationAltName, 'StationTimeZone': models.StationTimeZone, 'StationClimDiv': models.StationClimDiv, 'StationCounty': models.StationCounty, 'StationEquipment': models.StationEquipment, 'StationMaintenance':models.StationMaintenance, 'StationPhysical': models.StationPhysical }
+    #, 'StationPhoto': models.StationPhoto }
     ucan_id = request.GET.get('ucan_id', None)
     context = {
-        'title': "Available tables"
+        'title': "Populated tables for this Station"
     }
-    context['saved'] = "Please feel free to edit an existing record or add a new one!"
     if ucan_id:
         ucan_id = int(ucan_id)
         table_dir = defaultdict(list)
         table = {}
-        for name, obj in inspect.getmembers(models):
-            if inspect.isclass(obj) and hasattr(obj, '_meta') and "ucan_station_id" in [ f.name for f in obj._meta.fields ]:
-                instances = obj.objects.filter(ucan_station_id=ucan_id)
-                for i, instance in enumerate(instances):
-                    inst_name = '%s_%d' % (name, i+1)
-                    table_dir[name].append(inst_name)
-                    #table[inst_name]  =  set_as_table2(instance)
-                    (form, err) = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
-                    table[inst_name] = form
-        context['error'] = err
+        errors = defaultdict(dict)
+        for name, obj in primary_tables.iteritems():
+            instances = obj.objects.filter(ucan_station_id=ucan_id)
+            if not instances:
+                table_dir[name]= []
+                continue
+            for i, instance in enumerate(instances):
+                inst_name = '%s_%d' % (name, i+1)
+                table_dir[name].append(inst_name)
+                #table[inst_name]  =  set_as_table2(instance)
+                (form, err) = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
+                table[inst_name] = form
+                errors[inst_name] = form.errors
+        context['errors'] = dict(errors)
         context['ucan_station_id'] = ucan_id
         context['table'] = table
         context['table_dir'] = dict(table_dir)
     return render_to_response('my_meta/station_tables.html', context, context_instance=RequestContext(request))
 
-def submit(request):
-    context = {
-        'title': "Submited",
-    }
-    return render_to_response('my_meta/station_tables.html', context, context_instance=RequestContext(request))
 
 def add(request):
     tbl_name = request.GET.get('tbl_name', None)

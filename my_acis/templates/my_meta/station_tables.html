@@ -15,22 +15,32 @@
     <input type="submit" value="Submit" />
 </form>
 
-
-{% if error|is_true %}
-<p>Error submitting the form. Please check all entries for correctness and resubmit the form.</p>   
-{%endif%}
-
+<!--
 {% if error|is_false %}
-<p>No errors</p> 
-{% endif%}
+<p>Hunky Dory! :-)</p></br>
+<p>{{ errors }}</p>   
+{% endif %}
+-->
+
 
 
 {% if ucan_station_id %}
 
 {% for tbl_name, tbl_instances in table_dir.items %}
+    
+    {% for tbl_instance in tbl_instances %}
+        {% if errors|lookup:tbl_instance %}
+            <span style="color:red">
+            <p>The following errors were found:</p>
+               <li>In {{ tbl_name }}:</li> 
+                  <ul><li>{{ errors|lookup:tbl_instance|safe }}</li></ul>
+            </span>        
+        {% endif %}
+    {% endfor %}  
+
     <table style="width:100%; border:0" ><tr><td><a onClick="Toggle(this)"><img src="{{ MEDIA_URL }}img/plus.gif">{{ tbl_name }}</a><div style='display:none'>
 
-    {%for tbl_instance in tbl_instances %}
+    {% for tbl_instance in tbl_instances %}
           <table border=0><tr><td><a href="javascript:void(0)" onclick="ShowHide('{{tbl_instance}}')"><img src="{{ MEDIA_URL }}img/leaf.gif">{{ tbl_instance }} Show/Hide</a>
           <div></div></td></tr></table>
     
@@ -41,7 +51,8 @@
                   <input type="submit" value="Edit" name="{{tbl_instance}}"/>
                 </form>
          </div>
-    {% endfor%}
+
+    {% endfor %}
 
     <a href="add/?tbl_name={{tbl_name}}">ADD</a>
    </div></td></tr></table>
