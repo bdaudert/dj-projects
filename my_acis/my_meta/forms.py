@@ -4,6 +4,7 @@ from my_meta.models import *
 from django import forms
 
 class StationMaintenanceForm(ModelForm):
+    remark = forms.CharField(required=False)
     class Meta:
         model = StationMaintenance
     def save(self):
@@ -13,6 +14,7 @@ class StationMaintenanceForm(ModelForm):
 
 
 class StationPhysicalForm(ModelForm):
+    remark = forms.CharField(required=False)
     class Meta:
         model = StationPhysical
     def save(self):
@@ -21,6 +23,7 @@ class StationPhysicalForm(ModelForm):
         sp.save()
 
 class StationEquipmentForm(ModelForm):
+    remark = forms.CharField(required=False)
     class Meta:
         model = StationEquipment
     def save(self):
@@ -29,6 +32,7 @@ class StationEquipmentForm(ModelForm):
         se.save()
 
 class StationNetworkForm(ModelForm):
+    remark = forms.CharField(required=False)
     class Meta:
         model = StationNetwork
         #exclude = ('begin_date', 'begin_date_flag', 'end_date', 'end_date_flag',)
@@ -38,6 +42,7 @@ class StationNetworkForm(ModelForm):
         sn.save()
 
 class StationAltNameForm(ModelForm):
+    remark = forms.CharField(required=False)
     class Meta:
         model = StationAltName
         #exclude = ('begin_date', 'begin_date_flag', 'end_date', 'end_date_flag',)
@@ -56,6 +61,7 @@ class StationDigitalForm(ModelForm):
         sd.save()
 
 class StationClimDivForm(ModelForm):
+    remark = forms.CharField(required=False)
     class Meta:
         model = StationClimDiv
     def save(self):
@@ -64,6 +70,7 @@ class StationClimDivForm(ModelForm):
         scd.save()
 
 class ClimDivForm(ModelForm):
+    remark = forms.CharField(required=False)
     class Meta:
         model = ClimDiv
     def save(self):
@@ -72,6 +79,7 @@ class ClimDivForm(ModelForm):
         cd.save()
 
 class CountyForm(ModelForm):
+    remark = forms.CharField(required=False)
     class Meta:
         model = County
         #exclude = ('begin_date', 'begin_date_flag', 'end_date', 'end_date_flag',)
@@ -81,6 +89,7 @@ class CountyForm(ModelForm):
         c.save()
 
 class StationCountyForm(ModelForm):
+    remark = forms.CharField(required=False)
     class Meta:
         model = StationCounty
         #exclude = ('begin_date', 'begin_date_flag', 'end_date', 'end_date_flag',)
@@ -90,6 +99,7 @@ class StationCountyForm(ModelForm):
         sc.save()
 
 class StationForm(ModelForm):
+    remark = forms.CharField(required=False)
     class Meta:
         model = Station
     def save(self):
@@ -99,6 +109,7 @@ class StationForm(ModelForm):
 
 
 class StationLocationForm(ModelForm):
+    remark = forms.CharField(required=False)
     class Meta:
         model = StationLocation
         #exclude = ('begin_date', 'begin_date_flag', 'end_date', 'end_date_flag',)
@@ -108,15 +119,17 @@ class StationLocationForm(ModelForm):
         sl.save()
 
 class VariableForm(ModelForm):
+    #ucan_station_id = forms.IntegerField(widget=forms.widgets.HiddenInput)
     class Meta:
         model = Variable
-        exclude = ('begin_date', 'end_date',)
+        #exclude = ('begin_date', 'end_date',)
     def save(self):
         data = self.cleaned_data
         v = Variable(**data)
         v.save()
 
 class StationTimeZoneForm(ModelForm):
+    remark = forms.CharField(required=False)
     class Meta:
         model = StationTimeZone
         #exclude = ('begin_date', 'begin_date_flag', 'end_date', 'end_date_flag',)
@@ -126,6 +139,7 @@ class StationTimeZoneForm(ModelForm):
         tz.save()
 
 class IdTypeForm(ModelForm):
+    remark = forms.CharField(required=False)
     class Meta:
         model = IdType
     def save(self):
@@ -134,6 +148,7 @@ class IdTypeForm(ModelForm):
         it.save()
 
 class StateForm(ModelForm):
+    remark = forms.CharField(required=False)
     class Meta:
         model = State
     def save(self):
@@ -166,6 +181,7 @@ class ZipcodeForm(ModelForm):
         zc.save()
 
 class NetworkForm(ModelForm):
+    remark = forms.CharField(required=False)
     class Meta:
         model = Network
     def save(self):
@@ -174,6 +190,7 @@ class NetworkForm(ModelForm):
         n.save()
 
 class StationTimeZoneForm(ModelForm):
+    remark = forms.CharField(required=False)
     class Meta:
         model = StationTimeZone
     def save(self):

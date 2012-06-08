@@ -27,9 +27,10 @@
     
 {% ifequal tbl_name 'StationNetwork' %}
     <p><span style="color:green">Variable, Network, Subnetwork</span></p>
+    <a href="/my_meta/add/?tbl_name=Variable&ucan_id={{ucan_station_id}}">ADD Variable</a><br />
 {% endifequal %}
 
-<a href="/my_meta/add/?tbl_name={{tbl_name}}&ucan_id={{ucan_station_id}}">ADD</a>
+<a href="/my_meta/add/?tbl_name={{tbl_name}}&ucan_id={{ucan_station_id}}">ADD {{tbl_name}}</a><br />
     
 </div></td></tr></table>
 

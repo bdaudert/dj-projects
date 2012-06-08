@@ -18,7 +18,7 @@ urlpatterns = patterns('',
     (r'^my_meta/by_location/$', 'my_meta.views.by_location'),
     (r'^my_meta/station_detail/$', 'my_meta.views.station_detail'),
     (r'^my_meta/station_tables/$', 'my_meta.views.station_tables'),
-    (r'^my_meta/(?P<tbl_name>[Station][Network|AltName|Physical|ClimDiv|Maintenance|Equipment|Location|County|TimeZone]*)/(?P<tbl_id>\d+)/$', 'my_meta.views.sub_tables'),
+    (r'^my_meta/(?P<tbl_name>[Station][Location|Network|Subnetwork|AltName|TimeZone|ClimDiv|County|Digital|Equipment|Maintenance|Physical|Photo|Contact]*)/(?P<tbl_id>\d+)/$', 'my_meta.views.sub_tables'),
     #(r'^my_meta/Station/(?P<tbl_id>\d+)/$', 'my_meta.views.sub_tables'),
     (r'^my_meta/add/$', 'my_meta.views.add'),
     # Uncomment the admin/doc line below to enable admin documentation:

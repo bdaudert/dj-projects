@@ -18,8 +18,8 @@ from django.db.models.query import QuerySet
 import models
 import my_meta.forms as mforms
 
-primary_tables = { 'Station': models.Station, 'StationLocation': models.StationLocation, 'StationNetwork': models.StationNetwork, 'StationAltName': models.StationAltName, 'StationTimeZone': models.StationTimeZone, 'StationClimDiv': models.StationClimDiv, 'StationCounty': models.StationCounty, 'StationEquipment': models.StationEquipment, 'StationMaintenance':models.StationMaintenance, 'StationPhysical': models.StationPhysical }
-    #, 'StationPhoto': models.StationPhoto }
+primary_tables = { 'Station': models.Station, 'StationLocation': models.StationLocation, 'StationNetwork': models.StationNetwork, 'StationSubnetwork':models.StationSubnetwork, 'StationAltName': models.StationAltName, 'StationTimeZone': models.StationTimeZone, 'StationClimDiv': models.StationClimDiv, 'StationCounty': models.StationCounty,'StationDigital': models.StationDigital, 'StationEquipment': models.StationEquipment, 'StationMaintenance':models.StationMaintenance, 'StationPhysical': models.StationPhysical }
+    #, 'StationPhoto': models.StationPhoto, 'StationContact': models.StationContact }
 
 sub_tables = { 'Variable': models.Variable, 'Network': models.Network, 'Subnetwork': models.Subnetwork }
 
@@ -133,7 +133,7 @@ def sub_tables(request, tbl_name, tbl_id):
     context = {
         'title': "Secondary tables for this Station"
     }
-    context['primary_table'] = "%s_"
+    context['primary_table'] = "%s_%d" % (tbl_name, int(tbl_id))
     if ucan_id:
         tables = {}
         errors = defaultdict(dict)
@@ -164,11 +164,10 @@ def add(request):
         'title': "Add"
     }
     form = set_as_form(request, tbl_name, init={'ucan_station_id': ucan_id})
-    #form.ucan_station_id = ucan_id
-    if form.errors:
-        context['saved'] = form.errors
-    else:
+    if form and not form.errors:
         context['saved'] = "Information saved :-)."
+    else:
+        context['saved'] = "Following errors occurred:"
     context['tbl_name'] = tbl_name
     context['form'] = form
 
