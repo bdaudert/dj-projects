@@ -21,7 +21,6 @@ urlpatterns = patterns('',
     (r'^my_meta/(?P<tbl_name>[Station][Network|AltName|Physical|ClimDiv|Maintenance|Equipment|Location|County|TimeZone]*)/(?P<tbl_id>\d+)/$', 'my_meta.views.sub_tables'),
     #(r'^my_meta/Station/(?P<tbl_id>\d+)/$', 'my_meta.views.sub_tables'),
     (r'^my_meta/add/$', 'my_meta.views.add'),
-    (r'^my_meta/edit/$', 'my_meta.views.edit'),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

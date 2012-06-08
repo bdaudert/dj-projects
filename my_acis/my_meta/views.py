@@ -141,7 +141,7 @@ def sub_tables(request, tbl_name, tbl_id):
         context['primary_table_name'] = tbl_name_idxed
         obj = primary_tables[tbl_name]
         primary_inst = obj.objects.filter(ucan_station_id=ucan_id)[int(tbl_id)]
-        (form, err) = set_as_form(request, tbl_name, q=primary_inst, ucan_station_id=ucan_id)
+        form = set_as_form(request, tbl_name, q=primary_inst, ucan_station_id=ucan_id)
         primary_table = form
         context['primary_table'] = primary_table
         errors[tbl_name_idxed] = form.errors
@@ -149,7 +149,7 @@ def sub_tables(request, tbl_name, tbl_id):
             var_s = models.Variable.objects.filter(ucan_station_id=ucan_id, network_station_id=primary_inst.network_station_id)
             for j, v in enumerate(var_s):
                 var_name = 'Variable_%d_%d' % (int(tbl_id), j)
-                (form, err) = set_as_form(request, 'Variable', q=v, ucan_station_id=ucan_id)
+                form = set_as_form(request, 'Variable', q=v, ucan_station_id=ucan_id)
                 tables[var_name] = form
                 errors[var_name] = form.errors
         context['ucan_station_id'] = ucan_id
@@ -157,30 +157,21 @@ def sub_tables(request, tbl_name, tbl_id):
         context['tables'] = tables
     return render_to_response('my_meta/sub_tables.html', context, context_instance=RequestContext(request))
 
-def edit(request):
+def add(request):
     tbl_name = request.GET.get('tbl_name', None)
     ucan_id = request.GET.get('ucan_id', None)
     context = {
-        'title': "Edit"
-    }
-    obj = primary_tables[tbl_name]
-    instance
-    context['ucan_station_id'] = ucan_id
-    context['tbl_name'] = tbl_name
-    return render_to_response('my_meta/edit.html', context, context_instance=RequestContext(request))
-
-def add(request):
-    tbl_name = request.GET.get('tbl_name', None)
-    context = {
         'title': "Add"
     }
-    (form, err) = set_as_form(request, tbl_name)
-    if err:
-        context['saved'] = "Information NOT saved :-(."
+    form = set_as_form(request, tbl_name, init={'ucan_station_id': ucan_id})
+    #form.ucan_station_id = ucan_id
+    if form.errors:
+        context['saved'] = form.errors
     else:
         context['saved'] = "Information saved :-)."
     context['tbl_name'] = tbl_name
     context['form'] = form
+
     return render_to_response('my_meta/add.html', context, context_instance=RequestContext(request))
 
 
@@ -305,8 +296,7 @@ def set_as_table2(qs):
         raise
     return "\n".join(headers + rows)
 
-def set_as_form(request, tbl_name, q= None,  ucan_station_id = None):
-    err = False
+def set_as_form(request, tbl_name, q= None,  ucan_station_id = None, init = None):
     form_name = "%sForm" % tbl_name
     form_class = getattr(mforms, form_name)
     if ucan_station_id is None and q is None:
@@ -314,10 +304,11 @@ def set_as_form(request, tbl_name, q= None,  ucan_station_id = None):
             form = form_class(request.POST)
             if form.is_valid():
                 form.save()
-            else:
-                err = True
         else:
-            form = form_class(initial={'tble_name': tbl_name})
+            if init is not None:
+                form = form_class(initial=init)
+            else:
+                form = form_class(initial={'tble_name': tbl_name})
     else:
         if q is None or ucan_station_id is None:
             raise
@@ -326,11 +317,9 @@ def set_as_form(request, tbl_name, q= None,  ucan_station_id = None):
             form = form_class(request.POST,instance=q)
             if form.is_valid():
                 form.save()
-            else:
-                err = True
         else:
             form = form_class(instance=q)
-    return form, err
+    return form
 
 def break_text(s,num=60,sep="<br />"):
     """ Return string s with separator every num words."""

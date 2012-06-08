@@ -29,7 +29,7 @@
 {% for tbl_name, form in tables.items %}
     
 
-    {% if errors|lookup:tbl_instance %}
+    {% if errors|lookup:tbl_name %}
         <span style="color:red">
         <p>The following errors were found:</p>
            <li>In {{ tbl_name }}:</li>
