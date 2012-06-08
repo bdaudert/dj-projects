@@ -22,3 +22,7 @@ def is_false(arg):
 @register.filter
 def is_true(arg):
     return arg is True
+
+@register.filter
+def get_id(tbl_instance):
+    return tbl_instance.split("_")[-1]

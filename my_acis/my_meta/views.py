@@ -18,7 +18,10 @@ from django.db.models.query import QuerySet
 import models
 import my_meta.forms as mforms
 
+primary_tables = { 'Station': models.Station, 'StationLocation': models.StationLocation, 'StationNetwork': models.StationNetwork, 'StationAltName': models.StationAltName, 'StationTimeZone': models.StationTimeZone, 'StationClimDiv': models.StationClimDiv, 'StationCounty': models.StationCounty, 'StationEquipment': models.StationEquipment, 'StationMaintenance':models.StationMaintenance, 'StationPhysical': models.StationPhysical }
+    #, 'StationPhoto': models.StationPhoto }
 
+sub_tables = { 'Variable': models.Variable, 'Network': models.Network, 'Subnetwork': models.Subnetwork }
 
 def home_view(request):
     context = {
@@ -105,16 +108,13 @@ def station_detail(request):
     return render_to_response('my_meta/station_detail.html', context, context_instance=RequestContext(request))
 
 def station_tables(request):
-    primary_tables = {'Station': models.Station, 'StationLocation': models.StationLocation, 'StationNetwork': models.StationNetwork, 'StationAltName': models.StationAltName, 'StationTimeZone': models.StationTimeZone, 'StationClimDiv': models.StationClimDiv, 'StationCounty': models.StationCounty, 'StationEquipment': models.StationEquipment, 'StationMaintenance':models.StationMaintenance, 'StationPhysical': models.StationPhysical }
-    #, 'StationPhoto': models.StationPhoto }
     ucan_id = request.GET.get('ucan_id', None)
     context = {
-        'title': "Populated tables for this Station"
+        'title': "Primary tables for this Station"
     }
     if ucan_id:
         ucan_id = int(ucan_id)
         table_dir = defaultdict(list)
-        table = {}
         errors = defaultdict(dict)
         for name, obj in primary_tables.iteritems():
             instances = obj.objects.filter(ucan_station_id=ucan_id)
@@ -122,23 +122,57 @@ def station_tables(request):
                 table_dir[name]= []
                 continue
             for i, instance in enumerate(instances):
-                inst_name = '%s_%d' % (name, i+1)
+                inst_name = '%s_%d' % (name, i)
                 table_dir[name].append(inst_name)
-                #table[inst_name]  =  set_as_table2(instance)
-                (form, err) = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
-                table[inst_name] = form
-                errors[inst_name] = form.errors
-        context['errors'] = dict(errors)
         context['ucan_station_id'] = ucan_id
-        context['table'] = table
         context['table_dir'] = dict(table_dir)
     return render_to_response('my_meta/station_tables.html', context, context_instance=RequestContext(request))
 
+def sub_tables(request, tbl_name, tbl_id):
+    ucan_id = request.GET.get('ucan_id', None)
+    context = {
+        'title': "Secondary tables for this Station"
+    }
+    context['primary_table'] = "%s_"
+    if ucan_id:
+        tables = {}
+        errors = defaultdict(dict)
+        tbl_name_idxed = "%s_%d" % ( tbl_name, int(tbl_id))
+        context['primary_table_name'] = tbl_name_idxed
+        obj = primary_tables[tbl_name]
+        primary_inst = obj.objects.filter(ucan_station_id=ucan_id)[int(tbl_id)]
+        (form, err) = set_as_form(request, tbl_name, q=primary_inst, ucan_station_id=ucan_id)
+        primary_table = form
+        context['primary_table'] = primary_table
+        errors[tbl_name_idxed] = form.errors
+        if tbl_name == "StationNetwork":
+            var_s = models.Variable.objects.filter(ucan_station_id=ucan_id, network_station_id=primary_inst.network_station_id)
+            for j, v in enumerate(var_s):
+                var_name = 'Variable_%d_%d' % (int(tbl_id), j)
+                (form, err) = set_as_form(request, 'Variable', q=v, ucan_station_id=ucan_id)
+                tables[var_name] = form
+                errors[var_name] = form.errors
+        context['ucan_station_id'] = ucan_id
+        context['errors'] = dict(errors)
+        context['tables'] = tables
+    return render_to_response('my_meta/sub_tables.html', context, context_instance=RequestContext(request))
+
+def edit(request):
+    tbl_name = request.GET.get('tbl_name', None)
+    ucan_id = request.GET.get('ucan_id', None)
+    context = {
+        'title': "Edit"
+    }
+    obj = primary_tables[tbl_name]
+    instance
+    context['ucan_station_id'] = ucan_id
+    context['tbl_name'] = tbl_name
+    return render_to_response('my_meta/edit.html', context, context_instance=RequestContext(request))
 
 def add(request):
     tbl_name = request.GET.get('tbl_name', None)
     context = {
-        'title': tbl_name,
+        'title': "Add"
     }
     (form, err) = set_as_form(request, tbl_name)
     if err:
