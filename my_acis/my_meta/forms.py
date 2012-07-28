@@ -107,7 +107,6 @@ class StationForm(ModelForm):
         s = Station(**data)
         s.save()
 
-
 class StationLocationForm(ModelForm):
     remark = forms.CharField(required=False)
     class Meta:

@@ -1,4 +1,6 @@
 # Django settings for my_acis project.
+import sys
+sys.path.insert(0,'/Users/bdaudert/DRI/my-python-lib/')
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -132,6 +134,8 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'my_meta',
+    'my_data',
+    'my_apps',
 )
 
 # A sample logging configuration. The only tangible logging

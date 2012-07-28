@@ -21,6 +21,12 @@ urlpatterns = patterns('',
     (r'^my_meta/(?P<tbl_name>[Station][Location|Network|Subnetwork|AltName|TimeZone|ClimDiv|County|Digital|Equipment|Maintenance|Physical|Photo|Contact]*)/(?P<tbl_id>\d+)/$', 'my_meta.views.sub_tables'),
     #(r'^my_meta/Station/(?P<tbl_id>\d+)/$', 'my_meta.views.sub_tables'),
     (r'^my_meta/add/$', 'my_meta.views.add'),
+    (r'^my_data$', 'my_data.views.home_view'),
+    (r'^my_apps$', 'my_apps.views.home_view'),
+    #sub process apps: FIX ME: Need to be converted to module approach
+    #module approach apps
+    (r'^my_apps/(?P<app_name>[Sodsum]*)/$', 'my_apps.views.app_new'),
+    (r'^my_apps/(?P<app_name>[Sodrun|Sodlist|Sodmonline|Sodmonlinemy|Sodcnv]*)/$', 'my_apps.views.app'),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

@@ -26,3 +26,7 @@ def is_true(arg):
 @register.filter
 def get_id(tbl_instance):
     return tbl_instance.split("_")[-1]
+
+@register.filter
+def string_sub(arg):
+	return '%s' % arg

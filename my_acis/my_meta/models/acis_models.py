@@ -26,9 +26,9 @@ class Station(models.Model):
     src_quality_code = models.CharField(max_length=5)
     last_updated = models.DateField()
     updated_by = models.CharField(max_length=8)
-    remark = models.CharField(max_length=254)
+    remark = models.CharField(max_length=254, null=True, blank = True)
     class Meta:
-	app_label = 'meta'
+	app_label = 'my_meta'
         db_table = 'station'
     def __str__(self):
 	return "[%s] %s" % (self.ucan_station_id, self.station_best_name)
@@ -36,7 +36,7 @@ class Station(models.Model):
 	list_display = ('ucan_station_id','station_best_name','state','begin_date','end_date')
 	list_filter = ('state',)
 	search_fields = ('ucan_station_id','station_best_name')
-
+"""
 class StationLocation(models.Model):
     ucan_station_id = models.IntegerField(primary_key=True) # Not the real pk
     longitude = models.FloatField()
@@ -53,7 +53,7 @@ class StationLocation(models.Model):
     updated_by = models.CharField(max_length=8)
     remark = models.CharField(max_length=254)
     class Meta:
-	app_label = 'meta'
+	app_label = 'my_meta'
         db_table = 'station_location'
     def __str__(self):
 	return "[ucan %s] %.4f %.4f" % (self.ucan_station_id, self.latitude, self.longitude)
@@ -62,14 +62,41 @@ class StationLocation(models.Model):
 	search_fields = ('ucan_station_id',)
     def get_station(self):
 	return WrccStation.objects.get(pk=self.ucan_station_id)
+"""
+
+class StationLocation(models.Model):
+    ucan_station_id = models.IntegerField()
+    longitude = models.FloatField()
+    latitude =  models.FloatField()
+    unit_key = models.SmallIntegerField()
+    best_elevation = models.FloatField()
+    begin_date_flag = models.CharField(max_length=2)
+    begin_date = models.DateField()
+    end_date_flag = models.CharField(max_length=2)
+    end_date = models.DateField()
+    history_flag = models.CharField(max_length=2)
+    src_quality_flag = models.CharField(max_length=5)
+    last_updated = models.DateField()
+    updated_by = models.CharField(max_length=8)
+    remark = models.CharField(max_length=254, null=True, blank = True)
+    class Meta:
+        app_label = 'my_meta'
+        db_table = 'station_location'
+    def __str__(self):
+        return "[ucan %s] %.4f %.4f" % (self.ucan_station_id, self.latitude, self.longitude)
+    class Admin:
+        list_display = ('ucan_station_id', 'latitude', 'longitude', 'best_elevation', 'begin_date', 'end_date')
+        search_fields = ('ucan_station_id',)
+    def get_station(self):
+        return WrccStation.objects.get(pk=self.id)
 
 class StationMaintenance(models.Model):
     id = models.AutoField(primary_key=True)
     ucan_station_id = models.IntegerField()
     maintenance_date = models.DateField()
-    remark = models.TextField()
+    remark = models.TextField(null=True, blank = True)
     class Meta:
-	app_label = 'meta'
+	app_label = 'my_meta'
         db_table = 'station_maintenance'
     class Admin:
 	list_display = ('ucan_station_id', 'maintenance_date')
@@ -85,14 +112,14 @@ class StationEquipment(models.Model):
     eq_manufacturer = models.CharField(max_length=30)
     eq_model = models.CharField(max_length=20)
     serial_num = models.CharField(max_length=20)
-    eq_description = models.TextField()
+    eq_description = models.TextField(null=True, blank = True)
     install_date = models.DateField()
     remove_date = models.DateField(null=True)
     ref_height = models.IntegerField()
     sampling_interval = models.CharField(max_length=10)
-    remark = models.TextField()
+    remark = models.TextField(null=True, blank = True)
     class Meta:
-	app_label = 'meta'
+	app_label = 'my_meta'
         db_table = 'station_equipment'
     class Admin:
 	pass
@@ -105,11 +132,11 @@ class StationPhysical(models.Model):
     slope = models.IntegerField()
     aspect = models.IntegerField()
     gps = models.CharField(max_length=1)
-    site_description = models.TextField()
-    route_directions = models.TextField()
-    remark = models.TextField()
+    site_description = models.TextField(null=True, blank = True)
+    route_directions = models.TextField(null=True, blank = True)
+    remark = models.TextField(null=True, blank = True)
     class Meta:
-	app_label = 'meta'
+	app_label = 'my_meta'
         db_table = 'station_physical'
     class Admin:
 	pass
@@ -136,7 +163,7 @@ class StationAltName(models.Model):
 	list_display = ('station_alt_name', 'ucan_station_id', 'begin_date', 'end_date')
 	search_fields = ('station_alt_name', 'ucan_station_id')
     class Meta:
-	app_label = 'meta'
+	app_label = 'my_meta'
         db_table = 'station_alt_name'
 
 class StationCounty(models.Model):
@@ -153,14 +180,14 @@ class StationCounty(models.Model):
     src_quality_code = models.CharField(max_length=5)
     last_updated = models.DateField()
     updated_by = models.CharField(max_length=8)
-    remark = models.CharField(max_length=254)
+    remark = models.CharField(max_length=254, null=True, blank=True)
     def __str__(self):
 	return "[ucan %s] %s" % (self.ucan_station_id, self.county)
     class Admin:
 	list_display = ('ucan_station_id', 'county', 'begin_date', 'end_date')
 	search_fields = ('ucan_station_id','county_name')
     class Meta:
-	app_label = 'meta'
+	app_label = 'my_meta'
         db_table = 'station_county'
 
 class StationNetwork(models.Model):
@@ -175,14 +202,14 @@ class StationNetwork(models.Model):
     src_quality_code = models.CharField(max_length=5)
     last_updated = models.DateField()
     updated_by = models.CharField(max_length=8)
-    remark = models.CharField(max_length=254)
+    remark = models.CharField(max_length=254, null=True, blank=True)
     def __str__(self):
 	return "[ucan %s] %s in %s" % (self.ucan_station_id, self.network_station_id, self.id_type)
     class Admin:
 	list_display = ('ucan_station_id', 'network_station_id', 'id_type', 'begin_date', 'end_date')
 	search_fields = ('ucan_station_id', 'network_station_id')
     class Meta:
-	app_label = 'meta'
+	app_label = 'my_meta'
         db_table = 'station_network'
 
 #class GlobalVariableMajMin(models.Model):
@@ -194,10 +221,10 @@ class StationNetwork(models.Model):
 #    report_interval = models.CharField(max_length=8)
 #    default_units = models.CharField(max_length=20)
 #    data_source = models.CharField(max_length=20)
-#    remark = models.CharField(max_length=254)
+#    remark = models.CharField(max_length=254, null=True, blank=True)
 #    class Admin: pass
 #    class Meta:
-#	app_label = 'meta'
+#	app_label = 'my_meta'
 #        db_table = 'global_variable_maj_min'
 
 class StationTimeZone(models.Model):
@@ -211,13 +238,13 @@ class StationTimeZone(models.Model):
     src_quality_code = models.CharField(max_length=5)
     last_updated = models.DateField()
     updated_by = models.CharField(max_length=8)
-    remark = models.CharField(max_length=254)
+    remark = models.CharField(max_length=254, null=True, blank=True)
     def __str__(self):
 	return "[ucan %s] %s" % (self.ucan_station_id, self.time_zone)
     class Admin:
 	search_fields = ('ucan_station_id',)
     class Meta:
-	app_label = 'meta'
+	app_label = 'my_meta'
         db_table = 'station_time_zone'
 
 class ClimDiv(models.Model):
@@ -229,7 +256,7 @@ class ClimDiv(models.Model):
     clim_div_name = models.CharField(max_length=30)
     last_updated = models.DateField()
     updated_by = models.CharField(max_length=8)
-    remark = models.CharField(max_length=254)
+    remark = models.CharField(max_length=254, null=True, blank=True)
     def __str__(self):
 	return "[%s] %s, %s" % (self.clim_div_key, self.clim_div_name, self.fips_state_abbr)
     class Admin:
@@ -237,7 +264,7 @@ class ClimDiv(models.Model):
 	list_filter = ('fips_state_abbr',)
 	search_fields = ('clim_div_name')
     class Meta:
-	app_label = 'meta'
+	app_label = 'my_meta'
         db_table = 'clim_div'
 	verbose_name_plural = "climate divisions"
 
@@ -256,7 +283,7 @@ class StationClimDiv(models.Model):
     src_quality_code = models.CharField(max_length=5)
     last_updated = models.DateField()
     updated_by = models.CharField(max_length=8)
-    remark = models.CharField(max_length=254)
+    remark = models.CharField(max_length=254, null=True, blank=True)
     def __str__(self):
 	return "[ucan %s] [climdiv %s]" % (self.ucan_station_id,self.clim_div)
     class Admin:
@@ -264,7 +291,7 @@ class StationClimDiv(models.Model):
 	list_filter = ('fips_state_abbr',)
 	search_fields = ('ucan_station_id')
     class Meta:
-	app_label = 'meta'
+	app_label = 'my_meta'
         db_table = 'station_clim_div'
 
 
@@ -274,9 +301,9 @@ class Subnetwork(models.Model):
     network_key = models.IntegerField()
     network_subnetwork_id = models.CharField(max_length=16)
     subnetwork_name = models.CharField(max_length=30)
-    description = models.TextField()
+    description = models.TextField(null=True, blank = True)
     class Meta:
-	app_label = 'meta'
+	app_label = 'my_meta'
         db_table = 'subnetwork'
     class Admin:
 	pass
@@ -304,7 +331,7 @@ class StationSubnetwork(models.Model):
     ucan_station_id = models.IntegerField()
     network_station_id = models.CharField(max_length=20)
     class Meta:
-	app_label = 'meta'
+	app_label = 'my_meta'
         db_table = 'subnetwork_stations'
 
 ## class Contact(models.Model):
@@ -315,12 +342,12 @@ class StationSubnetwork(models.Model):
 ##     position_title = models.CharField(max_length=63)
 ##     address = models.CharField(max_length=127)
 ##     city = models.CharField(max_length=63)
-##     state = models.TextField() # This field type is a guess.
+##     state = models.TextField(null=True, blank = True) # This field type is a guess.
 ##     zip_code = models.CharField(max_length=10)
 ##     country = models.CharField(max_length=32)
 ##     email = models.CharField(max_length=63)
 ##     work_phone = models.CharField(max_length=32)
-##     contact_notes = models.TextField()
+##     contact_notes = models.TextField(null=True, blank = True)
 ##     class Meta:
-## 	app_label = 'meta'
+## 	app_label = 'my_meta'
 ##         db_table = 'contact'

@@ -114,7 +114,8 @@ h4,h5 {
 #header p {
     font-family: Verdana,Arial,sans-serif; 
     font-size: .8em;
-    color: #aab;
+    color:#aab;
+    text-align: center;
 }
 
 
@@ -123,8 +124,13 @@ h4,h5 {
     padding: .10em 1em;
 }
 
+
 a:link { color: #0000aa; }
+a:visited { color: #000099; }
+
+/*
 a:visited { color: #000066; }
+*/
 a:hover { 
     color: #007722; 
     text-decoration: none;
@@ -254,3 +260,51 @@ ul.horiz_tabs li a {
     padding-left: 20px;
     background: transparent url(/app/acis/media/img/cal.gif) no-repeat left center;
 }
+
+<!-- Britta additions-->
+/*Navigation Bar*/
+ul.navbar {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 2em;
+  left: 1em;
+  width: 10em }
+ul.navbar li {
+  background: #33ccff;
+  margin: 0.5em 0;
+  padding: 0.3em;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-right: 1px solid #000;
+  border-left: 1px solid #000; }
+ul.navbar a {
+  display:block;
+  width:120px;	
+  background-color: #ccffff;
+  text-decoration: none ; }
+/*Address*/
+address {
+  margin-top: 1em;
+  padding-top: 1em;
+  border-top: thin dotted }
+
+/*Promt Windows*/
+.configfile {
+  margin-top: .5em;
+  margin-bottom: .5em;
+  margin-left: 3em;
+  margin-right: 1em;
+  padding: .4em;
+  white-space: pre;
+  background-color: #eeeeff;
+  border: 1px dashed #8080c0;
+  font-family: monospace;
+  font-size: 100%;
+}
+
+table.aligned{border-collapse:collapse;}
+td{padding:0px;margin:0px;border:0px;}
+td+td{text-align:right;}
+td,td+td+td{text-align:left}
