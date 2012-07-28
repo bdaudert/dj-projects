@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <h1>{{title}}</h1>	
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas { height: 100% }
+    </style>
+
+   <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+   <!-- ** Javascript ** -->
+   <script type="text/javascript" src="{{ MEDIA_URL }}js/map_jutils.js"></script>	
+   <!-- ExtJS library: base/adapter
+   <script type="text/javascript" src="http://www.wrcc.dri.edu/media/ext/adapter/ext/ext-base.js"></script>
+   <!-- ExtJS library: all widgets -->
+   <script type="text/javascript" src="http://www.wrcc.dri.edu/media/ext/ext-all.js"></script>
+   <!-- overrides to library -->
+   <!-- extensions -->
+   <script type="text/javascript" src="http://www.wrcc.dri.edu/media/js/stationmap.js"></script> -->
+
+   <script type="text/javascript"
+      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true">
+    </script>
+
+    
+    <script type="text/javascript">
+
+      function initialize() {
+        var myOptions = {
+          center: new google.maps.LatLng(39.50, -99.00),
+          zoom: 4,
+          mapTypeId: google.maps.MapTypeId.TERRAIN
+        };
+        var map = new google.maps.Map(document.getElementById("map_canvas"),
+            myOptions);
+        }
+
+//       Ext.onReady(function(){
+//         var stationmap = new StationMap({
+//           station_json_url: 'calclim.json',
+//           center: { lat: 37, lng: -120 },
+//           panel_title: "CalClim Stations",
+//           zoom_level: 6
+//         });
+//
+//       }); // end onReady	
+
+     </script>
+   </head>
+
+  <body onload="initialize()">
+    <div id="map_canvas" style="width:50%; height:50%" align="center"></div>
+  </body>
+</html>

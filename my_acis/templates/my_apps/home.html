@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+<head>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>
+</head>
+
+
+{% block content %}
+
+<h1 align='center'>{{title}}</h1>
+
+<!-- Site navigation menu -->
+  <ul class="navbar">
+	<a  href="/my_apps/Sodrun/">SODRUN</a>
+	<a  href="/my_apps/Sodlist/">SODLIST</a>
+	<a  href="/my_apps/Sodmonline/">SODMONLINE</a>
+	<a  href="/my_apps/Sodmonlinemy/">SODMONLINEMY</a>
+	<a  href="/my_apps/Sodcnv/">SODCNV</a>
+	<a  href="/my_apps/Sodsum/">SODSUM</a>
+  </ul>
+{% endblock %}
