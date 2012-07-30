@@ -39,6 +39,7 @@ def app(request, app_name):
 	err = 'No error yet'
 	ex_list = ['python', 'print \'HALLO\'']
 	if form.is_valid():
+		context['cleaned'] = form.cleaned_data
 		if app_name == 'Sodrun':
 			app = 'ws_sodrun.py'
 		elif app_name in ['Sodlist', 'Sodmonline', 'Sodmonlinemy', 'Sodcnv']:

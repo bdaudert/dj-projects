@@ -22,7 +22,7 @@
 <b>Summary of daily observations by element.  Last date considered : {{results.0.end}}</b>
 </br>
 </br>
-<table class="aligned">
+<table>
   <tr>
 	<th colspan=2 align="right">STATION</th><th colspan=2 align="right">START</th><th colspan=2 align="right">END</th>
     {%for el in elements%}
@@ -31,9 +31,9 @@
   </tr>	
   {%for stn, stn_vals in results.items %}
   <tr>
-	<td></td><td>{{stn_vals.coop_station_id}}</td><td></td><td>{{stn_vals.start}}</td><td></td><td>{{stn_vals.end}}</td>
+	<td></td><td align="right">{{stn_vals.coop_station_id}}</td><td></td><td align="right">{{stn_vals.start}}</td><td></td><td align="right">{{stn_vals.end}}</td>
     {%for el in elements %}
-	  <td></td><td>{{stn_vals|lookup:el|safe}}</td>
+	  <td></td><td align="right">{{stn_vals|lookup:el|safe}}</td>
 	{%endfor%}
   </tr>
   {%endfor%}
@@ -60,13 +60,13 @@ A day is considered present if any element is reported.</br>
 NAME is the latest name of the station in the history file.</br>
 </br>
 
-<table class="aligned">
+<table>
   <tr>
     <th colspan=2 align="right">NUMBER</th><th colspan=2 align="right">NAME</th><th colspan=2 align="right">START</th><th colspan=2 align="right">END</th><th colspan=2 align="right">POSBL</th><th colspan=2 align="right">PRSNT</th><th colspan=2 align="right">LNGPR</th><th colspan=2 align="right">MISSG</th><th colspan=2 align="right">LNGMS</th>
    <tr>
   {%for stn, stn_vals in results.items %}
   <tr>
-    <td></td><td>{{stn_vals.coop_station_id}}</td><td></td><td>{{stn_vals.station_name}}</td><td></td><td>{{stn_vals.start}}</td><td></td><td>{{stn_vals.end}}</td><td></td><td>{{stn_vals.PSBL}}</td><td></td><td>{{stn_vals.PRSNT}}</td><td></td><td>{{stn_vals.LNGPR}}</td><td></td><td>{{stn_vals.MISSG}}</td><td></td><td>{{stn_vals.LNGMS}}</td>
+    <td></td><td align="right">{{stn_vals.coop_station_id}}</td><td></td><td align="right">{{stn_vals.station_name}}</td><td></td><td align="right">{{stn_vals.start}}</td><td></td><td align="right">{{stn_vals.end}}</td><td></td><td align="right">{{stn_vals.PSBL}}</td><td></td><td align="right">{{stn_vals.PRSNT}}</td><td></td><td align="right">{{stn_vals.LNGPR}}</td><td></td><td align="right">{{stn_vals.MISSG}}</td><td></td><td align="right">{{stn_vals.LNGMS}}</td>
   </tr>
   {%endfor%}
 </table>

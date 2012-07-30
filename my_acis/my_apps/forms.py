@@ -136,7 +136,7 @@ class SodlistForm(forms.Form):
 	include_tobs_evap = forms.BooleanField(required=False, initial = False)
 
 class SodcnvForm(forms.Form):
-        coop_station_id = forms.CharField(max_length=6, min_length=8, initial='266779')
+        coop_station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
         start_date = forms.CharField(max_length=8, min_length=8, required = False, initial='20120101')
         end_date = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
 	#output_file = forms.CharField(max_length=256, required=False)
@@ -145,8 +145,8 @@ class SodcnvForm(forms.Form):
 
 class SodmonlineForm(forms.Form):
 	coop_station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
-	start_date = forms.CharField(max_length=4, required = False, initial='2012')
-	end_date = forms.CharField(max_length=4, required = False, initial='2012')
+	start_date = forms.CharField(max_length=4, initial='2012')
+	end_date = forms.CharField(max_length=4, initial='2012')
 	element = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
 	temperature_precision = forms.ChoiceField(choices=SM_TEMP_PRECISION_CHOICES, initial=' ')
 	output_format = forms.ChoiceField(choices=SM_FRMT_CHOICES, initial='kr')
@@ -156,8 +156,8 @@ class SodmonlineForm(forms.Form):
 
 class SodmonlinemyForm(forms.Form):
 	coop_station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
-	start_date = forms.CharField(max_length=4, min_length=4, required = False, initial='2012')
-	end_date = forms.CharField(max_length=4, min_length=4, required = False, initial='2012')
+	start_date = forms.CharField(max_length=4, min_length=4, initial='2012')
+	end_date = forms.CharField(max_length=4, min_length=4, initial='2012')
 	element = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
 	temperature_precision = forms.ChoiceField(choices=SM_TEMP_PRECISION_CHOICES, initial=' ')
 	output_format = forms.ChoiceField(choices=SM_FRMT_CHOICES, initial='kr')
@@ -168,8 +168,8 @@ class SodmonlinemyForm(forms.Form):
 class SodsumForm(forms.Form):
 	#coop_station_ids = forms.CharField(initial='266779')
 	coop_station_ids = MultiStnField(initial='266779,103732')
-	start_date = forms.CharField(max_length=8, min_length=8, required = False, initial='20120101')
-	end_date = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
+	start_date = forms.CharField(max_length=8, required = False, initial='20120101')
+	end_date = forms.CharField(max_length=8, required = False, initial=today)
 	element = forms.ChoiceField(choices=SS_ELEMENT_CHOICES, initial='multi')
 	'''
 	stations = forms.ChoiceField(choices=SODSUM_STATION_CHOICES, initial='Coop_station_id')
