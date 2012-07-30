@@ -98,8 +98,10 @@ def app_new(request, app_name):
 	results = {}
 	if form.is_valid():
 		context['cleaned'] = form.cleaned_data
-		(data, dates, elements, coop_station_id, station_name) = AcisWS.get_sodsum_data(form.cleaned_data)
-		results = WRCCDataApps.SodSum(data, dates, elements, coop_station_id, station_name)
+		#(data, dates, elements, coop_station_id, station_name) = AcisWS.get_sodsum_data_multi(form.cleaned_data)
+		(data, elements, coop_station_id, station_name) = AcisWS.get_sodsum_data(form.cleaned_data)
+		#results = WRCCDataApps.SodSumMulti(data, dates, elements, coop_station_id, station_name)
+		results = WRCCDataApps.SodSum(data, elements, coop_station_id, station_name)
 		context['elements'] = elements
 	context['form'] = form
 	context['results']= dict(results)
