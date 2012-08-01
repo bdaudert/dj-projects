@@ -27,7 +27,7 @@ def home_view(request):
 	}
 	return render_to_response('my_apps/home.html', context, context_instance=RequestContext(request))
 
-def app(request, app_name):
+def sodlist(request, app_name):
 	#app_name = request.GET.get('app_name')
 	context = {
 	'title': '%s' % app_name,
@@ -86,7 +86,7 @@ def app(request, app_name):
 
 	return render_to_response('my_apps/application.html', context, context_instance=RequestContext(request))
 
-def app_new(request, app_name):
+def sodsum(request, app_name):
 	context = {
 	'title': '%s' % app_name,
 	}
@@ -107,6 +107,30 @@ def app_new(request, app_name):
 	context['results']= dict(results)
 	return render_to_response('my_apps/sodsum.html', context, context_instance=RequestContext(request))
 
+def soddyrec(request, app_name):
+	context = {
+	'title': '%s' % app_name,
+	}
+	form1 = set_as_form(request,'Stnfind')
+	context['form1'] = form1
+	if form1.is_valid():
+		station_selection = form1.cleaned_data['station_selection']
+		if request.POST:
+			form2 = forms.SoddyrecForm(station_selection, request.POST)
+		else:
+			form2 = forms.SoddyrecForm(station_selection, initial={'app_name': app_name})
+		context['form2'] = form2
+		if  form2.is_valid():
+			context['cleaned'] = form2.cleaned_data
+			(data, elements, coop_station_ids, station_names) = AcisWS.get_soddyrec_data(form2.cleaned_data)
+			context['data'] = data
+			context['coop_station_ids'] = coop_station_ids
+			context['station_names'] = station_names
+	else:
+		station_selection = None
+
+	context['station_selection'] = station_selection
+	return render_to_response('my_apps/soddyrec.html', context, context_instance=RequestContext(request))
 
 #Utlities
 def set_as_form(request, app_name, init = None):

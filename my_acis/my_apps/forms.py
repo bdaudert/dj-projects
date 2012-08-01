@@ -78,10 +78,10 @@ DIGIT_CHOICES = (
 	('5', 'Values take five spaces'),
 	)
 #Sodsum choices
-SODSUM_STATION_CHOICE = (
+SS_STATION_CHOICE = (
 	('coop_station_id', 'Indidual Coop Station'),
 	('list', 'Comma separated list of stations'),
-	('state', 'By US state'),
+	('climdiv', 'By Climate Division'),
 	)
 
 SS_ELEMENT_CHOICES = (
@@ -95,6 +95,24 @@ SS_ELEMENT_CHOICES = (
 	('wesf', 'Water Estimate Snow Fall'),
 	('multi', '[pcpn, snow, snwd, maxt, mint, evap, wdmv, wesf]'),
         )
+#soddyrec choices
+SDR_ELEMENT_CHOICES = (
+	('all', '[maxt, mint, pcpn, snow, snwd, hdd, cdd]'),
+	('tmp', '[maxt, mint, pcpn]'),
+	('wtr', '[pcpn, snow, snwd]'),
+	)
+
+#Stnfind choices
+STN_FIND_CHOICES = (
+	('stnid', 'Individual station'),
+	('stnids', 'Comma separated list of stations '),
+	('county', 'Countyi FIPS code'),
+	('climdiv', 'Climate Division'),
+	('cwa', 'County Warning Area (CWA)'),
+	('basin', 'Basin'),
+	('state', 'State'),
+	('bbox', 'Bounding Box'),
+	)
 
 #Custom form fields
 class MultiStnField(forms.CharField):
@@ -171,20 +189,34 @@ class SodsumForm(forms.Form):
 	start_date = forms.CharField(max_length=8, required = False, initial='20120101')
 	end_date = forms.CharField(max_length=8, required = False, initial=today)
 	element = forms.ChoiceField(choices=SS_ELEMENT_CHOICES, initial='multi')
-	'''
-	stations = forms.ChoiceField(choices=SODSUM_STATION_CHOICES, initial='Coop_station_id')
-	start_date = forms.CharField(max_length=4, required = False, initial='por')
-	end_date = forms.CharField(max_length=4, required = False, initial=today)
 
-	def __init__(self, stations, *args, **kwargs):
-		super(SodsumForm, self).__init__(*args, **kwargs)
-		is stations == 'coop_statio_id':
-			coop_station_id = forms.CharField(max_length=8, initial='266779')
-		elif stations == 'list':
-			stns = forms.CharField(initial = '266779, 303184')
-		elif stations = 'state':
-			state = USStateField()
-	'''
+#class to determine method of station selection used insubsequent forms
+class StnfindForm(forms.Form):
+	station_selection = forms.ChoiceField(choices=STN_FIND_CHOICES, initial='stnid')
+
+class SoddyrecForm(forms.Form):
+	def __init__(self, station_selection,*args, **kwargs):
+		super(SoddyrecForm, self).__init__(*args, **kwargs)
+		if station_selection == 'stnid':
+			self.fields['coop_station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779')
+		elif station_selection == 'stnids':
+			self.fields['coop_station_ids'] = MultiStnField(initial='266779,103732')
+		elif station_selection == 'county':
+			self.fields['county'] = forms.CharField(max_length=5, min_length=5, initial='09001')
+		elif station_selection == 'climdiv':
+			self.fields['climate_division'] = forms.CharField(max_length=4, min_length=4, initial='NV01')
+		elif station_selection == 'cwa':
+			self.fields['county_warning_area'] = forms.CharField(max_length=3, initial='BOI')
+		elif station_selection == 'basin':
+			self.fields['basin'] = forms.CharField(max_length=8, min_length=8, initial='01080205')
+		elif station_selection == 'state':
+			self.fields['state'] = USStateField()
+		elif station_selection == 'bbox':
+			self.fields['bounding_box'] = forms.CharField(initial='-90,40,-88,41')
+		self.fields['start_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial='20120101')
+		self.fields['end_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
+		self.fields['eighty_column_screen'] = forms.BooleanField(required=False)
+		self.fields['element'] = forms.ChoiceField(choices=SDR_ELEMENT_CHOICES, initial='all')
 
 class Survey(forms.Form):
     name = forms.CharField(max_length=20)
