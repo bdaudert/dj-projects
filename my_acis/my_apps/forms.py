@@ -5,6 +5,7 @@ from django.contrib.localflavor.us.models import USStateField
 import datetime
 
 #find todays date
+
 tdy = datetime.datetime.today()
 yr = str(tdy.year)
 mon = str(tdy.month)
@@ -12,8 +13,9 @@ day = str(tdy.day)
 if len(mon) == 1:
 	mon = '0%s' % mon
 if len(day) == 1:
-	day = '0%' % day
+	day = '0%s' % day
 today = '%s%s%s' % (yr, mon, day)
+
 
 #NOTE: the names given to the form quantities should be the commanline options
 #of the correcsponding preogram with underscores instead of dashes!!!
@@ -195,7 +197,7 @@ class StnfindForm(forms.Form):
 	station_selection = forms.ChoiceField(choices=STN_FIND_CHOICES, initial='stnid')
 
 class SoddyrecForm(forms.Form):
-	def __init__(self, station_selection,*args, **kwargs):
+	def __init__(self, station_selection, *args, **kwargs):
 		super(SoddyrecForm, self).__init__(*args, **kwargs)
 		if station_selection == 'stnid':
 			self.fields['coop_station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779')
@@ -217,13 +219,3 @@ class SoddyrecForm(forms.Form):
 		self.fields['end_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
 		self.fields['eighty_column_screen'] = forms.BooleanField(required=False)
 		self.fields['element'] = forms.ChoiceField(choices=SDR_ELEMENT_CHOICES, initial='all')
-
-class Survey(forms.Form):
-    name = forms.CharField(max_length=20)
-    age = forms.IntegerField()
-
-    def __init__(self, questions, *args, **kwargs):
-        super(Survey, self).__init__(*args, **kwargs)
-        # now we add each question individually
-        for i, question in enumerate(questions):
-             self.fields['question_%d' % i] = forms.ChoiceField(label=question)
