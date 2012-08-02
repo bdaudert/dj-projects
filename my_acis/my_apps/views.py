@@ -122,7 +122,7 @@ def soddyrec(request, app_name):
 		context['form2'] = form2
 		if  form2.is_valid():
 			context['cleaned'] = form2.cleaned_data
-			(data, elements, coop_station_ids, station_names) = AcisWS.get_soddyrec_data(form2.cleaned_data)
+			(data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, 'soddyrec')
 			context['data'] = data
 			context['coop_station_ids'] = coop_station_ids
 			context['station_names'] = station_names

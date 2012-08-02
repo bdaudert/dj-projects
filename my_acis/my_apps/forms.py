@@ -4,8 +4,9 @@ from django.contrib.localflavor.us.models import USStateField
 
 import datetime
 
+#Utilities
+############################################
 #find todays date
-
 tdy = datetime.datetime.today()
 yr = str(tdy.year)
 mon = str(tdy.month)
@@ -16,7 +17,8 @@ if len(day) == 1:
 	day = '0%s' % day
 today = '%s%s%s' % (yr, mon, day)
 
-
+#Choice fields for WRCC data app forms
+##############################################################################
 #NOTE: the names given to the form quantities should be the commanline options
 #of the correcsponding preogram with underscores instead of dashes!!!
 #Important for string handling in my_apps/views.py
@@ -92,10 +94,10 @@ SS_ELEMENT_CHOICES = (
 	('snwd', 'Snowdepth'),
 	('maxt', 'Maximum Temprature'),
 	('mint', 'Minimum Temperature'),
-        ('evap', 'Evaporation'),
-        ('wdmv', 'Wind Movement'),
+	#('evap', 'Evaporation'),
+	#('wdmv', 'Wind Movement'),
 	('wesf', 'Water Estimate Snow Fall'),
-	('multi', '[pcpn, snow, snwd, maxt, mint, evap, wdmv, wesf]'),
+	('multi', '[pcpn, snow, snwd, maxt, mint]'),
         )
 #soddyrec choices
 SDR_ELEMENT_CHOICES = (
@@ -114,6 +116,57 @@ STN_FIND_CHOICES = (
 	('basin', 'Basin'),
 	('state', 'State'),
 	('bbox', 'Bounding Box'),
+	)
+#sodsumm element choices
+SMM_ELEMENT_CHOICES = (
+	('all', '[maxt, mint, avgt, pcpn, snow,hdd, cdd, gdd]'),
+	('tmp', '[maxt, mint]'),
+	('ps', '[pcpn, snow]'),
+	('tps', '[maxt, mint, pcpn, snow]'),
+	('hc', '[hdd, cdd]'),
+	('gdd', '[gdd]'),
+    )
+
+#sodxtrmts choices
+#Note: element choices are the same as for sodmonline(my)
+SX_ANALYSIS_CHOICES = (
+	('mmax', 'Monthly Maximum'),
+	('mmin', 'Monthly Minimum'),
+	('mave', 'Monthly Average'),
+	('sd', 'Standard Deviation'),
+	('ndays', 'Number of Days'),
+	('rmon', 'Range during Month'),
+	('msum', 'Monthly Sum'),
+    )
+
+SPCT_ELEMENT_CHOICES = (
+	('pcpn', 'Precipitation'),
+	('snow', 'Snowfall'),
+	('snwd', 'Snowdepth'),
+	('maxt', 'Maximum Temprature '),
+	('mint', 'Minimum Temperature'),
+	('avgt', 'Mean Temperature'),
+	('dtr', 'Daily Temperatuer Range'),
+    ('hdd', 'Heating Degree Days'),
+    ('cdd', 'Cooling Degree Days'),
+    ('gdd', 'Growing degree days'),
+    )
+PII_ELEMENT_CHOICES = (
+	('pcpn', 'Precipitation'),
+	('snow', 'Snowfall'),
+	('snwd', 'Snowdepth'),
+	('maxt', 'Maximum Temprature '),
+	('mint', 'Minimum Temperature'),
+	('avgt', 'Mean Temperature'),
+	)
+
+SRR_ELEMENT_CHOICES = (
+	('pcpn', 'Precipitation'),
+	('snow', 'Snowfall'),
+	('snwd', 'Snowdepth'),
+	('maxt', 'Maximum Temprature '),
+	('mint', 'Minimum Temperature'),
+	('dtr', 'Daily Temperature Range'),
 	)
 
 #Custom form fields
@@ -219,3 +272,106 @@ class SoddyrecForm(forms.Form):
 		self.fields['end_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
 		self.fields['eighty_column_screen'] = forms.BooleanField(required=False)
 		self.fields['element'] = forms.ChoiceField(choices=SDR_ELEMENT_CHOICES, initial='all')
+
+class FilterForm(forms.Form):
+		filter_required = forms.BooleanField(initial=False)
+
+class SoddynormForm(forms.Form):
+	#station_selection comes from StnfindForm, filter_required from FilterForm
+	def __init__(self, station_selection, filter_required, *args, **kwargs):
+		'''
+		copy from SoddyrecForm once fixed
+		'''
+		self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
+		self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
+		if filter_required:
+			self.fields['filter_type'] = forms.ChoiceField(choices=([('gauss','Gaussian'), ('rm','Running Mean'), ]), initial='gauss')
+		self.fields['number_of_days'] = forms.CharField(max_length=2, required = False)
+
+class SodsummForm(forms.Form):
+	def __init__(self, station_selection, *args, **kwargs):
+		'''
+		copy from SoddyrecForm once fixed
+		'''
+		self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
+		self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
+		self.fields['max_number_days_missing'] = forms.CharField(max_length=8, initial = 5)
+		self.fields['element'] = forms.ChoiceField(choices=SMM_ELEMENT_CHOICES, initial='all')
+
+class SodxtrmtsForm(forms.Form):
+	def __init__(self, station_selection, *args, **kwargs):
+		'''
+		copy from SoddyrecForm once fixed, possibly more to deal with other input options
+		'''
+		self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
+		self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
+		self.fields['element'] = forms.ChoiceField(choices=SPCT_ELEMENT_CHOICES, initial='pcpn')
+		self.fields['analysis_type'] = forms.ChoiceField(choices=SX_ANALYSIS_CHOICES, initial='mave')
+
+class SodpctForm(forms.Form):
+	def __init__(self, station_selection, *args, **kwargs):
+		'''
+		copy from SoddyrecForm once fixed, possibly more to deal with other input options
+		'''
+		self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
+		self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
+		#Note number_of_days has max of 31, implement!!
+		self.fields['number_of_days'] = forms.CharField(max_length=2, required = False)
+		self.fields['element'] = forms.ChoiceField(choices=SPCT_ELEMENT_CHOICES, initial='pcpn')
+
+class SodpadForm(forms.Form):
+    def __init__(self, station_selection, *args, **kwargs):
+        '''
+        copy from SoddyrecForm once fixed, possibly more to deal with other input options
+        '''
+        self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
+        self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
+
+class SodthrForm(forms.Form):
+	def __init__(self, station_selection, *args, **kwargs):
+		'''
+		copy from SoddyrecForm once fixed, possibly more to deal with other input options
+		'''
+		self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
+		self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
+		#self.fields['table_type'] = forms.ChoiceField(choices=([('std','Standard'), ('ctm','Custom'), ]), initial='std')
+class SodddForm(forms.Form):
+	def __init__(self, station_selection, *args, **kwargs):
+		'''
+		copy from SoddyrecForm once fixed, possibly more to deal with other input options
+		'''
+		self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
+		self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
+		self.fields['base_temperature'] = forms.CharField(max_length=4, initial='60')
+		self.fields['above_or_below'] = forms.CharField(max_length=1, min_length=1, initial='a')
+		self.fields['skip_days'] = forms.BooleanField(required=False, initial=False)
+		self.fields['table_type'] = forms.ChoiceField(choices=([('dly','Daily Averages'), ('mly','Monthly Time Series'), ]), initial='dly')
+
+class SodpiipreForm(forms.Form):
+	skew = forms.ChoiceField(choices=([('as','Areal Skew'), ('ss','Station Skew'), ]), initial='ss')
+	cv = forms.ChoiceField(choices=([('acv','Areal CV'), ('scv','Station CV'), ]), initial='scv')
+	mean = forms.ChoiceField(choices=([('am','Areal Mean'), ('scv','Station Mean'), ]), initial='sm')
+	pct_average = forms.ChoiceField(choices=([('apct','Areal PCT Average'), ('spct','Station PCT Average'), ]), initial='spct')
+
+
+class SodpiiForm(forms.Form):
+	def __init__(self, station_selection, skew, cv, mean, pct_average, *args, **kwargs):
+		'''
+		copy from SoddyrecForm once fixed, possibly more to deal with other input options
+		NOTE: MESSY INPUT OPTTIONS NEED FIXING UP
+		'''
+		self.fields['start_date'] = forms.CharField(max_length=6, min_length=6, initial='2000')
+		self.fields['end_date'] = forms.CharField(max_length=6, min_length=6, initial='2012')
+		self.fields['element'] = forms.ChoiceField(choices=PII_ELEMENT_CHOICES, initial='pcpn')
+
+class SodrunrForm(forms.Form):
+	def __init__(self, station_selection, *args, **kwargs):
+		'''
+		copy from SoddyrecForm once fixed, possibly more to deal with other input options
+		'''
+		self.fields['start_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial='20120101')
+		self.fields['end_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
+		self.fields['element'] = forms.ChoiceField(choices=SRR_ELEMENT_CHOICES, initial='pcpn')
+		self.fields['aeb'] = forms.ChoiceField(choices=AEB_CHOICES, initial ='A' )
+		self.fields['threshold'] = forms.IntegerField(initial=0)
+		self.fields['min_run'] = forms.IntegerField(required=False, initial=1)
