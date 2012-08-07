@@ -129,7 +129,7 @@ def soddyrec(request, app_name):
 	#	form2 = forms.SoddyrecForm(station_selection, initial={'app_name': app_name})
 		#import pdb; pdb.set_trace()
 		if  form2.is_valid():
-			import pdb; pdb.set_trace()
+			#import pdb; pdb.set_trace()
 			context['cleaned'] = form2.cleaned_data
 			context['station_selection'] = form2.cleaned_data['station_selection']
 			(data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, 'soddyrec')

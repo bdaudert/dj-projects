@@ -254,8 +254,10 @@ class SoddyrecForm(forms.Form):
 		station_selection = kwargs.get('initial', {}).get('station_selection', None)
 		super(SoddyrecForm, self).__init__(*args, **kwargs)
 		self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid')
+		if station_selection is None:
+			station_selection = self.data.get('station_selection')
 		if station_selection == 'stnid':
-			self.fields['coop_station_id'] = forms.CharField(required=False, max_length=6, min_length=6, initial='266779')
+			self.fields['coop_station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779')
 		elif station_selection == 'stnids':
 			self.fields['coop_station_ids'] = MultiStnField(required=False,initial='266779,103732')
 		elif station_selection == 'county':
