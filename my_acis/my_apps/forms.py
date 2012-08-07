@@ -110,7 +110,7 @@ SDR_ELEMENT_CHOICES = (
 STN_FIND_CHOICES = (
 	('stnid', 'Individual station'),
 	('stnids', 'Comma separated list of stations '),
-	('county', 'Countyi FIPS code'),
+	('county', 'County FIPS code'),
 	('climdiv', 'Climate Division'),
 	('cwa', 'County Warning Area (CWA)'),
 	('basin', 'Basin'),
@@ -247,29 +247,31 @@ class SodsumForm(forms.Form):
 
 #class to determine method of station selection used insubsequent forms
 class StnfindForm(forms.Form):
-	station_selection = forms.ChoiceField(choices=STN_FIND_CHOICES, initial='stnid')
+	station_selection = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid')
 
 class SoddyrecForm(forms.Form):
-	def __init__(self, station_selection, *args, **kwargs):
+	def __init__(self, *args, **kwargs):
+		station_selection = kwargs.get('initial', {}).get('station_selection', None)
 		super(SoddyrecForm, self).__init__(*args, **kwargs)
+		self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid')
 		if station_selection == 'stnid':
-			self.fields['coop_station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779')
+			self.fields['coop_station_id'] = forms.CharField(required=False, max_length=6, min_length=6, initial='266779')
 		elif station_selection == 'stnids':
-			self.fields['coop_station_ids'] = MultiStnField(initial='266779,103732')
+			self.fields['coop_station_ids'] = MultiStnField(required=False,initial='266779,103732')
 		elif station_selection == 'county':
-			self.fields['county'] = forms.CharField(max_length=5, min_length=5, initial='09001')
+			self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='09001')
 		elif station_selection == 'climdiv':
-			self.fields['climate_division'] = forms.CharField(max_length=4, min_length=4, initial='NV01')
+			self.fields['climate_division'] = forms.CharField(required=False,max_length=4, min_length=4, initial='NV01')
 		elif station_selection == 'cwa':
-			self.fields['county_warning_area'] = forms.CharField(max_length=3, initial='BOI')
+			self.fields['county_warning_area'] = forms.CharField(required=False,max_length=3, initial='BOI')
 		elif station_selection == 'basin':
-			self.fields['basin'] = forms.CharField(max_length=8, min_length=8, initial='01080205')
+			self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='01080205')
 		elif station_selection == 'state':
-			self.fields['state'] = USStateField()
+			self.fields['state'] = USStateField(required=False)
 		elif station_selection == 'bbox':
-			self.fields['bounding_box'] = forms.CharField(initial='-90,40,-88,41')
-		self.fields['start_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial='20120101')
-		self.fields['end_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
+			self.fields['bounding_box'] = forms.CharField(required=False,initial='-90,40,-88,41')
+		self.fields['start_date'] = forms.CharField(max_length=8, initial='20120101')
+		self.fields['end_date'] = forms.CharField(max_length=8, initial=today)
 		self.fields['eighty_column_screen'] = forms.BooleanField(required=False)
 		self.fields['element'] = forms.ChoiceField(choices=SDR_ELEMENT_CHOICES, initial='all')
 

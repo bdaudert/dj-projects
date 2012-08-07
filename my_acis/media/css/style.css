@@ -149,6 +149,7 @@ dt {
     border-bottom: 1px dashed #ccc;
     margin: .8em 0 .2em 0;
 }
+
 dd {
     margin-left: 1em;
 }
@@ -189,6 +190,7 @@ dd {
     margin: 1em;
     padding: 0;
 }
+
 
 /*
 table {
@@ -262,6 +264,7 @@ ul.horiz_tabs li a {
 }
 
 <!-- Britta additions-->
+
 /*Navigation Bar*/
 ul.navbar {
   list-style-type: none;
@@ -272,6 +275,7 @@ ul.navbar {
   left: 1em;
   width: 10em }
 ul.navbar li {
+  width:140px;
   background: #33ccff;
   margin: 0.5em 0;
   padding: 0.3em;
@@ -284,6 +288,16 @@ ul.navbar a {
   width:140px;	
   background-color: #ccffff;
   text-decoration: none ; }
+ul.navbar em {
+  background: #33ccff;
+  margin: 0.5em 0;
+  padding: 0.3em;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-right: 1px solid #000;
+  border-left: 1px solid #000; }
+
+
 /*Address*/
 address {
   margin-top: 1em;

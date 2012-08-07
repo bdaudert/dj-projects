@@ -1,22 +1,43 @@
+
 {% extends "base.html" %}
-
-<head>
-<script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>
-</head>
-
 
 {% block content %}
 
 <h1 align='center'>{{title}}</h1>
 
+
 <!-- Site navigation menu -->
   <ul class="navbar">
-	<a  href="/my_apps/Sodrun/">SODRUN</a>
-	<a  href="/my_apps/Sodlist/">SODLIST</a>
-	<a  href="/my_apps/Sodmonline/">SODMONLINE</a>
-	<a  href="/my_apps/Sodmonlinemy/">SODMONLINEMY</a>
-	<a  href="/my_apps/Sodcnv/">SODCNV</a>
-	<a  href="/my_apps/Sodsum/">SODSUM</a>
-	<a  href="/my_apps/Soddyrec/">SODDYREC</a>
+	<a href="/my_apps/Sodrun/" onmouseover="ShowHide('sr_txt')">SODRUN</a>
+	<a href="/my_apps/Sodlist/" onmouseover="ShowHide('sl_txt')">SODLIST</a>
+	<a href="/my_apps/Sodmonline/" onmouseover="ShowHide('sm_txt')">SODMONLINE</a>
+	<a href="/my_apps/Sodmonlinemy/" onmouseover="ShowHide('smy_txt')">SODMONLINEMY</a>
+	<a href="/my_apps/Sodcnv/" onmouseover="ShowHide('scnv_txt')">SODCNV</a>
+	<a href="/my_apps/Sodsum/" onmouseover="ShowHide('ss_txt')">SODSUM</a>
+	<a href="/my_apps/Soddyrec/" onmouseover="ShowHide('sdr_txt')">SODDYREC</a>
   </ul>
+
+<div align="center" id='sr_txt' style='display:none'>
+<font size="4" color='DarkBlue'>Computes runs of consecutive days meeting certain criteria</font>
+</div>
+<div align="center" id='sl_txt' style='display:none'>
+<font size="4" color='DarkBlue'>Lists out Summary of the day (SOD) data</font>
+</div>
+<div align="center" id='sm_txt' style='display:none'>
+<font size="4" color='DarkBlue'>Lists all the days of a month, one element, on a single line. Steps through all years chronologically</font>
+</div>
+<div align="center" id='smy_txt' style='display:none'>
+<font size="4" color='DarkBlue'>Lists all the days of a month, one element, on a single line. Organized by month, then by year:  all Jans, all Febs, all Mars, etc</font>
+</div>
+<div align="center" id='scnv_txt' style='display:none'>
+<font size="4" color='DarkBlue'>Converts to character file. Internal use.</font>
+</div>
+<div align="center" id='ss_txt' style='display:none'>
+<font size="4" color='DarkBlue'>Reads station data and provides report on completeness</font>
+</div>
+<div align="center" id='sdr_txt' style='display:none'>
+<font size="4" color='DarkBlue'>Finds daily records</font>
+</div>
+
 {% endblock %}
+

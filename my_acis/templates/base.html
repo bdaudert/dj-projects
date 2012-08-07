@@ -9,10 +9,22 @@
 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/base.css"></link>
 <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
 <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>
+<script src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
+<script>
+$(document).ready(function(){
+
+  $(".navbar a").hover(function () {
+      $(this).next('em')animate({opacity: "show", top: "-75"}, "slow");
+    },function () {
+      $(this).next("em").animate({opacity: "hide", top: "-85"}, "fast");
+    });
+ });
+</script>
 {% load my_filters %}
 {% block extrahead %}{% endblock %}
 {% block extrastyle %}{% endblock %}
 </head>
+
 <body {% if bodyclass %}class="{% block bodyclass %}{% endblock %}" {% endif %} {% if bodyid %} id="{% block bodyid %}{% endblock %}"{% endif %}>
     <!-- Header -->
     <div id="header">

@@ -33,6 +33,8 @@ function Toggle(node)
 
 }
 
+
+
 function popup(mylink, windowname)
 {
 	if (! window.focus)
@@ -52,7 +54,7 @@ function popup(mylink, windowname)
 	return false;
 }
 
-// [client side code for showing/hiding conteny]
+// [client side code for showing/hiding content]
 function ShowHide(divId)
 {
         obj = document.getElementById(divId);
