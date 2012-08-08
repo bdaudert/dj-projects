@@ -107,15 +107,15 @@ def sodsum(request, app_name):
 	context['results']= dict(results)
 	return render_to_response('my_apps/sodsum.html', context, context_instance=RequestContext(request))
 
-def soddyrec(request, app_name):
+def sods(request, app_name):
 	context = {
 	'title': '%s' % app_name,
 	}
 
-	form1 = set_as_form(request,'Stnfind')
+	form1 = set_as_form(request,'Soddyrec0')
 	context['form1'] = form1
 	if 'stn_selection' in request.POST:
-		form1 = set_as_form(request,'Stnfind')
+		form1 = set_as_form(request,'Soddyrec0')
 		context['form1'] = form1
 		if form1.is_valid():
 			station_selection = form1.cleaned_data['station_selection']
@@ -125,42 +125,18 @@ def soddyrec(request, app_name):
 	if 'app_form' in request.POST:
 		form2 = forms.SoddyrecForm(request.POST)
 		context['form2'] = form2
-	#else:
-	#	form2 = forms.SoddyrecForm(station_selection, initial={'app_name': app_name})
 		#import pdb; pdb.set_trace()
 		if  form2.is_valid():
-			#import pdb; pdb.set_trace()
 			context['cleaned'] = form2.cleaned_data
 			context['station_selection'] = form2.cleaned_data['station_selection']
 			(data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, 'soddyrec')
-			context['data'] = data
+			context['dates'] = dates
+			context['elements'] = elements
+			context['data'] = dict(data)
 			context['coop_station_ids'] = coop_station_ids
 			context['station_names'] = station_names
 		else:
 			station_selection = None
-
-
-	'''
-	if request.POST:
-		if 'stn_selection' in request.POST:
-			form1 = set_as_form(request,'Stnfind')
-		elif 'app_form' in request.POST:
-			form2 = forms.SoddyrecForm(station_selection, request.POST)
-	else:
-		form1 = forms.StnfindForm(initial={'station_selection':'stnid'})
-		form2 = forms.SoddyrecForm('county', initial={'start_date': '19990101'})
-
-	if form1.is_valid():
-		station_selection = form1.cleaned_data['station_selection']
-		context['station_selection'] = station_selection
-
-	if form2.is_valid():
-		context['cleaned'] = form2.cleaned_data
-		(data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, 'soddyrec')
-		context['data'] = data
-		context['coop_station_ids'] = coop_station_ids
-		context['station_names'] = station_names
-	'''
 	return render_to_response('my_apps/soddyrec.html', context, context_instance=RequestContext(request))
 
 
