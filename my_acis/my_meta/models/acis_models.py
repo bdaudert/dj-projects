@@ -28,14 +28,14 @@ class Station(models.Model):
     updated_by = models.CharField(max_length=8)
     remark = models.CharField(max_length=254, null=True, blank = True)
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'station'
     def __str__(self):
-	return "[%s] %s" % (self.ucan_station_id, self.station_best_name)
+        return "[%s] %s" % (self.ucan_station_id, self.station_best_name)
     class Admin:
-	list_display = ('ucan_station_id','station_best_name','state','begin_date','end_date')
-	list_filter = ('state',)
-	search_fields = ('ucan_station_id','station_best_name')
+        list_display = ('ucan_station_id','station_best_name','state','begin_date','end_date')
+        list_filter = ('state',)
+        search_fields = ('ucan_station_id','station_best_name')
 """
 class StationLocation(models.Model):
     ucan_station_id = models.IntegerField(primary_key=True) # Not the real pk
@@ -53,15 +53,15 @@ class StationLocation(models.Model):
     updated_by = models.CharField(max_length=8)
     remark = models.CharField(max_length=254)
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'station_location'
     def __str__(self):
-	return "[ucan %s] %.4f %.4f" % (self.ucan_station_id, self.latitude, self.longitude)
+        return "[ucan %s] %.4f %.4f" % (self.ucan_station_id, self.latitude, self.longitude)
     class Admin:
-	list_display = ('ucan_station_id', 'latitude', 'longitude', 'best_elevation', 'begin_date', 'end_date')
-	search_fields = ('ucan_station_id',)
+        list_display = ('ucan_station_id', 'latitude', 'longitude', 'best_elevation', 'begin_date', 'end_date')
+        search_fields = ('ucan_station_id',)
     def get_station(self):
-	return WrccStation.objects.get(pk=self.ucan_station_id)
+        return WrccStation.objects.get(pk=self.ucan_station_id)
 """
 
 class StationLocation(models.Model):
@@ -96,13 +96,13 @@ class StationMaintenance(models.Model):
     maintenance_date = models.DateField()
     remark = models.TextField(null=True, blank = True)
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'station_maintenance'
     class Admin:
-	list_display = ('ucan_station_id', 'maintenance_date')
-	search_fields = ('ucan_station_id',)
+        list_display = ('ucan_station_id', 'maintenance_date')
+        search_fields = ('ucan_station_id',)
     def __str__(self):
-	return "[ucan %s] %s" % (self.ucan_station_id, self.maintenance_date)
+        return "[ucan %s] %s" % (self.ucan_station_id, self.maintenance_date)
 
 
 class StationEquipment(models.Model):
@@ -119,12 +119,12 @@ class StationEquipment(models.Model):
     sampling_interval = models.CharField(max_length=10)
     remark = models.TextField(null=True, blank = True)
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'station_equipment'
     class Admin:
-	pass
+        pass
     def __str__(self):
-	return "[ucan %s] %s" % (self.ucan_station_id, self.equipment_type)
+        return "[ucan %s] %s" % (self.ucan_station_id, self.equipment_type)
 
 class StationPhysical(models.Model):
     id = models.AutoField(primary_key=True)
@@ -136,12 +136,12 @@ class StationPhysical(models.Model):
     route_directions = models.TextField(null=True, blank = True)
     remark = models.TextField(null=True, blank = True)
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'station_physical'
     class Admin:
-	pass
+        pass
     def __str__(self):
-	return "[ucan %s] %s ..." % (self.ucan_station_id, str(self.site_description)[:80])
+        return "[ucan %s] %s ..." % (self.ucan_station_id, str(self.site_description)[:80])
 
 
 class StationAltName(models.Model):
@@ -158,12 +158,12 @@ class StationAltName(models.Model):
     updated_by = models.CharField(max_length=8)
     remark = models.CharField(max_length=254)
     def __str__(self):
-	return "[ucan %s] %s" % (self.ucan_station_id, self.station_alt_name)
+        return "[ucan %s] %s" % (self.ucan_station_id, self.station_alt_name)
     class Admin:
-	list_display = ('station_alt_name', 'ucan_station_id', 'begin_date', 'end_date')
-	search_fields = ('station_alt_name', 'ucan_station_id')
+        list_display = ('station_alt_name', 'ucan_station_id', 'begin_date', 'end_date')
+        search_fields = ('station_alt_name', 'ucan_station_id')
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'station_alt_name'
 
 class StationCounty(models.Model):
@@ -182,12 +182,12 @@ class StationCounty(models.Model):
     updated_by = models.CharField(max_length=8)
     remark = models.CharField(max_length=254, null=True, blank=True)
     def __str__(self):
-	return "[ucan %s] %s" % (self.ucan_station_id, self.county)
+        return "[ucan %s] %s" % (self.ucan_station_id, self.county)
     class Admin:
-	list_display = ('ucan_station_id', 'county', 'begin_date', 'end_date')
-	search_fields = ('ucan_station_id','county_name')
+        list_display = ('ucan_station_id', 'county', 'begin_date', 'end_date')
+        search_fields = ('ucan_station_id','county_name')
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'station_county'
 
 class StationNetwork(models.Model):
@@ -204,12 +204,12 @@ class StationNetwork(models.Model):
     updated_by = models.CharField(max_length=8)
     remark = models.CharField(max_length=254, null=True, blank=True)
     def __str__(self):
-	return "[ucan %s] %s in %s" % (self.ucan_station_id, self.network_station_id, self.id_type)
+        return "[ucan %s] %s in %s" % (self.ucan_station_id, self.network_station_id, self.id_type)
     class Admin:
-	list_display = ('ucan_station_id', 'network_station_id', 'id_type', 'begin_date', 'end_date')
-	search_fields = ('ucan_station_id', 'network_station_id')
+        list_display = ('ucan_station_id', 'network_station_id', 'id_type', 'begin_date', 'end_date')
+        search_fields = ('ucan_station_id', 'network_station_id')
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'station_network'
 
 #class GlobalVariableMajMin(models.Model):
@@ -224,7 +224,7 @@ class StationNetwork(models.Model):
 #    remark = models.CharField(max_length=254, null=True, blank=True)
 #    class Admin: pass
 #    class Meta:
-#	app_label = 'my_meta'
+#       app_label = 'my_meta'
 #        db_table = 'global_variable_maj_min'
 
 class StationTimeZone(models.Model):
@@ -240,11 +240,11 @@ class StationTimeZone(models.Model):
     updated_by = models.CharField(max_length=8)
     remark = models.CharField(max_length=254, null=True, blank=True)
     def __str__(self):
-	return "[ucan %s] %s" % (self.ucan_station_id, self.time_zone)
+        return "[ucan %s] %s" % (self.ucan_station_id, self.time_zone)
     class Admin:
-	search_fields = ('ucan_station_id',)
+        search_fields = ('ucan_station_id',)
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'station_time_zone'
 
 class ClimDiv(models.Model):
@@ -258,15 +258,15 @@ class ClimDiv(models.Model):
     updated_by = models.CharField(max_length=8)
     remark = models.CharField(max_length=254, null=True, blank=True)
     def __str__(self):
-	return "[%s] %s, %s" % (self.clim_div_key, self.clim_div_name, self.fips_state_abbr)
+        return "[%s] %s, %s" % (self.clim_div_key, self.clim_div_name, self.fips_state_abbr)
     class Admin:
-	list_display = ('clim_div_name','clim_div_key','fips_state_abbr','ncdc_state_code')
-	list_filter = ('fips_state_abbr',)
-	search_fields = ('clim_div_name')
+        list_display = ('clim_div_name','clim_div_key','fips_state_abbr','ncdc_state_code')
+        list_filter = ('fips_state_abbr',)
+        search_fields = ('clim_div_name')
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'clim_div'
-	verbose_name_plural = "climate divisions"
+        verbose_name_plural = "climate divisions"
 
 class StationClimDiv(models.Model):
     ucan_station_id = models.IntegerField(primary_key=True)
@@ -285,13 +285,13 @@ class StationClimDiv(models.Model):
     updated_by = models.CharField(max_length=8)
     remark = models.CharField(max_length=254, null=True, blank=True)
     def __str__(self):
-	return "[ucan %s] [climdiv %s]" % (self.ucan_station_id,self.clim_div)
+        return "[ucan %s] [climdiv %s]" % (self.ucan_station_id,self.clim_div)
     class Admin:
-	list_display = ('ucan_station_id','clim_div','fips_state_abbr','ncdc_state_code')
-	list_filter = ('fips_state_abbr',)
-	search_fields = ('ucan_station_id')
+        list_display = ('ucan_station_id','clim_div','fips_state_abbr','ncdc_state_code')
+        list_filter = ('fips_state_abbr',)
+        search_fields = ('ucan_station_id')
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'station_clim_div'
 
 
@@ -303,27 +303,27 @@ class Subnetwork(models.Model):
     subnetwork_name = models.CharField(max_length=30)
     description = models.TextField(null=True, blank = True)
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'subnetwork'
     class Admin:
-	pass
+        pass
     def __str__(self):
-	return "<Subnetwork:%s> %s" % (self.subnetwork_key, self.subnetwork_name)
+        return "<Subnetwork:%s> %s" % (self.subnetwork_key, self.subnetwork_name)
 
     def station_set(self):
-	from django.db import connection
-	cursor = connection.cursor()
-	sql = "SELECT ucan_station_id FROM subnetwork_stations WHERE subnetwork_key = %s"
-	cursor.execute(sql, (self.subnetwork_key,))
-	id_list = [r[0] for r in cursor.fetchall()]
-	return Station.objects.filter(ucan_station_id__in=id_list)
+        from django.db import connection
+        cursor = connection.cursor()
+        sql = "SELECT ucan_station_id FROM subnetwork_stations WHERE subnetwork_key = %s"
+        cursor.execute(sql, (self.subnetwork_key,))
+        id_list = [r[0] for r in cursor.fetchall()]
+        return Station.objects.filter(ucan_station_id__in=id_list)
 
     def station_id_set(self):
-	from django.db import connection
-	cursor = connection.cursor()
-	sql = "SELECT ucan_station_id, network_station_id FROM subnetwork_stations WHERE subnetwork_key = %s"
-	cursor.execute(sql, (self.subnetwork_key,))
-	return cursor.fetchall()
+        from django.db import connection
+        cursor = connection.cursor()
+        sql = "SELECT ucan_station_id, network_station_id FROM subnetwork_stations WHERE subnetwork_key = %s"
+        cursor.execute(sql, (self.subnetwork_key,))
+        return cursor.fetchall()
 
 
 class StationSubnetwork(models.Model):
@@ -331,7 +331,7 @@ class StationSubnetwork(models.Model):
     ucan_station_id = models.IntegerField()
     network_station_id = models.CharField(max_length=20)
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'subnetwork_stations'
 
 ## class Contact(models.Model):
@@ -349,5 +349,5 @@ class StationSubnetwork(models.Model):
 ##     work_phone = models.CharField(max_length=32)
 ##     contact_notes = models.TextField(null=True, blank = True)
 ##     class Meta:
-## 	app_label = 'my_meta'
+##      app_label = 'my_meta'
 ##         db_table = 'contact'

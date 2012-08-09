@@ -24,7 +24,7 @@ def results(request, state_name, ucan_id):
         station =  Station.objects.get(state=state_name, ucan_station_id=ucan_id)
         stns = Station.objects.filter(state=state_name, ucan_station_id=ucan_id)
     except Station.DoesNotExist:
-       raise Http404
+        raise Http404
     #station = get_object_or_404(Station, state=state_name, ucan_station_id=ucan_id)
 
     today = date.today()
@@ -56,5 +56,3 @@ def results(request, state_name, ucan_id):
 
     #return render_to_response('plots_7d/results.html', {'station' : station,'wrcc_id': wrcc_id, 'state_name': state_name, 'year': year, 'month': month, 'day': day })
     return render_to_response('plots_7d/results.html', {'state_name': state_name, 'station': station,'wrcc_id': wrcc_id,'year': year, 'month': month, 'day': day })
-
-

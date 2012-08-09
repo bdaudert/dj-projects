@@ -29,4 +29,4 @@ def get_id(tbl_instance):
 
 @register.filter
 def string_sub(arg):
-	return '%s' % arg
+    return '%s' % arg

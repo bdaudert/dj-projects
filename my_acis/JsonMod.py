@@ -13,7 +13,7 @@ file_name = '%s.json' % model_name
 out_file_name ='New%s' % file_name
 
 if os.path.isfile(out_file_name):
-	os.remove(out_file_name)
+    os.remove(out_file_name)
 
 in_file = open(file_name, 'r')
 data =  json.loads(in_file.read())
@@ -26,11 +26,11 @@ out_file = open (out_file_name, 'a')
 i_d = 0
 
 for i, dat in enumerate(data):
-	i_d+=1
-	ucan_id = dat['pk']
+    i_d+=1
+    ucan_id = dat['pk']
 
-	dat['fields']['ucan_station_id'] = ucan_id
-	dat['pk'] = i_d
+    dat['fields']['ucan_station_id'] = ucan_id
+    dat['pk'] = i_d
 
 
 data_out = json.dumps(data)

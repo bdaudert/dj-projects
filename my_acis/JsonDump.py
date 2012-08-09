@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 usage = '''
-	JsonDump model_name
+        JsonDump model_name
         '''
 
 import sys

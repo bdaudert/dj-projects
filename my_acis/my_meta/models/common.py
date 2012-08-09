@@ -16,15 +16,15 @@ class County(models.Model):
     updated_by = models.CharField(max_length=8)
     remark = models.CharField(max_length=254, null=True, blank=True)
     def __str__(self):
-	return "%s, %s" % (self.county_name, self.fips_state_abbr)
+        return "%s, %s" % (self.county_name, self.fips_state_abbr)
     class Admin:
-	list_display = ('county_name','county_key','fips_state_abbr','begin_date','end_date')
-	list_filter = ('fips_state_abbr',)
-	search_fields = ('county_name')
+        list_display = ('county_name','county_key','fips_state_abbr','begin_date','end_date')
+        list_filter = ('fips_state_abbr',)
+        search_fields = ('county_name')
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'county'
-	verbose_name_plural = "counties"
+        verbose_name_plural = "counties"
 
 
 class State(models.Model):
@@ -39,10 +39,10 @@ class State(models.Model):
     updated_by = models.CharField(max_length=8)
     remark = models.CharField(max_length=254, null=True, blank=True)
     def __str__(self):
-	return "%s" % self.fips_state_abbr
+        return "%s" % self.fips_state_abbr
     class Admin: pass
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'state'
 
 STATE_CHOICES = [(s.state_key, s.state_name) for s in State.objects.all()]
@@ -53,7 +53,7 @@ class Zipcode(models.Model):
     latitude =  models.FloatField()
     class Admin: pass
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'zipcode'
 
 
@@ -66,11 +66,11 @@ class IdType(models.Model):
     updated_by = models.CharField(max_length=8)
     remark = models.CharField(max_length=254, null=True, blank=True)
     def __str__(self):
-	return "[%s] %s" % (self.id_type_key, self.name)
+        return "[%s] %s" % (self.id_type_key, self.name)
     class Admin:
-	list_display = ('name','id_type_key','description','controller_info','last_updated','updated_by','remark')
+        list_display = ('name','id_type_key','description','controller_info','last_updated','updated_by','remark')
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'id_type'
 
 
@@ -84,11 +84,11 @@ class Network(models.Model):
     updated_by = models.CharField(max_length=8)
     remark = models.CharField(max_length=254, null=True, blank=True)
     def __str__(self):
-	return "[%s] %s" % (self.network_key, self.network_code)
+        return "[%s] %s" % (self.network_key, self.network_code)
     class Admin:
-	list_display = ('name','network_key','network_code','name','description','id_type','last_updated','updated_by','remark')
+        list_display = ('name','network_key','network_code','name','description','id_type','last_updated','updated_by','remark')
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'network'
 
 
@@ -101,13 +101,13 @@ class Variable(models.Model):
     begin_date = models.DateField()
     end_date = models.DateField()
     def __str__(self):
-	return "[ucan %s] %s in %s, %s::%s" % (self.ucan_station_id, self.network_station_id,
-						self.network, self.var_major_id, self.var_minor_id)
+        return "[ucan %s] %s in %s, %s::%s" % (self.ucan_station_id, self.network_station_id,
+                                                self.network, self.var_major_id, self.var_minor_id)
     class Admin:
-	list_display = ('ucan_station_id', 'network_station_id', 'network', 'var_major_id', 'var_minor_id', 'begin_date', 'end_date')
-	search_fields = ('ucan_station_id', 'network_station_id')
+        list_display = ('ucan_station_id', 'network_station_id', 'network', 'var_major_id', 'var_minor_id', 'begin_date', 'end_date')
+        search_fields = ('ucan_station_id', 'network_station_id')
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'variable'
 
 
@@ -118,11 +118,11 @@ class StationDigital(models.Model):
     begin_date = models.DateField()
     end_date = models.DateField()
     def __str__(self):
-	return "[ucan %s] %s in %s" % (self.ucan_station_id, self.network_station_id, self.network)
+        return "[ucan %s] %s in %s" % (self.ucan_station_id, self.network_station_id, self.network)
     class Admin:
-	list_display = ('ucan_station_id','network_station_id','network','begin_date','end_date')
-	list_filter = ('network',)
-	search_fields = ('ucan_station_id', 'network_station_id')
+        list_display = ('ucan_station_id','network_station_id','network','begin_date','end_date')
+        list_filter = ('network',)
+        search_fields = ('ucan_station_id', 'network_station_id')
     class Meta:
-	app_label = 'my_meta'
+        app_label = 'my_meta'
         db_table = 'station_digital'

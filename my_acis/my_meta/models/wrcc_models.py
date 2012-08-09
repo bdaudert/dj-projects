@@ -19,14 +19,14 @@ class WrccStation(models.Model):
     updated_by = models.CharField(maxlength=8)
     remark = models.CharField(maxlength=254)
     class Meta:
-	app_label = 'meta'
+        app_label = 'meta'
         db_table = 'wrcc_station'
     def __str__(self):
-	return "[%s] %s, %s" % (self.ucan_station_id, self.station_best_name, self.state.fips_state_abbr)
+        return "[%s] %s, %s" % (self.ucan_station_id, self.station_best_name, self.state.fips_state_abbr)
     class Admin:
-	list_display = ('ucan_station_id','station_best_name','state','begin_date','end_date')
-	list_filter = ('state',)
-	search_fields = ('ucan_station_id','station_best_name')
+        list_display = ('ucan_station_id','station_best_name','state','begin_date','end_date')
+        list_filter = ('state',)
+        search_fields = ('ucan_station_id','station_best_name')
 
 class WrccStationLocation(models.Model):
     ucan_station_id = models.IntegerField(primary_key=True) # Not the real pk
@@ -44,15 +44,15 @@ class WrccStationLocation(models.Model):
     updated_by = models.CharField(maxlength=8)
     remark = models.CharField(maxlength=254)
     class Meta:
-	app_label = 'meta'
+        app_label = 'meta'
         db_table = 'wrcc_station_location'
     def __str__(self):
-	return "[ucan %s] %.4f %.4f" % (self.ucan_station_id, self.latitude, self.longitude)
+        return "[ucan %s] %.4f %.4f" % (self.ucan_station_id, self.latitude, self.longitude)
     class Admin:
-	list_display = ('ucan_station_id', 'latitude', 'longitude', 'best_elevation', 'begin_date', 'end_date')
-	search_fields = ('ucan_station_id',)
+        list_display = ('ucan_station_id', 'latitude', 'longitude', 'best_elevation', 'begin_date', 'end_date')
+        search_fields = ('ucan_station_id',)
     def get_station(self):
-	return WrccStation.objects.get(pk=self.ucan_station_id)
+        return WrccStation.objects.get(pk=self.ucan_station_id)
 
 class WrccStationMaintenance(models.Model):
     id = models.AutoField(primary_key=True)
@@ -60,13 +60,13 @@ class WrccStationMaintenance(models.Model):
     maintenance_date = models.DateField()
     remark = models.TextField()
     class Meta:
-	app_label = 'meta'
+        app_label = 'meta'
         db_table = 'wrcc_station_maintenance'
     class Admin:
-	list_display = ('ucan_station_id', 'maintenance_date')
-	search_fields = ('ucan_station_id',)
+        list_display = ('ucan_station_id', 'maintenance_date')
+        search_fields = ('ucan_station_id',)
     def __str__(self):
-	return "[ucan %s] %s" % (self.ucan_station_id, self.maintenance_date)
+        return "[ucan %s] %s" % (self.ucan_station_id, self.maintenance_date)
 
 
 class WrccStationEquipment(models.Model):
@@ -83,12 +83,12 @@ class WrccStationEquipment(models.Model):
     sampling_interval = models.CharField(maxlength=10)
     remark = models.TextField()
     class Meta:
-	app_label = 'meta'
+        app_label = 'meta'
         db_table = 'wrcc_station_equipment'
     class Admin:
-	pass
+        pass
     def __str__(self):
-	return "[ucan %s] %s" % (self.ucan_station_id, self.equipment_type)
+        return "[ucan %s] %s" % (self.ucan_station_id, self.equipment_type)
 
 class WrccStationPhysical(models.Model):
     id = models.AutoField(primary_key=True)
@@ -100,12 +100,12 @@ class WrccStationPhysical(models.Model):
     route_directions = models.TextField()
     remark = models.TextField()
     class Meta:
-	app_label = 'meta'
+        app_label = 'meta'
         db_table = 'wrcc_station_physical'
     class Admin:
-	pass
+        pass
     def __str__(self):
-	return "[ucan %s] %s ..." % (self.ucan_station_id, str(self.site_description)[:80])
+        return "[ucan %s] %s ..." % (self.ucan_station_id, str(self.site_description)[:80])
 
 
 ## class WrccStationClimDiv(models.Model):
@@ -125,9 +125,9 @@ class WrccStationPhysical(models.Model):
 ##     updated_by = models.TextField() # This field type is a guess.
 ##     remark = models.CharField(maxlength=254)
 ##     class Meta:
-## 	app_label = 'meta'
+##      app_label = 'meta'
 ##         db_table = 'wrcc_station_clim_div'
-## 
+##
 ## class WrccStationCounty(models.Model):
 ##     ucan_station_id = models.IntegerField()
 ##     county_key = models.SmallIntegerField()
@@ -144,9 +144,9 @@ class WrccStationPhysical(models.Model):
 ##     updated_by = models.TextField() # This field type is a guess.
 ##     remark = models.CharField(maxlength=254)
 ##     class Meta:
-## 	app_label = 'meta'
+##      app_label = 'meta'
 ##         db_table = 'wrcc_station_county'
-## 
+##
 ## class WrccStationNetwork(models.Model):
 ##     ucan_station_id = models.IntegerField()
 ##     network_station_id = models.CharField(maxlength=20)
@@ -161,32 +161,32 @@ class WrccStationPhysical(models.Model):
 ##     updated_by = models.TextField() # This field type is a guess.
 ##     remark = models.CharField(maxlength=254)
 ##     class Meta:
-## 	app_label = 'meta'
+##      app_label = 'meta'
 ##         db_table = 'wrcc_station_network'
-## 
+##
 ## class WrccSubnetworkStations(models.Model):
 ##     subnetwork_key = models.IntegerField()
 ##     ucan_station_id = models.IntegerField()
 ##     network_station_id = models.CharField(maxlength=20)
 ##     class Meta:
-## 	app_label = 'meta'
+##      app_label = 'meta'
 ##         db_table = 'wrcc_subnetwork_stations'
-## 
+##
 ## class StationContact(models.Model):
 ##     ucan_station_id = models.IntegerField()
 ##     contact_key = models.IntegerField()
 ##     class Meta:
-## 	app_label = 'meta'
+##      app_label = 'meta'
 ##         db_table = 'station_contact'
-## 
+##
 ## class WrccStationContact(models.Model):
 ##     ucan_station_id = models.IntegerField()
 ##     contact_key = models.IntegerField()
 ##     class Meta:
-## 	app_label = 'meta'
+##      app_label = 'meta'
 ##         db_table = 'wrcc_station_contact'
-## 
-## 
+##
+##
 ## class SpatialRefSys(models.Model):
 ##     srid = models.IntegerField(primary_key=True)
 ##     auth_name = models.CharField(maxlength=256)
@@ -194,9 +194,9 @@ class WrccStationPhysical(models.Model):
 ##     srtext = models.CharField(maxlength=2048)
 ##     proj4text = models.CharField(maxlength=2048)
 ##     class Meta:
-## 	app_label = 'meta'
+##      app_label = 'meta'
 ##         db_table = 'spatial_ref_sys'
-## 
+##
 ## class GeometryColumns(models.Model):
 ##     f_table_catalog = models.CharField(maxlength=256)
 ##     f_table_schema = models.CharField(maxlength=256)
@@ -206,10 +206,10 @@ class WrccStationPhysical(models.Model):
 ##     srid = models.IntegerField()
 ##     type = models.CharField(maxlength=30)
 ##     class Meta:
-## 	app_label = 'meta'
+##      app_label = 'meta'
 ##         db_table = 'geometry_columns'
-## 
-## 
+##
+##
 ## class WrccContact(models.Model):
 ##     contact_key = models.IntegerField()
 ##     full_name = models.CharField(maxlength=127)
@@ -225,9 +225,9 @@ class WrccStationPhysical(models.Model):
 ##     work_phone = models.CharField(maxlength=32)
 ##     contact_notes = models.TextField()
 ##     class Meta:
-## 	app_label = 'meta'
+##      app_label = 'meta'
 ##         db_table = 'wrcc_contact'
-## 
+##
 ## class StationPhysical(models.Model):
 ##     ucan_station_id = models.IntegerField()
 ##     slope = models.IntegerField()
@@ -237,17 +237,17 @@ class WrccStationPhysical(models.Model):
 ##     route_directions = models.TextField()
 ##     remark = models.TextField()
 ##     class Meta:
-## 	app_label = 'meta'
+##      app_label = 'meta'
 ##         db_table = 'station_physical'
-## 
+##
 ## class StationMaintenance(models.Model):
 ##     ucan_station_id = models.IntegerField()
 ##     maintenance_date = models.DateField()
 ##     remark = models.TextField()
 ##     class Meta:
-## 	app_label = 'meta'
+##      app_label = 'meta'
 ##         db_table = 'station_maintenance'
-## 
+##
 ## class StationEquipment(models.Model):
 ##     ucan_station_id = models.IntegerField()
 ##     equipment_type = models.CharField(maxlength=30)
@@ -261,9 +261,9 @@ class WrccStationPhysical(models.Model):
 ##     sampling_interval = models.CharField(maxlength=10)
 ##     remark = models.TextField()
 ##     class Meta:
-## 	app_label = 'meta'
+##      app_label = 'meta'
 ##         db_table = 'station_equipment'
-## 
+##
 ## class WrccStationAltName(models.Model):
 ##     ucan_station_id = models.IntegerField()
 ##     station_alt_name = models.CharField(maxlength=30)
@@ -278,6 +278,6 @@ class WrccStationPhysical(models.Model):
 ##     updated_by = models.TextField() # This field type is a guess.
 ##     remark = models.CharField(maxlength=254)
 ##     class Meta:
-## 	app_label = 'meta'
+##      app_label = 'meta'
 ##         db_table = 'wrcc_station_alt_name'
-## 
+##

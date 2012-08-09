@@ -322,3 +322,23 @@ table.aligned{border-collapse:collapse;}
 td{padding:0px;margin:0px;border:0px;}
 td+td{text-align:right;}
 td,td+td+td{text-align:left}
+
+/* HOVER STYLES */
+div#pop-up {
+  display: none;
+  position: absolute;
+  width: 280px;
+  padding: 10px;
+  background: #eeeeee;
+  color: #000000;
+  border: 1px solid #1a1a1a;
+  font-size: 90%;
+}
+
+div#container {
+  width: 580px;
+  margin: 100px auto 0 auto;
+  padding: 20px;
+  background: #000;
+  border: 1px solid #1a1a1a;
+}

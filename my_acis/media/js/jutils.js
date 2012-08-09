@@ -67,3 +67,27 @@ function ShowHide(divId)
                 obj.style.display = 'none';
         }
 }
+
+$(function() {
+    $('div.pop-up').hide();
+});
+$(function() {
+  var moveLeft = 20;
+  var moveDown = 10;
+
+  $('a.trigger').hover(function(e) {
+    $(this).next('div.pop-up').show();
+   //$('div.pop-up').show();
+      //.css('top', e.pageY + moveDown)
+      //.css('left', e.pageX + moveLeft)
+      //.appendTo('body');
+  }, function() {
+    $(this).next('div.pop-up').hide();
+  });
+
+  $('a.trigger').mousemove(function(e) {
+    //$('div.pop-up').css('top', e.pageY + moveDown).css('left', e.pageX + moveLeft);
+    $(this).next('div.pop-up').css('top', e.pageY + moveDown).css('left', e.pageX + moveLeft);
+  });
+
+}); 

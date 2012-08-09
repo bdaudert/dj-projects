@@ -317,5 +317,3 @@ class NetworkForm(forms.Form):
         data = self.cleaned_data
         n = Network(**data)
         n.save()
-
-
