@@ -100,8 +100,8 @@ def sodsum(request, app_name):
         context['cleaned'] = form.cleaned_data
         #(data, dates, elements, coop_station_id, station_name) = AcisWS.get_sodsum_data_multi(form.cleaned_data)
         (data, elements, coop_station_id, station_name) = AcisWS.get_sodsum_data(form.cleaned_data)
-        #results = WRCCDataApps.SodSumMulti(data, dates, elements, coop_station_id, station_name)
-        results = WRCCDataApps.SodSum(data, elements, coop_station_id, station_name)
+        #results = WRCCDataApps.SodsumMulti(data, dates, elements, coop_station_id, station_name)
+        results = WRCCDataApps.Sodsum(data, elements, coop_station_id, station_name)
         context['elements'] = elements
     context['form'] = form
     context['results']= dict(results)
@@ -130,13 +130,14 @@ def sods(request, app_name):
         #import pdb; pdb.set_trace()
         if  form2.is_valid():
             context['cleaned'] = form2.cleaned_data
-            context['station_selection'] = form2.cleaned_data['station_selection']
             (data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, 'soddyrec')
+            results = WRCCDataApps.Soddyrec(data, dates, elements, coop_station_ids, station_names)
+            context['results'] =  dict(results)
             context['dates'] = dates
             context['elements'] = elements
             context['data'] = dict(data)
-            context['coop_station_ids'] = coop_station_ids
-            context['station_names'] = station_names
+            context['coop_station_ids'] = dict([(k,v) for k,v in enumerate(coop_station_ids)])
+            context['station_names'] = dict([(k,v) for k,v in enumerate(station_names)])
         else:
             station_selection = None
     return render_to_response('my_apps/soddyrec.html', context, context_instance=RequestContext(request))

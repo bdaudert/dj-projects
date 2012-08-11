@@ -102,9 +102,16 @@ SS_ELEMENT_CHOICES = (
         )
 #soddyrec choices
 SDR_ELEMENT_CHOICES = (
-        ('all', '[maxt, mint, pcpn, snow, snwd, hdd, cdd]'),
-        ('tmp', '[maxt, mint, pcpn]'),
-        ('wtr', '[pcpn, snow, snwd]'),
+        #('all', '[maxt, mint, pcpn, snow, snwd, hdd, cdd]'),
+        #('tmp', '[maxt, mint, pcpn]'),
+        #('wtr', '[pcpn, snow, snwd]'),
+        ('pcpn', 'Precipitation'),
+        ('snow', 'Snowfall'),
+        ('snwd', 'Snowdepth'),
+        ('maxt', 'Maximum Temprature'),
+        ('mint', 'Minimum Temperature'),
+        ('hdd', 'Heating Degree Days'),
+        ('cdd', 'Cooling Degree Days'),
         )
 
 #Stnfind choices
@@ -273,7 +280,7 @@ class SoddyrecForm(forms.Form):
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES)
         elif station_selection == 'bbox':
             self.fields['bounding_box'] = forms.CharField(required=False,initial='-90,40,-88,41')
-        self.fields['start_date'] = forms.CharField(max_length=8, initial='20120101')
+        self.fields['start_date'] = forms.CharField(max_length=8, initial='20100101')
         self.fields['end_date'] = forms.CharField(max_length=8, initial=today)
         self.fields['eighty_column_screen'] = forms.BooleanField(required=False)
         self.fields['element'] = forms.ChoiceField(choices=SDR_ELEMENT_CHOICES, initial='all')

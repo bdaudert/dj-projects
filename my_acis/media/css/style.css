@@ -324,7 +324,7 @@ td+td{text-align:right;}
 td,td+td+td{text-align:left}
 
 /* HOVER STYLES */
-div#pop-up {
+div.pop-up {
   display: none;
   position: absolute;
   width: 280px;
@@ -335,7 +335,7 @@ div#pop-up {
   font-size: 90%;
 }
 
-div#container {
+div.container {
   width: 580px;
   margin: 100px auto 0 auto;
   padding: 20px;
