@@ -102,9 +102,9 @@ SS_ELEMENT_CHOICES = (
         )
 #soddyrec choices
 SDR_ELEMENT_CHOICES = (
-        #('all', '[maxt, mint, pcpn, snow, snwd, hdd, cdd]'),
-        #('tmp', '[maxt, mint, pcpn]'),
-        #('wtr', '[pcpn, snow, snwd]'),
+        ('all', '[maxt, mint, pcpn, snow, snwd, hdd, cdd]'),
+        ('tmp', '[maxt, mint, pcpn]'),
+        ('wtr', '[pcpn, snow, snwd]'),
         ('pcpn', 'Precipitation'),
         ('snow', 'Snowfall'),
         ('snwd', 'Snowdepth'),

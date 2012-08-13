@@ -134,7 +134,7 @@ def sods(request, app_name):
             results = WRCCDataApps.Soddyrec(data, dates, elements, coop_station_ids, station_names)
             context['results'] =  dict(results)
             context['dates'] = dates
-            context['elements'] = elements
+            context['elements'] = dict([(k,v) for k,v in enumerate(elements)])
             context['data'] = dict(data)
             context['coop_station_ids'] = dict([(k,v) for k,v in enumerate(coop_station_ids)])
             context['station_names'] = dict([(k,v) for k,v in enumerate(station_names)])
