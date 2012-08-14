@@ -261,7 +261,7 @@ class SoddyrecForm(forms.Form):
     def __init__(self, *args, **kwargs):
         station_selection = kwargs.get('initial', {}).get('station_selection', None)
         super(SoddyrecForm, self).__init__(*args, **kwargs)
-        self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid')
+        self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid', widget=forms.HiddenInput())
         if station_selection is None:
             station_selection = self.data.get('station_selection')
         if station_selection == 'stnid':
@@ -282,7 +282,6 @@ class SoddyrecForm(forms.Form):
             self.fields['bounding_box'] = forms.CharField(required=False,initial='-90,40,-88,41')
         self.fields['start_date'] = forms.CharField(max_length=8, initial='20100101')
         self.fields['end_date'] = forms.CharField(max_length=8, initial=today)
-        self.fields['eighty_column_screen'] = forms.BooleanField(required=False)
         self.fields['element'] = forms.ChoiceField(choices=SDR_ELEMENT_CHOICES, initial='all')
 
 class Soddynorm0Form(forms.Form):
