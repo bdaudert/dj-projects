@@ -105,33 +105,29 @@ def sodsum(request, app_name):
         context['elements'] = elements
     context['form'] = form
     context['results']= dict(results)
-    return render_to_response('my_apps/sodsum.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_apps/Sodsum.html', context, context_instance=RequestContext(request))
 
 def sods(request, app_name):
     context = {
     'title': '%s' % app_name,
     }
-    #For Acis workshop
-    context['months'] = [i for i in range(1,13)]
-    context['days'] = [i for i in range(1,367)]
-    form1 = set_as_form(request,'Soddyrec0')
+    form1 = set_as_form(request, 'Sod0')
     context['form1'] = form1
     if 'stn_selection' in request.POST:
-        form1 = set_as_form(request,'Soddyrec0')
+        form1 = set_as_form(request, 'Sod0')
         context['form1'] = form1
         if form1.is_valid():
             station_selection = form1.cleaned_data['station_selection']
-            context['station_selection'] = station_selection
-            form2 = forms.SoddyrecForm(initial={'app_name': app_name, 'station_selection': station_selection})
+            form2 = set_as_form2(app_name, stn_selection=station_selection)
             context['form2'] = form2
     if 'app_form' in request.POST:
-        form2 = forms.SoddyrecForm(request.POST)
+        form2 = set_as_form(request, 'Sod')
         context['form2'] = form2
         #import pdb; pdb.set_trace()
         if  form2.is_valid():
             context['cleaned'] = form2.cleaned_data
-            (data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, 'soddyrec')
-            results = WRCCDataApps.Soddyrec(data, dates, elements, coop_station_ids, station_names)
+            (data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
+            results = run_data_app(app_name, data, dates, elements, coop_station_ids, station_names)
             context['results'] =  dict(results)
             context['dates'] = dates
             context['elements'] = dict([(k,v) for k,v in enumerate(elements)])
@@ -140,8 +136,7 @@ def sods(request, app_name):
             context['station_names'] = dict([(k,v) for k,v in enumerate(station_names)])
         else:
             station_selection = None
-    return render_to_response('my_apps/soddyrec.html', context, context_instance=RequestContext(request))
-
+    return render_to_response('my_apps/%s.html' % app_name, context, context_instance=RequestContext(request))
 
 #Utlities
 def set_as_form(request, app_name, init = None):
@@ -155,3 +150,30 @@ def set_as_form(request, app_name, init = None):
         else:
             form = form_class(initial={'app_name': app_name})
     return form
+
+def set_as_form2(app_name, stn_selection = None):
+    form_name = 'SodForm'
+    form_class = getattr(forms, form_name)
+    if stn_selection is not None:
+        form = form_class(initial={'app_name': app_name, 'station_selection': stn_selection})
+    else:
+        form = form_class(initial={'app_name': app_name})
+    return form
+
+def run_data_app(app_name, *args, **kwargs):
+    try:
+        data_app = getattr(WRCCDataApps, app_name)
+        results = data_app(*args)
+    except:
+        results = {}
+    return results
+'''
+def run_data_app(app_name, data, dates, elements, coop_station_ids, station_names):
+    if app_name == 'Soddyrec':
+        results = WRCCDataApps.Soddyrec(data, dates, elements, coop_station_ids, station_names)
+    elif app_name == 'Soddynorm':
+        results = WRCCDataApps.Soddynorm(data, dates, elements, coop_station_ids, station_names)
+    else:
+        results = {}
+    return results
+'''
