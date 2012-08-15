@@ -2,7 +2,6 @@
 #Python imports
 import subprocess
 import sys
-import csv
 #django Imports
 from django.template import RequestContext
 #from django.contrib.auth.models import User
@@ -127,7 +126,13 @@ def sods(request, app_name):
         if  form2.is_valid():
             context['cleaned'] = form2.cleaned_data
             (data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
-            results = run_data_app(app_name, data, dates, elements, coop_station_ids, station_names)
+            if app_name == 'Soddynorm':
+                results = run_data_app(app_name, data, dates, elements, coop_station_ids, station_names, \
+                form2.cleaned_data['filter_type'], form2.cleaned_data['number_of_days'])
+            elif app_name == 'Soddyrec':
+                results = run_data_app(app_name, data, dates, elements, coop_station_ids, station_names)
+            else:
+                results = {}
             context['results'] =  dict(results)
             context['dates'] = dates
             context['elements'] = dict([(k,v) for k,v in enumerate(elements)])

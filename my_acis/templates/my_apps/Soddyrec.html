@@ -37,7 +37,9 @@
       <th colspan="3">Day of year</th><th colspan=8 align="left">{{elements|lookup:el|safe}}</th>
       <tr><td class="stronger">Month</td><td class="stronger">Day</td><td></td><td class="stronger">Average</td><td class="stronger">No</td><td class="stronger">High</td><td class="stronger">Year</td></tr>
       {%for vals in el_data %}
-        <tr align="right"><td>{{vals.0}}</td><td>{{vals.1}}</td><td></td><td>{{vals.2}}</td><td>{{vals.3}}</td><td>{{vals.4}}</td><td>{{vals.5}}</td></tr>
+        {%for val in vals%}
+        <tr><td style="text-align:right">{{val}}</td><td style="text-align:right">{{vals.1}}</td><td></td><td style="text-align:right">{{vals.2}}</td><td style="text-align:right">{{vals.3}}</td><td style="text-align:right">{{vals.4}}</td><td style="text-align:right">{{vals.5}}</td></tr>
+      {%endfor%}
       {%endfor%}
       </td></table>
    {%endfor%}

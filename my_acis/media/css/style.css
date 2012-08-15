@@ -139,6 +139,7 @@ a:active { color: red; }
 
 td,tr,th {
     white-space: nowrap;
+    text-align: right;
 }
 
 dl {
@@ -192,19 +193,23 @@ dd {
 }
 
 
-/*
+
 table {
     border-collapse: collapse;
     border: 1px solid #ccc;
 }
 table tr {
 }
-table td ,
+table td {
+    text-align:right;
+}
 table th {
     border: 1px solid #ccc;
     padding: .5em;
 }
-*/
+
+
+
 
 table.sortable {
     border: 1px solid black;
