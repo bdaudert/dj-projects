@@ -26,20 +26,32 @@
 	</form>
   </table>
 
+</br>
+
+{%if results%}
+
+<p>
+Cooling degree threshold =   65.00  Heating degree threshold =   65.00</br>
+</br>
+Mon         Month</br>
+Day         Day</br>
+Avgt        Multi-year unsmoothed average of the indicated quantity</br>
+Extrm       Extreme value of indicated quantity for this day of year (LOW for mint, HIGH for all other elements)</br>
+Year l      Latest year of occurrence of the extreme value</br>
+No          Number of years with data for this day of year.</br>
+Units       English (inches and degrees F)</br>
+<p>
 
 </br>
-{%if results %}
   {%for stn, stn_data in results.items %}
     <h2>Station_name: {{station_names|lookup:stn|safe}}  Coop_station_id: {{coop_station_ids|lookup:stn|safe}}</h2>
     <table><tr>
     {%for el, el_data in stn_data.items%}
-      <td><table align="right" border="1">
-      <th colspan="3">Day of year</th><th colspan=8 align="left">{{elements|lookup:el|safe}}</th>
-      <tr><td class="stronger">Month</td><td class="stronger">Day</td><td></td><td class="stronger">Average</td><td class="stronger">No</td><td class="stronger">High</td><td class="stronger">Year</td></tr>
+      <td><table border="1">
+      <th colspan="2"></th><th colspan=8 align="left">{{elements|lookup:el|safe}}</th>
+      <tr><td class="stronger">Mon</td><td class="stronger">Day</td><td class="stronger">Avgt</td><td></td><td></td><td class="stronger">No</td><td class="stronger">Extrm</td><td></td><td></td><td class="stronger">Year L</td></tr>
       {%for vals in el_data %}
-        {%for val in vals%}
-        <tr><td style="text-align:right">{{val}}</td><td style="text-align:right">{{vals.1}}</td><td></td><td style="text-align:right">{{vals.2}}</td><td style="text-align:right">{{vals.3}}</td><td style="text-align:right">{{vals.4}}</td><td style="text-align:right">{{vals.5}}</td></tr>
-      {%endfor%}
+        <tr><td style="text-align:right">{{vals.0}}</td><td style="text-align:right">{{vals.1}}</td><td style="text-align:right">{{vals.2}}</td><td></td><td></td><td style="text-align:right">{{vals.3}}</td><td style="text-align:right">{{vals.4}} </td><td></td><td></td><td style="text-align:right">{{vals.5}}</td></tr>
       {%endfor%}
       </td></table>
    {%endfor%}
