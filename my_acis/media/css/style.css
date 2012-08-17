@@ -302,6 +302,12 @@ ul.navbar em {
   border-right: 1px solid #000;
   border-left: 1px solid #000; }
 
+#map { 
+    height: 900px;
+    width: 1200px;
+    margin-left: 3em;
+    margin-right: 3em;
+}
 
 /*Address*/
 address {

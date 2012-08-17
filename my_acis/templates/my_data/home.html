@@ -3,55 +3,36 @@
 <html>
   <head>
     <h1>{{title}}</h1>	
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <style type="text/css">
-      html { height: 100% }
-      body { height: 100%; margin: 0; padding: 0 }
-      #map_canvas { height: 100% }
-    </style>
+    <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/base.css"></link>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.css" />
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.ie.css" />
+    <![endif]-->
+    <script src="http://cdn.leafletjs.com/leaflet-0.4/leaflet.js"></script>
 
-   <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-   <!-- ** Javascript ** -->
-   <script type="text/javascript" src="{{ MEDIA_URL }}js/map_jutils.js"></script>	
-   <!-- ExtJS library: base/adapter
-   <script type="text/javascript" src="http://www.wrcc.dri.edu/media/ext/adapter/ext/ext-base.js"></script>
-   <!-- ExtJS library: all widgets -->
-   <script type="text/javascript" src="http://www.wrcc.dri.edu/media/ext/ext-all.js"></script>
-   <!-- overrides to library -->
-   <!-- extensions -->
-   <script type="text/javascript" src="http://www.wrcc.dri.edu/media/js/stationmap.js"></script> -->
+  <body>
+    <div id="map"</div>
 
-   <script type="text/javascript"
-      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true">
+    <script>
+    var map = L.map('map').setView([39.50, -99.00], 5);
+    L.tileLayer('http://{s}.tile.cloudmade.com/675e9a7b604442e182c1482bcb3732b9/997/256/{z}/{x}/{y}.png', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+    maxZoom: 18
+}).addTo(map);
+    var marker = L.marker([40.5, -90.0]).addTo(map);
+    marker.bindPopup("I am a popup.");
+    var popup = L.popup();
+
+function onMapClick(e) {
+    popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(map);
+}
+
+map.on('click', onMapClick);
     </script>
-
-    
-    <script type="text/javascript">
-
-      function initialize() {
-        var myOptions = {
-          center: new google.maps.LatLng(39.50, -99.00),
-          zoom: 4,
-          mapTypeId: google.maps.MapTypeId.TERRAIN
-        };
-        var map = new google.maps.Map(document.getElementById("map_canvas"),
-            myOptions);
-        }
-
-//       Ext.onReady(function(){
-//         var stationmap = new StationMap({
-//           station_json_url: 'calclim.json',
-//           center: { lat: 37, lng: -120 },
-//           panel_title: "CalClim Stations",
-//           zoom_level: 6
-//         });
-//
-//       }); // end onReady	
-
-     </script>
    </head>
-
-  <body onload="initialize()">
-    <div id="map_canvas" style="width:50%; height:50%" align="center"></div>
   </body>
 </html>
