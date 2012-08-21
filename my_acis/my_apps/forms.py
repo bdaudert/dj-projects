@@ -268,8 +268,22 @@ class SodsumForm(forms.Form):
     element = forms.ChoiceField(choices=SS_ELEMENT_CHOICES, initial='multi')
 
 #class to determine method of station selection used insubsequent forms
+'''
 class Sod0Form(forms.Form):
     station_selection = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid')
+'''
+class Sod0Form(forms.Form):
+    def __init__(self, *args, **kwargs):
+        app_name = kwargs.get('initial', {}).get('app_name', None)
+        super(Sod0Form, self).__init__(*args, **kwargs)
+
+        self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid')
+        self.fields['app_name'] = forms.ChoiceField(choices=APP_NAME_CHOICES, required=False, initial='Soddd', widget=forms.HiddenInput())
+        if app_name is None:
+            app_name = self.data.get('app_name')
+        if app_name == 'Soddd':
+            self.fields['skip_days'] = forms.BooleanField(initial=False, required=False)
+            self.fields['truncate'] = forms.BooleanField(initial=False, required=False)
 
 class SodForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -279,6 +293,7 @@ class SodForm(forms.Form):
 
         self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid', widget=forms.HiddenInput())
         self.fields['app_name'] = forms.ChoiceField(choices=APP_NAME_CHOICES, required=False, initial='Soddyrec', widget=forms.HiddenInput())
+
         if station_selection is None:
             station_selection = self.data.get('station_selection')
         if station_selection == 'stnid':
@@ -300,15 +315,34 @@ class SodForm(forms.Form):
 
         if app_name is None:
             app_name = self.data.get('app_name')
-        if app_name == 'Soddyrec':
+
+        if app_name in ['Soddyrec']:
             self.fields['start_date'] = forms.CharField(max_length=8, initial='20100101')
             self.fields['end_date'] = forms.CharField(max_length=8, initial=today)
-            self.fields['element'] = forms.ChoiceField(choices=SDR_ELEMENT_CHOICES, initial='all')
-        elif app_name == 'Soddynorm':
+        elif app_name in ['Soddynorm', 'Soddd']:
             self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
             self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
+
+        if app_name == 'Soddyrec':
+            self.fields['element'] = forms.ChoiceField(choices=SDR_ELEMENT_CHOICES, initial='all')
+        elif app_name == 'Soddynorm':
             self.fields['filter_type'] = forms.ChoiceField(choices=([('gauss','Gaussian'), ('rm','Running Mean'), ]), initial='rm', required = False)
             self.fields['number_of_days'] = forms.ChoiceField(choices=((str(n), n) for n in range(1,32)), initial = '1')
+        elif app_name == 'Soddd':
+            self.fields['base_temperature'] = forms.CharField(max_length=4, initial='65')
+            self.fields['above_or_below'] = forms.ChoiceField(choices=([('a','Above'), ('b','Below'), ]), initial='a')
+            self.fields['output_type'] = forms.ChoiceField(choices=([('m','Monthly Time Series'), ('d','Daily Long-term Averages'), ]), initial='m')
+            self.fields['max_days_to_skip'] = forms.CharField(initial='0', required=False)
+            self.fields['max_missing_days'] = forms.CharField(initial='0', required=False)
+
+            skip_days = kwargs.get('initial', {}).get('skip_days', False)
+            truncate = kwargs.get('initial', {}).get('truncate', False)
+            if skip_days:
+                self.fields['skip_days_with_max_above'] = forms.CharField(max_length=4,initial='100')
+                self.fields['skip_days_with_min_below'] = forms.CharField(max_length=4,initial='20')
+            if truncate:
+                self.fields['truncation_upper_limit'] = forms.CharField(max_length=4,initial='85')
+                self.fields['truncation_lower_limit'] = forms.CharField(max_length=4,initial='50')
         else:
             pass
 

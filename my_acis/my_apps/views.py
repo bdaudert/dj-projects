@@ -110,20 +110,33 @@ def sods(request, app_name):
     context = {
     'title': '%s' % app_name,
     }
-    form1 = set_as_form(request, 'Sod0')
+    form1 = set_as_form(request, 'Sod0', init={'app_name': app_name})
     context['form1'] = form1
     if 'stn_selection' in request.POST:
-        form1 = set_as_form(request, 'Sod0')
+        if app_name == 'Soddd':
+            form1 = set_as_form(request, 'Sod0', init={'app_name': app_name, 'skip_days':False})
+        else:
+            form1 = set_as_form(request, 'Sod0', init={'app_name': app_name})
         context['form1'] = form1
         if form1.is_valid():
             station_selection = form1.cleaned_data['station_selection']
-            form2 = set_as_form2(app_name, stn_selection=station_selection)
+            if app_name == 'Soddd':
+                skip_days = form1.cleaned_data['skip_days']
+                truncate = form1.cleaned_data['truncate']
+                initial = {'app_name':app_name, 'station_selection':station_selection, 'skip_days':skip_days, 'truncate':truncate }
+            else:
+                initial = {'app_name':app_name, 'station_selection':station_selection}
+            form2 = set_as_form2(init=initial)
             context['form2'] = form2
+        else:
+            station_selection=None
     if 'app_form' in request.POST:
         form2 = set_as_form(request, 'Sod')
         context['form2'] = form2
         #import pdb; pdb.set_trace()
         if  form2.is_valid():
+            skip_days = None
+            truncate = None
             context['cleaned'] = form2.cleaned_data
             (data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
             if app_name == 'Soddynorm':
@@ -131,6 +144,18 @@ def sods(request, app_name):
                 form2.cleaned_data['filter_type'], form2.cleaned_data['number_of_days'])
             elif app_name == 'Soddyrec':
                 results = run_data_app(app_name, data, dates, elements, coop_station_ids, station_names)
+            elif app_name == 'Soddd':
+                app_arg_list = [app_name, data, dates,elements, coop_station_ids,station_names, form2.cleaned_data['base_temperature'], \
+                form2.cleaned_data['above_or_below'],form2.cleaned_data['output_type'], form2.cleaned_data['max_days_to_skip'], \
+                form2.cleaned_data['max_missing_days']]
+                if skip_days:
+                     app_arg_list.append(form2.cleaned_data['skip_days_with_max_above'], \
+                     form2.cleaned_data['skip_days_with_min_below'])
+                if truncate:
+                    app_arg_list.append(form2.cleaned_data['truncation_higher_limit'], \
+                    form2.cleaned_data['truncation_lower_limit'])
+                #results = run_data_app(','.join(app_arg_list))
+                results = []
             else:
                 results = {}
             context['results'] =  dict(results)
@@ -144,8 +169,8 @@ def sods(request, app_name):
     return render_to_response('my_apps/%s.html' % app_name, context, context_instance=RequestContext(request))
 
 #Utlities
-def set_as_form(request, app_name, init = None):
-    form_name = '%sForm' % app_name
+def set_as_form(request, f_name, init = None):
+    form_name = '%sForm' % f_name
     form_class = getattr(forms, form_name)
     if request.POST:
         form = form_class(request.POST)
@@ -153,32 +178,18 @@ def set_as_form(request, app_name, init = None):
         if init is not None:
             form = form_class(initial=init)
         else:
-            form = form_class(initial={'app_name': app_name})
+            form = form_class(initial={'app_name': f_name})
     return form
 
-def set_as_form2(app_name, stn_selection = None):
-    form_name = 'SodForm'
-    form_class = getattr(forms, form_name)
-    if stn_selection is not None:
-        form = form_class(initial={'app_name': app_name, 'station_selection': stn_selection})
-    else:
-        form = form_class(initial={'app_name': app_name})
+def set_as_form2(init=None):
+    form_class = getattr(forms, 'SodForm')
+    form = form_class(initial=init)
     return form
 
 def run_data_app(app_name, *args, **kwargs):
     try:
         data_app = getattr(WRCCDataApps, app_name)
-        results = data_app(*args)
+        results = data_app(*args, **kwargs)
     except:
         results = {}
     return results
-'''
-def run_data_app(app_name, data, dates, elements, coop_station_ids, station_names):
-    if app_name == 'Soddyrec':
-        results = WRCCDataApps.Soddyrec(data, dates, elements, coop_station_ids, station_names)
-    elif app_name == 'Soddynorm':
-        results = WRCCDataApps.Soddynorm(data, dates, elements, coop_station_ids, station_names)
-    else:
-        results = {}
-    return results
-'''
