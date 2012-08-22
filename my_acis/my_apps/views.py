@@ -123,7 +123,8 @@ def sods(request, app_name):
             if app_name == 'Soddd':
                 skip_days = form1.cleaned_data['skip_days']
                 truncate = form1.cleaned_data['truncate']
-                initial = {'app_name':app_name, 'station_selection':station_selection, 'skip_days':skip_days, 'truncate':truncate }
+                initial = {'app_name':app_name, 'station_selection':station_selection, \
+                'skip_days':skip_days, 'truncate':truncate }
             else:
                 initial = {'app_name':app_name, 'station_selection':station_selection}
             form2 = set_as_form2(init=initial)
@@ -149,12 +150,11 @@ def sods(request, app_name):
                 output_type = form2.cleaned_data['output_type']
                 max_miss = form2.cleaned_data['max_missing_days']
                 a_b = form2.cleaned_data['above_or_below']
-                max_skip = form2.cleaned_data['max_days_to_skip']
                 max_miss = form2.cleaned_data['max_missing_days']
                 ncdc_round = form2.cleaned_data['ncdc_roundoff']
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
                 'coop_station_ids':coop_station_ids,'station_names':station_names,\
-                'base_temp':base_temp, 'a_b':a_b,'output_type':output_type,'max_skip':max_skip,\
+                'base_temp':base_temp, 'a_b':a_b,'output_type':output_type, \
                 'max_miss':max_miss, 'ncdc_round':ncdc_round}
                 if skip_days:
                      skip_max_above = form2.cleaned_data['skip_days_with_max_above']
@@ -170,6 +170,8 @@ def sods(request, app_name):
                     app_args['trunc_low'] = trunc_low
                     context['trunc_high'] = trunc_high
                     context['trunc_low'] = trunc_low
+                context['start_year'] = dates[0][0:4]
+                context['end_year'] = dates[-1][0:4]
                 context['base_temp'] = base_temp
                 context['output_type'] = output_type
                 context['max_miss'] = max_miss
