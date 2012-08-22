@@ -145,17 +145,40 @@ def sods(request, app_name):
             elif app_name == 'Soddyrec':
                 results = run_data_app(app_name, data, dates, elements, coop_station_ids, station_names)
             elif app_name == 'Soddd':
-                app_arg_list = [app_name, data, dates,elements, coop_station_ids,station_names, form2.cleaned_data['base_temperature'], \
-                form2.cleaned_data['above_or_below'],form2.cleaned_data['output_type'], form2.cleaned_data['max_days_to_skip'], \
-                form2.cleaned_data['max_missing_days']]
+                base_temp = form2.cleaned_data['base_temperature']
+                output_type = form2.cleaned_data['output_type']
+                max_miss = form2.cleaned_data['max_missing_days']
+                a_b = form2.cleaned_data['above_or_below']
+                max_skip = form2.cleaned_data['max_days_to_skip']
+                max_miss = form2.cleaned_data['max_missing_days']
+                ncdc_round = form2.cleaned_data['ncdc_roundoff']
+                app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
+                'coop_station_ids':coop_station_ids,'station_names':station_names,\
+                'base_temp':base_temp, 'a_b':a_b,'output_type':output_type,'max_skip':max_skip,\
+                'max_miss':max_miss, 'ncdc_round':ncdc_round}
                 if skip_days:
-                     app_arg_list.append(form2.cleaned_data['skip_days_with_max_above'], \
-                     form2.cleaned_data['skip_days_with_min_below'])
+                     skip_max_above = form2.cleaned_data['skip_days_with_max_above']
+                     skip_min_below = form2.cleaned_data['skip_days_with_min_below']
+                     app_args['skip_max_above'] = skip_max_above
+                     app_args['skip_min_below'] = skip_min_below
+                     context['skip_max_above'] = skip_max_above
+                     context['skip_min_below'] = skip_min_below
                 if truncate:
-                    app_arg_list.append(form2.cleaned_data['truncation_higher_limit'], \
-                    form2.cleaned_data['truncation_lower_limit'])
-                #results = run_data_app(','.join(app_arg_list))
-                results = []
+                    trunc_high = form2.cleaned_data['truncation_higher_limit']
+                    trunc_low = form2.cleaned_data['truncation_lower_limit']
+                    app_args['trunc_high'] = trunc_high
+                    app_args['trunc_low'] = trunc_low
+                    context['trunc_high'] = trunc_high
+                    context['trunc_low'] = trunc_low
+                context['base_temp'] = base_temp
+                context['output_type'] = output_type
+                context['max_miss'] = max_miss
+                if form2.cleaned_data['output_type'] == 'm':
+                    context['monthly'] = 'yes'
+                else:
+                    context['daily'] = 'yes'
+                #results = run_data_app(tuple(app_arg_list))
+                results = run_data_app(**app_args)
             else:
                 results = {}
             context['results'] =  dict(results)

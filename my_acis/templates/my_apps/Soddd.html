@@ -23,25 +23,44 @@
 
 </br>
 </br>
-{%if data %}
-{{data}}
-{%endif%}
-</br>
-</br>
 {%if results %}
+<p>DEGREE DAYS {{a_b}} BASE TEMPERATURE {{base_temp}}</br>
+TRUNCATES MAXIMUMS ABOVE {%if trunc_high%}{{trunc_high}}{%else%}999{%endif%}</br>
+TRUNCATES MAXIMUMS ABOVE {%if trunc_low%}{{trunc_low}}{%else%}-999{%endif%}</br>
+UP TO {{max_miss}} DAYS MAY BE ESTIMATED </br>
+NCDC ROUND-OFF PROCEDURE is {%if not ncdc_round%}NOT{%endif%} SIMULATED{%if not ncdc_round%}, EXACT ROUND-OFF USED{%endif%}</br>
+</p>
+  {%if monthly%}
+  <p>FLAG FOLLOWING VALUE GIVES NUMBER OF MISSING DAYS :</br> 
+     a = 1 DAY, b = 2 DAYS, ..., z = 26+ DAYS MISSING</br>
+  </p>
+    {%for stn, stn_data in results.items %}
+    <h2>Station_name: {{station_names|lookup:stn|safe}}  Coop_station_id: {{coop_station_ids|lookup:stn|safe}}</h2>
+    <table border="1">
+    <th colspan="2">YEAR</th><th colspan="2">JAN</th><th colspan="2">FEB</th><th colspan="2">MAR</th><th colspan="2">APR</th><th colspan="2">MAY<th colspan="2">JUN</th><th colspan="2">JUL</th><th colspan="2">AUG</th><th colspan="2">SEP</th><th colspan="2">OCT</th><th colspan="2">NOV</th><th colspan="2">DEC</th>
+    {%for year_val in stn_data%}
+     <tr>
+     {%for mon_val in year_val%}
+     <td style="text-align:right">{{mon_val}}</td><td></td>
+     {%endfor%}
+     </tr> 
+     {%endfor%}  
+     </table>
+   {%endfor%}
+  {%endif%}
+  </br>
+  </br>
+
+  {%if daily%}
+    <p>
+    -99 = MISSING DATA OR NON-EXISTENT DAYS </br>
+     AV = DAILY AVERAGE.  YR = NUMBER OF YEARS FOR THIS DAY.</br>
   {%for stn, stn_data in results.items %}
-  <h2>Station_name: {{station_names|lookup:stn|safe}}  Coop_station_id: {{coop_station_ids|lookup:stn|safe}}</h2>
-  <table border="1">
-  <th>DOY</th><th>MON</th><th>DAY</th><th>MAXT AVE</th><th>MAXT STD</th><th>MAXT YRS<th>MINT AVE</th><th>MINT STD</th><th>MINT YRS</th><th>PCPN AVE</th><th>PCPN YRS</th>
-  {%for day_data in stn_data%}
-   <tr>
-    {%for val in day_data%}
-    <td style="text-align:right">{{val}}</td>
-    {%endfor%}
-   </tr> 
-  {%endfor%}  
-  </table>
- {%endfor%}
+    <p> STATION: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;NUMBER: {{coop_station_ids|lookup:stn|safe}}
+   {%endfor%}                            
+  {%endif%}
 {%endif%}
+
+
 
 {% endblock %}

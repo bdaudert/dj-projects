@@ -329,20 +329,21 @@ class SodForm(forms.Form):
             self.fields['filter_type'] = forms.ChoiceField(choices=([('gauss','Gaussian'), ('rm','Running Mean'), ]), initial='rm', required = False)
             self.fields['number_of_days'] = forms.ChoiceField(choices=((str(n), n) for n in range(1,32)), initial = '1')
         elif app_name == 'Soddd':
-            self.fields['base_temperature'] = forms.CharField(max_length=4, initial='65')
+            self.fields['base_temperature'] = forms.IntegerField(initial=65)
             self.fields['above_or_below'] = forms.ChoiceField(choices=([('a','Above'), ('b','Below'), ]), initial='a')
             self.fields['output_type'] = forms.ChoiceField(choices=([('m','Monthly Time Series'), ('d','Daily Long-term Averages'), ]), initial='m')
-            self.fields['max_days_to_skip'] = forms.CharField(initial='0', required=False)
-            self.fields['max_missing_days'] = forms.CharField(initial='0', required=False)
+            self.fields['max_days_to_skip'] = forms.IntegerField(initial=0, required=False)
+            self.fields['max_missing_days'] = forms.IntegerField(initial=0, required=False)
+            self.fields['ncdc_roundoff'] = forms.BooleanField(initial=False, required=False)
 
             skip_days = kwargs.get('initial', {}).get('skip_days', False)
             truncate = kwargs.get('initial', {}).get('truncate', False)
             if skip_days:
-                self.fields['skip_days_with_max_above'] = forms.CharField(max_length=4,initial='100')
-                self.fields['skip_days_with_min_below'] = forms.CharField(max_length=4,initial='20')
+                self.fields['skip_days_with_max_above'] = forms.IntegerField(initial=100)
+                self.fields['skip_days_with_min_below'] = forms.IntegerField(initial=20)
             if truncate:
-                self.fields['truncation_upper_limit'] = forms.CharField(max_length=4,initial='85')
-                self.fields['truncation_lower_limit'] = forms.CharField(max_length=4,initial='50')
+                self.fields['truncation_upper_limit'] = forms.IntegerField(initial=85)
+                self.fields['truncation_lower_limit'] = forms.IntegerField(initial=50)
         else:
             pass
 
