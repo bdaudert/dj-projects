@@ -75,9 +75,6 @@ SM_ELEMENT_CHOICES = (
         ('mmt', 'Max Min Temperature(Whole or Tenths of Degrees)'),
         ('hdd', 'Heating Degree Days(Whole or Tenths of Degrees)'),
         ('cdd', 'Cooling Degree Days(Whole or Tenths of Degrees)'),
-        ('evap', 'Evaporation (Hundredths of Inches)'),
-        ('wesf', 'Water Estimate Snow on Ground: (Tenth of Inches)'),
-        ('wdmv', 'Wind Movement: (Miles Per Day)'),
         )
 
 SM_TEMP_PRECISION_CHOICES = (
@@ -316,10 +313,10 @@ class SodForm(forms.Form):
         if app_name is None:
             app_name = self.data.get('app_name')
 
-        if app_name in ['Soddyrec']:
+        if app_name in ['Soddyrec', 'Sodcnv', 'Sodlist', 'Sodrun', 'Sodrunr']:
             self.fields['start_date'] = forms.CharField(max_length=8, initial='20100101')
             self.fields['end_date'] = forms.CharField(max_length=8, initial=today)
-        elif app_name in ['Soddynorm', 'Soddd']:
+        elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy']:
             self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
             self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
 
@@ -343,41 +340,31 @@ class SodForm(forms.Form):
             if truncate:
                 self.fields['truncation_upper_limit'] = forms.IntegerField(initial=110)
                 self.fields['truncation_lower_limit'] = forms.IntegerField(initial=20)
+        elif app_name == 'Sodlist':
+            output_format = forms.ChoiceField(choices=SL_FRMT_CHOICES, initial='kr')
+            start_window = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
+            end_window = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
+            minimize = forms.BooleanField(required=False, initial = False)
+            include_tobs_evap = forms.BooleanField(required=False, initial = False)
+        elif app_name == 'Sodcnv':
+            start_window = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
+            end_window = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
+        elif app_name in ['Sodmonline', 'Sodmonlinemy']:
+            element = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
+            temperature_precision = forms.ChoiceField(choices=SM_TEMP_PRECISION_CHOICES, initial=' ')
+            output_format = forms.ChoiceField(choices=SM_FRMT_CHOICES, initial='kr')
+            temp_unit = forms.ChoiceField(choices=TMP_UNIT_CHOICE, initial=' ')
+            number_of_characters = forms.ChoiceField(choices=DIGIT_CHOICES, initial='3')
+        elif app_name in ['Sodrun', 'Sodrunr']:
+            element = forms.ChoiceField(choices=SR_ELEMENT_CHOICES, initial='pcpn')
+            aeb = forms.ChoiceField(choices=AEB_CHOICES, initial ='A' )
+            threshold = forms.IntegerField(initial=0)
+            min_run = forms.IntegerField(required=False, initial=1)
+            name = forms.CharField(max_length=256, required=False)
+            verbose = forms.BooleanField(required=False, initial=False)
         else:
             pass
 
-
-
-#class to determine method of station selection used insubsequent forms
-class Soddyrec0Form(forms.Form):
-    station_selection = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid')
-
-class SoddyrecForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        station_selection = kwargs.get('initial', {}).get('station_selection', None)
-        super(SoddyrecForm, self).__init__(*args, **kwargs)
-        self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid', widget=forms.HiddenInput())
-        if station_selection is None:
-            station_selection = self.data.get('station_selection')
-        if station_selection == 'stnid':
-            self.fields['coop_station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779')
-        elif station_selection == 'stnids':
-            self.fields['coop_station_ids'] = MultiStnField(required=False,initial='266779,103732')
-        elif station_selection == 'county':
-            self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='09001')
-        elif station_selection == 'climdiv':
-            self.fields['climate_division'] = forms.CharField(required=False,max_length=4, min_length=4, initial='NV01')
-        elif station_selection == 'cwa':
-            self.fields['county_warning_area'] = forms.CharField(required=False,max_length=3, initial='BOI')
-        elif station_selection == 'basin':
-            self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='01080205')
-        elif station_selection == 'state':
-            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES)
-        elif station_selection == 'bbox':
-            self.fields['bounding_box'] = forms.CharField(required=False,initial='-90,40,-88,41')
-        self.fields['start_date'] = forms.CharField(max_length=8, initial='20100101')
-        self.fields['end_date'] = forms.CharField(max_length=8, initial=today)
-        self.fields['element'] = forms.ChoiceField(choices=SDR_ELEMENT_CHOICES, initial='all')
 
 class SodsummForm(forms.Form):
     def __init__(self, station_selection, *args, **kwargs):
@@ -426,18 +413,6 @@ class SodthrForm(forms.Form):
         self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
         self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
         #self.fields['table_type'] = forms.ChoiceField(choices=([('std','Standard'), ('ctm','Custom'), ]), initial='std')
-class SodddForm(forms.Form):
-    def __init__(self, station_selection, *args, **kwargs):
-        '''
-        copy from SoddyrecForm once fixed, possibly more to deal with other input options
-        '''
-        self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
-        self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
-        self.fields['base_temperature'] = forms.CharField(max_length=4, initial='60')
-        self.fields['above_or_below'] = forms.CharField(max_length=1, min_length=1, initial='a')
-        self.fields['skip_days'] = forms.BooleanField(required=False, initial=False)
-        self.fields['table_type'] = forms.ChoiceField(choices=([('dly','Daily Averages'), ('mly','Monthly Time Series'), ]), initial='dly')
-
 class SodpiipreForm(forms.Form):
     skew = forms.ChoiceField(choices=([('as','Areal Skew'), ('ss','Station Skew'), ]), initial='ss')
     cv = forms.ChoiceField(choices=([('acv','Areal CV'), ('scv','Station CV'), ]), initial='scv')
