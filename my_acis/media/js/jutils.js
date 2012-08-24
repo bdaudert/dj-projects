@@ -68,12 +68,14 @@ function ShowHide(divId)
         }
 }
 
+
+
 $(function() {
     $('div.pop-up').hide();
 });
 $(function() {
-  var moveLeft = 20;
-  var moveDown = 10;
+  var moveLeft = 50;
+  var moveDown = 0;
 
   $('a.trigger').hover(function(e) {
     $(this).next('div.pop-up').show();
@@ -91,3 +93,4 @@ $(function() {
   });
 
 }); 
+
