@@ -316,7 +316,7 @@ class SodForm(forms.Form):
         if app_name in ['Soddyrec', 'Sodcnv', 'Sodlist', 'Sodrun', 'Sodrunr']:
             self.fields['start_date'] = forms.CharField(max_length=8, initial='20100101')
             self.fields['end_date'] = forms.CharField(max_length=8, initial=today)
-        elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy']:
+        elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy', 'Sodpad']:
             self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
             self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
 
@@ -396,14 +396,6 @@ class SodpctForm(forms.Form):
         #Note number_of_days has max of 31, implement!!
         self.fields['number_of_days'] = forms.CharField(max_length=2, required = False)
         self.fields['element'] = forms.ChoiceField(choices=SPCT_ELEMENT_CHOICES, initial='pcpn')
-
-class SodpadForm(forms.Form):
-    def __init__(self, station_selection, *args, **kwargs):
-        '''
-        copy from SoddyrecForm once fixed, possibly more to deal with other input options
-        '''
-        self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
-        self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
 
 class SodthrForm(forms.Form):
     def __init__(self, station_selection, *args, **kwargs):

@@ -140,6 +140,7 @@ def sods(request, app_name):
             truncate = None
             context['cleaned'] = form2.cleaned_data
             (data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
+
             if app_name == 'Soddynorm':
                 results = run_data_app(app_name, data, dates, elements, coop_station_ids, station_names, \
                 form2.cleaned_data['filter_type'], form2.cleaned_data['number_of_days'])
@@ -170,8 +171,6 @@ def sods(request, app_name):
                     app_args['trunc_low'] = trunc_low
                     context['trunc_high'] = trunc_high
                     context['trunc_low'] = trunc_low
-                context['start_year'] = dates[0][0:4]
-                context['end_year'] = dates[-1][0:4]
                 context['base_temp'] = base_temp
                 context['output_type'] = output_type
                 context['max_miss'] = max_miss
@@ -181,10 +180,27 @@ def sods(request, app_name):
                     context['daily'] = 'yes'
                 #results = run_data_app(tuple(app_arg_list))
                 results = run_data_app(**app_args)
+            elif app_name == 'Sodpad':
+                app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
+                'coop_station_ids':coop_station_ids,'station_names':station_names}
+                results = run_data_app(**app_args)
+                mon_dict = {}
+                day_dict = {}
+                for doy in range(366):
+                    mon, day = WRCCUtils.compute_mon_day(doy+1)
+                    mon_dict[doy] = mon
+                    day_dict[doy] = day
+                context['mon'] = mon_dict
+                context['day'] = day_dict
+                context['durations'] ={ 1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:12,12:14,13:15,14:16,15:18,16:20,17:22,18:24,19:25,20:26,21:28,22:30}
             else:
                 results = {}
+
             context['results'] =  dict(results)
             context['dates'] = dates
+            context['start_year'] = dates[0][0:4]
+            context['end_year'] = dates[-1][0:4]
+            context['num_yrs'] = int(dates[-1][0:4]) - int(dates[0][0:4])
             context['elements'] = dict([(k,v) for k,v in enumerate(elements)])
             context['data'] = dict(data)
             context['coop_station_ids'] = dict([(k,v) for k,v in enumerate(coop_station_ids)])
