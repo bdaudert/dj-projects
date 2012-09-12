@@ -187,6 +187,15 @@ SRR_ELEMENT_CHOICES = (
         ('mint', 'Minimum Temperature'),
         ('dtr', 'Daily Temperature Range'),
         )
+SDMM_ELEMENT_CHOICES = (
+        ('temp', 'Temperature Statistics'),
+        ('prsn', 'Precipitation and Snowfall Statistics'),
+        ('both', 'Both Temperature and Precipitation Statistics'),
+        ('hc', ' Heating and Cooling Degree Day Summaries '),
+        ('g', 'Growing Degree Day Summaries'),
+        ('all', 'All Statistics'),
+        )
+
 
 #Custom form fields
 class MultiStnField(forms.CharField):
@@ -316,7 +325,7 @@ class SodForm(forms.Form):
         if app_name in ['Soddyrec', 'Sodcnv', 'Sodlist', 'Sodrun', 'Sodrunr']:
             self.fields['start_date'] = forms.CharField(max_length=8, initial='20100101')
             self.fields['end_date'] = forms.CharField(max_length=8, initial=today)
-        elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy', 'Sodpad']:
+        elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy', 'Sodpad', 'Sodsumm']:
             self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
             self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
 
@@ -340,6 +349,9 @@ class SodForm(forms.Form):
             if truncate:
                 self.fields['truncation_upper_limit'] = forms.IntegerField(initial=110)
                 self.fields['truncation_lower_limit'] = forms.IntegerField(initial=20)
+        elif app_name == 'Sodsumm':
+            self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False)
+            self.fields['element'] = forms.ChoiceField(choices=SDMM_ELEMENT_CHOICES, initial='all')
         elif app_name == 'Sodlist':
             output_format = forms.ChoiceField(choices=SL_FRMT_CHOICES, initial='kr')
             start_window = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
@@ -366,15 +378,6 @@ class SodForm(forms.Form):
             pass
 
 
-class SodsummForm(forms.Form):
-    def __init__(self, station_selection, *args, **kwargs):
-        '''
-        copy from SoddyrecForm once fixed
-        '''
-        self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
-        self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
-        self.fields['max_number_days_missing'] = forms.CharField(max_length=8, initial = 5)
-        self.fields['element'] = forms.ChoiceField(choices=SMM_ELEMENT_CHOICES, initial='all')
 
 class SodxtrmtsForm(forms.Form):
     def __init__(self, station_selection, *args, **kwargs):

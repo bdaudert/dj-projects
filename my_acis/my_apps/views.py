@@ -178,7 +178,6 @@ def sods(request, app_name):
                     context['monthly'] = 'yes'
                 else:
                     context['daily'] = 'yes'
-                #results = run_data_app(tuple(app_arg_list))
                 results = run_data_app(**app_args)
             elif app_name == 'Sodpad':
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
@@ -193,14 +192,33 @@ def sods(request, app_name):
                 context['mon'] = mon_dict
                 context['day'] = day_dict
                 context['durations'] ={ 1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:12,12:14,13:15,14:16,15:18,16:20,17:22,18:24,19:25,20:26,21:28,22:30}
+            elif app_name == 'Sodsumm':
+                el_type  = form2.cleaned_data['element']
+                app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
+                'coop_station_ids':coop_station_ids,'station_names':station_names, 'el_type':el_type}
+                results = run_data_app(**app_args)
+                context['max_missing_days'] = form2.cleaned_data['max_missing_days']
+                if el_type  == 'temp':
+                    table_list = ['temp']
+                elif el_type  == 'prsn':
+                    table_list = ['prsn']
+                elif el_type  == 'both':
+                    table_list = ['temp', 'prsn']
+                elif el_type == 'hc':
+                    table_list = ['hdd', 'cdd']
+                elif el_type ==  'g':
+                    table_list = ['gdd', 'corn']
+                elif el_type == 'all':
+                    table_list = ['temp', 'prsn', 'hdd', 'cdd', 'gdd', 'corn']
+                context['headers'] = set_sodsumm_headers(table_list)
             else:
                 results = {}
 
             context['results'] =  dict(results)
             context['dates'] = dates
             context['start_year'] = dates[0][0:4]
-            context['end_year'] = dates[-1][0:4]
-            context['num_yrs'] = int(dates[-1][0:4]) - int(dates[0][0:4])
+            context['end_year'] = str(int(dates[-1][0:4])+1)
+            context['num_yrs'] = int(dates[-1][0:4]) - int(dates[0][0:4])+1
             context['elements'] = dict([(k,v) for k,v in enumerate(elements)])
             context['data'] = dict(data)
             context['coop_station_ids'] = dict([(k,v) for k,v in enumerate(coop_station_ids)])
@@ -234,3 +252,46 @@ def run_data_app(app_name, *args, **kwargs):
     except:
         results = {}
     return results
+
+def set_sodsumm_headers(table_list):
+    headers = {}
+    def set_header(table):
+        rows = []
+        if table == 'temp':
+            rows.append('<th colspan="12"> Temperature Statistics</th><th>#Day</th><th>-Max</th><th>#Day</th><th>-Min</th>')
+            rows.append('<tr><td colspan="4">Averages</td><td colspan="4">Daily Extremes</td><td colspan="4">Mean Extremes</td><td> >= </td><td>=< </td><td>=< </td><td>=< </td></tr>')
+            rows.append('<tr><td></td><td>Max</td><td>Min</td><td>Mean</td><td>High--</td><td>-Date</td><td>Low--</td><td>Date</td><td>High-</td><td>Yr</td><td>Low-</td><td>Yr</td><td>90</td><td>32</td><td>32</td><td>0</td></tr>')
+        elif table == 'prsn':
+            rows.append('<th colspan="15">Precipitation/Snow Statistics</th>')
+            rows.append('<tr><td colspan="15">Missing data not yet determined</td></tr>')
+            rows.append('<tr><td colspan="6">Total Precipitation</td><td colspan="2">Precipitation</td><td colspan="3">Total Snowfall</td><td colspan="4">#Days Precip >=</td></tr>')
+            rows.append('<tr><td colspan="2">Mean</td><td colspan="2">High--Yr</td><td colspan="2">Low-Yr</td><td>1-Day</td><td>Max</td><td>Mean</td><td colspan="2">High-Yr</td><td>0.01</td><td>0.10</td><td>0.50</td><td>1.00</td></tr>')
+
+        elif table == 'hdd':
+            rows.append('<th colspan="14">For Heating degree day calculations:</th>')
+            rows.append('<tr><td colspan="14">Output is rounded, unlike NCDC values, which round input.</td></tr>')
+            rows.append('<tr><td colspan="14">Missing data not yet determined</td></tr>')
+            rows.append('<tr><td colspan="14">Degree Days to selected Base Temperatures(F)</td></tr>')
+            rows.append('<tr><td>Base</td><td colspan="13">Heating Degree Days</td></tr>')
+            rows.append('<tr><td>Below</td><td>Jan</td><td>Feb</td><td>Mar</td><td>Apr</td><td>May</td><td>Jun</td><td>Jul</td><td>Aug</td><td>Sep</td><td>Oct</td><td>Nov</td><td>Dec</td><td>Ann</td></tr>')
+        elif table == 'cdd':
+            rows.append('<th colspan="14">For Cooling degree day calculations:</th>')
+            rows.append('<tr><td colspan="14">Output is rounded, unlike NCDC values, which round input.</td></tr>')
+            rows.append('<tr><td colspan="14">Missing data not yet determined</td></tr>')
+            rows.append('<tr><td colspan="14">Degree Days to selected Base Temperatures(F)</td></tr>')
+            rows.append('<tr><td>Base</td><td colspan="13">Cooling Degree Days</td></tr>')
+            rows.append('<tr><td>Above</td><td>Jan</td><td>Feb</td><td>Mar</td><td>Apr</td><td>May</td><td>Jun</td><td>Jul</td><td>Aug</td><td>Sep</td><td>Oct</td><td>Nov</td><td>Dec</td><td>Ann</td></tr>')
+        elif table == 'gdd':
+            rows.append('<th colspan="15">For Growing degree day calculations:</th>')
+            rows.append('<tr><td colspan="15">Output is rounded, unlike NCDC values, which round input.</td>')
+            rows.append('<tr><td colspan="15">Missing data not yet determined</td></tr>')
+            rows.append('<tr><td colspan="15">Growing Degree Days to selected Base Temperatures(F)</td></tr>')
+            rows.append('<tr><td colspan="2">Base</td><td>Jan</td><td>Feb</td><td>Mar</td><td>Apr</td><td>May</td><td>Jun</td><td>Jul</td><td>Aug</td><td>Sep</td><td>Oct</td><td>Nov</td><td>Dec</td><td>Ann</td></tr>')
+        elif table == 'corn':
+            rows.append('<th colspan="15">Corn Growing Degree Days</th>')
+            rows.append('<td colspan="2">Base</td><td>Jan</td><td>Feb</td><td>Mar</td><td>Apr</td><td>May</td><td>Jun</td><td>Jul</td><td>Aug</td><td>Sep</td><td>Oct</td><td>Nov</td><td>Dec</td><td>Ann</td></tr>')
+        return "\n".join(rows)
+
+    for table in table_list:
+         headers[table] = set_header(table)
+    return headers
