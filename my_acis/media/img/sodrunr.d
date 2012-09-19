@@ -1,11 +1,13 @@
+<div id="content">
+<textarea rows="50" cols="100" style="background-color: LightBlue;color:DarkBlue;border:1px solid Blue;font-size:20px;">
 ###########
-Sodrun
+Sodrunr
 ###########
 This program finds all runs of consecutive days where requested
-threshold conditions are met or exceeded.  It considers 2 days at a time.
-The conditions apply only to a single climate element at a time.
-Starting and ending day of all runs greater than a specified 
-length are printed.  Runs are not
+threshold conditions are met or exceeded.  It considers two days ata time. 
+The conditions apply only
+to a single climate element at a time.  Starting and ending day of all
+runs greater than a specified length are printed.  Runs are not
 allowed to cross a missing day; user is informed of all missing days
 that may possibly interrupt runs. Only runs with at least one occurrence
 are reported.
@@ -46,4 +48,4 @@ Notes:
     A,S and T flagged data at the beginning or the end of a streak are ignored.
     If an A,S or T flag is encountered in the middle of a streak, the streak is interrupted.
     If missing data is encountered in the middle of a streak, the streak is interrupted.
-
+</div>

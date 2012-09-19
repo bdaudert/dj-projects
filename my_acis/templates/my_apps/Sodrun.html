@@ -24,29 +24,14 @@
 </br>
 </br>
 {%if results %}
-  <p>
-  For monthly and annual mean, thresholds and sums:</br>
-  Month with {{max_missing_days}} or more missing days are not considered</br>
-  Years with one or mor missing months are not considered</br>
-  Two-didgit years are departures from 1900: -20 = 1880, 102 = 2002</br>
-  </p>
   {%for stn, stn_data in results.items %}
-    <p>Station: ({{coop_station_ids|lookup:stn|safe}}) {{station_names|lookup:stn|safe}}</br>
-    From Year {{start_year}} To Year {{end_year}}</br>
+    <p>STATION: ({{coop_station_ids|lookup:stn|safe}})&nbsp;NAME:{{station_names|lookup:stn|safe}}</br>
+     RUNS OF {{el}}&nbsp;{{op}}&nbsp;{{thresh}}</br>
+     START: {{start_year}} END {{end_year}}</br>
+     MINIMUM DURATION {{dur}}
     </p></br>
-        {%for type_idx, table_type in stn_data.items %}
-        <table>
-        {{headers|lookup:type_idx|safe}}
-        </table>
-        </br>
-        <table>
-        <tr text-align="right">
-        {%for row in table_type %}
-          <tr text-align="right">{%for val in row%}<td>{{val}}<td>{%endfor%}</tr>
-        {%endfor%}
-        </td>
-        </table>
-        </br>
+        {%for run in stn_data %}
+          {{run}}</br>
         {%endfor%}
   {%endfor%}
 {%endif%}

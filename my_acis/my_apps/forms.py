@@ -36,12 +36,14 @@ APP_NAME_CHOICES = (
         ('Soddd', 'Soddd'),
         ('Sodpiii', 'Sodpiii'),
         ('Sodrunr', 'Sodrunr'),
+        ('Sodrun', 'Sodrun'),
         )
 
 #SODRUN CHOICES
 SR_ELEMENT_CHOICES = (
         ('maxt', 'Maximum Temprature (Whole Degrees)'),
         ('mint', 'Minimum Temperature(Whole Degrees)'),
+        ('rang', 'Temperature Range(Whole Degrees)'),
         ('snow', 'Snowfall (Tenth of inches)'),
         ('snwd', 'Snowdepth (Whole inches)'),
         ('pcpn', 'Precipitation (Hundredths of inches)'),
@@ -274,10 +276,6 @@ class SodsumForm(forms.Form):
     element = forms.ChoiceField(choices=SS_ELEMENT_CHOICES, initial='multi')
 
 #class to determine method of station selection used insubsequent forms
-'''
-class Sod0Form(forms.Form):
-    station_selection = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid')
-'''
 class Sod0Form(forms.Form):
     def __init__(self, *args, **kwargs):
         app_name = kwargs.get('initial', {}).get('app_name', None)
@@ -323,13 +321,20 @@ class SodForm(forms.Form):
             app_name = self.data.get('app_name')
 
         if app_name in ['Soddyrec', 'Sodcnv', 'Sodlist', 'Sodrun', 'Sodrunr']:
-            self.fields['start_date'] = forms.CharField(max_length=8, initial='20100101')
-            self.fields['end_date'] = forms.CharField(max_length=8, initial=today)
+            self.fields['start_date'] = forms.CharField(max_length=8, initial='20000101')
+            #self.fields['end_date'] = forms.CharField(max_length=8, initial=today)
+            self.fields['end_date'] = forms.CharField(max_length=8, initial='20091231')
         elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy', 'Sodpad', 'Sodsumm']:
             self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
             self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
 
-        if app_name == 'Soddyrec':
+        if app_name in ['Sodrun', 'Sodrunr']:
+            self.fields['element'] = forms.ChoiceField(choices=SR_ELEMENT_CHOICES, initial='rang')
+            self.fields['aeb'] = forms.ChoiceField(choices=AEB_CHOICES, initial ='A' )
+            self.fields['threshold'] = forms.IntegerField(initial=40)
+            self.fields['minimum_run'] = forms.IntegerField(required=False, initial=1)
+            self.fields['verbose'] = forms.BooleanField(required=False, initial=False)
+        elif app_name == 'Soddyrec':
             self.fields['element'] = forms.ChoiceField(choices=SDR_ELEMENT_CHOICES, initial='all')
         elif app_name == 'Soddynorm':
             self.fields['filter_type'] = forms.ChoiceField(choices=([('gauss','Gaussian'), ('rm','Running Mean'), ]), initial='rm', required = False)
