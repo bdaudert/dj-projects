@@ -3,62 +3,31 @@
 <html>
   <head>
     <h1>{{title}}</h1>	
-    <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/base.css"></link>
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.css" />
-    <!--[if lte IE 8]>
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.ie.css" />
-    <![endif]-->
-    <script src="http://cdn.leafletjs.com/leaflet-0.4/leaflet.js"></script>
-    <script src="http://d3js.org/d3.v2.js"></script>
-    <script src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
-    </head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas { height: 100% }
+    </style>
 
-  <body>
-    <div id="map"</div>
+   <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+   <!-- ** Javascript ** -->
+   <script type="text/javascript" src="{{ MEDIA_URL }}js/map_jutils.js"></script>
+   <script type="text/javascript" src="{{ MEDIA_URL }}js/polymaps.min.js"></script>
+   <script type="text/javascript">
+     var po = org.polymaps;
+     var map = po.map()
+        .container(document.getElementById("map_canvas").appendChild(po.svg("svg")))
+        .center({lat: 39.50, lon: -99.00})
+        map.add(po.image()
+    .url(po.url("http://{S}tile.cloudmade.com"
+    + "/675e9a7b604442e182c1482bcb3732b9" // http://cloudmade.com/register
+    + "/997/256/{Z}/{X}/{Y}.png")
+    .hosts(["a.", "b.", "c.", ""])));
+   </script>
+ </head>
 
-<script>
-    /* map basics */
-    var map = L.map('map').setView([39.50, -99.00], 5);
-    L.tileLayer('http://{s}.tile.cloudmade.com/675e9a7b604442e182c1482bcb3732b9/997/256/{z}/{x}/{y}.png', {
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-    maxZoom: 18
-    }).addTo(map);
-    /* function enabling lat/lon show at point where  map is clicked on by user */
-    function onMapClick(e) {
-    popup
-        .setLatLng(e.latlng)
-        .setContent("You clicked the map at " + e.latlng.toString())
-        .openOn(map);
-    }
-    map.on('click', onMapClick);
-    
-    function onEachFeature(feature, layer) {
-    // does this feature have a property named popupContent?
-    if (feature.properties && feature.properties.popupContent) {
-        layer.bindPopup(feature.properties.popupContent);}
-    }
-
-    
-
-    var geojsonFeature = {
-    "type": "Feature",
-    "properties": {
-        "popupContent": "Type:COOP \n Name: MERCED AP \n Station_id: 045532"
-    },
-    "geometry": {
-        "type": "Point",
-        "coordinates": [-124.11667,40.8]
-    }
-    };
-
-    $.get("{{ MEDIA_URL }}json/DE_coop_stations.json", function(data) {
-    var station_data = data;
-    L.geoJson(station_data,{onEachFeature: onEachFeature}).addTo(map);
-    });
-    </script>
-
-
-
-  </body>
+ <body id="map_canvas">
+    <div style="width:50%; height:50%" align="center"></div>
+ </body>
 </html>

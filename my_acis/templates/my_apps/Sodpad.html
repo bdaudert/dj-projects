@@ -32,9 +32,9 @@
         {%for doy, doy_data in stn_data.items %}
       <p>STN={{coop_station_ids|lookup:stn|safe}} MON={{mon|lookup:doy|safe}} DAY={{day|lookup:doy|safe}}</p></br>
       <table>
-      <th colspan="3">THRESHOLD:</th><th colspan="4">01__</th><th colspan="4">10__</th><th colspan="4">15__</th><th colspan="4">20__</th><th colspan="4">25__<th colspan="4">30__</th><th colspan="4">40__</th><th colspan="4">50__</th><th colspan="4">75__</th><th colspan="4">100_</th><th colspan="4">150_</th><th colspan="4">200_</th><th colspan="4">250_</th><th colspan="4">300_</th><th colspan="4">400_</th><th colspan="4">500_</th><th colspan="4">600_</th><th colspan="4">800_</th><th colspan="4">1000</th><th colspan="4">AVE PRECIP</th>
+      <th colspan="3">THRESHOLD:</th><th colspan="4">01</th><th colspan="4">10</th><th colspan="4">15</th><th colspan="4">20</th><th colspan="4">25<th colspan="4">30</th><th colspan="4">40</th><th colspan="4">50</th><th colspan="4">75</th><th colspan="4">100</th><th colspan="4">150</th><th colspan="4">200</th><th colspan="4">250</th><th colspan="4">300</th><th colspan="4">400</th><th colspan="4">500</th><th colspan="4">600</th><th colspan="4">800</th><th colspan="4">1000</th><th colspan="4">AVE PRECIP</th>
        {%for dur in doy_data %}
-        <tr><td style="text-align:left">DURATION = {{durations|lookup:forloop.counter|safe}}</td><td>#</td><td>{{num_yrs}}</td>
+        <tr><td style="text-align:right">DURATION = {{durations|lookup:forloop.counter|safe}}</td><td>#</td><td>{{num_yrs}}</td>
         {% for val in dur%}
         <td style="text-align:right">{{val}}</td><td></td><td></td><td></td>
         {%endfor%}

@@ -1,5 +1,5 @@
 <div id="content">
-<textarea rows="50" cols="100" style="background-color: LightBlue;color:DarkBlue;border:1px solid Blue;font-size:20px;">
+<textarea rows="50" cols="100" style="background-color:LightBlue;color:DarkBlue;border:1px solid Blue;font-size:20px;">
 ###########
 Sodsumm
 ###########
@@ -16,4 +16,5 @@ Input:
 Output:
 
 Notes:
+
 </div>
