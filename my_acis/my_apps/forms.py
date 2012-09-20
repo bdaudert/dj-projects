@@ -48,6 +48,15 @@ SR_ELEMENT_CHOICES = (
         ('snwd', 'Snowdepth (Whole inches)'),
         ('pcpn', 'Precipitation (Hundredths of inches)'),
         )
+SRR_ELEMENT_CHOICES = (
+        ('maxt', 'Maximum Temprature (Whole Degrees)'),
+        ('mint', 'Minimum Temperature(Whole Degrees)'),
+        ('rang', 'Temperature Range(Whole Degrees)'),
+        ('snow', 'Snowfall (Tenth of inches)'),
+        ('snwd', 'Snowdepth (Whole inches)'),
+        ('pcpn', 'Precipitation (Hundredths of inches)'),
+        )
+
 AEB_CHOICES = (
         ('A', 'Above'),
         ('B', 'Below'),
@@ -181,14 +190,6 @@ PII_ELEMENT_CHOICES = (
         ('avgt', 'Mean Temperature'),
         )
 
-SRR_ELEMENT_CHOICES = (
-        ('pcpn', 'Precipitation'),
-        ('snow', 'Snowfall'),
-        ('snwd', 'Snowdepth'),
-        ('maxt', 'Maximum Temprature '),
-        ('mint', 'Minimum Temperature'),
-        ('dtr', 'Daily Temperature Range'),
-        )
 SDMM_ELEMENT_CHOICES = (
         ('temp', 'Temperature Statistics'),
         ('prsn', 'Precipitation and Snowfall Statistics'),
@@ -322,16 +323,21 @@ class SodForm(forms.Form):
 
         if app_name in ['Soddyrec', 'Sodcnv', 'Sodlist', 'Sodrun', 'Sodrunr']:
             self.fields['start_date'] = forms.CharField(max_length=8, initial='20000101')
-            #self.fields['end_date'] = forms.CharField(max_length=8, initial=today)
-            self.fields['end_date'] = forms.CharField(max_length=8, initial='20091231')
+            self.fields['end_date'] = forms.CharField(max_length=8, initial=today)
+            #self.fields['end_date'] = forms.CharField(max_length=8, initial='20091231')
         elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy', 'Sodpad', 'Sodsumm']:
             self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
             self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
 
         if app_name in ['Sodrun', 'Sodrunr']:
-            self.fields['element'] = forms.ChoiceField(choices=SR_ELEMENT_CHOICES, initial='rang')
-            self.fields['aeb'] = forms.ChoiceField(choices=AEB_CHOICES, initial ='A' )
-            self.fields['threshold'] = forms.IntegerField(initial=40)
+            if app_name == 'Sodrunr':
+                self.fields['element'] = forms.ChoiceField(choices=SRR_ELEMENT_CHOICES, initial='rang')
+                self.fields['aeb'] = forms.ChoiceField(choices=AEB_CHOICES, initial ='A' )
+                self.fields['threshold'] = forms.IntegerField(initial=40)
+            else:
+                self.fields['element'] = forms.ChoiceField(choices=SR_ELEMENT_CHOICES, initial='pcpn')
+                self.fields['aeb'] = forms.ChoiceField(choices=AEB_CHOICES, initial ='A' )
+                self.fields['threshold'] = forms.IntegerField(initial=0)
             self.fields['minimum_run'] = forms.IntegerField(required=False, initial=1)
             self.fields['verbose'] = forms.BooleanField(required=False, initial=False)
         elif app_name == 'Soddyrec':
@@ -429,15 +435,3 @@ class SodpiiForm(forms.Form):
         self.fields['start_date'] = forms.CharField(max_length=6, min_length=6, initial='2000')
         self.fields['end_date'] = forms.CharField(max_length=6, min_length=6, initial='2012')
         self.fields['element'] = forms.ChoiceField(choices=PII_ELEMENT_CHOICES, initial='pcpn')
-
-class SodrunrForm(forms.Form):
-    def __init__(self, station_selection, *args, **kwargs):
-        '''
-        copy from SoddyrecForm once fixed, possibly more to deal with other input options
-        '''
-        self.fields['start_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial='20120101')
-        self.fields['end_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
-        self.fields['element'] = forms.ChoiceField(choices=SRR_ELEMENT_CHOICES, initial='pcpn')
-        self.fields['aeb'] = forms.ChoiceField(choices=AEB_CHOICES, initial ='A' )
-        self.fields['threshold'] = forms.IntegerField(initial=0)
-        self.fields['min_run'] = forms.IntegerField(required=False, initial=1)
