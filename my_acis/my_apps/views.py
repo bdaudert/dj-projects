@@ -123,12 +123,20 @@ def sods(request, app_name):
                 truncate = form1.cleaned_data['truncate']
                 initial = {'app_name':app_name, 'station_selection':station_selection, \
                 'skip_days':skip_days, 'truncate':truncate }
+            if app_name == 'Sodpct':
+                threshold = form1.cleaned_data['threshold']
+                element = form1.cleaned_data['element']
+                individual_averages = form1.cleaned_data['individual_averages']
+                initial = {'app_name':app_name, 'station_selection':station_selection,\
+                'threshold':threshold, 'element':element, 'individual_averages': individual_averages }
             else:
                 initial = {'app_name':app_name, 'station_selection':station_selection}
             form2 = set_as_form2(init=initial)
             context['form2'] = form2
         else:
             station_selection=None
+
+
     if 'app_form' in request.POST:
         form2 = set_as_form(request, 'Sod')
         context['form2'] = form2

@@ -169,7 +169,7 @@ SX_ANALYSIS_CHOICES = (
         ('msum', 'Monthly Sum'),
     )
 
-SPCT_ELEMENT_CHOICES = (
+SXTR_ELEMENT_CHOICES = (
         ('pcpn', 'Precipitation'),
         ('snow', 'Snowfall'),
         ('snwd', 'Snowdepth'),
@@ -181,6 +181,7 @@ SPCT_ELEMENT_CHOICES = (
     ('cdd', 'Cooling Degree Days'),
     ('gdd', 'Growing degree days'),
     )
+
 PII_ELEMENT_CHOICES = (
         ('pcpn', 'Precipitation'),
         ('snow', 'Snowfall'),
@@ -289,6 +290,10 @@ class Sod0Form(forms.Form):
         if app_name == 'Soddd':
             self.fields['skip_days'] = forms.BooleanField(initial=False, required=False)
             self.fields['truncate'] = forms.BooleanField(initial=False, required=False)
+        if app_name == 'Sodpct':
+            self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='pcpn')
+            self.fields['individual_averages'] = forms.ChoiceField(choices=([('I','Individual'), ('A','Day Sums or Averages'),]))
+            self.fields['threshold'] = forms.IntegerField(required=False)
 
 class SodForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -325,7 +330,7 @@ class SodForm(forms.Form):
             self.fields['start_date'] = forms.CharField(max_length=8, initial='20000101')
             self.fields['end_date'] = forms.CharField(max_length=8, initial=today)
             #self.fields['end_date'] = forms.CharField(max_length=8, initial='20091231')
-        elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy', 'Sodpad', 'Sodsumm']:
+        elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy', 'Sodpad', 'Sodsumm', 'Sodpct']:
             self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
             self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
 
@@ -364,27 +369,42 @@ class SodForm(forms.Form):
             self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False)
             self.fields['element'] = forms.ChoiceField(choices=SDMM_ELEMENT_CHOICES, initial='all')
         elif app_name == 'Sodlist':
-            output_format = forms.ChoiceField(choices=SL_FRMT_CHOICES, initial='kr')
-            start_window = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
-            end_window = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
-            minimize = forms.BooleanField(required=False, initial = False)
-            include_tobs_evap = forms.BooleanField(required=False, initial = False)
+            self.fields['output_format'] = forms.ChoiceField(choices=SL_FRMT_CHOICES, initial='kr')
+            self.fields['start_window'] = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
+            self.fields['end_window'] = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
+            self.fields['minimize'] = forms.BooleanField(required=False, initial = False)
+            self.fields['include_tobs_evap'] = forms.BooleanField(required=False, initial = False)
         elif app_name == 'Sodcnv':
-            start_window = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
-            end_window = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
+            self.fields['start_window'] = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
+            self.fields['end_window'] = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
         elif app_name in ['Sodmonline', 'Sodmonlinemy']:
-            element = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
-            temperature_precision = forms.ChoiceField(choices=SM_TEMP_PRECISION_CHOICES, initial=' ')
-            output_format = forms.ChoiceField(choices=SM_FRMT_CHOICES, initial='kr')
-            temp_unit = forms.ChoiceField(choices=TMP_UNIT_CHOICE, initial=' ')
-            number_of_characters = forms.ChoiceField(choices=DIGIT_CHOICES, initial='3')
+            self.fields['element'] = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
+            self.fields['temperature_precision'] = forms.ChoiceField(choices=SM_TEMP_PRECISION_CHOICES, initial=' ')
+            self.fields['output_format'] = forms.ChoiceField(choices=SM_FRMT_CHOICES, initial='kr')
+            self.fields['temp_unit'] = forms.ChoiceField(choices=TMP_UNIT_CHOICE, initial=' ')
+            self.fields['number_of_characters'] = forms.ChoiceField(choices=DIGIT_CHOICES, initial='3')
         elif app_name in ['Sodrun', 'Sodrunr']:
-            element = forms.ChoiceField(choices=SR_ELEMENT_CHOICES, initial='pcpn')
-            aeb = forms.ChoiceField(choices=AEB_CHOICES, initial ='A' )
-            threshold = forms.IntegerField(initial=0)
-            min_run = forms.IntegerField(required=False, initial=1)
-            name = forms.CharField(max_length=256, required=False)
-            verbose = forms.BooleanField(required=False, initial=False)
+            self.fields['element'] = forms.ChoiceField(choices=SR_ELEMENT_CHOICES, initial='pcpn')
+            self.fields['aeb'] = forms.ChoiceField(choices=AEB_CHOICES, initial ='A' )
+            self.fields['threshold'] = forms.IntegerField(initial=0)
+            self.fields['min_run'] = forms.IntegerField(required=False, initial=1)
+            self.fields['name'] = forms.CharField(max_length=256, required=False)
+            self.fields['verbose'] = forms.BooleanField(required=False, initial=False)
+        elif app_name == 'Sodpct':
+            threshold = kwargs.get('initial', {}).get('threshold', None)
+            element = kwargs.get('initial', {}).get('element', None)
+            individual_averages = kwargs.get('initial', {}).get('individual_averages', None)
+            if threshold is not None:
+                self.fields['threshold_ab'] = forms.ChoiceField(choices=([('A','Above'), ('B','Below'),]))
+            if element in ['hdd', 'cdd', 'gdd']:
+                self.fields['base_temperature'] = forms.IntegerField(initial=65)
+                if element == 'gdd':
+                    self.fields['min_temperature'] = forms.IntegerField(initial=50)
+                    self.fields['max_temperature'] = forms.IntegerField(initial=80)
+            if individual_averages == 'I' and element in ['pcpn', 'snow']:
+                self.fields['accumulate_over_season'] = forms.BooleanField(required=False, initial = False)
+                self.fields['begin_month'] = forms.IntegerField(min_value=0,max_value=12, initial=0)
+            self.fields['number_days_ahead'] = forms.IntegerField(min_value=1,max_value=31, initial=1)
         else:
             pass
 
@@ -397,19 +417,8 @@ class SodxtrmtsForm(forms.Form):
         '''
         self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
         self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
-        self.fields['element'] = forms.ChoiceField(choices=SPCT_ELEMENT_CHOICES, initial='pcpn')
+        self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='pcpn')
         self.fields['analysis_type'] = forms.ChoiceField(choices=SX_ANALYSIS_CHOICES, initial='mave')
-
-class SodpctForm(forms.Form):
-    def __init__(self, station_selection, *args, **kwargs):
-        '''
-        copy from SoddyrecForm once fixed, possibly more to deal with other input options
-        '''
-        self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
-        self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
-        #Note number_of_days has max of 31, implement!!
-        self.fields['number_of_days'] = forms.CharField(max_length=2, required = False)
-        self.fields['element'] = forms.ChoiceField(choices=SPCT_ELEMENT_CHOICES, initial='pcpn')
 
 class SodthrForm(forms.Form):
     def __init__(self, station_selection, *args, **kwargs):
