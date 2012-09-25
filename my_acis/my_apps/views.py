@@ -116,6 +116,7 @@ def sods(request, app_name):
             form1 = set_as_form(request, 'Sod0', init={'app_name': app_name})
         context['form1'] = form1
         if form1.is_valid():
+            context['form_2_ready'] = '2ready'
             station_selection = form1.cleaned_data['station_selection']
             if app_name == 'Soddd':
                 skip_days = form1.cleaned_data['skip_days']
@@ -211,7 +212,7 @@ def sods(request, app_name):
             elif app_name == 'Sodsumm':
                 el_type  = form2.cleaned_data['element']
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
-                'coop_station_ids':coop_station_ids,'station_names':station_names,'el_type':el_type}
+                'coop_station_ids':coop_station_ids,'station_names':station_names,'el_type':el_type, 'max_missing_days':form2.cleaned_data['max_missing_days']}
                 results = run_data_app(**app_args)
                 context['max_missing_days'] = form2.cleaned_data['max_missing_days']
                 if el_type  == 'temp':

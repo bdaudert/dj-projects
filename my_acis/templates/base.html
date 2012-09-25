@@ -35,26 +35,25 @@ $(document).ready(function() {
 
     <div id="breadcrumbs">
     {% block breadcrumbs %}
-	    <a href="/my_meta">METADATA HOME</a>
-            &nbsp;&nbsp;
-            <a href="/my_data">STATIONFINDER</a>
-	    &nbsp;&nbsp;
-	    <a href="/my_apps">APPLICATIONS</a>
+        <a href="/">HOME </a>&nbsp;&nbsp;
+	    <a href="/my_meta">METADATA</a>&nbsp;&nbsp;
+        <a href="/my_data">STATIONFINDER</a>&nbsp;&nbsp;
+	    <a href="/my_apps">APPLICATIONS</a>&nbsp;&nbsp;
     {% endblock %}
     </div>
 
     <div id="content">
     {% block content %} 
-        <img style="width:90%; height:100%; align:center" src="{{MEDIA_URL}}img/CarefulNow.jpg">
+        <img style="width:90%; height:90%; align:center" src="{{MEDIA_URL}}img/DataDriven.png">
+        <p class="intro" color="red">PROVIDING EASY ACCESS TO CLIMATE DATA AND PRODUCTS</p>
+        
     {% endblock %}
     </div> <!-- END content -->
 
     {% block footer %}
-	<div id="footer-wrapper">
 	<div id="footer">
 	    <p>Created by <a href="http://www.wrcc.dri.edu/">WRCC</a></p>
 	</div><!-- END footer -->
-	</div> <!--END footer-wrapper-->
     {% endblock %}
 </body>
 </html>

@@ -1,11 +1,13 @@
 
 {% extends "base.html" %}
 
+
 {% block content %}
 
+
 <h1 align='center'>{{title}}</h1>
-
-
+    <table align = "center"><td class="unpadded"><img style="width:70%; height:60%; align:right" src="{{MEDIA_URL}}img/DataAnalysis.jpg"></td>
+    <td class="unpadded">
     <!-- Site navigation menu -->
     <ul class="navbar">
      <a href="/my_apps/Sodrun/" class="trigger">SODRUN</a>
@@ -84,6 +86,7 @@
      </div>
      <a class="docu_long" href="{{ MEDIA_URL }}img/sodsumm.d"><img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="30" height="30">...more</a>
      </ul>
+    </td></table>
 
     <!-- 
     <a onClick="ShowHide('sr')"><img height="15" width="15" src="{{ MEDIA_URL }}img/FaceQMark.jpg"></a>
