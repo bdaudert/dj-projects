@@ -275,29 +275,23 @@ def set_sodsumm_headers(table_list):
     def set_header(table):
         rows = []
         if table == 'temp':
-            rows.append('<th colspan="12"> Temperature Statistics</th><th>#Day</th><th>-Max</th><th>#Day</th><th>-Min</th>')
-            rows.append('<tr><td colspan="4">Averages</td><td colspan="4">Daily Extremes</td><td colspan="4">Mean Extremes</td><td> >= </td><td>=< </td><td>=< </td><td>=< </td></tr>')
+            rows.append('<th colspan="16"> Temperature Statistics:</th>')
+            rows.append('<th colspan="2"></th><th colspan="4">Averages, </th><th colspan="4">Daily Extremes, </th><th colspan="4">Mean Extremes, </th><th colspan="2"> >= =<  =<  =< </th>')
         elif table == 'prsn':
-            rows.append('<th colspan="15">Precipitation/Snow Statistics</th>')
-            rows.append('<tr><td colspan="15">Missing data not yet determined</td></tr>')
-            rows.append('<tr><td colspan="6">Total Precipitation</td><td colspan="2">Precipitation</td><td colspan="3">Total Snowfall</td><td colspan="4">#Days Precip</td></tr>')
+            rows.append('<th colspan="15">Precipitation/Snow Statistics:</th>')
+            rows.append('<th colspan="6">Total Precipitation, </th><th colspan="2">Precipitation, </th><th colspan="3">Total Snowfall, </th><th colspan="4">#Days Precip</th>')
 
         elif table == 'hdd':
-            rows.append('<th colspan="14">For Heating degree day calculations:</th>')
+            rows.append('<th colspan="14">Heating degree days:</th>')
             rows.append('<tr><td colspan="14">Output is rounded, unlike NCDC values, which round input.</td></tr>')
-            rows.append('<tr><td colspan="14">Missing data not yet determined</td></tr>')
             rows.append('<tr><td colspan="14">Degree Days to selected Base Temperatures(F)</td></tr>')
-            rows.append('<tr><td>Base</td><td colspan="13">Heating Degree Days</td></tr>')
         elif table == 'cdd':
-            rows.append('<th colspan="14">For Cooling degree day calculations:</th>')
+            rows.append('<th colspan="14">Cooling degree days:</th>')
             rows.append('<tr><td colspan="14">Output is rounded, unlike NCDC values, which round input.</td></tr>')
-            rows.append('<tr><td colspan="14">Missing data not yet determined</td></tr>')
             rows.append('<tr><td colspan="14">Degree Days to selected Base Temperatures(F)</td></tr>')
-            rows.append('<tr><td>Base</td><td colspan="13">Cooling Degree Days</td></tr>')
         elif table == 'gdd':
-            rows.append('<th colspan="15">For Growing degree day calculations:</th>')
+            rows.append('<th colspan="15">Growing degree days:</th>')
             rows.append('<tr><td colspan="15">Output is rounded, unlike NCDC values, which round input.</td>')
-            rows.append('<tr><td colspan="15">Missing data not yet determined</td></tr>')
             rows.append('<tr><td colspan="15">Growing Degree Days to selected Base Temperatures(F)</td></tr>')
         elif table == 'corn':
             rows.append('<th colspan="15">Corn Growing Degree Days</th>')
