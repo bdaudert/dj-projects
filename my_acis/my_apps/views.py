@@ -91,6 +91,7 @@ def sodsum(request, app_name):
     if app_name is None:
         raise
     form =  set_as_form(request, app_name)
+    context['form'] = form
     out =  'No output yet'
     err = 'No error yet'
     results = {}
@@ -99,14 +100,16 @@ def sodsum(request, app_name):
         (data, elements, coop_station_id, station_name) = AcisWS.get_sodsum_data(form.cleaned_data)
         results = WRCCDataApps.Sodsum(data, elements, coop_station_id, station_name)
         context['elements'] = elements
-    context['form'] = form
     context['results']= dict(results)
     return render_to_response('my_apps/Sodsum.html', context, context_instance=RequestContext(request))
 
 def sods(request, app_name):
+    units = {'pcpn':'Hundredths of Inches', 'snow':'Tenths of Inches', 'snwd': 'Inches', 'maxt':'Whole Degrees', 'mint':'Whole Degrees',\
+             'avgt':'Whole Degrees', 'dtr':'Whole Degrees', 'hdd':'Days', 'cdd':'Days','gdd':'Days'}
     context = {
     'title': '%s' % app_name,
     }
+    #Form 1 dealing with station selection and for some apps, preliminary information
     form1 = set_as_form(request, 'Sod0', init={'app_name': app_name})
     context['form1'] = form1
     if 'stn_selection' in request.POST:
@@ -129,6 +132,10 @@ def sods(request, app_name):
                 individual_averages = form1.cleaned_data['individual_averages']
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
                 'threshold':threshold, 'element':element, 'individual_averages': individual_averages }
+                context['threshold'] = threshold
+                context['element'] = element
+                context['units'] = units[element]
+                context['individual_averages'] = individual_averages
             else:
                 initial = {'app_name':app_name, 'station_selection':station_selection}
             form2 = set_as_form2(init=initial)
@@ -136,7 +143,7 @@ def sods(request, app_name):
         else:
             station_selection=None
 
-
+    #Form2 Application parameters
     if 'app_form' in request.POST:
         form2 = set_as_form(request, 'Sod')
         context['form2'] = form2
@@ -236,6 +243,52 @@ def sods(request, app_name):
                 elif el_type == 'all':
                     table_list = ['temp', 'prsn', 'hdd', 'cdd', 'gdd', 'corn']
                 context['headers'] = set_sodsumm_headers(table_list)
+            elif app_name == 'Sodpct':
+                el_type = form2.cleaned_data['element']
+                if abs(form2.cleaned_data['threshold'] + 9999) < 0.05:
+                    threshold = None
+                else:
+                    threshold = form2.cleaned_data['threshold']
+                ia = form2.cleaned_data['individual_averages']
+                number_days_ahead = form2.cleaned_data['number_days_ahead']
+                if 'threshold_ab' in form2.cleaned_data.keys():
+                    threshold_ab = form2.cleaned_data['threshold_ab']
+                else:
+                    threshold_ab = None
+                if el_type in ['hdd', 'cdd', 'gdd']:
+                    base_temperature = form2.cleaned_data['base_temperature']
+                    if el_type == 'gdd':
+                        min_temperature = form2.cleaned_data['min_temperature']
+                        max_temperature = form2.cleaned_data['max_temperature']
+                    else:
+                        min_temperature = None
+                        max_temperature = None
+                else:
+                    base_temperature = None
+                    min_temperature = None
+                    max_temperature = None
+                if 'begin_month' in form2.cleaned_data.keys():
+                    begin_month = form2.cleaned_data['begin_month']
+                else:
+                    begin_month = None
+                if 'accumulate_over_season' in form2.cleaned_data.keys():
+                    accumulate_over_season = form2.cleaned_data['accumulate_over_season']
+                else:
+                    accumulate_over_season = None
+                app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
+                'coop_station_ids':coop_station_ids,'station_names':station_names,'el_type':el_type,\
+                'ia':ia, 'number_days_ahead':number_days_ahead,'threshold':threshold, 'threshold_ab':threshold_ab, \
+                'base_temperature':base_temperature, 'min_temperature':min_temperature, \
+                'max_temperature':max_temperature, 'begin_month':begin_month, 'accumulate_over_season':accumulate_over_season }
+                if threshold_ab == 'A':
+                    context['op'] = 'Above'
+                elif threshold_ab == 'B':
+                    context['op'] = 'Below'
+                context['base_temperature'] = base_temperature
+                context['min_temperature'] = min_temperature
+                context['min_temperature'] = max_temperature
+                context['begin_month'] = begin_month
+                results = run_data_app(**app_args)
             else:
                 results = {}
             #general context

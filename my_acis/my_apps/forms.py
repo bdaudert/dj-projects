@@ -43,7 +43,7 @@ APP_NAME_CHOICES = (
 SR_ELEMENT_CHOICES = (
         ('maxt', 'Maximum Temprature (Whole Degrees)'),
         ('mint', 'Minimum Temperature(Whole Degrees)'),
-        ('rang', 'Temperature Range(Whole Degrees)'),
+        ('range', 'Temperature Range(Whole Degrees)'),
         ('snow', 'Snowfall (Tenth of inches)'),
         ('snwd', 'Snowdepth (Whole inches)'),
         ('pcpn', 'Precipitation (Hundredths of inches)'),
@@ -51,7 +51,7 @@ SR_ELEMENT_CHOICES = (
 SRR_ELEMENT_CHOICES = (
         ('maxt', 'Maximum Temprature (Whole Degrees)'),
         ('mint', 'Minimum Temperature(Whole Degrees)'),
-        ('rang', 'Temperature Range(Whole Degrees)'),
+        ('range', 'Temperature Range(Whole Degrees)'),
         ('snow', 'Snowfall (Tenth of inches)'),
         ('snwd', 'Snowdepth (Whole inches)'),
         ('pcpn', 'Precipitation (Hundredths of inches)'),
@@ -292,8 +292,8 @@ class Sod0Form(forms.Form):
             self.fields['truncate'] = forms.BooleanField(initial=False, required=False)
         if app_name == 'Sodpct':
             self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='pcpn')
-            self.fields['individual_averages'] = forms.ChoiceField(choices=([('I','Individual'), ('A','Day Sums or Averages'),]))
-            self.fields['threshold'] = forms.IntegerField(required=False)
+            self.fields['individual_averages'] = forms.ChoiceField(choices=([('I','Individual'), ('A','Day Sums or Averages'),]), required=False, initial='I')
+            self.fields['threshold'] = forms.DecimalField(required=False, initial=-9999)
 
 class SodForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -336,7 +336,7 @@ class SodForm(forms.Form):
 
         if app_name in ['Sodrun', 'Sodrunr']:
             if app_name == 'Sodrunr':
-                self.fields['element'] = forms.ChoiceField(choices=SRR_ELEMENT_CHOICES, initial='rang')
+                self.fields['element'] = forms.ChoiceField(choices=SRR_ELEMENT_CHOICES, initial='range')
                 self.fields['aeb'] = forms.ChoiceField(choices=AEB_CHOICES, initial ='A' )
                 self.fields['threshold'] = forms.IntegerField(initial=40)
             else:
@@ -394,6 +394,11 @@ class SodForm(forms.Form):
             threshold = kwargs.get('initial', {}).get('threshold', None)
             element = kwargs.get('initial', {}).get('element', None)
             individual_averages = kwargs.get('initial', {}).get('individual_averages', None)
+            self.fields['element'] = forms.CharField(label=element)
+            self.fields['individual_averages'] = forms.CharField(label=individual_averages)
+            self.fields['threshold'] = forms.DecimalField(label=threshold)
+            #self.fields['element'] = forms.ChoiceField(choices=([(element, element), ]))
+            #self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, required=False, initial=element)
             if threshold is not None:
                 self.fields['threshold_ab'] = forms.ChoiceField(choices=([('A','Above'), ('B','Below'),]))
             if element in ['hdd', 'cdd', 'gdd']:
@@ -403,7 +408,7 @@ class SodForm(forms.Form):
                     self.fields['max_temperature'] = forms.IntegerField(initial=80)
             if individual_averages == 'I' and element in ['pcpn', 'snow']:
                 self.fields['accumulate_over_season'] = forms.BooleanField(required=False, initial = False)
-                self.fields['begin_month'] = forms.IntegerField(min_value=0,max_value=12, initial=0)
+                self.fields['begin_month'] = forms.IntegerField(min_value=1,max_value=12, initial=1)
             self.fields['number_days_ahead'] = forms.IntegerField(min_value=1,max_value=31, initial=1)
         else:
             pass
