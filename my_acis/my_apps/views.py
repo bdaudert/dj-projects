@@ -294,8 +294,12 @@ def sods(request, app_name):
             #general context
             context['results'] =  dict(results)
             context['dates'] = dates
-            context['start_year'] = dates[0][0:4]
-            context['end_year'] = str(int(dates[-1][0:4])+1)
+            if app_name in ['Sodrun', 'Sodrunr', 'Soddyrec', 'Sodcnv', 'Sodlist']:
+                context['start_year'] = dates[0]
+                context['end_year'] = dates[-1]
+            else:
+                context['start_year'] = dates[0][0:4]
+                context['end_year'] = str(int(dates[-1][0:4])+1)
             context['num_yrs'] = int(dates[-1][0:4]) - int(dates[0][0:4])+1
             context['elements'] = dict([(k,v) for k,v in enumerate(elements)])
             context['data'] = dict(data)
