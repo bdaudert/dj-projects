@@ -199,7 +199,12 @@ SDMM_ELEMENT_CHOICES = (
         ('g', 'Growing Degree Day Summaries'),
         ('all', 'All Statistics'),
         )
-
+SDTHR_ELEMENT_CHOICES = (
+        ('maxt', 'Maximum Temprature '),
+        ('mint', 'Minimum Temperature'),
+        ('avgt', 'Mean Temperature'),
+        ('dtr', 'Daily Temperature Range'),
+        )
 
 #Custom form fields
 class MultiStnField(forms.CharField):
@@ -294,6 +299,9 @@ class Sod0Form(forms.Form):
             self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='pcpn')
             self.fields['individual_averages'] = forms.ChoiceField(choices=([('I','Individual'), ('A','Day Sums or Averages'),]), required=False, initial='I')
             self.fields['threshold'] = forms.DecimalField(required=False, initial=-9999)
+        if app_name == 'Sodthr':
+            self.fields['custom_tables'] = forms.BooleanField(initial=False, required=False)
+            self.fields['number_of_thresholds']= forms.IntegerField(min_value=1,max_value=10, initial=1, required = False)
 
 class SodForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -330,9 +338,9 @@ class SodForm(forms.Form):
             self.fields['start_date'] = forms.CharField(max_length=8, initial='20000101')
             self.fields['end_date'] = forms.CharField(max_length=8, initial=today)
             #self.fields['end_date'] = forms.CharField(max_length=8, initial='20091231')
-        elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy', 'Sodpad', 'Sodsumm', 'Sodpct']:
+        elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy', 'Sodpad', 'Sodsumm', 'Sodpct', 'Sodthr']:
             self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
-            self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2012')
+            self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2010')
 
         if app_name in ['Sodrun', 'Sodrunr']:
             if app_name == 'Sodrunr':
@@ -394,11 +402,16 @@ class SodForm(forms.Form):
             threshold = kwargs.get('initial', {}).get('threshold', None)
             element = kwargs.get('initial', {}).get('element', None)
             individual_averages = kwargs.get('initial', {}).get('individual_averages', None)
-            self.fields['element'] = forms.CharField(label=element)
-            self.fields['individual_averages'] = forms.CharField(label=individual_averages)
-            self.fields['threshold'] = forms.DecimalField(label=threshold)
-            #self.fields['element'] = forms.ChoiceField(choices=([(element, element), ]))
-            #self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, required=False, initial=element)
+            if threshold is None:threshold = self.data.get('threshold')
+            if element is None:element = self.data.get('element')
+            if individual_averages is None:individual_averages = self.data.get('individual_averages')
+            self.fields['element'] = forms.CharField(initial=element)
+            self.fields['element'].widget.attrs['readonly'] = 'readonly'
+            self.fields['individual_averages'] = forms.CharField(initial=individual_averages)
+            self.fields['individual_averages'].widget.attrs['readonly'] = 'readonly'
+            self.fields['threshold'] = forms.DecimalField(initial=threshold)
+            self.fields['threshold'].widget.attrs['readonly'] = 'readonly'
+            #self.fields['threshold'] = forms.DecimalField(label=threshold)
             if threshold is not None:
                 self.fields['threshold_ab'] = forms.ChoiceField(choices=([('A','Above'), ('B','Below'),]))
             if element in ['hdd', 'cdd', 'gdd']:
@@ -406,10 +419,33 @@ class SodForm(forms.Form):
                 if element == 'gdd':
                     self.fields['min_temperature'] = forms.IntegerField(initial=50)
                     self.fields['max_temperature'] = forms.IntegerField(initial=80)
-            if individual_averages == 'I' and element in ['pcpn', 'snow']:
-                self.fields['accumulate_over_season'] = forms.BooleanField(required=False, initial = False)
-                self.fields['begin_month'] = forms.IntegerField(min_value=1,max_value=12, initial=1)
+            if individual_averages == 'I':
+                if element in ['pcpn', 'snow']:
+                    self.fields['accumulate_over_season'] = forms.BooleanField(required=False, initial = False)
+                    self.fields['begin_month'] = forms.IntegerField(min_value=1,max_value=12, initial=1)
             self.fields['number_days_ahead'] = forms.IntegerField(min_value=1,max_value=31, initial=1)
+        elif app_name == 'Sodthr':
+            number_of_thresholds = kwargs.get('initial', {}).get('number_of_thresholds', None)
+            custom_tables = kwargs.get('initial', {}).get('custom_tables',False)
+            if number_of_thresholds is None: number_of_thresholds =int(self.data.get('number_of_thresholds'))
+            if not custom_tables:custom_tables = self.data.get('custom_tables')
+            self.fields['element'] = forms.ChoiceField(choices=SDTHR_ELEMENT_CHOICES, required=False, initial='maxt')
+            if custom_tables:
+                self.fields['interval_start'] = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
+                self.fields['interval_end'] = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
+                self.fields['midpoint'] = forms.CharField(max_length=4, min_length=4, initial='0731')
+                self.fields['number_of_thresholds'] = forms.IntegerField(initial=number_of_thresholds)
+                self.fields['number_of_thresholds'].widget.attrs['readonly'] = 'readonly'
+                for thresh in range(number_of_thresholds):
+                    self.fields['threshold_%s' % thresh] = forms.DecimalField(initial = 0.0)
+                    self.fields['time_series_%s' % thresh] = forms.BooleanField(required=False, initial = False)
+                self.fields['latest_or_earliest_for_period_1'] = forms.ChoiceField(choices=([('e','Earliest'), ('l','Latest'), ]), initial='e')
+                self.fields['latest_or_earliest_for_period_2'] = forms.ChoiceField(choices=([('e','Latest'), ('l','Earliest'), ]), initial='l')
+                self.fields['above_or_below'] = forms.ChoiceField(choices=([('a','Above'), ('b','Below'), ]), initial='a')
+            self.fields['max_missing_days_first_and_last'] = forms.IntegerField(initial=10, required=False)
+            self.fields['max_missing_days_differences'] = forms.IntegerField(initial=10, required=False)
+            self.fields['custom_tables'] = forms.CharField(initial = custom_tables)
+            self.fields['custom_tables'].widget.attrs['readonly'] = 'readonly'
         else:
             pass
 

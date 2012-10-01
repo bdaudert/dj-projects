@@ -126,7 +126,7 @@ def sods(request, app_name):
                 truncate = form1.cleaned_data['truncate']
                 initial = {'app_name':app_name, 'station_selection':station_selection, \
                 'skip_days':skip_days, 'truncate':truncate }
-            if app_name == 'Sodpct':
+            elif app_name == 'Sodpct':
                 threshold = form1.cleaned_data['threshold']
                 element = form1.cleaned_data['element']
                 individual_averages = form1.cleaned_data['individual_averages']
@@ -136,6 +136,11 @@ def sods(request, app_name):
                 context['element'] = element
                 context['units'] = units[element]
                 context['individual_averages'] = individual_averages
+            elif app_name == 'Sodthr':
+                custom_tables = form1.cleaned_data['custom_tables']
+                number_of_thresholds = form1.cleaned_data['number_of_thresholds']
+                initial = {'app_name':app_name, 'station_selection':station_selection,\
+                'custom_tables':custom_tables,'number_of_thresholds': number_of_thresholds }
             else:
                 initial = {'app_name':app_name, 'station_selection':station_selection}
             form2 = set_as_form2(init=initial)
@@ -171,7 +176,6 @@ def sods(request, app_name):
                 app_args = {'app_name': app_name, 'data':data,'dates':dates,'elements':elements,\
                 'coop_station_ids':coop_station_ids,'station_names':station_names,'op':context['op'],\
                 'thresh':context['thresh'], 'verbose': form2.cleaned_data['verbose'], 'minimum_run': form2.cleaned_data['minimum_run']}
-                #results = run_data_app(app_name, **app_args)
                 results = WRCCDataApps.Sodrun(**app_args)
             elif app_name == 'Soddynorm':
                 results = run_data_app(app_name, data, dates, elements, coop_station_ids, station_names, \
@@ -289,6 +293,47 @@ def sods(request, app_name):
                 context['min_temperature'] = max_temperature
                 context['begin_month'] = begin_month
                 results = run_data_app(**app_args)
+            elif app_name == 'Sodthr':
+                header = {}
+                el_type = str(form2.cleaned_data['element'])
+                start_year = dates[0][0:4]
+                end_year = dates[-1][0:4]
+                number_of_thresholds = int(form2.cleaned_data['number_of_thresholds'])
+                if form2.cleaned_data['custom_tables']:
+                    time_series = []
+                    thresholds = []
+                    #set headers
+                    for k in range(3):
+                        header[k] = set_sodthr_headers(k, el_type, str(form2.cleaned_data['interval_start']), \
+                        str(form2.cleaned_data['midpoint']),str(form2.cleaned_data['interval_end']), start_year, end_year, \
+                        int(form2.cleaned_data['max_missing_days_first_and_last']), int(form2.cleaned_data['max_missing_days_differences']), \
+                        str(form2.cleaned_data['above_or_below']), str(form2.cleaned_data['latest_or_earliest_for_period_1']), \
+                        str(form2.cleaned_data['latest_or_earliest_for_period_2']))
+                    #Find list of thresholds, and time_series_booleans
+                    for k in range(int(number_of_thresholds)):
+                        thresholds.append(form2.cleaned_data['threshold_%s' % str(k)])
+                        time_series.append(form2.cleaned_data['time_series_%s' % str(k)])
+                    #set application arguments
+                    app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
+                    'coop_station_ids':coop_station_ids,'station_names':station_names,'el_type':el_type,\
+                    'interval_start':form2.cleaned_data['interval_start'], 'midpoint':form2.cleaned_data['midpoint'], \
+                    'interval_end':form2.cleaned_data['interval_end'], 'thresholds': thresholds, 'time_series': time_series, \
+                    'le_1': form2.cleaned_data['latest_or_earliest_for_period_1'], \
+                    'le_2':form2.cleaned_data['latest_or_earliest_for_period_2'], 'ab':form2.cleaned_data['above_or_below'], \
+                    'miss_days_1':int(form2.cleaned_data['max_missing_days_first_and_last']), 'miss_days_2':int(form2.cleaned_data['max_missing_days_differences'])}
+                else:
+                    time_series = []
+                    thresholds = []
+                    #set headers
+                    for k in range(3):
+                        header[k] = set_sodthr_headers(k, el_type, '0101', '0731',  '1231', start_year, \
+                        end_year, 10, 10, 'below', 'latest','earliest')
+                    app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
+                    'coop_station_ids':coop_station_ids,'station_names':station_names,'el_type':el_type,\
+                    'interval_start':'0101', 'midpoint':'0731', 'interval_end':'1231', 'thresholds': thresholds, \
+                    'time_series': time_series, 'le_1': 'latest', 'le_2':'earliest', 'ab':'below', \
+                    'miss_days_1':10, 'miss_days_2':10}
+                results = run_data_app(**app_args)
             else:
                 results = {}
             #general context
@@ -305,7 +350,9 @@ def sods(request, app_name):
             context['data'] = dict(data)
             context['coop_station_ids'] = dict([(k,v) for k,v in enumerate(coop_station_ids)])
             context['station_names'] = dict([(k,v) for k,v in enumerate(station_names)])
-        else:
+        else: #form_2 is not valid
+            print "The following errors occurred:"
+            print form2.errors
             station_selection = None
     return render_to_response('my_apps/%s.html' % app_name, context, context_instance=RequestContext(request))
 
@@ -334,6 +381,40 @@ def run_data_app(app_name,*args, **kwargs):
     except:
         results = {}
     return results
+
+def set_sodthr_headers(tbl_idx, el, int_start, midpoint,  int_end, start_year, end_year, days_miss_1, days_miss_2, ab, le_1, le_2):
+    lines = []
+    if tbl_idx == 0:
+        lines.append('PROBABILITY OF %s DATE OF %s %s</br>' % (le_1, el, ab))
+        lines.append('THE INDICATED THRESHOLD VALUE (DEGREES F).</br>')
+        lines.append('DURING THE FOLLOWING INTERVAL:</br>')
+        lines.append('START MONTH-DAY: %s  END MONTH-DAY:  %s' % (int_start, midpoint))
+        lines.append('YEARS USED:  %s -  %s </br>' % (start_year, end_year))
+        lines.append('WITH NO MORE THAN  %i MISSING DAYS DURING THE INTERVAL.</br>' % days_miss_1)
+        lines.append('[ -01-01 ] INDICATES NON-OCCURRENCE OF THE THRESHOLD</br>')
+    elif tbl_idx == 1:
+        lines.append('PROBABILITY OF %s DATE OF %s %s</br>' % (le_2, el, ab))
+        lines.append('THE INDICATED THRESHOLD VALUE (DEGREES F).</br>')
+        lines.append('DURING THE FOLLOWING INTERVAL:</br>')
+        lines.append('START MONTH-DAY: %s  END MONTH-DAY:  %s' % (midpoint, int_end))
+        lines.append('YEARS USED:  %s -  %s </br>' % (start_year, end_year))
+        lines.append('WITH NO MORE THAN  %i MISSING DAYS DURING THE INTERVAL.</br>' % days_miss_1)
+        lines.append('[ -01-01 ] INDICATES NON-OCCURRENCE OF THE THRESHOLD</br>')
+    else:
+        lines.append('PROBABILITY OF NO MORE THAN THE INDICATED NUMBER OF DAYS (I.E., PERCENTILE)</br>')
+        lines.append('---  BETWEEN  ---</br>')
+        lines.append('(1) THE %s DATE OF %s %s</br>' % (le_1, el, ab))
+        lines.append('THE INDICATED THRESHOLD VALUE (DEGREES F) DURING</br>')
+        lines.append('THE  FIRST INTERVAL ---      START MONTH-DAY: %s END MONTH-DAY:  %s </br>'  % (int_start, midpoint))
+        lines.append('---  AND  ---</br>')
+        lines.append('(2) THE %s DATE OF %s %s</br>' % (le_2, el, ab))
+        lines.append('THE SAME THRESHOLD VALUE (DEGREES F) DURING</br>')
+        lines.append('THE  SECOND INTERVAL ---      START MONTH-DAY: %s END MONTH-DAY:  %s </br>'  % (midpoint, int_end))
+        lines.append('YEARS USED:  %s -  %s </br>' % (start_year, end_year))
+        lines.append('WITH NO MORE THAN  %i MISSING DAYS DURING THE TWO INTERVALS COMBINED.</br>' % days_miss_2)
+        lines.append('[ 367.0 ] INDICATES NON-OCCURRENCE OF THE THRESHOLD</br>')
+
+    return "\n".join(lines)
 
 def set_sodsumm_headers(table_list):
     headers = {}
