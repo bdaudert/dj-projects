@@ -298,7 +298,7 @@ class Sod0Form(forms.Form):
         if app_name == 'Sodpct':
             self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='pcpn')
             self.fields['individual_averages'] = forms.ChoiceField(choices=([('I','Individual'), ('A','Day Sums or Averages'),]), required=False, initial='I')
-            self.fields['threshold'] = forms.DecimalField(required=False, initial=-9999)
+            self.fields['threshold'] = forms.DecimalField(required=False, initial=-9999.0)
         if app_name == 'Sodthr':
             self.fields['custom_tables'] = forms.BooleanField(initial=False, required=False)
             self.fields['number_of_thresholds']= forms.IntegerField(min_value=1,max_value=10, initial=1, required = False)
@@ -429,7 +429,7 @@ class SodForm(forms.Form):
             custom_tables = kwargs.get('initial', {}).get('custom_tables',False)
             if number_of_thresholds is None: number_of_thresholds =int(self.data.get('number_of_thresholds'))
             if not custom_tables:custom_tables = self.data.get('custom_tables')
-            self.fields['element'] = forms.ChoiceField(choices=SDTHR_ELEMENT_CHOICES, required=False, initial='maxt')
+            self.fields['element'] = forms.ChoiceField(choices=SDTHR_ELEMENT_CHOICES, required=False, initial='mint')
             if custom_tables:
                 self.fields['interval_start'] = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
                 self.fields['interval_end'] = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')

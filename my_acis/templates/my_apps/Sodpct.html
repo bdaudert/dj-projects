@@ -2,6 +2,7 @@
 
 {% block content %}
 
+
 <h1 align='center'>{{title}}</h1>
 <div id='stn_selection'>
      <table border=0 align="right">
@@ -63,6 +64,8 @@ Mon - Month</br>
     </table>
     {%endif%}     
   {%endfor%}
+{%else%}
+ <p style="color:red">NO RESULTS!</p></br>
 {%endif%}
 
 {% endblock %}
