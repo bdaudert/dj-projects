@@ -26,7 +26,7 @@
 
 {%if results %}
   {%for stn, stn_data in results.items %}
-    <p class="stronger" style="color:darkblue">LOCATION:{{station_names|lookup:stn|safe}}&nbsp;&nbsp;STATION: {{coop_station_ids|lookup:stn|safe}}</br>
+    <p class="stronger" style="color:darkblue; font-size:large">LOCATION:{{station_names|lookup:stn|safe}}&nbsp;&nbsp;STATION: {{coop_station_ids|lookup:stn|safe}}</br>
     </p></br>
     {%for tbl_idx, tbl_data in stn_data.items %}
     <p>{{header|lookup:tbl_idx|safe}}</p></br>
@@ -47,6 +47,7 @@
      </table>
     {%endif%}
     {%endfor%}
+    </br>
   {%endfor%}
 {%endif%}
 

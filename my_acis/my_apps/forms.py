@@ -300,7 +300,8 @@ class Sod0Form(forms.Form):
             self.fields['individual_averages'] = forms.ChoiceField(choices=([('I','Individual'), ('A','Day Sums or Averages'),]), required=False, initial='I')
             self.fields['threshold'] = forms.DecimalField(required=False, initial=-9999.0)
         if app_name == 'Sodthr':
-            self.fields['custom_tables'] = forms.BooleanField(initial=False, required=False)
+            #self.fields['custom_tables'] = forms.BooleanField(initial=False, required=False)
+            self.fields['custom_tables'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F')
             self.fields['number_of_thresholds']= forms.IntegerField(min_value=1,max_value=10, initial=1)
 
 class SodForm(forms.Form):
@@ -314,6 +315,7 @@ class SodForm(forms.Form):
 
         if station_selection is None:
             station_selection = self.data.get('station_selection')
+
         if station_selection == 'stnid':
             self.fields['coop_station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779')
         elif station_selection == 'stnids':
@@ -427,10 +429,12 @@ class SodForm(forms.Form):
         elif app_name == 'Sodthr':
             number_of_thresholds = kwargs.get('initial', {}).get('number_of_thresholds', None)
             custom_tables = kwargs.get('initial', {}).get('custom_tables',None)
-            if number_of_thresholds is None: number_of_thresholds =self.data.get('number_of_thresholds')
+
+            if number_of_thresholds is None: number_of_thresholds = self.data.get('number_of_thresholds')
             if custom_tables is None:custom_tables = self.data.get('custom_tables')
+
             self.fields['element'] = forms.ChoiceField(choices=SDTHR_ELEMENT_CHOICES, required=False, initial='mint')
-            if custom_tables == True:
+            if custom_tables == 'T':
                 self.fields['interval_start'] = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
                 self.fields['interval_end'] = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
                 self.fields['midpoint'] = forms.CharField(max_length=4, min_length=4, initial='0731')
@@ -447,7 +451,7 @@ class SodForm(forms.Form):
                 self.fields['number_of_thresholds'] = forms.IntegerField(initial=None, widget=forms.HiddenInput())
             self.fields['max_missing_days_first_and_last'] = forms.IntegerField(initial=10, required=False)
             self.fields['max_missing_days_differences'] = forms.IntegerField(initial=10, required=False)
-            self.fields['custom_tables'] = forms.CharField(initial = custom_tables)
+            self.fields['custom_tables'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = custom_tables)
             self.fields['custom_tables'].widget.attrs['readonly'] = 'readonly'
         else:
             pass

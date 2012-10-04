@@ -301,7 +301,8 @@ def sods(request, app_name):
                 start_year = dates[0][0:4]
                 end_year = dates[-1][0:4]
                 number_of_thresholds = form2.cleaned_data['number_of_thresholds']
-                if form2.cleaned_data['custom_tables'] == True:
+                custom_tables = form2.cleaned_data['custom_tables']
+                if custom_tables == 'T':
                     time_series = []
                     thresholds = []
                     #set headers
@@ -386,33 +387,33 @@ def run_data_app(app_name,*args, **kwargs):
 def set_sodthr_headers(tbl_idx, el, int_start, midpoint,  int_end, start_year, end_year, days_miss_1, days_miss_2, ab, le_1, le_2):
     lines = []
     if tbl_idx == 0:
-        lines.append('PROBABILITY OF %s DATE OF %s %s</br>' % (le_1, el, ab))
+        lines.append('PROBABILITY OF <b>%s</b> DATE OF <b>%s %s</b></br>' % (le_1, el, ab))
         lines.append('THE INDICATED THRESHOLD VALUE (DEGREES F).</br>')
         lines.append('DURING THE FOLLOWING INTERVAL:</br>')
-        lines.append('START MONTH-DAY: %s  END MONTH-DAY:  %s' % (int_start, midpoint))
-        lines.append('YEARS USED:  %s -  %s </br>' % (start_year, end_year))
-        lines.append('WITH NO MORE THAN  %i MISSING DAYS DURING THE INTERVAL.</br>' % days_miss_1)
+        lines.append('START MONTH-DAY: <b>%s</b>  END MONTH-DAY:  <b>%s</b>' % (int_start, midpoint))
+        lines.append('YEARS USED:  <b>%s -  %s</b> </br>' % (start_year, end_year))
+        lines.append('WITH NO MORE THAN  <b>%i</b> MISSING DAYS DURING THE INTERVAL.</br>' % days_miss_1)
         lines.append('[ -01-01 ] INDICATES NON-OCCURRENCE OF THE THRESHOLD</br>')
     elif tbl_idx == 1:
-        lines.append('PROBABILITY OF %s DATE OF %s %s</br>' % (le_2, el, ab))
+        lines.append('PROBABILITY OF <b>%s</b> DATE OF <b>%s %s</b></br>' % (le_2, el, ab))
         lines.append('THE INDICATED THRESHOLD VALUE (DEGREES F).</br>')
         lines.append('DURING THE FOLLOWING INTERVAL:</br>')
-        lines.append('START MONTH-DAY: %s  END MONTH-DAY:  %s' % (midpoint, int_end))
-        lines.append('YEARS USED:  %s -  %s </br>' % (start_year, end_year))
-        lines.append('WITH NO MORE THAN  %i MISSING DAYS DURING THE INTERVAL.</br>' % days_miss_1)
+        lines.append('START MONTH-DAY: <b>%s</b>  END MONTH-DAY:  <b>%s</b>' % (midpoint, int_end))
+        lines.append('YEARS USED:  <b>%s -  %s</b> </br>' % (start_year, end_year))
+        lines.append('WITH NO MORE THAN  <b>%i</b> MISSING DAYS DURING THE INTERVAL.</br>' % days_miss_1)
         lines.append('[ -01-01 ] INDICATES NON-OCCURRENCE OF THE THRESHOLD</br>')
     else:
         lines.append('PROBABILITY OF NO MORE THAN THE INDICATED NUMBER OF DAYS (I.E., PERCENTILE)</br>')
         lines.append('---  BETWEEN  ---</br>')
-        lines.append('(1) THE %s DATE OF %s %s</br>' % (le_1, el, ab))
+        lines.append('(1) THE <b>%s</b> DATE OF <b>%s %s</b></br>' % (le_1, el, ab))
         lines.append('THE INDICATED THRESHOLD VALUE (DEGREES F) DURING</br>')
-        lines.append('THE  FIRST INTERVAL ---      START MONTH-DAY: %s END MONTH-DAY:  %s </br>'  % (int_start, midpoint))
+        lines.append('THE  FIRST INTERVAL ---      START MONTH-DAY: <b>%s</b> END MONTH-DAY:  <b>%s</b> </br>'  % (int_start, midpoint))
         lines.append('---  AND  ---</br>')
-        lines.append('(2) THE %s DATE OF %s %s</br>' % (le_2, el, ab))
+        lines.append('(2) THE <b>%s</b> DATE OF <b>%s %s</b></br>' % (le_2, el, ab))
         lines.append('THE SAME THRESHOLD VALUE (DEGREES F) DURING</br>')
-        lines.append('THE  SECOND INTERVAL ---      START MONTH-DAY: %s END MONTH-DAY:  %s </br>'  % (midpoint, int_end))
-        lines.append('YEARS USED:  %s -  %s </br>' % (start_year, end_year))
-        lines.append('WITH NO MORE THAN  %i MISSING DAYS DURING THE TWO INTERVALS COMBINED.</br>' % days_miss_2)
+        lines.append('THE  SECOND INTERVAL ---      START MONTH-DAY: <b>%s</b> END MONTH-DAY:  <b>%s</b> </br>'  % (midpoint, int_end))
+        lines.append('YEARS USED:  <b>%s -  %s</b> </br>' % (start_year, end_year))
+        lines.append('WITH NO MORE THAN  <b>%i</b> MISSING DAYS DURING THE TWO INTERVALS COMBINED.</br>' % days_miss_2)
         lines.append('[ 367.0 ] INDICATES NON-OCCURRENCE OF THE THRESHOLD</br>')
 
     return "\n".join(lines)
