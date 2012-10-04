@@ -415,7 +415,7 @@ class SodForm(forms.Form):
             self.fields['threshold'].widget.attrs['readonly'] = 'readonly'
             #self.fields['threshold'] = forms.DecimalField(label=threshold)
             if threshold is not None:
-                self.fields['threshold_ab'] = forms.ChoiceField(choices=([('A','Above'), ('B','Below'),]))
+                self.fields['threshold_ab'] = forms.ChoiceField(choices=([('a','Above'), ('b','Below'),]))
             if element in ['hdd', 'cdd', 'gdd']:
                 self.fields['base_temperature'] = forms.IntegerField(initial=65)
                 if element == 'gdd':
@@ -425,7 +425,7 @@ class SodForm(forms.Form):
                 if element in ['pcpn', 'snow']:
                     self.fields['accumulate_over_season'] = forms.BooleanField(required=False, initial = False)
                     self.fields['begin_month'] = forms.IntegerField(min_value=1,max_value=12, initial=1)
-            self.fields['number_days_ahead'] = forms.IntegerField(min_value=1,max_value=31, initial=1)
+            self.fields['number_days_ahead'] = forms.IntegerField(min_value=1,max_value=31, initial=5)
         elif app_name == 'Sodthr':
             number_of_thresholds = kwargs.get('initial', {}).get('number_of_thresholds', None)
             custom_tables = kwargs.get('initial', {}).get('custom_tables',None)

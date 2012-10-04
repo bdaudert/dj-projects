@@ -134,10 +134,6 @@ def sods(request, app_name):
                 individual_averages = form1.cleaned_data['individual_averages']
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
                 'threshold':threshold, 'element':element, 'individual_averages': individual_averages }
-                context['threshold'] = threshold
-                context['element'] = element
-                context['units'] = units[element]
-                context['individual_averages'] = individual_averages
             elif app_name == 'Sodthr':
                 custom_tables = form1.cleaned_data['custom_tables']
                 number_of_thresholds = form1.cleaned_data['number_of_thresholds']
@@ -294,6 +290,12 @@ def sods(request, app_name):
                 context['min_temperature'] = min_temperature
                 context['min_temperature'] = max_temperature
                 context['begin_month'] = begin_month
+                context['threshold'] = threshold
+                if threshold_ab == 'a':context['op'] = 'ABOVE'
+                if threshold_ab == 'b':context['op'] = 'BELOW'
+                context['element'] =  el_type
+                context['units'] = units[el_type]
+                context['individual_averages'] = ia
                 results = run_data_app(**app_args)
             elif app_name == 'Sodthr':
                 header = {}
