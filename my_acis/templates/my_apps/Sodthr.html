@@ -23,23 +23,19 @@
 </br>
 {%endif%}
 
-{{cleaned}}
 
 {%if results %}
-  </p>
   {%for stn, stn_data in results.items %}
     <p class="stronger" style="color:darkblue">LOCATION:{{station_names|lookup:stn|safe}}&nbsp;&nbsp;STATION: {{coop_station_ids|lookup:stn|safe}}</br>
     </p></br>
     {%for tbl_idx, tbl_data in stn_data.items %}
-    <p>
-    {{header|lookup:tbl_idx|safe}}
-    </p></br>
+    <p>{{header|lookup:tbl_idx|safe}}</p></br>
     {%if not tbl_data%}
     <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}
     <table>
       <tr>
-      <td />TEMP F</td><td>HIGH</td><td >10%</td><td >20%</td><td >30%</td><td >40%<td >50%</td><td >60%</td><td >70%</td><td >80%</td><td >90%</td><td >HIGH</td>
+      <td />TEMP F</td><td>LOW</td><td >10%</td><td >20%</td><td >30%</td><td >40%<td >50%</td><td >60%</td><td >70%</td><td >80%</td><td >90%</td><td >HIGH</td>
       </tr>
       {%for temp_data in tbl_data %}
        <tr>
@@ -48,7 +44,7 @@
         {%endfor%}
        </tr>
       {%endfor%}
-    </table>
+     </table>
     {%endif%}
     {%endfor%}
   {%endfor%}

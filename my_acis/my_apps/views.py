@@ -113,10 +113,12 @@ def sods(request, app_name):
     form1 = set_as_form(request, 'Sod0', init={'app_name': app_name})
     context['form1'] = form1
     if 'stn_selection' in request.POST:
-        if app_name == 'Soddd':
-            form1 = set_as_form(request, 'Sod0', init={'app_name': app_name, 'skip_days':False})
-        else:
-            form1 = set_as_form(request, 'Sod0', init={'app_name': app_name})
+        #if app_name == 'Soddd':
+        #    form1 = set_as_form(request, 'Sod0', init={'app_name': app_name, 'skip_days':False})
+        #elif app_name  == 'Sodthr':
+        #    form1 = set_as_form(request, 'Sod0', init={'app_name': app_name, 'custom_tables':False, 'number_of_threholds':1})
+        #else:
+        form1 = set_as_form(request, 'Sod0', init={'app_name': app_name})
         context['form1'] = form1
         if form1.is_valid():
             context['form_2_ready'] = '2ready'
@@ -295,11 +297,11 @@ def sods(request, app_name):
                 results = run_data_app(**app_args)
             elif app_name == 'Sodthr':
                 header = {}
-                el_type = str(form2.cleaned_data['element'])
+                el_type = form2.cleaned_data['element']
                 start_year = dates[0][0:4]
                 end_year = dates[-1][0:4]
-                number_of_thresholds = int(form2.cleaned_data['number_of_thresholds'])
-                if form2.cleaned_data['custom_tables']:
+                number_of_thresholds = form2.cleaned_data['number_of_thresholds']
+                if form2.cleaned_data['custom_tables'] == True:
                     time_series = []
                     thresholds = []
                     #set headers
@@ -311,33 +313,30 @@ def sods(request, app_name):
                         str(form2.cleaned_data['latest_or_earliest_for_period_2']))
                     #Find list of thresholds, and time_series_booleans
                     for k in range(int(number_of_thresholds)):
-                        thresholds.append(form2.cleaned_data['threshold_%s' % str(k)])
+                        thresholds.append(float(form2.cleaned_data['threshold_%s' % str(k)]))
                         time_series.append(form2.cleaned_data['time_series_%s' % str(k)])
                     #set application arguments
                     app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
-                    'coop_station_ids':coop_station_ids,'station_names':station_names,'el_type':el_type,\
+                    'coop_station_ids':coop_station_ids,'station_names':station_names,'el_type':el_type, 'custom_tables':True, \
                     'interval_start':form2.cleaned_data['interval_start'], 'midpoint':form2.cleaned_data['midpoint'], \
                     'interval_end':form2.cleaned_data['interval_end'], 'thresholds': thresholds, 'time_series': time_series, \
                     'le_1': form2.cleaned_data['latest_or_earliest_for_period_1'], \
                     'le_2':form2.cleaned_data['latest_or_earliest_for_period_2'], 'ab':form2.cleaned_data['above_or_below'], \
-                    'miss_days_1':int(form2.cleaned_data['max_missing_days_first_and_last']), 'miss_days_2':int(form2.cleaned_data['max_missing_days_differences'])}
+                    'miss_days_1':form2.cleaned_data['max_missing_days_first_and_last'], 'miss_days_2':form2.cleaned_data['max_missing_days_differences']}
                 else:
-                    time_series = []
-                    thresholds = []
                     #set headers
                     for k in range(3):
                         header[k] = set_sodthr_headers(k, el_type, '0101', '0731',  '1231', start_year, \
-                        end_year, 10, 10, 'below', 'latest','earliest')
+                        end_year, 10, 10, 'BELOW', 'latest','earliest')
                     app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
-                    'coop_station_ids':coop_station_ids,'station_names':station_names,'el_type':el_type,\
-                    'interval_start':'0101', 'midpoint':'0731', 'interval_end':'1231', 'thresholds': thresholds, \
-                    'time_series': time_series, 'le_1': 'latest', 'le_2':'earliest', 'ab':'below', \
-                    'miss_days_1':10, 'miss_days_2':10}
+                    'coop_station_ids':coop_station_ids,'station_names':station_names,'el_type':el_type, 'custom_tables':False}
+                context['header'] = header
                 results = run_data_app(**app_args)
             else:
                 results = {}
+
             #general context
-            context['results'] =  dict(results)
+            context['results'] = dict(results)
             context['dates'] = dates
             if app_name in ['Sodrun', 'Sodrunr', 'Soddyrec', 'Sodcnv', 'Sodlist']:
                 context['start_year'] = dates[0]
@@ -374,12 +373,14 @@ def set_as_form2(init=None):
     form = form_class(initial=init)
     return form
 
+
 def run_data_app(app_name,*args, **kwargs):
+    data_app = getattr(WRCCDataApps, app_name)
     try:
         data_app = getattr(WRCCDataApps, app_name)
         results = data_app(*args, **kwargs)
     except:
-        results = {}
+        results = 'Error: Could not run data app %s. Check arguments:'  % data_app
     return results
 
 def set_sodthr_headers(tbl_idx, el, int_start, midpoint,  int_end, start_year, end_year, days_miss_1, days_miss_2, ab, le_1, le_2):

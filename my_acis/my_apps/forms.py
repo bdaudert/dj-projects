@@ -301,7 +301,7 @@ class Sod0Form(forms.Form):
             self.fields['threshold'] = forms.DecimalField(required=False, initial=-9999.0)
         if app_name == 'Sodthr':
             self.fields['custom_tables'] = forms.BooleanField(initial=False, required=False)
-            self.fields['number_of_thresholds']= forms.IntegerField(min_value=1,max_value=10, initial=1, required = False)
+            self.fields['number_of_thresholds']= forms.IntegerField(min_value=1,max_value=10, initial=1)
 
 class SodForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -426,22 +426,25 @@ class SodForm(forms.Form):
             self.fields['number_days_ahead'] = forms.IntegerField(min_value=1,max_value=31, initial=1)
         elif app_name == 'Sodthr':
             number_of_thresholds = kwargs.get('initial', {}).get('number_of_thresholds', None)
-            custom_tables = kwargs.get('initial', {}).get('custom_tables',False)
-            if number_of_thresholds is None: number_of_thresholds =int(self.data.get('number_of_thresholds'))
-            if not custom_tables:custom_tables = self.data.get('custom_tables')
+            custom_tables = kwargs.get('initial', {}).get('custom_tables',None)
+            if number_of_thresholds is None: number_of_thresholds =self.data.get('number_of_thresholds')
+            if custom_tables is None:custom_tables = self.data.get('custom_tables')
             self.fields['element'] = forms.ChoiceField(choices=SDTHR_ELEMENT_CHOICES, required=False, initial='mint')
-            if custom_tables:
+            if custom_tables == True:
                 self.fields['interval_start'] = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
                 self.fields['interval_end'] = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
                 self.fields['midpoint'] = forms.CharField(max_length=4, min_length=4, initial='0731')
                 self.fields['number_of_thresholds'] = forms.IntegerField(initial=number_of_thresholds)
                 self.fields['number_of_thresholds'].widget.attrs['readonly'] = 'readonly'
-                for thresh in range(number_of_thresholds):
-                    self.fields['threshold_%s' % thresh] = forms.DecimalField(initial = 0.0)
-                    self.fields['time_series_%s' % thresh] = forms.BooleanField(required=False, initial = False)
+                if number_of_thresholds is not None:
+                    for thresh in range(int(number_of_thresholds)):
+                        self.fields['threshold_%s' % thresh] = forms.DecimalField(initial = 0.0)
+                        self.fields['time_series_%s' % thresh] = forms.BooleanField(required=False, initial = False)
                 self.fields['latest_or_earliest_for_period_1'] = forms.ChoiceField(choices=([('e','Earliest'), ('l','Latest'), ]), initial='e')
                 self.fields['latest_or_earliest_for_period_2'] = forms.ChoiceField(choices=([('e','Latest'), ('l','Earliest'), ]), initial='l')
-                self.fields['above_or_below'] = forms.ChoiceField(choices=([('a','Above'), ('b','Below'), ]), initial='a')
+                self.fields['above_or_below'] = forms.ChoiceField(choices=([('a','Above'), ('b','Below'), ]), initial='b')
+            else:
+                self.fields['number_of_thresholds'] = forms.IntegerField(initial=None, widget=forms.HiddenInput())
             self.fields['max_missing_days_first_and_last'] = forms.IntegerField(initial=10, required=False)
             self.fields['max_missing_days_differences'] = forms.IntegerField(initial=10, required=False)
             self.fields['custom_tables'] = forms.CharField(initial = custom_tables)
