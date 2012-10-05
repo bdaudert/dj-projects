@@ -139,6 +139,10 @@ def sods(request, app_name):
                 number_of_thresholds = form1.cleaned_data['number_of_thresholds']
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
                 'custom_tables':custom_tables,'number_of_thresholds': number_of_thresholds }
+            elif app_name == 'Sodxtrmts':
+                analysis_type = form1.cleaned_data['analysis_type']
+                initial = {'app_name':app_name, 'station_selection':station_selection,\
+                'analysis_type':analysis_type}
             else:
                 initial = {'app_name':app_name, 'station_selection':station_selection}
             form2 = set_as_form2(init=initial)
@@ -335,6 +339,36 @@ def sods(request, app_name):
                     'coop_station_ids':coop_station_ids,'station_names':station_names,'el_type':el_type, 'custom_tables':False}
                 context['header'] = header
                 results = run_data_app(**app_args)
+            elif app_name == 'Sodxtrmts':
+                context['el_type'] = form2.cleaned_data['element']
+                context['max_missing_days'] = form2.cleaned_data['max_missing_days']
+                context['start_month'] = form2.cleaned_data['start_month']
+                if form2.cleaned_data['frequency_analysis'] == 'T':
+                    context['frequency_analysis'] = True
+                else:
+                    context['frequency_analysis'] = False
+                if form2.cleaned_data['departures_from_averages'] == 'T':
+                    context['departures_from_averages'] = True
+                else:
+                    context['departures_from_averages'] = False
+                context['analysis_type'] = form2.cleaned_data['analysis_type']
+                app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
+                'coop_station_ids':coop_station_ids,'station_names':station_names, \
+                'el_type':form2.cleaned_data['element'], \
+                'max_missing_days':form2.cleaned_data['max_missing_days'], \
+                'start_month': form2.cleaned_data['start_month'], \
+                'analysis_type': form2.cleaned_data['analysis_type'], \
+                'frequency_analysis': form2.cleaned_data['frequency_analysis'], \
+                'departures_from_averages':form2.cleaned_data['departures_from_averages']}
+                if form2.cleaned_data['analysis_type'] == 'ndays':
+                    if form2.cleaned_data['less_greater_or_between'] == 'b':
+                        app_args['threshold_1'] = form2.cleaned_data['threshold_low_for_between']
+                        app_args['threshold_2'] = form2.cleaned_data['threshold_high_for_between']
+                    else:
+                        app_args['threshold'] = form2.cleaned_data['threshold_for_l_and_g']
+
+                results = run_data_app(**app_args)
+
             else:
                 results = {}
 
