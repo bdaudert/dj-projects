@@ -142,7 +142,8 @@ def sods(request, app_name):
             elif app_name == 'Sodxtrmts':
                 analysis_type = form1.cleaned_data['analysis_type']
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
-                'analysis_type':analysis_type}
+                'analysis_type':form1.cleaned_data['analysis_type'], 'element':form1.cleaned_data['element'], \
+                'frequency_analysis':form1.cleaned_data['frequency_analysis']}
             else:
                 initial = {'app_name':app_name, 'station_selection':station_selection}
             form2 = set_as_form2(init=initial)

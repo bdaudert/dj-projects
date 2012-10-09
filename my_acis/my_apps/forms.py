@@ -206,6 +206,13 @@ SDTHR_ELEMENT_CHOICES = (
         ('dtr', 'Daily Temperature Range'),
         )
 
+F_ANALYSIS_CHOICES = (
+        ('p', 'Pearson Type III'),
+        ('g', 'Generalized Extreme Value'),
+        ('b', 'Beta-P'),
+        ('c', 'Censored Gamma'),
+        )
+
 #Custom form fields
 class MultiStnField(forms.CharField):
     def to_python(self, stn_list):
@@ -305,7 +312,8 @@ class Sod0Form(forms.Form):
             self.fields['number_of_thresholds']= forms.IntegerField(min_value=1,max_value=10, initial=1)
         if app_name == 'Sodxtrmts':
             self.fields['analysis_type'] = forms.ChoiceField(choices=SX_ANALYSIS_CHOICES, initial='mave')
-
+            self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='pcpn')
+            self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F')
 class SodForm(forms.Form):
     def __init__(self, *args, **kwargs):
         station_selection = kwargs.get('initial', {}).get('station_selection', None)
@@ -456,10 +464,22 @@ class SodForm(forms.Form):
             self.fields['custom_tables'].widget.attrs['readonly'] = 'readonly'
         elif app_name == 'Sodxtrmts':
             analysis_type = kwargs.get('initial', {}).get('analysis_type', None)
+            element = kwargs.get('initial', {}).get('element', None)
+            frequency_analysis = kwargs.get('initial', {}).get('frequency_analysis', None)
+            if element is None:element = self.data.get('element')
             if analysis_type is None:analysis_type = self.data.get('analysis_type')
+            if frequency_analysis is None:frequency_analysis = self.data.get('frequency_analysis')
+            self.fields['frequency_analysis'] = forms.CharField(initial=frequency_analysis)
+            self.fields['frequency_analysis'].widget.attrs['readonly'] = 'readonly'
+            if frequency_analysis == 'T':
+                self.fields['frequency_analysis_type'] = forms.ChoiceField(choices=F_ANALYSIS_CHOICES, required=False, initial='g')
+            self.fields['element'] = forms.CharField(initial=element)
+            self.fields['element'].widget.attrs['readonly'] = 'readonly'
+            if element in ['hdd', 'cdd', 'gdd']:
+                self.fields['base_temperature'] = forms.IntegerField(initial=65)
             if analysis_type == 'ndays':
                 self.fields['less_greater_or_between'] = forms.ChoiceField(choices=([('l','Less Than'), ('g','Greater Than'),('b','Between'), ]), initial='b')
-                self.fields['threshold_for_l_and_g'] = forms.DecimalField(initial = 0.0)
+                self.fields['threshold_for_less_or_greater'] = forms.DecimalField(initial = 0.0)
                 self.fields['threshold_low_for_between'] = forms.DecimalField(initial = 0.0)
                 self.fields['threshold_high_for_between'] = forms.DecimalField(initial = 1.0)
             self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, required=False, initial='mint')
