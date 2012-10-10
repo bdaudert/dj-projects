@@ -106,6 +106,7 @@ def sodsum(request, app_name):
 def sods(request, app_name):
     units = {'pcpn':'Hundredths of Inches', 'snow':'Tenths of Inches', 'snwd': 'Inches', 'maxt':'Whole Degrees', 'mint':'Whole Degrees',\
              'avgt':'Whole Degrees', 'dtr':'Whole Degrees', 'hdd':'Days', 'cdd':'Days','gdd':'Days'}
+    months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
     context = {
     'title': '%s' % app_name,
     }
@@ -344,14 +345,16 @@ def sods(request, app_name):
                 context['el_type'] = form2.cleaned_data['element']
                 context['max_missing_days'] = form2.cleaned_data['max_missing_days']
                 context['start_month'] = form2.cleaned_data['start_month']
-                if form2.cleaned_data['frequency_analysis'] == 'T':
-                    context['frequency_analysis'] = True
-                else:
-                    context['frequency_analysis'] = False
-                if form2.cleaned_data['departures_from_averages'] == 'T':
-                    context['departures_from_averages'] = True
-                else:
-                    context['departures_from_averages'] = False
+                mon_start = int(form2.cleaned_data['start_month'].lstrip('0'))
+                month_list = []
+                for mon_idx in range(mon_start -1,12):
+                    month_list.append(months[mon_idx])
+                for mon_idx in range(mon_start-1):
+                    month_list.append(months[mon_idx])
+                month_list.append('ANN')
+                context['month_list'] = month_list
+                context['frequency_analysis'] = form2.cleaned_data['frequency_analysis']
+                context['departures_from_averages'] = form2.cleaned_data['departures_from_averages']
                 context['analysis_type'] = form2.cleaned_data['analysis_type']
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
                 'coop_station_ids':coop_station_ids,'station_names':station_names, \
@@ -362,11 +365,12 @@ def sods(request, app_name):
                 'frequency_analysis': form2.cleaned_data['frequency_analysis'], \
                 'departures_from_averages':form2.cleaned_data['departures_from_averages']}
                 if form2.cleaned_data['analysis_type'] == 'ndays':
+                    app_args['lgb'] = form2.cleaned_data['less_greater_or_between']
                     if form2.cleaned_data['less_greater_or_between'] == 'b':
                         app_args['threshold_1'] = form2.cleaned_data['threshold_low_for_between']
                         app_args['threshold_2'] = form2.cleaned_data['threshold_high_for_between']
                     else:
-                        app_args['threshold'] = form2.cleaned_data['threshold_for_l_and_g']
+                        app_args['threshold'] = form2.cleaned_data['threshold_for_less_or_greater']
 
                 results = run_data_app(**app_args)
 

@@ -482,7 +482,8 @@ class SodForm(forms.Form):
                 self.fields['threshold_for_less_or_greater'] = forms.DecimalField(initial = 0.0)
                 self.fields['threshold_low_for_between'] = forms.DecimalField(initial = 0.0)
                 self.fields['threshold_high_for_between'] = forms.DecimalField(initial = 1.0)
-            self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, required=False, initial='mint')
+            self.fields['element'] = forms.CharField(initial=element)
+            self.fields['element'].widget.attrs['readonly'] = 'readonly'
             self.fields['analysis_type'] = forms.CharField(initial=analysis_type)
             self.fields['analysis_type'].widget.attrs['readonly'] = 'readonly'
             self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False)
