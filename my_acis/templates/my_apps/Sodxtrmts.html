@@ -56,6 +56,27 @@
          </tr>
          {%endfor%}
        </table>
+
+       {%if fa_results|lookup:stn|safe %}
+       <p class="stronger" style="color:darkblue; font-size:large">
+       FREQUENCY ANALYSIS</br>
+       Probability of non-exceedance, confined between  -999.00 and   999.00.</br>
+       Distribution Type: p-PearsonIII, g-GenExtVal, b-BetaP, c-Censored Gamma.</br>
+       <p></br>
+       <table>
+        <tr>
+        <td />Pnoexc</td>{%for mon in month_list%}<td>{{mon}}</td>{%endfor%}
+        </tr>
+         {%for cat in fa_results|lookup:stn %}
+          <tr>
+          {%for dat in cat%}
+          <td style="text-align:right">{{dat}}</td>
+          {%endfor%}
+         </tr>
+         {%endfor%}
+       </table> 
+
+       {%endif%}
     {%endif%}
     </br>
   {%endfor%}

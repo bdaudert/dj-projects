@@ -312,8 +312,8 @@ class Sod0Form(forms.Form):
             self.fields['number_of_thresholds']= forms.IntegerField(min_value=1,max_value=10, initial=1)
         if app_name == 'Sodxtrmts':
             self.fields['analysis_type'] = forms.ChoiceField(choices=SX_ANALYSIS_CHOICES, initial='mave')
-            self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='pcpn')
-            self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F')
+            self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='maxt')
+            self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'T')
 class SodForm(forms.Form):
     def __init__(self, *args, **kwargs):
         station_selection = kwargs.get('initial', {}).get('station_selection', None)
@@ -472,7 +472,7 @@ class SodForm(forms.Form):
             self.fields['frequency_analysis'] = forms.CharField(initial=frequency_analysis)
             self.fields['frequency_analysis'].widget.attrs['readonly'] = 'readonly'
             if frequency_analysis == 'T':
-                self.fields['frequency_analysis_type'] = forms.ChoiceField(choices=F_ANALYSIS_CHOICES, required=False, initial='g')
+                self.fields['frequency_analysis_type'] = forms.ChoiceField(choices=F_ANALYSIS_CHOICES, required=False, initial='p')
             self.fields['element'] = forms.CharField(initial=element)
             self.fields['element'].widget.attrs['readonly'] = 'readonly'
             if element in ['hdd', 'cdd', 'gdd']:
@@ -489,7 +489,6 @@ class SodForm(forms.Form):
             self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False)
             self.fields['start_month'] = forms.CharField(initial='01', required=False)
             self.fields['departures_from_averages'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F')
-            self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F')
         else:
             pass
 

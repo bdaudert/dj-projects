@@ -364,6 +364,9 @@ def sods(request, app_name):
                 'analysis_type': form2.cleaned_data['analysis_type'], \
                 'frequency_analysis': form2.cleaned_data['frequency_analysis'], \
                 'departures_from_averages':form2.cleaned_data['departures_from_averages']}
+                if form2.cleaned_data['frequency_analysis'] == 'T':
+                    context['frequency_analysis_type'] = form2.cleaned_data['frequency_analysis_type']
+                    app_args['frequency_analysis_type'] = form2.cleaned_data['frequency_analysis_type']
                 if form2.cleaned_data['analysis_type'] == 'ndays':
                     app_args['lgb'] = form2.cleaned_data['less_greater_or_between']
                     if form2.cleaned_data['less_greater_or_between'] == 'b':
@@ -372,8 +375,8 @@ def sods(request, app_name):
                     else:
                         app_args['threshold'] = form2.cleaned_data['threshold_for_less_or_greater']
 
-                results = run_data_app(**app_args)
-
+                (results,fa_results) = WRCCDataApps.Sodxtrmts(**app_args)
+                context['fa_results'] = dict(fa_results)
             else:
                 results = {}
 
