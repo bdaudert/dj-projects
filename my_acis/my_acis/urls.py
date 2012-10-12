@@ -26,7 +26,7 @@ urlpatterns = patterns('',
     #sub process apps: FIX ME: Need to be converted to module approach
     #module approach apps
     (r'^my_apps/(?P<app_name>Sodsum)/$', 'my_apps.views.sodsum'),
-    (r'^my_apps/(?P<app_name>[Soddyrec|Soddynorm|Soddd|Sodpad|Sodsumm|Sodrun|Sodrunr|Sodpct|Sodthr|Sodxtrmts]*)/$', 'my_apps.views.sods'),
+    (r'^my_apps/(?P<app_name>[Soddyrec|Soddynorm|Soddd|Sodpad|Sodsumm|Sodrun|Sodrunr|Sodpct|Sodthr|Sodxtrmts|Sodpiii]*)/$', 'my_apps.views.sods'),
     (r'^my_apps/(?P<app_name>[Sodlist|Sodmonline|Sodmonlinemy|Sodcnv]*)/$', 'my_apps.views.sodlist'),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

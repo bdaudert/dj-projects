@@ -119,7 +119,7 @@ SS_ELEMENT_CHOICES = (
         ('mint', 'Minimum Temperature'),
         #('evap', 'Evaporation'),
         #('wdmv', 'Wind Movement'),
-        ('wesf', 'Water Estimate Snow Fall'),
+        #('wesf', 'Water Estimate Snow Fall'),
         ('multi', '[pcpn, snow, snwd, maxt, mint]'),
         )
 #soddyrec choices
@@ -314,6 +314,13 @@ class Sod0Form(forms.Form):
             self.fields['analysis_type'] = forms.ChoiceField(choices=SX_ANALYSIS_CHOICES, initial='mave')
             self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='maxt')
             self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'T')
+        if app_name == 'Sodpiii':
+            self.fields['element'] = forms.ChoiceField(choices=PII_ELEMENT_CHOICES, initial='maxt')
+            self.fields['skew'] = forms.ChoiceField(choices=([('as','Areal Skew'), ('ss','Station Skew'), ]), initial='ss')
+            self.fields['cv'] = forms.ChoiceField(choices=([('acv','Areal CV'), ('scv','Station CV'), ]), initial='scv')
+            self.fields['mean'] = forms.ChoiceField(choices=([('am','Areal Mean'), ('sm','Station Mean'), ]), initial='sm')
+            self.fields['pct_average'] = forms.ChoiceField(choices=([('apct','Areal PCT Average'), ('spct','Station PCT Average'), ]), initial='spct')
+            self.fields['days'] = forms.ChoiceField(choices=([('i','Individual Day'), ('5','Day 1-5'), ('a','All Days'), ]), initial='a')
 class SodForm(forms.Form):
     def __init__(self, *args, **kwargs):
         station_selection = kwargs.get('initial', {}).get('station_selection', None)
@@ -328,20 +335,28 @@ class SodForm(forms.Form):
 
         if station_selection == 'stnid':
             self.fields['coop_station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779')
+            self.fields['coop_station_id'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'stnids':
             self.fields['coop_station_ids'] = MultiStnField(required=False,initial='266779,103732')
+            self.fields['coop_station_ids'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'county':
             self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='09001')
+            self.fields['county'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'climdiv':
             self.fields['climate_division'] = forms.CharField(required=False,max_length=4, min_length=4, initial='NV01')
+            self.fields['climate_division'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'cwa':
             self.fields['county_warning_area'] = forms.CharField(required=False,max_length=3, initial='BOI')
+            self.fields['county_warning_area'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'basin':
             self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='01080205')
+            self.fields['basin_division'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES)
+            self.fields['state'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'bbox':
             self.fields['bounding_box'] = forms.CharField(required=False,initial='-90,40,-88,41')
+            self.fields['bounding_box'].widget.attrs['readonly'] = 'readonly'
 
         if app_name is None:
             app_name = self.data.get('app_name')
@@ -353,6 +368,9 @@ class SodForm(forms.Form):
         elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy', 'Sodpad', 'Sodsumm', 'Sodpct', 'Sodthr', 'Sodxtrmts']:
             self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
             self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2010')
+        elif app_name == 'Sodpiii':
+            self.fields['start_date'] = forms.CharField(max_length=6, min_length=6, initial='200001')
+            self.fields['end_date'] = forms.CharField(max_length=6, min_length=6, initial='200912')
 
         if app_name in ['Sodrun', 'Sodrunr']:
             if app_name == 'Sodrunr':
@@ -489,23 +507,38 @@ class SodForm(forms.Form):
             self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False)
             self.fields['start_month'] = forms.CharField(initial='01', required=False)
             self.fields['departures_from_averages'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F')
+        elif app_name == 'Sodpiii':
+            skew = kwargs.get('initial', {}).get('skew', None)
+            cv = kwargs.get('initial', {}).get('cv', None)
+            mean = kwargs.get('initial', {}).get('mean', None)
+            pct_average = kwargs.get('initial', {}).get('pct_average', None)
+            element = kwargs.get('initial', {}).get('element', None)
+            days = kwargs.get('initial', {}).get('days', None)
+            if skew is None:skew = self.data.get('skew')
+            if cv is None:cv = self.data.get('cv')
+            if mean is None:mean = self.data.get('mean')
+            if pct_average is None:pct_average = self.data.get('pct_average')
+            if element is None:element = self.data.get('element')
+            if days is None:days = self.data.get('days')
+            self.fields['skew'] = forms.CharField(initial=skew)
+            self.fields['skew'].widget.attrs['readonly'] = 'readonly'
+            self.fields['cv'] = forms.CharField(initial=cv)
+            self.fields['cv'].widget.attrs['readonly'] = 'readonly'
+            self.fields['mean'] = forms.CharField(initial=mean)
+            self.fields['mean'].widget.attrs['readonly'] = 'readonly'
+            self.fields['pct_average'] = forms.CharField(initial=pct_average)
+            self.fields['pct_average'].widget.attrs['readonly'] = 'readonly'
+            self.fields['element'] = forms.CharField(initial=element)
+            self.fields['element'].widget.attrs['readonly'] = 'readonly'
+            if skew == 'ss' or cv == 'scv' or mean == 'sm' or pct_averages == 'spct':
+                if element == 'avgt':
+                    self.fields['mean_temperatures']= forms.ChoiceField(choices = ([('b', 'Below Average'),('a', 'Above Average'),]), initial = 'b')
+                self.fields['days'] = forms.CharField(initial=days)
+                self.fields['days'].widget.attrs['readonly'] = 'readonly'
+                if days == 'i':
+                    self.fields['number_of_days'] = forms.IntegerField(min_value=1,max_value=30, initial=1)
+                self.fields['value_subsequent'] = forms.IntegerField(required=False, initial=9991)
+                self.fields['value_missing'] = forms.IntegerField(required=False, initial=9999)
         else:
             pass
 
-
-class SodpiipreForm(forms.Form):
-    skew = forms.ChoiceField(choices=([('as','Areal Skew'), ('ss','Station Skew'), ]), initial='ss')
-    cv = forms.ChoiceField(choices=([('acv','Areal CV'), ('scv','Station CV'), ]), initial='scv')
-    mean = forms.ChoiceField(choices=([('am','Areal Mean'), ('scv','Station Mean'), ]), initial='sm')
-    pct_average = forms.ChoiceField(choices=([('apct','Areal PCT Average'), ('spct','Station PCT Average'), ]), initial='spct')
-
-
-class SodpiiForm(forms.Form):
-    def __init__(self, station_selection, skew, cv, mean, pct_average, *args, **kwargs):
-        '''
-        copy from SoddyrecForm once fixed, possibly more to deal with other input options
-        NOTE: MESSY INPUT OPTTIONS NEED FIXING UP
-        '''
-        self.fields['start_date'] = forms.CharField(max_length=6, min_length=6, initial='2000')
-        self.fields['end_date'] = forms.CharField(max_length=6, min_length=6, initial='2012')
-        self.fields['element'] = forms.ChoiceField(choices=PII_ELEMENT_CHOICES, initial='pcpn')

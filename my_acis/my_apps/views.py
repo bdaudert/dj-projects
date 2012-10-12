@@ -125,26 +125,23 @@ def sods(request, app_name):
             context['form_2_ready'] = '2ready'
             station_selection = form1.cleaned_data['station_selection']
             if app_name == 'Soddd':
-                skip_days = form1.cleaned_data['skip_days']
-                truncate = form1.cleaned_data['truncate']
                 initial = {'app_name':app_name, 'station_selection':station_selection, \
-                'skip_days':skip_days, 'truncate':truncate }
+                'skip_days':form1.cleaned_data['skip_days'], 'truncate':form1.cleaned_data['truncate'] }
             elif app_name == 'Sodpct':
-                threshold = form1.cleaned_data['threshold']
-                element = form1.cleaned_data['element']
-                individual_averages = form1.cleaned_data['individual_averages']
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
-                'threshold':threshold, 'element':element, 'individual_averages': individual_averages }
+                'threshold':form1.cleaned_data['threshold'], 'element':form1.cleaned_data['element'], \
+                'individual_averages': form1.cleaned_data['individual_averages'] }
             elif app_name == 'Sodthr':
-                custom_tables = form1.cleaned_data['custom_tables']
-                number_of_thresholds = form1.cleaned_data['number_of_thresholds']
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
-                'custom_tables':custom_tables,'number_of_thresholds': number_of_thresholds }
+                'custom_tables':form1.cleaned_data['custom_tables'],'number_of_thresholds': form1.cleaned_data['number_of_thresholds']}
             elif app_name == 'Sodxtrmts':
-                analysis_type = form1.cleaned_data['analysis_type']
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
                 'analysis_type':form1.cleaned_data['analysis_type'], 'element':form1.cleaned_data['element'], \
                 'frequency_analysis':form1.cleaned_data['frequency_analysis']}
+            elif app_name == 'Sodpiii':
+                initial = {'app_name':app_name, 'station_selection':station_selection,\
+                'skew':form1.cleaned_data['skew'], 'cv':form1.cleaned_data['cv'], 'mean':form1.cleaned_data['mean'], \
+                'pct_average':form1.cleaned_data['pct_average'],'element':form1.cleaned_data['element'], 'days':form1.cleaned_data['days']}
             else:
                 initial = {'app_name':app_name, 'station_selection':station_selection}
             form2 = set_as_form2(init=initial)
@@ -377,6 +374,24 @@ def sods(request, app_name):
 
                 (results,fa_results) = WRCCDataApps.Sodxtrmts(**app_args)
                 context['fa_results'] = dict(fa_results)
+            elif app_name == 'Sodpiii':
+                context['el_type'] = form2.cleaned_data['element']
+                context['units'] = units[form2.cleaned_data['element']]
+                context['start_year'] = form2.cleaned_data['start_date'][0:4]
+                context['end_year'] = form2.cleaned_data['end_date'][0:4]
+                context['start_month'] = form2.cleaned_data['start_date'][4:6]
+                context['end_month'] = form2.cleaned_data['end_date'][4:6]
+                app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
+                'coop_station_ids':coop_station_ids,'station_names':station_names, \
+                'el_type':form2.cleaned_data['element'], 'skew':form2.cleaned_data['skew'], \
+                'cv':form2.cleaned_data['cv'], 'mean': form2.cleaned_data['mean'], \
+                'pct_average':form2.cleaned_data['pct_average'], 'value_subsequent':form2.cleaned_data['value_subsequent'], \
+                'value_missing':form2.cleaned_data['value_missing']}
+                if form2.cleaned_data['element'] == 'avgt':
+                    app_args['ab'] = form2.cleaned_data['mean_temperatures']
+                if form2.cleaned_data['days'] == 'i':
+                    app_args['number_of_days'] = form2.cleaned_data['number_of_days']
+                results = run_data_app(**app_args)
             else:
                 results = {}
 
