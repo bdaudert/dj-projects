@@ -21,9 +21,8 @@ Input:
     Min Run    number of days in a run to be reported
     Verbose    if turned on it will return information about data where
                the threshold was not met
-Output:
+Smaple Output:
 
-    Output Sample
 
     ========================================================================
     STATION : COOP_STATION_ID : 266779 NAME : RENO TAHOE INTL AP STATE : NV

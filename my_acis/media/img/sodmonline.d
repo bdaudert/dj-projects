@@ -10,18 +10,44 @@ Listed are all the days of a month on a single line. The data is stepped
 through chronologically.
 
 Input:
-    Coop Station Id(s)        dddddd, dddddd
-    Start date                yyyy
-    End date                  yyyy
-    Element                   (e.g. maxt) 
-    Temperature Precision     Temperature precision option; tenths of degrees or                                  whole degrees. (default = tenths of degrees)
-    Output Format             json, ascii
-    Temp Unit                 Celsius or Fahrenheit
-    Number of Characters      Number of spaces to be used to store results.
-                              Options: 2,3 or 4. If data does not fit space
-                              specified here, 2 hashes are substituted instead of 
-                              the data values
-Output:
+    Coop Station Id(s)          dddddd, dddddd
+    Start date                  yyyy
+    End date                    yyyy
+    Element                     (e.g. maxt) 
+    Temperature Precision       Temperature precision option; tenths of degrees or
+                                whole degrees. (default = tenths of degrees)
+    Output Format               json, ascii
+    Temp Unit                   Celsius or Fahrenheit
+    Number of Characters        Number of spaces to be used to store results.
+                                Options: 2,3 or 4. If data does not fit space
+                                specified here, 2 hashes are substituted instead of 
+                                the data values
+Sample Output:
+
+---  DAILY PRECIPITATION     ---
+LOCATION: RENO TAHOE INTL AP                          STATION NUMBER : 266779
+START YEAR: 2012      END YEAR : 2012
+UNITS: HUNDREDTHS OF INCHES
+TX-TempMax TN-TempMin TV-TempAve PR-Precip, DD-DegDys, SF-SnowFall, SD-SnowDepth, EV-Evap, WM-WindMov, WQ-WatEqu
+M - Missing data,  T - Trace ,  S - Value for this day included in the subsequent total
+FORTRAN FORMAT : (I4, I2, A2, 31I4)
+   --> (YEAR, MONTH, ELEMENT, 31 DATA VALUES)
+
+                                         DAY  OF  THE  MONTH
+YR MO      1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+====--==  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+2012 1PR   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  3  0  0  0 44 48  T 59  0  T  T  0  0  0  0  0
+2012 2PR   1  0  0  0  0  0  1  0  0  0  T  T  9  T 19  0  0  0  0  T  0  0  0  0  0  0 30  0  T
+2012 3PR   T  0  0  0  0  2  0  0  0  0  0  0  T  T  T  4  5  0  0  0  0  0  0  0  0  0  T  T  0  0  T
+2012 4PR   T  0  0  T  T  0  0  0  0  0  T  1  2  T  0  0  0  0  0  0  0  0  1  0  T  3  0  0  0  0
+2012 5PR   0  0  T  0  0  0  0  0  0  0  0  0  0  0  T  0  T  0  0  0  0  0  0  T 30  T  0  0  0  0  0
+2012 6PR   0  0  0  T  T  0  0  T  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+2012 7PR   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  T  0  0  T  2  0  0  0  0  0  0  0  0
+2012 8PR   0  0  0  0  T  0  0  0  0  0  0  T  0  0  1  0  T  T  0  0  0  0  0  0  0  0  0  0  0  0  0
+2012 9PR   0  0  0  0  T  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  7  0  0  0  0  0  0  0  0
+201210PR   0  0  0  0  0  0  0  T  0  T  3  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M
+201211PR   M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M
+201212PR   M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M  M
 
 Notes:
 </div>

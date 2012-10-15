@@ -9,10 +9,15 @@ Input:
     Coop Station Id(s)    dddddd, dddddd
     Start date            yyyymmdd
     End date              yyyymmdd
-    Eighty Column Screen  Format output to fit 80 columns (default=False)
-    Element(s)            Choices: pcpn, snow, snwd, maxt, mint, hdd, cdd 
+    Element combinations  [pcpn, snow, snwd, maxt, mint, hdd, cdd]
+                          [maxt, mint, pcpn]
+                          [pcpn, snow, snwd]
+                          or each individually
+                          [hdd]
+                          [cdd]
 
-Output:
+
+Sample Output:
    AVE  Multi year unsmoothed average of the indicated quantity
    HI Highest value of the indicated quantity for this day of the year
    LO Lowest value of the indicated quantity for this day of the year

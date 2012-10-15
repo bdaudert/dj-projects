@@ -12,20 +12,32 @@ Input:
     End date                  yyyymmdd
     Element(s)                 (e.g. maxt) 
 
-Output:
-    Table one
-        lists number of records found at the stations for each element
-        for the given period
-    Table two
-        START   First date in record
-        END     Last date in record
-        POSBL   Possible number of observations
-        PRSNT   Total number of days present in the record
-        LNGPR   Largest number of consecutive observations
-        MISSG   Total number of missing days
-        LNGMS   Most consecutive missing observations
 
-    Output sample
+Sample Output:
+
+Summary of daily observations by element. Last date considered : 20121012 
+
+STATION        START             END       pcpn    snow    snwd    maxt    mint    obst
+103732      20120101        20121012        286     271     269     280     279     262
+266779      20120101        20121012        285     284     285     285     285     0
+
+SUMMARY-OF-THE-DAY STATISTICS
+          Last date considered for this listing : 20120101
+          START - First date in record (YYMMDD)
+          END - Last date in record (YYMMDD)
+          POSBL - Possible number of observations
+          PRSNT - Total number of days present in the record
+          LNGPR - Largest number of consecutive observations
+          MISSG - Total number of missing days
+          LNGMS - Most consecutive missing observations
+A day is considered present if any element is reported.
+NAME is the latest name of the station in the history file.
+
+NUMBER                    NAME         START             END      POSBL   PRSNT   LNGPR   MISSG   LNGMS
+103732      GRACE                   20120101        20121012        286     286     286     0       0
+266779      RENO TAHOE INTL AP      20120101        20121012        286     285     285     1       1
+
+
 
 Notes:
     A day is considered present if ANY element is reported.

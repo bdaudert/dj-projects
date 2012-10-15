@@ -3,15 +3,92 @@
 ###########
 Sodthr
 ###########
-This program summarizes first/last/difference for up to
-ten different temperature thresholds
+This program can be used to find the latest spring and   
+earliest fall frost (or other temperature(s)) each year. 
+' However, it is written much more generally to allow      
+finding the latest or earliest occurrence above or below 
+a threshold value, for a period up to 12-months long,    
+which may extend from one year into the next (for example,
+the winter season from July thru June), for up to 10 sets 
+of values.  Furthermore, the "midpoint" of the period can 
+be set anywhere between the starting and ending dates.    
+For example, July 31 can be used as mid-year, rather than 
+une 30 (is a frost on July 2 the "last frost" of  spring,
+or the "first frost" of autumn??)  A time series of the   
+values for each half of the interval is formed, and the   
+probability of exceedance is calculated, using only those 
+years with less missing data than the user specifies as a 
+minimum.
+
 
 Input:
     Coop Station Id(s)      dddddd, dddddd
     Start date              yyyy
     End date                yyyy
+    Element
+    Max missing days for first and last
+    Max missing days for differences
+    Custom tables          True or False
     
-Output:
+If Custom tables are required:
+    Number of Thresholds    up to ten
+    Thresholds
+    Time Series desired     True or False
+    Latest or earliest for period 1    
+    Latest or earliest for period 2 
+    Above or Below Threshold
+
+Sample Output:
+
+PROBABILITY OF latest DATE OF mint BELOW
+THE INDICATED THRESHOLD VALUE (DEGREES F).
+DURING THE FOLLOWING INTERVAL:
+START MONTH-DAY: 0101 END MONTH-DAY: 0731 YEARS USED: 2000 - 2010 
+WITH NO MORE THAN 10 MISSING DAYS DURING THE INTERVAL.
+[ -01-01 ] INDICATES NON-OCCURRENCE OF THE THRESHOLD
+
+TEMP F    LOW     10%     20%     30%     40%     50%     60%     70%     80%     90%    HIGH
+36.5    04 19   04 26   05 01   05 03   05 06   05 06   05 12   05 14   05 25   06 01   06 07
+32.5    04 18   04 18   04 19   04 20   04 22   04 29   04 30   05 03   05 14   05 22   05 23
+28.5    03 04   03 11   03 22   04 02   04 13   04 14   04 15   04 18   04 20   04 29   05 11
+24.5    02 05   02 21   03 03   03 09   03 14   03 17   03 18   03 24   04 03   04 07   04 12
+20.5    01 08   01 19   01 30   02 04   02 10   02 10   02 24   03 03   03 14   03 27   04 10
+
+PROBABILITY OF earliest DATE OF mint BELOW
+THE INDICATED THRESHOLD VALUE (DEGREES F).
+DURING THE FOLLOWING INTERVAL:
+START MONTH-DAY: 0731 END MONTH-DAY: 1231 YEARS USED: 2000 - 2010 
+WITH NO MORE THAN 10 MISSING DAYS DURING THE INTERVAL.
+[ -01-01 ] INDICATES NON-OCCURRENCE OF THE THRESHOLD
+
+TEMP F    LOW     10%     20%     30%     40%     50%     60%     70%     80%     90%    HIGH
+36.5    09 24   09 28   10 02   10 09   10 10   10 11   10 11   10 13   10 17   10 21   10 26
+32.5    10 05   10 06   10 09   10 12   10 17   10 19   10 20   10 24   10 27   10 30   10 31
+28.5    10 12   10 17   10 25   10 27   10 29   10 30   10 30   10 31   11 04   11 12   11 16
+24.5    10 31   11 01   11 06   11 11   11 15   11 18   11 21   11 22   11 23   11 28   12 06
+20.5    11 01   11 08   11 19   11 22   11 23   11 23   11 24   11 28   12 07   12 15   12 15
+
+PROBABILITY OF NO MORE THAN THE INDICATED NUMBER OF DAYS (I.E., PERCENTILE)
+--- BETWEEN ---
+(1) THE latest DATE OF mint BELOW
+THE INDICATED THRESHOLD VALUE (DEGREES F) DURING
+THE FIRST INTERVAL --- START MONTH-DAY: 0101 END MONTH-DAY: 0731 
+--- AND ---
+(2) THE earliest DATE OF mint BELOW
+THE SAME THRESHOLD VALUE (DEGREES F) DURING
+THE SECOND INTERVAL --- START MONTH-DAY: 0731 END MONTH-DAY: 1231 
+YEARS USED: 2000 - 2010 
+WITH NO MORE THAN 10 MISSING DAYS DURING THE TWO INTERVALS COMBINED.
+[ 367.0 ] INDICATES NON-OCCURRENCE OF THE THRESHOLD
+
+TEMP F    LOW     10%     20%     30%     40%     50%     60%     70%     80%     90%    HIGH
+36.5    131.0   132.2   138.6   149.0   151.9   153.0   154.4   158.2   159.9   170.0   182.0
+32.5    150.0   152.4   155.4   158.4   161.7   170.0   183.1   184.2   185.0   188.2   193.0
+28.5    172.0   173.2   181.7   189.8   200.0   208.0   209.7   216.6   221.1   231.6   240.0
+24.5    213.0   220.2   225.0   226.6   235.1   242.0   254.9   263.2   264.3   273.4   286.0
+20.5    228.0   240.6   254.6   265.0   272.4   286.0   296.4   300.0   302.4   310.0   313.0
+
 
 Notes:
+
 </div>

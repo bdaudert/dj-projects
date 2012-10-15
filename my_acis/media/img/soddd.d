@@ -3,18 +3,56 @@
 ###########
 Soddd
 ###########
-This is a degree day program. 
+This program finds degree days above or below any selected
+base temperature, allowing for heating, cooling, freezing, 
+thawing, chilling and other degree day thresholds.
+NCDC round-off can be simulated (truncation rather than
+rounding.
+Maximum and minimum temperatures can be truncated, and 
+certain days can be skipped.
+The program can find either time series of monthly values
+or long term averages of daily values
 
 Input:
     Coop Station Id(s)      dddddd, dddddd
     Start date              yyyy
     End date                yyyy
-    Base Temperature
-    Above or Below          
-    Skip Days
-    Table type              Daily averages or monthly time series
-    
-Output:
+    Skip Days               True or False
+    (above or below a threshold)
+    Truncate                True or False
+    (above or below a threshold)
+   
+    Base temperature        [65]
+    Above or Below
+    (Above -> Heating Degree Days, 
+    Below --> Cooling Degree days)
+
+ 
+Sample Output:
+
+DEGREE DAYS BASE TEMPERATURE 65
+TRUNCATES MAXIMUMS ABOVE 999
+TRUNCATES MAXIMUMS ABOVE -999
+UP TO 0 DAYS MAY BE ESTIMATED FROM MEAN DAILY NORMALS
+NCDC ROUND-OFF PROCEDURE is NOT SIMULATED, EXACT ROUND-OFF USED
+STARTING YEAR : 2000 ENDING YEAR : 2011
+FLAG FOLLOWING VALUE GIVES NUMBER OF MISSING DAYS :
+a = 1 DAY, b = 2 DAYS, ..., z = 26+ DAYS MISSING
+STATION: RENO TAHOE INTL AP   NUMBER: 266779
+
+YEAR        JAN     FEB     MAR     APR     MAY           JUN         JUL         AUG        SEP        OCT   NOV     DEC
+2000        0       0       0       0       50.0        182.5       243.5       274.0       63.5        5.0     0       0
+2001        0       0       -999a   0       90.5        160.0       289.5       340.0       109.0       14.5    0       0
+2002        0       0       -999a   0       22.0        181.5       413.0       238.5       100.0       0       0       0
+2003        0       0       -999a   0       80.0        216.0       431.0       293.0       113.5       15.5    0       0
+2004        0       0       0       1.0     19.0        182.0       396.0       289.5       103.5       0.5     0       0
+2005        0       0       -999a   0       25.0        66.5        462.0       342.0       43.5        0.5     0       0
+2006        0       0       -999a   0.5     46.0        230.5       463.0       268.5       112.0       1.0     0       0
+2007        0       0       -999a   3.5     59.5        254.5       459.0       355.5       100.0       0       0       0
+2008        0       0       0       0       49.0        164.0       391.0       383.5       107.0       13.0    0       0
+2009        0       0       -999a   1.0     89.5         97.5       389.5       290.0       172.0       0       0       0
+2010        0       0       -999a   0       0.0         124.0       396.5       264.5       86.5        26.5    0       0
+
 
 Notes:
 </div>

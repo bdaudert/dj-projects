@@ -45,7 +45,7 @@ Sample Output:
     Long-term means based on columns; thus, the monthly row may not
     sum (or average) to the long-term annual value.
 
-    YEARS   JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC ANN
+    YEARS     JAN     FEB     MAR     APR     MAY     JUN     JUL     AUG     SEP     OCT     NOV     DEC     ANN
     2000    48.71   51.41   58.97   69.00   74.90   88.27   90.97   90.90   80.90   66.81   50.10   49.87   68.40
     2001    44.29   47.36   62.45   61.60   83.00   86.03   90.65   94.87   85.47   74.94   57.40   44.68   69.39
     2002    45.55   54.43   56.32   65.73   73.87   86.90   95.68   89.90   83.20   68.61   56.63   48.10   68.74
