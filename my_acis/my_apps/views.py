@@ -385,8 +385,9 @@ def sods(request, app_name):
                 'coop_station_ids':coop_station_ids,'station_names':station_names, \
                 'el_type':form2.cleaned_data['element'], 'skew':form2.cleaned_data['skew'], \
                 'cv':form2.cleaned_data['cv'], 'mean': form2.cleaned_data['mean'], \
-                'pct_average':form2.cleaned_data['pct_average'], 'value_subsequent':form2.cleaned_data['value_subsequent'], \
-                'value_missing':form2.cleaned_data['value_missing']}
+                'pct_average':form2.cleaned_data['pct_average'], \
+                'value_subsequent':form2.cleaned_data['value_subsequent'], \
+                'value_missing':form2.cleaned_data['value_missing'],'days':form2.cleaned_data['days']}
                 if form2.cleaned_data['element'] == 'avgt':
                     app_args['ab'] = form2.cleaned_data['mean_temperatures']
                 if form2.cleaned_data['days'] == 'i':

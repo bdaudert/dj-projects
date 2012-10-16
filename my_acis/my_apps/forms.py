@@ -537,8 +537,8 @@ class SodForm(forms.Form):
                 self.fields['days'].widget.attrs['readonly'] = 'readonly'
                 if days == 'i':
                     self.fields['number_of_days'] = forms.IntegerField(min_value=1,max_value=30, initial=1)
-                self.fields['value_subsequent'] = forms.IntegerField(required=False, initial=9991)
-                self.fields['value_missing'] = forms.IntegerField(required=False, initial=9999)
+            self.fields['value_subsequent'] = forms.IntegerField(required=False, initial=9991)
+            self.fields['value_missing'] = forms.IntegerField(required=False, initial=9999)
         else:
             pass
 
