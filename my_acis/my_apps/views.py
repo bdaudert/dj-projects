@@ -375,6 +375,9 @@ def sods(request, app_name):
                 (results,fa_results) = WRCCDataApps.Sodxtrmts(**app_args)
                 context['fa_results'] = dict(fa_results)
             elif app_name == 'Sodpiii':
+                lisdur = [ '6 Hrs', '12 Hrs', '1 Day', '2 Days', '3 Days', \
+                        '4 Days', '5 Days', '6 Days', '7 Days', '8 Days', '9 Days', \
+                        '10 Days', '15 Days', '20 Days', '25 Days', '30 Days']
                 context['el_type'] = form2.cleaned_data['element']
                 context['units'] = units[form2.cleaned_data['element']]
                 context['start_year'] = form2.cleaned_data['start_date'][0:4]
@@ -390,9 +393,22 @@ def sods(request, app_name):
                 'value_missing':form2.cleaned_data['value_missing'],'days':form2.cleaned_data['days']}
                 if form2.cleaned_data['element'] == 'avgt':
                     app_args['ab'] = form2.cleaned_data['mean_temperatures']
+                duration = {}
                 if form2.cleaned_data['days'] == 'i':
                     app_args['number_of_days'] = form2.cleaned_data['number_of_days']
-                results = run_data_app(**app_args)
+                    duration[0] = [form2.cleaned_data['number_of_days']]
+                elif form2.cleaned_data['days'] == '5':
+                    for k in range(5):
+                        duration[k] = lisdur[k + 2]
+                elif form2.cleaned_data['days'] == 'a':
+                    for k in range(len(lisdur)):
+                        duration[k] = lisdur[k]
+                context['duration'] = duration
+                results_0, results, averages, stdevs, skews = WRCCDataApps.Sodpiii(**app_args)
+                context['averages'] = averages
+                context['stdevs'] = stdevs
+                context['skews'] = skews
+                context['results_0'] = dict(results_0)
             else:
                 results = {}
 

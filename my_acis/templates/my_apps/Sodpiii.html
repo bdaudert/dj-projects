@@ -23,6 +23,33 @@
 </br>
 {%endif%}
 
+{%if results_0 %}
+  {%for stn, stn_data in results_0.items %}
+    {%if not stn_data%}
+    <p style="color:red">NO STATION DATA FOUND!</p></br>
+    {%else%}
+    {%for tbl_idx, table in stn_data.items%}
+    <p class="stronger" style="color:darkblue; font-size:large">
+    STATION NUMBER: {{coop_station_ids|lookup:stn|safe}}&nbsp;&nbsp;LOCATION:{{station_names|lookup:stn|safe}}</br>
+    START YEAR {{start_year}} END YEAR {{end_year}}</br>
+    START MONTH {{start_month}} END MONTH {{end_month}}</br>
+    ELEMENT {{el_type}} UNITS {{units}}</br>
+    DURATION {{duration|lookup:tbl_idx|safe}}</br>
+    </p></br>
+    <table>
+      <tr>
+        <td>Year</td><td>Value</td><td>Start Date(mmdd)</td><td>Days Missing</td>
+        {%for row in table%}
+        <tr>
+            {%for val in row%}<td>{{val}}</td>{%endfor%}
+        </tr>
+         {%endfor%}
+        </tr>
+    </table>
+    {%endfor%}
+    {%endif%}
+  {%endfor%}
+{%endif%}
 
 {%if results %}
   {%for stn, stn_data in results.items %}
@@ -36,8 +63,8 @@
     START YEAR {{start_year}} END YEAR {{end_year}}</br>
     START MONTH {{start_month}} END MONTH {{end_month}}</br>
     ELEMENT {{el_type}} UNITS {{units}}</br>
-    DURATION {{number_of_days}}</br>
-    AVERAGE {{ave}} ST DEV {{stdev}} SKEWNESS {{skew}}
+    DURATION {{duration|lookup:tbl_idx|safe}}</br>
+    AVERAGE {{averages|lookup:tbl_idx|safe}} ST DEV {{stdevs|lookup:tbl_idx|safe}} SKEWNESS {{skews|lookup:tbl_idx|safe}}
     ADJUSTMENT OF 1.00 APPLIED FOR CLOCK EFFECTS</br>
     USES OBSERVATION DAYS ONLY</br>
     </p></br>
@@ -45,10 +72,10 @@
         <tr>
         <td>Prob of Nonexceednce</td><td>Prob of Exceednce</td><td>Return Interval</td><td>Value in Std. Dev.</td><td>Value in Absolute Units</td>
         </tr>
-         {%for cat in table %}
+         {%for row in table %}
          <tr>
-          {%for dat in cat%}
-          <td style="text-align:right">{{dat}}</td>
+          {%for val in row%}
+          <td style="text-align:right">{{val}}</td>
           {%endfor%}
          </tr>
          {%endfor%}
