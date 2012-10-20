@@ -182,7 +182,7 @@ SXTR_ELEMENT_CHOICES = (
         ('gdd', 'Growing degree days'),
     )
 
-PII_ELEMENT_CHOICES = (
+PIII_ELEMENT_CHOICES = (
         ('pcpn', 'Precipitation'),
         ('snow', 'Snowfall'),
         ('snwd', 'Snowdepth'),
@@ -190,6 +190,23 @@ PII_ELEMENT_CHOICES = (
         ('mint', 'Minimum Temperature'),
         ('avgt', 'Mean Temperature'),
         )
+
+PIII_DAY_CHOICES = (
+        (1, 'One'),
+        (2, 'Two'),
+        (3, 'Three'),
+        (4, 'Four'),
+        (5, 'Five'),
+        (6, 'Six'),
+        (7, 'Seven'),
+        (8, 'Eight'),
+        (9, 'Nine'),
+        (10, 'Ten'),
+        (15, 'Fifteen'),
+        (20, 'Twenty'),
+        (25, 'Twenty five'),
+        (30, 'Thirty'),
+)
 
 SDMM_ELEMENT_CHOICES = (
         ('temp', 'Temperature Statistics'),
@@ -315,12 +332,11 @@ class Sod0Form(forms.Form):
             self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='maxt')
             self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'T')
         if app_name == 'Sodpiii':
-            self.fields['element'] = forms.ChoiceField(choices=PII_ELEMENT_CHOICES, initial='maxt')
             self.fields['skew'] = forms.ChoiceField(choices=([('as','Areal Skew'), ('ss','Station Skew'), ]), initial='ss')
             self.fields['cv'] = forms.ChoiceField(choices=([('acv','Areal CV'), ('scv','Station CV'), ]), initial='scv')
             self.fields['mean'] = forms.ChoiceField(choices=([('am','Areal Mean'), ('sm','Station Mean'), ]), initial='sm')
             self.fields['pct_average'] = forms.ChoiceField(choices=([('apct','Areal PCT Average'), ('spct','Station PCT Average'), ]), initial='spct')
-            self.fields['days'] = forms.ChoiceField(choices=([('i','Individual Day'), ('5','Day 1-5'), ('a','All Days'), ]), initial='a')
+            self.fields['days'] = forms.ChoiceField(choices=([('i','Individual Day'), ('5','Day 1-5'), ('a','All Days'), ]), initial='i')
 class SodForm(forms.Form):
     def __init__(self, *args, **kwargs):
         station_selection = kwargs.get('initial', {}).get('station_selection', None)
@@ -512,13 +528,11 @@ class SodForm(forms.Form):
             cv = kwargs.get('initial', {}).get('cv', None)
             mean = kwargs.get('initial', {}).get('mean', None)
             pct_average = kwargs.get('initial', {}).get('pct_average', None)
-            element = kwargs.get('initial', {}).get('element', None)
             days = kwargs.get('initial', {}).get('days', None)
             if skew is None:skew = self.data.get('skew')
             if cv is None:cv = self.data.get('cv')
             if mean is None:mean = self.data.get('mean')
             if pct_average is None:pct_average = self.data.get('pct_average')
-            if element is None:element = self.data.get('element')
             if days is None:days = self.data.get('days')
             self.fields['skew'] = forms.CharField(initial=skew)
             self.fields['skew'].widget.attrs['readonly'] = 'readonly'
@@ -528,15 +542,17 @@ class SodForm(forms.Form):
             self.fields['mean'].widget.attrs['readonly'] = 'readonly'
             self.fields['pct_average'] = forms.CharField(initial=pct_average)
             self.fields['pct_average'].widget.attrs['readonly'] = 'readonly'
-            self.fields['element'] = forms.CharField(initial=element)
-            self.fields['element'].widget.attrs['readonly'] = 'readonly'
-            if skew == 'ss' or cv == 'scv' or mean == 'sm' or pct_averages == 'spct':
-                if element == 'avgt':
-                    self.fields['mean_temperatures']= forms.ChoiceField(choices = ([('b', 'Below Average'),('a', 'Above Average'),]), initial = 'b')
+            if skew == 'as' or cv == 'acv' or mean == 'am' or pct_average == 'apct':
+                self.fields['element'] = forms.CharField(initial='pcpn')
+                self.fields['element'].widget.attrs['readonly'] = 'readonly'
+            else:
+                self.fields['element'] = forms.ChoiceField(choices=PIII_ELEMENT_CHOICES, initial='maxt')
+            if skew == 'ss' or cv == 'scv' or mean == 'sm' or pct_average == 'spct':
+                self.fields['mean_temperatures']= forms.ChoiceField(choices = ([('b', 'Below Average'),('a', 'Above Average'), ('n', 'None'),]), initial = 'None')
                 self.fields['days'] = forms.CharField(initial=days)
                 self.fields['days'].widget.attrs['readonly'] = 'readonly'
                 if days == 'i':
-                    self.fields['number_of_days'] = forms.IntegerField(min_value=1,max_value=30, initial=1)
+                    self.fields['number_of_days'] = forms.ChoiceField(choices=PIII_DAY_CHOICES, initial='20')
             self.fields['value_subsequent'] = forms.IntegerField(required=False, initial=9991)
             self.fields['value_missing'] = forms.IntegerField(required=False, initial=9999)
         else:

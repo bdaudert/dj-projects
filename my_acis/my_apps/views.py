@@ -141,7 +141,7 @@ def sods(request, app_name):
             elif app_name == 'Sodpiii':
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
                 'skew':form1.cleaned_data['skew'], 'cv':form1.cleaned_data['cv'], 'mean':form1.cleaned_data['mean'], \
-                'pct_average':form1.cleaned_data['pct_average'],'element':form1.cleaned_data['element'], 'days':form1.cleaned_data['days']}
+                'pct_average':form1.cleaned_data['pct_average'], 'days':form1.cleaned_data['days']}
             else:
                 initial = {'app_name':app_name, 'station_selection':station_selection}
             form2 = set_as_form2(init=initial)
@@ -395,11 +395,11 @@ def sods(request, app_name):
                     app_args['ab'] = form2.cleaned_data['mean_temperatures']
                 duration = {}
                 if form2.cleaned_data['days'] == 'i':
-                    app_args['number_of_days'] = form2.cleaned_data['number_of_days']
-                    duration[0] = [form2.cleaned_data['number_of_days']]
+                    app_args['number_of_days'] = int(form2.cleaned_data['number_of_days'])
+                    duration[0] = '%i Days' % int(form2.cleaned_data['number_of_days'])
                 elif form2.cleaned_data['days'] == '5':
                     for k in range(5):
-                        duration[k] = lisdur[k + 2]
+                        duration[k] = '%i Days' % lisdur[k + 2]
                 elif form2.cleaned_data['days'] == 'a':
                     for k in range(len(lisdur)):
                         duration[k] = lisdur[k]
