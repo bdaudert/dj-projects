@@ -371,7 +371,9 @@ def sods(request, app_name):
                         app_args['threshold_2'] = form2.cleaned_data['threshold_high_for_between']
                     else:
                         app_args['threshold'] = form2.cleaned_data['threshold_for_less_or_greater']
-
+                if form2.cleaned_data['element'] in ['hdd', 'gdd', 'cdd']:
+                    app_args['base_temperature'] = form2.cleaned_data['base_temperature']
+                context['app_arg'] = app_args
                 (results,fa_results) = WRCCDataApps.Sodxtrmts(**app_args)
                 context['fa_results'] = dict(fa_results)
             elif app_name == 'Sodpiii':

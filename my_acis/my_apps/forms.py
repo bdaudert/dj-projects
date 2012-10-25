@@ -226,8 +226,8 @@ SDTHR_ELEMENT_CHOICES = (
 F_ANALYSIS_CHOICES = (
         ('p', 'Pearson Type III'),
         ('g', 'Generalized Extreme Value'),
-        ('b', 'Beta-P'),
-        ('c', 'Censored Gamma'),
+        #('b', 'Beta-P'),
+        #('c', 'Censored Gamma'),
         )
 
 #Custom form fields
