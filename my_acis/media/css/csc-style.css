@@ -13,9 +13,21 @@ body {
     padding: 0;
 }
 
-p {
+p, ul, ol, li {
     color:#FFCC99;
 }
+
+
+/* HOVER STYLES */
+a:link { color: #0000aa; }
+a:visited { color: #000099; }
+
+a:hover {
+    color: #007722;
+    text-decoration: none;
+}
+a:active { color: red; }
+
 
 #container { 
     margin: 0 auto; 
@@ -38,17 +50,9 @@ p {
 #center { 
     margin: 50px 10px 400px 300px;
     padding: 0px 0px 0px 0px;
-    text-align:center;
+    text-align:left;
 }
 
-#map_canvas {
-    height: 50%;
-    width: 50%;
-    margin-right:auto;
-    margin-left:auto;
-    margin-top:200px;
-    margin-bottom:auto;
-}
 
 #header {
     background: #FFCC99 ;
@@ -89,4 +93,20 @@ p {
     background: #FFCC99;
     color: #660000;
     font-weight:bold
+}
+
+/*Map related stuff*/
+#map_canvas {
+    height: 50%;
+    width: 50%;
+    margin-right:auto;
+    margin-left:auto;
+    margin-top:100px;
+    margin-bottom:auto;
+}
+
+#MarkerWindow {
+    padding:0px 0px 0px 0px;
+    background: #947e6e;
+    font-family: 'Georgia',serif;
 }

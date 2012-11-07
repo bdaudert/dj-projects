@@ -69,7 +69,6 @@ function ShowHide(divId)
 }
 
 
-
 $(function() {
     $('div.pop-up').hide();
 });
@@ -77,7 +76,7 @@ $(function() {
   var moveLeft = 50;
   var moveDown = 0;
 
-  $('a.trigger').hover(function(e) {
+  $('.trigger').hover(function(e) {
     $(this).next('div.pop-up').show();
    //$('div.pop-up').show();
       //.css('top', e.pageY + moveDown)
@@ -87,42 +86,21 @@ $(function() {
     $(this).next('div.pop-up').hide();
   });
 
-  $('a.trigger').mousemove(function(e) {
+  $('.trigger').mousemove(function(e) {
     //$('div.pop-up').css('top', e.pageY + moveDown).css('left', e.pageX + moveLeft);
     $(this).next('div.pop-up').css('top', e.pageY + moveDown).css('left', e.pageX + moveLeft);
   });
 
 }); 
 
-//Testing popup in same window
-function toggle(div_id) {
-    var el = document.getElementById(div_id);
-    if ( el.style.display == 'none' ) { el.style.display = 'block';}
-    else {el.style.display = 'none';}
+
+function showIt(Id)
+{
+document.getElementById(Id).style.display="inline";
 }
 
-function window_pos(popUpDivVar) {
-    if (typeof window.innerWidth != 'undefined') {
-        viewportwidth = window.innerHeight;
-    } else {
-        viewportwidth = document.documentElement.clientHeight;
-    }
-    if ((viewportwidth > document.body.parentNode.scrollWidth) && (viewportwidth > document.body.parentNode.clientWidth)) {
-        window_width = viewportwidth;
-    } else {
-        if (document.body.parentNode.clientWidth > document.body.parentNode.scrollWidth) {
-            window_width = document.body.parentNode.clientWidth;
-        } else {
-            window_width = document.body.parentNode.scrollWidth;
-        }
-    }
-    var popUpDiv = document.getElementById(popUpDivVar);
-    window_width=window_width/2-150;//150 is half popup's width
-    popUpDiv.style.left = window_width + 'px';
-}
 
-function popup(windowname) {
-    window_pos(windowname);
-    toggle(windowname);     
+function hideIt(Id)
+{
+document.getElementById(Id).style.display='none';
 }
-//End test

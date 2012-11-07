@@ -1,142 +1,147 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
-    <title>Station Finder</title>	
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-    <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
-   <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-   <!-- ** Javascript ** -->
-   <script type="text/javascript" src="{{ MEDIA_URL }}js/map_utils.js"></script>	
-   <!-- ExtJS library: base/adapteri-->
-   <script type="text/javascript" src="http://www.wrcc.dri.edu/media/ext/adapter/ext/ext-base.js"></script>
-   <!-- ExtJS library: all widgets -->
-   <script type="text/javascript" src="http://www.wrcc.dri.edu/media/ext/ext-all.js"></script>
-   <!-- overrides to library -->
-   <!-- extensions -->
-   <script type="text/javascript" src="http://www.wrcc.dri.edu/media/js/stationmap.js"></script>
-
-   <script type="text/javascript"
-    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true">
-   </script>
-
-   <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
-   <script type="text/javascript">
-     function initialize() {
+    <head>
+        <title>Station Finder</title>	
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+        <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
+        <!-- ** Javascript ** -->
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>	
+        <!-- ExtJS library: all widgets -->
+        <script type="text/javascript" src="http://www.wrcc.dri.edu/media/ext/ext-all.js"></script>
+        <!-- overrides to library -->
+        <!-- extensions -->
+        <script type="text/javascript" src="http://www.wrcc.dri.edu/media/js/stationmap.js"></script>
+        <script type="text/javascript"
+        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true">
+        </script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
+        <script type="text/javascript">
+            function initialize() {
         
-        $.getJSON("{{MEDIA_URL}}json/stn.json", function(data) {
+            $.getJSON("{{MEDIA_URL}}json/stn.json", function(data) {
 
-        //for (first in data.station) var ll = new google.maps.LatLng(first.lat,first.lon);
-        var mapOptions = {
-          //center: ll
-          center: new google.maps.LatLng(39.8282, -98.5795),
-          zoom: 5,
-          mapTypeId: google.maps.MapTypeId.HYBRID
-          };
+                //for (first in data.station) var ll = new google.maps.LatLng(first.lat,first.lon);
+                var mapOptions = {
+                    //center: ll
+                    center: new google.maps.LatLng(39.8282, -98.5795),
+                    zoom: 5,
+                    mapTypeId: google.maps.MapTypeId.HYBRID
+                };
 
-        map = new google.maps.Map(document.getElementById("map_canvas"),mapOptions);
-        var bounds=new google.maps.LatLngBounds();
-        infowindow = new google.maps.InfoWindow({
+                map = new google.maps.Map(document.getElementById("map_canvas"),mapOptions);
+                var bounds=new google.maps.LatLngBounds();
+                infowindow = new google.maps.InfoWindow({
                     content: 'oi'
-                  });
-         var markers = [];
-         $.each(data.stations, function(index, c) {
-            
-            var latlon = new google.maps.LatLng(c.lat,c.lon);
-            
-            var marker = new google.maps.Marker({
-                      map: map,
-                      position: latlon,
-                      title:'Name:'+c.name
-                  });
-            markers.push(marker)
-            bounds.extend(latlon);
+                });
+                var markers = [];
+                $.each(data.stations, function(index, c) {
+                    var latlon = new google.maps.LatLng(c.lat,c.lon);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: latlon,
+                        title:'Name:'+c.name
+                    });
 
-            google.maps.event.addListener(marker, 'click', function() {
-                infowindow.close();
-                infowindow.setContent('Name: '+c.name+' State:'+c.state);
-                infowindow.open(map, marker);
-            });
-          });//close each
-            
-          var markerCluster = new MarkerClusterer(map, markers);
-          map.fitBounds(bounds);
-          });//close getjson
-      }//close initialize   
-     </script>
-   </head>
+                    markers.push(marker)
+                    bounds.extend(latlon);
 
-  <body onload="initialize()">
-    <div id="header">
-        <h1 align="center">Station Finder</h1>
-        <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png">
-        <img class="nature" src="{{ MEDIA_URL }}img/sierras.jpg">
-    </div>
+                    google.maps.event.addListener(marker, 'click', function() {
+                        infowindow.close();
+                        var contentString = '<div id="MarkerWindow">'+
+                        '<p><b>Name: </b>' + c.name + '<br/>'+
+                        '<b>State: </b>' + c.state + '<br/>' +
+                        '<b>Elevation: </b>' + c.elevation + '<br/>' +
+                        '<b>UID: </b>' + c.uid + '<br/>' +
+                        '<b>SIDS: </b>' + c.sids + '<br/>' +
+                        '</p>' +
+                        '<a href="/my_data/data">Get Data for this Station</a>'+
+                        '</div>';
+                        infowindow.setContent(contentString);
+                        infowindow.open(map, marker);
+                        });
+                });//close each
+            
+                var markerCluster = new MarkerClusterer(map, markers);
+                map.fitBounds(bounds);
+            });//close getjson
+        }//close initialize   
+        </script>
+    </head>
+
+    <body onload="initialize()">
+
+        <div id="header">
+            <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png">
+            <img class="nature" src="{{ MEDIA_URL }}img/sierras.jpg">
+            <div id="title"></div>
+                <script>$("#title").load("{{MEDIA_URL}}html/csc_base.html #head");</script>
+        </div>
     
-    <div id="breadcrumbs">
-        <a href="/my_data">HOME </a>&nbsp;&nbsp;
-        <a href="/my_data/station_finder">STATION FINDER</a>&nbsp;&nbsp;
-        <a href="/my_data/data">DATA PORTAL</a>&nbsp;&nbsp;
-        <a href="/my_data/apps">PRODUCTS AND SERVICES</a>&nbsp;&nbsp;
-    </div>
+        <div id="bcrumbs"></div>           
+            <script>$("#bcrumbs").load("{{MEDIA_URL}}html/csc_base.html #breadcrumbs");</script>
 
-    <div id="sidebar_left">
-        <p>Search by ID</p>
-        <form method="get" action="by_id/">
-            <input type="text" name="q" />
-            <input type="submit" value="Submit"/>
-        </form>
+        <h1 align="center">STATION FINDER</h1>
 
-        <p>Search by County</p>
-        <form method="get" action="by_county/">
-            <input type="text" name="q" />
-            <input type="submit" value="Submit" />
-        </form>
+        <div id="sidebar_left">
+            <p onmouseover="ShowHide('myImage')">Search by ID</p>
+            <img src="{{MEDIA_URL}}img/Acis_Stn_Id_Type.png" id="myImage" border="0" style="display:none;" />
+            <form method="get" action="by_id/">
+                <input type="text" name="q" />
+                <input type="submit" value="Submit"/>
+            </form>
 
-        <p>Search by County Warning Area</p>
-        <form method="get" action="by_cwa/">
-            <input type="text" name="q" />
-            <input type="submit" value="Submit" />
-        </form>
+            <p>Search by County</p>
+            <form method="get" action="by_county/">
+                <input type="text" name="q" />
+                <input type="submit" value="Submit" />
+            </form>
 
-        <p>Search by Climate Division</p>
-        <form method="get" action="by_clim_div/">
-            <input type="text" name="q" />
-            <input type="submit" value="Submit" />
-        </form>
+            <p>Search by County Warning Area</p>
+            <form method="get" action="by_cwa/">
+                <input type="text" name="q" />
+                <input type="submit" value="Submit" />
+            </form>
 
-        <p>Search by Basin</p>
-        <form method="get" action="by_basin/">
-            <input type="text" name="q" />
-            <input type="submit" value="Submit" />
-        </form>
+            <p>Search by Climate Division</p>
+            <form method="get" action="by_clim_div/">
+                <input type="text" name="q" />
+                <input type="submit" value="Submit" />
+            </form>
+
+            <p>Search by Basin</p>
+            <form method="get" action="by_basin/">
+                <input type="text" name="q" />
+                <input type="submit" value="Submit" />
+            </form>
         
 
-        <p>List stations by state</p>
-        <form method="get" action="by_state/">
-            <select name="state_key">
-                {% for state in state_choices %}
-                <option value="{{state}}">{{state}}</option>
-                {% endfor %}
-            </select>
-            <input type="submit" value="Submit"/>
-        </form> 
+            <p>Search by State</p>
+            <form method="get" action="by_state/">
+                <select name="state_key">
+                    {% for state in state_choices %}
+                    <option value="{{state}}">{{state}}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Submit"/>
+            </form> 
           
-        <p>Bounding Box</p>
-        <form method="get" action="by_bounding_box/">
-            West: <input type="text" name="W" size="8" />
-            South: <input type="text" name="S" size="8" /></br>
-            East: <input type="text" name="E" size="8" />
-            North: <input type="text" name="N" size="8" />
-            <input type="submit" value="Submit"/>
-        </form>    
-        </br>
-        <br/> 
-        <a href="{{MEDIA_URL}}img/Acis_search_areas.png">
-            <img class="logo" src="{{ MEDIA_URL }}img/Acis_search_areas.png" width="275" height="250"></a>         
+            <p>Search by Bounding Box</p>
+            <form method="get" action="by_bounding_box/">
+                West: <input type="text" name="W" size="8" />
+                South: <input type="text" name="S" size="8" /></br>
+                East: <input type="text" name="E" size="8" />
+                North: <input type="text" name="N" size="8" />
+                <input type="submit" value="Submit"/>
+            </form>    
+        
+            </br>
+            <br/> 
+            <a href="{{MEDIA_URL}}img/Acis_search_areas.png">
+            <img class="logo" src="{{ MEDIA_URL }}img/Acis_Area_Codes.png" width="275" height="250"></a>         
 
-    </div>
+        </div>
 
-    <div id="map_canvas"></div>
-  </body>
+        <div id="map_canvas"></div>
+    </body>
 </html>
