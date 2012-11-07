@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Station Finder</title>	
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+    <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
+   <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+   <!-- ** Javascript ** -->
+   <script type="text/javascript" src="{{ MEDIA_URL }}js/map_utils.js"></script>	
+   <!-- ExtJS library: base/adapteri-->
+   <script type="text/javascript" src="http://www.wrcc.dri.edu/media/ext/adapter/ext/ext-base.js"></script>
+   <!-- ExtJS library: all widgets -->
+   <script type="text/javascript" src="http://www.wrcc.dri.edu/media/ext/ext-all.js"></script>
+   <!-- overrides to library -->
+   <!-- extensions -->
+   <script type="text/javascript" src="http://www.wrcc.dri.edu/media/js/stationmap.js"></script>
+
+   <script type="text/javascript"
+    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true">
+   </script>
+
+   <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
+   <script type="text/javascript">
+
+function initialize() {
+        
+        $.getJSON("{{MEDIA_URL}}json/stn.json", function(data) {
+
+        //for (first in data.station) var ll = new google.maps.LatLng(first.lat,first.lon);
+        var mapOptions = {
+          //center: ll
+          center: new google.maps.LatLng(39.8282, -98.5795),
+          zoom: 5,
+          mapTypeId: google.maps.MapTypeId.HYBRID
+          };
+
+        map = new google.maps.Map(document.getElementById("map_canvas"),mapOptions);
+        var bounds=new google.maps.LatLngBounds();
+        infowindow = new google.maps.InfoWindow({
+                    content: 'oi'
+                  });
+         var markers = [];
+         $.each(data.stations, function(index, c) {
+            
+            var latlon = new google.maps.LatLng(c.lat,c.lon);
+            
+            var marker = new google.maps.Marker({
+                      map: map,
+                      position: latlon,
+                      title:'Name:'+c.name
+                  });
+            markers.push(marker)
+            bounds.extend(latlon);
+
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.close();
+                infowindow.setContent('Name: '+c.name+' State:'+c.state);
+                infowindow.open(map, marker);
+            });
+          });//close each
+            
+          var markerCluster = new MarkerClusterer(map, markers);
+          map.fitBounds(bounds);
+          });//close getjson
+      }//close initialize
+
+   
+//      Ext.onReady(function(){
+//      var stationmap = new StationMap({
+//        station_json_url: '{{MEDIA_URL}}json/calclim.json',
+//        center: { lat: 37, lng: -120 },
+//        panel_title: "CalClim Stations",
+//        zoom_level: 6
+//        });
+//      }); // end onReady	
+
+     </script>
+   </head>
+
+  <body onload="initialize()">
+    <div id="header">
+        <h1 align="center">Station Finder</h1>
+        <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png">
+        <img class="nature" src="{{ MEDIA_URL }}img/sierras.jpg">
+    </div>
+    
+    <div id="breadcrumbs">
+        <a href="/my_data">HOME </a>&nbsp;&nbsp;
+        <a href="/my_data/station_finder">STATION FINDER</a>&nbsp;&nbsp;
+        <a href="/my_data/data">DATA PORTAL</a>&nbsp;&nbsp;
+        <a href="/my_data/apps">PRODUCTS AND SERVICES</a>&nbsp;&nbsp;
+    </div>
+
+       <h2 align="center">{{title}}</h2>
+
+    <div id="map_canvas"></div>
+  </body>
+</html>

@@ -2,25 +2,72 @@
 
 <html>
   <head>
-    <h1>{{title}}</h1>
-   <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-   <style>
-    @import url("{{MEDIA_URL}}css/polymaps.css");
-   </style>
-   <!-- ** Javascript ** -->
-   <script type="text/javascript" src="{{ MEDIA_URL }}js/icons.js"></script>
-   <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
-   <script type="text/javascript" src="{{ MEDIA_URL }}js/polymaps.min.js"></script>
-    <script type="text/javascript" src="http://github.com/simplegeo/polymaps/raw/v2.3.0/lib/raphaeljs/icons.js"></script>
- </head>
+    <title>Southwest CSC Climate Data Portal</title>	
+    <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
+    <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
 
- <body id="map">
-<script type="text/javascript" src="{{ MEDIA_URL }}js/pm_markers.js"></script>
-    <span id="copy">
-      &copy; 2010
-      <a href="http://www.cloudmade.com/">CloudMade</a>,
-      <a href="http://www.openstreetmap.org/">OpenStreetMap</a> contributors,
-      <a href="http://creativecommons.org/licenses/by-sa/2.0/">CCBYSA</a>.
-    </span>
- </body>
+    <!-- include greybox media for pop-up windows -->
+    <script type="text/javascript" src="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.js"></script>
+    <link href="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.css" rel="stylesheet" type="text/css" media="all">
+    <script type="text/javascript">
+        GB_CLOSE_URL = "http://www.wrcc.dri.edu/wrccpub/media/greybox/close.gif";
+
+    $(function () {
+        $(".popup_map").click(function(ev){ 
+            // Let alt-clicks and non-left clicks (which != 1) do their thing
+            if ( ev.shiftKey || ev.ctrlKey || ev.altKey || ev.metaKey || ev.which != 1 ) {
+                return true;
+            }
+            var url = this.getAttribute("href");
+            var title = $(this).text();
+            var width = 792 + 20;
+            var height = 612 + 40;
+            GB_show(title, url, height, width);
+            return false;
+        });
+
+    });
+
+</script>
+
+  </head>
+
+  <body>
+    <div id="header">
+        <h1 align="center">Climate Data Portal</h1>
+        <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png">
+        <img class="nature" src="{{ MEDIA_URL }}img/zzyzx.jpg"> 
+    </div>
+
+    <div id="breadcrumbs">
+        <a href="/my_data">HOME </a>&nbsp;&nbsp;
+        <a href="/my_data/station_finder">STATION FINDER</a>&nbsp;&nbsp;
+        <a href="/my_data/data">DATA PORTAL</a>&nbsp;&nbsp;
+        <a href="/my_data/apps">PRODUCTS AND SERVICES</a>&nbsp;&nbsp;
+    </div>
+
+    <div id="container">
+        <div id="sidebar_left">
+            <h2>Recent Climate in the West</h2>
+            <p>Temperature departure from Average and Percent of Average Precipitation for the past 30 days</p>
+            <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="popup_map">
+            <img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" width="250"></a>
+            <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="popup_map">
+            <img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" width="250"></a>
+            <p>&rarr; More <a href="http://www.wrcc.dri.edu/anom/">climate anomaly maps</a></p>
+        </div>
+        <div id="sidebar_right">
+            <h2>Current Weather in West</h2>
+            <p>Click on the image to go to NWS' Western Regional Headquarters</p>
+            <a href="http://www.wrh.noaa.gov/index.php">
+            <img class="logo" src="{{ MEDIA_URL }}img/Weather.jpg" width="250"></a>
+        </div> 
+        <div id="center">
+            <h1>BLAH</h1>
+        </div>
+    </div>
+
+
+
+  </body>
 </html>
