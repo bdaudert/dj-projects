@@ -1,0 +1,92 @@
+/*
+Theme Name: SWCSC
+*/
+
+html {
+    height: 100%;
+}
+
+body {
+    background-color: #947e6e;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+p {
+    color:#FFCC99;
+}
+
+#container { 
+    margin: 0 auto; 
+    border: 1px solid #000000;
+    text-align: left; 
+}
+
+#sidebar_left {
+    float: left; 
+    width: 300px;
+    padding: 15px 10px 15px 20px;
+}
+
+#sidebar_right {
+    float: right;
+    width: 300px;
+    padding: 15px 10px 15px 20px;
+}
+
+#center { 
+    margin: 50px 10px 400px 300px;
+    padding: 0px 0px 0px 0px;
+    text-align:center;
+}
+
+#map_canvas {
+    height: 50%;
+    width: 50%;
+    margin-right:auto;
+    margin-left:auto;
+    margin-top:200px;
+    margin-bottom:auto;
+}
+
+#header {
+    background: #FFCC99 ;
+    padding: 3em;
+}
+#header h1,
+#header h2,
+#header h3 {
+    color: #660000;
+    border: none;
+    background: none;
+    font-family: 'Georgia',serif;
+    margin: 0em;
+}
+
+#header img.nature {
+    width: 400px;
+    height: 155px;
+    position: absolute;
+    top: 0; 
+    right: 0;
+}    
+
+#header img.logo {
+    position: absolute;
+    top: 0; 
+    left: 0;
+}
+
+#breadcrumbs {
+    background: #FFCC99;
+    color: #660000;
+    padding: .10em 1em;
+    
+}
+
+#breadcrumbs a {
+    background: #FFCC99;
+    color: #660000;
+    font-weight:bold
+}
