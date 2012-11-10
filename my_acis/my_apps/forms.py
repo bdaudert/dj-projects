@@ -41,7 +41,7 @@ APP_NAME_CHOICES = (
 
 #SODRUN CHOICES
 SR_ELEMENT_CHOICES = (
-        ('maxt', 'Maximum Temprature (Whole Degrees)'),
+        ('maxt', 'Maximum Temperature (Whole Degrees)'),
         ('mint', 'Minimum Temperature(Whole Degrees)'),
         ('range', 'Temperature Range(Whole Degrees)'),
         ('snow', 'Snowfall (Tenth of inches)'),
@@ -49,7 +49,7 @@ SR_ELEMENT_CHOICES = (
         ('pcpn', 'Precipitation (Hundredths of inches)'),
         )
 SRR_ELEMENT_CHOICES = (
-        ('maxt', 'Maximum Temprature (Whole Degrees)'),
+        ('maxt', 'Maximum Temperature (Whole Degrees)'),
         ('mint', 'Minimum Temperature(Whole Degrees)'),
         ('range', 'Temperature Range(Whole Degrees)'),
         ('snow', 'Snowfall (Tenth of inches)'),
@@ -79,7 +79,7 @@ SM_ELEMENT_CHOICES = (
         ('pcpn', 'Precipitation (Hundredths of Inches)'),
         ('snow', 'Snowfall (Tenths of Inches)'),
         ('snwd', 'Snowdepth (Whole Inches)'),
-        ('maxt', 'Maximum Temprature (Whole or Tenths of Degrees)'),
+        ('maxt', 'Maximum Temperature (Whole or Tenths of Degrees)'),
         ('mint', 'Minimum Temperature(Whole or Tenths of Degrees)'),
         ('avgt', 'Mean Temperature(Whole or Tenths of Degrees)'),
         ('dtr', 'Daily Temperatuer Range (Whole or Tenths of Degrees)'),
@@ -115,7 +115,7 @@ SS_ELEMENT_CHOICES = (
         ('pcpn', 'Precipitation'),
         ('snow', 'Snowfall'),
         ('snwd', 'Snowdepth'),
-        ('maxt', 'Maximum Temprature'),
+        ('maxt', 'Maximum Temperature'),
         ('mint', 'Minimum Temperature'),
         #('evap', 'Evaporation'),
         #('wdmv', 'Wind Movement'),
@@ -130,7 +130,7 @@ SDR_ELEMENT_CHOICES = (
         ('pcpn', 'Precipitation'),
         ('snow', 'Snowfall'),
         ('snwd', 'Snowdepth'),
-        ('maxt', 'Maximum Temprature'),
+        ('maxt', 'Maximum Temperature'),
         ('mint', 'Minimum Temperature'),
         ('hdd', 'Heating Degree Days'),
         ('cdd', 'Cooling Degree Days'),
@@ -173,7 +173,7 @@ SXTR_ELEMENT_CHOICES = (
         ('pcpn', 'Precipitation'),
         ('snow', 'Snowfall'),
         ('snwd', 'Snowdepth'),
-        ('maxt', 'Maximum Temprature '),
+        ('maxt', 'Maximum Temperature '),
         ('mint', 'Minimum Temperature'),
         ('avgt', 'Mean Temperature'),
         ('dtr', 'Daily Temperatuer Range'),
@@ -186,7 +186,7 @@ PIII_ELEMENT_CHOICES = (
         ('pcpn', 'Precipitation'),
         ('snow', 'Snowfall'),
         ('snwd', 'Snowdepth'),
-        ('maxt', 'Maximum Temprature '),
+        ('maxt', 'Maximum Temperature '),
         ('mint', 'Minimum Temperature'),
         ('avgt', 'Mean Temperature'),
         )
@@ -217,7 +217,7 @@ SDMM_ELEMENT_CHOICES = (
         ('all', 'All Statistics'),
         )
 SDTHR_ELEMENT_CHOICES = (
-        ('maxt', 'Maximum Temprature '),
+        ('maxt', 'Maximum Temperature '),
         ('mint', 'Minimum Temperature'),
         ('avgt', 'Mean Temperature'),
         ('dtr', 'Daily Temperature Range'),

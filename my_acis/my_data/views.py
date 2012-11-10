@@ -12,6 +12,8 @@ from django.contrib.localflavor.us.forms import USStateField
 
 import AcisWS
 
+import my_data.forms as forms
+
 state_choices = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', \
                 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', \
                 'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', \
@@ -28,6 +30,36 @@ def data(request):
     context = {
         'title': "Data Access",
     }
+    stn_id = None
+    if stn_id is not None:
+        form0_point = set_as_form(request,'PointData0Form', init={'stn_id':stn_id})
+    else:
+        form0_point = set_as_form(request,'PointData0Form')
+    context['form0_point'] = form0_point
+
+    if 'form0_point' in request.POST:
+        if stn_id is not None:
+            form0_point = set_as_form(request,'PointData0Form', init={'stn_id':stn_id})
+        else:
+            form0_point = set_as_form(request,'PointData0Form')
+        context['form0_point']  = form0_point
+
+        if form0_point.is_valid():
+            context['form_1_ready'] = '1ready'
+            initial = {'station_selection':form0_point.cleaned_data['station_selection'], \
+                      'element':form0_point.cleaned_data['element'], \
+                      'data_format':form0_point.cleaned_data['data_format']}
+            form1_point = forms.PointDataForm1(initial=initial)
+            context['form1_point'] = form1_point
+
+    if 'form1_point' in request.POST:
+        context['form_0_done'] = '0done'
+        form1_point = set_as_form(request,'PointDataForm1')
+        context['form1_point'] = form1_point
+        if form1_point.is_valid():
+            #Acis data call here
+            #AcisWS.get_csc_point_data(form2.cleaned_data)
+            pass
     return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))
 
 def apps(request):
@@ -140,3 +172,16 @@ def by_bounding_box(request):
         'title': "Search Results for bounding box %s" %bbox,
     }
     return render_to_response('my_data/station_finder/station_map.html', context, context_instance=RequestContext(request))
+
+#Utlities
+def set_as_form(request, f_name, init = None):
+    form_name = f_name
+    form_class = getattr(forms, form_name)
+    if request.POST:
+        form = form_class(request.POST)
+    else:
+        if init is not None:
+            form = form_class(initial=init)
+        else:
+            form = form_class(initial={'stn_id': None})
+    return form

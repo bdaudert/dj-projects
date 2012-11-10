@@ -15,6 +15,7 @@ body {
 
 p, ul, ol, li {
     color:#FFCC99;
+    font-size:large;
 }
 
 
@@ -29,38 +30,54 @@ a:hover {
 a:active { color: red; }
 
 
-#container { 
+.container { 
     margin: 0 auto; 
     border: 1px solid #000000;
     text-align: left; 
 }
 
-#sidebar_left {
+/* Page divide e.g. my_data/home.html*/
+.sidebar_left {
     float: left; 
     width: 300px;
     padding: 15px 10px 15px 20px;
 }
 
-#sidebar_right {
+.sidebar_right {
     float: right;
     width: 300px;
     padding: 15px 10px 15px 20px;
 }
 
-#center { 
+.center { 
     margin: 50px 10px 400px 300px;
     padding: 0px 0px 0px 0px;
     text-align:left;
 }
 
+/*2 page divide e.g. my_data/data/home.html*/
+.center-left {
+    float: left;
+    width: 460px;
+    padding: 10px 10px 10px 10px;
+}
 
-#header {
+.center-right{
+    float: right;
+    width: 460px;
+    padding: 10px 10px 10px 10px;
+}
+
+.center-left p {font-size:xx-large;}
+.center-right p {font-size:xx-large;}    
+
+.header {
     background: #FFCC99 ;
     padding: 3em;
 }
-#header h1,
-#header h2,
-#header h3 {
+.header h1,
+.header h2,
+.header h3 {
     color: #660000;
     border: none;
     background: none;
@@ -68,28 +85,28 @@ a:active { color: red; }
     margin: 0em;
 }
 
-#header img.nature {
+.header img.nature {
     width: 400px;
-    height: 155px;
+    height:250px;
     position: absolute;
     top: 0; 
     right: 0;
 }    
 
-#header img.logo {
+.header img.logo {
     position: absolute;
     top: 0; 
     left: 0;
 }
 
-#breadcrumbs {
+.breadcrumbs {
     background: #FFCC99;
     color: #660000;
     padding: .10em 1em;
     
 }
 
-#breadcrumbs a {
+.breadcrumbs a {
     background: #FFCC99;
     color: #660000;
     font-weight:bold
