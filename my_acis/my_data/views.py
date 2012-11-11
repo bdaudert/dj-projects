@@ -45,20 +45,26 @@ def data(request):
         context['form0_point']  = form0_point
 
         if form0_point.is_valid():
-            context['form_1_ready'] = '1ready'
+            context['form1_ready'] = '1ready'
             initial = {'station_selection':form0_point.cleaned_data['station_selection'], \
-                      'element':form0_point.cleaned_data['element'], \
+                      'elements':form0_point.cleaned_data['elements'], \
                       'data_format':form0_point.cleaned_data['data_format']}
             form1_point = forms.PointDataForm1(initial=initial)
             context['form1_point'] = form1_point
+            context['initial'] = initial
+        else:
+            elements = None
+            station_selection = None
+            data_format = None
 
     if 'form1_point' in request.POST:
-        context['form_0_done'] = '0done'
+        context['form0_done']= '0Done'
         form1_point = set_as_form(request,'PointDataForm1')
         context['form1_point'] = form1_point
         if form1_point.is_valid():
+            context['cleaned'] = form1_point.cleaned_data
             #Acis data call here
-            #AcisWS.get_csc_point_data(form2.cleaned_data)
+            #AcisWS.get_csc_point_data(form1.cleaned_data)
             pass
     return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))
 

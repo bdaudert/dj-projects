@@ -19,12 +19,13 @@
            <script>$("#bcrumbs").load("{{MEDIA_URL}}html/csc_base.html .breadcrumbs");</script>
         
         <h1 align="center">DATA ACCESS</h1>
-        
+        {{initial}}
+        {{cleaned}} 
         <div class="container">
             <div class="center-left">
                 <p>Point Data</p>
                 
-                {%if not 0done%}
+                {%if not form0_done%}
                 <div id='form0'>
                     <table border=0 align="right">
                     <form method="post" action="">{% csrf_token %}
@@ -34,7 +35,8 @@
                     </table>
                 </div>
                 {%endif%}
-
+            
+                {%if form1_ready%}
                 <div id="form1">
                     <table border=0 align="right">
                     <form method="post" action="">{% csrf_token %}
@@ -45,6 +47,7 @@
                 </div>
                 </br>
                 </br>
+                {%endif%}
             </div>
 
             <div class="center-right">
