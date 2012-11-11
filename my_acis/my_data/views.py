@@ -10,7 +10,7 @@ from django.views.generic.list_detail import object_detail, object_list
 from django.db.models.query import QuerySet
 from django.contrib.localflavor.us.forms import USStateField
 
-import AcisWS
+import AcisWS, WRCCDataApps
 
 import my_data.forms as forms
 
@@ -62,10 +62,15 @@ def data(request):
         form1_point = set_as_form(request,'PointDataForm1')
         context['form1_point'] = form1_point
         if form1_point.is_valid():
-            context['cleaned'] = form1_point.cleaned_data
-            #Acis data call here
-            #AcisWS.get_csc_point_data(form1.cleaned_data)
-            pass
+            #context['cleaned'] = form1_point.cleaned_data
+            #(data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form1_point.cleaned_data, 'sodlist_web')
+            #app_args = {'data':data, 'dates':dates, elements:'elements', \
+            #'coop_station_ids':coop_station_ids, 'data_format': form1_point.cleaned_data['data_format']}
+            app_args={}
+            if 'delimiter' in form1_point.cleaned_data.keys():
+                app_args['delimiter'] = form1_point.cleaned_data['delimiter']
+            results = WRCCDataApps.get_csc_point_data(**app_args)
+
     return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))
 
 def apps(request):
