@@ -10,8 +10,11 @@ from django.views.generic.list_detail import object_detail, object_list
 from django.db.models.query import QuerySet
 from django.contrib.localflavor.us.forms import USStateField
 
-import AcisWS, WRCCDataApps
+#Python
+import csv
 
+#My modules
+import AcisWS, WRCCDataApps
 import my_data.forms as forms
 
 state_choices = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', \
@@ -62,15 +65,19 @@ def data(request):
         form1_point = set_as_form(request,'PointDataForm1')
         context['form1_point'] = form1_point
         if form1_point.is_valid():
-            #context['cleaned'] = form1_point.cleaned_data
-            #(data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form1_point.cleaned_data, 'sodlist_web')
-            #app_args = {'data':data, 'dates':dates, elements:'elements', \
-            #'coop_station_ids':coop_station_ids, 'data_format': form1_point.cleaned_data['data_format']}
-            app_args={}
-            if 'delimiter' in form1_point.cleaned_data.keys():
-                app_args['delimiter'] = form1_point.cleaned_data['delimiter']
-            results = WRCCDataApps.get_csc_point_data(**app_args)
+            context['cleaned'] = form1_point.cleaned_data
+            (data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form1_point.cleaned_data, 'sodlist_web')
+            context['data'] = data
 
+            if form1_point.cleaned_data['data_format'] == 'dlm':
+                if str(form1_point.cleaned_data['delimiter']) == 'comma':delimiter = ','
+                if str(form1_point.cleaned_data['delimiter']) == 'tab':delimiter = '  '
+                if str(form1_point.cleaned_data['delimiter']) == 'colon':delimiter = ':'
+                if str(form1_point.cleaned_data['delimiter']) == 'space':delimiter = ' '
+                if str(form1_point.cleaned_data['delimiter']) == 'pipe':delimiter = '|'
+                return export_to_csv(request, data, dates, station_names, coop_station_ids, elements, delimiter)
+            else:
+                return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))
     return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))
 
 def apps(request):
@@ -196,3 +203,19 @@ def set_as_form(request, f_name, init = None):
         else:
             form = form_class(initial={'stn_id': None})
     return form
+
+def export_to_csv(request, data, dates, station_names, station_ids, elements, delim):
+    response = HttpResponse(mimetype='text/csv')
+    response['Content-Disposition'] = 'attachment;filename=export.dat'
+    writer = csv.writer(response, delimiter=delim )
+    for stn, dat in data.items():
+        row = ['Station ID: %s' %str(station_ids[stn]), 'Station_name: %s' %str(station_names[stn])]
+        writer.writerow(row)
+        row = ['date']
+        for el in elements:row.append(el)
+        writer.writerow(row)
+        for j, vals in enumerate(dat):
+            row = [dates[j]]
+            for val in vals:row.append(val)
+            writer.writerow(row)
+    return response
