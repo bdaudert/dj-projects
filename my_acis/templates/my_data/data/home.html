@@ -19,12 +19,9 @@
            <script>$("#bcrumbs").load("{{MEDIA_URL}}html/csc_base.html .breadcrumbs");</script>
         
         <h1 align="center">DATA ACCESS</h1>
-        {{data}} 
         <div class="container">
             <div class="center-left">
-                <p>Point Data</p>
-                
-                {%if not form0_done%}
+                <p>Point Data</p>    
                 <div id='form0'>
                     <table border=0 align="right">
                     <form method="post" action="">{% csrf_token %}
@@ -33,24 +30,71 @@
                     </form>
                     </table>
                 </div>
-                {%endif%}
             
-                {%if form1_ready%}
-                <div id="form1">
-                    <table border=0 align="right">
-                    <form method="post" action="">{% csrf_token %}
-                    <table>{{ form1_point|safe }}</table>
-                    <input type="submit" value="Submit" name="form1_point"/>
-                    </form>
-                    </table>
-                </div>
-                </br>
-                </br>
+                {%if form1_point_ready%}
+                    <div id="form1">
+                        <table border=0 align="right">
+                        <form method="post" action="">{% csrf_token %}
+                        <table>{{ form1_point|safe }}</table>
+                        <input type="submit" value="Submit" name="form1_point"/>
+                        </form>
+                        </table>
+                    </div>
+                    </br>
+                    </br>
                 {%endif%}
             </div>
+            
 
             <div class="center-right">
                 <p>Gridded Data</p>
+                <div id='form2'>
+                    <table border=0 align="right">
+                    <form method="post" action="">{% csrf_token %}
+                    <table class="sortable">{{ form0_grid|safe }}</table>
+                    <input type="submit" value="Submit" name="form0_grid"/>
+                    </form>
+                    </table>
+                </div>
+
+                {%if form1_grid_ready%}
+                    <div id="form1">
+                        <table border=0 align="right">
+                        <form method="post" action="">{% csrf_token %}
+                        <table>{{ form1_grid|safe }}</table>
+                        <input type="submit" value="Submit" name="form1_grid"/>
+                        </form>
+                        </table>
+                    </div>
+                    </br>
+                    </br>
+                {%endif%}
+            </div>
+
+            <div class="center">
+                {%if data%}
+                {%if not json%}
+                    {%for stn, stn_data in data.items %}
+                        <h2>STATION NAME: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
+                        <table>
+                        <th>date{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</th>
+                        {%for date_vals in stn_data%}
+                            <tr>
+                            <td>{{dates|lookup:forloop.counter|safe}}{{delimiter}}
+                            {%for el_val in date_vals%}{{el_val}}{{delimiter}}{%endfor%}</td>
+                            </tr>
+                        {%endfor%}
+                        </table>
+                    {%endfor%}
+                {%else%}
+                    {%for stn, stn_data in data.items %}
+                        <h2>STATION NAME: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
+                    {{data}}
+                    {%endfor%}
+                {%endif%}
+                {%endif%}
+                </br>
+                </br>
             </div>
         </div>
   </body>

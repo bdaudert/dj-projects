@@ -366,7 +366,7 @@ class SodForm(forms.Form):
             self.fields['county_warning_area'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'basin':
             self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='01080205')
-            self.fields['basin_division'].widget.attrs['readonly'] = 'readonly'
+            self.fields['basin'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES)
             self.fields['state'].widget.attrs['readonly'] = 'readonly'
