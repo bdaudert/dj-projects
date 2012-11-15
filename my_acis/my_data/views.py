@@ -39,6 +39,7 @@ def data(request):
     form0_grid = set_as_form(request,'GridData0Form')
     context['form0_point'] = form0_point
     context['form0_grid'] = form0_grid
+
     if 'form0_point' in request.POST:
         form0_point = set_as_form(request,'PointData0Form')
         context['form0_point']  = form0_point
@@ -132,11 +133,11 @@ def data(request):
             context['delimiter'] = delimiter
 
             #Output formats
+            import re
             grid_selection = form1_grid.cleaned_data['grid_selection']
-            if grid_selection == 'point':file_info =['location', form1_grid.cleaned_data['location']]
+            if grid_selection == 'point':file_info =['location', re.sub(',','_',form1_grid.cleaned_data['location'])]
             if grid_selection == 'state':file_info = ['state', form1_grid.cleaned_data['state']]
             if grid_selection == 'bounding_box':file_info = ['bounding_box',form1_grid.cleaned_data['bounding_box']]
-            '''
             if form1_grid.cleaned_data['data_format'] == 'dlm':
                 return export_to_file_grid(request, data, elements, file_info,delimiter, 'dat')
             elif form1_grid.cleaned_data['data_format'] == 'clm':
@@ -145,8 +146,7 @@ def data(request):
                 return export_to_file_grid(request, data, elements, file_info, delimiter, 'xls')
             else:
                 return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))
-            '''
-            return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))
+
     return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))
 
 def apps(request):
@@ -335,7 +335,7 @@ def export_to_file_grid(request, data, elements, file_info, delim, file_extensio
         #Data
         for date_idx, date_vals in data.items():
             for j, val in enumerate(date_vals):
-                ws.write(date_idx+1, j, val)#row, column, label
+                ws.write(date_idx+1, j, str(val))#row, column, label
         response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
         response['Content-Disposition'] = 'attachment;filename=%s_%s.%s' % (file_info[0], file_info[1], file_extension)
         wb.save(response)
