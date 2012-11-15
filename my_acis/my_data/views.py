@@ -80,20 +80,11 @@ def data(request):
         if form1_point.is_valid():
             context['cleaned'] = form1_point.cleaned_data
             (data, dates, elements, station_ids, station_names) = AcisWS.get_point_data(form1_point.cleaned_data, 'sodlist_web')
-            context['data'] = dict(data)
+            context['point_data'] = dict(data)
             context['elements'] =  elements
-            dates_dict = {}
-            stn_ids_dict = {}
-            stn_names_dict = {}
-            #FIX ME!Need to convert to dict since lookup not working on lists
-            for k, name in enumerate(station_names):
-                stn_ids_dict[k] = station_ids[k]
-                stn_names_dict[k] = station_names[k]
-            for k, date in enumerate(dates):
-                dates_dict[k] = date
-            context['station_names'] = stn_names_dict
-            context['station_ids'] = stn_ids_dict
-            context['dates'] = dates_dict
+            context['station_names'] = station_names
+            context['station_ids'] = station_ids
+            context['dates'] = dates
             if 'delimiter' in form1_point.cleaned_data.keys():
                 if str(form1_point.cleaned_data['delimiter']) == 'comma':delimiter = ','
                 if str(form1_point.cleaned_data['delimiter']) == 'tab':delimiter = '  '
@@ -110,11 +101,11 @@ def data(request):
 
             #Output formats
             if form1_point.cleaned_data['data_format'] == 'dlm':
-                return export_to_file(request, data, dates, station_names, station_ids, elements, delimiter, 'dat')
+                return export_to_file_point(request, data, dates, station_names, station_ids, elements, delimiter, 'dat')
             elif form1_point.cleaned_data['data_format'] == 'clm':
-                return export_to_file(request, data, dates, station_names, station_ids, elements, delimiter, 'txt')
+                return export_to_file_point(request, data, dates, station_names, station_ids, elements, delimiter, 'txt')
             elif form1_point.cleaned_data['data_format'] == 'xl':
-                return export_to_file(request, data, dates, station_names, station_ids, elements, delimiter, 'xls')
+                return export_to_file_point(request, data, dates, station_names, station_ids, elements, delimiter, 'xls')
             else:
                 return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))
 
@@ -122,11 +113,10 @@ def data(request):
         form1_grid = set_as_form(request,'GridDataForm1')
         context['form1_grid'] = form1_grid
         if form1_grid.is_valid():
-            (data, dates, elements, latlons) = AcisWS.get_grid_data(**form1_grid.cleaned_data)
-            context['data'] = dict(data)
+            (data, elements) = AcisWS.get_grid_data(form1_grid.cleaned_data, 'griddata_web')
+            context['grid_data'] = dict(data)
             context['elements'] =  elements
             dates_dict = {}
-            context['dates'] = dates_dict
             if 'delimiter' in form1_grid.cleaned_data.keys():
                 if str(form1_grid.cleaned_data['delimiter']) == 'comma':delimiter = ','
                 if str(form1_grid.cleaned_data['delimiter']) == 'tab':delimiter = '  '
@@ -142,15 +132,21 @@ def data(request):
             context['delimiter'] = delimiter
 
             #Output formats
+            grid_selection = form1_grid.cleaned_data['grid_selection']
+            if grid_selection == 'point':file_info =['location', form1_grid.cleaned_data['location']]
+            if grid_selection == 'state':file_info = ['state', form1_grid.cleaned_data['state']]
+            if grid_selection == 'bounding_box':file_info = ['bounding_box',form1_grid.cleaned_data['bounding_box']]
+            '''
             if form1_grid.cleaned_data['data_format'] == 'dlm':
-                return export_to_file(request, data, dates, station_names, latlonss, elements, delimiter, 'dat')
+                return export_to_file_grid(request, data, elements, file_info,delimiter, 'dat')
             elif form1_grid.cleaned_data['data_format'] == 'clm':
-                return export_to_file(request, data, dates, station_names, latlons, elements, delimiter, 'txt')
+                return export_to_file_grid(request, data, elements, file_info, delimiter, 'txt')
             elif form1_grid.cleaned_data['data_format'] == 'xl':
-                return export_to_file(request, data, dates, station_names, latlons, elements, delimiter, 'xls')
+                return export_to_file_grid(request, data, elements, file_info, delimiter, 'xls')
             else:
                 return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))
-
+            '''
+            return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))
     return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))
 
 def apps(request):
@@ -277,7 +273,7 @@ def set_as_form(request, f_name, init = None):
             form = form_class(initial={'stn_id': None})
     return form
 
-def export_to_file(request, data, dates, station_names, station_ids, elements, delim, file_extension):
+def export_to_file_point(request, data, dates, station_names, station_ids, elements, delim, file_extension):
     if file_extension in ['dat', 'txt']:
         import csv
         response = HttpResponse(mimetype='text/csv')
@@ -306,8 +302,42 @@ def export_to_file(request, data, dates, station_names, station_ids, elements, d
                 ws.write(j+1, 0, dates[j])
                 for l,val in enumerate(vals):ws.write(j+1, l+1, val) #row, column, label
 
-        response = HttpResponse(content_type='application/vnd.ms-excel;charset=<charset>')
+        response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
         response['Content-Disposition'] = 'attachment;filename=export.%s' % file_extension
+        wb.save(response)
+
+    return response
+
+
+def export_to_file_grid(request, data, elements, file_info, delim, file_extension):
+    if file_extension in ['dat', 'txt']:
+        import csv
+        response = HttpResponse(mimetype='text/csv')
+        response['Content-Disposition'] = 'attachment;filename=%s_%s.%s' % (file_info[0], file_info[1],file_extension)
+        writer = csv.writer(response, delimiter=delim )
+        for stn, dat in data.items():
+            row = ['Date', 'Lat', 'Lon', 'Elev']
+            for el in elements:row.append(el)
+            writer.writerow(row)
+            for date_idx, date_vals in data.items():
+                writer.writerow(date_vals)
+    else: #Excel
+        from xlwt import Workbook
+        wb = Workbook()
+        ws = wb.add_sheet('GRIDDED DATA RESULTS')
+        #Header
+        ws.write(0, 0, 'Date')
+        ws.write(0, 1, 'Lat')
+        ws.write(0, 2, 'Lon')
+        ws.write(0, 3, 'Elev')
+        for k, el in enumerate(elements):ws.write(0, k+4, el)
+
+        #Data
+        for date_idx, date_vals in data.items():
+            for j, val in enumerate(date_vals):
+                ws.write(date_idx+1, j, val)#row, column, label
+        response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
+        response['Content-Disposition'] = 'attachment;filename=%s_%s.%s' % (file_info[0], file_info[1], file_extension)
         wb.save(response)
 
     return response

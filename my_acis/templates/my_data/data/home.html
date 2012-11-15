@@ -72,9 +72,9 @@
             </div>
 
             <div class="center">
-                {%if data%}
+                {%if point_data%}
                 {%if not json%}
-                    {%for stn, stn_data in data.items %}
+                    {%for stn, stn_data in point_data.items %}
                         <h2>STATION NAME: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
                         <table>
                         <th>date{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</th>
@@ -89,8 +89,28 @@
                 {%else%}
                     {%for stn, stn_data in data.items %}
                         <h2>STATION NAME: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
-                    {{data}}
+                    {{point_data}}
                     {%endfor%}
+                {%endif%}
+                {%endif%}
+
+
+                {%if grid_data%}
+                {%if not json%}
+                    <table>
+                    <th>date{{delimiter}}lat{{delimiter}}lon{{delimiter}}elev{{delimiter}}
+                        {%for el in elements%}{{el}}{{delimiter}}{%endfor%}</th>
+
+                    {%for date_idx, date_vals in grid_data.items %}
+                        <tr>
+                            {%for val in date_vals%}<td>{{val}}{{delimiter}}</td>{%endfor%}
+                        </tr>
+                    {%endfor%}
+                    </table>
+                {%else%}
+                    <p>date,lat,lon,elev,
+                    {%for el in elements%}{{el}},{%endfor%}</p>
+                    {{grid_data}}
                 {%endif%}
                 {%endif%}
                 </br>
