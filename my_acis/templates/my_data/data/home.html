@@ -14,11 +14,16 @@
             <div id="title"></div>
                 <script>$("#title").load("{{MEDIA_URL}}html/csc_base.html .header");</script>
         </div>
-        
+
         <div id="bcrumbs"></div>
            <script>$("#bcrumbs").load("{{MEDIA_URL}}html/csc_base.html .breadcrumbs");</script>
         
         <h1 align="center">DATA ACCESS</h1>
+            
+        <div class="footer">
+            <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30"></p>
+        </div>
+
         <div class="container">
             <div class="center-left">
                 <p>Point Data</p>    
@@ -97,25 +102,33 @@
 
                 {%if grid_data%}
                 {%if not json%}
-                    <table>
-                    <th>date{{delimiter}}lat{{delimiter}}lon{{delimiter}}elev{{delimiter}}
-                        {%for el in elements%}{{el}}{{delimiter}}{%endfor%}</th>
-
-                    {%for date_idx, date_vals in grid_data.items %}
-                        <tr>
-                            {%for val in date_vals%}<td>{{val}}{{delimiter}}</td>{%endfor%}
-                        </tr>
+                    <h2>{%for item in file_info%}{{item}}&nbsp;{%endfor%}</h2>
+                    <p>date{{delimiter}}lat{{delimiter}}lon{{delimiter}}elev{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</p>
+                    {%for date_idx, date_vals in grid_data.items%}
+                    {%for val in date_vals%}
+                    {{val}}{{delimiter}}
+                    {%endfor%}<br/>
+                    {%endfor%}
+                    <!--
+                    <table >
+                    {%for date_idx, date_vals in grid_data.items%}
+                            <tr>
+                            {%for val in date_vals%}
+                            <td align="left">{{val}}{{delimiter}}</td>
+                            {%endfor%}
+                            <tr>
                     {%endfor%}
                     </table>
+                    -->
                 {%else%}
                     <p>date,lat,lon,elev,
                     {%for el in elements%}{{el}},{%endfor%}</p>
                     {{grid_data}}
                 {%endif%}
                 {%endif%}
-                </br>
-                </br>
             </div>
+
         </div>
+
   </body>
 </html>

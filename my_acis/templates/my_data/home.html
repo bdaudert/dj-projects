@@ -33,7 +33,7 @@
 
     <body>
         <div class="header">
-            <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png">
+            <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png"> 
             <img class="nature" src="{{ MEDIA_URL }}img/zzyzx.jpg">
             <div id="title"></div>
                 <script>$("#title").load("{{MEDIA_URL}}html/csc_base.html .header");</script>
@@ -67,9 +67,11 @@
                 <h1>Welcome to the Data Portal of the Southwest Climate Science Center!</h1>
                 <p><font size="6">Delivering data, applications and pretty pictures to you!</font></p>
             </div>
+
+            <div class="footer">
+                <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30"></p>
+            </div>
         </div>
-
-
 
   </body>
 </html>

@@ -137,7 +137,8 @@ def data(request):
             grid_selection = form1_grid.cleaned_data['grid_selection']
             if grid_selection == 'point':file_info =['location', re.sub(',','_',form1_grid.cleaned_data['location'])]
             if grid_selection == 'state':file_info = ['state', form1_grid.cleaned_data['state']]
-            if grid_selection == 'bounding_box':file_info = ['bounding_box',form1_grid.cleaned_data['bounding_box']]
+            if grid_selection == 'bbox':file_info =['bounding_box', re.sub(',','_',form1_grid.cleaned_data['bounding_box'])]
+            context['file_info'] = file_info
             if form1_grid.cleaned_data['data_format'] == 'dlm':
                 return export_to_file_grid(request, data, elements, file_info,delimiter, 'dat')
             elif form1_grid.cleaned_data['data_format'] == 'clm':

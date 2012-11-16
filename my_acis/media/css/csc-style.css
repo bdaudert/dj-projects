@@ -14,7 +14,7 @@ body {
 }
 
 p, ul, ol, li {
-    color:#FFCC99;
+    color:#FFEBCD;
     font-size:large;
 }
 
@@ -33,26 +33,29 @@ a:active { color: red; }
 .container { 
     margin: 0 auto; 
     border: 1px solid #000000;
-    text-align: left; 
+    text-align: left;
 }
 
 /* Page divide e.g. my_data/home.html*/
 .sidebar_left {
     float: left; 
-    width: 300px;
+    width: 250px;
     padding: 15px 10px 15px 20px;
+    height:480px
 }
 
 .sidebar_right {
     float: right;
-    width: 300px;
+    width: 250px;
     padding: 15px 10px 15px 20px;
+    height:480px
 }
 
 .center { 
-    margin: 50px 10px 400px 300px;
-    padding: 0px 0px 0px 0px;
+    margin: 150px 10px 270px 350px;
+    padding: 15px 10px 15px 20px;
     text-align:left;
+    /*height:900px*/
 }
 
 /*2 page divide e.g. my_data/data/home.html*/
@@ -72,7 +75,7 @@ a:active { color: red; }
 .center-right p {font-size:xx-large;}    
 
 .header {
-    background: #FFCC99 ;
+    background: #FFEBCD ;
     padding: 3em;
 }
 .header h1,
@@ -99,15 +102,26 @@ a:active { color: red; }
     left: 0;
 }
 
+.footer {
+    float:bottom;
+    background-color:#FFEBCD;
+    text-align:center;
+    height:30px;
+}
+
+.footer p {
+    color:#660000;
+}
+
 .breadcrumbs {
-    background: #FFCC99;
+    background: #FFEBCD;
     color: #660000;
     padding: .10em 1em;
     
 }
 
 .breadcrumbs a {
-    background: #FFCC99;
+    background: #FFEBCD;
     color: #660000;
     font-weight:bold
 }
