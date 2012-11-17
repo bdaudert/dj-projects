@@ -72,6 +72,7 @@ function ShowHide(divId)
 $(function() {
     $('div.pop-up').hide();
 });
+
 $(function() {
   var moveLeft = 50;
   var moveDown = 0;

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#django Imports
+#django imports
 from django.template import RequestContext
 #from django.contrib.auth.models import User
 #from django.contrib.auth.decorators import login_required
@@ -10,6 +10,8 @@ from django.views.generic.list_detail import object_detail, object_list
 from django.db.models.query import QuerySet
 from django.contrib.localflavor.us.forms import USStateField
 
+#Python imports
+import datetime
 
 #My modules
 import AcisWS, WRCCDataApps
@@ -21,10 +23,24 @@ state_choices = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA
                 'NY', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', \
                 'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
 
+month_names = ['January', 'February', 'March', 'April', 'May', 'June'\
+               'July', 'August', 'September', 'October', 'Novemer', 'December']
+
 def home_view(request):
     context = {
         'title': "Southwest CSC Portal",
+        'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT']
     }
+    #Main display temps/precip for month since 1900
+    state = request.GET.get('state_key', None)
+    element = request.GET.get('element', None)
+    if state is None:state = 'NV'
+    if element is None: element='ave_temp'
+    month = int(datetime.date.today().month)
+    context['month'] = month
+    context['month_name'] = month_names[month - 1]
+    context['state'] = state
+    context['element'] = element
     return render_to_response('my_data/home.html', context, context_instance=RequestContext(request))
 
 def data(request):
@@ -176,7 +192,7 @@ def by_id(request):
         'stn_json': stn_json,
         'title': "Search Results for Station ID %s" %q,
     }
-    return render_to_response('my_data/station_finder/station_map.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 
 def by_county(request):
@@ -190,7 +206,7 @@ def by_county(request):
         'stn_json': stn_json,
         'title': "Search Results for County %s" %q,
     }
-    return render_to_response('my_data/station_finder/station_map.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 def by_cwa(request):
     q = request.GET.get('q', '')
@@ -203,7 +219,7 @@ def by_cwa(request):
         'stn_json': stn_json,
         'title': "Search Results for County Warning Area %s" %q,
     }
-    return render_to_response('my_data/station_finder/station_map.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 def by_clim_div(request):
     q = request.GET.get('q', '')
@@ -216,7 +232,7 @@ def by_clim_div(request):
         'stn_json': stn_json,
         'title': "Search Results for Climate Division %s" %q,
     }
-    return render_to_response('my_data/station_finder/station_map.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 def by_basin(request):
     q = request.GET.get('q', '')
@@ -229,7 +245,7 @@ def by_basin(request):
         'stn_json': stn_json,
         'title': "Search Results for Basin %s" %q,
     }
-    return render_to_response('my_data/station_finder/station_map.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 def by_state(request):
     state_key = request.GET.get('state_key', None)
@@ -242,8 +258,9 @@ def by_state(request):
     context = {
         'stn_json': stn_json,
         'title': "Search Results for State %s" %state_key,
+        'state_choices':state_choices
     }
-    return render_to_response('my_data/station_finder/station_map.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 def by_bounding_box(request):
     W = request.GET.get('W', None)
@@ -259,7 +276,7 @@ def by_bounding_box(request):
         'stn_json': stn_json,
         'title': "Search Results for bounding box %s" %bbox,
     }
-    return render_to_response('my_data/station_finder/station_map.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 #Utlities
 def set_as_form(request, f_name, init = None):
