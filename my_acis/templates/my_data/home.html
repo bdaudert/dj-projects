@@ -72,14 +72,14 @@
                     <p>Choose a different Southwest State and/or element</p>
                     <form method="get" action="">
                         <select name="state_key">
-                            <option value="None">Chose a different State</option>
+                            <option value="NV">Chose a different State</option>
                             {% for state in state_choices %}
                             <option value="{{state}}">{{state}}</option>
                             {% endfor %}
                         </select>
                         <select name="element">
-                            <option value="None">Choose a different element</option>
-                            <option value="avgt">Temperature</option>
+                            <option value="avgt">Choose a different element</option>
+                            <option value="avgt">Mean Temperature</option>
                             <option value="pcpn">Precipitation</option>
                             <option value="maxt">Maximum Temperature</option>
                             <option value="mint">Minimum Temperature</option>

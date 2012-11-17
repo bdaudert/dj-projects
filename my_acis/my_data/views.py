@@ -35,7 +35,7 @@ def home_view(request):
     state = request.GET.get('state_key', None)
     element = request.GET.get('element', None)
     if state is None:state = 'NV'
-    if element is None: element='ave_temp'
+    if element is None: element='avgt'
     month = int(datetime.date.today().month)
     context['month'] = month
     context['month_name'] = month_names[month - 1]
