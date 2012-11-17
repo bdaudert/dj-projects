@@ -109,22 +109,13 @@
                     {{val}}{{delimiter}}
                     {%endfor%}<br/>
                     {%endfor%}
-                    <!--
-                    <table >
-                    {%for date_idx, date_vals in grid_data.items%}
-                            <tr>
-                            {%for val in date_vals%}
-                            <td align="left">{{val}}{{delimiter}}</td>
-                            {%endfor%}
-                            <tr>
-                    {%endfor%}
-                    </table>
-                    -->
                 {%else%}
                     <p>date,lat,lon,elev,
                     {%for el in elements%}{{el}},{%endfor%}</p>
                     {{grid_data}}
                 {%endif%}
+                {%else%}
+                <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" width="500" height="500" style="float:center;">
                 {%endif%}
             </div>
 
