@@ -26,7 +26,7 @@ $(function () {
                 }
             else if (element == 'mint'){
                 var data = datadict.mint;
-                var Element = 'Mean Minumum Tenperature';
+                var Element = 'Mean Minumum Temperature';
                 }
             else if (element == 'snow'){
                 var data = datadict.pcpn;
@@ -36,6 +36,7 @@ $(function () {
                 var data = datadict.pcpn;
                 var Element = 'Snow Depth';
                 }
+            var dates = datadict.year_list;
             // create the master chart
             function createMaster() {
                 masterChart = new Highcharts.Chart({
@@ -56,6 +57,7 @@ $(function () {
                                     min = extremesObject.min,
                                     max = extremesObject.max,
                                     detailData = [],
+                                    detail_date_valData = [],
                                     xAxis = this.xAxis[0];
         
                                 // reverse engineer the last part of the data
@@ -65,6 +67,7 @@ $(function () {
                                             x: point.x,
                                             y: point.y
                                         });
+                                        detail_date_valData.push([point.x, point.y]);
                                     }
                                 });
         
@@ -87,11 +90,11 @@ $(function () {
         
         
                                 detailChart.series[0].setData(detailData);
-        
+                                detailChart.series[1].setData(fitData(detail_date_valData).data); 
                                 return false;
                             }
-                        }
-                    },
+                        } //end evens
+                    },//end chart
                     title: {
                         text: null
                     },
@@ -168,18 +171,20 @@ $(function () {
                 }, function(masterChart) {
                     createDetail(masterChart)
                 });
-            }
+            } //end createMaster
         
             // create the detail chart
             function createDetail(masterChart) {
         
                 // prepare the detail chart
                 var detailData = [],
-                    detailStart = Date.UTC(1900, 1, 1);
+                    detail_date_valData = [], //for regression line
+                    detailStart = Date.UTC(1950, 1, 1);
         
                 jQuery.each(masterChart.series[0].data, function(i, point) {
                     if (point.x >= detailStart) {
                         detailData.push(point.y);
+                        detail_date_valData.push([point.x, point.y]); 
                     }
                 });
         
@@ -245,14 +250,24 @@ $(function () {
                         pointStart: detailStart,
                         pointInterval: 365*25 * 3600 * 1000, //somehow, this makes it go from 1900 to present
                         data: detailData
+                    }, 
+                    {
+                        name: 'Regression Line',
+                        pointStart: detailStart,
+                        pointInterval: 365*25 * 3600 * 1000, //somehow, this makes it go from 1900 to present
+                        type: 'line',
+                        /* function returns data for trend-line */
+                        data: (function() {
+                        return fitData(detail_date_valData).data; //calls functions from {{MEDIA_URL}}js/regression.js
+                        })()
                     }],
         
                     exporting: {
                         enabled: false
                     }
         
-                });
-            }
+                });//end createDetail(masterChart) 
+            }//
         
             // make the container smaller and add a second container for the master chart
             var $container = $('#hc-graph-state-aves')

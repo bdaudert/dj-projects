@@ -23,8 +23,8 @@ state_choices = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA
                 'NY', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', \
                 'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
 
-month_names = ['January', 'February', 'March', 'April', 'May', 'June'\
-               'July', 'August', 'September', 'October', 'Novemer', 'December']
+month_names = ['January', 'February', 'March', 'April', 'May', 'June',\
+               'July', 'August', 'September', 'October', 'November', 'December']
 
 def home_view(request):
     context = {
@@ -35,7 +35,7 @@ def home_view(request):
     state = request.GET.get('state_key', None)
     element = request.GET.get('element', None)
     if state is None:state = 'NV'
-    if element is None: element='avgt'
+    if element is None: element='mint'
     month = int(datetime.date.today().month)
     context['month'] = month
     context['month_name'] = month_names[month - 1]
