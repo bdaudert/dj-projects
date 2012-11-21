@@ -1,105 +1,49 @@
-<!DOCTYPE html>
+{% extends "csc_base.html" %}
 
-<html>
+{% block content %}
 
-    <head>
-        <title>Southwest CSC Climate Data Portal</title>	
-        <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
-        <!-- Britta's Javascript utilities -->
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>
-        <!-- jquery -->
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
-        <!-- Highcharts graphics -->
-        <script src="http://code.highcharts.com/highcharts.js"></script>
-        <script src="http://code.highcharts.com/modules/exporting.js"></script>
-        <script type="text/javascript" src="{{MEDIA_URL}}js/regression.js"></script>
-        <!-- include greybox media for pop-up windows: WRCC links to anomaly maps -->
-        <script type="text/javascript" src="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.js"></script>
-        <link href="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.css" rel="stylesheet" type="text/css" media="all">
-        <script type="text/javascript">
-            GB_CLOSE_URL = "http://www.wrcc.dri.edu/wrccpub/media/greybox/close.gif";
 
-            $(function () {
-                $(".popup_map").click(function(ev){ 
-                // Let alt-clicks and non-left clicks (which != 1) do their thing
-                if ( ev.shiftKey || ev.ctrlKey || ev.altKey || ev.metaKey || ev.which != 1 ) {
-                    return true;
-                }
-                var url = this.getAttribute("href");
-                var title = $(this).text();
-                var width = 792 + 20;
-                var height = 612 + 40;
-                GB_show(title, url, height, width);
-                return false;
-                });
+<div class="container">
+    <div class="sidebar_left">
+        <h2>Recent Climate in the West</h2>
+        <p>Temperature departure from Average, <br/>Percent of Average Precipitation <br/>
+        for the past 30 days</p>
+        <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="popup_map">
+        <img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" width="250"></a>
+        <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="popup_map">
+        <img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" width="250"></a>
+        <p>&rarr; More <a href="http://www.wrcc.dri.edu/anom/">climate anomaly maps</a></p>
+    </div>
 
-            });
-        </script>
-    </head>
+    <div class="sidebar_right">
+        <h2>Current Weather in West</h2>
+        <p>Click on the image to go to NWS' Western Regional Headquarters</p>
+        <a href="http://www.wrh.noaa.gov/index.php" target="_blank">
+        <img class="logo" src="{{ MEDIA_URL }}img/Weather.jpg" width="250"> NWS Western Regional Headquarters</a>
+        <br />
+        <br />
+        <!-- Radar image -->
+        <a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" target="_blank"><img src="http://radar.weather.gov/ridge/Conus/Loop/pacsouthwest_loop.gif" width="100%" height="200%">Pacific Southwest Radar Mosaic</a>
+    </div>
 
-    <body>
-        <div class="header">
-            <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png"> 
-            <img class="nature" src="{{ MEDIA_URL }}img/zzyzx.jpg">
-            <div id="title"></div>
-                <script>$("#title").load("{{MEDIA_URL}}html/csc_base.html .header");</script>
-        </div>
-        
-        <div id="bcrumbs"></div>           
-            <script>$("#bcrumbs").load("{{MEDIA_URL}}html/csc_base.html .breadcrumbs");</script>
-        
+    <div class="center">
+        <!--
+        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+        <a href="#" onclick="scramble();return false">Scramble</a> | <a href="#" onclick="initPuzzle();return false">New image</a> | 
+        <form style="display:inline">
+        Columns/Rows: 
+        <input type="text" value="4" onblur="var no = this.value.replace(/[^\d]/g,'');if(no/1<3){ this.value = '3';no=3; };cols=no" maxlength="1" size="2"> 
+        x 
+        <input type="text" value="3" onblur="var no = this.value.replace(/[^\d]/g,'');if(no/1<2){ this.value = '2';no=2; };rows=no" maxlength="1" size="2">
+        </form>
 
-        <div class="container">
-            <div class="sidebar_left">
-                <h2>Recent Climate in the West</h2>
-                <p>Temperature departure from Average, <br/>Percent of Average Precipitation <br/>
-                for the past 30 days</p>
-                <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="popup_map">
-                <img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" width="250"></a>
-                <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="popup_map">
-                <img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" width="250"></a>
-                <p>&rarr; More <a href="http://www.wrcc.dri.edu/anom/">climate anomaly maps</a></p>
-            </div>
-
-            <div class="sidebar_right">
-                <h2>Current Weather in West</h2>
-                <p>Click on the image to go to NWS' Western Regional Headquarters</p>
-                <a href="http://www.wrh.noaa.gov/index.php">
-                <img class="logo" src="{{ MEDIA_URL }}img/Weather.jpg" width="250"></a>
-            </div>
- 
-            <div class="center">
-                <h1>Means for {{state}} since 1900</h1>
-                    <form method="get" action="">
-                        <select name="state_key">
-                            <option value="NV">Chose a different State</option>
-                            {% for state in state_choices %}
-                            <option value="{{state}}">{{state}}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="element">
-                            <option value="mint">Choose a different element</option>
-                            <option value="avgt">Mean Temperature</option>
-                            <option value="pcpn">Precipitation</option>
-                            <option value="maxt">Maximum Temperature</option>
-                            <option value="mint">Minimum Temperature</option>
-                            <option value="snow">Snow</option>
-                            <option value="snwd">Snow depth</option>
-                        </select>
-                        <input type="submit" value="Submit"/>
-                    </form>
-                <br/>
-
-                <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}"> 
-                <input type="hidden" id="state" name="state" value="{{ state }}">
-                <input type="hidden" id="month" name="month" value="{{ month }}">
-                <input type="hidden" id="month_name" name="month_name" value="{{ month_name }}">
-                <input type="hidden" id="element" name="element" value="{{ element }}">
-                <div id="hc-graph-state-aves" style="width: 600px; height: 400px;"></div>
-                    <script type="text/javascript" src="{{ MEDIA_URL }}js/highchart-state-aves.js"></script>        
-                </div>
-            
+         <div id="puzzle_container">
+            Please wait - initializing script
         </div>
 
-  </body>
-</html>
+        <div id="messageDiv"></div>
+        <p><i>Shuffle, then click to move the pieces</i></p>
+    </div>
+    -->
+</div>
+{% endblock %}

@@ -1,32 +1,11 @@
-<!DOCTYPE html>
-<html>  
-    <head>
-        <title>DATA</title> 
-        <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
-        {% load my_filters %}
-    </head>
+{% extends "csc_base.html" %}
 
-    <body>
-        <div class="header">
-            <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png">
-            <img class="nature" src="{{ MEDIA_URL }}img/anza.jpg">
-            <div id="title"></div>
-                <script>$("#title").load("{{MEDIA_URL}}html/csc_base.html .header");</script>
-        </div>
-
-        <div id="bcrumbs"></div>
-           <script>$("#bcrumbs").load("{{MEDIA_URL}}html/csc_base.html .breadcrumbs");</script>
-        
+{% block content %} 
         <h1 align="center">DATA ACCESS</h1>
             
-        <div class="footer">
-            <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30"></p>
-        </div>
-
         <div class="container">
             <div class="center-left">
-                <p>Point Data</p>    
+                <p>Historic Station Data</p>    
                 <div id='form0'>
                     <table border=0 align="right">
                     <form method="post" action="">{% csrf_token %}
@@ -121,5 +100,4 @@
 
         </div>
 
-  </body>
-</html>
+{%endblock%}

@@ -179,7 +179,7 @@ $(function () {
                 // prepare the detail chart
                 var detailData = [],
                     detail_date_valData = [], //for regression line
-                    detailStart = Date.UTC(1950, 1, 1);
+                    detailStart = Date.UTC(1900, 1, 1);
         
                 jQuery.each(masterChart.series[0].data, function(i, point) {
                     if (point.x >= detailStart) {

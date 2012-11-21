@@ -23,13 +23,17 @@ state_choices = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA
                 'NY', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', \
                 'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
 
+static_url = '/Users/bdaudert/DRI/dj-projects/my_acis/static/'
+media_url = '/Users/bdaudert/DRI/dj-projects/my_acis/media/'
+
 month_names = ['January', 'February', 'March', 'April', 'May', 'June',\
                'July', 'August', 'September', 'October', 'November', 'December']
 
 def home_view(request):
     context = {
-        'title': "Southwest CSC Portal",
-        'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT']
+        'title': 'Southwest CSC Portal',
+        'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
+        'home_page':True
     }
     #Main display temps/precip for month since 1900
     state = request.GET.get('state_key', None)
@@ -45,7 +49,8 @@ def home_view(request):
 
 def data(request):
     context = {
-        'title': "Data Access",
+        'title': 'Data Access',
+        'data_page':True
     }
     stn_id = request.GET.get('stn_id', None)
     if stn_id is not None:
@@ -168,98 +173,121 @@ def data(request):
 
 def apps(request):
     context = {
-        'title': "Applications and Products",
+        'title': 'Applications and Products',
+        'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
+        'apps_page':True
     }
+    #Main display temps/precip for month since 1900
+    state = request.GET.get('state_key', None)
+    element = request.GET.get('element', None)
+    if state is None:state = 'NV'
+    if element is None: element='mint'
+    month = int(datetime.date.today().month)
+    context['month'] = month
+    context['month_name'] = month_names[month - 1]
+    context['state'] = state
+    context['element'] = element
     return render_to_response('my_data/apps/home.html', context, context_instance=RequestContext(request))
 
 
 def station_finder(request):
-    stn_json = AcisWS.get_station_meta('state', "nv")
     context = {
         'title': "Station Finder",
-        'stn_json': stn_json,
         'state_choices':state_choices,
+        'station_finder_page':True
     }
+    context['json_file'] = 'SW_stn.json'
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 def by_id(request):
     q = request.GET.get('q', '')
+    context = {
+        'title': "Search Results for Station ID %s" %q,
+        'state_choices':state_choices
+    }
     if not q:
         stn_json = {}
     else:
         stn_json = AcisWS.get_station_meta('id', q)
-    context = {
-        'stn_json': stn_json,
-        'title': "Search Results for Station ID %s" %q,
-    }
+        if 'error' in stn_json.keys():
+            context['error'] = stn_json['error']
+    context['json_file'] = 'stn.json'
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 
 def by_county(request):
     q = request.GET.get('q', '')
+    context = {
+        'title': "Search Results for County %s" %q,
+        'state_choices':state_choices
+    }
     if not q:
         stn_json = {}
     else:
         stn_json = AcisWS.get_station_meta('county', q)
-
-    context = {
-        'stn_json': stn_json,
-        'title': "Search Results for County %s" %q,
-    }
+        if 'error' in stn_json.keys():
+            context['error'] = stn_json['error']
+    context['json_file'] = 'stn.json'
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 def by_cwa(request):
     q = request.GET.get('q', '')
+    context = {
+        'title': "Search Results for County Warning Area %s" %q,
+        'state_choices':state_choices
+        }
     if not q:
         stn_json = {}
     else:
         stn_json = AcisWS.get_station_meta('county_warning_area', q)
-
-    context = {
-        'stn_json': stn_json,
-        'title': "Search Results for County Warning Area %s" %q,
-    }
+        if 'error' in stn_json.keys():
+            context['error'] = stn_json['error']
+    context['json_file'] = 'stn.json'
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 def by_clim_div(request):
     q = request.GET.get('q', '')
+    context = {
+        'title': "Search Results for Climate Division %s" %q,
+        'state_choices':state_choices
+    }
     if not q:
         stn_json = {}
     else:
         stn_json = AcisWS.get_station_meta('climate_division', q)
-
-    context = {
-        'stn_json': stn_json,
-        'title': "Search Results for Climate Division %s" %q,
-    }
+        if 'error' in stn_json.keys():
+            context['error'] = stn_json['error']
+    context['json_file'] = 'stn.json'
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 def by_basin(request):
     q = request.GET.get('q', '')
+    context = {
+        'title': "Search Results for Basin %s" %q,
+        'state_choices':state_choices
+    }
     if not q:
         stn_json = {}
     else:
-        stn_json = AcisWS.get_station_meta('basin', q)
-
-    context = {
-        'stn_json': stn_json,
-        'title': "Search Results for Basin %s" %q,
-    }
+        stn_json = AcisWS.get_station_meta('basin', )
+        if 'error' in stn_json.keys():
+            context['error'] = stn_json['error']
+    context['json_file'] = 'stn.json'
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 def by_state(request):
     state_key = request.GET.get('state_key', None)
+    context = {
+        'title': "Search Results for State %s" %state_key,
+        'state_choices':state_choices
+    }
     if state_key is None:
         stn_json = {}
     else:
         stn_json = AcisWS.get_station_meta('state', state_key)
-
-
-    context = {
-        'stn_json': stn_json,
-        'title': "Search Results for State %s" %state_key,
-        'state_choices':state_choices
-    }
+        if 'error' in stn_json.keys():
+            context['error'] = stn_json['error']
+    context['json_file'] = 'stn.json'
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 def by_bounding_box(request):
@@ -267,15 +295,22 @@ def by_bounding_box(request):
     S = request.GET.get('S', None)
     E = request.GET.get('E', None)
     N = request.GET.get('N', None)
-    bbox ="%f, %f, %f, %f" % (float(W), float(S), float(E), float(N))
+    context = {
+        'state_choices':state_choices
+    }
     if not W or not S or not E or not N:
         stn_json = {}
     else:
-        stn_json = AcisWS.get_station_meta('bounding_box', bbox)
-    context = {
-        'stn_json': stn_json,
-        'title': "Search Results for bounding box %s" %bbox,
-    }
+        try:
+            bbox ="%f, %f, %f, %f" % (float(W), float(S), float(E), float(N))
+            stn_json = AcisWS.get_station_meta('bounding_box', bbox)
+            if 'error' in stn_json.keys():
+                context['error'] = stn_json['error']
+        except:
+            bbox = ''
+            pass
+    context['title'] = "Search Results for bounding box %s" %bbox
+    context['json_file'] = 'stn.json'
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 #Utlities
