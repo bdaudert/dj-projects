@@ -3,12 +3,11 @@
 {% block content %}
 
 <h1 align="center">{{title}}</h1>
-
 <div class="center">
-    <div id='form_meta'>
+    <div id='form1'>
         <table border=0 align="right">
         <form method="post" action="">{% csrf_token %}
-            <table class="sortable">{{ form_meta|safe }}</table>
+            <table>{{ form_meta|safe }}</table>
             <input type="submit" value="Submit" name="form_meta"/>
         </form>
         </table>
@@ -20,10 +19,25 @@
         {%endfor%}
     {%endif%}
     <br />
+
     
-    {%if station_id%}
-        <img src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}"><BR>
-    {%endif%}
+    {%if perl_err%}
+        <h1 class="warning">{{perl_err}}</h1>
+    {%else%}
+        {%if station_id%}
+        <h1>STATION ID: {{station_id}}</h1>
+        <img src="{{MEDIA_URL}}img/tmax.gif">
+        <img src="{{MEDIA_URL}}img/tmin.gif">
+        <img src="{{MEDIA_URL}}img/pcpn.gif">
+        <img src="{{MEDIA_URL}}img/snow.gif">
+        <img src="{{MEDIA_URL}}img/snwd.gif">
+        {%endif%}
+    {%endif%} 
+
+
+    <br / >
+
+    <!--    <img src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}"> -->
 </div>
 
 {%endblock%}

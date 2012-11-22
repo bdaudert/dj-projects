@@ -261,6 +261,6 @@ class MetaGraphForm(forms.Form):
             stn_id = self.data.get('stn_id')
 
         if stn_id is None:
-            self.fields['station_id'] = forms.CharField(max_length=6, min_length=6,required=False, initial='266779')
+            self.fields['station_id'] = forms.CharField(required=False, initial='266779')
         else:
-            self.fields['station_id'] = forms.CharField(max_length=6, min_length=6,required=False, initial=stn_id)
+            self.fields['station_id'] = forms.CharField(required=False, initial=stn_id)

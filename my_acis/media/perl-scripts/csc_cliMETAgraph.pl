@@ -143,7 +143,7 @@ $state = substr($stnid, 0, 2);
        $state = "ws";
     }
 
-   $filename = "python /Users/bdaudert/DRI/AcisWS_WRCC_PythonScripts/ws_sodlist_web.py -c $stnid -s $sdate -f $edate";
+   $filename = "python /Users/bdaudert/DRI/AcisWS_WRCC_PythonScripts/ws_meta_lister.py -c $stnid -s $sdate -f $edate";
    open(SOD, "$filename|") || die ("Can't retrieve data.\n");
    print "$filename \n";
   #load data
@@ -156,7 +156,7 @@ $state = substr($stnid, 0, 2);
 
 # create array for each variable
 $count = 0;
-$ymx = 2013;
+$ymx = 2020;
 $ymn = 1870;
 foreach $sod2(@sod2) {
 #   @elem = split(/ +/,$data);
@@ -211,12 +211,15 @@ for ($year=1870; $year<=2013; $year++) {
 }
 
 # print the image
-#   print "Content-type: image/gif\n\n";
-print $im->gif;
-# $gif_data = $im->gif;
-# open (GIFFILE,">" . $stnid . "tmax.gif") || die ("Can't open $stnidtmax.gif");
-# print GIFFILE $gif_data;
-# close GIFFILE;
+#print "Content-type: image/gif\n\n";
+#print $im->gif;
+$dir_path = "/Users/bdaudert/DRI/dj-projects/my_acis/media/img/";
+
+$gif_data = $im->gif;
+open (GIFFILE,">" . $dir_path . "tmax.gif") || die ("Can't open tmax.gif");
+#open (GIFFILE,">" . $stnid . "tmax.gif") || die ("Can't open $stnidtmax.gif");
+print GIFFILE $gif_data;
+close GIFFILE;
 
 # Open GIF Image
 $im2 = new GD::Image(510,433);
@@ -234,11 +237,12 @@ for ($year=1870; $year<=2013; $year++) {
    }
 }
 
-print $im2->gif;
-# $gif_data = $im2->gif;
+#print $im2->gif;
+$gif_data = $im2->gif;
+open (GIFFILE,">" . $dir_path . "tmin.gif") || die ("Can't open tmin.gif");
 # open (GIFFILE,">" . $stnid . "tmin.gif") || die;
-# print GIFFILE $gif_data;
-# close GIFFILE;
+print GIFFILE $gif_data;
+close GIFFILE;
 
 # Open GIF Image
 $im3 = new GD::Image(510,433);
@@ -256,11 +260,12 @@ for ($year=1870; $year<=2013; $year++) {
    }
 }
 
-print $im3->gif;
-# $gif_data = $im3->gif;
+#print $im3->gif;
+$gif_data = $im3->gif;
 # open (GIFFILE,">" . $stnid . "pcpn.gif") || die;
-# print GIFFILE $gif_data;
-# close GIFFILE;
+open (GIFFILE,">" . $dir_path . "pcpn.gif") || die ("Can't open pcpn.gif");
+print GIFFILE $gif_data;
+close GIFFILE;
 
 # Open GIF Image
 $im4 = new GD::Image(510,433);
@@ -278,11 +283,12 @@ for ($year=1870; $year<=2013; $year++) {
    }
 }
 
-print $im4->gif;
-# $gif_data = $im4->gif;
-# open (GIFFILE,">" . $stnid . "snwd.gif") || die;
-# print GIFFILE $gif_data;
-# close GIFFILE;
+#print $im4->gif;
+$gif_data = $im4->gif;
+#open (GIFFILE,">" . $stnid . "snwd.gif") || die;
+open (GIFFILE,">" . $dir_path . "snow.gif") || die ("Can't open snow.gif");
+print GIFFILE $gif_data;
+close GIFFILE;
 
 # Open GIF Image
 $im5 = new GD::Image(510,433);
@@ -300,11 +306,12 @@ for ($year=1870; $year<=2013; $year++) {
    }
 }
 
-print $im5->gif;
-# $gif_data = $im5->gif;
-# open (GIFFILE,">" . $stnid . "snwf.gif") || die;
-# print GIFFILE $gif_data;
-# close GIFFILE;
+#print $im5->gif;
+$gif_data = $im5->gif;
+# open (GIFFILE,">" . $stnid . "snwd.gif") || die;
+open (GIFFILE,">" . $dir_path . "snwd.gif") || die ("Can't open snwd.gif");
+print GIFFILE $gif_data;
+close GIFFILE;
 
 # close for loop 
 undef (%tmax);

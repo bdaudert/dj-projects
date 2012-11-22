@@ -195,10 +195,10 @@ def metagraph(request):
         'apps_page':True
     }
     stn_id = request.GET.get('stn_id', None)
-    if stn_id is not None:
-        form_meta = set_as_form(request,'MetaGraphForm', init={'stn_id':str(stn_id)})
-    else:
+    if stn_id is None:
         form_meta = set_as_form(request,'MetaGraphForm')
+    else:
+        form_meta = set_as_form(request,'MetaGraphForm', init={'stn_id':str(stn_id)})
     context['form_meta'] = form_meta
 
     if 'form_meta' in request.POST:
@@ -206,27 +206,44 @@ def metagraph(request):
         context['form_meta']  = form_meta
 
         if form_meta.is_valid():
+
             context['station_id'] = form_meta.cleaned_data['station_id']
             station_meta = {}
             params = {'sids':str(form_meta.cleaned_data['station_id'])}
-            request = AcisWS.StnMeta(params)
-
-            if 'error' in request.keys():
-                station_meta['error'] = request['error']
-            if 'meta' in request.keys():
-                station_meta = request['meta'][0]
+            meta_request = AcisWS.StnMeta(params)
+            if 'error' in meta_request.keys():
+                station_meta['error'] = meta_request['error']
+            if 'meta' in meta_request.keys():
+                if len(meta_request['meta']) == 0:
+                    station_meta['error'] = 'No meta data found for station: %s.' %stn_id
+                else:
+                    for key, val in meta_request['meta'][0].items():
+                        if key == 'sids':
+                            sid_list = []
+                            for sid in val:sid_list.append(sid.encode('ascii', 'ignore'))
+                            station_meta['sids'] = sid_list
+                        else:
+                            station_meta[key] = str(val)
             else:
-                if 'error' in request.keys():
-                    station_meta['error'] = request['error']
+                if 'error' in meta_request.keys():
+                    station_meta['error'] = meta_request['error']
                 else:
                     station_meta['error'] = 'No meta data found for station: %s.' %stn_id
             context['station_meta'] = station_meta
+            #Call perl script that generates gif graphs
+            #FIX ME! Should be able to call it from html:
+            #<img src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}">
+            perl_out, perl_err = run_external_script("perl %sperl-scripts/csc_cliMETAgraph.pl %s" %(media_url, str(form_meta.cleaned_data['station_id'])))
+            context['perl_err'] = perl_err
+            context['perl_out'] = perl_out
+        else:
+            stn_id = None
 
     return render_to_response('my_data/apps/Metagraph.html', context, context_instance=RequestContext(request))
 
 def station_finder(request):
     context = {
-        'title': "Station Finder",
+        'title': 'Station Finder',
         'state_choices':state_choices,
         'station_finder_page':True
     }
@@ -428,3 +445,9 @@ def export_to_file_grid(request, data, elements, file_info, delim, file_extensio
         wb.save(response)
 
     return response
+
+def run_external_script(cmd):
+    """ Capture a command's standard output."""
+    import subprocess
+    out, err = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    return out, err

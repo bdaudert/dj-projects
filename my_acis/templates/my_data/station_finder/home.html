@@ -61,7 +61,9 @@
                         '<b>Elevation: </b>' + c.elevation + '<br/>' +
                         '</p>' +
                         '<a href="/my_data/data/?stn_id=' + c.sids[0] + 
-                        '">Get Data for this Station</a>'+
+                        '">Get Data for this Station</a> <br/>'+
+                        '<a href="/my_data/apps/Metagraph/?stn_id=' + c.sids[0] + 
+                        '">Get Meta Data for this Station</a>'+ 
                         '</div>';
                         infowindow.setContent(contentString);
                         infowindow.open(map, marker);
