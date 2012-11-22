@@ -18,10 +18,12 @@ p, ul, ol, li {
     font-size:large;
 }
 
-
+h1, h2, h3, h4, h5 {
+    color:#006666;
+}
 
 /* HOVER STYLES */
-a:link { color: #0000aa; }
+/*a:link { color: #0000aa; }
 a:visited { color: #000099; }
 
 a:hover {
@@ -29,6 +31,52 @@ a:hover {
     text-decoration: none;
 }
 a:active { color: red; }
+*/
+
+a:link { color: #330033; }
+a:visited { color: #996633; }
+
+a:hover {
+    color: #996633;
+    text-decoration: none;
+}
+a:active { color: red; }
+
+ul.navbar {
+  list-style-type: none;
+  padding: 0.5em;
+  margin: 0;
+  top: 1em;
+  left: 5em;
+  /*width: 50em;*/
+}
+
+ul.navbar li {
+  width:160px;
+  background: #FFEBCD;
+  margin: 0.5em;
+  padding: 0.3em;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-right: 1px solid #000;
+  border-left: 1px solid #000; }
+
+ul.navbar a {
+  display:block;
+  width:220px;
+  background-color: #FFEBCD;
+  text-decoration: none ; }
+
+div.pop-up {
+  display: none;
+  position: absolute;
+  width: 280px;
+  padding: 10px;
+  background: #FFEBCD;
+  color: #330033;
+  border: 1px solid #1a1a1a;
+  font-size: 90%;
+}
 
 .warning {
     color:#FF0000;
@@ -87,7 +135,7 @@ a:active { color: red; }
 .header h1,
 .header h2,
 .header h3 {
-    color: #660000;
+    color: #009999;
     border: none;
     background: none;
     font-family: 'Georgia',serif;
@@ -142,8 +190,9 @@ a:active { color: red; }
 
 /*Map related stuff*/
 #map_canvas {
-    height: 50%;
-    width: 50%;
+
+    height: 70%;
+    width: 60%;
     margin-right:auto;
     margin-left:auto;
     margin-top:100px;

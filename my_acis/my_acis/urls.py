@@ -35,6 +35,7 @@ urlpatterns = patterns('',
     (r'^my_data/data/$', 'my_data.views.data'),
     (r'^my_data/data/(?P<stn_id>\d+)/$', 'my_data.views.data'),
     (r'^my_data/apps/$', 'my_data.views.apps'),
+    (r'^my_data/apps/Metagraph/$', 'my_data.views.metagraph'),
     (r'^my_apps/$', 'my_apps.views.home_view'),
     #sub process apps: FIX ME: Need to be converted to module approach
     #module approach apps

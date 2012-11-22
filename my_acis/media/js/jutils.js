@@ -69,9 +69,9 @@ function ShowHide(divId)
 }
 
 
-$(function() {
-    $('div.pop-up').hide();
-});
+//$(function() {
+//    $('div.pop-up').hide();
+//});
 
 $(function() {
   var moveLeft = 50;

@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{% if LANGUAGE_CODE %}{{ LANGUAGE_CODE }}{% else %}en-US{% endif %}" xml:lang="{% if LANGUAGE_CODE %}{{ LANGUAGE_CODE }}{% else %}en-US{% endif %}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+<head>
+    <title>Southwest CSC Climate Data Portal
+    {% if title %} [ {% endif %} 
+    {{ title|escape }}
+    {% if title %} ] {% endif %}
+    </title>
+    <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+    <!--<script type="text/javascript" src="{{ MEDIA_URL }}js/puzzle.js"></script>-->
+    <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
+    <!-- Britta's Javascript utilities -->
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>
+    <!-- jquery -->
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
+    <!-- Highcharts graphics -->
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script type="text/javascript" src="{{MEDIA_URL}}js/regression.js"></script>
+    <!-- include greybox media for pop-up windows: WRCC links to anomaly maps -->
+    <script type="text/javascript" src="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.js"></script>
+    <link href="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.css" rel="stylesheet" type="text/css" media="all">
+    <script type="text/javascript">
+        GB_CLOSE_URL = "http://www.wrcc.dri.edu/wrccpub/media/greybox/close.gif";
+
+        $(function () {
+            $(".popup_map").click(function(ev){ 
+            // Let alt-clicks and non-left clicks (which != 1) do their thing
+            if ( ev.shiftKey || ev.ctrlKey || ev.altKey || ev.metaKey || ev.which != 1 ) {
+                return true;
+            }
+            var url = this.getAttribute("href");
+            var title = $(this).text();
+            var width = 792 + 20;
+            var height = 612 + 40;
+            GB_show(title, url, height, width);
+            return false;
+            });
+
+        });
+    </script>
+    {% load my_filters %}
+    {% block extrahead %}{% endblock %}
+    {% block extrastyle %}{% endblock %}
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1 align="center">Climate Data Portal</h1>
+        <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png">
+        {%if home_page%}
+            <img class="map" src="{{ MEDIA_URL }}img/SouthWest.jpg">
+        {%endif%}
+        {%if station_finder_page%}
+            <img class="nature" src="{{ MEDIA_URL }}img/NorthPoleWS.jpg">
+        {%endif%}
+        {%if data_page%}
+            <img class="map" src="{{ MEDIA_URL }}img/data_img2.jpg">
+        {%endif%}
+        {%if apps_page%}
+            <img class="map" src="{{ MEDIA_URL }}img/DataAnalysis.jpg">
+        {%endif%}
+    </div>
+    <!-- Nav bar at top of page-->
+    <div class="breadcrumbs">
+    {% block breadcrumbs %}
+        <a href="/my_data">HOME </a>&nbsp;&nbsp;
+        <a href="/my_data/station_finder">STATION FINDER</a>&nbsp;&nbsp;
+        <a href="/my_data/data">DATA PORTAL</a>&nbsp;&nbsp;
+        <a href="/my_data/apps">DATA PRODUCTS </a>&nbsp;&nbsp;
+    {% endblock %}
+    </div>
+
+    <div class="content">
+    {% block content %} 
+    {% endblock %}
+    </div> <!-- END content -->
+
+    {% block footer %}
+    <div class="footer">
+        <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30"></p>
+    </div>
+    {% endblock %}
+</body>
+</html>

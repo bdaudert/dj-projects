@@ -189,6 +189,40 @@ def apps(request):
     context['element'] = element
     return render_to_response('my_data/apps/home.html', context, context_instance=RequestContext(request))
 
+def metagraph(request):
+    context = {
+        'title': 'Station Metadata graphs',
+        'apps_page':True
+    }
+    stn_id = request.GET.get('stn_id', None)
+    if stn_id is not None:
+        form_meta = set_as_form(request,'MetaGraphForm', init={'stn_id':str(stn_id)})
+    else:
+        form_meta = set_as_form(request,'MetaGraphForm')
+    context['form_meta'] = form_meta
+
+    if 'form_meta' in request.POST:
+        form_meta = set_as_form(request,'MetaGraphForm')
+        context['form_meta']  = form_meta
+
+        if form_meta.is_valid():
+            context['station_id'] = form_meta.cleaned_data['station_id']
+            station_meta = {}
+            params = {'sids':str(form_meta.cleaned_data['station_id'])}
+            request = AcisWS.StnMeta(params)
+
+            if 'error' in request.keys():
+                station_meta['error'] = request['error']
+            if 'meta' in request.keys():
+                station_meta = request['meta'][0]
+            else:
+                if 'error' in request.keys():
+                    station_meta['error'] = request['error']
+                else:
+                    station_meta['error'] = 'No meta data found for station: %s.' %stn_id
+            context['station_meta'] = station_meta
+
+    return render_to_response('my_data/apps/Metagraph.html', context, context_instance=RequestContext(request))
 
 def station_finder(request):
     context = {
@@ -208,7 +242,7 @@ def by_id(request):
     if not q:
         stn_json = {}
     else:
-        stn_json = AcisWS.get_station_meta('id', q)
+        stn_json = AcisWS.station_meta_to_json('id', q)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
     context['json_file'] = 'stn.json'
@@ -224,7 +258,7 @@ def by_county(request):
     if not q:
         stn_json = {}
     else:
-        stn_json = AcisWS.get_station_meta('county', q)
+        stn_json = AcisWS.station_meta_to_json('county', q)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
     context['json_file'] = 'stn.json'
@@ -239,7 +273,7 @@ def by_cwa(request):
     if not q:
         stn_json = {}
     else:
-        stn_json = AcisWS.get_station_meta('county_warning_area', q)
+        stn_json = AcisWS.station_meta_to_json('county_warning_area', q)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
     context['json_file'] = 'stn.json'
@@ -254,7 +288,7 @@ def by_clim_div(request):
     if not q:
         stn_json = {}
     else:
-        stn_json = AcisWS.get_station_meta('climate_division', q)
+        stn_json = AcisWS.station_meta_to_json('climate_division', q)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
     context['json_file'] = 'stn.json'
@@ -269,7 +303,7 @@ def by_basin(request):
     if not q:
         stn_json = {}
     else:
-        stn_json = AcisWS.get_station_meta('basin', )
+        stn_json = AcisWS.station_meta_to_json('basin', q)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
     context['json_file'] = 'stn.json'
@@ -284,7 +318,7 @@ def by_state(request):
     if state_key is None:
         stn_json = {}
     else:
-        stn_json = AcisWS.get_station_meta('state', state_key)
+        stn_json = AcisWS.station_meta_to_json('state', state_key)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
     context['json_file'] = 'stn.json'
@@ -303,7 +337,7 @@ def by_bounding_box(request):
     else:
         try:
             bbox ="%f, %f, %f, %f" % (float(W), float(S), float(E), float(N))
-            stn_json = AcisWS.get_station_meta('bounding_box', bbox)
+            stn_json = AcisWS.station_meta_to_json('bounding_box', bbox)
             if 'error' in stn_json.keys():
                 context['error'] = stn_json['error']
         except:

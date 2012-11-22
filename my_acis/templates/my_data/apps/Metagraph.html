@@ -1,0 +1,29 @@
+{% extends "csc_base.html" %}
+
+{% block content %}
+
+<h1 align="center">{{title}}</h1>
+
+<div class="center">
+    <div id='form_meta'>
+        <table border=0 align="right">
+        <form method="post" action="">{% csrf_token %}
+            <table class="sortable">{{ form_meta|safe }}</table>
+            <input type="submit" value="Submit" name="form_meta"/>
+        </form>
+        </table>
+    </div>
+    <br /> 
+    {%if station_meta%}
+        {% for key, val in station_meta.items %}
+            <p> {{key}}: {{val}} </p>
+        {%endfor%}
+    {%endif%}
+    <br />
+    
+    {%if station_id%}
+        <img src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}"><BR>
+    {%endif%}
+</div>
+
+{%endblock%}
