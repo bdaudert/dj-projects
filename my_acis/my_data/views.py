@@ -47,6 +47,12 @@ def home_view(request):
     context['element'] = element
     return render_to_response('my_data/home.html', context, context_instance=RequestContext(request))
 
+def about_us(request):
+    context = {
+        'title': 'About Us'
+    }
+    return render_to_response('my_data/about_us.html', context, context_instance=RequestContext(request))
+
 def data(request):
     context = {
         'title': 'Data Access',
@@ -177,6 +183,11 @@ def apps(request):
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
         'apps_page':True
     }
+    stn_id = request.GET.get('stn_id', None)
+    if stn_id is None:
+        pass
+    else:
+        context['stn_id'] = stn_id
     #Main display temps/precip for month since 1900
     state = request.GET.get('state_key', None)
     element = request.GET.get('element', None)
@@ -239,7 +250,57 @@ def metagraph(request):
         else:
             stn_id = None
 
-    return render_to_response('my_data/apps/Metagraph.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/apps/metagraph.html', context, context_instance=RequestContext(request))
+
+def monthly_aves(request):
+    context = {
+        'title': 'Monthly Averages',
+    }
+    stn_id = request.GET.get('stn_id', None)
+    if stn_id is None:
+        form = set_as_form(request,'MonthlyAveragesForm')
+    else:
+        form = set_as_form(request,'MonthlyAveragesForm', init={'stn_id':str(stn_id)})
+    context['form'] = form
+    if 'form' in request.POST:
+        form = set_as_form(request,'MonthlyAveragesForm')
+        context['form']  = form
+        if form.is_valid():
+            s_date = form.cleaned_data['start_date']
+            e_date = form.cleaned_data['end_date']
+            context['stn_id'] = form.cleaned_data['station_id']
+            params = dict(sid=form.cleaned_data['station_id'], sdate=s_date, edate=e_date, \
+            meta='valid_daterange,name,state,sids,ll,elev,uid,county,climdiv', \
+            elems=[dict(name=el, groupby="year")for el in form.cleaned_data['elements']])
+            req = AcisWS.StnData(params)
+            if 'error' in req:
+                data = req['error']
+            else:
+                try:
+                    results = WRCCDataApps.monthly_aves(req, form.cleaned_data['elements'])
+                    context['data'] = req['data']
+                except:
+                    pass
+
+            if 'meta' in req.keys():
+                context['stn_name'] = req['meta']['name']
+                context['state'] = req['meta']['state']
+                date_range = {}
+                for el_idx, el in enumerate(form.cleaned_data['elements']):
+                    date_range[el_idx] = {'element': el}
+                    if form.cleaned_data['start_date'] == 'por':
+                        date_range['record_start'] = str(req['meta']['valid_daterange'][el_idx][0])
+                    else:
+                        date_range['record_start'] = '%s-%s-%s' % (s_date[0:4], s_date[4:6], s_date[6:8])
+                    if form.cleaned_data['end_date'] == 'por':
+                        date_range['record_end'] = str(req['meta']['valid_daterange'][el_idx][1])
+                    else:
+                        date_range['record_end'] = '%s-%s-%s' % (e_date[0:4], e_date[4:6], e_date[6:8])
+                context['date_range'] = date_range
+        else:
+            stn_id = None
+
+    return render_to_response('my_data/apps/monthly_aves.html', context, context_instance=RequestContext(request))
 
 def station_finder(request):
     context = {

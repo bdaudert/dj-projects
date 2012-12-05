@@ -351,28 +351,20 @@ class SodForm(forms.Form):
 
         if station_selection == 'stnid':
             self.fields['coop_station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779')
-            self.fields['coop_station_id'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'stnids':
             self.fields['coop_station_ids'] = MultiStnField(required=False,initial='266779,103732')
-            self.fields['coop_station_ids'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'county':
             self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='09001')
-            self.fields['county'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'climdiv':
             self.fields['climate_division'] = forms.CharField(required=False,max_length=4, min_length=4, initial='NV01')
-            self.fields['climate_division'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'cwa':
             self.fields['county_warning_area'] = forms.CharField(required=False,max_length=3, initial='BOI')
-            self.fields['county_warning_area'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'basin':
             self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='01080205')
-            self.fields['basin'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES)
-            self.fields['state'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'bbox':
             self.fields['bounding_box'] = forms.CharField(required=False,initial='-90,40,-88,41')
-            self.fields['bounding_box'].widget.attrs['readonly'] = 'readonly'
 
         if app_name is None:
             app_name = self.data.get('app_name')

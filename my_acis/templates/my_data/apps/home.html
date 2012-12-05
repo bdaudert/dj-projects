@@ -6,11 +6,33 @@
     <div class="container">
 
         <div class="center-left">
+            <h1>Point Data Applications</h1>
             <ul class="navbar">
-                <a href="/my_data/apps/Metagraph/" class="trigger">Station Metadata Graphics</a>
-                <div class="pop-up" id="meta">
-                    <p><font size="4">Shows availabilty of COOP station data</font></p>
-                </div>
+                {%if stn_id%}
+                    <a href="/my_data/apps/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics</a>
+                    <div class="pop-up" id="meta">
+                        <p><font size="4">Shows availabilty of COOP station data</font></p>
+                    </div>
+                    <a href="/my_data/apps/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages</a>
+                    <div class="pop-up" id="maves">
+                        <p><font size="4">Generates bar chart of monthly averages</font></p>
+                    </div>
+                {%else%}
+                    <a href="/my_data/apps/metagraph/" class="trigger">Station Metadata Graphics</a>
+                    <div class="pop-up" id="meta">
+                        <p><font size="4">Shows availabilty of COOP station data</font></p>
+                    </div>
+                    <a href="/my_data/apps/monthly_aves/" class="trigger">Monthly Averages</a>
+                    <div class="pop-up" id="meta">
+                        <p><font size="4">Generates bar chart of monthly averages</font></p>
+                    </div>
+                {%endif%}
+            </ul>
+        </div>
+
+        <div class="center-right">
+            <h1>Gridded Data Applications</h1>
+            <ul class="navbar">
             </ul>
         </div>
 
@@ -42,7 +64,7 @@
             <input type="hidden" id="month_name" name="month_name" value="{{ month_name }}">
             <input type="hidden" id="element" name="element" value="{{ element }}">
             
-            <div id="hc-graph-state-aves" style="width: 600px; height: 400px;"></div>
+            <div id="hc-graph-state-aves" style="width: 600px; height: 500px;"></div>
             <script type="text/javascript" src="{{ MEDIA_URL }}js/highchart-state-aves.js"></script>
         </div>    
 

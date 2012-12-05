@@ -264,3 +264,20 @@ class MetaGraphForm(forms.Form):
             self.fields['station_id'] = forms.CharField(required=False, initial='266779')
         else:
             self.fields['station_id'] = forms.CharField(required=False, initial=stn_id)
+
+class MonthlyAveragesForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        stn_id = kwargs.get('initial', {}).get('stn_id', None)
+        super(MonthlyAveragesForm, self).__init__(*args, **kwargs)
+
+        if stn_id is None:
+            stn_id = self.data.get('stn_id')
+
+        if stn_id is None:
+            self.fields['station_id'] = forms.CharField(required=False, initial='266779')
+        else:
+            self.fields['station_id'] = forms.CharField(required=False, initial=stn_id)
+        self.fields['elements'] = MultiElementField(initial='pcpn')
+        self.fields['start_date'] = forms.CharField(max_length=8, required = False, initial='20000101')
+        self.fields['end_date'] = forms.CharField(max_length=8, required = False, initial='por')
+

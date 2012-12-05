@@ -23,12 +23,13 @@
         <br />
         <br />
         <!-- Radar image -->
-        <a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" target="_blank"><img src="http://radar.weather.gov/ridge/Conus/Loop/pacsouthwest_loop.gif" width="100%" height="200%">Pacific Southwest Radar Mosaic</a>
+        <a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" target="_blank"><img src="http://radar.weather.gov/ridge/Conus/Loop/pacsouthwest_loop.gif" width="100%">Pacific Southwest Radar Mosaic</a>
     </div>
 
     <div class="center">
-        <!--
+        <h1>Try our puzzle!</h1>
         <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/puzzle.js"></script>
         <a href="#" onclick="scramble();return false">Scramble</a> | <a href="#" onclick="initPuzzle();return false">New image</a> | 
         <form style="display:inline">
         Columns/Rows: 
@@ -44,6 +45,5 @@
         <div id="messageDiv"></div>
         <p><i>Shuffle, then click to move the pieces</i></p>
     </div>
-    -->
 </div>
 {% endblock %}

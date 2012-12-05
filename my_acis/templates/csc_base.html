@@ -67,10 +67,14 @@
     <!-- Nav bar at top of page-->
     <div class="breadcrumbs">
     {% block breadcrumbs %}
-        <a href="/my_data">HOME </a>&nbsp;&nbsp;
-        <a href="/my_data/station_finder">STATION FINDER</a>&nbsp;&nbsp;
-        <a href="/my_data/data">DATA PORTAL</a>&nbsp;&nbsp;
-        <a href="/my_data/apps">DATA PRODUCTS </a>&nbsp;&nbsp;
+        <li><a href="/my_data">HOME </a>
+        <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact Us</a></li>
+        </ul></li>
+        <li><a href="/my_data/station_finder">STATION FINDER</a></li>
+        <li><a href="/my_data/data">DATA PORTAL</a></li>
+        <li><a href="/my_data/apps">DATA PRODUCTS </a></li>
     {% endblock %}
     </div>
 

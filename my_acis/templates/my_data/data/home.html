@@ -56,6 +56,8 @@
             </div>
 
             <div class="center">
+                <p onmouseover="ShowHide('AcisElementChoices')">Hover here for list of element choices</p>
+                <img class="logo" src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0" style="display:none;" />
                 {%if point_data%}
                 {%if not json%}
                     {%for stn, stn_data in point_data.items %}
@@ -93,8 +95,6 @@
                     {%for el in elements%}{{el}},{%endfor%}</p>
                     {{grid_data}}
                 {%endif%}
-                {%else%}
-                <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" width="500" height="500" style="float:center;">
                 {%endif%}
             </div>
 
