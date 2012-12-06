@@ -12,6 +12,8 @@ from django.contrib.localflavor.us.forms import USStateField
 
 #Python imports
 import datetime
+import re
+from collections import defaultdict
 
 #My modules
 import AcisWS, WRCCDataApps
@@ -24,7 +26,7 @@ state_choices = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA
                 'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
 
 static_url = '/Users/bdaudert/DRI/dj-projects/my_acis/static/'
-media_url = '/Users/bdaudert/DRI/dj-projects/my_acis/media/'
+MEDIA_URL = '/Users/bdaudert/DRI/dj-projects/my_acis/media/'
 
 month_names = ['January', 'February', 'March', 'April', 'May', 'June',\
                'July', 'August', 'September', 'October', 'November', 'December']
@@ -244,7 +246,7 @@ def metagraph(request):
             #Call perl script that generates gif graphs
             #FIX ME! Should be able to call it from html:
             #<img src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}">
-            perl_out, perl_err = run_external_script("perl %sperl-scripts/csc_cliMETAgraph.pl %s" %(media_url, str(form_meta.cleaned_data['station_id'])))
+            perl_out, perl_err = run_external_script("perl %sperl-scripts/csc_cliMETAgraph.pl %s" %(MEDIA_URL, str(form_meta.cleaned_data['station_id'])))
             context['perl_err'] = perl_err
             context['perl_out'] = perl_out
         else:
@@ -266,37 +268,82 @@ def monthly_aves(request):
         form = set_as_form(request,'MonthlyAveragesForm')
         context['form']  = form
         if form.is_valid():
-            s_date = form.cleaned_data['start_date']
-            e_date = form.cleaned_data['end_date']
-            context['stn_id'] = form.cleaned_data['station_id']
+            s_date = str(form.cleaned_data['start_date'])
+            e_date = str(form.cleaned_data['end_date'])
             params = dict(sid=form.cleaned_data['station_id'], sdate=s_date, edate=e_date, \
             meta='valid_daterange,name,state,sids,ll,elev,uid,county,climdiv', \
             elems=[dict(name=el, groupby="year")for el in form.cleaned_data['elements']])
             req = AcisWS.StnData(params)
+            monthly_aves = {}
             if 'error' in req:
                 data = req['error']
             else:
                 try:
-                    results = WRCCDataApps.monthly_aves(req, form.cleaned_data['elements'])
-                    context['data'] = req['data']
+                    monthly_aves = WRCCDataApps.monthly_aves(req, form.cleaned_data['elements'])
                 except:
                     pass
 
+            results = [{} for k in form.cleaned_data['elements']]
+            #results = defaultdict(dict)
+            for el_idx, el in enumerate(form.cleaned_data['elements']):
+                el_strip = re.sub(r'(\d+)(\d+)', '', el)   #strip digits from gddxx, hddxx, cddxx
+                b = el[-2:len(el)]
+                try:
+                    base_temp = int(b)
+                except:
+                    if b == 'dd' and el in ['hdd', 'cdd']:
+                        base_temp = '65'
+                    elif b == 'dd' and el == 'gdd':
+                        base_temp = '50'
+
+                if el_strip == 'pcpn':
+                    results[el_idx] = {'element_long': 'Total Rainfall', 'units':'in'}
+                elif el_strip == 'snow':
+                    results[el_idx] = {'element_long': 'Total Snowfall', 'units':'in'}
+                elif el_strip == 'maxt':
+                    results[el_idx] = {'element_long': 'Maximum Temperature', 'units':'F'}
+                elif el_strip == 'mint':
+                    results[el_idx] = {'element_long': 'Minimum Temperature', 'units':'F'}
+                elif el_strip == 'avgt':
+                    results[el_idx] = {'element_long': 'Mean Temperature', 'units':'F'}
+                elif el_strip == 'obst':
+                    results[el_idx] = {'element_long': 'Observation Time Temperature', 'units':'F'}
+                elif el_strip == 'snwd':
+                    results[el_idx] = {'element_long': 'Total Snowfall', 'units':'in'}
+                elif el_strip == 'cdd':
+                    results[el_idx] = {'element_long': 'Growing Degree Days, Base Temp %s' %base_temp, 'units':'days'}
+                elif el_strip == 'hdd':
+                    results[el_idx] = {'element_long': 'Heading Degree Days, Base Temp %s' %base_temp, 'units':'days'}
+                elif el_strip == 'gdd':
+                    results[el_idx] = {'element_long': 'Cooling Degree Days, Base Temp %s' %base_temp, 'units':'days'}
+                else:
+                    results[el_idx] = {'element_long':str(el)}
+                results[el_idx]['element'] = str(el)
+                results[el_idx]['stn_id']= str(form.cleaned_data['station_id'])
+                if form.cleaned_data['start_date'] == 'por':
+                    results[el_idx]['record_start'] = str(req['meta']['valid_daterange'][el_idx][0])
+                else:
+                    results[el_idx]['record_start'] = '%s-%s-%s' % (s_date[0:4], s_date[4:6], s_date[6:8])
+                if form.cleaned_data['end_date'] == 'por':
+                    results[el_idx]['record_end'] = str(req['meta']['valid_daterange'][el_idx][1])
+                else:
+                    results[el_idx]['record_end'] = '%s-%s-%s' % (e_date[0:4], e_date[4:6], e_date[6:8])
+                results[el_idx]['data'] = monthly_aves[el]
+
+                if 'meta' in req.keys():
+                    results[el_idx]['stn_name'] = str(req['meta']['name']).replace("\'"," ")
+                    results[el_idx]['state'] = str(req['meta']['state'])
             if 'meta' in req.keys():
-                context['stn_name'] = req['meta']['name']
-                context['state'] = req['meta']['state']
-                date_range = {}
-                for el_idx, el in enumerate(form.cleaned_data['elements']):
-                    date_range[el_idx] = {'element': el}
-                    if form.cleaned_data['start_date'] == 'por':
-                        date_range['record_start'] = str(req['meta']['valid_daterange'][el_idx][0])
-                    else:
-                        date_range['record_start'] = '%s-%s-%s' % (s_date[0:4], s_date[4:6], s_date[6:8])
-                    if form.cleaned_data['end_date'] == 'por':
-                        date_range['record_end'] = str(req['meta']['valid_daterange'][el_idx][1])
-                    else:
-                        date_range['record_end'] = '%s-%s-%s' % (e_date[0:4], e_date[4:6], e_date[6:8])
-                context['date_range'] = date_range
+                context['meta'] = req['meta']
+            context['results'] = results
+            #save to json file (necessary since we can't pass list, dicts to js via hidden vars)
+            #double quotes needed for jquery json.load
+            results_json = str(results).replace("\'", "\"")
+            json_file = 'monthly_aves.json'
+            context['json_file'] = json_file
+            f = open('%sjson/%s' %(MEDIA_URL,json_file),'w+')
+            f.write(results_json)
+            f.close()
         else:
             stn_id = None
 

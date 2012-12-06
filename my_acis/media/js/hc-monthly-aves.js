@@ -1,21 +1,10 @@
 $(function () {
-    var stn_id = document.getElementById("stn_id").value;
-    var stn_name = document.getElementById("stn_name").value
-    var date_range = document.getElementById("date_range").value
-    var state = document.getElementById("state").value;
-    var element = document.getElementById("element").value;
-    var MEDIA_URL = document.getElementById("MEDIA_URL").value;
     var defaultChart = {
+        chartContent: null,
+        highchart: null,
         defaults: {
             chart: {
-                renderTo: 'container',
                 type: 'column'
-            },
-            title: {
-                text: 'Monthly Averages'
-            },
-            subtitle: {
-                text: stn_name + ', ' + stn_id + ', ' + state + '<br/>' + 'Date Range' + date_range 
             },
             xAxis: {
                 categories: [
@@ -33,12 +22,6 @@ $(function () {
                     'Dec'
                 ]
             },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Rainfall (in)'
-                }
-            },
             legend: {
                 layout: 'vertical',
                 backgroundColor: '#FFFFFF',
@@ -52,7 +35,7 @@ $(function () {
             tooltip: {
                 formatter: function() {
                     return ''+
-                        this.x +': '+ this.y +' in';
+                        this.x +': '+ this.y;
                 }
             },
             plotOptions: {
@@ -61,7 +44,6 @@ $(function () {
                     borderWidth: 0
                 }
             },
-                series: []
         },//end defaults
 
         // here you'll merge the defauls with the object options
@@ -79,23 +61,40 @@ $(function () {
 
     }; // end var defaultChart
 
-
+    var Charts;
     $(document).ready(function() {
-        for (var i=0;i<elements.length;i++)
-        { 
-            var Chart = {
+        var json_file = document.getElementById("json_file").value;
+        var MEDIA_URL = document.getElementById("MEDIA_URL").value;
+        var json_file_path = MEDIA_URL +'json/' + json_file;
+        $.getJSON(json_file_path, function(datadict) {
+            Charts = {
+
+                chartContent: 'container',
                 options: {
+
+                    title: {
+                         text: 'Monthly Averages for ' + datadict[0].element_long
+                    },
+                    subtitle: {
+                        text: datadict[0].stn_name + ', ' + datadict[0].stn_id + ', ' + datadict[0].state + '<br/>' + 
+                        'Date Range' + datadict[0].record_start  + ' - '+ datadict[0].record_end
+                    },
+                    yAxis: {
+                    min: 0,
+                    title: {
+                        text: datadict[0].element + ' ' + datadict[0].units
+                        }
+                    },
                     series: [{
-                        name: stn_name + ', ' + stn_id,
-                        data: results.i.data
+                        name: datadict[0].stn_name + ', ' + datadict[0].stn_id,
+                        data: datadict[0].data
 
                     }]
                 },
             };
-            Chart = jQuery.extend(true, {}, defaultChart, Chart);
-            Chart.init(Chart.options);
-            Chart.create();
-        };
-    });
-    
-});
+            Charts = jQuery.extend(true, {}, defaultChart, Charts);
+            Charts.init(Charts.options);
+            Charts.create();
+        }); //end getJSON
+    }); // end doc ready
+});//end top function

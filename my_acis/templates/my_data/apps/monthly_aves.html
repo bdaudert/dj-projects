@@ -23,8 +23,6 @@
 
     <br /> 
 
-    {{date_range}}
-
     {%if meta%}
         {% for key, val in meta.items %}
             <p> {{key}}: {{val}} </p>
@@ -33,6 +31,15 @@
     <br />
     {%if data%}
         {{data}}
+    {%endif%}
+
+
+
+    {%if results%}
+        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+        <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">            
+        <div id="container"style="height:300px;width:500px;"></div>
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-monthly-aves.js"></script>
     {%endif%}
 </div>
 

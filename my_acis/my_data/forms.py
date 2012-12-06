@@ -6,7 +6,7 @@ from django.contrib.localflavor.us.us_states import STATE_CHOICES
 from django.utils.safestring import mark_safe
 
 import datetime
-
+import re
 #Utilities
 ############################################
 #find todays date
@@ -105,7 +105,8 @@ class MultiElementField(forms.CharField):
     def validate(self, el_tuple):
         "Check if value consists only of valid coop_station_ids."
         for el in el_tuple:
-            if str(el) not in ['pcpn', 'snow', 'snwd', 'maxt', 'mint', 'avgt', 'obst', 'cdd', 'hdd', 'gdd', 'gddxx', 'hddxx', 'cddxx']:
+            el_strip = re.sub(r'(\d+)(\d+)', '', el) #strip digits from gddxx, hddxx, cddxx
+            if str(el_strip) not in ['pcpn', 'snow', 'snwd', 'maxt', 'mint', 'avgt', 'obst', 'cdd', 'hdd', 'gdd']:
                 raise forms.ValidationError(\
                 mark_safe("elements should be a comma separated list of valid element choices:<br/>") + \
                 mark_safe("pcpn = Precipitation (Inches)<br/>") + \
