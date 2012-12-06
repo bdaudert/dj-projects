@@ -61,40 +61,43 @@ $(function () {
 
     }; // end var defaultChart
 
-    var Charts;
     $(document).ready(function() {
         var json_file = document.getElementById("json_file").value;
         var MEDIA_URL = document.getElementById("MEDIA_URL").value;
         var json_file_path = MEDIA_URL +'json/' + json_file;
         $.getJSON(json_file_path, function(datadict) {
-            Charts = {
+            for (var i=0;i<datadict.length;i++){
+                var j = i + 1
+                var cntr = 'container' + j
+                var Chart;            
+                Chart = {
 
-                chartContent: 'container',
+                chartContent: cntr,
                 options: {
 
                     title: {
-                         text: 'Monthly Averages for ' + datadict[0].element_long
+                         text: 'Monthly Averages for ' + datadict[i].element_long
                     },
                     subtitle: {
-                        text: datadict[0].stn_name + ', ' + datadict[0].stn_id + ', ' + datadict[0].state + '<br/>' + 
-                        'Date Range' + datadict[0].record_start  + ' - '+ datadict[0].record_end
+                        text: 'Date Range ' + datadict[i].record_start  + ' - '+ datadict[i].record_end
                     },
                     yAxis: {
                     min: 0,
                     title: {
-                        text: datadict[0].element + ' ' + datadict[0].units
+                        text: datadict[i].element + ' in ' + datadict[i].units
                         }
                     },
                     series: [{
-                        name: datadict[0].stn_name + ', ' + datadict[0].stn_id,
-                        data: datadict[0].data
+                        name: datadict[i].stn_name + ', ' + datadict[i].stn_id + ', ' + datadict[i].state,
+                        data: datadict[i].data
 
                     }]
                 },
             };
-            Charts = jQuery.extend(true, {}, defaultChart, Charts);
-            Charts.init(Charts.options);
-            Charts.create();
+            Chart= jQuery.extend(true, {}, defaultChart, Chart);
+            Chart.init(Chart.options);
+            Chart.create();
+            }; //endfor
         }); //end getJSON
     }); // end doc ready
 });//end top function

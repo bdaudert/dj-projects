@@ -334,7 +334,25 @@ def monthly_aves(request):
                     results[el_idx]['stn_name'] = str(req['meta']['name']).replace("\'"," ")
                     results[el_idx]['state'] = str(req['meta']['state'])
             if 'meta' in req.keys():
-                context['meta'] = req['meta']
+                #get rid of annoying unicode
+                Meta = {}
+                for key, val in req['meta'].items():
+                    if key == 'sids':
+                        Val = []
+                        for sid in val:
+                            Val.append(str(sid))
+                    elif key == 'valid_daterange':
+                        Val = []
+                        for el_idx, rnge in enumerate(val):
+                            start = str(rnge[0])
+                            end = str(rnge[1])
+                            line = '%s : %s - %s' %(results[el_idx]['element_long'], start, end)
+                            Val.append(line)
+                    else:
+                        Val = str(val)
+                    Meta[key] = Val
+
+                context['meta'] = Meta
             context['results'] = results
             #save to json file (necessary since we can't pass list, dicts to js via hidden vars)
             #double quotes needed for jquery json.load

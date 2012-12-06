@@ -3,6 +3,19 @@
 {% block content %}
 
 <h1 align="center">{{title}}</h1>
+
+<div class="sidebar_left">
+    <br /> 
+   <h2>How to use:</h2>
+        
+        <p><ul>
+        <li>Start and end date should be 8 digits long, e.g. 20121023</li>
+        <li>If interested in period of record, type <font color="red">por</font> for both start and end date</li>
+        <li>If more than one element desired, elements should be a comma separated list</li>
+        <li><p onmouseover="ShowHide('AcisElementChoices')">Hover here for list of Element Choices</p>    <img class="logo" src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0" style="display:none;" /></li>
+        </ul></p>
+</div>
+
 <div class="center">
     <div id='form'>
         <table border=0 align="right">
@@ -12,18 +25,9 @@
         </form>
         </table>
     </div>
-    <br />
-    <p>How to use: 
-        <ul>
-        <li>Start and end date should be 8 digits long, e.g. 20121023</li>
-        <li>If interested in period of record, type <font color="red">por</font> for both start and end date</li>
-        <li>If more than one element desired, elements should be a comma separated list</li>
-        <li><p onmouseover="ShowHide('AcisElementChoices')">Hover here for list of Element Choices</p>    <img class="logo" src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0" style="display:none;" /></li>
-        </ul></p>
-
-    <br /> 
-
+    
     {%if meta%}
+        <h2>Station Metedata</h2>
         {% for key, val in meta.items %}
             <p> {{key}}: {{val}} </p>
         {%endfor%}
@@ -36,9 +40,14 @@
 
 
     {%if results%}
+        <h2>Plots of Monthly Averages</h2>
         <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-        <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">            
-        <div id="container"style="height:300px;width:500px;"></div>
+        <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+        <!-- One container per elements -->
+        {%for result in results%}
+            <div id="container{{forloop.counter}}"style="height:400px;width:600px;"></div>
+            <br /> 
+        {%endfor%}         
         <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-monthly-aves.js"></script>
     {%endif%}
 </div>
