@@ -6,39 +6,45 @@
 
 <div class="sidebar_left">
     <br /> 
-   <h2>How to use:</h2>
+    <h2>How to use:</h2>
         
-        <p><ul>
-        <li>Start and end date should be 8 digits long, e.g. 20121023</li>
-        <li>If interested in period of record, type <font color="red">por</font> for both start and end date</li>
-        <li>If more than one element desired, elements should be a comma separated list</li>
-        <li><p onmouseover="ShowHide('AcisElementChoices')">Hover here for list of Element Choices</p>    <img class="logo" src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0" style="display:none;" /></li>
-        </ul></p>
-</div>
-
-<div class="center">
-    <div id='form'>
-        <table border=0 align="right">
-        <form method="post" action="">{% csrf_token %}
-            <table>{{ form|safe }}</table>
-            <input type="submit" value="Submit" name="form"/>
-        </form>
-        </table>
-    </div>
-    
+    <p><ul>
+    <li>Start and end date should be 8 digits long, e.g. 20121023</li>
+    <li>If interested in period of record, type <font color="red">por</font> for both start and end date</li>
+    <li>If more than one element desired, elements should be a comma separated list</li>
+    <li><p onmouseover="ShowHide('AcisElementChoices')">Hover here for list of Element Choices</p>    <img class="logo" src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0" style="display:none;" /></li>
+    </ul></p>
     {%if meta%}
         <h2>Station Metedata</h2>
         {% for key, val in meta.items %}
             <p> {{key}}: {{val}} </p>
         {%endfor%}
     {%endif%}
+</div>
+
+<div class="sidebar_right">
     <br />
-    {%if data%}
-        {{data}}
+    {%if results%}
+        <h1>Get Data Here (only json format available at this time)!</h1>
+        <p onClick="ShowHide('averaged_data')">Click here for averaged data</p>
+        <div id="averaged_data" width="450" height="450" border="0" style="display:none;">{{averaged_data}}</div>
+        <p onClick="ShowHide('raw_data')">Click here for raw data</p>
+        <div id="raw_data" width="450" height="450" border="0" style="display:none;">{{raw_data}}</div>
     {%endif%}
+</br>
+</div>
 
-
-
+<div class="center">
+    <div id='form_graphs'>
+        <table border=0 align="right">
+        <form method="post" action="">{% csrf_token %}
+            <table>{{ form_graphs|safe }}</table>
+            <input type="submit" value="Submit" name="form_graphs"/>
+        </form>
+        </table>
+    </div>
+    <br />
+    <br /> 
     {%if results%}
         <h2>Plots of Monthly Averages</h2>
         <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
@@ -51,5 +57,4 @@
         <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-monthly-aves.js"></script>
     {%endif%}
 </div>
-
 {%endblock%}

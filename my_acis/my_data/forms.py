@@ -281,4 +281,3 @@ class MonthlyAveragesForm(forms.Form):
         self.fields['elements'] = MultiElementField(initial='pcpn')
         self.fields['start_date'] = forms.CharField(max_length=8, required = False, initial='20000101')
         self.fields['end_date'] = forms.CharField(max_length=8, required = False, initial='por')
-

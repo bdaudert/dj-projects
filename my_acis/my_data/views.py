@@ -260,32 +260,35 @@ def monthly_aves(request):
     }
     stn_id = request.GET.get('stn_id', None)
     if stn_id is None:
-        form = set_as_form(request,'MonthlyAveragesForm')
+        form_graphs = set_as_form(request,'MonthlyAveragesForm')
     else:
-        form = set_as_form(request,'MonthlyAveragesForm', init={'stn_id':str(stn_id)})
-    context['form'] = form
-    if 'form' in request.POST:
-        form = set_as_form(request,'MonthlyAveragesForm')
-        context['form']  = form
-        if form.is_valid():
-            s_date = str(form.cleaned_data['start_date'])
-            e_date = str(form.cleaned_data['end_date'])
-            params = dict(sid=form.cleaned_data['station_id'], sdate=s_date, edate=e_date, \
+        form_graphs = set_as_form(request,'MonthlyAveragesForm', init={'stn_id':str(stn_id)})
+    context['form_graphs'] = form_graphs
+    if 'form_graphs' in request.POST:
+        form_graphs = set_as_form(request,'MonthlyAveragesForm')
+        context['form_graphs']  = form_graphs
+        if form_graphs.is_valid():
+            s_date = str(form_graphs.cleaned_data['start_date'])
+            e_date = str(form_graphs.cleaned_data['end_date'])
+            params = dict(sid=form_graphs.cleaned_data['station_id'], sdate=s_date, edate=e_date, \
             meta='valid_daterange,name,state,sids,ll,elev,uid,county,climdiv', \
-            elems=[dict(name=el, groupby="year")for el in form.cleaned_data['elements']])
+            elems=[dict(name=el, groupby="year")for el in form_graphs.cleaned_data['elements']])
             req = AcisWS.StnData(params)
             monthly_aves = {}
+            context['averaged_data'] = []
             if 'error' in req:
-                data = req['error']
+                monthly_aves = req['error']
             else:
+                context['raw_data'] = req['data']
                 try:
-                    monthly_aves = WRCCDataApps.monthly_aves(req, form.cleaned_data['elements'])
+                    monthly_aves = WRCCDataApps.monthly_aves(req, form_graphs.cleaned_data['elements'])
+                    context['averaged_data'] = monthly_aves
                 except:
                     pass
 
-            results = [{} for k in form.cleaned_data['elements']]
+            results = [{} for k in form_graphs.cleaned_data['elements']]
             #results = defaultdict(dict)
-            for el_idx, el in enumerate(form.cleaned_data['elements']):
+            for el_idx, el in enumerate(form_graphs.cleaned_data['elements']):
                 el_strip = re.sub(r'(\d+)(\d+)', '', el)   #strip digits from gddxx, hddxx, cddxx
                 b = el[-2:len(el)]
                 try:
@@ -319,12 +322,12 @@ def monthly_aves(request):
                 else:
                     results[el_idx] = {'element_long':str(el)}
                 results[el_idx]['element'] = str(el)
-                results[el_idx]['stn_id']= str(form.cleaned_data['station_id'])
-                if form.cleaned_data['start_date'] == 'por':
+                results[el_idx]['stn_id']= str(form_graphs.cleaned_data['station_id'])
+                if form_graphs.cleaned_data['start_date'] == 'por':
                     results[el_idx]['record_start'] = str(req['meta']['valid_daterange'][el_idx][0])
                 else:
                     results[el_idx]['record_start'] = '%s-%s-%s' % (s_date[0:4], s_date[4:6], s_date[6:8])
-                if form.cleaned_data['end_date'] == 'por':
+                if form_graphs.cleaned_data['end_date'] == 'por':
                     results[el_idx]['record_end'] = str(req['meta']['valid_daterange'][el_idx][1])
                 else:
                     results[el_idx]['record_end'] = '%s-%s-%s' % (e_date[0:4], e_date[4:6], e_date[6:8])
@@ -362,6 +365,7 @@ def monthly_aves(request):
             f = open('%sjson/%s' %(MEDIA_URL,json_file),'w+')
             f.write(results_json)
             f.close()
+
         else:
             stn_id = None
 

@@ -99,7 +99,7 @@ div.pop-up {
     left :0px;    
     width: 25%;
     padding: 15px 10px 15px 20px;
-    height:70%;
+    height:80%;
     /*border:1px solid #FFEBCD;*/
 }
 
@@ -110,7 +110,7 @@ div.pop-up {
     right:0px;
     width: 25%;
     padding: 15px 10px 15px 20px;
-    height:70%;
+    height:80%;
     /*border:1px solid #FFEBCD;*/
 }
 
@@ -136,9 +136,10 @@ div.pop-up {
     padding: 15px 10px 15px 20px;
 }
 
+/*
 .center-left p {font-size:xx-large;}
 .center-right p {font-size:xx-large;}    
-
+*/
 .header {
     background: #FFEBCD ;
     padding: 2em;
