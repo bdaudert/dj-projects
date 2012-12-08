@@ -92,11 +92,7 @@
             <script type="text/javascript">$("#bcrumbs").load("{{MEDIA_URL}}html/csc_stationfinder.html .breadcrumbs");</script>
 
         <h1 align="center">STATION FINDER</h1>
-        <div class="footer">
-            <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30"></p>
-        </div>
-
-        <div class="sidebar_left">
+        <div class="center-left">
             <p onmouseover="ShowHide('myImage')">Search by ID</p>
             <img src="{{MEDIA_URL}}img/Acis_Stn_Id_Type.png" id="myImage" border="0" width="275" height="250" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_id/">
@@ -105,28 +101,28 @@
             </form>
 
             <p onmouseover="ShowHide('myImage2')">Search by County</p>
-            <img class="logo" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage2" width="275" height="250" border="0" style="display:none;" />
+            <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage2" width="275" height="250" border="0" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_county/">
                 <input type="text" name="q" />
                 <input type="submit" value="Submit" />
             </form>
 
             <p onmouseover="ShowHide('myImage3')">Search by County Warning Area</p>
-            <img class="logo" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage3" width="275" height="250" border="0" style="display:none;" />
+            <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage3" width="275" height="250" border="0" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_cwa/">
                 <input type="text" name="q" />
                 <input type="submit" value="Submit" />
             </form>
 
             <p onmouseover="ShowHide('myImage4')">Search by Climate Division</p> 
-            <img class="logo" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage4" width="275" height="250" border="0" style="display:none;" />
+            <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage4" width="275" height="250" border="0" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_clim_div/">
                 <input type="text" name="q" />
                 <input type="submit" value="Submit" />
             </form>
 
             <p onmouseover="ShowHide('myImage5')">Search by Basin</p>
-            <img class="logo" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage5" width="275" height="250" border="0" style="display:none;" />
+            <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage5" width="275" height="250" border="0" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_basin/">
                 <input type="text" name="q" />
                 <input type="submit" value="Submit" />
@@ -144,7 +140,7 @@
             </form> 
           
             <p onmouseover="ShowHide('myImage6')">Search by Bounding Box</p>
-            <img class="logo" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage6" width="275" height="250" border="0" style="display:none;" />
+            <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage6" width="275" height="250" border="0" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_bounding_box/">
                 West: <input type="text" name="W" size="8" />
                 South: <input type="text" name="S" size="8" /></br>
@@ -156,8 +152,15 @@
         </div>
         {%if error%} 
             <h1 class="warning">{{error}}</h1>
-        {%else%}         
+        {%else%}
             <div id="map_canvas"></div>
         {%endif%}
+        
+        <div class="footer">
+        <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30">&nbsp;&nbsp;           
+           Created by <a href="http://www.wrcc.dri.edu/" target="_blank">>WRCC</a> &nbsp;&nbsp;
+           Hosted by <a href="http://www.dri.edu/" target="_blank"><img class="logo" src="{{ MEDIA_URL }}img/DRILogo.gif"></a></p>
+
+    </div>
     </body>
 </html>

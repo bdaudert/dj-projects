@@ -69,8 +69,8 @@
     {% block breadcrumbs %}
         <li><a href="/my_data">HOME </a>
         <ul>
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Contact Us</a></li>
+            <li><a href="/my_data/about_us/">About Us</a></li>
+            <li><a href="/my_data/contact_us">Contact Us</a></li>
         </ul></li>
         <li><a href="/my_data/station_finder">STATION FINDER</a></li>
         <li><a href="/my_data/data">DATA PORTAL</a></li>
@@ -85,7 +85,10 @@
 
     {% block footer %}
     <div class="footer">
-        <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30"></p>
+        <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30">&nbsp;&nbsp;  
+           Created by <a href="http://www.wrcc.dri.edu/" target="_blank">>WRCC</a> &nbsp;&nbsp;
+           Hosted by <a href="http://www.dri.edu/" target="_blank"><img class="logo" src="{{ MEDIA_URL }}img/DRILogo.gif"></a></p>
+
     </div>
     {% endblock %}
 </body>

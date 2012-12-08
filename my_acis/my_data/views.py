@@ -16,7 +16,7 @@ import re
 from collections import defaultdict
 
 #My modules
-import AcisWS, WRCCDataApps
+import AcisWS, WRCCDataApps, WRCCClasses, WRCCUtils
 import my_data.forms as forms
 
 state_choices = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', \
@@ -54,6 +54,12 @@ def about_us(request):
         'title': 'About Us'
     }
     return render_to_response('my_data/about_us.html', context, context_instance=RequestContext(request))
+
+def contact_us(request):
+    context = {
+        'title': 'Contact Us'
+    }
+    return render_to_response('my_data/contact_us.html', context, context_instance=RequestContext(request))
 
 def data(request):
     context = {
@@ -223,9 +229,7 @@ def metagraph(request):
             context['station_id'] = form_meta.cleaned_data['station_id']
             station_meta = {}
             params = {'sids':str(form_meta.cleaned_data['station_id'])}
-            meta_request = AcisWS.StnMeta(params)
-            if 'error' in meta_request.keys():
-                station_meta['error'] = meta_request['error']
+            meta_request = WRCCClasses.DataJob('StnMeta', params).make_data_call()
             if 'meta' in meta_request.keys():
                 if len(meta_request['meta']) == 0:
                     station_meta['error'] = 'No meta data found for station: %s.' %stn_id
@@ -273,18 +277,16 @@ def monthly_aves(request):
             params = dict(sid=form_graphs.cleaned_data['station_id'], sdate=s_date, edate=e_date, \
             meta='valid_daterange,name,state,sids,ll,elev,uid,county,climdiv', \
             elems=[dict(name=el, groupby="year")for el in form_graphs.cleaned_data['elements']])
-            req = AcisWS.StnData(params)
             monthly_aves = {}
-            context['averaged_data'] = []
-            if 'error' in req:
-                monthly_aves = req['error']
-            else:
-                context['raw_data'] = req['data']
-                try:
-                    monthly_aves = WRCCDataApps.monthly_aves(req, form_graphs.cleaned_data['elements'])
-                    context['averaged_data'] = monthly_aves
-                except:
-                    pass
+
+            #req = WRCCClasses.DataJob('StnData', params).make_data_call()
+            req = AcisWS.StnData(params)
+            context['raw_data'] = req['data']
+            try:
+                monthly_aves = WRCCDataApps.monthly_aves(req, form_graphs.cleaned_data['elements'])
+                context['averaged_data'] = monthly_aves
+            except:
+                pass
 
             results = [{} for k in form_graphs.cleaned_data['elements']]
             #results = defaultdict(dict)
@@ -332,29 +334,11 @@ def monthly_aves(request):
                 else:
                     results[el_idx]['record_end'] = '%s-%s-%s' % (e_date[0:4], e_date[4:6], e_date[6:8])
                 results[el_idx]['data'] = monthly_aves[el]
-
                 if 'meta' in req.keys():
-                    results[el_idx]['stn_name'] = str(req['meta']['name']).replace("\'"," ")
+                    results[el_idx]['stn_name'] = str(req['meta']['name'])
                     results[el_idx]['state'] = str(req['meta']['state'])
             if 'meta' in req.keys():
-                #get rid of annoying unicode
-                Meta = {}
-                for key, val in req['meta'].items():
-                    if key == 'sids':
-                        Val = []
-                        for sid in val:
-                            Val.append(str(sid))
-                    elif key == 'valid_daterange':
-                        Val = []
-                        for el_idx, rnge in enumerate(val):
-                            start = str(rnge[0])
-                            end = str(rnge[1])
-                            line = '%s : %s - %s' %(results[el_idx]['element_long'], start, end)
-                            Val.append(line)
-                    else:
-                        Val = str(val)
-                    Meta[key] = Val
-
+                Meta = WRCCUtils.format_stn_meta(req['meta'])
                 context['meta'] = Meta
             context['results'] = results
             #save to json file (necessary since we can't pass list, dicts to js via hidden vars)

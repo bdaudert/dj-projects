@@ -4,15 +4,14 @@
 
 <h1 align="center">{{title}}</h1>
 
-<div class="sidebar_left">
-    <br /> 
+
+<div class="center-left">
     <h2>How to use:</h2>
-        
     <p><ul>
     <li>Start and end date should be 8 digits long, e.g. 20121023</li>
     <li>If interested in period of record, type <font color="red">por</font> for both start and end date</li>
     <li>If more than one element desired, elements should be a comma separated list</li>
-    <li><p onmouseover="ShowHide('AcisElementChoices')">Hover here for list of Element Choices</p>    <img class="logo" src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0" style="display:none;" /></li>
+    <li><p onmouseover="ShowHide('AcisElementChoices')">Hover here for list of Element Choices</p><img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0" style="display:none;" /></li>
     </ul></p>
     {%if meta%}
         <h2>Station Metedata</h2>
@@ -22,16 +21,14 @@
     {%endif%}
 </div>
 
-<div class="sidebar_right">
-    <br />
+<div class="center-right">
     {%if results%}
-        <h1>Get Data Here (only json format available at this time)!</h1>
+        <h2>Get Data Here <br/>(only json format available at this time)!</h2>
         <p onClick="ShowHide('averaged_data')">Click here for averaged data</p>
         <div id="averaged_data" width="450" height="450" border="0" style="display:none;">{{averaged_data}}</div>
         <p onClick="ShowHide('raw_data')">Click here for raw data</p>
         <div id="raw_data" width="450" height="450" border="0" style="display:none;">{{raw_data}}</div>
     {%endif%}
-</br>
 </div>
 
 <div class="center">
