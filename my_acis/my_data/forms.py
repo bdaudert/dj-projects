@@ -7,6 +7,8 @@ from django.utils.safestring import mark_safe
 
 import datetime
 import re
+import WRCCUtils
+
 #Utilities
 ############################################
 #find todays date
@@ -19,6 +21,29 @@ if len(mon) == 1:
 if len(day) == 1:
     day = '0%s' % day
 today = '%s%s%s' % (yr, mon, day)
+
+TIME_PERIOD_CHOICES = (
+    ('custom', 'Custom Date Range'),
+    ('days', 'Last x days'),
+    ('months', 'Last x months'),
+    ('years', 'Last x years'),
+)
+
+ACIS_ELEMENT_CHOICES = (
+        ('pcpn', 'Precipitation (Inches)'),
+        ('snow', 'Snowfall (Inches)'),
+        ('snwd', 'Snowdepth (Inches)'),
+        ('maxt', 'Maximum Temperature (F)'),
+        ('mint', 'Minimum Temperature(F)'),
+        ('avgt', 'Mean Temperature(F)'),
+        ('obst', 'Temperature at Observation Time'),
+        ('gdd', 'Growing Degree Days (Base 50F)'),
+        ('hdd', 'Heating Degree Days (Base 65F)'),
+        ('cdd', 'Cooling Degree Days (Base 65F)'),
+        ('gddxx', 'Growing Degree Days (Base xxF)'),
+        ('hddxx', 'Heating Degree Days (Base xxF)'),
+        ('cddxx', 'Cooling Degree Days (Base xxF)'),
+)
 
 STN_FIND_CHOICES = (
         ('stnid', 'Individual station'),
@@ -281,3 +306,59 @@ class MonthlyAveragesForm(forms.Form):
         self.fields['elements'] = MultiElementField(initial='pcpn')
         self.fields['start_date'] = forms.CharField(max_length=8, required = False, initial='20000101')
         self.fields['end_date'] = forms.CharField(max_length=8, required = False, initial='por')
+
+class ClimateMapForm0(forms.Form):
+        grid_selection = forms.ChoiceField(choices=GRID_SELECTION_CHOICES, required=False, initial='point')
+        element = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES, required=False, initial='maxt')
+        time_period = forms.ChoiceField(choices=TIME_PERIOD_CHOICES, required=False, initial='months')
+        x = forms.IntegerField(required=False, initial=1)
+
+class ClimateMapForm1(forms.Form):
+    def __init__(self, *args, **kwargs):
+        grid_selection = kwargs.get('initial', {}).get('grid_selection', None)
+        element = kwargs.get('initial', {}).get('element', None)
+        time_period =  kwargs.get('initial', {}).get('time_period', None)
+        x = kwargs.get('initial', {}).get('x', None)
+
+        super(ClimateMapForm1, self).__init__(*args, **kwargs)
+
+        if grid_selection is None:
+            grid_selection = self.data.get('grid_selection')
+        if element is None:
+            element = self.data.get('element')
+        if time_period is None:
+            time_period = self.data.get('time_period')
+        if x is None:
+            x = self.data.get('x')
+
+        self.fields['grid_selection'] = forms.CharField(required=False, initial=grid_selection, widget=forms.HiddenInput())
+        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES)
+        if grid_selection == 'point':
+            self.fields['location'] = forms.CharField(initial='-77.7,41.8')
+        elif grid_selection == 'state':
+            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES)
+        elif grid_selection == 'bbox':
+            self.fields['bounding_box'] = forms.CharField(required=False,initial='-90,40,-88,41')
+
+        self.fields['element'] = forms.CharField(initial=element)
+        self.fields['element'].widget.attrs['readonly'] = 'readonly'
+        if element == 'cddxx':
+            self.fields['base_temperature_cddxx'] = forms.IntegerField(initial=65)
+        if element == 'hddxx':
+            self.fields['base_temperature_hddxx'] = forms.IntegerField(initial=65)
+        if element == 'gddxx':
+            self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50)
+
+        if time_period == 'custom':
+            self.fields['start_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial='20120101')
+            self.fields['end_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
+        else:
+            if x is None:
+                self.fields['start_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial='20000101')
+                self.fields['end_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
+            else:
+                start_date = WRCCUtils.get_start_date(time_period,today, x)
+                self.fields['start_date'] = forms.CharField(required = False, initial=start_date)
+                self.fields['start_date'].widget.attrs['readonly'] = 'readonly'
+            self.fields['end_date'] = forms.CharField(required=False, initial=today)
+            self.fields['end_date'].widget.attrs['readonly'] = 'readonly'

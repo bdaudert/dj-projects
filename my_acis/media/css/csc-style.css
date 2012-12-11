@@ -26,7 +26,7 @@ a:link { color: #3300CC; }
 a:visited { color: #3300CC; }
 
 a:hover {
-    color: #996633;
+    color: #33CCFF;
     text-decoration: none;
 }
 a:active { color: red; }
@@ -73,10 +73,12 @@ div.pop-up {
 }
     
 .container { 
-    margin: 0 auto; 
+    /*margin: 0 auto;*/
+    margin: 0px 0px 0px 0px; 
     /*border: 1px solid #000000;*/
     text-align: left;
     height:100%;
+    z-index:1
     /*height:100%;*/
 }
 
@@ -92,7 +94,7 @@ div.pop-up {
 /*2 page divide e.g. my_data/data/home.html*/
 .center-left {
     float: left;
-    width: 460px;
+    width: 300px;
     padding: 15px 10px 15px 20px;
     height 80%;
     z-index:-1;
@@ -100,8 +102,8 @@ div.pop-up {
 
 .center-right{
     float: right;
-    width: 460px;
-    padding: 15px 10px 15px 20px;
+    width: 300px;
+    padding: 15px 10px 15px 0px;
     height: 80%;
     z-index:-1;
 }
@@ -157,8 +159,8 @@ img.logo {
 }
 
 .hover_img {
-    width: 300px;
-    height:300px;
+    width: 250px;
+    height:250px;
 }
 
 .footer {
@@ -297,13 +299,13 @@ img.logo {
         color: #FFFFFF;
         background-color: #707070;
         
-        width: 220px;   /* IE 5.x */
-        width/* */:/**/200px;   /* Other browsers */
-        width: /**/200px;   
+        width: 200px;   /* IE 5.x */
+        width/* */:/**/180px;   /* Other browsers */
+        width: /**/180px;   
         
-        height: 220px;  /* IE 5.x */
-        height/* */:/**/200px;  /* Other browsers */
-        height: /**/200px;          
+        height: 200px;  /* IE 5.x */
+        height/* */:/**/180px;  /* Other browsers */
+        height: /**/180px;          
 
     }
     
@@ -317,7 +319,7 @@ img.logo {
     .activeImageIndicator{
         border:1px solid #FF0000;
         position:absolute;
-        z-index:10000;
+        z-index:1;
     }
     .revealedImage{
         /*

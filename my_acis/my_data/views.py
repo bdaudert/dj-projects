@@ -355,6 +355,35 @@ def monthly_aves(request):
 
     return render_to_response('my_data/apps/monthly_aves.html', context, context_instance=RequestContext(request))
 
+def clim_sum_maps(request):
+    context = {
+        'title': 'Climate Summary Maps',
+    }
+    form0 = set_as_form(request,'ClimateMapForm0')
+    context['form0'] = form0
+    if 'form0' in request.POST:
+        form0 = set_as_form(request,'ClimateMapForm0')
+        context['form0']  = form0
+
+        if form0.is_valid():
+            context['form1_ready'] = True
+            initial = {'grid_selection':form0.cleaned_data['grid_selection'], \
+                      'element':form0.cleaned_data['element'], \
+                      'time_period':form0.cleaned_data['time_period'], \
+                      'x': form0.cleaned_data['x']}
+            form1 = forms.ClimateMapForm1(initial=initial)
+            context['form1'] = form1
+        else:
+            element = None
+            grid_selection = None
+            time_period = None
+            x = None
+    if 'form1' in request.POST:
+        form0 = set_as_form(request,'ClimateMapForm0')
+        context['form0'] = form0
+    return render_to_response('my_data/apps/clim_sum_maps.html', context, context_instance=RequestContext(request))
+
+
 def station_finder(request):
     context = {
         'title': 'Station Finder',

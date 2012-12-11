@@ -1,0 +1,27 @@
+{% extends "csc_base.html" %}
+
+{% block content %}
+
+<h1 align="center">{{title}}</h1>
+<div class="center">
+    <div id='form0'>
+        <table border=0 align="right">
+        <form method="post" action="">{% csrf_token %}
+            <table>{{ form0|safe }}</table>
+            <input type="submit" value="Submit" name="form0"/>
+        </form>
+        </table>
+    </div>
+    {%if form1_ready%}
+    <div id='form1'>
+        <table border=0 align="right">
+        <form method="post" action="">{% csrf_token %}
+            <table>{{ form1|safe }}</table>
+            <input type="submit" value="Submit" name="form1"/>
+        </form>
+        </table>
+    </div> 
+    {%endif%}    
+</div>
+
+{%endblock%}
