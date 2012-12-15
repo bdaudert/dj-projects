@@ -19,7 +19,7 @@
         <script src="http://code.highcharts.com/modules/exporting.js"></script>
     </head>
 
-    <body>
+    <body onload="initialize_map()">
 
        <div class="header">
             <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png">
@@ -51,15 +51,13 @@
                 </table>
             </div>
                 
-            {{json_file}}
         </div>
         
-        
-        <div class="center">
-            <a href="#"  onClick="initialize_map()">Find your Latitude and Longitude here!</a>
-            <p>Drag and click the marker to change latitude and longitude</p>
-            <div id="map" style="width: 100%; height:70%"></div>
-            </br>
+            <!--<a href="#"  onClick="initialize_map()">Find your Latitude and Longitude here!</a>-->
+            <p class="warning">Drag and click the marker to change latitude and longitude</p>
+            <div id="map" style="width: 60%; height:60%;margin:0px 0px 0px 400px;"></div>
+            <br />
+            {%if datadict%}
             <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
             <input type="hidden" id="element_long" name="element_long" value="{{element_long}}">
             <input type="hidden" id="element" name="element" value="{{element}}">
@@ -67,9 +65,11 @@
             <input type="hidden" id="lon" name="lon" value="{{lon}}">
             <input type="hidden" id="start_date" name="start_date" value="{{start_date}}">
             <input type="hidden" id="end_date" name="end_date" value="{{end_date}}">
-            <div id="hc-graph" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+            <div id="hc-graph" style="width: 60%; height: 60%; margin: 0 auto"></div>
             <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-gp-time-series.js"></script>
-        </div>
+            </br>
+            {%endif%}
+
 
         <div class="footer">
             <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30">&nbsp;&nbsp;

@@ -9,7 +9,7 @@ html {
 body {
     background-color: #947e6e;
     height: 100%;
-    margin: 0;
+    margin: 0px auto;
     padding: 0;
 }
 
@@ -56,20 +56,6 @@ ul.navbar a {
   background-color: #FFEBCD;
   text-decoration: none ; }
 
-/*
-div.pop-up {
-  display: none;
-  position: absolute;
-  width: 280px;
-  padding: 10px;
-  background-color: #FFEBCD;
-  color: #000000;
-  border: 1px solid #1a1a1a;
-  font-size: 90%;
-}
-*/
-
-
 div.pop-up {
   display: none;
   position: absolute;
@@ -86,45 +72,40 @@ div.pop-up {
 }
     
 .container { 
-    /*margin: 0 auto;*/
-    margin: 0px 0px 0px 0px; 
+    margin: 0px auto;
+    /*margin: 0px 0px 0px 0px;*/ 
     /*border: 1px solid #000000;*/
     text-align: left;
-    height:100%;
-    z-index:1
     /*height:100%;*/
+    z-index:1
 }
 
 .center {
     float:center;
-    margin: 15px 10px 250px 400px;
-    padding: 15px 10px 15px 100px;
+    margin: 0px auto;
+    /*margin: 15px 10px 250px 300px;*/
+    padding: 15px 10px 15px 20px;
     text-align:left;
-    height:80%;
-    width:40%;
+    height:100%;
+    width:45%;
 }
 
 /*2 page divide e.g. my_data/data/home.html*/
 .center-left {
     float: left;
-    width: 300px;
+    margin auto;
+    width: 25%;
     padding: 15px 10px 15px 20px;
-    height 80%;
-    z-index:-1;
+    height 100%;
 }
 
 .center-right{
     float: right;
-    width: 300px;
-    padding: 15px 10px 15px 0px;
-    height: 80%;
-    z-index:-1;
+    margin auto;
+    width: 25%;
+    padding: 15px 10px 15px 20px;
+    height: 100%;
 }
-
-/*
-.center-left p {font-size:xx-large;}
-.center-right p {font-size:xx-large;}    
-*/
 
 .header {
     background: #FFEBCD ;
@@ -176,13 +157,15 @@ img.logo {
     height:250px;
 }
 
+
 .footer {
+    float: bottom;
     border-top: 1px dashed #FFEBCD;
-    margin: 1em 0;
-    padding: 1em;
+    margin: auto;
+    padding: .5em;
 }
 .footer p {
-    margin: 0 0 2px 0;
+    margin: 0 0 0 0;
     text-align: center;
     font-size: 1em;
     color:#660000;
@@ -287,10 +270,10 @@ img.logo {
 /*Map related stuff*/
 #map_canvas {
 
-    height: 70%;
+    height: 100%;
     width: 70%;
     margin-right:auto;
-    margin-left:400px;
+    margin-left:300px;
     margin-top:auto;
     margin-bottom:auto;
 }

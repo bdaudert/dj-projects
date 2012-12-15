@@ -1,108 +1,112 @@
 {% extends "csc_base.html" %}
 
 {% block content %} 
-        <h1 align="center">DATA ACCESS</h1>
-            
-        <div class="container">
-            <div class="center-left">
-                <h1>Historic Station Data</h1>    
-                <div id='form0'>
-                    <table border=0 align="right">
-                    <form method="post" action="">{% csrf_token %}
-                    <table class="sortable">{{ form0_point|safe }}</table>
-                    <input type="submit" value="Submit" name="form0_point"/>
-                    </form>
-                    </table>
-                </div>
-            
-                {%if form1_point_ready%}
-                    <div id="form1">
-                        <table border=0 align="right">
-                        <form method="post" action="">{% csrf_token %}
-                        <table>{{ form1_point|safe }}</table>
-                        <input type="submit" value="Submit" name="form1_point"/>
-                        </form>
-                        </table>
-                    </div>
-                    </br>
-                    </br>
-                {%endif%}
-            </div>
-            
-
-            <div class="center-right">
-                <h1>Gridded Data</h1>
-                <div id='form2'>
-                    <table border=0 align="right">
-                    <form method="post" action="">{% csrf_token %}
-                    <table class="sortable">{{ form0_grid|safe }}</table>
-                    <input type="submit" value="Submit" name="form0_grid"/>
-                    </form>
-                    </table>
-                </div>
-
-                {%if form1_grid_ready%}
-                    <div id="form1">
-                        <table border=0 align="right">
-                        <form method="post" action="">{% csrf_token %}
-                        <table>{{ form1_grid|safe }}</table>
-                        <input type="submit" value="Submit" name="form1_grid"/>
-                        </form>
-                        </table>
-                    </div>
-                    </br>
-                    </br>
-                {%endif%}
-            </div>
-
-            <div class="center">
-                <p onClick="ShowHide('AcisElementChoices')"><font color="red" size="6">Click here for list of element choices!</font></p>
-                <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0" style="display:none;" />
-                {%if point_data%}
-                <br />
-                <br />
-                {%if not json%}
-                    {%for stn, stn_data in point_data.items %}
-                        <h2>STATION NAME: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
-                        <table>
-                        <th>date{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</th>
-                        {%for date_vals in stn_data%}
-                            <tr>
-                            <td>{{dates|lookup:forloop.counter|safe}}{{delimiter}}
-                            {%for el_val in date_vals%}{{el_val}}{{delimiter}}{%endfor%}</td>
-                            </tr>
-                        {%endfor%}
-                        </table>
-                    {%endfor%}
-                {%else%}
-                    {%for stn, stn_data in data.items %}
-                        <h2>STATION NAME: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
-                    {{point_data}}
-                    {%endfor%}
-                {%endif%}
-                {%endif%}
-
-
-                {%if grid_data%}
-                <br />
-                <br />
-                {%if not json%}
-                    <h2>{%for item in file_info%}{{item}}&nbsp;{%endfor%}</h2>
-                    <p>date{{delimiter}}lat{{delimiter}}lon{{delimiter}}elev{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</p>
-                    {%for date_vals in grid_data%}
-                    {%for val in date_vals%}
-                    {{val}}{{delimiter}}
-                    {%endfor%}
-                    <br/>
-                    {%endfor%}
-                {%else%}
-                    <p>date,lat,lon,elev,
-                    {%for el in elements%}{{el}},{%endfor%}</p>
-                    {{grid_data}}
-                {%endif%}
-                {%endif%}
-            </div>
-
+<h1 align="center">DATA ACCESS</h1>
+    
+<div class="container">
+    <div class="center-left">
+        <h2>Historic Station Data</h2>    
+        <div id='form0'>
+            <table border=0 align="right">
+            <form method="post" action="">{% csrf_token %}
+            <table class="sortable">{{ form0_point|safe }}</table>
+            <input type="submit" value="Submit" name="form0_point"/>
+            </form>
+            </table>
         </div>
+    
+        {%if form1_point_ready%}
+            <div id="form1">
+                <table border=0 align="right">
+                <form method="post" action="">{% csrf_token %}
+                <table>{{ form1_point|safe }}</table>
+                <input type="submit" value="Submit" name="form1_point"/>
+                </form>
+                </table>
+            </div>
+            </br>
+            </br>
+        {%endif%}
+    </div>
+    
+
+    <div class="center-right">
+        <h2>Gridded Data</h2>
+        <div id='form2'>
+            <table border=0 align="right">
+            <form method="post" action="">{% csrf_token %}
+            <table class="sortable">{{ form0_grid|safe }}</table>
+            <input type="submit" value="Submit" name="form0_grid"/>
+            </form>
+            </table>
+        </div>
+
+        {%if form1_grid_ready%}
+            <div id="form1">
+                <table border=0 align="right">
+                <form method="post" action="">{% csrf_token %}
+                <table>{{ form1_grid|safe }}</table>
+                <input type="submit" value="Submit" name="form1_grid"/>
+                </form>
+                </table>
+            </div>
+            </br>
+            </br>
+        {%endif%}
+    </div>
+
+    <div class="center">
+        <p class="warning" onClick="ShowHide('AcisElementChoices')">Click here for list of element choices!</p>
+        <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0" style="display:none;" />
+        <p class="warning" onClick="ShowHide('Acis_Area_Codes')">Click here for examples of Station Selection!</p>
+                <img src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="Acis_Area_Codes" width="450" height="450" border="0" style="display:none;" />
+        <a href="http://data.rcc-acis.org/doc/" target="_blank" class="warning"><font color="#A00000">Click here for more information on Gridded Data!</font></a>
+
+        {%if point_data%}
+        <br />
+        <br />
+        {%if not json%}
+            {%for stn, stn_data in point_data.items %}
+                <h2>STATION NAME: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
+                <table>
+                <th>date{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</th>
+                {%for date_vals in stn_data%}
+                    <tr>
+                    <td>{{dates|lookup:forloop.counter|safe}}{{delimiter}}
+                    {%for el_val in date_vals%}{{el_val}}{{delimiter}}{%endfor%}</td>
+                    </tr>
+                {%endfor%}
+                </table>
+            {%endfor%}
+        {%else%}
+            {%for stn, stn_data in data.items %}
+                <h2>STATION NAME: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
+            {{point_data}}
+            {%endfor%}
+        {%endif%}
+        {%endif%}
+
+
+        {%if grid_data%}
+        <br />
+        <br />
+        {%if not json%}
+            <h2>{%for item in file_info%}{{item}}&nbsp;{%endfor%}</h2>
+            <p>date{{delimiter}}lat{{delimiter}}lon{{delimiter}}elev{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</p>
+            {%for date_vals in grid_data%}
+            {%for val in date_vals%}
+            {{val}}{{delimiter}}
+            {%endfor%}
+            <br/>
+            {%endfor%}
+        {%else%}
+            <p>date,lat,lon,elev,
+            {%for el in elements%}{{el}},{%endfor%}</p>
+            {{grid_data}}
+        {%endif%}
+        {%endif%}
+    </div>
+
+</div>
 
 {%endblock%}

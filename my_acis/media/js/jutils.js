@@ -115,7 +115,6 @@ function initialize_map() {
     mapTypeId: google.maps.MapTypeId.HYBRID
     };
     map = new google.maps.Map(document.getElementById("map"),mapOptions);
-
     infowindow = new google.maps.InfoWindow({
         content: 'oi'
     });

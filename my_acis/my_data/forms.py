@@ -45,6 +45,19 @@ ACIS_ELEMENT_CHOICES = (
         ('cddxx', 'Cooling Degree Days (Base xxF)'),
 )
 
+ACIS_ELEMENT_CHOICES_SHORT = (
+        ('pcpn', 'Precipitation (Inches)'),
+        ('snow', 'Snowfall (Inches)'),
+        ('snwd', 'Snowdepth (Inches)'),
+        ('maxt', 'Maximum Temperature (F)'),
+        ('mint', 'Minimum Temperature(F)'),
+        ('avgt', 'Mean Temperature(F)'),
+        ('obst', 'Temperature at Observation Time'),
+        ('gdd', 'Growing Degree Days (Base 50F)'),
+        ('hdd', 'Heating Degree Days (Base 65F)'),
+        ('cdd', 'Cooling Degree Days (Base 65F)'),
+)
+
 STN_FIND_CHOICES = (
         ('stnid', 'Individual station'),
         ('stnids', 'Comma separated list of stations '),
@@ -383,7 +396,7 @@ class GPTimeSeriesForm(forms.Form):
                  self.fields['lon'] = forms.CharField(initial='-77.7', required=False)
             else:
                 self.fields['lon'] = forms.CharField(initial=lon, required=False)
-            self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES, required=False, initial='maxt')
+            self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, required=False, initial='maxt')
             self.fields['start_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial='20120101')
             self.fields['end_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
             self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES)

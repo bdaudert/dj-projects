@@ -93,7 +93,6 @@
 
         <h1 align="center">STATION FINDER</h1>
         <div class="center-left">
-            <h3><font color="red">Click on the categories for more/less information!</font></h3>
             <p onClick="ShowHide('myImage')">Search by ID</p>
             <img src="{{MEDIA_URL}}img/Acis_Stn_Id_Type.png" id="myImage" border="0" width="275" height="250" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_id/">
@@ -151,12 +150,14 @@
             </form>    
         
         </div>
+
+        <p class="warning">Click on the categories for more/less information!</p>
         {%if error%} 
             <h1 class="warning">{{error}}</h1>
         {%else%}
             <div id="map_canvas"></div>
         {%endif%}
-        
+
         <div class="footer">
         <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30">&nbsp;&nbsp;           
            Created by <a href="http://www.wrcc.dri.edu/" target="_blank">>WRCC</a> &nbsp;&nbsp;
