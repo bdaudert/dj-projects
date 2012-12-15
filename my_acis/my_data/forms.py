@@ -376,11 +376,11 @@ class GPTimeSeriesForm(forms.Form):
                 lon = self.data.get('lon')
 
             if lat is None:
-                 self.fields['lat'] = forms.CharField(initial='-77.7', required=False)
+                 self.fields['lat'] = forms.CharField(initial='41.8', required=False)
             else:
                 self.fields['lat'] = forms.CharField(initial=lat, required=False)
             if lon is None:
-                 self.fields['lon'] = forms.CharField(initial='41.8', required=False)
+                 self.fields['lon'] = forms.CharField(initial='-77.7', required=False)
             else:
                 self.fields['lon'] = forms.CharField(initial=lon, required=False)
             self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES, required=False, initial='maxt')

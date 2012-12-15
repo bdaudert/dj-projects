@@ -14,8 +14,9 @@ $(function () {
         
         var start = new Array();
         var end = new Array();
-        temp_start = start_date.split('-')
-        temp_end = end_date.split('-')
+        start = start_date.split('-')
+        end = end_date.split('-')
+        
         $.getJSON(json_file_name, function(datadict) {
             chart = new Highcharts.Chart({
                 chart: {
@@ -24,8 +25,7 @@ $(function () {
                     spacingRight: 20
                 },
                 title: {
-                    text: 'Grid Point Time Series <br />' +
-                          'Lat: ' + lat + ' Lon: ' + lon
+                    text:  element_long + ' Lat: ' + lat + ' Lon: ' + lon
                 },
                 subtitle: {
                     text: document.ontouchstart === undefined ?
@@ -36,8 +36,9 @@ $(function () {
                     type: 'datetime',
                     maxZoom: 1 * 24 * 3600000, // 1 day
                     plotBands: [{
-                    from: Date.UTC(parseInt(start.slice(0,4)), parseInt(start.slice(4,6)), parseInt(start.slice(6,8))),
-                    to: Date.UTC(parseInt(end.slice(0,4)), parseInt(end.slice(4,6)), parseInt(end.slice(6,8))),
+                    //from: Date.UTC(2001, 01, 01)
+                    from: Date.UTC(parseInt(start[0]), parseInt(start[1]), parseInt(start[2])),
+                    to: Date.UTC(parseInt(end[0]), parseInt(end[1]), parseInt(end[2])),
                     }],
                     title: {
                         text: null
@@ -45,7 +46,7 @@ $(function () {
                 },
                 yAxis: {
                     title: {
-                        text: element_long
+                        text: element
                     },
                     startOnTick: false,
                     showFirstLabel: false
@@ -86,9 +87,11 @@ $(function () {
         
                 series: [{
                     type: 'area',
-                    name: ,
-                    pointInterval: 24 * 3600 * 1000,
-                    pointStart: Date.UTC(parseInt(start.slice(0,4)), parseInt(start.slice(4,6)), parseInt(start.slice(6,8))),
+                    name: element,
+                    pointInterval:1 * 24 * 3600000, // 1 day
+                    pointStart: Date.UTC(parseInt(start[0]), parseInt(start[1]), parseInt(start[2])),
+                    //pointInterval: 24 * 3600 * 1000,
+                    //pointStart: Date.UTC(2001, 01, 01),
                     data:datadict.data
                 }] //end series
             });//end chart
