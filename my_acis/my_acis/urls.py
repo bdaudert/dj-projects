@@ -39,6 +39,8 @@ urlpatterns = patterns('',
     (r'^my_data/apps/(?P<stn_id>\d+)/$', 'my_data.views.apps'),
     (r'^my_data/apps/metagraph/$', 'my_data.views.metagraph'),
     (r'^my_data/apps/monthly_aves/$', 'my_data.views.monthly_aves'),
+    (r'^my_data/apps/grid_point_time_series/$', 'my_data.views.grid_point_time_series'),
+    (r'^my_data/apps/grid_point_time_series/(?P<lat>\-?(0|1-9+)\.?\d+)(\&P<lon>\-?(0|1-9+)\.?\d+)$', 'my_data.views.grid_point_time_series'),
     (r'^my_data/apps/clim_sum_maps/$', 'my_data.views.clim_sum_maps'),
     (r'^my_apps/$', 'my_apps.views.home_view'),
     #sub process apps: FIX ME: Need to be converted to module approach

@@ -362,3 +362,28 @@ class ClimateMapForm1(forms.Form):
                 self.fields['start_date'].widget.attrs['readonly'] = 'readonly'
             self.fields['end_date'] = forms.CharField(required=False, initial=today)
             self.fields['end_date'].widget.attrs['readonly'] = 'readonly'
+
+class GPTimeSeriesForm(forms.Form):
+        def __init__(self, *args, **kwargs):
+            lat = kwargs.get('initial', {}).get('lat', None)
+            lon = kwargs.get('initial', {}).get('lon', None)
+
+            super(GPTimeSeriesForm, self).__init__(*args, **kwargs)
+
+            if lat is None:
+                lat = self.data.get('lat')
+            if lon is None:
+                lon = self.data.get('lon')
+
+            if lat is None:
+                 self.fields['lat'] = forms.CharField(initial='-77.7', required=False)
+            else:
+                self.fields['lat'] = forms.CharField(initial=lat, required=False)
+            if lon is None:
+                 self.fields['lon'] = forms.CharField(initial='41.8', required=False)
+            else:
+                self.fields['lon'] = forms.CharField(initial=lon, required=False)
+            self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES, required=False, initial='maxt')
+            self.fields['start_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial='20120101')
+            self.fields['end_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
+            self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES)

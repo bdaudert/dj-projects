@@ -56,14 +56,27 @@ ul.navbar a {
   background-color: #FFEBCD;
   text-decoration: none ; }
 
+/*
 div.pop-up {
   display: none;
   position: absolute;
   width: 280px;
   padding: 10px;
-  background: #eeeeee;
-  color: #191970;
+  background-color: #FFEBCD;
+  color: #000000;
   border: 1px solid #1a1a1a;
+  font-size: 90%;
+}
+*/
+
+
+div.pop-up {
+  display: none;
+  position: absolute;
+  width: 280px;
+  padding: 10px;
+  background: #947e6e;
+  border: 2px solid #FFEBCD;
   font-size: 90%;
 }
 
@@ -284,6 +297,7 @@ img.logo {
 
 #MarkerWindow {
     padding:0px 0px 0px 0px;
+    margin:0px 0px 0px 0px;
     background: #947e6e;
     font-family: 'Georgia',serif;
 }

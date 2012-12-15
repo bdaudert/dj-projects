@@ -25,6 +25,12 @@ state_choices = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA
                 'NY', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', \
                 'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
 
+long_el_name = {'pcpn':'Precipiation (in)', 'snow':'Snowfall (in)', \
+                'maxt':'Maximum Temperature (F)', 'mint':'Miniimum Temperature (F)', \
+                'avgt':'Mean Temperature (F)', 'obst':'Observation Time Temperature (F)', \
+                'snwd':'Snow Depth (in)', 'gdd':'Growing Degree Days', \
+                'hdd':'Heading Degree Days', 'cdd': 'Cooling Degree Days'}
+
 static_url = '/Users/bdaudert/DRI/dj-projects/my_acis/static/'
 MEDIA_URL = '/Users/bdaudert/DRI/dj-projects/my_acis/media/'
 
@@ -150,7 +156,8 @@ def data(request):
         context['form1_grid'] = form1_grid
         if form1_grid.is_valid():
             (data, elements) = AcisWS.get_grid_data(form1_grid.cleaned_data, 'griddata_web')
-            context['grid_data'] = dict(data)
+            #context['grid_data'] = dict(data)
+            context['grid_data'] = data #list
             context['elements'] =  elements
             dates_dict = {}
             if 'delimiter' in form1_grid.cleaned_data.keys():
@@ -261,6 +268,7 @@ def metagraph(request):
 def monthly_aves(request):
     context = {
         'title': 'Monthly Averages',
+        'apps_page':True
     }
     stn_id = request.GET.get('stn_id', None)
     if stn_id is None:
@@ -314,7 +322,7 @@ def monthly_aves(request):
                 elif el_strip == 'obst':
                     results[el_idx] = {'element_long': 'Observation Time Temperature', 'units':'F'}
                 elif el_strip == 'snwd':
-                    results[el_idx] = {'element_long': 'Total Snowfall', 'units':'in'}
+                    results[el_idx] = {'element_long': 'Snow Depth', 'units':'in'}
                 elif el_strip == 'cdd':
                     results[el_idx] = {'element_long': 'Growing Degree Days, Base Temp %s' %base_temp, 'units':'days'}
                 elif el_strip == 'hdd':
@@ -358,6 +366,7 @@ def monthly_aves(request):
 def clim_sum_maps(request):
     context = {
         'title': 'Climate Summary Maps',
+        'apps_page':True
     }
     form0 = set_as_form(request,'ClimateMapForm0')
     context['form0'] = form0
@@ -380,9 +389,76 @@ def clim_sum_maps(request):
             x = None
     if 'form1' in request.POST:
         form0 = set_as_form(request,'ClimateMapForm0')
+
         context['form0'] = form0
     return render_to_response('my_data/apps/clim_sum_maps.html', context, context_instance=RequestContext(request))
 
+def grid_point_time_series(request):
+    context = {
+        'title': 'Grid Point Time Series',
+        'apps_page':True
+    }
+    lat = request.GET.get('lat', None)
+    lon = request.GET.get('lon', None)
+    context['lat'] = lat
+
+    '''
+    if 'form_lat_lon' in request.POST:
+        context['form0_ready'] = True
+        lat = request.POST.get('lat', None)
+        lon = request.POST.get('lon', None)
+        context['lat'] = lat
+        context['lon'] = lon
+        context['form0_ready'] = True
+        form0 = set_as_form(request,'GPTimeSeriesForm', init={'lat':str(lat), 'lon':str(lon)})
+        context['form0'] = form0
+    else:
+
+        lat = request.GET.get('lat', None)
+        lon = request.GET.get('lon', None)
+    '''
+
+    if lat is not None and lon is not None:
+        form0 = set_as_form(request,'GPTimeSeriesForm', init={'lat':str(lat), 'lon':str(lon)})
+        context['form0'] = form0
+    else:
+        form0 = set_as_form(request,'GPTimeSeriesForm')
+        context['form0'] = form0
+    if 'form0' in request.POST:
+        form0 = set_as_form(request,'GPTimeSeriesForm')
+        context['form0']  = form0
+
+        if form0.is_valid():
+            #check for base temperature if gdd, hdd, cdd
+            element, base_temp = WRCCUtils.get_el_and_base_temp(form0.cleaned_data['element'])
+            if base_temp is not None:
+                conetxt['base_temp'] = base_temp
+            context['element_long'] = long_el_name[element]
+            context['element'] = form0.cleaned_data['element']
+            context['lat'] = form0.cleaned_data['lat']
+            context['lon'] = form0.cleaned_data['lon']
+            #Note: acis takes lon, lat in that order
+            location = '%s,%s' %(form0.cleaned_data['lon'], form0.cleaned_data['lat'])
+            form_input = {'location':location, 'element': form0.cleaned_data['element'], \
+            'start_date':form0.cleaned_data['start_date'], \
+            'end_date':form0.cleaned_data['end_date'], 'grid':form0.cleaned_data['grid']}
+            datalist, el_list = AcisWS.get_grid_data(form_input, 'GPTimeSeries')
+            data = []
+            dates = []
+            for date_idx, dat in enumerate(datalist):
+                data.append(float(dat[-1]))
+                dates.append(dat[0])
+            datadict = {'data':data, 'dates':dates}
+            context['start_date'] = datalist[0][0]
+            context['end_date'] = datalist[-1][0]
+            context['datadict'] = datadict
+            results_json = str(datadict).replace("\'", "\"")
+            json_file = 'gp_time_series.json'
+            context['json_file'] = json_file
+            f = open('%sjson/%s' %(MEDIA_URL,json_file),'w+')
+            f.write(results_json)
+            f.close()
+    return render_to_response('my_data/apps/grid_point_time_series.html', context, context_instance=RequestContext(request))
 
 def station_finder(request):
     context = {

@@ -56,7 +56,7 @@
             </div>
 
             <div class="center">
-                <p onmouseover="ShowHide('AcisElementChoices')">Hover here for list of element choices</p>
+                <p onClick="ShowHide('AcisElementChoices')"><font color="red" size="6">Click here for list of element choices!</font></p>
                 <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0" style="display:none;" />
                 {%if point_data%}
                 <br />
@@ -89,10 +89,11 @@
                 {%if not json%}
                     <h2>{%for item in file_info%}{{item}}&nbsp;{%endfor%}</h2>
                     <p>date{{delimiter}}lat{{delimiter}}lon{{delimiter}}elev{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</p>
-                    {%for date_idx, date_vals in grid_data.items%}
+                    {%for date_vals in grid_data%}
                     {%for val in date_vals%}
                     {{val}}{{delimiter}}
-                    {%endfor%}<br/>
+                    {%endfor%}
+                    <br/>
                     {%endfor%}
                 {%else%}
                     <p>date,lat,lon,elev,
