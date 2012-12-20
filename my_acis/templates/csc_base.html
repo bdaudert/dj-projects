@@ -3,7 +3,7 @@
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 
 <head>
-    <title>Southwest CSC Climate Data Portal
+    <title>Southwest CSC Climate Knowledge Network
     {% if title %} [ {% endif %} 
     {{ title|escape }}
     {% if title %} ] {% endif %}
@@ -57,7 +57,7 @@
 <body>
     <!-- Header -->
     <div class="header">
-        <h1 align="center">Climate Data Portal</h1>
+        <h1 align="center">Southwest Climate Knowledge Network</h1>
         <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png">
         {%if home_page%}
             <img class="map" src="{{ MEDIA_URL }}img/SouthWest.jpg">
@@ -75,19 +75,34 @@
     <!-- Nav bar at top of page-->
     <div class="breadcrumbs">
     {% block breadcrumbs %}
-        <li><a href="/my_data">HOME </a>
-        <ul>
-            <li><a href="/my_data/about_us/">About Us</a></li>
-            <li><a href="/my_data/contact_us">Contact Us</a></li>
-        </ul></li>
-        <li><a href="/my_data/station_finder">STATION FINDER</a></li>
-        <li><a href="/my_data/data">DATA PORTAL</a></li>
-        <li><a href="/my_data/apps">DATA PRODUCTS </a></li>
+    <li><a href="/my_data">HOME </a>
+    <li><a href="/my_data/about_us/">ABOUT US</a>
+    <ul>
+        <li><a href="/my_data/contact_us/">Contact Us</a></li>
+    </ul></li>
+    <li><a href="/my_data/station_finder/">STATION FINDER</a>
+    <li><a href="/my_data/data">DATA PORTAL</a>
+    <ul>
+        <li><a href="/my_data/data/historic">Historic Station Data</a></li>
+        <li><a href="/my_data/data/modeled">Modeled/Gridded Data</a></li>
+    </ul></li>
+    <li><a href="/my_data/apps">TOOLS/PRODUCTS</a>
+    <ul>
+        <li><a href="/my_data/apps/climate">Climate</a>
+        <li><a href="/my_data/apps/hydro">Hydrology</a></li>
+        <li><a href="/my_data/apps/eco">Ecosystem</a></li>
+    </ul></li>
     {% endblock %}
     </div>
 
+    <div class="content-header">
+    {% block content-header %}
+            <h1 align="center">{{title}}</h1>
+    {% endblock %}
+    </div> 
+
     <div class="content">
-    {% block content %} 
+    {% block content %}
     {% endblock %}
     </div> <!-- END content -->
 

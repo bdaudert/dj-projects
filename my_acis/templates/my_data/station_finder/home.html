@@ -19,7 +19,6 @@
         <script type="text/javascript">
             function initialize() {
 
-            var STATIC_URL = document.getElementById("STATIC_URL").value;
             var MEDIA_URL = document.getElementById("MEDIA_URL").value;
             var json_file = document.getElementById("json_file").value;
             $.getJSON(MEDIA_URL + 'json/' + json_file, function(data) {
@@ -60,10 +59,10 @@
                         '<b>SIDS: </b>' + c.sids + '<br/>' +
                         '<b>Elevation: </b>' + c.elevation + '<br/>' +
                         '</p>' +
-                        '<a href="/my_data/data/?stn_id=' + c.sids[0] + 
+                        '<a href="/my_data/data/historic/?stn_id=' + c.sids[0] + 
                         '">Get Data for this Station</a> <br/>'+
-                        '<a href="/my_data/apps/?stn_id=' + c.sids[0] + 
-                        '">Run a data application for this Station</a>'+ 
+                        '<a href="/my_data/apps/climate/?stn_id=' + c.sids[0] + 
+                        '">Run a climate application for this Station</a>'+ 
                         '</div>';
                         infowindow.setContent(contentString);
                         infowindow.open(map, marker);
@@ -78,18 +77,17 @@
     </head>
 
     <body onload="initialize()">
-        <input type="hidden" id="STATIC_URL" name="variable" value="{{ STATIC_URL }}">
         <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
         <input type="hidden" id="json_file" name="variable" value="{{ json_file }}"> 
         <div class="header">
             <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png">
             <img class="nature" src="{{ MEDIA_URL }}img/NorthPoleWS.jpg">
             <div id="title"></div>
-                <script type="text/javascript">$("#title").load("{{MEDIA_URL}}html/csc_stationfinder.html .header");</script>
+                <script type="text/javascript">$("#title").load("{{MEDIA_URL}}html/csc_map_page_base.html .header");</script>
         </div>
     
         <div id="bcrumbs"></div>          
-            <script type="text/javascript">$("#bcrumbs").load("{{MEDIA_URL}}html/csc_stationfinder.html .breadcrumbs");</script>
+            <script type="text/javascript">$("#bcrumbs").load("{{MEDIA_URL}}html/csc_map_page_base.html .breadcrumbs");</script>
 
         <h1 align="center">STATION FINDER</h1>
         <div class="center-left">

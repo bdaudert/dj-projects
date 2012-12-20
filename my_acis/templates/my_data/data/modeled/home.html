@@ -1,0 +1,60 @@
+{% extends "csc_base.html" %}
+
+{% block content %} 
+    
+<div class="container">
+    <h2>Acis Gridded Data</h2>
+    <div class="center-left">
+        <div id='form2'>
+            <table border=0 align="right">
+            <form method="post" action="">{% csrf_token %}
+            <table class="sortable">{{ form0_grid|safe }}</table>
+            <input type="submit" value="Submit" name="form0_grid"/>
+            </form>
+            </table>
+        </div>
+
+        {%if form1_grid_ready%}
+            <div id="form1">
+                <table border=0 align="right">
+                <form method="post" action="">{% csrf_token %}
+                <table>{{ form1_grid|safe }}</table>
+                <input type="submit" value="Submit" name="form1_grid"/>
+                </form>
+                </table>
+            </div>
+            </br>
+            </br>
+        {%endif%}
+    </div>
+
+    <div class="center">
+        <p class="warning" onClick="ShowHide('AcisElementChoices')">Click here for list of element choices!</p>
+        <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0" style="display:none;" />
+        <p class="warning" onClick="ShowHide('Acis_Area_Codes')">Click here for examples of Grid Selection!</p>
+                <img src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="Acis_Area_Codes" width="450" height="450" border="0" style="display:none;" />
+        <a href="http://data.rcc-acis.org/doc/" target="_blank" class="warning"><font color="#A00000">Click here for more information on Gridded Data!</font></a>
+
+        {%if grid_data%}
+        <br />
+        <br />
+        {%if not json%}
+            <h2>{%for item in file_info%}{{item}}&nbsp;{%endfor%}</h2>
+            <p>date{{delimiter}}lat{{delimiter}}lon{{delimiter}}elev{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</p>
+            {%for date_vals in grid_data%}
+            {%for val in date_vals%}
+            {{val}}{{delimiter}}
+            {%endfor%}
+            <br />
+            {%endfor%}
+        {%else%}
+            <p>date,lat,lon,elev,
+            {%for el in elements%}{{el}},{%endfor%}</p>
+            {{grid_data}}
+        {%endif%}
+        {%endif%}
+    </div>
+
+</div>
+
+{%endblock%}

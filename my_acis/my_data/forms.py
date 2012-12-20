@@ -31,12 +31,9 @@ TIME_PERIOD_CHOICES = (
 
 ACIS_ELEMENT_CHOICES = (
         ('pcpn', 'Precipitation (Inches)'),
-        ('snow', 'Snowfall (Inches)'),
-        ('snwd', 'Snowdepth (Inches)'),
         ('maxt', 'Maximum Temperature (F)'),
         ('mint', 'Minimum Temperature(F)'),
         ('avgt', 'Mean Temperature(F)'),
-        ('obst', 'Temperature at Observation Time'),
         ('gdd', 'Growing Degree Days (Base 50F)'),
         ('hdd', 'Heating Degree Days (Base 65F)'),
         ('cdd', 'Cooling Degree Days (Base 65F)'),
@@ -47,12 +44,9 @@ ACIS_ELEMENT_CHOICES = (
 
 ACIS_ELEMENT_CHOICES_SHORT = (
         ('pcpn', 'Precipitation (Inches)'),
-        ('snow', 'Snowfall (Inches)'),
-        ('snwd', 'Snowdepth (Inches)'),
         ('maxt', 'Maximum Temperature (F)'),
         ('mint', 'Minimum Temperature(F)'),
         ('avgt', 'Mean Temperature(F)'),
-        ('obst', 'Temperature at Observation Time'),
         ('gdd', 'Growing Degree Days (Base 50F)'),
         ('hdd', 'Heating Degree Days (Base 65F)'),
         ('cdd', 'Cooling Degree Days (Base 65F)'),

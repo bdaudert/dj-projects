@@ -102,7 +102,8 @@ function hideIt(Id)
 document.getElementById(Id).style.display='none';
 }
 
-function initialize_map() {
+
+function initialize_grid_point_map() {
     var map;
     var center_lat = document.getElementById("center_lat").value;
     var center_lon = document.getElementById("center_lon").value;
@@ -131,7 +132,7 @@ function initialize_map() {
         var contentString = '<div id="MarkerWindow">'+
             '<p><b>Lat: </b>' + event.latLng.lat() + '<br/>'+
             '<b>Lon: </b>' + event.latLng.lng() + '<br/>' +
-            '<a href="/my_data/apps/grid_point_time_series/?lat=' + event.latLng.lat() + '&lon=' + event.latLng.lng() + 
+            '<a href="/my_data/apps/climate_products/grid_point_time_series/?lat=' + event.latLng.lat() + '&lon=' + event.latLng.lng() + 
             '">Use this location</a></div>';
         infowindow.setContent(contentString);
         infowindow.open(map, marker);
@@ -140,6 +141,8 @@ function initialize_map() {
         myLatlng = google.maps.LatLng(event.latLng.lat(),event.latLng.lng());
     });
 }//close initialize 
+
+
 
 
 function load_script() {

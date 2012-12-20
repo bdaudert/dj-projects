@@ -1,80 +1,28 @@
 {% extends "csc_base.html" %}
 
 {% block content %}
-        <h1 align="center">DATA PRODUCTS</h1>
-
-    <div class="container">
-
-        <div class="center-left">
-            <h1>Point Data Applications</h1>
-            <ul class="navbar">
-                {%if stn_id%}
-                    <a href="/my_data/apps/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics</a>
+<div class="container">
+    <div class="center-left">
+        <h1>Product Categories</h1>
+        <ul class="navbar">
+            {%if stn_id%}
+                <a href="/my_data/apps/climate/?stn_id={{stn_id}}" class="trigger">Climate Products</a>
                     <div class="pop-up" id="meta">
-                        <p><font size="4">Shows availabilty of COOP station data</font></p>
+                        <p><font size="4">Time Series of Station data, monthly averages, anomaly maps ...</font></p>
                     </div>
-                    <a href="/my_data/apps/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages</a>
-                    <div class="pop-up" id="maves">
-                        <p><font size="4">Generates bar chart of monthly averages</font></p>
-                    </div>
-                {%else%}
-                    <a href="/my_data/apps/metagraph/" class="trigger">Station Metadata Graphics</a>
+            {%else%}
+                <a href="/my_data/apps/climate/?stn_id={{stn_id}}" class="trigger">Climate Products</a>
                     <div class="pop-up" id="meta">
-                        <p><font size="4">Shows availabilty of COOP station data</font></p>
+                        <p><font size="4">Time Series of Station data, monthly averages, anomaly maps</font></p>
                     </div>
-                    <a href="/my_data/apps/monthly_aves/" class="trigger">Monthly Averages</a>
-                    <div class="pop-up" id="meta">
-                        <p><font size="4">Generates bar chart of monthly averages</font></p>
-                    </div>
-                {%endif%}
-            </ul>
-        </div>
-
-        <div class="center-right">
-            <h1>Gridded Data Applications</h1>
-            <ul class="navbar">
-                <a href="/my_data/apps/clim_sum_maps/" class="trigger">Climate Summary Maps</a>
-                <div class="pop-up" id="meta">
-                    <p><font size="4">Generates climate summary maps for different elements, time ranges and regions</font></p>
-                </div>
-                <a href="/my_data/apps/grid_point_time_series/" class="trigger">Grid Point Time Series</a>
-                <div class="pop-up" id="meta">
-                    <p><font size="4">Generates time series data and graph for a chosen grid point and time range</font></p>
-                </div> 
-            </ul>
-        </div>
-
-        <div class="center">
-            <h1>Means for {{state}} since 1900</h1>
-            <form method="get" action="">
-                <select name="state_key">
-                    <option value="NV">Chose a different State</option>
-                    {% for state in state_choices %}
-                    <option value="{{state}}">{{state}}</option>
-                    {% endfor %}
-                </select>
-                <select name="element">
-                    <option value="mint">Choose a different element</option>
-                    <option value="avgt">Mean Temperature</option>
-                    <option value="pcpn">Precipitation</option>
-                    <option value="maxt">Maximum Temperature</option>
-                    <option value="mint">Minimum Temperature</option>
-                    <option value="snow">Snow</option>
-                    <option value="snwd">Snow depth</option>
-                </select>
-                <input type="submit" value="Submit"/>
-            </form>
-            <br/>
-
-            <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-            <input type="hidden" id="state" name="state" value="{{ state }}">
-            <input type="hidden" id="month" name="month" value="{{ month }}">
-            <input type="hidden" id="month_name" name="month_name" value="{{ month_name }}">
-            <input type="hidden" id="element" name="element" value="{{ element }}">
-            
-            <div id="hc-graph-state-aves" style="width: 600px; height: 500px;"></div>
-            <script type="text/javascript" src="{{ MEDIA_URL }}js/highchart-state-aves.js"></script>
-        </div>    
-
+            {%endif%}
+                <a href="/my_data/apps/hydro/" class="trigger">Hydrology Products</a>
+                <a href="/my_data/apps/eco/" class="trigger">Ecosystem Products</a>
+        </ul>
     </div>
+
+    <div class="major-right">
+        <p class="warning">Let us help you find what you are looking for!</p>
+    </div>
+</div>
 {%endblock%}
