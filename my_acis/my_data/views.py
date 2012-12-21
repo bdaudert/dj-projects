@@ -191,11 +191,62 @@ def data_modeled(request):
         form1_grid = set_as_form(request,'GridDataForm1')
         context['form1_grid'] = form1_grid
         if form1_grid.is_valid():
+            '''
             (data, elements) = AcisWS.get_grid_data(form1_grid.cleaned_data, 'griddata_web')
             #context['grid_data'] = dict(data)
             context['grid_data'] = data #list
             context['elements'] =  elements
             dates_dict = {}
+            '''
+            el_list = form1_grid.cleaned_data['elements']
+            context['elements'] =  el_list
+            req = AcisWS.get_grid_data(form1_grid.cleaned_data, 'griddata_web')
+            if 'error' in req.keys:
+                context['error']  = req
+            else:
+                if form1_grid.cleaned_data['data_format'] == 'json':
+                    delimiter = None
+                    context['json'] = True
+                    context['grid_data']  = req
+                else:
+                    if 'location' in form1_grid.cleaned_data.keys():
+                        lats = [[req['meta']['lat']]]
+                        lons = [[req['meta']['lon']]]
+                        elevs = [[req['meta']['elev']]]
+                        data = [[] for i in range(len(req['data']))]
+                    else:
+                        lats = req['meta']['lat']
+                        lons = req['meta']['lon']
+                        elevs = req['meta']['elev']
+                        lat_num = 0
+                        for lat_idx, lat_grid in enumerate(req['meta']['lat']):
+                           lat_num+=len(lat_grid)
+                        length = len(req['data']) * lat_num
+                        #length = len(req['data']) * len(lats)
+                        data = [[] for i in range(length)]
+                    idx = -1
+                    for date_idx, date_vals in enumerate(req['data']):
+                        if 'location' in form1_grid.cleaned_data.keys():
+                            data[date_idx].append(str(date_vals[0]))
+                            data[date_idx].append(lons[0][0])
+                            data[date_idx].append(lats[0][0])
+                            data[date_idx].append(elevs[0][0])
+
+                            for el_idx in range(1,len(el_list) + 1):
+                                data[date_idx].append(str(date_vals[el_idx]).strip(' '))
+                        else:
+                            for grid_idx, lat_grid in enumerate(lats):
+                                for lat_idx, lat in enumerate(lat_grid):
+                                    idx+=1
+                                    data[idx].append(str(date_vals[0]))
+                                    data[idx].append(lons[grid_idx][lat_idx])
+                                    data[idx].append(lat)
+                                    data[idx].append(elevs[grid_idx][lat_idx])
+
+                                    for el_idx in range(1,len(el_list) + 1):
+                                        data[idx].append(date_vals[el_idx][grid_idx][lat_idx])
+                    context['grid_data'] = data
+
             if 'delimiter' in form1_grid.cleaned_data.keys():
                 if str(form1_grid.cleaned_data['delimiter']) == 'comma':delimiter = ','
                 if str(form1_grid.cleaned_data['delimiter']) == 'tab':delimiter = '  '
@@ -203,11 +254,7 @@ def data_modeled(request):
                 if str(form1_grid.cleaned_data['delimiter']) == 'space':delimiter = ' '
                 if str(form1_grid.cleaned_data['delimiter']) == 'pipe':delimiter = '|'
             else:
-                if form1_grid.cleaned_data['data_format'] == 'json':
-                    delimiter = None
-                    context['json'] = True
-                else:
-                    delimiter = ' '
+                delimiter = ' '
             context['delimiter'] = delimiter
 
             #Output formats
@@ -217,11 +264,11 @@ def data_modeled(request):
             if grid_selection == 'bbox':file_info =['bounding_box', re.sub(',','_',form1_grid.cleaned_data['bounding_box'])]
             context['file_info'] = file_info
             if form1_grid.cleaned_data['data_format'] == 'dlm':
-                return export_to_file_grid(request, data, elements, file_info,delimiter, 'dat')
+                return export_to_file_grid(request, data, el_list, file_info, delimiter, 'dat')
             elif form1_grid.cleaned_data['data_format'] == 'clm':
-                return export_to_file_grid(request, data, elements, file_info, delimiter, 'txt')
+                return export_to_file_grid(request, data, el_list, file_info, delimiter, 'txt')
             elif form1_grid.cleaned_data['data_format'] == 'xl':
-                return export_to_file_grid(request, data, elements, file_info, delimiter, 'xls')
+                return export_to_file_grid(request, data, el_list, file_info, delimiter, 'xls')
             else:
                 return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
 
@@ -485,16 +532,23 @@ def grid_point_time_series(request):
             form_input = {'location':location, 'element': form0.cleaned_data['element'], \
             'start_date':form0.cleaned_data['start_date'], \
             'end_date':form0.cleaned_data['end_date'], 'grid':form0.cleaned_data['grid']}
-            datalist, el_list = AcisWS.get_grid_data(form_input, 'GPTimeSeries')
-            data = []
-            dates = []
-            for date_idx, dat in enumerate(datalist):
-                data.append(float(dat[-1]))
-                dates.append(dat[0])
-            datadict = {'data':data, 'dates':dates}
-            context['start_date'] = datalist[0][0]
-            context['end_date'] = datalist[-1][0]
-            context['datadict'] = datadict
+
+            req = AcisWS.get_grid_data(form_input, 'GPTimeSeries')
+            try:
+                data = []
+                dates = []
+                context['start_date'] = str(req['data'][0][0])
+                context['start_date'] = str(req['data'][-1][0])
+                for date_idx, dat in enumerate(req['data']):
+                    data.append(req['data'][date_idx][1])
+                    dates.append(str(req['data'][date_idx][0]))
+                datadict = {'data':data, 'dates':dates}
+                context['datadict'] = datadict
+            except:
+                if 'error' in request.keys():
+                    context['error'] = str(req['error'])
+                else:
+                    context['error'] = 'Unknown error ocurred when getting data'
             results_json = str(datadict).replace("\'", "\"")
             json_file = 'gp_time_series.json'
             context['json_file'] = json_file
@@ -705,21 +759,12 @@ def export_to_file_grid(request, data, elements, file_info, delim, file_extensio
     else: #Excel
         from xlwt import Workbook
         wb = Workbook()
-        #Note, this version of excel has row number limit 65536
-        ws = wb.add_sheet('GRIDDED DATA RESULTS')
-        #Header
-        ws.write(0, 0, 'Date')
-        ws.write(0, 1, 'Lat')
-        ws.write(0, 2, 'Lon')
-        ws.write(0, 3, 'Elev')
-        for k, el in enumerate(elements):ws.write(0, k+4, el)
-        #Data
         #Note row number limit is 65536 in some excel versions
         row_number = 0
         flag = 0
         sheet_counter = 0
-        for date_idx, date_vals in enumerate(data):
-            for j, val in enumerate(date_vals):
+        for date_idx, date_vals in enumerate(data): #row
+            for j, val in enumerate(date_vals):#column
                 if row_number == 0:
                     flag = 1
                 else:

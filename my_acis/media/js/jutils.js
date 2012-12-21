@@ -132,7 +132,7 @@ function initialize_grid_point_map() {
         var contentString = '<div id="MarkerWindow">'+
             '<p><b>Lat: </b>' + event.latLng.lat() + '<br/>'+
             '<b>Lon: </b>' + event.latLng.lng() + '<br/>' +
-            '<a href="/my_data/apps/climate_products/grid_point_time_series/?lat=' + event.latLng.lat() + '&lon=' + event.latLng.lng() + 
+            '<a href="/my_data/apps/climate/grid_point_time_series/?lat=' + event.latLng.lat() + '&lon=' + event.latLng.lng() + 
             '">Use this location</a></div>';
         infowindow.setContent(contentString);
         infowindow.open(map, marker);
