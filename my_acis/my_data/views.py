@@ -191,17 +191,10 @@ def data_modeled(request):
         form1_grid = set_as_form(request,'GridDataForm1')
         context['form1_grid'] = form1_grid
         if form1_grid.is_valid():
-            '''
-            (data, elements) = AcisWS.get_grid_data(form1_grid.cleaned_data, 'griddata_web')
-            #context['grid_data'] = dict(data)
-            context['grid_data'] = data #list
-            context['elements'] =  elements
-            dates_dict = {}
-            '''
             el_list = form1_grid.cleaned_data['elements']
             context['elements'] =  el_list
             req = AcisWS.get_grid_data(form1_grid.cleaned_data, 'griddata_web')
-            if 'error' in req.keys:
+            if 'error' in req.keys():
                 context['error']  = req
             else:
                 if form1_grid.cleaned_data['data_format'] == 'json':
@@ -222,7 +215,7 @@ def data_modeled(request):
                         for lat_idx, lat_grid in enumerate(req['meta']['lat']):
                            lat_num+=len(lat_grid)
                         length = len(req['data']) * lat_num
-                        #length = len(req['data']) * len(lats)
+                        #length = len(req['data'])
                         data = [[] for i in range(length)]
                     idx = -1
                     for date_idx, date_vals in enumerate(req['data']):
@@ -235,6 +228,7 @@ def data_modeled(request):
                             for el_idx in range(1,len(el_list) + 1):
                                 data[date_idx].append(str(date_vals[el_idx]).strip(' '))
                         else:
+                            #idx+=1
                             for grid_idx, lat_grid in enumerate(lats):
                                 for lat_idx, lat in enumerate(lat_grid):
                                     idx+=1
