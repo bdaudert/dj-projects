@@ -10,7 +10,7 @@ $(function () {
         var start_date = document.getElementById("start_date").value;
         var end_date = document.getElementById("end_date").value;
         var json_file = document.getElementById("json_file").value;
-        var json_file_name = MEDIA_URL +'json/' + json_file;
+        var json_file_name = MEDIA_URL +'tmp/' + json_file;
         
         var start = new Array();
         var end = new Array();
@@ -25,7 +25,7 @@ $(function () {
                     spacingRight: 20
                 },
                 title: {
-                    text:  element_long + ' Lat: ' + lat + ' Lon: ' + lon
+                    text:  element_long + '<br /> Lat: ' + lat + ' Lon: ' + lon
                 },
                 subtitle: {
                     text: document.ontouchstart === undefined ?

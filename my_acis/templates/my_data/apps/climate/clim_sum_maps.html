@@ -20,7 +20,13 @@
         </form>
         </table>
     </div> 
-    {%endif%}    
+    {%endif%} 
+
+    {%if figure_file%}
+        <img src = '{{MEDIA_URL}}tmp/{{figure_file}}'>
+    {%endif%}
+
+    
 </div>
 
 {%endblock%}

@@ -473,8 +473,39 @@ def clim_sum_maps(request):
             x = None
     if 'form1' in request.POST:
         form0 = set_as_form(request,'ClimateMapForm0')
-
         context['form0'] = form0
+        form1 = set_as_form(request,'ClimateMapForm1')
+        context['form1'] = form1
+        if form1.is_valid():
+            image = dict(type='png',proj='lcc',interp='cspline',cmap='spectral',
+                    overlays=['state','county:0.5:black'],width=500, height=400)
+            params = {'image':image , 'output':'json', 'grid': form1.cleaned_data['grid'], \
+                    'sdate': form1.cleaned_data['start_date'], \
+                    'edate': form1.cleaned_data['end_date']}
+            if form1.cleaned_data['element'] == 'gddxx':
+                elem = 'gdd%s' %str(form1.cleaned_data['base_temperature_gddxx'])
+            elif form1.cleaned_data['element'] == 'hddxx':
+                elem = 'hdd%s' %str(form1.cleaned_data['base_temperature_hddxx'])
+            elif form1.cleaned_data['element'] == 'cddxx':
+                elem = 'cdd%s' %str(form1.cleaned_data['base_temperature_cddxx'])
+            else:
+                elem = form1.cleaned_data['element']
+            params['elems'] = [{'name':elem}]
+            if 'state' in form1.cleaned_data.keys():
+                params['state'] = form1.cleaned_data['state']
+                region = 'state_%s' %form1.cleaned_data['state']
+            elif 'bounding_box' in form1.cleaned_data.keys():
+                params['bbox'] = form1.cleaned_data['bounding_box']
+                region = 'bbox_' + re.sub(',','_',form1.cleaned_data['bounding_box'])
+            fig = WRCCClasses.GridFigure(params)
+            results = fig.get_grid()
+            figure_file = region + 'acis_map.png'
+            file_path_big = MEDIA_URL +'tmp/' + figure_file
+            #file_path_small = MEDIA_URL +'tmp/' + region + 'acis_map_sm.png'
+            context['figure_file'] = figure_file
+            #context['file_path_thumbnail'] = file_path_small
+            fig.build_figure(results, file_path_big)
+            #fig.draw_thumbnail(results,file_path_small)
     return render_to_response('my_data/apps/climate/clim_sum_maps.html', context, context_instance=RequestContext(request))
 
 def grid_point_time_series(request):
@@ -544,9 +575,12 @@ def grid_point_time_series(request):
                 else:
                     context['error'] = 'Unknown error ocurred when getting data'
             results_json = str(datadict).replace("\'", "\"")
-            json_file = 'gp_time_series.json'
+            #json_file = 'gp_time_series.json'
+            json_file = '%s_%s_%s_%s_gp_ts.json' %(str(form0.cleaned_data['lat']), \
+                str(form0.cleaned_data['lon']), form0.cleaned_data['start_date'], \
+                form0.cleaned_data['end_date'])
             context['json_file'] = json_file
-            f = open('%sjson/%s' %(MEDIA_URL,json_file),'w+')
+            f = open('%stmp/%s' %(MEDIA_URL,json_file),'w+')
             f.write(results_json)
             f.close()
     return render_to_response('my_data/apps/climate/grid_point_time_series.html', context, context_instance=RequestContext(request))

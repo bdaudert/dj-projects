@@ -315,7 +315,7 @@ class MonthlyAveragesForm(forms.Form):
         self.fields['end_date'] = forms.CharField(max_length=8, required = False, initial='por')
 
 class ClimateMapForm0(forms.Form):
-        grid_selection = forms.ChoiceField(choices=GRID_SELECTION_CHOICES, required=False, initial='point')
+        grid_selection = forms.ChoiceField(choices=([('state', 'State'),('bbox', 'Bounding Box')]), required=False, initial='point')
         element = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES, required=False, initial='maxt')
         time_period = forms.ChoiceField(choices=TIME_PERIOD_CHOICES, required=False, initial='months')
         x = forms.IntegerField(required=False, initial=1)
