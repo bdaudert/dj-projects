@@ -25,7 +25,7 @@ $(function () {
                     spacingRight: 20
                 },
                 title: {
-                    text:  element_long + '<br /> Lat: ' + lat + ' Lon: ' + lon
+                    text:  element_long + ' Lat: ' + lat + ' Lon: ' + lon
                 },
                 subtitle: {
                     text: document.ontouchstart === undefined ?

@@ -2,31 +2,50 @@
 
 {% block content %}
 
-<div class="center">
-    <div id='form0'>
-        <table border=0 align="right">
-        <form method="post" action="">{% csrf_token %}
-            <table>{{ form0|safe }}</table>
-            <input type="submit" value="Submit" name="form0"/>
-        </form>
-        </table>
+<div class="container">
+    <div class="center-left">
+        <div id='form0'>
+            <table border=0 align="right">
+            <form method="post" action="">{% csrf_token %}
+                <table>{{ form0|safe }}</table>
+                <input type="submit" value="Submit" name="form0"/>
+            </form>
+            </table>
+        </div>
+        {%if form1_ready%}
+        <div id='form1'>
+            <table border=0 align="right">
+            <form method="post" action="">{% csrf_token %}
+                <table>{{ form1|safe }}</table>
+                <input type="submit" value="Submit" name="form1"/>
+            </form>
+            </table>
+        </div> 
+        {%endif%} 
     </div>
-    {%if form1_ready%}
-    <div id='form1'>
-        <table border=0 align="right">
-        <form method="post" action="">{% csrf_token %}
-            <table>{{ form1|safe }}</table>
-            <input type="submit" value="Submit" name="form1"/>
-        </form>
-        </table>
-    </div> 
-    {%endif%} 
 
-    {%if figure_file%}
-        <img src = '{{MEDIA_URL}}tmp/{{figure_file}}'>
-    {%endif%}
-
-    
+    <div class="center">
+        <div id="how_to_head"></div>
+            <script type="text/javascript">
+            $("#how_to_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_how_to");
+            </script>
+        <div id="how_to" style="display:none;">
+            <p><ul>
+            <li></li>
+            </ul></p>
+        </div>
+        <div id=tool_info_head></div>
+            <script type="text/javascript">            
+            $("#tool_info_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_info");
+            </script>
+        <div id="tool_info" style="display:none;">
+            <p></p>
+        </div>
+        
+        {%if figure_file%}
+            <img src = '{{MEDIA_URL}}tmp/{{figure_file}}'>
+        {%endif%}
+    </div>    
 </div>
 
 {%endblock%}

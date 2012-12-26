@@ -1,4 +1,4 @@
-                                       /*
+/*
 Theme Name: SWCSC
 */
 
@@ -68,7 +68,7 @@ div.pop-up {
 
 .warning {
     color:#A00000;
-    font-size:xx-large;
+    font-size:x-large;
 }
     
 .container { 
@@ -139,6 +139,10 @@ div.pop-up {
     height: 80px;
 }
 
+img.icon {
+    width: 50px;
+    height:50px;
+}
 
 img.nature {
     width: 250px;

@@ -477,7 +477,7 @@ def clim_sum_maps(request):
         form1 = set_as_form(request,'ClimateMapForm1')
         context['form1'] = form1
         if form1.is_valid():
-            image = dict(type='png',proj='lcc',interp='cspline',cmap='spectral',
+            image = dict(type='png',proj='lcc',interp='cspline',cmap='jet',
                     overlays=['state','county:0.5:black'],width=500, height=400)
             params = {'image':image , 'output':'json', 'grid': form1.cleaned_data['grid'], \
                     'sdate': form1.cleaned_data['start_date'], \

@@ -1,90 +1,112 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <title>{{title}}</title>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-        <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
-        <!-- ** Javascript ** -->
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
-        <!-- ** Britta'sJavascript ** -->
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>  
-        <!-- Map Utils -->
-        <script type="text/javascript" src="http://www.wrcc.dri.edu/media/js/stationmap.js"></script>
-        <script type="text/javascript"
+
+<head>
+    <title>{{title}}</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+    <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
+    <!-- ** Javascript ** -->
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
+    <!-- ** Britta'sJavascript ** -->
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>  
+    <!-- Map Utils -->
+    <script type="text/javascript" src="http://www.wrcc.dri.edu/media/js/stationmap.js"></script>
+    <script type="text/javascript"
         src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true">
-        </script>
-        <!-- Highcharts -->
-        <script src="http://code.highcharts.com/highcharts.js"></script>
-        <script src="http://code.highcharts.com/modules/exporting.js"></script>
-    </head>
+    </script>
+    <!-- Highcharts -->
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+</head>
 
-    <body onload="initialize_grid_point_map()">
+<body onload="initialize_grid_point_map()">
 
-       <div class="header">
-            <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png">
-            <img class="nature" src="{{ MEDIA_URL }}img/DataAnalysis.jpg">
-            <div id="title"></div>
-                <script type="text/javascript">$("#title").load("{{MEDIA_URL}}html/csc_map_page_base.html .header");</script>
-        </div>
+<div class="header">
+    <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png">
+    <img class="nature" src="{{ MEDIA_URL }}img/DataAnalysis.jpg">
+    <div id="title"></div>
+        <script type="text/javascript">$("#title").load("{{MEDIA_URL}}html/csc_map_page_base.html .header");</script>
+</div>
 
-        <div id="bcrumbs"></div>
-            <script type="text/javascript">$("#bcrumbs").load("{{MEDIA_URL}}html/csc_map_page_base.html .breadcrumbs");</script>
+<div id="bcrumbs"></div>
+<script type="text/javascript">$("#bcrumbs").load("{{MEDIA_URL}}html/csc_map_page_base.html .breadcrumbs");</script>
+
+<h1 align="center">{{title}}</h1>
+
+<div class="container">
+    <div class="center-left">
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+        <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
+        <input type="hidden" id="center_lat" name="center_lat" value="39.8282">
+        <input type="hidden" id="center_lon" name="center_lon" value="-98.5795">
+        <input type="hidden" id="zoom_level" name="zoom_level" value="5">
         
-        <h1 align="center">{{title}}</h1>
 
-    <div class="container">
-        <div class="center-left">
-            <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-            <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
-            <input type="hidden" id="center_lat" name="center_lat" value="39.8282">
-            <input type="hidden" id="center_lon" name="center_lon" value="-98.5795">
-            <input type="hidden" id="zoom_level" name="zoom_level" value="5">
-            
-
-            <div id='form0'>
-                <table border=0 align="right">
-                <form method="post" action="">{% csrf_token %}
-                    <table>{{ form0|safe }}</table>
-                    <input type="submit" value="Submit" name="form0"/>
-                </form>
-                </table>
-            </div>
-                
+        <div id='form0'>
+            <table border=0 align="right">
+            <form method="post" action="">{% csrf_token %}
+                <table>{{ form0|safe }}</table>
+                <input type="submit" value="Submit" name="form0"/>
+            </form>
+            </table>
         </div>
-
-        <div class="center">
-            
-            {%if error%}
-                {{error}}
-            {%else%}
-              {%if datadict%}
-                <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-                <input type="hidden" id="element_long" name="element_long" value="{{element_long}}">
-                <input type="hidden" id="element" name="element" value="{{element}}">
-                <input type="hidden" id="lat" name="lat" value="{{lat}}">
-                <input type="hidden" id="lon" name="lon" value="{{lon}}">
-                <input type="hidden" id="start_date" name="start_date" value="{{start_date}}">
-                <input type="hidden" id="end_date" name="end_date" value="{{end_date}}">
-                <div id="hc-graph" style="width: 100%; height: 400px; margin: 0 auto"></div>
-                <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-gp-time-series.js"></script>
-                <br />
-                <br />
-              {%endif%}
-            {%endif%}
-             
-
-            <!--<a href="#"  onClick="initialize_grid_point_map()">Find your Latitude and Longitude here!</a>-->
-            <p class="warning">Drag and click the marker to change latitude and longitude</p>
-            <div id="map" style="width: 100%; height:400px;"></div>
+        <br />
+        <div id="how_to_head"></div>
+        <script type="text/javascript">            
+            $("#how_to_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_how_to");
+        </script>
+        <div id="how_to" style="display:none;">
+            <p><ul>
+            <li></li>
+            </ul></p>
         </div>
-    </div>        
-
-        <div class="footer">
-            <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30">&nbsp;&nbsp;
-               Created by <a href="http://www.wrcc.dri.edu/" target="_blank">>WRCC</a> &nbsp;&nbsp;
-               Hosted by <a href="http://www.dri.edu/" target="_blank"><img class="logo" src="{{ MEDIA_URL }}img/DRILogo.gif"></a></p>
+        <div id=tool_info_head></div>
+        <script type="text/javascript">                        
+            $("#tool_info_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_info");
+        </script>
+        <div id="tool_info" style="display:none;">
+            <p></p>
         </div>
+    </div>
 
-    </body>
+    <div class="center">
+        
+        {%if error%}
+            {{error}}
+        {%else%}
+          {%if datadict%}
+            <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+            <input type="hidden" id="element_long" name="element_long" value="{{element_long}}">
+            <input type="hidden" id="element" name="element" value="{{element}}">
+            <input type="hidden" id="lat" name="lat" value="{{lat}}">
+            <input type="hidden" id="lon" name="lon" value="{{lon}}">
+            <input type="hidden" id="start_date" name="start_date" value="{{start_date}}">
+            <input type="hidden" id="end_date" name="end_date" value="{{end_date}}">
+            <div id="hc-graph" style="width: 100%; height: 400px; margin: 0 auto"></div>
+            <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-gp-time-series.js"></script>
+            <br />
+            <br />
+          {%endif%}
+        {%endif%}
+         
+
+        <!--<a href="#"  onClick="initialize_grid_point_map()">Find your Latitude and Longitude here!</a>-->
+
+        <p class="warning">Drag and click the marker to change latitude and longitude</p>
+        <div id="map" style="width: 100%; height:400px;"></div>
+    </div>
+
+</div>    
+    
+<div class="footer">
+    <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" 
+    alt="Acis" width="90" height="30">&nbsp;&nbsp;
+    Created by <a href="http://www.wrcc.dri.edu/" target="_blank">>WRCC</a> &nbsp;&nbsp;
+    Hosted by <a href="http://www.dri.edu/" target="_blank">
+    <img class="logo" src="{{ MEDIA_URL }}img/DRILogo.gif"></a></p>
+</div>
+
+</body>
+
 </html>
