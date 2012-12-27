@@ -16,7 +16,7 @@
 {% block extrastyle %}{% endblock %}
 <script type="text/javascript">
 $(document).ready(function() {
-  // select all the links with class="lnk", when one of them is clicked, get its "href" value
+  // select all the links with class="docu_long", when one of them is clicked, get its "href" value
   // load the content from that URL and place it into the tag with id="content"
   $('a.docu_long').click(function() {
     var url = $(this).attr('href');

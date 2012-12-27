@@ -22,6 +22,7 @@
             // load the content from that URL and place it into the tag with id="content"
             $('a.docu_long').click(function() {
                 var url = $(this).attr('href');
+                $('#docu_long').style.display = 'inline';
                 $('#docu_long').html('<p>Loading...</p>').load(url);
                 return false;
                 });
@@ -163,13 +164,21 @@
                 <input type="submit" value="Submit"/>
             </form>    
         </div>
-        
-        <a class="docu_long" href="{{ MEDIA_URL }}img/acis_id_systems_summary.d">
+        <!--        
+        <p class="warning" 
+            onClick="$('#acis_id_system_docu').load('{{MEDIA_URL}}html/csc_documentation.html #acis_id_system');"
+            <img class="icon" src="{{MEDIA_URL}}img/InfoMan.jpg">Station ID systems explained
+        </p>
+        <div id="acis_id_system_docu"></div>
+        <br />
+        -->
+        <a class="docu_long" href="{{ MEDIA_URL }}html/csc_documentation.html">
         <img src="{{ MEDIA_URL }}img/InfoMan.jpg" class="icon">Station ID systems explained</a>
         <div id="docu_long"></div>
         <br />
         <br />
-        
+
+
         {%if error%} 
             <h1 class="warning">{{error}}</h1>
         {%else%}

@@ -66,6 +66,17 @@ div.pop-up {
   font-size: 90%;
 }
 
+
+.docu_long {
+    display:none;
+    float:center;
+    background-color: #947e6e;
+    color:#FFEBCD;
+    font-size:20px;
+    width:60%;
+    height:50%;
+}
+
 .warning {
     color:#A00000;
     font-size:x-large;
