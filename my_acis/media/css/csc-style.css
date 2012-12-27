@@ -67,7 +67,7 @@ div.pop-up {
 }
 
 
-.docu_long {
+#docu_long {
     display:none;
     float:center;
     background-color: #947e6e;
