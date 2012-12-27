@@ -116,13 +116,15 @@
             </form>
 
             <p onClick="ShowHide('myImage2')">Search by County</p>
+            <a target="_blank" href="{{MEDIA_URL}}html/US_FIPS_CountyCodes.htm">List of US FIPS County Codes</a>
             <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage2" width="275" height="250" border="0" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_county/">
                 <input type="text" name="q" />
                 <input type="submit" value="Submit" />
             </form>
 
-            <p onClick="ShowHide('myImage3')">Search by County Warning Area</p>
+            <p onClick="ShowHide('myImage3')">Search by County Warning Area (CWA)</p>
+            <a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a>
             <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage3" width="275" height="250" border="0" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_cwa/">
                 <input type="text" name="q" />
@@ -130,6 +132,7 @@
             </form>
 
             <p onClick="ShowHide('myImage4')">Search by Climate Division</p> 
+            <a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a>
             <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage4" width="275" height="250" border="0" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_clim_div/">
                 <input type="text" name="q" />
@@ -137,6 +140,7 @@
             </form>
 
             <p onClick="ShowHide('myImage5')">Search by Basin</p>
+            <a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a>
             <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage5" width="275" height="250" border="0" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_basin/">
                 <input type="text" name="q" />
@@ -164,14 +168,7 @@
                 <input type="submit" value="Submit"/>
             </form>    
         </div>
-        <!--        
-        <p class="warning" 
-            onClick="$('#acis_id_system_docu').load('{{MEDIA_URL}}html/csc_documentation.html #acis_id_system');"
-            <img class="icon" src="{{MEDIA_URL}}img/InfoMan.jpg">Station ID systems explained
-        </p>
-        <div id="acis_id_system_docu"></div>
-        <br />
-        -->
+        
         <a class="docu_long" target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">
         <img src="{{ MEDIA_URL }}img/InfoMan.jpg" class="icon">Station ID systems explained</a>
         <div id="docu_long"></div>
