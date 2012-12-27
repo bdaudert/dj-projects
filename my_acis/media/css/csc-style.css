@@ -284,8 +284,8 @@ img.logo {
 /*Map related stuff*/
 #map_canvas {
 
-    height: 60%;
-    width: 70%;
+    height: 400px;
+    width: 700px;
     margin-right:auto;
     margin-left:300px;
     margin-top:auto;

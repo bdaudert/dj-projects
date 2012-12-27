@@ -25,21 +25,32 @@
     </div>
 
     <div class="center">
+        <div id=tool_info_head></div>
+            <script type="text/javascript">            
+            $("#tool_info_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_info");
+            </script>
+        <div id="tool_info" style="display:none;">
+            <p><ul>
+            <li>A temporal composite map for an element of choice and a 
+            user defined time period is created</li>
+            <li>For Precipitation and Snowfall daily values are summed 
+            over the time period.</li>
+            <li>For all other elements, daily values are averaged</li>
+            <li>Daily gridded data is obtained through Acis Webservices.</li>
+            <li>Information on different grid types:</li>
+            </ul></p>
+        </div>
+        
         <div id="how_to_head"></div>
             <script type="text/javascript">
             $("#how_to_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_how_to");
             </script>
         <div id="how_to" style="display:none;">
             <p><ul>
+            <li>Grid selection is made either by US state or by a user defined bounding box.</li>
             <li></li>
+            <li>Bounding</li>
             </ul></p>
-        </div>
-        <div id=tool_info_head></div>
-            <script type="text/javascript">            
-            $("#tool_info_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_info");
-            </script>
-        <div id="tool_info" style="display:none;">
-            <p></p>
         </div>
         
         {%if figure_file%}

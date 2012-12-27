@@ -28,6 +28,26 @@
     </div>
     
     <div class="center">
+        <div id=tool_info_head></div>
+        <script type="text/javascript">                        
+            $("#tool_info_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_info");
+        </script>
+        <div id="tool_info" style="display:none;">
+            <p><ul>
+            <li>Graphic representation of availablility of daily data of the five most common elements
+            at a stattion belonging to the COOP network. <a href="http://www.nws.noaa.gov/om/coop/">more information on COOP Network</a></li>
+            <li>Daily data of following elements are queried via Acis Webservices.
+                <ul><li>Maximum Temperature</li>
+                <li>Minimum Temperature</li>
+                <li>Total Precipitation</li>
+                <li>Total Snowfall</li>
+                <li>Total Snowdepth</li>
+            </ul></li>
+            <li>A colored pixel means a valid data entry was found for the particular day of the year.</li>
+            <li>A white space indicates that data was not recorded at that date.</li>
+            </ul></p>
+        </div>
+
         <div id="how_to_head"></div>
         <script type="text/javascript">            
             $("#how_to_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_how_to");
@@ -39,28 +59,9 @@
             <li><a href="/my_data/station_finder/">STATION FINDER</a></li>
             </ul></p>
         </div>
-        <div id=tool_info_head></div>
-        <script type="text/javascript">                        
-            $("#tool_info_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_info");
-        </script>
-        <div id="tool_info" style="display:none;">
-            <p><ul>
-            <li>Graphic representation of availablility of daily data of the five most common elements
-            at a stattion belonging to the COOP network <a href="http://www.nws.noaa.gov/om/coop/">more information on COOP Network</a></li>
-            <li>Daily data of following elements are queried via Acis Webservices
-                <ul><li>Maximum Temperature</li>
-                <li>Minimum Temperature</li>
-                <li>Total Precipitation</li>
-                <li>Total Snowfall</li>
-                <li>Total Snowdepth</li>
-            </ul></li>
-            <li>A colored pixel means a valid data entry was found for the particular day of the year</li>
-            <li>A white space indicates that data was not recorded at that date</li>
-            </ul></p>
-        </div>
-        
 
-        {%if perl_err%}
+        
+         {%if perl_err%}
             <h1 class="warning">{{perl_err}}</h1>
         {%else%}
             {%if station_id%}

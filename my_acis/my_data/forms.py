@@ -31,6 +31,8 @@ TIME_PERIOD_CHOICES = (
 
 ACIS_ELEMENT_CHOICES = (
         ('pcpn', 'Precipitation (Inches)'),
+        ('snow', 'Snowfall (Inches)'),
+        ('snwd', 'Snowdepth (Inches)'),
         ('maxt', 'Maximum Temperature (F)'),
         ('mint', 'Minimum Temperature(F)'),
         ('avgt', 'Mean Temperature(F)'),

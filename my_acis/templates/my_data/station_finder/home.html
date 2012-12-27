@@ -16,6 +16,18 @@
         <script type="text/javascript"
         src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true">
         </script>
+        <script type="text/javascript"> 
+            $(document).ready(function() { 
+            // select all the links with class="lnk", when one of them is clicked, get its "href" value
+            // load the content from that URL and place it into the tag with id="content"
+            $('a.docu_long').click(function() {
+                var url = $(this).attr('href');
+                $('#docu_long').html('<p>Loading...</p>').load(url);
+                return false;
+                });
+            });
+        </script>
+
         <script type="text/javascript">
             function initialize() {
 
@@ -90,7 +102,11 @@
             <script type="text/javascript">$("#bcrumbs").load("{{MEDIA_URL}}html/csc_map_page_base.html .breadcrumbs");</script>
 
         <h1 align="center">STATION FINDER</h1>
+
         <div class="center-left">
+        
+            <p class="warning">Click on the search categories to see examples</p>
+
             <p onClick="ShowHide('myImage')">Search by ID</p>
             <img src="{{MEDIA_URL}}img/Acis_Stn_Id_Type.png" id="myImage" border="0" width="275" height="250" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_id/">
@@ -146,10 +162,14 @@
                 North: <input type="text" name="N" size="8" />
                 <input type="submit" value="Submit"/>
             </form>    
-        
         </div>
-
-        <p class="warning">Click on the categories for more/less information!</p>
+        
+        <a class="docu_long" href="{{ MEDIA_URL }}img/acis_id_systems_summary.d">
+        <img src="{{ MEDIA_URL }}img/InfoMan.jpg" class="icon">Station ID systems explained</a>
+        <div id="docu_long"></div>
+        <br />
+        <br />
+        
         {%if error%} 
             <h1 class="warning">{{error}}</h1>
         {%else%}

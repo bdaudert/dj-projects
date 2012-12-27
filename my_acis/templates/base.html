@@ -14,7 +14,7 @@
 {% load my_filters %}
 {% block extrahead %}{% endblock %}
 {% block extrastyle %}{% endblock %}
-<script type="text/javascript"><!--
+<script type="text/javascript">
 $(document).ready(function() {
   // select all the links with class="lnk", when one of them is clicked, get its "href" value
   // load the content from that URL and place it into the tag with id="content"
@@ -24,7 +24,7 @@ $(document).ready(function() {
     return false;
   });
 });
---></script>
+</script>
 </head>
 
 <body {% if bodyclass %}class="{% block bodyclass %}{% endblock %}" {% endif %} {% if bodyid %} id="{% block bodyid %}{% endblock %}"{% endif %}>
