@@ -2,6 +2,11 @@
 
 {% block content %}
 
+<p align="center">You are here <a href="/my_data">HOME></a>
+<a href="/my_data/apps/">TOOLS/PRODUCTS></a>
+<a href="/my_data/apps/climate/">Climate></a>
+<a href="/my_data/apps/climate/metagraph/">Station Metadata Graphs</a></p>
+
 <div class="container">
     <div class="center-left">
         <div id='form1'>
@@ -60,7 +65,6 @@
             </ul></p>
         </div>
 
-        
          {%if perl_err%}
             <h1 class="warning">{{perl_err}}</h1>
         {%else%}
@@ -74,8 +78,6 @@
             <!--
             <img src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}"> 
             -->
-            {%else%}
-                <img src="{{MEDIA_URL}}img/spinner.gif">
             {%endif%}
         {%endif%} 
     </div>

@@ -39,7 +39,7 @@ month_names = ['January', 'February', 'March', 'April', 'May', 'June',\
 
 def home_view(request):
     context = {
-        'title': 'Welcoe to the SW-CKN',
+        'title': 'Welcome to the SW-CKN',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
         'home_page':True
     }
@@ -314,7 +314,6 @@ def metagraph(request):
     if 'form_meta' in request.POST:
         form_meta = set_as_form(request,'MetaGraphForm')
         context['form_meta']  = form_meta
-
         if form_meta.is_valid():
 
             context['station_id'] = form_meta.cleaned_data['station_id']

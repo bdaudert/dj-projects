@@ -23,8 +23,7 @@ h1, h2, h3, h4, h5 {
 }
 
 a:link { color: #3300CC; }
-a:visited { color: #3300CC; }
-
+a:visited { color: #660099; }
 a:hover {
     color: #33CCFF;
     text-decoration: none;
@@ -81,13 +80,18 @@ div.pop-up {
     color:#A00000;
     font-size:x-large;
 }
-    
+  
+.content-header {
+    border:1px solid #006666;
+
+}
+
 .container { 
     margin: 0px auto;
     width:100%;
     height:100%;
     /*margin: 0px 0px 0px 0px;*/ 
-    border: 1px solid #000000;
+    /*border: 1px solid #000000;/*
     text-align: left;
     /*height:100%;*/
     z-index:1
@@ -155,9 +159,14 @@ img.icon {
     height:30px;
 }
 
+img.icon_small {
+        width: 15px;
+        height:15px;
+}
+
 img.nature {
     width: 250px;
-    height:181px;
+    height:150px;
     position: absolute;
     top: 0; 
     right: 0;
@@ -290,13 +299,20 @@ img.logo {
     background-color: #FFEBCD; 
 }
 
+.searchbox {
+    position:absolute;
+    top:170px;
+    right:0;
+
+}
+
 /*END Drop down menue*/
 
 /*Map related stuff*/
 #map_canvas {
 
-    height: 400px;
-    width: 700px;
+    height: 600px;
+    width: 600px;
     margin-right:auto;
     margin-left:300px;
     margin-top:auto;

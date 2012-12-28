@@ -22,17 +22,27 @@
 
 <body onload="initialize_grid_point_map()">
 
-<div class="header">
-    <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png">
-    <img class="nature" src="{{ MEDIA_URL }}img/DataAnalysis.jpg">
-    <div id="title"></div>
-        <script type="text/javascript">$("#title").load("{{MEDIA_URL}}html/csc_map_page_base.html .header");</script>
-</div>
+<div id="header"></div>
+<script type="text/javascript">$("#header").load("{{MEDIA_URL}}html/csc_map_page_base.html .header");</script>
+<div id="apps_img"></div>
+<script type="text/javascript">$("#apps_img").load("{{MEDIA_URL}}html/csc_map_page_base.html .apps_img");</script>
 
 <div id="bcrumbs"></div>
 <script type="text/javascript">$("#bcrumbs").load("{{MEDIA_URL}}html/csc_map_page_base.html .breadcrumbs");</script>
 
-<h1 align="center">{{title}}</h1>
+
+<div class="content-header">
+    <h1 align="center">{{title}}</h1>
+
+    <div id="searchbox"></div>            
+    <script type="text/javascript">$("#searchbox").load("{{MEDIA_URL}}html/csc_map_page_base.html .searchbox");</script>
+
+</div>
+
+<p align="center">You are here <a href="/my_data">HOME></a>
+<a href="/my_data/apps/">TOOLS/PRODUCTS></a>
+<a href="/my_data/apps/climate/">Climate></a>
+<a href="/my_data/apps/climate/grid_point_time_series/">Grid Point Time Series</a></p>
 
 <div class="container">
     <div class="center-left">

@@ -1,28 +1,66 @@
 <!DOCTYPE html>
 
 <!-- Stationfinder header to agree with csc_base.html-->
-    <div class="header" style="padding:1em;">
+    <div class="header">
         <h1 align="center">Southwest Climate Knowledge Network</h1>
+        <img class="logo" src="/media/img/SW-CSC-LOGO.png">
+    </div>
+
+    <div class="home_img">
+        <img class="map" src="/media/img/SouthWest.jpg">
+    </div>
+
+    <div class="into_img">
+        <img class="map" src="media/img/AboutUs.jpg">
+    </div>
+
+    <div class="station_finder_img">
+        <img class="nature" src="/media/img/NorthPoleWS.jpg">
+    </div>
+
+    <div class="data_img">
+        <img class="map" src="/media/img/data_img2.jpg">
+    </div>
+    
+    <div class="apps_img">
+        <img class="map" src="/media/img/DataAnalysis.jpg">
     </div>
 
     <div class="breadcrumbs">
         <li><a href="/my_data">HOME </a>
-        <li><a href="/my_data/about_us/">ABOUT US</a>
+        <li><a href="/my_data/about_us/">ABOUT US <img class="icon_small" src="/media/img/DownArrowHand.png"></a>
         <ul>
             <li><a href="/my_data/contact_us/">Contact Us</a></li>
         </ul></li>
         <li><a href="/my_data/station_finder/">STATION FINDER</a></li>    
-        <li><a href="/my_data/data/">DATA PORTAL</a>
+        <li><a href="/my_data/data/">DATA PORTAL <img class="icon_small" src="/media/img/DownArrowHand.png"></a>
         <ul>
             <li><a href="/my_data/data/historic/">Historic Station Data</a></li>
             <li><a href="/my_data/data/modeled">Modeled/Gridded Data</a></li>
         </ul></li>
-        <li><a href="/my_data/apps">TOOLS/PRODUCTS</a>
+        <li><a href="/my_data/apps">TOOLS/PRODUCTS <img class="icon_small" src="/media/img/DownArrowHand.png"></a>
         <ul>
             <li><a href="/my_data/apps/climate">Climate</a>
             <li><a href="/my_data/apps/hydro">Hydrology</a></li>
             <li><a href="/my_data/apps/eco">Ecosystem</a></li>
         </ul></li>
+    </div>
+    
+    <div class="searchbox">
+        <!-- Search Box -->
+        <form target="_blank"  method="get" action="http://www.google.com/search">
+            <div style="width:20em;">
+            <table border="0" align="center" cellpadding="0">
+            <tr><td>
+            <input type="text"   name="q" size="25"
+            maxlength="255" value="" />
+            <input type="submit" value="Search" /></td></tr>
+            <tr><td align="center" style="font-size:75%">
+            <input type="radio"  name="sitesearch" value="http://10.10.15.45:8000/my_data/" />Only this site
+            <input type="radio"  name="sitesearch"value="" checked /> The Web<br />
+            </td></tr></table>
+            </div>
+        </form>
     </div>
 
     <div class="tool_how_to">

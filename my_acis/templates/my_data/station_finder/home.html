@@ -92,21 +92,31 @@
     <body onload="initialize()">
         <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
         <input type="hidden" id="json_file" name="variable" value="{{ json_file }}"> 
-        <div class="header">
-            <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png">
-            <img class="nature" src="{{ MEDIA_URL }}img/NorthPoleWS.jpg">
-            <div id="title"></div>
-                <script type="text/javascript">$("#title").load("{{MEDIA_URL}}html/csc_map_page_base.html .header");</script>
-        </div>
-    
+   
+        <div id="header"></div>
+        <script type="text/javascript">$("#header").load("{{MEDIA_URL}}html/csc_map_page_base.html .header");</script>
+        <div id="station_finder_img"></div>
+        <script type="text/javascript">$("#station_finder_img").load("{{MEDIA_URL}}html/csc_map_page_base.html .station_finder_img");</script>
+
         <div id="bcrumbs"></div>          
             <script type="text/javascript">$("#bcrumbs").load("{{MEDIA_URL}}html/csc_map_page_base.html .breadcrumbs");</script>
 
-        <h1 align="center">STATION FINDER</h1>
+        <div class="content-header">
+
+            <h1 align="center">STATION FINDER</h1>
+        
+            <div id="searchbox"></div>
+            <script type="text/javascript">$("#searchbox").load("{{MEDIA_URL}}html/csc_map_page_base.html .searchbox");</script>
+            
+        </div>
+
+        <p align="center">You are here <a href="/my_data">HOME></a>
+        <a href="/my_data/station_finder/">STATION FINDER</a></p>
+
 
         <div class="center-left">
         
-            <p class="warning">Click on the search categories to see examples</p>
+            <p class="warning">Click on the <font color="#FFEBCD">search categories</font> to see examples</p>
 
             <a class="docu_long" target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">
             <img src="{{ MEDIA_URL }}img/InfoMan.jpg" class="icon">Station ID systems explained</a>
@@ -134,6 +144,12 @@
             </form>
             <a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a>
 
+        </div>
+    
+        <div class="center-right">
+            
+            <p class="warning">Click on the <font color="#FFEBCD">search categories</font> to see examples</p>
+            
             <p onClick="ShowHide('myImage4')">Search by Climate Division</p> 
             <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage4" width="275" height="250" border="0" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_clim_div/">
