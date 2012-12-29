@@ -30,6 +30,16 @@ a:hover {
 }
 a:active { color: red; }
 
+a.warning {
+    color:#FFCC66;
+    font-size:x-large;
+}
+
+.warning {
+    color:#FFCC66;
+    font-size:x-large;
+}
+
 ul.navbar {
   list-style-type: none;
   padding: 0.5em;
@@ -76,9 +86,10 @@ div.pop-up {
     height:50%;
 }
 
-.warning {
+
+.error {
     color:#A00000;
-    font-size:x-large;
+    font-size:xx-large;
 }
   
 .content-header {
@@ -305,6 +316,7 @@ img.logo {
     right:0;
 
 }
+
 
 /*END Drop down menue*/
 

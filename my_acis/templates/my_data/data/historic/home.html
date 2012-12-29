@@ -34,12 +34,12 @@
     </div>    
 
     <div class="center">
-        <a class="warning" href="/my_data/station_finder"><font color="#A00000">Find a Station here!</font></a>
+        <a class="warning" href="/my_data/station_finder">Find a Station here!</a>
         <p class="warning" onClick="ShowHide('AcisElementChoices')">Click here for list of element choices!</p>
         <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0" style="display:none;" />
         <p class="warning" onClick="ShowHide('Acis_Area_Codes')">Click here for examples of Station Selection!</p>
                 <img src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="Acis_Area_Codes" width="450" height="450" border="0" style="display:none;" />
-        <a href="http://data.rcc-acis.org/doc/" target="_blank" class="warning"><font color="#A00000">Click here for more information on Gridded Data!</font></a>
+        
         {%if point_data%}
         <br />
         <br />
@@ -63,7 +63,11 @@
             {%endfor%}
         {%endif%}
         {%endif%}
-    
+        
+        {%if error%}
+            <div class="error">{{error}}</div>
+        {%endif%}
+
     </div>
 
 </div>

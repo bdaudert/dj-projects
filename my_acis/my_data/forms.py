@@ -126,6 +126,25 @@ DELIMITER_CHOICES = (
 )
 
 #Custom form fields
+class MultiStnField(forms.CharField):
+    def to_python(self, stn_list):
+        "Normalize data to a list of strings."
+        # Return an empty list if no input was given.
+        if not stn_list:
+            return []
+        return stn_list.split(',')
+
+    def validate(self, stn_list):
+        "Check if value consists only of valid coop_station_ids."
+        for stn in stn_list:
+            try:
+                int(stn)
+            except:
+                raise forms.ValidationError("coop_station_ids should be a comma separated list of valid 6 digit coop_station_ids %s!" % str(stn))
+
+            if len(str(stn))!=6:
+                raise forms.ValidationError("coop_station_ids should be a comma separated list of valid 6 digit coop_station_ids %s!" % str(stn))
+
 class MultiElementField(forms.CharField):
     def to_python(self, el_tuple):
         "Normalize data to a list of strings."
@@ -157,20 +176,6 @@ class MultiElementField(forms.CharField):
                 mark_safe("hddxx = Heating Degree Days base user defined(Whole Days)<br/>") + \
                 mark_safe("gddxx = Growing Degree Days base user defined(Whole Days), %s" %str(el)))
 
-class MultiStnField(forms.CharField):
-    def to_python(self, stn_list):
-        "Normalize data to a list of strings."
-        # Return an empty list if no input was given.
-        if not stn_list:
-            return []
-        return stn_list.split(',')
-
-    def validate(self, stn_list):
-        "Check if value consists only of valid coop_station_ids."
-        for stn in stn_list:
-            if len(str(stn))!=6:
-                raise forms.ValidationError("coop_station_ids should be a comma separated list \
-                      of valid 6 digit coop_station_ids %s!" % str(stn))
 
 #Data Retrieval Forms
 class PointData0Form(forms.Form):

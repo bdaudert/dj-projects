@@ -90,6 +90,10 @@
             {%endfor%}         
             <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-monthly-aves.js"></script>
         {%endif%}
+
+        {%if error%}
+            <p class="error">{{error}}</p>
+        {%endif%}
     </div>
 </div>
 {%endblock%}

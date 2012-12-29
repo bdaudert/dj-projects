@@ -57,13 +57,15 @@ def home_view(request):
 
 def about_us(request):
     context = {
-        'title': 'About Us'
+        'title': 'About Us',
+        'intro_page':True
     }
     return render_to_response('my_data/about_us.html', context, context_instance=RequestContext(request))
 
 def contact_us(request):
     context = {
-        'title': 'Contact Us'
+        'title': 'Contact Us',
+        'intro_page':True
     }
     return render_to_response('my_data/contact_us.html', context, context_instance=RequestContext(request))
 
@@ -315,7 +317,6 @@ def metagraph(request):
         form_meta = set_as_form(request,'MetaGraphForm')
         context['form_meta']  = form_meta
         if form_meta.is_valid():
-
             context['station_id'] = form_meta.cleaned_data['station_id']
             station_meta = {}
             params = {'sids':str(form_meta.cleaned_data['station_id'])}
@@ -369,77 +370,83 @@ def monthly_aves(request):
             meta='valid_daterange,name,state,sids,ll,elev,uid,county,climdiv', \
             elems=[dict(name=el, groupby="year")for el in form_graphs.cleaned_data['elements']])
             monthly_aves = {}
+            results = [{} for k in form_graphs.cleaned_data['elements']]
+            #results = defaultdict(dict)
 
             #req = WRCCClasses.DataJob('StnData', params).make_data_call()
             req = AcisWS.StnData(params)
-            context['raw_data'] = req['data']
-            try:
-                monthly_aves = WRCCDataApps.monthly_aves(req, form_graphs.cleaned_data['elements'])
-                context['averaged_data'] = monthly_aves
-            except:
-                pass
+            if not req:
+                content['error']= 'Bad Data request for parameters: %s' %str(form_graphs.cleaned_data)
+            elif 'data' not in req.keys() or 'meta' not in req.keys():
+                context['error']= 'Bad Data request for parameters: %s' %str(form_graphs.cleaned_data)
+            else:
+                context['raw_data'] = req['data']
 
-            results = [{} for k in form_graphs.cleaned_data['elements']]
-            #results = defaultdict(dict)
-            for el_idx, el in enumerate(form_graphs.cleaned_data['elements']):
-                el_strip = re.sub(r'(\d+)(\d+)', '', el)   #strip digits from gddxx, hddxx, cddxx
-                b = el[-2:len(el)]
                 try:
-                    base_temp = int(b)
+                    monthly_aves = WRCCDataApps.monthly_aves(req, form_graphs.cleaned_data['elements'])
+                    context['averaged_data'] = monthly_aves
                 except:
-                    if b == 'dd' and el in ['hdd', 'cdd']:
-                        base_temp = '65'
-                    elif b == 'dd' and el == 'gdd':
-                        base_temp = '50'
+                    pass
 
-                if el_strip == 'pcpn':
-                    results[el_idx] = {'element_long': 'Total Rainfall', 'units':'in'}
-                elif el_strip == 'snow':
-                    results[el_idx] = {'element_long': 'Total Snowfall', 'units':'in'}
-                elif el_strip == 'maxt':
-                    results[el_idx] = {'element_long': 'Maximum Temperature', 'units':'F'}
-                elif el_strip == 'mint':
-                    results[el_idx] = {'element_long': 'Minimum Temperature', 'units':'F'}
-                elif el_strip == 'avgt':
-                    results[el_idx] = {'element_long': 'Mean Temperature', 'units':'F'}
-                elif el_strip == 'obst':
-                    results[el_idx] = {'element_long': 'Observation Time Temperature', 'units':'F'}
-                elif el_strip == 'snwd':
-                    results[el_idx] = {'element_long': 'Snow Depth', 'units':'in'}
-                elif el_strip == 'cdd':
-                    results[el_idx] = {'element_long': 'Growing Degree Days, Base Temp %s' %base_temp, 'units':'days'}
-                elif el_strip == 'hdd':
-                    results[el_idx] = {'element_long': 'Heading Degree Days, Base Temp %s' %base_temp, 'units':'days'}
-                elif el_strip == 'gdd':
-                    results[el_idx] = {'element_long': 'Cooling Degree Days, Base Temp %s' %base_temp, 'units':'days'}
-                else:
-                    results[el_idx] = {'element_long':str(el)}
-                results[el_idx]['element'] = str(el)
-                results[el_idx]['stn_id']= str(form_graphs.cleaned_data['station_id'])
-                if form_graphs.cleaned_data['start_date'] == 'por':
-                    results[el_idx]['record_start'] = str(req['meta']['valid_daterange'][el_idx][0])
-                else:
-                    results[el_idx]['record_start'] = '%s-%s-%s' % (s_date[0:4], s_date[4:6], s_date[6:8])
-                if form_graphs.cleaned_data['end_date'] == 'por':
-                    results[el_idx]['record_end'] = str(req['meta']['valid_daterange'][el_idx][1])
-                else:
-                    results[el_idx]['record_end'] = '%s-%s-%s' % (e_date[0:4], e_date[4:6], e_date[6:8])
-                results[el_idx]['data'] = monthly_aves[el]
+                for el_idx, el in enumerate(form_graphs.cleaned_data['elements']):
+                    el_strip = re.sub(r'(\d+)(\d+)', '', el)   #strip digits from gddxx, hddxx, cddxx
+                    b = el[-2:len(el)]
+                    try:
+                        base_temp = int(b)
+                    except:
+                        if b == 'dd' and el in ['hdd', 'cdd']:
+                            base_temp = '65'
+                        elif b == 'dd' and el == 'gdd':
+                            base_temp = '50'
+
+                    if el_strip == 'pcpn':
+                        results[el_idx] = {'element_long': 'Total Rainfall', 'units':'in'}
+                    elif el_strip == 'snow':
+                        results[el_idx] = {'element_long': 'Total Snowfall', 'units':'in'}
+                    elif el_strip == 'maxt':
+                        results[el_idx] = {'element_long': 'Maximum Temperature', 'units':'F'}
+                    elif el_strip == 'mint':
+                        results[el_idx] = {'element_long': 'Minimum Temperature', 'units':'F'}
+                    elif el_strip == 'avgt':
+                        results[el_idx] = {'element_long': 'Mean Temperature', 'units':'F'}
+                    elif el_strip == 'obst':
+                        results[el_idx] = {'element_long': 'Observation Time Temperature', 'units':'F'}
+                    elif el_strip == 'snwd':
+                        results[el_idx] = {'element_long': 'Snow Depth', 'units':'in'}
+                    elif el_strip == 'cdd':
+                        results[el_idx] = {'element_long': 'Growing Degree Days, Base Temp %s' %base_temp, 'units':'days'}
+                    elif el_strip == 'hdd':
+                        results[el_idx] = {'element_long': 'Heading Degree Days, Base Temp %s' %base_temp, 'units':'days'}
+                    elif el_strip == 'gdd':
+                        results[el_idx] = {'element_long': 'Cooling Degree Days, Base Temp %s' %base_temp, 'units':'days'}
+                    else:
+                        results[el_idx] = {'element_long':str(el)}
+                    results[el_idx]['element'] = str(el)
+                    results[el_idx]['stn_id']= str(form_graphs.cleaned_data['station_id'])
+                    if form_graphs.cleaned_data['start_date'] == 'por':
+                        results[el_idx]['record_start'] = str(req['meta']['valid_daterange'][el_idx][0])
+                    else:
+                        results[el_idx]['record_start'] = '%s-%s-%s' % (s_date[0:4], s_date[4:6], s_date[6:8])
+                    if form_graphs.cleaned_data['end_date'] == 'por':
+                        results[el_idx]['record_end'] = str(req['meta']['valid_daterange'][el_idx][1])
+                    else:
+                        results[el_idx]['record_end'] = '%s-%s-%s' % (e_date[0:4], e_date[4:6], e_date[6:8])
+                    results[el_idx]['data'] = monthly_aves[el]
+                    if 'meta' in req.keys():
+                        results[el_idx]['stn_name'] = str(req['meta']['name'])
+                        results[el_idx]['state'] = str(req['meta']['state'])
                 if 'meta' in req.keys():
-                    results[el_idx]['stn_name'] = str(req['meta']['name'])
-                    results[el_idx]['state'] = str(req['meta']['state'])
-            if 'meta' in req.keys():
-                Meta = WRCCUtils.format_stn_meta(req['meta'])
-                context['meta'] = Meta
-            context['results'] = results
-            #save to json file (necessary since we can't pass list, dicts to js via hidden vars)
-            #double quotes needed for jquery json.load
-            results_json = str(results).replace("\'", "\"")
-            json_file = 'monthly_aves.json'
-            context['json_file'] = json_file
-            f = open('%sjson/%s' %(MEDIA_URL,json_file),'w+')
-            f.write(results_json)
-            f.close()
+                    Meta = WRCCUtils.format_stn_meta(req['meta'])
+                    context['meta'] = Meta
+                context['results'] = results
+                #save to json file (necessary since we can't pass list, dicts to js via hidden vars)
+                #double quotes needed for jquery json.load
+                results_json = str(results).replace("\'", "\"")
+                json_file = 'monthly_aves.json'
+                context['json_file'] = json_file
+                f = open('%sjson/%s' %(MEDIA_URL,json_file),'w+')
+                f.write(results_json)
+                f.close()
 
         else:
             stn_id = None
@@ -619,6 +626,8 @@ def by_id(request):
         stn_json = AcisWS.station_meta_to_json('id', q)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
+        if stn_json['stations'] == []:
+            context['error'] = "No station found for the given Id: %s" %q
     context['json_file'] = 'stn.json'
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
@@ -635,6 +644,8 @@ def by_county(request):
         stn_json = AcisWS.station_meta_to_json('county', q)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
+        if stn_json['stations'] == []:
+            context['error'] = "No stations found for the given County: %s" %q
     context['json_file'] = 'stn.json'
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
@@ -650,6 +661,8 @@ def by_cwa(request):
         stn_json = AcisWS.station_meta_to_json('county_warning_area', q)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
+        if stn_json['stations'] == []:
+            context['error'] = "No stations found for the given County Warning Area: %s" %q
     context['json_file'] = 'stn.json'
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
@@ -665,6 +678,8 @@ def by_clim_div(request):
         stn_json = AcisWS.station_meta_to_json('climate_division', q)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
+        if stn_json['stations'] == []:
+            context['error'] = "No stations found for the given Climate Division: %s" %q
     context['json_file'] = 'stn.json'
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
@@ -680,6 +695,8 @@ def by_basin(request):
         stn_json = AcisWS.station_meta_to_json('basin', q)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
+        if stn_json['stations'] == []:
+            context['error'] = "No stations found for the given Basin: %s" %q
     context['json_file'] = 'stn.json'
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
@@ -695,6 +712,8 @@ def by_state(request):
         stn_json = AcisWS.station_meta_to_json('state', state_key)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
+        if stn_json['stations'] == []:
+            context['error'] = "No stations found for the given State: %s" %state_key
     context['json_file'] = 'stn.json'
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
@@ -708,15 +727,20 @@ def by_bounding_box(request):
     }
     if not W or not S or not E or not N:
         stn_json = {}
+        bbox = ' '
+        context['error'] = "Not a valid Bounding Box!"
     else:
         try:
             bbox ="%f, %f, %f, %f" % (float(W), float(S), float(E), float(N))
             stn_json = AcisWS.station_meta_to_json('bounding_box', bbox)
             if 'error' in stn_json.keys():
                 context['error'] = stn_json['error']
+            if stn_json['stations'] == []:
+                context['error'] = "No stations found for the given Bounding Box: %s" %bbox
         except:
             bbox = ''
-            pass
+            if stn_json['stations'] == []:
+                context['error'] = "No stations found for the given Bounding Box: None"
     context['title'] = "Search Results for bounding box %s" %bbox
     context['json_file'] = 'stn.json'
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
