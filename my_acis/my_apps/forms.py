@@ -231,6 +231,22 @@ F_ANALYSIS_CHOICES = (
         )
 
 #Custom form fields
+class MyDateField(forms.CharField):
+    def to_python(self, date):
+        # Return an empty string if no input was given.
+        if not date:
+            return ' '
+        return date
+
+    def validate(self, date):
+        if date == 'por':
+            pass
+        else:
+            try:
+                int(date)
+            except:
+                raise forms.ValidationError("Not a valid date. You entered: %s!" %str(date))
+
 class MultiStnField(forms.CharField):
     def to_python(self, stn_list):
         "Normalize data to a list of strings."
@@ -248,8 +264,8 @@ class MultiStnField(forms.CharField):
 
 class SodrunForm(forms.Form):
     coop_station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
-    start_date = forms.CharField(max_length=8, min_length=8, required = False, initial='20120101')
-    end_date = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
+    start_date = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
+    end_date = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
     element = forms.ChoiceField(choices=SR_ELEMENT_CHOICES, initial='pcpn')
     aeb = forms.ChoiceField(choices=AEB_CHOICES, initial ='A' )
     threshold = forms.IntegerField(initial=0)
@@ -260,8 +276,8 @@ class SodrunForm(forms.Form):
 
 class SodlistForm(forms.Form):
     coop_station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
-    start_date = forms.CharField(max_length=8, min_length=8, required = False, initial='20120101')
-    end_date = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
+    start_date = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
+    end_date = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
     output_format = forms.ChoiceField(choices=SL_FRMT_CHOICES, initial='kr')
     #output_file = forms.CharField(max_length=256, required=False)
     start_window = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
@@ -271,16 +287,16 @@ class SodlistForm(forms.Form):
 
 class SodcnvForm(forms.Form):
     coop_station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
-    start_date = forms.CharField(max_length=8, min_length=8, required = False, initial='20120101')
-    end_date = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
+    start_date = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
+    end_date = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
     #output_file = forms.CharField(max_length=256, required=False)
     start_window = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
     end_window = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
 
 class SodmonlineForm(forms.Form):
     coop_station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
-    start_date = forms.CharField(max_length=4, initial='2012')
-    end_date = forms.CharField(max_length=4, initial='2012')
+    start_date = MyDateField(max_length=4, initial='2012', help_text="yyyy")
+    end_date = forms.CharField(max_length=4, initial='2012', help_text="yyyy")
     element = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
     temperature_precision = forms.ChoiceField(choices=SM_TEMP_PRECISION_CHOICES, initial=' ')
     output_format = forms.ChoiceField(choices=SM_FRMT_CHOICES, initial='kr')
@@ -290,8 +306,8 @@ class SodmonlineForm(forms.Form):
 
 class SodmonlinemyForm(forms.Form):
     coop_station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
-    start_date = forms.CharField(max_length=4, min_length=4, initial='2012')
-    end_date = forms.CharField(max_length=4, min_length=4, initial='2012')
+    start_date = MyDateField(max_length=4, min_length=4, initial='2012', help_text="yyyymmdd")
+    end_date = MyDateField(max_length=4, min_length=4, initial='2012', help_text="yyyymmdd")
     element = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
     temperature_precision = forms.ChoiceField(choices=SM_TEMP_PRECISION_CHOICES, initial=' ')
     output_format = forms.ChoiceField(choices=SM_FRMT_CHOICES, initial='kr')
@@ -302,8 +318,8 @@ class SodmonlinemyForm(forms.Form):
 class SodsumForm(forms.Form):
     #coop_station_ids = forms.CharField(initial='266779')
     coop_station_ids = MultiStnField(initial='266779,103732')
-    start_date = forms.CharField(max_length=8, required = False, initial='20120101')
-    end_date = forms.CharField(max_length=8, required = False, initial=today)
+    start_date = MyDateField(max_length=8, required = False, initial='20120101', help_text="yyyymmdd")
+    end_date = MyDateField(max_length=8, required = False, initial=today, help_text="yyyymmdd")
     element = forms.ChoiceField(choices=SS_ELEMENT_CHOICES, initial='multi')
 
 #class to determine method of station selection used insubsequent forms
@@ -370,15 +386,15 @@ class SodForm(forms.Form):
             app_name = self.data.get('app_name')
 
         if app_name in ['Soddyrec', 'Sodcnv', 'Sodlist', 'Sodrun', 'Sodrunr']:
-            self.fields['start_date'] = forms.CharField(max_length=8, initial='20000101')
-            self.fields['end_date'] = forms.CharField(max_length=8, initial=today)
+            self.fields['start_date'] = MyDateField(max_length=8, initial='20000101', help_text="yyyymmdd")
+            self.fields['end_date'] = MyDateField(max_length=8, initial=today, help_text="yyyymmdd")
             #self.fields['end_date'] = forms.CharField(max_length=8, initial='20091231')
         elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy', 'Sodpad', 'Sodsumm', 'Sodpct', 'Sodthr', 'Sodxtrmts']:
-            self.fields['start_date'] = forms.CharField(max_length=4, min_length=4, initial='2000')
-            self.fields['end_date'] = forms.CharField(max_length=4, min_length=4, initial='2010')
+            self.fields['start_date'] = MyDateField(max_length=4, min_length=4, initial='2000', help_text="yyyy")
+            self.fields['end_date'] = MyDateField(max_length=4, min_length=4, initial='2010', help_text="yyyy")
         elif app_name == 'Sodpiii':
-            self.fields['start_date'] = forms.CharField(max_length=6, min_length=6, initial='200001')
-            self.fields['end_date'] = forms.CharField(max_length=6, min_length=6, initial='200912')
+            self.fields['start_date'] = MyDateField(max_length=6, min_length=6, initial='200001', help_text="yyyymm")
+            self.fields['end_date'] = MyDateField(max_length=6, min_length=6, initial='200912', help_text="yyyymm")
 
         if app_name in ['Sodrun', 'Sodrunr']:
             if app_name == 'Sodrunr':

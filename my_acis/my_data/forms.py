@@ -126,6 +126,24 @@ DELIMITER_CHOICES = (
 )
 
 #Custom form fields
+class MyDateField(forms.CharField):
+    def to_python(self, date):
+        # Return an empty string if no input was given.
+        if not date:
+            return ' '
+        return date
+
+    def validate(self, date):
+        if date == 'por':
+            pass
+        else:
+            if len(date)!=8:
+                raise forms.ValidationError("Date should be 8 digits long (yyyymmdd). You entered: %s!" %str(date))
+            try:
+                int(date)
+            except:
+                raise forms.ValidationError("Not a valid date. You entered: %s!" %str(date))
+
 class MultiStnField(forms.CharField):
     def to_python(self, stn_list):
         "Normalize data to a list of strings."
@@ -137,13 +155,26 @@ class MultiStnField(forms.CharField):
     def validate(self, stn_list):
         "Check if value consists only of valid coop_station_ids."
         for stn in stn_list:
-            try:
-                int(stn)
-            except:
-                raise forms.ValidationError("coop_station_ids should be a comma separated list of valid 6 digit coop_station_ids %s!" % str(stn))
+            if not str(stn).isalnum:
+                raise forms.ValidationError("Not a valid station_id! Station ID are alphanumeric %s!" % str(stn))
 
-            if len(str(stn))!=6:
-                raise forms.ValidationError("coop_station_ids should be a comma separated list of valid 6 digit coop_station_ids %s!" % str(stn))
+class BBoxField(forms.CharField):
+    def to_python(self, bbox_str):
+        "Normalize data to a list of strings."
+        # Return an empty string if no input was given.
+        if not bbox_str:
+            return ' '
+        return str(bbox_str)
+    def validate(self, bbox_str):
+        "Check if bbox_str is a valid bounding box."
+        bbox_list = bbox_str.split(',')
+        if len(bbox_list)!= 4:
+            raise forms.ValidationError("Not a valid bounding box. Missing lat or lon! %s" %str(bbox_str))
+        for ll in bbox_list:
+            try:
+                float(ll)
+            except:
+                raise forms.ValidationError("Not a valid lat/lon. %s" %str(ll))
 
 class MultiElementField(forms.CharField):
     def to_python(self, el_tuple):
@@ -151,9 +182,13 @@ class MultiElementField(forms.CharField):
         # Return an empty list if no input was given.
         if not el_tuple:
             return []
-        el_list =  el_tuple.split(',')
-        el_list = [str(el).strip(' ') for el in el_list]
-        return el_list
+        else:
+            if isinstance(el_tuple, list):
+                el_list = [str(el).strip(' ') for el in el_list]
+            else:
+                el_list =  el_tuple.split(',')
+                el_list = [str(el).strip(' ') for el in el_list]
+            return el_list
 
     def validate(self, el_tuple):
         "Check if value consists only of valid coop_station_ids."
@@ -162,20 +197,11 @@ class MultiElementField(forms.CharField):
             if str(el_strip) not in ['pcpn', 'snow', 'snwd', 'maxt', 'mint', 'avgt', 'obst', 'cdd', 'hdd', 'gdd']:
                 raise forms.ValidationError(\
                 mark_safe("elements should be a comma separated list of valid element choices:<br/>") + \
-                mark_safe("pcpn = Precipitation (Inches)<br/>") + \
-                mark_safe("snow = Snowfall (Inches)<br/>") + \
-                mark_safe("nwd = Snowdepth (Inches)<br/>") + \
-                mark_safe("maxt = Maximum Temperature (F)<br/>") +\
-                mark_safe("mint = Minimum Temperature (F)<br/>") + \
-                mark_safe("avgt = Mean Temperature (F)<br/>") + \
-                mark_safe("obst = Observation Time Temperature (F)<br/>") + \
-                mark_safe("cdd = Cooling Degree Days base 65F(Whole Days)<br/>") + \
-                mark_safe("hdd = Heating Degree Days base 65F(Whole Days)<br/>") + \
-                mark_safe("gdd = Growing Degree Days base 50F(Whole Days)<br/>") + \
-                mark_safe("cddxx = Cooling Degree Days base user defined(Whole Days)<br/>") + \
-                mark_safe("hddxx = Heating Degree Days base user defined(Whole Days)<br/>") + \
-                mark_safe("gddxx = Growing Degree Days base user defined(Whole Days), %s" %str(el)))
-
+                mark_safe("pcpn, snow, snwd, <br/>") + \
+                mark_safe("maxt, mint, avgt, <br/>") + \
+                mark_safe("obst, cdd, hdd, <br/>") + \
+                mark_safe("gdd, cddxx, hddxx, gddxx<br/>") + \
+                mark_safe("You entered: %s" %str(el)))
 
 #Data Retrieval Forms
 class PointData0Form(forms.Form):
@@ -192,13 +218,13 @@ class PointData0Form(forms.Form):
             self.fields['station_selection'] = forms.CharField(max_length=6, min_length=6,required=False, initial='stn_id', widget=forms.HiddenInput())
             self.fields['stn_id'] = forms.CharField(required=False, initial=stn_id)
         #self.fields['element'] = forms.ChoiceField(choices=ELEMENT_CHOICES, initial='pcpn', required=False)
-        self.fields['elements'] =forms.CharField(initial ='maxt,mint,avgt', required=False)
+        self.fields['elements'] = forms.CharField(initial ='maxt,mint,avgt', required=False)
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', required=False)
 
 class PointDataForm1(forms.Form):
     def __init__(self, *args, **kwargs):
         station_selection = kwargs.get('initial', {}).get('station_selection', None)
-        elements = kwargs.get('initial', {}).get('elements', [])
+        elements = kwargs.get('initial', {}).get('elements', None)
         data_format =  kwargs.get('initial', {}).get('data_format', None)
         stn_id = kwargs.get('initial', {}).get('stn_id', None)
         super(PointDataForm1, self).__init__(*args, **kwargs)
@@ -207,18 +233,20 @@ class PointDataForm1(forms.Form):
             station_selection = self.data.get('station_selection')
         if stn_id is None:
             stn_id = self.data.get('stn_id')
-        if elements is []:
+        if elements is None:
             elements = self.data.get('elements')
         if data_format is None:
             data_format = self.data.get('data_format')
 
+
         self.fields['station_selection'] = forms.CharField(required=False, initial=station_selection, widget=forms.HiddenInput())
 
         if station_selection == 'stn_id':
-            self.fields['station_id'] = forms.CharField(initial=stn_id, widget=forms.HiddenInput())
-            #self.fields['coop_station_id'].widget.attrs['readonly'] = 'readonly'
+            self.fields['station_id'] = forms.CharField(initial=stn_id)
+            self.fields['station_id'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'stnid':
             self.fields['station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779')
+            #self.fields['station_id'].help_text='for more information see "Station Id systems explained"'
         elif station_selection == 'stnids':
             self.fields['station_ids'] = MultiStnField(required=False,initial='266779,103732')
         elif station_selection == 'county':
@@ -232,7 +260,7 @@ class PointDataForm1(forms.Form):
         elif station_selection == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES)
         elif station_selection == 'bbox':
-            self.fields['bounding_box'] = forms.CharField(required=False,initial='-90,40,-88,41')
+            self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41')
 
         self.fields['elements'] = MultiElementField(initial=elements)
         #self.fields['elements'] = forms.CharField(required=False, initial=elements, widget=forms.HiddenInput())
@@ -243,8 +271,8 @@ class PointDataForm1(forms.Form):
                 self.fields['base_temperature_hddxx'] = forms.IntegerField(initial=65)
             if element == 'gddxx':
                 self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50)
-        self.fields['start_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial='20120101')
-        self.fields['end_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
+        self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
+        self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
         self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput())
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES)
@@ -275,7 +303,7 @@ class GridDataForm1(forms.Form):
         elif grid_selection == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES)
         elif grid_selection == 'bbox':
-            self.fields['bounding_box'] = forms.CharField(required=False,initial='-90,40,-88,41')
+            self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41')
 
         self.fields['elements'] = MultiElementField(initial=elements)
         for element in elements:
@@ -285,8 +313,8 @@ class GridDataForm1(forms.Form):
                 self.fields['base_temperature_hddxx'] = forms.IntegerField(initial=65)
             if element == 'gddxx':
                 self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50)
-        self.fields['start_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial='20120101')
-        self.fields['end_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
+        self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
+        self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
         self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput())
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES)
@@ -318,8 +346,8 @@ class MonthlyAveragesForm(forms.Form):
         else:
             self.fields['station_id'] = forms.CharField(required=False, initial=stn_id)
         self.fields['elements'] = MultiElementField(initial='pcpn')
-        self.fields['start_date'] = forms.CharField(max_length=8, required = False, initial='20000101')
-        self.fields['end_date'] = forms.CharField(max_length=8, required = False, initial='por')
+        self.fields['start_date'] = MyDateField(max_length=8, required = False, initial='20000101', help_text="yyyymmdd or 'por' for period of record")
+        self.fields['end_date'] = MyDateField(max_length=8, required = False, initial='por', help_text="yyyymmdd or 'por' for period of record")
 
 class ClimateMapForm0(forms.Form):
         grid_selection = forms.ChoiceField(choices=([('state', 'State'),('bbox', 'Bounding Box')]), required=False, initial='state')
@@ -352,7 +380,7 @@ class ClimateMapForm1(forms.Form):
         elif grid_selection == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES)
         elif grid_selection == 'bbox':
-            self.fields['bounding_box'] = forms.CharField(required=False,initial='-90,40,-88,41')
+            self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41')
 
         self.fields['element'] = forms.CharField(initial=element)
         self.fields['element'].widget.attrs['readonly'] = 'readonly'
@@ -364,17 +392,17 @@ class ClimateMapForm1(forms.Form):
             self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50)
 
         if time_period == 'custom':
-            self.fields['start_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial='20120101')
-            self.fields['end_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
+            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
+            self.fields['end_date'] =MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
         else:
             if x is None:
-                self.fields['start_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial='20000101')
-                self.fields['end_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
+                self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
+                self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
             else:
                 start_date = WRCCUtils.get_start_date(time_period,today, x)
-                self.fields['start_date'] = forms.CharField(required = False, initial=start_date)
+                self.fields['start_date'] = MyDateField(required = False, initial=start_date)
                 self.fields['start_date'].widget.attrs['readonly'] = 'readonly'
-            self.fields['end_date'] = forms.CharField(required=False, initial=today)
+            self.fields['end_date'] = MyDateField(required=False, initial=today)
             self.fields['end_date'].widget.attrs['readonly'] = 'readonly'
 
 class GPTimeSeriesForm(forms.Form):
@@ -390,14 +418,14 @@ class GPTimeSeriesForm(forms.Form):
                 lon = self.data.get('lon')
 
             if lat is None:
-                 self.fields['lat'] = forms.CharField(initial='41.8', required=False)
+                 self.fields['lat'] = forms.FloatField(initial='41.8', required=False)
             else:
-                self.fields['lat'] = forms.CharField(initial=lat, required=False)
+                self.fields['lat'] = forms.FloatField(initial=lat, required=False)
             if lon is None:
-                 self.fields['lon'] = forms.CharField(initial='-77.7', required=False)
+                 self.fields['lon'] = forms.FloatField(initial='-77.7', required=False)
             else:
-                self.fields['lon'] = forms.CharField(initial=lon, required=False)
+                self.fields['lon'] = forms.FloatField(initial=lon, required=False)
             self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, required=False, initial='maxt')
-            self.fields['start_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial='20120101')
-            self.fields['end_date'] = forms.CharField(max_length=8, min_length=8, required = False, initial=today)
+            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
+            self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
             self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES)

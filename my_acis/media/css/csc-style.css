@@ -34,6 +34,10 @@ a.warning {
     color:#FFCC66;
     font-size:x-large;
 }
+a#warning {
+    color:#FFCC66;
+    font-size:x-large;
+}
 
 .warning {
     color:#FFCC66;

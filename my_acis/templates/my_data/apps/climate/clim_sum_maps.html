@@ -30,6 +30,7 @@
     </div>
 
     <div class="center">
+    {{YES}}
         <div id=tool_info_head></div>
             <script type="text/javascript">            
             $("#tool_info_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_info");
@@ -42,7 +43,7 @@
             over the time period.</li>
             <li>For all other elements, daily values are averaged</li>
             <li>Daily gridded data is obtained through Acis Webservices.</li>
-            <li>Information on different grid types:</li>
+            <li>Information on different grid types:<p class="warning">soon to come!</p></li>
             </ul></p>
         </div>
         
@@ -53,8 +54,11 @@
         <div id="how_to" style="display:none;">
             <p><ul>
             <li>Grid selection is made either by US state or by a user defined bounding box.</li>
-            <li></li>
-            <li>Bounding</li>
+            <li>Bounding Box min Longitude , min Latitude , max Longitude , max Latitude</li>
+            <li>After chosing the desired time period and X value, hit submit. A second form will appear.</li>
+            <li>If Custom Date Range was chosen, the user should enter the desired 
+            8 digit (yyyymmdd) start and end dates fields in the second form.</li>
+            <li>If the Time Period was "Custom Date Range", start and end dates will be computed automatically</li>
             </ul></p>
         </div>
         

@@ -102,10 +102,10 @@ def data_historic(request):
                 initial['stn_id'] = form0_point.cleaned_data['stn_id']
             form1_point = forms.PointDataForm1(initial=initial)
             context['form1_point'] = form1_point
-        else:
-            elements = None
-            station_selection = None
-            data_format = None
+#        else:
+#            elements = None
+#            station_selection = None
+#            data_format = None
 
     if 'form1_point' in request.POST:
         form1_point = set_as_form(request,'PointDataForm1')
@@ -164,6 +164,11 @@ def data_historic(request):
                 return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'xls')
             else:
                 return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
+        #form1_point not valid or form1_point valid and we are done with computation
+        #needed to show validation error in form1_point
+        form1_point = set_as_form(request,'PointDataForm1')
+        context['form1_point'] = form1_point
+        context['form1_point_ready'] = True
 
     return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
 
@@ -184,10 +189,6 @@ def data_modeled(request):
                       'data_format':form0_grid.cleaned_data['data_format']}
             form1_grid = forms.GridDataForm1(initial=initial)
             context['form1_grid'] = form1_grid
-        else:
-            elements = None
-            grid_selection = None
-            data_format = None
 
     if 'form1_grid' in request.POST:
         form1_grid = set_as_form(request,'GridDataForm1')
@@ -267,6 +268,11 @@ def data_modeled(request):
                 return export_to_file_grid(request, data, el_list, file_info, delimiter, 'xls')
             else:
                 return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
+        #form1_grid not valid or form1_grid valid and we are done with computation
+        #needed to show validation error in form1_grid
+        form1_grid = set_as_form(request,'GridDataForm1')
+        context['form1_grid'] = form1_grid
+        context['form1_grid_ready'] = True
 
     return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
 
@@ -448,8 +454,8 @@ def monthly_aves(request):
                 f.write(results_json)
                 f.close()
 
-        else:
-            stn_id = None
+        #else:
+        #    stn_id = None
 
     return render_to_response('my_data/apps/climate/monthly_aves.html', context, context_instance=RequestContext(request))
 
@@ -460,6 +466,7 @@ def clim_sum_maps(request):
     }
     form0 = set_as_form(request,'ClimateMapForm0')
     context['form0'] = form0
+
     if 'form0' in request.POST:
         form0 = set_as_form(request,'ClimateMapForm0')
         context['form0']  = form0
@@ -472,14 +479,8 @@ def clim_sum_maps(request):
                       'x': form0.cleaned_data['x']}
             form1 = forms.ClimateMapForm1(initial=initial)
             context['form1'] = form1
-        else:
-            element = None
-            grid_selection = None
-            time_period = None
-            x = None
+
     if 'form1' in request.POST:
-        form0 = set_as_form(request,'ClimateMapForm0')
-        context['form0'] = form0
         form1 = set_as_form(request,'ClimateMapForm1')
         context['form1'] = form1
         if form1.is_valid():
@@ -512,6 +513,9 @@ def clim_sum_maps(request):
             #context['file_path_thumbnail'] = file_path_small
             fig.build_figure(results, file_path_big)
             #fig.draw_thumbnail(results,file_path_small)
+        form1 = set_as_form(request, 'ClimateMapForm1')
+        context['form1_ready'] = True
+        context['form1'] = form1
     return render_to_response('my_data/apps/climate/clim_sum_maps.html', context, context_instance=RequestContext(request))
 
 def grid_point_time_series(request):
@@ -559,7 +563,7 @@ def grid_point_time_series(request):
             context['lat'] = form0.cleaned_data['lat']
             context['lon'] = form0.cleaned_data['lon']
             #Note: acis takes lon, lat in that order
-            location = '%s,%s' %(form0.cleaned_data['lon'], form0.cleaned_data['lat'])
+            location = '%s,%s' %(str(form0.cleaned_data['lon']), str(form0.cleaned_data['lat']))
             form_input = {'location':location, 'element': form0.cleaned_data['element'], \
             'start_date':form0.cleaned_data['start_date'], \
             'end_date':form0.cleaned_data['end_date'], 'grid':form0.cleaned_data['grid']}

@@ -428,10 +428,15 @@ def sods(request, app_name):
             context['data'] = dict(data)
             context['coop_station_ids'] = dict([(k,v) for k,v in enumerate(coop_station_ids)])
             context['station_names'] = dict([(k,v) for k,v in enumerate(station_names)])
-        else: #form_2 is not valid
-            print "The following errors occurred:"
-            print form2.errors
-            station_selection = None
+        #form_2 not valid or we are done with analysis
+        form2 = set_as_form(request, 'Sod')
+        context['form2'] = form2
+        context['form_2_ready'] = True
+        station_selection = None
+        #else: #form_2 is not valid
+        #    print "The following errors occurred:"
+        #    print form2.errors
+        #    station_selection = None
     return render_to_response('my_apps/%s.html' % app_name, context, context_instance=RequestContext(request))
 
 #Utlities
