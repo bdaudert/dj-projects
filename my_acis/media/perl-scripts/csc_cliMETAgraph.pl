@@ -10,8 +10,9 @@ use Time::localtime;
 
 $numargs = @ARGV;
 # Is control file given as an argument
-if ($numargs == 1) {
+if ($numargs == 2) {
    $stationid = $ARGV[0];
+   $time_stamp = $ARGV[1];
 } else {
    # Input data file
    print ("Enter a 6-digit coop id:\n");
@@ -213,10 +214,10 @@ for ($year=1870; $year<=2013; $year++) {
 # print the image
 #print "Content-type: image/gif\n\n";
 #print $im->gif;
-$dir_path = "/Users/bdaudert/DRI/dj-projects/my_acis/media/img/";
+$dir_path = "/Users/bdaudert/DRI/dj-projects/my_acis/media/tmp/";
 
 $gif_data = $im->gif;
-open (GIFFILE,">" . $dir_path . "tmax.gif") || die ("Can't open tmax.gif");
+open (GIFFILE,">" . $dir_path . $time_stamp ."metagraph_tmax.gif") || die ("Can't open " . $time_stamp . "metagraph_tmax.gif");
 #open (GIFFILE,">" . $stnid . "tmax.gif") || die ("Can't open $stnidtmax.gif");
 print GIFFILE $gif_data;
 close GIFFILE;
@@ -239,8 +240,8 @@ for ($year=1870; $year<=2013; $year++) {
 
 #print $im2->gif;
 $gif_data = $im2->gif;
-open (GIFFILE,">" . $dir_path . "tmin.gif") || die ("Can't open tmin.gif");
-# open (GIFFILE,">" . $stnid . "tmin.gif") || die;
+open (GIFFILE,">" . $dir_path . $time_stamp ."metagraph_tmin.gif") || die ("Can't open " . $time_stamp . "metagraph_tmin.gif");
+#open (GIFFILE,">" . $dir_path . "tmin.gif") || die ("Can't open tmin.gif");
 print GIFFILE $gif_data;
 close GIFFILE;
 
@@ -262,8 +263,8 @@ for ($year=1870; $year<=2013; $year++) {
 
 #print $im3->gif;
 $gif_data = $im3->gif;
-# open (GIFFILE,">" . $stnid . "pcpn.gif") || die;
-open (GIFFILE,">" . $dir_path . "pcpn.gif") || die ("Can't open pcpn.gif");
+open (GIFFILE,">" . $dir_path . $time_stamp ."metagraph_pcpn.gif") || die ("Can't open " . $time_stamp . "metagraph_pcpn.gif");
+#open (GIFFILE,">" . $dir_path . "pcpn.gif") || die ("Can't open pcpn.gif");
 print GIFFILE $gif_data;
 close GIFFILE;
 
@@ -285,8 +286,8 @@ for ($year=1870; $year<=2013; $year++) {
 
 #print $im4->gif;
 $gif_data = $im4->gif;
-#open (GIFFILE,">" . $stnid . "snwd.gif") || die;
-open (GIFFILE,">" . $dir_path . "snow.gif") || die ("Can't open snow.gif");
+open (GIFFILE,">" . $dir_path . $time_stamp ."metagraph_snow.gif") || die ("Can't open " . $time_stamp . "metagraph_snow.gif");
+#open (GIFFILE,">" . $dir_path . "snow.gif") || die ("Can't open snow.gif");
 print GIFFILE $gif_data;
 close GIFFILE;
 
@@ -308,8 +309,8 @@ for ($year=1870; $year<=2013; $year++) {
 
 #print $im5->gif;
 $gif_data = $im5->gif;
-# open (GIFFILE,">" . $stnid . "snwd.gif") || die;
-open (GIFFILE,">" . $dir_path . "snwd.gif") || die ("Can't open snwd.gif");
+open (GIFFILE,">" . $dir_path . $time_stamp ."metagraph_snwd.gif") || die ("Can't open " . $time_stamp . "metagraph_snwd.gif");
+#open (GIFFILE,">" . $dir_path . "snwd.gif") || die ("Can't open snwd.gif");
 print GIFFILE $gif_data;
 close GIFFILE;
 

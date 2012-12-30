@@ -102,10 +102,6 @@ def data_historic(request):
                 initial['stn_id'] = form0_point.cleaned_data['stn_id']
             form1_point = forms.PointDataForm1(initial=initial)
             context['form1_point'] = form1_point
-#        else:
-#            elements = None
-#            station_selection = None
-#            data_format = None
 
     if 'form1_point' in request.POST:
         form1_point = set_as_form(request,'PointDataForm1')
@@ -347,7 +343,9 @@ def metagraph(request):
             #Call perl script that generates gif graphs
             #FIX ME! Should be able to call it from html:
             #<img src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}">
-            perl_out, perl_err = run_external_script("perl %sperl-scripts/csc_cliMETAgraph.pl %s" %(MEDIA_URL, str(form_meta.cleaned_data['station_id'])))
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_')
+            context['time_stamp'] = time_stamp
+            perl_out, perl_err = run_external_script("perl %sperl-scripts/csc_cliMETAgraph.pl %s %s" %(MEDIA_URL, str(form_meta.cleaned_data['station_id']), time_stamp))
             context['perl_err'] = perl_err
             context['perl_out'] = perl_out
         else:
@@ -448,9 +446,11 @@ def monthly_aves(request):
                 #save to json file (necessary since we can't pass list, dicts to js via hidden vars)
                 #double quotes needed for jquery json.load
                 results_json = str(results).replace("\'", "\"")
-                json_file = 'monthly_aves.json'
+                time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+                json_file = '%s_monthly_aves_%s_%s_%s.json' \
+                %(time_stamp, str(form_graphs.cleaned_data['station_id']), s_date, e_date)
                 context['json_file'] = json_file
-                f = open('%sjson/%s' %(MEDIA_URL,json_file),'w+')
+                f = open('%stmp/%s' %(MEDIA_URL,json_file),'w+')
                 f.write(results_json)
                 f.close()
 
@@ -506,9 +506,10 @@ def clim_sum_maps(request):
                 region = 'bbox_' + re.sub(',','_',form1.cleaned_data['bounding_box'])
             fig = WRCCClasses.GridFigure(params)
             results = fig.get_grid()
-            figure_file = region + 'acis_map.png'
+            time_stamp = datetime.datetime.now().strftime('%Y%m_%d_%H_%M_%S_')
+            figure_file = time_stamp + 'acis_map_' + region + '.png'
             file_path_big = MEDIA_URL +'tmp/' + figure_file
-            #file_path_small = MEDIA_URL +'tmp/' + region + 'acis_map_sm.png'
+            #file_path_small = MEDIA_URL +'tmp/' + time_stamp + 'acis_map_small_' + region + '.png'
             context['figure_file'] = figure_file
             #context['file_path_thumbnail'] = file_path_small
             fig.build_figure(results, file_path_big)
@@ -527,21 +528,6 @@ def grid_point_time_series(request):
     lon = request.GET.get('lon', None)
     context['lat'] = lat
 
-    '''
-    if 'form_lat_lon' in request.POST:
-        context['form0_ready'] = True
-        lat = request.POST.get('lat', None)
-        lon = request.POST.get('lon', None)
-        context['lat'] = lat
-        context['lon'] = lon
-        context['form0_ready'] = True
-        form0 = set_as_form(request,'GPTimeSeriesForm', init={'lat':str(lat), 'lon':str(lon)})
-        context['form0'] = form0
-    else:
-
-        lat = request.GET.get('lat', None)
-        lon = request.GET.get('lon', None)
-    '''
 
     if lat is not None and lon is not None:
         form0 = set_as_form(request,'GPTimeSeriesForm', init={'lat':str(lat), 'lon':str(lon)})
@@ -585,12 +571,14 @@ def grid_point_time_series(request):
                 else:
                     context['error'] = 'Unknown error ocurred when getting data'
             results_json = str(datadict).replace("\'", "\"")
-            #json_file = 'gp_time_series.json'
-            json_file = '%s_%s_%s_%s_gp_ts.json' %(str(form0.cleaned_data['lat']), \
+            JSON_URL = MEDIA_URL + 'tmp/'
+            context['JSON_URL'] = JSON_URL
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+            json_file = '%s_gp_ts_%s_%s_%s_%s.json' %(time_stamp, str(form0.cleaned_data['lat']), \
                 str(form0.cleaned_data['lon']), form0.cleaned_data['start_date'], \
                 form0.cleaned_data['end_date'])
             context['json_file'] = json_file
-            f = open('%stmp/%s' %(MEDIA_URL,json_file),'w+')
+            f = open('%s%s' %(JSON_URL,json_file),'w+')
             f.write(results_json)
             f.close()
     return render_to_response('my_data/apps/climate/grid_point_time_series.html', context, context_instance=RequestContext(request))

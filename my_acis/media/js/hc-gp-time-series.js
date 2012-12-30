@@ -2,7 +2,7 @@ $(function () {
     var chart;
 
     $(document).ready(function() {
-        var MEDIA_URL = document.getElementById("MEDIA_URL").value;
+        var JSON_URL = document.getElementById("JSON_URL").value;
         var element_long = document.getElementById("element_long").value;
         var element = document.getElementById("element").value;
         var lat = document.getElementById("lat").value;
@@ -10,7 +10,7 @@ $(function () {
         var start_date = document.getElementById("start_date").value;
         var end_date = document.getElementById("end_date").value;
         var json_file = document.getElementById("json_file").value;
-        var json_file_name = MEDIA_URL +'tmp/' + json_file;
+        var json_file_name = JSON_URL + json_file;
         
         var start = new Array();
         var end = new Array();

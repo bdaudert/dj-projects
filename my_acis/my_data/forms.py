@@ -199,8 +199,8 @@ class MultiElementField(forms.CharField):
                 mark_safe("elements should be a comma separated list of valid element choices:<br/>") + \
                 mark_safe("pcpn, snow, snwd, <br/>") + \
                 mark_safe("maxt, mint, avgt, <br/>") + \
-                mark_safe("obst, cdd, hdd, <br/>") + \
-                mark_safe("gdd, cddxx, hddxx, gddxx<br/>") + \
+                mark_safe("obst, cdd, hdd, gdd <br/>") + \
+                mark_safe(" or cddxx, hddxx, gddxx where xx is the base temperature in Fahrenheit, e.g. 68<br/>") + \
                 mark_safe("You entered: %s" %str(el)))
 
 #Data Retrieval Forms

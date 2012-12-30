@@ -63,8 +63,8 @@ $(function () {
 
     $(document).ready(function() {
         var json_file = document.getElementById("json_file").value;
-        var MEDIA_URL = document.getElementById("MEDIA_URL").value;
-        var json_file_path = MEDIA_URL +'json/' + json_file;
+        var JSON_URL = document.getElementById("JSON_URL").value;
+        var json_file_path = JSON_URL + json_file;
         $.getJSON(json_file_path, function(datadict) {
             for (var i=0;i<datadict.length;i++){
                 var j = i + 1

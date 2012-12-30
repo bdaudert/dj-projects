@@ -70,11 +70,11 @@
         {%else%}
             {%if station_id%}
             <h1>STATION ID: {{station_id}}</h1>
-            <img src="{{MEDIA_URL}}img/tmax.gif">
-            <img src="{{MEDIA_URL}}img/tmin.gif">
-            <img src="{{MEDIA_URL}}img/pcpn.gif">
-            <img src="{{MEDIA_URL}}img/snow.gif">
-            <img src="{{MEDIA_URL}}img/snwd.gif">
+            <img src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmax.gif">
+            <img src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmin.gif">
+            <img src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_pcpn.gif">
+            <img src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_snow.gif">
+            <img src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_snwd.gif">
             <!--
             <img src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}"> 
             -->
