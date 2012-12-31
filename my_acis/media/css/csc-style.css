@@ -31,16 +31,19 @@ a:hover {
 a:active { color: red; }
 
 a.warning {
-    color:#FFCC66;
+    /*color:#FFCC66;*/
+    color:#FFEBCD;
     font-size:x-large;
 }
 a#warning {
-    color:#FFCC66;
+    color:#FFEBCD;
+    /*color:#FFCC66;*/
     font-size:x-large;
 }
 
 .warning {
-    color:#FFCC66;
+    color:#FFEBCD;
+    /*color:#FFCC66;*/
     font-size:x-large;
 }
 

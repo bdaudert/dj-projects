@@ -271,8 +271,8 @@ class PointDataForm1(forms.Form):
                 self.fields['base_temperature_hddxx'] = forms.IntegerField(initial=65)
             if element == 'gddxx':
                 self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50)
-        self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
-        self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
+        self.fields['start_date'] = MyDateField(max_length=8, min_length=3, required = False, initial='20120101', help_text="yyyymmdd")
+        self.fields['end_date'] = MyDateField(max_length=8, min_length=3, required = False, initial=today, help_text="yyyymmdd")
         self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput())
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES)

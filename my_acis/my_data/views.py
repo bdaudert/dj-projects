@@ -571,13 +571,12 @@ def grid_point_time_series(request):
                 else:
                     context['error'] = 'Unknown error ocurred when getting data'
             results_json = str(datadict).replace("\'", "\"")
-            JSON_URL = MEDIA_URL + 'tmp/'
-            context['JSON_URL'] = JSON_URL
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
             json_file = '%s_gp_ts_%s_%s_%s_%s.json' %(time_stamp, str(form0.cleaned_data['lat']), \
                 str(form0.cleaned_data['lon']), form0.cleaned_data['start_date'], \
                 form0.cleaned_data['end_date'])
             context['json_file'] = json_file
+            JSON_URL = MEDIA_URL + 'tmp/'
             f = open('%s%s' %(JSON_URL,json_file),'w+')
             f.write(results_json)
             f.close()
@@ -765,7 +764,10 @@ def export_to_file_point(request, data, dates, station_names, station_ids, eleme
             writer.writerow(row)
             for j, vals in enumerate(dat):
                 row = [dates[j]]
-                for val in vals:row.append(val)
+                if len(station_ids) == 1:
+                    for val in vals[1:]:row.append(val)
+                else:
+                    for val in vals:row.append(val)
                 writer.writerow(row)
     else: #Excel
         from xlwt import Workbook
@@ -778,7 +780,10 @@ def export_to_file_point(request, data, dates, station_names, station_ids, eleme
             #Data
             for j, vals in enumerate(dat):
                 ws.write(j+1, 0, dates[j])
-                for l,val in enumerate(vals):ws.write(j+1, l+1, val) #row, column, label
+                if len(station_ids) == 1:
+                    for l,val in enumerate(vals[1:]):ws.write(j+1, l+1, val) #row, column, label
+                else:
+                    for l,val in enumerate(vals):ws.write(j+1, l+1, val) #row, column, label
 
         response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
         response['Content-Disposition'] = 'attachment;filename=%s_%s.%s' % (file_info[0], file_info[1],file_extension)

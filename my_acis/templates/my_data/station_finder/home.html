@@ -116,10 +116,8 @@
 
         <div class="center-left">
         
-            <p class="warning">Click on the <font color="#FFEBCD">search categories</font> to see examples</p>
+            <p class="warning">Click on the <font color="#FFEBCD">search categories</font> to see examples!</p>
 
-            <a class="docu_long" target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">
-            <img src="{{ MEDIA_URL }}img/InfoMan.jpg" class="icon">Station ID systems explained</a>
             <p onClick="ShowHide('myImage')">Search by ID</p>
             <img src="{{MEDIA_URL}}img/Acis_Stn_Id_Type.png" id="myImage" border="0" width="275" height="250" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_id/">
@@ -148,7 +146,7 @@
     
         <div class="center-right">
             
-            <p class="warning">Click on the <font color="#FFEBCD">search categories</font> to see examples</p>
+            <p class="warning">Click on the <font color="#FFEBCD">search categories</font> to see examples!</p>
             
             <p onClick="ShowHide('myImage4')">Search by Climate Division</p> 
             <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage4" width="275" height="250" border="0" style="display:none;" />
@@ -190,9 +188,13 @@
         <div id="docu_long"></div>
 
         {%if error%} 
+            <a class="docu_long" id="warning" target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">
+            <img src="{{ MEDIA_URL }}img/InfoMan.jpg" class="icon">Station ID systems explained</a><br />
             <h1 class="error">{{error}}</h1>
             <div id="map_canvas"></div>
         {%else%}
+            <a class="docu_long" id="warning" target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">
+            <img src="{{ MEDIA_URL }}img/InfoMan.jpg" class="icon">Station ID systems explained</a><br />
             <div id="map_canvas"></div>
         {%endif%}
 
