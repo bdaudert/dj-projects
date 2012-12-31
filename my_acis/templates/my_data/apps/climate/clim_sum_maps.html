@@ -63,6 +63,9 @@
         </div>
         
         {%if figure_file%}
+
+            <a href="/my_data/data/modeled/?grid_selection={{grid_selection}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}">Get raw data here!</a>
+
             <img src = '{{MEDIA_URL}}tmp/{{figure_file}}'>
         {%endif%}
     </div>    

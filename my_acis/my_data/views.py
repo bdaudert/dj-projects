@@ -82,9 +82,12 @@ def data_historic(request):
         'data_page':True
     }
     context['json_file'] = 'SW_stn.json'
-    stn_id = request.GET.get('stn_id', None)
-    if stn_id is not None:
-        form0_point = set_as_form(request,'PointData0Form', init={'stn_id':str(stn_id)})
+    elements = request.GET.get('elements', None)
+    initial_params_0 = {}
+    if elements is not None:initial_params_0['elements'] = str(elements)
+
+    if initial_params_0:
+        form0_point = set_as_form(request,'PointData0Form', init=initial_params_0)
     else:
         form0_point = set_as_form(request,'PointData0Form')
     context['form0_point'] = form0_point
@@ -95,12 +98,25 @@ def data_historic(request):
 
         if form0_point.is_valid():
             context['form1_point_ready'] = True
+            initial_params_1 = {}
+            stn_id = request.GET.get('stn_id', None)
+            start_date = request.GET.get('start_date', None)
+            end_date = request.GET.get('end_date', None)
+            elements = request.GET.get('elements', None)
+            if stn_id is not None:initial_params_1['station_id'] = str(stn_id)
+            if start_date is not None:initial_params_1['start_date'] = str(start_date)
+            if end_date is not None:initial_params_1['end_date'] = str(end_date)
+            initial_params_1['elements'] = form0_point.cleaned_data['elements']
+            initial_params_1['data_format'] = form0_point.cleaned_data['data_format']
+            initial_params_1['station_selection'] = form0_point.cleaned_data['station_selection']
+
+            '''
             initial = {'station_selection':form0_point.cleaned_data['station_selection'], \
                       'elements':form0_point.cleaned_data['elements'], \
                       'data_format':form0_point.cleaned_data['data_format']}
-            if 'stn_id' in form0_point.cleaned_data.keys():
-                initial['stn_id'] = form0_point.cleaned_data['stn_id']
-            form1_point = forms.PointDataForm1(initial=initial)
+            '''
+
+            form1_point = forms.PointDataForm1(initial=initial_params_1)
             context['form1_point'] = form1_point
 
     if 'form1_point' in request.POST:
@@ -173,17 +189,51 @@ def data_modeled(request):
         'title': 'Modeled Data',
         'data_page':True
     }
-    form0_grid = set_as_form(request,'GridData0Form')
+
+    initial_0 = {}
+    grid_selection = request.GET.get('grid_selection', None)
+    elements = request.GET.get('elements', None)
+    if grid_selection is not None:initial_0['grid_selection'] = grid_selection
+    if elements is not None:initial_0['elements'] = str(elements)
+
+    if initial_0:
+        form0_grid = set_as_form(request,'GridData0Form', init=initial_0)
+    else:
+        form0_grid = set_as_form(request,'GridData0Form')
     context['form0_grid'] = form0_grid
     if 'form0_grid' in request.POST:
         form0_grid = set_as_form(request,'GridData0Form')
         context['form0_grid']  = form0_grid
         if form0_grid.is_valid():
             context['form1_grid_ready'] = True
-            initial = {'grid_selection':form0_grid.cleaned_data['grid_selection'], \
+            grid_selection = request.GET.get('grid_selection', None)
+            start_date = request.GET.get('start_date', None)
+            end_date = request.GET.get('end_date', None)
+            elements = request.GET.get('elements', None)
+            bounding_box = request.GET.get('bounding_box', None)
+            state = request.GET.get('grid', None)
+            grid = request.GET.get('grid', None)
+            initial_1 = {}
+            if start_date is not None:initial_1['start_date'] = start_date
+            if end_date is not None:initial_1['end_date'] = end_date
+            if bounding_box is not None:initial_1['bounding_box'] = bounding_box
+            if state is not None:initial_1['state'] = state
+            if grid_selection is None:
+                initial_1['grid_selection'] = form0_grid.cleaned_data['grid_selection']
+            else:
+                initial_1['grid_selection'] = grid_selection
+            if elements is None:
+                initial_1['elements'] = form0_grid.cleaned_data['elements']
+            else:
+                initial_1['elements'] = elements
+            initial_1['data_format']  = form0_grid.cleaned_data['data_format']
+
+            '''
+            initial_1 = {'grid_selection':form0_grid.cleaned_data['grid_selection'], \
                       'elements':form0_grid.cleaned_data['elements'], \
                       'data_format':form0_grid.cleaned_data['data_format']}
-            form1_grid = forms.GridDataForm1(initial=initial)
+            '''
+            form1_grid = forms.GridDataForm1(initial=initial_1)
             context['form1_grid'] = form1_grid
 
     if 'form1_grid' in request.POST:
@@ -330,7 +380,11 @@ def metagraph(request):
                     for key, val in meta_request['meta'][0].items():
                         if key == 'sids':
                             sid_list = []
-                            for sid in val:sid_list.append(sid.encode('ascii', 'ignore'))
+                            for sid in val:
+                                sid_l = sid.split()
+                                if sid_l[1] == '2':
+                                    station_meta['coop_id'] = str(sid_l[0])
+                                sid_list.append(sid.encode('ascii', 'ignore'))
                             station_meta['sids'] = sid_list
                         else:
                             station_meta[key] = str(val)
@@ -370,7 +424,12 @@ def monthly_aves(request):
         if form_graphs.is_valid():
             s_date = str(form_graphs.cleaned_data['start_date'])
             e_date = str(form_graphs.cleaned_data['end_date'])
-            params = dict(sid=form_graphs.cleaned_data['station_id'], sdate=s_date, edate=e_date, \
+            stn_id = form_graphs.cleaned_data['station_id']
+            context['stn_id'] = stn_id
+            context['start_date'] = s_date
+            context['end_date'] = e_date
+            context['elems'] = ','.join(form_graphs.cleaned_data['elements'])
+            params = dict(sid=stn_id, sdate=s_date, edate=e_date, \
             meta='valid_daterange,name,state,sids,ll,elev,uid,county,climdiv', \
             elems=[dict(name=el, groupby="year")for el in form_graphs.cleaned_data['elements']])
             monthly_aves = {}
@@ -473,6 +532,7 @@ def clim_sum_maps(request):
 
         if form0.is_valid():
             context['form1_ready'] = True
+            context['grid_selection'] = form0.cleaned_data['grid_selection']
             initial = {'grid_selection':form0.cleaned_data['grid_selection'], \
                       'element':form0.cleaned_data['element'], \
                       'time_period':form0.cleaned_data['time_period'], \
@@ -504,6 +564,11 @@ def clim_sum_maps(request):
             elif 'bounding_box' in form1.cleaned_data.keys():
                 params['bbox'] = form1.cleaned_data['bounding_box']
                 region = 'bbox_' + re.sub(',','_',form1.cleaned_data['bounding_box'])
+            context['elems'] = elem
+            context['start_date']= form1.cleaned_data['start_date']
+            context['end_date'] = form1.cleaned_data['end_date']
+            context['grid']= form1.cleaned_data['grid']
+            context['grid_selection'] = form1.cleaned_data['grid_selection']
             fig = WRCCClasses.GridFigure(params)
             results = fig.get_grid()
             time_stamp = datetime.datetime.now().strftime('%Y%m_%d_%H_%M_%S_')
@@ -550,6 +615,11 @@ def grid_point_time_series(request):
             context['lon'] = form0.cleaned_data['lon']
             #Note: acis takes lon, lat in that order
             location = '%s,%s' %(str(form0.cleaned_data['lon']), str(form0.cleaned_data['lat']))
+            context['grid_selection'] = 'point'
+            context['s_date'] = form0.cleaned_data['start_date']
+            context['e_date'] = form0.cleaned_data['end_date']
+            context['elems'] = form0.cleaned_data['element']
+            context['grid'] = form0.cleaned_data['grid']
             form_input = {'location':location, 'element': form0.cleaned_data['element'], \
             'start_date':form0.cleaned_data['start_date'], \
             'end_date':form0.cleaned_data['end_date'], 'grid':form0.cleaned_data['grid']}
@@ -559,7 +629,7 @@ def grid_point_time_series(request):
                 data = []
                 dates = []
                 context['start_date'] = str(req['data'][0][0])
-                context['start_date'] = str(req['data'][-1][0])
+                context['end_date'] = str(req['data'][-1][0])
                 for date_idx, dat in enumerate(req['data']):
                     data.append(req['data'][date_idx][1])
                     dates.append(str(req['data'][date_idx][0]))

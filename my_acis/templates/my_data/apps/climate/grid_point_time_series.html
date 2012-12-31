@@ -103,6 +103,10 @@
             {{error}}
         {%else%}
           {%if datadict%}
+
+            <a href="/my_data/data/modeled/?grid_selection={{grid_selection}}&start_date={{s_date}}&e_date={{end_date}}&elements={{elems}}&grid={{grid}}">Get raw data here!</a>
+            <br />
+
             <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{MEDIA_URL}}tmp/">
             <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
             <input type="hidden" id="element_long" name="element_long" value="{{element_long}}">
@@ -120,6 +124,7 @@
          
 
         <!--<a href="#"  onClick="initialize_grid_point_map()">Find your Latitude and Longitude here!</a>-->
+
 
         <div id="map" style="width: 100%; height:400px;"></div>
     </div>

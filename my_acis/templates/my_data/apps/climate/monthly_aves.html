@@ -33,8 +33,7 @@
         {%if results%}
             <p class="warning" onClick="ShowHide('averaged_data')">Click here for averaged data</p>
             <div id="averaged_data" width="450" height="450" border="0" style="display:none;">{{averaged_data}}</div>
-            <p class="warning" onClick="ShowHide('raw_data')">Click here for raw data</p>
-            <div id="raw_data" width="450" height="450" border="0" style="display:none;">{{raw_data}}</div>
+            <a href="/my_data/data/historic/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}">Get raw data here!</a>
         {%endif%}
     </div>
 
