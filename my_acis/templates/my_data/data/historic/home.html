@@ -10,22 +10,18 @@
     <div class="center-left">
         <h2>Historic Station Data</h2>
         <div id='form0'>
-            <table border=0 align="right">
             <form method="post" action="">{% csrf_token %}
-            <table class="sortable">{{ form0_point|safe }}</table>
-            <input type="submit" value="Submit" name="form0_point"/>
+            <table class="form">{{ form0_point|safe }}</table>
+            <input type="submit" value="Select" name="form0_point"/>
             </form>
-            </table>
         </div>
     
         {%if form1_point_ready%}
             <div id="form1">
-                <table border=0 align="right">
                 <form method="post" action="">{% csrf_token %}
-                <table>{{ form1_point|safe }}</table>
+                <table class="form">{{ form1_point|safe }}</table>
                 <input type="submit" value="Submit" name="form1_point"/>
                 </form>
-                </table>
             </div>
             </br>
             </br>

@@ -43,8 +43,18 @@ a#warning {
 
 .warning {
     color:#FFEBCD;
-    /*color:#FFCC66;*/
     font-size:x-large;
+}
+
+.greenish {
+    color:#006666;
+    font-size:large;
+}
+
+table.form {
+border: 1px solid #006666;
+color:#006666;
+text-align:left;
 }
 
 ul.navbar {
@@ -330,8 +340,8 @@ img.logo {
 /*Map related stuff*/
 #map_canvas {
 
-    height: 600px;
-    width: 600px;
+    height: 90%;
+    width: 70%;
     margin-right:auto;
     margin-left:300px;
     margin-top:auto;

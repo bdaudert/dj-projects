@@ -116,16 +116,17 @@
 
         <div class="center-left">
         
-            <p class="warning">Click on the <font color="#FFEBCD">search categories</font> to see examples!</p>
+            <p class="warning">Click on the <font color="#006666">search categories</font> to see examples!</p>
 
-            <p onClick="ShowHide('myImage')">Search by ID</p>
+            <p class="greenish" onClick="ShowHide('myImage')">Search by ID</p>
             <img src="{{MEDIA_URL}}img/Acis_Stn_Id_Type.png" id="myImage" border="0" width="275" height="250" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_id/">
                 <input type="text" name="q" />
                 <input type="submit" value="Submit"/>
             </form>
+            <a class="docu_long" target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">More on station ids</a>
 
-            <p onClick="ShowHide('myImage2')">Search by County</p>
+            <p class="greenish"  onClick="ShowHide('myImage2')">Search by County</p>
             <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage2" width="275" height="250" border="0" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_county/">
                 <input type="text" name="q" />
@@ -134,7 +135,7 @@
             <a target="_blank" href="{{MEDIA_URL}}html/US_FIPS_CountyCodes.htm">List of US FIPS County Codes</a>
 
 
-            <p onClick="ShowHide('myImage3')">Search by County Warning Area (CWA)</p>
+            <p class="greenish" onClick="ShowHide('myImage3')">Search by County Warning Area (CWA)</p>
             <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage3" width="275" height="250" border="0" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_cwa/">
                 <input type="text" name="q" />
@@ -142,13 +143,7 @@
             </form>
             <a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a>
 
-        </div>
-    
-        <div class="center-right">
-            
-            <p class="warning">Click on the <font color="#FFEBCD">search categories</font> to see examples!</p>
-            
-            <p onClick="ShowHide('myImage4')">Search by Climate Division</p> 
+            <p class="greenish" onClick="ShowHide('myImage4')">Search by Climate Division</p> 
             <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage4" width="275" height="250" border="0" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_clim_div/">
                 <input type="text" name="q" />
@@ -156,7 +151,7 @@
             </form>
             <a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a>
 
-            <p onClick="ShowHide('myImage5')">Search by Basin</p>
+            <p  class="greenish" onClick="ShowHide('myImage5')">Search by Basin</p>
             <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage5" width="275" height="250" border="0" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_basin/">
                 <input type="text" name="q" />
@@ -164,7 +159,7 @@
             </form>
             <a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a> 
 
-            <p>Search by State</p>
+            <p class="greenish">Search by State</p>
             <form method="get" action="/my_data/station_finder/by_state/">
                 <select name="state_key">
                     {% for state in state_choices %}
@@ -174,13 +169,15 @@
                 <input type="submit" value="Submit"/>
             </form> 
           
-            <p onClick="ShowHide('myImage6')">Search by Bounding Box</p>
+            <p class="greenish" onClick="ShowHide('myImage6')">Search by Bounding Box</p>
             <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage6" width="275" height="250" border="0" style="display:none;" />
             <form method="get" action="/my_data/station_finder/by_bounding_box/">
-                West: <input type="text" name="W" size="8" />
-                South: <input type="text" name="S" size="8" /></br>
-                East: <input type="text" name="E" size="8" />
-                North: <input type="text" name="N" size="8" />
+                <p class="greenish">
+                    West:<input type="text" name="W" size="8" />
+                    South:<input type="text" name="S" size="8" /></br>
+                    East:<input type="text" name="E" size="8" />
+                    North:<input type="text" name="N" size="8" />
+                </p>
                 <input type="submit" value="Submit"/>
             </form>    
         </div>
@@ -188,13 +185,9 @@
         <div id="docu_long"></div>
 
         {%if error%} 
-            <a class="docu_long" id="warning" target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">
-            <img src="{{ MEDIA_URL }}img/InfoMan.jpg" class="icon">Station ID systems explained</a><br />
             <h1 class="error">{{error}}</h1>
             <div id="map_canvas"></div>
         {%else%}
-            <a class="docu_long" id="warning" target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">
-            <img src="{{ MEDIA_URL }}img/InfoMan.jpg" class="icon">Station ID systems explained</a><br />
             <div id="map_canvas"></div>
         {%endif%}
 

@@ -54,12 +54,10 @@
         
 
         <div id='form0'>
-            <table border=0 align="right">
             <form method="post" action="">{% csrf_token %}
-                <table>{{ form0|safe }}</table>
+                <table class="form">{{ form0|safe }}</table>
                 <input type="submit" value="Submit" name="form0"/>
             </form>
-            </table>
         </div>
     </div>
 

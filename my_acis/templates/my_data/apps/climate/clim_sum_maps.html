@@ -10,21 +10,17 @@
 <div class="container">
     <div class="center-left">
         <div id='form0'>
-            <table border=0 align="right">
             <form method="post" action="">{% csrf_token %}
-                <table>{{ form0|safe }}</table>
-                <input type="submit" value="Submit" name="form0"/>
+                <table class="form">{{ form0|safe }}</table>
+                <input type="submit" value="Select" name="form0"/>
             </form>
-            </table>
         </div>
         {%if form1_ready%}
         <div id='form1'>
-            <table border=0 align="right">
             <form method="post" action="">{% csrf_token %}
-                <table>{{ form1|safe }}</table>
+                <table class="form">{{ form1|safe }}</table>
                 <input type="submit" value="Submit" name="form1"/>
             </form>
-            </table>
         </div> 
         {%endif%} 
     </div>
