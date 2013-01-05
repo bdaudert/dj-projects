@@ -30,21 +30,67 @@
     </div>    
 
     <div class="center">
-        <a class="warning" href="/my_data/station_finder">Find a Station here!</a>
-        <p class="warning" onClick="ShowHide('AcisElementChoices')">Click here for list of element choices!</p>
-        <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0" style="display:none;" />
-        <p class="warning" onClick="ShowHide('Acis_Area_Codes')">Click here for examples of Station Selection!</p>
-                <img src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="Acis_Area_Codes" width="450" height="450" border="0" style="display:none;" />
+        <div id=tool_info_head></div>
+        <script type="text/javascript">                        
+            $("#tool_info_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_info");
+        </script>
+        <div id="tool_info" style="display:none;">
+            <p><ul>
+            <li>This tool provides access to daily data from the Acis system.</li>
+            <a target="_blank" href="http://rcc-acis.unl.edu/index.php">Acis Home Page</a>
+            <li>Elements like daily precipitation and daily maximum temperature are directly observed quantities measured at weather stations across the US.</li>
+            <li>Elements like daily average temperature, growing, heating and cooling degree days are derived quantities.</li>
+            <li>Data for multiple station in a certain region defined by the "Station selection" option are available.</li>
+            <li>Queries can be performed for multiple elements at a time.</li>
+             <li>Several data formats are available. .xls, .dat, .txt will be downloaded on the user's machine. 
+             html and  json formats are displayed on the webpage directly for copy and paste.</li>
+            </ul></p>
+        </div>
 
-        <a class="docu_long" id="warning" target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">
-        <img src="{{ MEDIA_URL }}img/InfoMan.jpg" class="icon">Station ID systems explained</a>
+        <div id="how_to_head"></div>
+        <script type="text/javascript">            
+            $("#how_to_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_how_to");
+        </script>
+        <div id="how_to" style="display:none;">
+            <p><ul>
+            <li>Choose a station selection method. This will define the type of area of whose station data you are interested in.</li>
+            <li>Quick list of examples for different station selections.</li>
+            <img src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="Acis_Area_Codes" width="450" height="450" border="0"/>
+            <li>Enter one or more elements as a comma separated list. Element Choices are:</li>
+            <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0"/>
+            <li>Choose a data format. .xls, .dat, .txt files will be downloaded on the user's machine. 
+            html, json formats are displayed on the webpage directly.</li>
+            <li>After making your selection, a second form will appear.</li>
+            <li>Depending on your choice of Station Selection, you now choose the stations to be included.</li>
+                <ul>
+                    <li>Station Selection = "Individual Station". Enter the Station Id of choice. If you don't know your station id, find it here:</li>
+                    <a href="/my_data/station_finder">Station Finder</a>
+                    or here:
+                    <a class="docu_long"target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">More on station Ids</a>
+                    <li>Station Selection = "Comma separated list of stations". Enter multiple station ids, separated by a comma.</li>
+                    <li>Station Selection = "County FIPS code". Find data for all stations in a US county of your choice.</li>
+                    <a target="_blank" href="{{MEDIA_URL}}html/US_FIPS_CountyCodes.htm">List of US FIPS County Codes</a>
+                    <li>Station Selection = "Climate Division".  Find data for all stations in a US climate division of your choice.</li>
+                    <a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a>
+                    <li>Station Selection = "County Warning Area. Find data for all stations in a US county warning area of your choice."</li>
+                    <a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a>
+                    <li>Station Selection = "Basin". Find data for all stations in a US drainage basin of your choice.</li>
+                    <a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a>
+                    <li>Station Selection = "State". Find data for all stations in a US state of your choice.</li>
+                    <li>Station Selection = "Bounding Box". Find data for all stations in a bounding box of your choice. A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. Please enter them in this order.</li>
+                    <li>Start and end date should be 8 characters long and of form yyyymmdd</li>
+                </ul>
+            </ul></p>
+        </div>
+
+        <div id="docu_long"></div>
 
         {%if point_data%}
         <br />
         <br />
         {%if not json%}
             {%for stn, stn_data in point_data.items %}
-                <h2>STATION NAME: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
+                <h2>STATION NAME: {{station_names.stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
                 <table>
                 <th>date{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</th>
                 {%for date_vals in stn_data%}
@@ -57,7 +103,7 @@
             {%endfor%}
         {%else%}
             {%for stn, stn_data in point_data.items %}
-                <h2>STATION NAME: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
+                <h2>STATION NAME: {{station_names.stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
             {{point_data}}
             {%endfor%}
         {%endif%}

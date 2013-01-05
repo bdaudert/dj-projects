@@ -29,11 +29,63 @@
     </div>
 
     <div class="center">
-        <p class="warning" onClick="ShowHide('AcisElementChoices')">Click here for list of element choices!</p>
-        <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0" style="display:none;" />
-        <p class="warning" onClick="ShowHide('Acis_Area_Codes')">Click here for examples of Grid Selection!</p>
-                <img src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="Acis_Area_Codes" width="450" height="450" border="0" style="display:none;" />
-        <a href="http://data.rcc-acis.org/doc/" target="_blank" class="warning"><font color="#A00000">Click here for more information on Gridded Data!</font></a>
+
+        <div id=tool_info_head></div>
+        <script type="text/javascript">                        
+            $("#tool_info_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_info");
+        </script>
+        <div id="tool_info" style="display:none;">
+            <p><ul>
+            <li>This tool provides access to daily data from the Acis system.</li>
+            <a target="_blank" href="http://rcc-acis.unl.edu/index.php">Acis Home Page</a>            
+            <li>Data can be obtained for a single grid point, all grid points in a US state or in a user defined bounding box.</li>
+            <li>Queries can be performed for multiple elements at a time.</li>
+             <li>Several data formats are available. .xls, .dat, .txt will be downloaded on the user's machine.
+             html and  json formats are displayed on the webpage directly for copy and paste.</li>
+            <li>Information on gridded data sets:</li>
+            <ul>
+                <li>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
+                <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
+                <li>For more information and direct access to NARCCAP                         (North American Regional Climate Change Assessment Program) gridded data sets:</li>
+                <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+            </ul>
+            </ul></p>
+        </div>
+
+        <div id="how_to_head"></div>
+        <script type="text/javascript">            
+            $("#how_to_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_how_to");
+        </script>
+        <div id="how_to" style="display:none;">
+            <p><ul>
+            <li>Select a single gridpoint, a US state or a bounding box as your grid selection. 
+            This will define the type of area of whose grid data you are interested in</li>
+            <li>Enter a comma seperated list of elements. Element choices:
+            <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" 
+            width="450" height="450" border="0"/></li>
+            <li>Choose you data format. .xls, .dat, .txt will be downloaded on the user's machine.
+             html and  json formats are displayed on the webpage directly for copy and paste.</li>
+            <li>After making your selection, a second form will appear.</li>
+            <li>Start and end date should be 8 characters long and of form yyyymmdd</li>
+            <li>Depending on your choice of Grid selection, you now choose the stations to be included.</li>
+                <ul>
+                    <li>Grid selection = "Point Location". Enter a latitude, longitide of choice. 
+                    If you don't know your lat, lon, find it here:</li>
+                    <a href="/my_data/apps/climate/grid_point_time_series/">Gridpoint time series tool</a>
+                    <li>Grid selection = "State". Enter a US state of choice.</li>
+                    <li>Station Selection = "Bounding Box". Find data for all stations in a bounding box of your choice. 
+                    A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. 
+                    Please enter them in this order.</li>
+                </ul>
+            <li>Information on gridded data sets:</li>
+            <ul>
+                <li>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
+                <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
+                <li>For more information and direct access to NARCCAP                         (North American Regional Climate Change Assessment Program) gridded data sets:</li>
+                <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+            </ul>
+            </ul></p>
+        </div>
 
         {%if error%}
             {{error}}

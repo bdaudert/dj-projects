@@ -211,7 +211,7 @@ def data_modeled(request):
             end_date = request.GET.get('end_date', None)
             elements = request.GET.get('elements', None)
             bounding_box = request.GET.get('bounding_box', None)
-            state = request.GET.get('grid', None)
+            state = request.GET.get('state', None)
             grid = request.GET.get('grid', None)
             initial_1 = {}
             if start_date is not None:initial_1['start_date'] = start_date
@@ -561,9 +561,11 @@ def clim_sum_maps(request):
             if 'state' in form1.cleaned_data.keys():
                 params['state'] = form1.cleaned_data['state']
                 region = 'state_%s' %form1.cleaned_data['state']
+                context['state'] = form1.cleaned_data['state']
             elif 'bounding_box' in form1.cleaned_data.keys():
                 params['bbox'] = form1.cleaned_data['bounding_box']
                 region = 'bbox_' + re.sub(',','_',form1.cleaned_data['bounding_box'])
+                context['bounding_box'] = form1.cleaned_data['bounding_box']
             context['elems'] = elem
             context['start_date']= form1.cleaned_data['start_date']
             context['end_date'] = form1.cleaned_data['end_date']

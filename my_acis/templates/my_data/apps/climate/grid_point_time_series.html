@@ -73,6 +73,14 @@
             <li>The values for the gridpoint closest to the user chosen latitude and longitude are returned.</li>
             <li>Raw data can also be retrieved.</li>
             <li>Data is queried with Acis Webservices.</li>
+            <li>Information on gridded data sets:</li>
+            <ul>
+                <li>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
+                <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
+                <li>For more information and direct access to NARCCAP             
+                (North American Regional Climate Change Assessment Program) gridded data sets:</li>
+                <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+            </ul>
             </ul></p>
         </div>
  
@@ -90,9 +98,11 @@
                 <li>Click on the "Use this location" link. The coordinates of your new 
                 location will appear in the form on the left hand side.</li>
             </ol>
-            <li>Choose start, end date and the data set you wish to use and submit.</li>
+            <li>Start and end date should be 8 characters long and of form yyyymmdd.</li>
             <li>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
-            <li>For more information and direct access to NARCCAP (North American Regional Climate Change Assessment Program) data sets:</li>
+            <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
+            <li>For more information and direct access to NARCCAP 
+            (North American Regional Climate Change Assessment Program) gridded data sets:</li>
             <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
             </ul></p>
         </div>
@@ -102,7 +112,7 @@
         {%else%}
           {%if datadict%}
 
-            <a href="/my_data/data/modeled/?grid_selection={{grid_selection}}&start_date={{s_date}}&e_date={{end_date}}&elements={{elems}}&grid={{grid}}">Get raw data here!</a>
+            <a href="/my_data/data/modeled/?grid_selection={{grid_selection}}&start_date={{s_date}}&e_date={{end_date}}&elements={{elems}}&grid={{grid}}">Get raw data  behind this graphic here!</a>
             <br />
 
             <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{MEDIA_URL}}tmp/">

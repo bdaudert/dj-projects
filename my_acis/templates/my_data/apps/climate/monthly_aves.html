@@ -29,9 +29,9 @@
         {%endif%}
 
         {%if results%}
-            <p class="warning" onClick="ShowHide('averaged_data')">Click here for averaged data</p>
+            <p class="warning" onClick="ShowHide('averaged_data')">Click here for averaged data behind this graphic</p>
             <div id="averaged_data" width="450" height="450" border="0" style="display:none;">{{averaged_data}}</div>
-            <a href="/my_data/data/historic/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}">Get raw data here!</a>
+            <a href="/my_data/data/historic/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}">Get raw data behind this graphic here!</a>
         {%endif%}
     </div>
 
@@ -64,13 +64,15 @@
         </script>
         <div id="how_to" style="display:none;">
             <p><ul>
-            <li>Start and end date should be 8 digits long, e.g. 20121023</li>
-            <li>If interested in period of record, type <font color="#A00000">
-            <b>por</b></font> for both start and end date</li>
-            <li>If more than one element desired, elements should be a comma separated list</li>
             <li>Don't know your station id? Find it here:</li>
             <a href="/my_data/station_finder/">STATION FINDER</a>
-            <li>Element Choices:
+            <li>Elements should be given as a comma separated list. Element Choices:
+            <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" 
+            width="450" height="450" border="0"/></li>
+            <li>Start and end date should be 8 characters long and of form yyyymmdd. Alternativly you can enter
+            'por' if you are interested in the period of record for this station.</li>
+            <li>If interested in period of record, type <font color="#A00000">
+            <b>por</b></font> for both start and end date</li>
             <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" 
             width="450" height="450" border="0"/></li>
             </ul></p>

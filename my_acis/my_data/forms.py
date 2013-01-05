@@ -246,7 +246,6 @@ class PointDataForm1(forms.Form):
             self.fields['station_id'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'stnid':
             self.fields['station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779')
-            #self.fields['station_id'].help_text='for more information see "Station Id systems explained"'
         elif station_selection == 'stnids':
             self.fields['station_ids'] = MultiStnField(required=False,initial='266779,103732')
         elif station_selection == 'county':
@@ -262,8 +261,9 @@ class PointDataForm1(forms.Form):
         elif station_selection == 'bbox':
             self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41')
 
-        self.fields['elements'] = MultiElementField(initial=elements)
+        self.fields['elements'] = MultiElementField(initial=elements, widget=forms.HiddenInput())
         #self.fields['elements'] = forms.CharField(required=False, initial=elements, widget=forms.HiddenInput())
+        '''
         for element in elements:
             if element == 'cddxx':
                 self.fields['base_temperature_cddxx'] = forms.IntegerField(initial=65)
@@ -271,8 +271,9 @@ class PointDataForm1(forms.Form):
                 self.fields['base_temperature_hddxx'] = forms.IntegerField(initial=65)
             if element == 'gddxx':
                 self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50)
-        self.fields['start_date'] = MyDateField(max_length=8, min_length=3, required = False, initial='20120101', help_text="yyyymmdd")
-        self.fields['end_date'] = MyDateField(max_length=8, min_length=3, required = False, initial=today, help_text="yyyymmdd")
+        '''
+        self.fields['start_date'] = MyDateField(max_length=8, min_length=3, required = False, initial='20120101')
+        self.fields['end_date'] = MyDateField(max_length=8, min_length=3, required = False, initial=today)
         self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput())
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES)
@@ -296,8 +297,6 @@ class GridDataForm1(forms.Form):
         if data_format is None:
             data_format = self.data.get('data_format')
 
-        self.fields['grid_selection'] = forms.CharField(required=False, initial=grid_selection, widget=forms.HiddenInput())
-        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES)
         if grid_selection == 'point':
             self.fields['location'] = forms.CharField(initial="-77.7,41.8")
         elif grid_selection == 'state':
@@ -305,7 +304,9 @@ class GridDataForm1(forms.Form):
         elif grid_selection == 'bbox':
             self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41')
 
-        self.fields['elements'] = MultiElementField(initial=elements)
+        self.fields['grid_selection'] = forms.CharField(required=False, initial=grid_selection, widget=forms.HiddenInput())
+        self.fields['elements'] = MultiElementField(initial=elements,widget=forms.HiddenInput())
+        '''
         for element in elements:
             if element == 'cddxx':
                 self.fields['base_temperature_cddxx'] = forms.IntegerField(initial=65)
@@ -313,8 +314,10 @@ class GridDataForm1(forms.Form):
                 self.fields['base_temperature_hddxx'] = forms.IntegerField(initial=65)
             if element == 'gddxx':
                 self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50)
-        self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
-        self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
+        '''
+        self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101')
+        self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today)
+        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES)
         self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput())
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES)
@@ -345,9 +348,9 @@ class MonthlyAveragesForm(forms.Form):
             self.fields['station_id'] = forms.CharField(required=False, initial='266779')
         else:
             self.fields['station_id'] = forms.CharField(required=False, initial=stn_id)
-        self.fields['elements'] = MultiElementField(initial='pcpn')
-        self.fields['start_date'] = MyDateField(max_length=8, required = False, initial='20000101', help_text="yyyymmdd or 'por' for period of record")
-        self.fields['end_date'] = MyDateField(max_length=8, required = False, initial='por', help_text="yyyymmdd or 'por' for period of record")
+        self.fields['elements'] = MultiElementField(initial='pcpn, snow')
+        self.fields['start_date'] = MyDateField(max_length=8, required = False, initial='20000101')
+        self.fields['end_date'] = MyDateField(max_length=8, required = False, initial='por')
 
 class ClimateMapForm0(forms.Form):
         grid_selection = forms.ChoiceField(choices=([('state', 'State'),('bbox', 'Bounding Box')]), required=False, initial='state')
@@ -374,7 +377,6 @@ class ClimateMapForm1(forms.Form):
             x = self.data.get('x')
 
         self.fields['grid_selection'] = forms.CharField(required=False, initial=grid_selection, widget=forms.HiddenInput())
-        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES)
         if grid_selection == 'point':
             self.fields['location'] = forms.CharField(initial='-77.7,41.8')
         elif grid_selection == 'state':
@@ -382,8 +384,7 @@ class ClimateMapForm1(forms.Form):
         elif grid_selection == 'bbox':
             self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41')
 
-        self.fields['element'] = forms.CharField(initial=element)
-        self.fields['element'].widget.attrs['readonly'] = 'readonly'
+        self.fields['element'] = forms.CharField(initial=element, widget=forms.HiddenInput())
         if element == 'cddxx':
             self.fields['base_temperature_cddxx'] = forms.IntegerField(initial=65)
         if element == 'hddxx':
@@ -392,18 +393,19 @@ class ClimateMapForm1(forms.Form):
             self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50)
 
         if time_period == 'custom':
-            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
-            self.fields['end_date'] =MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
+            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101')
+            self.fields['end_date'] =MyDateField(max_length=8, min_length=8, required = False, initial=today)
         else:
             if x is None:
-                self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
-                self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
+                self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101')
+                self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today)
             else:
                 start_date = WRCCUtils.get_start_date(time_period,today, x)
                 self.fields['start_date'] = MyDateField(required = False, initial=start_date)
                 self.fields['start_date'].widget.attrs['readonly'] = 'readonly'
             self.fields['end_date'] = MyDateField(required=False, initial=today)
             self.fields['end_date'].widget.attrs['readonly'] = 'readonly'
+        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES)
 
 class GPTimeSeriesForm(forms.Form):
         def __init__(self, *args, **kwargs):
@@ -426,6 +428,6 @@ class GPTimeSeriesForm(forms.Form):
             else:
                 self.fields['lon'] = forms.FloatField(initial=lon, required=False)
             self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, required=False, initial='maxt')
-            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
-            self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
+            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101')
+            self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today)
             self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES)

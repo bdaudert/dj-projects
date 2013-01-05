@@ -129,7 +129,7 @@ div.pop-up {
     float:center;
     margin: 0px auto;
     /*margin: 15px 10px 250px 300px;*/
-    padding: 15px 10px 15px 20px;
+    padding: 15px 0px 15px 20px;
     text-align:left;
     height:100%;
     width:45%;
@@ -140,7 +140,7 @@ div.pop-up {
     float: left;
     margin 0px auto;
     width: 25%;
-    padding: 15px 10px 15px 20px;
+    padding: 0px 10px 15px 20px;
     height 100%;
 }
 
@@ -148,7 +148,7 @@ div.pop-up {
     float: right;
     margin  0px auto;
     width: 25%;
-    padding: 15px 10px 15px 20px;
+    padding: 0px 10px 15px 20px;
     height: 100%;
 }
 
@@ -340,7 +340,7 @@ img.logo {
 /*Map related stuff*/
 #map_canvas {
 
-    height: 90%;
+    height: 85%;
     width: 70%;
     margin-right:auto;
     margin-left:300px;
