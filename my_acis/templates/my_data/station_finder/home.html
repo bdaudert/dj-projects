@@ -1,203 +1,96 @@
-<!DOCTYPE html>
+{% extends "csc_base.html" %}
 
-<html>
-    <head>
-        <title>{{title}}</title>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-        <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
-        <!-- ** Javascript ** -->
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>	
-        <!-- ExtJS library: all widgets -->
-        <script type="text/javascript" src="http://www.wrcc.dri.edu/media/ext/ext-all.js"></script>
-        <!-- overrides to library -->
-        <!-- extensions -->
-        <script type="text/javascript" src="http://www.wrcc.dri.edu/media/js/stationmap.js"></script>
-        <script type="text/javascript"
-        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true">
-        </script>
-        <script type="text/javascript"> 
-            $(document).ready(function() { 
-            // select all the links with class="lnk", when one of them is clicked, get its "href" value
-            // load the content from that URL and place it into the tag with id="content"
-            $('a.docu_long').click(function() {
-                var url = $(this).attr('href');
-                $('#docu_long').style.display = 'inline';
-                $('#docu_long').html('<p>Loading...</p>').load(url);
-                return false;
-                });
-            });
-        </script>
+{% block content %}
 
-        <script type="text/javascript">
-            function initialize() {
+<div class="container">
+    <p align="center">You are here <a href="/my_data">HOME></a>
+    <a href="/my_data/station_finder/">STATION FINDER</a></p>
+    <br />
+    <br />
+    <br />
+    <br />
+    <div class="center-left">
 
-            var MEDIA_URL = document.getElementById("MEDIA_URL").value;
-            var json_file = document.getElementById("json_file").value;
-            $.getJSON(MEDIA_URL + 'json/' + json_file, function(data) {
+        <p class="warning">Click on the <font color="#006666">search categories</font> to see examples!</p>
+
+        <p class="greenish" onClick="ShowHide('myImage')">Search by ID</p>
+        <img src="{{MEDIA_URL}}img/Acis_Stn_Id_Type.png" id="myImage" border="0" width="275" height="250" style="display:none;" />
+        <form method="get" action="/my_data/station_finder/by_id/">
+            <input type="text" name="q" />
+            <input type="submit" value="Submit"/>
+        </form>
+        <a class="docu_long" target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">More on station ids</a>
+
+        <p class="greenish"  onClick="ShowHide('myImage2')">Search by County</p>
+        <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage2" width="275" height="250" border="0" style="display:none;" />
+        <form method="get" action="/my_data/station_finder/by_county/">
+            <input type="text" name="q" />
+            <input type="submit" value="Submit" />
+        </form>
+        <a target="_blank" href="{{MEDIA_URL}}html/US_FIPS_CountyCodes.htm">List of US FIPS County Codes</a>
 
 
-                //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
-                var ll = new google.maps.LatLng(data.stations[0].lat, data.stations[0].lon);
-                var mapOptions = {
-                center: ll,
-                //center: new google.maps.LatLng(39.8282, -98.5795),
-                zoom: 7,
-                mapTypeId: google.maps.MapTypeId.HYBRID
-                };
+        <p class="greenish" onClick="ShowHide('myImage3')">Search by County Warning Area (CWA)</p>
+        <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage3" width="275" height="250" border="0" style="display:none;" />
+        <form method="get" action="/my_data/station_finder/by_cwa/">
+            <input type="text" name="q" />
+            <input type="submit" value="Submit" />
+        </form>
+        <a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a>
 
-                map = new google.maps.Map(document.getElementById("map_canvas"),mapOptions);
-                var bounds=new google.maps.LatLngBounds();
-                infowindow = new google.maps.InfoWindow({
-                    content: 'oi'
-                });
-                var markers = [];
-                $.each(data.stations, function(index, c) {
-                    var latlon = new google.maps.LatLng(c.lat,c.lon);
-                    var marker = new google.maps.Marker({
-                        map: map,
-                        position: latlon,
-                        title:'Name:'+c.name
-                    });
+        <p class="greenish" onClick="ShowHide('myImage4')">Search by Climate Division</p>
+        <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage4" width="275" height="250" border="0" style="display:none;" />
+        <form method="get" action="/my_data/station_finder/by_clim_div/">
+            <input type="text" name="q" />
+            <input type="submit" value="Submit" />
+        </form>
+        <a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a>
 
-                    markers.push(marker)
-                    bounds.extend(latlon);
+        <p  class="greenish" onClick="ShowHide('myImage5')">Search by Basin</p>
+        <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage5" width="275" height="250" border="0" style="display:none;" />
+        <form method="get" action="/my_data/station_finder/by_basin/">
+            <input type="text" name="q" />
+            <input type="submit" value="Submit" />
+        </form>
+        <a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a>
 
-                    google.maps.event.addListener(marker, 'click', function() {
-                        infowindow.close();
-                        var contentString = '<div id="MarkerWindow">'+
-                        '<p><b>Name: </b>' + c.name + '<br/>'+
-                        '<b>State: </b>' + c.state + '<br/>' +
-                        '<b>UID: </b>' + c.uid + '<br/>' +
-                        '<b>SIDS: </b>' + c.sids + '<br/>' +
-                        '<b>Elevation: </b>' + c.elevation + '<br/>' +
-                        '</p>' +
-                        '<a href="/my_data/data/historic/?stn_id=' + c.sids[0] + 
-                        '">Get Data for this Station</a> <br/>'+
-                        '<a href="/my_data/apps/climate/?stn_id=' + c.sids[0] + 
-                        '">Run a climate application for this Station</a>'+ 
-                        '</div>';
-                        infowindow.setContent(contentString);
-                        infowindow.open(map, marker);
-                        });
-                });//close each
-            
-                var markerCluster = new MarkerClusterer(map, markers);
-                map.fitBounds(bounds);
-            });//close getjson
-        }//close initialize   
-        </script>
-    </head>
+        <p class="greenish">Search by State</p>
+        <form method="get" action="/my_data/station_finder/by_state/">
+            <select name="state_key">
+                {% for state in state_choices %}
+                <option value="{{state}}">{{state}}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Submit"/>
+        </form>
 
-    <body onload="initialize()">
-        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-        <input type="hidden" id="json_file" name="variable" value="{{ json_file }}"> 
-   
-        <div id="header"></div>
-        <script type="text/javascript">$("#header").load("{{MEDIA_URL}}html/csc_map_page_base.html .header");</script>
-        <div id="station_finder_img"></div>
-        <script type="text/javascript">$("#station_finder_img").load("{{MEDIA_URL}}html/csc_map_page_base.html .station_finder_img");</script>
+        <p class="greenish" onClick="ShowHide('myImage6')">Search by Bounding Box</p>
+        <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage6" width="275" height="250" border="0" style="display:none;" />
+        <form method="get" action="/my_data/station_finder/by_bounding_box/">
+            <p class="greenish">
+                West:<input type="text" name="W" size="8" />
+                South:<input type="text" name="S" size="8" /></br>
+                East:<input type="text" name="E" size="8" />
+                North:<input type="text" name="N" size="8" />
+            </p>
+            <input type="submit" value="Submit"/>
+        </form>
+    </div>
 
-        <div id="bcrumbs"></div>          
-            <script type="text/javascript">$("#bcrumbs").load("{{MEDIA_URL}}html/csc_map_page_base.html .breadcrumbs");</script>
-
-        <div class="content-header">
-
-            <h1 align="center">STATION FINDER</h1>
-        
-            <div id="searchbox"></div>
-            <script type="text/javascript">$("#searchbox").load("{{MEDIA_URL}}html/csc_map_page_base.html .searchbox");</script>
-            
-        </div>
-
-        <p align="center">You are here <a href="/my_data">HOME></a>
-        <a href="/my_data/station_finder/">STATION FINDER</a></p>
-        <br />
-        <br />
-        <br />
-        <br />
-        <div class="center-left">
-        
-            <p class="warning">Click on the <font color="#006666">search categories</font> to see examples!</p>
-
-            <p class="greenish" onClick="ShowHide('myImage')">Search by ID</p>
-            <img src="{{MEDIA_URL}}img/Acis_Stn_Id_Type.png" id="myImage" border="0" width="275" height="250" style="display:none;" />
-            <form method="get" action="/my_data/station_finder/by_id/">
-                <input type="text" name="q" />
-                <input type="submit" value="Submit"/>
-            </form>
-            <a class="docu_long" target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">More on station ids</a>
-
-            <p class="greenish"  onClick="ShowHide('myImage2')">Search by County</p>
-            <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage2" width="275" height="250" border="0" style="display:none;" />
-            <form method="get" action="/my_data/station_finder/by_county/">
-                <input type="text" name="q" />
-                <input type="submit" value="Submit" />
-            </form>
-            <a target="_blank" href="{{MEDIA_URL}}html/US_FIPS_CountyCodes.htm">List of US FIPS County Codes</a>
-
-
-            <p class="greenish" onClick="ShowHide('myImage3')">Search by County Warning Area (CWA)</p>
-            <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage3" width="275" height="250" border="0" style="display:none;" />
-            <form method="get" action="/my_data/station_finder/by_cwa/">
-                <input type="text" name="q" />
-                <input type="submit" value="Submit" />
-            </form>
-            <a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a>
-
-            <p class="greenish" onClick="ShowHide('myImage4')">Search by Climate Division</p> 
-            <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage4" width="275" height="250" border="0" style="display:none;" />
-            <form method="get" action="/my_data/station_finder/by_clim_div/">
-                <input type="text" name="q" />
-                <input type="submit" value="Submit" />
-            </form>
-            <a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a>
-
-            <p  class="greenish" onClick="ShowHide('myImage5')">Search by Basin</p>
-            <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage5" width="275" height="250" border="0" style="display:none;" />
-            <form method="get" action="/my_data/station_finder/by_basin/">
-                <input type="text" name="q" />
-                <input type="submit" value="Submit" />
-            </form>
-            <a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a> 
-
-            <p class="greenish">Search by State</p>
-            <form method="get" action="/my_data/station_finder/by_state/">
-                <select name="state_key">
-                    {% for state in state_choices %}
-                    <option value="{{state}}">{{state}}</option>
-                    {% endfor %}
-                </select>
-                <input type="submit" value="Submit"/>
-            </form> 
-          
-            <p class="greenish" onClick="ShowHide('myImage6')">Search by Bounding Box</p>
-            <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage6" width="275" height="250" border="0" style="display:none;" />
-            <form method="get" action="/my_data/station_finder/by_bounding_box/">
-                <p class="greenish">
-                    West:<input type="text" name="W" size="8" />
-                    South:<input type="text" name="S" size="8" /></br>
-                    East:<input type="text" name="E" size="8" />
-                    North:<input type="text" name="N" size="8" />
-                </p>
-                <input type="submit" value="Submit"/>
-            </form>    
-        </div>
-
+    <div class="major-right">
         <div id="docu_long"></div>
 
-        {%if error%} 
+        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+        <input type="hidden" id="json_file" name="variable" value="{{ json_file }}">
+        
+        {%if error%}
             <h1 class="error">{{error}}</h1>
-            <div id="map_canvas"></div>
-        {%else%}
-            <div id="map_canvas"></div>
         {%endif%}
-
-        <div class="footer">
-        <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30">&nbsp;&nbsp;           
-           Created by <a href="http://www.wrcc.dri.edu/" target="_blank">>WRCC</a> &nbsp;&nbsp;
-           Hosted by <a href="http://www.dri.edu/" target="_blank"><img class="logo" src="{{ MEDIA_URL }}img/DRILogo.gif"></a></p>
-
+        
+        <script type="text/javascript">
+            initialize_station_finder()
+        </script>
+        <div id="map" style="width: 100%; height:800px;"></div>
     </div>
-    </body>
-</html>
+<div>
+{%endblock%}

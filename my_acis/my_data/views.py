@@ -551,12 +551,19 @@ def clim_sum_maps(request):
                     'edate': form1.cleaned_data['end_date']}
             if form1.cleaned_data['element'] == 'gddxx':
                 elem = 'gdd%s' %str(form1.cleaned_data['base_temperature_gddxx'])
+                context['elems_long'] = long_el_name['gdd']
+                context['base_temp'] = str(form1.cleaned_data['base_temperature_gddxx'])
             elif form1.cleaned_data['element'] == 'hddxx':
                 elem = 'hdd%s' %str(form1.cleaned_data['base_temperature_hddxx'])
+                context['elems_long'] = long_el_name['hdd']
+                context['base_temp'] = str(form1.cleaned_data['base_temperature_hddxx'])
             elif form1.cleaned_data['element'] == 'cddxx':
                 elem = 'cdd%s' %str(form1.cleaned_data['base_temperature_cddxx'])
+                context['elems_long'] = long_el_name['cdd']
+                context['base_temp'] = str(form1.cleaned_data['base_temperature_cddxx'])
             else:
-                elem = form1.cleaned_data['element']
+                elem = str(form1.cleaned_data['element'])
+                context['elems_long'] = long_el_name[elem]
             params['elems'] = [{'name':elem}]
             if 'state' in form1.cleaned_data.keys():
                 params['state'] = form1.cleaned_data['state']
@@ -566,21 +573,28 @@ def clim_sum_maps(request):
                 params['bbox'] = form1.cleaned_data['bounding_box']
                 region = 'bbox_' + re.sub(',','_',form1.cleaned_data['bounding_box'])
                 context['bounding_box'] = form1.cleaned_data['bounding_box']
+
             context['elems'] = elem
             context['start_date']= form1.cleaned_data['start_date']
             context['end_date'] = form1.cleaned_data['end_date']
             context['grid']= form1.cleaned_data['grid']
             context['grid_selection'] = form1.cleaned_data['grid_selection']
+            context['params'] = params
             fig = WRCCClasses.GridFigure(params)
             results = fig.get_grid()
             time_stamp = datetime.datetime.now().strftime('%Y%m_%d_%H_%M_%S_')
             figure_file = time_stamp + 'acis_map_' + region + '.png'
+            context['time_stamp'] = time_stamp
+            context['region']= region
             file_path_big = MEDIA_URL +'tmp/' + figure_file
             #file_path_small = MEDIA_URL +'tmp/' + time_stamp + 'acis_map_small_' + region + '.png'
-            context['figure_file'] = figure_file
             #context['file_path_thumbnail'] = file_path_small
             fig.build_figure(results, file_path_big)
+            context['figure_file'] = figure_file
             #fig.draw_thumbnail(results,file_path_small)
+        #form1 not valid or we are done with computations
+        form0 = forms.ClimateMapForm0()
+        context['form0'] = form0
         form1 = set_as_form(request, 'ClimateMapForm1')
         context['form1_ready'] = True
         context['form1'] = form1

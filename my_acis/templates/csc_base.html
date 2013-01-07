@@ -128,15 +128,16 @@
 
     {% block content %}
     {% endblock %}
-    </div> <!-- END content -->
+</div> <!-- END content -->
 
-    {% block footer %}
-    <div class="footer">
-        <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30">&nbsp;&nbsp;  
-           Created by <a href="http://www.wrcc.dri.edu/" target="_blank">>WRCC</a> &nbsp;&nbsp;
-           Hosted by <a href="http://www.dri.edu/" target="_blank"><img class="logo" src="{{ MEDIA_URL }}img/DRILogo.gif"></a></p>
+{% block footer %}
+<div class="footer">
+    <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30">&nbsp;&nbsp;  
+        Created by <a href="http://www.wrcc.dri.edu/" target="_blank">>WRCC</a> &nbsp;&nbsp;
+        Hosted by <a href="http://www.dri.edu/" target="_blank"><img class="logo" src="{{ MEDIA_URL }}img/DRILogo.gif"></a></p>
 
-    </div>
-    {% endblock %}
+</div>
+{% endblock %}
+
 </body>
 </html>

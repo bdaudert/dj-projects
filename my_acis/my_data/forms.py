@@ -213,13 +213,13 @@ class PointData0Form(forms.Form):
             stn_id = self.data.get('stn_id')
 
         if stn_id is None:
-            self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid')
+            self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid', help_text='Defines area encompassing the stations of interest.')
         else:
-            self.fields['station_selection'] = forms.CharField(max_length=6, min_length=6,required=False, initial='stn_id', widget=forms.HiddenInput())
-            self.fields['stn_id'] = forms.CharField(required=False, initial=stn_id)
+            self.fields['station_selection'] = forms.CharField(max_length=6, min_length=6,required=False, initial='stn_id', widget=forms.HiddenInput(), help_text='Defines area encompassing the stations of interest.')
+            self.fields['stn_id'] = forms.CharField(required=False, initial=stn_id, help_text='Station id recognized by Acis. See "About this tool" for more information.')
         #self.fields['element'] = forms.ChoiceField(choices=ELEMENT_CHOICES, initial='pcpn', required=False)
-        self.fields['elements'] = forms.CharField(initial ='maxt,mint,avgt', required=False)
-        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', required=False)
+        self.fields['elements'] = forms.CharField(initial ='maxt,mint,avgt', required=False, help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
+        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', required=False, help_text='Defines format in which data will be returned.')
 
 class PointDataForm1(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -239,49 +239,50 @@ class PointDataForm1(forms.Form):
             data_format = self.data.get('data_format')
 
 
-        self.fields['station_selection'] = forms.CharField(required=False, initial=station_selection, widget=forms.HiddenInput())
+        self.fields['station_selection'] = forms.CharField(required=False, initial=station_selection, widget=forms.HiddenInput(), help_text='Defines area encompassing the stations of interest.')
 
         if station_selection == 'stn_id':
-            self.fields['station_id'] = forms.CharField(initial=stn_id)
+            self.fields['station_id'] = forms.CharField(initial=stn_id, help_text='Station id recognized by Acis. See "How to use this tool" for more info.')
             self.fields['station_id'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'stnid':
-            self.fields['station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779')
+            self.fields['station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779', help_text='Station id recognized by Acis. See "About this tool" for more info.')
         elif station_selection == 'stnids':
-            self.fields['station_ids'] = MultiStnField(required=False,initial='266779,103732')
+            #self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES)
+            self.fields['station_ids'] = MultiStnField(required=False,initial='266779,103732', help_text='Comma separated list of valid station ids.' )
         elif station_selection == 'county':
-            self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='09001')
+            self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='09001', help_text='Valid US county identifier.')
         elif station_selection == 'climdiv':
-            self.fields['climate_division'] = forms.CharField(required=False,max_length=4, min_length=4, initial='NV01')
+            self.fields['climate_division'] = forms.CharField(required=False,max_length=4, min_length=4, initial='NV01', help_text='Valid US climate division identifier.')
         elif station_selection == 'cwa':
-            self.fields['county_warning_area'] = forms.CharField(required=False,max_length=3, initial='BOI')
+            self.fields['county_warning_area'] = forms.CharField(required=False,max_length=3, initial='BOI', help_text='Valid US county warning area identifier.')
         elif station_selection == 'basin':
-            self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='01080205')
+            self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='01080205', help_text='Valid US darinage basin identifier.')
         elif station_selection == 'state':
-            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES)
+            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='Valid US state abreviation.')
         elif station_selection == 'bbox':
-            self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41')
+            self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41', help_text='Bounding box latitudes and longitudes: West,South,East,North.')
 
-        self.fields['elements'] = MultiElementField(initial=elements, widget=forms.HiddenInput())
+        self.fields['elements'] = MultiElementField(initial=elements, widget=forms.HiddenInput(), help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
         #self.fields['elements'] = forms.CharField(required=False, initial=elements, widget=forms.HiddenInput())
         '''
         for element in elements:
             if element == 'cddxx':
-                self.fields['base_temperature_cddxx'] = forms.IntegerField(initial=65)
+                self.fields['base_temperature_cddxx'] = forms.IntegerField(initial=65, help_text='Base temperature used to calculate cooling degree days.')
             if element == 'hddxx':
-                self.fields['base_temperature_hddxx'] = forms.IntegerField(initial=65)
+                self.fields['base_temperature_hddxx'] = forms.IntegerField(initial=65, help_text='Base temperature used to calculate heating degree days.')
             if element == 'gddxx':
-                self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50)
+                self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50, help_text='Base temperature used to calculate growing degree days.')
         '''
-        self.fields['start_date'] = MyDateField(max_length=8, min_length=3, required = False, initial='20120101')
-        self.fields['end_date'] = MyDateField(max_length=8, min_length=3, required = False, initial=today)
-        self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput())
+        self.fields['start_date'] = MyDateField(max_length=8, min_length=3, required = False, initial='20120101', help_text= 'yyyymmdd or "por" (period of record) if single station.')
+        self.fields['end_date'] = MyDateField(max_length=8, min_length=3, required = False, initial=today, help_text= 'yyyymmdd or "por" (period of record) if single station.')
+        self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput(), help_text='Defines format in which data will be returned.')
         if data_format in ['dlm', 'html']:
-            self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES)
+            self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
 class GridData0Form(forms.Form):
-        grid_selection = forms.ChoiceField(choices=GRID_SELECTION_CHOICES, required=False, initial='point')
-        elements =forms.CharField(initial ='maxt,mint,avgt', required=False)
-        data_format = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', required=False)
+        grid_selection = forms.ChoiceField(choices=GRID_SELECTION_CHOICES, required=False, initial='point', help_text='Area defining gridpoints of interest.')
+        elements =forms.CharField(initial ='maxt,mint,avgt', required=False, help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
+        data_format = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', required=False, help_text='Delimiter used to seperate data values.')
 
 class GridDataForm1(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -298,29 +299,29 @@ class GridDataForm1(forms.Form):
             data_format = self.data.get('data_format')
 
         if grid_selection == 'point':
-            self.fields['location'] = forms.CharField(initial="-77.7,41.8")
+            self.fields['location'] = forms.CharField(initial="-77.7,41.8", help_text='Gridpoint coordinates: latitude, longitude.')
         elif grid_selection == 'state':
-            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES)
+            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='US state abbreviation.')
         elif grid_selection == 'bbox':
-            self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41')
+            self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41', help_text='Bounding boxcoordinates: West, South, East, North.')
 
-        self.fields['grid_selection'] = forms.CharField(required=False, initial=grid_selection, widget=forms.HiddenInput())
-        self.fields['elements'] = MultiElementField(initial=elements,widget=forms.HiddenInput())
+        self.fields['grid_selection'] = forms.CharField(required=False, initial=grid_selection, widget=forms.HiddenInput(), help_text='Area defining gridpoints of interest.')
+        self.fields['elements'] = MultiElementField(initial=elements,widget=forms.HiddenInput(), help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
         '''
         for element in elements:
             if element == 'cddxx':
-                self.fields['base_temperature_cddxx'] = forms.IntegerField(initial=65)
+                self.fields['base_temperature_cddxx'] = forms.IntegerField(initial=65, help_text='Base temperature used to calculate cooling degree days.')
             if element == 'hddxx':
-                self.fields['base_temperature_hddxx'] = forms.IntegerField(initial=65)
+                self.fields['base_temperature_hddxx'] = forms.IntegerField(initial=65, help_text='Base temperature used to calculate heating degree days.')
             if element == 'gddxx':
-                self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50)
+                self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50, help_text='Base temperature used to calculate growing degree days.')
         '''
-        self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101')
-        self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today)
-        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES)
-        self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput())
+        self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text= 'yyyymmdd')
+        self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text= 'yyyymmdd')
+        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text='Valid gridded data set recognized by Acis.')
+        self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput(), help_text='Defines format in which data will be returned.')
         if data_format in ['dlm', 'html']:
-            self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES)
+            self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
 #Data Application Forms
 class MetaGraphForm(forms.Form):
@@ -332,9 +333,9 @@ class MetaGraphForm(forms.Form):
             stn_id = self.data.get('stn_id')
 
         if stn_id is None:
-            self.fields['station_id'] = forms.CharField(required=False, initial='266779')
+            self.fields['station_id'] = forms.CharField(required=False, initial='266779', help_text='Coop station id. See "How to use this tool" for more info.')
         else:
-            self.fields['station_id'] = forms.CharField(required=False, initial=stn_id)
+            self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text='Coop station id. See "How to use this tool" for more info.')
 
 class MonthlyAveragesForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -345,18 +346,18 @@ class MonthlyAveragesForm(forms.Form):
             stn_id = self.data.get('stn_id')
 
         if stn_id is None:
-            self.fields['station_id'] = forms.CharField(required=False, initial='266779')
+            self.fields['station_id'] = forms.CharField(required=False, initial='266779', help_text='Station id recognized by Acis. See "How to use this tool" for more information.')
         else:
-            self.fields['station_id'] = forms.CharField(required=False, initial=stn_id)
-        self.fields['elements'] = MultiElementField(initial='pcpn, snow')
-        self.fields['start_date'] = MyDateField(max_length=8, required = False, initial='20000101')
-        self.fields['end_date'] = MyDateField(max_length=8, required = False, initial='por')
+            self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text='Station id recognized by Acis. See "How to use this tool" for more information.')
+        self.fields['elements'] = MultiElementField(initial='pcpn, snow', help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
+        self.fields['start_date'] = MyDateField(max_length=8, required = False, initial='20000101', help_text= 'yyyymmdd or "por" for period of record.')
+        self.fields['end_date'] = MyDateField(max_length=8, required = False, initial='por', help_text= 'yyyymmdd or "por" for period of record.')
 
 class ClimateMapForm0(forms.Form):
-        grid_selection = forms.ChoiceField(choices=([('state', 'State'),('bbox', 'Bounding Box')]), required=False, initial='state')
-        element = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES, required=False, initial='maxt')
-        time_period = forms.ChoiceField(choices=TIME_PERIOD_CHOICES, required=False, initial='months')
-        x = forms.IntegerField(required=False, initial=1)
+        grid_selection = forms.ChoiceField(choices=([('state', 'State'),('bbox', 'Bounding Box')]), required=False, initial='state', help_text='Area defining gridpoints of interest.')
+        element = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES, required=False, initial='maxt', help_text='Valid Acis climate element.')
+        time_period = forms.ChoiceField(choices=TIME_PERIOD_CHOICES, required=False, initial='months', help_text='Time period over which to compute map gridpoint values.')
+        x = forms.IntegerField(required=False, initial=1, help_text='Integer defining the number of days/months or years.')
 
 class ClimateMapForm1(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -376,36 +377,33 @@ class ClimateMapForm1(forms.Form):
         if x is None:
             x = self.data.get('x')
 
-        self.fields['grid_selection'] = forms.CharField(required=False, initial=grid_selection, widget=forms.HiddenInput())
-        if grid_selection == 'point':
-            self.fields['location'] = forms.CharField(initial='-77.7,41.8')
-        elif grid_selection == 'state':
-            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES)
+        self.fields['grid_selection'] = forms.CharField(required=False, initial=grid_selection, widget=forms.HiddenInput(), help_text='Area defining gridpoints of interest.')
+        if grid_selection == 'state':
+            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='US state.')
         elif grid_selection == 'bbox':
-            self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41')
+            self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41', help_text='Bounding box latitudes and longitudes: West,South,East,North.')
 
-        self.fields['element'] = forms.CharField(initial=element, widget=forms.HiddenInput())
+        self.fields['element'] = forms.CharField(initial=element, widget=forms.HiddenInput(), help_text='Valid element recognized by Acis.')
         if element == 'cddxx':
-            self.fields['base_temperature_cddxx'] = forms.IntegerField(initial=65)
+            self.fields['base_temperature_cddxx'] = forms.IntegerField(initial=65, help_text='Base temperature used to calculate cooling degree days.')
         if element == 'hddxx':
-            self.fields['base_temperature_hddxx'] = forms.IntegerField(initial=65)
+            self.fields['base_temperature_hddxx'] = forms.IntegerField(initial=65, help_text='Base temperature used to calculate heating degree days.')
         if element == 'gddxx':
-            self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50)
+            self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50, help_text='Base temperature used to calculate growing degree days.')
 
         if time_period == 'custom':
-            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101')
-            self.fields['end_date'] =MyDateField(max_length=8, min_length=8, required = False, initial=today)
+            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text= 'yyyymmdd')
+            self.fields['end_date'] =MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text= 'yyyymmdd')
         else:
             if x is None:
-                self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101')
-                self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today)
+                self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text= 'yyyymmdd')
             else:
                 start_date = WRCCUtils.get_start_date(time_period,today, x)
-                self.fields['start_date'] = MyDateField(required = False, initial=start_date)
+                self.fields['start_date'] = MyDateField(required = False, initial=start_date, help_text= 'yyyymmdd')
                 self.fields['start_date'].widget.attrs['readonly'] = 'readonly'
-            self.fields['end_date'] = MyDateField(required=False, initial=today)
+            self.fields['end_date'] = MyDateField(required=False, initial=today, help_text= 'yyyymmdd')
             self.fields['end_date'].widget.attrs['readonly'] = 'readonly'
-        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES)
+        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text='Valid gridded data set recognized by Acis.')
 
 class GPTimeSeriesForm(forms.Form):
         def __init__(self, *args, **kwargs):
@@ -420,14 +418,14 @@ class GPTimeSeriesForm(forms.Form):
                 lon = self.data.get('lon')
 
             if lat is None:
-                 self.fields['lat'] = forms.FloatField(initial='41.8', required=False)
+                 self.fields['lat'] = forms.FloatField(initial='41.8', required=False, help_text='Valid latitude.')
             else:
-                self.fields['lat'] = forms.FloatField(initial=lat, required=False)
+                self.fields['lat'] = forms.FloatField(initial=lat, required=False, help_text='Valid latitude.')
             if lon is None:
-                 self.fields['lon'] = forms.FloatField(initial='-77.7', required=False)
+                 self.fields['lon'] = forms.FloatField(initial='-77.7', required=False, help_text='Valid longitude.')
             else:
-                self.fields['lon'] = forms.FloatField(initial=lon, required=False)
-            self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, required=False, initial='maxt')
-            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101')
-            self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today)
-            self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES)
+                self.fields['lon'] = forms.FloatField(initial=lon, required=False, help_text='Valid longitude.')
+            self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, required=False, initial='maxt', help_text='Acis element code. See "About this tool."')
+            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text= 'yyyymmdd')
+            self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text= 'yyyymmdd')
+            self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text='Valid gridded data set recognized by Acis.')

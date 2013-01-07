@@ -11,18 +11,42 @@
         <h2>Historic Station Data</h2>
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
-            <table class="form">{{ form0_point|safe }}</table>
+            <table class="form">
+            {%for field in form0_point %}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    <td>{{field}}</td>
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
+                    <div class="pop-up">{{field.help_text}}</div>
+                    </td>
+                </tr>
+            {%endfor%}
+            </table>
             <input type="submit" value="Select" name="form0_point"/>
             </form>
         </div>
     
         {%if form1_point_ready%}
-            <div id="form1">
-                <form method="post" action="">{% csrf_token %}
-                <table class="form">{{ form1_point|safe }}</table>
-                <input type="submit" value="Submit" name="form1_point"/>
-                </form>
-            </div>
+        <div id="form1">
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form1_point %}
+            {%if field.is_hidden %}
+                {{field}}
+            {%else%}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    <td>{{field}}</td>                    
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                    
+                    <div class="pop-up">{{field.help_text}}</div>
+                    </td>
+                </tr>
+            {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form1_point"/>
+            </form>
+        </div>
             </br>
             </br>
         {%endif%}

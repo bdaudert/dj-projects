@@ -11,8 +11,17 @@
     <div class="center-left">
         <div id='form_graphs'>
             <form method="post" action="">{% csrf_token %}
-                <table class="form">{{ form_graphs|safe }}</table>
-                <input type="submit" value="Submit" name="form_graphs"/>
+            <table class="form">
+            {%for field in form_graphs %}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    <td>{{field}}</td>                                                                                
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                                             <div class="pop-up">{{field.help_text}}</div>
+                    </td>
+                </tr>
+            {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form_graphs"/>
             </form>
         </div>
         <br />

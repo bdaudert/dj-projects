@@ -1,43 +1,6 @@
-<!DOCTYPE html>
+{% extends "csc_base.html" %}
 
-<html>
-
-<head>
-    <title>{{title}}</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-    <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
-    <!-- ** Javascript ** -->
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
-    <!-- ** Britta'sJavascript ** -->
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>  
-    <!-- Map Utils -->
-    <script type="text/javascript" src="http://www.wrcc.dri.edu/media/js/stationmap.js"></script>
-    <script type="text/javascript"
-        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true">
-    </script>
-    <!-- Highcharts -->
-    <script src="http://code.highcharts.com/highcharts.js"></script>
-    <script src="http://code.highcharts.com/modules/exporting.js"></script>
-</head>
-
-<body onload="initialize_grid_point_map()">
-
-<div id="header"></div>
-<script type="text/javascript">$("#header").load("{{MEDIA_URL}}html/csc_map_page_base.html .header");</script>
-<div id="apps_img"></div>
-<script type="text/javascript">$("#apps_img").load("{{MEDIA_URL}}html/csc_map_page_base.html .apps_img");</script>
-
-<div id="bcrumbs"></div>
-<script type="text/javascript">$("#bcrumbs").load("{{MEDIA_URL}}html/csc_map_page_base.html .breadcrumbs");</script>
-
-
-<div class="content-header">
-    <h1 align="center">{{title}}</h1>
-
-    <div id="searchbox"></div>            
-    <script type="text/javascript">$("#searchbox").load("{{MEDIA_URL}}html/csc_map_page_base.html .searchbox");</script>
-
-</div>
+{% block content %}
 
 <p align="center">You are here <a href="/my_data">HOME></a>
 <a href="/my_data/apps/">TOOLS/PRODUCTS></a>
@@ -51,12 +14,20 @@
         <input type="hidden" id="center_lat" name="center_lat" value="39.8282">
         <input type="hidden" id="center_lon" name="center_lon" value="-98.5795">
         <input type="hidden" id="zoom_level" name="zoom_level" value="5">
-        
+
 
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
-                <table class="form">{{ form0|safe }}</table>
-                <input type="submit" value="Submit" name="form0"/>
+            <table class="form">
+            {%for field in form0 %}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    <td>{{field}}</td>                                                                                                                   <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                                             <div class="pop-up">{{field.help_text}}</div>
+                    </td>
+                </tr>
+            {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form0"/>
             </form>
         </div>
     </div>
@@ -77,13 +48,13 @@
             <ul>
                 <li>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
                 <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
-                <li>For more information and direct access to NARCCAP             
+                <li>For more information and direct access to NARCCAP
                 (North American Regional Climate Change Assessment Program) gridded data sets:</li>
                 <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
             </ul>
             </ul></p>
         </div>
- 
+
         <div id="how_to_head"></div>
         <script type="text/javascript">            
             $("#how_to_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_how_to");
@@ -95,18 +66,18 @@
             <ol>
                 <li>Drag the marker to the desired position on the map.</li>
                 <li>Click on the marker.</li>
-                <li>Click on the "Use this location" link. The coordinates of your new 
+                <li>Click on the "Use this location" link. The coordinates of your new
                 location will appear in the form on the left hand side.</li>
             </ol>
             <li>Start and end date should be 8 characters long and of form yyyymmdd.</li>
             <li>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
             <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
-            <li>For more information and direct access to NARCCAP 
+            <li>For more information and direct access to NARCCAP
             (North American Regional Climate Change Assessment Program) gridded data sets:</li>
             <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
             </ul></p>
         </div>
-    
+
         {%if error%}
             {{error}}
         {%else%}
@@ -129,22 +100,16 @@
             <br />
           {%endif%}
         {%endif%}
-         
+
+        <div id="map" style="width: 100%; height:400px;"></div>
+
+        <script type="text/javascript">
+            initialize_grid_point_map()
+        </script>
 
         <!--<a href="#"  onClick="initialize_grid_point_map()">Find your Latitude and Longitude here!</a>-->
 
-
-        <div id="map" style="width: 100%; height:400px;"></div>
     </div>
 </div>
 
-</body>
-
-<div class="footer">
-    <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" 
-    alt="Acis" width="90" height="30">&nbsp;&nbsp;
-    Created by <a href="http://www.wrcc.dri.edu/" target="_blank">>WRCC</a> &nbsp;&nbsp;
-    Hosted by <a href="http://www.dri.edu/" target="_blank">
-    <img class="logo" src="{{ MEDIA_URL }}img/DRILogo.gif"></a></p>
-</div>
-</html>
+{%endblock%}

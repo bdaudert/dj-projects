@@ -125,14 +125,15 @@ function initialize_grid_point_map() {
         position: myLatlng, 
         map: map,
         title: "Your location"
-  });
+    });
 
     google.maps.event.addListener(marker, 'click', function (event) {
         infowindow.close();
         var contentString = '<div id="MarkerWindow">'+
             '<p><b>Lat: </b>' + event.latLng.lat() + '<br/>'+
             '<b>Lon: </b>' + event.latLng.lng() + '<br/>' +
-            '<a href="/my_data/apps/climate/grid_point_time_series/?lat=' + event.latLng.lat() + '&lon=' + event.latLng.lng() + 
+            '<a href="/my_data/apps/climate/grid_point_time_series/?lat=' + 
+            event.latLng.lat() + '&lon=' + event.latLng.lng() + 
             '">Use this location</a></div>';
         infowindow.setContent(contentString);
         infowindow.open(map, marker);
@@ -140,10 +141,65 @@ function initialize_grid_point_map() {
         document.getElementById("lonbox").value = event.latLng.lng();
         myLatlng = google.maps.LatLng(event.latLng.lat(),event.latLng.lng());
     });
-}//close initialize 
+}//close initialize_grid_point_map 
 
 
+function initialize_station_finder() {
 
+    var MEDIA_URL = document.getElementById("MEDIA_URL").value;
+    var json_file = document.getElementById("json_file").value;
+    $.getJSON(MEDIA_URL + 'json/' + json_file, function(data) {
+
+
+        //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
+        var ll = new google.maps.LatLng(data.stations[0].lat, data.stations[0].lon);
+        var mapOptions = {
+        center: ll,
+        //center: new google.maps.LatLng(39.8282, -98.5795),
+        zoom: 7,
+        mapTypeId: google.maps.MapTypeId.HYBRID
+        };
+
+        map = new google.maps.Map(document.getElementById("map"),mapOptions);
+        var bounds=new google.maps.LatLngBounds();
+        infowindow = new google.maps.InfoWindow({
+            content: 'oi'
+        });
+        var markers = [];
+        $.each(data.stations, function(index, c) {
+            var latlon = new google.maps.LatLng(c.lat,c.lon);
+            var marker = new google.maps.Marker({
+                map: map,
+                position: latlon,
+                title:'Name:'+c.name
+            });
+
+            markers.push(marker)
+            bounds.extend(latlon);
+
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.close();
+                var contentString = '<div id="MarkerWindow">'+
+                '<p><b>Name: </b>' + c.name + '<br/>'+
+                '<b>State: </b>' + c.state + '<br/>' +
+                '<b>UID: </b>' + c.uid + '<br/>' +
+                '<b>SIDS: </b>' + c.sids + '<br/>' +
+                '<b>Elevation: </b>' + c.elevation + '<br/>' +
+                '</p>' +
+                '<a href="/my_data/data/historic/?stn_id=' + c.sids[0] + 
+                '">Get Data for this Station</a> <br/>'+
+                '<a href="/my_data/apps/climate/?stn_id=' + c.sids[0] + 
+                '">Run a climate application for this Station</a>'+ 
+                '</div>';
+                infowindow.setContent(contentString);
+                infowindow.open(map, marker);
+                });
+        });//close each
+    
+        var markerCluster = new MarkerClusterer(map, markers);
+        map.fitBounds(bounds);
+    });//close getjson
+}//close initialize_station_finder
 
 function load_script() {
   var script = document.createElement("script");
