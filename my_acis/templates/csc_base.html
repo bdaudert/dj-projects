@@ -8,6 +8,8 @@
     {{ title|escape }}
     {% if title %} ] {% endif %}
     </title>
+    <meta name="keywords" content="climate,climate change,Southwest US,Soutwest CSC,Climate Science Center, Climate Knowledge Network">
+    <meta name="description" content="Southwest Climate Knowledge Network">
     <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
     <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
     <!-- jquery -->
@@ -19,6 +21,7 @@
     <script type="text/javascript"
         src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true">
     </script>
+    <script type="text/javascript" src="polygon.min.js"></script>
     <!--<script type="text/javascript" src="http://www.wrcc.dri.edu/media/ext/ext-all.js"></script>-->
     <script type="text/javascript" src="http://www.wrcc.dri.edu/media/js/stationmap.js"></script>
     <!-- Highcharts graphics -->
@@ -57,7 +60,7 @@
 <body>
     <!-- Header -->
     <div class="header">
-        <h1 align="center">Southwest Climate Knowledge Network</h1>
+        <h1 align="center">Southwest Climate Knowledge Network (SW-CKN)</h1>
         <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png">
         {%if home_page%}
             <img class="map" src="{{ MEDIA_URL }}img/SouthWest.jpg">
@@ -74,17 +77,27 @@
         {%if intro_page%}
             <img class="map" src="{{ MEDIA_URL }}img/AboutUs.jpg">
         {%endif%}
-
+        {%if search_page%}
+            <img class="map" src="{{ MEDIA_URL }}img/Magnify.jpg">
+        {%endif%}
 
     </div>
     <!-- Nav bar at top of page-->
     <div class="breadcrumbs">
     {% block breadcrumbs %}
-    <li><a href="/my_data">HOME </a>
+    <li><a href="/my_data/start/">START PAGE</a>
+    <li><a href="/my_data/">HOME</a>
     <li><a href="/my_data/about_us/">ABOUT US <img class="icon_small" src="/media/img/DownArrowHand.png"></a>
     <ul>
+        <li><a href="/my_data/who_we_are/">Who we are</a></li>
+        <li><a href="/my_data/what_we_do/">What we do</a></li>
+        <li><a href="/my_data/focus_areas/">Focus Areas</a></li>
+        <li><a href="/my_data/projects/">Projects</a></li>
+        <li><a href="/my_data/publications/">Publications</a></li>
+        <li><a href="/my_data/news_events_announcements/">News/Events</a></li>
         <li><a href="/my_data/contact_us/">Contact Us</a></li>
     </ul></li>
+    <li><a href="/my_data/finder/">FINDER TOOL</a>
     <li><a href="/my_data/station_finder/">STATION FINDER</a>
     <li><a href="/my_data/data">DATA PORTAL <img class="icon_small" src="/media/img/DownArrowHand.png"></a>
     <ul>

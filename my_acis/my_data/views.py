@@ -37,6 +37,20 @@ MEDIA_URL = '/Users/bdaudert/DRI/dj-projects/my_acis/media/'
 month_names = ['January', 'February', 'March', 'April', 'May', 'June',\
                'July', 'August', 'September', 'October', 'November', 'December']
 
+def front_page_dash(request):
+    context = {
+        'title': 'Southwest Climate Knowledge Network (SW-CKN)',
+        'home_page':True
+    }
+    return render_to_response('my_data/front_page_dash.html', context, context_instance=RequestContext(request))
+
+def finder(request):
+    context = {
+        'title': 'Finder Tool',
+        'search_page':True
+    }
+    return render_to_response('my_data/finder/home.html', context, context_instance=RequestContext(request))
+
 def home_view(request):
     context = {
         'title': 'Welcome to the SW-CKN',
@@ -62,12 +76,56 @@ def about_us(request):
     }
     return render_to_response('my_data/about_us.html', context, context_instance=RequestContext(request))
 
+def who_we_are(request):
+    context = {
+        'title': 'Who we are',
+        'intro_page':True
+    }
+    return render_to_response('my_data/who_we_are.html', context, context_instance=RequestContext(request))
+
+def what_we_do(request):
+    context = {
+        'title': 'What we do',
+        'intro_page':True
+    }
+    return render_to_response('my_data/what_we_do.html', context, context_instance=RequestContext(request))
+
+def focus_areas(request):
+    context = {
+        'title': 'Focus Areas',
+        'intro_page':True
+    }
+    return render_to_response('my_data/focus_areas.html', context, context_instance=RequestContext(request))
+
+def projects(request):
+    context = {
+        'title': 'Projects',
+        'intro_page':True
+    }
+    return render_to_response('my_data/projects.html', context, context_instance=RequestContext(request))
+
+def publications(request):
+    context = {
+        'title': 'Publications',
+        'intro_page':True
+    }
+    return render_to_response('my_data/publications.html', context, context_instance=RequestContext(request))
+
+def news_events(request):
+    context = {
+        'title': 'News, Events and Announcements',
+        'intro_page':True
+    }
+    return render_to_response('my_data/news_events.html', context, context_instance=RequestContext(request))
+
 def contact_us(request):
     context = {
         'title': 'Contact Us',
         'intro_page':True
     }
     return render_to_response('my_data/contact_us.html', context, context_instance=RequestContext(request))
+
+
 
 def data_home(request):
     context = {

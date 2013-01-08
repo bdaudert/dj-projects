@@ -201,6 +201,49 @@ function initialize_station_finder() {
     });//close getjson
 }//close initialize_station_finder
 
+function initialize_finder_map() {
+      //create map
+     var Center=new google.maps.LatLng(37.0, -114.05);
+     var myOptions = {
+        zoom: 5,
+        center: Center,
+        mapTypeId: google.maps.MapTypeId.HYBRID
+      }
+     map = new google.maps.Map(document.getElementById('map'), myOptions);
+
+     var creator = new PolygonCreator(map);
+
+     //reset
+     $('#reset').click(function(){ 
+            creator.destroy();
+            creator=null;
+
+            creator=new PolygonCreator(map);
+     });         
+
+
+     //show paths
+     $('#showData').click(function(){ 
+            $('#dataPanel').empty();
+            if(null==creator.showData()){
+                $('#dataPanel').append('Please first create a polygon');
+            }else{
+                $('#dataPanel').append(creator.showData());
+            }
+     });
+
+     //show color
+     $('#showColor').click(function(){ 
+            $('#dataPanel').empty();
+            if(null==creator.showData()){
+                $('#dataPanel').append('Please first create a polygon');
+            }else{
+                    $('#dataPanel').append(creator.showColor());
+            }
+     });
+}//close initialize_finder_map
+
+
 function load_script() {
   var script = document.createElement("script");
   script.type = "text/javascript";
@@ -209,3 +252,5 @@ function load_script() {
   //document.body.appendChild(script)
   //document.getElementById("map_js").appendChild(script)
 }
+
+
