@@ -27,12 +27,21 @@
         <img src="http://radar.weather.gov/ridge/Conus/Loop/pacsouthwest_loop.gif" width="250" height="200"><br />Pacific Southwest Radar Mosaic</a>
     </div>
 
-    <div class="center">
 
+    <div class="center">
+        <p class="error">Zoom in on an area of interest or</p> 
+        <p class="error">Draw a polyon by clicking on map points!</p>
+        <div id="side">
+            <input id="reset" value="Reset" type="button" class="navi"/>
+            <input id="showData"  value="Show Paths (class function) " type="button" class="navi"/>
+            <!--<input id="showColor"  value="Show Color (class function) " type="button" class="navi"/>-->
+            <div   id="dataPanel"></div>
+        </div>
+
+        <div id="map" style="width: 80%; height:600px;"></div> 
         <script type="text/javascript">
             initialize_finder_map()
         </script>
-        <div id="map" style="width: 100%; height:600px;"></div> 
 
     <!--
         <h1>Try our puzzle!</h1>
@@ -53,7 +62,7 @@
         <div id="messageDiv"></div>
         <p><i>Shuffle, then click to move the pieces</i></p>
         -->
-
     </div>
-</div>
+
+</div> <!--end container-->
 {% endblock %}

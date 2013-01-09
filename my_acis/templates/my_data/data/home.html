@@ -15,27 +15,80 @@
     </div>
 
     <div class="center-right">
-            <p class="warning">Don't see what you are looking for? Let us help you!</p>
+            <h1>Links to other data portals</h1>
     </div>
 
 
     <div class="center">
-        <h1>Data available directly though the Climate Knowledge Network</h1>
-        <h2>1) Applied Climate Information System (Acis) 
-        <a target="_blank" href="http://rcc-acis.unl.edu/index.php">Acis Home Page</a></h2>
-        <p class="warning" onClick="ShowHide('more_on_data')"><img class="icon"         
-        src="/media/img/InfoMan.jpg">More ...</p>
+
+        <p class="warning" align="center" onClick="ShowHide('more_on_data')"><img class="logo"         
+        src="{{MEDIA_URL}}img/Acis-logo.jpg">More about the Acis data sets ...</p>
         <div id="more_on_data" style="display:none;">
             <p>Currently most of our data applications query data from Acis via webservices.
             Climate data available in ACIS consists of in-situ observations collected from a 
             variety of federal, regional, state, and local weather and climate networks. 
             Both archive-quality historical data and near-real-time data ingested from operational 
             data transmission streams are available. ACIS data are primarily used for the generation 
-            of operational climate products but also provide quality archive datasets. 
-            New data sources are continually added contingent upont demand, need, time and funding.</p>
+            of operational climate products but also provide quality archive datasets.
+            A collection of gridded/modeled data sets is also available. The Northeast Regional Climate Center (NRCC) 
+            developed their own gridded data sets but also provides access to modeled NARCCAPP 
+            (North American Regional Climate Change Assessment Program ) data sets. 
+            New data sources are continually added contingent upont demand, need, time and funding.
+            For more information:<br />
+            <a target="_blank" href="http://rcc-acis.unl.edu/index.php">Acis Home Page</a>
+            <br />
+            <a href="https://gist.github.com/4197956">Information on NRCC interpolated, NRCC Hi-Res data sets</a>
+            <a href="http://www.earthsystemgrid.org/project/narccap.html">North American Regional Climate Change Assessment Program (NARCCAPP) Home Page</a>
+            <br />
+            </p>
         </div>
-        
-        <h1>Links to other data sources</h1>
+
+        <table class="dash" cellspacing="20px">
+            <!--Headers-->
+            <th><font size="5"><b>Historic Station Data (Acis) </b></th>
+            <th><font size="5"><b>Gridded/Modeled Data(Acis)</b></th>
+            <th><font size="5"><b></b></th>
+            <th><font size="5"><b></b></th>
+            <tr><td></td></tr>
+            <!--First row of dashboard: image-->
+            <tr>
+                <td><a href="/my_data/data/historic"><img class="dash_img" src="{{MEDIA_URL}}img/RAWSWeatherStation.png"></a></td>
+                <td><a href="/my_data/data/modeled"><img class="dash_img" src="{{MEDIA_URL}}img/SeaSurfTempGlobal.jpg"></a></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <!--Second+ rows: list of content-->
+            <tr>
+                <td><p class="greenish" onClick="ShowHide('acis_networks')"><b><u>Networks in Acis</u></b></p>
+                <div id="acis_networks" style="display:none;"><img src={{MEDIA_URL}}img/Acis_Stn_Id_Type.png></div></td>
+                <td><p class="greenish" onClick="ShowHide('acis_griddata')"><b><u>Gridded/Modeled data sets in Acis</u></b></p>
+                <div id="acis_griddata" style="display:none;"><img src={{MEDIA_URL}}img/AcisGridData.png></div></td>
+                <td><b></b></td>
+                <td><b></b></td>
+            </tr>
+            <tr>
+                <td><p class="greenish" onClick="ShowHide('acis_elements_h')"><b><u>Climate Elements in Acis</u></b></p>                
+                <div id="acis_elements_h" style="display:none;"><img src={{MEDIA_URL}}img/Acis_Element_Choices.png></div></td>
+                <td><p class="greenish" onClick="ShowHide('acis_elements_g')"><b><u>Climate Elements in Acis</u></b></p>                
+                <div id="acis_elements_g" style="display:none;"><img src={{MEDIA_URL}}img/Acis_Element_Choices.png></div></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <td>Time Intervals: daily</td>
+                <td><a href="https://gist.github.com/4197956">Information on NRCC interpolated, NRCC Hi-Res data sets 1, 3</a></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><a href="http://www.earthsystemgrid.org/project/narccap.html">Information on NARCCAPP data sets 4-16</a></td>
+                <td></td>
+                <td></td>
+            </tr>
+         </table>
+
     </div>
 
 </div>    

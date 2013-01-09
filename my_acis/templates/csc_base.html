@@ -21,7 +21,7 @@
     <script type="text/javascript"
         src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true">
     </script>
-    <script type="text/javascript" src="polygon.min.js"></script>
+    <script type="text/javascript" src="{{MEDIA_URL}}js/polygon.min.js"></script>
     <!--<script type="text/javascript" src="http://www.wrcc.dri.edu/media/ext/ext-all.js"></script>-->
     <script type="text/javascript" src="http://www.wrcc.dri.edu/media/js/stationmap.js"></script>
     <!-- Highcharts graphics -->
@@ -72,7 +72,7 @@
             <img class="map" src="{{ MEDIA_URL }}img/data_img2.jpg">
         {%endif%}
         {%if apps_page%}
-            <img class="map" src="{{ MEDIA_URL }}img/DataAnalysis.jpg">
+            <img class="map" src="{{ MEDIA_URL }}img/ToolProduct.png">
         {%endif%}
         {%if intro_page%}
             <img class="map" src="{{ MEDIA_URL }}img/AboutUs.jpg">
@@ -81,7 +81,8 @@
             <img class="map" src="{{ MEDIA_URL }}img/Magnify.jpg">
         {%endif%}
 
-    </div>
+    </div><!--end header-->
+
     <!-- Nav bar at top of page-->
     <div class="breadcrumbs">
     {% block breadcrumbs %}
@@ -111,7 +112,7 @@
         <li><a href="/my_data/apps/eco">Ecosystem</a></li>
     </ul></li>
     {% endblock %}
-    </div>
+    </div><!--end breadcrumbs-->
 
     <div class="content-header">
     {% block content-header %}
@@ -134,23 +135,20 @@
         </form>
         </div>
     {% endblock %}
-    </div> 
+    </div> <!--end content-header-->
 
     <div class="content">
-
-
     {% block content %}
     {% endblock %}
-</div> <!-- END content -->
+    </div> <!-- END content -->
 
-{% block footer %}
-<div class="footer">
-    <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30">&nbsp;&nbsp;  
-        Created by <a href="http://www.wrcc.dri.edu/" target="_blank">>WRCC</a> &nbsp;&nbsp;
-        Hosted by <a href="http://www.dri.edu/" target="_blank"><img class="logo" src="{{ MEDIA_URL }}img/DRILogo.gif"></a></p>
-
-</div>
-{% endblock %}
+    <div class="footer">
+    {% block footer %}
+    <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30">&nbsp;&nbsp;
+       Created by <a href="http://www.wrcc.dri.edu/" target="_blank">>WRCC</a> &nbsp;&nbsp;
+       Hosted by <a href="http://www.dri.edu/" target="_blank"><img class="logo" src="{{ MEDIA_URL }}img/DRILogo.gif"></a></p>
+    {% endblock %}
+    </div><!--end footer-->
 
 </body>
 </html>
