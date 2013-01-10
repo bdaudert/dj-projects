@@ -1,5 +1,8 @@
 {% extends "csc_base.html" %}
 
+<meta name="keywords" content="data, station data, historic data, gridded data, modeled data, data portal, acis">
+<meta name="description" content="SW-CKN Data Portal Home">
+
 {% block content %} 
 
 <p align="center">You are here <a href="/my_data">HOME></a>
@@ -9,8 +12,8 @@
     <div class="center-left">
         <h1>Data Categories</h1>
         <ul class="navbar">
-            <a href="/my_data/data/historic/" class="trigger">Historic Station Data</a>
-            <a href="/my_data/data/modeled" class="trigger">Modeled/Gridded Data</a>
+            <a href="/my_data/data/historic/" class="trigger">Historic Station Data (Acis)</a>
+            <a href="/my_data/data/modeled" class="trigger">Modeled/Gridded Data (Acis)</a>
         </ul>
     </div>
 
@@ -22,7 +25,7 @@
     <div class="center">
 
         <p class="warning" align="center" onClick="ShowHide('more_on_data')"><img class="logo"         
-        src="{{MEDIA_URL}}img/Acis-logo.jpg">More about the Acis data sets ...</p>
+        src="{{MEDIA_URL}}img/Acis-logo.jpg"><u>More about the Acis data sets ...</u></p>
         <div id="more_on_data" style="display:none;">
             <p>Currently most of our data applications query data from Acis via webservices.
             Climate data available in ACIS consists of in-situ observations collected from a 

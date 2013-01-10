@@ -1,5 +1,8 @@
 {% extends "csc_base.html" %}
 
+<meta name="keywords" content="monthly averages, graph, station data, historic data,application, product, tool">
+<meta name="description" content="SW-CKN Generates graphs of monthly averages">
+
 {% block content %}
 
 <p align="center">You are here <a href="/my_data">HOME></a>
@@ -16,7 +19,8 @@
                 <tr>
                     <td>{{field.label}}:</td>
                     <td>{{field}}</td>                                                                                
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                                             <div class="pop-up">{{field.help_text}}</div>
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                                             
+                    <div class="pop-up">{{field.help_text}}</div>
                     </td>
                 </tr>
             {%endfor%}
@@ -29,7 +33,7 @@
 
     <div class="center-right">
         {%if meta%}
-            <p class="warning" onClick="ShowHide('metadata')">Click here for station metadata</p>
+            <p class="warning" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
             <div id="metadata" style="display:none;">
                 {% for key, val in meta.items %}
                     <p> {{key}}: {{val}} </p>
@@ -38,7 +42,7 @@
         {%endif%}
 
         {%if results%}
-            <p class="warning" onClick="ShowHide('averaged_data')">Click here for averaged data behind this graphic</p>
+            <p class="warning" onClick="ShowHide('averaged_data')"><u>Click here for averaged data behind this graphic</u></p>
             <div id="averaged_data" width="450" height="450" border="0" style="display:none;">{{averaged_data}}</div>
             <a href="/my_data/data/historic/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}">Get raw data behind this graphic here!</a>
         {%endif%}
