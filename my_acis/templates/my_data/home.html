@@ -32,19 +32,27 @@
 
 
     <div class="center">
+    <!--
         <p class="error">Zoom in on an area of interest or</p> 
         <p class="error">Draw a polyon by clicking on map points!</p>
         <div id="side">
             <input id="reset" value="Reset" type="button" class="navi"/>
             <input id="showData"  value="Show Paths (class function) " type="button" class="navi"/>
-            <!--<input id="showColor"  value="Show Color (class function) " type="button" class="navi"/>-->
+            <input id="showColor"  value="Show Color (class function) " type="button" class="navi"/>
             <div   id="dataPanel"></div>
         </div>
+    -->
+        <input onclick="showOverlays();" type=button name="host" value="Show Hosts">
+        <input onclick="showOverlays();" type=button name="project" value="Show Projects">
+        <input onclick="showOverlays();" type=button name="all" value="Show Everything">
+        <input onclick="clearOverlays();" type=button name="nothing" value="Reset">
 
-        <div id="map" style="width: 80%; height:600px;"></div> 
-        <script type="text/javascript">
-            initialize_finder_map()
-        </script>
+        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+        <input type="hidden" id="json_file" name="variable" value="{{ json_file }}">
+        <div id="map" style="width: 80%; height:600px;"></div>
+            <script type="text/javascript">
+                initialize_info_map()
+            </script>
 
     <!--
         <h1>Try our puzzle!</h1>
@@ -64,7 +72,7 @@
 
         <div id="messageDiv"></div>
         <p><i>Shuffle, then click to move the pieces</i></p>
-        -->
+    -->
     </div>
 
 </div> <!--end container-->
