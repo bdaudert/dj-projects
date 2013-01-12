@@ -100,11 +100,11 @@ function initialize_station_finder() {
     });//close getjson
 }//close initialize_station_finder
 
-function initialize_info_map() {
+function initialize_info_map(node) {
 
     var MEDIA_URL = document.getElementById("MEDIA_URL").value;
     var json_file = document.getElementById("json_file").value;
-    var marker_type = this.name
+    var marker_type = node.id
     
     $.getJSON(MEDIA_URL + 'json/' + json_file, function(data) {
         //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
@@ -112,7 +112,7 @@ function initialize_info_map() {
         var mapOptions = {
         center: ll,
         //center: new google.maps.LatLng(39.8282, -98.5795),
-        zoom: 7,
+        zoom: 5,
         mapTypeId: google.maps.MapTypeId.HYBRID
         };
 
@@ -123,66 +123,43 @@ function initialize_info_map() {
         });
         var markers = [];
         $.each(data.OverLays, function(index, c) {
+            if (c.type == marker_type || marker_type == 'all') {
+                var image = new google.maps.MarkerImage(MEDIA_URL + 'img/' + c.icon,
+                    // This marker is 20 pixels wide by 32 pixels tall.
+                    new google.maps.Size(20, 32),
+                    // The origin for this image is 0,0.
+                    new google.maps.Point(0,0),
+                    // The anchor for this image is the base of the flagpole at 0,32.
+                    new google.maps.Point(0, 32)
+                );
+                var latlon = new google.maps.LatLng(c.lat,c.lon);
+                var marker = new google.maps.Marker({
+                    map: map,
+                    icon: image,
+                    position: latlon,
+                    title:'Name:'+c.name
+                });
+
+                markers.push(marker);
+                bounds.extend(latlon);
+            };//endif
+
             
-            var image = new google.maps.MarkerImage(MEDIA_URL + 'img/' + c.icon,
-                // This marker is 20 pixels wide by 32 pixels tall.
-                new google.maps.Size(20, 32),
-                // The origin for this image is 0,0.
-                new google.maps.Point(0,0),
-                // The anchor for this image is the base of the flagpole at 0,32.
-                new google.maps.Point(0, 32)
-            );
-            var latlon = new google.maps.LatLng(c.lat,c.lon);
-            var marker = new google.maps.Marker({
-                map: map,
-                icon: image,
-                position: latlon,
-                title:'Name:'+c.name
-            });
-
-            markers.push(marker)
-            bounds.extend(latlon);
-
             google.maps.event.addListener(marker, 'click', function() {
                 infowindow.close();
                 var contentString = '<div id="MarkerWindow">'+
-                '<p><b>CSC Host: </b>' + c.name + '<br/>'+
+                '<p><b>CSC ' + c.type +': </b>' + c.name + '<br/>'+
                 c.name_long + '<br/>' +
                 '<b>Latitude: </b>' + c.lat + '<br/>' +
                 '<b>Longitude: </b>' + c.lon + '<br/>' +
                 '</p>' +'</div>';
                 infowindow.setContent(contentString);
                 infowindow.open(map, marker);
-                });
+            });
         });//close each
 
         //var markerCluster = new MarkerClusterer(map, markers);
         map.fitBounds(bounds);
-
-        // Sets the map on all markers in the array.
-        function setAllMap(map) {
-        for (var i = 0; i < markers.length; i++) {
-            markers[i].setMap(map);
-            }
-        }
-
-        // Removes the overlays from the map, but keeps them in the array.
-        function clearOverlays() {
-            setAllMap(null);
-        }
-
-        // Shows any overlays currently in the array.
-        function showOverlays() {
-           setAllMap(map);
-        }
-
-        // Deletes all markers in the array by removing references to them.
-        function deleteOverlays() {
-           clearOverlays();
-           markers = [];
-        }
-
-        
 
     });//close getjson
 }//close initialize_info_map
