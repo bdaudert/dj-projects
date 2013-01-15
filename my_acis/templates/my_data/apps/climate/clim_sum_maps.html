@@ -6,9 +6,9 @@
 {% block content %}
 
 <p align="center">You are here <a href="/my_data">HOME></a>
-<a href="/my_data/apps/">TOOLS/PRODUCTS></a>
-<a href="/my_data/apps/climate/">Climate></a>
-<a href="/my_data/apps/climate/clim_sum_maps/">Climate Summary Maps</a></p>
+<a href="{{URL_PREFIX}}my_data/apps/">TOOLS/PRODUCTS></a>
+<a href="{{URL_PREFIX}}my_data/apps/climate/">Climate></a>
+<a href="{{URL_PREFIX}}my_data/apps/climate/clim_sum_maps/">Climate Summary Maps</a></p>
 
 <div class="container">
     <div class="center-left">
@@ -18,7 +18,7 @@
             {%for field in form0 %}
                 <tr>
                     <td>{{field.label}}:</td>
-                    <td>{{field}}</td>                                                                                                                   <td>                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
+                    <td>{{field}}</td>                                                                                              <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
                     <div class="pop-up">{{field.help_text}}</div>
                     </td>
                 </tr>
@@ -111,14 +111,14 @@
         {%if figure_file%}
 
             {%if state%}
-            <a href="/my_data/data/modeled/?grid_selection={{grid_selection}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}">Get raw data behind this graphic here!</a>
+            <a href="{{URL_PREFIX}}my_data/data/modeled/?grid_selection={{grid_selection}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}">Get raw data behind this graphic here!</a>
             <br />
             <br />
             <p class="greenish">GridAcis Map for State: <b>{{state}}</b></p>
             {%endif%}
 
             {%if bounding_box%}
-            <a href="/my_data/data/modeled/?grid_selection={{grid_selection}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bounding_box={{bounding_box}}">Get raw data behind this graphic here!</a>
+            <a href="{{URL_PREFIX}}my_data/data/modeled/?grid_selection={{grid_selection}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bounding_box={{bounding_box}}">Get raw data behind this graphic here!</a>
             <br />
             <br />
             <p class="greenish">GridAcis Map for Bounding Box: <b>{{bounding_box}}</b></p>

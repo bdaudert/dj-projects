@@ -5,15 +5,15 @@
 
 {% block content %} 
 
-<p align="center">You are here <a href="/my_data">HOME></a>
-<a href="/my_data/data/">DATA PORTAL</a></p>
+<p align="center">You are here <a href="{{URL_PREFIX}}my_data">HOME></a>
+<a href="{{URL_PREFIX}}my_data/data/">DATA PORTAL</a></p>
 
 <div class="container">
     <div class="center-left">
         <h1>Data Categories</h1>
         <ul class="navbar">
-            <a href="/my_data/data/historic/" class="trigger">Historic Station Data (Acis)</a>
-            <a href="/my_data/data/modeled" class="trigger">Modeled/Gridded Data (Acis)</a>
+            <a href="{{URL_PREFIX}}my_data/data/historic/" class="trigger">Historic Station Data (Acis)</a>
+            <a href="{{URL_PREFIX}}my_data/data/modeled" class="trigger">Modeled/Gridded Data (Acis)</a>
         </ul>
     </div>
 
@@ -55,8 +55,8 @@
             <tr><td></td></tr>
             <!--First row of dashboard: image-->
             <tr>
-                <td><a href="/my_data/data/historic"><img class="dash_img" src="{{MEDIA_URL}}img/RAWSWeatherStation.png"></a></td>
-                <td><a href="/my_data/data/modeled"><img class="dash_img" src="{{MEDIA_URL}}img/SeaSurfTempGlobal.jpg"></a></td>
+                <td><a href="{{URL_PREFIX}}my_data/data/historic"><img class="dash_img" src="{{MEDIA_URL}}img/RAWSWeatherStation.png"></a></td>
+                <td><a href="{{URL_PREFIX}}my_data/data/modeled"><img class="dash_img" src="{{MEDIA_URL}}img/SeaSurfTempGlobal.jpg"></a></td>
                 <td></td>
                 <td></td>
             </tr>

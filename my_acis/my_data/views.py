@@ -15,9 +15,17 @@ import datetime
 import re
 from collections import defaultdict
 
+import sys
+print >> sys.stderr, "\nImporting modules..."
+
 #My modules
-import AcisWS, WRCCDataApps, WRCCClasses, WRCCUtils
+import WRCCUtils
+import AcisWS
+import WRCCDataApps
+import WRCCClasses
 import my_data.forms as forms
+
+print >> sys.stderr, "\nDone importing modules..."
 
 state_choices = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', \
                 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', \
@@ -31,8 +39,8 @@ long_el_name = {'pcpn':'Precipiation (in)', 'snow':'Snowfall (in)', \
                 'snwd':'Snow Depth (in)', 'gdd':'Growing Degree Days', \
                 'hdd':'Heading Degree Days', 'cdd': 'Cooling Degree Days'}
 
-static_url = '/Users/bdaudert/DRI/dj-projects/my_acis/static/'
-MEDIA_URL = '/Users/bdaudert/DRI/dj-projects/my_acis/media/'
+static_url = '/www-devel/apps/csc/dj-projects/my_acis/static/'
+MEDIA_URL = '/www-devel/apps/csc/dj-projects/my_acis/media/'
 
 month_names = ['January', 'February', 'March', 'April', 'May', 'June',\
                'July', 'August', 'September', 'October', 'November', 'December']

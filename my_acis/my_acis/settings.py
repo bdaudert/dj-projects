@@ -1,9 +1,16 @@
 # Django settings for my_acis project.
 import sys
-sys.path.insert(0,'/Users/bdaudert/DRI/my-python-lib/')
+import django.conf.global_settings as DEFAULT_SETTINGS
+
+URL_PREFIX = "/csc/"
+SRC_BASE = "/www-devel/apps/csc/dj-projects/"
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+    "my_acis.context_processors.url_prefix",
+)
 
 
 #URL_PREFIX = '/wwwapps/my_acis'
@@ -56,26 +63,28 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = '/Users/bdaudert/DRI/dj-projects/my_acis/media/'
+#MEDIA_ROOT = '/Users/bdaudert/DRI/dj-projects/my_acis/media/'
+MEDIA_ROOT = SRC_BASE + 'my_acis/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = '/media/'
+MEDIA_URL = '/csc/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = '/Users/bdaudert/DRI/dj-projects/my_acis/static/'
+STATIC_ROOT = SRC_BASE+'my_acis/static/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
+STATIC_URL = 'http://cyclone1.dri.edu/csc/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    '/Users/bdaudert/DRI/dj-projects/my_acis/media/',
+    SRC_BASE+'my_acis/media/',
+    #'/Users/bdaudert/DRI/dj-projects/my_acis/media/',
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -118,7 +127,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/Users/bdaudert/DRI/dj-projects/my_acis/templates'
+    #'/Users/bdaudert/DRI/dj-projects/my_acis/templates'
+    SRC_BASE+'my_acis/templates'
 )
 
 INSTALLED_APPS = (

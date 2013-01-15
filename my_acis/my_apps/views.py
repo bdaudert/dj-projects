@@ -18,7 +18,7 @@ import WRCCDataApps
 import my_apps.forms as forms
 
 #Prefix to location of executables
-prefix='/Users/bdaudert/DRI/AcisWS_WRCC_PythonScripts/'
+prefix='/www-devel/apps/csc/AcisWS_WRCC_PythonScripts/'
 
 def home_view(request):
     context = {

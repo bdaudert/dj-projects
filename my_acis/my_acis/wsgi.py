@@ -14,6 +14,19 @@ framework.
 
 """
 import os
+import sys
+
+# Add virtualenv
+import site
+site.addsitedir('/usr/local/pythonenv/csc/lib/python2.7/site-packages')
+
+# Calculate the path based on the location of the WSGI script.
+apache_configuration = os.path.dirname(__file__)
+project = os.path.dirname(apache_configuration)
+# Add directories to the PYTHONPATH
+sys.path.append(project)
+# Manually add in python library files. Could be a package later...
+sys.path.append("/www-devel/apps/csc/my-python-lib")
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "my_acis.settings")
 
@@ -26,3 +39,23 @@ application = get_wsgi_application()
 # Apply WSGI middleware here.
 # from helloworld.wsgi import HelloWorldApplication
 # application = HelloWorldApplication(application)
+
+#class Debugger:
+#    "From http://code.google.com/p/modwsgi/wiki/DebuggingTechniques"
+#    def __init__(self, object):
+#        self.__object = object
+#
+#    def __call__(self, *args, **kwargs):
+#        import pdb, sys
+#        debugger = pdb.Pdb()
+#        debugger.use_rawinput = 0
+#        debugger.reset()
+#        sys.settrace(debugger.trace_dispatch)
+#
+#        try:
+#            return self.__object(*args, **kwargs)
+#        finally:
+#            debugger.quitting = 1
+#            sys.settrace(None)
+
+#application = Debugger(application)

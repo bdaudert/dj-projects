@@ -5,10 +5,10 @@
 
 {% block content %}
 
-<p align="center">You are here <a href="/my_data">HOME></a>
-<a href="/my_data/apps/">TOOLS/PRODUCTS></a>
-<a href="/my_data/apps/climate/">Climate></a>
-<a href="/my_data/apps/climate/metagraph/">Station Metadata Graphs</a></p>
+<p align="center">You are here <a href="{{URL_PREFIX}}my_data">HOME></a>
+<a href="{{URL_PREFIX}}my_data/apps/">TOOLS/PRODUCTS></a>
+<a href="{{URL_PREFIX}}my_data/apps/climate/">Climate></a>
+<a href="{{URL_PREFIX}}my_data/apps/climate/metagraph/">Station Metadata Graphs</a></p>
 
 <div class="container">
     <div class="center-left">
@@ -38,7 +38,7 @@
                     <p> {{key}}: {{val}} </p>
                 {%endfor%}
             </div>
-            <a href="/my_data/data/historic/?stn_id={{station_meta.coop_id}}&start_date=por&end_date=por&elements=maxt,mint,pcpn,snow,snwd">
+            <a href="{{URL_PREFIX}}my_data/data/historic/?stn_id={{station_meta.coop_id}}&start_date=por&end_date=por&elements=maxt,mint,pcpn,snow,snwd">
             Get raw data behind these plots here!</a>
         {%endif%}
 
@@ -73,7 +73,7 @@
             <p><ul>
             <li>Station ID should be a 6 digit coop id.</li>
             <li>Don't know your coop station id? Find it here:</li>
-            <a href="/my_data/station_finder/">STATION FINDER</a>
+            <a href="{{URL_PREFIX}}my_data/station_finder/">STATION FINDER</a>
             <a href="http://www.nws.noaa.gov/om/coop/">More information on the COOP Network</a></ul>
             </p>
         </div>

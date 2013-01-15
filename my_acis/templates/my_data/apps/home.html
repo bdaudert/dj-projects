@@ -5,8 +5,8 @@
 
 {% block content %}
 
-<p align="center">You are here <a href="/my_data">HOME></a>
-<a href="/my_data/apps/">TOOLS/PRODUCTS</a></p>
+<p align="center">You are here <a href="{{URL_PREFIX}}my_data">HOME></a>
+<a href="{{URL_PREFIX}}my_data/apps/">TOOLS/PRODUCTS</a></p>
 
 
 <div class="container">
@@ -14,18 +14,18 @@
         <h1>Product Categories</h1>
         <ul class="navbar">
             {%if stn_id%}
-                <a href="/my_data/apps/climate/?stn_id={{stn_id}}" class="trigger">Climate Products</a>
+                <a href="csc/my_data/apps/climate/?stn_id={{stn_id}}" class="trigger">Climate Products</a>
                     <div class="pop-up" id="meta">
                         <p><font size="4">Time Series of Station data, monthly averages, anomaly maps ...</font></p>
                     </div>
             {%else%}
-                <a href="/my_data/apps/climate/?stn_id={{stn_id}}" class="trigger">Climate Products</a>
+                <a href="{{URL_PREFIX}}my_data/apps/climate/?stn_id={{stn_id}}" class="trigger">Climate Products</a>
                     <div class="pop-up" id="meta">
                         <p><font size="4">Time Series of Station data, monthly averages, anomaly maps</font></p>
                     </div>
             {%endif%}
-                <a href="/my_data/apps/hydro/" class="trigger">Hydrology Products</a>
-                <a href="/my_data/apps/eco/" class="trigger">Ecosystem Products</a>
+                <a href="{{URL_PREFIX}}my_data/apps/hydro/" class="trigger">Hydrology Products</a>
+                <a href="{{URL_PREFIX}}my_data/apps/eco/" class="trigger">Ecosystem Products</a>
         </ul>
     </div>
 

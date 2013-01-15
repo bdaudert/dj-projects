@@ -16,7 +16,7 @@
 <body style="background-color: #FFEBCD;">
 
 <div id="header"></div>
-    <script type="text/javascript">$("#header").load("{{MEDIA_URL}}html/csc_map_page_base.html .header");</script>
+    <script type="text/javascript">$("#header").load("{{STATIC_URL}}html/csc_map_page_base.html .header");</script>
 
 <div id="home_img"></div>
     <script type="text/javascript">$("#home_img").load("{{MEDIA_URL}}html/csc_map_page_base.html .home_img");</script>
@@ -29,13 +29,12 @@
 </div>
 
 <p class="greenish" align="center">You are here
-<a href="/my_data/start/">START PAGE</a>
+<a href="{{URL_PREFIX}}my_data/start/">START PAGE</a>
 
 <div class="container">
     
 
     <p class="error" align="center">To get started, choose one of the following:</p>
-
     <table class="dash" cellspacing="20px">
         <!--Headers-->
         <th><font size="5"><b>LAUNCH SW-CKN</b></th>
@@ -45,10 +44,10 @@
         <tr><td></td></tr>
         <!--First row of dashboard: image-->
         <tr>
-            <td><a href="/my_data/"><img class="dash_img" src="{{MEDIA_URL}}img/SW_CSC_HOME.png"></a></td>
-            <td><a href="/my_data/finder/"><img class="dash_img" src="{{MEDIA_URL}}img/Locator.jpg"></a></td>
-            <td><a href="/my_data/data/"><img class="dash_img" src="{{MEDIA_URL}}img/DataPortal.jpg"></a></td>
-            <td><a href="/my_data/apps/"><img class="dash_img" src="{{MEDIA_URL}}img/Application.png"></a></td>
+            <td><a href="/csc/my_data/"><img class="dash_img" src="{{MEDIA_URL}}img/SW_CSC_HOME.png"></a></td>
+            <td><a href="{{URL_PREFIX}}my_data/finder/"><img class="dash_img" src="{{MEDIA_URL}}img/Locator.jpg"></a></td>
+            <td><a href="{{URL_PREFIX}}my_data/data/"><img class="dash_img" src="{{MEDIA_URL}}img/DataPortal.jpg"></a></td>
+            <td><a href="{{URL_PREFIX}}my_data/apps/"><img class="dash_img" src="{{MEDIA_URL}}img/Application.png"></a></td>
         </tr>
         <!--Second+ rows: list of content-->
         <tr>
