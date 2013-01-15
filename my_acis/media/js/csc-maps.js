@@ -1,7 +1,15 @@
+<<<<<<< HEAD
 
 function initialize_grid_point_map() {
     var URL_PREFIX = document.getElementById("URL_PREFIX").value;
     var MEDIA_URL = document.getElementById("MEDIA_URL").value;
+=======
+var MEDIA_URL = document.getElementById("MEDIA_URL").value;
+
+
+
+function initialize_grid_point_map() {
+>>>>>>> d34ecd0e1b67213a9a9c905bca405ce39e8b527c
     var map;
     var center_lat = document.getElementById("center_lat").value;
     var center_lon = document.getElementById("center_lon").value;
@@ -30,7 +38,11 @@ function initialize_grid_point_map() {
         var contentString = '<div id="MarkerWindow">'+
             '<p><b>Lat: </b>' + event.latLng.lat() + '<br/>'+
             '<b>Lon: </b>' + event.latLng.lng() + '<br/>' +
+<<<<<<< HEAD
             '<a href="' + URL_PREFIX + '/csc/my_data/apps/climate/grid_point_time_series/?lat=' + 
+=======
+            '<a href="/my_data/apps/climate/grid_point_time_series/?lat=' + 
+>>>>>>> d34ecd0e1b67213a9a9c905bca405ce39e8b527c
             event.latLng.lat() + '&lon=' + event.latLng.lng() + 
             '">Use this location</a></div>';
         infowindow.setContent(contentString);
@@ -43,7 +55,11 @@ function initialize_grid_point_map() {
 
 
 function initialize_station_finder() {
+<<<<<<< HEAD
     var URL_PREFIX = document.getElementById("URL_PREFIX").value;
+=======
+
+>>>>>>> d34ecd0e1b67213a9a9c905bca405ce39e8b527c
     var MEDIA_URL = document.getElementById("MEDIA_URL").value;
     var json_file = document.getElementById("json_file").value;
     $.getJSON(MEDIA_URL + 'json/' + json_file, function(data) {
@@ -84,9 +100,15 @@ function initialize_station_finder() {
                 '<b>SIDS: </b>' + c.sids + '<br/>' +
                 '<b>Elevation: </b>' + c.elevation + '<br/>' +
                 '</p>' +
+<<<<<<< HEAD
                 '<a href="' + URL_PREFIX + 'my_data/data/historic/?stn_id=' + c.sids[0] + 
                 '">Get Data for this Station</a> <br/>'+
                 '<a href="' + URL_PREFIX + '/csc/my_data/apps/climate/?stn_id=' + c.sids[0] + 
+=======
+                '<a href="/my_data/data/historic/?stn_id=' + c.sids[0] + 
+                '">Get Data for this Station</a> <br/>'+
+                '<a href="/my_data/apps/climate/?stn_id=' + c.sids[0] + 
+>>>>>>> d34ecd0e1b67213a9a9c905bca405ce39e8b527c
                 '">Run a climate application for this Station</a>'+ 
                 '</div>';
                 infowindow.setContent(contentString);
@@ -100,7 +122,11 @@ function initialize_station_finder() {
 }//close initialize_station_finder
 
 function initialize_info_map(node) {
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> d34ecd0e1b67213a9a9c905bca405ce39e8b527c
     var MEDIA_URL = document.getElementById("MEDIA_URL").value;
     var json_file = document.getElementById("json_file").value;
     var marker_type = node.id
@@ -215,3 +241,8 @@ function load_script() {
   //document.body.appendChild(script)
   //document.getElementById("map_js").appendChild(script)
 }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> d34ecd0e1b67213a9a9c905bca405ce39e8b527c

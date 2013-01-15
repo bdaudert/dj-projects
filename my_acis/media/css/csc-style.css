@@ -155,18 +155,18 @@ div.pop-up {
 /*2 page divide e.g. my_data/data/home.html*/
 .center-left {
     float: left;
-    margin 0px auto;
+    margin 0px 0px;
     width: 25%;
-    padding: 0px 0px 15px 20px;
+    padding: 0px 0px 10px 10px;
     height 100%;
     z-index:3;
 }
 
 .center-right{
     float: right;
-    margin  0px 15px;
+    margin  0px 0px;
     width: 25%;
-    padding: 0px 10px 15px 20px;
+    padding: 0px 0px 10px 0px;
     height: 100%;
 }
 

@@ -75,6 +75,7 @@ def home_view(request):
     context['month_name'] = month_names[month - 1]
     context['state'] = state
     context['element'] = element
+    context['json_file'] = 'CSC_Info.json'
     return render_to_response('my_data/home.html', context, context_instance=RequestContext(request))
 
 def about_us(request):

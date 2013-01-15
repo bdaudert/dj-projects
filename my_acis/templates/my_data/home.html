@@ -22,6 +22,8 @@
 
     <div class="center-right">
         <h2>Current Weather in West</h2>
+        <br />
+        <br />
         <a href="http://www.wrh.noaa.gov/index.php" target="_blank">
         <img src="{{ MEDIA_URL }}img/Weather.jpg" width="250" height="200"><br />NWS Western Regional Headquarters</a>
         <br />
@@ -32,20 +34,43 @@
 
 
     <div class="center">
+    <!--
         <p class="error">Zoom in on an area of interest or</p> 
         <p class="error">Draw a polyon by clicking on map points!</p>
         <div id="side">
             <input id="reset" value="Reset" type="button" class="navi"/>
             <input id="showData"  value="Show Paths (class function) " type="button" class="navi"/>
-            <!--<input id="showColor"  value="Show Color (class function) " type="button" class="navi"/>-->
+            <input id="showColor"  value="Show Color (class function) " type="button" class="navi"/>
             <div   id="dataPanel"></div>
         </div>
+    -->
+        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+        <input type="hidden" id="json_file" name="variable" value="{{ json_file }}">
 
-        <div id="map" style="width: 80%; height:600px;"></div> 
-        <script type="text/javascript">
-            initialize_finder_map()
-        </script>
+        
+        <img class="icon_small" src="{{MEDIA_URL}}img/HostIcon.png">
+        <input onclick="initialize_info_map(this);" type=button id="host" value="Show Hosts">
 
+        <img class="icon_small" src="{{MEDIA_URL}}img/PartnerIcon.jpg">
+        <input onclick="initialize_info_map(this);" type=button id="partner" value="Show Partners">
+
+        <img class="icon_small" src="{{MEDIA_URL}}img/ProjectIcon.jpg">
+        <input onclick="initialize_info_map(this);" type=button id="project" value="Show Projects">
+
+        <img class="icon_small" src="{{MEDIA_URL}}img/MiscIcon.jpg">
+        <input onclick="initialize_info_map(this);" type=button id="misc" value="Miscellaneous">
+
+        <input onclick="initialize_info_map(this);" type=button id="all" value="Show All" checked>
+        <!--<label for="Show Everything">Show All</label>-->
+        <input onclick="initialize_info_map(this);" type=button id="nothing" value="Reset">
+        <br />
+        <br />
+
+                    
+        <div id="map" style="width: 80%; height:600px;"></div>
+        <div id="all"><script type="text/javascript">
+            initialize_info_map(this)
+        </script></div>
     <!--
         <h1>Try our puzzle!</h1>
         <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
@@ -64,7 +89,7 @@
 
         <div id="messageDiv"></div>
         <p><i>Shuffle, then click to move the pieces</i></p>
-        -->
+    -->
     </div>
 
 </div> <!--end container-->
