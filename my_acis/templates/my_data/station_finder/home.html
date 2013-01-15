@@ -6,8 +6,8 @@
 {% block content %}
 
 <div class="container">
-    <p align="center">You are here <a href="{{URL_PREFIX}}my_data">HOME></a>
-    <a href="{{URL_PREFIX}}my_data/station_finder/">STATION FINDER</a></p>
+    <p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn">HOME></a>
+    <a href="{{URL_PREFIX}}sw_ckn/station_finder/">STATION FINDER</a></p>
     <br />
     <br />
     <br />
@@ -18,7 +18,7 @@
 
         <p class="greenish" onClick="ShowHide('myImage')"><u>Search by ID</u></p>
         <img src="{{MEDIA_URL}}img/Acis_Stn_Id_Type.png" id="myImage" border="0" width="275" height="250" style="display:none;" />
-        <form method="get" action="{{URL_PREFIX}}my_data/station_finder/by_id/">
+        <form method="get" action="{{URL_PREFIX}}sw_ckn/station_finder/by_id/">
             <input type="text" name="q" />
             <input type="submit" value="Submit"/>
         </form>
@@ -26,7 +26,7 @@
 
         <p class="greenish"  onClick="ShowHide('myImage2')"><u>Search by County</u></p>
         <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage2" width="275" height="250" border="0" style="display:none;" />
-        <form method="get" action="{{URL_PREFIX}}my_data/station_finder/by_county/">
+        <form method="get" action="{{URL_PREFIX}}sw_ckn/station_finder/by_county/">
             <input type="text" name="q" />
             <input type="submit" value="Submit" />
         </form>
@@ -35,7 +35,7 @@
 
         <p class="greenish" onClick="ShowHide('myImage3')"><u>Search by County Warning Area (CWA)</u></p>
         <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage3" width="275" height="250" border="0" style="display:none;" />
-        <form method="get" action="{{URL_PREFIX}}my_data/station_finder/by_cwa/">
+        <form method="get" action="{{URL_PREFIX}}sw_ckn/station_finder/by_cwa/">
             <input type="text" name="q" />
             <input type="submit" value="Submit" />
         </form>
@@ -43,7 +43,7 @@
 
         <p class="greenish" onClick="ShowHide('myImage4')"><u>Search by Climate Division</u></p>
         <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage4" width="275" height="250" border="0" style="display:none;" />
-        <form method="get" action="{{URL_PREFIX}}my_data/station_finder/by_clim_div/">
+        <form method="get" action="{{URL_PREFIX}}sw_ckn/station_finder/by_clim_div/">
             <input type="text" name="q" />
             <input type="submit" value="Submit" />
         </form>
@@ -51,14 +51,14 @@
 
         <p  class="greenish" onClick="ShowHide('myImage5')"><u>Search by Basin</u></p>
         <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage5" width="275" height="250" border="0" style="display:none;" />
-        <form method="get" action="{{URL_PREFIX}}my_data/station_finder/by_basin/">
+        <form method="get" action="{{URL_PREFIX}}sw_ckn/station_finder/by_basin/">
             <input type="text" name="q" />
             <input type="submit" value="Submit" />
         </form>
         <a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a>
 
         <p class="greenish">Search by State</p>
-        <form method="get" action="{{URL_PREFIX}}my_data/station_finder/by_state/">
+        <form method="get" action="{{URL_PREFIX}}sw_ckn/station_finder/by_state/">
             <select name="state_key">
                 {% for state in state_choices %}
                 <option value="{{state}}">{{state}}</option>
@@ -69,7 +69,7 @@
 
         <p class="greenish" onClick="ShowHide('myImage6')"><u>Search by Bounding Box</u></p>
         <img class="hover_img" src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="myImage6" width="275" height="250" border="0" style="display:none;" />
-        <form method="get" action="{{URL_PREFIX}}my_data/station_finder/by_bounding_box/">
+        <form method="get" action="{{URL_PREFIX}}sw_ckn/station_finder/by_bounding_box/">
             <p class="greenish">
                 West:<input type="text" name="W" size="8" />
                 South:<input type="text" name="S" size="8" /></br>

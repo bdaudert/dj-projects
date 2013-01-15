@@ -5,9 +5,9 @@
 
 {% block content %} 
 
-<p align="center">You are here <a href="{{URL_PREFIX}}my_data">HOME></a>
-<a href="{{URL_PREFIX}}my_data/data/">DATA PORTAL></a>
-<a href="{{URL_PREFIX}}my_data/data/historic/">Historic Station Data</a></p>
+<p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn">HOME></a>
+<a href="{{URL_PREFIX}}sw_ckn/data/">DATA PORTAL></a>
+<a href="{{URL_PREFIX}}sw_ckn/data/historic/">Historic Station Data</a></p>
 
 <div class="container">
     <div class="center-left">
@@ -91,7 +91,7 @@
             <li>Depending on your choice of Station Selection, you now choose the stations to be included.</li>
                 <ul>
                     <li>Station Selection = "Individual Station". Enter the Station Id of choice. If you don't know your station id, find it here:</li>
-                    <a href="{{URL_PREFIX}}my_data/station_finder">Station Finder</a>
+                    <a href="{{URL_PREFIX}}sw_ckn/station_finder">Station Finder</a>
                     or here:
                     <a class="docu_long"target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">More on station Ids</a>
                     <li>Station Selection = "Comma separated list of stations". Enter multiple station ids, separated by a comma.</li>
@@ -117,12 +117,12 @@
         <br />
         {%if not json%}
             {%for stn, stn_data in point_data.items %}
-                <h2>STATION NAME: {{station_names.stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
+                <h2>STATION NAME: {{station_names.stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids.stn|safe}}</h2>
                 <table>
                 <th>date{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</th>
                 {%for date_vals in stn_data%}
                     <tr>
-                    <td>{{dates|lookup:forloop.counter|safe}}{{delimiter}}
+                    <td>{{dates.forloop.counter|safe}}{{delimiter}}
                     {%for el_val in date_vals%}{{el_val}}{{delimiter}}{%endfor%}</td>
                     </tr>
                 {%endfor%}
@@ -130,7 +130,7 @@
             {%endfor%}
         {%else%}
             {%for stn, stn_data in point_data.items %}
-                <h2>STATION NAME: {{station_names.stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
+                <h2>STATION NAME: {{station_names.stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids.stn|safe}}</h2>
             {{point_data}}
             {%endfor%}
         {%endif%}

@@ -29,11 +29,11 @@
 {% for tbl_name, form in tables.items %}
     
 
-    {% if errors|lookup:tbl_name %}
+    {% if errors.tbl_name %}
         <span style="color:red">
         <p>The following errors were found:</p>
            <li>In {{ tbl_name }}:</li>
-              <ul><li>{{ errors|lookup:tbl_name|safe }}</li></ul>          
+              <ul><li>{{ errors.tbl_name|safe }}</li></ul>          
          </span>
         {% endif %}
 
@@ -41,7 +41,7 @@
 
             <div align="right" id='{{ tbl_name }}' style='display:none'>
                 <form method="post" action="">{% csrf_token %}
-                    <table style="width:50%; height:100%; background-color:yellow" class="sortable">{{ tables|lookup:tbl_name|safe }}</table>
+                    <table style="width:50%; height:100%; background-color:yellow" class="sortable">{{ tables.tbl_name|safe }}</table>
                     <input type="submit" value="Edit" name="{{tbl_name}}"/>
                 </form>
             </div>

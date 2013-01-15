@@ -5,10 +5,10 @@
 
 {% block content %}
 
-<p align="center">You are here <a href="{{URL_PREFIX}}my_data">HOME></a>
-<a href="{{URL_PREFIX}}my_data/apps/">TOOLS/PRODUCTS></a>
-<a href="{{URL_PREFIX}}my_data/apps/climate/">Climate></a>
-<a href="{{URL_PREFIX}}my_data/apps/climate/monthly_aves/">Monthly Averages</a></p>
+<p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn">HOME></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS/PRODUCTS></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/climate/">Climate></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/climate/monthly_aves/">Monthly Averages</a></p>
 
 <div class="container">
     <div class="center-left">
@@ -44,7 +44,7 @@
         {%if results%}
             <p class="warning" onClick="ShowHide('averaged_data')"><u>Click here for averaged data behind this graphic</u></p>
             <div id="averaged_data" width="450" height="450" border="0" style="display:none;">{{averaged_data}}</div>
-            <a href="{{URL_PREFIX}}my_data/data/historic/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}">Get raw data behind this graphic here!</a>
+            <a href="{{URL_PREFIX}}sw_ckn/data/historic/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}">Get raw data behind this graphic here!</a>
         {%endif%}
     </div>
 
@@ -78,7 +78,7 @@
         <div id="how_to" style="display:none;">
             <p><ul>
             <li>Don't know your station id? Find it here:</li>
-            <a href="{{URL_PREFIX}}my_data/station_finder/">STATION FINDER</a>
+            <a href="{{URL_PREFIX}}sw_ckn/station_finder/">STATION FINDER</a>
             <li>Elements should be given as a comma separated list. Element Choices:
             <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" 
             width="450" height="450" border="0"/></li>

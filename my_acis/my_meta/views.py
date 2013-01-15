@@ -145,7 +145,7 @@ def sub_tables(request, tbl_name, tbl_id):
         tbl_name_idxed = "%s_%d" % ( tbl_name, int(tbl_id))
         context['primary_table_name'] = tbl_name_idxed
         obj = primary_tables[tbl_name]
-        primary_inst = obj.objects.filter(ucan_station_id=ucan_id)[int(tbl_id)]
+        primary_inst = obj.objects.filter(ucan_station_id=ucan_id)[int(tbl_id) - 1]
         form = set_as_form(request, tbl_name, q=primary_inst, ucan_station_id=ucan_id)
         primary_table = form
         context['primary_table'] = primary_table

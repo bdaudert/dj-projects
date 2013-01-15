@@ -1,15 +1,7 @@
-<<<<<<< HEAD
-
-function initialize_grid_point_map() {
-    var URL_PREFIX = document.getElementById("URL_PREFIX").value;
-    var MEDIA_URL = document.getElementById("MEDIA_URL").value;
-=======
 var MEDIA_URL = document.getElementById("MEDIA_URL").value;
-
-
+var base_dir = '/csc/sw_ckn/'
 
 function initialize_grid_point_map() {
->>>>>>> d34ecd0e1b67213a9a9c905bca405ce39e8b527c
     var map;
     var center_lat = document.getElementById("center_lat").value;
     var center_lon = document.getElementById("center_lon").value;
@@ -25,10 +17,10 @@ function initialize_grid_point_map() {
     infowindow = new google.maps.InfoWindow({
         content: 'oi'
     });
-    
+
     var marker = new google.maps.Marker({
         draggable: true,
-        position: myLatlng, 
+        position: myLatlng,
         map: map,
         title: "Your location"
     });
@@ -38,12 +30,8 @@ function initialize_grid_point_map() {
         var contentString = '<div id="MarkerWindow">'+
             '<p><b>Lat: </b>' + event.latLng.lat() + '<br/>'+
             '<b>Lon: </b>' + event.latLng.lng() + '<br/>' +
-<<<<<<< HEAD
-            '<a href="' + URL_PREFIX + '/csc/my_data/apps/climate/grid_point_time_series/?lat=' + 
-=======
-            '<a href="/my_data/apps/climate/grid_point_time_series/?lat=' + 
->>>>>>> d34ecd0e1b67213a9a9c905bca405ce39e8b527c
-            event.latLng.lat() + '&lon=' + event.latLng.lng() + 
+            '<a href="'+ base_dir +'apps/climate/grid_point_time_series/?lat=' +
+            event.latLng.lat() + '&lon=' + event.latLng.lng() +
             '">Use this location</a></div>';
         infowindow.setContent(contentString);
         infowindow.open(map, marker);
@@ -51,15 +39,10 @@ function initialize_grid_point_map() {
         document.getElementById("lonbox").value = event.latLng.lng();
         myLatlng = google.maps.LatLng(event.latLng.lat(),event.latLng.lng());
     });
-}//close initialize_grid_point_map 
-
+}//close initialize_grid_point_map
 
 function initialize_station_finder() {
-<<<<<<< HEAD
-    var URL_PREFIX = document.getElementById("URL_PREFIX").value;
-=======
 
->>>>>>> d34ecd0e1b67213a9a9c905bca405ce39e8b527c
     var MEDIA_URL = document.getElementById("MEDIA_URL").value;
     var json_file = document.getElementById("json_file").value;
     $.getJSON(MEDIA_URL + 'json/' + json_file, function(data) {
@@ -100,37 +83,27 @@ function initialize_station_finder() {
                 '<b>SIDS: </b>' + c.sids + '<br/>' +
                 '<b>Elevation: </b>' + c.elevation + '<br/>' +
                 '</p>' +
-<<<<<<< HEAD
-                '<a href="' + URL_PREFIX + 'my_data/data/historic/?stn_id=' + c.sids[0] + 
+                '<a href="' + base_dir + 'data/historic/?stn_id=' + c.sids[0] +
                 '">Get Data for this Station</a> <br/>'+
-                '<a href="' + URL_PREFIX + '/csc/my_data/apps/climate/?stn_id=' + c.sids[0] + 
-=======
-                '<a href="/my_data/data/historic/?stn_id=' + c.sids[0] + 
-                '">Get Data for this Station</a> <br/>'+
-                '<a href="/my_data/apps/climate/?stn_id=' + c.sids[0] + 
->>>>>>> d34ecd0e1b67213a9a9c905bca405ce39e8b527c
-                '">Run a climate application for this Station</a>'+ 
+                '<a href="' + base_dir + 'apps/climate/?stn_id=' + c.sids[0] +
+                '">Run a climate application for this Station</a>'+
                 '</div>';
                 infowindow.setContent(contentString);
                 infowindow.open(map, marker);
                 });
         });//close each
-    
+
         var markerCluster = new MarkerClusterer(map, markers);
         map.fitBounds(bounds);
     });//close getjson
 }//close initialize_station_finder
 
 function initialize_info_map(node) {
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> d34ecd0e1b67213a9a9c905bca405ce39e8b527c
     var MEDIA_URL = document.getElementById("MEDIA_URL").value;
     var json_file = document.getElementById("json_file").value;
     var marker_type = node.id
-    
+
     $.getJSON(MEDIA_URL + 'json/' + json_file, function(data) {
         //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
         var ll = new google.maps.LatLng(37.0, -114.05);
@@ -169,7 +142,6 @@ function initialize_info_map(node) {
                 bounds.extend(latlon);
             };//endif
 
-            
             google.maps.event.addListener(marker, 'click', function() {
                 infowindow.close();
                 var contentString = '<div id="MarkerWindow">'+
@@ -203,16 +175,16 @@ function initialize_polygon_map() {
      var creator = new PolygonCreator(map);
 
      //reset
-     $('#reset').click(function(){ 
+     $('#reset').click(function(){
             creator.destroy();
             creator=null;
 
             creator=new PolygonCreator(map);
-     });         
+     });
 
 
      //show paths
-     $('#showData').click(function(){ 
+     $('#showData').click(function(){
             $('#dataPanel').empty();
             if(null==creator.showData()){
                 $('#dataPanel').append('Please first create a polygon');
@@ -222,7 +194,7 @@ function initialize_polygon_map() {
      });
 
      //show color
-     $('#showColor').click(function(){ 
+     $('#showColor').click(function(){
             $('#dataPanel').empty();
             if(null==creator.showData()){
                 $('#dataPanel').append('Please first create a polygon');
@@ -241,8 +213,3 @@ function load_script() {
   //document.body.appendChild(script)
   //document.getElementById("map_js").appendChild(script)
 }
-<<<<<<< HEAD
-=======
-
-
->>>>>>> d34ecd0e1b67213a9a9c905bca405ce39e8b527c

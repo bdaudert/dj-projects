@@ -4,9 +4,13 @@
 #  Graphs for 5 elements.  Max. and Min temp., Precip., Snowfall and snowdepth
 #  for WWW
 
+
 use CGI;
 use GD;
 use Time::localtime;
+
+$executable = "/www-devel/apps/csc/AcisWS_WRCC_PythonScripts/ws_meta_lister.py";
+$img_dir = "/www-devel/apps/csc/dj-projects/my_acis/media/tmp";
 
 $numargs = @ARGV;
 # Is control file given as an argument
@@ -144,7 +148,7 @@ $state = substr($stnid, 0, 2);
        $state = "ws";
     }
 
-   $filename = "python /Users/bdaudert/DRI/AcisWS_WRCC_PythonScripts/ws_meta_lister.py -c $stnid -s $sdate -f $edate";
+   $filename = "python $executable -c $stnid -s $sdate -f $edate";
    open(SOD, "$filename|") || die ("Can't retrieve data.\n");
    print "$filename \n";
   #load data
@@ -214,7 +218,7 @@ for ($year=1870; $year<=2013; $year++) {
 # print the image
 #print "Content-type: image/gif\n\n";
 #print $im->gif;
-$dir_path = "/Users/bdaudert/DRI/dj-projects/my_acis/media/tmp/";
+$dir_path = $img_dir;
 
 $gif_data = $im->gif;
 open (GIFFILE,">" . $dir_path . $time_stamp ."metagraph_tmax.gif") || die ("Can't open " . $time_stamp . "metagraph_tmax.gif");

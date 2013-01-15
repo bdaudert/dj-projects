@@ -5,10 +5,10 @@
 
 {% block content %}
 
-<p align="center">You are here <a href="{{URL_PREFIX}}my_data">HOME></a>
-<a href="{{URL_PREFIX}}my_data/apps/">TOOLS/PRODUCTS></a>
-<a href="{{URL_PREFIX}}my_data/apps/climate/">Climate></a>
-<a href="{{URL_PREFIX}}my_data/apps/climate/grid_point_time_series/">Grid Point Time Series</a></p>
+<p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn">HOME></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS/PRODUCTS></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/climate/">Climate></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/climate/grid_point_time_series/">Grid Point Time Series</a></p>
 
 <div class="container">
     <div class="center-left">
@@ -86,7 +86,7 @@
         {%else%}
           {%if datadict%}
 
-            <a href="{{URL_PREFIX}}my_data/data/modeled/?grid_selection={{grid_selection}}&start_date={{s_date}}&e_date={{end_date}}&elements={{elems}}&grid={{grid}}">Get raw data  behind this graphic here!</a>
+            <a href="{{URL_PREFIX}}sw_ckn/data/modeled/?grid_selection={{grid_selection}}&start_date={{s_date}}&e_date={{end_date}}&elements={{elems}}&grid={{grid}}">Get raw data  behind this graphic here!</a>
             <br />
 
             <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{MEDIA_URL}}tmp/">

@@ -23,7 +23,7 @@
     <h2>{{stations.count}} results</h2>
     <ul>
     {% for s in stations %}
-	<li><a href="{{URL_PREFIX}}my_meta/station_detail/?ucan_id={{s.ucan_station_id}}">{{s}}</a></li>
+	<li><a href="{{URL_PREFIX}}wrcc_meta/station_detail/?ucan_id={{s.ucan_station_id}}">{{s}}</a></li>
     {% endfor %}
     </ul>
 {% endif %}
