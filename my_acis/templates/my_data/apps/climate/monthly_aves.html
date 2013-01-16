@@ -31,23 +31,6 @@
         <br />
     </div>
 
-    <div class="center-right">
-        {%if meta%}
-            <p class="warning" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
-            <div id="metadata" style="display:none;">
-                {% for key, val in meta.items %}
-                    <p> {{key}}: {{val}} </p>
-                {%endfor%}
-            </div>
-        {%endif%}
-
-        {%if results%}
-            <p class="warning" onClick="ShowHide('averaged_data')"><u>Click here for averaged data behind this graphic</u></p>
-            <div id="averaged_data" width="450" height="450" border="0" style="display:none;">{{averaged_data}}</div>
-            <a href="{{URL_PREFIX}}sw_ckn/data/historic/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}">Get raw data behind this graphic here!</a>
-        {%endif%}
-    </div>
-
     <div class="center">
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
@@ -105,6 +88,23 @@
 
         {%if error%}
             <p class="error">{{error}}</p>
+        {%endif%}
+    </div>
+
+    <div class="center-right">
+        {%if meta%}
+            <p class="warning" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
+            <div id="metadata" style="display:none;">
+                {% for key, val in meta.items %}
+                    <p> {{key}}: {{val}} </p>
+                {%endfor%}
+            </div>
+        {%endif%}
+
+        {%if results%}
+            <p class="warning" onClick="ShowHide('averaged_data')"><u>Click here for averaged data behind this graphic</u></p>
+            <div id="averaged_data" width="450" height="450" border="0" style="display:none;">{{averaged_data}}</div>
+            <a href="{{URL_PREFIX}}sw_ckn/data/historic/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}">Get raw data behind this graphic here!</a>
         {%endif%}
     </div>
 </div>

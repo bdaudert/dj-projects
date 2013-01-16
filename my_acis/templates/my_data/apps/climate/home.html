@@ -37,20 +37,6 @@
             </ul>
         </div>
 
-        <div class="center-right">
-            <h1>Gridded Data Applications</h1>
-            <ul class="navbar">
-                <a href="{{URL_PREFIX}}sw_ckn/apps/climate/clim_sum_maps/" class="trigger">Climate Summary Maps</a>
-                <div class="pop-up" id="meta">
-                    <p><font size="4">Generates climate summary maps for different elements, time ranges and regions</font></p>
-                </div>
-                <a href="{{URL_PREFIX}}sw_ckn/apps/climate/grid_point_time_series/" class="trigger">Grid Point Time Series</a>
-                <div class="pop-up" id="meta">
-                    <p><font size="4">Generates time series data and graph for a chosen grid point and time range</font></p>
-                </div> 
-            </ul>
-        </div>
-
         <div class="center">
             <h1>Means for {{state}} since 1900</h1>
             <form method="get" action="">
@@ -78,10 +64,24 @@
             <input type="hidden" id="month" name="month" value="{{ month }}">
             <input type="hidden" id="month_name" name="month_name" value="{{ month_name }}">
             <input type="hidden" id="element" name="element" value="{{ element }}">
-            
+
             <div id="hc-graph-state-aves" style="width: 600px; height: 500px;"></div>
             <script type="text/javascript" src="{{ MEDIA_URL }}js/highchart-state-aves.js"></script>
-        </div>    
+        </div>
+
+        <div class="center-right">
+            <h1>Gridded Data Applications</h1>
+            <ul class="navbar">
+                <a href="{{URL_PREFIX}}sw_ckn/apps/climate/clim_sum_maps/" class="trigger">Climate Summary Maps</a>
+                <div class="pop-up" id="meta">
+                    <p><font size="4">Generates climate summary maps for different elements, time ranges and regions</font></p>
+                </div>
+                <a href="{{URL_PREFIX}}sw_ckn/apps/climate/grid_point_time_series/" class="trigger">Grid Point Time Series</a>
+                <div class="pop-up" id="meta">
+                    <p><font size="4">Generates time series data and graph for a chosen grid point and time range</font></p>
+                </div> 
+            </ul>
+        </div>
 
     </div>
 {%endblock%}

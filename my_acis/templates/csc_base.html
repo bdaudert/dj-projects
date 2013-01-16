@@ -8,6 +8,7 @@
     {{ title|escape }}
     {% if title %} ] {% endif %}
     </title>
+    {%load my_filters%}
     <meta name="keywords" content="climate,climate change,Southwest US,Soutwest CSC,Climate Science Center, Climate Knowledge Network">
     <meta name="description" content="Southwest Climate Knowledge Network">
     <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
@@ -52,7 +53,6 @@
         });
     </script>
 
-    {% load my_filters %}
     {% block extrahead %}{% endblock %}
     {% block extrastyle %}{% endblock %}
 
@@ -93,11 +93,11 @@
     <ul>
         <li><a href="/csc/sw_ckn/who_we_are/">Who we are</a></li>
         <li><a href="/csc/sw_ckn/what_we_do/">What we do</a></li>
+        <li><a href="/csc/sw_ckn/contact_us/">Contact Us</a></li>
         <li><a href="/csc/sw_ckn/focus_areas/">Focus Areas</a></li>
         <li><a href="/csc/sw_ckn/projects/">Projects</a></li>
         <li><a href="/csc/sw_ckn/publications/">Publications</a></li>
         <li><a href="/csc/sw_ckn/news_events_announcements/">News/Events</a></li>
-        <li><a href="/csc/sw_ckn/contact_us/">Contact Us</a></li>
     </ul></li>
     <li><a href="/csc/sw_ckn/finder/">FINDER TOOL</a>
     <li><a href="/csc/sw_ckn/station_finder/">STATION FINDER</a>

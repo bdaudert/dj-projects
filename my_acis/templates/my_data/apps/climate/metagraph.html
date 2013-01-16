@@ -30,20 +30,6 @@
 
     </div>
 
-    <div class="center-right">
-        {%if station_meta%}
-            <p class="warning" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
-            <div id="metadata" style="display:none;">
-                {% for key, val in station_meta.items %}
-                    <p> {{key}}: {{val}} </p>
-                {%endfor%}
-            </div>
-            <a href="{{URL_PREFIX}}sw_ckn/data/historic/?stn_id={{station_meta.coop_id}}&start_date=por&end_date=por&elements=maxt,mint,pcpn,snow,snwd">
-            Get raw data behind these plots here!</a>
-        {%endif%}
-
-    </div>
-    
     <div class="center">
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
@@ -95,5 +81,18 @@
         {%endif%} 
     </div>
 
+    <div class="center-right">
+        {%if station_meta%}
+            <p class="warning" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
+            <div id="metadata" style="display:none;">
+                {% for key, val in station_meta.items %}
+                    <p> {{key}}: {{val}} </p>
+                {%endfor%}
+            </div>
+            <a href="{{URL_PREFIX}}sw_ckn/data/historic/?stn_id={{station_meta.coop_id}}&start_date=por&end_date=por&elements=maxt,mint,pcpn,snow,snwd">
+            Get raw data behind these plots here!</a>
+        {%endif%}
+
+    </div>
 </div>
 {%endblock%}
