@@ -76,6 +76,7 @@
         
         {%if results%}
             <h2>Plots of Monthly Averages</h2>
+            <p class="error">Data values of 10k indicate missing data for the entire month.</p>
             <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">
             <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
             <!-- One container per element -->

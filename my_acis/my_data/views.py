@@ -504,9 +504,9 @@ def monthly_aves(request):
             #req = WRCCClasses.DataJob('StnData', params).make_data_call()
             req = AcisWS.StnData(params)
             if not req:
-                content['error']= 'Bad Data request for parameters: %s' %str(form_graphs.cleaned_data)
+                context['error']= 'Bad Data request for parameters: %s' %str(params)
             elif 'data' not in req.keys() or 'meta' not in req.keys():
-                context['error']= 'Bad Data request for parameters: %s' %str(form_graphs.cleaned_data)
+                context['error']= 'Bad Data request for parameters: %s' %str(params)
             else:
                 context['raw_data'] = req['data']
 

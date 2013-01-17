@@ -104,9 +104,13 @@
                 <th><font size="5"><b>Bar Charts</b></th>
                 <!--First row of dashboard: image-->
                 <tr>
-                    <td><img class="dash_img" src="{{MEDIA_URL}}img/WestMap.png"></td>
-                    <td><img class="dash_img" src="{{MEDIA_URL}}img/GPTimeSeries.png"></td>
-                    <td><img class="dash_img" src="{{MEDIA_URL}}img/MonAves.png"></td>
+                    <td><a href="http://www.cefa.dri.edu/Westmap/"><img class="dash_img" src="{{MEDIA_URL}}img/WestMap.png"></a></td>
+                    <td><a href="{{URL_PREFIX}}sw_ckn/apps/climate/grid_point_time_series/"><img class="dash_img" src="{{MEDIA_URL}}img/GPTimeSeries.png"></a></td>
+                    {%if stn_id%}
+                    <td><a href="{{URL_PREFIX}}sw_ckn/apps/climate/monthly_aves/?stn_id={{stn_id}}"><img class="dash_img" src="{{MEDIA_URL}}img/MonAves.png"></a></td>
+                    {%else%}
+                    <td><a href="{{URL_PREFIX}}sw_ckn/apps/climate/monthly_aves/"><img class="dash_img" src="{{MEDIA_URL}}img/MonAves.png"></a></td>
+                    {%endif%}
                 </tr>
                 <!--Second row: Tool that produces img-->
                 <tr>

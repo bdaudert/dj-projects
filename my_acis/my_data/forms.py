@@ -245,7 +245,7 @@ class PointDataForm1(forms.Form):
             self.fields['station_id'] = forms.CharField(initial=stn_id, help_text='Station id recognized by Acis. See "How to use this tool" for more info.')
             self.fields['station_id'].widget.attrs['readonly'] = 'readonly'
         elif station_selection == 'stnid':
-            self.fields['station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779', help_text='Station id recognized by Acis. See "About this tool" for more info.')
+            self.fields['station_id'] = forms.CharField(initial='266779', help_text='Station id recognized by Acis. See "About this tool" for more info.')
         elif station_selection == 'stnids':
             #self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES)
             self.fields['station_ids'] = MultiStnField(required=False,initial='266779,103732', help_text='Comma separated list of valid station ids.' )
