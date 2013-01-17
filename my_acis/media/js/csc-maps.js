@@ -45,7 +45,7 @@ function initialize_station_finder() {
 
     var MEDIA_URL = document.getElementById("MEDIA_URL").value;
     var json_file = document.getElementById("json_file").value;
-    $.getJSON(MEDIA_URL + 'json/' + json_file, function(data) {
+    $.getJSON(MEDIA_URL + 'tmp/' + json_file, function(data) {
 
 
         //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
@@ -76,16 +76,22 @@ function initialize_station_finder() {
 
             google.maps.event.addListener(marker, 'click', function() {
                 infowindow.close();
+                var wrcc_info_string = new String();
+                if (c.sids[0].length == 6 && !isNaN(c.sids[0].replace(/^[0]/g,"") * 1)){
+                    var wrcc_info_string = '<a  target="_blank" href="http://www.wrcc.dri.edu/cgi-bin/cliMAIN.pl?' 
+                    + c.state + c.sids[0].substring(2,6) +
+                    '">Access Climate Information for this Station</a> <br/>' 
+                }
                 var contentString = '<div id="MarkerWindow">'+
                 '<p><b>Name: </b>' + c.name + '<br/>'+
                 '<b>State: </b>' + c.state + '<br/>' +
                 '<b>UID: </b>' + c.uid + '<br/>' +
                 '<b>SIDS: </b>' + c.sids + '<br/>' +
                 '<b>Elevation: </b>' + c.elevation + '<br/>' +
-                '</p>' +
-                '<a href="' + base_dir + 'data/historic/?stn_id=' + c.sids[0] +
+                '</p>' + wrcc_info_string +
+                '<a target="_blank" href="' + base_dir + 'data/historic/?stn_id=' + c.sids[0] +
                 '">Get Data for this Station</a> <br/>'+
-                '<a href="' + base_dir + 'apps/climate/?stn_id=' + c.sids[0] +
+                '<a target="_blank" href="' + base_dir + 'apps/climate/?stn_id=' + c.sids[0] +
                 '">Run a climate application for this Station</a>'+
                 '</div>';
                 infowindow.setContent(contentString);

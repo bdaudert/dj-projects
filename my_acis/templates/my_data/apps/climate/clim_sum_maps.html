@@ -19,7 +19,7 @@
                 <tr>
                     <td>{{field.label}}:</td>
                     <td>{{field}}</td>                                                                                              <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
-                    <div class="pop-up">{{field.help_text}}</div>
+                    <div class="pop-up"><p class="yellowish">{{field.help_text}}</p></div>
                     </td>
                 </tr>
             {%endfor%}
@@ -39,7 +39,7 @@
                 <tr>
                     <td>{{field.label}}:</td>
                     <td>{{field}}</td>                                                                                                                   
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                                                                     <div class="pop-up">{{field.help_text}}</div>
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                                                <div class="pop-up"><p class="yellowish">{{field.help_text}}</p></div>
                     </td>
                 </tr>
                 {%endif%}
@@ -114,18 +114,18 @@
             <a href="{{URL_PREFIX}}sw_ckn/data/modeled/?grid_selection={{grid_selection}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}">Get raw data behind this graphic here!</a>
             <br />
             <br />
-            <p class="greenish">GridAcis Map for State: <b>{{state}}</b></p>
+            <p>GridAcis Map for State: <b>{{state}}</b></p>
             {%endif%}
 
             {%if bounding_box%}
             <a href="{{URL_PREFIX}}sw_ckn/data/modeled/?grid_selection={{grid_selection}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bounding_box={{bounding_box}}">Get raw data behind this graphic here!</a>
             <br />
             <br />
-            <p class="greenish">GridAcis Map for Bounding Box: <b>{{bounding_box}}</b></p>
+            <p>GridAcis Map for Bounding Box: <b>{{bounding_box}}</b></p>
             {%endif%}
             
-            <p class="greenish">Element: <b>{{elems_long}}</b> {%if base_temp%}Base Temperature: <b>{{base_temp}}</b>{%endif%}</p>
-            <p class="greenish">Time Period: <b>{{start_date}}</b> to <b>{{end_date}}</b></p>
+            <p>Element: <b>{{elems_long}}</b> {%if base_temp%}Base Temperature: <b>{{base_temp}}</b>{%endif%}</p>
+            <p>Time Period: <b>{{start_date}}</b> to <b>{{end_date}}</b></p>
             <img src="{{MEDIA_URL}}tmp/{{figure_file}}">
     
         {%endif%}

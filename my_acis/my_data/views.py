@@ -16,7 +16,6 @@ import re
 from collections import defaultdict
 
 import sys
-print >> sys.stderr, "\nImporting modules..."
 
 #My modules
 import WRCCUtils
@@ -25,7 +24,6 @@ import WRCCDataApps
 import WRCCClasses
 import my_data.forms as forms
 
-print >> sys.stderr, "\nDone importing modules..."
 
 state_choices = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', \
                 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', \
@@ -576,7 +574,7 @@ def monthly_aves(request):
                 json_file = '%s_monthly_aves_%s_%s_%s.json' \
                 %(time_stamp, str(form_graphs.cleaned_data['station_id']), s_date, e_date)
                 context['json_file'] = json_file
-                f = open('%stmp/%s' %(MEDIA_URL,json_file),'w+')
+                f = open('/tmp/%s' %(json_file),'w+')
                 f.write(results_json)
                 f.close()
 
@@ -729,7 +727,7 @@ def grid_point_time_series(request):
                 str(form0.cleaned_data['lon']), form0.cleaned_data['start_date'], \
                 form0.cleaned_data['end_date'])
             context['json_file'] = json_file
-            JSON_URL = MEDIA_URL + 'tmp/'
+            JSON_URL = '/tmp/'
             f = open('%s%s' %(JSON_URL,json_file),'w+')
             f.write(results_json)
             f.close()
@@ -767,12 +765,12 @@ def by_id(request):
     if not q:
         stn_json = {}
     else:
-        stn_json = AcisWS.station_meta_to_json('id', q)
+        stn_json, f_name = AcisWS.station_meta_to_json('id', q)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
         if stn_json['stations'] == []:
             context['error'] = "No station found for the given Id: %s" %q
-    context['json_file'] = 'stn.json'
+    context['json_file'] = f_name
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 
@@ -785,12 +783,12 @@ def by_county(request):
     if not q:
         stn_json = {}
     else:
-        stn_json = AcisWS.station_meta_to_json('county', q)
+        stn_json, f_name = AcisWS.station_meta_to_json('county', q)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
         if stn_json['stations'] == []:
             context['error'] = "No stations found for the given County: %s" %q
-    context['json_file'] = 'stn.json'
+    context['json_file'] = f_name
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 def by_cwa(request):
@@ -802,12 +800,12 @@ def by_cwa(request):
     if not q:
         stn_json = {}
     else:
-        stn_json = AcisWS.station_meta_to_json('county_warning_area', q)
+        stn_json, f_name = AcisWS.station_meta_to_json('county_warning_area', q)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
         if stn_json['stations'] == []:
             context['error'] = "No stations found for the given County Warning Area: %s" %q
-    context['json_file'] = 'stn.json'
+    context['json_file'] = f_name
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 def by_clim_div(request):
@@ -819,12 +817,12 @@ def by_clim_div(request):
     if not q:
         stn_json = {}
     else:
-        stn_json = AcisWS.station_meta_to_json('climate_division', q)
+        stn_json, f_name = AcisWS.station_meta_to_json('climate_division', q)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
         if stn_json['stations'] == []:
             context['error'] = "No stations found for the given Climate Division: %s" %q
-    context['json_file'] = 'stn.json'
+    context['json_file'] = f_name
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 def by_basin(request):
@@ -836,12 +834,12 @@ def by_basin(request):
     if not q:
         stn_json = {}
     else:
-        stn_json = AcisWS.station_meta_to_json('basin', q)
+        stn_json, f_name = AcisWS.station_meta_to_json('basin', q)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
         if stn_json['stations'] == []:
             context['error'] = "No stations found for the given Basin: %s" %q
-    context['json_file'] = 'stn.json'
+    context['json_file'] = f_name
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 def by_state(request):
@@ -853,12 +851,12 @@ def by_state(request):
     if state_key is None:
         stn_json = {}
     else:
-        stn_json = AcisWS.station_meta_to_json('state', state_key)
+        stn_json, f_name = AcisWS.station_meta_to_json('state', state_key)
         if 'error' in stn_json.keys():
             context['error'] = stn_json['error']
         if stn_json['stations'] == []:
             context['error'] = "No stations found for the given State: %s" %state_key
-    context['json_file'] = 'stn.json'
+    context['json_file'] = f_name
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 def by_bounding_box(request):
@@ -876,7 +874,7 @@ def by_bounding_box(request):
     else:
         try:
             bbox ="%f, %f, %f, %f" % (float(W), float(S), float(E), float(N))
-            stn_json = AcisWS.station_meta_to_json('bounding_box', bbox)
+            stn_json, f_name = AcisWS.station_meta_to_json('bounding_box', bbox)
             if 'error' in stn_json.keys():
                 context['error'] = stn_json['error']
             if stn_json['stations'] == []:
@@ -886,7 +884,7 @@ def by_bounding_box(request):
             if stn_json['stations'] == []:
                 context['error'] = "No stations found for the given Bounding Box: None"
     context['title'] = "Search Results for bounding box %s" %bbox
-    context['json_file'] = 'stn.json'
+    context['json_file'] = f_name
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
 
 #Utlities

@@ -5,19 +5,17 @@
 
 {% block content %}
 
-<p class="greenish" align="center">You are here
+<p  align="center">You are here
 <a href="{{URL_PREFIX}}sw_ckn/">HOME</a>
 
 <div class="container">
     <div class="center-left">
         <h2>Recent Climate in the West</h2>
-        <p>Temperature departure from Average, <br/>Percent of Average Precipitation <br/>
-        for the past 30 days</p>
         <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="popup_map">
-        <img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" width="250"></a><br />
+        <img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" width="100%">Temperature Departure</a>
         <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="popup_map">
-        <img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" width="250"></a>
-        <p>&rarr; More <a href="http://www.wrcc.dri.edu/anom/" target="_blank">climate anomaly maps</a></p>
+        <img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" width="100%">% of Normal Precipitation</a>
+        <p >&rarr; More <a href="http://www.wrcc.dri.edu/anom/" target="_blank">anomaly maps</a></p>
     </div>
 
     <div class="center">
@@ -54,7 +52,7 @@
         <br />
 
                     
-        <div id="map" style="width: 90%; height:600px;margin:0px 0px 0px 5px;"></div>
+        <div id="map" style="width: 100%; height:600px;"></div>
         <div id="all"><script type="text/javascript">
             initialize_info_map(this)
         </script></div>
@@ -81,13 +79,12 @@
 
    <div class="center-right">
         <h2>Current Weather in West</h2>
-        <br />
-        <br />
         <a href="http://www.wrh.noaa.gov/index.php" target="_blank">
-        <img src="{{ MEDIA_URL }}img/NWS_Logo.png"><br />NWS Western Regional Headquarters</a>
+        <img src="{{ MEDIA_URL }}img/NWS_Logo.png" class="sidebar"><br />NWS Western Regional Headquarters</a>
         <br />
-        <!-- Radar image -->        <a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" target="_blank">
-        <img src="http://radar.weather.gov/ridge/Conus/Loop/pacsouthwest_loop.gif" width="250" height="200"><br />Pacific Southwest Radar Mosaic</a>
+        <!-- Radar image -->        
+        <a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" target="_blank">
+        <img src="http://radar.weather.gov/ridge/Conus/Loop/pacsouthwest_loop.gif" class="sidebar"><br />Pacific Southwest Radar Mosaic</a>
     </div>
 
 </div> <!--end container-->
