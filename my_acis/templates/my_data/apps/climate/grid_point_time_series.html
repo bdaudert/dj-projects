@@ -6,12 +6,11 @@
 {% block content %}
 
 <p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn">HOME></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS/PRODUCTS></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/climate/">Climate></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/climate/">TOOLS/PRODUCTS></a>
 <a href="{{URL_PREFIX}}sw_ckn/apps/climate/grid_point_time_series/">Grid Point Time Series</a></p>
 
 <div class="container">
-    <div class="center-left">
+    <div class="major-left">
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
         <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
         <input type="hidden" id="center_lat" name="center_lat" value="39.8282">
@@ -25,7 +24,8 @@
             {%for field in form0 %}
                 <tr>
                     <td>{{field.label}}:</td>
-                    <td>{{field}}</td>                                                                                              <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                        
+                    <td>{{field}}</td>
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                        
                     <div class="pop-up"><p class="yellowish">{{field.help_text}}</p></div>
                     </td>
                 </tr>

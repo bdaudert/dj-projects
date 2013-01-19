@@ -6,39 +6,69 @@
 {% block content %}
 
     <p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn">HOME></a>
-    <a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS/PRODUCTS></a>
-    <a href="{{URL_PREFIX}}sw_ckn/apps/climate/">Climate</a></p>
+    <a href="{{URL_PREFIX}}sw_ckn/apps/climate/">TOOLS/PRODUCTS></a>
 
 
     <div class="container">
 
         <div class="center-left">
             <h1>Point Data Applications</h1>
+            <p><font color="X^H#3366FF;">External Applications</font></p>
             <ul class="navbar">
                 {%if stn_id%}
                     <a href="{{URL_PREFIX}}sw_ckn/apps/climate/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics</a>
                     <div class="pop-up" id="meta">
-                        <p class="yellowish"><font size="4">Shows availabilty of COOP station data</font></p>
+                        <p class="yellowish"><font size="4">Shows availabilty of COOP station data.</font></p>
                     </div>
                     <a href="{{URL_PREFIX}}sw_ckn/apps/climate/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages</a>
                     <div class="pop-up" id="maves">
-                        <p class="yellowish"><font size="4">Generates bar chart of monthly averages</font></p>
+                        <p class="yellowish"><font size="4">Generates bar chart of monthly averages.</font></p>
                     </div>
                 {%else%}
                     <a href="{{URL_PREFIX}}sw_ckn/apps/climate/metagraph/" class="trigger">Station Metadata Graphics</a>
                     <div class="pop-up" id="meta">
-                        <p class="yellowish"><font size="4">Shows availabilty of COOP station data</font></p>
+                        <p class="yellowish"><font size="4">Shows availabilty of COOP station data.</font></p>
                     </div>
                     <a href="{{URL_PREFIX}}sw_ckn/apps/climate/monthly_aves/" class="trigger">Monthly Averages</a>
                     <div class="pop-up" id="meta">
-                        <p class="yellowish"><font size="4">Generates bar chart of monthly averages</font></p>
-                    </div>
-                    <a href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank">RAWS USA Climate Archive</a>
-                    <div class="pop-up" id="maves">
-                        <p class="yellowish"><font size="4">Summaries, Graphs, and other products for RAWS 
-                        (Remote Automatic Weather Stations).<a href="http://raws.fam.nwcg.gov">RAWS Home Page</a></font></p>
+                        <p class="yellowish"><font size="4">Generates bar chart of monthly averages.</font></p>
                     </div>
                 {%endif%}
+
+                <a href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank">RAWS USA Climate Archive</a>
+                <div class="pop-up" id="raws">
+                    <p class="yellowish"><font size="4">Summaries, Graphs, and other products for RAWS 
+                    (Remote Automatic Weather Stations).</font></p>
+                </div>
+                <a id="external" href="http://wrcc.dri.edu/sod-products/" class="trigger" target="_blank">Summary of the Day (SOD) products</a>
+                <div class="pop-up" id="sods">
+                    <p class="yellowish"><font size="4"></font>Data Lister, Graphs, Monthly Data Summaries.</p>
+                </div>
+                    <li>                            
+                        <a id="external" href="http://wrcc.dri.edu/sod/sodusa.html" class="trigger" target="_blank">&rarr;Daily Lister and Graph</a>
+                        <div class="pop-up" id="sod1">
+                        <p class="yellowish"><font size="4"></font>Graphs Temperature/Precipitation elements and extremes for chosen COOP station.</p>
+                        </div>
+                    </li>
+                   <li>                        
+                        <a id="external" href="http://wrcc.dri.edu/cgi-bin/coopdata0.pl" class="trigger" target="_blank">&rarr;Monthly Data Lister</a>
+                        <div class="pop-up" id="sod1">
+                        <p class="yellowish"><font size="4"></font>Temparture/Precipitation/Evaporation listings of choosen COOP station and month.</p>                       
+                        </div>
+                    </li>
+                    <li>                                                
+                        <a id="external" href="http://wrcc.dri.edu/sod/sodusaxtrm.html" class="trigger" target="_blank">&rarr;Monthly Summaries</a>
+                        <div class="pop-up" id="sod1">
+                        <p class="yellowish"><font size="4"></font>Monthly Summaries of choosen COOP station and element for Period of Record.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <a id="external" href="http://wrcc.dri.edu/sod/arch/index.html" class="trigger" target="_blank">&rarr;USA Climate Archive</a>
+                        <div class="pop-up" id="sod1">
+                        <p class="yellowish"><font size="4"></font>Get climate Summaries for station (COOP,RAWS,Snotel and others) and run applications.</p>
+                        </div>
+                    </li>
+
             </ul>
         </div>
 
@@ -104,7 +134,7 @@
                 <th><font size="5"><b>Bar Charts</b></th>
                 <!--First row of dashboard: image-->
                 <tr>
-                    <td><a href="http://www.cefa.dri.edu/Westmap/"><img class="dash_img" src="{{MEDIA_URL}}img/WestMap.png"></a></td>
+                    <td><a target="_blank" href="http://www.cefa.dri.edu/Westmap/"><img class="dash_img" src="{{MEDIA_URL}}img/WestMap.png"></a></td>
                     <td><a href="{{URL_PREFIX}}sw_ckn/apps/climate/grid_point_time_series/"><img class="dash_img" src="{{MEDIA_URL}}img/GPTimeSeries.png"></a></td>
                     {%if stn_id%}
                     <td><a href="{{URL_PREFIX}}sw_ckn/apps/climate/monthly_aves/?stn_id={{stn_id}}"><img class="dash_img" src="{{MEDIA_URL}}img/MonAves.png"></a></td>
@@ -150,6 +180,7 @@
 
         <div class="center-right">
             <h1>Gridded Data Applications</h1>
+            <p><font color="X^H#3366FF;">External Applications</font></p>
             <ul class="navbar">
                 <a href="{{URL_PREFIX}}sw_ckn/apps/climate/clim_sum_maps/" class="trigger">Climate Summary Maps</a>
                 <div class="pop-up" id="meta">
@@ -160,7 +191,7 @@
                     <p class="yellowish"><font size="4">Generates time series data and graph for a chosen grid point and time range using Acis gridded data.</font></p>
                 </div> 
 
-                <a href="http://www.cefa.dri.edu/Westmap/" class="trigger">Westmap</a>
+                <a id="external" href="http://www.cefa.dri.edu/Westmap/" class="trigger">Westmap</a>
                 <div class="pop-up" id="meta">
                     <p class="yellowish"><font size="4">Climate Analysis and Mapping Tool that uses PRISM Data set.</font></p>
                 </div>

@@ -6,12 +6,11 @@
 {% block content %}
 
 <p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn">HOME></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS/PRODUCTS></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/climate/">Climate></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/climate/">TOOLS/PRODUCTS></a>
 <a href="{{URL_PREFIX}}sw_ckn/apps/climate/metagraph/">Station Metadata Graphs</a></p>
 
 <div class="container">
-    <div class="center-left">
+    <div class="center-left" style="border:none;background-color:#947e6e;">
         <div id='form1'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -30,7 +29,7 @@
 
     </div>
 
-    <div class="center">
+    <div class="center" style="border:none;background-color:X^H#947e6e;">
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_info");
@@ -59,8 +58,8 @@
             <p><ul>
             <li>Station ID should be a 6 digit coop id.</li>
             <li>Don't know your coop station id? Find it here:</li>
-            <a href="{{URL_PREFIX}}sw_ckn/station_finder/">STATION FINDER</a>
-            <a href="http://www.nws.noaa.gov/om/coop/">More information on the COOP Network</a></ul>
+            <a href="{{URL_PREFIX}}sw_ckn/station_finder/">STATION FINDER</a><br />
+            <li><a target="_blank" href="http://www.nws.noaa.gov/om/coop/">More information on the COOP Network</a></li></ul>
             </p>
         </div>
 
@@ -81,7 +80,7 @@
         {%endif%} 
     </div>
 
-    <div class="center-right">
+    <div class="center-right" style="border:none;background-color:#947e6e;">
         {%if station_meta%}
             <p class="warning" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
             <div id="metadata" style="display:none;">

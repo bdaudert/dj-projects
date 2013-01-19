@@ -6,12 +6,11 @@
 {% block content %}
 
 <p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn">HOME></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS/PRODUCTS></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/climate/">Climate></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/climate/">TOOLS/PRODUCTS></a>
 <a href="{{URL_PREFIX}}sw_ckn/apps/climate/monthly_aves/">Monthly Averages</a></p>
 
 <div class="container">
-    <div class="center-left">
+    <div class="center-left" style="border:none;background-color:#947e6e;">
         <div id='form_graphs'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -31,7 +30,7 @@
         <br />
     </div>
 
-    <div class="center">
+    <div class="center" style="border:none;">
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_info");
@@ -92,7 +91,7 @@
         {%endif%}
     </div>
 
-    <div class="center-right">
+    <div class="center-right" style="border:none;background-color:#947e6e;">
         {%if meta%}
             <p class="warning" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
             <div id="metadata" style="display:none;">

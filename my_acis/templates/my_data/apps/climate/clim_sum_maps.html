@@ -6,19 +6,19 @@
 {% block content %}
 
 <p align="center">You are here <a href="/sw_ckn">HOME></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS/PRODUCTS></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/climate/">Climate></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/climate/">TOOLS/PRODUCTS></a>
 <a href="{{URL_PREFIX}}sw_ckn/apps/climate/clim_sum_maps/">Climate Summary Maps</a></p>
 
 <div class="container">
-    <div class="center-left">
+    <div class="major-left">
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
             {%for field in form0 %}
                 <tr>
                     <td>{{field.label}}:</td>
-                    <td>{{field}}</td>                                                                                              <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
+                    <td>{{field}}</td>                                                                                              
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
                     <div class="pop-up"><p class="yellowish">{{field.help_text}}</p></div>
                     </td>
                 </tr>
@@ -38,8 +38,7 @@
                 {%else%}
                 <tr>
                     <td>{{field.label}}:</td>
-                    <td>{{field}}</td>                                                                                                                   
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                                                <div class="pop-up"><p class="yellowish">{{field.help_text}}</p></div>
+                    <td>{{field}}</td>                                                                                                                               <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                                                         <div class="pop-up"><p class="yellowish">{{field.help_text}}</p></div>
                     </td>
                 </tr>
                 {%endif%}
@@ -52,7 +51,7 @@
 
     </div><!--end center-left-->
 
-    <div class="center">
+    <div class="major-right">
         <div id=tool_info_head></div>
             <script type="text/javascript">            
             $("#tool_info_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_info");

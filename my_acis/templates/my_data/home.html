@@ -5,22 +5,37 @@
 
 {% block content %}
 
+<p align="center"><font color="#A00000" size="xx-large"><b>PROVIDING EASY ACCESS TO CLIMATE DATA,PRODUCTS AND INFORMATION</b></font></p>
+
 <p  align="center">You are here
 <a href="{{URL_PREFIX}}sw_ckn/">HOME</a>
 
 <div class="container">
-    <div class="center-left">
-        <h2>Recent Climate in the West</h2>
-        <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="popup_map">Temperature Departure
-        <img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" width="100%"></a>
-        <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="popup_map">% of Normal Precipitation
-        <img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" width="100%"></a>
-        <a href="http://www.wrcc.dri.edu/anom/" target="_blank">&rarr; More anomaly maps</a>
-        <a href="http://www.wrcc.dri.edu/weather/index.html" target="_blank">
-        <img class="sidebar" src="{{MEDIA_URL}}img/CurrentWeatherDataPlots.png" width="100%">Last Month's Weather Data Plots</a>
+    <div class="third-left">
+        <h1 align="center" style="border: 2px solid #006666; background-color:#EBCEB2;">PAST</h1>
+        <div class="major-left">
+            <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="popup_map"><img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="sidebar">Temperature Departure</a>
+            <br /><br /><br />
+            <a href="http://www.wrcc.dri.edu/weather/index.html" target="_blank"><img class="sidebar" src="{{MEDIA_URL}}img/CurrentWeatherDataPlots.png" width="40%">Last Month's Weather Data Plots</a>
+        </div>
+        <div class="major-right">
+            <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="popup_map"><img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="sidebar">% of Normal Precipitation</a>
+            <a href="http://www.wrcc.dri.edu/anom/" target="_blank">&rarr; More anomaly maps</a>
+        </div>
     </div>
 
-    <div class="center">
+    <div class="third-center">
+        <h1 align="center" style="border: 2px solid #006666; background-color:#EBCEB2;">PRESENT</h1>
+        <div class="major-left">
+            <a href="http://www.wrh.noaa.gov/index.php" target="_blank"><img src="{{ MEDIA_URL }}img/NWS_Logo.png" class="sidebar"><br />NWS Western Regional Headquarters</a>
+            <br /><br />
+            <a href="http://www.spc.noaa.gov/products/wwa/" target="_blank"><img src="{{ MEDIA_URL }}img/NatHazard.png" class="sidebar"><br />NWS National Hazard Map</a>
+        </div>
+
+        <div class="major-right">
+            <!-- Radar image -->
+            <a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" target="_blank"><img src="http://radar.weather.gov/ridge/Conus/Loop/pacsouthwest_loop.gif" class="sidebar"><br />Pacific Southwest Radar Mosaic</a>
+        </div>
     <!--
         <p class="error">Zoom in on an area of interest or</p> 
         <p class="error">Draw a polyon by clicking on map points!</p>
@@ -31,6 +46,7 @@
             <div   id="dataPanel"></div>
         </div>
     -->
+    <!--
         <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
         <input type="hidden" id="json_file" name="variable" value="{{ json_file }}">
 
@@ -48,7 +64,6 @@
         <input onclick="initialize_info_map(this);" type=button id="misc" value="Miscellaneous">
 
         <input onclick="initialize_info_map(this);" type=button id="all" value="Show All" checked>
-        <!--<label for="Show Everything">Show All</label>-->
         <input onclick="initialize_info_map(this);" type=button id="nothing" value="Reset">
         <br />
         <br />
@@ -58,6 +73,7 @@
         <div id="all"><script type="text/javascript">
             initialize_info_map(this)
         </script></div>
+    -->
     <!--
         <h1>Try our puzzle!</h1>
         <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
@@ -79,14 +95,11 @@
     -->
     </div>
 
-   <div class="center-right">
-        <h2>Current Weather in West</h2>
-        <a href="http://www.wrh.noaa.gov/index.php" target="_blank">
-        <img src="{{ MEDIA_URL }}img/NWS_Logo.png" class="sidebar"><br />NWS Western Regional Headquarters</a>
-        <br />
-        <!-- Radar image -->        
-        <a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" target="_blank">
-        <img src="http://radar.weather.gov/ridge/Conus/Loop/pacsouthwest_loop.gif" class="sidebar"><br />Pacific Southwest Radar Mosaic</a>
+   <div class="third-right">
+        <h1 align="center" style="border: 2px solid #006666; background-color:#EBCEB2;">FUTURE</h1>
+        <div class="major-left">
+            <a target="_blank" href="http://www.earthsystemgrid.org/home.htm"><img class="sidebar" src="{{MEDIA_URL}}img/narccap.png">North American Regional Climate Change Assessment Program (NARCCAPP) Home Page</a>
+        </div>
     </div>
 
 </div> <!--end container-->

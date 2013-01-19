@@ -63,7 +63,7 @@ STN_FIND_CHOICES = (
         ('basin', 'Basin'),
         ('state', 'State'),
         ('bbox', 'Bounding Box'),
-        ('stn_id', 'Pick a finder method')
+        ('stn_id', 'Preselected Station')
 )
 
 GRID_SELECTION_CHOICES = (
@@ -215,7 +215,7 @@ class PointData0Form(forms.Form):
         if stn_id is None:
             self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid', help_text='Defines area encompassing the stations of interest.')
         else:
-            self.fields['station_selection'] = forms.CharField(max_length=6, min_length=6,required=False, initial='stn_id', widget=forms.HiddenInput(), help_text='Defines area encompassing the stations of interest.')
+            self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES,required=False, initial='stn_id', widget=forms.HiddenInput(), help_text='Defines area encompassing the stations of interest.')
             self.fields['stn_id'] = forms.CharField(required=False, initial=stn_id, help_text='Station id recognized by Acis. See "About this tool" for more information.')
         #self.fields['element'] = forms.ChoiceField(choices=ELEMENT_CHOICES, initial='pcpn', required=False)
         self.fields['elements'] = forms.CharField(initial ='maxt,mint,avgt', required=False, help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
