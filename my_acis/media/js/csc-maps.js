@@ -68,9 +68,9 @@ function initialize_station_finder() {
             var marker = new google.maps.Marker({
                 map: map,
                 position: latlon,
-                title:'Name:'+c.name
+                title:'Name:'+c.name,
+                icon: 'http://maps.google.com/mapfiles/ms/icons/' + c.marker_color + '.png'
             });
-
             markers.push(marker)
             bounds.extend(latlon);
 
@@ -99,7 +99,7 @@ function initialize_station_finder() {
                 });
         });//close each
 
-        var markerCluster = new MarkerClusterer(map, markers);
+        //var markerCluster = new MarkerClusterer(map, markers);
         map.fitBounds(bounds);
     });//close getjson
 }//close initialize_station_finder

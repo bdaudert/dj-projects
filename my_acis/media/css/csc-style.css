@@ -210,6 +210,13 @@ div.pop-up {
     /*background-color:#FFFFFF;*/
 }
 
+.layer {
+    position:absolute;
+    background-color:#EBCEB2;
+    color:#006666;
+    border: 2px solid #006666;
+    z-index:100;
+}
 
 .header {
     background: #FFEBCD ;
