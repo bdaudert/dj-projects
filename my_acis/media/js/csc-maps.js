@@ -58,6 +58,19 @@ function initialize_station_finder() {
         };
 
         map = new google.maps.Map(document.getElementById("map"),mapOptions);
+        
+        var legend = document.getElementById('map_legend');
+        for (var key in data.network_codes) {
+          var type = data.network_codes[key];
+          var name = data.network_codes[key];
+          var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
+          var div = document.createElement('div');
+          div.innerHTML = '<img src="' + icon + '"> ' + name;
+          legend.appendChild(div);
+        }
+
+        //map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+        map.controls.push(legend);
         var bounds=new google.maps.LatLngBounds();
         infowindow = new google.maps.InfoWindow({
             content: 'oi'
@@ -69,7 +82,7 @@ function initialize_station_finder() {
                 map: map,
                 position: latlon,
                 title:'Name:'+c.name,
-                icon: 'http://maps.google.com/mapfiles/ms/icons/' + c.marker_color + '.png'
+                icon: 'http://maps.google.com/mapfiles/ms/icons/' + c.marker_icon + '.png'
             });
             markers.push(marker)
             bounds.extend(latlon);
@@ -99,7 +112,7 @@ function initialize_station_finder() {
                 });
         });//close each
 
-        //var markerCluster = new MarkerClusterer(map, markers);
+        var markerCluster = new MarkerClusterer(map, markers);
         map.fitBounds(bounds);
     });//close getjson
 }//close initialize_station_finder

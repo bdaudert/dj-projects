@@ -243,16 +243,9 @@ address {
     color: #1E90FF;
     padding: .10em 1em;
 }
-/*
-#map { 
-    height: 900px;
-    width: 1200px;
-    margin-left: 3em;
-    margin-right: 3em;
-}
-*/
 
-/* Testing popuu on same page in my_apps/home.html, may need to be delete*/
+
+/* Testing popup on same page in my_apps/home.html, may need to be delete*/
 #popUpDiv {
     position:absolute;
     background-color:#eeeeee;

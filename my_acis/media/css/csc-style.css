@@ -421,6 +421,16 @@ img.center {
 /*END Drop down menue*/
 
 /*Map related stuff*/
+#map_legend {
+    position:absolute;
+    top:150px;
+    right:150px;
+    background: #FFEBCD;
+    padding: 10px;
+     
+}
+
+
 #map_canvas {
 
     height: 85%;
