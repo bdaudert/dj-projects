@@ -41,12 +41,13 @@ function initialize_grid_point_map() {
     });
 }//close initialize_grid_point_map
 
+var boxclick;
+var show;
+var hide;
 function initialize_station_finder() {
-
     var MEDIA_URL = document.getElementById("MEDIA_URL").value;
     var json_file = document.getElementById("json_file").value;
     $.getJSON(MEDIA_URL + 'tmp/' + json_file, function(data) {
-
 
         //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
         var ll = new google.maps.LatLng(data.stations[0].lat, data.stations[0].lon);
@@ -65,7 +66,8 @@ function initialize_station_finder() {
           var name = data.network_codes[key];
           var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
           var div = document.createElement('div');
-          div.innerHTML = '<img src="' + icon + '"> ' + name;
+          div.innerHTML = '<img src="' + icon + '"> ' + name +': <input type="checkbox" id="'+ name + 
+          '" onclick="my_boxclick(this,\''+ name +'\')" checked />';
           legend.appendChild(div);
         }
 
@@ -83,8 +85,12 @@ function initialize_station_finder() {
                 position: latlon,
                 title:'Name:'+c.name,
                 icon: 'http://maps.google.com/mapfiles/ms/icons/' + c.marker_icon + '.png'
+                // === Store the category and name info as a marker properties ===
             });
-            markers.push(marker)
+            // === Store the category and name info as a marker properties ===
+            marker.category = c.marker_category 
+            markers.push(marker);
+            
             bounds.extend(latlon);
 
             google.maps.event.addListener(marker, 'click', function() {
@@ -100,6 +106,7 @@ function initialize_station_finder() {
                 '<b>State: </b>' + c.state + '<br/>' +
                 '<b>UID: </b>' + c.uid + '<br/>' +
                 '<b>SIDS: </b>' + c.sids + '<br/>' +
+                '<b>NETWORKS: </b>' + c.stn_networks + '<br/>' +
                 '<b>Elevation: </b>' + c.elevation + '<br/>' +
                 '</p>' + wrcc_info_string +
                 '<a target="_blank" href="' + base_dir + 'data/historic/?stn_id=' + c.sids[0] +
@@ -112,10 +119,49 @@ function initialize_station_finder() {
                 });
         });//close each
 
-        var markerCluster = new MarkerClusterer(map, markers);
+        // == shows all markers of a particular category, and ensures the checkbox is checked ==
+        show = function(category) {
+            for (var i=0; i<markers.length; i++) {
+                if (markers[i].category == category) {
+                    markers[i].setVisible(true);
+                }
+            }
+            // == check the checkbox ==
+            document.getElementById(category).checked = true;
+        };
+
+        // == hides all markers of a particular category, and ensures the checkbox is cleared ==
+        hide = function(category) {
+            for (var i=0; i<markers.length; i++) {
+                if (markers[i].category == category) {
+                    markers[i].setVisible(false);
+                }
+            }
+            // == clear the checkbox ==
+            document.getElementById(category).checked = false;
+        };
+
+        boxclick = function(box, category){
+            if (box.checked){
+                show(category);
+            }
+            else {
+                hide(category);
+            }
+        };
+        //var markerCluster = new MarkerClusterer(map, markers);
         map.fitBounds(bounds);
     });//close getjson
+
+
 }//close initialize_station_finder
+
+function my_boxclick(box, category){
+    boxclick(box, category);
+}
+
+
+
 
 function initialize_info_map(node) {
 
