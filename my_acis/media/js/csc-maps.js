@@ -55,6 +55,8 @@ function initialize_station_finder() {
         center: ll,
         //center: new google.maps.LatLng(39.8282, -98.5795),
         zoom: 7,
+        zoomControl: true,
+        panControl:true,
         mapTypeId: google.maps.MapTypeId.HYBRID
         };
 
@@ -78,6 +80,8 @@ function initialize_station_finder() {
             content: 'oi'
         });
         var markers = [];
+        //stationlist scrolling list
+        var station_list = document.getElementById('station_list');;
         $.each(data.stations, function(index, c) {
             var latlon = new google.maps.LatLng(c.lat,c.lon);
             var marker = new google.maps.Marker({
@@ -117,7 +121,14 @@ function initialize_station_finder() {
                 infowindow.setContent(contentString);
                 infowindow.open(map, marker);
                 });
+            //add station to station list
+            var option = document.createElement('option');
+            if (marker.getVisible()) {
+                option.innerHTML =c.name;  
+                station_list.appendChild(option);
+            }
         });//close each
+
 
         // == shows all markers of a particular category, and ensures the checkbox is checked ==
         show = function(category) {

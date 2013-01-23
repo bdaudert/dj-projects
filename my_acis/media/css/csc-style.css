@@ -430,14 +430,23 @@ img.center {
      
 }
 
+#station_list   {
+    position:absolute;
+    top:910px;
+    left:240px;
+    height:60%;
+    width: 60%;
+    background: #FFEBCD;
+    color:#006666;
+}
 
 #map_canvas {
 
-    height: 85%;
+    height: 50%;
     width: 70%;
     margin-right:auto;
     margin-left:300px;
-    margin-top:auto;
+    margin-top:10px;
     margin-bottom:auto;
 }
 
