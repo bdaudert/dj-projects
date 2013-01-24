@@ -95,9 +95,16 @@
         <script type="text/javascript">
             initialize_station_finder()
         </script>
-        <div id="map" style="width: 100%; height:800px;"></div>
+        <div id="map"></div>
         <div id="map_legend"><h3>Legend</h3></div>
-        <select id="station_list" name="station_list" multiple></select>
+
+        <table id="station_list">
+            <th>Name</th><th>State</th><th>Lat</th><th>Lon</th><th>Elevation</th><th>Networks</th>
+        </table>
+
+        <!--<form name='staion_list_form'>    
+            <select id="station_list" name="station_list" multiple></select>
+        </form>-->
     </div>
 <div>
 {%endblock%}

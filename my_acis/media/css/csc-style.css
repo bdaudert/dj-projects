@@ -423,31 +423,28 @@ img.center {
 /*Map related stuff*/
 #map_legend {
     position:absolute;
-    top:150px;
-    right:150px;
+    top:113px;
+    right:225px;
     background: #FFEBCD;
     padding: 10px;
-     
+    border:2px solid #006666; 
 }
 
 #station_list   {
     position:absolute;
-    top:910px;
-    left:240px;
-    height:60%;
+    top:810px;
+    left:242px;
+    height:130%;
     width: 60%;
     background: #FFEBCD;
     color:#006666;
+    border:2px solid #006666;
 }
 
-#map_canvas {
 
-    height: 50%;
-    width: 70%;
-    margin-right:auto;
-    margin-left:300px;
-    margin-top:10px;
-    margin-bottom:auto;
+#map {
+    height: 700px;
+    width: 100%;
 }
 
 #MarkerWindow {

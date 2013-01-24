@@ -41,6 +41,7 @@ function initialize_grid_point_map() {
     });
 }//close initialize_grid_point_map
 
+var stnclick;
 var boxclick;
 var show;
 var hide;
@@ -75,13 +76,14 @@ function initialize_station_finder() {
 
         //map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
         map.controls.push(legend);
+
         var bounds=new google.maps.LatLngBounds();
+
         infowindow = new google.maps.InfoWindow({
             content: 'oi'
         });
         var markers = [];
-        //stationlist scrolling list
-        var station_list = document.getElementById('station_list');;
+        //Define markers
         $.each(data.stations, function(index, c) {
             var latlon = new google.maps.LatLng(c.lat,c.lon);
             var marker = new google.maps.Marker({
@@ -92,20 +94,26 @@ function initialize_station_finder() {
                 // === Store the category and name info as a marker properties ===
             });
             // === Store the category and name info as a marker properties ===
-            marker.category = c.marker_category 
+            marker.category = c.marker_category;
+            marker.name = c.name;
+            marker.state = c.state;
+            marker.lat = c.lat;
+            marker.lon = c.lon;
+            marker.elevation = c.elevation
+            marker.stn_networks = c.stn_networks
+            marker.sids = c.sids
             markers.push(marker);
             
+            //Fit map to encompass all markers
             bounds.extend(latlon);
 
-            google.maps.event.addListener(marker, 'click', function() {
-                infowindow.close();
-                var wrcc_info_string = new String();
-                if (c.sids[0].length == 6 && !isNaN(c.sids[0].replace(/^[0]/g,"") * 1)){
-                    var wrcc_info_string = '<a  target="_blank" href="http://www.wrcc.dri.edu/cgi-bin/cliMAIN.pl?' 
-                    + c.state + c.sids[0].substring(2,6) +
-                    '">Access Climate Information for this Station</a> <br/>' 
-                }
-                var contentString = '<div id="MarkerWindow">'+
+            var wrcc_info_string = new String();
+            if ( c.sids[0] && c.sids[0].length == 6 && !isNaN(c.sids[0].replace(/^[0]/g,"") * 1)){
+                var wrcc_info_string = '<a  target="_blank" href="http://www.wrcc.dri.edu/cgi-bin/cliMAIN.pl?'
+                + c.state + c.sids[0].substring(2,6) +
+                '">Access Climate Information for this Station</a> <br/>'
+            }
+            var contentString = '<div id="MarkerWindow">'+
                 '<p><b>Name: </b>' + c.name + '<br/>'+
                 '<b>State: </b>' + c.state + '<br/>' +
                 '<b>UID: </b>' + c.uid + '<br/>' +
@@ -118,17 +126,87 @@ function initialize_station_finder() {
                 '<a target="_blank" href="' + base_dir + 'apps/climate/?stn_id=' + c.sids[0] +
                 '">Run a climate application for this Station</a>'+
                 '</div>';
+
+            //Open info window when user clicks on marker
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.close();
                 infowindow.setContent(contentString);
                 infowindow.open(map, marker);
                 });
-            //add station to station list
-            var option = document.createElement('option');
+
+            //add station to scrolling list
+            stnclick = function(){
+                infowindow.close();
+                infowindow.setContent(contentString);
+                infowindow.open(map, marker);
+            }
+            var station_list = document.getElementById('station_list'); 
+            var tbl_row = document.createElement('tr');
+            tbl_row.onclick = "my_stnclick()";
             if (marker.getVisible()) {
-                option.innerHTML =c.name;  
+                tbl_row.innerHTML = '<td>' + c.name + '</td><td>' + 
+                                  c.state + '</td><td>' + c.lat + '</td><td>' +
+                                  c.lon + '</td><td>' + c.elevation + '</td><td>' + 
+                                  c.stn_networks +'</td>';  
+                station_list.appendChild(tbl_row);
+            }
+           
+            /*add station to scrolling list
+            var option = document.createElement('option');
+            option.value = c.name;
+            if (marker.getVisible()) {
+                option.innerHTML = c.name + ';;' + ';;' + c.state + ';;' +
+                            c.lon + ';;' + c.lat + ';;' + c.elevation + ';;' + c.stn_networks;
                 station_list.appendChild(option);
             }
-        });//close each
+            //station_list is scolling list of stations for markers shown
+            var stns = document.getElementById('station_list');
+            selected = document.station_list_form.station_list.selectedIndex;
+            if (selected != -1  && stns.options[selected].value == c.name){
+                //info_window.close();
+                info_window.setContent(contentString);
+                info_window.open(map, marker);        
+            }
+            */
+        }); //end each
 
+        //station_list is scolling list of stations for markers shown
+        /*
+        var stns = document.getElementById('station_list');
+        var selected = document.station_list_form.station_list.selectedIndex;
+        i_window = new google.maps.InfoWindow({
+            content: 'oi'
+        });
+        if (selected != -1){
+            stn_name = stns.options[stns.selectedIndex].value;
+            for (var i=0; i<markers.length; i++) {
+                if (markers[i].name == stn_name) {
+                    i_window.close();
+                    var wrcc_info_string = new String();
+                    if ( markers[i].sids[0] && markers[i].sids[0].length == 6 && !isNaN(markers[i].sids[0].replace(/^[0]/g,"") * 1)){
+                        var wrcc_info_string = '<a  target="_blank" href="http://www.wrcc.dri.edu/cgi-bin/cliMAIN.pl?'
+                        + markers[i].state + markers[i].sids[0].substring(2,6) +
+                        '">Access Climate Information for this Station</a> <br/>'
+                    }
+                    var contentString = '<div id="MarkerWindow">'+
+                        '<p><b>Name: </b>' + markers[i].name + '<br/>'+
+                        '<b>State: </b>' + markers[i].state + '<br/>' +
+                        '<b>UID: </b>' + markers[i].uid + '<br/>' +
+                        '<b>SIDS: </b>' + markers[i].sids + '<br/>' +
+                        '<b>NETWORKS: </b>' + markers[i].stn_networks + '<br/>' +
+                        '<b>Elevation: </b>' + markers[i].elevation + '<br/>' +
+                        '</p>' + wrcc_info_string +
+                        '<a target="_blank" href="' + base_dir + 'data/historic/?stn_id=' + markers[i].sids[0] +
+                        '">Get Data for this Station</a> <br/>'+
+                        '<a target="_blank" href="' + base_dir + 'apps/climate/?stn_id=' + markers[i].sids[0] +
+                        '">Run a climate application for this Station</a>'+
+                        '</div>'; 
+                    i_window.setContent(contentString);
+                    i_window.open(map, markers[i]);   
+                }
+            }
+        }
+        */
 
         // == shows all markers of a particular category, and ensures the checkbox is checked ==
         show = function(category) {
@@ -171,7 +249,9 @@ function my_boxclick(box, category){
     boxclick(box, category);
 }
 
-
+function my_stnclick(){
+    stnclick();
+}
 
 
 function initialize_info_map(node) {
