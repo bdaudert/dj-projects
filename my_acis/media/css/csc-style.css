@@ -431,16 +431,22 @@ img.center {
 }
 
 #station_list   {
-    position:absolute;
-    top:810px;
-    left:242px;
-    height:130%;
-    width: 60%;
+    position:relative;
+    left:0px;
+    width: 100%;
     background: #FFEBCD;
     color:#006666;
     border:2px solid #006666;
 }
 
+.station_list   {
+    position:relative;
+    left:0px;
+    width: 100%;
+    background: #FFEBCD;
+    color:#006666;
+    border:2px solid #006666;
+}
 
 #map {
     height: 700px;

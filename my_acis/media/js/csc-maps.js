@@ -134,80 +134,36 @@ function initialize_station_finder() {
                 infowindow.open(map, marker);
                 });
 
-            //add station to scrolling list
-            stnclick = function(){
-                infowindow.close();
-                infowindow.setContent(contentString);
-                infowindow.open(map, marker);
-            }
+
             var station_list = document.getElementById('station_list'); 
-            var tbl_row = document.createElement('tr');
-            tbl_row.onclick = "my_stnclick()";
+
             if (marker.getVisible()) {
-                tbl_row.innerHTML = '<td>' + c.name + '</td><td>' + 
-                                  c.state + '</td><td>' + c.lat + '</td><td>' +
-                                  c.lon + '</td><td>' + c.elevation + '</td><td>' + 
-                                  c.stn_networks +'</td>';  
+                //tbl_row.onclick = '"my_stnclick(' + infowindow + ',' + marker + ',' + contentString + ')"';
+                //t_data = '<td onclick = "my_stnclick(' + infowindow + ',' + marker + ',' + contentString + ')">';
+                var tbl_row = document.createElement('tr');
+                var t_data = '<td>';
+                tbl_row.addEventListener("cick", function(){
+                    infowindow.close();
+                    infowindow.setContent(contentString);
+                    infowindow.open(map, marker);
+                }); 
+                
+                tbl_row.innerHTML = t_data + c.name + '</td>' + t_data + 
+                                  c.state + '</td>' + t_data + c.lat + '</td>' + t_data +
+                                  c.lon + '</td>' + t_data + c.elevation + '</td>' + t_data + 
+                                  c.stn_networks +'</td>';
                 station_list.appendChild(tbl_row);
             }
-           
-            /*add station to scrolling list
-            var option = document.createElement('option');
-            option.value = c.name;
-            if (marker.getVisible()) {
-                option.innerHTML = c.name + ';;' + ';;' + c.state + ';;' +
-                            c.lon + ';;' + c.lat + ';;' + c.elevation + ';;' + c.stn_networks;
-                station_list.appendChild(option);
-            }
-            //station_list is scolling list of stations for markers shown
-            var stns = document.getElementById('station_list');
-            selected = document.station_list_form.station_list.selectedIndex;
-            if (selected != -1  && stns.options[selected].value == c.name){
-                //info_window.close();
-                info_window.setContent(contentString);
-                info_window.open(map, marker);        
-            }
-            */
+ 
         }); //end each
-
-        //station_list is scolling list of stations for markers shown
         /*
-        var stns = document.getElementById('station_list');
-        var selected = document.station_list_form.station_list.selectedIndex;
-        i_window = new google.maps.InfoWindow({
-            content: 'oi'
-        });
-        if (selected != -1){
-            stn_name = stns.options[stns.selectedIndex].value;
-            for (var i=0; i<markers.length; i++) {
-                if (markers[i].name == stn_name) {
-                    i_window.close();
-                    var wrcc_info_string = new String();
-                    if ( markers[i].sids[0] && markers[i].sids[0].length == 6 && !isNaN(markers[i].sids[0].replace(/^[0]/g,"") * 1)){
-                        var wrcc_info_string = '<a  target="_blank" href="http://www.wrcc.dri.edu/cgi-bin/cliMAIN.pl?'
-                        + markers[i].state + markers[i].sids[0].substring(2,6) +
-                        '">Access Climate Information for this Station</a> <br/>'
-                    }
-                    var contentString = '<div id="MarkerWindow">'+
-                        '<p><b>Name: </b>' + markers[i].name + '<br/>'+
-                        '<b>State: </b>' + markers[i].state + '<br/>' +
-                        '<b>UID: </b>' + markers[i].uid + '<br/>' +
-                        '<b>SIDS: </b>' + markers[i].sids + '<br/>' +
-                        '<b>NETWORKS: </b>' + markers[i].stn_networks + '<br/>' +
-                        '<b>Elevation: </b>' + markers[i].elevation + '<br/>' +
-                        '</p>' + wrcc_info_string +
-                        '<a target="_blank" href="' + base_dir + 'data/historic/?stn_id=' + markers[i].sids[0] +
-                        '">Get Data for this Station</a> <br/>'+
-                        '<a target="_blank" href="' + base_dir + 'apps/climate/?stn_id=' + markers[i].sids[0] +
-                        '">Run a climate application for this Station</a>'+
-                        '</div>'; 
-                    i_window.setContent(contentString);
-                    i_window.open(map, markers[i]);   
-                }
-            }
-        }
+        //show marker window when station is selected from list
+        stnclick = function(i_window, mkr, content_str){
+                i_window.close();
+                i_window.setContent(content_str);
+                i_window.open(map, mkr);
+                };
         */
-
         // == shows all markers of a particular category, and ensures the checkbox is checked ==
         show = function(category) {
             for (var i=0; i<markers.length; i++) {
@@ -249,10 +205,11 @@ function my_boxclick(box, category){
     boxclick(box, category);
 }
 
-function my_stnclick(){
-    stnclick();
+/*
+function my_stnclick(i_window, mkr, content_str){
+    stnclick(i_window, mkr, content_str);
 }
-
+*/
 
 function initialize_info_map(node) {
 

@@ -98,13 +98,35 @@
         <div id="map"></div>
         <div id="map_legend"><h3>Legend</h3></div>
 
-        <table id="station_list">
-            <th>Name</th><th>State</th><th>Lat</th><th>Lon</th><th>Elevation</th><th>Networks</th>
-        </table>
+<table cellspacing="0">
+  <tr>
+    <td>
+       <table cellspacing="0" class="station_list" >
+         <tr>
+            <th>Name</th>
+            <th>State</th>
+            <th>Lat</th>
+            <th>Lon</th>
+            <th>Elev</th>
+            <th>Networks</th>
+         </tr>
+       </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+       <div style="height:200px; overflow:auto;" >
+         <table cellspacing="0" id="station_list">
+         </table>  
+       </div>
+    </td>
+  </tr>
+</table>
 
-        <!--<form name='staion_list_form'>    
-            <select id="station_list" name="station_list" multiple></select>
-        </form>-->
+
+        <!--
+        <select size="20" id="station_list" name="station_list" multiple>
+        -->
     </div>
 <div>
 {%endblock%}
