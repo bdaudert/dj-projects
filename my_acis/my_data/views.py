@@ -277,12 +277,14 @@ def data_modeled(request):
             elements = request.GET.get('elements', None)
             bounding_box = request.GET.get('bounding_box', None)
             state = request.GET.get('state', None)
+            loc = request.GET.get('loc', None)
             grid = request.GET.get('grid', None)
             initial_1 = {}
             if start_date is not None:initial_1['start_date'] = start_date
             if end_date is not None:initial_1['end_date'] = end_date
             if bounding_box is not None:initial_1['bounding_box'] = bounding_box
             if state is not None:initial_1['state'] = state
+            if loc is not None:initial_1['location'] = loc
             if grid_selection is None:
                 initial_1['grid_selection'] = form0_grid.cleaned_data['grid_selection']
             else:
@@ -298,6 +300,7 @@ def data_modeled(request):
                       'elements':form0_grid.cleaned_data['elements'], \
                       'data_format':form0_grid.cleaned_data['data_format']}
             '''
+            context['initial_1'] = initial_1
             form1_grid = forms.GridDataForm1(initial=initial_1)
             context['form1_grid'] = form1_grid
 

@@ -46,6 +46,7 @@ var boxclick;
 var show;
 var hide;
 function initialize_station_finder() {
+    var geocoder = new google.maps.Geocoder();
     var MEDIA_URL = document.getElementById("MEDIA_URL").value;
     var json_file = document.getElementById("json_file").value;
     $.getJSON(MEDIA_URL + 'tmp/' + json_file, function(data) {
@@ -53,15 +54,13 @@ function initialize_station_finder() {
         //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
         var ll = new google.maps.LatLng(data.stations[0].lat, data.stations[0].lon);
         var mapOptions = {
-        center: ll,
-        //center: new google.maps.LatLng(39.8282, -98.5795),
-        zoom: 7,
-        zoomControl: true,
-        panControl:true,
-        mapTypeId: google.maps.MapTypeId.HYBRID
+        center:ll,
+        zoom:7,
+        //maxZoom:12,
+        mapTypeId:google.maps.MapTypeId.HYBRID
         };
 
-        map = new google.maps.Map(document.getElementById("map"),mapOptions);
+        var map = new google.maps.Map(document.getElementById("map"),mapOptions);
         
         var legend = document.getElementById('map_legend');
         for (var key in data.network_codes) {
@@ -194,7 +193,7 @@ function initialize_station_finder() {
                 hide(category);
             }
         };
-        //var markerCluster = new MarkerClusterer(map, markers);
+        var markerCluster = new MarkerClusterer(map, markers);
         map.fitBounds(bounds);
     });//close getjson
 

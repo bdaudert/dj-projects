@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<p align="center"><font color="#A00000" size="xx-large"><b>PROVIDING EASY ACCESS TO CLIMATE DATA,PRODUCTS AND INFORMATION</b></font></p>
+<p align="center"><font color="red" size="xx-large"><b>PROVIDING EASY ACCESS TO CLIMATE DATA,PRODUCTS AND INFORMATION</b></font></p>
 
 <p  align="center">You are here
 <a href="{{URL_PREFIX}}sw_ckn/">HOME</a>
@@ -17,13 +17,12 @@
     <div class="third-left">
         <h1 align="center" style="border: 2px solid #006666; background-color:#EBCEB2;">PAST &rarr;</h1>
         <div class="major-left">
-            <a href="http://www.wrcc.dri.edu/weather/index.html" target="_blank"><img class="sidebar" src="{{MEDIA_URL}}img/CurrentWeatherDataPlots.png" width="40%">Last Month's Weather Data Plots</a>
-            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
             <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="popup_map"><img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="sidebar">Temperature Departure</a>
+            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+            <a href="http://www.wrcc.dri.edu/weather/index.html" target="_blank"><img class="sidebar" src="{{MEDIA_URL}}img/CurrentWeatherDataPlots.png" width="40%">Last Month's Weather Data Plots</a>
         </div>
+
         <div class="major-right">
-            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
             <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="popup_map"><img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="sidebar">% of Normal Precipitation</a>
             <a href="http://www.wrcc.dri.edu/anom/" target="_blank">&rarr; More anomaly maps</a>
         </div>
@@ -32,9 +31,7 @@
     <div class="third-center">
         <h1 align="center" style="border: 2px solid #006666; background-color:#EBCEB2;">PRESENT &rarr;</h1>
         <div class="major-left">
-            <a href="http://www.wrh.noaa.gov/index.php" target="_blank"><img src="{{ MEDIA_URL }}img/NWS_Logo.png" class="sidebar"><br />NWS Western Regional Headquarters</a>
-            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-            <a href="http://www.spc.noaa.gov/products/wwa/" target="_blank"><img src="{{ MEDIA_URL }}img/NatHazard.png" class="sidebar"><br />NWS National Hazard Map</a>
+            <a href="http://www.weather.gov/" target="_blank"><img src="{{ MEDIA_URL }}img/NatHazard.png" class="sidebar"><br />NWS Current Weather in the US</a>
         </div>
 
         <div class="major-right">

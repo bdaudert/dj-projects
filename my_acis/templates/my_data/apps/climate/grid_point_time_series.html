@@ -80,6 +80,7 @@
             (North American Regional Climate Change Assessment Program) gridded data sets:</li>
             <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
             </ul></p>
+
         </div>
 
         {%if error%}
@@ -87,7 +88,7 @@
         {%else%}
           {%if datadict%}
 
-            <a href="{{URL_PREFIX}}sw_ckn/data/modeled/?grid_selection={{grid_selection}}&start_date={{s_date}}&e_date={{end_date}}&elements={{elems}}&grid={{grid}}">Get raw data  behind this graphic here!</a>
+            <a href="{{URL_PREFIX}}sw_ckn/data/modeled/?grid_selection={{grid_selection}}&start_date={{s_date}}&end_date={{e_date}}&elements={{elems}}&grid={{grid}}&loc={{lon}},{{lat}}">Get raw data  behind this graphic here!</a>
             <br />
 
             <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{MEDIA_URL}}tmp/">

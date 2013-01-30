@@ -7,7 +7,9 @@ html {
 }
 
 body {
-    background-color: #947e6e;
+    /*background-color: #947e6e;
+    background-color: white;*/
+    background-color:#FFEBCD;
     height: 100%;
     margin: 0px auto;
     padding: 0;
@@ -45,13 +47,14 @@ a.warning {
     font-size:x-large;
 }
 a#warning {
-    color:#CC0066;
+    color:#006666;
+    /*color:#CC0066;*/
     /*color:#FFCC66;*/
     font-size:x-large;
 }
 
 .warning {
-    color:#FFEBCD;
+    color:#006666;
     font-size:x-large;
 }
 
@@ -126,7 +129,7 @@ div.pop-up {
   position: absolute;
   width: 280px;
   padding: 10px;
-  background: #947e6e;
+  /*background: #947e6e;*/
   border: 2px solid #FFEBCD;
   font-size: 90%;
 }
@@ -150,7 +153,7 @@ div.pop-up {
   
 .content-header {
     border:1px solid #006666;
-
+    background-color: #947e6e;
 }
 
 .container {
@@ -161,13 +164,14 @@ div.pop-up {
     min-width:100%;
     min-height:100%;
     position:relative;
+    /*background-color: #947e6e;*/
 }
 
 .center {
     float:left;
-    /*padding: 10px 5px 10px 5px;*/
+    padding: 10px 5px 10px 5px;
     text-align:left;
-    height:870px;
+    height:910px;
     width:60%;
     border: 2px solid #006666;
     /*background-color:#DCA978;*/
@@ -176,9 +180,9 @@ div.pop-up {
 /*2 page divide e.g. my_data/data/home.html*/
 .center-right, .center-left {
     float: left;
-    /*padding: 10px 5px 10px 5px;*/
+    padding: 10px 5px 10px 5px;
     width:15%;
-    height: 870px;
+    height: 910px;
     border: 2px solid #006666;
     /*background-color:#EBCEB2;*/
     background-color:#FFEBCD;
@@ -188,14 +192,14 @@ div.pop-up {
 .major-left, .major-right{
     float: left;
     padding: 10px 20px 10px 20px;
-    height: 870px;
+    height: 910px;
     width:40%;
 }
 
 .third-left, .third-right {
     float: left;
     padding: 10px 20px 10px 20px;
-    height: 870px;
+    height: 910px;
     width:30%;
     background-color:#FFEBCD;
     border:3px solid #006666;
@@ -204,7 +208,7 @@ div.pop-up {
 .third-center {
     float: left;
     padding: 10px 20px 10px 20px;
-    height: 870px;
+    height: 910px;
     width:30%;
     border:3px solid #006666;
     /*background-color:#FFFFFF;*/
@@ -449,14 +453,15 @@ img.center {
 }
 
 #map {
-    height: 700px;
+    position:relative;
+    height: 80%;
     width: 100%;
 }
 
 #MarkerWindow {
     padding:0px 0px 0px 0px;
     margin:0px 0px 0px 0px;
-    background: #947e6e;
+    /*background-color:#FFEBCD;*/
     font-family: 'Georgia',serif;
 }
 
