@@ -273,7 +273,7 @@ class PointDataForm1(forms.Form):
             if element == 'gddxx':
                 self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50, help_text='Base temperature used to calculate growing degree days.')
         '''
-        self.fields['start_date'] = MyDateField(max_length=8, min_length=3, required = False, initial='20120101', help_text= 'yyyymmdd or "por" (period of record) if single station.')
+        self.fields['start_date'] = MyDateField(max_length=8, min_length=3, required = False, initial='20130101', help_text= 'yyyymmdd or "por" (period of record) if single station.')
         self.fields['end_date'] = MyDateField(max_length=8, min_length=3, required = False, initial=today, help_text= 'yyyymmdd or "por" (period of record) if single station.')
         self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput(), help_text='Defines format in which data will be returned.')
         if data_format in ['dlm', 'html']:
@@ -316,7 +316,7 @@ class GridDataForm1(forms.Form):
             if element == 'gddxx':
                 self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50, help_text='Base temperature used to calculate growing degree days.')
         '''
-        self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text= 'yyyymmdd')
+        self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20130101', help_text= 'yyyymmdd')
         self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text= 'yyyymmdd')
         self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text='Valid gridded data set recognized by Acis.')
         self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput(), help_text='Defines format in which data will be returned.')
@@ -392,11 +392,11 @@ class ClimateMapForm1(forms.Form):
             self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50, help_text='Base temperature used to calculate growing degree days.')
 
         if time_period == 'custom':
-            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text= 'yyyymmdd')
+            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20130101', help_text= 'yyyymmdd')
             self.fields['end_date'] =MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text= 'yyyymmdd')
         else:
             if x is None:
-                self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text= 'yyyymmdd')
+                self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20130101', help_text= 'yyyymmdd')
             else:
                 start_date = WRCCUtils.get_start_date(time_period,today, x)
                 self.fields['start_date'] = MyDateField(required = False, initial=start_date, help_text= 'yyyymmdd')
@@ -426,6 +426,6 @@ class GPTimeSeriesForm(forms.Form):
             else:
                 self.fields['lon'] = forms.FloatField(initial=lon, required=False, help_text='Valid longitude.')
             self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, required=False, initial='maxt', help_text='Acis element code. See "About this tool."')
-            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text= 'yyyymmdd')
+            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20130101', help_text= 'yyyymmdd')
             self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text= 'yyyymmdd')
             self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text='Valid gridded data set recognized by Acis.')

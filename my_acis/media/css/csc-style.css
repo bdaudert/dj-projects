@@ -58,16 +58,6 @@ a#warning {
     font-size:x-large;
 }
 
-.greenish {
-    color:#006666;
-    font-size:large;
-}
-
-.yellowish {
-    color:#FFEBCD;
-    font-size:large;
-}
-
 table.dash {
 padding: 20px 20px 20px 20px;
 border: 0px;
@@ -129,9 +119,10 @@ div.pop-up {
   position: absolute;
   width: 280px;
   padding: 10px;
-  /*background: #947e6e;*/
-  border: 2px solid #FFEBCD;
+  background: #DCA978;
+  border: 2px solid #006666;
   font-size: 90%;
+  z-index:100;
 }
 
 

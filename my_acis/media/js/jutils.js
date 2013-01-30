@@ -71,7 +71,7 @@ function ShowHide(divId)
 
 $(function() {
   var moveLeft = 50;
-  var moveDown = 0;
+  var moveDown = 50;
 
   $('.trigger').hover(function(e) {
     $(this).next('div.pop-up').show();
@@ -84,8 +84,8 @@ $(function() {
   });
 
   $('.trigger').mousemove(function(e) {
-    //$('div.pop-up').css('top', e.pageY + moveDown).css('left', e.pageX + moveLeft);
-    $(this).next('div.pop-up').css('top', e.pageY).css('left', e.pageX);
+    $('div.pop-up').css('top', moveDown).css('left', e.pageX );
+    //$(this).next('div.pop-up').css('top', e.pageY).css('left', e.pageX);
   });
 
 }); 
