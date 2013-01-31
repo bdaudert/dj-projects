@@ -10,15 +10,20 @@
 <p  align="center">You are here
 <a href="{{URL_PREFIX}}sw_ckn/">HOME</a>
 
-<textarea class="layer" rows="12" cols="90" style="top:660px;left:100px;">Past-Present connection</textarea>
-<textarea class="layer" rows="12" cols="90" style="top:660px;right:100px;">Present-Future connection</textarea>
+<!--<textarea class="layer" rows="40" cols="140" style="top:660px;left:300px;">
+</textarea>
+<textarea class="layer" rows="30" cols="70" style="top:660px;right:300px;">Present-Future connection</textarea>-->
+
 
 <div class="container">
+
     <div class="third-left">
         <h1 align="center" style="border: 2px solid #006666; background-color:#EBCEB2;">PAST &rarr;</h1>
         <div class="major-left">
             <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="popup_map"><img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="sidebar">Temperature Departure</a>
-            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+            <br /><br /><br /><br />
+            <a href="http://www.wrcc.dri.edu" target="_blank"><img class="sidebar" src="{{MEDIA_URL}}img/WRCC.png" width="40%">Western Regional Climate Center (WRCC)</a>
+            <br /><br /><br /><br />
             <a href="http://www.wrcc.dri.edu/weather/index.html" target="_blank"><img class="sidebar" src="{{MEDIA_URL}}img/CurrentWeatherDataPlots.png" width="40%">Last Month's Weather Data Plots</a>
         </div>
 
@@ -37,16 +42,6 @@
         <div class="major-right">
             <a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" target="_blank"><img src="http://radar.weather.gov/ridge/Conus/Loop/pacsouthwest_loop.gif" class="sidebar"><br />Pacific Southwest Radar Mosaic</a>
         </div>
-    <!--
-        <p class="error">Zoom in on an area of interest or</p> 
-        <p class="error">Draw a polyon by clicking on map points!</p>
-        <div id="side">
-            <input id="reset" value="Reset" type="button" class="navi"/>
-            <input id="showData"  value="Show Paths (class function) " type="button" class="navi"/>
-            <input id="showColor"  value="Show Color (class function) " type="button" class="navi"/>
-            <div   id="dataPanel"></div>
-        </div>
-    -->
     <!--
         <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
         <input type="hidden" id="json_file" name="variable" value="{{ json_file }}">
@@ -105,4 +100,19 @@
     </div>
 
 </div> <!--end container-->
+
+<div class="front_page_map">
+    <div id="side" align="center">
+        <input id="reset" value="Reset" type="button" class="navi"/>
+        <input id="showData"  value="Show Paths" type="button" class="navi"/>
+        <p style="color:red;">Draw a polyon by clicking on map points!</p>
+        <div   id="dataPanel"></div>
+    </div>
+    <div id="map"></div>
+<div>
+
+<script type="text/javascript">
+    initialize_polygon_map()
+</script>
+
 {% endblock %}

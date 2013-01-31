@@ -314,7 +314,7 @@ function initialize_polygon_map() {
                     $('#dataPanel').append(creator.showColor());
             }
      });
-}//close initialize_finder_map
+}//close initialize_polygon_map
 
 
 function load_script() {

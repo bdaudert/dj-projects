@@ -13,14 +13,15 @@
 
         <div class="center-left">
             <h1>Point Data Applications</h1>
-            <p><font color="X^H#3366FF;">External Applications</font></p>
+                <p id="sw_ckn">SW-CKN Applications</p>
+            
             <ul class="navbar">
                 {%if stn_id%}
-                    <a href="{{URL_PREFIX}}sw_ckn/apps/climate/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics</a>
+                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/climate/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics</a>
                     <div class="pop-up" id="meta">
                         <p><font size="4">Shows availabilty of COOP station data.</font></p>
                     </div>
-                    <a href="{{URL_PREFIX}}sw_ckn/apps/climate/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages</a>
+                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/climate/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages</a>
                     <div class="pop-up" id="maves">
                         <p><font size="4">Generates bar chart of monthly averages.</font></p>
                     </div>
@@ -34,36 +35,36 @@
                         <p><font size="4">Generates bar chart of monthly averages.</font></p>
                     </div>
                 {%endif%}
-
-                <a href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank">RAWS USA Climate Archive</a>
+                <p id="wrcc">WRCC Applications</p>
+                <a id="wrcc" href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank">RAWS USA Climate Archive</a>
                 <div class="pop-up" id="raws">
                     <p><font size="4">Summaries, Graphs, and other products for RAWS 
                     (Remote Automatic Weather Stations).</font></p>
                 </div>
-                <a id="external" href="http://wrcc.dri.edu/sod-products/" class="trigger" target="_blank">Summary of the Day (SOD) products</a>
+                <a id="wrcc" href="http://wrcc.dri.edu/sod-products/" class="trigger" target="_blank">Summary of the Day (SOD) products</a>
                 <div class="pop-up" id="sods">
                     <p><font size="4"></font>Data Lister, Graphs, Monthly Data Summaries.</p>
                 </div>
                     <li>                            
-                        <a id="external" href="http://wrcc.dri.edu/sod/sodusa.html" class="trigger" target="_blank">&rarr;Daily Lister and Graph</a>
+                        <a id="wrcc" href="http://wrcc.dri.edu/sod/sodusa.html" class="trigger" target="_blank">&rarr;Daily Lister and Graph</a>
                         <div class="pop-up" id="sod1">
                         <p><font size="4"></font>Graphs Temperature/Precipitation elements and extremes for chosen COOP station.</p>
                         </div>
                     </li>
                    <li>                        
-                        <a id="external" href="http://wrcc.dri.edu/cgi-bin/coopdata0.pl" class="trigger" target="_blank">&rarr;Monthly Data Lister</a>
+                        <a id="wrcc" href="http://wrcc.dri.edu/cgi-bin/coopdata0.pl" class="trigger" target="_blank">&rarr;Monthly Data Lister</a>
                         <div class="pop-up" id="sod1">
                         <p><font size="4"></font>Temparture/Precipitation/Evaporation listings of choosen COOP station and month.</p>                       
                         </div>
                     </li>
                     <li>                                                
-                        <a id="external" href="http://wrcc.dri.edu/sod/sodusaxtrm.html" class="trigger" target="_blank">&rarr;Monthly Summaries</a>
+                        <a id="wrcc" href="http://wrcc.dri.edu/sod/sodusaxtrm.html" class="trigger" target="_blank">&rarr;Monthly Summaries</a>
                         <div class="pop-up" id="sod1">
                         <p><font size="4"></font>Monthly Summaries of choosen COOP station and element for Period of Record.</p>
                         </div>
                     </li>
                     <li>
-                        <a id="external" href="http://wrcc.dri.edu/sod/arch/index.html" class="trigger" target="_blank">&rarr;USA Climate Archive</a>
+                        <a id="wrcc" href="http://wrcc.dri.edu/sod/arch/index.html" class="trigger" target="_blank">&rarr;USA Climate Archive</a>
                         <div class="pop-up" id="sod1">
                         <p><font size="4"></font>Get climate Summaries for station (COOP,RAWS,Snotel and others) and run applications.</p>
                         </div>
@@ -180,18 +181,18 @@
 
         <div class="center-right">
             <h1>Gridded Data Applications</h1>
-            <p><font color="X^H#3366FF;">External Applications</font></p>
+            <p id="sw_ckn">SW-CKN Applications</p>
             <ul class="navbar">
-                <a href="{{URL_PREFIX}}sw_ckn/apps/climate/clim_sum_maps/" class="trigger">Climate Summary Maps</a>
+                <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/climate/clim_sum_maps/" class="trigger">Climate Summary Maps</a>
                 <div class="pop-up" id="meta">
                     <p><font size="4">Generates climate summary maps for different elements, time ranges and region usig Acis gridded data</font></p>
                 </div>
-                <a href="{{URL_PREFIX}}sw_ckn/apps/climate/grid_point_time_series/" class="trigger">Grid Point Time Series</a>
+                <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/climate/grid_point_time_series/" class="trigger">Grid Point Time Series</a>
                 <div class="pop-up" id="meta">
                     <p><font size="4">Generates time series data and graph for a chosen grid point and time range using Acis gridded data.</font></p>
                 </div> 
-
-                <a id="external" href="http://www.cefa.dri.edu/Westmap/" class="trigger">Westmap</a>
+                <p id="wrcc">WRCC Applications</p>
+                <a id="wrcc" href="http://www.cefa.dri.edu/Westmap/" class="trigger">Westmap</a>
                 <div class="pop-up" id="meta">
                     <p><font size="4">Climate Analysis and Mapping Tool that uses PRISM Data set.</font></p>
                 </div>

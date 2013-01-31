@@ -33,13 +33,24 @@ a:hover {
 }
 a:active { color: red; }
 
-a#external {
-    color: #3366FF;
+#wrcc {
+    color: #4D4DFF;
 }
-a#external:hover{
+
+a#wrcc:hover{
     color: #33CCFF;
     text-decoration: none;
 }
+
+#sw_ckn {
+    color: #6B238E;
+}
+
+a#sw_ckn:hover{
+        color: #33CCFF;
+            text-decoration: none;
+}
+
 
 a.warning {
     color:#CC0066;
@@ -87,6 +98,7 @@ ul.navbar {
   margin: 0;
   top: 1em;
   left: 5em;
+  border: 1px solid #006666;
   /*width: 50em;*/
   z-index:20;
 }
@@ -190,7 +202,7 @@ div.pop-up {
 .third-left, .third-right {
     float: left;
     padding: 10px 20px 10px 20px;
-    height: 910px;
+    height: 1000px;
     width:30%;
     background-color:#FFEBCD;
     border:3px solid #006666;
@@ -199,7 +211,7 @@ div.pop-up {
 .third-center {
     float: left;
     padding: 10px 20px 10px 20px;
-    height: 910px;
+    height: 1000px;
     width:30%;
     border:3px solid #006666;
     /*background-color:#FFFFFF;*/
@@ -441,6 +453,15 @@ img.center {
     background: #FFEBCD;
     color:#006666;
     border:2px solid #006666;
+}
+
+.front_page_map {
+    position:absolute;
+    top:660px;
+    left:350px;
+    width:900px;
+    height:600px;
+    z-index:100;
 }
 
 #map {
