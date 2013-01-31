@@ -174,9 +174,10 @@ div.pop-up {
     float:left;
     padding: 10px 5px 10px 5px;
     text-align:left;
-    height:910px;
+    height:1000px;
     width:60%;
-    border: 2px solid #006666;
+    border-top: 2px solid #006666;
+    border-bottom: 2px solid #006666;
     /*background-color:#DCA978;*/
 }
 
@@ -185,7 +186,7 @@ div.pop-up {
     float: left;
     padding: 10px 5px 10px 5px;
     width:15%;
-    height: 910px;
+    height: 1000px;
     border: 2px solid #006666;
     /*background-color:#EBCEB2;*/
     background-color:#FFEBCD;
@@ -195,7 +196,7 @@ div.pop-up {
 .major-left, .major-right{
     float: left;
     padding: 10px 20px 10px 20px;
-    height: 910px;
+    height: 1000px;
     width:40%;
 }
 
@@ -213,7 +214,8 @@ div.pop-up {
     padding: 10px 20px 10px 20px;
     height: 1000px;
     width:30%;
-    border:3px solid #006666;
+    border-top:3px solid #006666;
+    border-bottom:3px solid #006666;
     /*background-color:#FFFFFF;*/
 }
 
@@ -429,9 +431,15 @@ img.center {
 
 /*Map related stuff*/
 #map_legend {
+    /*
     position:absolute;
     top:113px;
     right:225px;
+    */
+    position:relative;
+    left:20px;
+    top:20px;
+    width: 70%;
     background: #FFEBCD;
     padding: 10px;
     border:2px solid #006666; 
@@ -458,9 +466,9 @@ img.center {
 .front_page_map {
     position:absolute;
     top:660px;
-    left:350px;
-    width:900px;
-    height:600px;
+    left:400px;
+    width:60%;
+    height:60%;
     z-index:100;
 }
 

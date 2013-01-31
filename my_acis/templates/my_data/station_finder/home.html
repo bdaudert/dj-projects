@@ -8,8 +8,8 @@
 <div class="container">
     <p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn">HOME></a>
     <a href="{{URL_PREFIX}}sw_ckn/station_finder/">STATION FINDER</a></p>
+    
     <div class="center-left">
-
         <p class="warning">Click on the <font color="#006666">search categories</font> to see examples!</p>
 
         <p onClick="ShowHide('myImage')"><u>Search by ID</u></p>
@@ -92,7 +92,6 @@
             initialize_station_finder()
         </script>
         <div id="map"></div>
-        <div id="map_legend"><h3>Legend</h3></div>
 
         <table cellspacing="0" class="station_list">
           <tr>
@@ -118,11 +117,14 @@
             </td>
           </tr>
         </table>
-
-
-        <!--
+     <!--
         <select size="20" id="station_list" name="station_list" multiple>
-        -->
+    -->
     </div>
+
+    <div class="center-right">
+        <div id="map_legend"><h3>Legend</h3></div>
+    </div>
+
 <div>
 {%endblock%}
