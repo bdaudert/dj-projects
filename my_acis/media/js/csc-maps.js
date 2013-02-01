@@ -119,6 +119,7 @@ function initialize_station_finder() {
                 '<b>SIDS: </b>' + c.sids + '<br/>' +
                 '<b>NETWORKS: </b>' + c.stn_networks + '<br/>' +
                 '<b>Elevation: </b>' + c.elevation + '<br/>' +
+                '<b>Available Elements: </b>' + c.available_elements + '<br/>' +
                 '</p>' + wrcc_info_string +
                 '<a target="_blank" href="' + base_dir + 'data/historic/?stn_id=' + c.sids[0] +
                 '">Get Data for this Station</a> <br/>'+

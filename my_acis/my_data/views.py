@@ -24,18 +24,26 @@ import WRCCDataApps
 import WRCCClasses
 import my_data.forms as forms
 
+acis_elements = defaultdict(dict)
+acis_elements ={'maxt':{'name':'maxt', 'name_long': 'Maximum Daily Temperature (F)', 'vX':'1'}, \
+              'mint':{'name':'mint', 'name_long': 'Minimum Daily Temperature (F)', 'vX':'2'}, \
+              'avgt': {'name':'avgt', 'name_long': 'Average Daily Temperature (F)', 'vX':'43'}, \
+              'obst':{'name':'obst', 'name_long': 'Observation Time Temperature (F)', 'vX':'3'}, \
+              'pcpn': {'name': 'pcpn', 'name_long':'Precipitation (In)', 'vX':'4'}, \
+              'snow': {'name': 'snow', 'name_long':'Snowfall (In)', 'vX':'10'}, \
+              'snwd': {'name': 'snwd', 'name_long':'Snow Depth (In)', 'vX':'11'}, \
+              'evap': {'name': 'evap', 'name_long':'Pan Evaporation (In)', 'vX':'7'}, \
+              'dd': {'name': 'dd', 'name_long':'Degree Days (Days)', 'vX':'45'}, \
+              'cdd': {'name': 'cdd', 'name_long':'Cooling Degree Days (Days)'}, 'vX':'44', \
+              'hdd': {'name': 'hdd', 'name_long':'Heating Degree Days (Days)'}, 'vX':'45', \
+              'gdd': {'name': 'gdd', 'name_long':'Growing Degree Days (Days)'}, 'vX':'45'}
+              #bug fix needed for cdd = 44
 
 state_choices = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', \
                 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', \
                 'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', \
                 'NY', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', \
                 'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
-
-long_el_name = {'pcpn':'Precipiation (in)', 'snow':'Snowfall (in)', \
-                'maxt':'Maximum Temperature (F)', 'mint':'Miniimum Temperature (F)', \
-                'avgt':'Mean Temperature (F)', 'obst':'Observation Time Temperature (F)', \
-                'snwd':'Snow Depth (in)', 'gdd':'Growing Degree Days', \
-                'hdd':'Heading Degree Days', 'cdd': 'Cooling Degree Days'}
 
 static_url = '/www-devel/apps/csc/dj-projects/my_acis/static/'
 MEDIA_URL = '/www-devel/apps/csc/dj-projects/my_acis/media/'
@@ -619,19 +627,19 @@ def clim_sum_maps(request):
                     'edate': form1.cleaned_data['end_date']}
             if form1.cleaned_data['element'] == 'gddxx':
                 elem = 'gdd%s' %str(form1.cleaned_data['base_temperature_gddxx'])
-                context['elems_long'] = long_el_name['gdd']
+                context['elems_long'] = acis_elements['gdd']['name_long']
                 context['base_temp'] = str(form1.cleaned_data['base_temperature_gddxx'])
             elif form1.cleaned_data['element'] == 'hddxx':
                 elem = 'hdd%s' %str(form1.cleaned_data['base_temperature_hddxx'])
-                context['elems_long'] = long_el_name['hdd']
+                context['elems_long'] = acis_elements['hdd']['name_long']
                 context['base_temp'] = str(form1.cleaned_data['base_temperature_hddxx'])
             elif form1.cleaned_data['element'] == 'cddxx':
                 elem = 'cdd%s' %str(form1.cleaned_data['base_temperature_cddxx'])
-                context['elems_long'] = long_el_name['cdd']
+                context['elems_long'] = acis_elements['cdd']['name_long']
                 context['base_temp'] = str(form1.cleaned_data['base_temperature_cddxx'])
             else:
                 elem = str(form1.cleaned_data['element'])
-                context['elems_long'] = long_el_name[elem]
+                context['elems_long'] = acis_elements[elem]['name_long']
             params['elems'] = [{'name':elem}]
             if 'state' in form1.cleaned_data.keys():
                 params['state'] = form1.cleaned_data['state']
@@ -693,7 +701,7 @@ def grid_point_time_series(request):
             element, base_temp = WRCCUtils.get_el_and_base_temp(form0.cleaned_data['element'])
             if base_temp is not None:
                 context['base_temp'] = base_temp
-            context['element_long'] = long_el_name[element]
+            context['element_long'] = acis_elements[element]['name_long']
             context['element'] = form0.cleaned_data['element']
             context['lat'] = form0.cleaned_data['lat']
             context['lon'] = form0.cleaned_data['lon']
