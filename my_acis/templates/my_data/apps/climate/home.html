@@ -6,7 +6,7 @@
 {% block content %}
 
     <p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn">HOME></a>
-    <a href="{{URL_PREFIX}}sw_ckn/apps/climate/">TOOLS/PRODUCTS></a>
+    <a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS/PRODUCTS></a>
 
 
     <div class="container">
@@ -17,28 +17,28 @@
             
             <ul class="navbar">
                 {%if stn_id%}
-                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/climate/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics</a>
+                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics</a>
                     <div class="pop-up" id="meta">
                         <p><font size="4">Shows availabilty of COOP station data.</font></p>
                     </div>
-                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/climate/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages</a>
+                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages</a>
                     <div class="pop-up" id="maves">
                         <p><font size="4">Generates bar chart of monthly averages.</font></p>
                     </div>
-                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/climate/station_locator/?stn_id={{stn_id}}" class="trigger">Station Locator</a>
+                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/station_locator/?stn_id={{stn_id}}" class="trigger">Station Locator</a>
                     <div class="pop-up" id="stn_locator">
                         <p><font size="4">Find Acis stations with data for specific elements and a chosen time range.</font></p>
                     </div>
                 {%else%}
-                    <a href="{{URL_PREFIX}}sw_ckn/apps/climate/metagraph/" class="trigger">Station Metadata Graphics</a>
+                    <a href="{{URL_PREFIX}}sw_ckn/apps/metagraph/" class="trigger">Station Metadata Graphics</a>
                     <div class="pop-up" id="meta">
                         <p><font size="4">Shows availabilty of COOP station data.</font></p>
                     </div>
-                    <a href="{{URL_PREFIX}}sw_ckn/apps/climate/monthly_aves/" class="trigger">Monthly Averages</a>
+                    <a href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/" class="trigger">Monthly Averages</a>
                     <div class="pop-up" id="meta">
                         <p><font size="4">Generates bar chart of monthly averages.</font></p>
                     </div>
-                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/climate/station_locator/" class="trigger">Station Locator</a>
+                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/station_locator/" class="trigger">Station Locator</a>
                     <div class="pop-up" id="stn_locator">
                         <p><font size="4">Find Acis stations with data for specific elements and a chosen time range.</font></p>
                     </div>
@@ -144,11 +144,11 @@
                 <!--First row of dashboard: image-->
                 <tr>
                     <td><a target="_blank" href="http://www.cefa.dri.edu/Westmap/"><img class="dash_img" src="{{MEDIA_URL}}img/WestMap.png"></a></td>
-                    <td><a href="{{URL_PREFIX}}sw_ckn/apps/climate/grid_point_time_series/"><img class="dash_img" src="{{MEDIA_URL}}img/GPTimeSeries.png"></a></td>
+                    <td><a href="{{URL_PREFIX}}sw_ckn/apps/grid_point_time_series/"><img class="dash_img" src="{{MEDIA_URL}}img/GPTimeSeries.png"></a></td>
                     {%if stn_id%}
-                    <td><a href="{{URL_PREFIX}}sw_ckn/apps/climate/monthly_aves/?stn_id={{stn_id}}"><img class="dash_img" src="{{MEDIA_URL}}img/MonAves.png"></a></td>
+                    <td><a href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}"><img class="dash_img" src="{{MEDIA_URL}}img/MonAves.png"></a></td>
                     {%else%}
-                    <td><a href="{{URL_PREFIX}}sw_ckn/apps/climate/monthly_aves/"><img class="dash_img" src="{{MEDIA_URL}}img/MonAves.png"></a></td>
+                    <td><a href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/"><img class="dash_img" src="{{MEDIA_URL}}img/MonAves.png"></a></td>
                     {%endif%}
                 </tr>
                 <!--Second row: Tool that produces img-->
@@ -191,11 +191,11 @@
             <h1>Gridded Data Applications</h1>
             <p id="sw_ckn">SW-CKN Applications</p>
             <ul class="navbar">
-                <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/climate/clim_sum_maps/" class="trigger">Climate Summary Maps</a>
+                <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/clim_sum_maps/" class="trigger">Climate Summary Maps</a>
                 <div class="pop-up" id="meta">
                     <p><font size="4">Generates climate summary maps for different elements, time ranges and region usig Acis gridded data</font></p>
                 </div>
-                <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/climate/grid_point_time_series/" class="trigger">Grid Point Time Series</a>
+                <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/grid_point_time_series/" class="trigger">Grid Point Time Series</a>
                 <div class="pop-up" id="meta">
                     <p><font size="4">Generates time series data and graph for a chosen grid point and time range using Acis gridded data.</font></p>
                 </div> 

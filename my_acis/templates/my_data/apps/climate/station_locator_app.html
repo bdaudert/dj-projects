@@ -6,8 +6,8 @@
 {% block content %}
 
 <p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn">HOME></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/climate/">TOOLS/PRODUCTS></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/climate/station_locator/">Station Locator</a></p>
+<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS/PRODUCTS></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/station_locator/">Station Locator</a></p>
 
 <div class="container">
     <div class="center-left" style="border:none;">
@@ -39,7 +39,9 @@
                 {%else%}
                 <tr>
                     <td>{{field.label}}:</td>
-                    <td>{{field}}</td>                                                                                                                               <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                                                         <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    <td>{{field}}</td>                                                                                       
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
+                    <div class="pop-up"><p>{{field.help_text}}</p></div>
                     </td>
                 </tr>
                 {%endif%}
@@ -88,7 +90,22 @@
         {%if json_file%}
             <input type="hidden" id="json_file" name="variable" value="{{ json_file }}">
         {%else%}
-            <input type="hidden" id="json_file" name="variable" value="Test.json">
+            {%if empty_json%}
+                <input type="hidden" id="json_file" name="variable" value="Empty.json">
+            {%else%}
+                <input type="hidden" id="json_file" name="variable" value="SW_stn.json">
+            {%endif%}
+        {%endif%}
+
+        {%if start_date%}
+            <input type="hidden" id="start_date" name="variable" value="{{start_date}}">
+        {%endif%}
+        {%if end_date%}
+            <input type="hidden" id="end_date" name="variable" value="{{end_date}}">
+        {%endif%}
+
+        {%if elements%}
+            <input type="hidden" id="elements" name="variable" value="{{elements}}">
         {%endif%}
 
         <script type="text/javascript">

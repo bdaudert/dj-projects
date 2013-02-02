@@ -6,7 +6,7 @@
 {% block content %}
 
 <p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn">HOME></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/climate/">TOOLS/PRODUCTS</a></p>
+<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS/PRODUCTS</a></p>
 
 
 <div class="container">
@@ -14,12 +14,12 @@
         <h1>Product Categories</h1>
         <ul class="navbar">
             {%if stn_id%}
-                <a href="csc/sw_ckn/apps/climate/?stn_id={{stn_id}}" class="trigger">Climate Products</a>
+                <a href="csc/sw_ckn/apps/?stn_id={{stn_id}}" class="trigger">Climate Products</a>
                     <div class="pop-up" id="meta">
                         <p><font size="4">Time Series of Station data, monthly averages, anomaly maps ...</font></p>
                     </div>
             {%else%}
-                <a href="{{URL_PREFIX}}sw_ckn/apps/climate/?stn_id={{stn_id}}" class="trigger">Climate Products</a>
+                <a href="{{URL_PREFIX}}sw_ckn/apps/?stn_id={{stn_id}}" class="trigger">Climate Products</a>
                     <div class="pop-up" id="meta">
                         <p><font size="4">Time Series of Station data, monthly averages, anomaly maps</font></p>
                     </div>

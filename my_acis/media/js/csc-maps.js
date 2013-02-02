@@ -30,7 +30,7 @@ function initialize_grid_point_map() {
         var contentString = '<div id="MarkerWindow">'+
             '<p><b>Lat: </b>' + event.latLng.lat() + '<br/>'+
             '<b>Lon: </b>' + event.latLng.lng() + '<br/>' +
-            '<a href="'+ base_dir +'apps/climate/grid_point_time_series/?lat=' +
+            '<a href="'+ base_dir +'apps/grid_point_time_series/?lat=' +
             event.latLng.lat() + '&lon=' + event.latLng.lng() +
             '">Use this location</a></div>';
         infowindow.setContent(contentString);
@@ -49,6 +49,19 @@ function initialize_station_finder() {
     var geocoder = new google.maps.Geocoder();
     var MEDIA_URL = document.getElementById("MEDIA_URL").value;
     var json_file = document.getElementById("json_file").value;
+    if (document.getElementById("start_date")) {
+        var start_date = document.getElementById("start_date").value;
+    } 
+    else { var start_date = null }
+    if (document.getElementById("end_date")) {
+        var end_date = document.getElementById("end_date").value;
+    }
+    else { var end_date = null }
+    if (document.getElementById("elements")) {
+        var elements = document.getElementById("elements").value;
+    }
+    else { var elements = null } 
+    
     $.getJSON(MEDIA_URL + 'tmp/' + json_file, function(data) {
 
         //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
@@ -106,12 +119,32 @@ function initialize_station_finder() {
             //Fit map to encompass all markers
             bounds.extend(latlon);
 
-            var wrcc_info_string = new String();
+            var wrcc_info_link = new String();
             if ( c.sids[0] && c.sids[0].length == 6 && !isNaN(c.sids[0].replace(/^[0]/g,"") * 1)){
-                var wrcc_info_string = '<a  target="_blank" href="http://www.wrcc.dri.edu/cgi-bin/cliMAIN.pl?'
+                var wrcc_info_link = '<a  target="_blank" href="http://www.wrcc.dri.edu/cgi-bin/cliMAIN.pl?'
                 + c.state + c.sids[0].substring(2,6) +
-                '">Access Climate Information for this Station</a> <br/>'
+                '">Access Climate Information for this Station</a>'
             }
+            var avbl_elements = '<br />';
+            for (var i=0;i<c.available_elements.length;i++){
+                avbl_elements = avbl_elements + c.available_elements[i] + '<br />';
+            }
+            var data_portal_link = '<a target="_blank" href="' + base_dir + 'data/historic/?stn_id=' + c.sids[0];
+            var app_portal_link = '<a target="_blank" href="' + base_dir + 'apps/sw_ckn_station_apps/?stn_id=' + c.sids[0]; 
+            if (start_date != null){ 
+                data_portal_link = data_portal_link + '&start_date=' + start_date;
+                app_portal_link = app_portal_link + '&start_date=' + start_date; 
+            }
+            if (end_date != null){ 
+                data_portal_link = data_portal_link + '&end_date=' + end_date;
+                app_portal_link = app_portal_link + '&end_date=' + end_date; 
+            }
+            if (elements != null){ 
+                data_portal_link = data_portal_link + '&elements=' + elements;
+                app_portal_link = app_portal_link + '&elements=' + elements;
+            }
+            data_portal_link = data_portal_link + '">Get Data for this Station</a>'
+            app_portal_link = app_portal_link + '">Run a climate application for this Station</a>'
             var contentString = '<div id="MarkerWindow">'+
                 '<p><b>Name: </b>' + c.name + '<br/>'+
                 '<b>State: </b>' + c.state + '<br/>' +
@@ -119,12 +152,10 @@ function initialize_station_finder() {
                 '<b>SIDS: </b>' + c.sids + '<br/>' +
                 '<b>NETWORKS: </b>' + c.stn_networks + '<br/>' +
                 '<b>Elevation: </b>' + c.elevation + '<br/>' +
-                '<b>Available Elements: </b>' + c.available_elements + '<br/>' +
-                '</p>' + wrcc_info_string +
-                '<a target="_blank" href="' + base_dir + 'data/historic/?stn_id=' + c.sids[0] +
-                '">Get Data for this Station</a> <br/>'+
-                '<a target="_blank" href="' + base_dir + 'apps/climate/?stn_id=' + c.sids[0] +
-                '">Run a climate application for this Station</a>'+
+                '<b>Available Elements: </b>' + avbl_elements +
+                '</p>' + wrcc_info_link + '<br />' +
+                data_portal_link + '<br />' +
+                app_portal_link +
                 '</div>';
 
             //Open info window when user clicks on marker

@@ -155,9 +155,15 @@ def data_historic(request):
         'data_page':True
     }
     context['json_file'] = 'SW_stn.json'
+    stn_id = request.GET.get('stn_id', None)
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
     elements = request.GET.get('elements', None)
     initial_params_0 = {}
-    if elements is not None:initial_params_0['elements'] = str(elements)
+    if stn_id is not None:context['stn_id'] = stn_id
+    if start_date is not None:context['start_date'] = start_date
+    if end_date is not None:context['end_date'] = end_date
+    if elements is not None:initial_params_0['elements'] = str(elements);context['elements'] = elements
 
     if initial_params_0:
         form0_point = set_as_form(request,'PointData0Form', init=initial_params_0)
@@ -176,9 +182,10 @@ def data_historic(request):
             start_date = request.GET.get('start_date', None)
             end_date = request.GET.get('end_date', None)
             elements = request.GET.get('elements', None)
-            if stn_id is not None:initial_params_1['station_id'] = str(stn_id)
-            if start_date is not None:initial_params_1['start_date'] = str(start_date)
-            if end_date is not None:initial_params_1['end_date'] = str(end_date)
+            if stn_id is not None:initial_params_1['station_id'] = str(stn_id);context['stn_id'] = stn_id
+            if start_date is not None:initial_params_1['start_date'] = str(start_date);context['start_date'] = start_date
+            if end_date is not None:initial_params_1['end_date'] = str(end_date);context['end_date'] = end_date
+            if elements is not None:context['elements'] = elements
             initial_params_1['elements'] = form0_point.cleaned_data['elements']
             initial_params_1['data_format'] = form0_point.cleaned_data['data_format']
             initial_params_1['station_selection'] = form0_point.cleaned_data['station_selection']
@@ -190,9 +197,19 @@ def data_historic(request):
     if 'form1_point' in request.POST:
         form1_point = set_as_form(request,'PointDataForm1')
         context['form1_point'] = form1_point
+        stn_id = request.GET.get('stn_id', None)
+        start_date = request.GET.get('start_date', None)
+        end_date = request.GET.get('end_date', None)
+        elements = request.GET.get('elements', None)
+        if stn_id is not None:context['stn_id'] = stn_id
+        if start_date is not None:context['start_date'] = start_date
+        if end_date is not None:context['end_date'] = end_date
+        if elements is not None:context['elements'] = elements
+
         if form1_point.is_valid():
             context['cleaned'] = form1_point.cleaned_data
-            (data, dates, elements, station_ids, station_names) = AcisWS.get_point_data(form1_point.cleaned_data, 'sodlist_web')
+            (data, dates, elements, station_ids, station_names, errors) = AcisWS.get_point_data(form1_point.cleaned_data, 'sodlist_web')
+            context['errors'] = errors
             context['point_data'] = dict(data)
             context['elements'] =  elements
             context['station_names'] = station_names
@@ -261,9 +278,20 @@ def data_modeled(request):
     initial_0 = {}
     grid_selection = request.GET.get('grid_selection', None)
     elements = request.GET.get('elements', None)
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
+    elements = request.GET.get('elements', None)
+    bounding_box = request.GET.get('bounding_box', None)
+    state = request.GET.get('state', None)
+    loc = request.GET.get('loc', None)
+    grid = request.GET.get('grid', None)
     if grid_selection is not None:initial_0['grid_selection'] = grid_selection
-    if elements is not None:initial_0['elements'] = str(elements)
-
+    if elements is not None:initial_0['elements'] = str(elements);context['elements'] = elements
+    if start_date is not None:context['start_date'] = start_date
+    if end_date is not None:context['end_date'] = end_date
+    if bounding_box is not None:context['bounding_box'] = bounding_box
+    if state is not None:context['state'] = state
+    if loc is not None:context['location'] = loc
     if initial_0:
         form0_grid = set_as_form(request,'GridData0Form', init=initial_0)
     else:
@@ -283,11 +311,12 @@ def data_modeled(request):
             loc = request.GET.get('loc', None)
             grid = request.GET.get('grid', None)
             initial_1 = {}
-            if start_date is not None:initial_1['start_date'] = start_date
-            if end_date is not None:initial_1['end_date'] = end_date
-            if bounding_box is not None:initial_1['bounding_box'] = bounding_box
-            if state is not None:initial_1['state'] = state
-            if loc is not None:initial_1['location'] = loc
+            if elements is not None:context['elements'] = elements
+            if start_date is not None:initial_1['start_date'] = start_date;context['start_date'] = start_date
+            if end_date is not None:initial_1['end_date'] = end_date;context['end_date'] = end_date
+            if bounding_box is not None:initial_1['bounding_box'] = bounding_box;context['bounding_box'] = bounding_box
+            if state is not None:initial_1['state'] = state;context['state'] = state
+            if loc is not None:initial_1['location'] = loc;context['location'] = loc
             if grid_selection is None:
                 initial_1['grid_selection'] = form0_grid.cleaned_data['grid_selection']
             else:
@@ -401,6 +430,7 @@ def apps_home(request):
     }
     return render_to_response('my_data/apps/home.html', context, context_instance=RequestContext(request))
 
+
 def apps_climate(request):
     context = {
         'title': 'Climate Data Products',
@@ -423,6 +453,24 @@ def apps_climate(request):
     context['state'] = state
     context['element'] = element
     return render_to_response('my_data/apps/climate/home.html', context, context_instance=RequestContext(request))
+
+def sw_ckn_station_apps(request):
+    context = {
+        'title': 'SW-CKN Historic Station Data Applications',
+        'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
+        'apps_page':True
+
+    }
+    stn_id = request.GET.get('stn_id', None)
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
+    elements = request.GET.get('elements', None)
+    if stn_id is not None:context['stn_id'] = stn_id
+    if start_date is not None:context['start_date'] = start_date
+    if end_date is not None:context['end_date'] = end_date
+    if elements is not None:context['elements'] = elements
+
+    return render_to_response('my_data/apps/climate/sw_ckn_station_apps.html', context, context_instance=RequestContext(request))
 
 def metagraph(request):
     context = {
@@ -484,10 +532,19 @@ def monthly_aves(request):
         'apps_page':True
     }
     stn_id = request.GET.get('stn_id', None)
-    if stn_id is None:
-        form_graphs = set_as_form(request,'MonthlyAveragesForm')
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
+    elements = request.GET.get('elements', None)
+    initial = {}
+    if stn_id is None:initial['stn_id']= str(stn_id);context['stn_id'] = stn_id
+    if start_date is None:initial['start_date']= str(start_date);context['start_date'] = start_date
+    if end_date is None:initial['end_date']= str(end_date);context['end_date'] = end_date
+    if elements is None:initial['elements']= str(elements);context['elements'] = elements
+    if initial:
+        form_graphs = set_as_form(request,'MonthlyAveragesForm', init=initial)
+        context['initial'] = initial
     else:
-        form_graphs = set_as_form(request,'MonthlyAveragesForm', init={'stn_id':str(stn_id)})
+        form_graphs = set_as_form(request,'MonthlyAveragesForm')
     context['form_graphs'] = form_graphs
     if 'form_graphs' in request.POST:
         form_graphs = set_as_form(request,'MonthlyAveragesForm')
@@ -558,11 +615,18 @@ def monthly_aves(request):
                     results[el_idx]['element'] = str(el)
                     results[el_idx]['stn_id']= str(form_graphs.cleaned_data['station_id'])
                     if form_graphs.cleaned_data['start_date'] == 'por':
-                        results[el_idx]['record_start'] = str(req['meta']['valid_daterange'][el_idx][0])
+                        if len(req['meta']['valid_daterange'][el_idx]) == 2:
+                            results[el_idx]['record_start'] = str(req['meta']['valid_daterange'][el_idx][0])
+                        else:
+                            #no valid daterange found
+                            results[el_idx]['record_start'] = ['0000-00-00']
                     else:
                         results[el_idx]['record_start'] = '%s-%s-%s' % (s_date[0:4], s_date[4:6], s_date[6:8])
                     if form_graphs.cleaned_data['end_date'] == 'por':
-                        results[el_idx]['record_end'] = str(req['meta']['valid_daterange'][el_idx][1])
+                        if len(req['meta']['valid_daterange'][el_idx]) == 2:
+                            results[el_idx]['record_end'] = str(req['meta']['valid_daterange'][el_idx][1])
+                        else:
+                            results[el_idx]['record_end'] = ['0000-00-00']
                     else:
                         results[el_idx]['record_end'] = '%s-%s-%s' % (e_date[0:4], e_date[4:6], e_date[6:8])
                     results[el_idx]['data'] = monthly_aves[el]
@@ -740,14 +804,18 @@ def grid_point_time_series(request):
     return render_to_response('my_data/apps/climate/grid_point_time_series.html', context, context_instance=RequestContext(request))
 
 def station_locator_app(request):
+    from subprocess import call
+    call(["touch", "/tmp/Empty.json"])
     context = {
-        'title': 'Find Acis stations by element and date range!',
+        'title': 'Station Finder',
         'apps_page':True
     }
     form0 = set_as_form(request,'StationLocatorForm0')
     context['form0'] = form0
+    context['empty_json'] = False
 
     if 'form0' in request.POST:
+        context['empty_json'] = True
         form0 = set_as_form(request,'StationLocatorForm0')
         context['form0']  = form0
 
@@ -757,13 +825,15 @@ def station_locator_app(request):
             stn_id = request.GET.get('stn_id', None)
             if stn_id is not None:initial_params['station_id'] = str(stn_id)
             initial_params['station_selection'] = form0.cleaned_data['station_selection']
-
+            initial_params['element_selection'] = form0.cleaned_data['element_selection']
             form1 = forms.StationLocatorForm1(initial=initial_params)
             context['form1'] = form1
 
     if 'form1' in request.POST:
+        context['empty_json'] = True
         form1 = set_as_form(request,'StationLocatorForm1')
         context['form1'] = form1
+        #context['form1_ready'] = True
         if form1.is_valid():
             station_selection = form1.cleaned_data['station_selection']
             if 'station_id' in form1.cleaned_data.keys():by_type = 'station_id';val = form1.cleaned_data['station_id']
@@ -775,30 +845,41 @@ def station_locator_app(request):
             if 'state' in form1.cleaned_data.keys():by_type = 'state';val = form1.cleaned_data['state']
             if 'bounding_box' in form1.cleaned_data.keys():by_type = 'bounding_box';val = form1.cleaned_data['bounding_box']
 
-            date_range = [str(form1.cleaned_data['start_date']), str(form1.cleaned_data['end_date'])]
-            #Convert element_list to list of var majors
-            el_vX_list = []
-            for el_idx, el in enumerate(form1.cleaned_data['elements']):
-                #Check if user entered a gddxx,hddxx,cddxx
-                el_strip = re.sub(r'(\d+)(\d+)', '', el)   #strip digits from gddxx, hddxx, cddxx
-                b = el[-2:len(el)] #base_temp
-                try:
-                    int(b)
-                    if el_strip in ['hdd', 'gdd']:
-                        el_vX_list.append('45')
-                    elif el_strip == 'cdd':
-                        el_vX_list.append('45') #should be 44
-                    else:
-                        pass
-                except:
-                    el_vX_list.append(acis_elements[el]['vX'])
+            if form1.cleaned_data['element_selection'] == 'T':
+                date_range = [str(form1.cleaned_data['start_date']), str(form1.cleaned_data['end_date'])]
+                context['start_date'] = form1.cleaned_data['start_date']
+                context['end_date'] = form1.cleaned_data['end_date']
+                context['elements'] = ','.join(form1.cleaned_data['elements']) #tuple of elements
+                #Convert element_list to list of var majors
+                el_vX_list = []
+                for el_idx, el in enumerate(form1.cleaned_data['elements']):
+                    #Check if user entered a gddxx,hddxx,cddxx
+                    el_strip = re.sub(r'(\d+)(\d+)', '', el)   #strip digits from gddxx, hddxx, cddxx
+                    b = el[-2:len(el)] #base_temp
+                    try:
+                        int(b)
+                        if el_strip in ['hdd', 'gdd']:
+                            el_vX_list.append('45')
+                        elif el_strip == 'cdd':
+                            el_vX_list.append('45') #should be 44
+                        else:
+                            pass
+                    except:
+                        el_vX_list.append(acis_elements[el]['vX'])
 
-            stn_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range)
+                stn_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range)
+            else:
+                stn_json, f_name = AcisWS.station_meta_to_json(by_type, val)
+
             if 'error' in stn_json.keys():
                 context['error'] = stn_json['error']
             if stn_json['stations'] == []:
                 context['error'] = "No stations found for %s : %s, elements: %s and date range %s!"  %(by_type, val, element_list, date_range)
             context['json_file'] = f_name
+            context['empty_json'] = False
+        form1 = set_as_form(request,'StationLocatorForm1')
+        context['form1'] = form1
+        context['form1_ready'] = True
     return render_to_response('my_data/apps/climate/station_locator_app.html', context, context_instance=RequestContext(request))
 
 def apps_hydro(request):

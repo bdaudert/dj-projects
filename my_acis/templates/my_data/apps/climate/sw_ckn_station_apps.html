@@ -1,0 +1,98 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="tools, climate product, climate applications, visualization, time series, risk maps, composite maps">
+<meta name="description" content="SW-CKN Climate Applications">
+
+{% block content %}
+
+    <p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn">HOME></a>
+    <a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS/PRODUCTS></a>
+
+
+    <div class="container">
+
+        <div class="center-left">
+            <h1>Point Data Applications</h1>
+                <p id="sw_ckn">SW-CKN Applications</p>
+            {{stn_id}}            
+            <ul class="navbar">
+                {%if stn_id%}
+                    {%if start_date%}
+                        {%if elements%}
+                            <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/metagraph/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}" class="trigger">Station Metadata Graphics</a>
+                            <div class="pop-up" id="meta">
+                                <p><font size="4">Shows availabilty of COOP station data.</font></p>
+                            </div>
+                            <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}" class="trigger">Monthly Averages</a>
+                            <div class="pop-up" id="maves">
+                                <p><font size="4">Generates bar chart of monthly averages.</font></p>
+                            </div>
+                        {%else%}
+                            <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/metagraph/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}" class="trigger">Station Metadata Graphics</a>
+                            <div class="pop-up" id="meta">
+                                <p><font size="4">Shows availabilty of COOP station data.</font></p>
+                            </div>
+                            <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}" class="trigger">Monthly Averages</a>
+                            <div class="pop-up" id="maves">
+                                <p><font size="4">Generates bar chart of monthly averages.</font></p>
+                            </div>
+                        {%endif%}
+                    {%else%}
+                        <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics</a>
+                        <div class="pop-up" id="meta">
+                            <p><font size="4">Shows availabilty of COOP station data.</font></p>
+                        </div>
+                        <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages</a>
+                        <div class="pop-up" id="maves">
+                            <p><font size="4">Generates bar chart of monthly averages.</font></p>
+                        </div>
+                    {%endif%}
+                {%else%}
+                    <a href="{{URL_PREFIX}}sw_ckn/apps/metagraph/" class="trigger">Station Metadata Graphics</a>
+                    <div class="pop-up" id="meta">
+                        <p><font size="4">Shows availabilty of COOP station data.</font></p>
+                    </div>
+                    <a href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/" class="trigger">Monthly Averages</a>
+                    <div class="pop-up" id="meta">
+                        <p><font size="4">Generates bar chart of monthly averages.</font></p>
+                    </div>
+                {%endif%}
+            </ul>
+        </div>
+
+        <div class="center">
+            <p class="warning" align="center" onClick="ShowHide('more_on_data')"><img class="logo"         
+            src="{{MEDIA_URL}}img/Acis-logo.jpg"><u>More about the Acis data sets ...</u></p>
+            <div id="more_on_data" style="display:none;">
+            <p>Currently most of our data applications query data from Acis via webservices.
+            Climate data available in ACIS consists of in-situ observations collected from a
+            variety of federal, regional, state, and local weather and climate networks.
+            Both archive-quality historical data and near-real-time data ingested from operational
+            data transmission streams are available. ACIS data are primarily used for the generation
+            of operational climate products but also provide quality archive datasets.
+            A collection of gridded/modeled data sets is also available. The Northeast Regional Climate Center (NRCC)
+            developed their own gridded data sets but also provides access to modeled NARCCAPP
+            (North American Regional Climate Change Assessment Program ) data sets.
+            New data sources are continually added contingent upont demand, need, time and funding.
+            For more information:<br />
+            <a target="_blank" href="http://rcc-acis.unl.edu/index.php">Acis Home Page</a>
+            </p></div>
+
+
+            {%if stn_id%}
+                <p class="error">Station ID: {{stn_id}}</p>
+            {%endif%}
+            {%if start_date%}
+                <p class="error">Start Date: {{start_date}}</p>
+            {%endif%}
+            {%if end_date%}
+                <p class="error">End Date: {{end_date}}</p>
+            {%endif%}
+            {%if elements%}
+                <p class="error">Acis Elements: {{elements}}</p>
+            {%endif%}
+         
+        </div>
+
+    </div>
+{%endblock%}

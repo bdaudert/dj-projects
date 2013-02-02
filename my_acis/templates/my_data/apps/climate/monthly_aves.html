@@ -6,8 +6,8 @@
 {% block content %}
 
 <p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn">HOME></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/climate/">TOOLS/PRODUCTS></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/climate/monthly_aves/">Monthly Averages</a></p>
+<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS/PRODUCTS></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/">Monthly Averages</a></p>
 
 <div class="container">
     <div class="center-left" style="border:none;">
@@ -72,7 +72,21 @@
             width="450" height="450" border="0"/></li>
             </ul></p>
         </div>
-        
+
+        {{initial}}
+        {%if stn_id%}
+            <p class="error">Station ID: {{stn_id}}</p>
+        {%endif%}
+        {%if start_date%}
+            <p class="error">Start Date: {{start_date}}</p>
+        {%endif%}
+        {%if end_date%}
+            <p class="error">End Date: {{end_date}}</p>
+        {%endif%}
+        {%if elements%}
+            <p class="error">Acis Elements: {{elements}}</p>
+        {%endif%}       
+
         {%if results%}
             <h2>Plots of Monthly Averages</h2>
             <p class="error">Data values of 10k indicate missing data for the entire month.</p>

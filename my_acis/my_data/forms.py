@@ -12,7 +12,7 @@ import WRCCUtils
 #Utilities
 ############################################
 #find todays date
-tdy = datetime.datetime.today()
+tdy = datetime.datetime.today() - datetime.timedelta(days=2)
 yr = str(tdy.year)
 mon = str(tdy.month)
 day = str(tdy.day)
@@ -431,21 +431,22 @@ class GPTimeSeriesForm(forms.Form):
             self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text='Valid gridded data set recognized by Acis.')
 
 class StationLocatorForm0(forms.Form):
-    station_selection = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid', help_text='Defines area encompassing the stations of interest.')
-
+    station_selection = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='state', help_text='Defines area encompassing the stations of interest.')
+    element_selection = forms.ChoiceField(choices=([('T', 'Cherry pick elements'),('F', 'All Acis elements')]), required=False, initial='F', help_text='Only look for stations that have data for certain elements.')
 class StationLocatorForm1(forms.Form):
     def __init__(self, *args, **kwargs):
         station_selection = kwargs.get('initial', {}).get('station_selection', None)
+        element_selection = kwargs.get('initial', {}).get('element_selection', None)
         stn_id = kwargs.get('initial', {}).get('stn_id', None)
         super(StationLocatorForm1, self).__init__(*args, **kwargs)
 
-        if station_selection is None:
-            station_selection = self.data.get('station_selection')
-        if stn_id is None:
-            stn_id = self.data.get('stn_id')
+        if station_selection is None:station_selection = self.data.get('station_selection')
+        if element_selection is None:element_selection = self.data.get('element_selection')
+        if stn_id is None:stn_id = self.data.get('stn_id')
 
 
         self.fields['station_selection'] = forms.CharField(required=False, initial=station_selection, widget=forms.HiddenInput(), help_text='Defines area encompassing the stations of interest.')
+        self.fields['element_selection'] = forms.CharField(required=False, initial=element_selection, widget=forms.HiddenInput(), help_text='Only look for stations that have data for certain elements.')
 
         if station_selection == 'stn_id':
             self.fields['station_id'] = forms.CharField(initial=stn_id, help_text='Station id recognized by Acis. See "How to use this tool" for more info.')
@@ -463,9 +464,11 @@ class StationLocatorForm1(forms.Form):
         elif station_selection == 'basin':
             self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='01080205', help_text='Valid US darinage basin identifier.')
         elif station_selection == 'state':
-            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='Valid US state abreviation.')
+            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='US state.')
         elif station_selection == 'bbox':
             self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41', help_text='Bounding box latitudes and longitudes: West,South,East,North.')
-        self.fields['elements'] = MultiElementField(initial='mint,maxt,avgt', help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
-        self.fields['start_date'] = MyDateField(max_length=8, required = False, initial='20000101', help_text= 'yyyymmdd or "por" for period of record.')
-        self.fields['end_date'] = MyDateField(max_length=8, required = False, initial='por', help_text= 'yyyymmdd or "por" for period of record.')
+        if element_selection == 'T':
+            self.fields['elements'] = MultiElementField(initial='mint,maxt,avgt', help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
+            self.fields['start_date'] = MyDateField(max_length=8, required = False, initial='20130101',min_length=8, help_text= 'yyyymmdd.')
+            self.fields['end_date'] = MyDateField(max_length=8, required = False, initial=today,min_length=8, help_text= 'yyyymmdd.')
+

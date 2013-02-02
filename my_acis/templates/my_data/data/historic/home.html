@@ -113,12 +113,27 @@
 
         <div id="docu_long"></div>
 
-        {{dates}}
+        {%if stn_id%}
+            <p class="error">Station ID: {{stn_id}}</p>
+        {%endif%}
+        {%if start_date%}
+            <p class="error">Start Date: {{start_date}}</p>
+        {%endif%}
+        {%if end_date%}
+            <p class="error">End Date: {{end_date}}</p>
+        {%endif%}
+        {%if elements%}
+            <p class="error">Acis Elements: {{elements}}</p>
+        {%endif%}
+
         {%if point_data%}
         <br />
         <br />
         {%if not json%}
             {%for stn, stn_data in point_data.items %}
+            
+                <p class="error"> {{errors.forloop_counter}}</p>
+
                 <h2>STATION NAME: {{station_names.stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids.stn|safe}}</h2>
                 <table>
                 <th>date{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</th>

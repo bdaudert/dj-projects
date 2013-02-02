@@ -97,7 +97,7 @@
                 <ul>
                     <li>Grid selection = "Point Location". Enter a latitude, longitide of choice. 
                     If you don't know your lat, lon, find it here:</li>
-                    <a href="{{URL_PREFIX}}sw_ckn/apps/climate/grid_point_time_series/">Gridpoint time series tool</a>
+                    <a href="{{URL_PREFIX}}sw_ckn/apps/grid_point_time_series/">Gridpoint time series tool</a>
                     <li>Grid selection = "State". Enter a US state of choice.</li>
                     <li>Station Selection = "Bounding Box". Find data for all stations in a bounding box of your choice. 
                     A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. 
@@ -112,6 +112,25 @@
             </ul>
             </ul></p>
         </div>
+
+        {%if location%}
+            <p class="error">Lat, Lon: {{location}}</p>
+        {%endif%}
+        {%if state%}
+            <p class="error">State: {{State}}</p>
+        {%endif%}
+        {%if bounding_box%}
+            <p class="error">Bounding Box: {{bounding_box}}</p>
+        {%endif%}
+       {%if start_date%}
+            <p class="error">Start Date: {{start_date}}</p>
+        {%endif%}
+        {%if end_date%}
+            <p class="error">End Date: {{end_date}}</p>
+        {%endif%}
+        {%if elements%}
+            <p class="error">Acis Elements: {{elements}}</p>
+        {%endif%}
 
         {%if error%}
             {{error}}
