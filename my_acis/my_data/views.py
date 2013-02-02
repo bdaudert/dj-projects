@@ -34,10 +34,10 @@ acis_elements ={'maxt':{'name':'maxt', 'name_long': 'Maximum Daily Temperature (
               'snwd': {'name': 'snwd', 'name_long':'Snow Depth (In)', 'vX':'11'}, \
               'evap': {'name': 'evap', 'name_long':'Pan Evaporation (In)', 'vX':'7'}, \
               'dd': {'name': 'dd', 'name_long':'Degree Days (Days)', 'vX':'45'}, \
-              'cdd': {'name': 'cdd', 'name_long':'Cooling Degree Days (Days)'}, 'vX':'44', \
+              'cdd': {'name': 'cdd', 'name_long':'Cooling Degree Days (Days)'}, 'vX':'45', \
               'hdd': {'name': 'hdd', 'name_long':'Heating Degree Days (Days)'}, 'vX':'45', \
               'gdd': {'name': 'gdd', 'name_long':'Growing Degree Days (Days)'}, 'vX':'45'}
-              #bug fix needed for cdd = 44
+              #bug fix needed for cdd = 44 (WAITING FOR BILL, ALSO IN PLACES BELOW, eg in station_locator_app, also in AcisWS.py)
 
 state_choices = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', \
                 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', \
@@ -183,11 +183,6 @@ def data_historic(request):
             initial_params_1['data_format'] = form0_point.cleaned_data['data_format']
             initial_params_1['station_selection'] = form0_point.cleaned_data['station_selection']
 
-            '''
-            initial = {'station_selection':form0_point.cleaned_data['station_selection'], \
-                      'elements':form0_point.cleaned_data['elements'], \
-                      'data_format':form0_point.cleaned_data['data_format']}
-            '''
 
             form1_point = forms.PointDataForm1(initial=initial_params_1)
             context['form1_point'] = form1_point
@@ -744,6 +739,68 @@ def grid_point_time_series(request):
             f.close()
     return render_to_response('my_data/apps/climate/grid_point_time_series.html', context, context_instance=RequestContext(request))
 
+def station_locator_app(request):
+    context = {
+        'title': 'Find Acis stations by element and date range!',
+        'apps_page':True
+    }
+    form0 = set_as_form(request,'StationLocatorForm0')
+    context['form0'] = form0
+
+    if 'form0' in request.POST:
+        form0 = set_as_form(request,'StationLocatorForm0')
+        context['form0']  = form0
+
+        if form0.is_valid():
+            context['form1_ready'] = True
+            initial_params= {}
+            stn_id = request.GET.get('stn_id', None)
+            if stn_id is not None:initial_params['station_id'] = str(stn_id)
+            initial_params['station_selection'] = form0.cleaned_data['station_selection']
+
+            form1 = forms.StationLocatorForm1(initial=initial_params)
+            context['form1'] = form1
+
+    if 'form1' in request.POST:
+        form1 = set_as_form(request,'StationLocatorForm1')
+        context['form1'] = form1
+        if form1.is_valid():
+            station_selection = form1.cleaned_data['station_selection']
+            if 'station_id' in form1.cleaned_data.keys():by_type = 'station_id';val = form1.cleaned_data['station_id']
+            if 'station_ids' in form1.cleaned_data.keys():by_type = 'station_ids';val = form1.cleaned_data['station_ids']
+            if 'county' in form1.cleaned_data.keys():by_type = 'county';val = form1.cleaned_data['county']
+            if 'climate_division' in form1.cleaned_data.keys():by_type = 'climate_division';val = form1.cleaned_data['climate_division']
+            if 'county_warning_area' in form1.cleaned_data.keys():by_type = 'county_warning_area';val = form1.cleaned_data['county_warning_area']
+            if 'basin' in form1.cleaned_data.keys():by_type = 'basin';val = form1.cleaned_data['basin']
+            if 'state' in form1.cleaned_data.keys():by_type = 'state';val = form1.cleaned_data['state']
+            if 'bounding_box' in form1.cleaned_data.keys():by_type = 'bounding_box';val = form1.cleaned_data['bounding_box']
+
+            date_range = [str(form1.cleaned_data['start_date']), str(form1.cleaned_data['end_date'])]
+            #Convert element_list to list of var majors
+            el_vX_list = []
+            for el_idx, el in enumerate(form1.cleaned_data['elements']):
+                #Check if user entered a gddxx,hddxx,cddxx
+                el_strip = re.sub(r'(\d+)(\d+)', '', el)   #strip digits from gddxx, hddxx, cddxx
+                b = el[-2:len(el)] #base_temp
+                try:
+                    int(b)
+                    if el_strip in ['hdd', 'gdd']:
+                        el_vX_list.append('45')
+                    elif el_strip == 'cdd':
+                        el_vX_list.append('45') #should be 44
+                    else:
+                        pass
+                except:
+                    el_vX_list.append(acis_elements[el]['vX'])
+
+            stn_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range)
+            if 'error' in stn_json.keys():
+                context['error'] = stn_json['error']
+            if stn_json['stations'] == []:
+                context['error'] = "No stations found for %s : %s, elements: %s and date range %s!"  %(by_type, val, element_list, date_range)
+            context['json_file'] = f_name
+    return render_to_response('my_data/apps/climate/station_locator_app.html', context, context_instance=RequestContext(request))
+
 def apps_hydro(request):
     context = {
         'title': 'Hydrology Products',
@@ -897,6 +954,7 @@ def by_bounding_box(request):
     context['title'] = "Search Results for bounding box %s" %bbox
     context['json_file'] = f_name
     return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
+
 
 #Utlities
 def set_as_form(request, f_name, init = None):

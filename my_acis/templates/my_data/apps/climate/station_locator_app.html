@@ -1,0 +1,129 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="station finder, map, by date range, by element, station data, historic data,application, product, tool">
+<meta name="description" content="SW-CKN Generates graphs of monthly averages">
+
+{% block content %}
+
+<p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn">HOME></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/climate/">TOOLS/PRODUCTS></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/climate/station_locator/">Station Locator</a></p>
+
+<div class="container">
+    <div class="center-left" style="border:none;">
+
+        <div id='form0'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form0 %}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    <td>{{field}}</td>
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
+                    <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    </td>
+                </tr>
+            {%endfor%}
+            </table>
+            <input type="submit" value="Select" name="form0"/>
+            </form>
+        </div>
+
+        {%if form1_ready%}
+        <div id='form1'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form1 %}
+                {%if field.is_hidden %}
+                    {{field}}
+                {%else%}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    <td>{{field}}</td>                                                                                                                               <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                                                         <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    </td>
+                </tr>
+                {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form1"/>
+            </form>
+        </div>
+        {%endif%}
+    </div>
+
+    <div class="center" style="border:none;">
+        <div id=tool_info_head></div>
+        <script type="text/javascript">                        
+            $("#tool_info_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_info");
+        </script>
+        <div id="tool_info" style="display:none;">
+            <p><ul>
+                <li>Tool to locate Acis stations that have data for user choosen list of elements and  data range</li>
+            </ul></p>
+        </div>
+
+        <div id="how_to_head"></div>
+        <script type="text/javascript">            
+            $("#how_to_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_how_to");
+        </script>
+        <div id="how_to" style="display:none;">
+            <p><ul>
+            <li>Choose and Area of interest</li>
+            <li>Enter a comma seperated list of elements from the following otions</li>
+            <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0"/></li>
+            <li>Start and end date should be 8 characters long and of form yyyymmdd. Alternativly you can enter
+            'por' if you are interested in the period of record for this station.</li>
+            <li>If interested in period of record, type <font color="#A00000">
+            <b>por</b></font> for both start and end date</li>
+            </ul></p>
+        </div>
+        
+        {%if error%}
+            <p class="error">{{error}}</p>
+        {%endif%}
+
+        <input type="hidden" id="URL_PREFIX" name="variable" value="{{ URL_PREFIX }}">
+        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">       
+
+        {%if json_file%}
+            <input type="hidden" id="json_file" name="variable" value="{{ json_file }}">
+        {%else%}
+            <input type="hidden" id="json_file" name="variable" value="Test.json">
+        {%endif%}
+
+        <script type="text/javascript">
+            initialize_station_finder()
+        </script>
+        <div id="map"></div>
+
+        <table cellspacing="0" class="station_list">
+          <tr>
+            <td>
+               <table cellspacing="0" class="station_list" >
+                 <tr>
+                    <th>Name</th>
+                    <th>State</th>
+                    <th>Lat</th>
+                    <th>Lon</th>
+                    <th>Elev</th>
+                    <th>Networks</th>
+                 </tr>
+               </table>
+            </td>
+          </tr>
+          <tr>
+            <td>
+               <div style="height:200px; overflow:auto;" >
+                 <table cellspacing="0" id="station_list">
+                 </table>
+               </div>
+            </td>
+          </tr>
+        </table>
+    </div>
+
+    <div class="center-right" style="border:none;">
+        <div id="map_legend"><h3>Legend</h3></div>
+    </div>
+</div>
+{%endblock%}

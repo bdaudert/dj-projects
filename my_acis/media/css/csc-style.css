@@ -173,9 +173,9 @@ div.pop-up {
 .center {
     float:left;
     padding: 10px 5px 10px 5px;
-    text-align:left;
+    text-align:center;
     height:1000px;
-    width:60%;
+    width:50%;
     border-top: 2px solid #006666;
     border-bottom: 2px solid #006666;
     /*background-color:#DCA978;*/
@@ -185,7 +185,7 @@ div.pop-up {
 .center-right, .center-left {
     float: left;
     padding: 10px 5px 10px 5px;
-    width:15%;
+    width:20%;
     height: 1000px;
     border: 2px solid #006666;
     /*background-color:#EBCEB2;*/
