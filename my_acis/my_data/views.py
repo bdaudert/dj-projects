@@ -536,10 +536,10 @@ def monthly_aves(request):
     end_date = request.GET.get('end_date', None)
     elements = request.GET.get('elements', None)
     initial = {}
-    if stn_id is None:initial['stn_id']= str(stn_id);context['stn_id'] = stn_id
-    if start_date is None:initial['start_date']= str(start_date);context['start_date'] = start_date
-    if end_date is None:initial['end_date']= str(end_date);context['end_date'] = end_date
-    if elements is None:initial['elements']= elements;context['elements'] = elements
+    if stn_id is not None:initial['stn_id']= str(stn_id);context['stn_id'] = stn_id
+    if start_date is not None:initial['start_date']= str(start_date);context['start_date'] = start_date
+    if end_date is not None:initial['end_date']= str(end_date);context['end_date'] = end_date
+    if elements is not None:initial['elements']= elements;context['elements'] = elements
     context['initial'] = initial
     if initial:
         form_graphs = set_as_form(request,'MonthlyAveragesForm', init=initial)
