@@ -131,18 +131,20 @@ class MyDateField(forms.CharField):
         # Return an empty string if no input was given.
         if not date:
             return ' '
-        return date
+        formatted_date = ''.join(date.split('-'))
+        return formatted_date
 
-    def validate(self, date):
-        if date == 'por':
-            pass
+    def validate(self, formatted_date):
+        if formatted_date == 'por':
+            if self.min_length == 8:
+                raise forms.ValidationError("Date should be of form yyyymmdd or yyyy-mm-dd.")
         else:
-            if len(date)!=8:
-                raise forms.ValidationError("Date should be 8 digits long (yyyymmdd). You entered: %s!" %str(date))
+            if len(formatted_date)!=8:
+                raise forms.ValidationError("Date should be of form yyyymmdd or yyyy-mm-dd.")
             try:
-                int(date)
+                int(formatted_date)
             except:
-                raise forms.ValidationError("Not a valid date. You entered: %s!" %str(date))
+                raise forms.ValidationError("Not a valid date.")
 
 class MultiStnField(forms.CharField):
     def to_python(self, stn_list):
@@ -181,7 +183,8 @@ class MultiElementField(forms.CharField):
         "Normalize data to a list of strings."
         # Return an empty list if no input was given.
         if not el_tuple:
-            return []
+            raise forms.ValidationError("Need at least one element.")
+            #return []
         else:
             if isinstance(el_tuple, list):
                 el_list = [str(el).strip(' ') for el in el_list]
@@ -218,7 +221,7 @@ class PointData0Form(forms.Form):
             self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES,required=False, initial='stn_id', widget=forms.HiddenInput(), help_text='Defines area encompassing the stations of interest.')
             self.fields['stn_id'] = forms.CharField(required=False, initial=stn_id, help_text='Station id recognized by Acis. See "About this tool" for more information.')
         #self.fields['element'] = forms.ChoiceField(choices=ELEMENT_CHOICES, initial='pcpn', required=False)
-        self.fields['elements'] = forms.CharField(initial ='maxt,mint,avgt', required=False, help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
+        self.fields['elements'] = forms.CharField(initial ='maxt,mint,avgt', required=True, help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', required=False, help_text='Defines format in which data will be returned.')
 
 class PointDataForm1(forms.Form):
@@ -273,15 +276,15 @@ class PointDataForm1(forms.Form):
             if element == 'gddxx':
                 self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50, help_text='Base temperature used to calculate growing degree days.')
         '''
-        self.fields['start_date'] = MyDateField(max_length=8, min_length=3, required = False, initial='20130101', help_text= 'yyyymmdd or "por" (period of record) if single station.')
-        self.fields['end_date'] = MyDateField(max_length=8, min_length=3, required = False, initial=today, help_text= 'yyyymmdd or "por" (period of record) if single station.')
+        self.fields['start_date'] = MyDateField(max_length=10, min_length=3, required = False, initial='20130101', help_text= 'yyyymmdd or "por" (period of record) if single station.')
+        self.fields['end_date'] = MyDateField(max_length=10, min_length=3, required = False, initial=today, help_text= 'yyyymmdd or "por" (period of record) if single station.')
         self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput(), help_text='Defines format in which data will be returned.')
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
 class GridData0Form(forms.Form):
         grid_selection = forms.ChoiceField(choices=GRID_SELECTION_CHOICES, required=False, initial='point', help_text='Area defining gridpoints of interest.')
-        elements =forms.CharField(initial ='maxt,mint,avgt', required=False, help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
+        elements =forms.CharField(initial ='maxt,mint,avgt', required=True, help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
         data_format = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', required=False, help_text='Delimiter used to seperate data values.')
 
 class GridDataForm1(forms.Form):
@@ -316,8 +319,8 @@ class GridDataForm1(forms.Form):
             if element == 'gddxx':
                 self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50, help_text='Base temperature used to calculate growing degree days.')
         '''
-        self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20130101', help_text= 'yyyymmdd')
-        self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text= 'yyyymmdd')
+        self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial='20130101', help_text= 'yyyymmdd')
+        self.fields['end_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=today, help_text= 'yyyymmdd')
         self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text='Valid gridded data set recognized by Acis.')
         self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput(), help_text='Defines format in which data will be returned.')
         if data_format in ['dlm', 'html']:
@@ -333,9 +336,9 @@ class MetaGraphForm(forms.Form):
             stn_id = self.data.get('stn_id')
 
         if stn_id is None:
-            self.fields['station_id'] = forms.CharField(required=False, initial='266779', help_text='Coop station id. See "How to use this tool" for more info.')
+            self.fields['station_id'] = forms.CharField(required=True, initial='266779', help_text='Coop station id. See "How to use this tool" for more info.')
         else:
-            self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text='Coop station id. See "How to use this tool" for more info.')
+            self.fields['station_id'] = forms.CharField(required=True, initial=stn_id, help_text='Coop station id. See "How to use this tool" for more info.')
 
 class MonthlyAveragesForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -350,8 +353,8 @@ class MonthlyAveragesForm(forms.Form):
         else:
             self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text='Station id recognized by Acis. See "How to use this tool" for more information.')
         self.fields['elements'] = MultiElementField(initial='pcpn, snow', help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
-        self.fields['start_date'] = MyDateField(max_length=8, required = False, initial='20000101', help_text= 'yyyymmdd or "por" for period of record.')
-        self.fields['end_date'] = MyDateField(max_length=8, required = False, initial='por', help_text= 'yyyymmdd or "por" for period of record.')
+        self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='20000101', help_text= 'yyyymmdd or "por" for period of record.')
+        self.fields['end_date'] = MyDateField(max_length=10, required = False, initial='por', help_text= 'yyyymmdd or "por" for period of record.')
 
 class ClimateMapForm0(forms.Form):
         grid_selection = forms.ChoiceField(choices=([('state', 'State'),('bbox', 'Bounding Box')]), required=False, initial='state', help_text='Area defining gridpoints of interest.')
@@ -392,11 +395,11 @@ class ClimateMapForm1(forms.Form):
             self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50, help_text='Base temperature used to calculate growing degree days.')
 
         if time_period == 'custom':
-            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20130101', help_text= 'yyyymmdd')
-            self.fields['end_date'] =MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text= 'yyyymmdd')
+            self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial='20130101', help_text= 'yyyymmdd')
+            self.fields['end_date'] =MyDateField(max_length=10, min_length=8, required = False, initial=today, help_text= 'yyyymmdd')
         else:
             if x is None:
-                self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20130101', help_text= 'yyyymmdd')
+                self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial='20130101', help_text= 'yyyymmdd')
             else:
                 start_date = WRCCUtils.get_start_date(time_period,today, x)
                 self.fields['start_date'] = MyDateField(required = False, initial=start_date, help_text= 'yyyymmdd')
@@ -418,16 +421,16 @@ class GPTimeSeriesForm(forms.Form):
                 lon = self.data.get('lon')
 
             if lat is None:
-                 self.fields['lat'] = forms.FloatField(initial='41.8', required=False, help_text='Valid latitude.')
+                 self.fields['lat'] = forms.FloatField(initial='41.8', required=True, help_text='Valid latitude.')
             else:
-                self.fields['lat'] = forms.FloatField(initial=lat, required=False, help_text='Valid latitude.')
+                self.fields['lat'] = forms.FloatField(initial=lat, required=True, help_text='Valid latitude.')
             if lon is None:
-                 self.fields['lon'] = forms.FloatField(initial='-77.7', required=False, help_text='Valid longitude.')
+                 self.fields['lon'] = forms.FloatField(initial='-77.7', required=True, help_text='Valid longitude.')
             else:
-                self.fields['lon'] = forms.FloatField(initial=lon, required=False, help_text='Valid longitude.')
+                self.fields['lon'] = forms.FloatField(initial=lon, required=True, help_text='Valid longitude.')
             self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, required=False, initial='maxt', help_text='Acis element code. See "About this tool."')
-            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, required = False, initial='20130101', help_text= 'yyyymmdd')
-            self.fields['end_date'] = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text= 'yyyymmdd')
+            self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial='20130101', help_text= 'yyyymmdd')
+            self.fields['end_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=today, help_text= 'yyyymmdd')
             self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text='Valid gridded data set recognized by Acis.')
 
 class StationLocatorForm0(forms.Form):
@@ -469,6 +472,6 @@ class StationLocatorForm1(forms.Form):
             self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41', help_text='Bounding box latitudes and longitudes: West,South,East,North.')
         if element_selection == 'T':
             self.fields['elements'] = MultiElementField(initial='mint,maxt,avgt', help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
-            self.fields['start_date'] = MyDateField(max_length=8, required = False, initial='20130101',min_length=8, help_text= 'yyyymmdd.')
-            self.fields['end_date'] = MyDateField(max_length=8, required = False, initial=today,min_length=8, help_text= 'yyyymmdd.')
+            self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='20130101',min_length=8, help_text= 'yyyymmdd.')
+            self.fields['end_date'] = MyDateField(max_length=10, required = False, initial=today,min_length=8, help_text= 'yyyymmdd.')
 

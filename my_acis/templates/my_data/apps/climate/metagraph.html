@@ -21,6 +21,9 @@
                     <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                                             <div class="pop-up"><p>{{field.help_text}}</p></div>
                     </td>
                 </tr>
+               {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
             {%endfor%}
             </table>
             <input type="submit" value="Submit" name="form_meta"/>

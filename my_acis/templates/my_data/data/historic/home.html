@@ -24,6 +24,9 @@
                     <div class="pop-up"><p>{{field.help_text}}</p></div>
                     </td>
                 </tr>
+                {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
             {%endfor%}
             </table>
             <input type="submit" value="Select" name="form0_point"/>
@@ -45,6 +48,9 @@
                     <div class="pop-up"><p>{{field.help_text}}</p></div>
                     </td>
                 </tr>
+                {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
             {%endif%}
             {%endfor%}
             </table>
@@ -114,6 +120,7 @@
         <div id="docu_long"></div>
 
         {%if stn_id%}
+            <p class="error">Hit "select". Getting data for:</p>
             <p class="error">Station ID: {{stn_id}}</p>
         {%endif%}
         {%if start_date%}

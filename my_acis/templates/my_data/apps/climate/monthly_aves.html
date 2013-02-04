@@ -22,6 +22,9 @@
                     <div class="pop-up"><p>{{field.help_text}}</p></div>
                     </td>
                 </tr>
+               {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
             {%endfor%}
             </table>
             <input type="submit" value="Submit" name="form_graphs"/>
@@ -73,7 +76,6 @@
             </ul></p>
         </div>
 
-        {{initial}}
         {%if stn_id%}
             <p class="error">Station ID: {{stn_id}}</p>
         {%endif%}

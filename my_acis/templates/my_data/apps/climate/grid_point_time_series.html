@@ -29,6 +29,9 @@
                     <div class="pop-up"><p>{{field.help_text}}</p></div>
                     </td>
                 </tr>
+               {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
             {%endfor%}
             </table>
             <input type="submit" value="Submit" name="form0"/>
@@ -90,7 +93,8 @@
 
             <a href="{{URL_PREFIX}}sw_ckn/data/modeled/?grid_selection={{grid_selection}}&start_date={{s_date}}&end_date={{e_date}}&elements={{elems}}&grid={{grid}}&loc={{lon}},{{lat}}">Get raw data  behind this graphic here!</a>
             <br />
-
+            {{start_date}}
+            {{end_date}}
             <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{MEDIA_URL}}tmp/">
             <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
             <input type="hidden" id="element_long" name="element_long" value="{{element_long}}">

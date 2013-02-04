@@ -13,47 +13,38 @@
 
         <div class="center-left">
             <h1>Point Data Applications</h1>
-                <p id="sw_ckn">SW-CKN Applications</p>
             <ul class="navbar">
                 {%if stn_id%}
                     {%if start_date%}
                         {%if elements%}
-                            <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/metagraph/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}" class="trigger">Station Metadata Graphics</a>
-                            <div class="pop-up" id="meta">
-                                <p><font size="4">Shows availabilty of COOP station data.</font></p>
-                            </div>
                             <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}" class="trigger">Monthly Averages</a>
                             <div class="pop-up" id="maves">
                                 <p><font size="4">Generates bar chart of monthly averages.</font></p>
                             </div>
                         {%else%}
-                            <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/metagraph/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}" class="trigger">Station Metadata Graphics</a>
-                            <div class="pop-up" id="meta">
-                                <p><font size="4">Shows availabilty of COOP station data.</font></p>
-                            </div>
                             <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}" class="trigger">Monthly Averages</a>
                             <div class="pop-up" id="maves">
                                 <p><font size="4">Generates bar chart of monthly averages.</font></p>
                             </div>
                         {%endif%}
                     {%else%}
-                        <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics</a>
-                        <div class="pop-up" id="meta">
-                            <p><font size="4">Shows availabilty of COOP station data.</font></p>
-                        </div>
                         <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages</a>
                         <div class="pop-up" id="maves">
                             <p><font size="4">Generates bar chart of monthly averages.</font></p>
                         </div>
                     {%endif%}
-                {%else%}
-                    <a href="{{URL_PREFIX}}sw_ckn/apps/metagraph/" class="trigger">Station Metadata Graphics</a>
+                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics</a>
                     <div class="pop-up" id="meta">
-                        <p><font size="4">Shows availabilty of COOP station data.</font></p>
+                        <p><font size="4">See how much data is missing over the period of record (COOP stations only).</font></p>
                     </div>
+                {%else%}
                     <a href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/" class="trigger">Monthly Averages</a>
                     <div class="pop-up" id="meta">
                         <p><font size="4">Generates bar chart of monthly averages.</font></p>
+                    </div>
+                    <a href="{{URL_PREFIX}}sw_ckn/apps/metagraph/" class="trigger">Station Metadata Graphics</a>
+                    <div class="pop-up" id="meta">
+                        <p><font size="4">See how much data is missing over the period of record (COOP stations only).</font></p>
                     </div>
                 {%endif%}
             </ul>

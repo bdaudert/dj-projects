@@ -172,8 +172,8 @@ def data_historic(request):
     context['form0_point'] = form0_point
 
     if 'form0_point' in request.POST:
-        form0_point = set_as_form(request,'PointData0Form')
-        context['form0_point']  = form0_point
+        #form0_point = set_as_form(request,'PointData0Form')
+        #context['form0_point']  = form0_point
 
         if form0_point.is_valid():
             context['form1_point_ready'] = True
@@ -197,6 +197,7 @@ def data_historic(request):
     if 'form1_point' in request.POST:
         form1_point = set_as_form(request,'PointDataForm1')
         context['form1_point'] = form1_point
+        context['form1_point_ready'] = True
         stn_id = request.GET.get('stn_id', None)
         start_date = request.GET.get('start_date', None)
         end_date = request.GET.get('end_date', None)
@@ -263,9 +264,9 @@ def data_historic(request):
                 return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
         #form1_point not valid or form1_point valid and we are done with computation
         #needed to show validation error in form1_point
-        form1_point = set_as_form(request,'PointDataForm1')
-        context['form1_point'] = form1_point
-        context['form1_point_ready'] = True
+        #form1_point = set_as_form(request,'PointDataForm1')
+        #context['form1_point'] = form1_point
+        #context['form1_point_ready'] = True
 
     return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
 
@@ -298,8 +299,8 @@ def data_modeled(request):
         form0_grid = set_as_form(request,'GridData0Form')
     context['form0_grid'] = form0_grid
     if 'form0_grid' in request.POST:
-        form0_grid = set_as_form(request,'GridData0Form')
-        context['form0_grid']  = form0_grid
+        #form0_grid = set_as_form(request,'GridData0Form')
+        #context['form0_grid']  = form0_grid
         if form0_grid.is_valid():
             context['form1_grid_ready'] = True
             grid_selection = request.GET.get('grid_selection', None)
@@ -339,6 +340,7 @@ def data_modeled(request):
     if 'form1_grid' in request.POST:
         form1_grid = set_as_form(request,'GridDataForm1')
         context['form1_grid'] = form1_grid
+        context['form1_grid_ready'] = True
         if form1_grid.is_valid():
             el_list = form1_grid.cleaned_data['elements']
             context['elements'] =  el_list
@@ -416,9 +418,9 @@ def data_modeled(request):
                 return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
         #form1_grid not valid or form1_grid valid and we are done with computation
         #needed to show validation error in form1_grid
-        form1_grid = set_as_form(request,'GridDataForm1')
-        context['form1_grid'] = form1_grid
-        context['form1_grid_ready'] = True
+        #context['form1_grid_ready'] = True
+        #form1_grid = set_as_form(request,'GridDataForm1')
+        #context['form1_grid'] = form1_grid
 
     return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
 
@@ -482,6 +484,7 @@ def metagraph(request):
         form_meta = set_as_form(request,'MetaGraphForm')
     else:
         form_meta = set_as_form(request,'MetaGraphForm', init={'stn_id':str(stn_id)})
+        context['stn_id'] = stn_id
     context['form_meta'] = form_meta
 
     if 'form_meta' in request.POST:
@@ -540,7 +543,6 @@ def monthly_aves(request):
     if start_date is not None:initial['start_date']= str(start_date);context['start_date'] = start_date
     if end_date is not None:initial['end_date']= str(end_date);context['end_date'] = end_date
     if elements is not None:initial['elements']= elements;context['elements'] = elements
-    context['initial'] = initial
     if initial:
         form_graphs = set_as_form(request,'MonthlyAveragesForm', init=initial)
     else:
@@ -833,7 +835,7 @@ def station_locator_app(request):
         context['empty_json'] = True
         form1 = set_as_form(request,'StationLocatorForm1')
         context['form1'] = form1
-        #context['form1_ready'] = True
+        context['form1_ready'] = True
         if form1.is_valid():
             station_selection = form1.cleaned_data['station_selection']
             if 'station_id' in form1.cleaned_data.keys():by_type = 'station_id';val = form1.cleaned_data['station_id']
@@ -877,9 +879,9 @@ def station_locator_app(request):
                 context['error'] = "No stations found for %s : %s, elements: %s and date range %s!"  %(by_type, val, element_list, date_range)
             context['json_file'] = f_name
             context['empty_json'] = False
-        form1 = set_as_form(request,'StationLocatorForm1')
-        context['form1'] = form1
-        context['form1_ready'] = True
+        #form1 = set_as_form(request,'StationLocatorForm1')
+        #context['form1'] = form1
+        #context['form1_ready'] = True
     return render_to_response('my_data/apps/climate/station_locator_app.html', context, context_instance=RequestContext(request))
 
 def apps_hydro(request):

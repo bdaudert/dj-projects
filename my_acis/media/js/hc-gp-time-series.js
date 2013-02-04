@@ -36,8 +36,8 @@ $(function () {
                     type: 'datetime',
                     maxZoom: 1 * 24 * 3600000, // 1 day
                     plotBands: [{
-                    from: Date.UTC(parseInt(start[0]), parseInt(start[1]), parseInt(start[2])),
-                    to: Date.UTC(parseInt(end[0]), parseInt(end[1]), parseInt(end[2])),
+                    from: Date.UTC(parseInt(start[0]), parseInt(start[1]) -1 , parseInt(start[2])),
+                    to: Date.UTC(parseInt(end[0]), parseInt(end[1]) - 1, parseInt(end[2])),
                     }],
                     title: {
                         text: null
@@ -88,7 +88,8 @@ $(function () {
                     type: 'area',
                     name: element,
                     pointInterval:1 * 24 * 3600000, // 1 day
-                    pointStart: Date.UTC(parseInt(start[0]), parseInt(start[1]), parseInt(start[2])),
+                    pointStart: Date.UTC(parseInt(start[0]), parseInt(start[1])-1, parseInt(start[2])),
+                    //pointEnd:Date.UTC(parseInt(end[0]), parseInt(end[1]), parseInt(end[2])),
                     data:datadict.data
                 }] //end series
             });//end chart

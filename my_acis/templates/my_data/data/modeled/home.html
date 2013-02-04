@@ -19,9 +19,13 @@
                 <tr>
                     <td>{{field.label}}:</td>
                     <td>{{field}}</td>                                        
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                                                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
+                    <div class="pop-up"><p>{{field.help_text}}</p></div>
                     </td>
                 </tr>
+                {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>   
+                {%endif%}
             {%endfor%}
             </table>
             <input type="submit" value="Select" name="form0_grid"/>
@@ -39,9 +43,13 @@
                 <tr>
                     <td>{{field.label}}:</td>
                     <td>{{field}}</td>                                                            
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                                                          <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
+                    <div class="pop-up"><p>{{field.help_text}}</p></div>
                     </td>
                 </tr>
+                {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
             {%endif%}
             {%endfor%}
             </table>
@@ -54,8 +62,6 @@
     </div>
 
     <div class="major-right" style="background-color:X^H#947e6e; border:none;">
-        <p class="error">Large data requests may take a long time to execute!<br /> 
-        It is recommended to request data for no more than 1 year at a time.</p>
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/csc_map_page_base.html .tool_info");
@@ -114,12 +120,15 @@
         </div>
 
         {%if location%}
+            <p class="error">Hit "select". Getting data for:</p>
             <p class="error">Lat, Lon: {{location}}</p>
         {%endif%}
         {%if state%}
+            <p class="error">Hit "select". Getting data for:</p>
             <p class="error">State: {{State}}</p>
         {%endif%}
         {%if bounding_box%}
+            <p class="error">Hit "select". Getting data for:</p>
             <p class="error">Bounding Box: {{bounding_box}}</p>
         {%endif%}
        {%if start_date%}
