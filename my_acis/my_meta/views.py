@@ -19,7 +19,7 @@ import models
 import my_meta.forms as mforms
 
 
-primary_tables = { 'Station': models.Station, 'StationLocation': models.StationLocation, 'StationNetwork': models.StationNetwork, 'StationSubnetwork':models.StationSubnetwork, 'StationAltName': models.StationAltName, 'StationTimeZone': models.StationTimeZone, 'StationClimDiv': models.StationClimDiv, 'StationCounty': models.StationCounty,'StationDigital': models.StationDigital, 'StationEquipment': models.StationEquipment, 'StationMaintenance':models.StationMaintenance, 'StationPhysical': models.StationPhysical }
+primary_tables = { 'Station': models.Station, 'StationLocation': models.StationLocation, 'StationNetwork': models.StationNetwork, 'StationSubnetwork':models.StationSubnetwork, 'StationAltName': models.StationAltName, 'StationTimeZone': models.StationTimeZone, 'StationClimDiv': models.StationClimDiv, 'StationCounty': models.StationCounty,'StationDigital': models.StationDigital, 'StationEquipment': models.StationEquipment, 'StationMaintenance':models.StationMaintenance, 'StationPhysical': models.StationPhysical,'Variable': models.Variable}
 #, 'StationPhoto': models.StationPhoto, 'StationContact': models.StationContact }
 
 '''
@@ -141,8 +141,6 @@ def station_tables_nina(request):
         for name, obj in primary_tables.iteritems():
             for idx, ucan_id in enumerate(ucan_id_list):
                 instances = obj.objects.filter(ucan_station_id=ucan_id)
-                num_inst =  len(instances)
-                #if num_inst > max_inst: max_inst = num_inst
                 for i, instance in enumerate(instances):
                     inst_name = '%s_%d' % (name, i)
                     form = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
@@ -151,7 +149,21 @@ def station_tables_nina(request):
                     else:
                         table_dict[inst_name] =['No Table' for k in range(idx)]
                         table_dict[inst_name].append(form)
-
+                    '''
+                    if name == 'StationNetwork':
+                        #find all instances of IDType tables
+                        id_type_instances = models.IdType.objects.filter(id_type_key=instance.id_type)
+                    else:
+                        id_type_instances = []
+                    for k,id_type_instance in enumerate(id_type_instances):
+                        id_type_name='IdType_%s' % k
+                        form = set_as_form(request, 'IdType', q=id_type_instance, ucan_station_id=ucan_id)
+                        if id_type_name in table_dict.keys():
+                            table_dict[id_type_name].append(form)
+                        else:
+                            table_dict[id_type_name] =['No Table' for k in range(idx)]
+                            table_dict[id_type_name].append(form)
+                    '''
         #context['table_list'] = table_list
         context['table_dict'] = dict(table_dict)
     return render_to_response('my_meta/station_tables_nina.html', context, context_instance=RequestContext(request))
