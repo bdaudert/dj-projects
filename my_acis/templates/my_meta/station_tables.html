@@ -10,11 +10,6 @@
 <h1>{{title}}</h1>
 
 
-<p>UCAN station id</p>
-<form action="." method="get">
-    <input type="text" name="ucan_id" value="{{ucan_station_id}}" />
-    <input type="submit" value="Submit" />
-</form>
 
 {% if ucan_station_id %}
 {% for tbl_name, tbl_instances in table_dir.items %}
@@ -36,7 +31,6 @@
 </div></td></tr></table>
 
 {% endfor %}
-
 {% endif %}
 
 {% endblock %}

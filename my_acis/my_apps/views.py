@@ -11,6 +11,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.views.generic.list_detail import object_detail, object_list
 from django.db.models.query import QuerySet
+from django.conf import settings
 #My imports
 import AcisWS
 import WRCCUtils
@@ -18,7 +19,8 @@ import WRCCDataApps
 import my_apps.forms as forms
 
 #Prefix to location of executables
-prefix='/www-devel/apps/csc/AcisWS_WRCC_PythonScripts/'
+#prefix='/www/apps/csc/AcisWS_WRCC_PythonScripts/'
+prefix = settings.BASE_DIR + 'AcisWS_WRCC_PythonScripts/'
 
 def home_view(request):
     context = {

@@ -69,7 +69,6 @@ function initialize_station_finder() {
         var mapOptions = {
         center:ll,
         zoom:7,
-        //maxZoom:12,
         mapTypeId:google.maps.MapTypeId.HYBRID
         };
 
@@ -173,7 +172,7 @@ function initialize_station_finder() {
                 //t_data = '<td onclick = "my_stnclick(' + infowindow + ',' + marker + ',' + contentString + ')">';
                 var tbl_row = document.createElement('tr');
                 var t_data = '<td>';
-                tbl_row.addEventListener("cick", function(){
+                tbl_row.addEventListener("click", function(){
                     infowindow.close();
                     infowindow.setContent(contentString);
                     infowindow.open(map, marker);

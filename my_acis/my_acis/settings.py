@@ -2,8 +2,11 @@
 import sys
 import django.conf.global_settings as DEFAULT_SETTINGS
 
+
 URL_PREFIX = "/csc/"
-SRC_BASE = "/www-devel/apps/csc/dj-projects/"
+SRC_BASE = "/www/apps/csc/dj-projects/"
+LIB_PREFIX  = "/www/apps/csc/my-python-lib/"
+BASE_DIR = "/www/apps/csc/"
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

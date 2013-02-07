@@ -13,12 +13,13 @@
     <h2>{{stations.count}} results</h2>
     <ul>
     {% for s in stations %}
-	<li><a href="{{URL_PREFIX}}wrcc_meta/station_tables/?ucan_id={{s.ucan_station_id}}">{{s}}</a></li>
+    <li><a href="{{URL_PREFIX}}wrcc_meta/station_tables/?ucan_id={{s.ucan_station_id}}">{{s}}</a></li>
     {% endfor %}
     </ul>
 {% else %}
     <p>No stations found</p>
 {% endif %}
+
 
 {% endblock %}
 

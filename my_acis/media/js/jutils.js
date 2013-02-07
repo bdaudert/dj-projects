@@ -85,7 +85,7 @@ $(function() {
 
   $('.trigger').mousemove(function(e) {
     //$('div.pop-up').css('top', moveDown).css('left', e.pageX );
-    $(this).next('div.pop-up').css('top', e.pageY).css('left', e.pageX);
+    $(this).next('div.pop-up').css('top', e.pageY - moveDown).css('left', e.pageX + moveLeft);
   });
 
 }); 

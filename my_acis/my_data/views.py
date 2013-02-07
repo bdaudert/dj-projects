@@ -44,9 +44,8 @@ state_choices = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA
                 'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', \
                 'NY', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', \
                 'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
-
-static_url = '/www-devel/apps/csc/dj-projects/my_acis/static/'
-MEDIA_URL = '/www-devel/apps/csc/dj-projects/my_acis/media/'
+STATIC_URL = '/www/apps/csc/dj-projects/my_acis/static/'
+MEDIA_URL = '/www/apps/csc/dj-projects/my_acis/media/'
 
 month_names = ['January', 'February', 'March', 'April', 'May', 'June',\
                'July', 'August', 'September', 'October', 'November', 'December']

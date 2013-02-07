@@ -35,6 +35,8 @@ def home_view(request):
     }
     return render_to_response('my_meta/home.html', context, context_instance=RequestContext(request))
 
+
+
 def by_state(request):
     state_key = request.GET.get('state_key', None)
     if state_key is None:
@@ -47,7 +49,7 @@ def by_state(request):
         'stations': stations,
         'title': "Stations by State",
     }
-    return render_to_response('my_meta/results.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_meta/results-nina.html', context, context_instance=RequestContext(request))
 def by_name(request):
     q = request.GET.get('q', '')
     if not q:
@@ -59,7 +61,7 @@ def by_name(request):
         'stations': stations,
         'title': "Station Name Search Results",
     }
-    return render_to_response('my_meta/results.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_meta/results-nina.html', context, context_instance=RequestContext(request))
 
 def by_id(request):
     q = request.GET.get('q', '')
@@ -73,12 +75,12 @@ def by_id(request):
         'stations': stations,
         'title': "Station ID Search Results",
     }
-    return render_to_response('my_meta/results.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_meta/results-nina.html', context, context_instance=RequestContext(request))
 
 def by_location(request):
     lat = request.GET.get('lat', None)
     lon = request.GET.get('lon', None)
-    delta = .51
+    delta = .02
     if not lat or not lon:
         stations = []
     else:
@@ -94,7 +96,7 @@ def by_location(request):
         'stations': stations,
         'title': "Station Location Search Results",
     }
-    return render_to_response('my_meta/results.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_meta/results-nina.html', context, context_instance=RequestContext(request))
 
 def station_detail(request):
     ucan_id = request.GET.get('ucan_id', None)
@@ -111,6 +113,48 @@ def station_detail(request):
         context['station_equipment'] = set_as_table(models.StationEquipment.objects.filter(ucan_station_id=ucan_id))
         context['station_physical'] = set_as_table(models.StationPhysical.objects.filter(ucan_station_id=ucan_id))
     return render_to_response('my_meta/station_detail.html', context, context_instance=RequestContext(request))
+
+def station_tables_nina(request):
+    ucan_id_list = request.GET.getlist('ucan_id', [])
+    context = {
+        'title': "Primary tables for this Station"
+    }
+    context['ucan_id_list'] = ucan_id_list
+    if ucan_id_list:
+        #put in list
+        '''
+        table_list = []
+        for idx, ucan_id in enumerate(ucan_id_list):
+            ucan_id = int(ucan_id)
+            table_dict = {}
+            for name, obj in primary_tables.iteritems():
+                instances = obj.objects.filter(ucan_station_id=ucan_id)
+                if instances:
+                    for i, instance in enumerate(instances):
+                        inst_name = '%s_%d' % (name, i)
+                        form = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
+                        table_dict[inst_name] = form
+            table_list.append(table_dict)
+        context['table_list'] = table_list
+        '''
+        table_dict = defaultdict(list)
+        for name, obj in primary_tables.iteritems():
+            for idx, ucan_id in enumerate(ucan_id_list):
+                instances = obj.objects.filter(ucan_station_id=ucan_id)
+                num_inst =  len(instances)
+                #if num_inst > max_inst: max_inst = num_inst
+                for i, instance in enumerate(instances):
+                    inst_name = '%s_%d' % (name, i)
+                    form = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
+                    if inst_name in table_dict.keys():
+                        table_dict[inst_name].append(form)
+                    else:
+                        table_dict[inst_name] =['No Table' for k in range(idx)]
+                        table_dict[inst_name].append(form)
+
+        #context['table_list'] = table_list
+        context['table_dict'] = dict(table_dict)
+    return render_to_response('my_meta/station_tables_nina.html', context, context_instance=RequestContext(request))
 
 def station_tables(request):
     ucan_id = request.GET.get('ucan_id', None)
@@ -131,6 +175,7 @@ def station_tables(request):
                 table_dir[name].append(inst_name)
         context['ucan_station_id'] = ucan_id
         context['table_dir'] = dict(table_dir)
+
     return render_to_response('my_meta/station_tables.html', context, context_instance=RequestContext(request))
 
 def sub_tables(request, tbl_name, tbl_id):

@@ -26,7 +26,7 @@ project = os.path.dirname(apache_configuration)
 # Add directories to the PYTHONPATH
 sys.path.append(project)
 # Manually add in python library files. Could be a package later...
-sys.path.append("/www-devel/apps/csc/my-python-lib")
+sys.path.append("/www/apps/csc/my-python-lib")
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "my_acis.settings")
 

@@ -9,8 +9,8 @@ use CGI;
 use GD;
 use Time::localtime;
 
-$executable = "/www-devel/apps/csc/AcisWS_WRCC_PythonScripts/ws_meta_lister.py";
-$img_dir = "/www-devel/apps/csc/dj-projects/my_acis/media/tmp/";
+$executable = "/www/apps/csc/AcisWS_WRCC_PythonScripts/ws_meta_lister.py";
+$img_dir = "/www/apps/csc/dj-projects/my_acis/media/tmp/";
 
 $numargs = @ARGV;
 # Is control file given as an argument

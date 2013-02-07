@@ -141,12 +141,12 @@
             
                 <p class="error"> {{errors.forloop_counter}}</p>
 
-                <h2>STATION NAME: {{station_names.stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids.stn|safe}}</h2>
+                <h2>STATION NAME: {{station_names.forloop_counter|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids.forloop_counter|safe}}</h2>
                 <table>
                 <th>date{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</th>
                 {%for date_vals in stn_data%}
                     <tr>
-                    <td>{{dates.forloop.counter|safe}}{{delimiter}}
+                    <td>{{dates.forloop.counter|safe}}
                     {%for el_val in date_vals%}{{el_val}}{{delimiter}}{%endfor%}</td>
                     </tr>
                 {%endfor%}
@@ -154,7 +154,7 @@
             {%endfor%}
         {%else%}
             {%for stn, stn_data in point_data.items %}
-                <h2>STATION NAME: {{station_names.stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids.stn|safe}}</h2>
+                <h2>STATION NAME: {{station_names.forloop_counter|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids.forloop_counter|safe}}</h2>
             {{point_data}}
             {%endfor%}
         {%endif%}
