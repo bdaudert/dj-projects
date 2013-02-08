@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{%load my_meta_filters%}
 {% block content %}
 
 <h1 align='center'>{{title}}</h1>
@@ -30,11 +30,11 @@
     {%else%}
     {%for tbl_idx, table in stn_data.items%}
     <p class="stronger" style="color:darkblue; font-size:large">
-    STATION NUMBER: {{coop_station_ids.stn|safe}}&nbsp;&nbsp;LOCATION:{{station_names.stn|safe}}</br>
+    STATION NUMBER: {{coop_station_ids|lookup:stn|safe}}&nbsp;&nbsp;LOCATION:{{station_names|lookup:stn|safe}}</br>
     START YEAR {{start_year}} END YEAR {{end_year}}</br>
     START MONTH {{start_month}} END MONTH {{end_month}}</br>
     ELEMENT {{el_type}} UNITS {{units}}</br>
-    DURATION {{duration.tbl_idx|safe}}</br>
+    DURATION {{duration|lookup:tbl_idx|safe}}</br>
     </p></br>
     <table>
       <tr>
@@ -59,12 +59,12 @@
 
     {%for tbl_idx, table in stn_data.items%}
     <p class="stronger" style="color:darkblue; font-size:large">
-    STATION NUMBER: {{coop_station_ids.stn|safe}}&nbsp;&nbsp;LOCATION:{{station_names.stn|safe}}</br> 
+    STATION NUMBER: {{coop_station_ids|lookup:stn|safe}}&nbsp;&nbsp;LOCATION:{{station_names|lookup:stn|safe}}</br> 
     START YEAR {{start_year}} END YEAR {{end_year}}</br>
     START MONTH {{start_month}} END MONTH {{end_month}}</br>
     ELEMENT {{el_type}} UNITS {{units}}</br>
-    DURATION {{duration.tbl_idx|safe}}</br>
-    AVERAGE {{averages.tbl_idx|safe}} ST DEV {{stdevs.tbl_idx|safe}} SKEWNESS {{skews.tbl_idx|safe}}
+    DURATION {{duration|lookup:tbl_idx|safe}}</br>
+    AVERAGE {{averages|lookup:tbl_idx|safe}} ST DEV {{stdevs|lookup:tbl_idx|safe}} SKEWNESS {{skews|lookup:tbl_idx|safe}}
     ADJUSTMENT OF 1.00 APPLIED FOR CLOCK EFFECTS</br>
     USES OBSERVATION DAYS ONLY</br>
     </p></br>

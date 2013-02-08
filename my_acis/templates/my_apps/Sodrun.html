@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{%load my_meta_filters%}
 {% block content %}
 
 
@@ -26,7 +26,7 @@
 
 {%if results %}
   {%for stn, stn_data in results.items %}
-    <p>STATION: ({{coop_station_ids.stn|safe}})&nbsp;NAME:{{station_names.stn|safe}}</br>
+    <p>STATION: ({{coop_station_ids|lookup:stn|safe}})&nbsp;NAME:{{station_names|lookup:stn|safe}}</br>
      RUNS OF {{el}}&nbsp;{{op}}&nbsp;{{thresh}}</br>
      START: {{start_year}} END {{end_year}}</br>
      MINIMUM DURATION {{dur}}

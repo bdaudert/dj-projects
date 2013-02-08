@@ -36,7 +36,7 @@ class Station(models.Model):
         list_display = ('ucan_station_id','station_best_name','state','begin_date','end_date')
         list_filter = ('state',)
         search_fields = ('ucan_station_id','station_best_name')
-"""
+
 class StationLocation(models.Model):
     ucan_station_id = models.IntegerField(primary_key=True) # Not the real pk
     longitude = models.FloatField()
@@ -62,6 +62,8 @@ class StationLocation(models.Model):
         search_fields = ('ucan_station_id',)
     def get_station(self):
         return WrccStation.objects.get(pk=self.ucan_station_id)
+
+#FOR MY OLD META NOT NINA's
 """
 
 class StationLocation(models.Model):
@@ -89,6 +91,7 @@ class StationLocation(models.Model):
         search_fields = ('ucan_station_id',)
     def get_station(self):
         return WrccStation.objects.get(pk=self.id)
+"""
 
 class StationMaintenance(models.Model):
     id = models.AutoField(primary_key=True)

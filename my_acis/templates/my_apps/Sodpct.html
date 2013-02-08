@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{%load my_meta_filters%}
 {% block content %}
 
 
@@ -39,7 +39,7 @@ Mon - Month</br>
 
   </p>
   {%for stn, stn_data in results.items %}
-    <p class="stronger" style="color:darkblue">Station: ({{coop_station_ids.stn|safe}}) {{station_names.stn|safe}}</br>
+    <p class="stronger" style="color:darkblue">Station: ({{coop_station_ids|lookup:stn|safe}}) {{station_names|lookup:stn|safe}}</br>
     START YEAR {{start_year}} END YEAR {{end_year}}</br>
     ELEMENT {{element}} UNITS {{units}}</br>
     INDIVIDUAL OBSERVATIONS FOR THE  {{number_days_ahead}}  DAY(S) STARTING ON THE LISTED DATE</br>

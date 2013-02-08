@@ -28,10 +28,17 @@ primary_tables = { 'Station': models.Station, 'StationNetwork': models.StationNe
 
 sub_tables = { 'Variable': models.Variable, 'Network': models.Network, 'Subnetwork': models.Subnetwork }
 
+lat_lon_stations = {'49.02, -113.62': [1003210, 42832], '50.17, -114.72': [1003488, 42816], '49.82, -114.63': [1003325, 42834], '48.42, -123.23': [1011288, 41023], '38.14, -109.61': [1013591, 61851, 1018197], '49.62, -113.82': [1010326, 42609], '49.02, -113.65': [1003214, 42778], '49.58, -114.42': [1009742, 1012668], '63.25, -130.03': [1009743, 42100], '64.85, -147.80': [1014039, 1002370, 28876, 1017151, 20953, 20954], '47.87, -117.03': [1014451, 1003073, 1003037, 34082], '50.27, -117.82': [1009738, 41811, 41812, 26513], '51.08, -114.22': [1011287, 42639], '59.67, -151.65': [1014068, 20609], '46.22, -72.65': [1009739, 45189], '50.63, -115.28': [1003489, 42868], '50.95, -115.18': [1009740, 42873], '51.42, -105.25': [1008944, 43265], '49.62, -110.32': [1003135, 1003059, 42677], '52.93, -66.87': [1009343, 26628, 46254], '52.18, -127.47': [1010884, 41302, 26503], '61.92, -113.73': [1010327, 42162], '59.68, -151.37': [1014444, 1014457, 1011355, 1012263], '45.32, -75.67': [1010867, 1012975, 26838, 26832, 44394], '38.25, -75.16': [1004331, 1013743]}
+
+
+lat_lon_list = [key for key in lat_lon_stations.keys()]
+
+
 def home_view(request):
     context = {
         'state_choices': mforms.STATE_CHOICES,
         'title': "Metadata Home",
+        'lat_lon_list': lat_lon_list
     }
     return render_to_response('my_meta/home.html', context, context_instance=RequestContext(request))
 
@@ -80,23 +87,35 @@ def by_id(request):
 def by_location(request):
     lat = request.GET.get('lat', None)
     lon = request.GET.get('lon', None)
+    lat_lon = request.GET.get('lat_lon', None)
     delta = .02
-    if not lat or not lon:
-        stations = []
-    else:
-        lat = float(lat)
-        lon = float(lon)
+    if lat_lon:
+        try:
+            lat = float(lat_lon.split(',')[0]);lon = float(lat_lon.split(',')[1])
+        except:
+            lat = None;lon=None
+    elif lat and lon:
+        try:
+            lat = float(lat);lon = float(lon)
+        except:
+            lat = None;lon=None
+
+    if lat and lon:
         stations = models.StationLocation.objects.filter(latitude__lte=lat+delta, latitude__gte=lat-delta,
                                                     longitude__lte=lon+delta, longitude__gte=lon-delta,
                                                     history_flag__icontains='L'
                                                 )
         ucan_ids = [s.ucan_station_id for s in stations]
         stations = models.Station.objects.filter(ucan_station_id__in=ucan_ids)
+    else:
+        stations = []
+
     context = {
         'stations': stations,
         'title': "Station Location Search Results",
     }
     return render_to_response('my_meta/results-nina.html', context, context_instance=RequestContext(request))
+
 
 def station_detail(request):
     ucan_id = request.GET.get('ucan_id', None)

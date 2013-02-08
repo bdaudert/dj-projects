@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{%load my_meta_filters%}
 {% block content %}
 
 <h1 align='center'>{{title}}</h1>
@@ -26,10 +26,10 @@
 
 {%if results %}
   {%for stn, stn_data in results.items %}
-    <p class="stronger" style="color:darkblue; font-size:large">LOCATION:{{station_names.stn|safe}}&nbsp;&nbsp;STATION: {{coop_station_ids.stn|safe}}</br>
+    <p class="stronger" style="color:darkblue; font-size:large">LOCATION:{{station_names|lookup:stn|safe}}&nbsp;&nbsp;STATION: {{coop_station_ids|lookup:stn|safe}}</br>
     </p></br>
     {%for tbl_idx, tbl_data in stn_data.items %}
-    <p>{{header.tbl_idx|safe}}</p></br>
+    <p>{{header|lookup:tbl_idx|safe}}</p></br>
     {%if not tbl_data%}
     <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}

@@ -1,7 +1,8 @@
 {% extends "csc_base.html" %}
-
 <meta name="keywords" content="data, station data, historic data, acis">
 <meta name="description" content="SW-CKN Historic Station Data">
+
+{%load my_data_filters%}
 
 {% block content %} 
 
@@ -138,15 +139,14 @@
         <br />
         {%if not json%}
             {%for stn, stn_data in point_data.items %}
-            
-                <p class="error"> {{errors.forloop_counter}}</p>
+                <p class="error"> {{errors|lookup:stn}}</p>
 
-                <h2>STATION NAME: {{station_names.forloop_counter|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids.forloop_counter|safe}}</h2>
+                <h2>STATION NAME: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
                 <table>
                 <th>date{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</th>
                 {%for date_vals in stn_data%}
                     <tr>
-                    <td>{{dates.forloop.counter|safe}}
+                    <td>{{dates.stn|safe}}
                     {%for el_val in date_vals%}{{el_val}}{{delimiter}}{%endfor%}</td>
                     </tr>
                 {%endfor%}
@@ -154,7 +154,7 @@
             {%endfor%}
         {%else%}
             {%for stn, stn_data in point_data.items %}
-                <h2>STATION NAME: {{station_names.forloop_counter|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids.forloop_counter|safe}}</h2>
+                <h2>STATION NAME: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
             {{point_data}}
             {%endfor%}
         {%endif%}

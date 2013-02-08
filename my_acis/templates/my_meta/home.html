@@ -39,5 +39,15 @@
     <input type="submit" value="Submit"/>
 </form>
 
+<p><font color="red" size="6">Nina: Choose Lat/Lon! :-)</font></p>
+<form method="get" action="by_nina/">
+<select name="lat_lon">
+{%for lat_lon in lat_lon_list%}
+    <option type="radio">{{lat_lon}}</option>
+{%endfor%}
+</select>
+<input type="submit" value="Select"/>
+</form>
+
 {% endblock %}
 
