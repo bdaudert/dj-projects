@@ -14,6 +14,7 @@ from django.contrib.localflavor.us.forms import USStateField
 import datetime
 import re
 from collections import defaultdict
+import json
 
 import sys
 
@@ -165,13 +166,13 @@ def data_historic(request):
     if elements is not None:initial_params_0['elements'] = str(elements);context['elements'] = elements
 
     if initial_params_0:
-        form0_point = set_as_form(request,'PointData0Form', init=initial_params_0)
+        form0_point = set_as_form(request,'PointDataForm0', init=initial_params_0)
     else:
-        form0_point = set_as_form(request,'PointData0Form')
+        form0_point = set_as_form(request,'PointDataForm0')
     context['form0_point'] = form0_point
 
     if 'form0_point' in request.POST:
-        #form0_point = set_as_form(request,'PointData0Form')
+        #form0_point = set_as_form(request,'PointDataForm0')
         #context['form0_point']  = form0_point
 
         if form0_point.is_valid():
@@ -208,64 +209,94 @@ def data_historic(request):
 
         if form1_point.is_valid():
             context['cleaned'] = form1_point.cleaned_data
-            (data, dates, elements, station_ids, station_names, errors) = AcisWS.get_point_data(form1_point.cleaned_data, 'sodlist_web')
-            context['errors'] = errors
-            context['point_data'] = dict(data)
-            context['elements'] =  elements
-            context['station_names'] = station_names
-            context['station_ids'] = station_ids
-            context['dates'] = dates
-            if 'delimiter' in form1_point.cleaned_data.keys():
-                if str(form1_point.cleaned_data['delimiter']) == 'comma':delimiter = ','
-                if str(form1_point.cleaned_data['delimiter']) == 'tab':delimiter = '  '
-                if str(form1_point.cleaned_data['delimiter']) == 'colon':delimiter = ':'
-                if str(form1_point.cleaned_data['delimiter']) == 'space':delimiter = ' '
-                if str(form1_point.cleaned_data['delimiter']) == 'pipe':delimiter = '|'
-            else:
-                if form1_point.cleaned_data['data_format'] == 'json':
-                    delimiter = None
-                    context['json'] = True
-                else:
-                    delimiter = ' '
-            context['delimiter'] = delimiter
-
-            #Output formats
-            station_selection = form1_point.cleaned_data['station_selection']
-            if station_selection == 'stnid':
-                file_info =['StnId', form1_point.cleaned_data['station_id']]
-            elif station_selection == 'stn_id':
-                file_info =['StnId',',',form1_point.cleaned_data['station_id']]
-            elif station_selection == 'stnids':
-                file_info = ['Multi','Stations']
-            elif station_selection == 'county':
-                file_info =['county', form1_point.cleaned_data['county']]
-            elif station_selection == 'climdiv':
-                file_info =['climdiv', form1_point.cleaned_data['climate_division']]
-            elif station_selection == 'cwa':
-                file_info =['cwa', form1_point.cleaned_data['county_warning_area']]
-            elif station_selection == 'basin':
-                file_info =['basin', form1_point.cleaned_data['basin']]
-            elif station_selection == 'state':
-                file_info =['state', form1_point.cleaned_data['state']]
-            elif station_selection == 'bbox':
-                file_info =['bbox', re.sub(',','_',form1_point.cleaned_data['bounding_box'])]
-            else:
-                file_info =['Undefined','export']
-            context['file_info'] = file_info
-
-            if form1_point.cleaned_data['data_format'] == 'dlm':
-                return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'dat')
-            elif form1_point.cleaned_data['data_format'] == 'clm':
-                return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'txt')
-            elif form1_point.cleaned_data['data_format'] == 'xl':
-                return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'xls')
-            else:
+            #Check if data request is large,
+            #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
+            s_date = datetime.date(int(form1_point.cleaned_data['start_date'][0:4]), int(form1_point.cleaned_data['start_date'][4:6]),int(form1_point.cleaned_data['start_date'][6:8]))
+            e_date = datetime.date(int(form1_point.cleaned_data['end_date'][0:4]), int(form1_point.cleaned_data['end_date'][4:6]),int(form1_point.cleaned_data['end_date'][6:8]))
+            days = (e_date - s_date).days
+            #if time range > 1 month or user requests data for more than 1 station, large request via ftp
+            if days > 31 or 'station_id' not in form1_point.cleaned_data.keys():
+                context['form3_point_ready'] = True
+                context['large_request'] = 'You requested a large amount of data.Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
+                initial_params_2 = form1_point.cleaned_data
+                #keep MultiElements format and MultiStnField format
+                initial_params_2['elements'] = ','.join(initial_params_2['elements'])
+                if 'station_ids' in initial_params_2.keys():
+                    initial_params_2['station_ids'] = ','.join([str(stn) for stn in initial_params_2['station_ids']])
+                form3_point = forms.PointDataForm3(initial=initial_params_2)
+                context['form3_point'] = form3_point
                 return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
-        #form1_point not valid or form1_point valid and we are done with computation
-        #needed to show validation error in form1_point
-        #form1_point = set_as_form(request,'PointDataForm1')
-        #context['form1_point'] = form1_point
-        #context['form1_point_ready'] = True
+            else:
+                (data, dates, elements, station_ids, station_names, errors) = AcisWS.get_point_data(form1_point.cleaned_data, 'sodlist_web')
+                context['errors'] = errors
+                context['point_data'] = dict(data)
+                context['elements'] =  elements
+                context['station_names'] = station_names
+                context['station_ids'] = station_ids
+                context['dates'] = dates
+                if 'delimiter' in form1_point.cleaned_data.keys():
+                    if str(form1_point.cleaned_data['delimiter']) == 'comma':delimiter = ','
+                    if str(form1_point.cleaned_data['delimiter']) == 'tab':delimiter = '  '
+                    if str(form1_point.cleaned_data['delimiter']) == 'colon':delimiter = ':'
+                    if str(form1_point.cleaned_data['delimiter']) == 'space':delimiter = ' '
+                    if str(form1_point.cleaned_data['delimiter']) == 'pipe':delimiter = '|'
+                else:
+                    if form1_point.cleaned_data['data_format'] == 'json':
+                        delimiter = None
+                        context['json'] = True
+                    else:
+                        delimiter = ' '
+                context['delimiter'] = delimiter
+
+                #Output formats
+                station_selection = form1_point.cleaned_data['station_selection']
+                if station_selection == 'stnid':
+                    file_info =['StnId', form1_point.cleaned_data['station_id']]
+                elif station_selection == 'stn_id':
+                    file_info =['StnId',',',form1_point.cleaned_data['station_id']]
+                elif station_selection == 'stnids':
+                    file_info = ['Multi','Stations']
+                elif station_selection == 'county':
+                    file_info =['county', form1_point.cleaned_data['county']]
+                elif station_selection == 'climdiv':
+                    file_info =['climdiv', form1_point.cleaned_data['climate_division']]
+                elif station_selection == 'cwa':
+                    file_info =['cwa', form1_point.cleaned_data['county_warning_area']]
+                elif station_selection == 'basin':
+                    file_info =['basin', form1_point.cleaned_data['basin']]
+                elif station_selection == 'state':
+                    file_info =['state', form1_point.cleaned_data['state']]
+                elif station_selection == 'bbox':
+                    file_info =['bbox', re.sub(',','_',form1_point.cleaned_data['bounding_box'])]
+                else:
+                    file_info =['Undefined','export']
+                context['file_info'] = file_info
+
+                if form1_point.cleaned_data['data_format'] == 'dlm':
+                    return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'dat')
+                elif form1_point.cleaned_data['data_format'] == 'clm':
+                    return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'txt')
+                elif form1_point.cleaned_data['data_format'] == 'xl':
+                    return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'xls')
+                else:
+                    return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
+            #form1_point not valid or form1_point valid and we are done with computation
+            #needed to show validation error in form1_point
+            #form1_point = set_as_form(request,'PointDataForm1')
+            #context['form1_point'] = form1_point
+            #context['form1_point_ready'] = True
+    if 'form3_point' in request.POST:
+        form3_point = set_as_form(request,'PointDataForm3')
+        context['form3_point'] = form3_point
+        context['form3_point_ready'] = True
+        if form3_point.is_valid():
+            user_name = form3_point.cleaned_data['user_name']
+            time_stamp = datetime.datetime.now().strftime('_%Y_%m_%d_%H_%M_%S')
+            context['json'] = '/tmp/' + user_name + time_stamp + '.json'
+            with open('/tmp/' + user_name + time_stamp + '.json', 'w+') as j_file:
+                json.dump(form3_point.cleaned_data, j_file)
+            context['user_info'] = 'An e-mail will be sent to %s when the data request has been processed. The file name corresponding to this request is: %s.' % (form3_point.cleaned_data['email'], user_name + time_stamp + '.json')
+        return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
 
     return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
 
@@ -293,12 +324,12 @@ def data_modeled(request):
     if state is not None:context['state'] = state
     if loc is not None:context['location'] = loc
     if initial_0:
-        form0_grid = set_as_form(request,'GridData0Form', init=initial_0)
+        form0_grid = set_as_form(request,'GridDataForm0', init=initial_0)
     else:
-        form0_grid = set_as_form(request,'GridData0Form')
+        form0_grid = set_as_form(request,'GridDataForm0')
     context['form0_grid'] = form0_grid
     if 'form0_grid' in request.POST:
-        #form0_grid = set_as_form(request,'GridData0Form')
+        #form0_grid = set_as_form(request,'GridDataForm0')
         #context['form0_grid']  = form0_grid
         if form0_grid.is_valid():
             context['form1_grid_ready'] = True
@@ -1058,7 +1089,7 @@ def export_to_file_point(request, data, dates, station_names, station_ids, eleme
         #response['Content-Disposition'] = 'attachment;filename=export.%s' % file_extension
         response['Content-Disposition'] = 'attachment;filename=%s_%s.%s' % (file_info[0], file_info[1],file_extension)
         writer = csv.writer(response, delimiter=delim )
-        for stn, dat in data.items():
+        for stn, dat in data.iteritems():
             row = ['Station ID: %s' %str(station_ids[stn]), 'Station_name: %s' %str(station_names[stn])]
             writer.writerow(row)
             row = ['date']
@@ -1100,12 +1131,11 @@ def export_to_file_grid(request, data, elements, file_info, delim, file_extensio
         response = HttpResponse(mimetype='text/csv')
         response['Content-Disposition'] = 'attachment;filename=%s_%s.%s' % (file_info[0], file_info[1],file_extension)
         writer = csv.writer(response, delimiter=delim )
-        for stn, dat in enumerate(data):
-            row = ['Date', 'Lat', 'Lon', 'Elev']
-            for el in elements:row.append(el)
-            writer.writerow(row)
-            for date_idx, date_vals in enumerate(data):
-                writer.writerow(date_vals)
+        row = ['Date', 'Lat', 'Lon', 'Elev']
+        for el in elements:row.append(el)
+        writer.writerow(row)
+        for date_idx, date_vals in enumerate(data):
+            writer.writerow(date_vals)
     else: #Excel
         from xlwt import Workbook
         wb = Workbook()

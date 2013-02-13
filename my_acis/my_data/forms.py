@@ -207,10 +207,10 @@ class MultiElementField(forms.CharField):
                 mark_safe("You entered: %s" %str(el)))
 
 #Data Retrieval Forms
-class PointData0Form(forms.Form):
+class PointDataForm0(forms.Form):
     def __init__(self, *args, **kwargs):
         stn_id = kwargs.get('initial', {}).get('stn_id', None)
-        super(PointData0Form, self).__init__(*args, **kwargs)
+        super(PointDataForm0, self).__init__(*args, **kwargs)
 
         if stn_id is None:
             stn_id = self.data.get('stn_id')
@@ -221,7 +221,7 @@ class PointData0Form(forms.Form):
             self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES,required=False, initial='stn_id', widget=forms.HiddenInput(), help_text='Defines area encompassing the stations of interest.')
             self.fields['stn_id'] = forms.CharField(required=False, initial=stn_id, help_text='Station id recognized by Acis. See "About this tool" for more information.')
         #self.fields['element'] = forms.ChoiceField(choices=ELEMENT_CHOICES, initial='pcpn', required=False)
-        self.fields['elements'] = forms.CharField(initial ='maxt,mint,avgt', required=True, help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
+        self.fields['elements'] = forms.CharField(initial ='maxt,mint,avgt', required=False, help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', required=False, help_text='Defines format in which data will be returned.')
 
 class PointDataForm1(forms.Form):
@@ -282,7 +282,49 @@ class PointDataForm1(forms.Form):
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
-class GridData0Form(forms.Form):
+class PointDataForm3(forms.Form):
+   def __init__(self, *args, **kwargs):
+        station_selection = kwargs.get('initial', {}).get('station_selection', None)
+        data_format =  kwargs.get('initial', {}).get('data_format', None)
+        super(PointDataForm3, self).__init__(*args, **kwargs)
+
+        if station_selection is None:
+            station_selection = self.data.get('station_selection')
+        if data_format is None:
+            data_format = self.data.get('data_format')
+
+        self.fields['user_name'] = forms.CharField(required =False, help_text = 'Enter a one word user name of your choice.Example: first name initial + last name.')
+        self.fields['email'] = forms.EmailField(required=False, help_text='Enter a valid e-mail address at wich we can reach you.')
+
+        self.fields['station_selection'] = forms.CharField(required=False, widget=forms.HiddenInput(), initial=station_selection, help_text='Defines area encompassing the stations of interest.')
+
+        if station_selection == 'stn_id':
+            self.fields['station_id'] = forms.CharField(required=False,initial=kwargs.get('initial', {}).get('stn_id', None), help_text='Station id recognized by Acis. See "How to use this tool" for more info.')
+        elif station_selection == 'stnid':
+            self.fields['station_id'] = forms.CharField(required=False,initial=kwargs.get('initial', {}).get('station_id', None), help_text='Station id recognized by Acis. See "About this tool" for more info.')
+        elif station_selection == 'stnids':
+            self.fields['station_ids'] = MultiStnField(required=False,initial=kwargs.get('initial', {}).get('station_ids', None),help_text='Comma separated list of valid station ids.' )
+        elif station_selection == 'county':
+            self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial=kwargs.get('initial', {}).get('county', None),help_text='Valid US county identifier.')
+        elif station_selection == 'climdiv':
+            self.fields['climate_division'] = forms.CharField(required=False,max_length=4, min_length=4, initial=kwargs.get('initial', {}).get('climate_division', None),help_text='Valid US climate division identifier.')
+        elif station_selection == 'cwa':
+            self.fields['county_warning_area'] = forms.CharField(required=False,max_length=3, initial=kwargs.get('initial', {}).get('county_warning_area', None),help_text='Valid US county warning area identifier.')
+        elif station_selection == 'basin':
+            self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial=kwargs.get('initial', {}).get('basin', None),help_text='Valid US darinage basin identifier.')
+        elif station_selection == 'state':
+            self.fields['state'] = forms.ChoiceField(required=False,choices=STATE_CHOICES, initial=kwargs.get('initial', {}).get('state', None),help_text='Valid US state abreviation.')
+        elif station_selection == 'bbox':
+            self.fields['bounding_box'] = BBoxField(required=False,initial=kwargs.get('initial', {}).get('bounding_box', None),help_text='Bounding box latitudes and longitudes: West,South,East,North.')
+        self.fields['elements'] = MultiElementField(required=False,initial=kwargs.get('initial', {}).get('elements', None), help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
+        self.fields['start_date'] = MyDateField(required=False,max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('start_date', None),help_text= 'yyyymmdd or "por" (period of record) if single station.')
+        self.fields['end_date'] = MyDateField(required=False, max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('end_date', None), help_text= 'yyyymmdd or "por" (period of record) if single station.')
+        self.fields['data_format'] = forms.CharField(required=False, initial=kwargs.get('initial', {}).get('data_format', None), help_text='Defines format in which data will be returned.')
+        if data_format in ['dlm', 'html']:
+            self.fields['delimiter'] = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial=kwargs.get('initial', {}).get('delimiter', None),help_text='Delimiter used to seperate data values.')
+
+
+class GridDataForm0(forms.Form):
         grid_selection = forms.ChoiceField(choices=GRID_SELECTION_CHOICES, required=False, initial='point', help_text='Area defining gridpoints of interest.')
         elements =forms.CharField(initial ='maxt,mint,avgt', required=True, help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
         data_format = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', required=False, help_text='Delimiter used to seperate data values.')

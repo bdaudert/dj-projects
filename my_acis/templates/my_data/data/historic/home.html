@@ -14,6 +14,7 @@
     <div class="major-left">
     <br />
     <br />
+    {%if not form3_point_ready%}
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -61,6 +62,7 @@
             </br>
             </br>
         {%endif%}
+    {%endif%}
         <br />
     </div>    
 
@@ -119,7 +121,7 @@
         </div>
 
         <div id="docu_long"></div>
-
+    
         {%if stn_id%}
             <p class="error">Hit "select". Getting data for:</p>
             <p class="error">Station ID: {{stn_id}}</p>
@@ -133,6 +135,37 @@
         {%if elements%}
             <p class="error">Acis Elements: {{elements}}</p>
         {%endif%}
+
+        {%if large_request%}
+            <p class="error">{{large_request}}</p>
+        {%endif%}
+
+       {%if user_info%}
+            <p class="error">{{user_info}}</p>
+        {%endif%}
+
+        {% if form3_point_ready%}
+            <div id='form3'>
+                <form method="post" action="">{% csrf_token %}
+                <table class="form">
+                {%for field in form3_point %}
+                    <tr>
+                        <td>{{field.label}}:</td>
+                        <td>{{field}}</td>
+                        <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                        </td>
+                    </tr>
+                    {%if field.errors%}
+                     <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                    {%endif%}
+                {%endfor%}
+                </table>
+                <input type="submit" value="Submit" name="form3_point"/>
+                </form>
+            </div>
+        {%endif%}
+
 
         {%if point_data%}
         <br />
