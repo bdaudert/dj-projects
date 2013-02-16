@@ -129,7 +129,7 @@ ul.navbar a {
 div.pop-up {
   display: none;
   position: absolute;
-  width: 280px;
+  width: 500px;
   padding: 10px;
   background: #DCA978;
   border: 2px solid #006666;

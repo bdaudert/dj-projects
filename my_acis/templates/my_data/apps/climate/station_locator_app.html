@@ -76,7 +76,24 @@
         </script>
         <div id="how_to" style="display:none;">
             <p><ul>
-            <li>Choose and Area of interest</li>
+            <li>Choose a station selection method. This will define the type of area of whose station data you are interested in.</li>
+            <li>Explanation of station selection choices:</li>
+                <ul>
+                    <li>Station Selection = "Individual Station". Enter the Station Id of choice. If you don't know your station id, find it here:</li>
+                    <a href="{{URL_PREFIX}}sw_ckn/station_finder">Station Finder</a>
+                    or here:
+                    <a class="docu_long"target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">More on station Ids</a>
+                    <li>Station Selection = "Comma separated list of stations". Enter multiple station ids, separated by a comma.</li>
+                    <li>Station Selection = "County FIPS code". Find data for all stations in a US county of your choice.</li>
+                    <a target="_blank" href="{{MEDIA_URL}}html/US_FIPS_CountyCodes.htm">List of US FIPS County Codes</a>
+                    <li>Station Selection = "Climate Division".  Find data for all stations in a US climate division of your choice.</li>
+                    <a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a>
+                    <li>Station Selection = "County Warning Area. Find data for all stations in a US county warning area of your choice."</li>
+                    <a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a>
+                    <li>Station Selection = "Basin". Find data for all stations in a US drainage basin of your choice.</li>
+                    <a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a>
+                    <li>Station Selection = "State". Find data for all stations in a US state of your choice.</li>
+                    <li>Station Selection = "Bounding Box". Find data for all stations in a bounding box of your choice. A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. Please enter them in this order.</li>
             <li>Enter a comma seperated list of elements from the following otions</li>
             <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0"/></li>
             <li>Start and end date should be 8 characters long and of form yyyymmdd. Alternativly you can enter
@@ -146,7 +163,10 @@
     </div>
 
     <div class="center-right" style="border:none;">
-        <div id="map_legend"><h3>Legend</h3></div>
+        <div id="map_legend">
+            <h3>Legend of Station Networks.</h3>
+            <p class="error">Zoom in to see Networks show on the map.</p>
+        </div>
     </div>
 </div>
 {%endblock%}

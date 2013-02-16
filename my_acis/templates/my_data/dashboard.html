@@ -1,0 +1,101 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="climate, weather, dashboard, monitoring">
+<meta name="description" content="Climate Dashboard">
+
+{% block content %}
+
+<p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn">HOME></a>
+<a href="{{URL_PREFIX}}sw_ckn/dashboard/">DASHBOARD</a></p>
+
+<div class="container">
+<table border="1px solid #006666">
+    <th><h1>The Southwest</h1></th><th><h1>The Rest</h1></th>
+    <!--First Row Temps-->
+    <tr><td>
+     <!-- The SW Left side of page -->
+        <h2 style="color:magenta;">Temperature Anomaly Maps - Updated daily by HPRCC </h2>
+        <table>
+            <th>Year To Date</th><th>30-day</th><th>7-day</th>
+            <tr>
+                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/YearTDeptWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/YearTDeptWRCC.png" class="sidebar"></a></td>
+                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dTDeptWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dTDeptWRCC.png" class="sidebar"></a></td>
+                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/7dTDeptWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/7dTDeptWRCC.png" class="sidebar"></a></td>
+            </tr>
+        </table>
+        <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?state=SW&region=WRCC&product=TDept">MORE HERE: High Plains Regional Climate Center SW Temperature anomaly map tool</a>
+    </td><td>
+    <!-- The US right side of page -->
+        <h2 style="color:magenta;">Temperature Anomaly Maps - Updated daily by HPCC</h2>
+        <table>
+            <th>Year To Date</th><th>30-day</th><th>7-day</th>
+            <tr>
+                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/YearTDeptUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/YearTDeptUS.png" class="sidebar"></a></td>
+                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/30dTDeptUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/30dTDeptUS.png" class="sidebar"></a></td>
+                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/7dTDeptUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/7dTDeptUS.png" class="sidebar"></a></td>
+            </tr>
+        </table>
+        <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?product=TDept">MORE HERE: High Plains Regional Climate Center US Temperature anomaly map tool</a>
+    </td></tr>
+    <!--Second Row Precip-->
+    <tr><td>
+        <h2 style="color:magenta;">% of Normal Precipitation - Updated daily by HPRCC</h2>
+        <table>
+            <th>Year To date</th><th>30-day</th><th>7-day</th><th>Water Year </th>
+            <tr>                
+                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/YearPNormPWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/YearPNormWRCC.png" class="sidebar"></a></td>
+
+                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dPNormWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dPNormWRCC.png" class="sidebar"></a></td>
+                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/7dPNormWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/7dPNormWRCC.png" class="sidebar"></a></td>
+                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterPNormWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterPNormWRCC.png" class="sidebar"></a></td>
+            </tr>
+        </table>
+        <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?state=SW&region=WRCC&product=PNorm">MORE HERE: High Plains Regional Climate Center SW Precip anomaly map tool</a>
+
+    </td><td>
+        <h2 style="color:magenta;">% of Normal Precipitation - Updated daily by HPCC</h2>
+        <table>
+            <th>Year To date</th><th>30-day</th><th>7-day</th><th>Water Year</th>
+            <tr>
+                <td><a href="http://www.hprcc.unl.edu/products/maps/acisYearPNormPUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/YearPNormUS.png" class="sidebar"></a></td>
+
+                <td><a href="http://www.hprcc.unl.edu/products/maps/acis30dPNormUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/30dPNormUS.png" class="sidebar"></a></td>
+                <td><a href="http://www.hprcc.unl.edu/products/maps/acis7dPNormUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/7dPNormUS.png" class="sidebar"></a></td>
+                <td><a href="http://www.hprcc.unl.edu/products/maps/acisWaterPNormUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/WaterPNormUS.png" class="sidebar"></a></td>
+            </tr>
+        </table>
+        <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?product=PNorm">MORE HERE: High Plains Regional Climate Center US Precip anomaly map tool</a>
+    </td></tr>
+    <!-- Third Row Snow-->
+    <tr><td>
+        <h2 style="color:magenta;">Snow data from SNOTEL</h2>
+        <table>
+            <th>Snow Depth</th><th>Snow Density</th><th>Snow Water equivalent</th>
+            <tr>
+                <td><a href="http://www.wcc.nrcs.usda.gov/ftpref/data/water/wcs/gis/maps/west_snowdepth.pdf" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/SnowDepth.png" class="sidebar"></a></td>
+                <td><a href="http://www.wcc.nrcs.usda.gov/ftpref/data/water/wcs/gis/maps/west_snowdensity.pdf" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/SnowDensity.png" class="sidebar"></a></td>
+                <td><a href="http://www.wcc.nrcs.usda.gov/ftpref/data/water/wcs/gis/maps/WestwideSWEPercent.pdf" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/WaterEquivalent.png" class="sidebar"></a></td>
+            <tr>
+        </table>
+        <a target="_blank" href="http://www.wcc.nrcs.usda.gov/cgibin/westsnow.pl">MORE HERE: SNOTEL Mountain Snowpack Maps for the West</a>
+   
+    </td><td>
+        <!-- No Snotel for US -->
+    </td></tr>
+    
+    <!-- Fourth Row Drought-->
+    <tr><td>
+        <h2 style="color:magenta;">Drought Monitoring</h2>
+    </td><td>
+        <h2 style="color:magenta;">Drought Monitoring</h2>
+    </td></tr>
+    <!-- Fifth Row Soil-->
+    <tr><td>
+            <h2 style="color:magenta;">Soil</h2>
+    </td><td>
+            <h2 style="color:magenta;">Soil</h2>
+    </td></tr>
+</table>
+
+</div>
+{% endblock %}

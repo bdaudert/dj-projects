@@ -12,11 +12,10 @@ from django.contrib.localflavor.us.forms import USStateField
 
 #Python imports
 import datetime
-import re
 from collections import defaultdict
 import json
 
-import sys
+import sys, os, stat, re
 
 #My modules
 import WRCCUtils
@@ -24,6 +23,7 @@ import AcisWS
 import WRCCDataApps
 import WRCCClasses
 import my_data.forms as forms
+
 
 acis_elements = defaultdict(dict)
 acis_elements ={'maxt':{'name':'maxt', 'name_long': 'Maximum Daily Temperature (F)', 'vX':'1'}, \
@@ -140,7 +140,12 @@ def contact_us(request):
     }
     return render_to_response('my_data/contact_us.html', context, context_instance=RequestContext(request))
 
-
+def dashboard(request):
+    context = {
+        'title': 'Dashboard',
+        'home_page':True
+    }
+    return render_to_response('my_data/dashboard.html', context, context_instance=RequestContext(request))
 
 def data_home(request):
     context = {
@@ -273,11 +278,14 @@ def data_historic(request):
                 context['file_info'] = file_info
 
                 if form1_point.cleaned_data['data_format'] == 'dlm':
-                    return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'dat')
+                    #return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'dat')
+                    return WRCCUtils.write_point_data_to_file(data, dates, station_names, station_ids, elements,delimiter, 'dat', request=request, file_info=file_info)
                 elif form1_point.cleaned_data['data_format'] == 'clm':
-                    return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'txt')
+                    #return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'txt')
+                    return WRCCUtils.write_point_data_to_file(data, dates, station_names, station_ids, elements,delimiter, 'txt', request=request, file_info=file_info)
                 elif form1_point.cleaned_data['data_format'] == 'xl':
-                    return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'xls')
+                    #return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'xls')
+                    return WRCCUtils.write_point_data_to_file(data, dates, station_names, station_ids, elements,delimiter, 'xls', request=request, file_info=file_info)
                 else:
                     return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
             #form1_point not valid or form1_point valid and we are done with computation
@@ -292,10 +300,19 @@ def data_historic(request):
         if form3_point.is_valid():
             user_name = form3_point.cleaned_data['user_name']
             time_stamp = datetime.datetime.now().strftime('_%Y_%m_%d_%H_%M_%S')
-            context['json'] = '/tmp/' + user_name + time_stamp + '.json'
-            with open('/tmp/' + user_name + time_stamp + '.json', 'w+') as j_file:
+            f = '/tmp/data_requests/' + user_name + time_stamp + '_params.json'
+            context['json'] = f
+            #check if directory /tmp/data_requests exists, else create it
+            dr = os.path.dirname(f)
+            try:
+                os.stat(dr)
+            except:
+                os.mkdir(dr)
+            with open( f, 'w+') as j_file:
                 json.dump(form3_point.cleaned_data, j_file)
-            context['user_info'] = 'An e-mail will be sent to %s when the data request has been processed. The file name corresponding to this request is: %s.' % (form3_point.cleaned_data['email'], user_name + time_stamp + '.json')
+            mode = os.stat(f).st_mode
+            os.chmod(f, mode | stat.S_IWOTH)
+            context['user_info'] = 'You will receive an email from csc-data-request@dri.edu with instructions when the data request has been processed. You provided following e-mail address: %s' % (form3_point.cleaned_data['email'])
         return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
 
     return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
@@ -374,83 +391,138 @@ def data_modeled(request):
         if form1_grid.is_valid():
             el_list = form1_grid.cleaned_data['elements']
             context['elements'] =  el_list
-            req = AcisWS.get_grid_data(form1_grid.cleaned_data, 'griddata_web')
-            if 'error' in req.keys():
-                context['error']  = req
+            #Check if data request is large,
+            #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
+            s_date = datetime.date(int(form1_grid.cleaned_data['start_date'][0:4]), int(form1_grid.cleaned_data['start_date'][4:6]), \
+            int(form1_grid.cleaned_data['start_date'][6:8]))
+            e_date = datetime.date(int(form1_grid.cleaned_data['end_date'][0:4]), int(form1_grid.cleaned_data['end_date'][4:6]), \
+            int(form1_grid.cleaned_data['end_date'][6:8]))
+            days = (e_date - s_date).days
+            #if time range > 1 month or user requests data for more than 1 station, large request via ftp
+            if days > 31 or 'location' not in form1_grid.cleaned_data.keys():
+                context['form3_grid_ready'] = True
+                context['large_request'] = \
+                'You requested a large amount of data.Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
+                initial_params_2 = form1_grid.cleaned_data
+                #keep MultiElements format and MultiStnField format
+                initial_params_2['elements'] = ','.join(initial_params_2['elements'])
+                form3_grid = forms.GridDataForm3(initial=initial_params_2)
+                context['form3_grid'] = form3_grid
+                return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
             else:
+                req = AcisWS.get_grid_data(form1_grid.cleaned_data, 'griddata_web')
+                #format data
                 if form1_grid.cleaned_data['data_format'] == 'json':
                     delimiter = None
                     context['json'] = True
                     context['grid_data']  = req
                 else:
-                    if 'location' in form1_grid.cleaned_data.keys():
-                        lats = [[req['meta']['lat']]]
-                        lons = [[req['meta']['lon']]]
-                        elevs = [[req['meta']['elev']]]
-                        data = [[] for i in range(len(req['data']))]
-                    else:
-                        lats = req['meta']['lat']
-                        lons = req['meta']['lon']
-                        elevs = req['meta']['elev']
-                        lat_num = 0
-                        for lat_idx, lat_grid in enumerate(req['meta']['lat']):
-                           lat_num+=len(lat_grid)
-                        length = len(req['data']) * lat_num
-                        #length = len(req['data'])
-                        data = [[] for i in range(length)]
-                    idx = -1
-                    for date_idx, date_vals in enumerate(req['data']):
-                        if 'location' in form1_grid.cleaned_data.keys():
-                            data[date_idx].append(str(date_vals[0]))
-                            data[date_idx].append(lons[0][0])
-                            data[date_idx].append(lats[0][0])
-                            data[date_idx].append(elevs[0][0])
-
-                            for el_idx in range(1,len(el_list) + 1):
-                                data[date_idx].append(str(date_vals[el_idx]).strip(' '))
-                        else:
-                            #idx+=1
-                            for grid_idx, lat_grid in enumerate(lats):
-                                for lat_idx, lat in enumerate(lat_grid):
-                                    idx+=1
-                                    data[idx].append(str(date_vals[0]))
-                                    data[idx].append(lons[grid_idx][lat_idx])
-                                    data[idx].append(lat)
-                                    data[idx].append(elevs[grid_idx][lat_idx])
-
-                                    for el_idx in range(1,len(el_list) + 1):
-                                        data[idx].append(date_vals[el_idx][grid_idx][lat_idx])
+                    data = WRCCUtils.format_grid_data(req, form1_grid.cleaned_data)
                     context['grid_data'] = data
+                '''
+                if 'error' in req.keys():
+                    context['error']  = req
+                else:
+                    if form1_grid.cleaned_data['data_format'] == 'json':
+                        delimiter = None
+                        context['json'] = True
+                        context['grid_data']  = req
+                    else:
+                        if 'location' in form1_grid.cleaned_data.keys():
+                            lats = [[req['meta']['lat']]]
+                            lons = [[req['meta']['lon']]]
+                            elevs = [[req['meta']['elev']]]
+                            data = [[] for i in range(len(req['data']))]
+                        else:
+                            lats = req['meta']['lat']
+                            lons = req['meta']['lon']
+                            elevs = req['meta']['elev']
+                            lat_num = 0
+                            for lat_idx, lat_grid in enumerate(req['meta']['lat']):
+                               lat_num+=len(lat_grid)
+                            length = len(req['data']) * lat_num
+                            #length = len(req['data'])
+                            data = [[] for i in range(length)]
+                        idx = -1
+                        for date_idx, date_vals in enumerate(req['data']):
+                            if 'location' in form1_grid.cleaned_data.keys():
+                                data[date_idx].append(str(date_vals[0]))
+                                data[date_idx].append(lons[0][0])
+                                data[date_idx].append(lats[0][0])
+                                data[date_idx].append(elevs[0][0])
 
-            if 'delimiter' in form1_grid.cleaned_data.keys():
-                if str(form1_grid.cleaned_data['delimiter']) == 'comma':delimiter = ','
-                if str(form1_grid.cleaned_data['delimiter']) == 'tab':delimiter = '  '
-                if str(form1_grid.cleaned_data['delimiter']) == 'colon':delimiter = ':'
-                if str(form1_grid.cleaned_data['delimiter']) == 'space':delimiter = ' '
-                if str(form1_grid.cleaned_data['delimiter']) == 'pipe':delimiter = '|'
-            else:
-                delimiter = ' '
-            context['delimiter'] = delimiter
+                                for el_idx in range(1,len(el_list) + 1):
+                                    data[date_idx].append(str(date_vals[el_idx]).strip(' '))
+                            else:
+                                #idx+=1
+                                for grid_idx, lat_grid in enumerate(lats):
+                                    for lat_idx, lat in enumerate(lat_grid):
+                                        idx+=1
+                                        data[idx].append(str(date_vals[0]))
+                                        data[idx].append(lons[grid_idx][lat_idx])
+                                        data[idx].append(lat)
+                                        data[idx].append(elevs[grid_idx][lat_idx])
 
-            #Output formats
-            grid_selection = form1_grid.cleaned_data['grid_selection']
-            if grid_selection == 'point':file_info =['location', re.sub(',','_',form1_grid.cleaned_data['location'])]
-            if grid_selection == 'state':file_info = ['state', form1_grid.cleaned_data['state']]
-            if grid_selection == 'bbox':file_info =['bounding_box', re.sub(',','_',form1_grid.cleaned_data['bounding_box'])]
-            context['file_info'] = file_info
-            if form1_grid.cleaned_data['data_format'] == 'dlm':
-                return export_to_file_grid(request, data, el_list, file_info, delimiter, 'dat')
-            elif form1_grid.cleaned_data['data_format'] == 'clm':
-                return export_to_file_grid(request, data, el_list, file_info, delimiter, 'txt')
-            elif form1_grid.cleaned_data['data_format'] == 'xl':
-                return export_to_file_grid(request, data, el_list, file_info, delimiter, 'xls')
-            else:
-                return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
-        #form1_grid not valid or form1_grid valid and we are done with computation
-        #needed to show validation error in form1_grid
-        #context['form1_grid_ready'] = True
-        #form1_grid = set_as_form(request,'GridDataForm1')
-        #context['form1_grid'] = form1_grid
+                                        for el_idx in range(1,len(el_list) + 1):
+                                            data[idx].append(date_vals[el_idx][grid_idx][lat_idx])
+                        context['grid_data'] = data
+                '''
+
+                if 'delimiter' in form1_grid.cleaned_data.keys():
+                    if str(form1_grid.cleaned_data['delimiter']) == 'comma':delimiter = ','
+                    if str(form1_grid.cleaned_data['delimiter']) == 'tab':delimiter = '  '
+                    if str(form1_grid.cleaned_data['delimiter']) == 'colon':delimiter = ':'
+                    if str(form1_grid.cleaned_data['delimiter']) == 'space':delimiter = ' '
+                    if str(form1_grid.cleaned_data['delimiter']) == 'pipe':delimiter = '|'
+                else:
+                    delimiter = ' '
+                context['delimiter'] = delimiter
+
+                #Output formats
+                grid_selection = form1_grid.cleaned_data['grid_selection']
+                if grid_selection == 'point':file_info =['location', re.sub(',','_',form1_grid.cleaned_data['location'])]
+                if grid_selection == 'state':file_info = ['state', form1_grid.cleaned_data['state']]
+                if grid_selection == 'bbox':file_info =['bounding_box', re.sub(',','_',form1_grid.cleaned_data['bounding_box'])]
+                context['file_info'] = file_info
+                if form1_grid.cleaned_data['data_format'] == 'dlm':
+                    #return export_to_file_grid(request, data, el_list, file_info, delimiter, 'dat')
+                    return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'dat', request=request,file_info=file_info)
+                elif form1_grid.cleaned_data['data_format'] == 'clm':
+                    #return export_to_file_grid(request, data, el_list, file_info, delimiter, 'txt')
+                    return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'txt', request=request,file_info=file_info)
+
+                elif form1_grid.cleaned_data['data_format'] == 'xl':
+                    #return export_to_file_grid(request, data, el_list, file_info, delimiter, 'xls')
+                    return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'xls', request=request,file_info=file_info)
+                else:
+                    return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
+            #form1_grid not valid or form1_grid valid and we are done with computation
+            #needed to show validation error in form1_grid
+            #context['form1_grid_ready'] = True
+            #form1_grid = set_as_form(request,'GridDataForm1')
+            #context['form1_grid'] = form1_grid
+
+    if 'form3_grid' in request.POST:
+        form3_grid = set_as_form(request,'GridDataForm3')
+        context['form3_grid'] = form3_grid
+        context['form3_grid_ready'] = True
+        if form3_grid.is_valid():
+            user_name = form3_grid.cleaned_data['user_name']
+            time_stamp = datetime.datetime.now().strftime('_%Y_%m_%d_%H_%M_%S')
+            f = '/tmp/data_requests/' + user_name + time_stamp + '_params.json'
+            context['json'] = f
+            #check if directory /tmp/data_requests exists, else create it
+            dr = os.path.dirname(f)
+            try:
+                os.stat(dr)
+            except:
+                os.mkdir(dr)
+            with open(f, 'w+') as j_file:
+                json.dump(form3_grid.cleaned_data, j_file)
+            mode = os.stat(f).st_mode
+            os.chmod(f, mode | stat.S_IWOTH)
+            context['user_info'] = 'You will receive an email from csc-data-request@dri.edu with instructions when the data request has been processed. You provided following -mail address: %s' % (form3_grid.cleaned_data['email'])
+        return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
 
     return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
 

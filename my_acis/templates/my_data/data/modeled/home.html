@@ -12,6 +12,7 @@
 <div class="container">
     <h2>Acis Gridded Data</h2>
     <div class="major-left">
+        {%if not form3_grid_ready%}
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -58,6 +59,7 @@
         </div>
         </br>
         </br>
+        {%endif%}
         {%endif%}
     </div>
 
@@ -144,6 +146,37 @@
         {%if error%}
             {{error}}
         {%endif%}
+
+       {%if large_request%}
+            <p class="error">{{large_request}}</p>
+        {%endif%}
+
+       {%if user_info%}
+            <p class="error">{{user_info}}</p>
+        {%endif%}
+
+        {% if form3_grid_ready%}
+            <div id='form3'>
+                <form method="post" action="">{% csrf_token %}
+                <table class="form">
+                {%for field in form3_grid %}
+                    <tr>
+                        <td>{{field.label}}:</td>
+                        <td>{{field}}</td>
+                        <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                        </td>
+                    </tr>
+                    {%if field.errors%}
+                     <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                    {%endif%}
+                {%endfor%}
+                </table>
+                <input type="submit" value="Submit" name="form3_grid"/>
+                </form>
+            </div>
+        {%endif%}
+
 
         {%if grid_data%}
             <br />
