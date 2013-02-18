@@ -51,38 +51,57 @@ MEDIA_URL = '/www/apps/csc/dj-projects/my_acis/media/'
 month_names = ['January', 'February', 'March', 'April', 'May', 'June',\
                'July', 'August', 'September', 'October', 'November', 'December']
 
-def front_page_dash(request):
+mon_lens = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+def home(request):
     context = {
         'title': 'Southwest Climate Knowledge Network (SW-CKN)',
         'home_page':True
     }
-    return render_to_response('my_data/front_page_dash.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/home.html', context, context_instance=RequestContext(request))
 
-def finder(request):
+def help(request):
     context = {
-        'title': 'Finder Tool',
+        'title': 'Help Tool',
         'search_page':True
     }
-    return render_to_response('my_data/finder/home.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/help/home.html', context, context_instance=RequestContext(request))
 
-def home_view(request):
+def main_map(request):
     context = {
         'title': 'Welcome to the SW-CKN',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
         'home_page':True
     }
-    #Main display temps/precip for month since 1900
+    context['json_file'] = 'CSC_Info.json'
+    return render_to_response('my_data/main_map.html', context, context_instance=RequestContext(request))
+
+#Temp home page fpr Kelly to look at
+def main_maves(request):
+    context = {
+        'title': 'Welcome to the SW-CKN',
+        'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
+        'home_page':True
+    }
     state = request.GET.get('state_key', None)
     element = request.GET.get('element', None)
     if state is None:state = 'NV'
     if element is None: element='mint'
     month = int(datetime.date.today().month)
+    if len(str(month)) == 1:
+        mon = '0%s' %str(month)
+    else:
+        mon = str(month)
+    day  = str(mon_lens[month -1])
+    if len(day) == 1:
+        day = '0%s' %day
+    context['day'] = day
     context['month'] = month
+    context['mon'] = mon
     context['month_name'] = month_names[month - 1]
     context['state'] = state
     context['element'] = element
-    context['json_file'] = 'CSC_Info.json'
-    return render_to_response('my_data/home.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/main_maves.html', context, context_instance=RequestContext(request))
 
 def about_us(request):
     context = {

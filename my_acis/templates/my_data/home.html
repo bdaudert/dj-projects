@@ -1,118 +1,89 @@
-{% extends "csc_base.html" %}
+<!DOCTYPE html>
 
-<meta name="keywords" content="climate,climate change,Southwest US,Soutwest CSC,Climate Science Center, Climate Knowledge Network">
-<meta name="description" content="Southwest Climate Knowledge Network">
+<html>
 
-{% block content %}
+<head>
+    <title>{{title}}</title>
+    <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
+    <!-- ** Javascript ** -->
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
+    <!-- ** Britta'sJavascript ** -->
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script> 
+    <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+</head>
 
-<p align="center"><font color="red" size="xx-large"><b>PROVIDING EASY ACCESS TO CLIMATE DATA,PRODUCTS AND INFORMATION</b></font></p>
+<!--<body onload="initialize_grid_point_map()">-->
+<body style="background-color: #FFEBCD;">
 
-<p  align="center">You are here
-<a href="{{URL_PREFIX}}sw_ckn/">HOME</a>
+<div id="header"></div>
+    <script type="text/javascript">$("#header").load("{{MEDIA_URL}}html/csc_map_page_base.html .header");</script>
 
-<!--<textarea class="layer" rows="40" cols="140" style="top:660px;left:300px;">
-</textarea>
-<textarea class="layer" rows="30" cols="70" style="top:660px;right:300px;">Present-Future connection</textarea>-->
+<div id="home_img"></div>
+    <script type="text/javascript">$("#home_img").load("{{MEDIA_URL}}html/csc_map_page_base.html .home_img");</script>
 
+<div class="content-header">
+
+</div>
+
+<p align="center">You are here
+<a href="{{URL_PREFIX}}sw_ckn/home/">HOME</a>
+
+<div id="searchbox"></div>
+<script type="text/javascript">$("#searchbox").load("{{MEDIA_URL}}html/csc_map_page_base.html .searchbox");</script>
 
 <div class="container">
 
-    <div class="third-left">
-        <h1 align="center" style="border: 2px solid #006666; background-color:#EBCEB2;">PAST &rarr;</h1>
-        <div class="major-left">
-            <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="popup_map"><img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="sidebar">Temperature Departure</a>
-            <br /><br /><br /><br />
-            <a href="http://www.wrcc.dri.edu" target="_blank"><img class="sidebar" src="{{MEDIA_URL}}img/WRCC.png" width="40%">Western Regional Climate Center (WRCC)</a>
-            <br /><br /><br /><br />
-            <a href="http://www.wrcc.dri.edu/weather/index.html" target="_blank"><img class="sidebar" src="{{MEDIA_URL}}img/CurrentWeatherDataPlots.png" width="40%">Last Month's Weather Data Plots</a>
-        </div>
-
-        <div class="major-right">
-            <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="popup_map"><img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="sidebar">% of Normal Precipitation</a>
-            <a href="http://www.wrcc.dri.edu/anom/" target="_blank">&rarr; More anomaly maps</a>
-        </div>
+    <p class="error" align="center">To get started, choose one of the following:</p>
+    <table class="dash" cellspacing="20px">
+        <!--Headers-->
+        <th><font size="5"><b>LAUNCH SW-CKN</b></th>
+        <th><font size="5"><b>HELP TOOL</b></th>
+        <th><font size="5"><b>DATA PORTAL</b></th>
+        <th><font size="5"><b>TOOLS & PRODUCTS</b></th>
+        <tr><td></td></tr>
+        <!--First row of dashboard: image-->
+        <tr>
+            <!--<td><a href="/csc/sw_ckn/"><img class="dash_img" src="{{MEDIA_URL}}img/SW_CSC_HOME.png"></a></td>-->
+            <td><a href="/csc/sw_ckn/main/"><img class="dash_img" src="{{MEDIA_URL}}img/SW_CSC_HOME.png"></a></td>
+            <td><a href="{{URL_PREFIX}}sw_ckn/help/"><img class="dash_img" src="{{MEDIA_URL}}img/Locator.jpg"></a></td>
+            <td><a href="{{URL_PREFIX}}sw_ckn/data/"><img class="dash_img" src="{{MEDIA_URL}}img/DataPortal.jpg"></a></td>
+            <td><a href="{{URL_PREFIX}}sw_ckn/apps/"><img class="dash_img" src="{{MEDIA_URL}}img/Application.png"></a></td>
+        </tr>
+        <!--Second+ rows: list of content-->
+        <tr>
+            <!--<td><b>SW-CKN Home Page</b></td>-->
+            <td><b>Main Page</b></td>
+            <td><b>Use FAQs to find what you need</b></td>
+            <td><b>Access to various (open) climate data</b></td>
+            <td><b>Applications</b></td>
+        </tr>
+        <tr>
+            <td>Access to all content</td>
+            <td></td>
+            <td>Historic Station Data (observational)</td>
+            <td>Data Analysis</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Gridded Data</td>
+            <td>Visualization (maps, time series)</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Modeled Downscaled Data</td>
+            <td>Desision Making Tools</td>
+        </tr>
+    </table>
+    <br />
+    <br />
+    <div class="footer">
+        <p>Powered by <img src="{{MEDIA_URL}}img/Acis-logo.jpg" alt="Acis" width="90" height="30">&nbsp;&nbsp;
+        Created by <a href="http://www.wrcc.dri.edu/" target="_blank">>WRCC</a> &nbsp;&nbsp;
+        Hosted by <a href="http://www.dri.edu/" target="_blank"><img class="logo" src="{{ MEDIA_URL }}img/DRILogo.gif"></a></p>
     </div>
 
-    <div class="third-center">
-        <h1 align="center" style="border: 2px solid #006666; background-color:#EBCEB2;">PRESENT &rarr;</h1>
-        <div class="major-left">
-            <a href="http://www.weather.gov/" target="_blank"><img src="{{ MEDIA_URL }}img/NatHazard.png" class="sidebar"><br />NWS Current Weather in the US</a>
-        </div>
-
-        <div class="major-right">
-            <a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" target="_blank"><img src="http://radar.weather.gov/ridge/Conus/Loop/pacsouthwest_loop.gif" class="sidebar"><br />Pacific Southwest Radar Mosaic</a>
-        </div>
-    <!--
-        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-        <input type="hidden" id="json_file" name="variable" value="{{ json_file }}">
-
-        
-        <img class="icon_small" src="{{MEDIA_URL}}img/HostIcon.png">
-        <input onclick="initialize_info_map(this);" type=button id="host" value="Show Hosts">
-
-        <img class="icon_small" src="{{MEDIA_URL}}img/PartnerIcon.jpg">
-        <input onclick="initialize_info_map(this);" type=button id="partner" value="Show Partners">
-
-        <img class="icon_small" src="{{MEDIA_URL}}img/ProjectIcon.jpg">
-        <input onclick="initialize_info_map(this);" type=button id="project" value="Show Projects">
-
-        <img class="icon_small" src="{{MEDIA_URL}}img/MiscIcon.jpg">
-        <input onclick="initialize_info_map(this);" type=button id="misc" value="Miscellaneous">
-
-        <input onclick="initialize_info_map(this);" type=button id="all" value="Show All" checked>
-        <input onclick="initialize_info_map(this);" type=button id="nothing" value="Reset">
-        <br />
-        <br />
-
-                    
-        <div id="map" style="width: 100%; height:600px;"></div>
-        <div id="all"><script type="text/javascript">
-            initialize_info_map(this)
-        </script></div>
-    -->
-    <!--
-        <h1>Try our puzzle!</h1>
-        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/puzzle.js"></script>
-        <a href="#" onclick="scramble();return false">Scramble</a> | <a href="#" onclick="initPuzzle();return false">New image</a> | 
-        <form style="display:inline">
-        Columns/Rows: 
-        <input type="text" value="4" onblur="var no = this.value.replace(/[^\d]/g,'');if(no/1<3){ this.value = '3';no=3; };cols=no" maxlength="1" size="2"> 
-        x 
-        <input type="text" value="3" onblur="var no = this.value.replace(/[^\d]/g,'');if(no/1<2){ this.value = '2';no=2; };rows=no" maxlength="1" size="2">
-        </form>
-
-         <div id="puzzle_container">
-            Please wait - initializing script
-        </div>
-
-        <div id="messageDiv"></div>
-        <p><i>Shuffle, then click to move the pieces</i></p>
-    -->
-    </div>
-
-   <div class="third-right">
-        <h1 align="center" style="border: 2px solid #006666; background-color:#EBCEB2;">FUTURE</h1>
-
-        <div class="major-left">
-            <a target="_blank" href="http://www.earthsystemgrid.org/home.htm"><img class="sidebar" src="{{MEDIA_URL}}img/narccap.png">North American Regional Climate Change Assessment Program (NARCCAPP)</a>
-        </div>
-    </div>
-
-</div> <!--end container-->
-
-<div class="front_page_map">
-    <div id="side" align="center">
-        <input id="reset" value="Reset" type="button" class="navi"/>
-        <input id="showData"  value="Show Paths" type="button" class="navi"/>
-        <p style="color:red;">Draw a polyon by clicking on map points!</p>
-        <div   id="dataPanel"></div>
-    </div>
-    <div id="map"></div>
-<div>
-
-<script type="text/javascript">
-    initialize_polygon_map()
-</script>
-
-{% endblock %}
+</div>
+</body>
+</html>

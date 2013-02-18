@@ -1,0 +1,77 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="climate,climate change,Southwest US,Soutwest CSC,Climate Science Center, Climate Knowledge Network">
+<meta name="description" content="Southwest Climate Knowledge Network">
+
+{% block content %}
+
+<p align="center"><font color="red" size="xx-large"><b>PROVIDING EASY ACCESS TO CLIMATE DATA,PRODUCTS AND INFORMATION</b></font></p>
+
+<p  align="center">You are here
+<a href="{{URL_PREFIX}}sw_ckn/">MAIN</a>
+
+<!--<textarea class="layer" rows="40" cols="140" style="top:660px;left:300px;">
+</textarea>
+<textarea class="layer" rows="30" cols="70" style="top:660px;right:300px;">Present-Future connection</textarea>-->
+
+
+<div class="container">
+
+<div align="center">
+ <!-- Try one Average Temps for State tool as scenter piece-->
+
+    <h1>Means for {{state}} since 1950</h1>
+    <form method="get" action="">
+        <select name="state_key">
+            <option value="NV">Chose a different State</option>
+            {% for state in state_choices %}
+            <option value="{{state}}">{{state}}</option>
+            {% endfor %}
+        </select>
+        <select name="element">
+            <option value="mint">Choose a different element</option>
+            <option value="avgt">Mean Temperature</option>
+            <option value="pcpn">Precipitation</option>
+            <option value="maxt">Maximum Temperature</option>
+            <option value="mint">Minimum Temperature</option>
+            <option value="snow">Snow</option>
+            <option value="snwd">Snow depth</option>
+        </select>
+        <input type="submit" value="Submit"/>
+    </form>
+    <br/>
+
+    <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+    <input type="hidden" id="state" name="state" value="{{ state }}">
+    <input type="hidden" id="month" name="month" value="{{ month }}">
+    <input type="hidden" id="mon" name="mon" value="{{ mon }}">
+    <input type="hidden" id="day" name="day" value="{{ day }}">
+    <input type="hidden" id="month_name" name="month_name" value="{{ month_name }}">
+    <input type="hidden" id="element" name="element" value="{{ element }}">
+
+    <div id="hc-graph-state-aves" style="width: 600px; height: 500px;"></div>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-state-aves.js"></script>
+
+
+    <!--
+        <h1>Try our puzzle!</h1>
+        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/puzzle.js"></script>
+        <a href="#" onclick="scramble();return false">Scramble</a> | <a href="#" onclick="initPuzzle();return false">New image</a> | 
+        <form style="display:inline">
+        Columns/Rows: 
+        <input type="text" value="4" onblur="var no = this.value.replace(/[^\d]/g,'');if(no/1<3){ this.value = '3';no=3; };cols=no" maxlength="1" size="2"> 
+        x 
+        <input type="text" value="3" onblur="var no = this.value.replace(/[^\d]/g,'');if(no/1<2){ this.value = '2';no=2; };rows=no" maxlength="1" size="2">
+        </form>
+
+         <div id="puzzle_container">
+            Please wait - initializing script
+        </div>
+
+        <div id="messageDiv"></div>
+        <p><i>Shuffle, then click to move the pieces</i></p>
+    -->
+</div> <!-- end center div -->
+</div> <!-- end container -->
+{% endblock %}
