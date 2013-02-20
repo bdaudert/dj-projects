@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<!-- Stationfinder header to agree with csc_base.html-->
+
+    <div class="header">
+        <h1 align="center">Southwest Climate Knowledge Network(SW-CKN)</h1>
+        <img class="logo" src="/csc/media/img/SW-CSC-LOGO.png">
+        <p style="color:red;" align="center"><b>PROVIDING EASY ACCESS TO CLIMATE DATA,PRODUCTS AND INFORMATION</b></p>
+    </div>
+
+    <div class="home_img">
+        <img class="map_dash" src="/csc/media/img/SouthWest.jpg">
+    </div>
+
+    <div class="intro_img">
+        <img class="map" src="/csc/media/img/AboutUs.jpg">
+    </div>
+
+    <div class="station_finder_img">
+        <img class="nature" src="/csc/media/img/NorthPoleWS.jpg">
+    </div>
+
+    <div class="data_img">
+        <img class="map" src="/csc/media/img/data_img2.jpg">
+    </div>
+    
+    <div class="apps_img">
+        <img class="map" src="/csc/media/img/ToolProduct.png">
+    </div>
+
+    <div class="search_img">
+        <img class="map" src="/csc/media/img/Magnify.jpg">
+    </div>
+
+ 
+    <div class="searchbox">
+        <!-- Search Box -->
+        <form target="_blank"  method="get" action="http://www.google.com/search">
+            <div style="width:20em;">
+            <table border="0" align="center" cellpadding="0">
+            <tr><td>
+            <input type="text"   name="q" size="25"
+            maxlength="255" value="" />
+            <input type="submit" value="Search" /></td></tr>
+            <tr><td align="center" style="font-size:75%">
+            <input type="radio"  name="sitesearch" value="http://cyclone1.dri.edu/csc/sw_ckn/" />Only this site
+            <input type="radio"  name="sitesearch"value="" checked /> The Web<br />
+            </td></tr></table>
+            </div>
+        </form>
+    </div>
+
+    <div class="tool_how_to">
+        <p class="warning" onClick="ShowHide('how_to')"><img class="icon"         
+        src="/csc/media/img/QMarkMan.jpg">How to use this tool</p>
+    </div>
+
+    <div class="tool_info">
+        <p class="warning" onClick="ShowHide('tool_info')"><img class="icon"                         
+        src="/csc/media/img/InfoMan.jpg">About this tool</p>
+    </div>
+
+            <!-- Application documentation -->
+            <div class="docu" id="Docu_Westmap" style="display:none;">
+                <p class="error">What is Westmap?</p>
+                <p>An interactive web-based interface that can be used to understand climate variability.</p>
+                <p class="error">What dataset is being used?</p>
+                <p>The initial fundamental data is monthly PRISM temperature (maximum, mean, minimum) and precipitation at 4km resolution. Period of record is 1895-present. Currently, WestMap supports gridded PRISM climate data for the Western United States.</p>
+                <p class="error">What can you do with this tool?</p>
+                <h3>Generate Maps</h3>
+                <img class="dash_img" src="/csc/media/img/WestMap.png">
+                <li>Variety of subregion options</li>
+                <li>Regional aggregate capabilities</li>
+                <li>Compute/plot anomalies</li>
+                <li>Composite and Difference maps</li>
+                <li>Compute basic statistics</li>
+
+                <h3>Create Time Series Plots</h3>
+                <img class="dash_img" src="/csc/media/img/WestMapTS.png">
+                <li>Download Data, Maps, Plots</li>
+                <li>Access metadata</li>
+            </div>
+           <div class="docu" id="Docu_GP_TS" style="display:none;">
+                <p class="error">What is the Gridpoint Time Series Tool?</p>
+                <p>An interactive web-based interface that can be used to look at time series plots of various climate elements at individual grid points.</p>
+                <p class="error">What dataset is being used?</p>
+                <p>This tool works with  the NRCC interpolated, NRCC Hi-Res gridded datasets developed at NRCC (Northern regional Climate Center)
+                as well as with a variety of NARCCAP modeled datasets.
+                <ul>
+                <li>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
+                <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
+                <li>For more information and direct access to NARCCAP
+                (North American Regional Climate Change Assessment Program) gridded data sets:</li>
+                <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+                </ul>
+                <p class="error">What can you do with this tool?</p>
+                <h3>Create Time Series Plots</h3>
+                <img class="dash_img" src="/csc/media/img/GPTimeSeries.png">
+                <h3>Download Data, Plots</h3>
+            </div>
+<!-- Application documentation -->
+<div id="Docu_WESTMAP">
+    <p class="error">What is Westmap?</p>
+    <p>An interactive web-based interface that can be used to understand climate variability.</p>
+    <p class="error">What dataset is being used?</p>
+    <p>The initial fundamental data is monthly PRISM temperature (maximum, mean, minimum) and precipitation at 4km resolution. Period of record is 1895-present. Currently, WestMap supports gridded PRISM climate data for the Western United States.</p>
+    <p class="error">What can you do with this tool?</p>
+    <h3>Generate Maps</h3>
+    <img class="dash_img" src="/csc/media/img/WestMap.png">
+    <li>Variety of subregion options</li>
+    <li>Regional aggregate capabilities</li>
+    <li>Compute/plot anomalies</li>
+    <li>Composite and Difference maps</li>
+    <li>Compute basic statistics</li>
+
+    <h3>Create Time Series Plots</h3>
+    <img class="dash_img" src="/csc/media/img/WestMapTS.png">
+    <li>Download Data, Maps, Plots</li>
+    <li>Access metadata</li>
+</div>
+
+<div id="Docu_GP_TS">
+    <p class="error">What is the Gridpoint Time Series Tool?</p>
+    <p>An interactive web-based interface that can be used to look at time series plots of various climate elements at individual grid points.</p>
+    <p class="error">What dataset is being used?</p>
+    <p>This tool works with  the NRCC interpolated, NRCC Hi-Res gridded datasets developed at NRCC (Northern regional Climate Center)
+    as well as with a variety of NARCCAP modeled datasets.
+    <ul>
+    <li>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
+    <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
+    <li>For more information and direct access to NARCCAP
+    (North American Regional Climate Change Assessment Program) gridded data sets:</li>
+    <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+    </ul>
+    <p class="error">What can you do with this tool?</p>
+    <h3>Create Time Series Plots</h3>
+    <img class="dash_img" src="/csc/media/img/GPTimeSeries.png">
+    <h3>Download Data, Plots</h3>
+</div>
+
+<div id="Docu_CLIM_SUM_MAP">
+    <p class="error">What is the Climate Summary Map Tool?</p>
+    <p>An interactive web-based interface that can be used to generate temporal composite maps for a variety of climate elements. Maps can be generated for individula US stated or user defined bounding boxes.</p>
+    <p class="error">What dataset is being used?</p>
+    <p>This tool works with  the NRCC interpolated, NRCC Hi-Res gridded datasets developed at NRCC (Northern regional Climate Center)
+    as well as with a variety of NARCCAP modeled datasets.
+    <ul>
+    <li>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
+    <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
+    <li>For more information and direct access to NARCCAP
+    (North American Regional Climate Change Assessment Program) gridded data sets:</li>
+    <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+    </ul>
+    <p class="error">What can you do with this tool?</p>
+    <h3>Generate Comosite Maps</h3>
+    <img class="dash_img" src="/csc/media/img/ClimSumMap.png">
+    <h3>Download Data, Maps</h3>
+</div>
+
+<div id="Docu_META_GRAPH">
+    <p class="error">What is the Climate Summary Map Tool?</p>
+    <p>An interactive web-based interface that can be used to investigate availability of data for the period of record of a station in the COOP network for the 5 most common climate elements</p>
+    <ul><li>Maximum Temperature</li>
+    <li>Minimum Temperature</li>
+    <li>Total Precipitation</li>
+    <li>Total Snowfall</li>
+    <li>Total Snowdepth</li>
+    </ul>
+    <p class="error">What dataset is being used?</p>
+    <p>This tool works with COOP station data set found in the ACIS system.</p>
+    <p><a href="http://rcc-acis.unl.edu/index.php">Acis Home Page</a></p>
+    <p class="error">What can you do with this tool?</p>
+    <h3>Get a graphic summary of the availablity of data of the five most common elements of a COOP station</h3>
+    <img class="dash_img" src="/csc/media/img/MetaGraph.png">
+</div>
+
+<div id="Docu_MAVES">
+    <p class="error">What is the Monthly Averages Tool?</p>
+    <p>An interactive web-based tool that can be used to visualize monthly averages over user chosen range of years at a station location.</p>
+    </ul>
+    <p class="error">What dataset is being used?</p>
+    <p>This tool works with station data found in the ACIS system.</p>
+    <p><a href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a></p>
+    <p class="error">What can you do with this tool?</p>
+    <h3>Generate bar charts</h3>
+    <img class="dash_img" src="/csc/media/img/MonAves.png">
+    <h3>Get raw data behind the graphics</h3>
+</div>
+
+<div id="Docu_NONE"><p class="error"> Coming soon to a screen near you!</p></div>

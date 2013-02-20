@@ -26,7 +26,7 @@ h1, h2, h3, h4, h5 {
 }
 
 a:link { color: #3300CC; }
-a:visited { color: #660099; }
+/*a:visited { color: #660099; }*/
 a:hover {
     color: #33CCFF;
     text-decoration: none;
@@ -44,6 +44,7 @@ a#wrcc:hover{
 
 #sw_ckn {
     color: #6B238E;
+    /*color:#FF00FF;*/
 }
 
 a#sw_ckn:hover{
@@ -106,7 +107,8 @@ ul.navbar {
 ul.navbar li {
   width:96%;
   background-color: #F1C2A0;
-  color:#33CCFF;
+  /*color:#33CCFF;*/
+  color:#FF00FF;
   /*margin: 0.5em;*/
   padding-left: 0.5em;
   /*
@@ -137,6 +139,10 @@ div.pop-up {
   z-index:100;
 }
 
+.docu {
+    position:relative;
+    top:20px;
+}
 
 #docu_long {
     display:none;
@@ -176,7 +182,7 @@ div.pop-up {
     text-align:center;
     height:1000px;
     width:50%;
-    border: 1px solid #006666;
+    /*border: 1px solid #006666;*/
     /*background-color:#DCA978;*/
 }
 

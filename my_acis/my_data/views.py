@@ -546,15 +546,8 @@ def data_modeled(request):
     return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
 
 
+
 def apps_home(request):
-    context = {
-        'title': 'Tools and Products',
-        'apps_page':True
-    }
-    return render_to_response('my_data/apps/home.html', context, context_instance=RequestContext(request))
-
-
-def apps_climate(request):
     context = {
         'title': 'Climate Data Products',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
@@ -575,7 +568,7 @@ def apps_climate(request):
     context['month_name'] = month_names[month - 1]
     context['state'] = state
     context['element'] = element
-    return render_to_response('my_data/apps/climate/home.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/apps/home.html', context, context_instance=RequestContext(request))
 
 def sw_ckn_station_apps(request):
     context = {
@@ -593,7 +586,7 @@ def sw_ckn_station_apps(request):
     if end_date is not None:context['end_date'] = end_date
     if elements is not None:context['elements'] = elements
 
-    return render_to_response('my_data/apps/climate/sw_ckn_station_apps.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/apps/sw_ckn_station_apps.html', context, context_instance=RequestContext(request))
 
 def metagraph(request):
     context = {
@@ -648,7 +641,7 @@ def metagraph(request):
         else:
             stn_id = None
 
-    return render_to_response('my_data/apps/climate/metagraph.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/apps/metagraph.html', context, context_instance=RequestContext(request))
 
 def monthly_aves(request):
     context = {
@@ -774,7 +767,7 @@ def monthly_aves(request):
         #else:
         #    stn_id = None
 
-    return render_to_response('my_data/apps/climate/monthly_aves.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/apps/monthly_aves.html', context, context_instance=RequestContext(request))
 
 def clim_sum_maps(request):
     context = {
@@ -856,7 +849,7 @@ def clim_sum_maps(request):
         form1 = set_as_form(request, 'ClimateMapForm1')
         context['form1_ready'] = True
         context['form1'] = form1
-    return render_to_response('my_data/apps/climate/clim_sum_maps.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/apps/clim_sum_maps.html', context, context_instance=RequestContext(request))
 
 def grid_point_time_series(request):
     context = {
@@ -924,7 +917,7 @@ def grid_point_time_series(request):
             f = open('%s%s' %(JSON_URL,json_file),'w+')
             f.write(results_json)
             f.close()
-    return render_to_response('my_data/apps/climate/grid_point_time_series.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/apps/grid_point_time_series.html', context, context_instance=RequestContext(request))
 
 def station_locator_app(request):
     from subprocess import call
@@ -1003,7 +996,7 @@ def station_locator_app(request):
         #form1 = set_as_form(request,'StationLocatorForm1')
         #context['form1'] = form1
         #context['form1_ready'] = True
-    return render_to_response('my_data/apps/climate/station_locator_app.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/apps/station_locator_app.html', context, context_instance=RequestContext(request))
 
 def apps_hydro(request):
     context = {

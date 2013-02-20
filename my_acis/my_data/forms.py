@@ -125,6 +125,7 @@ GRID_CHOICES = (
     ('16', 'WRFG + CGCM3'),
 )
 
+help_grids = 'Gridded/modeled datasets available in Acis. For more info, see "How to use this tool"!'
 
 ELEMENT_CHOICES = (
 
@@ -168,7 +169,7 @@ DELIMITER_CHOICES = (
 )
 
 
-HELP_TEXTS = {'station_selection': help_stn_selection}
+HELP_TEXTS = {'station_selection': help_stn_selection, 'grids': help_grids}
 
 #Custom form fields
 class MyDateField(forms.CharField):
@@ -421,7 +422,7 @@ class GridDataForm1(forms.Form):
         '''
         self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin, help_text= 'yyyymmdd')
         self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=today, help_text= 'yyyymmdd')
-        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text='Valid gridded data set recognized by Acis.')
+        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
         self.fields['data_format'] = forms.CharField(initial=data_format, widget=forms.HiddenInput(), help_text='Defines format in which data will be returned.')
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
@@ -450,7 +451,7 @@ class GridDataForm3(forms.Form):
         self.fields['elements'] = MultiElementField(initial=kwargs.get('initial', {}).get('elements', None), help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
         self.fields['start_date'] = MyDateField(max_length=10, min_length=8, initial=kwargs.get('initial', {}).get('start_date', None), help_text= 'yyyymmdd')
         self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=kwargs.get('initial', {}).get('end_date', None), help_text= 'yyyymmdd')
-        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, initial=kwargs.get('initial', {}).get('grid', None), help_text='Valid gridded data set recognized by Acis.')
+        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, initial=kwargs.get('initial', {}).get('grid', None), help_text=HELP_TEXTS['grids'])
         #self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput(), help_text='Defines format in which data will be returned.')
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='txt', help_text='Defines format in which data will be returned.')
         if data_format in ['dlm', 'html']:
@@ -537,7 +538,7 @@ class ClimateMapForm1(forms.Form):
                 self.fields['start_date'].widget.attrs['readonly'] = 'readonly'
             self.fields['end_date'] = MyDateField(required=False, initial=today, help_text= 'yyyymmdd')
             self.fields['end_date'].widget.attrs['readonly'] = 'readonly'
-        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text='Valid gridded data set recognized by Acis.')
+        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
 
 class GPTimeSeriesForm(forms.Form):
         def __init__(self, *args, **kwargs):
@@ -562,7 +563,7 @@ class GPTimeSeriesForm(forms.Form):
             self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, required=False, initial='maxt', help_text='Acis element code. See "About this tool."')
             self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial='20130101', help_text= 'yyyymmdd')
             self.fields['end_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=today, help_text= 'yyyymmdd')
-            self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text='Valid gridded data set recognized by Acis.')
+            self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
 
 class StationLocatorForm0(forms.Form):
     station_selection = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='state', help_text=HELP_TEXTS['station_selection'])

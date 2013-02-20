@@ -1,36 +1,218 @@
 {% extends "csc_base.html" %}
 
-<meta name="keywords" content="tools, product, applications, visualization, time series, risk maps, composite maps">
-<meta name="description" content="SW-CKN Application Home Page">
+<meta name="keywords" content="tools, climate product, climate applications, visualization, time series, risk maps, composite maps">
+<meta name="description" content="SW-CKN Climate Applications">
 
 {% block content %}
 
-<p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn/main/">MAIN></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS/PRODUCTS</a></p>
+    <p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn/main/">MAIN></a>
+    <a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS/PRODUCTS></a>
 
 
-<div class="container">
-    <div class="center-left">
-        <h1>Product Categories</h1>
-        <ul class="navbar">
-            {%if stn_id%}
-                <a href="csc/sw_ckn/apps/?stn_id={{stn_id}}" class="trigger">Climate Products</a>
+    <div class="container">
+
+        <div class="center-left">
+            <h1>Historic Applications</h1>
+                <h2 align="center"><p id="sw_ckn">SW-CKN Applications</p></h2>
+            
+            <ul class="navbar">
+                <table>
+                {%if stn_id%}
+                    <tr></td>
+                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics(US)</a>
                     <div class="pop-up" id="meta">
-                        <p><font size="4">Time Series of Station data, monthly averages, anomaly maps ...</font></p>
+                        <p><font size="4">See how much data is missing over the period of record (COOP stations only).</font></p>
                     </div>
-            {%else%}
-                <a href="{{URL_PREFIX}}sw_ckn/apps/?stn_id={{stn_id}}" class="trigger">Climate Products</a>
+                    </td><td>
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_META_GRAPH')">
+                    </td></tr>
+                    <tr></td>
+                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages(US)</a>
+                    <div class="pop-up" id="maves">
+                        <p><font size="4">Generates bar chart of monthly averages.</font></p>
+                    </div>
+                    </td><td>
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_MAVES')">
+                    </td></tr>
+                    <tr></td>
+                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/station_locator/?stn_id={{stn_id}}" class="trigger">Station Locator(US)</a>
+                    <div class="pop-up" id="stn_locator">
+                        <p><font size="4">Find Acis stations with data for specific elements and a chosen time range.</font></p>
+                    </div>
+                    </td><td>
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NONE')">
+                    </td></tr>
+                {%else%}
+                    <tr><td>
+                    <a href="{{URL_PREFIX}}sw_ckn/apps/metagraph/" class="trigger">Station Metadata Graphics(US)</a>
                     <div class="pop-up" id="meta">
-                        <p><font size="4">Time Series of Station data, monthly averages, anomaly maps</font></p>
+                        <p><font size="4">See how much data is missing over the period of record (COOP stations only).</font></p>
                     </div>
-            {%endif%}
-                <a href="{{URL_PREFIX}}sw_ckn/apps/hydro/" class="trigger">Hydrology Products</a>
-                <a href="{{URL_PREFIX}}sw_ckn/apps/eco/" class="trigger">Ecosystem Products</a>
-        </ul>
-    </div>
+                    </td><td>
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_META_GRAPH')">
+                    </td></tr>
+                    <tr><td>
+                    <a href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/" class="trigger">Monthly Averages(US)</a>
+                    <div class="pop-up" id="meta">
+                        <p><font size="4">Generates bar chart of monthly averages.</font></p>
+                    </div>
+                    </td><td>
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_MAVES')">
+                    </td></tr>
+                    <tr><td>
+                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/station_locator/" class="trigger">Station Locator(US)</a>
+                    <div class="pop-up" id="stn_locator">
+                        <p><font size="4">Find Acis stations with data for specific elements and a chosen time range.</font></p>
+                    </div>
+                    </td><td>
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NONE')">
+                    </td></tr>
+                {%endif%}
+                </table>
+                <h2 align="center"><p id="wrcc">WRCC/External Applications</p></h2>
+                <table>
+                <tr><td>
+                <a id="wrcc" href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank">RAWS USA Climate Archive(US)</a>
+                <div class="pop-up" id="raws">
+                    <p><font size="4">Summaries, Graphs, and other products for RAWS 
+                    (Remote Automatic Weather Stations).</font></p>
+                </div>
+                </td><td>
+                <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NONE')">
+                </td></tr>
+                <tr><td>
+                <a id="wrcc" href="http://wrcc.dri.edu/sod-products/" class="trigger" target="_blank">Summary of the Day (SOD) products(<font color="red">COOP stations only</font>)</a>
+                <div class="pop-up" id="sods">
+                    <p><font size="4"></font>Data Lister, Graphs, Monthly Data Summaries.</p>
+                </div>
+                </td><td>
+                <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NONE')">
+                </td></tr>
+                <tr><td>
+                <a id="wrcc" href="http://wrcc.dri.edu/sod/sodusa.html" class="trigger" target="_blank">&nbsp;&nbsp;&nbsp;&rarr;Daily Lister and Graph(US)</a>
+                <div class="pop-up" id="sod1">
+                    <p><font size="4"></font>Graphs Temperature/Precipitation elements and extremes for chosen COOP station.</p>
+                </div>
+                </td><td>
+                <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NONE')">
+                </td></tr>
+                <tr><td>
+                <a id="wrcc" href="http://wrcc.dri.edu/cgi-bin/coopdata0.pl" class="trigger" target="_blank">&nbsp;&nbsp;&nbsp;&rarr;Monthly Data Lister(US)</a>
+                <div class="pop-up" id="sod1">
+                    <p><font size="4"></font>Temparture/Precipitation/Evaporation listings of choosen COOP station and month.</p>                       
+                </div>
+                </td><td>
+                <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NONE')">
+                </td></tr>
+                <tr><td>
+                <a id="wrcc" href="http://wrcc.dri.edu/sod/sodusaxtrm.html" class="trigger" target="_blank">&nbsp;&nbsp;&nbsp;&rarr;Monthly Summaries(US)</a>
+                <div class="pop-up" id="sod1">
+                    <p><font size="4"></font>Monthly Summaries of choosen COOP station and element for Period of Record.</p>
+                </div>
+                </td><td>
+                <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NONE')">
+                </td></tr>
+                <tr><td>
+                <a id="wrcc" href="http://wrcc.dri.edu/sod/arch/index.html" class="trigger" target="_blank">&nbsp;&nbsp;&nbsp;&rarr;USA Climate Archive(US)</a>
+                <div class="pop-up" id="sod1">
+                    <p><font size="4"></font>Get climate Summaries for station (COOP,RAWS,Snotel and others) and run applications.</p>
+                </div>
+                </td><td>
+                <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NONE')">
+                </td></tr>
+                </table>
+           </ul>
+        </div>
 
-    <div class="major-right">
-        <p class="warning">Let us help you find what you are looking for!</p>
+        <div class="center">
+            <p class="warning" align="center" onClick="ShowHide('more_on_data')"><img class="logo"         
+            src="{{MEDIA_URL}}img/Acis-logo.jpg"><u>More about the Acis data sets ...</u></p>
+            <div id="more_on_data" style="display:none;">
+            <p>Currently most of our data applications query data from Acis via webservices.
+            Climate data available in ACIS consists of in-situ observations collected from a
+            variety of federal, regional, state, and local weather and climate networks.
+            Both archive-quality historical data and near-real-time data ingested from operational
+            data transmission streams are available. ACIS data are primarily used for the generation
+            of operational climate products but also provide quality archive datasets.
+            A collection of gridded/modeled data sets is also available. The Northeast Regional Climate Center (NRCC)
+            developed their own gridded data sets but also provides access to modeled NARCCAPP
+            (North American Regional Climate Change Assessment Program ) data sets.
+            New data sources are continually added contingent upont demand, need, time and funding.
+            For more information:<br />
+            <a target="_blank" href="http://rcc-acis.unl.edu/index.php">Acis Home Page</a>
+            <br />
+            <a href="https://gist.github.com/4197956">Information on NRCC interpolated, NRCC Hi-Res data sets</a>
+            <a href="http://www.earthsystemgrid.org/project/narccap.html">North American Regional Climate Change Assessment Program (NARCCAPP) Home Page</a>
+            <br />
+            </p></div>
+
+             <p class="warning" align="center"><a href="http://raws.fam.nwcg.gov/" target="_blank"><img class="logo" src="{{MEDIA_URL}}img/raws.gif">RAWS Home Page</a><p>
+        
+            <!-- Application documentation -->
+            <div class="docu" id="Docu_WESTMAP" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_WESTMAP").load("{{MEDIA_URL}}html/commons.html #Docu_WESTMAP");
+                </script>
+           <div class="docu" id="Docu_GP_TS" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_GP_TS").load("{{MEDIA_URL}}html/commons.html #Docu_GP_TS");
+                </script>
+           <div class="docu" id="Docu_CLIM_SUM_MAP" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_CLIM_SUM_MAP").load("{{MEDIA_URL}}html/commons.html #Docu_CLIM_SUM_MAP");
+                </script>
+           <div class="docu" id="Docu_META_GRAPH" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_META_GRAPH").load("{{MEDIA_URL}}html/commons.html #Docu_META_GRAPH");
+                </script>
+
+            <div class="docu" id="Docu_NONE" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_NONE").load("{{MEDIA_URL}}html/commons.html #Docu_NONE");
+                </script>
+
+            <div class="docu" id="Docu_MAVES" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_MAVES").load("{{MEDIA_URL}}html/commons.html #Docu_MAVES");
+                </script>
+        </div>
+
+        <div class="center-right">
+           <h1>Gridded/Modeled Data Applications</h1>
+            <h2 align="center"><p id="sw_ckn">SW-CKN Applications</p></h2>
+            <ul class="navbar">
+                <table>
+                    <tr><td>
+                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/clim_sum_maps/" class="trigger">Climate Summary Maps(US)</a>
+                    <div class="pop-up" id="meta">
+                        <p><font size="4">Generates climate summary maps for different elements, time ranges and region usig Acis gridded data.</font></p>
+                    </div>
+                    </td><td>
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_CLIM_SUM_MAP')">
+                    </td></tr>
+                    <tr><td>
+                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/grid_point_time_series/" class="trigger">Grid Point Time Series(US)</a>
+                    <div class="pop-up" id="meta">
+                        <p><font size="4">Generates time series data and graph for a chosen grid point and time range using Acis gridded data.</font></p>
+                    </div>
+                    </td><td>
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_GP_TS')">
+                    </td></tr>
+                </table>
+
+                <h2 align="center"><p id="wrcc">WRCC/External Applications</p></h2>
+                <table>
+                    <tr><td>
+                    <a id="wrcc" target="_blank" href="http://www.cefa.dri.edu/Westmap/" class="trigger">Westmap(SW US only)</a>
+                    <div class="pop-up" id="meta">
+                        <p><font size="4">Climate Analysis and Mapping Tool that uses PRISM Data set.</font></p>
+                    </div>
+                    </td><td>
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_WESTMAP')">
+                    </td></tr>
+                </table>
+            </ul>
+        </div>
+
     </div>
-</div>
 {%endblock%}
