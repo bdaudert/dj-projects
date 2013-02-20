@@ -66,8 +66,6 @@ urlpatterns = patterns('',
     (r'^sw_ckn/apps/grid_point_time_series/(?P<lat>\-?(0|1-9+)\.?\d+)(\&P<lon>\-?(0|1-9+)\.?\d+)$', 'my_data.views.grid_point_time_series'),
     (r'^sw_ckn/apps/clim_sum_maps/$', 'my_data.views.clim_sum_maps'),
     (r'^sw_ckn/apps/station_locator/$', 'my_data.views.station_locator_app'),
-    (r'^sw_ckn/apps/hydro/$', 'my_data.views.apps_hydro'),
-    (r'^sw_ckn/apps/eco/$', 'my_data.views.apps_eco'),
     (r'^wrcc_apps/$', 'my_apps.views.home_view'),
     #sub process apps: FIX ME: Need to be converted to module approach
     #module approach apps

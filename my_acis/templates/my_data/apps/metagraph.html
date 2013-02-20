@@ -6,7 +6,7 @@
 {% block content %}
 
 <p align="center">You are here <a href="{{URL_PREFIX}}sw_ckni/main/">MAIN></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS/PRODUCTS></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS></a>
 <a href="{{URL_PREFIX}}sw_ckn/apps/metagraph/">Station Metadata Graphs</a></p>
 
 <div class="container">
@@ -41,7 +41,7 @@
             <p><ul>
             <li>Graphic representation of availablility of daily data of the five most common elements
             at a station belonging to the COOP network. <a href="http://www.nws.noaa.gov/om/coop/">More information on the COOP Network</a></li>
-            <li>Daily data of following elements are queried via Acis Webservices.
+            <li>Daily data of following elements are queried via ACIS Webservices.
                 <ul><li>Maximum Temperature</li>
                 <li>Minimum Temperature</li>
                 <li>Total Precipitation</li>
@@ -67,7 +67,7 @@
         </div>
 
          {%if perl_err%}
-            <h1 class="warning">{{perl_err}}</h1>
+            <h1 class="error">{{perl_err}}</h1>
         {%else%}
             {%if station_id%}
             <h1>STATION ID: {{station_id}}</h1>
@@ -85,7 +85,7 @@
 
     <div class="center-right" style="border:none;">
         {%if station_meta%}
-            <p class="warning" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
+            <p onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
             <div id="metadata" style="display:none;">
                 {% for key, val in station_meta.items %}
                     <p> {{key}}: {{val}} </p>

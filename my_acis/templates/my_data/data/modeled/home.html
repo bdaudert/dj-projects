@@ -10,7 +10,7 @@
 <a href="{{URL_PREFIX}}sw_ckn/data/modeled/">Modeled/Gridded Data</a></p>
 
 <div class="container">
-    <h2>Acis Gridded Data</h2>
+    <h2>ACIS Gridded Data</h2>
     <div class="major-left">
         {%if not form3_grid_ready%}
         <div id='form0'>
@@ -64,21 +64,29 @@
     </div>
 
     <div class="major-right" style="background-color:X^H#947e6e; border:none;">
+
+        <p align="center" onClick="ShowHide('Docu_ACIS')"><img class="logo"         
+        src="{{MEDIA_URL}}img/ACIS-logo.png"><u>More about the ACIS data sets ...</u></p>
+        <div id="Docu_ACIS" style="display:none;"></div>
+            <script type="text/javascript">                        
+            $("#Docu_ACIS").load("{{MEDIA_URL}}html/commons.html #Docu_ACIS");
+            </script>
+
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
         </script>
         <div id="tool_info" style="display:none;">
             <p><ul>
-            <li>This tool provides access to daily data from the Acis system.</li>
-            <a target="_blank" href="http://rcc-acis.unl.edu/index.php">Acis Home Page</a>            
+            <li>This tool provides access to daily data from the ACIS system.</li>
+            <a target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a>            
             <li>Data can be obtained for a single grid point, all grid points in a US state or in a user defined bounding box.</li>
             <li>Queries can be performed for multiple elements at a time.</li>
              <li>Several data formats are available. .xls, .dat, .txt will be downloaded on the user's machine.
              html and  json formats are displayed on the webpage directly for copy and paste.</li>
             <li>Information on gridded data sets:</li>
             <ul>
-                <li>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
+                <li>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
                 <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
                 <li>For more information and direct access to NARCCAP                         (North American Regional Climate Change Assessment Program) gridded data sets:</li>
                 <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
@@ -95,7 +103,7 @@
             <li>Select a single gridpoint, a US state or a bounding box as your grid selection. 
             This will define the type of area of whose grid data you are interested in</li>
             <li>Enter a comma seperated list of elements. Element choices:
-            <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" 
+            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" 
             width="450" height="450" border="0"/></li>
             <li>Choose you data format. .xls, .dat, .txt will be downloaded on the user's machine.
              html and  json formats are displayed on the webpage directly for copy and paste.</li>
@@ -113,7 +121,7 @@
                 </ul>
             <li>Information on gridded data sets:</li>
             <ul>
-                <li>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
+                <li>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
                 <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
                 <li>For more information and direct access to NARCCAP                         (North American Regional Climate Change Assessment Program) gridded data sets:</li>
                 <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
@@ -134,7 +142,7 @@
             <p class="error">Bounding Box: {{bounding_box}}</p>
         {%endif%}
        {%if start_date%}
-            <p class="error">Acis Elements: {{elements}}</p>
+            <p class="error">ACIS Elements: {{elements}}</p>
             <p class="error">Start Date: {{start_date}}</p>
         {%endif%}
         {%if end_date%}

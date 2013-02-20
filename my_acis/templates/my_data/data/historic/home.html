@@ -67,14 +67,21 @@
     </div>    
 
     <div class="major-right" style="border:none;">
+        <p align="center" onClick="ShowHide('Docu_ACIS')"><img class="logo"         
+        src="{{MEDIA_URL}}img/ACIS-logo.png"><u>More about the ACIS data sets ...</u></p>
+        <div id="Docu_ACIS" style="display:none;"></div>
+            <script type="text/javascript">                        
+            $("#Docu_ACIS").load("{{MEDIA_URL}}html/commons.html #Docu_ACIS");
+            </script>
+
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
         </script>
         <div id="tool_info" style="display:none;">
             <p><ul>
-            <li>This tool provides access to daily data from the Acis system.</li>
-            <a target="_blank" href="http://rcc-acis.unl.edu/index.php">Acis Home Page</a>
+            <li>This tool provides access to daily data from the ACIS system.</li>
+            <a target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a>
             <li>Elements like daily precipitation and daily maximum temperature are directly observed quantities measured at weather stations across the US.</li>
             <li>Elements like daily average temperature, growing, heating and cooling degree days are derived quantities.</li>
             <li>Data for multiple station in a certain region defined by the "Station selection" option are available.</li>
@@ -112,9 +119,9 @@
                 </ul>
 
             <li>Quick list of examples for different station selections.</li>
-            <img src="{{MEDIA_URL}}img/Acis_Area_Codes.png" id="Acis_Area_Codes" width="450" height="450" border="0"/>
+            <img src="{{MEDIA_URL}}img/ACIS_Area_Codes.png" id="ACIS_Area_Codes" width="450" height="450" border="0"/>
             <li>Enter one or more elements as a comma separated list. Element Choices are:</li>
-            <img src="{{MEDIA_URL}}img/Acis_Element_Choices.png" id="AcisElementChoices" width="450" height="450" border="0"/>
+            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0"/>
             <li>Choose a data format. .xls, .dat, .txt files will be downloaded on the user's machine. 
             html, json formats are displayed on the webpage directly.</li>
             <li>After making your selections, a second form will appear.</li>
@@ -134,7 +141,7 @@
             <p class="error">End Date: {{end_date}}</p>
         {%endif%}
         {%if elements%}
-            <p class="error">Acis Elements: {{elements}}</p>
+            <p class="error">ACIS Elements: {{elements}}</p>
         {%endif%}
 
         {%if large_request%}

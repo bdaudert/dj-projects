@@ -6,7 +6,7 @@
 {% block content %}
 
 <p align="center">You are here <a href="/sw_ckn/main/">MAIN></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS/PRODUCTS></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS></a>
 <a href="{{URL_PREFIX}}sw_ckn/apps/clim_sum_maps/">Climate Summary Maps</a></p>
 
 <div class="container">
@@ -72,11 +72,11 @@
             <li>For Precipitation and Snowfall daily values are summed 
             over the time period.</li>
             <li>For all other elements, daily values are averaged</li>
-            <li>Daily gridded data is obtained through Acis Webservices.</li>
+            <li>Daily gridded data is obtained through ACIS Webservices.</li>
             <li>Information on different gridded data sets:</li>
             <li>Information on gridded data sets:</li>
             <ul>
-                <li>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
+                <li>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
                 <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
                 <li>For more information and direct access to NARCCAP                         
                 (North American Regional Climate Change Assessment Program) gridded data sets:</li>
@@ -106,7 +106,7 @@
             <li>If the Time Period was NOT "Custom Date Range", start and end dates will be computed automatically</li>
             <li>Information on gridded data sets:</li>
             <ul>
-                <li>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
+                <li>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
                 <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
                 <li>For more information and direct access to NARCCAP                         
                 (North American Regional Climate Change Assessment Program) gridded data sets:</li>
@@ -121,14 +121,14 @@
             <a href="{{URL_PREFIX}}sw_ckn/data/modeled/?grid_selection={{grid_selection}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}">Get raw data behind this graphic here!</a>
             <br />
             <br />
-            <p>GridAcis Map for State: <b>{{state}}</b></p>
+            <p>GridACIS Map for State: <b>{{state}}</b></p>
             {%endif%}
 
             {%if bounding_box%}
             <a href="{{URL_PREFIX}}sw_ckn/data/modeled/?grid_selection={{grid_selection}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bounding_box={{bounding_box}}">Get raw data behind this graphic here!</a>
             <br />
             <br />
-            <p>GridAcis Map for Bounding Box: <b>{{bounding_box}}</b></p>
+            <p>GridACIS Map for Bounding Box: <b>{{bounding_box}}</b></p>
             {%endif%}
             
             <p>Element: <b>{{elems_long}}</b> {%if base_temp%}Base Temperature: <b>{{base_temp}}</b>{%endif%}</p>

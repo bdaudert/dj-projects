@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+G<!DOCTYPE html>
 
 <!-- Stationfinder header to agree with csc_base.html-->
 
@@ -51,53 +51,38 @@
     </div>
 
     <div class="tool_how_to">
-        <p class="warning" onClick="ShowHide('how_to')"><img class="icon"         
+        <p onClick="ShowHide('how_to')"><img class="icon"         
         src="/csc/media/img/QMarkMan.jpg">How to use this tool</p>
     </div>
 
     <div class="tool_info">
-        <p class="warning" onClick="ShowHide('tool_info')"><img class="icon"                         
+        <p onClick="ShowHide('tool_info')"><img class="icon"                         
         src="/csc/media/img/InfoMan.jpg">About this tool</p>
     </div>
 
-            <!-- Application documentation -->
-            <div class="docu" id="Docu_Westmap" style="display:none;">
-                <p class="error">What is Westmap?</p>
-                <p>An interactive web-based interface that can be used to understand climate variability.</p>
-                <p class="error">What dataset is being used?</p>
-                <p>The initial fundamental data is monthly PRISM temperature (maximum, mean, minimum) and precipitation at 4km resolution. Period of record is 1895-present. Currently, WestMap supports gridded PRISM climate data for the Western United States.</p>
-                <p class="error">What can you do with this tool?</p>
-                <h3>Generate Maps</h3>
-                <img class="dash_img" src="/csc/media/img/WestMap.png">
-                <li>Variety of subregion options</li>
-                <li>Regional aggregate capabilities</li>
-                <li>Compute/plot anomalies</li>
-                <li>Composite and Difference maps</li>
-                <li>Compute basic statistics</li>
+<!--ACIS Documentation -->
+<div id="Docu_ACIS">
+    <p>The Applied Climate Information System (ACIS) developed and maintained by the NOAA Regional Climate Centers (RCCs) is designed to manage the complex flow of information from climate data collectors to the end users of climate information.
+    Climate data available in ACIS consists of in-situ observations collected from a
+    variety of federal, regional, state, and local weather and climate networks.
+    Both archive-quality historical data and near-real-time data ingested from operational
+    data transmission streams are available. ACIS data are primarily used for the generation
+    of operational climate products but also provide quality archive datasets.
+    A collection of gridded/modeled data sets is also available. The Northeast Regional Climate Center (NRCC)
+    developed their own gridded data sets but also provides access to modeled NARCCAPP
+    (North American Regional Climate Change Assessment Program ) data sets.
+    New data sources are continually added contingent upont demand, need, time and funding.
+    For more information:<br />
+    <a target="_blank" href="http://rcc-acis.unl.edu/index.php">Acis Home Page</a>
+    <br />
+    <a  target="_blank" href="http://cyclone1.dri.edu/csc/media/html/station_id_system_docu.html">Information on Station Networks found in Acis</a>
+    <br />
+    <a  target="_blank" href="https://gist.github.com/4197956">Information on NRCC interpolated, NRCC Hi-Res data sets</a>
+    <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">North American Regional Climate Change Assessment Program (NARCCAPP) Home Page</a>
+    <br />
+    </p>
+</div>
 
-                <h3>Create Time Series Plots</h3>
-                <img class="dash_img" src="/csc/media/img/WestMapTS.png">
-                <li>Download Data, Maps, Plots</li>
-                <li>Access metadata</li>
-            </div>
-           <div class="docu" id="Docu_GP_TS" style="display:none;">
-                <p class="error">What is the Gridpoint Time Series Tool?</p>
-                <p>An interactive web-based interface that can be used to look at time series plots of various climate elements at individual grid points.</p>
-                <p class="error">What dataset is being used?</p>
-                <p>This tool works with  the NRCC interpolated, NRCC Hi-Res gridded datasets developed at NRCC (Northern regional Climate Center)
-                as well as with a variety of NARCCAP modeled datasets.
-                <ul>
-                <li>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
-                <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
-                <li>For more information and direct access to NARCCAP
-                (North American Regional Climate Change Assessment Program) gridded data sets:</li>
-                <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
-                </ul>
-                <p class="error">What can you do with this tool?</p>
-                <h3>Create Time Series Plots</h3>
-                <img class="dash_img" src="/csc/media/img/GPTimeSeries.png">
-                <h3>Download Data, Plots</h3>
-            </div>
 <!-- Application documentation -->
 <div id="Docu_WESTMAP">
     <p class="error">What is Westmap?</p>
@@ -105,18 +90,13 @@
     <p class="error">What dataset is being used?</p>
     <p>The initial fundamental data is monthly PRISM temperature (maximum, mean, minimum) and precipitation at 4km resolution. Period of record is 1895-present. Currently, WestMap supports gridded PRISM climate data for the Western United States.</p>
     <p class="error">What can you do with this tool?</p>
-    <h3>Generate Maps</h3>
+    <h3>Generate Composite and Difference Maps</h3>
     <img class="dash_img" src="/csc/media/img/WestMap.png">
-    <li>Variety of subregion options</li>
-    <li>Regional aggregate capabilities</li>
-    <li>Compute/plot anomalies</li>
-    <li>Composite and Difference maps</li>
-    <li>Compute basic statistics</li>
-
     <h3>Create Time Series Plots</h3>
     <img class="dash_img" src="/csc/media/img/WestMapTS.png">
-    <li>Download Data, Maps, Plots</li>
-    <li>Access metadata</li>
+    <h3>Compute basic statistics</h3>
+    <h3>Download Data, Maps, Plots</h3>
+    <h3>Access metadata</h3>
 </div>
 
 <div id="Docu_GP_TS">
@@ -125,12 +105,11 @@
     <p class="error">What dataset is being used?</p>
     <p>This tool works with  the NRCC interpolated, NRCC Hi-Res gridded datasets developed at NRCC (Northern regional Climate Center)
     as well as with a variety of NARCCAP modeled datasets.
-    <ul>
-    <li>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
-    <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
-    <li>For more information and direct access to NARCCAP
-    (North American Regional Climate Change Assessment Program) gridded data sets:</li>
-    <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+    <p>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
+    <a  target="_blank" href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
+    <p>For more information and direct access to NARCCAP
+    (North American Regional Climate Change Assessment Program) gridded data sets:</p>
+    <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
     </ul>
     <p class="error">What can you do with this tool?</p>
     <h3>Create Time Series Plots</h3>
@@ -140,17 +119,16 @@
 
 <div id="Docu_CLIM_SUM_MAP">
     <p class="error">What is the Climate Summary Map Tool?</p>
-    <p>An interactive web-based interface that can be used to generate temporal composite maps for a variety of climate elements. Maps can be generated for individula US stated or user defined bounding boxes.</p>
+    <p>An interactive web-based interface that can be used to generate temporal composite maps for a variety of climate elements. Maps can be generated for individula US states or user defined bounding boxes.</p>
     <p class="error">What dataset is being used?</p>
     <p>This tool works with  the NRCC interpolated, NRCC Hi-Res gridded datasets developed at NRCC (Northern regional Climate Center)
     as well as with a variety of NARCCAP modeled datasets.
-    <ul>
-    <li>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
+    
+    <p>For more information on Acis gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
     <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
-    <li>For more information and direct access to NARCCAP
-    (North American Regional Climate Change Assessment Program) gridded data sets:</li>
-    <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
-    </ul>
+    <p>For more information and direct access to NARCCAP
+    (North American Regional Climate Change Assessment Program) gridded data sets:</p>
+    <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
     <p class="error">What can you do with this tool?</p>
     <h3>Generate Comosite Maps</h3>
     <img class="dash_img" src="/csc/media/img/ClimSumMap.png">
@@ -158,33 +136,100 @@
 </div>
 
 <div id="Docu_META_GRAPH">
-    <p class="error">What is the Climate Summary Map Tool?</p>
-    <p>An interactive web-based interface that can be used to investigate availability of data for the period of record of a station in the COOP network for the 5 most common climate elements</p>
-    <ul><li>Maximum Temperature</li>
-    <li>Minimum Temperature</li>
-    <li>Total Precipitation</li>
-    <li>Total Snowfall</li>
-    <li>Total Snowdepth</li>
-    </ul>
+    <p class="error">What is the Metadata Graphics Tool?</p>
+    <p>An interactive web-based interface that can be used to investigate availability of data for the period of record of a station in the COOP network for the 5 most common climate elements: Maximum Temperature, Minimum Temperature, Total Precipitation, Total Snowfall, Total Snowdepth.</p>
     <p class="error">What dataset is being used?</p>
-    <p>This tool works with COOP station data set found in the ACIS system.</p>
-    <p><a href="http://rcc-acis.unl.edu/index.php">Acis Home Page</a></p>
+    <p>This tool works with COOP station data found in the ACIS system.</p>
+    <p><a  target="_blank" href="http://rcc-acis.unl.edu/index.php">Acis Home Page</a></p>
+    <p><a  target="_blank" href="http://www.nws.noaa.gov/om/coop/">More on COOP data</a></a>
     <p class="error">What can you do with this tool?</p>
-    <h3>Get a graphic summary of the availablity of data of the five most common elements of a COOP station</h3>
+    <h3>Get a graphic summary of the availablity of data over the period of record of a COOP station</h3>
     <img class="dash_img" src="/csc/media/img/MetaGraph.png">
 </div>
 
 <div id="Docu_MAVES">
     <p class="error">What is the Monthly Averages Tool?</p>
     <p>An interactive web-based tool that can be used to visualize monthly averages over user chosen range of years at a station location.</p>
-    </ul>
     <p class="error">What dataset is being used?</p>
-    <p>This tool works with station data found in the ACIS system.</p>
-    <p><a href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a></p>
+    <p>This tool works with station data found in the ACIS system. A variety of data sets from different networks can be found in the ACIS system.</p>
+    <p><a  target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a></p>
+    <p><a  target="_blank" href="http://cyclone1.dri.edu/csc/media/html/station_id_system_docu.html">More on Station Networks found in Acis</a></p>
     <p class="error">What can you do with this tool?</p>
     <h3>Generate bar charts</h3>
     <img class="dash_img" src="/csc/media/img/MonAves.png">
     <h3>Get raw data behind the graphics</h3>
 </div>
+
+<div id="Docu_RAWS">
+    <p class="error">What is the RAWS Tool?</p>
+    <p>An interactive web-based tool that can be used to obtain climate data and generate graphs for Remote Automated Weather Stations.</p>
+    <p><a  target="_blank" href="http://raws.fam.nwcg.gov/">RAWS Home Page</a></p>
+    <p class="error">What dataset is being used?</p>
+    <p>RAWS station data found in the WRCC data system at monthly and daily temporal resolutions.</p>
+    <p class="error">What can you do with this tool?</p>
+    <h3>Obtain daily and monthly climate summaries for all CEMP stations:</h3>
+    <p class="warning">Temperatures<br />
+    Precipitation<br />
+    Pressure<br />
+    Moisture/Dew Point/Humidity<br />
+    Fuel temperature<br />
+    Solar Radiation</p>
+    <h3>Download data, plots</h3>
+    <h3>Access to metadata</h3>
+    <h3>Frequency distributions/histograms</h3>
+    <h3>Generate wind roses</h3>
+    <img class="dash_img" src="/csc/media/img/CEMP_WR.png">
+    <h3>Generate time series</h3>
+    <img class="dash_img" src="/csc/media/img/CEMP.png">
+</div>
+
+
+<div id="Docu_CEMP">
+    <p class="error">What is the CEMP Tool?</p>
+    <p>An interactive web-based tool that can be used to obtain air quality and climate data and generate graphs for CEMP stations located near the Nevada Test Site.</p>
+    <p><a  target="_blank" href="http://www.cemp.dri.edu/cemp/">CEMP Home Page</a></p>
+    <p class="error">What dataset is being used?</p>
+    <p>Hourly observational data from 29 CEMP stations.</p>
+    <p class="error">What can you do with this tool?</p>
+    <h3>Obtain daily and monthly climate summaries for all CEMP stations</h3>
+    <p class="warning">Temperatures<br />
+    Precipitation<br />
+    Pressure<br />
+    Moisture/Dew Point/Humidity<br />
+    Fuel temperature<br />
+    Solar Radiation</p>
+    <h3>Download data, plots</h3>
+    <h3>Frequency distributions/histograms</h3>
+    <h3>Generate wind roses</h3>
+    <img class="dash_img" src="/csc/media/img/CEMP_WR.png">
+    <h3>Generate near real time Series</h3>
+    <img class="dash_img" src="/csc/media/img/CEMP.png">
+</div>
+
+<div id="Docu_WIND_NV">
+    <p class="error">What is the Wind Energy Assessment Tool?</p>
+    <p>An interactive web-based tool that can be used to obtain climate data and generate graphs for Remote Automated Weather Stations in Nevada.</p>
+    <p><a  target="_blank" href="http://www.wrcc.dri.edu/nrel/">Wind Energy Assessment Home Page</a></p>
+    <p><a  target="_blank" href="http://raws.fam.nwcg.gov/">RAWS Home Page</a></p>
+    <p class="error">What dataset is being used?</p>
+    <p>Nevada RAWS station data found in the WRCC data system at monthly and daily temporal resolutions.</p>
+    <p class="error">What can you do with this tool?</p>
+    <h3>Obtain daily and monthly climate summaries for all CEMP stations</h3>
+    <p class="warning">Temperatures<br />
+    Precipitation<br />
+    Pressure<br />
+    Moisture/Dew Point/Humidity<br />
+    Fuel temperature<br />
+    Solar Radiation</p>
+    <h3>Download data, plots</h3>
+    <h3>Access to metadata</h3>
+    <h3>Frequency distributions/histograms</h3>
+    <h3>Generate wind roses</h3>
+    <img class="dash_img" src="/csc/media/img/CEMP_WR.png">
+    <h3>Generate time series</h3>
+    <img class="dash_img" src="/csc/media/img/CEMP.png">
+</div>
+
+
 
 <div id="Docu_NONE"><p class="error"> Coming soon to a screen near you!</p></div>

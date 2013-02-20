@@ -33,21 +33,21 @@ a:hover {
 }
 a:active { color: red; }
 
-#wrcc {
+#sw_us {
     color: #4D4DFF;
 }
 
-a#wrcc:hover{
+a#sw_us:hover{
     color: #33CCFF;
     text-decoration: none;
 }
 
-#sw_ckn {
+#us_wide {
     color: #6B238E;
     /*color:#FF00FF;*/
 }
 
-a#sw_ckn:hover{
+a#ius_wide:hover{
         color: #33CCFF;
             text-decoration: none;
 }
@@ -57,6 +57,7 @@ a.warning {
     color:#CC0066;
     /*color:#FFEBCD;*/
     font-size:x-large;
+
 }
 a#warning {
     color:#006666;
@@ -66,8 +67,7 @@ a#warning {
 }
 
 .warning {
-    color:#006666;
-    font-size:x-large;
+    color:#FF00FF;
 }
 
 table.dash {

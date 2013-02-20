@@ -549,7 +549,7 @@ def data_modeled(request):
 
 def apps_home(request):
     context = {
-        'title': 'Climate Data Products',
+        'title': 'Climate Data Tools',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
         'apps_page':True
     }
