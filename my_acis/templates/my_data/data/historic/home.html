@@ -67,18 +67,18 @@
     </div>    
 
     <div class="major-right" style="border:none;">
-        <p align="center" onClick="ShowHide('Docu_ACIS')"><img class="logo"         
+        <p onClick="ShowHide('Docu_ACIS')"><img class="logo"         
         src="{{MEDIA_URL}}img/ACIS-logo.png"><u>More about the ACIS data sets ...</u></p>
-        <div id="Docu_ACIS" style="display:none;"></div>
+        <div class="docu" id="Docu_ACIS" style="display:none;"></div>
             <script type="text/javascript">                        
             $("#Docu_ACIS").load("{{MEDIA_URL}}html/commons.html #Docu_ACIS");
             </script>
 
-        <div id=tool_info_head></div>
+        <div class="docu" id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
         </script>
-        <div id="tool_info" style="display:none;">
+        <div class="docu" id="tool_info" style="display:none;">
             <p><ul>
             <li>This tool provides access to daily data from the ACIS system.</li>
             <a target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a>
@@ -91,7 +91,7 @@
             </ul></p>
         </div>
 
-        <div id="how_to_head"></div>
+        <div class="docu" id="how_to_head"></div>
         <script type="text/javascript">            
             $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
         </script>

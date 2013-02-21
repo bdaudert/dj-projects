@@ -56,9 +56,14 @@
             </form>
         </div>
         {%endif%}
+
+        <div id="map_legend">
+            <h3>Legend of Station Networks.</h3>
+            <p class="error">Zoom in to see Networks show on the map.</p>
+        </div>
     </div>
 
-    <div class="center">
+    <div class="right-wide">
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
@@ -130,42 +135,22 @@
             <input type="hidden" id="elements" name="variable" value="{{elements}}">
         {%endif%}
 
+        <div id="map"></div>
         <script type="text/javascript">
             initialize_station_finder()
         </script>
-        <div id="map"></div>
 
-        <table cellspacing="0" class="station_list">
-          <tr>
-            <td>
-               <table cellspacing="0" class="station_list" >
-                 <tr>
-                    <th>Name</th>
-                    <th>State</th>
-                    <th>Lat</th>
-                    <th>Lon</th>
-                    <th>Elev</th>
-                    <th>Networks</th>
-                 </tr>
-               </table>
-            </td>
-          </tr>
-          <tr>
-            <td>
-               <div style="height:200px; overflow:auto;" >
-                 <table cellspacing="0" id="station_list">
-                 </table>
-               </div>
-            </td>
-          </tr>
-        </table>
-    </div>
-
-    <div class="center-right" style="border:none;">
-        <div id="map_legend">
-            <h3>Legend of Station Networks.</h3>
-            <p class="error">Zoom in to see Networks show on the map.</p>
+        <div style="height:200px; overflow:auto;" >
+            <table cellspacing="2" id="station_list">
+                <th>Name</th>
+                <th>State</th>
+                <th>Lat</th>
+                <th>Lon</th>
+                <th>Elev</th>
+                <th>Networks</th>
+            </table>
         </div>
     </div>
+
 </div>
 {%endblock%}

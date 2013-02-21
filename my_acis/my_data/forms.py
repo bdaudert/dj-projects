@@ -76,29 +76,6 @@ STN_FIND_CHOICES = (
         ('stn_id', 'Preselected Station')
 )
 
-#Help text
-help_stn_selection = 'Defines the type ofsearch area. For more info, see "How to use this tool"!'
-'''
-help_stn_selection = 'Individual Station:\n' + \
-                     'Looks for single station. User will need to enter station ID \n' + \
-                     'Comma separated list of stations:\n' + \
-                     ' Looks for multiple station. User will need to enter station IDs\n' + \
-                     'Use station finder tool to find IDs: http://cyclone1.dri.edu/csc/sw_ckn/station_finder or/\n' + \
-                     'Read more on station IDs here: http://cyclone1.dri.edu/csc/media/html/station_id_system_docu.html\n' + \
-                     'County FIPS code:\n' + \
-                     ' http://cyclone1.dri.edu/csc/media/html/US_FIPS_CountyCodes.htm\n' + \
-                     'Climate Division map and list:\n' + \
-                     ' http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php\n' + \
-                     'County Warning Area list:\n' + \
-                     ' http://www.aprs-is.net/WX/NWSCodes.aspx\n' + \
-                     'Basin list:\n' + \
-                     ' http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt\n' + \
-                     'Bounding Box:\n' + \
-                     ' A bounding box has four coordinates:\n' + \
-                     ' West longitude, South latitude, East longitude, North latitude. Please enter them in this order.\n' + \
-                     'Preselected Station: If you reached this pages via our station finder or via' + \
-                     'one of our applications, your station ID will be entered automatically. Leave this option as is.'
-'''
 
 GRID_SELECTION_CHOICES = (
     ('point', 'Point Location'),
@@ -125,7 +102,6 @@ GRID_CHOICES = (
     ('16', 'WRFG + CGCM3'),
 )
 
-help_grids = 'Gridded/modeled datasets available in Acis. For more info, see "How to use this tool"!'
 
 ELEMENT_CHOICES = (
 
@@ -168,8 +144,37 @@ DELIMITER_CHOICES = (
     ('pipe', 'Pipe (|)'),
 )
 
+#Help texts
+help_comma_elements = 'Comma separated list of ACIS climate elements. For more information, see "About this tool"!'
+help_acis_elements = 'Available climate element in ACIS. For more information, see "About this tool"!'
+help_grids = 'Gridded/modeled datasets available in Acis. For more info, see "How to use this tool"!'
+help_stn_selection = 'Defines the type ofsearch area. For more info, see "How to use this tool"!'
+help_date = 'yyyymmdd'
+help_date_por = 'yyyymmdd or "por" (period of record) if single station.'
 
-HELP_TEXTS = {'station_selection': help_stn_selection, 'grids': help_grids}
+'''
+help_stn_selection = 'Individual Station:\n' + \
+                     'Looks for single station. User will need to enter station ID \n' + \
+                     'Comma separated list of stations:\n' + \
+                     ' Looks for multiple station. User will need to enter station IDs\n' + \
+                     'Use station finder tool to find IDs: http://cyclone1.dri.edu/csc/sw_ckn/station_finder or/\n' + \
+                     'Read more on station IDs here: http://cyclone1.dri.edu/csc/media/html/station_id_system_docu.html\n' + \
+                     'County FIPS code:\n' + \
+                     ' http://cyclone1.dri.edu/csc/media/html/US_FIPS_CountyCodes.htm\n' + \
+                     'Climate Division map and list:\n' + \
+                     ' http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php\n' + \
+                     'County Warning Area list:\n' + \
+                     ' http://www.aprs-is.net/WX/NWSCodes.aspx\n' + \
+                     'Basin list:\n' + \
+                     ' http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt\n' + \
+                     'Bounding Box:\n' + \
+                     ' A bounding box has four coordinates:\n' + \
+                     ' West longitude, South latitude, East longitude, North latitude. Please enter them in this order.\n' + \
+                     'Preselected Station: If you reached this pages via our station finder or via' + \
+                     'one of our applications, your station ID will be entered automatically. Leave this option as is.'
+'''
+HELP_TEXTS = {'station_selection': help_stn_selection, 'grids': help_grids, 'acis_elements':help_acis_elements, \
+            'comma_elements':help_comma_elements, 'date':help_date, 'date_por':help_date_por}
 
 #Custom form fields
 class MyDateField(forms.CharField):
@@ -281,7 +286,7 @@ class PointDataForm0(forms.Form):
             self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES,required=False, initial='stn_id', widget=forms.HiddenInput(), help_text=HELP_TEXTS['station_selection'])
             self.fields['stn_id'] = forms.CharField(required=False, initial=stn_id, help_text='Station id recognized by Acis. See "About this tool" for more information.')
         #self.fields['element'] = forms.ChoiceField(choices=ELEMENT_CHOICES, initial='pcpn', required=False)
-        self.fields['elements'] = forms.CharField(initial ='maxt,mint,avgt', required=False, help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
+        self.fields['elements'] = forms.CharField(initial ='maxt,mint,avgt', required=False, help_text=HELP_TEXTS['comma_elements'])
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', required=False, help_text='Defines format in which data will be returned.')
 
 class PointDataForm1(forms.Form):
@@ -325,7 +330,7 @@ class PointDataForm1(forms.Form):
         elif station_selection == 'bbox':
             self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41', help_text='Bounding box latitudes and longitudes: West,South,East,North.')
 
-        self.fields['elements'] = MultiElementField(initial=elements, widget=forms.HiddenInput(), help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
+        self.fields['elements'] = MultiElementField(initial=elements, widget=forms.HiddenInput(), help_text=HELP_TEXTS['comma_elements'])
         #self.fields['elements'] = forms.CharField(required=False, initial=elements, widget=forms.HiddenInput())
         '''
         for element in elements:
@@ -336,8 +341,8 @@ class PointDataForm1(forms.Form):
             if element == 'gddxx':
                 self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50, help_text='Base temperature used to calculate growing degree days.')
         '''
-        self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial=begin, help_text= 'yyyymmdd or "por" (period of record) if single station.')
-        self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=today, help_text= 'yyyymmdd or "por" (period of record) if single station.')
+        self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial=begin, help_text=HELP_TEXTS['date_por'])
+        self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=today, help_text=HELP_TEXTS['date_por'])
         self.fields['data_format'] = forms.CharField(initial=data_format, widget=forms.HiddenInput(), help_text='Defines format in which data will be returned.')
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
@@ -374,9 +379,9 @@ class PointDataForm3(forms.Form):
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, initial=kwargs.get('initial', {}).get('state', None),help_text='Valid US state abreviation.')
         elif station_selection == 'bbox':
             self.fields['bounding_box'] = BBoxField(initial=kwargs.get('initial', {}).get('bounding_box', None),help_text='Bounding box latitudes and longitudes: West,South,East,North.')
-        self.fields['elements'] = MultiElementField(initial=kwargs.get('initial', {}).get('elements', None), help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
-        self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('start_date', None),help_text= 'yyyymmdd or "por" (period of record) if single station.')
-        self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('end_date', None), help_text= 'yyyymmdd or "por" (period of record) if single station.')
+        self.fields['elements'] = MultiElementField(initial=kwargs.get('initial', {}).get('elements', None), help_text=HELP_TEXTS['comma_elements'])
+        self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('start_date', None),help_text=HELP_TEXTS['date_por'])
+        self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('end_date', None), help_text=HELP_TEXTS['date_por'])
         #self.fields['data_format'] = forms.CharField(required=False, initial=kwargs.get('initial', {}).get('data_format', None), help_text='Defines format in which data will be returned.')
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='txt', help_text='Defines format in which data will be returned.')
         if data_format in ['dlm', 'html']:
@@ -385,7 +390,7 @@ class PointDataForm3(forms.Form):
 
 class GridDataForm0(forms.Form):
         grid_selection = forms.ChoiceField(choices=GRID_SELECTION_CHOICES, required=False, initial='point', help_text='Area defining gridpoints of interest.')
-        elements =forms.CharField(initial ='maxt,mint,avgt', required=True, help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
+        elements =forms.CharField(initial ='maxt,mint,avgt', required=True, help_text=HELP_TEXTS['comma_elements'])
         data_format = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', required=False, help_text='Delimiter used to seperate data values.')
 
 class GridDataForm1(forms.Form):
@@ -410,7 +415,7 @@ class GridDataForm1(forms.Form):
             self.fields['bounding_box'] = BBoxField(initial='-90,40,-88,41', help_text='Bounding boxcoordinates: West, South, East, North.')
 
         self.fields['grid_selection'] = forms.CharField(initial=grid_selection, widget=forms.HiddenInput(), help_text='Area defining gridpoints of interest.')
-        self.fields['elements'] = MultiElementField(initial=elements,widget=forms.HiddenInput(), help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
+        self.fields['elements'] = MultiElementField(initial=elements,widget=forms.HiddenInput(), help_text=HELP_TEXTS['comma_elements'])
         '''
         for element in elements:
             if element == 'cddxx':
@@ -420,8 +425,8 @@ class GridDataForm1(forms.Form):
             if element == 'gddxx':
                 self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50, help_text='Base temperature used to calculate growing degree days.')
         '''
-        self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin, help_text= 'yyyymmdd')
-        self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=today, help_text= 'yyyymmdd')
+        self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin, help_text=HELP_TEXTS['date'])
+        self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=today, help_text=HELP_TEXTS['date'])
         self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
         self.fields['data_format'] = forms.CharField(initial=data_format, widget=forms.HiddenInput(), help_text='Defines format in which data will be returned.')
         if data_format in ['dlm', 'html']:
@@ -449,8 +454,8 @@ class GridDataForm3(forms.Form):
             self.fields['bounding_box'] = BBoxField(initial=kwargs.get('initial', {}).get('bounding_box', None), help_text='Bounding boxcoordinates: West, South, East, North.')
 
         self.fields['elements'] = MultiElementField(initial=kwargs.get('initial', {}).get('elements', None), help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
-        self.fields['start_date'] = MyDateField(max_length=10, min_length=8, initial=kwargs.get('initial', {}).get('start_date', None), help_text= 'yyyymmdd')
-        self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=kwargs.get('initial', {}).get('end_date', None), help_text= 'yyyymmdd')
+        self.fields['start_date'] = MyDateField(max_length=10, min_length=8, initial=kwargs.get('initial', {}).get('start_date', None), help_text=HELP_TEXTS['date'])
+        self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=kwargs.get('initial', {}).get('end_date', None), help_text=HELP_TEXTS['date'])
         self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, initial=kwargs.get('initial', {}).get('grid', None), help_text=HELP_TEXTS['grids'])
         #self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput(), help_text='Defines format in which data will be returned.')
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='txt', help_text='Defines format in which data will be returned.')
@@ -484,13 +489,13 @@ class MonthlyAveragesForm(forms.Form):
             self.fields['station_id'] = forms.CharField(required=False, initial='266779', help_text='Station id recognized by Acis. See "How to use this tool" for more information.')
         else:
             self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text='Station id recognized by Acis. See "How to use this tool" for more information.')
-        self.fields['elements'] = MultiElementField(initial='pcpn, snow', help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
-        self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='20000101', help_text= 'yyyymmdd or "por" for period of record.')
-        self.fields['end_date'] = MyDateField(max_length=10, required = False, initial='por', help_text= 'yyyymmdd or "por" for period of record.')
+        self.fields['elements'] = MultiElementField(initial='pcpn, snow', help_text=HELP_TEXTS['comma_elements'])
+        self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='20000101', help_text=HELP_TEXTS['date_por'])
+        self.fields['end_date'] = MyDateField(max_length=10, required = False, initial='por', help_text=HELP_TEXTS['date_por'])
 
 class ClimateMapForm0(forms.Form):
         grid_selection = forms.ChoiceField(choices=([('state', 'State'),('bbox', 'Bounding Box')]), required=False, initial='state', help_text='Area defining gridpoints of interest.')
-        element = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES, required=False, initial='maxt', help_text='Valid Acis climate element.')
+        element = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES, required=False, initial='maxt', help_text=HELP_TEXTS['acis_elements'])
         time_period = forms.ChoiceField(choices=TIME_PERIOD_CHOICES, required=False, initial='months', help_text='Time period over which to compute map gridpoint values.')
         x = forms.IntegerField(required=False, initial=1, help_text='Integer defining the number of days/months or years.')
 
@@ -527,16 +532,16 @@ class ClimateMapForm1(forms.Form):
             self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50, help_text='Base temperature used to calculate growing degree days.')
 
         if time_period == 'custom':
-            self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=begin, help_text= 'yyyymmdd')
-            self.fields['end_date'] =MyDateField(max_length=10, min_length=8, required = False, initial=today, help_text= 'yyyymmdd')
+            self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=begin, help_text=HELP_TEXTS['date'])
+            self.fields['end_date'] =MyDateField(max_length=10, min_length=8, required = False, initial=today, help_text=HELP_TEXTS['date'])
         else:
             if x is None:
-                self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial='20130101', help_text= 'yyyymmdd')
+                self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial='20130101', help_text=HELP_TEXTS['date'])
             else:
                 start_date = WRCCUtils.get_start_date(time_period,today, x)
-                self.fields['start_date'] = MyDateField(required = False, initial=start_date, help_text= 'yyyymmdd')
+                self.fields['start_date'] = MyDateField(required = False, initial=start_date, help_text=HELP_TEXTS['date'])
                 self.fields['start_date'].widget.attrs['readonly'] = 'readonly'
-            self.fields['end_date'] = MyDateField(required=False, initial=today, help_text= 'yyyymmdd')
+            self.fields['end_date'] = MyDateField(required=False, initial=today, help_text=HELP_TEXTS['date'])
             self.fields['end_date'].widget.attrs['readonly'] = 'readonly'
         self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
 
@@ -560,9 +565,9 @@ class GPTimeSeriesForm(forms.Form):
                  self.fields['lon'] = forms.FloatField(initial='-77.7', required=True, help_text='Valid longitude.')
             else:
                 self.fields['lon'] = forms.FloatField(initial=lon, required=True, help_text='Valid longitude.')
-            self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, required=False, initial='maxt', help_text='Acis element code. See "About this tool."')
-            self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial='20130101', help_text= 'yyyymmdd')
-            self.fields['end_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=today, help_text= 'yyyymmdd')
+            self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, required=False, initial='maxt', help_text=HELP_TEXTS['acis_elements'])
+            self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial='20130101', help_text=HELP_TEXTS['date'])
+            self.fields['end_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=today, help_text=HELP_TEXTS['date'])
             self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
 
 class StationLocatorForm0(forms.Form):
@@ -603,8 +608,8 @@ class StationLocatorForm1(forms.Form):
         elif station_selection == 'bbox':
             self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41', help_text='Bounding box latitudes and longitudes: West,South,East,North.')
         if element_selection == 'T':
-            self.fields['elements'] = MultiElementField(initial='mint,maxt,avgt', help_text='Comma separated list of Acis element abbreviations. See "How to use this tool" for complete list.')
+            self.fields['elements'] = MultiElementField(initial='mint,maxt,avgt', help_text=HELP_TEXTS['comma_elements'])
 
-            self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='20130101',min_length=8, help_text= 'yyyymmdd.')
+            self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='20130101',min_length=8, help_text=HELP_TEXTS['date'])
             self.fields['end_date'] = MyDateField(max_length=10, required = False, initial=today,min_length=8, help_text= 'yyyymmdd.')
 

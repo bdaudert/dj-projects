@@ -53,6 +53,13 @@ month_names = ['January', 'February', 'March', 'April', 'May', 'June',\
 
 mon_lens = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
+def test(request):
+    context = {
+        'title': 'Southwest Climate Knowledge Network (SW-CKN)',
+        'home_page':True
+    }
+    return render_to_response('my_data/index.html', context, context_instance=RequestContext(request))
+
 def home(request):
     context = {
         'title': 'Southwest Climate Knowledge Network (SW-CKN)',

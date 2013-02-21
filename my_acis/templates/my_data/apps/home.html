@@ -33,6 +33,14 @@
                     </td><td>
                     <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_WIND_NV')">
                     </td></tr>
+                    <tr><td>
+                    <a id="sw_us" href="http://nicenet.dri.edu/" class="trigger" target="_blank">NICE Net(<font color="red">NV only</font>)</a>
+                    <div class="pop-up" id="sod1">
+                        <p><font size="4"></font>Nevada Integrated Climate and Evaporation Network.</p>
+                    </div>
+                    </td><td>
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NICE_NET')">
+                    </td></tr>
                 </table>
 
                 <h2 align ="center"><p id="us_wide">US-Wide Applications</p></h2>
@@ -167,11 +175,6 @@ Click the question mark next to the application to get more/less detail.</p>
                 $("#Docu_CEMP").load("{{MEDIA_URL}}html/commons.html #Docu_CEMP");
                 </script>
 
-            <div class="docu" id="Docu_NONE" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_NONE").load("{{MEDIA_URL}}html/commons.html #Docu_NONE");
-                </script>
-
             <div class="docu" id="Docu_MAVES" style="display:none;"></div>
                 <script type="text/javascript">                        
                 $("#Docu_MAVES").load("{{MEDIA_URL}}html/commons.html #Docu_MAVES");
@@ -186,6 +189,16 @@ Click the question mark next to the application to get more/less detail.</p>
                 $("#Docu_WIND_NV").load("{{MEDIA_URL}}html/commons.html #Docu_WIND_NV");
                 </script>
 
+            <div class="docu" id="Docu_NICE_NET" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_NICE_NET").load("{{MEDIA_URL}}html/commons.html #Docu_NICE_NET");
+                </script>
+
+           <div class="docu" id="Docu_NONE" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_NONE").load("{{MEDIA_URL}}html/commons.html #Docu_NONE");
+                </script>
+            </div>
         </div>
 
         <div class="center-right">
