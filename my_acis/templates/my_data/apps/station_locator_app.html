@@ -11,52 +11,6 @@
 <div class="container">
     <div class="center-left" style="border:none;">
 
-        <div id='form0'>
-            <form method="post" action="">{% csrf_token %}
-            <table class="form">
-            {%for field in form0 %}
-                <tr>
-                    <td>{{field.label}}:</td>
-                    <td>{{field}}</td>
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
-                    <div class="pop-up"><p>{{field.help_text}}</p></div>
-                    </td>
-                </tr>
-               {%if field.errors%}
-                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
-                {%endif%} 
-            {%endfor%}
-            </table>
-            <input type="submit" value="Select" name="form0"/>
-            </form>
-        </div>
-
-        {%if form1_ready%}
-        <div id='form1'>
-            <form method="post" action="">{% csrf_token %}
-            <table class="form">
-            {%for field in form1 %}
-                {%if field.is_hidden %}
-                    {{field}}
-                {%else%}
-                <tr>
-                    <td>{{field.label}}:</td>
-                    <td>{{field}}</td>                                                                                       
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
-                    <div class="pop-up"><p>{{field.help_text}}</p></div>
-                    </td>
-                </tr>
-               {%if field.errors%}
-                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
-                {%endif%}
-                {%endif%}
-            {%endfor%}
-            </table>
-            <input type="submit" value="Submit" name="form1"/>
-            </form>
-        </div>
-        {%endif%}
-
         <div id="map_legend">
             <h3>Legend of Station Networks.</h3>
             <p class="error">Zoom in to see Networks show on the map.</p>
@@ -64,21 +18,21 @@
     </div>
 
     <div class="right-wide">
-        <div id=tool_info_head></div>
+        <div align="center" id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
         </script>
-        <div id="tool_info" style="display:none;">
+        <div align="center" id="tool_info" style="display:none;">
             <p><ul>
                 <li>Tool to locate ACIS stations that have data for user choosen list of elements and  data range</li>
             </ul></p>
         </div>
 
-        <div id="how_to_head"></div>
+        <div align="center" id="how_to_head"></div>
         <script type="text/javascript">            
             $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
         </script>
-        <div id="how_to" style="display:none;">
+        <div align="center" id="how_to" style="display:none;">
             <p><ul>
             <li>Choose a station selection method. This will define the type of area of whose station data you are interested in.</li>
             <li>Explanation of station selection choices:</li>
@@ -106,7 +60,53 @@
             <b>por</b></font> for both start and end date</li>
             </ul></p>
         </div>
-        
+       
+        <div id='form0'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form0 %}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    <td>{{field}}</td>
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
+                    <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    </td>
+                </tr>
+               {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Select" name="form0"/>
+            </form>
+        </div>
+
+        {%if form1_ready%}
+        <div id='form1'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form1 %}
+                {%if field.is_hidden %}
+                    {{field}}
+                {%else%}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    <td>{{field}}</td>                                                           
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
+                    <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    </td>
+                </tr>
+               {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
+                {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form1"/>
+            </form>
+        </div>
+        {%endif%} 
+
         {%if error%}
             <p class="error">{{error}}</p>
         {%endif%}

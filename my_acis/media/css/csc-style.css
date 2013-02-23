@@ -47,7 +47,7 @@ a#sw_us:hover{
     /*color:#FF00FF;*/
 }
 
-a#ius_wide:hover{
+a#us_wide:hover{
         color: #33CCFF;
             text-decoration: none;
 }
@@ -71,19 +71,19 @@ a#warning {
 }
 
 table.dash {
-padding: 20px 20px 20px 20px;
+padding: 10px 10px 10px 10px;
 border: 0px;
 text-align:center;
 color: #006666;
-font-size:large;
+/*font-size:large;*/
 }
 
 
 
 table.dash img {
     border: 2px solid #006666;
-    width: 300px;
-    height:250px;
+    width: 250px;
+    height:200px;
 }
 
 
@@ -179,7 +179,7 @@ div.pop-up {
 
 .center {
     float:left;
-    padding: 10px 5px 10px 5px;
+    padding: 10px 10px 10px 10px;
     text-align:center;
     height:1000px;
     width:50%;
@@ -201,14 +201,14 @@ div.pop-up {
 
 .major-left, .major-right{
     float: left;
-    padding: 10px 20px 10px 20px;
+    padding: 10px 0px 10px 0px;
     height: 1000px;
     width:45%;
 }
 
 .right-wide{
     float: left;
-    padding: 10px 20px 10px 20px;
+    padding: 10px 5px 10px 5px;
     height: 1000px;
     width:70%;
 }
@@ -295,8 +295,8 @@ img.map {
 }
 
 img.dash_img {
-    width: 250px;
-    height:245px;
+    width: 200px;
+    height:200px;
 }
 
 img.map_dash {
@@ -452,7 +452,7 @@ img.center {
     position:relative;
     left:20px;
     top:20px;
-    width: 70%;
+    width: 80%;
     background: #FFEBCD;
     padding: 10px;
     border:2px solid #006666; 
@@ -461,20 +461,11 @@ img.center {
 #station_list   {
     position:relative;
     left:0px;
-    width: 90%;
     background: #FFEBCD;
     color:#006666;
     border:2px solid #006666;
 }
 
-.station_list   {
-    position:relative;
-    left:0px;
-    width: 90%;
-    background: #FFEBCD;
-    color:#006666;
-    border:2px solid #006666;
-}
 
 .front_page_map {
     position:absolute;
@@ -488,7 +479,7 @@ img.center {
 #map {
     
     position:relative;
-    height: 60%;
+    height: 50%;
     width: 90%;
 
 }
