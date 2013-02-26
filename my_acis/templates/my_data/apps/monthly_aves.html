@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn/main/">MAIN></a>
+<p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN></a>
 <a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS></a>
 <a href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/">Monthly Averages</a></p>
 
@@ -91,7 +91,6 @@
 
         {%if results%}
             <h2>Plots of Monthly Averages</h2>
-            <p class="error">Data values of 10k indicate missing data for the entire month.</p>
             <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">
             <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
             <!-- One container per element -->

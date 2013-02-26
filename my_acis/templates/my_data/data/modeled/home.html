@@ -5,7 +5,7 @@
 
 {% block content %} 
 
-<p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn/main/">MAIN></a>
+<p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN></a>
 <a href="{{URL_PREFIX}}sw_ckn/data/">DATA PORTAL></a>
 <a href="{{URL_PREFIX}}sw_ckn/data/modeled/">Modeled/Gridded Data</a></p>
 
@@ -78,13 +78,15 @@
         </script>
         <div id="tool_info" style="display:none;">
             <p><ul>
-            <li>This tool provides access to daily data from the ACIS system.</li>
+            <li>This tool provides access to gridded/modeled data from the ACIS system.</li>
             <a target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a>            
             <li>Data can be obtained for a single grid point, all grid points in a US state or in a user defined bounding box.</li>
             <li>Queries can be performed for multiple elements at a time.</li>
              <li>Several data formats are available. .xls, .dat, .txt will be downloaded on the user's machine.
              html and  json formats are displayed on the webpage directly for copy and paste.</li>
             <li>Information on gridded data sets:</li>
+            <p>Quick View: Gridded/Modeled Data in ACIS</p>
+            <img class="dash_img" src="{{MEDIA_URL}}img/ACISGridData.png">
             <ul>
                 <li>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</li>
                 <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>

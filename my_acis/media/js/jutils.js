@@ -70,8 +70,8 @@ function ShowHide(divId)
 
 
 $(function() {
-  var moveLeft = 10;
-  var moveDown = 10;
+  var moveLeft = 0.1;
+  var moveDown = 0.1;
 
   $('.trigger').hover(function(e) {
     $(this).next('div.pop-up').show();
@@ -84,8 +84,8 @@ $(function() {
   });
 
   $('.trigger').mousemove(function(e) {
-    //$('div.pop-up').css('top', moveDown).css('left', e.pageX );
-    $(this).next('div.pop-up').css('top', e.pageY - moveDown).css('left', e.pageX + moveLeft);
+    $(this).next('div.pop-up').css('top', e.pageY).css('left', e.pageX );
+    //$(this).next('div.pop-up').css('top', e.pageY - moveDown).css('left', e.pageX + moveLeft);
   });
 
 }); 

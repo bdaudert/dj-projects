@@ -55,14 +55,14 @@ mon_lens = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 def test(request):
     context = {
-        'title': 'Southwest Climate Knowledge Network (SW-CKN)',
+        'title': 'Southwest Climate Knowledge Network',
         'home_page':True
     }
     return render_to_response('my_data/index.html', context, context_instance=RequestContext(request))
 
 def home(request):
     context = {
-        'title': 'Southwest Climate Knowledge Network (SW-CKN)',
+        'title': 'Southwest Climate Knowledge Network',
         'home_page':True
     }
     return render_to_response('my_data/home.html', context, context_instance=RequestContext(request))
@@ -84,7 +84,7 @@ def main_map(request):
     return render_to_response('my_data/main_map.html', context, context_instance=RequestContext(request))
 
 #Temp home page fpr Kelly to look at
-def main_maves(request):
+def main(request):
     context = {
         'title': 'Welcome to the SW-CKN',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
@@ -191,7 +191,9 @@ def data_historic(request):
     end_date = request.GET.get('end_date', None)
     elements = request.GET.get('elements', None)
     initial_params_0 = {}
-    if stn_id is not None:context['stn_id'] = stn_id
+    if stn_id is not None:
+        initial_params_0['select_stations_by'] = 'stn_id'
+        context['stn_id'] = stn_id
     if start_date is not None:context['start_date'] = start_date
     if end_date is not None:context['end_date'] = end_date
     if elements is not None:initial_params_0['elements'] = str(elements);context['elements'] = elements
@@ -202,11 +204,11 @@ def data_historic(request):
         form0_point = set_as_form(request,'PointDataForm0')
     context['form0_point'] = form0_point
 
-    if 'form0_point' in request.POST:
+    if 'form0_point' in request.POST or stn_id is not None:
         #form0_point = set_as_form(request,'PointDataForm0')
         #context['form0_point']  = form0_point
 
-        if form0_point.is_valid():
+        if form0_point.is_valid() or stn_id is not None:
             context['form1_point_ready'] = True
             initial_params_1 = {}
             stn_id = request.GET.get('stn_id', None)
@@ -217,9 +219,12 @@ def data_historic(request):
             if start_date is not None:initial_params_1['start_date'] = str(start_date);context['start_date'] = start_date
             if end_date is not None:initial_params_1['end_date'] = str(end_date);context['end_date'] = end_date
             if elements is not None:context['elements'] = elements
-            initial_params_1['elements'] = form0_point.cleaned_data['elements']
-            initial_params_1['data_format'] = form0_point.cleaned_data['data_format']
-            initial_params_1['station_selection'] = form0_point.cleaned_data['station_selection']
+            #initial_params_1['elements'] = form0_point.cleaned_data['elements']
+            #initial_params_1['data_format'] = form0_point.cleaned_data['data_format']
+            if stn_id is not None:
+                initial_params_1['select_stations_by'] = 'stn_id'
+            else:
+                initial_params_1['select_stations_by'] = form0_point.cleaned_data['select_stations_by']
 
 
             form1_point = forms.PointDataForm1(initial=initial_params_1)
@@ -242,8 +247,14 @@ def data_historic(request):
             context['cleaned'] = form1_point.cleaned_data
             #Check if data request is large,
             #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
-            s_date = datetime.date(int(form1_point.cleaned_data['start_date'][0:4]), int(form1_point.cleaned_data['start_date'][4:6]),int(form1_point.cleaned_data['start_date'][6:8]))
-            e_date = datetime.date(int(form1_point.cleaned_data['end_date'][0:4]), int(form1_point.cleaned_data['end_date'][4:6]),int(form1_point.cleaned_data['end_date'][6:8]))
+            if form1_point.cleaned_data['start_date'] == 'por':
+                s_date = datetime.date(1900,01,01)
+            else:
+                s_date = datetime.date(int(form1_point.cleaned_data['start_date'][0:4]), int(form1_point.cleaned_data['start_date'][4:6]),int(form1_point.cleaned_data['start_date'][6:8]))
+            if form1_point.cleaned_data['end_date'] == 'por':
+                e_date = datetime.date.today()
+            else:
+                e_date = datetime.date(int(form1_point.cleaned_data['end_date'][0:4]), int(form1_point.cleaned_data['end_date'][4:6]),int(form1_point.cleaned_data['end_date'][6:8]))
             days = (e_date - s_date).days
             #if time range > 1 month or user requests data for more than 1 station, large request via ftp
             if days > 31 or 'station_id' not in form1_point.cleaned_data.keys():
@@ -280,24 +291,24 @@ def data_historic(request):
                 context['delimiter'] = delimiter
 
                 #Output formats
-                station_selection = form1_point.cleaned_data['station_selection']
-                if station_selection == 'stnid':
+                select_stations_by = form1_point.cleaned_data['select_stations_by']
+                if select_stations_by == 'stnid':
                     file_info =['StnId', form1_point.cleaned_data['station_id']]
-                elif station_selection == 'stn_id':
+                elif select_stations_by == 'stn_id':
                     file_info =['StnId',',',form1_point.cleaned_data['station_id']]
-                elif station_selection == 'stnids':
+                elif select_stations_by == 'stnids':
                     file_info = ['Multi','Stations']
-                elif station_selection == 'county':
+                elif select_stations_by == 'county':
                     file_info =['county', form1_point.cleaned_data['county']]
-                elif station_selection == 'climdiv':
+                elif select_stations_by == 'climdiv':
                     file_info =['climdiv', form1_point.cleaned_data['climate_division']]
-                elif station_selection == 'cwa':
+                elif select_stations_by == 'cwa':
                     file_info =['cwa', form1_point.cleaned_data['county_warning_area']]
-                elif station_selection == 'basin':
+                elif select_stations_by == 'basin':
                     file_info =['basin', form1_point.cleaned_data['basin']]
-                elif station_selection == 'state':
+                elif select_stations_by == 'state':
                     file_info =['state', form1_point.cleaned_data['state']]
-                elif station_selection == 'bbox':
+                elif select_stations_by == 'bbox':
                     file_info =['bbox', re.sub(',','_',form1_point.cleaned_data['bounding_box'])]
                 else:
                     file_info =['Undefined','export']
@@ -350,7 +361,7 @@ def data_modeled(request):
     }
 
     initial_0 = {}
-    grid_selection = request.GET.get('grid_selection', None)
+    select_grid_by = request.GET.get('select_grid_by', None)
     elements = request.GET.get('elements', None)
     start_date = request.GET.get('start_date', None)
     end_date = request.GET.get('end_date', None)
@@ -359,7 +370,7 @@ def data_modeled(request):
     state = request.GET.get('state', None)
     loc = request.GET.get('loc', None)
     grid = request.GET.get('grid', None)
-    if grid_selection is not None:initial_0['grid_selection'] = grid_selection
+    if select_grid_by is not None:initial_0['select_grid_by'] = select_grid_by
     if elements is not None:initial_0['elements'] = str(elements);context['elements'] = elements
     if start_date is not None:context['start_date'] = start_date
     if end_date is not None:context['end_date'] = end_date
@@ -376,7 +387,7 @@ def data_modeled(request):
         #context['form0_grid']  = form0_grid
         if form0_grid.is_valid():
             context['form1_grid_ready'] = True
-            grid_selection = request.GET.get('grid_selection', None)
+            select_grid_by = request.GET.get('select_grid_by', None)
             start_date = request.GET.get('start_date', None)
             end_date = request.GET.get('end_date', None)
             elements = request.GET.get('elements', None)
@@ -391,10 +402,10 @@ def data_modeled(request):
             if bounding_box is not None:initial_1['bounding_box'] = bounding_box;context['bounding_box'] = bounding_box
             if state is not None:initial_1['state'] = state;context['state'] = state
             if loc is not None:initial_1['location'] = loc;context['location'] = loc
-            if grid_selection is None:
-                initial_1['grid_selection'] = form0_grid.cleaned_data['grid_selection']
+            if select_grid_by is None:
+                initial_1['select_grid_by'] = form0_grid.cleaned_data['select_grid_by']
             else:
-                initial_1['grid_selection'] = grid_selection
+                initial_1['select_grid_by'] = select_grid_by
             if elements is None:
                 initial_1['elements'] = form0_grid.cleaned_data['elements']
             else:
@@ -402,7 +413,7 @@ def data_modeled(request):
             initial_1['data_format']  = form0_grid.cleaned_data['data_format']
 
             '''
-            initial_1 = {'grid_selection':form0_grid.cleaned_data['grid_selection'], \
+            initial_1 = {'select_grid_by':form0_grid.cleaned_data['select_grid_by'], \
                       'elements':form0_grid.cleaned_data['elements'], \
                       'data_format':form0_grid.cleaned_data['data_format']}
             '''
@@ -505,10 +516,10 @@ def data_modeled(request):
                 context['delimiter'] = delimiter
 
                 #Output formats
-                grid_selection = form1_grid.cleaned_data['grid_selection']
-                if grid_selection == 'point':file_info =['location', re.sub(',','_',form1_grid.cleaned_data['location'])]
-                if grid_selection == 'state':file_info = ['state', form1_grid.cleaned_data['state']]
-                if grid_selection == 'bbox':file_info =['bounding_box', re.sub(',','_',form1_grid.cleaned_data['bounding_box'])]
+                select_grid_by = form1_grid.cleaned_data['select_grid_by']
+                if select_grid_by == 'point':file_info =['location', re.sub(',','_',form1_grid.cleaned_data['location'])]
+                if select_grid_by == 'state':file_info = ['state', form1_grid.cleaned_data['state']]
+                if select_grid_by == 'bbox':file_info =['bounding_box', re.sub(',','_',form1_grid.cleaned_data['bounding_box'])]
                 context['file_info'] = file_info
                 if form1_grid.cleaned_data['data_format'] == 'dlm':
                     #return export_to_file_grid(request, data, el_list, file_info, delimiter, 'dat')
@@ -790,8 +801,8 @@ def clim_sum_maps(request):
 
         if form0.is_valid():
             context['form1_ready'] = True
-            context['grid_selection'] = form0.cleaned_data['grid_selection']
-            initial = {'grid_selection':form0.cleaned_data['grid_selection'], \
+            context['select_grid_by'] = form0.cleaned_data['select_grid_by']
+            initial = {'select_grid_by':form0.cleaned_data['select_grid_by'], \
                       'element':form0.cleaned_data['element'], \
                       'time_period':form0.cleaned_data['time_period'], \
                       'x': form0.cleaned_data['x']}
@@ -836,7 +847,7 @@ def clim_sum_maps(request):
             context['start_date']= form1.cleaned_data['start_date']
             context['end_date'] = form1.cleaned_data['end_date']
             context['grid']= form1.cleaned_data['grid']
-            context['grid_selection'] = form1.cleaned_data['grid_selection']
+            context['select_grid_by'] = form1.cleaned_data['select_grid_by']
             context['params'] = params
             fig = WRCCClasses.GridFigure(params)
             results = fig.get_grid()
@@ -889,7 +900,7 @@ def grid_point_time_series(request):
             context['lon'] = form0.cleaned_data['lon']
             #Note: acis takes lon, lat in that order
             location = '%s,%s' %(str(form0.cleaned_data['lon']), str(form0.cleaned_data['lat']))
-            context['grid_selection'] = 'point'
+            context['select_grid_by'] = 'point'
             context['s_date'] = form0.cleaned_data['start_date']
             context['e_date'] = form0.cleaned_data['end_date']
             context['elems'] = form0.cleaned_data['element']
@@ -931,7 +942,7 @@ def station_locator_app(request):
     call(["touch", "/tmp/Empty.json"])
     context = {
         'title': 'Station Finder',
-        'apps_page':True
+        'station_finder_page':True
     }
     form0 = set_as_form(request,'StationLocatorForm0')
     context['form0'] = form0
@@ -947,7 +958,7 @@ def station_locator_app(request):
             initial_params= {}
             stn_id = request.GET.get('stn_id', None)
             if stn_id is not None:initial_params['station_id'] = str(stn_id)
-            initial_params['station_selection'] = form0.cleaned_data['station_selection']
+            initial_params['select_stations_by'] = form0.cleaned_data['select_stations_by']
             initial_params['element_selection'] = form0.cleaned_data['element_selection']
             form1 = forms.StationLocatorForm1(initial=initial_params)
             context['form1'] = form1
@@ -958,7 +969,7 @@ def station_locator_app(request):
         context['form1'] = form1
         context['form1_ready'] = True
         if form1.is_valid():
-            station_selection = form1.cleaned_data['station_selection']
+            select_stations_by = form1.cleaned_data['select_stations_by']
             if 'station_id' in form1.cleaned_data.keys():by_type = 'station_id';val = form1.cleaned_data['station_id']
             if 'station_ids' in form1.cleaned_data.keys():by_type = 'station_ids';val = form1.cleaned_data['station_ids']
             if 'county' in form1.cleaned_data.keys():by_type = 'county';val = form1.cleaned_data['county']

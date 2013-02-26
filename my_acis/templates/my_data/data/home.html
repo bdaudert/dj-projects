@@ -5,7 +5,7 @@
 
 {% block content %} 
 
-<p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn/main/">MAIN></a>
+<p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN></a>
 <a href="{{URL_PREFIX}}sw_ckn/data/">DATA PORTAL</a></p>
 
 <div class="container">
@@ -22,50 +22,49 @@
             <script type="text/javascript">                        
             $("#Docu_ACIS").load("{{MEDIA_URL}}html/commons.html #Docu_ACIS");
             </script>
-        <p class="error">Currently all data available in the ACIS system is of DAILY temporal resolution.</p>
         
         <table class="dash" cellspacing="20px">
             <!--Headers-->
-            <th><font size="5"><b>Historic Station Data (ACIS) </b></th>
-            <th><font size="5"><b>Gridded/Modeled Data(ACIS)</b></th>
-            <th><font size="5"><b></b></th>
-            <th><font size="5"><b></b></th>
-            <tr><td></td></tr>
-            <!--First row of dashboard: image-->
+            <th><font size="5"><b>Station Finder</b></th>
+            <th><font size="5"><b>Historic Station Data</b></th>
+            <th><font size="5"><b>Gridded/Modeled Data</b></th>
+            <!--First row of dashboard: Description-->
             <tr>
+                <td><font color="magenta">Find a station in the ACIS system</font></td>
+                <td><font color="magenta">Find and download ACIS station data</font></td>
+                <td><font color="magenta">Find and download gridded/modeled data from the ACIS system</font></td>
+            </tr>
+            <!--Second row of dashboard: image-->
+            <tr>
+                <td><a href="{{URL_PREFIX}}sw_ckn/station_finder"><img class="dash_img" src="{{MEDIA_URL}}img/StationFinder.png"></a></td>
                 <td><a href="{{URL_PREFIX}}sw_ckn/data/historic"><img class="dash_img" src="{{MEDIA_URL}}img/RAWSWeatherStation.png"></a></td>
                 <td><a href="{{URL_PREFIX}}sw_ckn/data/modeled"><img class="dash_img" src="{{MEDIA_URL}}img/SeaSurfTempGlobal.jpg"></a></td>
-                <td></td>
-                <td></td>
             </tr>
-            <!--Second+ rows: list of content-->
+            <!--Third+ rows: list of content-->
             <tr>
-                <td><p onClick="ShowHide('acis_networks')"><b><u>Networks in ACIS</u></b></p>
+                <td><p onClick="ShowHide('acis_networks')"><b><u>Quick View: Networks in ACIS</u></b></p>
                 <div id="acis_networks" style="display:none;"><img src={{MEDIA_URL}}img/ACIS_Stn_Id_Type.png></div></td>
-                <td><p  onClick="ShowHide('acis_griddata')"><b><u>Gridded/Modeled data sets in ACIS</u></b></p>
+                <td><p onClick="ShowHide('acis_networks')"><b><u>Quick View: Networks in ACIS</u></b></p>
+                <div id="acis_networks" style="display:none;"><img src={{MEDIA_URL}}img/ACIS_Stn_Id_Type.png></div></td>
+                <td><p  onClick="ShowHide('acis_griddata')"><b><u>Quick View: Gridded/Modeled data sets in ACIS</u></b></p>
                 <div id="acis_griddata" style="display:none;"><img src={{MEDIA_URL}}img/ACISGridData.png></div></td>
-                <td><b></b></td>
-                <td><b></b></td>
             </tr>
             <tr>
-                <td><a href="http://cyclone1.dri.edu/csc/media/html/station_id_system_docu.html">More information on Station Networks found in Acis</a></td>
+                <td><a href="http://cyclone1.dri.edu/csc/media/html/station_id_system_docu.html">More information on Station Networks found in ACIS</a></td>
+                <td><a href="http://cyclone1.dri.edu/csc/media/html/station_id_system_docu.html">More information on Station Networks found in ACIS</a></td>
                 <td><a href="https://gist.github.com/4197956">Information on NRCC interpolated, NRCC Hi-Res data sets 1, 3</a></td>
-                <td></td>
-                <td></td>
             </tr>
             <tr>
+                <td></td>
                 <td></td>
                 <td><a href="http://www.earthsystemgrid.org/project/narccap.html">Information on NARCCAPP data sets 4-16</a></td>
-                <td></td>
-                <td></td>
             </tr>
             <tr>
+                <td></td>
                 <td><p  onClick="ShowHide('acis_elements_h')"><b><u>Climate Elements in ACIS</u></b></p>
                 <div id="acis_elements_h" style="display:none;"><img src={{MEDIA_URL}}img/ACIS_Element_Choices.png></div></td>
                 <td><p  onClick="ShowHide('acis_elements_g')"><b><u>Climate Elements in ACIS</u></b></p>
                 <div id="acis_elements_g" style="display:none;"><img src={{MEDIA_URL}}img/ACIS_Element_Choices.png></div></td>
-                <td></td>
-                <td></td>
             </tr>
          </table>
     </div>

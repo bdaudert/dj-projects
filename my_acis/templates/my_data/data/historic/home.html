@@ -6,7 +6,7 @@
 
 {% block content %} 
 
-<p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn/main/">MAIN></a>
+<p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN></a>
 <a href="{{URL_PREFIX}}sw_ckn/data/">DATA PORTAL></a>
 <a href="{{URL_PREFIX}}sw_ckn/data/historic/">Historic Station Data</a></p>
 
@@ -15,27 +15,29 @@
     <br />
     <br />
     {%if not form3_point_ready%}
-        <div id='form0'>
-            <form method="post" action="">{% csrf_token %}
-            <table class="form">
-            {%for field in form0_point %}
-                <tr>
-                    <td>{{field.label}}:</td>
-                    <td>{{field}}</td>
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
-                    <div class="pop-up"><p>{{field.help_text}}</p></div>
-                    </td>
-                </tr>
-                {%if field.errors%}
-                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
-                {%endif%}
-            {%endfor%}
-            </table>
-            <input type="submit" value="Select" name="form0_point"/>
-            </form>
-        </div>
-    
-        {%if form1_point_ready%}
+        {%if not stn_id%}
+            <div id='form0'>
+                <form method="post" action="">{% csrf_token %}
+                <table class="form">
+                {%for field in form0_point %}
+                    <tr>
+                        <td>{{field.label}}:</td>
+                        <td>{{field}}</td>
+                        <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                        </td>
+                    </tr>
+                    {%if field.errors%}
+                     <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                    {%endif%}
+                {%endfor%}
+                </table>
+                <input type="submit" value="Select" name="form0_point"/>
+                </form>
+            </div>
+        {%endif%}
+
+        {%if form1_point_ready %}
         <div id="form1">
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -64,6 +66,10 @@
         {%endif%}
     {%endif%}
         <br />
+    {%if not stn_id %}
+      <p class="error">Looking for a particular station? Use our station finder!</p>
+      <a href="/csc/sw_ckn/station_finder/"><img class="dash_img" src="{{MEDIA_URL}}img/StationFinder.png"></a>
+    {%endif%}
     </div>    
 
     <div class="major-right" style="border:none;">
@@ -128,15 +134,11 @@
             <li>Depending on your choice of Station Selection, you now choose the stations to be included.</li>
         </div>
 
-        <p class="error">Looking for a particular station? Use out station finder!</p>
-        <a href="/csc/sw_ckn/station_finder/"><img class="dash_img" src="{{MEDIA_URL}}img/StationFinder.png"></a>
-
         <div id="docu_long"></div>
 
 
 
         {%if stn_id%}
-            <p class="error">Hit "select". Getting data for:</p>
             <p class="error">Station ID: {{stn_id}}</p>
         {%endif%}
         {%if start_date%}

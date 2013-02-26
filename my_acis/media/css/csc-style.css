@@ -179,7 +179,7 @@ div.pop-up {
 
 .center {
     float:left;
-    padding: 10px 10px 10px 10px;
+    padding: 10px 10px 10px 20px;
     text-align:center;
     height:1000px;
     width:50%;
@@ -201,7 +201,7 @@ div.pop-up {
 
 .major-left, .major-right{
     float: left;
-    padding: 10px 0px 10px 0px;
+    padding: 10px 10px 10px 10px;
     height: 1000px;
     width:45%;
 }
@@ -250,7 +250,7 @@ div.pop-up {
     color: #009999;
     border: none;
     background: none;
-    font-family: 'Georgia',serif;
+    font-family: 'Arial',sans-serif;
     margin: 0em;
 }
 
@@ -288,7 +288,7 @@ img.sidebar {
 
 img.map {
     width: 250px;
-    height:150px;
+    height:178px;
     position: absolute;
     top: 0;
     right:0;
@@ -301,7 +301,7 @@ img.dash_img {
 
 img.map_dash {
     width: 250px;
-    height:158px;
+    height:157px;
     position: absolute;
     top: 0;
     right:0;
@@ -434,7 +434,7 @@ img.center {
 
 .searchbox {
     position:absolute;
-    top:170px;
+    top:190px;
     right:0;
 
 }

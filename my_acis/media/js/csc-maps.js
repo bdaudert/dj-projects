@@ -80,8 +80,14 @@ function initialize_station_finder() {
           var name = data.network_codes[key];
           var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
           var div = document.createElement('div');
-          div.innerHTML = '<img src="' + icon + '"> ' + name +': <input type="checkbox" id="'+ name + 
-          '" onclick="my_boxclick(this,\''+ name +'\')" checked />';
+          if (name == 'Misc'){
+            div.innerHTML = '<img src="' + icon + '"> ' + name +': <input type="checkbox" id="'+ name + 
+            '" onclick="my_boxclick(this,\''+ name +'\')" checked />';
+            }
+          else{
+            div.innerHTML = '<img src="' + icon + '"> ' + name +': <input type="checkbox" id="'+ name +
+            '" onclick="my_boxclick(this,\''+ name +'\')"/>';
+            }  
           legend.appendChild(div);
         }
 
@@ -101,7 +107,11 @@ function initialize_station_finder() {
                 map: map,
                 position: latlon,
                 title:'Name:'+c.name,
-                icon: 'http://maps.google.com/mapfiles/ms/icons/' + c.marker_icon + '.png'
+                icon: new google.maps.MarkerImage(
+                'http://maps.google.com/mapfiles/ms/icons/' + c.marker_icon + '.png'
+                //new google.maps.Size(16, 16)
+                )
+                //icon: 'http://maps.google.com/mapfiles/ms/icons/' + c.marker_icon + '.png'
                 // === Store the category and name info as a marker properties ===
             });
             // === Store the category and name info as a marker properties ===
@@ -118,16 +128,27 @@ function initialize_station_finder() {
             //Fit map to encompass all markers
             bounds.extend(latlon);
 
-            var wrcc_info_link = new String();
-            if ( c.sids[0] && c.sids[0].length == 6 && !isNaN(c.sids[0].replace(/^[0]/g,"") * 1)){
-                var wrcc_info_link = '<a  target="_blank" href="http://www.wrcc.dri.edu/cgi-bin/cliMAIN.pl?'
-                + c.state + c.sids[0].substring(2,6) +
-                '">Access Climate Information for this Station</a>'
-            }
             var avbl_elements = '<br />';
             for (var i=0;i<c.available_elements.length;i++){
                 avbl_elements = avbl_elements + c.available_elements[i] + '<br />';
+                //Check of we should have link to Greg's climate summary pages
+                if (c.available_elements[i][0] == 'Maximum Daily Temperature (F)' || c.available_elements[i][0] == 'Minimum Daily Temperature (F)' || c.available_elements[i][0] == 'Maximum Daily Temperature (F)'){
+                    if (parseInt(c.available_elements[i][1][0].slice(0,4)) - parseInt(c.available_elements[i][1][1].slice(0,4)) > 5){
+                        var greg_flag = true;
+                    }
+                    else{
+                        var greg_flag = false;
+                    }
+                }
             }
+
+            var wrcc_info_link = new String();
+            if ( c.sids[0] && c.sids[0].length == 6 && greg_flag && !isNaN(c.sids[0].replace(/^[0]/g,"") * 1)){
+                var wrcc_info_link = '<a  target="_blank" href="http://www.wrcc.dri.edu/cgi-bin/cliMAIN.pl?'
+                + c.state + c.sids[0].substring(2,6) +
+                '">Access Climate for this Station</a>'
+            }
+
             var data_portal_link = '<a target="_blank" href="' + base_dir + 'data/historic/?stn_id=' + c.sids[0];
             var app_portal_link = '<a target="_blank" href="' + base_dir + 'apps/sw_ckn_station_apps/?stn_id=' + c.sids[0]; 
             if (start_date != null){ 
@@ -224,7 +245,7 @@ function initialize_station_finder() {
                 hide(category);
             }
         };
-        var markerCluster = new MarkerClusterer(map, markers);
+        //var markerCluster = new MarkerClusterer(map, markers);
         map.fitBounds(bounds);
     });//close getjson
 
