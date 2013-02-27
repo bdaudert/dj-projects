@@ -5,7 +5,10 @@
 
 {% block content %}
 
-<p align="center"><font color="red" size="xx-large"><b>PROVIDING EASY ACCESS TO CLIMATE DATA,PRODUCTS AND INFORMATION</b></font></p>
+<div id="header"></div>
+<script type="text/javascript">                        
+    $("#header").load("{{MEDIA_URL}}html/commons.html .header");
+</script>
 
 <p  align="center">You are here
 <a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN</a>
@@ -49,6 +52,7 @@
     <td>
      <!-- Try one Average Temps for State tool as scenter piece-->
         <h1>Means for {{state}} since 1950</h1>
+        <h2>With 9Year Running Mean</h2>
         <form method="get" action="">
             <select name="state_key">
                 <option value="NV">Chose a different State</option>
@@ -62,8 +66,8 @@
                 <option value="pcpn">Precipitation</option>
                 <option value="maxt">Maximum Temperature</option>
                 <option value="mint">Minimum Temperature</option>
-                <option value="snow">Snow</option>
-                <option value="snwd">Snow depth</option>
+                <!--<option value="snow">Snow</option>
+                <option value="snwd">Snow depth</option>-->
             </select>
             <input type="submit" value="Submit"/>
         </form>

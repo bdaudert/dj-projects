@@ -76,23 +76,16 @@ function initialize_station_finder() {
         
         var legend = document.getElementById('map_legend');
         for (var key in data.network_codes) {
-          var type = data.network_codes[key];
-          var name = data.network_codes[key];
-          var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
-          var div = document.createElement('div');
-          if (name == 'Misc'){
-            div.innerHTML = '<img src="' + icon + '"> ' + name +': <input type="checkbox" id="'+ name + 
-            '" onclick="my_boxclick(this,\''+ name +'\')" checked />';
-            }
-          else{
+            var name = data.network_codes[key];
+            var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
+            var div = document.createElement('div');
             div.innerHTML = '<img src="' + icon + '"> ' + name +': <input type="checkbox" id="'+ name +
             '" onclick="my_boxclick(this,\''+ name +'\')"/>';
-            }  
-          legend.appendChild(div);
+            legend.appendChild(div);
         }
 
         //map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
-        map.controls.push(legend);
+        //map.controls.push(legend);
 
         var bounds=new google.maps.LatLngBounds();
 
@@ -123,8 +116,8 @@ function initialize_station_finder() {
             marker.elevation = c.elevation
             marker.stn_networks = c.stn_networks
             marker.sids = c.sids
-            markers.push(marker);
-            
+            marker.setVisible(false);
+            //markers.push(marker);
             //Fit map to encompass all markers
             bounds.extend(latlon);
 
@@ -177,57 +170,54 @@ function initialize_station_finder() {
                 data_portal_link + '<br />' +
                 app_portal_link +
                 '</div>';
-
+            marker.contentString = contentString
+            markers.push(marker)
             //Open info window when user clicks on marker
             google.maps.event.addListener(marker, 'click', function() {
                 infowindow.close();
                 infowindow.setContent(contentString);
                 infowindow.open(map, marker);
                 });
-
-
-            var station_list = document.getElementById('station_list'); 
-
-            if (marker.getVisible()) {
-                //tbl_row.onclick = '"my_stnclick(' + infowindow + ',' + marker + ',' + contentString + ')"';
-                //t_data = '<td onclick = "my_stnclick(' + infowindow + ',' + marker + ',' + contentString + ')">';
-                var tbl_row = document.createElement('tr');
-                var t_data = '<td>';
-                tbl_row.addEventListener("click", function(){
-                    infowindow.close();
-                    infowindow.setContent(contentString);
-                    infowindow.open(map, marker);
-                }); 
-                
-                tbl_row.innerHTML = t_data + c.name + '</td>' + t_data + 
-                                  c.state + '</td>' + t_data + c.lat + '</td>' + t_data +
-                                  c.lon + '</td>' + t_data + c.elevation + '</td>' + t_data + 
-                                  c.stn_networks +'</td>';
-                station_list.appendChild(tbl_row);
-            }
- 
         }); //end each
-        /*
-        //show marker window when station is selected from list
-        stnclick = function(i_window, mkr, content_str){
-                i_window.close();
-                i_window.setContent(content_str);
-                i_window.open(map, mkr);
-                };
-        */
-        // == shows all markers of a particular category, and ensures the checkbox is checked ==
+
+        // == shows all markers of a particular category, and ensures the checkbox is checked and write station_list==
         show = function(category) {
+            var station_list = document.getElementById('station_list');
             for (var i=0; i<markers.length; i++) {
                 if (markers[i].category == category) {
                     markers[i].setVisible(true);
+                    var tbl_row = document.createElement('tr');
+                    var t_data = '<td>';
+                    //Add click event for row:
+                   i_window = new google.maps.InfoWindow({
+                        content: 'oi'
+                    });
+                    var contentString = markers[i].contentString
+                    tbl_row.addEventListener("click", function(){
+                        i_window.close();
+                        i_window.setContent(contentString);
+                        i_window.open(map, markers[i]);
+                    });
+                    tbl_row.innerHTML = t_data + markers[i].name + '</td>' + t_data +
+                        markers[i].state + '</td>' + t_data + markers[i].lat + '</td>' + t_data + 
+                        markers[i].lon + '</td>' + t_data + markers[i].elevation + '</td>' + t_data +
+                        markers[i].stn_networks +'</td>';
+                    station_list.appendChild(tbl_row);
                 }
             }
             // == check the checkbox ==
             document.getElementById(category).checked = true;
         };
 
-        // == hides all markers of a particular category, and ensures the checkbox is cleared ==
+        // == hides all markers of a particular category, and ensures the checkbox is cleared and delete station_list ==
         hide = function(category) {
+            //remove previous station_list
+            var station_list = document.getElementById('station_list');
+            var tableRows = station_list.getElementsByTagName('tr');
+            var rowCount = tableRows.length;
+            for (var x=rowCount-1; x>0; x--) {
+                station_list.removeChild(tableRows[x]);
+            }
             for (var i=0; i<markers.length; i++) {
                 if (markers[i].category == category) {
                     markers[i].setVisible(false);

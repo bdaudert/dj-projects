@@ -13,7 +13,7 @@
 
         <div id="map_legend">
             <h3>Legend of Station Networks.</h3>
-            <p class="error">Zoom in to see Networks show on the map.</p>
+            <p class="error">Choose Networks!</p>
         </div>
     </div>
 
@@ -23,9 +23,9 @@
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
         </script>
         <div align="center" id="tool_info" style="display:none;">
-            <p><ul>
-                <li>Tool to locate ACIS stations that have data for user choosen list of elements and  data range</li>
-            </ul></p>
+            <p>Tool to locate ACIS stations that have data for user choosen list of elements and  data range</p>
+            <p>Element Choices:</p>
+            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0"/>
         </div>
 
         <div align="center" id="how_to_head"></div>
@@ -33,8 +33,7 @@
             $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
         </script>
         <div align="center" id="how_to" style="display:none;">
-            <p><ul>
-            <li>Choose a station selection method. This will define the type of area of whose station data you are interested in.</li>
+            <p>Choose a station selection method. This will define the type of area of whose station data you are interested in.</p>
             <li>Explanation of station selection choices:</li>
                 <ul>
                     <li>Station Selection = "Individual Station". Enter the Station Id of choice. If you don't know your station id, find it here:</li>
@@ -140,7 +139,7 @@
             initialize_station_finder()
         </script>
 
-        <div style="height:200px; overflow:auto;" >
+        <div style="height:200px;width:90%;overflow:auto;" >
             <table cellspacing="2" id="station_list">
                 <th>Name</th>
                 <th>State</th>

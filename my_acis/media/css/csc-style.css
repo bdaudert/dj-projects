@@ -461,6 +461,7 @@ img.center {
 #station_list   {
     position:relative;
     left:0px;
+    /*width:90%;*/
     background: #FFEBCD;
     color:#006666;
     border:2px solid #006666;

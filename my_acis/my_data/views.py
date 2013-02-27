@@ -1011,6 +1011,7 @@ def station_locator_app(request):
                 context['error'] = "No stations found for %s : %s, elements: %s and date range %s!"  %(by_type, val, element_list, date_range)
             context['json_file'] = f_name
             context['empty_json'] = False
+            context['form1_ready'] = False
         #form1 = set_as_form(request,'StationLocatorForm1')
         #context['form1'] = form1
         #context['form1_ready'] = True

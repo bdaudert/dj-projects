@@ -36,7 +36,7 @@ $(function () {
                 var Element = 'Snow Fall';
                 } 
             else if (element == 'snwd'){
-                var data = datadict.pcpn;
+                var data = datadict.snwd;
                 var Element = 'Snow Depth';
                 }
             var dates = datadict.year_list;
@@ -60,6 +60,7 @@ $(function () {
                                     min = extremesObject.min,
                                     max = extremesObject.max,
                                     detailData = [],
+                                    moving_aveData = [], // 9yr Running mean
                                     detail_date_valData = [],
                                     xAxis = this.xAxis[0];
         
@@ -73,7 +74,15 @@ $(function () {
                                         detail_date_valData.push([point.x, point.y]);
                                     }
                                 });
-        
+                                jQuery.each(this.series[1].data, function(i, point) {
+                                    if (point.x > min && point.x < max) {
+                                        moving_aveData.push({
+                                            x: point.x,
+                                            y: point.y
+                                        });
+                                    }
+                                });
+ 
                                 // move the plot bands to reflect the new detail span
                                 xAxis.removePlotBand('mask-before');
                                 xAxis.addPlotBand({
@@ -93,7 +102,8 @@ $(function () {
         
         
                                 detailChart.series[0].setData(detailData);
-                                detailChart.series[1].setData(fitData(detail_date_valData).data); 
+                                //detailChart.series[2].setData(fitData(detail_date_valData).data);
+                                detailChart.series[1].setData(moving_aveData); 
                                 return false;
                             }
                         } //end evens
@@ -165,7 +175,15 @@ $(function () {
                         //pointInterval: 365 * 25 * 3600 * 1000, //somehow this works
                         pointInterval:365 * 24 * 3600000, // 1 year
                         pointStart: Date.UTC(parseInt(start[0]) + 50, parseInt(start[1]) , parseInt(start[2])),
-                        data: data
+                        data: data[0]
+                    },
+                    {
+                        type: 'area',
+                        name: '9Yr Running Mean',
+                        //pointInterval: 365 * 25 * 3600 * 1000, //somehow this works
+                        pointInterval:365 * 24 * 3600000, // 1 year
+                        pointStart: Date.UTC(parseInt(start[0]) + 50, parseInt(start[1]) , parseInt(start[2])),
+                        data: data[1] 
                     }],
         
                     exporting: {
@@ -183,6 +201,7 @@ $(function () {
                 // prepare the detail chart
                 var detailData = [],
                     detail_date_valData = [], //for regression line
+                    moving_aveData = [], // 9yr Running mean
                     detailStart = Date.UTC(parseInt(start[0]) + 50, parseInt(start[1]) , parseInt(start[2]));
         
                 jQuery.each(masterChart.series[0].data, function(i, point) {
@@ -191,7 +210,13 @@ $(function () {
                         detail_date_valData.push([point.x, point.y]); 
                     }
                 });
-        
+
+                jQuery.each(masterChart.series[1].data, function(i, point) {
+                    if (point.x >= detailStart) {
+                        moving_aveData.push(point.y);
+                    }
+                });        
+
                 // create a detail chart referenced by a global variable
                 detailChart = new Highcharts.Chart({
                     chart: {
@@ -255,18 +280,26 @@ $(function () {
                         //pointInterval: 365*25 * 3600 * 1000, //somehow, this makes it go from 1950 to present
                         pointInterval:365 * 24 * 3600000, // 1 yr
                         data: detailData
-                    }, 
+                    },
+                    {
+                        name: '9Yr Running Mean',
+                        pointStart: detailStart,
+                        //pointInterval: 365*25 * 3600 * 1000, //somehow, this makes it go from 1950 to present
+                        pointInterval:365 * 24 * 3600000, // 1 yr
+                        data: moving_aveData
+                    }],
+                    /*
                     {
                         name: 'Regression Line',
                         pointStart: detailStart,
                         //pointInterval: 365*25 * 3600 * 1000, //somehow, this makes it go from 1950 to present
                         pointInterval:365 * 24 * 3600000, // 1 year
                         type: 'line',
-                        /* function returns data for trend-line */
                         data: (function() {
                         return fitData(detail_date_valData).data; //calls functions from {{MEDIA_URL}}js/regression.js
                         })()
                     }],
+                    */ 
         
                     exporting: {
                         enabled: false
