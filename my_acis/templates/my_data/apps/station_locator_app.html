@@ -10,14 +10,13 @@
 
 <div class="container">
     <div class="center-left" style="border:none;">
-
         <div id="map_legend">
-            <h3>Legend of Station Networks.</h3>
+            <h3>Legend of Station Networks</h3>
             <p class="error">Choose Networks!</p>
         </div>
     </div>
 
-    <div class="right-wide">
+    <div class="center">
         <div align="center" id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
@@ -140,7 +139,7 @@
         </script>
 
         <div style="height:200px;width:90%;overflow:auto;" >
-            <table cellspacing="2" id="station_list">
+            <table cellspacing="1" id="station_list" border=1>
                 <th>Name</th>
                 <th>State</th>
                 <th>Lat</th>
@@ -149,6 +148,87 @@
                 <th>Networks</th>
             </table>
         </div>
+    </div>
+
+    <div class="center-right">
+        <h2>Links to other Networks</h2>
+           <ul class="navbar">
+                <table>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank">RAWS USA Climate Archive</a>
+                    <div class="pop-up">
+                        <p><font size="4">Summaries, Graphs, and other products for RAWS
+                        (Remote Automatic Weather Stations).</font></p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.wrcc.dri.edu/crn/" class="trigger" target="_blank">USCRN (<font color="red">US</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">NOAA U.S. Climate Reference Network</font></p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.cocorahs.org/" class="trigger" target="_blank">CoCoRaHS (<font color="red">US</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">Community Collaborative Rain, Hail and Snow Network</font></p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.wcc.nrcs.usda.gov/snow/" class="trigger" target="_blank">SNOTEL (<font color="red">W-US/Alaska</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">Snowpack and related climatic data in the Western United States and Alaska.</font></p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.cemp.dri.edu/" class="trigger" target="_blank">CEMP(<font color="red">NV</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4"></font>Community Environmental Monitoring Porgram. Monitoring air quality and climate near and downwind of the Nevada National Security Site.</p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.wrcc.dri.edu/nrel/" class="trigger" target="_blank">Wind Energy Assessment(<font color="red">NV</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4"></font>Climate and Wind data for Nevada.</p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://nicenet.dri.edu/" class="trigger" target="_blank">NICE Net(<font color="red">NV</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4"></font>Nevada Integrated Climate and Evaporation Network.</p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.ymp.dri.edu/index.html" class="trigger" target="_blank">Yucca Mountain Project(<font color="red">NV</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">Climate Data from Yucca Mountain, Nevada.</font></p>
+                    </div>
+                    </td></tr>
+                    <tr><td>                                        
+                    <a id="us_wide" href="http://www.tahoeclim.dri.edu/" class="trigger" target="_blank">TahoeClim(<font color="red">CA/NV</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">Lake Tahoe Climate Information and Data.</font></p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.calclim.dri.edu/" class="trigger" target="_blank">CalClim(<font color="red">CA</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">California Climate Data Archive.</font></p>
+                    </div>
+                    </td></tr>
+                    <tr><td>                                        
+                    <a id="us_wide" href="http://www.wrcc.dri.edu/catalina/" class="trigger" target="_blank">SC Island Climate Network(<font color="red">CA</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">Climate Data from Santa Catalina Island.</font></p>
+                    </div>
+                    </td></tr>
+                   <tr><td>
+                    <a id="us_wide" href="http://www.wrcc.dri.edu/vallescaldera/" class="trigger" target="_blank">Valles Caldera(<font color="red">NM</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">Valles Caldera Climate Network</font></p>
+                    </div>
+                    </td></tr>
+                    </table>
+                </ul>
     </div>
 
 </div>

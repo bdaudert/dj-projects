@@ -113,11 +113,10 @@ function initialize_station_finder() {
             marker.state = c.state;
             marker.lat = c.lat;
             marker.lon = c.lon;
-            marker.elevation = c.elevation
-            marker.stn_networks = c.stn_networks
-            marker.sids = c.sids
+            marker.elevation = c.elevation;
+            marker.stn_networks = c.stn_networks;
+            marker.sids = c.sids;
             marker.setVisible(false);
-            //markers.push(marker);
             //Fit map to encompass all markers
             bounds.extend(latlon);
 
@@ -170,8 +169,8 @@ function initialize_station_finder() {
                 data_portal_link + '<br />' +
                 app_portal_link +
                 '</div>';
-            marker.contentString = contentString
-            markers.push(marker)
+            marker.contentString = contentString;
+            markers.push(marker);
             //Open info window when user clicks on marker
             google.maps.event.addListener(marker, 'click', function() {
                 infowindow.close();
@@ -189,14 +188,11 @@ function initialize_station_finder() {
                     var tbl_row = document.createElement('tr');
                     var t_data = '<td>';
                     //Add click event for row:
-                   i_window = new google.maps.InfoWindow({
-                        content: 'oi'
-                    });
-                    var contentString = markers[i].contentString
+                    var cString = markers[i].contentString;
                     tbl_row.addEventListener("click", function(){
-                        i_window.close();
-                        i_window.setContent(contentString);
-                        i_window.open(map, markers[i]);
+                        infowindow.close();
+                        infowindow.setContent(cString);
+                        infowindow.open(map, markers[i]);
                     });
                     tbl_row.innerHTML = t_data + markers[i].name + '</td>' + t_data +
                         markers[i].state + '</td>' + t_data + markers[i].lat + '</td>' + t_data + 
