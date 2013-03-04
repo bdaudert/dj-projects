@@ -5,7 +5,9 @@
 
 {% block content %}
 
-    <p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN></a>
+    <p align="center">You are here 
+    <a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
+    <a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN></a>
     <a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS></a>
 
 
@@ -16,7 +18,7 @@
         
             <ul class="navbar">    
                 <h2 align="center"><p id="sw_us">Southwest US Applications</p></h2>
-                <!-- These Are Really Networks not applications -->
+                <!-- These Are really Networks not apps
                 <table>
                     <tr><td>
                     <a id="sw_us" href="http://www.cemp.dri.edu/" class="trigger" target="_blank">CEMP(<font color="red">NV only</font>)</a>
@@ -43,7 +45,7 @@
                     <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NICE_NET')">
                     </td></tr>
                 </table>
-
+                -->
                 <h2 align ="center"><p id="us_wide">US-Wide Applications</p></h2>
                 <table>
                     {%if stn_id%}
@@ -125,7 +127,7 @@
                     <tr><td>
                     <a id="us_wide" href="http://wrcc.dri.edu/cgi-bin/coopdata0.pl" class="trigger" target="_blank">&nbsp;&nbsp;&nbsp;&rarr;Monthly Data Lister</a>
                     <div class="pop-up">
-                        <p><font size="4"></font>Temparture/Precipitation/Evaporation listings of choosen COOP station and month.</p>                       
+                        <p><font size="4"></font>Temparture/Precipitation/Evaporation listings of chosen COOP station and month.</p>                       
                     </div>
                     </td><td>
                     <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NONE')">
@@ -133,7 +135,7 @@
                     <tr><td>
                     <a id="us_wide" href="http://wrcc.dri.edu/sod/sodusaxtrm.html" class="trigger" target="_blank">&nbsp;&nbsp;&nbsp;&rarr;Monthly Summaries</a>
                     <div class="pop-up">
-                        <p><font size="4"></font>Monthly Summaries of choosen COOP station and element for Period of Record.</p>
+                        <p><font size="4"></font>Monthly Summaries of chosen COOP station and element for Period of Record.</p>
                     </div>
                     </td><td>
                     <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NONE')">

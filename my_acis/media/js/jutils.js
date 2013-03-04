@@ -82,12 +82,12 @@ $(function() {
   }, function() {
     $(this).next('div.pop-up').hide();
   });
-
+  /*
   $('.trigger').mousemove(function(e) {
-    $(this).next('div.pop-up').css('top', e.pageY).css('left', e.pageX );
-    //$(this).next('div.pop-up').css('top', e.pageY - moveDown).css('left', e.pageX + moveLeft);
+    //$(this).next('div.pop-up').css('top', e.pageY).css('left', e.pageX );
+    $(this).next('div.pop-up').css('top', e.pageY - moveDown).css('left', e.pageX + moveLeft);
   });
-
+  */
 }); 
 
 

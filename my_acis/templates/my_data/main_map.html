@@ -5,114 +5,76 @@
 
 {% block content %}
 
-<p align="center"><font color="red" size="xx-large"><b>PROVIDING EASY ACCESS TO CLIMATE DATA,PRODUCTS AND INFORMATION</b></font></p>
+<div id="header"></div>
+<script type="text/javascript">                        
+    $("#header").load("{{MEDIA_URL}}html/commons.html .header");
+</script>
 
 <p  align="center">You are here
-<a href="{{URL_PREFIX}}sw_ckn//main/">SW-CKN</a>
-
-<!--<textarea class="layer" rows="40" cols="140" style="top:660px;left:300px;">
-</textarea>
-<textarea class="layer" rows="30" cols="70" style="top:660px;right:300px;">Present-Future connection</textarea>-->
+<a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
+<a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN</a>
 
 
 <div class="container">
 
-    <div class="third-left">
-        <h1 align="center" style="border: 2px solid #006666; background-color:#EBCEB2;">PAST &rarr;</h1>
-        <div class="major-left">
-            <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="popup_map"><img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="sidebar">Temperature Departure</a>
-            <br /><br /><br /><br />
-            <a href="http://www.wrcc.dri.edu" target="_blank"><img class="sidebar" src="{{MEDIA_URL}}img/WRCC.png" width="40%">Western Regional Climate Center (WRCC)</a>
-            <br /><br /><br /><br />
-            <a href="http://www.wrcc.dri.edu/weather/index.html" target="_blank"><img class="sidebar" src="{{MEDIA_URL}}img/CurrentWeatherDataPlots.png" width="40%">Last Month's Weather Data Plots</a>
-        </div>
-
-        <div class="major-right">
-            <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="popup_map"><img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="sidebar">% of Normal Precipitation</a>
+<table border="1px solid #006666">
+ <tr>   
+    <td>
+        <table>
+        <tr><td>
+            <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="popup_map"><img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="dash_img"></a>
+        </td></tr>
+        <tr><td>
+            <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="popup_map">Temperature Departure</a>
+        </td></tr>   
+        <tr><td>
+            <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="popup_map"><img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="dash_img"></a>
+        </td></tr>
+        <tr><td>
+            <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="popup_map">% of Normal Precipitation</a> 
+        </td></tr>
+        <tr><td> 
             <a href="http://www.wrcc.dri.edu/anom/" target="_blank">&rarr; More anomaly maps</a>
-        </div>
-    </div>
-
-    <div class="third-center">
-        <h1 align="center" style="border: 2px solid #006666; background-color:#EBCEB2;">PRESENT &rarr;</h1>
-        <div class="major-left">
-            <a href="http://www.weather.gov/" target="_blank"><img src="{{ MEDIA_URL }}img/NatHazard.png" class="sidebar"><br />NWS Current Weather in the US</a>
-        </div>
-
-        <div class="major-right">
-            <a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" target="_blank"><img src="http://radar.weather.gov/ridge/Conus/Loop/pacsouthwest_loop.gif" class="sidebar"><br />Pacific Southwest Radar Mosaic</a>
-        </div>
-    <!--
-        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-        <input type="hidden" id="json_file" name="variable" value="{{ json_file }}">
-
-        
-        <img class="icon_small" src="{{MEDIA_URL}}img/HostIcon.png">
-        <input onclick="initialize_info_map(this);" type=button id="host" value="Show Hosts">
-
-        <img class="icon_small" src="{{MEDIA_URL}}img/PartnerIcon.jpg">
-        <input onclick="initialize_info_map(this);" type=button id="partner" value="Show Partners">
-
-        <img class="icon_small" src="{{MEDIA_URL}}img/ProjectIcon.jpg">
-        <input onclick="initialize_info_map(this);" type=button id="project" value="Show Projects">
-
-        <img class="icon_small" src="{{MEDIA_URL}}img/MiscIcon.jpg">
-        <input onclick="initialize_info_map(this);" type=button id="misc" value="Miscellaneous">
-
-        <input onclick="initialize_info_map(this);" type=button id="all" value="Show All" checked>
-        <input onclick="initialize_info_map(this);" type=button id="nothing" value="Reset">
+        </td></tr>
+        <tr><td>
+            <a href="http://www.weather.gov/" target="_blank"><img src="{{ MEDIA_URL }}img/NatHazard.png" class="dash_img"></a>
+        </td></tr>
+        <tr><td> 
+            <a href="http://www.weather.gov/" target="_blank">NWS Current Weather in the US</a>
+        </td></tr>
+        <tr><td>
+            <a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" target="_blank"><img src="http://radar.weather.gov/ridge/Conus/Loop/pacsouthwest_loop.gif" class="dash_img"></a>
+        </td></tr>
+        <tr><td> 
+            <a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" target="_blank">Pacific Southwest Radar Mosaic</a>
+        </td></tr>
+        </table>
+    </td>
+    <td>
+     <table>
+     <!-- Try two grid point map center piece-->
+     <tr><td>
+        <h1>Drag and click!</h1>
+        <h2>Data set: NRCC Interpolated in ACIS</h2>
+        <a  target="_blank" href="https://gist.github.com/4197956">Information on NRCC interpolated, NRCC Hi-Res data sets</a>
         <br />
-        <br />
+      </td></tr>
+      <tr><td>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+        <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
+        <input type="hidden" id="center_lat" name="center_lat" value="39.8282">
+        <input type="hidden" id="center_lon" name="center_lon" value="-98.5795">
+        <input type="hidden" id="zoom_level" name="zoom_level" value="5">
 
-                    
-        <div id="map" style="width: 100%; height:600px;"></div>
-        <div id="all"><script type="text/javascript">
-            initialize_info_map(this)
-        </script></div>
-    -->
-    <!--
-        <h1>Try our puzzle!</h1>
-        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/puzzle.js"></script>
-        <a href="#" onclick="scramble();return false">Scramble</a> | <a href="#" onclick="initPuzzle();return false">New image</a> | 
-        <form style="display:inline">
-        Columns/Rows: 
-        <input type="text" value="4" onblur="var no = this.value.replace(/[^\d]/g,'');if(no/1<3){ this.value = '3';no=3; };cols=no" maxlength="1" size="2"> 
-        x 
-        <input type="text" value="3" onblur="var no = this.value.replace(/[^\d]/g,'');if(no/1<2){ this.value = '2';no=2; };rows=no" maxlength="1" size="2">
-        </form>
+        <div id="map" style="width:700px; height:500px;"></div>
 
-         <div id="puzzle_container">
-            Please wait - initializing script
-        </div>
-
-        <div id="messageDiv"></div>
-        <p><i>Shuffle, then click to move the pieces</i></p>
-    -->
-    </div>
-
-   <div class="third-right">
-        <h1 align="center" style="border: 2px solid #006666; background-color:#EBCEB2;">FUTURE</h1>
-
-        <div class="major-left">
-            <a target="_blank" href="http://www.earthsystemgrid.org/home.htm"><img class="sidebar" src="{{MEDIA_URL}}img/narccap.png">North American Regional Climate Change Assessment Program (NARCCAPP)</a>
-        </div>
-    </div>
-
-</div> <!--end container-->
-
-<div class="front_page_map">
-    <div id="side" align="center">
-        <input id="reset" value="Reset" type="button" class="navi"/>
-        <input id="showData"  value="Show Paths" type="button" class="navi"/>
-        <p style="color:red;">Draw a polyon by clicking on map points!</p>
-        <div   id="dataPanel"></div>
-    </div>
-    <div id="map"></div>
-<div>
-
-<script type="text/javascript">
-    initialize_polygon_map()
-</script>
-
+        <script type="text/javascript">
+            initialize_grid_point_map()
+        </script>
+ 
+      </td></tr>
+    </table>
+</td></tr>
+</table>
+</div> <!-- end container -->
 {% endblock %}

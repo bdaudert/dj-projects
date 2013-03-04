@@ -5,8 +5,10 @@
 
 {% block content %}
 
-<p align="center">You are here <a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN></a>
-<a href="{{URL_PREFIX}}sw_ckn/dashboard/">DASHBOARD</a></p>
+<p align="center">You are here 
+<a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
+<a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN></a>
+<a href="{{URL_PREFIX}}sw_ckn/Monitoring/">MONITORING</a></p>
 
 <div class="container">
 <table border="1px solid #006666">
@@ -41,13 +43,14 @@
     <tr><td>
         <h2 style="color:magenta;">% of Normal Precipitation - Updated daily by HPRCC</h2>
         <table>
-            <th>Year To date</th><th>30-day</th><th>7-day</th><th>Water Year </th>
+            <th>Year To date</th><th>30-day</th><th>7-day</th>
+            <!--<th>Water Year </th>-->
             <tr>                
                 <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/YearPNormPWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/YearPNormWRCC.png" class="sidebar"></a></td>
 
                 <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dPNormWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dPNormWRCC.png" class="sidebar"></a></td>
                 <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/7dPNormWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/7dPNormWRCC.png" class="sidebar"></a></td>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterPNormWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterPNormWRCC.png" class="sidebar"></a></td>
+                <!--<td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterPNormWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterPNormWRCC.png" class="sidebar"></a></td>-->
             </tr>
         </table>
         <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?state=SW&region=WRCC&product=PNorm">MORE HERE: High Plains Regional Climate Center SW Precip anomaly map tool</a>
@@ -55,13 +58,15 @@
     </td><td>
         <h2 style="color:magenta;">% of Normal Precipitation - Updated daily by HPCC</h2>
         <table>
-            <th>Year To date</th><th>30-day</th><th>7-day</th><th>Water Year</th>
+            <th>Year To date</th><th>30-day</th><th>7-day</th>
+            <!--<th>Water Year</th>-->
             <tr>
                 <td><a href="http://www.hprcc.unl.edu/products/maps/acisYearPNormPUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/YearPNormUS.png" class="sidebar"></a></td>
 
                 <td><a href="http://www.hprcc.unl.edu/products/maps/acis30dPNormUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/30dPNormUS.png" class="sidebar"></a></td>
                 <td><a href="http://www.hprcc.unl.edu/products/maps/acis7dPNormUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/7dPNormUS.png" class="sidebar"></a></td>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acisWaterPNormUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/WaterPNormUS.png" class="sidebar"></a></td>
+                <!--<td><a href="http://www.hprcc.unl.edu/products/maps/acisWaterPNormUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/WaterPNormUS.png" class="sidebar"></a></td>-->
+
             </tr>
         </table>
         <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?product=PNorm">MORE HERE: High Plains Regional Climate Center US Precip anomaly map tool</a>
@@ -77,23 +82,62 @@
                 <td><a href="http://www.wcc.nrcs.usda.gov/ftpref/data/water/wcs/gis/maps/WestwideSWEPercent.pdf" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/WaterEquivalent.png" class="sidebar"></a></td>
             <tr>
         </table>
-        <a target="_blank" href="http://www.wcc.nrcs.usda.gov/cgibin/westsnow.pl">MORE HERE: SNOTEL Mountain Snowpack Maps for the West</a>
-   
+        <a target="_blank" href="http://www.wcc.nrcs.usda.gov/cgibin/westsnow.pl">MORE HERE: SNOTEL Mountain Snowpack Maps for the West</a> 
     </td><td>
-        <!-- No Snotel for US -->
+        <h2 style="color:magenta;">Snow data from NOHRSC (NOAA)</h2>
+        <table>
+            <th>Ntl. Snow Analysis</th><th>Interactive Snow Maps</th><th>Forecasts</th>
+            <tr>
+                <td><a href="http://www.nohrsc.noaa.gov/nsa/" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/SnowAnalysis.png" class="sidebar"></a></td>
+                <td><a href="http://www.nohrsc.noaa.gov/interactive/html/map.html" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/IASnowMap.png" class="sidebar"></a></td>
+                <td><a href="http://www.nohrsc.noaa.gov/forecasts/" class="popup_map"><img alt="Snow Forecast" src="{{MEDIA_URL}}img/SnowForeCast.png" class="sidebar"></a></td>
+            </tr>
+        </table>
+        <a target="_blank" href="http://www.nohrsc.noaa.gov/nsa/">MORE HERE: National Operational Hydrologic Remote Sensing Center</a>
     </td></tr>
     
     <!-- Fourth Row Drought-->
     <tr><td>
-        <h2 style="color:magenta;">Drought Monitoring</h2>
+        <h2 style="color:magenta;">Westwide Drought Tracker</h2>
+        <table>
+            <th>Palmer Z-Index(Daily)</th><th>Standardized Precipitation Index(1month)</th><th></th>
+            <tr>
+                <td><a href="http://www.wrcc.dri.edu/monitor/WWDT/index.php?folder=pzi" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/PalmerZSW.png" class="sidebar"></a></td>
+                <td><a href="http://www.wrcc.dri.edu/monitor/WWDT/index.php?folder=spi1" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/SPISW.png" class="sidebar"></a></td>
+                <td></td>
+            </tr>
+        </table><a target="_blank" href="http://www.wrcc.dri.edu/wwdt/">MORE HERE: Westwide Drought Tracker(WRCC)</a>
     </td><td>
-        <h2 style="color:magenta;">Drought Monitoring</h2>
+        <h2 style="color:magenta;">USwide Drought Monitor</H2>
+        <table>
+            <th>Palmer Z-Index(Weekly)</th><th>Standardized Precipitation Index(1month)</th>
+            <!--<th>Top Soil Moisture</th>-->
+            <tr>
+                <td><a href="http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/regional_monitoring/palmer.gif" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/PalmerZUS.png" class="sidebar"></a></td>
+                <td><a href="http://wrcc.dri.edu/cgi-bin/spiFmap.pl?spi01" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/SPIUS.png" class="sidebar"></a></td>
+               <!-- <td><a href="http://www.cpc.ncep.noaa.gov/products/monitoring_and_data/5yrcomp.gif" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/TSMoist.png" class="sidebar"></a></td>-->
+            </tr>
+        </table>
+        <a target="_blank" href="http://www.drought.gov/drought/">MORE HERE: US Drought Portal</a><br />
+        <a target="_blank" href="http://droughtmonitor.unl.edu/monitor.html">US Drought Monitor</a><br />
+        <a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/drought/nadm/">North American Drought Monitor</a>
     </td></tr>
     <!-- Fifth Row Soil-->
     <tr><td>
             <h2 style="color:magenta;">Soil</h2>
     </td><td>
             <h2 style="color:magenta;">Soil</h2>
+        <table>
+            <th>Soil Moisture</th><th>SCAN Data</th><th></th>
+            <tr>
+                <td><a href="http://www.cpc.ncep.noaa.gov/products/Soilmst_Monitoring/US/Soilmst/Soilmst.shtml#" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/SMoistUS.png" class="sidebar"></a></td>
+                <td><a href="http://www.wcc.nrcs.usda.gov/scan/" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/SCANUS.png" class="sidebar"></a></td>
+                <td></td>
+            </tr>
+        </table>
+
+    <a target="_blank" href="http://www.cpc.ncep.noaa.gov/products/Soilmst_Monitoring/index.shtml">MORE HERE: Land Surface Monitoring and Prediction(NOAA)</a><br />
+    <a target="_blank" href="http://www.wcc.nrcs.usda.gov/scan/">Soil Climate Analysis Network (USDA)</a>
     </td></tr>
 </table>
 
