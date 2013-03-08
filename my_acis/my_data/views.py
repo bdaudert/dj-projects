@@ -257,7 +257,8 @@ def data_historic(request):
                 e_date = datetime.date(int(form1_point.cleaned_data['end_date'][0:4]), int(form1_point.cleaned_data['end_date'][4:6]),int(form1_point.cleaned_data['end_date'][6:8]))
             days = (e_date - s_date).days
             #if time range > 1 month or user requests data for more than 1 station, large request via ftp
-            if days > 31 or 'station_id' not in form1_point.cleaned_data.keys():
+            if days > 10000:
+            #if days > 31 or 'station_id' not in form1_point.cleaned_data.keys():
                 context['form3_point_ready'] = True
                 context['large_request'] = 'You requested a large amount of data.Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
                 initial_params_2 = form1_point.cleaned_data
@@ -631,7 +632,7 @@ def metagraph(request):
                 if len(meta_request['meta']) == 0:
                     station_meta['error'] = 'No meta data found for station: %s.' %stn_id
                 else:
-                    for key, val in meta_request['meta'][0].items():
+                    for key, val in meta_request['meta'][0].iteritems():
                         if key == 'sids':
                             sid_list = []
                             for sid in val:
@@ -1208,7 +1209,7 @@ def export_to_file_point(request, data, dates, station_names, station_ids, eleme
     else: #Excel
         from xlwt import Workbook
         wb = Workbook()
-        for stn, dat in data.items():
+        for stn, dat in data.iteritems():
             ws = wb.add_sheet('Station_%s %s' %(str(station_ids[stn]), str(stn)))
             #Header
             ws.write(0, 0, 'Date')

@@ -18,34 +18,24 @@
         
             <ul class="navbar">    
                 <h2 align="center"><p id="sw_us">Southwest US Applications</p></h2>
-                <!-- These Are really Networks not apps
                 <table>
                     <tr><td>
-                    <a id="sw_us" href="http://www.cemp.dri.edu/" class="trigger" target="_blank">CEMP(<font color="red">NV only</font>)</a>
+                    <a id="sw_us" href="http://www.wrcc.dri.edu/monitor/cal-mon/frames_version.html" class="trigger" target="_blank">California Climate Tracker(<font color="red">CA</font>)</a>
                     <div class="pop-up">
-                        <p><font size="4"></font>Community Environmental Monitoring Porgram. Monitoring air quality and climate near and downwind of the Nevada National Security Site.</p>
+                        <p><font size="4"></font>Tracking Climate Variability and Change for the state of California.</p>
                     </div>
                     </td><td>
-                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_CEMP')">
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_CalTracker')">
                     </td></tr>
-                    <tr><td>
-                    <a id="sw_us" href="http://www.wrcc.dri.edu/nrel/" class="trigger" target="_blank">Wind Energy Assessment(<font color="red">NV only</font>)</a>
-                    <div class="pop-up">
-                        <p><font size="4"></font>Climate and Wind data for Nevada.</p>
+                    <tr><td>                    
+                    <a id="sw_us" href="http://www.wrcc.dri.edu/monitor/nev-mon/index.html" class="trigger" target="_blank">Nevada Climate Tracker(<font color="red">NV</font>)</a>
+                    <div class="pop-up">                        
+                    <p><font size="4"></font>Tracking Climate Variability and Change for the state of Nevada.</p>
                     </div>
                     </td><td>
-                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_WIND_NV')">
-                    </td></tr>
-                    <tr><td>
-                    <a id="sw_us" href="http://nicenet.dri.edu/" class="trigger" target="_blank">NICE Net(<font color="red">NV only</font>)</a>
-                    <div class="pop-up">
-                        <p><font size="4"></font>Nevada Integrated Climate and Evaporation Network.</p>
-                    </div>
-                    </td><td>
-                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NICE_NET')">
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NevTracker')">
                     </td></tr>
                 </table>
-                -->
                 <h2 align ="center"><p id="us_wide">US-Wide Applications</p></h2>
                 <table>
                     {%if stn_id%}
@@ -100,21 +90,19 @@
                         </td></tr>
                     {%endif%}
                     <tr><td>
-                    <a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank">RAWS USA Climate Archive</a>
+                    <a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank">USA Climate Archive</a>
                     <div class="pop-up">
                         <p><font size="4">Summaries, Graphs, and other products for RAWS 
-                        (Remote Automatic Weather Stations).</font></p>
+                        (Remote Automatic Weather Stations) and COOP stations (Cooperative Observer).</font></p>
                     </div>
                     </td><td>
-                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_RAWS')">
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_ClimArch')">
                     </td></tr>
                     <tr><td>
                     <a id="us_wide" href="http://wrcc.dri.edu/sod-products/" class="trigger" target="_blank">Summary of the Day (SOD) products(<font color="red">COOP stations only</font>)</a>
                     <div class="pop-up" id="sods">
                         <p><font size="4"></font>Data Lister, Graphs, Monthly Data Summaries.</p>
                     </div>
-                    </td><td>
-                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NONE')">
                     </td></tr>
                     <tr><td>
                     <a id="us_wide" href="http://wrcc.dri.edu/sod/sodusa.html" class="trigger" target="_blank">&nbsp;&nbsp;&nbsp;&rarr;Daily Lister and Graph</a>
@@ -122,7 +110,7 @@
                         <p><font size="4"></font>Graphs Temperature/Precipitation elements and extremes for chosen COOP station.</p>
                     </div>
                     </td><td>
-                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NONE')">
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_SOD_DLG')">
                     </td></tr>
                     <tr><td>
                     <a id="us_wide" href="http://wrcc.dri.edu/cgi-bin/coopdata0.pl" class="trigger" target="_blank">&nbsp;&nbsp;&nbsp;&rarr;Monthly Data Lister</a>
@@ -130,7 +118,7 @@
                         <p><font size="4"></font>Temparture/Precipitation/Evaporation listings of chosen COOP station and month.</p>                       
                     </div>
                     </td><td>
-                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NONE')">
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_SOD_MDL')">
                     </td></tr>
                     <tr><td>
                     <a id="us_wide" href="http://wrcc.dri.edu/sod/sodusaxtrm.html" class="trigger" target="_blank">&nbsp;&nbsp;&nbsp;&rarr;Monthly Summaries</a>
@@ -138,15 +126,7 @@
                         <p><font size="4"></font>Monthly Summaries of chosen COOP station and element for Period of Record.</p>
                     </div>
                     </td><td>
-                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NONE')">
-                    </td></tr>
-                    <tr><td>
-                    <a id="us_wide" href="http://wrcc.dri.edu/sod/arch/index.html" class="trigger" target="_blank">&nbsp;&nbsp;&nbsp;&rarr;USA Climate Archive</a>
-                    <div class="pop-up">
-                        <p><font size="4"></font>Get climate Summaries for station (COOP,RAWS,Snotel and others) and run applications.</p>
-                    </div>
-                    </td><td>
-                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NONE')">
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_SOD_MSUM')">
                     </td></tr>
                 </table>
            </ul>
@@ -157,9 +137,41 @@
 Click the question mark next to the application to get more/less detail.</p>
 
             <!-- Application documentation -->
+            <div class="docu" id="Docu_CalTracker" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_CalTracker").load("{{MEDIA_URL}}html/commons.html #Docu_CalTracker");
+                </script>
+            <div class="docu" id="Docu_NevTracker" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_NevTracker").load("{{MEDIA_URL}}html/commons.html #Docu_NevTracker");
+                </script>
+            <div class="docu" id="Docu_SOD_DLG" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_SOD_DLG").load("{{MEDIA_URL}}html/commons.html #Docu_SOD_DLG");
+                </script>
+            <div class="docu" id="Docu_SOD_DLG" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_SOD_DLG").load("{{MEDIA_URL}}html/commons.html #Docu_SOD_DLG");
+                </script>
+           <div class="docu" id="Docu_SOD_MDL" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_SOD_MDL").load("{{MEDIA_URL}}html/commons.html #Docu_SOD_MDL");
+                </script>
+           <div class="docu" id="Docu_SOD_MSUM" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_SOD_MSUM").load("{{MEDIA_URL}}html/commons.html #Docu_SOD_MSUM");
+                </script>
+           <div class="docu" id="Docu_SOD_ClimArch" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_SOD_ClimArch").load("{{MEDIA_URL}}html/commons.html #Docu_SOD_ClimArch");
+                </script>
             <div class="docu" id="Docu_WESTMAP" style="display:none;"></div>
                 <script type="text/javascript">                        
                 $("#Docu_WESTMAP").load("{{MEDIA_URL}}html/commons.html #Docu_WESTMAP");
+                </script>
+           <div class="docu" id="Docu_FreezTracker" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_FreezTracker").load("{{MEDIA_URL}}html/commons.html #Docu_FreezTracker");
                 </script>
            <div class="docu" id="Docu_GP_TS" style="display:none;"></div>
                 <script type="text/javascript">                        
@@ -182,9 +194,9 @@ Click the question mark next to the application to get more/less detail.</p>
                 <script type="text/javascript">                        
                 $("#Docu_MAVES").load("{{MEDIA_URL}}html/commons.html #Docu_MAVES");
                 </script>
-            <div class="docu" id="Docu_RAWS" style="display:none;"></div>
+            <div class="docu" id="Docu_ClimArch" style="display:none;"></div>
                 <script type="text/javascript">                        
-                $("#Docu_RAWS").load("{{MEDIA_URL}}html/commons.html #Docu_RAWS");
+                $("#Docu_ClimArch").load("{{MEDIA_URL}}html/commons.html #Docu_ClimArch");
                 </script>
 
             <div class="docu" id="Docu_WIND_NV" style="display:none;"></div>
@@ -210,6 +222,22 @@ Click the question mark next to the application to get more/less detail.</p>
 
             <h2 align="center"><p id="sw_us">Southwest US Applications</p></h2>
             <table>
+                <tr><td>
+                <a id="sw_us" href="http://www.wrcc.dri.edu/monitor/cal-mon/frames_version.html" class="trigger" target="_blank">California Climate Tracker(<font color="red">CA</font>)</a>
+                <div class="pop-up">
+                    <p><font size="4"></font>Tracking Climate Variability and Change for the state of California.</p>
+                </div>
+                </td><td>
+                <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_CalTracker')">
+                </td></tr>
+                <tr><td>
+                <a id="sw_us" href="http://www.wrcc.dri.edu/monitor/nev-mon/index.html" class="trigger" target="_blank">Nevada Climate Tracker(<font color="red">NV</font>)</a>
+                <div class="pop-up">
+                <p><font size="4"></font>Tracking Climate Variability and Change for the state of Nevada.</p>
+                </div>
+                </td><td>
+                <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NevTracker')">
+                </td></tr>
                 <tr><td><a id="sw_us" target="_blank" href="http://www.cefa.dri.edu/Westmap/" class="trigger">Westmap</a>
                 <div class="pop-up">
                     <p><font size="4">Climate Analysis and Mapping Tool.</font></p>
@@ -222,6 +250,14 @@ Click the question mark next to the application to get more/less detail.</p>
 
             <h2 align="center"><p id="us_wide">US-Wide Applications</p></h2>
                 <table>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.wrcc.dri.edu/cwd/products/" class="trigger">North American Freezing Level Tracker</a>
+                    <div class="pop-up">
+                        <p><font size="4">Track through time the height of the freezing level above sea level.</font></p>
+                    </div>
+                    </td><td>
+                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_FreezTracker')">
+                    </td></tr>
                     <tr><td>
                     <a id="us_wide" href="{{URL_PREFIX}}sw_ckn/apps/clim_sum_maps/" class="trigger">Climate Summary Maps</a>
                     <div class="pop-up">

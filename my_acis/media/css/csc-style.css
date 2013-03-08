@@ -258,7 +258,7 @@ div.pop-up {
     position: absolute;
     top: 0;
     left: 0;
-    width:200px;
+    width:100px;
     height: 80px;
 }
 
@@ -308,8 +308,8 @@ img.map_dash {
 }
 
 img.logo {
-    width: 100px;
-    height:30px;
+    width: 70px;
+    height:40px;
 }
 
 img.center {
