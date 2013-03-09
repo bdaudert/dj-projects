@@ -256,8 +256,8 @@ def data_historic(request):
             else:
                 e_date = datetime.date(int(form1_point.cleaned_data['end_date'][0:4]), int(form1_point.cleaned_data['end_date'][4:6]),int(form1_point.cleaned_data['end_date'][6:8]))
             days = (e_date - s_date).days
-            #if time range > 1 month or user requests data for more than 1 station, large request via ftp
-            if days > 10000:
+            #if time range > 1 year or user requests data for more than 1 station, large request via ftp
+            if days > 366:
             #if days > 31 or 'station_id' not in form1_point.cleaned_data.keys():
                 context['form3_point_ready'] = True
                 context['large_request'] = 'You requested a large amount of data.Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
@@ -270,13 +270,27 @@ def data_historic(request):
                 context['form3_point'] = form3_point
                 return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
             else:
+                '''
                 (data, dates, elements, station_ids, station_names, errors) = AcisWS.get_point_data(form1_point.cleaned_data, 'sodlist_web')
-                context['errors'] = errors
-                context['point_data'] = dict(data)
+                context['stn_errors'] = errors
+                context['stn_data'] = dict(data)
                 context['elements'] =  elements
-                context['station_names'] = station_names
-                context['station_ids'] = station_ids
+                context['stn_names'] = station_names
+                context['stn_ids'] = station_ids
                 context['dates'] = dates
+                '''
+                resultsdict = AcisWS.get_point_data(form1_point.cleaned_data, 'sodlist_web')
+                context['results'] = resultsdict
+                context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
+                '''
+                conext['errors'] = resultsdict['errors']
+                context['stn_errors'] = resultsdict['stn_errors']
+                context['stn_data'] = dict(resultsdict['stn_data'])
+                context['elements'] =  resultsdict['elements']
+                context['stn_names'] = resultsdict['stn_names']
+                context['stn_ids'] = resultsdict['stn_ids']
+                context['dates'] = resultsdict['dates']
+                '''
                 if 'delimiter' in form1_point.cleaned_data.keys():
                     if str(form1_point.cleaned_data['delimiter']) == 'comma':delimiter = ','
                     if str(form1_point.cleaned_data['delimiter']) == 'tab':delimiter = '  '
@@ -436,8 +450,8 @@ def data_modeled(request):
             e_date = datetime.date(int(form1_grid.cleaned_data['end_date'][0:4]), int(form1_grid.cleaned_data['end_date'][4:6]), \
             int(form1_grid.cleaned_data['end_date'][6:8]))
             days = (e_date - s_date).days
-            #if time range > 1 month or user requests data for more than 1 station, large request via ftp
-            if days > 31 or 'location' not in form1_grid.cleaned_data.keys():
+            #if time range > 1 day and user requests data for more than 1 station, large request via ftp
+            if (days > 1 and  'location' not in form1_grid.cleaned_data.keys()) or (days > 366 and 'location' in form1_grid.cleaned_data.keys()):
                 context['form3_grid_ready'] = True
                 context['large_request'] = \
                 'You requested a large amount of data.Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'

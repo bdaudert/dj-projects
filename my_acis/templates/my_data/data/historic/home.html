@@ -69,7 +69,8 @@
     {%endif%}
         <br />
     {%if not stn_id %}
-      <p class="error">Looking for a particular station? Use our station finder!</p>
+      <p class="error">Looking for a particular station?</p>
+      <p class="error">Use our station finder!</p>
       <a href="/csc/sw_ckn/station_finder/"><img class="dash_img" src="{{MEDIA_URL}}img/StationFinder.png"></a>
     {%endif%}
     </div>    
@@ -183,37 +184,35 @@
             </div>
         {%endif%}
 
+        {%if results%}
+            <p class="error">Results:</p>
+            {%if results.errors%}
+            <div class="error">Data Request could not be completed. The following error occurred: {{error}}</div>
+            {%endif%}
 
-        {%if point_data%}
-        <br />
-        <br />
-        {%if not json%}
-            {%for stn, stn_data in point_data.items %}
-                <p class="error"> {{errors|lookup:stn}}</p>
-
-                <h2>STATION NAME: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
-                <table>
-                <th>date{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</th>
-                {%for date_vals in stn_data%}
-                    <tr>
-                    <td>{{dates.stn|safe}}
-                    {%for el_val in date_vals%}{{el_val}}{{delimiter}}{%endfor%}</td>
-                    </tr>
+            {%for stn in stn_idx%}
+                <h3>STATION NAME:</h3> 
+                <b>{{results.stn_names|lookup:stn|safe}}</b>
+                <h3>STATION ID,STATION NETWORK PAIRS:</h3>
+                {%for id_network in results.stn_ids|lookup:stn %}
+                    <b>{{id_network}},</b>
                 {%endfor%}
-                </table>
+                <h3>Data:</h3> 
+                <p class="error"> {{results.stn_errors|lookup:stn}}</p>
+                 {%if not json%}   
+                    <table>
+                    <th>date{{delimiter}}{%for el in results.elements%}{{el}}{{delimiter}}{%endfor%}</th>
+                    {%for date_vals in results.stn_data|lookup:stn%}
+                        <tr><td>
+                        {%for el_val in date_vals%}{{el_val}}{{delimiter}}{%endfor%}
+                        </td></tr>
+                    {%endfor%}
+                    </table>
+                {%else%}
+                    {{results.stn_data|lookup:stn}}                    
+                {%endif%}
             {%endfor%}
-        {%else%}
-            {%for stn, stn_data in point_data.items %}
-                <h2>STATION NAME: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;STATION ID: {{station_ids|lookup:stn|safe}}</h2>
-            {{point_data}}
-            {%endfor%}
-        {%endif%}
-        {%endif%}
-        
-        {%if error%}
-            <div class="error">{{error}}</div>
-        {%endif%}
-
+        {%endif%} 
     </div>
 
 </div>
