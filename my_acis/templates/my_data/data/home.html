@@ -69,8 +69,15 @@
                 <div id="acis_elements_g" style="display:none;"><img src={{MEDIA_URL}}img/ACIS_Element_Choices.png></div></td>
             </tr>
          </table>
-    </div>
 
+  <!-- Footer -->
+  <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+    </script>
+
+
+    </div>
 </div>    
 
 {%endblock%}

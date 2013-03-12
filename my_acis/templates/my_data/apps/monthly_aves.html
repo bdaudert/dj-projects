@@ -124,5 +124,12 @@
             <a href="{{URL_PREFIX}}sw_ckn/data/historic/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}">Get raw data behind this graphic here!</a>
         {%endif%}
     </div>
+
+  <!-- Footer -->
+  <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+    </script>
+
 </div>
 {%endblock%}

@@ -144,9 +144,18 @@ DELIMITER_CHOICES = (
     ('pipe', 'Pipe (|)'),
 )
 
+acis_elements = acis_elements ={'maxt': 'Maximum Daily Temperature (F)','mint': 'Minimum Daily Temperature (F)', \
+'avgt': 'Average Daily Temperature (F)','obst': 'Observation Time Temperature (F)', 'pcpn':'Precipitation (In)', \
+'snow':'Snowfall (In)','snwd':'Snow Depth (In)', 'cdd':'Cooling Degree Days (Days, Base 65)', \
+'hdd':'Heating Degree Days (Days, Base 65)', 'gdd':'Growing Degree Days (Days, Base 50)', \
+'cddXX':'Cooling Degree Days (Days, Base XX)', 'hddXX':'Heating Degree Days (Days, Base XX)', 'gddXX':'Growing Degree Days (Days, Base XX)'}
+acis_element_list = ''
+for el, el_long in acis_elements.iteritems():
+    acis_element_list = acis_element_list + '%s : %s\n' %(el, el_long)
+
 #Help texts
-help_comma_elements = 'Comma separated list of ACIS climate elements. For more information, see "About this tool"!'
-help_acis_elements = 'Available climate element in ACIS. For more information, see "About this tool"!'
+help_comma_elements = 'Comma separated list of ACIS climate elements. Available elements: \n %s' %acis_element_list
+help_acis_elements = 'Available climate element in ACIS: \n %s' %acis_element_list
 help_grids = 'Gridded/modeled datasets available in Acis. For more info, see "How to use this tool"!'
 help_stn_selection = 'Defines the type ofsearch area. For more info, see "How to use this tool"!'
 help_date = 'yyyymmdd'

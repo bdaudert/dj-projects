@@ -218,7 +218,7 @@ def data_historic(request):
             if stn_id is not None:initial_params_1['station_id'] = str(stn_id);context['stn_id'] = stn_id
             if start_date is not None:initial_params_1['start_date'] = str(start_date);context['start_date'] = start_date
             if end_date is not None:initial_params_1['end_date'] = str(end_date);context['end_date'] = end_date
-            if elements is not None:context['elements'] = elements
+            if elements is not None:initial_params_1['elements'] = elements;context['elements'] = elements
             #initial_params_1['elements'] = form0_point.cleaned_data['elements']
             #initial_params_1['data_format'] = form0_point.cleaned_data['data_format']
             if stn_id is not None:

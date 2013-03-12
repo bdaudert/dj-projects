@@ -11,36 +11,26 @@
     <a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS></a>
     <a href="{{URL_PREFIX}}sw_ckn/apps/sw_ckn_station_apps/">SW-CKN Station Apps</a>
 
-    <div class="container">
+<div class="container">
 
-        <div class="center-left">
-            <h1>Point Data Applications</h1>
-            <ul class="navbar">
-            <table>
-                {%if stn_id%}
-                    {%if start_date%}
-                        {%if elements%}
-                            <tr><td>
-                            <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
-                            <div class="pop-up" id="maves">
-                                <p><font size="4">Generates bar chart of monthly averages.</font></p>
-                            </div>
-                            </td><td>
-                            <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_MAVES')">
-                            </td></tr>
-                        {%else%}
-                            <tr><td>
-                            <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
-                            <div class="pop-up" id="maves">
-                                <p><font size="4">Generates bar chart of monthly averages.</font></p>
-                            </div>
-                            </td><td>
-                            <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_MAVES')">
-                            </td></tr>
-                        {%endif%}
+    <div class="center-left">
+        <h1>Point Data Applications</h1>
+        <ul class="navbar">
+        <table>
+            {%if stn_id%}
+                {%if start_date%}
+                    {%if elements%}
+                        <tr><td>
+                        <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
+                        <div class="pop-up" id="maves">
+                            <p><font size="4">Generates bar chart of monthly averages.</font></p>
+                        </div>
+                        </td><td>
+                        <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_MAVES')">
+                        </td></tr>
                     {%else%}
                         <tr><td>
-                        <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
+                        <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
                         <div class="pop-up" id="maves">
                             <p><font size="4">Generates bar chart of monthly averages.</font></p>
                         </div>
@@ -48,76 +38,90 @@
                         <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_MAVES')">
                         </td></tr>
                     {%endif%}
-                    <tr><td>
-                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics(<font color="red">US, COOP only</font>)</a>
-                    <div class="pop-up" id="meta">
-                        <p><font size="4">See how much data is missing over the period of record (COOP stations only).</font></p>
-                    </div>
-                    </td><td>
-                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_META_GRAPH')">
-                    </td></tr>
                 {%else%}
                     <tr><td>
-                    <a href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
-                    <div class="pop-up" id="meta">
+                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
+                    <div class="pop-up" id="maves">
                         <p><font size="4">Generates bar chart of monthly averages.</font></p>
                     </div>
                     </td><td>
                     <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_MAVES')">
                     </td></tr>
-                    <tr><td>
-                    <a href="{{URL_PREFIX}}sw_ckn/apps/metagraph/" class="trigger">Station Metadata Graphics(<font color="red">US, COOP only</font>)</a>
-                    <div class="pop-up" id="meta">
-                        <p><font size="4">See how much data is missing over the period of record (COOP stations only).</font></p>
-                    </div>
-                    </td><td>
-                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_META_GRAPH')">
-                    </td></tr>
                 {%endif%}
-            </table>
-            </ul>
-        </div>
-
-        <div class="center">
-           <p align="center" onClick="ShowHide('Docu_ACIS')"><img class="logo"         
-            src="{{MEDIA_URL}}img/ACIS-logo.png"><u>More about the ACIS data sets ...</u></p>
-            <div id="Docu_ACIS" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_ACIS").load("{{MEDIA_URL}}html/commons.html #Docu_ACIS");
-                </script>
-
-            {%if stn_id%}
-                <p class="error">Station ID: {{stn_id}}</p>
+                <tr><td>
+                <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics(<font color="red">US, COOP only</font>)</a>
+                <div class="pop-up" id="meta">
+                    <p><font size="4">See how much data is missing over the period of record (COOP stations only).</font></p>
+                </div>
+                </td><td>
+                <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_META_GRAPH')">
+                </td></tr>
+            {%else%}
+                <tr><td>
+                <a href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
+                <div class="pop-up" id="meta">
+                    <p><font size="4">Generates bar chart of monthly averages.</font></p>
+                </div>
+                </td><td>
+                <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_MAVES')">
+                </td></tr>
+                <tr><td>
+                <a href="{{URL_PREFIX}}sw_ckn/apps/metagraph/" class="trigger">Station Metadata Graphics(<font color="red">US, COOP only</font>)</a>
+                <div class="pop-up" id="meta">
+                    <p><font size="4">See how much data is missing over the period of record (COOP stations only).</font></p>
+                </div>
+                </td><td>
+                <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_META_GRAPH')">
+                </td></tr>
             {%endif%}
-            {%if start_date%}
-                <p class="error">Start Date: {{start_date}}</p>
-            {%endif%}
-            {%if end_date%}
-                <p class="error">End Date: {{end_date}}</p>
-            {%endif%}
-            {%if elements%}
-                <p class="error">Acis Elements: {{elements}}</p>
-            {%endif%}
-            
-            <!-- Documentation -->        
-           <div class="docu" id="Docu_META_GRAPH" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_META_GRAPH").load("{{MEDIA_URL}}html/commons.html #Docu_META_GRAPH");
-                </script>
-
-            <div class="docu" id="Docu_MAVES" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_MAVES").load("{{MEDIA_URL}}html/commons.html #Docu_MAVES");
-                </script>
-
-           <div class="docu" id="Docu_NONE" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_NONE").load("{{MEDIA_URL}}html/commons.html #Docu_NONE");
-                </script>     
-   
-            
-        </div>
-
-
+        </table>
+        </ul>
     </div>
+
+    <div class="center">
+       <p align="center" onClick="ShowHide('Docu_ACIS')"><img class="logo"         
+        src="{{MEDIA_URL}}img/ACIS-logo.png"><u>More about the ACIS data sets ...</u></p>
+        <div id="Docu_ACIS" style="display:none;"></div>
+            <script type="text/javascript">                        
+            $("#Docu_ACIS").load("{{MEDIA_URL}}html/commons.html #Docu_ACIS");
+            </script>
+
+        {%if stn_id%}
+            <p class="error">Station ID: {{stn_id}}</p>
+        {%endif%}
+        {%if start_date%}
+            <p class="error">Start Date: {{start_date}}</p>
+        {%endif%}
+        {%if end_date%}
+            <p class="error">End Date: {{end_date}}</p>
+        {%endif%}
+        {%if elements%}
+            <p class="error">Acis Elements: {{elements}}</p>
+        {%endif%}
+        
+        <!-- Documentation -->        
+       <div class="docu" id="Docu_META_GRAPH" style="display:none;"></div>
+            <script type="text/javascript">                        
+            $("#Docu_META_GRAPH").load("{{MEDIA_URL}}html/commons.html #Docu_META_GRAPH");
+            </script>
+
+        <div class="docu" id="Docu_MAVES" style="display:none;"></div>
+            <script type="text/javascript">                        
+            $("#Docu_MAVES").load("{{MEDIA_URL}}html/commons.html #Docu_MAVES");
+            </script>
+
+       <div class="docu" id="Docu_NONE" style="display:none;"></div>
+            <script type="text/javascript">                        
+            $("#Docu_NONE").load("{{MEDIA_URL}}html/commons.html #Docu_NONE");
+            </script>     
+
+  <!-- Footer -->
+  <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+    </script>
+        
+    </div>
+
+</div><!-- end container -->
 {%endblock%}

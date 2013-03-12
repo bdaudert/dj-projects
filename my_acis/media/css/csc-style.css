@@ -70,6 +70,12 @@ a#warning {
     color:#FF00FF;
 }
 
+table {
+    border:2px solid #006666;
+    text-align:left;
+    /*padding:10px 10px 10px 10px;*/
+}
+
 table.dash {
 padding: 10px 10px 10px 10px;
 border: 0px;
@@ -183,7 +189,7 @@ div.pop-up {
     text-align:center;
     height:1000px;
     width:50%;
-    /*border: 1px solid #006666;*/
+    border: 2px solid #006666;
     /*background-color:#DCA978;*/
 }
 
@@ -307,6 +313,12 @@ img.map_dash {
     right:0;
 }
 
+img.person {
+    width: 70px;
+    height:100px;
+}
+
+
 img.logo {
     width: 70px;
     height:40px;
@@ -326,17 +338,6 @@ img.center {
     height:250px;
 }
 
-
-.footer {
-    position: absolute;
-    /*border-top: 1px dashed #006666;*/
-    bottom:0px;
-    text-align:center;
-    width:100%;
-    height: 50px;
-    /*z-index:10;*/
-    /*color:#FFCC66;*/
-}
 
 .breadcrumbs {
     background: #FFEBCD;
@@ -490,6 +491,7 @@ img.center {
     margin:0px 0px 0px 0px;
     /*background-color:#FFEBCD;*/
     font-family: 'Georgia',serif;
+    font-size:1;
 }
 
 /*JS puzzle, maybe temporary*/

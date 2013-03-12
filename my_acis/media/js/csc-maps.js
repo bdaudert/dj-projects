@@ -124,7 +124,7 @@ function initialize_station_finder() {
             for (var i=0;i<c.available_elements.length;i++){
                 avbl_elements = avbl_elements + c.available_elements[i] + '<br />';
                 //Check of we should have link to Greg's climate summary pages
-                if (c.available_elements[i][0] == 'Maximum Daily Temperature (F)' || c.available_elements[i][0] == 'Minimum Daily Temperature (F)' || c.available_elements[i][0] == 'Maximum Daily Temperature (F)'){
+                if (c.available_elements[i][0] == 'Maximum Daily Temperature (F)' || c.available_elements[i][0] == 'Minimum Daily Temperature (F)' || c.available_elements[i][0] == 'Precipitation (In)'){
                     if (parseInt(c.available_elements[i][1][0].slice(0,4)) - parseInt(c.available_elements[i][1][1].slice(0,4)) > 5){
                         var greg_flag = true;
                     }
@@ -135,7 +135,8 @@ function initialize_station_finder() {
             }
 
             var wrcc_info_link = new String();
-            if ( c.sids[0] && c.sids[0].length == 6 && greg_flag && !isNaN(c.sids[0].replace(/^[0]/g,"") * 1)){
+            //if ( c.sids[0] && c.sids[0].length == 6 && greg_flag && !isNaN(c.sids[0].replace(/^[0]/g,"") * 1)){
+            if ( c.sids[0] && c.sids[0].length == 6 && greg_flag){
                 var wrcc_info_link = '<a  target="_blank" href="http://www.wrcc.dri.edu/cgi-bin/cliMAIN.pl?'
                 + c.state + c.sids[0].substring(2,6) +
                 '">Access Climate for this Station</a>'

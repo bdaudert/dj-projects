@@ -14,7 +14,7 @@
     <div class="container">
 
         <div class="center-left">
-            <h1>Historic Station Data Applications</h1>
+            <h3>Historic Station Data Applications</h3>
         
             <ul class="navbar">    
                 <h2 align="center"><p id="sw_us">Southwest US Applications</p></h2>
@@ -217,7 +217,7 @@ Click the question mark next to the application to get more/less detail.</p>
         </div>
 
         <div class="center-right">
-           <h1>Gridded/Modeled Data Applications</h1>
+           <h3>Gridded/Modeled Data Applications</h3>
             <ul class="navbar">
 
             <h2 align="center"><p id="sw_us">Southwest US Applications</p></h2>
@@ -279,4 +279,10 @@ Click the question mark next to the application to get more/less detail.</p>
         </div>
 
     </div>
+
+ <!-- Footer -->
+  <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+    </script>
 {%endblock%}

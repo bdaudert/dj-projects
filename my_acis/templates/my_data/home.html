@@ -36,7 +36,7 @@
     <p class="error" align="center">To get started, choose one of the following:</p>
     <table class="dash" cellspacing="15px">
         <!--Headers-->
-        <th><font size="5"><b>LAUNCH A ROCKET</b></th>
+        <th><font size="5"><b>LAUNCH SW-CKN</b></th>
         <th><font size="5"><b>DATA PORTAL</b></th>
         <th><font size="5"><b>MONITORING PRODUCTS</b></th>
         <th><font size="5"><b>TOOLS</b></th>
@@ -78,12 +78,12 @@
     </table>
     <br />
     <br />
-    <div class="footer">
-        <p>Powered by <img src="{{MEDIA_URL}}img/ACIS-logo.png" alt="ACIS" width="90" height="30">&nbsp;&nbsp;
-        Created by <a href="http://www.wrcc.dri.edu/" target="_blank">>WRCC</a> &nbsp;&nbsp;
-        Hosted by <a href="http://www.dri.edu/" target="_blank"><img class="logo" src="{{ MEDIA_URL }}img/DRILogo.gif"></a></p>
-    </div>
 
+    <!-- Footer -->
+    <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+    </script>
 </div>
 </body>
 </html>

@@ -26,7 +26,13 @@
                         <td>{{field.label}}:</td>
                         <td>{{field}}</td>
                         <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
-                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                        {%ifequal field.label "Elements" %}
+                            <div class="pop-up"> 
+                            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0">
+                            </div>
+                        {%else%}
+                            <div class="pop-up"><p>{{field.help_text}}</p></div>
+                        {%endifequal%} 
                         </td>
                     </tr>
                     {%if field.errors%}
@@ -50,8 +56,13 @@
                 <tr>
                     <td>{{field.label}}:</td>
                     <td>{{field}}</td>                    
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                    
-                    <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                                       {%ifequal field.label "Elements" %}
+                        <div class="pop-up" onClick="ShowHide(this)">
+                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0">
+                        </div>
+                    {%else%}
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    {%endifequal%}
                     </td>
                 </tr>
                 {%if field.errors%}
@@ -212,9 +223,15 @@
                     {{results.stn_data|lookup:stn}}                    
                 {%endif%}
             {%endfor%}
-        {%endif%} 
-    </div>
+        {%endif%}
 
+  <!-- Footer -->
+  <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-sw-ckn");
+    </script>
+ 
+    </div>
 </div>
 
 {%endblock%}

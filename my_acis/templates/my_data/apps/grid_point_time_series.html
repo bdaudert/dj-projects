@@ -119,8 +119,14 @@
         </script>
 
         <!--<a href="#"  onClick="initialize_grid_point_map()">Find your Latitude and Longitude here!</a>-->
-
     </div>
+
+  <!-- Footer -->
+  <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+    </script>
+
 </div>
 
 {%endblock%}
