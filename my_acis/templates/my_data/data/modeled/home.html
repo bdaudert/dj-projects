@@ -14,7 +14,8 @@
 <div class="container">
     <h2>ACIS Gridded Data</h2>
     <div class="major-left">
-        {%if not form3_grid_ready%}
+        {%if not form3_grid_ready %}
+        {%if not hide_form_0 %}
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -40,6 +41,7 @@
             <input type="submit" value="Select" name="form0_grid"/>
             </form>
         </div>
+        {%endif%}
 
         {%if form1_grid_ready%}
         <div id="form1">
@@ -53,7 +55,13 @@
                     <td>{{field.label}}:</td>
                     <td>{{field}}</td>                                                            
                     <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
-                    <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    {%ifequal field.label "Elements" %}
+                        <div class="pop-up">
+                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0">
+                        </div>
+                    {%else%}
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    {%endifequal%}
                     </td>
                 </tr>
                 {%if field.errors%}
@@ -140,16 +148,16 @@
         </div>
 
         {%if location%}
-            <p class="error">Hit "select". Getting data for:</p>
+            <p class="error">You chose:</p>
             <p class="error">Lat, Lon: {{location}}</p>
         {%endif%}
         {%if state%}
-            <p class="error">Hit "select". Getting data for:</p>
-            <p class="error">State: {{State}}</p>
+            <p class="error">You chose:</p>
+            <p class="error">State: {{state}}</p>
         {%endif%}
-        {%if bounding_box%}
-            <p class="error">Hit "select". Getting data for:</p>
-            <p class="error">Bounding Box: {{bounding_box}}</p>
+        {%if bbox%}
+            <p class="error">You chose:</p>
+            <p class="error">Bounding Box: {{bbox}}</p>
         {%endif%}
        {%if start_date%}
             <p class="error">ACIS Elements: {{elements}}</p>
@@ -170,6 +178,19 @@
        {%if user_info%}
             <p class="error">{{user_info}}</p>
         {%endif%}
+
+    {%if need_map%}
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+        <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
+        <input type="hidden" id="center_lat" name="center_lat" value={{center_lat}}>
+        <input type="hidden" id="center_lon" name="center_lon" value={{center_lon}}>
+        <input type="hidden" id="zoom_level" name="zoom_level" value="5">
+        <input type="hidden" id="app" name="app" value="grid_data">
+        <div id="map" style="width: 100%; height:400px;"></div>
+        <script type="text/javascript">
+            initialize_grid_point_map()
+        </script>
+    {%endif%} 
 
         {% if form3_grid_ready%}
             <div id='form3'>

@@ -25,6 +25,11 @@ h1, h2, h3, h4, h5 {
     color:#006666;
 }
 
+h1.brown, h2.brown, h3.brown, h4.brown, h5.brown {
+    /*color:#947e6e;*/
+    color:#800000;
+}
+
 a:link { color: #3300CC; }
 /*a:visited { color: #660099; }*/
 a:hover {
@@ -131,7 +136,7 @@ ul.navbar a {
   width:100%;
   background-color:#F1C2A0;
   text-decoration:none;
-  z-index:20;
+  /*z-index:20;*/
 }
 
 div.pop-up {
@@ -142,7 +147,7 @@ div.pop-up {
   background: #DCA978;
   border: 2px solid #006666;
   font-size: 90%;
-  z-index:100;
+  z-index:10;
 }
 
 .docu {
@@ -294,7 +299,7 @@ img.sidebar {
 
 img.map {
     width: 250px;
-    height:178px;
+    height:177px;
     position: absolute;
     top: 0;
     right:0;
@@ -321,7 +326,7 @@ img.person {
 
 img.logo {
     width: 70px;
-    height:40px;
+    height:30px;
 }
 
 img.center {
@@ -355,6 +360,7 @@ img.center {
     color: #660000;
     font-weight:bold;
     position:relative;
+    z-index:10;
 }
 .breadcrumbs li {
     list-style: none;

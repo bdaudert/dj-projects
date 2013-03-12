@@ -375,64 +375,47 @@ def data_modeled(request):
         'data_page':True
     }
 
-    initial_0 = {}
-    select_grid_by = request.GET.get('select_grid_by', None)
     elements = request.GET.get('elements', None)
     start_date = request.GET.get('start_date', None)
     end_date = request.GET.get('end_date', None)
     elements = request.GET.get('elements', None)
-    bounding_box = request.GET.get('bounding_box', None)
+    bbox = request.GET.get('bbox', None)
     state = request.GET.get('state', None)
     loc = request.GET.get('loc', None)
     grid = request.GET.get('grid', None)
-    if select_grid_by is not None:initial_0['select_grid_by'] = select_grid_by
-    if elements is not None:initial_0['elements'] = str(elements);context['elements'] = elements
-    if start_date is not None:context['start_date'] = start_date
-    if end_date is not None:context['end_date'] = end_date
-    if bounding_box is not None:context['bounding_box'] = bounding_box
-    if state is not None:context['state'] = state
-    if loc is not None:context['location'] = loc
-    if initial_0:
-        form0_grid = set_as_form(request,'GridDataForm0', init=initial_0)
+    initial_1 = {}
+    if start_date is not None:context['start_date'] = start_date;initial_1['start_date'] = start_date
+    if end_date is not None:context['end_date'] = end_date;initial_1['end_date'] = end_date
+    if bbox is not None:
+        context['bbox'] = bbox;initial_1['bounding_box'] = bbox
+        context['select_grid_by'] = 'bbox';initial_1['select_grid_by'] = 'bbox'
+    if state is not None:
+        context['state'] = state;initial_1['state'] = state
+        context['select_grid_by'] = 'state';initial_1['select_grid_by'] = 'state'
+    if loc is not None:
+        context['location'] = loc;initial_1['location'] = loc
+        context['select_grid_by'] = 'point';initial_1['select_grid_by'] = 'point'
+    if elements is not None:context['elements'] = elements;initial_1['elements'] = elements
+    if loc is not None or state is not None or bbox is not None:
+        context['hide_form_0'] = True
+        context['form1_grid_ready'] = True
+        form1_grid = forms.GridDataForm1(initial=initial_1)
+        context['form1_grid'] = form1_grid
     else:
         form0_grid = set_as_form(request,'GridDataForm0')
-    context['form0_grid'] = form0_grid
+        context['form0_grid'] = form0_grid
+
     if 'form0_grid' in request.POST:
-        #form0_grid = set_as_form(request,'GridDataForm0')
-        #context['form0_grid']  = form0_grid
         if form0_grid.is_valid():
             context['form1_grid_ready'] = True
-            select_grid_by = request.GET.get('select_grid_by', None)
-            start_date = request.GET.get('start_date', None)
-            end_date = request.GET.get('end_date', None)
-            elements = request.GET.get('elements', None)
-            bounding_box = request.GET.get('bounding_box', None)
-            state = request.GET.get('state', None)
-            loc = request.GET.get('loc', None)
-            grid = request.GET.get('grid', None)
-            initial_1 = {}
-            if elements is not None:context['elements'] = elements
-            if start_date is not None:initial_1['start_date'] = start_date;context['start_date'] = start_date
-            if end_date is not None:initial_1['end_date'] = end_date;context['end_date'] = end_date
-            if bounding_box is not None:initial_1['bounding_box'] = bounding_box;context['bounding_box'] = bounding_box
-            if state is not None:initial_1['state'] = state;context['state'] = state
-            if loc is not None:initial_1['location'] = loc;context['location'] = loc
-            if select_grid_by is None:
-                initial_1['select_grid_by'] = form0_grid.cleaned_data['select_grid_by']
-            else:
-                initial_1['select_grid_by'] = select_grid_by
-            if elements is None:
-                initial_1['elements'] = form0_grid.cleaned_data['elements']
-            else:
-                initial_1['elements'] = elements
-            initial_1['data_format']  = form0_grid.cleaned_data['data_format']
+            initial_1 = {'select_grid_by':form0_grid.cleaned_data['select_grid_by']}
+            if initial_1['select_grid_by'] == 'point':
+                context['need_map'] = True
+                if loc is not None:
+                    context['center_lat'] = loc.split(',')[0]; context['center_lon'] = loc.split(',')[1]
+                else:
+                    context['center_lat'] = '39.8282'; context['center_lon'] = '-98.5795'
 
-            '''
-            initial_1 = {'select_grid_by':form0_grid.cleaned_data['select_grid_by'], \
-                      'elements':form0_grid.cleaned_data['elements'], \
-                      'data_format':form0_grid.cleaned_data['data_format']}
-            '''
-            context['initial_1'] = initial_1
             form1_grid = forms.GridDataForm1(initial=initial_1)
             context['form1_grid'] = form1_grid
 
@@ -891,15 +874,17 @@ def grid_point_time_series(request):
     }
     lat = request.GET.get('lat', None)
     lon = request.GET.get('lon', None)
-    context['lat'] = lat
 
 
     if lat is not None and lon is not None:
         form0 = set_as_form(request,'GPTimeSeriesForm', init={'lat':str(lat), 'lon':str(lon)})
         context['form0'] = form0
+        context['center_lat'] = str(lat); context['center_lon'] = str(lon)
+        context['lat'] = lat;context['lon'] = lon
     else:
         form0 = set_as_form(request,'GPTimeSeriesForm')
         context['form0'] = form0
+        context['center_lat'] = '39.8282'; context['center_lon'] = '-98.5795'
     if 'form0' in request.POST:
         form0 = set_as_form(request,'GPTimeSeriesForm')
         context['form0']  = form0

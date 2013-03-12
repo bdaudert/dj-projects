@@ -18,63 +18,31 @@
 <div class="container">
 
 <table border="1px solid #006666">
- <tr>   
-    <td>
-        <table>
-        <tr><td>
-            <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="popup_map"><img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="dash_img"></a>
-        </td></tr>
-        <tr><td>
-            <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="popup_map">Temperature Departure</a>
-        </td></tr>   
-        <tr><td>
-            <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="popup_map"><img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="dash_img"></a>
-        </td></tr>
-        <tr><td>
-            <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="popup_map">% of Normal Precipitation</a> 
-        </td></tr>
-        <tr><td> 
-            <a href="http://www.wrcc.dri.edu/anom/" target="_blank">&rarr; More anomaly maps</a>
-        </td></tr>
-        <tr><td>
-            <a href="http://www.weather.gov/" target="_blank"><img src="{{ MEDIA_URL }}img/NatHazard.png" class="dash_img"></a>
-        </td></tr>
-        <tr><td> 
-            <a href="http://www.weather.gov/" target="_blank">NWS Current Weather in the US</a>
-        </td></tr>
-        <tr><td>
-            <a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" target="_blank"><img src="http://radar.weather.gov/ridge/Conus/Loop/pacsouthwest_loop.gif" class="dash_img"></a>
-        </td></tr>
-        <tr><td> 
-            <a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" target="_blank">Pacific Southwest Radar Mosaic</a>
-        </td></tr>
-        </table>
+ <tr>
+    <!--Left Column: Weather/Climate in the Southwest-->
+    <td valign="top">
     </td>
-    <td>
-     <table>
-     <!-- Try two grid point map center piece-->
-     <tr><td>
-        <h1>Drag and click!</h1>
-        <h2>Data set: NRCC Interpolated in ACIS</h2>
-        <a  target="_blank" href="https://gist.github.com/4197956">Information on NRCC interpolated, NRCC Hi-Res data sets</a>
-        <br />
-      </td></tr>
-      <tr><td>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-        <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
-        <input type="hidden" id="center_lat" name="center_lat" value="39.8282">
-        <input type="hidden" id="center_lon" name="center_lon" value="-98.5795">
-        <input type="hidden" id="zoom_level" name="zoom_level" value="5">
+    <td valign="top">
+     <!--Center Column: grid point map-->
+    <h1>Drag and click!</h1>
+    <h2>Data set: NRCC Interpolated in ACIS</h2>
+    <a  target="_blank" href="https://gist.github.com/4197956">Information on NRCC interpolated, NRCC Hi-Res data sets</a>
+    <br />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+    <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
+    <input type="hidden" id="center_lat" name="center_lat" value="39.8282">
+    <input type="hidden" id="center_lon" name="center_lon" value="-98.5795">
+    <input type="hidden" id="zoom_level" name="zoom_level" value="5">
 
-        <div id="map" style="width:700px; height:500px;"></div>
-
-        <script type="text/javascript">
-            initialize_grid_point_map()
-        </script>
- 
-      </td></tr>
-    </table>
-</td></tr>
+    <div id="map" style="width:700px; height:500px;"></div>
+    <script type="text/javascript">
+        initialize_grid_point_map()
+    </script>
+    </td>
+    <!--Right Column: On Climate Change-->
+    <td valign="top">
+    </td>
+  </tr>
 </table>
 
   <!-- Footer -->

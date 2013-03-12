@@ -120,14 +120,14 @@
         {%if figure_file%}
 
             {%if state%}
-            <a href="{{URL_PREFIX}}sw_ckn/data/modeled/?grid_selection={{grid_selection}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}">Get raw data behind this graphic here!</a>
+            <a target="_blank" href="{{URL_PREFIX}}sw_ckn/data/modeled/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}">Get raw data behind this graphic here!</a>
             <br />
             <br />
             <p>GridACIS Map for State: <b>{{state}}</b></p>
             {%endif%}
 
             {%if bounding_box%}
-            <a href="{{URL_PREFIX}}sw_ckn/data/modeled/?grid_selection={{grid_selection}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bounding_box={{bounding_box}}">Get raw data behind this graphic here!</a>
+            <a target="_blank" href="{{URL_PREFIX}}sw_ckn/data/modeled/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bbox={{bounding_box}}">Get raw data behind this graphic here!</a>
             <br />
             <br />
             <p>GridACIS Map for Bounding Box: <b>{{bounding_box}}</b></p>

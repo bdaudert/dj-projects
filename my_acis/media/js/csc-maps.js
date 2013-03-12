@@ -3,6 +3,9 @@ var base_dir = '/csc/sw_ckn/'
 
 function initialize_grid_point_map() {
     var map;
+    // Since this map is used in multiple locations in slightly
+    //different ways, we need to specify the app. possible values: gp_ts,grid_data 
+    var app = document.getElementById("app").value; // Since this map is used in multiple locations
     var center_lat = document.getElementById("center_lat").value;
     var center_lon = document.getElementById("center_lon").value;
     var zoom_level = document.getElementById("zoom_level").value;
@@ -27,16 +30,23 @@ function initialize_grid_point_map() {
 
     google.maps.event.addListener(marker, 'click', function (event) {
         infowindow.close();
+        if (app == 'gp_ts'){
+            var href = base_dir +'apps/grid_point_time_series/?lat=' +
+                   event.latLng.lat() + '&lon=' + event.latLng.lng()
+        }
+        else if (app == 'grid_data'){
+            var href = base_dir +'data/modeled/?loc=' +
+                   event.latLng.lat() + ',' + event.latLng.lng()
+        }
         var contentString = '<div id="MarkerWindow">'+
             '<p><b>Lat: </b>' + event.latLng.lat() + '<br/>'+
             '<b>Lon: </b>' + event.latLng.lng() + '<br/>' +
-            '<a href="'+ base_dir +'apps/grid_point_time_series/?lat=' +
-            event.latLng.lat() + '&lon=' + event.latLng.lng() +
+            '<a href="'+ href +
             '">Use this location</a></div>';
         infowindow.setContent(contentString);
         infowindow.open(map, marker);
-        document.getElementById("latbox").value = event.latLng.lat();
-        document.getElementById("lonbox").value = event.latLng.lng();
+        document.getElementById("center_lat").value = event.latLng.lat();
+        document.getElementById("center_lon").value = event.latLng.lng();
         myLatlng = google.maps.LatLng(event.latLng.lat(),event.latLng.lng());
     });
 }//close initialize_grid_point_map

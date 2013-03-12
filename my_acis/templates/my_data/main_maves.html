@@ -20,15 +20,19 @@
     <tr>
     <td valign="top">
     <!--<div class="center-left">-->
-    <h2><font color="magenta">Current Weather and<br />Climate in the West</font></h2>
+    <h2 class="brown">Current Weather and<br />Climate in the West</h2>
     <!-- Left column: links to Current Weather/Climate -->
         <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="popup_map"><img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="dash_img"></a><br />
         <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dTvdep.gif" class="popup_map">Temperature Departure</a><br />
         <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="popup_map"><img alt="Climate map" src="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="dash_img"></a><br />
         <a href="http://www.wrcc.dri.edu/cgi-bin/anomimage.pl?wrc30dPpct.gif" class="popup_map">% of Normal Precipitation</a><br /> 
         <a href="http://www.wrcc.dri.edu/anom/" target="_blank">&rarr; More anomaly maps</a><br />
+        <a href="http://www.wrh.noaa.gov/" target="_blank"><img src="{{ MEDIA_URL }}img/NWS_SW.png" class="dash_img"></a><br />
+        <a href="http://www.wrh.noaa.gov/" target="_blank">NWS Current Weather in the West</a><br />
+        <!--
         <a href="http://www.weather.gov/" target="_blank"><img src="{{ MEDIA_URL }}img/NatHazard.png" class="dash_img"></a><br />
         <a href="http://www.weather.gov/" target="_blank">NWS Current Weather in the US</a><br />
+        -->
         <a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" target="_blank"><img src="http://radar.weather.gov/ridge/Conus/Loop/pacsouthwest_loop.gif" class="dash_img"></a><br />
         <a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" target="_blank">Pacific Southwest Radar Mosaic</a>
     </td>
@@ -36,8 +40,8 @@
     <!--<div class="center">-->
         <!--Center Column: State Averages Highcharts graph-->
          <!-- Try one Average Temps for State tool as scenter piece-->
-            <h1><font color="magenta">Means for {{state}} since 1950</font></h1>
-            <h2>With 9Year Running Mean</h2>
+            <h1 class="brown">Means for {{state}} since 1950</h1>
+            <h2 >With 9Year Running Mean</h2>
             <h2>Data set: NRCC Interpolated in ACIS</h2>
             <a  target="_blank" href="https://gist.github.com/4197956">Information on NRCC interpolated, NRCC Hi-Res data sets</a>
             <br /><br />
@@ -73,7 +77,8 @@
     <!--Third Column: Other links -->
     <!--<div class="center-right">-->
     <td valign="top">
-        <h2><font color="magenta">Read up on the latest<br />in Climate Change</font></h2>
+        <h2 class="brown">Read up on the latest<br />in Climate Change</h2>
+        <a href="http://www.climate.gov/#climateWatch" target="_blank">NOAA Climate Portal</a><br />
         <a href="https://nccwsc.usgs.gov/" target="_blank">USGS National Climate Change and Wildlife Center</a><br />
         <!--<a href="https://nccwsc.usgs.gov/" target="_blank"><img alt="USGS" src="{{MEDIA_URL}}img/ClimChangeUSGS.png" class="dash_img"></a><br />-->
         <a href="http://www.southwestclimatechange.org" target="_blank">Southwest Climate Change Network</a><br />

@@ -398,32 +398,27 @@ class PointDataForm3(forms.Form):
 
 class GridDataForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=select_grid_by_CHOICES, required=False, initial='point', help_text='Area defining gridpoints of interest.')
-        elements =forms.CharField(initial ='maxt,mint,avgt', required=True, help_text=HELP_TEXTS['comma_elements'])
-        data_format = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', required=False, help_text='Delimiter used to seperate data values.')
+        #elements =forms.CharField(initial ='maxt,mint,avgt', required=True, help_text=HELP_TEXTS['comma_elements'])
+        #data_format = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', required=False, help_text='Delimiter used to seperate data values.')
 
 class GridDataForm1(forms.Form):
     def __init__(self, *args, **kwargs):
         select_grid_by = kwargs.get('initial', {}).get('select_grid_by', None)
-        elements = kwargs.get('initial', {}).get('elements', [])
-        data_format =  kwargs.get('initial', {}).get('data_format', None)
         super(GridDataForm1, self).__init__(*args, **kwargs)
 
-        if select_grid_by is None:
-            select_grid_by = self.data.get('select_grid_by')
-        if elements is []:
-            elements = self.data.get('elements')
-        if data_format is None:
-            data_format = self.data.get('data_format')
-
+        if select_grid_by is None:select_grid_by = self.data.get('select_grid_by')
         if select_grid_by == 'point':
             self.fields['location'] = forms.CharField(initial="-77.7,41.8", help_text='Gridpoint coordinates: latitude, longitude.')
         elif select_grid_by == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='US state abbreviation.')
         elif select_grid_by == 'bbox':
             self.fields['bounding_box'] = BBoxField(initial='-90,40,-88,41', help_text='Bounding boxcoordinates: West, South, East, North.')
+        else:
+            self.fields['bounding_box'] = BBoxField(initial='-90,40,-88,41', help_text='Bounding boxcoordinates: West, South, East, North.')
 
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text='Area defining gridpoints of interest.')
-        self.fields['elements'] = MultiElementField(initial=elements,widget=forms.HiddenInput(), help_text=HELP_TEXTS['comma_elements'])
+        #self.fields['elements'] = MultiElementField(initial=elements,widget=forms.HiddenInput(), help_text=HELP_TEXTS['comma_elements'])
+        self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
         '''
         for element in elements:
             if element == 'cddxx':
@@ -436,9 +431,8 @@ class GridDataForm1(forms.Form):
         self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin, help_text=HELP_TEXTS['date'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=today, help_text=HELP_TEXTS['date'])
         self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
-        self.fields['data_format'] = forms.CharField(initial=data_format, widget=forms.HiddenInput(), help_text='Defines format in which data will be returned.')
-        if data_format in ['dlm', 'html']:
-            self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
+        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text='Defines format in which data will be returned.')
+        self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
 class GridDataForm3(forms.Form):
     def __init__(self, *args, **kwargs):

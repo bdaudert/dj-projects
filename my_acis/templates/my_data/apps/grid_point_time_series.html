@@ -15,10 +15,10 @@
     <div class="major-left">
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
         <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
-        <input type="hidden" id="center_lat" name="center_lat" value="39.8282">
-        <input type="hidden" id="center_lon" name="center_lon" value="-98.5795">
+        <input type="hidden" id="center_lat" name="center_lat" value={{center_lat}}>
+        <input type="hidden" id="center_lon" name="center_lon" value={{center_lon}}>
         <input type="hidden" id="zoom_level" name="zoom_level" value="5">
-
+        <input type="hidden" id="app" name="app" value="gp_ts">
 
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
@@ -93,7 +93,7 @@
         {%else%}
           {%if datadict%}
 
-            <a href="{{URL_PREFIX}}sw_ckn/data/modeled/?grid_selection={{grid_selection}}&start_date={{s_date}}&end_date={{e_date}}&elements={{elems}}&grid={{grid}}&loc={{lon}},{{lat}}">Get raw data  behind this graphic here!</a>
+            <a href="{{URL_PREFIX}}sw_ckn/data/modeled/?start_date={{s_date}}&end_date={{e_date}}&elements={{elems}}&grid={{grid}}&loc={{lon}},{{lat}}">Get raw data  behind this graphic here!</a>
             <br />
             {{start_date}}
             {{end_date}}
@@ -113,20 +113,20 @@
         {%endif%}
 
         <div id="map" style="width: 100%; height:400px;"></div>
-
         <script type="text/javascript">
             initialize_grid_point_map()
         </script>
 
         <!--<a href="#"  onClick="initialize_grid_point_map()">Find your Latitude and Longitude here!</a>-->
+        <br />
+        <!-- Footer -->
+        <div id="footer" align="center"></div>
+        <script type="text/javascript">                        
+        $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+        </script>
+        </div>
+    
     </div>
-
-  <!-- Footer -->
-  <div id="footer" align="center"></div>
-    <script type="text/javascript">                        
-    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
-    </script>
-
 </div>
 
 {%endblock%}
