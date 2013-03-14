@@ -17,27 +17,27 @@ $(function () {
             var end = datadict.year_list.slice(-1)[0] + ',' + mon + ','  + day;
             if (element == 'avgt'){
                 var data = datadict.avgt;
-                var Element = 'Mean Average Temperature';
+                var Element = 'Mean Average Temperature (F)';
                 }
             else if (element == 'pcpn'){
                 var data = datadict.pcpn;
-                var Element = 'Mean Precipitaion';            
+                var Element = 'Mean Precipitaion (In)';            
                 }
             else if (element == 'maxt'){
                 var data = datadict.maxt;
-                var Element = 'Mean Maximum Temperature';
+                var Element = 'Mean Maximum Temperature (F)';
                 }
             else if (element == 'mint'){
                 var data = datadict.mint;
-                var Element = 'Mean Minumum Temperature';
+                var Element = 'Mean Minumum Temperature (F)';
                 }
             else if (element == 'snow'){
                 var data = datadict.pcpn;
-                var Element = 'Snow Fall';
+                var Element = 'Snow Fall (In)';
                 } 
             else if (element == 'snwd'){
                 var data = datadict.snwd;
-                var Element = 'Snow Depth';
+                var Element = 'Snow Depth (In)';
                 }
             var dates = datadict.year_list;
             // create the master chart
@@ -131,7 +131,7 @@ $(function () {
                             enabled: false
                         },
                         title: {
-                            text: null
+                            text: Element
                         },
                         showFirstLabel: false
                     },
@@ -243,7 +243,7 @@ $(function () {
                     },
                     yAxis: {
                         title: {
-                            text: null
+                            text: Element
                         },
                         maxZoom: 0.1
                     },

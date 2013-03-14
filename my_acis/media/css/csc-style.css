@@ -13,6 +13,7 @@ body {
     height: 100%;
     margin: 0px auto;
     padding: 0;
+    font:14px "Lucida Grande", Lucida, Verdana, sans-serif;
 }
 
 p, ul, ol, li {
@@ -25,7 +26,7 @@ h1, h2, h3, h4, h5 {
     color:#006666;
 }
 
-h1.brown, h2.brown, h3.brown, h4.brown, h5.brown {
+.brown {
     /*color:#947e6e;*/
     color:#800000;
 }
@@ -156,6 +157,15 @@ div.pop-up {
     top:20px;
 }
 
+#qmark {
+ text-align="center"
+ width:45px;
+ height:45px;
+ background:#FF007F;
+}
+
+
+
 #docu_long {
     display:none;
     float:center;
@@ -168,7 +178,8 @@ div.pop-up {
 
 
 .error {
-    color:#FF0000;
+    /*color:#FF0000;*/
+    color:#FF007F;
     font-size:large;
 }
   
@@ -194,7 +205,7 @@ div.pop-up {
     text-align:center;
     height:1000px;
     width:50%;
-    border: 2px solid #006666;
+    /*border: 2px solid #006666;*/
     /*background-color:#DCA978;*/
 }
 
@@ -261,7 +272,7 @@ div.pop-up {
     color: #009999;
     border: none;
     background: none;
-    font-family: 'Arial',sans-serif;
+    font-family: 'Verdana',sans-serif;
     margin: 0em;
 }
 
@@ -269,8 +280,8 @@ div.pop-up {
     position: absolute;
     top: 0;
     left: 0;
-    width:100px;
-    height: 80px;
+    width:275px;
+    height: 75px;
 }
 
 img.icon {
@@ -283,14 +294,6 @@ img.icon_small {
         height:15px;
 }
 
-img.nature {
-    width: 250px;
-    height:150px;
-    position: absolute;
-    top: 0; 
-    right: 0;
-}    
-
 img.sidebar {
     width: 90%;
     height:150px;
@@ -299,7 +302,7 @@ img.sidebar {
 
 img.map {
     width: 250px;
-    height:177px;
+    height:165px;
     position: absolute;
     top: 0;
     right:0;
@@ -441,7 +444,7 @@ img.center {
 
 .searchbox {
     position:absolute;
-    top:190px;
+    top:185px;
     right:0;
 
 }
@@ -492,13 +495,14 @@ img.center {
 
 }
 
+/*
 #MarkerWindow {
     padding:0px 0px 0px 0px;
     margin:0px 0px 0px 0px;
-    /*background-color:#FFEBCD;*/
     font-family: 'Georgia',serif;
     font-size:1;
 }
+*/
 
 /*JS puzzle, maybe temporary*/
 

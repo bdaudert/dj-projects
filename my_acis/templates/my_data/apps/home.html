@@ -17,18 +17,18 @@
             <h3>Historic Station Data Applications</h3>
         
             <ul class="navbar">    
-                <h2 align="center"><p id="sw_us">Southwest US Applications</p></h2>
+                <h2 align="center"><p id="us_wide">Southwest US Applications</p></h2>
                 <table>
                     <tr><td>
-                    <a id="sw_us" href="http://www.wrcc.dri.edu/monitor/cal-mon/frames_version.html" class="trigger" target="_blank">California Climate Tracker(<font color="red">CA</font>)</a>
+                    <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/cal-mon/frames_version.html" class="trigger" target="_blank">California Climate Tracker(<font color="red">CA</font>)</a>
                     <div class="pop-up">
                         <p><font size="4"></font>Tracking Climate Variability and Change for the state of California.</p>
                     </div>
                     </td><td>
-                    <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_CalTracker')">
+                    <div id="qmark" ><img src="{{ MEDIA_URL }}img/QMark.png" width="20" height="20" onclick="ShowHide('Docu_CalTracker');changeBackgroundColor('qmark')">
                     </td></tr>
                     <tr><td>                    
-                    <a id="sw_us" href="http://www.wrcc.dri.edu/monitor/nev-mon/index.html" class="trigger" target="_blank">Nevada Climate Tracker(<font color="red">NV</font>)</a>
+                    <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/nev-mon/index.html" class="trigger" target="_blank">Nevada Climate Tracker(<font color="red">NV</font>)</a>
                     <div class="pop-up">                        
                     <p><font size="4"></font>Tracking Climate Variability and Change for the state of Nevada.</p>
                     </div>
@@ -133,11 +133,9 @@
         </div>
 
         <div class="center">
-            <p class="error">Hover over the application name to get a brief description of the tool.
-Click the question mark next to the application to get more/less detail.</p>
 
             <!-- Application documentation -->
-            <div class="docu" id="Docu_CalTracker" style="display:none;"></div>
+            <div class="docu" id="Docu_CalTracker" style="display:block;"></div>
                 <script type="text/javascript">                        
                 $("#Docu_CalTracker").load("{{MEDIA_URL}}html/commons.html #Docu_CalTracker");
                 </script>
@@ -220,10 +218,10 @@ Click the question mark next to the application to get more/less detail.</p>
            <h3>Gridded/Modeled Data Applications</h3>
             <ul class="navbar">
 
-            <h2 align="center"><p id="sw_us">Southwest US Applications</p></h2>
+            <h2 align="center"><p id="us_wide">Southwest US Applications</p></h2>
             <table>
                 <tr><td>
-                <a id="sw_us" href="http://www.wrcc.dri.edu/monitor/cal-mon/frames_version.html" class="trigger" target="_blank">California Climate Tracker(<font color="red">CA</font>)</a>
+                <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/cal-mon/frames_version.html" class="trigger" target="_blank">California Climate Tracker(<font color="red">CA</font>)</a>
                 <div class="pop-up">
                     <p><font size="4"></font>Tracking Climate Variability and Change for the state of California.</p>
                 </div>
@@ -231,14 +229,14 @@ Click the question mark next to the application to get more/less detail.</p>
                 <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_CalTracker')">
                 </td></tr>
                 <tr><td>
-                <a id="sw_us" href="http://www.wrcc.dri.edu/monitor/nev-mon/index.html" class="trigger" target="_blank">Nevada Climate Tracker(<font color="red">NV</font>)</a>
+                <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/nev-mon/index.html" class="trigger" target="_blank">Nevada Climate Tracker(<font color="red">NV</font>)</a>
                 <div class="pop-up">
                 <p><font size="4"></font>Tracking Climate Variability and Change for the state of Nevada.</p>
                 </div>
                 </td><td>
                 <img src="{{ MEDIA_URL }}img/FaceQMark.jpg" width="15" height="15" onclick="ShowHide('Docu_NevTracker')">
                 </td></tr>
-                <tr><td><a id="sw_us" target="_blank" href="http://www.cefa.dri.edu/Westmap/" class="trigger">Westmap</a>
+                <tr><td><a id="us_wide" target="_blank" href="http://www.cefa.dri.edu/Westmap/" class="trigger">Westmap</a>
                 <div class="pop-up">
                     <p><font size="4">Climate Analysis and Mapping Tool.</font></p>
                 </div>

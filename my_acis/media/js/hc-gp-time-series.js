@@ -45,7 +45,7 @@ $(function () {
                 },
                 yAxis: {
                     title: {
-                        text: element
+                        text: element_long
                     },
                     startOnTick: false,
                     showFirstLabel: false

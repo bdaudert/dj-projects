@@ -205,9 +205,6 @@ def data_historic(request):
     context['form0_point'] = form0_point
 
     if 'form0_point' in request.POST or stn_id is not None:
-        #form0_point = set_as_form(request,'PointDataForm0')
-        #context['form0_point']  = form0_point
-
         if form0_point.is_valid() or stn_id is not None:
             context['form1_point_ready'] = True
             initial_params_1 = {}
@@ -219,8 +216,6 @@ def data_historic(request):
             if start_date is not None:initial_params_1['start_date'] = str(start_date);context['start_date'] = start_date
             if end_date is not None:initial_params_1['end_date'] = str(end_date);context['end_date'] = end_date
             if elements is not None:initial_params_1['elements'] = elements;context['elements'] = elements
-            #initial_params_1['elements'] = form0_point.cleaned_data['elements']
-            #initial_params_1['data_format'] = form0_point.cleaned_data['data_format']
             if stn_id is not None:
                 initial_params_1['select_stations_by'] = 'stn_id'
             else:
@@ -257,8 +252,7 @@ def data_historic(request):
                 e_date = datetime.date(int(form1_point.cleaned_data['end_date'][0:4]), int(form1_point.cleaned_data['end_date'][4:6]),int(form1_point.cleaned_data['end_date'][6:8]))
             days = (e_date - s_date).days
             #if time range > 1 year or user requests data for more than 1 station, large request via ftp
-            if days > 366:
-            #if days > 31 or 'station_id' not in form1_point.cleaned_data.keys():
+            if days > 366 and 'station_id' not in form1_point.cleaned_data.keys():
                 context['form3_point_ready'] = True
                 context['large_request'] = 'You requested a large amount of data.Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
                 initial_params_2 = form1_point.cleaned_data
@@ -270,27 +264,9 @@ def data_historic(request):
                 context['form3_point'] = form3_point
                 return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
             else:
-                '''
-                (data, dates, elements, station_ids, station_names, errors) = AcisWS.get_point_data(form1_point.cleaned_data, 'sodlist_web')
-                context['stn_errors'] = errors
-                context['stn_data'] = dict(data)
-                context['elements'] =  elements
-                context['stn_names'] = station_names
-                context['stn_ids'] = station_ids
-                context['dates'] = dates
-                '''
                 resultsdict = AcisWS.get_point_data(form1_point.cleaned_data, 'sodlist_web')
                 context['results'] = resultsdict
                 context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
-                '''
-                conext['errors'] = resultsdict['errors']
-                context['stn_errors'] = resultsdict['stn_errors']
-                context['stn_data'] = dict(resultsdict['stn_data'])
-                context['elements'] =  resultsdict['elements']
-                context['stn_names'] = resultsdict['stn_names']
-                context['stn_ids'] = resultsdict['stn_ids']
-                context['dates'] = resultsdict['dates']
-                '''
                 if 'delimiter' in form1_point.cleaned_data.keys():
                     if str(form1_point.cleaned_data['delimiter']) == 'comma':delimiter = ','
                     if str(form1_point.cleaned_data['delimiter']) == 'tab':delimiter = '  '
@@ -340,11 +316,6 @@ def data_historic(request):
                     return WRCCUtils.write_point_data_to_file(data, dates, station_names, station_ids, elements,delimiter, 'xls', request=request, file_info=file_info)
                 else:
                     return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
-            #form1_point not valid or form1_point valid and we are done with computation
-            #needed to show validation error in form1_point
-            #form1_point = set_as_form(request,'PointDataForm1')
-            #context['form1_point'] = form1_point
-            #context['form1_point_ready'] = True
     if 'form3_point' in request.POST:
         form3_point = set_as_form(request,'PointDataForm3')
         context['form3_point'] = form3_point
@@ -947,12 +918,13 @@ def station_locator_app(request):
     form0 = set_as_form(request,'StationLocatorForm0')
     context['form0'] = form0
     context['empty_json'] = False
+    context['show_legend'] = True
 
     if 'form0' in request.POST:
         context['empty_json'] = True
         form0 = set_as_form(request,'StationLocatorForm0')
         context['form0']  = form0
-
+        context['show_legend'] = False
         if form0.is_valid():
             context['form1_ready'] = True
             initial_params= {}
@@ -1012,6 +984,7 @@ def station_locator_app(request):
             context['json_file'] = f_name
             context['empty_json'] = False
             context['form1_ready'] = False
+            context['show_legend'] = True
         #form1 = set_as_form(request,'StationLocatorForm1')
         #context['form1'] = form1
         #context['form1_ready'] = True

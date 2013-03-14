@@ -151,8 +151,8 @@
         <div id="docu_long"></div>
 
 
-
         {%if stn_id%}
+            <p class="error">Please make sure all parameters in the form on the left are correct before you <b>Submit</b> the data request. You chose:</p>
             <p class="error">Station ID: {{stn_id}}</p>
         {%endif%}
         {%if start_date%}
@@ -194,13 +194,11 @@
                 </form>
             </div>
         {%endif%}
-
         {%if results%}
             <p class="error">Results:</p>
             {%if results.errors%}
             <div class="error">Data Request could not be completed. The following error occurred: {{error}}</div>
             {%endif%}
-
             {%for stn in stn_idx%}
                 <h3>STATION NAME:</h3> 
                 <b>{{results.stn_names|lookup:stn|safe}}</b>

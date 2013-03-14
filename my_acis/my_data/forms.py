@@ -15,6 +15,7 @@ import WRCCUtils
 tdy = datetime.datetime.today() - datetime.timedelta(days=1)
 #Choose default start_date 4 weeks back
 b = datetime.datetime.today() - datetime.timedelta(days=14)
+y = datetime.datetime.today() - datetime.timedelta(days=1)
 yr = str(tdy.year)
 mon = str(tdy.month)
 day = str(tdy.day)
@@ -29,8 +30,16 @@ if len(mon_b) == 1:
     mon_b = '0%s' % mon_b
 if len(day_b) == 1:
     day_b = '0%s' % day_b
+yr_y = str(y.year)
+mon_y = str(y.month)
+day_y = str(y.day)
+if len(mon_y) == 1:
+    mon_y = '0%s' % mon_y
+if len(day_y) == 1:
+    day_y = '0%s' % day_y
 today = '%s%s%s' % (yr, mon, day)
 begin = '%s%s%s' % (yr_b, mon_b, day_b)
+yesterday = '%s%s%s' % (yr_y, mon_y, day_y)
 
 TIME_PERIOD_CHOICES = (
     ('custom', 'Custom Date Range'),
@@ -160,7 +169,7 @@ help_grids = 'Gridded/modeled datasets available in Acis. For more info, see "Ho
 help_stn_selection = 'Defines the type ofsearch area. For more info, see "How to use this tool"!'
 help_date = 'yyyymmdd'
 help_date_por = 'yyyymmdd or "por" (period of record) if single station.'
-
+help_lon_lat = 'Grid point coordinate pair: Longitude, Latitude'
 '''
 help_stn_selection = 'Individual Station:\n' + \
                      'Looks for single station. User will need to enter station ID \n' + \
@@ -183,7 +192,7 @@ help_stn_selection = 'Individual Station:\n' + \
                      'one of our applications, your station ID will be entered automatically. Leave this option as is.'
 '''
 HELP_TEXTS = {'select_stations_by': help_stn_selection, 'grids': help_grids, 'acis_elements':help_acis_elements, \
-            'comma_elements':help_comma_elements, 'date':help_date, 'date_por':help_date_por}
+            'comma_elements':help_comma_elements, 'date':help_date, 'date_por':help_date_por, 'grid_lon_lat':help_lon_lat }
 
 #Custom form fields
 class MyDateField(forms.CharField):
@@ -352,7 +361,7 @@ class PointDataForm1(forms.Form):
         '''
         self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial=begin, help_text=HELP_TEXTS['date_por'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=today, help_text=HELP_TEXTS['date_por'])
-        self.fields['data_format'] = forms.CharField(initial='html', widget=forms.HiddenInput(), help_text='Defines format in which data will be returned.')
+        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text='Defines format in which data will be returned.')
         self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
 class PointDataForm3(forms.Form):
@@ -408,7 +417,7 @@ class GridDataForm1(forms.Form):
 
         if select_grid_by is None:select_grid_by = self.data.get('select_grid_by')
         if select_grid_by == 'point':
-            self.fields['location'] = forms.CharField(initial="-77.7,41.8", help_text='Gridpoint coordinates: latitude, longitude.')
+            self.fields['location'] = forms.CharField(initial="-77.7,41.8", help_text=HELP_TEXTS['grid_lon_lat'])
         elif select_grid_by == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='US state abbreviation.')
         elif select_grid_by == 'bbox':
@@ -428,7 +437,10 @@ class GridDataForm1(forms.Form):
             if element == 'gddxx':
                 self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50, help_text='Base temperature used to calculate growing degree days.')
         '''
-        self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin, help_text=HELP_TEXTS['date'])
+        if select_grid_by == 'point':
+            self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin, help_text=HELP_TEXTS['date'])
+        else:
+            self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=yesterday, help_text=HELP_TEXTS['date'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=today, help_text=HELP_TEXTS['date'])
         self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text='Defines format in which data will be returned.')

@@ -31,7 +31,11 @@
             <input type="submit" value="Submit" name="form_meta"/>
             </form>
         </div>
-
+        {%if not stn_id %}
+            <p class="error">Looking for a particular station?</p>
+            <p class="error">Use our station finder!</p>
+            <a href="/csc/sw_ckn/station_finder/"><img class="dash_img" src="{{MEDIA_URL}}img/StationFinder.png"></a>
+    {%endif%}
     </div>
 
     <div class="center" style="border:none;background-color:X^H#947e6e;">

@@ -180,6 +180,7 @@
         {%endif%}
 
     {%if need_map%}
+        <p class="error">Drag and click the marker!</p>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
         <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
         <input type="hidden" id="center_lat" name="center_lat" value={{center_lat}}>
@@ -214,7 +215,7 @@
             </div>
         {%endif%}
 
-
+        {{delimiter}}, {{json}}
         {%if grid_data%}
             <br />
             <br />

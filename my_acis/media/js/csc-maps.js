@@ -1,6 +1,10 @@
 var MEDIA_URL = document.getElementById("MEDIA_URL").value;
 var base_dir = '/csc/sw_ckn/'
 
+function precise_round(num,decimals){
+return Math.round(num*Math.pow(10,decimals))/Math.pow(10,decimals);
+}
+
 function initialize_grid_point_map() {
     var map;
     // Since this map is used in multiple locations in slightly
@@ -30,6 +34,27 @@ function initialize_grid_point_map() {
 
     google.maps.event.addListener(marker, 'click', function (event) {
         infowindow.close();
+        var lat = precise_round(event.latLng.lat(),2);
+        var lon = precise_round(event.latLng.lng(),2);
+        if (app == 'gp_ts'){
+            var href = base_dir +'apps/grid_point_time_series/?lat=' +
+                   lat + '&lon=' + lon
+        }
+        else if (app == 'grid_data'){
+            var href = base_dir +'data/modeled/?loc=' +
+                   lon + ',' + lat
+        }
+        var contentString = '<div id="MarkerWindow">'+
+            '<p><b>Lat: </b>' + lat + '<br/>'+
+            '<b>Lon: </b>' + lon + '<br/>' +
+            '<a href="'+ href +
+            '">Use this location</a></div>';
+        infowindow.setContent(contentString);
+        infowindow.open(map, marker);
+        document.getElementById("center_lat").value = lat;
+        document.getElementById("center_lon").value = lon;
+        myLatlng = google.maps.LatLng(lat,lon);
+        /*
         if (app == 'gp_ts'){
             var href = base_dir +'apps/grid_point_time_series/?lat=' +
                    event.latLng.lat() + '&lon=' + event.latLng.lng()
@@ -48,6 +73,7 @@ function initialize_grid_point_map() {
         document.getElementById("center_lat").value = event.latLng.lat();
         document.getElementById("center_lon").value = event.latLng.lng();
         myLatlng = google.maps.LatLng(event.latLng.lat(),event.latLng.lng());
+        */
     });
 }//close initialize_grid_point_map
 
@@ -131,25 +157,23 @@ function initialize_station_finder() {
             bounds.extend(latlon);
 
             var avbl_elements = '<br />';
+            var greg_flag = false;
             for (var i=0;i<c.available_elements.length;i++){
                 avbl_elements = avbl_elements + c.available_elements[i] + '<br />';
                 //Check of we should have link to Greg's climate summary pages
-                if (c.available_elements[i][0] == 'Maximum Daily Temperature (F)' || c.available_elements[i][0] == 'Minimum Daily Temperature (F)' || c.available_elements[i][0] == 'Precipitation (In)'){
+                if (c.available_elements[i][0] == 'Maximum Daily Temperature(F)' || c.available_elements[i][0] == 'Minimum Daily Temperature(F)' || c.available_elements[i][0] == 'Precipitation(In)'){
                     if (parseInt(c.available_elements[i][1][0].slice(0,4)) - parseInt(c.available_elements[i][1][1].slice(0,4)) > 5){
                         var greg_flag = true;
-                    }
-                    else{
-                        var greg_flag = false;
                     }
                 }
             }
 
             var wrcc_info_link = new String();
             //if ( c.sids[0] && c.sids[0].length == 6 && greg_flag && !isNaN(c.sids[0].replace(/^[0]/g,"") * 1)){
-            if ( c.sids[0] && c.sids[0].length == 6 && greg_flag){
+            if ( c.marker_category == "COOP"){
                 var wrcc_info_link = '<a  target="_blank" href="http://www.wrcc.dri.edu/cgi-bin/cliMAIN.pl?'
                 + c.state + c.sids[0].substring(2,6) +
-                '">Access Climate for this Station</a>'
+                '">Access Climate Summaries for this Station (by WRCC)</a>'
             }
 
             var data_portal_link = '<a target="_blank" href="' + base_dir + 'data/historic/?stn_id=' + c.sids[0];
@@ -166,19 +190,18 @@ function initialize_station_finder() {
                 data_portal_link = data_portal_link + '&elements=' + elements;
                 app_portal_link = app_portal_link + '&elements=' + elements;
             }
-            data_portal_link = data_portal_link + '">Get Data for this Station</a>'
+            data_portal_link = data_portal_link + '">Get Data for this Station (via ACIS)</a>'
             app_portal_link = app_portal_link + '">Run a climate application for this Station</a>'
             var contentString = '<div id="MarkerWindow">'+
-                '<p><b>Name: </b>' + c.name + '<br/>'+
-                '<b>State: </b>' + c.state + '<br/>' +
-                '<b>UID: </b>' + c.uid + '<br/>' +
-                '<b>SIDS: </b>' + c.sids + '<br/>' +
-                '<b>NETWORKS: </b>' + c.stn_networks + '<br/>' +
-                '<b>Elevation: </b>' + c.elevation + '<br/>' +
-                '<b>Available Elements: </b>' + avbl_elements +
-                '</p>' + wrcc_info_link + '<br />' +
+                wrcc_info_link + '<br />' +
                 data_portal_link + '<br />' +
-                app_portal_link +
+                app_portal_link + '<br />' +
+                '<b>Name: </b>' + c.name + '<br/>'+
+                '<b>Station IDs: </b>' + c.sids + '<br/>' +
+                '<b>NETWORKS: </b>' + c.stn_networks + '<br/>' +
+                '<b>State, Elevation, Lat, Lon: </b>' + c.state + ', ' + c.elevation + ', ' + c.lat + ', ' +c.lon +'<br/>' +
+                '<b>Available elements with date range: </b>' + avbl_elements + '<br />' +
+                wrcc_info_link + '<br />' +
                 '</div>';
             marker.contentString = contentString;
             markers.push(marker);
@@ -197,14 +220,14 @@ function initialize_station_finder() {
                 if (markers[i].category == category) {
                     markers[i].setVisible(true);
                     var tbl_row = document.createElement('tr');
-                    var t_data = '<td>';
-                    //Add click event for row:
-                    var cString = markers[i].contentString;
-                    tbl_row.addEventListener("click", function(){
+                    tbl_row.cString = markers[i].contentString;
+                    tbl_row.marker = markers[i]
+                    tbl_row.onclick = function(){
                         infowindow.close();
-                        infowindow.setContent(cString);
-                        infowindow.open(map, markers[i]);
-                    });
+                        infowindow.setContent(this.cString);
+                        infowindow.open(map, this.marker);
+                    };
+                    var t_data = '<td>';
                     tbl_row.innerHTML = t_data + markers[i].name + '</td>' + t_data +
                         markers[i].state + '</td>' + t_data + markers[i].lat + '</td>' + t_data + 
                         markers[i].lon + '</td>' + t_data + markers[i].elevation + '</td>' + t_data +
@@ -252,6 +275,7 @@ function initialize_station_finder() {
 function my_boxclick(box, category){
     boxclick(box, category);
 }
+
 
 /*
 function my_stnclick(i_window, mkr, content_str){

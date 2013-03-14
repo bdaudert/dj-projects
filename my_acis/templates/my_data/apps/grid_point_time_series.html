@@ -93,7 +93,7 @@
         {%else%}
           {%if datadict%}
 
-            <a href="{{URL_PREFIX}}sw_ckn/data/modeled/?start_date={{s_date}}&end_date={{e_date}}&elements={{elems}}&grid={{grid}}&loc={{lon}},{{lat}}">Get raw data  behind this graphic here!</a>
+            <a target="_blank" href="{{URL_PREFIX}}sw_ckn/data/modeled/?start_date={{s_date}}&end_date={{e_date}}&elements={{elems}}&grid={{grid}}&loc={{lon}},{{lat}}">Get raw data  behind this graphic here!</a>
             <br />
             {{start_date}}
             {{end_date}}
@@ -111,7 +111,7 @@
             <br />
           {%endif%}
         {%endif%}
-
+        <p class="error">Drag and click the marker!</p><br />
         <div id="map" style="width: 100%; height:400px;"></div>
         <script type="text/javascript">
             initialize_grid_point_map()

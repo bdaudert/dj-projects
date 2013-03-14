@@ -12,12 +12,14 @@
 
 <div class="container">
     <div class="center-left" style="border:none;">
+        {%if show_legend%}
         <div id="map_legend">
             <h3>Legend of Station Networks</h3>
             <p class="error">Choose Networks!</p>
         </div>
+        {%endif%}
     </div>
-
+        
     <div class="center">
         <div align="center" id=tool_info_head></div>
         <script type="text/javascript">                        
@@ -60,7 +62,8 @@
             <b>por</b></font> for both start and end date</li>
             </ul></p>
         </div>
-       
+      
+        {%if not form1_ready%} 
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -80,6 +83,7 @@
             <input type="submit" value="Select" name="form0"/>
             </form>
         </div>
+        {%endif%}        
 
         {%if form1_ready%}
         <div id='form1'>
@@ -93,7 +97,13 @@
                     <td>{{field.label}}:</td>
                     <td>{{field}}</td>                                                           
                     <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
-                    <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    {%ifequal field.label "Elements" %}
+                        <div class="pop-up">
+                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0">
+                        </div>
+                    {%else%}
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    {%endifequal%}
                     </td>
                 </tr>
                {%if field.errors%}
@@ -140,7 +150,7 @@
             initialize_station_finder()
         </script>
 
-        <div style="height:200px;width:90%;overflow:auto;" >
+        <div style="height:200px;overflow:auto;" >
             <table cellspacing="1" id="station_list" border=1>
                 <th>Name</th>
                 <th>State</th>
@@ -163,7 +173,7 @@
            <ul class="navbar">
                 <table>
                     <tr><td>
-                    <a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank">RAWS USA Climate Archive</a>
+                    <a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank">USA Climate Archive by WRCC (RAWS/COOP)</a>
                     <div class="pop-up">
                         <p><font size="4">Summaries, Graphs, and other products for RAWS
                         (Remote Automatic Weather Stations).</font></p>
