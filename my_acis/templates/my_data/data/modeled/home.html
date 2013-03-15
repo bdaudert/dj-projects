@@ -22,7 +22,7 @@
             {%for field in form0_grid %}
                 <tr>
                     <td>{{field.label}}:</td>
-                    <td>{{field}}</td>                                        
+                    <td>{{field}}</td>
                     <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
                     {%ifequal field.label "Elements" %}
                     <div class="pop-up"> 
@@ -53,7 +53,15 @@
             {%else%}
                 <tr>
                     <td>{{field.label}}:</td>
-                    <td>{{field}}</td>                                                            
+                    {%if field.label == "Location" %}
+                        {%if not map_loc %}
+                            <td><input type="text" name="location" id="location"></td>
+                        {%else%}
+                            <td><input type="text" name="location" id="location" value={{map_loc}}></td>
+                        {%endif%}
+                    {%else%}
+                        <td>{{field}}</td>
+                    {%endif%}
                     <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>
                     {%ifequal field.label "Elements" %}
                         <div class="pop-up">
@@ -180,7 +188,6 @@
         {%endif%}
 
     {%if need_map%}
-        <p class="error">Drag and click the marker!</p>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
         <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
         <input type="hidden" id="center_lat" name="center_lat" value={{center_lat}}>
@@ -215,26 +222,43 @@
             </div>
         {%endif%}
 
-        {{delimiter}}, {{json}}
         {%if grid_data%}
+            <!--Link to relevant applications-->
+            {%if link_to_clim_sum_map %}
+                {%if state%}
+                    <a target="_blank" href="{{URL_PREFIX}}sw_ckn/apps/clim_sum_maps/?start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}&state={{state}}">Generate a climate summary map  for this data set here!</a>
+                {%endif%}
+                {%if bounding_box%}                    
+                    <a target="_blank" href="{{URL_PREFIX}}sw_ckn/apps/clim_sum_maps/?start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}&bounding_box={{bounding_box}}&">Generate a climate summary map  for this data set here!</a>
+                {%endif%}
+            {%endif%}
             <br />
+            {%if link_to_gp_ts %}
+                 <a target="_blank" href="{{URL_PREFIX}}sw_ckn/apps/grid_point_time_series/?lat={{lat}}&lon={{lon}}&start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}">Generate a time series for this data set here!</a>
+            {%endif%}            
             <br />
             <h2>{%for item in file_info%}{{item}}&nbsp;{%endfor%}</h2>
             {%if not json%}
-                <p>[date{{delimiter}}lat{{delimiter}}lon{{delimiter}}elev{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}]</p>
+                <p>date{{delimiter}}lat{{delimiter}}lon{{delimiter}}elev{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</p>
+                {%for row in grid_data%}
+                    {%for val  in row%}
+                        {{val}}{{delimiter}}
+                    {%endfor%}<br />
+                {%endfor%}
             {%else%}
                 <p>date,lat,lon,elev,{%for el in elements%}{{el}},{%endfor%}</p>
+                {{grid_data}}
             {%endif%}
-            
-            {{grid_data}}
         {%endif%}
 
   <!-- Footer -->
+<!--
   <div id="footer" align="center"></div>
     <script type="text/javascript">                        
     $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-sw-ckn");
     </script>
   </div>
+-->
 </div>
 
 {%endblock%}

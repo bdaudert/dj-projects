@@ -32,49 +32,32 @@ function initialize_grid_point_map() {
         title: "Your location"
     });
 
-    google.maps.event.addListener(marker, 'click', function (event) {
+    google.maps.event.addListener(marker, 'dragend', function (event) {
         infowindow.close();
         var lat = precise_round(event.latLng.lat(),2);
         var lon = precise_round(event.latLng.lng(),2);
+        var loc = lon + ',' + lat
         if (app == 'gp_ts'){
+            document.getElementById("lat").value = lat;
+            document.getElementById("lon").value = lon;
             var href = base_dir +'apps/grid_point_time_series/?lat=' +
-                   lat + '&lon=' + lon
+                   lat + '&lon=' + lon;
         }
         else if (app == 'grid_data'){
+            document.getElementById("location").value = loc;
             var href = base_dir +'data/modeled/?loc=' +
-                   lon + ',' + lat
+                   lon + ',' + lat;
         }
         var contentString = '<div id="MarkerWindow">'+
             '<p><b>Lat: </b>' + lat + '<br/>'+
             '<b>Lon: </b>' + lon + '<br/>' +
-            '<a href="'+ href +
-            '">Use this location</a></div>';
+            //'<a href="'+ href + '">Use this location</a>' + 
+            '</div>';
         infowindow.setContent(contentString);
         infowindow.open(map, marker);
-        document.getElementById("center_lat").value = lat;
-        document.getElementById("center_lon").value = lon;
         myLatlng = google.maps.LatLng(lat,lon);
-        /*
-        if (app == 'gp_ts'){
-            var href = base_dir +'apps/grid_point_time_series/?lat=' +
-                   event.latLng.lat() + '&lon=' + event.latLng.lng()
-        }
-        else if (app == 'grid_data'){
-            var href = base_dir +'data/modeled/?loc=' +
-                   event.latLng.lat() + ',' + event.latLng.lng()
-        }
-        var contentString = '<div id="MarkerWindow">'+
-            '<p><b>Lat: </b>' + event.latLng.lat() + '<br/>'+
-            '<b>Lon: </b>' + event.latLng.lng() + '<br/>' +
-            '<a href="'+ href +
-            '">Use this location</a></div>';
-        infowindow.setContent(contentString);
-        infowindow.open(map, marker);
-        document.getElementById("center_lat").value = event.latLng.lat();
-        document.getElementById("center_lon").value = event.latLng.lng();
-        myLatlng = google.maps.LatLng(event.latLng.lat(),event.latLng.lng());
-        */
     });
+
 }//close initialize_grid_point_map
 
 var stnclick;

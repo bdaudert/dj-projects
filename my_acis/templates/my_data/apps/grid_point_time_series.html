@@ -19,14 +19,28 @@
         <input type="hidden" id="center_lon" name="center_lon" value={{center_lon}}>
         <input type="hidden" id="zoom_level" name="zoom_level" value="5">
         <input type="hidden" id="app" name="app" value="gp_ts">
-
-        <div id='form0'>
+        <br /><br /><br /><br /><br /><br /><br />
+        <div id='form0' align="center">
             <form method="post" action="">{% csrf_token %}
             <table class="form">
             {%for field in form0 %}
                 <tr>
                     <td>{{field.label}}:</td>
-                    <td>{{field}}</td>
+                    {%if field.label == "Lat" %}
+                        {%if not lat %}
+                            <td><input type="text" name="lat" id="lat" value='-98.57'></td>
+                        {%else%}
+                            <td><input type="text" name="lat" id="lat" value={{lat}}></td>
+                        {%endif%}
+                    {%elif field.label == "Lon" %}
+                        {%if not lon %}
+                            <td><input type="text" name="lon"  id="lon" value='39.82'></td>
+                        {%else%}
+                            <td><input type="text" name="lon" id="lat" value={{lon}}></td>
+                        {%endif%}
+                    {%else%}
+                        <td>{{field}}</td>
+                    {%endif%}
                     <td><p class="trigger"><img src="{{MEDIA_URL}}img/FaceQMark.jpg" class="icon_small"></p>                        
                     <div class="pop-up"><p>{{field.help_text}}</p></div>
                     </td>
@@ -111,7 +125,6 @@
             <br />
           {%endif%}
         {%endif%}
-        <p class="error">Drag and click the marker!</p><br />
         <div id="map" style="width: 100%; height:400px;"></div>
         <script type="text/javascript">
             initialize_grid_point_map()
@@ -120,12 +133,13 @@
         <!--<a href="#"  onClick="initialize_grid_point_map()">Find your Latitude and Longitude here!</a>-->
         <br />
         <!-- Footer -->
+        <!--
         <div id="footer" align="center"></div>
         <script type="text/javascript">                        
         $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
         </script>
         </div>
-    
+        -->
     </div>
 </div>
 

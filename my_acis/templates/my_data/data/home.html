@@ -30,12 +30,16 @@
 
     <div class="major-right">
 
+        <p class="error" align="center" onClick="ShowHide('ACIS_STN_CHART')"><b>CLICK HERE TO SEE </b><u>what's in ACIS?</u></p>     
+        <div align="center" id="ACIS_STN_CHART" style="display:none"><img class="chart"  src="{{MEDIA_URL}}img/ACIS_STN_CHART.png">
+        <br />
         <p align="center" onClick="ShowHide('Docu_ACIS')"><img class="logo"         
-        src="{{MEDIA_URL}}img/ACIS-logo.png"><u>More about the ACIS data sets ...</u></p>
+        src="{{MEDIA_URL}}img/ACIS-logo.png"><u>Even more about the ACIS data sets ...</u></p>
         <div id="Docu_ACIS" style="display:none;"></div>
             <script type="text/javascript">                        
             $("#Docu_ACIS").load("{{MEDIA_URL}}html/commons.html #Docu_ACIS");
             </script>
+        </div>
         
         <table class="dash" cellspacing="20px">
             <!--Headers-->
@@ -44,9 +48,9 @@
             <th><font size="5"><b>Gridded/Modeled Data</b></th>
             <!--First row of dashboard: Description-->
             <tr>
-                <td class="error">Find a station in the ACIS system</td>
-                <td class="error">Find and download <b>daily</b> ACIS station data</td>
-                <td class="error">Find and download <b>daily</b> gridded/modeled data from the ACIS system</td>
+                <td class="error">Find a station</td>
+                <td class="error">Find and download station data</td>
+                <td class="error">Find and download gridded/modeled data</td>
             </tr>
             <!--Second row of dashboard: image-->
             <tr>

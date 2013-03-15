@@ -519,25 +519,33 @@ class ClimateMapForm1(forms.Form):
         element = kwargs.get('initial', {}).get('element', None)
         time_period =  kwargs.get('initial', {}).get('time_period', None)
         x = kwargs.get('initial', {}).get('x', None)
-
+        start_date = kwargs.get('initial', {}).get('start_date', None)
+        end_date = kwargs.get('initial', {}).get('end_date', None)
+        grid = kwargs.get('initial', {}).get('end_date', None)
+        state = kwargs.get('initial', {}).get('state', None)
+        bounding_box = kwargs.get('initial', {}).get('bounding_box', None)
         super(ClimateMapForm1, self).__init__(*args, **kwargs)
 
-        if select_grid_by is None:
-            select_grid_by = self.data.get('select_grid_by')
-        if element is None:
-            element = self.data.get('element')
-        if time_period is None:
-            time_period = self.data.get('time_period')
-        if x is None:
-            x = self.data.get('x')
+        if select_grid_by is None:select_grid_by = self.data.get('select_grid_by')
+        if element is None:element = self.data.get('element')
+        if time_period is None:time_period = self.data.get('time_period')
+        if x is None:x = self.data.get('x')
+        if start_date is None:start_date = self.data.get('start_date')
+        if end_date is None:end_date = self.data.get('end_date')
+        if grid is None:grid=self.data.get('grid')
+        if state is None:state=self.data.get('grid')
+        if bounding_box is None:bounding_box=self.data.get('bounding_box')
 
         self.fields['select_grid_by'] = forms.CharField(required=False, initial=select_grid_by, widget=forms.HiddenInput(), help_text='Area defining gridpoints of interest.')
         if select_grid_by == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='US state.')
         elif select_grid_by == 'bbox':
             self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41', help_text='Bounding box latitudes and longitudes: West,South,East,North.')
-
-        self.fields['element'] = forms.CharField(initial=element, widget=forms.HiddenInput(), help_text='Valid element recognized by Acis.')
+        elif state is not None:
+            self.fields['state'] = forms.ChoiceField(required=False, choices=STATE_CHOICES, initial=state, help_text='US state.')
+        elif bounding_box is not None:
+            self.fields['bounding_box'] = BBoxField(required=False,initial=bounding_box, help_text='Bounding box latitudes and longitudes: West,South,East,North.')
+        self.fields['element'] = forms.CharField(initial=element, help_text='Valid element recognized by Acis.')
         if element == 'cddxx':
             self.fields['base_temperature_cddxx'] = forms.IntegerField(initial=65, help_text='Base temperature used to calculate cooling degree days.')
         if element == 'hddxx':
@@ -548,6 +556,9 @@ class ClimateMapForm1(forms.Form):
         if time_period == 'custom':
             self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=begin, help_text=HELP_TEXTS['date'])
             self.fields['end_date'] =MyDateField(max_length=10, min_length=8, required = False, initial=today, help_text=HELP_TEXTS['date'])
+        elif start_date is not None and end_date is not None:
+            self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=start_date, help_text=HELP_TEXTS['date'])
+            self.fields['end_date'] =MyDateField(max_length=10, min_length=8, required = False, initial=end_date, help_text=HELP_TEXTS['date'])
         else:
             if x is None:
                 self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial='20130101', help_text=HELP_TEXTS['date'])
@@ -557,19 +568,26 @@ class ClimateMapForm1(forms.Form):
                 self.fields['start_date'].widget.attrs['readonly'] = 'readonly'
             self.fields['end_date'] = MyDateField(required=False, initial=today, help_text=HELP_TEXTS['date'])
             self.fields['end_date'].widget.attrs['readonly'] = 'readonly'
-        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
-
+        if grid is None:
+            self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
+        else:
+            self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, initial=grid, help_text=HELP_TEXTS['grids'])
 class GPTimeSeriesForm(forms.Form):
         def __init__(self, *args, **kwargs):
             lat = kwargs.get('initial', {}).get('lat', None)
             lon = kwargs.get('initial', {}).get('lon', None)
-
+            start_date = kwargs.get('initial', {}).get('start_date', None)
+            end_date = kwargs.get('initial', {}).get('end_date', None)
+            element = kwargs.get('initial', {}).get('element', None)
+            grid = kwargs.get('initial', {}).get('end_date', None)
             super(GPTimeSeriesForm, self).__init__(*args, **kwargs)
 
-            if lat is None:
-                lat = self.data.get('lat')
-            if lon is None:
-                lon = self.data.get('lon')
+            if lat is None:lat = self.data.get('lat')
+            if lon is None:lon = self.data.get('lon')
+            if start_date is None:start_date = self.data.get('start_date')
+            if end_date is None:end_date = self.data.get('end_date')
+            if element is None:element = self.data.get('element')
+            if grid is None:grid=self.data.get('grid')
 
             if lat is None:
                  self.fields['lat'] = forms.FloatField(initial='41.8', required=True, help_text='Valid latitude.')
@@ -579,11 +597,22 @@ class GPTimeSeriesForm(forms.Form):
                  self.fields['lon'] = forms.FloatField(initial='-77.7', required=True, help_text='Valid longitude.')
             else:
                 self.fields['lon'] = forms.FloatField(initial=lon, required=True, help_text='Valid longitude.')
-            self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, required=False, initial='maxt', help_text=HELP_TEXTS['acis_elements'])
-            self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial='20130101', help_text=HELP_TEXTS['date'])
-            self.fields['end_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=today, help_text=HELP_TEXTS['date'])
-            self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
-
+            if element is None:
+                self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, required=False, initial='maxt', help_text=HELP_TEXTS['acis_elements'])
+            else:
+                self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, required=False, initial=element, help_text=HELP_TEXTS['acis_elements'])
+            if start_date is None:
+                self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial='20130101', help_text=HELP_TEXTS['date'])
+            else:
+                self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=start_date, help_text=HELP_TEXTS['date'])
+            if end_date is None:
+                self.fields['end_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=today, help_text=HELP_TEXTS['date'])
+            else:
+                self.fields['end_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=end_date, help_text=HELP_TEXTS['date'])
+            if grid is None:
+                self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
+            else:
+                self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, initial=grid, help_text=HELP_TEXTS['grids'])
 class StationLocatorForm0(forms.Form):
     select_stations_by = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='state', help_text=HELP_TEXTS['select_stations_by'])
     element_selection = forms.ChoiceField(choices=([('T', 'Cherry pick elements'),('F', 'All Acis elements')]), required=False, initial='F', help_text='Only look for stations that have data for certain elements.')

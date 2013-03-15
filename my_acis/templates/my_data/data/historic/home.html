@@ -152,7 +152,6 @@
 
 
         {%if stn_id%}
-            <p class="error">Please make sure all parameters in the form on the left are correct before you <b>Submit</b> the data request. You chose:</p>
             <p class="error">Station ID: {{stn_id}}</p>
         {%endif%}
         {%if start_date%}
@@ -199,6 +198,16 @@
             {%if results.errors%}
             <div class="error">Data Request could not be completed. The following error occurred: {{error}}</div>
             {%endif%}
+            
+            <!--Link to relevant apps-->
+            {%if link_to_mon_aves %}
+                <a target="_blank" href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}">Generate bar charts for this data set here!</a>
+            {%endif%}
+            <br />
+            {%if link_to_metagraph%}
+                <a target="_blank" href="{{URL_PREFIX}}sw_ckn/apps/metagraph/?stn_id={{stn_id}}">Generate metadata graphics for this station here!</a>
+            {%endif%}            
+
             {%for stn in stn_idx%}
                 <h3>STATION NAME:</h3> 
                 <b>{{results.stn_names|lookup:stn|safe}}</b>

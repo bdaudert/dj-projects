@@ -35,9 +35,9 @@ acis_elements ={'maxt':{'name':'maxt', 'name_long': 'Maximum Daily Temperature (
               'snwd': {'name': 'snwd', 'name_long':'Snow Depth (In)', 'vX':'11'}, \
               'evap': {'name': 'evap', 'name_long':'Pan Evaporation (In)', 'vX':'7'}, \
               'dd': {'name': 'dd', 'name_long':'Degree Days (Days)', 'vX':'45'}, \
-              'cdd': {'name': 'cdd', 'name_long':'Cooling Degree Days (Days)'}, 'vX':'45', \
-              'hdd': {'name': 'hdd', 'name_long':'Heating Degree Days (Days)'}, 'vX':'45', \
-              'gdd': {'name': 'gdd', 'name_long':'Growing Degree Days (Days)'}, 'vX':'45'}
+              'cdd': {'name': 'cdd', 'name_long':'Cooling Degree Days (Days)', 'vX':'45'}, \
+              'hdd': {'name': 'hdd', 'name_long':'Heating Degree Days (Days)', 'vX':'45'}, \
+              'gdd': {'name': 'gdd', 'name_long':'Growing Degree Days (Days)', 'vX':'45'}}
               #bug fix needed for cdd = 44 (WAITING FOR BILL, ALSO IN PLACES BELOW, eg in station_locator_app, also in AcisWS.py)
 
 state_choices = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', \
@@ -266,6 +266,16 @@ def data_historic(request):
             else:
                 resultsdict = AcisWS.get_point_data(form1_point.cleaned_data, 'sodlist_web')
                 context['results'] = resultsdict
+                # If request successful, get params for link to apps page
+                if 'stn_data' in resultsdict.keys() and resultsdict['stn_data']:
+                    context['elements'] = ','.join(form1_point.cleaned_data['elements'])
+                    context['start_date'] = form1_point.cleaned_data['start_date']
+                    context['end_date'] = form1_point.cleaned_data['end_date']
+                    if 'station_id' in form1_point.cleaned_data.keys():
+                        context['stn_id']= form1_point.cleaned_data['station_id']
+                        context['link_to_mon_aves'] = True
+                        if 'stn_ids' in resultsdict.keys() and resultsdict['stn_ids'][0][0].split(' ')[1] == 'COOP':
+                            context['link_to_metagraph'] = True
                 context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
                 if 'delimiter' in form1_point.cleaned_data.keys():
                     if str(form1_point.cleaned_data['delimiter']) == 'comma':delimiter = ','
@@ -366,6 +376,7 @@ def data_modeled(request):
     if loc is not None:
         context['location'] = loc;initial_1['location'] = loc
         context['select_grid_by'] = 'point';initial_1['select_grid_by'] = 'point'
+
     if elements is not None:context['elements'] = elements;initial_1['elements'] = elements
     if loc is not None or state is not None or bbox is not None:
         context['hide_form_0'] = True
@@ -384,8 +395,10 @@ def data_modeled(request):
                 context['need_map'] = True
                 if loc is not None:
                     context['center_lat'] = loc.split(',')[0]; context['center_lon'] = loc.split(',')[1]
+                    context['map_loc'] = loc
                 else:
-                    context['center_lat'] = '39.8282'; context['center_lon'] = '-98.5795'
+                    context['center_lat'] = '39.82'; context['center_lon'] = '-98.57'
+                    context['map_loc'] = '-98.57,39.82'
 
             form1_grid = forms.GridDataForm1(initial=initial_1)
             context['form1_grid'] = form1_grid
@@ -416,6 +429,13 @@ def data_modeled(request):
                 context['form3_grid'] = form3_grid
                 return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
             else:
+                if 'location' in form1_grid.cleaned_data.keys():
+                    context['need_map'] = True
+                    context['map_loc'] = form1_grid.cleaned_data['location']
+                    #context['center_lat'] = '39.82'; context['center_lon'] = '-98.57'
+                    context['center_lat'] = form1_grid.cleaned_data['location'].split(',')[1]
+                    context['center_lon'] = form1_grid.cleaned_data['location'].split(',')[0]
+                    #context['map_loc'] = '%s,%s' % (form1_grid.cleaned_data['location'].split(',')[1], form1_grid.cleaned_data['location'].split(',')[0])
                 req = AcisWS.get_grid_data(form1_grid.cleaned_data, 'griddata_web')
                 #format data
                 if form1_grid.cleaned_data['data_format'] == 'json':
@@ -425,54 +445,26 @@ def data_modeled(request):
                 else:
                     data = WRCCUtils.format_grid_data(req, form1_grid.cleaned_data)
                     context['grid_data'] = data
-                '''
-                if 'error' in req.keys():
-                    context['error']  = req
-                else:
-                    if form1_grid.cleaned_data['data_format'] == 'json':
-                        delimiter = None
-                        context['json'] = True
-                        context['grid_data']  = req
-                    else:
+
+                #Link to relevant apps
+                if 'elements' in form1_grid.cleaned_data.keys() and len(form1_grid.cleaned_data['elements'])==1:
+                    if req or data:
+                        context['start_date'] = form1_grid.cleaned_data['start_date']
+                        context['end_date'] = form1_grid.cleaned_data['end_date']
+                        context['element'] = str(form1_grid.cleaned_data['elements'][0])
+                        context['grid'] = str(form1_grid.cleaned_data['grid'])
                         if 'location' in form1_grid.cleaned_data.keys():
-                            lats = [[req['meta']['lat']]]
-                            lons = [[req['meta']['lon']]]
-                            elevs = [[req['meta']['elev']]]
-                            data = [[] for i in range(len(req['data']))]
+                            if str(form1_grid.cleaned_data['elements'][0]) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
+                                context['link_to_gp_ts'] = True
+                                context['lat'] = form1_grid.cleaned_data['location'].split(',')[1]
+                                context['lon'] = form1_grid.cleaned_data['location'].split(',')[0]
                         else:
-                            lats = req['meta']['lat']
-                            lons = req['meta']['lon']
-                            elevs = req['meta']['elev']
-                            lat_num = 0
-                            for lat_idx, lat_grid in enumerate(req['meta']['lat']):
-                               lat_num+=len(lat_grid)
-                            length = len(req['data']) * lat_num
-                            #length = len(req['data'])
-                            data = [[] for i in range(length)]
-                        idx = -1
-                        for date_idx, date_vals in enumerate(req['data']):
-                            if 'location' in form1_grid.cleaned_data.keys():
-                                data[date_idx].append(str(date_vals[0]))
-                                data[date_idx].append(lons[0][0])
-                                data[date_idx].append(lats[0][0])
-                                data[date_idx].append(elevs[0][0])
-
-                                for el_idx in range(1,len(el_list) + 1):
-                                    data[date_idx].append(str(date_vals[el_idx]).strip(' '))
-                            else:
-                                #idx+=1
-                                for grid_idx, lat_grid in enumerate(lats):
-                                    for lat_idx, lat in enumerate(lat_grid):
-                                        idx+=1
-                                        data[idx].append(str(date_vals[0]))
-                                        data[idx].append(lons[grid_idx][lat_idx])
-                                        data[idx].append(lat)
-                                        data[idx].append(elevs[grid_idx][lat_idx])
-
-                                        for el_idx in range(1,len(el_list) + 1):
-                                            data[idx].append(date_vals[el_idx][grid_idx][lat_idx])
-                        context['grid_data'] = data
-                '''
+                            if str(form1_grid.cleaned_data['elements'][0]) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
+                                context['link_to_clim_sum_map'] = True
+                                if 'bounding_box' in form1_grid.cleaned_data.keys():
+                                    context['bounding_box'] = form1_grid.cleaned_data['bounding_box']
+                                else:
+                                    context['state'] = form1_grid.cleaned_data['state']
 
                 if 'delimiter' in form1_grid.cleaned_data.keys():
                     if str(form1_grid.cleaned_data['delimiter']) == 'comma':delimiter = ','
@@ -502,11 +494,6 @@ def data_modeled(request):
                     return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'xls', request=request,file_info=file_info)
                 else:
                     return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
-            #form1_grid not valid or form1_grid valid and we are done with computation
-            #needed to show validation error in form1_grid
-            #context['form1_grid_ready'] = True
-            #form1_grid = set_as_form(request,'GridDataForm1')
-            #context['form1_grid'] = form1_grid
 
     if 'form3_grid' in request.POST:
         form3_grid = set_as_form(request,'GridDataForm3')
@@ -678,7 +665,7 @@ def monthly_aves(request):
 
                 try:
                     monthly_aves = WRCCDataApps.monthly_aves(req, form_graphs.cleaned_data['elements'])
-                    context['averaged_data'] = monthly_aves
+                    context['averaged_data'] = dict(monthly_aves)
                 except:
                     pass
 
@@ -761,8 +748,37 @@ def clim_sum_maps(request):
         'title': 'Climate Summary Maps',
         'apps_page':True
     }
-    form0 = set_as_form(request,'ClimateMapForm0')
-    context['form0'] = form0
+    lat = request.GET.get('lat', None)
+    lon = request.GET.get('lon', None)
+    element = request.GET.get('element', None)
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
+    grid= request.GET.get('grid', None)
+    state = request.GET.get('state', None)
+    bounding_box = request.GET.get('bounding_box', None)
+    initial = {}
+    if element is not None:initial['element'] = str(element)
+    if start_date is not None:initial['start_date'] = str(start_date)
+    if end_date is not None:initial['end_date'] = str(end_date)
+    if lat is not None and lon is not None:
+        initial['lat']=str(lat);initial['lon']=str(lon)
+        context['lat'] = lat;context['lon'] = lon
+    if grid is not None:initial['grid'] = str(grid)
+    if state is not None:initial['state'] = state
+    if bounding_box is not None:initial['bounding_box'] = bounding_box
+
+    if initial:
+        if element and start_date and end_date:
+            form1 = forms.ClimateMapForm1(initial=initial)
+            context['form1'] = form1
+            context['hide_form_0'] = True
+            context['form1_ready'] = True
+        else:
+            form0 = set_as_form(request,'ClimateMapForm0', init=initial)
+            context['form0'] = form0
+    else:
+        form0 = set_as_form(request,'ClimateMapForm0')
+        context['form0'] = form0
 
     if 'form0' in request.POST:
         form0 = set_as_form(request,'ClimateMapForm0')
@@ -845,17 +861,30 @@ def grid_point_time_series(request):
     }
     lat = request.GET.get('lat', None)
     lon = request.GET.get('lon', None)
-
-
+    element = request.GET.get('element', None)
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
+    grid = request.GET.get('grid', None)
+    initial = {}
+    if element is not None:initial['element'] = str(element)
+    if start_date is not None:initial['start_date'] = str(start_date)
+    if end_date is not None:initial['end_date'] = str(end_date)
     if lat is not None and lon is not None:
-        form0 = set_as_form(request,'GPTimeSeriesForm', init={'lat':str(lat), 'lon':str(lon)})
-        context['form0'] = form0
+        initial['lat']=str(lat);initial['lon']=str(lon)
         context['center_lat'] = str(lat); context['center_lon'] = str(lon)
         context['lat'] = lat;context['lon'] = lon
     else:
+        context['center_lat'] = '39.82'; context['center_lon'] = '-98.57'
+    if grid is not None:
+        initial['grid'] = str(grid)
+
+    if initial:
+        form0 = set_as_form(request,'GPTimeSeriesForm', init=initial)
+    else:
         form0 = set_as_form(request,'GPTimeSeriesForm')
-        context['form0'] = form0
-        context['center_lat'] = '39.8282'; context['center_lon'] = '-98.5795'
+    context['form0'] = form0
+
+
     if 'form0' in request.POST:
         form0 = set_as_form(request,'GPTimeSeriesForm')
         context['form0']  = form0

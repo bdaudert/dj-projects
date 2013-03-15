@@ -13,6 +13,7 @@
 
 <div class="container">
     <div class="major-left">
+    {%if not hide_form_0%}
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -32,8 +33,9 @@
             <input type="submit" value="Select" name="form0"/>
             </form>
         </div>
+    {%endif%}
 
-        {%if form1_ready%}
+    {%if form1_ready%}
         <div id='form1'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -57,7 +59,7 @@
             <input type="submit" value="Submit" name="form1"/>
             </form>
         </div> 
-        {%endif%} 
+    {%endif%} 
 
     </div><!--end center-left-->
 
@@ -142,11 +144,12 @@
        </div><!--end center -->
 
   <!-- Footer -->
-  <div id="footer" align="center"></div>
+<!--
+    <div id="footer" align="center"></div>
     <script type="text/javascript">                        
     $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
     </script>
-
+-->
 </div> <!--end container -->
 
 {%endblock%}

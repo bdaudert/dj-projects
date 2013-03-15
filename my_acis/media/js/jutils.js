@@ -4,12 +4,18 @@ function changeBackgroundColor(DivID) {
             var backColor = new String(); 
  
             backColor = document.getElementById(DivID).style.background; 
- 
             // IE works with hex code of color e.g.: #FFFFFF 
             // Firefox works with rgb color code e.g.: rgb(255, 255, 255) 
             // Thats why both types are used in If-condition below 
             if (backColor.toLowerCase() == '#FFFFFF' || backColor.toLowerCase() == 'rgb(255, 255, 255)') { 
-                document.getElementById(DivID).style.background = '#FF007F'; 
+                document.getElementById(DivID).style.background = '#FF007F';
+                //Turn all other  classes of the same type off off
+                divs_to_turn_off =  document.getElementByClassName("docu"); 
+                for (div in divs_to_turn_off){   
+                    if (div.style.display == 'block'){
+                        div.style.display == 'none';
+                    }
+                } 
             } 
             else { 
                 document.getElementById(DivID).style.background = '#FFFFFF'; 

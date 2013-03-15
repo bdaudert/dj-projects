@@ -294,6 +294,11 @@ img.icon_small {
         height:15px;
 }
 
+img.chart {
+    width:350px;
+    height:500px;
+}
+
 img.sidebar {
     width: 90%;
     height:150px;
