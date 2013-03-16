@@ -2,15 +2,14 @@ var MEDIA_URL = document.getElementById("MEDIA_URL").value;
 
 function changeBackgroundColor(DivID) { 
             var backColor = new String(); 
- 
-            backColor = document.getElementById(DivID).style.background; 
+            backColor = document.getElementById(DivID).style.background;
             // IE works with hex code of color e.g.: #FFFFFF 
             // Firefox works with rgb color code e.g.: rgb(255, 255, 255) 
             // Thats why both types are used in If-condition below 
             if (backColor.toLowerCase() == '#FFFFFF' || backColor.toLowerCase() == 'rgb(255, 255, 255)') { 
                 document.getElementById(DivID).style.background = '#FF007F';
                 //Turn all other  classes of the same type off off
-                divs_to_turn_off =  document.getElementByClassName("docu"); 
+                divs_to_turn_off =  document.getElementsByClassName("docu"); 
                 for (div in divs_to_turn_off){   
                     if (div.style.display == 'block'){
                         div.style.display == 'none';
@@ -20,8 +19,25 @@ function changeBackgroundColor(DivID) {
             else { 
                 document.getElementById(DivID).style.background = '#FFFFFF'; 
             } 
-        } 
-
+        }
+/* 
+//Highlights node, hides and blurs all other elements of class DivClass
+function HighLight(node,DivClass) {
+    node.focus();
+    //Turn all other  classes of the same type off off
+    divs_to_turn_off = document.getElementsByClassName(DivClass);
+    for (k in divs_to_turn_off.length; k++){
+        if (divs_to_turn_off[k].style.display == "block"){
+            divs_to_turn_off[k].style.display = "none";
+        }
+    qmarks_to_turn_off = document.getElementsByClassName("qmark");
+    for (i in qmarks_to_turn_off.length:i++){ 
+        if (qmarks_to_turn_of[i] != node){
+            qmarks_to_turn_of[i].blur();
+        }
+    }
+}
+*/
 
 function Toggle(node)
 {

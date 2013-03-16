@@ -157,13 +157,19 @@ div.pop-up {
     top:20px;
 }
 
-#qmark {
+.qmark {
  text-align="center"
- width:45px;
- height:45px;
- background:#FF007F;
+ width:25px;
+ height:25px;
+ /*background:#FF007F;*/
 }
-
+/*
+.qmark:focus {
+    outline:none;
+    border-color:#FF007F;
+    outline:#FF007F; dotted thick;
+}
+*/
 
 
 #docu_long {
