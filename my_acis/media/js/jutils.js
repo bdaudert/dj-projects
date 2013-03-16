@@ -107,7 +107,6 @@ function ShowHide(divId)
         }
 }
 
-
 $(function() {
   var moveLeft = 0.1;
   var moveDown = 0.1;
@@ -128,6 +127,31 @@ $(function() {
   });
   */
 }); 
+
+//TRY THIS
+/*
+$(function() {
+  var moveLeft = 0.1;
+  var moveDown = 0.1;
+
+  $('.trigger').hover(function(e) {
+    $(this).next('div.pop-up').show();
+   //$('div.pop-up').show();
+      //.css('top', e.pageY + moveDown)
+      //.css('left', e.pageX + moveLeft)
+      //.appendTo('body');
+   }, function() {
+    $(this).next('div.pop-up').hide();
+  });
+ 
+  $('.trigger').click(function(e) {
+    //$(this).next('div.pop-up').css('top', e.pageY).css('left', e.pageX );
+    $(this).next('div.pop-up').show().css('top', e.pageY - moveDown).css('left', e.pageX + moveLeft);
+  }, function() {
+    $(this).next('div.pop-up').hide();
+  });
+}); 
+*/
 
 
 function showIt(Id)

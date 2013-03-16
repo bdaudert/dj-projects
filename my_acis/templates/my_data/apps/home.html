@@ -14,10 +14,10 @@
     <div class="container">
 
         <div class="center-left">
-            <h3>Historic Station Data Applications</h3>
+            <h2 class="error">Historic Station Data Applications</h3>
         
             <ul class="navbar">    
-                <h2 align="center"><p id="us_wide">Southwest US Applications</p></h2>
+                <h4 align="center">Southwest US Applications</h4>
                 <table>
                     <tr><td>
                     <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/cal-mon/frames_version.html" class="trigger" target="_blank">California Climate Tracker(<font color="red">CA</font>)</a>
@@ -37,7 +37,7 @@
                     <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="ShowHide('Docu_NevTracker')">
                     </td></tr>
                 </table>
-                <h2 align ="center"><p id="us_wide">US-Wide Applications</p></h2>
+                <h4 align ="center">US-Wide Applications</h4>
                 <table>
                     {%if stn_id%}
                         <tr><td>
@@ -134,9 +134,10 @@
         </div>
 
         <div class="center">
-
+            <h2 class="error">Hover over the application name to get a one-line intro!</h2>
+            <h2 class="error">Click/Unclick <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png"> for more/less information!</h2>
             <!-- Application documentation -->
-            <div class="docu" id="Docu_CalTracker" style="display:block;"></div>
+            <div class="docu" id="Docu_CalTracker" style="display:none;"></div>
                 <script type="text/javascript">                        
                 $("#Docu_CalTracker").load("{{MEDIA_URL}}html/commons.html #Docu_CalTracker");
                 </script>
@@ -216,10 +217,10 @@
         </div>
 
         <div class="center-right">
-           <h3>Gridded/Modeled Data Applications</h3>
+           <h2 class="error">Gridded/Modeled Data Applications</h2>
             <ul class="navbar">
 
-            <h2 align="center"><p id="us_wide">Southwest US Applications</p></h2>
+            <h4 align="center">Southwest US Applications</h4>
             <table>
                 <tr><td>
                 <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/cal-mon/frames_version.html" class="trigger" target="_blank">California Climate Tracker(<font color="red">CA</font>)</a>
@@ -247,7 +248,7 @@
             </table>
  
 
-            <h2 align="center"><p id="us_wide">US-Wide Applications</p></h2>
+            <h4 align="center">US-Wide Applications</h4>
                 <table>
                     <tr><td>
                     <a id="us_wide" href="http://www.wrcc.dri.edu/cwd/products/" class="trigger">North American Freezing Level Tracker</a>

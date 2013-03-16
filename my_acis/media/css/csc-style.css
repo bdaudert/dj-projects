@@ -30,6 +30,10 @@ h1, h2, h3, h4, h5 {
     /*color:#947e6e;*/
     color:#800000;
 }
+h1.error, h2.error, h3.error, h4.error, h5.error {
+    color:#FF007F;
+}
+
 
 a:link { color: #3300CC; }
 /*a:visited { color: #660099; }*/
@@ -218,7 +222,7 @@ div.pop-up {
 /*2 page divide e.g. my_data/data/home.html*/
 .center-right, .center-left {
     float: left;
-    padding: 10px 5px 10px 5px;
+    padding: 10px 10px 10px 10px;
     width:20%;
     height: 1000px;
     border: 2px solid #006666;
