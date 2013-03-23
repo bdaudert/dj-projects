@@ -917,7 +917,6 @@ def grid_point_time_series(request):
             context['element'] = form0.cleaned_data['element']
             context['lat'] = form0.cleaned_data['lat']
             context['lon'] = form0.cleaned_data['lon']
-            context['lat'] = str(lat); context['lon'] = str(lon)
             #Note: acis takes lon, lat in that order
             location = '%s,%s' %(str(form0.cleaned_data['lon']), str(form0.cleaned_data['lat']))
             context['select_grid_by'] = 'point'

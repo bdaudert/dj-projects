@@ -184,7 +184,7 @@ function initialize_station_finder() {
                 app_portal_link = app_portal_link + '&elements=' + elements;
             }
             data_portal_link = data_portal_link + '">Get Data for this Station </a>'
-            app_portal_link = app_portal_link + '">Run a climate application for this Station</a>'
+            app_portal_link = app_portal_link + '">Run an analysis on this Station</a>'
             var contentString = '<div id="MarkerWindow">'+
                 wrcc_info_link + '<br />' +
                 data_portal_link + '<br />' +

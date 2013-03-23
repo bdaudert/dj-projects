@@ -17,7 +17,7 @@
     </div>
 
     <div class="station_finder_img">
-        <img class="map" src="/csc/media/img/NorthPoleWS.jpg">
+        <img class="map_2" src="/csc/media/img/NorthPoleWS.jpg">
     </div>
 
     <div class="data_img">
@@ -73,15 +73,48 @@
     <a href="http://revampclimate.colostate.edu/regional-climate-science-centers" target="_blank"><img alt="UA" src="/csc/media/img/BoulderLogo.jpg" class="logo"></a>&nbsp;&nbsp;
 </div>
 
-<div class="footer-sw-ckn" style="border-top: 1px dashed #006666;padding:10px">
-    <p>Powered by <img src="/csc/media/img/ACIS-logo.png" alt="ACIS" width="90" height="30">&nbsp;&nbsp;
+<div class="footer-sw-ckn" style="padding:10px;width:100%;font-size:1;">
+    <p>Powered by <img src="/csc/media/img/ACIS-logo.png" alt="ACIS" width="90px" height="30px">&nbsp;&nbsp;
     Created by <a href="http://www.wrcc.dri.edu/" target="_blank">>WRCC</a> &nbsp;&nbsp;
     Hosted by <a href="http://www.dri.edu/" target="_blank"><img class="logo" src="/csc/media/img/DRILogo.gif"></a></p>
 </div>
 
-<!--ACIS Documentation -->
+<!-- Documentation -->
+<div id="Docu_select_stations_by">
+<p><b>"Individual Station"</b>:<br /> Use this option if you looking for an individual station. You will need to know your station identification number. If you don't know your station id, find it here:</p>
+&nbsp;&nbsp;&nbsp;<a target="_blank" href="{{URL_PREFIX}}sw_ckn/station_finder">Station Finder</a>
+or here:<a class="docu_long"target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">More on station Ids</a>
+<p><b>"Comma separated list of stations"</b>:<br /> Enter multiple station identifiers, separated by a comma. Again, you will need to know your station ids. Use the Station Finder if needed.</p>
+<p><b>"County FIPS code"</b>:<br /> Use this option if you are looking for all stations in a particular US county.</p>
+&nbsp;&nbsp;&nbsp;<a target="_blank" href="{{MEDIA_URL}}html/US_FIPS_CountyCodes.htm">List of US FIPS County Codes</a>
+<p><b>"Climate Division"</b>:<br /> Use this option if you are looking for all stations in a particular US climate division.</p>
+&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a>
+<p><b>"County Warning Area"</b>:<br /> Use this option if you are looking for all stations in a US county warning area."</p>
+&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a>
+<p><b>"Basin"</b>:<br /> Use this option if you are looking for all stations in a US drainage basin.</p>
+&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a>
+<p><b>"State"</b>:<br /> Use this option if you are lookingfor all stations in a US state.</p>
+<p><b>"Bounding Box"</b>:<br />Use this option if you are looking for all stations in a bounding box. A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. Please enter them in this order.</p>
+</div>
+
 <div id="Docu_ACIS">
-    <p class="error">Currently all data available in the ACIS system is of DAILY temporal resolution.</p>
+    <table>
+    <td><img class="chart"  src="/csc/media/img/ACIS_STN_CHART.png"></td>
+    <td><img class="chart"  src="/csc/media/img/ACIS_GRID_CHART.png"></td>
+    </table>
+    <br />
+    <div align="center"><p class="error">More Information:</p>
+        <a target="_blank" href="http://rcc-acis.unl.edu/index.php">Acis Home Page</a>
+        <br />
+        <a  target="_blank" href="http://cyclone1.dri.edu/csc/media/html/station_id_system_docu.html">Information on Station Networks found in Acis</a>
+        <br />
+        <a  target="_blank" href="https://gist.github.com/4197956">Information on NRCC interpolated, NRCC Hi-Res data sets</a>
+        <br />
+        <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">North American Regional Climate Change Assessment Program (NARCCAPP) Home Page</a>
+    </div>
+</div>
+<!--
+<div id="Docu_ACIS">
     <p>The Applied Climate Information System (ACIS) developed and maintained by the NOAA Regional Climate Centers (RCCs) is designed to manage the complex flow of information from climate data collectors to the end users of climate information.
     Climate data available in ACIS consists of in-situ observations collected from a
     variety of federal, regional, state, and local weather and climate networks.
@@ -103,7 +136,7 @@
     <br />
     </p>
 </div>
-
+-->
 <!-- Documentation -->
 <div id="Docu_CalTracker">
     <p class="error">What is the <b>California Climate Tracker?</b></p>

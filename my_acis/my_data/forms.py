@@ -130,16 +130,16 @@ ELEMENT_CHOICES = (
         ('maxt', 'Maximum Temperature (F)'),
         ('mint', 'Minimum Temperature(F)'),
         ('avgt', 'Mean Temperature(F)'),
-        ('hdd', 'heating Degree Days base 65F(Whole Days)'),
-        ('cdd', 'Cooling Degree Days base 65F (Whole Days)'),
-        ('cdd', 'Growing Degree Days  50F (Whole Days)'),
-        ('hddxx', 'Heating Degree Days base user defined(Whole Days)'),
-        ('cddxx', 'Cooling Degree Days base user defined(Whole Days)'),
-        ('cddxx', 'Growing Degree Days base user defined (Whole Days)'),
+        ('hdd', 'heating Degree Days base 65F(F)'),
+        ('cdd', 'Cooling Degree Days base 65F (F)'),
+        ('cdd', 'Growing Degree Days  50F (F)'),
+        ('hddxx', 'Heating Degree Days base user defined(F)'),
+        ('cddxx', 'Cooling Degree Days base user defined(F)'),
+        ('cddxx', 'Growing Degree Days base user defined (F)'),
 )
 
 DATA_FORMAT_CHOICES = (
-    ('json', 'JSON'),
+    #('json', 'JSON'),
     ('dlm', 'Delimited, .dat'),
     ('clm', 'Columnar, .txt'),
     ('xl', 'Excel, .xls'),
@@ -148,7 +148,7 @@ DATA_FORMAT_CHOICES = (
 )
 
 DATA_FORMAT_CHOICES_LTD = (
-    ('json', 'JSON'),
+    #('json', 'JSON'),
     ('dlm', 'Delimited, .dat'),
     ('clm', 'Columnar, .txt'),
     ('xl', 'Excel, .xls'),
@@ -165,21 +165,23 @@ DELIMITER_CHOICES = (
 
 acis_elements = acis_elements ={'maxt': 'Maximum Daily Temperature (F)','mint': 'Minimum Daily Temperature (F)', \
 'avgt': 'Average Daily Temperature (F)','obst': 'Observation Time Temperature (F)', 'pcpn':'Precipitation (In)', \
-'snow':'Snowfall (In)','snwd':'Snow Depth (In)', 'cdd':'Cooling Degree Days (Days, Base 65)', \
-'hdd':'Heating Degree Days (Days, Base 65)', 'gdd':'Growing Degree Days (Days, Base 50)', \
-'cddXX':'Cooling Degree Days (Days, Base XX)', 'hddXX':'Heating Degree Days (Days, Base XX)', 'gddXX':'Growing Degree Days (Days, Base XX)'}
+'snow':'Snowfall (In)','snwd':'Snow Depth (In)', 'cdd':'Cooling Degree Days (F, Base 65)', \
+'hdd':'Heating Degree Days (F, Base 65)', 'gdd':'Growing Degree Days (F, Base 50)', \
+'cddXX':'Cooling Degree Days (F, Base XX)', 'hddXX':'Heating Degree Days (F, Base XX)', 'gddXX':'Growing Degree Days (F, Base XX)'}
 acis_element_list = ''
 for el, el_long in acis_elements.iteritems():
     acis_element_list = acis_element_list + '%s : %s\n' %(el, el_long)
 
 #Help texts
 help_date = 'yyyymmdd, yyyy-mm-dd or yyyy/mm/dd'
-help_comma_elements = 'Comma separated list of ACIS climate elements. Available elements: \n %s' %acis_element_list
-help_acis_elements = 'Available climate element in ACIS: \n %s' %acis_element_list
-help_grids = 'Gridded/modeled datasets available in Acis. For more info, see "How to use this tool"!'
-help_stn_selection = 'Defines the type ofsearch area. For more info, see "How to use this tool"!'
+help_comma_elements = 'Comma separated list of climate elements. Available elements: \n %s' %acis_element_list
+help_acis_elements = 'Available climate elements: \n %s' %acis_element_list
+help_grids = 'Gridded/modeled datasets available in ACIS.'
+help_stn_selection = 'Defines the type of search area.'
+help_stn_id = 'Station identification number. Please use the Station Finder to find a station id.'
 help_date_por = 'yyyymmdd, yyyy-mm-dd, yyyy/mm/dd or "por" (period of record) if single station.'
-help_lon_lat = 'Grid point coordinate pair: Longitude, Latitude'
+help_lon_lat = 'Grid point coordinate pair: Longitude, Latitude. Use the map interface by dragging the marker to change location.'
+help_data_format = 'Defines format in which data will be returned. Note: html format prints to your screen.'
 '''
 help_stn_selection = 'Individual Station:\n' + \
                      'Looks for single station. User will need to enter station ID \n' + \
@@ -201,8 +203,9 @@ help_stn_selection = 'Individual Station:\n' + \
                      'Preselected Station: If you reached this pages via our station finder or via' + \
                      'one of our applications, your station ID will be entered automatically. Leave this option as is.'
 '''
-HELP_TEXTS = {'select_stations_by': help_stn_selection, 'grids': help_grids, 'acis_elements':help_acis_elements, \
-            'comma_elements':help_comma_elements, 'date':help_date, 'date_por':help_date_por, 'grid_lon_lat':help_lon_lat }
+HELP_TEXTS = {'select_stations_by': help_stn_selection, 'stn_id':help_stn_id, 'grids': help_grids, 'acis_elements':help_acis_elements, \
+            'comma_elements':help_comma_elements, 'date':help_date, 'date_por':help_date_por, 'grid_lon_lat':help_lon_lat, \
+            'data_format':help_data_format}
 
 #Custom form fields
 class MyDateField(forms.CharField):
@@ -225,6 +228,9 @@ class MyDateField(forms.CharField):
                 int(formatted_date)
             except:
                 raise forms.ValidationError("Not a valid date.")
+        #Check for leapyear
+        if not WRCCUtils.is_leap_year(formatted_date[0:4]) and formatted_date[4:6] == '02' and formatted_date[6:8] == '29':
+            raise forms.ValidationError("%s is a leap year and February only has 28 days. Please change your date." %formatted_date[0:4])
 
 class MyStateField(forms.CharField):
     def to_python(self, states):
@@ -324,7 +330,7 @@ class PointDataForm0(forms.Form):
             self.fields['select_stations_by'] = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid', help_text=HELP_TEXTS['select_stations_by'])
         else:
             self.fields['select_stations_by'] = forms.ChoiceField(choices=STN_FIND_CHOICES,required=False, initial='stn_id', widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
-            self.fields['stn_id'] = forms.CharField(required=False, initial=stn_id, help_text='Station id recognized by Acis. See "About this tool" for more information.')
+            self.fields['stn_id'] = forms.CharField(required=False, initial=stn_id, help_text=HELP_TEXTS['stn_id'])
         '''
         #self.fields['element'] = forms.ChoiceField(choices=ELEMENT_CHOICES, initial='pcpn', required=False)
         self.fields['elements'] = forms.CharField(initial ='maxt,mint,avgt', required=False, help_text=HELP_TEXTS['comma_elements'])
@@ -351,13 +357,13 @@ class PointDataForm1(forms.Form):
         self.fields['select_stations_by'] = forms.CharField(required=False, initial=select_stations_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
 
         if select_stations_by == 'stn_id':
-            self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text='Station id recognized by Acis. See "How to use this tool" for more info.')
+            self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text=HELP_TEXTS['stn_id'])
             self.fields['station_id'].widget.attrs['readonly'] = 'readonly'
         elif select_stations_by == 'stnid':
-            self.fields['station_id'] = forms.CharField(required=False,initial='266779', help_text='Station id recognized by Acis. See "About this tool" for more info.')
+            self.fields['station_id'] = forms.CharField(required=False,initial='266779', help_text=HELP_TEXTS['stn_id'])
         elif select_stations_by == 'stnids':
             #self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES)
-            self.fields['station_ids'] = MultiStnField(required=False,initial='266779,103732', help_text='Comma separated list of valid station ids.' )
+            self.fields['station_ids'] = MultiStnField(required=False,initial='266779,103732', help_text='Comma separated list station identifiers. Use the Station Finder to find an identifation numbers.')
         elif select_stations_by == 'county':
             self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='09001', help_text='Valid US county identifier.')
         elif select_stations_by == 'climdiv':
@@ -401,11 +407,11 @@ class PointDataForm3(forms.Form):
         self.fields['email'] = forms.EmailField(initial='Your e-mail', help_text='Enter a valid e-mail address at wich we can reach you.')
 
         if select_stations_by == 'stn_id':
-            self.fields['station_id'] = forms.CharField(initial=kwargs.get('initial', {}).get('stn_id', None), help_text='Station id recognized by Acis. See "How to use this tool" for more info.')
+            self.fields['station_id'] = forms.CharField(initial=kwargs.get('initial', {}).get('stn_id', None), help_text=HELP_TEXTS['stn_id'])
         elif select_stations_by == 'stnid':
-            self.fields['station_id'] = forms.CharField(initial=kwargs.get('initial', {}).get('station_id', None), help_text='Station id recognized by Acis. See "About this tool" for more info.')
+            self.fields['station_id'] = forms.CharField(initial=kwargs.get('initial', {}).get('station_id', None), help_text=HELP_TEXTS['stn_id'])
         elif select_stations_by == 'stnids':
-            self.fields['station_ids'] = MultiStnField(initial=kwargs.get('initial', {}).get('station_ids', None),help_text='Comma separated list of valid station ids.' )
+            self.fields['station_ids'] = MultiStnField(initial=kwargs.get('initial', {}).get('station_ids', None),help_text='Comma separated list of statio identifiers. Please use the station finder to find station ids.' )
         elif select_stations_by == 'county':
             self.fields['county'] = forms.CharField(max_length=5, min_length=5, initial=kwargs.get('initial', {}).get('county', None),help_text='Valid US county identifier.')
         elif select_stations_by == 'climdiv':
@@ -421,8 +427,8 @@ class PointDataForm3(forms.Form):
         self.fields['elements'] = MultiElementField(initial=kwargs.get('initial', {}).get('elements', None), help_text=HELP_TEXTS['comma_elements'])
         self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('start_date', None),help_text=HELP_TEXTS['date_por'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('end_date', None), help_text=HELP_TEXTS['date_por'])
-        #self.fields['data_format'] = forms.CharField(required=False, initial=kwargs.get('initial', {}).get('data_format', None), help_text='Defines format in which data will be returned.')
-        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='txt', help_text='Defines format in which data will be returned.')
+        #self.fields['data_format'] = forms.CharField(required=False, initial=kwargs.get('initial', {}).get('data_format', None), help_text=HELP_TEXTS['data_format'])
+        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='txt', help_text=HELP_TEXTS['data_format'])
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial=kwargs.get('initial', {}).get('delimiter', None),help_text='Delimiter used to seperate data values.')
         self.fields['select_stations_by'] = forms.CharField(widget=forms.HiddenInput(), initial=select_stations_by, help_text=HELP_TEXTS['select_stations_by'])
@@ -430,7 +436,7 @@ class PointDataForm3(forms.Form):
 class GridDataForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=select_grid_by_CHOICES, required=False, initial='point', help_text='Area defining gridpoints of interest.')
         #elements =forms.CharField(initial ='maxt,mint,avgt', required=True, help_text=HELP_TEXTS['comma_elements'])
-        #data_format = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', required=False, help_text='Delimiter used to seperate data values.')
+        #data_format = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', required=False, help_text=HELP_TEXTS['data_format'])
 
 class GridDataForm1(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -467,7 +473,7 @@ class GridDataForm1(forms.Form):
             self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=yesterday, help_text=HELP_TEXTS['date'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=today, help_text=HELP_TEXTS['date'])
         self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
-        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text='Defines format in which data will be returned.')
+        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
         self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
 class GridDataForm3(forms.Form):
@@ -495,8 +501,8 @@ class GridDataForm3(forms.Form):
         self.fields['start_date'] = MyDateField(max_length=10, min_length=8, initial=kwargs.get('initial', {}).get('start_date', None), help_text=HELP_TEXTS['date'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=kwargs.get('initial', {}).get('end_date', None), help_text=HELP_TEXTS['date'])
         self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, initial=kwargs.get('initial', {}).get('grid', None), help_text=HELP_TEXTS['grids'])
-        #self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput(), help_text='Defines format in which data will be returned.')
-        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='txt', help_text='Defines format in which data will be returned.')
+        #self.fields['data_format'] = forms.CharField(required=False, initial=data_format, widget=forms.HiddenInput(), help_text=HELP_TEXTS['data_format'])
+        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='txt', help_text=HELP_TEXTS['data_format'])
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial=kwargs.get('initial', {}).get('delimiter', None), help_text='Delimiter used to seperate data values.')
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text='Area defining gridpoints of interest.')
@@ -511,9 +517,9 @@ class MetaGraphForm(forms.Form):
             stn_id = self.data.get('stn_id')
 
         if stn_id is None:
-            self.fields['station_id'] = forms.CharField(required=True, initial='266779', help_text='Coop station id. See "How to use this tool" for more info.')
+            self.fields['station_id'] = forms.CharField(required=True, initial='266779', help_text='COOP station identification number. Please use the Station Finder to find your station id.')
         else:
-            self.fields['station_id'] = forms.CharField(required=True, initial=stn_id, help_text='Coop station id. See "How to use this tool" for more info.')
+            self.fields['station_id'] = forms.CharField(required=True, initial=stn_id, help_text='COOP station identification number. Please use the Station Finder to find your station id.')
 
 class MonthlyAveragesForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -524,9 +530,9 @@ class MonthlyAveragesForm(forms.Form):
             stn_id = self.data.get('stn_id')
 
         if stn_id is None:
-            self.fields['station_id'] = forms.CharField(required=False, initial='266779', help_text='Station id recognized by Acis. See "How to use this tool" for more information.')
+            self.fields['station_id'] = forms.CharField(required=False, initial='266779', help_text=HELP_TEXTS['stn_id'])
         else:
-            self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text='Station id recognized by Acis. See "How to use this tool" for more information.')
+            self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text=HELP_TEXTS['stn_id'])
         self.fields['elements'] = MultiElementField(initial='pcpn, snow', help_text=HELP_TEXTS['comma_elements'])
         self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='20000101', help_text=HELP_TEXTS['date_por'])
         self.fields['end_date'] = MyDateField(max_length=10, required = False, initial='por', help_text=HELP_TEXTS['date_por'])
@@ -656,12 +662,12 @@ class StationLocatorForm1(forms.Form):
         self.fields['element_selection'] = forms.CharField(required=False, initial=element_selection, widget=forms.HiddenInput(), help_text='Only look for stations that have data for certain elements.')
 
         if select_stations_by == 'stn_id':
-            self.fields['station_id'] = forms.CharField(initial=stn_id, help_text='Station id recognized by Acis. See "How to use this tool" for more info.')
+            self.fields['station_id'] = forms.CharField(initial=stn_id, help_text=HELP_TEXTS['stn_id'])
             self.fields['station_id'].widget.attrs['readonly'] = 'readonly'
         elif select_stations_by == 'stnid':
-            self.fields['station_id'] = forms.CharField(initial='266779', help_text='Station id recognized by Acis. See "About this tool" for more info.')
+            self.fields['station_id'] = forms.CharField(initial='266779',help_test=HELP_TEXTS['stn_id'])
         elif select_stations_by == 'stnids':
-            self.fields['station_ids'] = MultiStnField(required=False,initial='266779,103732', help_text='Comma separated list of valid station ids.' )
+            self.fields['station_ids'] = MultiStnField(required=False,initial='266779,103732', help_text='Comma separated list station identifiers. Use the Station Finder to find an identifation numbers.')
         elif select_stations_by == 'county':
             self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='09001', help_text='Valid US county identifier.')
         elif select_stations_by == 'climdiv':

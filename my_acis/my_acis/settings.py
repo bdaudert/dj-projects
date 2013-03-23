@@ -10,7 +10,7 @@ DASH_URL = URL_PREFIX + "sw_ckn/monitoring/"
 DATA_URL = URL_PREFIX + "sw_ckn/data/"
 STN_DATA_URL = DATA_URL + "station/"
 GRID_DATA_URL = DATA_URL + "modeled/"
-TOOLS_URL = URL_PREFIX + "csw_ckn/apps/"
+TOOLS_URL = URL_PREFIX + "sw_ckn/apps/"
 STN_TOOLS_URL = TOOLS_URL + "station/"
 GRID_TOOLS_URL = TOOLS_URL + "gridded/"
 

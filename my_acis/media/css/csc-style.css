@@ -13,13 +13,13 @@ body {
     height: 100%;
     margin: 0px auto;
     padding: 0;
-    font:14px "Lucida Grande", Lucida, Verdana, sans-serif;
+    font:12px "Lucida Grande", Lucida, Verdana, sans-serif;
 }
 
 p, ul, ol, li {
     /*color:#FFEBCD;*/
     color:#006666;
-    font-size:large;
+    font-size:4;
 }
 
 h1, h2, h3, h4, h5 {
@@ -76,7 +76,7 @@ a#warning {
 }
 
 table {
-    border:2px solid #006666;
+    /*border:2px solid #006666;*/
     text-align:left;
     /*padding:10px 10px 10px 10px;*/
 }
@@ -185,7 +185,7 @@ div.pop-up {
 .error {
     /*color:#FF0000;*/
     color:#FF007F;
-    font-size:large;
+    font-size:4;
 }
   
 .content-header {
@@ -228,10 +228,12 @@ div.pop-up {
 
 .major-left, .major-right{
     float: left;
-    padding: 10px 0px 10px 50px;
+    padding: 10px 0px 10px 10px;
     height: 1000px;
     width:45%;
 }
+
+
 
 .right-wide{
     float: left;
@@ -295,12 +297,12 @@ img.icon {
 }
 
 img.icon_small {
-        width: 15px;
-        height:15px;
+        width: 20px;
+        height:20px;
 }
 
 img.chart {
-    width:350px;
+    width:400px;
     height:500px;
 }
 
@@ -312,11 +314,20 @@ img.sidebar {
 
 img.map {
     width: 250px;
-    height:164px;
+    height:150px;
     position: absolute;
     top: 0;
     right:0;
 }
+
+img.map_2 {
+    width: 250px;
+    height:150px;
+    position: absolute;
+    top: 0;
+    right:0;
+}
+
 
 img.dash_img {
     width: 200px;
@@ -361,7 +372,8 @@ img.center {
     background: #FFEBCD;
     color: #660000;
     height:50px;
-    width:100%
+    width:100%;
+    font-size:5;
     /*padding: .10em 1em;*/
     position:relative;
     
@@ -398,6 +410,7 @@ img.center {
     position: absolute;
     margin: 0;
     padding: 0;
+    /*color:#CD7F32;*/
 }
 .breadcrumbs li:hover li {
     float: none;
