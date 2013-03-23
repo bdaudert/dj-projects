@@ -180,7 +180,7 @@ def data_home(request):
     }
     return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))
 
-def data_historic(request):
+def data_station(request):
     context = {
         'title': 'Historic Station Data',
         'data_page':True
@@ -262,7 +262,7 @@ def data_historic(request):
                     initial_params_2['station_ids'] = ','.join([str(stn) for stn in initial_params_2['station_ids']])
                 form3_point = forms.PointDataForm3(initial=initial_params_2)
                 context['form3_point'] = form3_point
-                return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
+                return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
             else:
                 resultsdict = AcisWS.get_point_data(form1_point.cleaned_data, 'sodlist_web')
                 context['results'] = resultsdict
@@ -317,15 +317,15 @@ def data_historic(request):
 
                 if form1_point.cleaned_data['data_format'] == 'dlm':
                     #return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'dat')
-                    return WRCCUtils.write_point_data_to_file(data, dates, station_names, station_ids, elements,delimiter, 'dat', request=request, file_info=file_info)
+                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'dat', request=request, file_info=file_info)
                 elif form1_point.cleaned_data['data_format'] == 'clm':
                     #return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'txt')
-                    return WRCCUtils.write_point_data_to_file(data, dates, station_names, station_ids, elements,delimiter, 'txt', request=request, file_info=file_info)
+                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'txt', request=request, file_info=file_info)
                 elif form1_point.cleaned_data['data_format'] == 'xl':
                     #return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'xls')
-                    return WRCCUtils.write_point_data_to_file(data, dates, station_names, station_ids, elements,delimiter, 'xls', request=request, file_info=file_info)
+                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'xls', request=request, file_info=file_info)
                 else:
-                    return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
+                    return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
     if 'form3_point' in request.POST:
         form3_point = set_as_form(request,'PointDataForm3')
         context['form3_point'] = form3_point
@@ -346,9 +346,9 @@ def data_historic(request):
             mode = os.stat(f).st_mode
             os.chmod(f, mode | stat.S_IWOTH)
             context['user_info'] = 'You will receive an email from csc-data-request@dri.edu with instructions when the data request has been processed. You provided following e-mail address: %s' % (form3_point.cleaned_data['email'])
-        return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
+        return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
 
-    return render_to_response('my_data/data/historic/home.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
 
 def data_modeled(request):
     context = {
@@ -376,6 +376,11 @@ def data_modeled(request):
     if loc is not None:
         context['location'] = loc;initial_1['location'] = loc
         context['select_grid_by'] = 'point';initial_1['select_grid_by'] = 'point'
+        context['lat'] = loc.split(',')[0]; context['lon'] = loc.split(',')[1]
+        context['map_loc'] = loc
+    else:
+        context['lat'] = '39.82'; context['lon'] = '-98.57'
+        context['map_loc'] = '-98.57,39.82'
 
     if elements is not None:context['elements'] = elements;initial_1['elements'] = elements
     if loc is not None or state is not None or bbox is not None:
@@ -394,10 +399,10 @@ def data_modeled(request):
             if initial_1['select_grid_by'] == 'point':
                 context['need_map'] = True
                 if loc is not None:
-                    context['center_lat'] = loc.split(',')[0]; context['center_lon'] = loc.split(',')[1]
+                    context['lat'] = loc.split(',')[0]; context['lon'] = loc.split(',')[1]
                     context['map_loc'] = loc
                 else:
-                    context['center_lat'] = '39.82'; context['center_lon'] = '-98.57'
+                    context['lat'] = '39.82'; context['lon'] = '-98.57'
                     context['map_loc'] = '-98.57,39.82'
 
             form1_grid = forms.GridDataForm1(initial=initial_1)
@@ -432,9 +437,9 @@ def data_modeled(request):
                 if 'location' in form1_grid.cleaned_data.keys():
                     context['need_map'] = True
                     context['map_loc'] = form1_grid.cleaned_data['location']
-                    #context['center_lat'] = '39.82'; context['center_lon'] = '-98.57'
-                    context['center_lat'] = form1_grid.cleaned_data['location'].split(',')[1]
-                    context['center_lon'] = form1_grid.cleaned_data['location'].split(',')[0]
+                    #context['lat'] = '39.82'; context['lon'] = '-98.57'
+                    context['lat'] = form1_grid.cleaned_data['location'].split(',')[1]
+                    context['lon'] = form1_grid.cleaned_data['location'].split(',')[0]
                     #context['map_loc'] = '%s,%s' % (form1_grid.cleaned_data['location'].split(',')[1], form1_grid.cleaned_data['location'].split(',')[0])
                 req = AcisWS.get_grid_data(form1_grid.cleaned_data, 'griddata_web')
                 #format data
@@ -544,6 +549,21 @@ def apps_home(request):
     context['element'] = element
     return render_to_response('my_data/apps/home.html', context, context_instance=RequestContext(request))
 
+def apps_station(request):
+    context = {
+        'title': 'Station Data Tools',
+        'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
+        'apps_page':True
+        }
+    return render_to_response('my_data/apps/station/home.html', context, context_instance=RequestContext(request))
+
+def apps_gridded(request):
+    context = {
+        'title': 'Gridded Data Tools',
+        'apps_page':True
+        }
+    return render_to_response('my_data/apps/gridded/home.html', context, context_instance=RequestContext(request))
+
 def sw_ckn_station_apps(request):
     context = {
         'title': 'SW-CKN Historic Station Data Applications',
@@ -615,7 +635,7 @@ def metagraph(request):
         else:
             stn_id = None
 
-    return render_to_response('my_data/apps/metagraph.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/apps/station/metagraph.html', context, context_instance=RequestContext(request))
 
 def monthly_aves(request):
     context = {
@@ -741,7 +761,7 @@ def monthly_aves(request):
         #else:
         #    stn_id = None
 
-    return render_to_response('my_data/apps/monthly_aves.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
 
 def clim_sum_maps(request):
     context = {
@@ -852,7 +872,7 @@ def clim_sum_maps(request):
         form1 = set_as_form(request, 'ClimateMapForm1')
         context['form1_ready'] = True
         context['form1'] = form1
-    return render_to_response('my_data/apps/clim_sum_maps.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/apps/gridded/clim_sum_maps.html', context, context_instance=RequestContext(request))
 
 def grid_point_time_series(request):
     context = {
@@ -871,10 +891,9 @@ def grid_point_time_series(request):
     if end_date is not None:initial['end_date'] = str(end_date)
     if lat is not None and lon is not None:
         initial['lat']=str(lat);initial['lon']=str(lon)
-        context['center_lat'] = str(lat); context['center_lon'] = str(lon)
-        context['lat'] = lat;context['lon'] = lon
+        context['lat'] = str(lat);context['lon'] = str(lon)
     else:
-        context['center_lat'] = '39.82'; context['center_lon'] = '-98.57'
+        context['lat'] = '39.82'; context['lon'] = '-98.57'
     if grid is not None:
         initial['grid'] = str(grid)
 
@@ -898,6 +917,7 @@ def grid_point_time_series(request):
             context['element'] = form0.cleaned_data['element']
             context['lat'] = form0.cleaned_data['lat']
             context['lon'] = form0.cleaned_data['lon']
+            context['lat'] = str(lat); context['lon'] = str(lon)
             #Note: acis takes lon, lat in that order
             location = '%s,%s' %(str(form0.cleaned_data['lon']), str(form0.cleaned_data['lat']))
             context['select_grid_by'] = 'point'
@@ -935,7 +955,7 @@ def grid_point_time_series(request):
             f = open('%s%s' %(JSON_URL,json_file),'w+')
             f.write(results_json)
             f.close()
-    return render_to_response('my_data/apps/grid_point_time_series.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/apps/gridded/grid_point_time_series.html', context, context_instance=RequestContext(request))
 
 def station_locator_app(request):
     from subprocess import call
@@ -978,6 +998,7 @@ def station_locator_app(request):
             if 'county_warning_area' in form1.cleaned_data.keys():by_type = 'county_warning_area';val = form1.cleaned_data['county_warning_area']
             if 'basin' in form1.cleaned_data.keys():by_type = 'basin';val = form1.cleaned_data['basin']
             if 'state' in form1.cleaned_data.keys():by_type = 'state';val = form1.cleaned_data['state']
+            if 'states' in form1.cleaned_data.keys():by_type = 'states';val = form1.cleaned_data['states']
             if 'bounding_box' in form1.cleaned_data.keys():by_type = 'bounding_box';val = form1.cleaned_data['bounding_box']
 
             if form1.cleaned_data['element_selection'] == 'T':
@@ -1017,161 +1038,7 @@ def station_locator_app(request):
         #form1 = set_as_form(request,'StationLocatorForm1')
         #context['form1'] = form1
         #context['form1_ready'] = True
-    return render_to_response('my_data/apps/station_locator_app.html', context, context_instance=RequestContext(request))
-
-def apps_hydro(request):
-    context = {
-        'title': 'Hydrology Products',
-        'apps_page':True
-    }
-    return render_to_response('my_data/apps/hydro/home.html', context, context_instance=RequestContext(request))
-
-def apps_eco(request):
-    context = {
-        'title': 'Ecosystem Products',
-        'apps_page':True
-    }
-    return render_to_response('my_data/apps/eco/home.html', context, context_instance=RequestContext(request))
-
-def station_finder(request):
-    context = {
-        'title': 'Station Finder',
-        'state_choices':state_choices,
-        'station_finder_page':True,
-    }
-    context['json_file'] = 'SW_stn.json'
-    return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
-
-def by_id(request):
-    q = request.GET.get('q', '')
-    context = {
-        'title': "Search Results for Station ID %s" %q,
-        'state_choices':state_choices
-    }
-    if not q:
-        stn_json = {}
-    else:
-        stn_json, f_name = AcisWS.station_meta_to_json('id', q)
-        if 'error' in stn_json.keys():
-            context['error'] = stn_json['error']
-        if stn_json['stations'] == []:
-            context['error'] = "No station found for the given Id: %s" %q
-    context['json_file'] = f_name
-    return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
-
-
-def by_county(request):
-    q = request.GET.get('q', '')
-    context = {
-        'title': "Search Results for County %s" %q,
-        'state_choices':state_choices
-    }
-    if not q:
-        stn_json = {}
-    else:
-        stn_json, f_name = AcisWS.station_meta_to_json('county', q)
-        if 'error' in stn_json.keys():
-            context['error'] = stn_json['error']
-        if stn_json['stations'] == []:
-            context['error'] = "No stations found for the given County: %s" %q
-    context['json_file'] = f_name
-    return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
-
-def by_cwa(request):
-    q = request.GET.get('q', '')
-    context = {
-        'title': "Search Results for County Warning Area %s" %q,
-        'state_choices':state_choices
-        }
-    if not q:
-        stn_json = {}
-    else:
-        stn_json, f_name = AcisWS.station_meta_to_json('county_warning_area', q)
-        if 'error' in stn_json.keys():
-            context['error'] = stn_json['error']
-        if stn_json['stations'] == []:
-            context['error'] = "No stations found for the given County Warning Area: %s" %q
-    context['json_file'] = f_name
-    return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
-
-def by_clim_div(request):
-    q = request.GET.get('q', '')
-    context = {
-        'title': "Search Results for Climate Division %s" %q,
-        'state_choices':state_choices
-    }
-    if not q:
-        stn_json = {}
-    else:
-        stn_json, f_name = AcisWS.station_meta_to_json('climate_division', q)
-        if 'error' in stn_json.keys():
-            context['error'] = stn_json['error']
-        if stn_json['stations'] == []:
-            context['error'] = "No stations found for the given Climate Division: %s" %q
-    context['json_file'] = f_name
-    return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
-
-def by_basin(request):
-    q = request.GET.get('q', '')
-    context = {
-        'title': "Search Results for Basin %s" %q,
-        'state_choices':state_choices
-    }
-    if not q:
-        stn_json = {}
-    else:
-        stn_json, f_name = AcisWS.station_meta_to_json('basin', q)
-        if 'error' in stn_json.keys():
-            context['error'] = stn_json['error']
-        if stn_json['stations'] == []:
-            context['error'] = "No stations found for the given Basin: %s" %q
-    context['json_file'] = f_name
-    return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
-
-def by_state(request):
-    state_key = request.GET.get('state_key', None)
-    context = {
-        'title': "Search Results for State %s" %state_key,
-        'state_choices':state_choices
-    }
-    if state_key is None:
-        stn_json = {}
-    else:
-        stn_json, f_name = AcisWS.station_meta_to_json('state', state_key)
-        if 'error' in stn_json.keys():
-            context['error'] = stn_json['error']
-        if stn_json['stations'] == []:
-            context['error'] = "No stations found for the given State: %s" %state_key
-    context['json_file'] = f_name
-    return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
-
-def by_bounding_box(request):
-    W = request.GET.get('W', None)
-    S = request.GET.get('S', None)
-    E = request.GET.get('E', None)
-    N = request.GET.get('N', None)
-    context = {
-        'state_choices':state_choices
-    }
-    if not W or not S or not E or not N:
-        stn_json = {}
-        bbox = ' '
-        context['error'] = "Not a valid Bounding Box!"
-    else:
-        try:
-            bbox ="%f, %f, %f, %f" % (float(W), float(S), float(E), float(N))
-            stn_json, f_name = AcisWS.station_meta_to_json('bounding_box', bbox)
-            if 'error' in stn_json.keys():
-                context['error'] = stn_json['error']
-            if stn_json['stations'] == []:
-                context['error'] = "No stations found for the given Bounding Box: %s" %bbox
-        except:
-            bbox = ''
-            if stn_json['stations'] == []:
-                context['error'] = "No stations found for the given Bounding Box: None"
-    context['title'] = "Search Results for bounding box %s" %bbox
-    context['json_file'] = f_name
-    return render_to_response('my_data/station_finder/home.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
 
 
 #Utlities

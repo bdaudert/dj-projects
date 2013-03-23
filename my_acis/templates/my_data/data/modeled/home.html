@@ -12,8 +12,8 @@
 <a href="{{URL_PREFIX}}sw_ckn/data/modeled/">Modeled/Gridded Data</a></p>
 
 <div class="container">
-    <h2>ACIS Gridded Data</h2>
     <div class="major-left">
+    <h2>ACIS Gridded Data</h2>
         {%if not form3_grid_ready %}
         {%if not hide_form_0 %}
         <div id='form0'>
@@ -55,9 +55,12 @@
                     <td>{{field.label}}:</td>
                     {%if field.label == "Location" %}
                         {%if not map_loc %}
-                            <td><input type="text" name="location" id="location"></td>
+                            <td><input type="text" name="location" id="location" value="{{location}}"></td>
                         {%else%}
-                            <td><input type="text" name="location" id="location" value={{map_loc}}></td>
+                            <td><input type="text" name="location" id="location" value="{{map_loc}}"></td>
+                        {%endif%}
+                        {%if need_map%}
+                            <p class="error">Drag map marker to change location</p>
                         {%endif%}
                     {%else%}
                         <td>{{field}}</td>
@@ -139,7 +142,7 @@
                 <ul>
                     <li>Grid selection = "Point Location". Enter a latitude, longitide of choice. 
                     If you don't know your lat, lon, find it here:</li>
-                    <a href="{{URL_PREFIX}}sw_ckn/apps/grid_point_time_series/">Gridpoint time series tool</a>
+                    <a href="{{URL_PREFIX}}sw_ckn/apps/gridded/grid_point_time_series/">Gridpoint time series tool</a>
                     <li>Grid selection = "State". Enter a US state of choice.</li>
                     <li>Station Selection = "Bounding Box". Find data for all stations in a bounding box of your choice. 
                     A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. 
@@ -187,18 +190,6 @@
             <p class="error">{{user_info}}</p>
         {%endif%}
 
-    {%if need_map%}
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-        <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
-        <input type="hidden" id="center_lat" name="center_lat" value={{center_lat}}>
-        <input type="hidden" id="center_lon" name="center_lon" value={{center_lon}}>
-        <input type="hidden" id="zoom_level" name="zoom_level" value="5">
-        <input type="hidden" id="app" name="app" value="grid_data">
-        <div id="map" style="width: 100%; height:400px;"></div>
-        <script type="text/javascript">
-            initialize_grid_point_map()
-        </script>
-    {%endif%} 
 
         {% if form3_grid_ready%}
             <div id='form3'>
@@ -226,15 +217,15 @@
             <!--Link to relevant applications-->
             {%if link_to_clim_sum_map %}
                 {%if state%}
-                    <a target="_blank" href="{{URL_PREFIX}}sw_ckn/apps/clim_sum_maps/?start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}&state={{state}}">Generate a climate summary map  for this data set here!</a>
+                    <a target="_blank" href="{{URL_PREFIX}}sw_ckn/apps/gridded/clim_sum_maps/?start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}&state={{state}}">Generate a climate summary map  for this data set here!</a>
                 {%endif%}
                 {%if bounding_box%}                    
-                    <a target="_blank" href="{{URL_PREFIX}}sw_ckn/apps/clim_sum_maps/?start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}&bounding_box={{bounding_box}}&">Generate a climate summary map  for this data set here!</a>
+                    <a target="_blank" href="{{URL_PREFIX}}sw_ckn/apps/gridded/clim_sum_maps/?start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}&bounding_box={{bounding_box}}&">Generate a climate summary map  for this data set here!</a>
                 {%endif%}
             {%endif%}
             <br />
             {%if link_to_gp_ts %}
-                 <a target="_blank" href="{{URL_PREFIX}}sw_ckn/apps/grid_point_time_series/?lat={{lat}}&lon={{lon}}&start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}">Generate a time series for this data set here!</a>
+                 <a target="_blank" href="{{URL_PREFIX}}sw_ckn/apps/gridded/grid_point_time_series/?lat={{lat}}&lon={{lon}}&start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}">Generate a time series for this data set here!</a>
             {%endif%}            
             <br />
             <h2>{%for item in file_info%}{{item}}&nbsp;{%endfor%}</h2>
@@ -250,6 +241,21 @@
                 {{grid_data}}
             {%endif%}
         {%endif%}
+    <br />
+    {%if need_map%}
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+        <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
+        <input type="hidden" id="lat" name="lat" value={{lat}}>
+        <input type="hidden" id="lon" name="lon" value={{lon}}>
+        <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+        <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+        <input type="hidden" id="zoom_level" name="zoom_level" value="5">
+        <input type="hidden" id="app" name="app" value="grid_data">
+        <div id="map" style="width: 100%; height:400px;"></div>
+        <script type="text/javascript">
+            initialize_grid_point_map()
+        </script>
+    {%endif%}
 
   <!-- Footer -->
 <!--

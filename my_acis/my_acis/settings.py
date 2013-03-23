@@ -4,6 +4,16 @@ import django.conf.global_settings as DEFAULT_SETTINGS
 
 
 URL_PREFIX = "/csc/"
+HOME_URL = URL_PREFIX + "sw_ckn/home/"
+SW_CKN_URL = URL_PREFIX + "sw_ckn/main/"
+DASH_URL = URL_PREFIX + "sw_ckn/monitoring/"
+DATA_URL = URL_PREFIX + "sw_ckn/data/"
+STN_DATA_URL = DATA_URL + "station/"
+GRID_DATA_URL = DATA_URL + "modeled/"
+TOOLS_URL = URL_PREFIX + "csw_ckn/apps/"
+STN_TOOLS_URL = TOOLS_URL + "station/"
+GRID_TOOLS_URL = TOOLS_URL + "gridded/"
+
 SRC_BASE = "/www/apps/csc/dj-projects/"
 LIB_PREFIX  = "/www/apps/csc/my-python-lib/"
 BASE_DIR = "/www/apps/csc/"

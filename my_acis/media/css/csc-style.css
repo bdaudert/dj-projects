@@ -43,14 +43,9 @@ a:hover {
 }
 a:active { color: red; }
 
-#sw_us {
-    color: #4D4DFF;
-}
+.tool_how_to:active {color: red;}
 
-a#sw_us:hover{
-    color: #33CCFF;
-    text-decoration: none;
-}
+.tool_info:active {color:red;}
 
 #us_wide {
     color: #6B238E;
@@ -233,7 +228,7 @@ div.pop-up {
 
 .major-left, .major-right{
     float: left;
-    padding: 10px 10px 10px 10px;
+    padding: 10px 0px 10px 50px;
     height: 1000px;
     width:45%;
 }
@@ -317,7 +312,7 @@ img.sidebar {
 
 img.map {
     width: 250px;
-    height:165px;
+    height:164px;
     position: absolute;
     top: 0;
     right:0;
@@ -366,7 +361,7 @@ img.center {
     background: #FFEBCD;
     color: #660000;
     height:50px;
-    width:80%
+    width:100%
     /*padding: .10em 1em;*/
     position:relative;
     

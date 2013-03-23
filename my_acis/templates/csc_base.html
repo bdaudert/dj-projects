@@ -22,7 +22,7 @@
     <script type="text/javascript"
         src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true">
     </script>
-    <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markermanager/src/markermanager.js"></script>
+    <!--<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markermanager/src/markermanager.js"></script>-->
     <script type="text/javascript" src="{{MEDIA_URL}}js/csc-maps.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}js/polygon.min.js"></script>
     <script type="text/javascript" src="http://www.wrcc.dri.edu/media/js/stationmap.js"></script>
@@ -63,7 +63,7 @@
     <div class="header">
         <h1 align="center">Southwest Climate Knowledge Network</h1>
         <h2 align="center">SW-CKN</h2>
-        <img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png">
+        <a target="_blank" href="http://www.swcsc.arizona.edu/"><img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png"></a>
         {%if home_page%}
             <img class="map" src="{{ MEDIA_URL }}img/SouthWest.jpg">
         {%endif%}
@@ -90,27 +90,34 @@
     {% block breadcrumbs %}
     <li><a href="/csc/sw_ckn/home/">HOME</a>
     <!--<li><a href="/csc/sw_ckn/main/">MAIN2</a>-->
-    <li><a href="/csc/sw_ckn/main/">SW-CKN</a>
+    <li><a href="/csc/sw_ckn/main/">RESOURCES</a>
     <!--<li><a href="/csc/sw_ckn/main_map/">SW-CKN2</a>-->
-    <li><a href="/csc/sw_ckn/about_us/">ABOUT US <img class="icon_small" src="{{MEDIA_URL}}img/DownArrowHand.png"></a>
+    <li><a href="{{SW_CKN_URL}}about_us/">ABOUT US <img class="icon_small" src="{{MEDIA_URL}}img/DownArrowHand.png"></a>
     <ul>
-        <li><a href="/csc/sw_ckn/who_we_are/">Who we are</a></li>
-        <li><a href="/csc/sw_ckn/what_we_do/">What we do</a></li>
-        <li><a href="/csc/sw_ckn/contact_us/">Contact Us</a></li>
+        <li><a href="{{SW_CKN_URL}}who_we_are/">Who we are</a></li>
+        <li><a href="{{SW_CKN_URL}}what_we_do/">What we do</a></li>
+        <li><a href="{{SW_CKN_URL}}contact_us/">Contact Us</a></li>
     </ul></li>
     <li><a href="/csc/sw_ckn/monitoring/">MONITORING</a>
     <li><a href="/csc/sw_ckn/data">DATA PORTAL <img class="icon_small" src="{{MEDIA_URL}}img/DownArrowHand.png"></a>
     <ul>
         <li><a href="/csc/sw_ckn/data">All Data</a></li>
-        <li><a href="/csc/sw_ckn/station_finder/">Station Finder</a>
-        <li><a href="/csc/sw_ckn/data/historic">Historic Station Data</a></li>
-        <li><a href="/csc/sw_ckn/data/modeled">Modeled/Gridded Data</a></li>
+        <li><a href="/csc/sw_ckn/station_finder/">&nbsp;&nbsp;Station Finder</a>
+        <li><a href="/csc/sw_ckn/data/station">&nbsp;&nbsp;Station Data</a></li>
+        <li><a href="/csc/sw_ckn/data/modeled">&nbsp;&nbsp;Gridded Data</a></li>
     </ul></li>
     <li><a href="/csc/sw_ckn/apps">TOOLS<img class="icon_small" src="{{MEDIA_URL}}img/DownArrowHand.png"></a>
     <ul>
-        <li><a href="/csc/sw_ckn/apps">All TOOLS</a></li>
-        <li><a href="/csc/sw_ckn/apps/sw_ckn_station_apps">SW-CKN Station Apps</a></li>
-        <li><a href="/csc/wrcc_apps/">WRCC PYTHON-SOD-APPS</a></li>
+        <li><a href="/csc/sw_ckn/apps/">Overview</a></li>
+        <li><a href="/csc/sw_ckn/apps/station/">&nbsp;&nbsp;Station Tools</a></li>
+        <li><a href="/csc/sw_ckn/apps/gridded/">&nbsp;&nbsp;Grid Tools</a></li>
+        <li><a href="/csc/sw_ckn/apps/sw_ckn_station_apps/">&nbsp;&nbsp;SW-CKN</a></li>
+        <li><a href="/csc/wrcc_apps/">&nbsp;&nbsp;WRCC-SOD</a></li>
+<!--
+        <li><a href="/csc/sw_ckn/apps/station/">Station Apps</a></li>
+        <li><a href="/csc/wrcc_apps/">&nbsp;&nbsp;&nbsp;WRCC SOD</a></li>
+        <li><a href="/csc/sw_ckn/apps/gridded/">Gridded Apps</a></li>
+    -->
     </ul>
     </li>
     
@@ -149,6 +156,7 @@
 
     <div class="content">
     {% block content %}
+        <input type="hidded" name="MEDIA_URL" id="MEDIA_URL" value={{MEDIA_URL}} />
     {% endblock %}
     </div> <!-- END content -->
 

@@ -131,7 +131,7 @@ $(function () {
                             enabled: false
                         },
                         title: {
-                            text: Element
+                            text: 'Zoom In!'
                         },
                         showFirstLabel: false
                     },

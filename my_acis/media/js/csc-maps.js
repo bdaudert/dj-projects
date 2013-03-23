@@ -10,10 +10,10 @@ function initialize_grid_point_map() {
     // Since this map is used in multiple locations in slightly
     //different ways, we need to specify the app. possible values: gp_ts,grid_data 
     var app = document.getElementById("app").value; // Since this map is used in multiple locations
-    var center_lat = document.getElementById("center_lat").value;
-    var center_lon = document.getElementById("center_lon").value;
+    var lat = document.getElementById("initial_lat").value;
+    var lon = document.getElementById("initial_lon").value;
     var zoom_level = document.getElementById("zoom_level").value;
-    var myLatlng = new google.maps.LatLng(center_lat,center_lon);
+    var myLatlng = new google.maps.LatLng(lat,lon);
     var mapOptions = {
     //center: ll,
     center: myLatlng,
@@ -40,7 +40,7 @@ function initialize_grid_point_map() {
         if (app == 'gp_ts'){
             document.getElementById("lat").value = lat;
             document.getElementById("lon").value = lon;
-            var href = base_dir +'apps/grid_point_time_series/?lat=' +
+            var href = base_dir +'apps/gridded/grid_point_time_series/?lat=' +
                    lat + '&lon=' + lon;
         }
         else if (app == 'grid_data'){
@@ -51,7 +51,7 @@ function initialize_grid_point_map() {
         var contentString = '<div id="MarkerWindow">'+
             '<p><b>Lat: </b>' + lat + '<br/>'+
             '<b>Lon: </b>' + lon + '<br/>' +
-            //'<a href="'+ href + '">Use this location</a>' + 
+
             '</div>';
         infowindow.setContent(contentString);
         infowindow.open(map, marker);
@@ -98,13 +98,17 @@ function initialize_station_finder() {
             var name = data.network_codes[key];
             var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
             var div = document.createElement('div');
-            div.innerHTML = '<img src="' + icon + '"> ' + name +': <input type="checkbox" id="'+ name +
-            '" onclick="my_boxclick(this,\''+ name +'\')"/>';
+            if (data.network_codes[key] == "COOP"){
+                //show("COOP");
+                div.innerHTML = '<img src="' + icon + '"> ' + name +': <input type="checkbox" id="'+ name +
+                                '" onclick="my_boxclick(this,\''+ name +'\')" checked />';
+            }
+            else {
+                div.innerHTML = '<img src="' + icon + '"> ' + name +': <input type="checkbox" id="'+ name +
+                '" onclick="my_boxclick(this,\''+ name +'\')"/>';
+            }
             legend.appendChild(div);
         }
-
-        //map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
-        //map.controls.push(legend);
 
         var bounds=new google.maps.LatLngBounds();
 
@@ -135,7 +139,13 @@ function initialize_station_finder() {
             marker.elevation = c.elevation;
             marker.stn_networks = c.stn_networks;
             marker.sids = c.sids;
-            marker.setVisible(false);
+            if (c.marker_category == "COOP"){
+                marker.setVisible(true);
+                document.getElementById(c.marker_category).checked = true;
+            }
+            else {
+                marker.setVisible(false);
+            }
             //Fit map to encompass all markers
             bounds.extend(latlon);
 
@@ -159,7 +169,7 @@ function initialize_station_finder() {
                 '">Access Climate Summaries for this Station (by WRCC)</a>'
             }
 
-            var data_portal_link = '<a target="_blank" href="' + base_dir + 'data/historic/?stn_id=' + c.sids[0];
+            var data_portal_link = '<a target="_blank" href="' + base_dir + 'data/station/?stn_id=' + c.sids[0];
             var app_portal_link = '<a target="_blank" href="' + base_dir + 'apps/sw_ckn_station_apps/?stn_id=' + c.sids[0]; 
             if (start_date != null){ 
                 data_portal_link = data_portal_link + '&start_date=' + start_date;
@@ -173,7 +183,7 @@ function initialize_station_finder() {
                 data_portal_link = data_portal_link + '&elements=' + elements;
                 app_portal_link = app_portal_link + '&elements=' + elements;
             }
-            data_portal_link = data_portal_link + '">Get Data for this Station (via ACIS)</a>'
+            data_portal_link = data_portal_link + '">Get Data for this Station </a>'
             app_portal_link = app_portal_link + '">Run a climate application for this Station</a>'
             var contentString = '<div id="MarkerWindow">'+
                 wrcc_info_link + '<br />' +
@@ -184,7 +194,6 @@ function initialize_station_finder() {
                 '<b>NETWORKS: </b>' + c.stn_networks + '<br/>' +
                 '<b>State, Elevation, Lat, Lon: </b>' + c.state + ', ' + c.elevation + ', ' + c.lat + ', ' +c.lon +'<br/>' +
                 '<b>Available elements with date range: </b>' + avbl_elements + '<br />' +
-                wrcc_info_link + '<br />' +
                 '</div>';
             marker.contentString = contentString;
             markers.push(marker);

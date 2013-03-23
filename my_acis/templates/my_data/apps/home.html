@@ -1,290 +1,76 @@
 {% extends "csc_base.html" %}
 
-<meta name="keywords" content="tools, climate product, climate applications, visualization, time series, risk maps, composite maps">
-<meta name="description" content="SW-CKN Climate Applications">
+<meta name="keywords" content="data, station data, historic data, gridded data, modeled data, data portal, acis">
+<meta name="description" content="SW-CKN TOOLS Home">
 
-{% block content %}
+{% block content %} 
 
-    <p align="center">You are here 
-    <a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
-    <a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN></a>
-    <a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS></a>
+<p align="center">You are here 
+<a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
+<a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS</a></p>
 
-
-    <div class="container">
-
-        <div class="center-left">
-            <h2 class="error">Historic Station Data Applications</h3>
-        
-            <ul class="navbar">    
-                <h4 align="center">Southwest US Applications</h4>
+<div class="container">
+    <div class="center-left">
+        <h1>Links to other tools</h1>
+        <!--
+           <ul class="navbar">
                 <table>
                     <tr><td>
-                    <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/cal-mon/frames_version.html" class="trigger" target="_blank">California Climate Tracker(<font color="red">CA</font>)</a>
-                    <div class="pop-up">
-                        <p><font size="4"></font>Tracking Climate Variability and Change for the state of California.</p>
-                    </div>
-                    </td><td>
-                    <img  class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowHide('Docu_CalTracker')">
-                    <!--;HighLight(this,'docu')-->
-                    </td></tr>
-                    <tr><td>                    
-                    <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/nev-mon/index.html" class="trigger" target="_blank">Nevada Climate Tracker(<font color="red">NV</font>)</a>
-                    <div class="pop-up">                        
-                    <p><font size="4"></font>Tracking Climate Variability and Change for the state of Nevada.</p>
-                    </div>
-                    </td><td>
-                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="ShowHide('Docu_NevTracker')">
-                    </td></tr>
-                </table>
-                <h4 align ="center">US-Wide Applications</h4>
-                <table>
-                    {%if stn_id%}
-                        <tr><td>
-                        <a id="us_wide" href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages</a>
-                        <div class="pop-up">
-                            <p><font size="4">Generates bar chart of monthly averages.</font></p>
-                        </div>
-                        </td><td>
-                        <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowHide('Docu_MAVES')">
-                        </td></tr>
-                        <tr><td>
-                        <a id="us_wide" href="{{URL_PREFIX}}sw_ckn/apps/station_locator/?stn_id={{stn_id}}" class="trigger">Station Locator</a>
-                        <div class="pop-up">
-                            <p><font size="4">Find ACIS stations with data for specific elements and a chosen time range.</font></p>
-                        </div>
-                        </td><td>
-                        <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowHide('Docu_NONE')">
-                        </td></tr>
-                       <tr><td>
-                        <a id="us_wide" href="{{URL_PREFIX}}sw_ckn/apps/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics(<font color="red">COOP stations only</font>)</a>
-                        <div class="pop-up">
-                            <p><font size="4">See how much data is missing over the period of record.</font></p>
-                        </div>
-                        </td><td>
-                        <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowHide('Docu_META_GRAPH')">
-                        </td></tr>
-                    {%else%}
-                        <tr><td>
-                        <a href="{{URL_PREFIX}}sw_ckn/apps/monthly_aves/" class="trigger">Monthly Averages</a>
-                        <div class="pop-up">
-                            <p><font size="4">Generates bar chart of monthly averages.</font></p>
-                        </div>
-                        </td><td>
-                        <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="ShowHide('Docu_MAVES')">
-                        </td></tr>
-                        <tr><td>
-                        <a id="us_wide" href="{{URL_PREFIX}}sw_ckn/apps/station_locator/" class="trigger">Station Locator</a>
-                        <div class="pop-up">
-                            <p><font size="4">Find ACIS stations with data for specific elements and a chosen time range.</font></p>
-                        </div>
-                        </td><td>
-                        <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowHide('Docu_NONE')">
-                        </td></tr>
-                       <tr><td>
-                        <a id="us_wide" href="{{URL_PREFIX}}sw_ckn/apps/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics(<font color="red">COOP stations only</font>)</a>
-                        <div class="pop-up">
-                            <p><font size="4">See how much data is missing over the period of record.</font></p>
-                        </div>
-                        </td><td>
-                        <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowHide('Docu_META_GRAPH')">
-                        </td></tr>
-                    {%endif%}
-                    <tr><td>
-                    <a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank">USA Climate Archive</a>
-                    <div class="pop-up">
-                        <p><font size="4">Summaries, Graphs, and other products for RAWS 
-                        (Remote Automatic Weather Stations) and COOP stations (Cooperative Observer).</font></p>
-                    </div>
-                    </td><td>
-                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="ShowHide('Docu_ClimArch')">
-                    </td></tr>
-                    <tr><td>
-                    <a id="us_wide" href="http://wrcc.dri.edu/sod-products/" class="trigger" target="_blank">Summary of the Day (SOD) products(<font color="red">COOP stations only</font>)</a>
-                    <div class="pop-up" id="sods">
-                        <p><font size="4"></font>Data Lister, Graphs, Monthly Data Summaries.</p>
-                    </div>
-                    </td></tr>
-                    <tr><td>
-                    <a id="us_wide" href="http://wrcc.dri.edu/sod/sodusa.html" class="trigger" target="_blank">&nbsp;&nbsp;&nbsp;&rarr;Daily Lister and Graph</a>
-                    <div class="pop-up">
-                        <p><font size="4"></font>Graphs Temperature/Precipitation elements and extremes for chosen COOP station.</p>
-                    </div>
-                    </td><td>
-                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowHide('Docu_SOD_DLG')">
-                    </td></tr>
-                    <tr><td>
-                    <a id="us_wide" href="http://wrcc.dri.edu/cgi-bin/coopdata0.pl" class="trigger" target="_blank">&nbsp;&nbsp;&nbsp;&rarr;Monthly Data Lister</a>
-                    <div class="pop-up">
-                        <p><font size="4"></font>Temparture/Precipitation/Evaporation listings of chosen COOP station and month.</p>                       
-                    </div>
-                    </td><td>
-                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowHide('Docu_SOD_MDL')">
-                    </td></tr>
-                    <tr><td>
-                    <a id="us_wide" href="http://wrcc.dri.edu/sod/sodusaxtrm.html" class="trigger" target="_blank">&nbsp;&nbsp;&nbsp;&rarr;Monthly Summaries</a>
-                    <div class="pop-up">
-                        <p><font size="4"></font>Monthly Summaries of chosen COOP station and element for Period of Record.</p>
-                    </div>
-                    </td><td>
-                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowHide('Docu_SOD_MSUM')">
-                    </td></tr>
-                </table>
-           </ul>
-        </div>
-
-        <div class="center">
-            <h2 class="error">Hover over the application name to get a one-line intro!</h2>
-            <h2 class="error">Click/Unclick <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png"> for more/less information!</h2>
-            <!-- Application documentation -->
-            <div class="docu" id="Docu_CalTracker" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_CalTracker").load("{{MEDIA_URL}}html/commons.html #Docu_CalTracker");
-                </script>
-            <div class="docu" id="Docu_NevTracker" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_NevTracker").load("{{MEDIA_URL}}html/commons.html #Docu_NevTracker");
-                </script>
-            <div class="docu" id="Docu_SOD_DLG" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_SOD_DLG").load("{{MEDIA_URL}}html/commons.html #Docu_SOD_DLG");
-                </script>
-            <div class="docu" id="Docu_SOD_DLG" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_SOD_DLG").load("{{MEDIA_URL}}html/commons.html #Docu_SOD_DLG");
-                </script>
-           <div class="docu" id="Docu_SOD_MDL" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_SOD_MDL").load("{{MEDIA_URL}}html/commons.html #Docu_SOD_MDL");
-                </script>
-           <div class="docu" id="Docu_SOD_MSUM" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_SOD_MSUM").load("{{MEDIA_URL}}html/commons.html #Docu_SOD_MSUM");
-                </script>
-           <div class="docu" id="Docu_SOD_ClimArch" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_SOD_ClimArch").load("{{MEDIA_URL}}html/commons.html #Docu_SOD_ClimArch");
-                </script>
-            <div class="docu" id="Docu_WESTMAP" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_WESTMAP").load("{{MEDIA_URL}}html/commons.html #Docu_WESTMAP");
-                </script>
-           <div class="docu" id="Docu_FreezTracker" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_FreezTracker").load("{{MEDIA_URL}}html/commons.html #Docu_FreezTracker");
-                </script>
-           <div class="docu" id="Docu_GP_TS" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_GP_TS").load("{{MEDIA_URL}}html/commons.html #Docu_GP_TS");
-                </script>
-           <div class="docu" id="Docu_CLIM_SUM_MAP" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_CLIM_SUM_MAP").load("{{MEDIA_URL}}html/commons.html #Docu_CLIM_SUM_MAP");
-                </script>
-           <div class="docu" id="Docu_META_GRAPH" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_META_GRAPH").load("{{MEDIA_URL}}html/commons.html #Docu_META_GRAPH");
-                </script>
-           <div class="docu" id="Docu_CEMP" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_CEMP").load("{{MEDIA_URL}}html/commons.html #Docu_CEMP");
-                </script>
-
-            <div class="docu" id="Docu_MAVES" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_MAVES").load("{{MEDIA_URL}}html/commons.html #Docu_MAVES");
-                </script>
-            <div class="docu" id="Docu_ClimArch" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_ClimArch").load("{{MEDIA_URL}}html/commons.html #Docu_ClimArch");
-                </script>
-
-            <div class="docu" id="Docu_WIND_NV" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_WIND_NV").load("{{MEDIA_URL}}html/commons.html #Docu_WIND_NV");
-                </script>
-
-            <div class="docu" id="Docu_NICE_NET" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_NICE_NET").load("{{MEDIA_URL}}html/commons.html #Docu_NICE_NET");
-                </script>
-
-           <div class="docu" id="Docu_NONE" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_NONE").load("{{MEDIA_URL}}html/commons.html #Docu_NONE");
-                </script>
-            </div>
-        </div>
-
-        <div class="center-right">
-           <h2 class="error">Gridded/Modeled Data Applications</h2>
-            <ul class="navbar">
-
-            <h4 align="center">Southwest US Applications</h4>
-            <table>
-                <tr><td>
-                <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/cal-mon/frames_version.html" class="trigger" target="_blank">California Climate Tracker(<font color="red">CA</font>)</a>
-                <div class="pop-up">
-                    <p><font size="4"></font>Tracking Climate Variability and Change for the state of California.</p>
-                </div>
-                </td><td>
-                <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowHide('Docu_CalTracker')">
-                </td></tr>
-                <tr><td>
-                <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/nev-mon/index.html" class="trigger" target="_blank">Nevada Climate Tracker(<font color="red">NV</font>)</a>
-                <div class="pop-up">
-                <p><font size="4"></font>Tracking Climate Variability and Change for the state of Nevada.</p>
-                </div>
-                </td><td>
-                <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowHide('Docu_NevTracker')">
-                </td></tr>
-                <tr><td><a id="us_wide" target="_blank" href="http://www.cefa.dri.edu/Westmap/" class="trigger">Westmap</a>
-                <div class="pop-up">
-                    <p><font size="4">Climate Analysis and Mapping Tool.</font></p>
-                </div>
-                </td><td>
-                <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowHide('Docu_WESTMAP')">
-                </td></tr>
-            </table>
- 
-
-            <h4 align="center">US-Wide Applications</h4>
-                <table>
-                    <tr><td>
-                    <a id="us_wide" href="http://www.wrcc.dri.edu/cwd/products/" class="trigger">North American Freezing Level Tracker</a>
-                    <div class="pop-up">
-                        <p><font size="4">Track through time the height of the freezing level above sea level.</font></p>
-                    </div>
-                    </td><td>
-                   <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="ShowHide('Docu_FreezTracker')">
-                    </td></tr>
-                    <tr><td>
-                    <a id="us_wide" href="{{URL_PREFIX}}sw_ckn/apps/clim_sum_maps/" class="trigger">Climate Summary Maps</a>
-                    <div class="pop-up">
-                        <p><font size="4">Generates climate summary maps for different elements, time ranges and region usig ACIS gridded data.</font></p>
-                    </div>
-                    </td><td>
-                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowHide('Docu_CLIM_SUM_MAP')">
-                    </td></tr>
-                    <tr><td>
-                    <a id="us_wide" href="{{URL_PREFIX}}sw_ckn/apps/grid_point_time_series/" class="trigger">Grid Point Time Series</a>
-                    <div class="pop-up">
-                        <p><font size="4">Generates time series data and graph for a chosen grid point and time range using ACIS gridded data.</font></p>
-                    </div>
-                    </td><td>
-                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowHide('Docu_GP_TS')">
                     </td></tr>
                 </table>
             </ul>
-        </div>
-
+        -->
     </div>
 
- <!-- Footer -->
-<!--
-    <div id="footer" align="center"></div>
+
+    <div class="major-right">
+
+        <table class="dash" cellspacing="20px">
+            <!--Headers-->
+            <th><font size="5"><b>STATION DATA TOOLS</b></th>
+            <th><font size="5"><b>GRIDDED/MODELED DATA TOOLS</b></th>
+            <!--First row of dashboard: Description-->
+            <tr>
+                <td class="error">Data analysis/visualization of historic station data</td>
+                <td class="error">Data analysis/visualization of gridded/modeled data</td>
+            </tr>
+            <!--Second row of dashboard: image-->
+            <tr>
+                <td><a href="{{URL_PREFIX}}sw_ckn/apps/station/"><img class="dash_img" src="{{MEDIA_URL}}img/StationFinder.png"></a></td>
+                <td><a href="{{URL_PREFIX}}sw_ckn/apps/gridded/"><img class="dash_img" src="{{MEDIA_URL}}img/ClimSumMap.png"></a></td>
+            </tr>
+            <!--Third+ rows: list of content-->
+            <tr>
+                <td><p onClick="ShowHide('acis_networks')"><b><u>Quick View: Networks in ACIS</u></b></p>
+                <div id="acis_networks" style="display:none;"><img src={{MEDIA_URL}}img/ACIS_Stn_Id_Type.png></div></td>
+                <td><p  onClick="ShowHide('acis_griddata')"><b><u>Quick View: Gridded/Modeled data sets in ACIS</u></b></p>
+                <div id="acis_griddata" style="display:none;"><img src={{MEDIA_URL}}img/ACISGridData.png></div></td>
+            </tr>
+            <tr>
+                <td><a target="_blank" href="http://cyclone1.dri.edu/csc/media/html/station_id_system_docu.html">More information on Station Networks found in ACIS</a></td>
+                <td><a href="https://gist.github.com/4197956">Information on NRCC interpolated, NRCC Hi-Res data sets 1, 3</a></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><a href="http://www.earthsystemgrid.org/project/narccap.html">Information on NARCCAPP data sets 4-16</a></td>
+            </tr>
+            <tr>
+                <td><p  onClick="ShowHide('acis_elements_h')"><b><u>Climate Elements in ACIS</u></b></p>
+                <div id="acis_elements_h" style="display:none;"><img src={{MEDIA_URL}}img/ACIS_Element_Choices.png></div></td>
+                <td><p  onClick="ShowHide('acis_elements_g')"><b><u>Climate Elements in ACIS</u></b></p>
+                <div id="acis_elements_g" style="display:none;"><img src={{MEDIA_URL}}img/ACIS_Element_Choices.png></div></td>
+            </tr>
+         </table>
+
+  <!-- Footer -->
+  <div id="footer" align="center"></div>
     <script type="text/javascript">                        
     $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
     </script>
--->
+
+
+    </div>
+</div>    
+
 {%endblock%}

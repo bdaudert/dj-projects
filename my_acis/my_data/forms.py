@@ -85,6 +85,16 @@ STN_FIND_CHOICES = (
         ('stn_id', 'Preselected Station')
 )
 
+STN_FIND_CHOICES_SHORT = (
+        ('sw_states', 'Southwest US'),
+        ('county', 'County FIPS code'),
+        ('climdiv', 'Climate Division'),
+        ('cwa', 'County Warning Area (CWA)'),
+        ('basin', 'Basin'),
+        ('state', 'State'),
+        ('states', 'Multiple States'),
+        ('bbox', 'Bounding Box')
+)
 
 select_grid_by_CHOICES = (
     ('point', 'Point Location'),
@@ -163,12 +173,12 @@ for el, el_long in acis_elements.iteritems():
     acis_element_list = acis_element_list + '%s : %s\n' %(el, el_long)
 
 #Help texts
+help_date = 'yyyymmdd, yyyy-mm-dd or yyyy/mm/dd'
 help_comma_elements = 'Comma separated list of ACIS climate elements. Available elements: \n %s' %acis_element_list
 help_acis_elements = 'Available climate element in ACIS: \n %s' %acis_element_list
 help_grids = 'Gridded/modeled datasets available in Acis. For more info, see "How to use this tool"!'
 help_stn_selection = 'Defines the type ofsearch area. For more info, see "How to use this tool"!'
-help_date = 'yyyymmdd'
-help_date_por = 'yyyymmdd or "por" (period of record) if single station.'
+help_date_por = 'yyyymmdd, yyyy-mm-dd, yyyy/mm/dd or "por" (period of record) if single station.'
 help_lon_lat = 'Grid point coordinate pair: Longitude, Latitude'
 '''
 help_stn_selection = 'Individual Station:\n' + \
@@ -201,20 +211,32 @@ class MyDateField(forms.CharField):
         if not date:
             return ' '
         formatted_date = ''.join(date.split('-'))
+        formatted_date = ''.join(formatted_date.split('/'))
         return formatted_date
 
     def validate(self, formatted_date):
         if formatted_date == 'por':
             if self.min_length == 8:
-                raise forms.ValidationError("Date should be of form yyyymmdd or yyyy-mm-dd.")
+                raise forms.ValidationError("Date should be of form yyyymmdd or yyyy-mm-dd or yyyy/mm/dd.")
         else:
             if len(formatted_date)!=8:
-                raise forms.ValidationError("Date should be of form yyyymmdd or yyyy-mm-dd.")
+                raise forms.ValidationError("Date should be of form yyyymmdd or yyyy-mm-dd or yyyy/mm/dd.")
             try:
                 int(formatted_date)
             except:
                 raise forms.ValidationError("Not a valid date.")
 
+class MyStateField(forms.CharField):
+    def to_python(self, states):
+        if not states:
+            return ' '
+        return states
+
+    def validate(self, states):
+        states_list = states.split(',')
+        for state in states_list:
+            if state not in WRCCUtils.fips_state_keys.keys() and state not in WRCCUtils.state_choices:
+                raise forms.ValidationError('Need comma separated list of valid US states. Not a valid US State: %s' % state)
 #for background data requests, see GridDataForm3, PointDataForm3
 class MyNameField(forms.CharField):
     def to_python(self, name):
@@ -413,6 +435,7 @@ class GridDataForm0(forms.Form):
 class GridDataForm1(forms.Form):
     def __init__(self, *args, **kwargs):
         select_grid_by = kwargs.get('initial', {}).get('select_grid_by', None)
+        location = kwargs.get('initial', {}).get('location', None)
         super(GridDataForm1, self).__init__(*args, **kwargs)
 
         if select_grid_by is None:select_grid_by = self.data.get('select_grid_by')
@@ -426,7 +449,8 @@ class GridDataForm1(forms.Form):
             self.fields['bounding_box'] = BBoxField(initial='-90,40,-88,41', help_text='Bounding boxcoordinates: West, South, East, North.')
 
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text='Area defining gridpoints of interest.')
-        #self.fields['elements'] = MultiElementField(initial=elements,widget=forms.HiddenInput(), help_text=HELP_TEXTS['comma_elements'])
+        if location is not None:
+            self.fields['location'] = forms.CharField(initial=location, help_text=HELP_TEXTS['grid_lon_lat'])
         self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
         '''
         for element in elements:
@@ -614,8 +638,8 @@ class GPTimeSeriesForm(forms.Form):
             else:
                 self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, initial=grid, help_text=HELP_TEXTS['grids'])
 class StationLocatorForm0(forms.Form):
-    select_stations_by = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='state', help_text=HELP_TEXTS['select_stations_by'])
-    element_selection = forms.ChoiceField(choices=([('T', 'Cherry pick elements'),('F', 'All Acis elements')]), required=False, initial='F', help_text='Only look for stations that have data for certain elements.')
+    select_stations_by = forms.ChoiceField(choices=STN_FIND_CHOICES_SHORT, required=False, initial='southwest', help_text=HELP_TEXTS['select_stations_by'])
+    element_selection = forms.ChoiceField(choices=([('T', 'Pick individual elements'),('F', 'All Acis elements')]), required=False, initial='F', help_text='Only look for stations that have data for certain elements.')
 class StationLocatorForm1(forms.Form):
     def __init__(self, *args, **kwargs):
         select_stations_by = kwargs.get('initial', {}).get('select_stations_by', None)
@@ -648,6 +672,8 @@ class StationLocatorForm1(forms.Form):
             self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='01080205', help_text='Valid US darinage basin identifier.')
         elif select_stations_by == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='US state.')
+        elif select_stations_by == 'sw_states':
+            self.fields['states'] = MyStateField(initial='ca,nv,co,nm,az,ut', help_text='Comma separated list of US states')
         elif select_stations_by == 'bbox':
             self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41', help_text='Bounding box latitudes and longitudes: West,South,East,North.')
         if element_selection == 'T':

@@ -1,43 +1,30 @@
 var MEDIA_URL = document.getElementById("MEDIA_URL").value;
 
-function changeBackgroundColor(DivID) { 
-            var backColor = new String(); 
-            backColor = document.getElementById(DivID).style.background;
-            // IE works with hex code of color e.g.: #FFFFFF 
-            // Firefox works with rgb color code e.g.: rgb(255, 255, 255) 
-            // Thats why both types are used in If-condition below 
-            if (backColor.toLowerCase() == '#FFFFFF' || backColor.toLowerCase() == 'rgb(255, 255, 255)') { 
-                document.getElementById(DivID).style.background = '#FF007F';
-                //Turn all other  classes of the same type off off
-                divs_to_turn_off =  document.getElementsByClassName("docu"); 
-                for (div in divs_to_turn_off){   
-                    if (div.style.display == 'block'){
-                        div.style.display == 'none';
-                    }
-                } 
-            } 
-            else { 
-                document.getElementById(DivID).style.background = '#FFFFFF'; 
-            } 
+//Highlights node by setting border, hides  all elements of class DivClass
+//and unsets the boder of all other nodes of same class type
+function HighLight(node,DivClass,DivId) {
+    node.style.border = "4px solid #FF007F";
+    NodeClassName = node.className
+    //Unborder all other nodes of same clas name
+    var nodes_to_blur= document.getElementsByClassName(NodeClassName);
+    for (i=0;i<nodes_to_blur.length;i++){     
+        if (nodes_to_blur[i] != node){
+            //qmarks_to_turn_off[i].blur();
+            nodes_to_blur[i].style.border="none";
         }
-/* 
-//Highlights node, hides and blurs all other elements of class DivClass
-function HighLight(node,DivClass) {
-    node.focus();
-    //Turn all other  classes of the same type off off
-    divs_to_turn_off = document.getElementsByClassName(DivClass);
-    for (k in divs_to_turn_off.length; k++){
-        if (divs_to_turn_off[k].style.display == "block"){
-            divs_to_turn_off[k].style.display = "none";
+    }
+    //Hide all divs with class name DivClass except the one of id=DivId 
+    var divs_to_hide = document.getElementsByClassName(DivClass);
+    div_to_show = document.getElementById(DivId)
+    for (i=0;i<divs_to_hide.length;i++){
+        if (divs_to_hide[i] == div_to_show){
+            divs_to_hide[i].style.display ="block";
         }
-    qmarks_to_turn_off = document.getElementsByClassName("qmark");
-    for (i in qmarks_to_turn_off.length:i++){ 
-        if (qmarks_to_turn_of[i] != node){
-            qmarks_to_turn_of[i].blur();
+        else {
+            divs_to_hide[i].style.display ="none";
         }
     }
 }
-*/
 
 function Toggle(node)
 {

@@ -21,12 +21,12 @@
 <div id="home_img"></div>
     <script type="text/javascript">$("#home_img").load("{{MEDIA_URL}}html/commons.html .home_img");</script>
 <br />
-<div class="content-header">
 
+<div class="content-header">
 </div>
 
 <p align="center">You are here
-<a href="{{URL_PREFIX}}sw_ckn/home/">HOME</a>
+<a href="{{HOME_URL}}">HOME</a>
 
 <div id="searchbox"></div>
 <script type="text/javascript">$("#searchbox").load("{{MEDIA_URL}}html/commons.html .searchbox");</script>
@@ -36,18 +36,26 @@
     <p class="error" align="center">To get started, choose one of the following:</p>
     <table class="dash" cellspacing="15px" align="center">
         <!--Headers-->
-        <th><font size="5"><b>LAUNCH SW-CKN</b></th>
+    <!--
+        <th><font size="5"><b>LAUNCH SOUTHWEST CLIMATE KNOWLEDGE NETWORK</b></th>
         <th><font size="5"><b>DATA PORTAL</b></th>
         <th><font size="5"><b>MONITORING</b></th>
         <th><font size="5"><b>TOOLS</b></th>
+    -->
         <tr><td></td></tr>
         <!--First row of dashboard: image-->
         <tr>
-            <!--<td><a href="/csc/sw_ckn/"><img class="dash_img" src="{{MEDIA_URL}}img/SW_CSC_HOME.png"></a></td>-->
-            <td><a href="/csc/sw_ckn/main/"><img class="dash_img" src="{{MEDIA_URL}}img/SW_CKN_HOME.png"></a></td>
-            <td><a href="{{URL_PREFIX}}sw_ckn/data/"><img class="dash_img" src="{{MEDIA_URL}}img/DataPortal.jpg"></a></td>
-            <td><a href="{{URL_PREFIX}}sw_ckn/monitoring/"><img class="dash_img" src="{{MEDIA_URL}}img/Dashboard.png"></a></td>
-            <td><a href="{{URL_PREFIX}}sw_ckn/apps/"><img class="dash_img" src="{{MEDIA_URL}}img/Application.png"></a></td>
+            <td><a href="/csc/sw_ckn/home/"><img class="dash_img" src="{{MEDIA_URL}}img/SW_CKN_HOME.png"></a></td>
+            <td><a href="/csc/sw_ckn/data/"><img class="dash_img" src="{{MEDIA_URL}}img/DataPortal.jpg"></a></td>
+            <td><a href="/csc/sw_ckn/monitoring/"><img class="dash_img" src="{{MEDIA_URL}}img/Dashboard.png"></a></td>
+            <td><a href="/csc/sw_ckn/apps"><img class="dash_img" src="{{MEDIA_URL}}img/Application.png"></a></td>
+        </tr>
+        <tr>
+            <!--<td><b>SW-CKN Home Page</b></td>-->
+            <td><a class="error" href="/csc/sw_ckn/home/"><b>RESOURCES</a><br /></b></td>
+            <td><a class="error" href="/csc/sw_ckn/data/"><b>DATA PORTAL</b></a></td>
+            <td><a class="error" href="/csc/sw_ckn/monitoring/"><b>MONITORING</b></a></td>
+            <td><a class="error" href="/csc/sw_ckn/apps/"><b>TOOLS</b></a></td>
         </tr>
         <!--Second+ rows: list of content-->
         <tr>
