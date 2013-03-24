@@ -135,11 +135,11 @@ ul.navbar a {
   display:block;
   width:100%;
   background-color:#F1C2A0;
-  text-decoration:none;
+  /*text-decoration:none;*/
   /*z-index:20;*/
 }
 
-div.pop-up {
+.pop-up {
   display: none;
   position: absolute;
   width: 500px;
@@ -148,6 +148,20 @@ div.pop-up {
   border: 2px solid #006666;
   font-size: 90%;
   z-index:10;
+}
+
+.pop-up:hover {
+    color: #33CCFF;
+}
+.tool_how_to p:hover {
+    color: #33CCFF;
+}
+.tool_info p:hover {
+    color: #33CCFF;
+}
+
+.pop_link:hover {
+    color: #33CCFF;
 }
 
 .docu {
@@ -322,7 +336,7 @@ img.map {
 
 img.map_2 {
     width: 250px;
-    height:150px;
+    height:131px;
     position: absolute;
     top: 0;
     right:0;
@@ -372,7 +386,7 @@ img.center {
     background: #FFEBCD;
     color: #660000;
     height:50px;
-    width:100%;
+    width:75%;
     font-size:5;
     /*padding: .10em 1em;*/
     position:relative;

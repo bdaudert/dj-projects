@@ -229,8 +229,9 @@ class MyDateField(forms.CharField):
             except:
                 raise forms.ValidationError("Not a valid date.")
         #Check for leapyear
-        if not WRCCUtils.is_leap_year(formatted_date[0:4]) and formatted_date[4:6] == '02' and formatted_date[6:8] == '29':
-            raise forms.ValidationError("%s is a leap year and February only has 28 days. Please change your date." %formatted_date[0:4])
+        if formatted_date != 'por':
+            if not WRCCUtils.is_leap_year(formatted_date[0:4]) and formatted_date[4:6] == '02' and formatted_date[6:8] == '29':
+                raise forms.ValidationError("%s is a leap year and February only has 28 days. Please change your date." %formatted_date[0:4])
 
 class MyStateField(forms.CharField):
     def to_python(self, states):
