@@ -269,29 +269,33 @@ function my_boxclick(box, category){
 }
 
 
-/*
-function my_stnclick(i_window, mkr, content_str){
-    stnclick(i_window, mkr, content_str);
-}
-*/
 
-function initialize_info_map(node) {
+function initialize_network_map() {
 
     var MEDIA_URL = document.getElementById("MEDIA_URL").value;
     var json_file = document.getElementById("json_file").value;
-    var marker_type = node.id
-
+    var marker_type='all';
     $.getJSON(MEDIA_URL + 'json/' + json_file, function(data) {
         //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
-        var ll = new google.maps.LatLng(37.0, -114.05);
+        var ll = new google.maps.LatLng(39.5, 98.35);
         var mapOptions = {
         center: ll,
         //center: new google.maps.LatLng(39.8282, -98.5795),
-        zoom: 5,
+        zoom: 4,
         mapTypeId: google.maps.MapTypeId.HYBRID
         };
 
         map = new google.maps.Map(document.getElementById("map"),mapOptions);
+
+        var legend = document.getElementById('map_legend');
+        for (var i=0; i<data.Types.length; i++) {
+            var name = data.Types[i].type;
+            var icon = MEDIA_URL + 'img/' + data.Types[i].icon;
+            var div = document.createElement('div');
+            div.innerHTML = '<p><img class="icon" src="' + icon + '"> ' + name +': <input type="checkbox" id="'+ name + '" onclick="my_networkclick(this,\''+ name +'\')" checked /></p>';
+            legend.appendChild(div);
+        }
+
         var bounds=new google.maps.LatLngBounds();
         infowindow = new google.maps.InfoWindow({
             content: 'oi'
@@ -301,11 +305,11 @@ function initialize_info_map(node) {
             if (c.type == marker_type || marker_type == 'all') {
                 var image = new google.maps.MarkerImage(MEDIA_URL + 'img/' + c.icon,
                     // This marker is 20 pixels wide by 32 pixels tall.
-                    new google.maps.Size(20, 32),
+                    new google.maps.Size(30, 30)
                     // The origin for this image is 0,0.
-                    new google.maps.Point(0,0),
+                    //new google.maps.Point(0,0),
                     // The anchor for this image is the base of the flagpole at 0,32.
-                    new google.maps.Point(0, 32)
+                    //new google.maps.Point(0, 30)
                 );
                 var latlon = new google.maps.LatLng(c.lat,c.lon);
                 var marker = new google.maps.Marker({
@@ -322,10 +326,8 @@ function initialize_info_map(node) {
             google.maps.event.addListener(marker, 'click', function() {
                 infowindow.close();
                 var contentString = '<div id="MarkerWindow">'+
-                '<p><b>CSC ' + c.type +': </b>' + c.name + '<br/>'+
+                '<p><b>' + c.type +': ' + c.name + '</b><br/>'+
                 c.name_long + '<br/>' +
-                '<b>Latitude: </b>' + c.lat + '<br/>' +
-                '<b>Longitude: </b>' + c.lon + '<br/>' +
                 '</p>' +'</div>';
                 infowindow.setContent(contentString);
                 infowindow.open(map, marker);
@@ -335,8 +337,43 @@ function initialize_info_map(node) {
         //var markerCluster = new MarkerClusterer(map, markers);
         map.fitBounds(bounds);
 
+        // == shows all markers of a particular category, and ensures the checkbox is checked and write station_list==
+        show = function(category) {
+            for (var i=0; i<markers.length; i++) {
+                if (markers[i].type == category) {
+                    markers[i].setVisible(true);
+                }
+            }
+            // == check the checkbox ==
+            document.getElementById(category).checked = true;
+        };
+
+        // == hides all markers of a particular category, and ensures the checkbox is cleared and delete station_list ==
+        hide = function(category) {
+            for (var i=0; i<markers.length; i++) {
+                if (markers[i].type == category) {
+                    markers[i].setVisible(false);
+                }
+            }
+            // == clear the checkbox ==
+            document.getElementById(category).checked = false;
+        };
+
+        networkclick = function(box, category){
+            if (box.checked){
+                show(category);
+            }
+            else {
+                hide(category);
+            }
+        };
+
     });//close getjson
 }//close initialize_info_map
+
+function my_networkclick(box, category){
+    networkclick(box, category);
+}
 
 
 function initialize_polygon_map() {

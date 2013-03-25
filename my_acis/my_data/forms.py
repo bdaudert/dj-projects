@@ -4,6 +4,7 @@ from django.forms.fields import ChoiceField, MultipleChoiceField
 from django.contrib.localflavor.us.forms import USStateField, USStateSelect
 from django.contrib.localflavor.us.us_states import STATE_CHOICES
 from django.utils.safestring import mark_safe
+from django.forms.widgets import RadioSelect, CheckboxSelectMultiple
 
 import datetime
 import re
@@ -535,6 +536,8 @@ class MonthlyAveragesForm(forms.Form):
         else:
             self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text=HELP_TEXTS['stn_id'])
         self.fields['elements'] = MultiElementField(initial='pcpn, snow', help_text=HELP_TEXTS['comma_elements'])
+        #self.fields['elements_2'] = forms.MultipleChoiceField(required=False, widget=RadioSelect, choices=ACIS_ELEMENT_CHOICES_SHORT)
+        #self.fields['base_temperature']= forms.IntegerField(required=False,min_value=40, max_value=86, initial=60)
         self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='20000101', help_text=HELP_TEXTS['date_por'])
         self.fields['end_date'] = MyDateField(max_length=10, required = False, initial='por', help_text=HELP_TEXTS['date_por'])
 

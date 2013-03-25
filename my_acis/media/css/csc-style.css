@@ -75,10 +75,10 @@ a#warning {
     color:#FF00FF;
 }
 
-table {
-    /*border:2px solid #006666;*/
-    text-align:left;
-    /*padding:10px 10px 10px 10px;*/
+table.dashboard {
+    border:1px solid #006666;
+    text-align:center;
+    padding:10px 10px 10px 10px;
 }
 
 table.dash {
@@ -321,14 +321,14 @@ img.chart {
 }
 
 img.sidebar {
-    width: 90%;
+    width: 150px;
     height:150px;
 }
 
 
 img.map {
     width: 250px;
-    height:150px;
+    height:149px;
     position: absolute;
     top: 0;
     right:0;

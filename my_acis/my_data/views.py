@@ -33,12 +33,15 @@ acis_elements ={'maxt':{'name':'maxt', 'name_long': 'Maximum Daily Temperature (
               'pcpn': {'name': 'pcpn', 'name_long':'Precipitation (In)', 'vX':'4'}, \
               'snow': {'name': 'snow', 'name_long':'Snowfall (In)', 'vX':'10'}, \
               'snwd': {'name': 'snwd', 'name_long':'Snow Depth (In)', 'vX':'11'}, \
-              'evap': {'name': 'evap', 'name_long':'Pan Evaporation (In)', 'vX':'7'}, \
-              'dd': {'name': 'dd', 'name_long':'Degree Days (Days)', 'vX':'45'}, \
-              'cdd': {'name': 'cdd', 'name_long':'Cooling Degree Days (Days)', 'vX':'45'}, \
-              'hdd': {'name': 'hdd', 'name_long':'Heating Degree Days (Days)', 'vX':'45'}, \
-              'gdd': {'name': 'gdd', 'name_long':'Growing Degree Days (Days)', 'vX':'45'}}
+              'cdd': {'name': 'cdd', 'name_long':'Cooling Degree Days (F)', 'vX':'45'}, \
+              'hdd': {'name': 'hdd', 'name_long':'Heating Degree Days (F)', 'vX':'45'}, \
+              'gdd': {'name': 'gdd', 'name_long':'Growing Degree Days (F)', 'vX':'45'}}
               #bug fix needed for cdd = 44 (WAITING FOR BILL, ALSO IN PLACES BELOW, eg in station_locator_app, also in AcisWS.py)
+acis_elements_list = [['maxt','Maximum Daily Temperature (F)'], ['mint','Minimum Daily Temperature (F)'],
+                      ['avgt','Average Daily Temperature (F)'], ['obst', 'Observation Time Temperature (F)'], \
+                      ['pcpn', 'Precipitation (In)'], ['snow', 'Snowfall (In)'], \
+                      ['snwd', 'Snow Depth (In)'], ['cdd', 'Cooling Degree Days (F)'], \
+                      ['hdd','Heating Degree Days (F)'], ['gdd', 'Growing Degree Days (F)']]
 
 state_choices = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', \
                 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', \
@@ -78,9 +81,9 @@ def main_map(request):
     context = {
         'title': 'Welcome to the SW-CKN',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
-        'home_page':True
+        'main_page':True
     }
-    context['json_file'] = 'CSC_Info.json'
+    context['json_file'] = 'Network.json'
     return render_to_response('my_data/main_map.html', context, context_instance=RequestContext(request))
 
 #Temp home page fpr Kelly to look at
@@ -88,7 +91,7 @@ def main(request):
     context = {
         'title': 'Welcome to the SW-CKN',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
-        'home_page':True
+        'main_page':True
     }
     state = request.GET.get('state_key', None)
     element = request.GET.get('element', None)
@@ -169,8 +172,17 @@ def contact_us(request):
 def dashboard(request):
     context = {
         'title': 'Dashboard',
-        'home_page':True
+        'monitor_page':True
     }
+    #Find mon, year to locate snotel map
+    year = str(datetime.datetime.today().year)
+    month = str(datetime.datetime.today().month)
+    if len(month) ==1:
+        month = '0%s' %month
+    context['month'] = month
+    context['year'] = year
+    context['year_short'] = '%s%s' % (year[-2], year[-1])
+
     return render_to_response('my_data/dashboard.html', context, context_instance=RequestContext(request))
 
 def data_home(request):
@@ -640,7 +652,8 @@ def metagraph(request):
 def monthly_aves(request):
     context = {
         'title': 'Monthly Averages',
-        'apps_page':True
+        'apps_page':True,
+        'acis_elements':dict(acis_elements)
     }
     stn_id = request.GET.get('stn_id', None)
     start_date = request.GET.get('start_date', None)

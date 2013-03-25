@@ -67,6 +67,10 @@
         {%if home_page%}
             <img class="map_2" src="{{ MEDIA_URL }}img/SouthWest.jpg">
         {%endif%}
+        {%if main_page%}
+            <img class="map" src="{{ MEDIA_URL }}img/Network.png">
+            <!--<img class="map" src="{{ MEDIA_URL }}img/KnowledgeNetwork.png">-->
+        {%endif%}
         {%if station_finder_page%}
             <img class="map_2" src="{{ MEDIA_URL }}img/NorthPoleWS.jpg">
         {%endif%}
@@ -75,6 +79,9 @@
         {%endif%}
         {%if apps_page%}
             <img class="map" src="{{ MEDIA_URL }}img/ToolProduct.png">
+        {%endif%}
+        {%if monitor_page%}
+            <img class="map" src="{{ MEDIA_URL }}img/Monitoring.png">
         {%endif%}
         {%if intro_page%}
             <img class="map" src="{{ MEDIA_URL }}img/AboutUs.jpg">
@@ -90,7 +97,8 @@
     {% block breadcrumbs %}
     <li><a href="/csc/sw_ckn/home/">HOME</a>
     <!--<li><a href="/csc/sw_ckn/main/">MAIN2</a>-->
-    <li><a href="/csc/sw_ckn/main/">RESOURCES</a>
+    <li><a href="/csc/sw_ckn/main">RESOURCES</a>
+    <li><a href="/csc/sw_ckn/main_map">SW_CKN</a></li>
     <!--<li><a href="/csc/sw_ckn/main_map/">SW-CKN2</a>-->
     <li><a href="{{SW_CKN_URL}}about_us/">ABOUT US</a>
     <ul>
@@ -98,7 +106,7 @@
         <li><a href="{{SW_CKN_URL}}what_we_do/">What we do</a></li>
         <li><a href="{{SW_CKN_URL}}contact_us/">Contact Us</a></li>
     </ul></li>
-    <li><a href="/csc/sw_ckn/monitoring/">MONITORING</a>
+    <li><a href="/csc/sw_ckn/monitoring">MONITORING</a>
     <li><a href="/csc/sw_ckn/data">DATA PORTAL </a>
     <ul>
         <li><a href="/csc/sw_ckn/data">All Data</a></li>

@@ -12,44 +12,31 @@
 
 <p  align="center">You are here
 <a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
-<a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN</a>
+<a href="{{URL_PREFIX}}sw_ckn/main/">RESOURCES</a>
 
 
 <div class="container">
 
-<table border="1px solid #006666">
- <tr>
-    <!--Left Column: Weather/Climate in the Southwest-->
-    <td valign="top">
-    </td>
-    <td valign="top">
-     <!--Center Column: grid point map-->
-    <h1>Drag and click!</h1>
-    <h2>Data set: NRCC Interpolated in ACIS</h2>
-    <a  target="_blank" href="https://gist.github.com/4197956">Information on NRCC interpolated, NRCC Hi-Res data sets</a>
-    <br />
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-    <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
-    <input type="hidden" id="center_lat" name="center_lat" value="39.8282">
-    <input type="hidden" id="center_lon" name="center_lon" value="-98.5795">
-    <input type="hidden" id="zoom_level" name="zoom_level" value="5">
+   <div class="center-left">
+        <div id="map_legend">
+            <h3>Legend</h3>
+            <p class="error"></p>
+        </div>
+    </div>
 
-    <div id="map" style="width:700px; height:500px;"></div>
-    <script type="text/javascript">
-        initialize_grid_point_map()
-    </script>
-    </td>
-    <!--Right Column: On Climate Change-->
-    <td valign="top">
-    </td>
-  </tr>
-</table>
-
-  <!-- Footer -->
-  <div id="footer" align="center"></div>
-    <script type="text/javascript">                        
-    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
-    </script>
+    <div class="center">
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+        <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
+        <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+        <div id="map" style="width:600px; height:500px;"></div>
+        <script type="text/javascript">
+            initialize_network_map()
+        </script>
+    </div>
+    
+    <div class="center-right">
+        <div id="info"></div>
+    </div>
 
 </div> <!-- end container -->
 {% endblock %}
