@@ -45,7 +45,7 @@ function initialize_grid_point_map() {
         }
         else if (app == 'grid_data'){
             document.getElementById("location").value = loc;
-            var href = base_dir +'data/modeled/?loc=' +
+            var href = base_dir +'data/gridded/?loc=' +
                    lon + ',' + lat;
         }
         var contentString = '<div id="MarkerWindow">'+
@@ -375,6 +375,69 @@ function my_networkclick(box, category){
     networkclick(box, category);
 }
 
+function initialize_bbox_map() {
+      //create map
+     var bbox_list = ','.split(document.getElementById("bounding_box").value)
+     var west = new google.maps.LatLng(bbox_list[3],bbox_list[0]);
+     var south = new google.maps.LatLng(bbox_list[1],bbox_list[0]);
+     var east = new google.maps.LatLng(bbox_list[1],bbox_list[2]);
+     var north = new google.maps.LatLng(bbox_list[3],bbox_list[2]);
+     var initial_rect = [west, south, east, north];
+
+     var Center=new google.maps.LatLng(37.0, -114.05);
+     var myOptions = {
+        zoom: 5,
+        center: Center,
+        mapTypeId: google.maps.MapTypeId.HYBRID
+      }
+     map = new google.maps.Map(document.getElementById('map'), myOptions);
+     var rect = new google.maps.Polygon({
+         path:initial_rect,
+         fillColor: "black",
+         fillOpacity: 0.1,
+         strokeColor: "black",
+         strokeWeight: 1
+     });
+    rect.setMap(map);
+
+     var drawingManager = new google.maps.drawing.DrawingManager({
+        drawingMode: google.maps.drawing.OverlayType.RECTANGLE,
+        drawingControl: true,
+        drawingControlOptions: {
+        position: google.maps.ControlPosition.TOP_CENTER,
+        drawingModes: [
+            google.maps.drawing.OverlayType.RECTANGLE
+            ]
+        }, 
+        rectangleOptions: {
+            editable: true,
+            fillColor: "black",
+            fillOpacity: 0.1,
+            map: map,
+            strokeColor: "black",
+            strokeWeight: 1
+        }
+    });
+    drawingManager.setMap(map);
+    google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
+        if (event.type == google.maps.drawing.OverlayType.RECTANGLE) {
+            if (rect){
+                rect.setMap(null);
+            }
+            rect = event.overlay;
+            var bounds=event.overlay.getBounds();
+            //set new bounding box
+            var w = precise_round(bounds.getSouthWest().lng(),2);
+            var s = precise_round(bounds.getSouthWest().lat(),2);
+            var e = precise_round(bounds.getNorthEast().lng(),2);
+            var n = precise_round(bounds.getNorthEast().lat(),2);
+            document.getElementById("bounding_box").value = w + ',' + s + ',' + e + ',' + n;
+        }
+        if (event.type == google.maps.drawing.OverlayType.CIRCLE) {
+            var radius = event.overlay.getRadius();
+        }
+    });
+}   
 
 function initialize_polygon_map() {
       //create map

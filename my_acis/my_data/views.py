@@ -362,9 +362,9 @@ def data_station(request):
 
     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
 
-def data_modeled(request):
+def data_gridded(request):
     context = {
-        'title': 'Modeled Data',
+        'title': 'Gridded Data',
         'data_page':True
     }
 
@@ -416,6 +416,13 @@ def data_modeled(request):
                 else:
                     context['lat'] = '39.82'; context['lon'] = '-98.57'
                     context['map_loc'] = '-98.57,39.82'
+            if initial_1['select_grid_by'] == 'bbox':
+                context['need_map_bbox'] = True
+                bounding_box = request.GET.get('bounding_box', None)
+                if bounding_box is not None:
+                    context['bounding_box'] = bounding_box
+                else:
+                    context['bounding_box'] = '-90,40,-88,41'
 
             form1_grid = forms.GridDataForm1(initial=initial_1)
             context['form1_grid'] = form1_grid
@@ -444,15 +451,17 @@ def data_modeled(request):
                 initial_params_2['elements'] = ','.join(initial_params_2['elements'])
                 form3_grid = forms.GridDataForm3(initial=initial_params_2)
                 context['form3_grid'] = form3_grid
-                return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
+                return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
             else:
                 if 'location' in form1_grid.cleaned_data.keys():
                     context['need_map'] = True
                     context['map_loc'] = form1_grid.cleaned_data['location']
-                    #context['lat'] = '39.82'; context['lon'] = '-98.57'
                     context['lat'] = form1_grid.cleaned_data['location'].split(',')[1]
                     context['lon'] = form1_grid.cleaned_data['location'].split(',')[0]
-                    #context['map_loc'] = '%s,%s' % (form1_grid.cleaned_data['location'].split(',')[1], form1_grid.cleaned_data['location'].split(',')[0])
+                elif 'bounding_box' in form1_grid.cleaned_data.keys():
+                    context['need_map_bbox'] = True
+                    context['bounding_box'] = form1_grid.cleaned_data['bounding_box']
+
                 req = AcisWS.get_grid_data(form1_grid.cleaned_data, 'griddata_web')
                 #format data
                 if form1_grid.cleaned_data['data_format'] == 'json':
@@ -510,7 +519,7 @@ def data_modeled(request):
                     #return export_to_file_grid(request, data, el_list, file_info, delimiter, 'xls')
                     return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'xls', request=request,file_info=file_info)
                 else:
-                    return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
+                    return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
     if 'form3_grid' in request.POST:
         form3_grid = set_as_form(request,'GridDataForm3')
@@ -532,9 +541,9 @@ def data_modeled(request):
             mode = os.stat(f).st_mode
             os.chmod(f, mode | stat.S_IWOTH)
             context['user_info'] = 'You will receive an email from csc-data-request@dri.edu with instructions when the data request has been processed. You provided following -mail address: %s' % (form3_grid.cleaned_data['email'])
-        return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
+        return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
-    return render_to_response('my_data/data/modeled/home.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
 
 
@@ -820,6 +829,13 @@ def clim_sum_maps(request):
         if form0.is_valid():
             context['form1_ready'] = True
             context['select_grid_by'] = form0.cleaned_data['select_grid_by']
+            if form0.cleaned_data['select_grid_by'] == 'bbox':
+                bounding_box = request.GET.get('bounding_box', None)
+                if bounding_box is not None:
+                    context['bounding_box'] = bounding_box
+                else:
+                    context['bounding_box'] = '-90,40,-88,41'
+                context['need_map'] = True
             initial = {'select_grid_by':form0.cleaned_data['select_grid_by'], \
                       'element':form0.cleaned_data['element'], \
                       'time_period':form0.cleaned_data['time_period'], \
@@ -857,6 +873,8 @@ def clim_sum_maps(request):
                 region = 'state_%s' %form1.cleaned_data['state']
                 context['state'] = form1.cleaned_data['state']
             elif 'bounding_box' in form1.cleaned_data.keys():
+                context['need_map'] = True
+                context['bounding_box'] = form1.cleaned_data['bounding_box']
                 params['bbox'] = form1.cleaned_data['bounding_box']
                 region = 'bbox_' + re.sub(',','_',form1.cleaned_data['bounding_box'])
                 context['bounding_box'] = form1.cleaned_data['bounding_box']
