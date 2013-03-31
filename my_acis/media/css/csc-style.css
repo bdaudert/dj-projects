@@ -367,6 +367,12 @@ img.logo {
     height:30px;
 }
 
+img.logo_sq {
+    width: 70px;
+    height:70px;
+}
+
+
 img.center {
     text-align:center;
     margin-top:0px;

@@ -277,11 +277,10 @@ function initialize_network_map() {
     var marker_type='all';
     $.getJSON(MEDIA_URL + 'json/' + json_file, function(data) {
         //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
-        var ll = new google.maps.LatLng(39.5, 98.35);
+        var ll = new google.maps.LatLng(39.5, -98.35);
         var mapOptions = {
         center: ll,
-        //center: new google.maps.LatLng(39.8282, -98.5795),
-        zoom: 4,
+        zoom: 3,
         mapTypeId: google.maps.MapTypeId.HYBRID
         };
 
@@ -289,10 +288,10 @@ function initialize_network_map() {
 
         var legend = document.getElementById('map_legend');
         for (var i=0; i<data.Types.length; i++) {
-            var name = data.Types[i].type;
+            var type = data.Types[i].type;
             var icon = MEDIA_URL + 'img/' + data.Types[i].icon;
             var div = document.createElement('div');
-            div.innerHTML = '<p><img class="icon" src="' + icon + '"> ' + name +': <input type="checkbox" id="'+ name + '" onclick="my_networkclick(this,\''+ name +'\')" checked /></p>';
+            div.innerHTML = '<p><img class="icon" src="' + icon + '"> ' + type +': <input type="checkbox" id="'+ type + '" onclick="my_networkclick(this,\''+ type +'\')" checked /></p>';
             legend.appendChild(div);
         }
 
@@ -318,7 +317,7 @@ function initialize_network_map() {
                     position: latlon,
                     title:'Name:'+c.name
                 });
-
+                marker.type = c.type;
                 markers.push(marker);
                 bounds.extend(latlon);
             };//endif
@@ -326,11 +325,15 @@ function initialize_network_map() {
             google.maps.event.addListener(marker, 'click', function() {
                 infowindow.close();
                 var contentString = '<div id="MarkerWindow">'+
-                '<p><b>' + c.type +': ' + c.name + '</b><br/>'+
+                '<img class="icon" src=' +  MEDIA_URL + 'img/' + c.icon + '>' +
+                '<p class="error"><b>' + c.type +'</p><p>' + c.name + '</b><br/>'+
                 c.name_long + '<br/>' +
+                '<b>Location</b>: ' + c.location +
                 '</p>' +'</div>';
                 infowindow.setContent(contentString);
                 infowindow.open(map, marker);
+                //Load longer documentation on right of page
+                $("#network_docu").load("/csc/media/html/commons.html #" + c.docu_long);
             });
         });//close each
 
@@ -439,54 +442,3 @@ function initialize_bbox_map() {
     });
 }   
 
-function initialize_polygon_map() {
-      //create map
-     var Center=new google.maps.LatLng(37.0, -114.05);
-     var myOptions = {
-        zoom: 5,
-        center: Center,
-        mapTypeId: google.maps.MapTypeId.HYBRID
-      }
-     map = new google.maps.Map(document.getElementById('map'), myOptions);
-
-     var creator = new PolygonCreator(map);
-
-     //reset
-     $('#reset').click(function(){
-            creator.destroy();
-            creator=null;
-
-            creator=new PolygonCreator(map);
-     });
-
-
-     //show paths
-     $('#showData').click(function(){
-            $('#dataPanel').empty();
-            if(null==creator.showData()){
-                $('#dataPanel').append('Please first create a polygon');
-            }else{
-                $('#dataPanel').append(creator.showData());
-            }
-     });
-
-     //show color
-     $('#showColor').click(function(){
-            $('#dataPanel').empty();
-            if(null==creator.showData()){
-                $('#dataPanel').append('Please first create a polygon');
-            }else{
-                    $('#dataPanel').append(creator.showColor());
-            }
-     });
-}//close initialize_polygon_map
-
-
-function load_script() {
-  var script = document.createElement("script");
-  script.type = "text/javascript";
-  script.src = "http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=false&callback=initialize_map";
-  $(".center").append(script);
-  //document.body.appendChild(script)
-  //document.getElementById("map_js").appendChild(script)
-}
