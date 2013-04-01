@@ -116,8 +116,10 @@ function initialize_station_finder() {
             content: 'oi'
         });
         var markers = [];
-        //Define markers
+        var tbl_rows = [];
+        //Define markers and table rows
         $.each(data.stations, function(index, c) {
+            //Define markers
             var latlon = new google.maps.LatLng(c.lat,c.lon);
             var marker = new google.maps.Marker({
                 map: map,
@@ -125,27 +127,16 @@ function initialize_station_finder() {
                 title:'Name:'+c.name,
                 icon: new google.maps.MarkerImage(
                 'http://maps.google.com/mapfiles/ms/icons/' + c.marker_icon + '.png'
-                //new google.maps.Size(16, 16)
                 )
-                //icon: 'http://maps.google.com/mapfiles/ms/icons/' + c.marker_icon + '.png'
-                // === Store the category and name info as a marker properties ===
             });
-            // === Store the category and name info as a marker properties ===
             marker.category = c.marker_category;
             marker.name = c.name;
             marker.state = c.state;
             marker.lat = c.lat;
             marker.lon = c.lon;
             marker.elevation = c.elevation;
-            marker.stn_networks = c.stn_networks;
+            marker.networks = c.stn_networks;
             marker.sids = c.sids;
-            if (c.marker_category == "COOP"){
-                marker.setVisible(true);
-                document.getElementById(c.marker_category).checked = true;
-            }
-            else {
-                marker.setVisible(false);
-            }
             //Fit map to encompass all markers
             bounds.extend(latlon);
 
@@ -189,42 +180,61 @@ function initialize_station_finder() {
                 wrcc_info_link + '<br />' +
                 data_portal_link + '<br />' +
                 app_portal_link + '<br />' +
-                '<b>Name: </b>' + c.name + '<br/>'+
+                '<b>Name: </b><font color="#FF007F">' + c.name + '</font><br/>'+
                 '<b>Station IDs: </b>' + c.sids + '<br/>' +
                 '<b>NETWORKS: </b>' + c.stn_networks + '<br/>' +
                 '<b>State, Elevation, Lat, Lon: </b>' + c.state + ', ' + c.elevation + ', ' + c.lat + ', ' +c.lon +'<br/>' +
                 '<b>Available elements with date range: </b>' + avbl_elements + '<br />' +
                 '</div>';
             marker.contentString = contentString;
-            markers.push(marker);
-            //Open info window when user clicks on marker
+
+           //Open info window when user clicks on marker
             google.maps.event.addListener(marker, 'click', function() {
                 infowindow.close();
                 infowindow.setContent(contentString);
                 infowindow.open(map, marker);
                 });
+
+            //Define table row
+            var tbl_row = document.createElement('tr');
+            tbl_row.cString = contentString;
+            tbl_row.marker = marker;
+            tbl_row.onclick = function(){
+                infowindow.close();
+                infowindow.setContent(this.cString);
+                infowindow.open(map, this.marker);
+            };
+            var t_data = '<td>';
+            tbl_row.innerHTML = t_data + c.name + '</td>' + t_data +
+                c.state + '</td>' + t_data + c.lat + '</td>' + t_data +
+                c.lon + '</td>' + t_data + c.elevation + '</td>' + t_data +
+                c.stn_networks +'</td>';
+
+            //Set Initial markers and station list
+            if (c.marker_category == "COOP"){
+                marker.setVisible(true);
+                document.getElementById(c.marker_category).checked = true;
+                var station_list = document.getElementById('station_list');
+                station_list.appendChild(tbl_row);
+            }
+            else {
+                marker.setVisible(false);
+            }
+            //Push markesr and table rows into list
+            tbl_rows.push(tbl_row);
+            markers.push(marker);
+
         }); //end each
 
+        
         // == shows all markers of a particular category, and ensures the checkbox is checked and write station_list==
         show = function(category) {
             var station_list = document.getElementById('station_list');
             for (var i=0; i<markers.length; i++) {
                 if (markers[i].category == category) {
                     markers[i].setVisible(true);
-                    var tbl_row = document.createElement('tr');
-                    tbl_row.cString = markers[i].contentString;
-                    tbl_row.marker = markers[i]
-                    tbl_row.onclick = function(){
-                        infowindow.close();
-                        infowindow.setContent(this.cString);
-                        infowindow.open(map, this.marker);
-                    };
-                    var t_data = '<td>';
-                    tbl_row.innerHTML = t_data + markers[i].name + '</td>' + t_data +
-                        markers[i].state + '</td>' + t_data + markers[i].lat + '</td>' + t_data + 
-                        markers[i].lon + '</td>' + t_data + markers[i].elevation + '</td>' + t_data +
-                        markers[i].stn_networks +'</td>';
-                    station_list.appendChild(tbl_row);
+                    station_list.appendChild(tbl_rows[i]);
+                    //station_list.sort()
                 }
             }
             // == check the checkbox ==
@@ -233,17 +243,14 @@ function initialize_station_finder() {
 
         // == hides all markers of a particular category, and ensures the checkbox is cleared and delete station_list ==
         hide = function(category) {
-            //remove previous station_list
+            //remove all rows that belong to category
             var station_list = document.getElementById('station_list');
-            var tableRows = station_list.getElementsByTagName('tr');
-            var rowCount = tableRows.length;
-            for (var x=rowCount-1; x>0; x--) {
-                station_list.removeChild(tableRows[x]);
-            }
             for (var i=0; i<markers.length; i++) {
                 if (markers[i].category == category) {
                     markers[i].setVisible(false);
+                    station_list.removeChild(tbl_rows[i]);
                 }
+
             }
             // == clear the checkbox ==
             document.getElementById(category).checked = false;

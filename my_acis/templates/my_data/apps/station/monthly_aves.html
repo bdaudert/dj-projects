@@ -1,0 +1,137 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="monthly averages, graph, station data, historic data,application, product, tool">
+<meta name="description" content="SW-CKN Generates graphs of monthly averages">
+
+{% block content %}
+
+<p align="center">You are here 
+<a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
+<a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/station/">STATION TOOLS></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/station/monthly_aves/">Monthly Averages</a></p>
+
+<div class="container">
+    <div class="center-left" style="border:none;">
+        <div id='form_graphs'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form_graphs %}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    <td>{{field}}</td>                                                                                
+                    <td><p class="trigger"><img class="qmark" src="{{MEDIA_URL}}img/QMark.png"></p>                                     
+                    {%ifequal field.label "Elements" %}
+                        <div class="pop-up">
+                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0">                           </div>
+                    {%else%}
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    {%endifequal%}
+                    </td>
+                </tr>
+                {%ifequal field.label "Station id"%}
+                    <tr><td></td><td><a target="_blank" href="/csc/sw_ckn/station_finder/">Station Finder</a></td><td></td></tr>
+                {%endifequal%}
+               {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form_graphs"/>
+            </form>
+        </div>
+        <br />
+    </div>
+
+    <div class="center" style="border:none;">
+        <div id=tool_info_head></div>
+        <script type="text/javascript">                        
+            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+        </script>
+        <div id="tool_info" style="display:none;">
+            <p>Generates bar charts of monthly averages for one or more elements.</p>
+            <p>Raw data is also available to the user (currently only json format is supported)</p>
+            <p>Daily Precipitation and Snowfall data are totaled per month and then averaged over the years spanned by the user defined start and end date.</p>
+            <p>All other elements are averaged over each month and then averaged again over the years.</p>
+            <p>Treatment of data flags:</p>
+                <p>Traces (T) are treated as having value 0.0 (precip and snowfall only).</p>
+                <p>S flags are counted and their position in the data set noted until the 
+                corresponding accumulation (A) flag is found. The accumulated  data value is
+                distributed in equal parts to each of the previous S positions
+                (precip and snowfall only).</p>
+                <p>Missing data is discarded.</p>
+        </div>
+
+        <div id="how_to_head"></div>
+        <script type="text/javascript">            
+            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+        </script>
+        <div id="how_to" style="display:none;">
+            <p>Don't know your station id? Find it here:</p>
+            <a href="{{URL_PREFIX}}sw_ckn/station_finder/">STATION FINDER</a>
+            <p>Elements should be given as a comma separated list. Element Choices:
+            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" 
+            width="450" height="450" border="0"/></p>
+            <p>Start and end date should be 8 characters long and of form yyyymmdd. Alternativly you can enter
+            'por' if you are interested in the period of record for this station.</p>
+            <p>If interested in period of record, type <font color="#A00000">
+            <b>por</b></font> for both start and end date</p>
+        </div>
+
+        {%if stn_id%}
+            <p class="error">Station ID: {{stn_id}}</p>
+        {%endif%}
+        {%if start_date%}
+            <p class="error">Start Date: {{start_date}}</p>
+        {%endif%}
+        {%if end_date%}
+            <p class="error">End Date: {{end_date}}</p>
+        {%endif%}
+        {%if elements%}
+            <p class="error">ACIS Elements: {{elements}}</p>
+        {%endif%}       
+
+        {%if results%}
+            <h2>Plots of Monthly Averages</h2>
+            <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">
+            <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+            <!-- One container per element -->
+            {%for result in results%}
+                <div id="container{{forloop.counter}}"style="height:300px;width:100%;"></div>
+                <br /> 
+            {%endfor%}         
+            <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-monthly-aves.js"></script>
+        {%endif%}
+
+        {%if error%}
+            <p class="error">{{error}}</p>
+        {%endif%}
+    </div>
+
+    <div class="center-right" style="border:none;">
+        {%if meta%}
+            <p class="pop_link" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
+            <div id="metadata" style="display:none;">
+                {% for key, val in meta.items %}
+                    <p> {{key}}: {{val}} </p>
+                {%endfor%}
+            </div>
+        {%endif%}
+
+        {%if results%}
+            <p class="pop_link" onClick="ShowHide('averaged_data')"><u>Click here for averaged data behind this graphic</u></p>
+            <div id="averaged_data" width="450" height="450" border="0" style="display:none;">{{averaged_data}}</div>
+            <a href="{{URL_PREFIX}}sw_ckn/data/station/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}">Get raw data behind this graphic here!</a>
+        {%endif%}
+    </div>
+
+  <!-- Footer -->
+  <!--
+  <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-sw-ckn");
+    </script>
+  -->
+</div>
+{%endblock%}

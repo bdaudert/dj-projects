@@ -1,0 +1,294 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="data, gridded data, modeled data, acis">
+<meta name="description" content="SW-CKN Gridded and Modeled Data">
+
+{% block content %} 
+
+<p align="center">You are here 
+<a href="{{HOME_URL}}">HOME></a>
+<a href="{{SW_CKN_URL}}">SW-CKN></a>
+<a href="{{DATA_URL}}">DATA PORTAL></a>
+<a href="{{GRID_DATA_URL}}">Modeled/Gridded Data</a></p>
+
+<div class="container">
+    <div class="major-left">
+    <h2>ACIS Gridded Data</h2>
+{{GRID_TOOLS_URL}}
+        {%if not form3_grid_ready %}
+        {%if not hide_form_0 %}
+        <div id='form0'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form0_grid %}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    <td>{{field}}</td>
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                    {%ifequal field.label "Elements" %}
+                    <div class="pop-up"> 
+                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0">
+                    </div>
+                    {%else%}
+                    <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    {%endifequal%}
+                    </td>
+                </tr>
+                {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>   
+                {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Select" name="form0_grid"/>
+            </form>
+        </div>
+        {%endif%}
+
+        {%if form1_grid_ready%}
+        <div id="form1">
+                <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form1_grid %}
+            {%if field.is_hidden %}
+                {{field}}
+            {%else%}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    {%if field.label == "Location" %}
+                        {%if not map_loc %}
+                            <td><input type="text" name="location" id="location" value="{{location}}"></td>
+                        {%else%}
+                            <td><input type="text" name="location" id="location" value="{{map_loc}}"></td>
+                        {%endif%}
+                        {%if need_map%}
+                            <p class="error">Drag map marker to change location</p>
+                        {%endif%}
+                    {%elif field.label == "Bounding box" and bounding_box %}
+                        <td><input type="text" name="bounding_box" id="bounding_box" value="{{bounding_box}}"></td>
+                    {%else%}
+                        <td>{{field}}</td>
+                    {%endif%}
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                    {%ifequal field.label "Elements" %}
+                        <div class="pop-up">
+                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0">
+                        </div>
+                    {%else%}
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    {%endifequal%}
+                    </td>
+                </tr>
+                {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
+            {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form1_grid"/>
+            </form>
+        </div>
+        </br>
+        </br>
+        {%endif%}
+        {%endif%}
+
+        {%if need_map and  grid_data%}
+            <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+            <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
+            <input type="hidden" id="lat" name="lat" value={{lat}}>
+            <input type="hidden" id="lon" name="lon" value={{lon}}>
+            <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+            <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+            <input type="hidden" id="zoom_level" name="zoom_level" value="5">
+            <input type="hidden" id="app" name="app" value="grid_data">
+            <div id="map" style="width: 100%; height:400px;"></div>
+            <script type="text/javascript">
+                initialize_grid_point_map()
+            </script>
+        {%endif%}
+
+        {%if need_map_bbox  and grid_data %}
+            <p class="error">Click and drag to define your Bounding Box!</p>
+            <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+            <div id="map" style="width: 100%; height:400px;"></div>
+            <script type="text/javascript">
+                initialize_bbox_map()
+            </script>
+        {%endif%}
+    </div>
+
+    <div class="major-right" style="background-color:X^H#947e6e; border:none;">
+
+        <p class="pop_link" onClick="ShowHide('Docu_ACIS')"><img class="logo"         
+        src="{{MEDIA_URL}}img/ACIS-logo.png"><u>More about the ACIS data sets ...</u></p>
+        <div id="Docu_ACIS" style="display:none;"></div>
+            <script type="text/javascript">                        
+            $("#Docu_ACIS").load("{{MEDIA_URL}}html/commons.html #Docu_ACIS");
+            </script>
+
+        <div id=tool_info_head></div>
+        <script type="text/javascript">                        
+            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+        </script>
+        <div class="docu" id="tool_info" style="display:none;">
+            <p class="error">What is it?</p>
+            <h3>Modeled/Gridded Data access point to the ACIS system.</h3>
+            <p class="error">What datasets are available?</p>
+            <a target="_blank" href="https://gist.github.com/bnoon/4197956">NRCC Interpolated/Hi-Res</a><br />
+            <a class="popup_map" href="http://www.prism.oregonstate.edu/">PRISM</a><br />
+            <p>NARCCAP(North American Regional Climate Change Assessment Program) Datasets:</p>
+            <a class="popup_map" target="_blank" href="http://www.earthsystemgrid.org/dataset/narccap.crcm.output.html">CRCM</a><br />
+            <a class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.hrm3.output.html">HRM3</a><br />
+            <a class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.mm5i.output.html">MM5I</a><br />
+            <a class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.rcm3.output.html">RCM3</a><br />
+            <a class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.wrfg.output.html">WRFG</a>
+            <p class="error">What can you do with this tool?</p>
+            <h3>Access and download data</h3>
+            <p>Available Data Formats: .xls, .dat, .txt, html(prints to screen)</p>
+            <p>Queries can be performed for single or multiple grid_points at a time.</p>
+            <a target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a>
+            <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
+            &nbsp;&nbsp;&nbsp;<a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
+            <p>For more information and direct access to NARCCAP gridded data sets:</p>
+            &nbsp;&nbsp;&nbsp;<a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+        </div>
+
+        <div id="how_to_head"></div>
+        <script type="text/javascript">            
+            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+        </script>
+        <div id="how_to" style="display:none;">
+            <p>Choose a single gridpoint, a US state or a bounding box as your search area.</p>
+            <p>Hit "Select". A second form will appear.</p>
+            <p><b>"Point Location"</b>:<br />Enter the grid point latitude and longitude if you know it or use the map interface by dragging the marker to the desired location.</p>
+            <p><b>"State"</b>:<br />Choose a state from the drop down menue.</p>
+             <p><b>"Bounding Box"</b>:<br />HANG IN THERE! A map interface to help you find your bounding box is in the works. For now, unfortunately, you will need to knoww your coordinates and enter them manually. <img class="icon" src="{{MEDIA_URL}}img/SadFace.png"></p>
+            <p>Enter one or more elements as a comma separated list.</p>
+            <p>Choose a start and end date.</p>
+            <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
+            <div id="element_choices" style="display:none"><img width="250px" height="300px" src={{MEDIA_URL}}img/ACIS_Element_Choices.png></div>
+            <p>Choose a data set from the drop down menue.</p>
+            <p>Choose a data format. .xls, .dat, .txt files will be downloaded on the user's machine.
+            html format is displayed on the webpage directly.</p>
+            <p>The delimiter choice defines the separation of the data values.</p>
+        </div>
+        
+        {%if location and not grid_data%}
+            <p class="error">You chose:</p>
+            <p class="error">Lat, Lon: {{location}}</p>
+        {%endif%}
+        {%if state and not grid_data%}
+            <p class="error">You chose:</p>
+            <p class="error">State: {{state}}</p>
+        {%endif%}
+        {%if bbox and not grid_data%}
+            <p class="error">You chose:</p>
+            <p class="error">Bounding Box: {{bbox}}</p>
+        {%endif%}
+       {%if start_date and not grid_data%}
+            <p class="error">ACIS Elements: {{elements}}</p>
+            <p class="error">Start Date: {{start_date}}</p>
+        {%endif%}
+        {%if end_date and not grid_data%}
+            <p class="error">End Date: {{end_date}}</p>
+        {%endif%}
+
+        {%if error%}
+            {{error}}
+        {%endif%}
+
+       {%if large_request%}
+            <p class="error">{{large_request}}</p>
+        {%endif%}
+
+       {%if user_info%}
+            <p class="error">{{user_info}}</p>
+        {%endif%}
+        
+        {% if form3_grid_ready%}
+            <div id='form3'>
+                <form method="post" action="">{% csrf_token %}
+                <table class="form">
+                {%for field in form3_grid %}
+                    <tr>
+                        <td>{{field.label}}:</td>
+                        <td>{{field}}</td>
+                        <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                        </td>
+                    </tr>
+                    {%if field.errors%}
+                     <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                    {%endif%}
+                {%endfor%}
+                </table>
+                <input type="submit" value="Submit" name="form3_grid"/>
+                </form>
+            </div>
+        {%endif%}
+
+        {%if grid_data%}
+            <!--Link to relevant applications-->
+            {%if link_to_clim_sum_map %}
+                {%if state%}
+                    <a target="_blank" href="{{GRID_TOOLS_URL}}clim_sum_maps/?start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}&state={{state}}">Generate a climate summary map  for this data set here!</a>
+                {%endif%}
+                {%if bounding_box%}                    
+                    <a target="_blank" href="{{GRID_TOOLS_URL}}clim_sum_maps/?start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}&bounding_box={{bounding_box}}&">Generate a climate summary map  for this data set here!</a>
+                {%endif%}
+            {%endif%}
+            <br />
+            {%if link_to_gp_ts %}
+                 <a target="_blank" href="{{GRID_TOOLS_URL}}grid_point_time_series/?lat={{lat}}&lon={{lon}}&start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}">Generate a time series for this data set here!</a>
+            {%endif%}            
+            <br />
+            <h2>{%for item in file_info%}{{item}}&nbsp;{%endfor%}</h2>
+            {%if not json%}
+                <p>date{{delimiter}}lat{{delimiter}}lon{{delimiter}}elev{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</p>
+                {%for row in grid_data%}
+                    {%for val  in row%}
+                        {{val}}{{delimiter}}
+                    {%endfor%}<br />
+                {%endfor%}
+            {%else%}
+                <p>date,lat,lon,elev,{%for el in elements%}{{el}},{%endfor%}</p>
+                {{grid_data}}
+            {%endif%}
+        {%endif%}
+    
+    <br />
+    {%if need_map and not grid_data%}
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+        <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
+        <input type="hidden" id="lat" name="lat" value={{lat}}>
+        <input type="hidden" id="lon" name="lon" value={{lon}}>
+        <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+        <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+        <input type="hidden" id="zoom_level" name="zoom_level" value="5">
+        <input type="hidden" id="app" name="app" value="grid_data">
+        <div id="map" style="width: 100%; height:400px;"></div>
+        <script type="text/javascript">
+            initialize_grid_point_map()
+        </script>
+    {%endif%}
+
+    {%if need_map_bbox  and  not grid_data %}
+        <p class="error">Click and drag to define your Bounding Box!</p>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+        <div id="map" style="width: 100%; height:400px;"></div>
+        <script type="text/javascript">
+            initialize_bbox_map()
+        </script>
+    {%endif%}
+
+  <!-- Footer -->
+<!--
+  <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-sw-ckn");
+    </script>
+  </div>
+-->
+</div>
+
+{%endblock%}

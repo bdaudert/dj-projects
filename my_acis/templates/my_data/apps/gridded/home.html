@@ -1,0 +1,120 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="tools, climate product, climate applications, visualization, time series, risk maps, composite maps">
+<meta name="description" content="SW-CKN Climate Applications">
+
+{% block content %}
+
+    <p align="center">You are here 
+    <a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
+    <a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN></a>
+    <a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS></a>
+    <a href="{{URL_PREFIX}}sw_ckn/apps/gridded/">GRID TOOLS</a>
+
+    <div class="container">
+
+        <div class="center-left">
+           <h2 class="error">Gridded/Modeled Data Applications</h2>
+            <ul class="navbar">
+
+            <h4 align="center">Southwest US Applications</h4>
+            <table>
+                <tr><td>
+                <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/cal-mon/frames_version.html" class="trigger" target="_blank">California Climate Tracker(<font color="red">CA</font>)</a>
+                <div class="pop-up">
+                    <p><font size="4"></font>Tracking Climate Variability and Change for the state of California.</p>
+                </div>
+                </td><td>
+                <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CalTracker')">
+                </td></tr>
+                <tr><td>
+                <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/nev-mon/index.html" class="trigger" target="_blank">Nevada Climate Tracker(<font color="red">NV</font>)</a>
+                <div class="pop-up">
+                <p><font size="4"></font>Tracking Climate Variability and Change for the state of Nevada.</p>
+                </div>
+                </td><td>
+                <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_NevTracker')">
+                </td></tr>
+                <tr><td><a id="us_wide" target="_blank" href="http://www.cefa.dri.edu/Westmap/" class="trigger">Westmap</a>
+                <div class="pop-up">
+                    <p><font size="4">Climate Analysis and Mapping Tool.</font></p>
+                </div>
+                </td><td>
+                <img class="qmark" style="border:4px solid #FF007F" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_WESTMAP')">
+                </td></tr>
+            </table>
+ 
+
+            <h4 align="center">US-Wide Applications</h4>
+                <table>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.wrcc.dri.edu/cwd/products/" class="trigger">North American Freezing Level Tracker</a>
+                    <div class="pop-up">
+                        <p><font size="4">Track through time the height of the freezing level above sea level.</font></p>
+                    </div>
+                    </td><td>
+                   <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="HighLight(this,'docu','Docu_FreezTracker')">
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="{{URL_PREFIX}}sw_ckn/apps/gridded/clim_sum_maps/" class="trigger">Climate Summary Maps</a>
+                    <div class="pop-up">
+                        <p><font size="4">Generates climate summary maps for different elements, time ranges and region usig ACIS gridded data.</font></p>
+                    </div>
+                    </td><td>
+                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CLIM_SUM_MAP')">
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="{{URL_PREFIX}}sw_ckn/apps/gridded/grid_point_time_series/" class="trigger">Grid Point Time Series</a>
+                    <div class="pop-up">
+                        <p><font size="4">Generates time series data and graph for a chosen grid point and time range using ACIS gridded data.</font></p>
+                    </div>
+                    </td><td>
+                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_GP_TS')">
+                    </td></tr>
+                </table>
+            </ul>
+        </div>
+
+        <div class="major-right">
+            <!-- Application documentation -->
+            <div class="docu" id="Docu_CalTracker" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_CalTracker").load("{{MEDIA_URL}}html/commons.html #Docu_CalTracker");
+                </script>
+            <div class="docu" id="Docu_NevTracker" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_NevTracker").load("{{MEDIA_URL}}html/commons.html #Docu_NevTracker");
+                </script>
+            <div class="docu" id="Docu_WESTMAP" style="display:block;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_WESTMAP").load("{{MEDIA_URL}}html/commons.html #Docu_WESTMAP");
+                </script>
+           <div class="docu" id="Docu_FreezTracker" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_FreezTracker").load("{{MEDIA_URL}}html/commons.html #Docu_FreezTracker");
+                </script>
+           <div class="docu" id="Docu_GP_TS" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_GP_TS").load("{{MEDIA_URL}}html/commons.html #Docu_GP_TS");
+                </script>
+           <div class="docu" id="Docu_CLIM_SUM_MAP" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_CLIM_SUM_MAP").load("{{MEDIA_URL}}html/commons.html #Docu_CLIM_SUM_MAP");
+                </script>
+           <div class="docu" id="Docu_NONE" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_NONE").load("{{MEDIA_URL}}html/commons.html #Docu_NONE");
+                </script>
+           </div>
+        </div>
+
+    </div>
+
+ <!-- Footer -->
+<!--
+    <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+    </script>
+-->
+{%endblock%}

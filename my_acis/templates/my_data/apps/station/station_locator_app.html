@@ -1,0 +1,290 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="station finder, map, by date range, by element, station data, historic data,application, product, tool">
+<meta name="description" content="SW-CKN Generates graphs of monthly averages">
+
+{% block content %}
+
+<p align="center">You are here 
+<a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
+<a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN></a>
+<a href="{{URL_PREFIX}}sw_ckn/station_finder/">STATION FINDER</a>
+
+<div class="container">
+    <div class="center-left" style="border:none;">
+        {%if show_legend%}
+        <div id="map_legend">
+            <h3>Legend of Station Networks</h3>
+            <p class="error">Choose Networks!</p>
+        </div>
+        {%endif%}
+    </div>
+        
+    <div class="center">
+        <div align="center" id=tool_info_head></div>
+        <script type="text/javascript">                        
+            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+        </script>
+        <div align="center" id="tool_info" style="display:none;">
+            <p>Tool to locate ACIS stations that have data for user choosen list of elements and  data range</p>
+            <p>Element Choices:</p>
+            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0"/>
+        </div>
+
+        <div align="center" id="how_to_head"></div>
+        <script type="text/javascript">            
+            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+        </script>
+        <div align="center" id="how_to" style="display:none;">
+            <p>Choose a station selection method. This will define the type of area of whose station data you are interested in.</p>
+            <li>Explanation of station selection choices:</li>
+                <ul>
+                    <!--<li>Station Selection = "Individual Station". Enter the Station Id of choice. If you don't know your station id, find it here:</li>
+                    <a href="{{URL_PREFIX}}sw_ckn/station_finder">Station Finder</a>
+                    or here:
+                    <a class="docu_long"target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">More on station Ids</a>
+                    
+                    <li>Station Selection = "Comma separated list of stations". Enter multiple station ids, separated by a comma.</li>
+                    -->
+                    <li>Station Selection = "County FIPS code". Find data for all stations in a US county of your choice.</li>
+                    <a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a>
+                    <li>Station Selection = "Climate Division".  Find data for all stations in a US climate division of your choice.</li>
+                    <a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a>
+                    <li>Station Selection = "County Warning Area. Find data for all stations in a US county warning area of your choice."</li>
+                    <a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a>
+                    <li>Station Selection = "Basin". Find data for all stations in a US drainage basin of your choice.</li>
+                    <a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a>
+                    <li>Station Selection = "State". Find data for all stations in a US state of your choice.</li>
+                    <li>Station Selection = "Bounding Box". Find data for all stations in a bounding box of your choice. A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. Please enter them in this order.</li>
+            <li>Enter a comma seperated list of elements from the following otions</li>
+            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0"/></li>
+            <li>Start and end date should be 8 characters long and of form yyyymmdd. Alternativly you can enter
+            'por' if you are interested in the period of record for this station.</li>
+            <li>If interested in period of record, type <font color="#A00000">
+            <b>por</b></font> for both start and end date</li>
+            </ul></p>
+        </div>
+      
+        {%if not form1_ready%} 
+        <div id='form0'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            <tr>
+            <td colspan="3"><p class="error">Refine your search here!</p></td>
+            </tr>
+            {%for field in form0 %}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    <td>{{field}}</td>
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                    <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    </td>
+                </tr>
+               {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
+            {%endfor%}
+                <tr><td></td><td></td><td><input type="submit" value="Select" name="form0"/></td></tr>
+            </table>
+            </form>
+        </div>
+        {%endif%}        
+
+        {%if form1_ready%}
+        <div id='form1'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form1 %}
+                {%if field.is_hidden %}
+                    {{field}}
+                {%else%}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    <td>{{field}}</td>                                                           
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                    {%ifequal field.label "Elements" %}
+                        <div class="pop-up">
+                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0">
+                        </div>
+                    {%else%}
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    {%endifequal%}
+                    </td>
+                </tr>
+                {%ifequal field.label "County" %}
+                <tr><td></td><td align="right"><a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a></td></tr>
+                {%endifequal%}
+                {%ifequal field.label "Climate division" %}                        
+                <tr><td></td><td align="right"><a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a></td></tr>                
+                {%endifequal%}
+                {%ifequal field.label "County warning area" %}                
+                <tr><td></td><td align="right"><a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a></td></tr>
+                {%endifequal%}
+                {%ifequal field.label "Basin" %}                                        
+                <tr><td></td><td align="right"><a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a></td></tr>                
+                {%endifequal%}
+                {%ifequal field.label "Bounding box" %}                                                         
+                <tr><td></td><td align="right"><p class="error">Map interface coming soon</p></td></tr>
+                {%endifequal%}
+               {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
+                {%endif%}
+            {%endfor%}
+            <tr><td></td><td></td><td><input type="submit" value="Submit" name="form1"/></td></tr>
+            </table>
+            </form>
+        </div>
+        {%endif%} 
+
+        {%if error%}
+            <p class="error">{{error}}</p>
+        {%endif%}
+
+        <br /><br />
+        <input type="hidden" id="URL_PREFIX" name="variable" value="{{ URL_PREFIX }}">
+        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">       
+
+        {%if json_file%}
+            <input type="hidden" id="json_file" name="variable" value="{{ json_file }}">
+        {%else%}
+            {%if empty_json%}
+                <input type="hidden" id="json_file" name="variable" value="Empty.json">
+            {%else%}
+                <input type="hidden" id="json_file" name="variable" value="SW_stn.json">
+            {%endif%}
+        {%endif%}
+
+        {%if start_date%}
+            <input type="hidden" id="start_date" name="variable" value="{{start_date}}">
+        {%endif%}
+        {%if end_date%}
+            <input type="hidden" id="end_date" name="variable" value="{{end_date}}">
+        {%endif%}
+
+        {%if elements%}
+            <input type="hidden" id="elements" name="variable" value="{{elements}}">
+        {%endif%}
+
+        <div id="map"></div>
+        <script type="text/javascript">
+            initialize_station_finder()
+        </script>
+
+        <div style="height:200px;overflow:auto;" >
+            <table cellspacing="1" id="station_list" border=1>
+              <thead>
+              <tr>
+                <th>Name</th>
+                <th>State</th>
+                <th>Lat</th>
+                <th>Lon</th>
+                <th>Elev</th>
+                <th>Networks</th>
+              </tr>
+              </thead>
+            </table>
+        </div>
+
+    <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-sw-ckn");
+    </script>
+
+    </div>
+
+    <div class="center-right">
+        <h2>Links to other Networks</h2>
+           <ul class="navbar">
+                <table>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank">USA Climate Archive by WRCC (RAWS)</a>
+                    <div class="pop-up">
+                        <p><font size="4">Summaries, Graphs, and other products for RAWS
+                        (Remote Automatic Weather Stations).</font></p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.wrcc.dri.edu/crn/" class="trigger" target="_blank">USCRN (<font color="red">US</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">NOAA U.S. Climate Reference Network</font></p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://mesowest.utah.edu/" class="trigger" target="_blank">MesoWest (<font color="red">US</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">Access to current and archived weather observations across the United States.</font></p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                        <a id="us_wide" href="http://www.cocorahs.org/" class="trigger" target="_blank">CoCoRaHS (<font color="red">US</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">Community Collaborative Rain, Hail and Snow Network</font></p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.wcc.nrcs.usda.gov/snow/" class="trigger" target="_blank">SNOTEL (<font color="red">W-US/Alaska</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">Snowpack and related climatic data in the Western United States and Alaska.</font></p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.cemp.dri.edu/" class="trigger" target="_blank">CEMP(<font color="red">NV</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4"></font>Community Environmental Monitoring Porgram. Monitoring air quality and climate near and downwind of the Nevada National Security Site.</p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.wrcc.dri.edu/nrel/" class="trigger" target="_blank">Wind Energy Assessment(<font color="red">NV</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4"></font>Climate and Wind data for Nevada.</p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://nicenet.dri.edu/" class="trigger" target="_blank">NICE Net(<font color="red">NV</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4"></font>Nevada Integrated Climate and Evaporation Network.</p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.ymp.dri.edu/index.html" class="trigger" target="_blank">Yucca Mountain Project(<font color="red">NV</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">Climate Data from Yucca Mountain, Nevada.</font></p>
+                    </div>
+                    </td></tr>
+                    <tr><td>                                        
+                    <a id="us_wide" href="http://www.tahoeclim.dri.edu/" class="trigger" target="_blank">TahoeClim(<font color="red">CA/NV</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">Lake Tahoe Climate Information and Data.</font></p>
+                    </div>
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.calclim.dri.edu/" class="trigger" target="_blank">CalClim(<font color="red">CA</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">California Climate Data Archive.</font></p>
+                    </div>
+                    </td></tr>
+                    <tr><td>                                        
+                    <a id="us_wide" href="http://www.wrcc.dri.edu/catalina/" class="trigger" target="_blank">SC Island Climate Network(<font color="red">CA</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">Climate Data from Santa Catalina Island.</font></p>
+                    </div>
+                    </td></tr>
+                   <tr><td>
+                    <a id="us_wide" href="http://www.wrcc.dri.edu/vallescaldera/" class="trigger" target="_blank">Valles Caldera(<font color="red">NM</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">Valles Caldera Climate Network</font></p>
+                    </div>
+                    </td></tr>
+                   <tr><td>
+                    <a id="us_wide" href="http://www.mesonet.org/" class="trigger" target="_blank">Oklahoma Mesonet(<font color="red">OK</font>)</a>
+                    <div class="pop-up">
+                        <p><font size="4">Measuring the environment at the size and duration of mesoscale weather events.</font></p>
+                    </div>
+                    </td></tr>
+                    </table>
+                </ul>
+    </div>
+
+</div>
+{%endblock%}

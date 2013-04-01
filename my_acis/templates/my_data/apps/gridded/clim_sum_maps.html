@@ -1,0 +1,168 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="Climate Summary Map, gridded data, application, product, tool">
+<meta name="description" content="SW-CKN Generates a climate summary map">
+
+{% block content %}
+
+<p align="center">You are here 
+<a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
+<a href="/sw_ckn/main/">SW-CKN></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/gridded/">GRID TOOLS></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/gridded/clim_sum_maps/">Climate Summary Maps</a></p>
+
+<div class="container">
+    <div class="major-left">
+    {%if not hide_form_0 and not form1_ready%}
+        <div id='form0'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form0 %}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    <td>{{field}}</td>                                                                                              
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                    <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    </td>
+                </tr>
+               {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Select" name="form0"/>
+            </form>
+        </div>
+    {%endif%}
+
+    {%if form1_ready%}
+        <div id='form1'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form1 %}
+                {%if field.is_hidden %}
+                    {{field}}
+                {%else%}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    {%if field.label == "Bounding box" and bounding_box %}
+                        <td><input type="text" name="bounding_box" id="bounding_box" value="{{bounding_box}}"></td>
+                    {%else%}
+                        <td>{{field}}</td>
+                    {%endif%}
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                    <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    </td>
+                </tr>
+               {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
+                {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form1"/>
+            </form>
+        </div> 
+    {%endif%} 
+
+    {%if need_map  and  figure_file%}
+        <p class="error">Click and drag to define your Bounding Box!</p>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+        <div id="map" style="width: 100%; height:400px;"></div>
+        <script type="text/javascript">
+            initialize_bbox_map()
+        </script>
+    {%endif%}
+
+    </div><!--end center-left-->
+
+    <div class="major-right">
+        <div id=tool_info_head></div>
+            <script type="text/javascript">            
+            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+            </script>
+
+        <div id="tool_info" style="display:none;">
+            <p>A temporal composite map for an element of choice and a 
+            user defined time period is created</p>
+            <p>For Precipitation and Snowfall daily values are summed 
+            over the time period.</p>
+            <p>For all other elements, daily values are averaged</p>
+            <p>Daily gridded data is obtained through ACIS Webservices.</p>
+            <p>Information on different gridded data sets:</p>
+            <p>Information on gridded data sets:</p>
+                <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
+                <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
+                <p>For more information and direct access to NARCCAP                         
+                (North American Regional Climate Change Assessment Program) gridded data sets:</p>
+                <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+        </div>
+        
+        <div id="how_to_head"></div>
+            <script type="text/javascript">
+            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+            </script>
+
+        <div id="how_to" style="display:none;">
+            <p><b>Grid selection</b> is made either by US state or by a user defined bounding box.</p>
+                    <p><b>Select grid by</b> = "State". Enter a US state of choice.</p>                    
+                    <p><b>Select grid by</b> = "Bounding Box". Find data for all stations in a bounding box of your choice.                         <p>A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. 
+                    Please enter them in this order.</p>
+            <p><b>Time Period:</b>If Custom Date Range was chosen, the user should enter the desired 
+            8 digit (yyyymmdd) start and end dates fields in the second form.</p>
+            <p>If the Time Period was NOT "Custom Date Range", start and end dates will be computed automatically</p>
+            <p>After selecting the desired element, time period and X value a second form will appear.</p>
+            <p>Depending on your choice of Grid selection, you now choose the gridpoints to be included.</p>
+            <p>Information on gridded data sets:</p>
+                <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
+                <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
+                <p>For more information and direct access to NARCCAP                         
+                (North American Regional Climate Change Assessment Program) gridded data sets:</p>
+                <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+            </ul></p>
+        </div>
+        
+        {%if figure_file%}
+
+            {%if state%}
+            <a target="_blank" href="{{URL_PREFIX}}sw_ckn/data/gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}">Get raw data behind this graphic here!</a>
+            <br />
+            <br />
+            <p>GridACIS Map for State: <b>{{state}}</b></p>
+            {%endif%}
+
+            {%if bounding_box%}
+            <a target="_blank" href="{{URL_PREFIX}}sw_ckn/data/gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bbox={{bounding_box}}">Get raw data behind this graphic here!</a>
+            <br />
+            <br />
+            <p>GridACIS Map for Bounding Box: <b>{{bounding_box}}</b></p>
+            {%endif%}
+            
+            <p>Element: <b>{{elems_long}}</b> {%if base_temp%}Base Temperature: <b>{{base_temp}}</b>{%endif%}</p>
+            <p>Time Period: <b>{{start_date}}</b> to <b>{{end_date}}</b></p>
+            <img src="{{MEDIA_URL}}tmp/{{figure_file}}">
+    
+        {%endif%}
+
+        {%if need_map  and not figure_file%}
+        <p class="error">Click and drag to define your Bounding Box!</p>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+        <div id="map" style="width: 100%; height:400px;"></div>
+        <script type="text/javascript">
+            initialize_bbox_map()
+        </script>
+        {%endif%}
+
+       </div><!--end center -->
+
+  <!-- Footer -->
+<!--
+    <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+    </script>
+-->
+</div> <!--end container -->
+
+{%endblock%}

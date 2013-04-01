@@ -1,0 +1,145 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="Gridpoint time series, gridded data, application, product, tool">
+<meta name="description" content="SW-CKN Generates a time series for a gridpoint">
+
+{% block content %}
+
+<p align="center">You are here 
+<a href="{{HOME_URL}}">HOME></a>
+<a href="/csc/sw_ckn/main_map/">SW-CKN></a>
+<a href="/csc/sw_ckn/apps/">TOOLS></a>
+<a href="/csc/sw_ckn/apps/gridded/">GRID TOOLS></a>
+<a href="/csc/sw_ckn/apps/gridded/grid_point_time_series/">Grid Point Time Series</a></p>
+
+<div class="container">
+    <div class="major-left">
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+        <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
+        {%if lat and lon %}
+            <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+            <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+        {%else%}
+            <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
+            <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+        {%endif%}
+        <input type="hidden" id="zoom_level" name="zoom_level" value="5">
+        <input type="hidden" id="app" name="app" value="gp_ts">
+        <br /><br /><br /><br /><br /><br /><br />
+        <div id='form0' align="center">
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form0 %}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    {%if field.label == "Lat" %}
+                        <p class="error">Drag map marker to change location</p>
+                        {%if not lat %}
+                            <td><input type="text" name="lat" id="lat" value='39.82'></td>
+                        {%else%}
+                            <td><input type="text" name="lat" id="lat" value={{lat}}></td>
+                        {%endif%}
+                    {%elif field.label == "Lon" %}
+                        {%if not lon %}
+                            <td><input type="text" name="lon"  id="lon" value='-98.57'></td>
+                        {%else%}
+                            <td><input type="text" name="lon" id="lon" value={{lon}}></td>
+                        {%endif%}
+                    {%else%}
+                        <td>{{field}}</td>
+                    {%endif%}
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>                        
+                    <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    </td>
+                </tr>
+               {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form0"/>
+            </form>
+        </div>
+    </div>
+
+    <div class="major-right">
+   
+        <div id=tool_info_head></div>
+        <script type="text/javascript">                        
+            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+        </script>
+        <div id="tool_info" style="display:none;">
+            <p>A zoomable time series plot of daily data for a gridded data point defined by latitude and longitude is produced.</p>
+            <p>The values for the gridpoint closest to the user chosen latitude and longitude are returned.</p>
+            <p>Raw data can also be retrieved.</p>
+            <p>Data is queried with ACIS Webservices.</p>
+            <p>Information on gridded data sets:</p>
+                <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
+                <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
+                <p>For more information and direct access to NARCCAP
+                (North American Regional Climate Change Assessment Program) gridded data sets:</p>
+                <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+        </div>
+
+        <div id="how_to_head"></div>
+        <script type="text/javascript">            
+            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+        </script>
+        <div id="how_to" style="display:none;">
+            <p>You can either manually enter your latitude and longitude or</p>
+            <p>Use the map tool to change latitude and longitude:</p>
+            <ol>
+                <p>Drag the marker to the desired position on the map.</p>
+                <p>The location will appear in the form on the left hand side.</p>
+            </ol>
+            <p>Start and end date should be 8 characters long and of form yyyymmdd, yyyy-mm-dd or yyyy/mm/dd.</p>
+            <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
+            <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
+            <p>For more information and direct access to NARCCAP
+            (North American Regional Climate Change Assessment Program) gridded data sets:</p>
+            <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+
+        </div>
+
+        {%if error%}
+            {{error}}
+        {%else%}
+          {%if datadict%}
+
+            <a target="_blank" href="{{URL_PREFIX}}sw_ckn/data/gridded/?start_date={{s_date}}&end_date={{e_date}}&elements={{elems}}&grid={{grid}}&loc={{lon}},{{lat}}">Get raw data  behind this graphic here!</a>
+            <br />
+            {{start_date}}
+            {{end_date}}
+            <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{MEDIA_URL}}tmp/">
+            <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+            <input type="hidden" id="element_long" name="element_long" value="{{element_long}}">
+            <input type="hidden" id="element" name="element" value="{{element}}">
+            <input type="hidden" id="lat" name="lat" value="{{lat}}">
+            <input type="hidden" id="lon" name="lon" value="{{lon}}">
+            <input type="hidden" id="start_date" name="start_date" value="{{start_date}}">
+            <input type="hidden" id="end_date" name="end_date" value="{{end_date}}">
+            <div id="hc-graph" style="width: 100%; height: 400px; margin: 0 auto"></div>
+            <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-gp-time-series.js"></script>
+            <br />
+            <br />
+          {%endif%}
+        {%endif%}
+        <div id="map" style="width: 100%; height:400px;"></div>
+        <script type="text/javascript">
+            initialize_grid_point_map()
+        </script>
+
+        <!--<a href="#"  onClick="initialize_grid_point_map()">Find your Latitude and Longitude here!</a>-->
+        <br />
+        <!-- Footer -->
+        <!--
+        <div id="footer" align="center"></div>
+        <script type="text/javascript">                        
+        $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+        </script>
+        </div>
+        -->
+    </div>
+</div>
+
+{%endblock%}

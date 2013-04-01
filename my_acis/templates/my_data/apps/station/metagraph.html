@@ -1,0 +1,108 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="Metadata, graph, coop station, station data, historic data,application, product, tool">
+<meta name="description" content="SW-CKN Generates Metadata graph for a coop station">
+
+{% block content %}
+
+<p align="center">You are here 
+<a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
+<a href="{{URL_PREFIX}}sw_ckni/main/">SW-CKN></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/station/">STATION TOOLS></a>
+<a href="{{URL_PREFIX}}sw_ckn/apps/station/metagraph/">Station Metadata Graphs</a></p>
+
+<div class="container">
+    <div class="center-left" style="border:none;">
+        <div id='form1'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form_meta %}
+                <tr>
+                    <td>{{field.label}}:</td>                                                                    
+                    <td>{{field}}</td>                                                                                
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>                                             <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    </td>
+                </tr>
+               {%ifequal field.label "Station id"%}
+                  <tr><td></td><td><a target="_blank" href="/csc/sw_ckn/station_finder/">Station Finder</a></td><td></td></tr>
+               {%endifequal%}
+               {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form_meta"/>
+            </form>
+        </div>
+    </div>
+
+    <div class="center" style="border:none;background-color:X^H#947e6e;">
+        <div id=tool_info_head></div>
+        <script type="text/javascript">                        
+            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+        </script>
+        <div id="tool_info" style="display:none;">
+            <p>Graphic representation of availablility of daily data of the five most common elements
+            at a station belonging to the COOP network. <a href="http://www.nws.noaa.gov/om/coop/">More information on the COOP Network</a></p>
+            <p>Daily data of following elements are queried via ACIS Webservices.
+                <ul><p>Maximum Temperature</p>
+                <p>Minimum Temperature</p>
+                <p>Total Precipitation</p>
+                <p>Total Snowfall</p>
+                <p>Total Snowdepth</p>
+            <p>A colored pixel means a valid data entry was found for the particular day of the year.</p>
+            <p>A white space indicates that data was not recorded at that date.</p>
+        </div>
+
+        <div id="how_to_head"></div>
+        <script type="text/javascript">            
+            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+        </script>
+        <div id="how_to" style="display:none;">
+            <p>Station ID should be a 6 digit coop id.</p>
+            <p>Don't know your coop station id? Find it here:</p>
+            <a href="{{URL_PREFIX}}sw_ckn/station_finder/">STATION FINDER</a><br />
+            <p><a target="_blank" href="http://www.nws.noaa.gov/om/coop/">More information on the COOP Network</a></p></ul>
+            </p>
+        </div>
+
+         {%if perl_err%}
+            <h1 class="error">{{perl_err}}</h1>
+        {%else%}
+            {%if station_id%}
+            <h1>STATION ID: {{station_id}}</h1>
+            <img src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmax.gif">
+            <img src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmin.gif">
+            <img src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_pcpn.gif">
+            <img src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_snow.gif">
+            <img src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_snwd.gif">
+            <!--
+            <img src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}"> 
+            -->
+            {%endif%}
+        {%endif%} 
+    </div>
+
+    <div class="center-right" style="border:none;">
+        {%if station_meta%}
+            <p class="pop_link" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
+            <div id="metadata" style="display:none;">
+                {% for key, val in station_meta.items %}
+                    <p> {{key}}: {{val}} </p>
+                {%endfor%}
+            </div>
+            <a href="{{URL_PREFIX}}sw_ckn/data/station/?stn_id={{station_meta.coop_id}}&start_date=por&end_date=por&elements=maxt,mint,pcpn,snow,snwd">Get raw data behind these plots here!</a>
+        {%endif%}
+
+    </div>
+
+  <!-- Footer -->
+<!--
+  <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+    </script>
+-->
+</div>
+{%endblock%}

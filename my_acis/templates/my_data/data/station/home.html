@@ -1,0 +1,250 @@
+{% extends "csc_base.html" %}
+<meta name="keywords" content="data, station data, historic data, acis">
+<meta name="description" content="SW-CKN Historic Station Data">
+
+{%load my_data_filters%}
+
+{% block content %} 
+
+<p align="center">You are here 
+<a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
+<a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN></a>
+<a href="{{URL_PREFIX}}sw_ckn/data/">DATA PORTAL></a>
+<a href="{{URL_PREFIX}}sw_ckn/data/historic/">Historic Station Data</a></p>
+
+<div class="container">
+    <div class="major-left">
+    <br />
+    <br />
+    {%if not form3_point_ready%}
+        {%if not stn_id%}
+            <div id='form0'>
+                <form method="post" action="">{% csrf_token %}
+                <table class="form">
+                {%for field in form0_point %}
+                    <tr>
+                        <td>{{field.label}}:</td>
+                        <td>{{field}}</td>
+                        <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                        {%ifequal field.label "Elements" %}
+                            <div class="pop-up"> 
+                            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0">                   </div>
+                        {%else%}
+                            <div class="pop-up"><p>{{field.help_text}}</p></div>
+                        {%endifequal%} 
+                        </td>
+                    </tr>
+                    {%if field.errors%}
+                     <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                    {%endif%}
+                {%endfor%}
+                </table>
+                <input type="submit" value="Select" name="form0_point"/>
+                </form>
+            </div>
+        {%endif%}
+        
+        {%if not form1_point_ready%}
+            <p class="pop_link" onClick="ShowHide('Docu_select_stations_by')"><b><u>Station Selection Choices</u></b> explained</p>
+            <div id="Docu_select_stations_by" style="display:none;"></div>
+            <script type="text/javascript">                        
+            $("#Docu_select_stations_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_stations_by");
+            </script>
+        {%endif%}
+
+        {%if form1_point_ready %}
+        <div id="form1">
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form1_point %}
+            {%if field.is_hidden %}
+                {{field}}
+            {%else%}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    <td>{{field}}</td>       
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>                            
+                    {%ifequal field.label "Elements" %}
+                        <div class="pop-up" onClick="ShowHide(this)">
+                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0">
+                        </div>
+                    {%else%}
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    {%endifequal%}
+                    </td>
+                </tr>
+                {%ifequal field.label "Station id"%}
+                    <tr><td></td><td align="right"><a href="/csc/sw_ckn/apps/station/station_locator/">Station Finder</a></td></tr>
+                {%endifequal%}
+                {%ifequal field.label "Station ids"%}
+                    <tr><td></td><td align="right"><a href="/csc/sw_ckn/apps/station/station_locator/">Station Finder</a></td></tr>
+                {%endifequal%}
+                {%ifequal field.label "County" %}
+                    <tr><td></td><td align="right"><a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a></td></tr>
+                {%endifequal%}
+                {%ifequal field.label "Climate division" %}
+                    <tr><td></td><td align="right"><a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a></td></tr>
+                {%endifequal%}
+                {%ifequal field.label "County warning area" %}
+                    <tr><td></td><td align="right"><a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a></td></tr>
+                {%endifequal%}
+                {%ifequal field.label "Basin" %}
+                    <tr><td></td><td align="right"><a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a></td></tr>
+                {%endifequal%}
+                {%ifequal field.label "Bounding box" %}
+                    <tr><td></td><td align="right"><p class="error">Map interface coming soon</p></td></tr>
+                {%endifequal%}
+                {%if field.errors%}
+                    <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
+            {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form1_point"/>
+            </form>
+        </div>
+            </br>
+            </br>
+        {%endif%}
+    {%endif%}
+        <br />
+    </div>
+    <div class="major-right" style="border:none;">
+       <p class="pop_link" align="center" onClick="ShowHide('Docu_ACIS')"><img class="logo"         
+        src="{{MEDIA_URL}}img/ACIS-logo.png"><u>CLICK HERE TO SEE/HIDE WHAT'S IN ACIS?</u></p>
+        <div id="Docu_ACIS" style="display:none;"></div>
+            <script type="text/javascript">                        
+            $("#Docu_ACIS").load("{{MEDIA_URL}}html/commons.html #Docu_ACIS");
+            </script>
+
+        <div class="docu" id=tool_info_head></div>
+        <script type="text/javascript">                        
+            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+        </script>
+        <div class="docu" id="tool_info" style="display:none;">
+            <p class="error">What is it?</p>
+            <h3>Data access point to the ACIS system.</h3>
+            <p class="error">What datasets are available?</p>
+            <h3>Observed Quantities:</h3>
+            <p>Maximum Temperature(F), Minimum Temperature(F), Observation Time Temperature</p>
+            <p>Snowfall, Snowdepth</p>
+            <h3>Derived Quantities:</h3>
+            <p>Average Temperature(F), Heating/Cooling/Growing Degree Days(F), </p>
+            <p class="error">What can you do with this tool?</p>
+            <h3>Access and download data</h3>
+            <p>Available Data Formats: .xls, .dat, .txt, html(prints to screen)</p>
+            <p>Queries can be performed for multiple elements/stations at a time.</p>
+            <a target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a>
+        </div>
+
+        <div class="docu" id="how_to_head"></div>
+        <script type="text/javascript">            
+            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+        </script>
+        <div id="how_to" style="display:none;">
+            <p>Make your station selection choice.</p>
+            <p>Hit "Select". A second form will appear.</p>
+            <p>Enter one or more elements as a comma separated list.</p>
+            <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
+            <div id="element_choices" style="display:none"><img width="250px" height="300px" src={{MEDIA_URL}}img/ACIS_Element_Choices.png></div>
+            <p>Choose a start and end date.</p>
+            <p>Choose a data format. .xls, .dat, .txt files will be downloaded on the user's machine. 
+            html format is displayed on the webpage directly.</p>
+            <p>The delimiter choice defines the separation of the data values.</p>
+        </div>
+
+        <div id="docu_long"></div>
+
+
+        {%if stn_id and not results %}
+            <p class="error">Station ID: {{stn_id}}</p>
+        {%endif%}
+        {%if start_date and not results %}
+            <p class="error">Start Date: {{start_date}}</p>
+        {%endif%}
+        {%if end_date and not results %}
+            <p class="error">End Date: {{end_date}}</p>
+        {%endif%}
+        {%if elements and not results %}
+            <p class="error">ACIS Elements: {{elements}}</p>
+        {%endif%}
+
+        {%if large_request %}
+            <p class="error">{{large_request}}</p>
+        {%endif%}
+
+       {%if user_info%}
+            <p class="error">{{user_info}}</p>
+        {%endif%}
+
+        {% if form3_point_ready%}
+            <div id='form3'>
+                <form method="post" action="">{% csrf_token %}
+                <table class="form">
+                {%for field in form3_point %}
+                    <tr>
+                        <td>{{field.label}}:</td>
+                        <td>{{field}}</td>
+                        <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                        </td>
+                    </tr>
+                    {%if field.errors%}
+                     <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                    {%endif%}
+                {%endfor%}
+                </table>
+                <input type="submit" value="Submit" name="form3_point"/>
+                </form>
+            </div>
+        {%endif%}
+        {%if results%}
+            <p class="error">Results:</p>
+            {%if results.errors%}
+            <div class="error">Data Request could not be completed. The following error occurred: {{error}}</div>
+            {%endif%}
+            
+            <!--Link to relevant apps-->
+            {%if link_to_mon_aves %}
+                <a target="_blank" href="{{URL_PREFIX}}sw_ckn/apps/station/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}">Generate bar charts for this data set here!</a>
+            {%endif%}
+            <br />
+            {%if link_to_metagraph%}
+                <a target="_blank" href="{{URL_PREFIX}}sw_ckn/apps/station/metagraph/?stn_id={{stn_id}}">Generate metadata graphics for this station here!</a>
+            {%endif%}            
+
+            {%for stn in stn_idx%}
+                <h3>STATION NAME:</h3> 
+                <b>{{results.stn_names|lookup:stn|safe}}</b>
+                <h3>STATION ID,STATION NETWORK PAIRS:</h3>
+                {%for id_network in results.stn_ids|lookup:stn %}
+                    <b>{{id_network}},</b>
+                {%endfor%}
+                <h3>Data:</h3> 
+                <p class="error"> {{results.stn_errors|lookup:stn}}</p>
+                 {%if not json%}   
+                    <table>
+                    <th>date{{delimiter}}{%for el in results.elements%}{{el}}{{delimiter}}{%endfor%}</th>
+                    {%for date_vals in results.stn_data|lookup:stn%}
+                        <tr><td>
+                        {%for el_val in date_vals%}{{el_val}}{{delimiter}}{%endfor%}
+                        </td></tr>
+                    {%endfor%}
+                    </table>
+                {%else%}
+                    {{results.stn_data|lookup:stn}}                    
+                {%endif%}
+            {%endfor%}
+        {%endif%}
+
+  <!-- Footer -->
+<!--
+  <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-sw-ckn");
+    </script>
+--> 
+    </div>
+</div>
+
+{%endblock%}
