@@ -342,6 +342,7 @@ def data_station(request):
         form3_point = set_as_form(request,'PointDataForm3')
         context['form3_point'] = form3_point
         context['form3_point_ready'] = True
+        context['hide_form_3'] = True
         if form3_point.is_valid():
             user_name = form3_point.cleaned_data['user_name']
             time_stamp = datetime.datetime.now().strftime('_%Y_%m_%d_%H_%M_%S')
@@ -525,6 +526,7 @@ def data_gridded(request):
         form3_grid = set_as_form(request,'GridDataForm3')
         context['form3_grid'] = form3_grid
         context['form3_grid_ready'] = True
+        context['hide_form_3'] = True
         if form3_grid.is_valid():
             user_name = form3_grid.cleaned_data['user_name']
             time_stamp = datetime.datetime.now().strftime('_%Y_%m_%d_%H_%M_%S')
@@ -623,7 +625,8 @@ def metagraph(request):
             context['station_id'] = form_meta.cleaned_data['station_id']
             station_meta = {}
             params = {'sids':str(form_meta.cleaned_data['station_id'])}
-            meta_request = WRCCClasses.DataJob('StnMeta', params).make_data_call()
+            meta_request = AcisWS.StnMeta(params)
+            #meta_request = WRCCClasses.DataJob('StnMeta', params).make_data_call()
             if 'meta' in meta_request.keys():
                 if len(meta_request['meta']) == 0:
                     station_meta['error'] = 'No meta data found for station: %s.' %stn_id
@@ -992,7 +995,7 @@ def station_locator_app(request):
     call(["touch", "/tmp/Empty.json"])
     context = {
         'title': 'Station Finder',
-        'station_finder_page':True
+        'search_page':True
     }
     form0 = set_as_form(request,'StationLocatorForm0')
     context['form0'] = form0

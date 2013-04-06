@@ -635,6 +635,8 @@ class StationLocatorForm1(forms.Form):
             self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='01080205', help_text='Valid US darinage basin identifier.')
         elif select_stations_by == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='US state.')
+        elif select_stations_by == 'states':
+            self.fields['states'] = MyStateField(initial='nv,id', help_text='Comma separated list of US state appreviations.')
         elif select_stations_by == 'sw_states':
             self.fields['states'] = MyStateField(initial='ca,nv,co,nm,az,ut', help_text='Comma separated list of US states')
         elif select_stations_by == 'bbox':

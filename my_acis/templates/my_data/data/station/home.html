@@ -8,9 +8,9 @@
 
 <p align="center">You are here 
 <a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
-<a href="{{URL_PREFIX}}sw_ckn/main/">SW-CKN></a>
+<a href="{{URL_PREFIX}}sw_ckn/main_map/">RESOURCES></a>
 <a href="{{URL_PREFIX}}sw_ckn/data/">DATA PORTAL></a>
-<a href="{{URL_PREFIX}}sw_ckn/data/historic/">Historic Station Data</a></p>
+<a href="{{URL_PREFIX}}sw_ckn/data/station/">Historic Station Data</a></p>
 
 <div class="container">
     <div class="major-left">
@@ -177,7 +177,7 @@
             <p class="error">{{user_info}}</p>
         {%endif%}
 
-        {% if form3_point_ready%}
+        {% if form3_point_ready and not hide_form_3 %}
             <div id='form3'>
                 <form method="post" action="">{% csrf_token %}
                 <table class="form">

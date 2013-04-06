@@ -205,7 +205,7 @@
             <p class="error">{{user_info}}</p>
         {%endif%}
         
-        {% if form3_grid_ready%}
+        {% if form3_grid_ready and not hide_form_3 %}
             <div id='form3'>
                 <form method="post" action="">{% csrf_token %}
                 <table class="form">
