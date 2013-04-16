@@ -6,10 +6,10 @@
 {% block content %}
 
     <p align="center">You are here 
-    <a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
-    <a href="{{URL_PREFIX}}sw_ckn/main">SW-CKN></a>
-    <a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS></a>
-    <a href="{{URL_PREFIX}}sw_ckn/apps/sw_ckn_station_apps/">SW-CKN Station Apps</a>
+    <a href="{{HOME_URL}}">HOME></a>
+    <a href="{{SW_CKN_URL}}main_map">SW-CKN></a>
+    <a href="{{TOOLS_URL}}">TOOLS></a>
+    <a href="{{TOOLS_URL}}sw_ckn_station_apps/">SW-CKN Station Apps</a>
 
 <div class="container">
 
@@ -21,7 +21,7 @@
                 {%if start_date%}
                     {%if elements%}
                         <tr><td>
-                        <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/station/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
+                        <a id="sw_ckn" href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
                         <div class="pop-up" id="maves">
                             <p><font size="4">Generates bar chart of monthly averages.</font></p>
                         </div>
@@ -30,7 +30,7 @@
                         </td></tr>
                     {%else%}
                         <tr><td>
-                        <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/station/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
+                        <a id="sw_ckn" href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
                         <div class="pop-up" id="maves">
                             <p><font size="4">Generates bar chart of monthly averages.</font></p>
                         </div>
@@ -40,7 +40,7 @@
                     {%endif%}
                 {%else%}
                     <tr><td>
-                    <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/station/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
+                    <a id="sw_ckn" href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
                     <div class="pop-up" id="maves">
                         <p><font size="4">Generates bar chart of monthly averages.</font></p>
                     </div>
@@ -49,7 +49,7 @@
                     </td></tr>
                 {%endif%}
                 <tr><td>
-                <a id="sw_ckn" href="{{URL_PREFIX}}sw_ckn/apps/station/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics(<font color="red">US, COOP only</font>)</a>
+                <a id="sw_ckn" href="{{TOOLS_URL}}station/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics(<font color="red">US, COOP only</font>)</a>
                 <div class="pop-up" id="meta">
                     <p><font size="4">See how much data is missing over the period of record (COOP stations only).</font></p>
                 </div>
@@ -58,7 +58,7 @@
                 </td></tr>
             {%else%}
                 <tr><td>
-                <a href="{{URL_PREFIX}}sw_ckn/apps/station/monthly_aves/" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
+                <a href="{{TOOLS_URL}}station/monthly_aves/" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
                 <div class="pop-up" id="meta">
                     <p><font size="4">Generates bar chart of monthly averages.</font></p>
                 </div>
@@ -66,7 +66,7 @@
                 <img class="qmark" style="border:4px solid #FF007F" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_MAVES')">
                 </td></tr>
                 <tr><td>
-                <a href="{{URL_PREFIX}}sw_ckn/apps/station/metagraph/" class="trigger">Station Metadata Graphics(<font color="red">US, COOP only</font>)</a>
+                <a href="{{TOOLS_URL}}station/metagraph/" class="trigger">Station Metadata Graphics(<font color="red">US, COOP only</font>)</a>
                 <div class="pop-up" id="meta">
                     <p><font size="4">See how much data is missing over the period of record (COOP stations only).</font></p>
                 </div>

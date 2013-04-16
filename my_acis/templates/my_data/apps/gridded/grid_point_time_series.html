@@ -5,17 +5,19 @@
 
 {% block content %}
 
-<p align="center">You are here 
-<a href="{{HOME_URL}}">HOME></a>
-<a href="/csc/sw_ckn/main_map/">SW-CKN></a>
-<a href="/csc/sw_ckn/apps/">TOOLS></a>
-<a href="/csc/sw_ckn/apps/gridded/">GRID TOOLS></a>
-<a href="/csc/sw_ckn/apps/gridded/grid_point_time_series/">Grid Point Time Series</a></p>
+<p align="center">You are here
+    <a href="{{HOME_URL}}sw_ckn/home/">HOME></a>
+    <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
+    <a href="{{TOOLS_URL}}">TOOLS></a>
+    <a href="{{TOOLS_URL}}gridded/">GRID TOOLS></a>
+    <a href="{{TOOLS_URL}}gridded/grid_point_time_series/">Grid Point Time Series</a></p>
 
 <div class="container">
     <div class="major-left">
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
         <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
+        <input type="hidden" id="DATA_URL" name="DATA_URL" value="{{DATA_URL}}">
+        <input type="hidden" id="TOOLS_URL" name="TOOLS_URL" value="{{TOOLS_URL}}">
         {%if lat and lon %}
             <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
             <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
@@ -114,7 +116,7 @@
         {%else%}
           {%if datadict%}
 
-            <a target="_blank" href="{{URL_PREFIX}}sw_ckn/data/gridded/?start_date={{s_date}}&end_date={{e_date}}&elements={{elems}}&grid={{grid}}&loc={{lon}},{{lat}}">Get raw data  behind this graphic here!</a>
+            <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{s_date}}&end_date={{e_date}}&elements={{elems}}&grid={{grid}}&loc={{lon}},{{lat}}">Get raw data  behind this graphic here!</a>
             <br />
             {{start_date}}
             {{end_date}}
@@ -140,7 +142,6 @@
             </script>
         {%endif%}
     
-        <!--<a href="#"  onClick="initialize_grid_point_map()">Find your Latitude and Longitude here!</a>-->
         <br />
         <!-- Footer -->
         <!--

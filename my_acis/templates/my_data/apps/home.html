@@ -5,10 +5,10 @@
 
 {% block content %} 
 
-<p align="center">You are here 
-<a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
-<a href="{{URL_PREFIX}}sw_ckn/main_map/">RESOURCES></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS</a></p>
+<p align="center">You are here
+<a href="{{HOME_URL}}">HOME></a>
+<a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
+<a href="{{TOOLS_URL}}">TOOLS</a></p>
 
 <div class="container">
     <div class="center-left">
@@ -16,9 +16,9 @@
         <ul class="navbar">
             <table>
                 <tr><td>
-                    <a href="http://tools.westernlandscapesexplorer.info/wle_map_viewer/" class="trigger" target="_blank"><img class="logo" src="{{MEDIA_URL}}img/ILAPLogo.png">&nbsp;&nbsp;<u>Western Landscape Explorer by the Integrated Landscape Assessment Project</u></a>&nbsp;&nbsp;
+                    <a href="" class="trigger" target="_blank"><img class="logo" src="">&nbsp;&nbsp;<u></u></a>&nbsp;&nbsp;
                     <div class="pop-up">
-                    <p><font size="4">Map based tool to investigate conditions and trends for animals and plants, habitats, water and air and more across the Western United States.</font></p>
+                    <p><font size="4"></font></p>
                     </div>
                 </td></tr>
             </table>
@@ -32,26 +32,32 @@
             <!--Headers-->
             <th><font size="5"><b>STATION DATA TOOLS</b></th>
             <th><font size="5"><b>GRIDDED/MODELED DATA TOOLS</b></th>
+            <th><font size="5"><b>GEOSPACIAL DATA TOOLS</b></th>
             <!--First row of dashboard: Description-->
             <tr>
-                <td class="error">Data analysis/visualization of historic station data</td>
-                <td class="error">Data analysis/visualization of gridded/modeled data</td>
+                <td class="error">Data analysis/visualization of historic climate station data</td>
+                <td class="error">Data analysis/visualization of gridded/modeled climate data</td>
+                <td class="error">Data analysis/visualization of geospatial data</td>
             </tr>
             <!--Second row of dashboard: image-->
             <tr>
-                <td><a href="{{URL_PREFIX}}sw_ckn/apps/station/"><img class="dash_img" src="{{MEDIA_URL}}img/StationFinder.png"></a></td>
-                <td><a href="{{URL_PREFIX}}sw_ckn/apps/gridded/"><img class="dash_img" src="{{MEDIA_URL}}img/ClimSumMap.png"></a></td>
+                <td><a href="{{TOOLS_URL}}station/"><img class="dash_img" src="{{MEDIA_URL}}img/StationFinder.png"></a></td>
+                <td><a href="{{TOOLS_URL}}gridded/"><img class="dash_img" src="{{MEDIA_URL}}img/ClimSumMap.png"></a></td>
+                <td><a href="{{TOOLS_URL}}gis/"><img class="dash_img" src="{{MEDIA_URL}}img/GISMap.png"></a></td>
             </tr>
             <!--Third+ rows: list of content-->
             <tr>
                 <td>Generate Climate Summaries Tables</u></b></p>
                 <td>Generate Climate Summary Maps</u></b></p>
+                <td>Generate Vulnerability Maps</td>
             </tr>
             <tr>
                 <td>Create your own Time Series</td>
                 <td>Create your own Grid Point Time Series</td>
+                <td></td>
             </tr>
             <tr>
+                <td>And much more ...</td>
                 <td>And much more ...</td>
                 <td>And much more ...</td>
             </tr>

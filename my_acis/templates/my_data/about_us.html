@@ -3,24 +3,13 @@
 {% block content %}
 
 <p align="center">You are here 
-<a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
-<a href="/sw_ckn/main_map/">RESOURCES></a>
-<a href="/sw_ckn/about_us/">ABOUT US</a></p>
+<a href="{{HOME_URL}}">HOME></a>
+<a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
+<a href="{{SW_CKN_URL}}about_us/">ABOUT US</a></p>
 
 <div class="container">
     <div class="center-left">
-    </div>
-
-    <div class="center">
-        <p align="center"><font color="#A00000" size="xx-large"><b>PROVIDING EASY ACCESS TO CLIMATE DATA,PRODUCTS AND INFORMATION</b></font></p>
-        <p align="left">to support the research efforts of the Southwest Climate Science Center (SWCSC) and
-        the Landscape Conservation Cooperatives(LCC) as well as delivering useful tools that will help resource managers in their decision making process.</p>
-        <br />
-        <p>To learn more, read <a href="{{URL_PREFIX}}sw_ckn/what_we_do/">What we do</a></li></p>
-    </div>
-
-    <div class="center-right">
-        <h2>Links</h2>
+       <h2>Links</h2>
        <a href="http://www.swcsc.arizona.edu/">Southwest CSC pages at the University of Arizona</a>
         <br />
         <a href="http://www.doi.gov/csc/southwest/index.cfm">Southwest CSC pages at the DOI</a>
@@ -28,11 +17,25 @@
         <a href="http://www.doi.gov/csc/lcc/index.cfm">Landscape Conservation Cooperatives</a>
     </div>
 
-  <!-- Footer -->
+    <div class="major-right">
+        <h2 align="center"><font color="#FF007F"><b>PROVIDING EASY ACCESS TO CLIMATE DATA,PRODUCTS AND INFORMATION</b></font></h2>
+        <p align="left">to support the research efforts of the Southwest Climate Science Center (SWCSC) and
+        the Landscape Conservation Cooperatives(LCC) as well as delivering useful tools that will help resource managers in their decision making process.</p>
+        <br />
+        <h2 align="center">Background </h2>
+        <p align="left">The natural and cultural resources owned by the American public and managed
+                        under the stewardship of the Department of Interior and allied agencies and organizations are effected in many different ways by the physical environment. Decisions about how to manage these complex systems begin with what is known from recent history and ideally make use of knowledge about the likelyhood of different potential futures. The need to incorporate environmental dependencies into resource management decision making has lead to the development of a highly complicated interwoven web involving observations, research, tools, activities and other processes pertaining to weather and climate. Due to the complexity not only in the science involved but also in the decision environment itself, there is a growing need for a comprensive framework that serves as a clearinghouse for data, tools and information pertaining to climate and climate change and that bridges the gap between pure science and the hands-on application environment.</p>
+        <img class="dash_img" src={{MEDIA_URL}}img/LInKS.png>
+        <br >
+        <p>To learn more, read <a href="{{URL_PREFIX}}sw_ckn/what_we_do/">What we do</a></li></p>
+    </div>
+
+
+  <!-- Footer
   <div id="footer" align="center"></div>
     <script type="text/javascript">                        
     $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
-    </script>
+    </script>-->
 
 </div>
 {% endblock %}

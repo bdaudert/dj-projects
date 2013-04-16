@@ -79,7 +79,7 @@ def help(request):
 
 def main_map(request):
     context = {
-        'title': 'Welcome to the SW-CKN',
+        'title': 'Resurces',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
         'main_page':True
     }
@@ -89,7 +89,7 @@ def main_map(request):
 #Temp home page fpr Kelly to look at
 def main(request):
     context = {
-        'title': 'Welcome to the SW-CKN',
+        'title': 'Resources',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
         'main_page':True
     }
@@ -134,34 +134,6 @@ def what_we_do(request):
     }
     return render_to_response('my_data/what_we_do.html', context, context_instance=RequestContext(request))
 
-def focus_areas(request):
-    context = {
-        'title': 'Focus Areas',
-        'intro_page':True
-    }
-    return render_to_response('my_data/focus_areas.html', context, context_instance=RequestContext(request))
-
-def projects(request):
-    context = {
-        'title': 'Projects',
-        'intro_page':True
-    }
-    return render_to_response('my_data/projects.html', context, context_instance=RequestContext(request))
-
-def publications(request):
-    context = {
-        'title': 'Publications',
-        'intro_page':True
-    }
-    return render_to_response('my_data/publications.html', context, context_instance=RequestContext(request))
-
-def news_events(request):
-    context = {
-        'title': 'News, Events and Announcements',
-        'intro_page':True
-    }
-    return render_to_response('my_data/news_events.html', context, context_instance=RequestContext(request))
-
 def contact_us(request):
     context = {
         'title': 'Contact Us',
@@ -171,12 +143,14 @@ def contact_us(request):
 
 def dashboard(request):
     context = {
-        'title': 'Dashboard',
+        'title': 'Monitoring',
         'monitor_page':True
     }
     #Find mon, year to locate snotel map
     year = str(datetime.datetime.today().year)
     month = str(datetime.datetime.today().month)
+    day = str((datetime.datetime.today() - datetime.timedelta(days=1)).day) #yesterday
+    context['full_date_for_ahps'] = '%s/%s/%s' % (year, month.lstrip('0'), day.lstrip('0'))
     if len(month) ==1:
         month = '0%s' %month
     context['month'] = month
@@ -187,7 +161,7 @@ def dashboard(request):
 
 def data_home(request):
     context = {
-        'title': 'Data Access',
+        'title': 'Data Portal',
         'data_page':True
     }
     return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))
@@ -365,7 +339,7 @@ def data_station(request):
 
 def data_gridded(request):
     context = {
-        'title': 'Gridded Data',
+        'title': 'Gridded/Modeled Data',
         'data_page':True
     }
 
@@ -377,7 +351,10 @@ def data_gridded(request):
     state = request.GET.get('state', None)
     loc = request.GET.get('loc', None)
     grid = request.GET.get('grid', None)
+    temporal_resolution = request.GET.get('temporal_resolution', None)
     initial_1 = {}
+    if temporal_resolution is not None:context['temporal_resolution'] = temporal_resolution;initial_1['temporal_resolution'] = temporal_resolution
+
     if start_date is not None:context['start_date'] = start_date;initial_1['start_date'] = start_date
     if end_date is not None:context['end_date'] = end_date;initial_1['end_date'] = end_date
     if bbox is not None:
@@ -395,7 +372,16 @@ def data_gridded(request):
         context['lat'] = '39.82'; context['lon'] = '-98.57'
         context['map_loc'] = '-98.57,39.82'
 
-    if elements is not None:context['elements'] = elements;initial_1['elements'] = elements
+    if elements is not None:
+        context['elements'] = elements;initial_1['elements'] = elements
+        #Check if we are dealing with PRISM data
+        if elements[0:4] == ['mly_']:
+            initial_1['temporal_resolution'] = 'mly'
+        if elements[0:4] == ['yly_']:
+            initial_1['temporal_resolution'] = 'yly'
+        else:
+            initial_1['temporal_resolution'] = 'dly'
+
     if loc is not None or state is not None or bbox is not None:
         context['hide_form_0'] = True
         context['form1_grid_ready'] = True
@@ -407,8 +393,12 @@ def data_gridded(request):
 
     if 'form0_grid' in request.POST:
         if form0_grid.is_valid():
+            context['temporal_resolution'] = form0_grid.cleaned_data['temporal_resolution']
             context['form1_grid_ready'] = True
-            initial_1 = {'select_grid_by':form0_grid.cleaned_data['select_grid_by']}
+            initial_1 = {
+                'select_grid_by':form0_grid.cleaned_data['select_grid_by'],
+                'temporal_resolution':form0_grid.cleaned_data['temporal_resolution']
+            }
             if initial_1['select_grid_by'] == 'point':
                 context['need_map'] = True
                 if loc is not None:
@@ -433,6 +423,7 @@ def data_gridded(request):
         context['form1_grid'] = form1_grid
         context['form1_grid_ready'] = True
         if form1_grid.is_valid():
+            context['temporal_resolution'] = form1_grid.cleaned_data['temporal_resolution']
             el_list = form1_grid.cleaned_data['elements']
             context['elements'] =  el_list
             #Check if data request is large,
@@ -551,7 +542,7 @@ def data_gridded(request):
 
 def apps_home(request):
     context = {
-        'title': 'Climate Data Tools',
+        'title': 'Tools/Applications',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
         'apps_page':True
     }
@@ -582,14 +573,21 @@ def apps_station(request):
 
 def apps_gridded(request):
     context = {
-        'title': 'Gridded Data Tools',
+        'title': 'Gridded/Modeled Data Tools',
         'apps_page':True
         }
     return render_to_response('my_data/apps/gridded/home.html', context, context_instance=RequestContext(request))
 
+def apps_gis(request):
+    context = {
+        'title': 'Geospatial Data Tools',
+        'apps_page':True
+        }
+    return render_to_response('my_data/apps/gis/home.html', context, context_instance=RequestContext(request))
+
 def sw_ckn_station_apps(request):
     context = {
-        'title': 'SW-CKN Historic Station Data Applications',
+        'title': 'Historic Station Data Tools',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
         'apps_page':True
 
@@ -607,7 +605,7 @@ def sw_ckn_station_apps(request):
 
 def metagraph(request):
     context = {
-        'title': 'Station Metadata graphs',
+        'title': 'Station Metadata Graphics',
         'apps_page':True
     }
     stn_id = request.GET.get('stn_id', None)

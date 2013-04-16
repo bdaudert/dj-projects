@@ -1,5 +1,3 @@
-var MEDIA_URL = document.getElementById("MEDIA_URL").value;
-var base_dir = '/csc/sw_ckn/'
 
 function precise_round(num,decimals){
 return Math.round(num*Math.pow(10,decimals))/Math.pow(10,decimals);
@@ -13,6 +11,8 @@ function initialize_grid_point_map() {
     var lat = document.getElementById("initial_lat").value;
     var lon = document.getElementById("initial_lon").value;
     var zoom_level = document.getElementById("zoom_level").value;
+    var DATA_URL = document.getElementById("DATA_URL").value;
+    var TOOLS_URL = document.getElementById("TOOLS_URL").value;
     var myLatlng = new google.maps.LatLng(lat,lon);
     var mapOptions = {
     //center: ll,
@@ -40,12 +40,12 @@ function initialize_grid_point_map() {
         if (app == 'gp_ts'){
             document.getElementById("lat").value = lat;
             document.getElementById("lon").value = lon;
-            var href = base_dir +'apps/gridded/grid_point_time_series/?lat=' +
+            var href = TOOLS_URL +'gridded/grid_point_time_series/?lat=' +
                    lat + '&lon=' + lon;
         }
         else if (app == 'grid_data'){
             document.getElementById("location").value = loc;
-            var href = base_dir +'data/gridded/?loc=' +
+            var href = DATA_URL +'gridded/?loc=' +
                    lon + ',' + lat;
         }
         var contentString = '<div id="MarkerWindow">'+
@@ -67,6 +67,8 @@ var hide;
 function initialize_station_finder() {
     var geocoder = new google.maps.Geocoder();
     var MEDIA_URL = document.getElementById("MEDIA_URL").value;
+    var DATA_URL = document.getElementById("DATA_URL").value;
+    var TOOLS_URL = document.getElementById("TOOLS_URL").value;
     var json_file = document.getElementById("json_file").value;
     if (document.getElementById("start_date")) {
         var start_date = document.getElementById("start_date").value;
@@ -160,8 +162,8 @@ function initialize_station_finder() {
                 '">Access Climate Summaries for this Station (by WRCC)</a>'
             }
 
-            var data_portal_link = '<a target="_blank" href="' + base_dir + 'data/station/?stn_id=' + c.sids[0];
-            var app_portal_link = '<a target="_blank" href="' + base_dir + 'apps/sw_ckn_station_apps/?stn_id=' + c.sids[0]; 
+            var data_portal_link = '<a target="_blank" href="' + DATA_URL + 'station/?stn_id=' + c.sids[0];
+            var app_portal_link = '<a target="_blank" href="' + TOOLS_URL + 'sw_ckn_station_apps/?stn_id=' + c.sids[0]; 
             if (start_date != null){ 
                 data_portal_link = data_portal_link + '&start_date=' + start_date;
                 app_portal_link = app_portal_link + '&start_date=' + start_date; 
@@ -340,7 +342,7 @@ function initialize_network_map() {
                 infowindow.setContent(contentString);
                 infowindow.open(map, marker);
                 //Load longer documentation on right of page
-                $("#network_docu").load("/csc/media/html/commons.html #" + c.docu_long);
+                $("#network_docu").load(MEDIA_URL + "html/commons.html #" + c.docu_long);
             });
         });//close each
 

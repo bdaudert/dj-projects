@@ -76,10 +76,20 @@ a#warning {
 }
 
 table.dashboard {
-    border:1px solid #006666;
+    /*border:1px solid #006666;*/
     text-align:center;
     padding:10px 10px 10px 10px;
 }
+
+table.page {
+    border:1px solid #006666;
+    text-align:center;
+}
+
+table.page td, th {
+    border:1px solid #006666;
+}
+
 
 table.dash {
 padding: 10px 10px 10px 10px;
@@ -142,9 +152,9 @@ ul.navbar a {
 .pop-up {
   display: none;
   position: absolute;
-  width: 500px;
-  padding: 10px;
-  background: #DCA978;
+  /*width: 450px;
+  padding: 10px;*/
+  background: #FDEEF4;
   border: 2px solid #006666;
   font-size: 90%;
   z-index:10;
@@ -215,6 +225,7 @@ ul.navbar a {
     min-width:100%;
     min-height:100%;
     position:relative;
+    padding:10px 10px 10px 10px;
     /*background-color: #947e6e;*/
 }
 
@@ -393,7 +404,7 @@ img.center {
     color: #660000;
     height:50px;
     width:75%;
-    font-size:5;
+    font-size:6;
     /*padding: .10em 1em;*/
     position:relative;
     

@@ -6,10 +6,10 @@
 {% block content %}
 
     <p align="center">You are here 
-    <a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
-    <a href="{{URL_PREFIX}}sw_ckn/main_map/">RESOURCES></a>
-    <a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS></a>
-    <a href="{{URL_PREFIX}}sw_ckn/apps/gridded/">GRID TOOLS</a>
+    <a href="{{HOME_URL}}sw_ckn/home/">HOME></a>
+    <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
+    <a href="{{TOOLS_URL}}">TOOLS></a>
+    <a href="{{TOOLS_URL}}gridded/">GRID TOOLS</a>
 
     <div class="container">
 
@@ -56,7 +56,7 @@
                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="HighLight(this,'docu','Docu_FreezTracker')">
                     </td></tr>
                     <tr><td>
-                    <a id="us_wide" href="{{URL_PREFIX}}sw_ckn/apps/gridded/clim_sum_maps/" class="trigger">Climate Summary Maps</a>
+                    <a id="us_wide" href="{{TOOLS_URL}}gridded/clim_sum_maps/" class="trigger">Climate Summary Maps</a>
                     <div class="pop-up">
                         <p><font size="4">Generates climate summary maps for different elements, time ranges and region usig ACIS gridded data.</font></p>
                     </div>
@@ -64,7 +64,7 @@
                     <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CLIM_SUM_MAP')">
                     </td></tr>
                     <tr><td>
-                    <a id="us_wide" href="{{URL_PREFIX}}sw_ckn/apps/gridded/grid_point_time_series/" class="trigger">Grid Point Time Series</a>
+                    <a id="us_wide" href="{{TOOLS_URL}}gridded/grid_point_time_series/" class="trigger">Grid Point Time Series</a>
                     <div class="pop-up">
                         <p><font size="4">Generates time series data and graph for a chosen grid point and time range using ACIS gridded data.</font></p>
                     </div>

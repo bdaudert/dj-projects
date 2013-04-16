@@ -11,20 +11,19 @@
 </script>
 
 <p  align="center">You are here
-<a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
-<a href="{{URL_PREFIX}}sw_ckn/main_map/">RESOURCES</a>
+<a href="{{HOME_URL}}">HOME></a>
+<a href="{{SW_CKN_URL}}main_map/">RESOURCES</a>
 
 
 <div class="container">
 
-   <div class="center-left">
+   <table class="page" cellspacing="2">
+   <tr><td width="250px">
         <div id="map_legend">
             <h3>Legend</h3>
             <p class="error"></p>
         </div>
-    </div>
-
-    <div class="center">
+    </td><td>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
         <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
         <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
@@ -32,11 +31,10 @@
         <script type="text/javascript">
             initialize_network_map()
         </script>
-    </div>
-    
-    <div class="center-right">
+    </td><td width="250px">
         <div id="network_docu"></div>
-    </div>
+    </td></tr>
+    </table>
 
 </div> <!-- end container -->
 {% endblock %}

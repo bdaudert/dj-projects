@@ -5,11 +5,11 @@
 
 {% block content %} 
 
-<p align="center">You are here 
+<p align="center">You are here
 <a href="{{HOME_URL}}">HOME></a>
-<a href="{{SW_CKN_URL}}">SW-CKN></a>
+<a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
 <a href="{{DATA_URL}}">DATA PORTAL></a>
-<a href="{{GRID_DATA_URL}}">Modeled/Gridded Data</a></p>
+<a href="{{DATA_URL}}gridded/">Modeled/Gridded Data</a></p>
 
 <div class="container">
     <div class="major-left">
@@ -26,8 +26,12 @@
                     <td>{{field}}</td>
                     <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                     {%ifequal field.label "Elements" %}
-                    <div class="pop-up"> 
-                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0">
+                    <div class="pop-up">
+                        {%if temporal_resolution == "dly"%}
+                            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_Grid.png" id="ACISElementChoices" width="450" height="450" border="0">
+                        {%else%}
+                            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_PRISM.png" id="ACISElementChoices" width="450" height="450" border="0">
+                        {%endif%}
                     </div>
                     {%else%}
                     <div class="pop-up"><p>{{field.help_text}}</p></div>
@@ -71,7 +75,7 @@
                     <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                     {%ifequal field.label "Elements" %}
                         <div class="pop-up">
-                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0">
+                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_Grid.png" id="ACISElementChoices" width="450" height="450" border="0">
                         </div>
                     {%else%}
                         <div class="pop-up"><p>{{field.help_text}}</p></div>
@@ -95,6 +99,8 @@
         {%if need_map and  grid_data%}
             <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
             <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
+            <input type="hidden" id="DATA_URL" name="DATA_URL" value="{{DATA_URL}}">
+            <input type="hidden" id="TOOLS_URL" name="TOOLS_URL" value="{{TOOLS_URL}}">
             <input type="hidden" id="lat" name="lat" value={{lat}}>
             <input type="hidden" id="lon" name="lon" value={{lon}}>
             <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
@@ -166,7 +172,7 @@
             <p>Enter one or more elements as a comma separated list.</p>
             <p>Choose a start and end date.</p>
             <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
-            <div id="element_choices" style="display:none"><img width="250px" height="300px" src={{MEDIA_URL}}img/ACIS_Element_Choices.png></div>
+            <div id="element_choices" style="display:none"><img width="250px" height="300px" src={{MEDIA_URL}}img/ACIS_Element_Choices_Grid.png></div>
             <p>Choose a data set from the drop down menue.</p>
             <p>Choose a data format. .xls, .dat, .txt files will be downloaded on the user's machine.
             html format is displayed on the webpage directly.</p>
@@ -260,6 +266,8 @@
     {%if need_map and not grid_data%}
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
         <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
+        <input type="hidden" id="DATA_URL" name="DATA_URL" value="{{DATA_URL}}">
+        <input type="hidden" id="TOOLS_URL" name="TOOLS_URL" value="{{TOOLS_URL}}">
         <input type="hidden" id="lat" name="lat" value={{lat}}>
         <input type="hidden" id="lon" name="lon" value={{lon}}>
         <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>

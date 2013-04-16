@@ -6,12 +6,14 @@
 {% block content %}
 
 <p align="center">You are here 
-<a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
-<a href="{{URL_PREFIX}}sw_ckn/main_map/">RESOURCES></a>
-<a href="{{URL_PREFIX}}sw_ckn/What we do/">What we do</a></p>
+<a href="{{HOME_URL}}">HOME></a>
+<a href="{{SW_CKN_URL }}main_map/">RESOURCES></a>
+<a href="{{SW_CKN_URL }}what_we_do/">What we do</a></p>
 
 <div class="container">
-
+    <p>HOME URL: {{HOME_URL}}</p>
+    <p>SW_CKNURL: {{SW_CKN_URL}}</p>
+    <p>DATA URL: {{DATA_URL}}</p>
     <div class="center-left">
         <h2>Links and resources</h2>
        <a href="http://www.swcsc.arizona.edu/">Southwest CSC pages at the University of Arizona</a>
@@ -22,15 +24,10 @@
     </div>
 
     <div class="major-right">
-        <h2 align="center">Mission Statement</h2>
-        <p align="center"><font color="red">PROVIDING EASY ACCESS TO CLIMATE DATA,PRODUCTS AND INFORMATION</font></p>
-        <p align="left">to support the research efforts of the Southwest Climate Science Center (SWCSC) and
-        the Landscape Conservation Cooperatives(LCC) as well as delivering useful tools that will help resource managers in their decision making process.</p>
-
-        <h2 align="center">Background </h2>
-        <p align="left">The natural and cultural resources owned by the American public and managed
-        under the stewardship of the Department of Interior and allied agencies and organizations are effected in many different ways by the physical environment. Decisions about how to manage these complex systems begin with what is known from recent history and ideally make use of knowledge about the likelyhood of different potential futures. The need to incorporate environmental dependencies into resource management decision making has lead to the development of a highly complicated interwoven web involving observations, research, tools, activities and other processes pertaining to weather and climate. Due to the complexity not only in the science involved but also in the decision environment itself, there is a growing need for a comprensive framework that serves as a clearinghouse for data, tools and information pertaining to climate and climate change and that bridges the gap between pure science and the hands-on application environment.</p>
-        
+        <p>
+        The Southwest Climate Knowledge Network (SWCKN) serves as a climate knowledge imfprmation hub for the Southwest US. It is a portal where users can receive information, contribute to the knowledge base of the region and provide feedback on the functioning of the data exchange.
+        The SWCKN will compile existing knowledge about weather, climate and projected climatic impacts on biological and physical systems in the Southwest US. 
+        </p>
         <h2 align="center">What we provide</h2>
         <p align="left"><ul>
         <li>Access to past and present observations</li>
@@ -52,11 +49,11 @@
         <p align="left">We will routinely perform evaluations of the usefulness of the information and tools provided. We will look at the effectiveness of the mechanisms for access, dissemination, summarization and visualization. User feetback as well as internal and external expert advice will guide improvements and enhancements to the Southwest Climate Knowledge Network.</p>
     </div>
 
-  <!-- Footer -->
+  <!-- Footer
   <div id="footer" align="center"></div>
     <script type="text/javascript">                        
     $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
     </script>
-
+  -->
 </div>
 {% endblock %}

@@ -4,8 +4,8 @@
 
     <div class="header">
         <h1 align="center">Southwest Climate Knowledge Network</h1>
-        <a target="_blank" src="http://www.swcsc.arizona.edu/"><img class="logo" src="/csc/media/img/SW-CSC-LOGO.png"></a>
-        <p class="error" align="center"><b>PROVIDING EASY ACCESS TO CLIMATE DATA, PRODUCTS AND INFORMATION</b></p>
+        <a target="_blank" href="http://www.swcsc.arizona.edu/"><img class="logo" src="/csc/media/img/SW-CSC-LOGO.png"></a>
+        <p class="error" align="center"><b>ACCESS TO CLIMATE DATA, PRODUCTS AND INFORMATION</b></p>
     </div>
 
     <div class="searchbox">
@@ -57,7 +57,7 @@
 <!-- Documentation -->
 <div id="Docu_select_stations_by">
 <p><b>"Individual Station"</b>:<br /> Use this option if you looking for an individual station. You will need to know your station identification number. If you don't know your station id, find it here:</p>
-&nbsp;&nbsp;&nbsp;<a target="_blank" href="{{URL_PREFIX}}sw_ckn/station_finder">Station Finder</a>
+&nbsp;&nbsp;&nbsp;<a target="_blank" href="/csc/sw_ckn/apps/station/station_finder/">Station Finder</a>
 or here:<a class="docu_long"target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">More on station Ids</a>
 <p><b>"Comma separated list of stations"</b>:<br /> Enter multiple station identifiers, separated by a comma. Again, you will need to know your station ids. Use the Station Finder if needed.</p>
 <p><b>"County FIPS code"</b>:<br /> Use this option if you are looking for all stations in a particular US county.</p>
@@ -113,6 +113,42 @@ or here:<a class="docu_long"target="_blank" href="{{ MEDIA_URL }}html/station_id
 </div>
 -->
 <!-- Documentation -->
+<div id="Docu_DataBasin">
+    <p class="error">What is the <b>DataBasin?</b></p>
+    <p>Data Basin is a science-based mapping and analysis platform that supports learning, research, and sustainable environmental stewardship.</p>
+    <p class="error">What datasets are being used?</p>
+    <p>Over 7000 geospatial datasets uploaded and shared by various institutions as well as individual users.</p>
+    <p class="error">What can you do with this tool?</p>
+    <h3>Explore and organize data & information</h3>
+    <h3>Create custom visualizations, drawings, & analyses</h3>
+    <img class="dash_img" src="/csc/media/img/GISMap.png">
+    <h3>Utilize collaborative tools in groups</h3>
+    <h3>Publish datasets, maps, & galleries</h3>
+    <h3>Develop decision-support and custom tools</h3>
+</div>
+
+<div id="Docu_ILAP">
+    <p class="error">What is the <b>Western Landscape Explorer?</b></p>
+    <p>
+    The Western Landscapes Explorer is a map based tool that provides access to information used to evaluate large landscapes over time. This includes data and information developed by the Integrated Landscape Assessment Project (ILAP), as well as other landscape-level information designed to facilitate decision making, research, and exploration.<br />
+    <a target="_blank" href="http://oregonstate.edu/inr/ilap">ILAP Home Page</a>
+    </p>
+    <p class="error">What datasets are being used?</p>
+    <p>
+        Various Geogarphic Information System (GIS) data sets pertaining to vegetation, soil, water sheds and more.
+    </p>
+    <p class="error">What can you do with this tool?</p>
+    <h3>Explore western landscapes and their diversity</h3>
+    <h3>Use the Western Landscapes Map Viewer</h3>
+    <a href="http://tools.westernlandscapesexplorer.info/wle_map_viewer/">Map Viewer</a><br /> 
+    <img class="dash_img" src="/csc/media/img/WLPV.png">
+    <h3>Access data, maps and models from ILAP</h3>
+    <h3>Learn about landscape-level collaborations and initiatives</h3>
+    <h3>Discover additional landscape resources</h3>
+    <h3>Submit information to the online archive</h3>
+</div>
+
+
 <div id="Docu_CalTracker">
     <p class="error">What is the <b>California Climate Tracker?</b></p>
     <p>An interactive web-based interface that can be used to understand temperature and precipitation variations over 11
@@ -502,7 +538,8 @@ distinct climate regions in California.</p>
 </div>
 
 <div id="Docu_RISA_CIG">
-    <p class="error"><a target="_blank" href="http://cpo.noaa.gov/ClimatePrograms/ClimateSocietalInteractionsCSI/RISAProgram.aspx"><img class="icon" src="/csc/media/img/RISAIcon.png"></a></p>
+    <p class="error"><a target="_blank" href="http://cpo.noaa.gov/ClimatePrograms/ClimateSocietalInteractionsCSI/RISAProgram.aspx"><img src="/csc/media/img/RISAIcon.png" class="icon"></a></p>
+    <p class="error">Regional Integrated Science and Assessments (RISA) program</p>
     <p class="error">Regional Integrated Science and Assessments (RISA) program</p>
     <p class="error"><b><a target="_blank" href="http://cses.washington.edu/cig/"><img class="logo_sq" src="/csc/media/img/CIGLogo.png"></a></b></p>
     <p class="error">Climate Impact Group</p>
@@ -515,9 +552,8 @@ distinct climate regions in California.</p>
 </div>
 
 <div id="Docu_RISA_CLIMAS">
-    <p class="error"><a target="_blank" href="http://cpo.noaa.gov/ClimatePrograms/ClimateSocietalInteractionsCSI/RISAProgram.aspx"><img class="icon" src="/csc/media/img/RISAIcon.png"></a></p>
+    <p class="error"><a target="_blank" href="http://cpo.noaa.gov/ClimatePrograms/ClimateSocietalInteractionsCSI/RISAProgram.aspx"><img src="/csc/media/img/RISAIcon.png" class="icon"></a></p>
     <p class="error">Regional Integrated Science and Assessments (RISA) program</p>
-    <!--<img class="" src="/csc/media/img/RISAMAP.png"><p>Currently Funded RISA teams</p>-->
     <p class="error"><b><a target="_blank" href="http://www.climas.arizona.edu/"><img class="logo_sq" src="/csc/media/img/CLIMASLogo.png"></a></b></p>
     <p class="error"><b>Climate Assessment for the Southwest (CLIMAS)</b></p>
     <p>
@@ -539,19 +575,21 @@ distinct climate regions in California.</p>
 </div>
 
 <div id="Docu_RISA_WWA">
-    <p class="error"><a target="_blank" href="http://cpo.noaa.gov/ClimatePrograms/ClimateSocietalInteractionsCSI/RISAProgram.aspx"><img class="logo" src="/csc/media/img/RISA.png"></a></p>
+    <p class="error"><a target="_blank" href="http://cpo.noaa.gov/ClimatePrograms/ClimateSocietalInteractionsCSI/RISAProgram.aspx"><img src="/csc/media/img/RISAIcon.png" class="icon"></a></p>
+    <p class="error">Regional Integrated Science and Assessments (RISA) program</p>
     <p class="error"><b>Western Water Assessment (WWA)</b></p>
     <p>
     WWA, like the other programs in the NOAA RISA network, conducts interdisciplinary research to better understand the decision context for climate-sensitive resources and improve the use of climate information in planning and decision making. The WWA team brings many expertises--in climatology, hydrology, ecology, social sciences, and law--to grapple with research questions of interest to stakeholders, who often serve as collaborators on projects. While based in Boulder, Colorado, they work across the Intermountain West—Colorado, Utah, and Wyoming. 
     </p>
-    <a target="_blank" href="" >http://wwa.colorado.edu/projects/core/</a>WWA List of Core Activities</br>
-    <a target="_blank" href="" >http://wwa.colorado.edu/index.html</a>WWA Home Page</br>
+    <a target="_blank" href="http://wwa.colorado.edu/projects/core">WWA List of Core Activities</a></br>
+    <a target="_blank" href="http://wwa.colorado.edu/index.html">WWA Home Page</a></br>
     <a target="_blank" href="http://www.socioeconimpacts.org/" >Featured: Socioeconomic Climate Impacts Database</a></br>
 
 </div>
 
 <div id="Docu_RISA_SCIPP">
-    <p class="error"><a target="_blank" href="http://cpo.noaa.gov/ClimatePrograms/ClimateSocietalInteractionsCSI/RISAProgram.aspx"><img class="logo" src="/csc/media/img/RISA.png"></a></p>
+    <p class="error"><a target="_blank" href="http://cpo.noaa.gov/ClimatePrograms/ClimateSocietalInteractionsCSI/RISAProgram.aspx"><img src="/csc/media/img/RISAIcon.png" class="icon"></a></p>
+    <p class="error">Regional Integrated Science and Assessments (RISA) program</p>
     <p class="error"><b>Southern Climate Impacts Program (SCIPP)</b></p>
     <p>
     SCIPP research is focused on improving the preparedness for and understanding of southern U.S. climate hazards as well as bridging the communication gap between climate scientists and local-level decision makers. Through new information products and a comprehensive all-climate hazards tool, SCIPP provides community planners with more readily available data to develop hazard mitigation plans which are now a requirement for obtaining Federal Emergency Management Agency (FEMA) hazard mitigation funding. 

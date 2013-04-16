@@ -6,11 +6,11 @@
 {% block content %}
 
 <p align="center">You are here 
-<a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
-<a href="/sw_ckn/main_map/">RESOURCES></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/">TOOLS></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/gridded/">GRID TOOLS></a>
-<a href="{{URL_PREFIX}}sw_ckn/apps/gridded/clim_sum_maps/">Climate Summary Maps</a></p>
+    <a href="{{HOME_URL}}sw_ckn/home/">HOME></a>
+    <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
+    <a href="{{TOOLS_URL}}">TOOLS></a>
+    <a href="{{TOOLS_URL}}gridded/">GRID TOOLS></a>
+    <a href="{{TOOLS_URL}}gridded/clim_sum_maps/">Climate Summary Maps</a></p>
 
 <div class="container">
     <div class="major-left">
@@ -126,14 +126,14 @@
         {%if figure_file%}
 
             {%if state%}
-            <a target="_blank" href="{{URL_PREFIX}}sw_ckn/data/gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}">Get raw data behind this graphic here!</a>
+            <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}">Get raw data behind this graphic here!</a>
             <br />
             <br />
             <p>GridACIS Map for State: <b>{{state}}</b></p>
             {%endif%}
 
             {%if bounding_box%}
-            <a target="_blank" href="{{URL_PREFIX}}sw_ckn/data/gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bbox={{bounding_box}}">Get raw data behind this graphic here!</a>
+            <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bbox={{bounding_box}}">Get raw data behind this graphic here!</a>
             <br />
             <br />
             <p>GridACIS Map for Bounding Box: <b>{{bounding_box}}</b></p>

@@ -12,7 +12,6 @@
     <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
 </head>
 
-<!--<body onload="initialize_grid_point_map()">-->
 <body style="background-color: #FFEBCD;">
 
 <div id="header"></div>
@@ -32,54 +31,54 @@
 
 <div class="container">
 
-    <p class="error" align="center">To get started, choose one of the following:</p>
+    <p class="error" align="center" style="font-size:large;">Start by choosing one of the following:</p>
     <table class="dash" cellspacing="15px" align="center">
         <tr><td></td></tr>
         <!--First row of dashboard: image-->
         <tr>
-            <td><a href="/csc/sw_ckn/main_map/"><img class="dash_img" src="{{MEDIA_URL}}img/Network.png"></a></td>
-            <td><a href="/csc/sw_ckn/data/"><img class="dash_img" src="{{MEDIA_URL}}img/DataPortal.png"></a></td>
-            <td><a href="/csc/sw_ckn/apps"><img class="dash_img" src="{{MEDIA_URL}}img/Application.png"></a></td>
-            <td><a href="/csc/sw_ckn/monitoring/"><img class="dash_img" src="{{MEDIA_URL}}img/Dashboard.png"></a></td>
+            <td><a href="{{DATA_URL}}"><img class="dash_img" src="{{MEDIA_URL}}img/DataPortal.png"></a></td>
+            <td><a href="{{TOOLS_URL}}"><img class="dash_img" src="{{MEDIA_URL}}img/Application.png"></a></td>
+            <td><a href="{{SW_CKN_URL}}monitoring/"><img class="dash_img" src="{{MEDIA_URL}}img/Dashboard.png"></a></td>
+            <td><a href="{{SW_CKN_URL}}main_map/"><img class="dash_img" src="{{MEDIA_URL}}img/Network.png"></a></td>
         </tr>
         <tr>
             <!--<td><b>SW-CKN Home Page</b></td>-->
-            <td><a class="error" href="/csc/sw_ckn/home/"><b>RESOURCES</a><br /></b></td>
-            <td><a class="error" href="/csc/sw_ckn/data/"><b>DATA PORTAL</b></a></td>
-            <td><a class="error" href="/csc/sw_ckn/apps/"><b>DATA TOOLS</b></a></td>
-            <td><a class="error" href="/csc/sw_ckn/monitoring/"><b>MONITORING</b></a></td>
+            <td><a class="error" href="{{DATA_URL}}"><b>DATA PORTAL</b></a></td>
+            <td><a class="error" href="{{TOOLS_URL}}"><b>TOOLS/APPLICATIONS</b></a></td>
+            <td><a class="error" href="{{SW_CKN_URL}}monitoring/"><b>MONITORING</b></a></td>
+            <td><a class="error" href="{{SW_CKN_URL}}main_map/"><b>RESOURCES</a><br /></b></td>
         </tr>
         <!--Second+ rows: list of content-->
         <tr>
             <!--<td><b>SW-CKN Home Page</b></td>-->
-            <td><b>Access to Climate/Climate Change Resources</b></td>
             <td><b>Access to various climate data</b></td>
             <td><b>Interactive Data Applications</b></td>
             <td><b>Current Climate Information</b></td>
+            <td><b>Access to Climate/Climate Change Resources</b></td>
         </tr>
         <tr>
-            <td>Access to all content</td>
-            <td>Historic Station Data</td>
+            <td>Historic Weather Station Finder</td>
             <td>Data Analysis</td>
-            <td>Anomaly Maps</td>
-        </tr>
-        <tr>
+            <td>Weather</td>
             <td>See who is involved and what is being done</td>
-            <td>Gridded/Modeled Data</td>
-            <td>Visualization (maps, time series)</td>
-            <td>Snow Maps</td>
         </tr>
         <tr>
-            <td></td>
-            <td>Modeled Downscaled Data</td>
+            <td>Historic Station Data</td>
+            <td>Visualization (maps, time series, ...)</td>
+            <td>Temperature and Precipitation Anomaly Maps</td>
+            <td>Descriptions of Climate/Climate change related organizations and instituations across the US</td>
+        </tr>
+        <tr>
+            <td>Gridded/Modeled and Downscaled Data</td>
             <td>Desision Making Tools</td>
-            <td>Soil and Drought Information</td>
+            <td>Water and Drought Information</td>
+            <td>External links</td>
         </tr>
        <tr>
+            <td>Geospatial Data Layers</td>
             <td></td>
-            <td>Station Finder</td>
-            <td></td>
-            <td></td>
+            <td>Projections</td>
+            <td>Access to all content</td>
         </tr>
     </table>
     <br />

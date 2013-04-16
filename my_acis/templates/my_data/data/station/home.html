@@ -6,12 +6,12 @@
 
 {% block content %} 
 
-<p align="center">You are here 
-<a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
-<a href="{{URL_PREFIX}}sw_ckn/main_map/">RESOURCES></a>
-<a href="{{URL_PREFIX}}sw_ckn/data/">DATA PORTAL></a>
-<a href="{{URL_PREFIX}}sw_ckn/data/station/">Historic Station Data</a></p>
-
+<p align="center">You are here
+<a href="{{HOME_URL}}">HOME></a>
+<a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
+<a href="{{DATA_URL}}">DATA PORTAL></a>
+<a href="{{DATA_URL}}station/">Historic Station Data</a></p>
+ 
 <div class="container">
     <div class="major-left">
     <br />
@@ -28,7 +28,7 @@
                         <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                         {%ifequal field.label "Elements" %}
                             <div class="pop-up"> 
-                            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0">                   </div>
+                            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0">                   </div>
                         {%else%}
                             <div class="pop-up"><p>{{field.help_text}}</p></div>
                         {%endifequal%} 
@@ -66,7 +66,7 @@
                     <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>                            
                     {%ifequal field.label "Elements" %}
                         <div class="pop-up" onClick="ShowHide(this)">
-                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0">
+                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0">
                         </div>
                     {%else%}
                         <div class="pop-up"><p>{{field.help_text}}</p></div>
@@ -146,7 +146,7 @@
             <p>Hit "Select". A second form will appear.</p>
             <p>Enter one or more elements as a comma separated list.</p>
             <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
-            <div id="element_choices" style="display:none"><img width="250px" height="300px" src={{MEDIA_URL}}img/ACIS_Element_Choices.png></div>
+            <div id="element_choices" style="display:none"><img width="250px" height="300px" src={{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png></div>
             <p>Choose a start and end date.</p>
             <p>Choose a data format. .xls, .dat, .txt files will be downloaded on the user's machine. 
             html format is displayed on the webpage directly.</p>
@@ -206,11 +206,11 @@
             
             <!--Link to relevant apps-->
             {%if link_to_mon_aves %}
-                <a target="_blank" href="{{URL_PREFIX}}sw_ckn/apps/station/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}">Generate bar charts for this data set here!</a>
+                <a target="_blank" href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}">Generate bar charts for this data set here!</a>
             {%endif%}
             <br />
             {%if link_to_metagraph%}
-                <a target="_blank" href="{{URL_PREFIX}}sw_ckn/apps/station/metagraph/?stn_id={{stn_id}}">Generate metadata graphics for this station here!</a>
+                <a target="_blank" href="{{TOOLS_URL}}station/metagraph/?stn_id={{stn_id}}">Generate metadata graphics for this station here!</a>
             {%endif%}            
 
             {%for stn in stn_idx%}

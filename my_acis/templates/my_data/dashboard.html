@@ -5,201 +5,241 @@
 {% block content %}
 
 <p align="center">You are here 
-<a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
-<a href="{{URL_PREFIX}}sw_ckn/main_map/">RESOURCES></a>
-<a href="{{URL_PREFIX}}sw_ckn/monitoring/">MONITORING</a></p>
+<a href="{{HOME_URL}}">HOME></a>
+<a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
+<a href="{{SW_CKN_URL}}monitoring/">MONITORING</a></p>
 
 <div class="container">
 <table class="dashboard">
     <th><h1>The Southwest</h1></th><th><h1>The Rest</h1></th>
    <!--Weather-->
     <tr><td>
-            <h2 style="color:#FF007F;">Current Weather</h2>
-        <table>
+        <h2 style="color:#FF007F;">Current Weather</h2>
+        <table border="1px solid #006666">
             <th>National Weather Service</th><th>Infrared Satellite Image</th><th>Radar Mosaic</th>
             <tr>
-                <td><a href="http://www.wrh.noaa.gov/" class="popup_map"><img alt="Climate map" src="{{ MEDIA_URL }}img/NWS_SW.png" class="sidebar"></a></td>
-                <td><a href="http://sat.wrh.noaa.gov/satellite/loopsat.php?wfo=rev&area=west&type=ir&size=4" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/SWIRSat.png" class="sidebar"></a></td>
+            <td><a href="http://www.wrh.noaa.gov/" class="popup_map"><img alt="Climate map" src="{{ MEDIA_URL }}img/NWS_SW.png" class="sidebar"></a></td>
+            <td><a href="http://sat.wrh.noaa.gov/satellite/loopsat.php?wfo=rev&area=west&type=ir&size=4" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/SWIRSat.png" class="sidebar"></a></td>
             <!-- <td><a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" class="popup_map"><img alt="Climate map" src="http://sat.wrh.noaa.gov/satellite/loopsat.php?wfo=rev&area=west&type=ir&size=4" class="sidebar"></a></td>-->
              <td><a href="http://radar.weather.gov/ridge/Conus/pacsouthwest_loop.php" class="popup_map"><img alt="Climate map" class="sidebar" src="http://radar.weather.gov/ridge/Conus/Loop/pacsouthwest_loop.gif"></a></td>
             </tr>
         </table>
-        <a target="_blank" href="http://www.wrh.noaa.gov/satellite/?wfo=rev">MORE: Satellite Images by NWS</a><br />
-        <a target="_blank" href="http://www.weather.gov/Radar">MORE: Radar Images by NWS</a><br />
+       <p align="left"><font color="#FF007F">MORE: </font>
+       <a target="_blank" href="http://www.wrh.noaa.gov/satellite/?wfo=rev">Satellite Images by NWS</a>|
+       <a target="_blank" href="http://www.weather.gov/Radar">Radar Images by NWS</a></p><br />
     </td><td>
-            <h2 style="color:#FF007F;">Current Weather</h2>
-        <table>
+        <h2 style="color:#FF007F;">Current Weather</h2>
+        <table border="1px solid #006666">
             <th>National Weather Service</th><th>Infrared Satellite Image</th><th>Radar Mosaic</th>
             <tr>
-                <td><a href="http://www.weather.gov/" class="popup_map"><img alt="Climate map" src="{{ MEDIA_URL }}img/NWS_US.png" class="sidebar"></a></td>
-                <td><a href="http://www.weather.gov/satellite" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/USIRSat.png" class="sidebar"></a></td>
-               <!-- <td><a href="http://radar.weather.gov/Conus/full_loop.php" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/USRadar.png" class="sidebar"></a></td>-->
-               <td><a href="http://radar.weather.gov/Conus/full_loop.php" class="popup_map"><img alt="Climate map" src="http://radar.weather.gov/Conus/Loop/NatLoop.gif" class="sidebar"></a></td>
+            <td><a href="http://www.weather.gov/" class="popup_map"><img alt="Climate map" src="{{ MEDIA_URL }}img/NWS_US.png" class="sidebar"></a></td>
+            <td><a href="http://www.weather.gov/satellite" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/USIRSat.png" class="sidebar"></a></td>
+            <td><a href="http://radar.weather.gov/Conus/full_loop.php" class="popup_map"><img alt="Climate map" src="http://radar.weather.gov/Conus/Loop/NatLoop.gif" class="sidebar"></a></td>
             </tr>
         </table>
-        <a target="_blank" href="http://www.goes.noaa.gov/">MORE: Satellite Images by NWS</a><br />
-        <a target="_blank" href="http://www.weather.gov/Radar">MORE: Radar Images by NWS</a><br />
+        <p align="left"><font color="#FF007F">MORE: </font>
+        <a target="_blank" href="http://www.goes.noaa.gov/">Satellite Images by NWS</a>|
+        <a target="_blank" href="http://www.weather.gov/Radar">Radar Images by NWS</a></p><br />
     </td></tr>
     <!--Temps-->
     <tr><td>
         <!-- The Southwest -->
-        <h2 style="color:#FF007F;">Temperature Anomaly Maps - Updated daily by HPRCC </h2>
-        <table>
+        <h2 style="color:#FF007F;">Temperature Anomaly Maps</h2>
+        <table border="1px solid #006666">
             <th>Water Year</th><th>30-day</th><th>7-day</th>
             <tr>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterTDeptWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterTDeptWRCC.png" class="sidebar"></a></td>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dTDeptWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dTDeptWRCC.png" class="sidebar"></a></td>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/7dTDeptWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/7dTDeptWRCC.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterTDeptWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterTDeptWRCC.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dTDeptWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dTDeptWRCC.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/7dTDeptWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/7dTDeptWRCC.png" class="sidebar"></a></td>
             </tr>
         </table>
-        <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?state=SW&region=WRCC&product=TDept">MORE HERE: High Plains Regional Climate Center SW Temperature anomaly map tool</a><br />
+        <p align="left"><font color="#FF007F">MORE: </font>
+        <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?state=SW&region=WRCC&product=TDept">High Plains Regional Climate Center SW Temperature anomaly map tool</a></p><br />
     </td><td>
         <!-- US-->
-        <h2 style="color:#FF007F;">Temperature Anomaly Maps - Updated daily by HPCC</h2>
-        <table >
+        <h2 style="color:#FF007F;">Temperature Anomaly Maps</h2>
+        <table border="1px solid #006666">
             <th>Water Year</th><th>30-day</th><th>7-day</th>
             <tr>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/WaterTDeptUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/WaterTDeptUS.png" class="sidebar"></a></td>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/30dTDeptUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/30dTDeptUS.png" class="sidebar"></a></td>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/7dTDeptUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/7dTDeptUS.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/WaterTDeptUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/WaterTDeptUS.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/30dTDeptUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/30dTDeptUS.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/7dTDeptUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/7dTDeptUS.png" class="sidebar"></a></td>
             </tr>
         </table>
-        <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?product=TDept">MORE OPTIONS: High Plains Regional Climate Center US Temperature anomaly map tool</a><br />
+        <p align="left"><font color="#FF007F">MORE: </font>
+        <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?product=TDept">High Plains Regional Climate Center US Temperature anomaly map tool</a></p><br />
     </td></tr>
     <!--Precip-->
     <tr><td>
-        <h2 style="color:#FF007F;">% of Normal Precipitation - Updated daily by HPRCC</h2>
-        <table >
+        <h2 style="color:#FF007F;">% of Normal Precipitation</h2>
+        <table border="1px solid #006666">
             <th>Water Year</th><th>30-day</th><th>7-day</th>
             <tr>                
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterPNormPWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterPNormWRCC.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterPNormPWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterPNormWRCC.png" class="sidebar"></a></td>
 
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dPNormWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dPNormWRCC.png" class="sidebar"></a></td>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/7dPNormWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/7dPNormWRCC.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dPNormWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dPNormWRCC.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/7dPNormWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/7dPNormWRCC.png" class="sidebar"></a></td>
             </tr>
         </table>
-        <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?state=SW&region=WRCC&product=PNorm">MORE OPTION: High Plains Regional Climate Center SW Precip anomaly map tool</a><br />
-
+        <p align="left"><font color="#FF007F">MORE: </font>
+        <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?state=SW&region=WRCC&product=PNorm">High Plains Regional Climate Center SW Precip anomaly map tool</a></p><br />
     </td><td>
-        <h2 style="color:#FF007F;">% of Normal Precipitation - Updated daily by HPCC</h2>
-        <table>
+        <h2 style="color:#FF007F;">% of Normal Precipitation</h2>
+        <table border="1px solid #006666">
             <th>Water Year</th><th>30-day</th><th>7-day</th>
             <tr>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/WaterPNormUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/WaterPNormUS.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/WaterPNormUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/WaterPNormUS.png" class="sidebar"></a></td>
 
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/30dPNormUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/30dPNormUS.png" class="sidebar"></a></td>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/7dPNormUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/7dPNormUS.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/30dPNormUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/30dPNormUS.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/7dPNormUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/7dPNormUS.png" class="sidebar"></a></td>
             </tr>
         </table>
-        <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?product=PNorm">MORE HERE: High Plains Regional Climate Center US Precip anomaly map tool</a><br />
+        <p align="left"><font color="#FF007F">MORE: </font>
+        <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?product=PNorm">High Plains Regional Climate Center US Precip anomaly map tool</a></p><br />
     </td></tr>
     <!-- Drought-->
     <tr><td>
-        <h2 style="color:#FF007F;">Drought Information - Updated daily by HPCC</h2>
-        <table>
+        <h2 style="color:#FF007F;">Drought Information</h2>
+        <table border="1px solid #006666">
             <th>Water Year SPI</th><th>30-day SPI</th><th>60-day SPI</th>
             <tr>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterSPIDataWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterSPIDataWRCC.png" class="sidebar"></a></td>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dSPIDataWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dSPIDataWRCC.png" class="sidebar"></a></td>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/60dSPIDataWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/60dSPIDataWRCC.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterSPIDataWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterSPIDataWRCC.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dSPIDataWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/30dSPIDataWRCC.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/60dSPIDataWRCC.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/60dSPIDataWRCC.png" class="sidebar"></a></td>
             </tr>
         </table>
-        <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?action=update_region&region=WRCC">MORE SPI products from HPRCC</a><br />
-        <a target="_blank" href="http://www.wrcc.dri.edu/wwdt/">MORE HERE: US Drought Monitor</a><br />
-        <!--<a target="_blank" href="http://www.wrcc.dri.edu/wwdt/">MORE HERE: Westwide Drought Tracker(WRCC)</a>-->
+        <p align="left"><font color="#FF007F">MORE: </font>
+        <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?action=update_region&region=WRCC">SPI products from HPRCC</a>|
+        <a target="_blank" href="http://www.wrcc.dri.edu/wwdt/">US Drought Monitor</a></p><br />
     </td><td>
-        <h2 style="color:#FF007F;">Drought Information - Updated daily by HPCC</H2>
-        <table >
+        <h2 style="color:#FF007F;">Drought Information</H2>
+        <table border="1px solid #006666">
             <th>Water Year SPI</th><th>30-day SPI</th><th>60-day SPI</th>
-            <!--<th>Top Soil Moisture</th>-->
             <tr>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/WaterSPIDataUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/WaterSPIDataUS.png" class="sidebar"></a></td>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/30dSPIDataUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/30dSPIDataUS.png" class="sidebar"></a></td>
-                <td><a href="http://www.hprcc.unl.edu/products/maps/acis/60dSPIDataUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/60dSPIDataUS.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/WaterSPIDataUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/WaterSPIDataUS.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/30dSPIDataUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/30dSPIDataUS.png" class="sidebar"></a></td>
+            <td><a href="http://www.hprcc.unl.edu/products/maps/acis/60dSPIDataUS.png" class="popup_map"><img alt="Climate map" src="http://www.hprcc.unl.edu/products/maps/acis/60dSPIDataUS.png" class="sidebar"></a></td>
                <!-- <td><a href="http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/regional_monitoring/palmer.gif" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/PalmerZUS.png" class="sidebar"></a></td>
                 <td><a href="http://wrcc.dri.edu/cgi-bin/spiFmap.pl?spi01" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/SPIUS.png" class="sidebar"></a></td>
                <td><a href="http://www.cpc.ncep.noaa.gov/products/monitoring_and_data/5yrcomp.gif" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/TSMoist.png" class="sidebar"></a></td>-->
             </tr>
         </table>
-        <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?action=update_region&region=US">MORE SPI products from HPRCC</a><br />
-        <a target="_blank" href="http://www.drought.gov/drought/">MORE HERE: US Drought Portal</a><br />
+        <p align="left"><font color="#FF007F">MORE: </font>
+        <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?action=update_region&region=US">SPI products from HPRCC</a>|
+        <a target="_blank" href="http://www.drought.gov/drought/">US Drought Portal</a>|
         <a target="_blank" href="http://droughtmonitor.unl.edu/monitor.html">US Drought Monitor</a><br />
-        <a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/drought/nadm/">North American Drought Monitor</a><br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/drought/nadm/">North American Drought Monitor</a></p><br />
+    </td></tr>
+    <!--WATER-->
+    <tr><td>
+            <h2 style="color:#FF007F;">West US Water Conditions</h2>
+        <table border="1px solid #006666">
+            <th>CA/NV River Forecast <br />(NWS)</th><th>CO Basin River Forecast <br />(NWS)</th><th>West Gulf River Forecast <br />(NWS)</th>
+            <tr>
+            <td><a href="http://www.cnrfc.noaa.gov/" class="popup_map"><img alt="Climate map" src="http://www.cnrfc.noaa.gov/images/official_zoom0.png" class="sidebar"></a></td>
+            <td><a href="http://www.cbrfc.noaa.gov/" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/CORiverForecast.png" class="sidebar"></a></td>
+            <td><a href="http://www.srh.noaa.gov/wgrfc/" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/WestGulfRiverForecast.png" class="sidebar"></a></td>
+            </tr>
+        </table>
+        <p align="left"><font color="#FF007F">MORE: </font>
+        <a target="_blank" href="http://www.usbr.gov/main/water/">Managing water in the west (BOR)</a>|
+        <a target="_blank" href="http://wwa.colorado.edu/">Western Water Assessment</a></p><br />
+    </td><td>
+            <h2 style="color:#FF007F;">US Water Conditions</h2>
+        <table border="1px solid #006666">
+            <th>Real time <br />comparative streamflow<br />(USGS)</th><th>7-Day <br />comparative streamflow<br />(USGS)</th><th> 7-Day <br />Observed Precipitation<br />(AHPS)</th>
+            <tr>
+            <td><a href="http://waterwatch.usgs.gov/index.php?id=real" class="popup_map"><img alt="Climate map" src="http://waterwatch.usgs.gov/images/real/us/realb.gif" class="sidebar"></a></td>
+            <td><a href="http://waterwatch.usgs.gov/index.php?id=pa07d" class="popup_map"><img alt="Climate map" src="http://waterwatch.usgs.gov/images/pa07d/us/pa07db.gif" class="sidebar"></a></td>
+            <td><a class="popup_map" target="_blank" href="http://water.weather.gov/precip/index_nonjs.php?layer%5B%5D=0&layer%5B%5D=1&layer%5B%5D=4&timetype=RECENT&units=engl&timeframe=last7days&product=observed&loctype=STATE&loc=conus"><img alt="Climate map" src="http://water.weather.gov/precip/images/{{full_date_for_ahps}}/current/conus_precip-composite_hi_res.png" class="sidebar"></a></td>
+            </tr>
+        </table>
+        <p align="left"><font color="#FF007F">MORE: </font>
+        <a target="_blank" href="http://waterwatch.usgs.gov/index.php">USGS Water Watch</a>|
+        <a target="_blank" href="http://water.weather.gov/ahps/">NWS Advanced Hydrologic prediction Service (AHPS)</a><br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a target="_blank" href="http://water.weather.gov/ahps/rfc/rfc.php">NWS River Forecast Centers</a></p><br />
     </td></tr>
     <!--Snow-->
     <tr><td>
         <h2 style="color:#FF007F;">Snow data from SNOTEL</h2>
-        <table>
+        <table border="1px solid #006666">
             <th>Water Year Snow Pack</th><th>Current Snow<br /> Water Equivalent</th><th>Month To Date <br />Precipitation % of Normal</th>
             <tr>
-               <td><a href="http://www.wcc.nrcs.usda.gov/ftpref/support/water/westwide/snowpack/wy{{year}}/snow{{year_short}}{{month}}.gif" class="popup_map"><img alt="Climate map" src="http://www.wcc.nrcs.usda.gov/ftpref/support/water/westwide/snowpack/wy{{year}}/snow{{year_short}}{{month}}.gif" class="sidebar"></a></td> 
-                <td><a href="http://www.wcc.nrcs.usda.gov/gis/images/west_swepctnormal_update.png" class="popup_map"><img alt="Climate map" src="http://www.wcc.nrcs.usda.gov/gis/images/west_swepctnormal_update.png" class="sidebar"></a></td>
-                <td><a href="http://www.wcc.nrcs.usda.gov/gis/images/west_mtdprecpctnormal_update.png" class="popup_map"><img alt="Climate map" src="http://www.wcc.nrcs.usda.gov/gis/images/west_mtdprecpctnormal_update.png" class="sidebar"></a></td>
+            <td><a href="http://www.wcc.nrcs.usda.gov/ftpref/support/water/westwide/snowpack/wy{{year}}/snow{{year_short}}{{month}}.gif" class="popup_map"><img alt="Climate map" src="http://www.wcc.nrcs.usda.gov/ftpref/support/water/westwide/snowpack/wy{{year}}/snow{{year_short}}{{month}}.gif" class="sidebar"></a></td> 
+            <td><a href="http://www.wcc.nrcs.usda.gov/gis/images/west_swepctnormal_update.png" class="popup_map"><img alt="Climate map" src="http://www.wcc.nrcs.usda.gov/gis/images/west_swepctnormal_update.png" class="sidebar"></a></td>
+            <td><a href="http://www.wcc.nrcs.usda.gov/gis/images/west_mtdprecpctnormal_update.png" class="popup_map"><img alt="Climate map" src="http://www.wcc.nrcs.usda.gov/gis/images/west_mtdprecpctnormal_update.png" class="sidebar"></a></td>
             <tr>
         </table>
-        <a target="_blank" href="http://www.wcc.nrcs.usda.gov/gis/index.html">MORE HERE: SNOTEL GIS Products</a><br />
-        <a target="_blank" href="http://www.wcc.nrcs.usda.gov/cgibin/westsnow.pl">MORE HERE: SNOTEL Mountain Snowpack Maps for the West</a><br />
+        <p align="left"><font color="#FF007F">MORE: </font><a target="_blank" href="http://www.wcc.nrcs.usda.gov/gis/index.html">SNOTEL GIS Products</a>|
+        <a target="_blank" href="http://www.wcc.nrcs.usda.gov/cgibin/westsnow.pl">SNOTEL Mountain Snowpack Maps for the West</a><br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <a target="_blank" href="http://www.wcc.nrcs.usda.gov/">National Water and Climate Center</a><br /> 
     </td><td>
         <h2 style="color:#FF007F;">Snow data from NOHRSC (NOAA)</h2>
-        <table>
+        <table border="1px solid #006666">
             <th>Ntl. Snow Analysis</th><th>Interactive Snow Maps</th><th>Forecasts</th>
             <tr>
-                <td><a href="http://www.nohrsc.noaa.gov/nsa/" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/SnowAnalysis.png" class="sidebar"></a></td>
-                <td><a href="http://www.nohrsc.noaa.gov/interactive/html/map.html" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/IASnowMap.png" class="sidebar"></a></td>
-                <td><a href="http://www.nohrsc.noaa.gov/forecasts/" class="popup_map"><img alt="Snow Forecast" src="{{MEDIA_URL}}img/SnowForeCast.png" class="sidebar"></a></td>
+            <td><a href="http://www.nohrsc.noaa.gov/nsa/" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/SnowAnalysis.png" class="sidebar"></a></td>
+            <td><a href="http://www.nohrsc.noaa.gov/interactive/html/map.html" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/IASnowMap.png" class="sidebar"></a></td>
+            <td><a href="http://www.nohrsc.noaa.gov/forecasts/" class="popup_map"><img alt="Snow Forecast" src="{{MEDIA_URL}}img/SnowForeCast.png" class="sidebar"></a></td>
             </tr>
         </table>
-        <a target="_blank" href="http://www.nohrsc.noaa.gov/nsa/">MORE HERE: National Operational Hydrologic Remote Sensing Center</a><br />
+        <p align="left"><font color="#FF007F">MORE: </font>
+        <a target="_blank" href="http://www.nohrsc.noaa.gov/nsa/">National Operational Hydrologic Remote Sensing Center</a></p><br />
     </td></tr>
-    </table>
-   
+</table> <!--end dashboard table-->
+
+<!--US only tables-->
    <!--New table: ENSO, AO/NAO, MJO Updates  US only-->
-    <h2 align="center" style="color:#FF007F;">ENSO, AO/NAO, MJO Updates</h2>
-        <table align="center">
-        <th>Weekly SST Anomaly</th><th>Weekly SST</th><th>Yrly SST Anomalies</th><th>MV ENSO Index</th><th>Daily MJO Index</th><th>EO: Observed and ENSM forecasts</th>
+        <h2 align="left" style="color:#FF007F;">ENSO, AO/NAO, MJO Updates</h2>
+        <table border="1px solid #006666">
+        <th>Weekly SST Anomaly</th><th>Weekly SST</th><th>Yrly SST Anomalies</th><th>MV ENSO Index</th><th>Daily MJO Index</th><th>EO: Observed and <br />ENSM forecasts</th>
         <tr>
-            <td><a href="http://www.esrl.noaa.gov/psd/map/images/sst/sst.anom.gif" class="popup_map"><img alt="Climate map" src="http://www.esrl.noaa.gov/psd/map/images/sst/sst.anom.gif" class="sidebar"></a></td>
-            <td><a href="http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_update/sstweek_c.gif" class="popup_map"><img alt="Climate map" src="http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_update/sstweek_c.gif" class="sidebar"></a></td>
-            <td><a href="http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_update/ssta_c.gif" class="popup_map"><img alt="Climate map" src="http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_update/ssta_c.gif" class="sidebar"></a></td>
-            <td><a href="http://www.esrl.noaa.gov/psd/enso/mei/ts.gif" class="popup_map"><img alt="Climate map" src="http://www.esrl.noaa.gov/psd/enso/mei/ts.gif" class="sidebar"></a></td>
+        <td><a href="http://www.esrl.noaa.gov/psd/map/images/sst/sst.anom.gif" class="popup_map"><img alt="Climate map" src="http://www.esrl.noaa.gov/psd/map/images/sst/sst.anom.gif" class="sidebar"></a></td>
+        <td><a href="http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_update/sstweek_c.gif" class="popup_map"><img alt="Climate map" src="http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_update/sstweek_c.gif" class="sidebar"></a></td>
+        <td><a href="http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_update/ssta_c.gif" class="popup_map"><img alt="Climate map" src="http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_update/ssta_c.gif" class="sidebar"></a></td>
+        <td><a href="http://www.esrl.noaa.gov/psd/enso/mei/ts.gif" class="popup_map"><img alt="Climate map" src="http://www.esrl.noaa.gov/psd/enso/mei/ts.gif" class="sidebar"></a></td>
             <td><a href="http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/whindex.shtml" class="popup_map"><img alt="Climate map" src="http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/obs_phase40_full.gif" class="sidebar"></a></td>
             <td><a href="http://www.cpc.ncep.noaa.gov/products/precip/CWlink/daily_ao_index/ao.sprd2.gif" class="popup_map"><img alt="Climate map" src="http://www.cpc.ncep.noaa.gov/products/precip/CWlink/daily_ao_index/ao.sprd2.gif" class="sidebar"></a></td>
         </tr>
         </table>
-        <p align="center"><a target="_blank" href="http://www.esrl.noaa.gov/psd/map/clim/sst.shtml">More Here: ESRL SST</a><br />
-        <a target="_blank" href="http://www.esrl.noaa.gov/psd/map/clim/sst.shtml">More Here: ESRL Map Room</a><br />
-        <a target="_blank" href="http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/enso.shtml">More Here: CPC ENSO</a><br />
-        <a target="_blank" href="http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/mjo.shtml">More Here: CPC MJO</a><br />
-        <a target="_blank" href="http://www.cpc.ncep.noaa.gov/products/precip/CWlink/daily_ao_index/teleconnections.shtml">More Here: CPC Oscillations</a></p><br />
+        <p align="left"><font color="#FF007F">MORE: </font>
+        <a target="_blank" href="http://www.esrl.noaa.gov/psd/map/clim/sst.shtml">ESRL SST</a>|
+        <a target="_blank" href="http://www.esrl.noaa.gov/psd/map/clim/sst.shtml">ESRL Map Room</a>|
+        <a target="_blank" href="http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/enso.shtml">CPC ENSO</a>|
+        <a target="_blank" href="http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/mjo.shtml">CPC MJO</a>|
+        <a target="_blank" href="http://www.cpc.ncep.noaa.gov/products/precip/CWlink/daily_ao_index/teleconnections.shtml">CPC Oscillations</a></p><br />
    <!--New table: Predictions US only-->
-        <h2 align="center" style="color:#FF007F;">Future Projections</h2>
-        <table align="center">
-            <h2  align="center" style="color:#FF007F;">National Multi-Model Ensemble Experimental Forecasts (NMME)</h2>  
-            <th>Lead 1 Prate</th><th>Lead 1 tmp2m</th><th>Season Prate</th><th>Season 1 tmp2m</th>
-            <tr>
-                <td><a href="http://www.cpc.ncep.noaa.gov/products/NMME/current/usprate_Lead1.html" class="popup_map"><img alt="Climate map" src="http://www.cpc.ncep.noaa.gov/products/NMME/current/images/NMME_ensemble_prate_us_lead1.png" class="sidebar"></a></td>
-                <td><a href="http://www.cpc.ncep.noaa.gov/products/NMME/current/ustmp2m_Lead1.html" class="popup_map"><img alt="Climate map" src="http://www.cpc.ncep.noaa.gov/products/NMME/current/images/NMME_ensemble_tmp2m_us_lead1.png" class="sidebar"></a></td>
-                <td><a href="http://www.cpc.ncep.noaa.gov/products/NMME/current/usprate_Seas1.html" class="popup_map"><img alt="Climate map" src="http://www.cpc.ncep.noaa.gov/products/NMME/current/images/NMME_ensemble_prate_us_season1.png" class="sidebar"></a></td>
-                <td><a href="http://www.cpc.ncep.noaa.gov/products/NMME/current/ustmp2m_Seas1.html" class="popup_map"><img alt="Climate map" src="http://www.cpc.ncep.noaa.gov/products/NMME/current/images/NMME_ensemble_tmp2m_us_season1.png" class="sidebar"></a></td>
-            </tr>
-        </table>
-        <p align="center"><a target="_blank" href="http://www.cpc.ncep.noaa.gov/products/NMME/">More Here: NMME Home Page</a><br />
-        <a target="_blank" href="http://www.cpc.ncep.noaa.gov/products/NMME/iMMEindex.shtml">More Here: IMME Home Page</a></p><br />
-        <table align="center">
-            <h2  align="center" style="color:#FF007F;">Weekly Climate Forecasting System Experimental Forecasts (CEFA/DRI)</h2>
-            <h2 align="center" style="color:#FF007F;">Mean/Anom Geopotential Height [500 mb] (dam)</h2>
+        <h2 align="left" style="color:#FF007F;">Projections</h2>
+        <h2  align="left">National Multi-Model Ensemble Experimental Forecasts (NMME)</h2>
+        <table border="1px solid #006666">
+        <th>Lead 1 Prate</th><th>Lead 1 tmp2m</th><th>Season Prate</th><th>Season 1 tmp2m</th>
+        <tr>
+        <td><a href="http://www.cpc.ncep.noaa.gov/products/NMME/current/usprate_Lead1.html" class="popup_map"><img alt="Climate map" src="http://www.cpc.ncep.noaa.gov/products/NMME/current/images/NMME_ensemble_prate_us_lead1.png" class="sidebar"></a></td>
+        <td><a href="http://www.cpc.ncep.noaa.gov/products/NMME/current/ustmp2m_Lead1.html" class="popup_map"><img alt="Climate map" src="http://www.cpc.ncep.noaa.gov/products/NMME/current/images/NMME_ensemble_tmp2m_us_lead1.png" class="sidebar"></a></td>
+        <td><a href="http://www.cpc.ncep.noaa.gov/products/NMME/current/usprate_Seas1.html" class="popup_map"><img alt="Climate map" src="http://www.cpc.ncep.noaa.gov/products/NMME/current/images/NMME_ensemble_prate_us_season1.png" class="sidebar"></a></td>
+        <td><a href="http://www.cpc.ncep.noaa.gov/products/NMME/current/ustmp2m_Seas1.html" class="popup_map"><img alt="Climate map" src="http://www.cpc.ncep.noaa.gov/products/NMME/current/images/NMME_ensemble_tmp2m_us_season1.png" class="sidebar"></a></td>
+        </tr></table>
+        <p align="left"><font color="#FF007F">MORE: </font>
+        <a target="_blank" href="http://www.cpc.ncep.noaa.gov/products/NMME/">NMME Home Page</a>|
+        <a target="_blank" href="http://www.cpc.ncep.noaa.gov/products/NMME/iMMEindex.shtml">IMME Home Page</a></p><br />
+        
+        <h2  align="left" style="color:#FF007F;">Weekly Climate Forecasting System Experimental Forecasts (CEFA/DRI)</h2>
+        <h2 align="left">Mean/Anom Geopotential Height [500 mb] (dam)</h2>
+        <table border="1px solid #006666">
             <th>Week 1</th><th>Week 2</th><th>Week 3</th><th>Week 4</th><th>Week 5</th>
             <tr>
-                <td><a href="http://www.cefa.dri.edu/CFS/images/h5.0.png" class="popup_map"><img alt="Climate map" src="http://www.cefa.dri.edu/CFS/images/h5.0.png" class="sidebar"></a></td>
-                <td><a href="http://www.cefa.dri.edu/CFS/images/h5.1.png" class="popup_map"><img alt="Climate map" src="http://www.cefa.dri.edu/CFS/images/h5.1.png" class="sidebar"></a></td>
-                <td><a href="http://www.cefa.dri.edu/CFS/images/h5.2.png" class="popup_map"><img alt="Climate map" src="http://www.cefa.dri.edu/CFS/images/h5.2.png" class="sidebar"></a></td>
-                <td><a href="http://www.cefa.dri.edu/CFS/images/h5.3.png" class="popup_map"><img alt="Climate map" src="http://www.cefa.dri.edu/CFS/images/h5.3.png" class="sidebar"></a></td>
-                <td><a href="http://www.cefa.dri.edu/CFS/images/h5.4.png" class="popup_map"><img alt="Climate map" src="http://www.cefa.dri.edu/CFS/images/h5.4.png" class="sidebar"></a></td>
+            <td><a href="http://www.cefa.dri.edu/CFS/images/h5.0.png" class="popup_map"><img alt="Climate map" src="http://www.cefa.dri.edu/CFS/images/h5.0.png" class="sidebar"></a></td>
+            <td><a href="http://www.cefa.dri.edu/CFS/images/h5.1.png" class="popup_map"><img alt="Climate map" src="http://www.cefa.dri.edu/CFS/images/h5.1.png" class="sidebar"></a></td>
+            <td><a href="http://www.cefa.dri.edu/CFS/images/h5.2.png" class="popup_map"><img alt="Climate map" src="http://www.cefa.dri.edu/CFS/images/h5.2.png" class="sidebar"></a></td>
+            <td><a href="http://www.cefa.dri.edu/CFS/images/h5.3.png" class="popup_map"><img alt="Climate map" src="http://www.cefa.dri.edu/CFS/images/h5.3.png" class="sidebar"></a></td>
+            <td><a href="http://www.cefa.dri.edu/CFS/images/h5.4.png" class="popup_map"><img alt="Climate map" src="http://www.cefa.dri.edu/CFS/images/h5.4.png" class="sidebar"></a></td>
             </tr>
         </table>
-        <p align="center"><a target="_blank" href="http://www.cefa.dri.edu/CFS/cfs.php">More Here: CFSv2 Forecast Grid Initialization - North America</a></p><br />        
- 
+        <p align="left"><font color="#FF007F">MORE: </font>
+        <a target="_blank" href="http://www.cefa.dri.edu/CFS/cfs.php">CFSv2 Forecast Grid Initialization - North America</a></p><br />
 
     <!-- Fifth Row Soil-->
     <!--
@@ -207,7 +247,7 @@
             <h2 style="color:#FF007F;">Soil</h2>
     </td><td>
             <h2 style="color:#FF007F;">Soil</h2>
-        <table class="dashboard">
+        <table border="1px solid #006666">
             <th>Soil Moisture</th><th>SCAN Data</th><th></th>
             <tr>
                 <td><a href="http://www.cpc.ncep.noaa.gov/products/Soilmst_Monitoring/US/Soilmst/Soilmst.shtml#" class="popup_map"><img alt="Climate map" src="{{MEDIA_URL}}img/SMoistUS.png" class="sidebar"></a></td>
@@ -219,15 +259,12 @@
     <a target="_blank" href="http://www.cpc.ncep.noaa.gov/products/Soilmst_Monitoring/index.shtml">MORE HERE: Land Surface Monitoring and Prediction(NOAA)</a><br />
     <a target="_blank" href="http://www.wcc.nrcs.usda.gov/scan/">Soil Climate Analysis Network (USDA)</a>
     </td></tr>
-    -->
-</table>
 
-  <!-- Footer -->
+  <!-- Footer-->
   <div id="footer" align="center"></div>
     <script type="text/javascript">                        
     $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
     </script>
-
 </div>
 {% endblock %}
 

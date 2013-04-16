@@ -346,7 +346,7 @@ class Sod0Form(forms.Form):
         if app_name == 'Sodxtrmts':
             self.fields['analysis_type'] = forms.ChoiceField(choices=SX_ANALYSIS_CHOICES, initial='mave')
             self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='maxt')
-            self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'T')
+            self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F')
         if app_name == 'Sodpiii':
             self.fields['skew'] = forms.ChoiceField(choices=([('as','Areal Skew'), ('ss','Station Skew'), ]), initial='ss')
             self.fields['cv'] = forms.ChoiceField(choices=([('acv','Areal CV'), ('scv','Station CV'), ]), initial='scv')
@@ -391,7 +391,7 @@ class SodForm(forms.Form):
             #self.fields['end_date'] = forms.CharField(max_length=8, initial='20091231')
         elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy', 'Sodpad', 'Sodsumm', 'Sodpct', 'Sodthr', 'Sodxtrmts']:
             self.fields['start_date'] = MyDateField(max_length=4, min_length=4, initial='2000', help_text="yyyy")
-            self.fields['end_date'] = MyDateField(max_length=4, min_length=4, initial='2010', help_text="yyyy")
+            self.fields['end_date'] = MyDateField(max_length=4, min_length=4, initial='2013', help_text="yyyy")
         elif app_name == 'Sodpiii':
             self.fields['start_date'] = MyDateField(max_length=6, min_length=6, initial='200001', help_text="yyyymm")
             self.fields['end_date'] = MyDateField(max_length=6, min_length=6, initial='200912', help_text="yyyymm")

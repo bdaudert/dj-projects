@@ -13,10 +13,10 @@ import WRCCUtils
 #Utilities
 ############################################
 #find yestarday's data, default end_data
-tdy = datetime.datetime.today() - datetime.timedelta(days=1)
+tdy = datetime.datetime.today() - datetime.timedelta(days=15)
 #Choose default start_date 4 weeks back
-b = datetime.datetime.today() - datetime.timedelta(days=14)
-y = datetime.datetime.today() - datetime.timedelta(days=1)
+b = datetime.datetime.today() - datetime.timedelta(days=60)
+y = datetime.datetime.today() - datetime.timedelta(days=30)
 yr = str(tdy.year)
 mon = str(tdy.month)
 day = str(tdy.day)
@@ -291,7 +291,7 @@ class MultiElementField(forms.CharField):
     def validate(self, el_tuple):
         "Check if value consists only of valid coop_station_ids."
         for el in el_tuple:
-            el_strip = re.sub(r'(\d+)(\d+)', '', el) #strip digits from gddxx, hddxx, cddxx
+            el_strip= re.sub(r'(\d+)(\d+)', '', el) #strip digits from gddxx, hddxx, cddxx
             if str(el_strip) not in ['pcpn', 'snow', 'snwd', 'maxt', 'mint', 'avgt', 'obst', 'cdd', 'hdd', 'gdd']:
                 raise forms.ValidationError(\
                 mark_safe("elements should be a comma separated list of valid element choices:<br/>") + \
@@ -300,6 +300,43 @@ class MultiElementField(forms.CharField):
                 mark_safe("obst, cdd, hdd, gdd <br/>") + \
                 mark_safe(" or cddxx, hddxx, gddxx where xx is the base temperature in Fahrenheit, e.g. 68<br/>") + \
                 mark_safe("You entered: %s" %str(el)))
+
+class MultiPRISMElementField(forms.CharField):
+    def to_python(self, el_tuple):
+        "Normalize data to a list of strings."
+        # Return an empty list if no input was given.
+        if not el_tuple:
+            raise forms.ValidationError("Need at least one element.")
+            #return []
+        else:
+            if isinstance(el_tuple, list):
+                el_list = [str(el).strip(' ') for el in el_list]
+            else:
+                el_list =  el_tuple.split(',')
+                el_list = [str(el).strip(' ') for el in el_list]
+            return el_list
+
+    def validate(self, el_tuple):
+        "Check if value consists only of valid coop_station_ids."
+        for el in el_tuple:
+            if el[0:4] not in ['mly_', 'yly_']:
+                raise forms.ValidationError(\
+                    mark_safe('Not a valid PRISM data element') + \
+                    mark_safe('Valid PRISM element choices:<br/>') + \
+                    mark_safe('mly_pcpn, mly_maxt, mly_mint, mly_dewpt, <br/>') + \
+                    mark_safe('You entered: %s' %str(el)))
+            if el[0:4] == 'mly_':
+                if str(el) not in ['mly_pcpn', 'mly_dewpt', 'mly_maxt', 'mly_mint']:
+                    raise forms.ValidationError(\
+                    mark_safe("elements should be a comma separated list of valid element choices:<br/>") + \
+                    mark_safe("mly_pcpn, mly_maxt, mly_mint, mly_dewpt, <br/>") + \
+                    mark_safe("You entered: %s" %str(el)))
+            if el[0:4] == 'yly_':
+                if str(el) not in ['yly_pcpn', 'yly_dewpt', 'yly_maxt', 'yly_mint']:
+                    raise forms.ValidationError(\
+                    mark_safe("elements should be a comma separated list of valid element choices:<br/>") + \
+                    mark_safe("yly_pcpn, yly_maxt, yly_mint, yly_dewpt, <br/>") + \
+                    mark_safe("You entered: %s" %str(el)))
 
 #Data Retrieval Forms
 class PointDataForm0(forms.Form):
@@ -404,14 +441,17 @@ class PointDataForm3(forms.Form):
 
 class GridDataForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=select_grid_by_CHOICES, required=False, initial='point', help_text=HELP_TEXTS['select_stations_by'])
+        temporal_resolution = forms.ChoiceField(choices=([('dly', 'Daily'),('mly', 'Monthly'),('yly', 'Yearly')]), required=False, initial='dly', help_text='Time resolution of data.')
 
 class GridDataForm1(forms.Form):
     def __init__(self, *args, **kwargs):
         select_grid_by = kwargs.get('initial', {}).get('select_grid_by', None)
         location = kwargs.get('initial', {}).get('location', None)
+        temporal_resolution = kwargs.get('initial', {}).get('temporal_resolution', None)
         super(GridDataForm1, self).__init__(*args, **kwargs)
 
         if select_grid_by is None:select_grid_by = self.data.get('select_grid_by')
+        if temporal_resolution is None:temporal_resolution = self.data.get('temporal_resolution')
         if select_grid_by == 'point':
             self.fields['location'] = forms.CharField(initial="-77.7,41.8", help_text=HELP_TEXTS['grid_lon_lat'])
         elif select_grid_by == 'state':
@@ -422,15 +462,23 @@ class GridDataForm1(forms.Form):
             self.fields['bounding_box'] = BBoxField(initial='-90,40,-88,41', help_text=HELP_TEXTS['bbox'])
 
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
+        self.fields['temporal_resolution'] = forms.CharField(initial=temporal_resolution, widget=forms.HiddenInput())
         if location is not None:
             self.fields['location'] = forms.CharField(initial=location, help_text=HELP_TEXTS['grid_lon_lat'])
-        self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
+        if temporal_resolution in ['mly', 'yly']:
+            if temporal_resolution == 'mly':
+                self.fields['elements'] = MultiPRISMElementField(initial='mly_maxt,mly_pcpn', help_text=HELP_TEXTS['comma_elements'])
+            else:
+                self.fields['elements'] = MultiPRISMElementField(initial='yly_maxt,yly_pcpn', help_text=HELP_TEXTS['comma_elements'])
+            self.fields['grid'] = forms.ChoiceField(choices=([('21', 'PRISM')]), help_text=HELP_TEXTS['grids'])
+        elif temporal_resolution == 'dly':
+            self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
+            self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
         if select_grid_by == 'point':
             self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin, help_text=HELP_TEXTS['date'])
         else:
             self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=yesterday, help_text=HELP_TEXTS['date'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=today, help_text=HELP_TEXTS['date'])
-        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
         self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
@@ -438,13 +486,12 @@ class GridDataForm3(forms.Form):
     def __init__(self, *args, **kwargs):
         select_grid_by = kwargs.get('initial', {}).get('select_grid_by', None)
         data_format =  kwargs.get('initial', {}).get('data_format', None)
+        temporal_resolution = kwargs.get('initial', {}).get('temporal_resolution', None)
         super(GridDataForm3, self).__init__(*args, **kwargs)
 
-        if select_grid_by is None:
-            select_grid_by = self.data.get('select_grid_by')
-        if data_format is None:
-            data_format = self.data.get('data_format')
-
+        if select_grid_by is None:select_grid_by = self.data.get('select_grid_by')
+        if data_format is None:data_format = self.data.get('data_format')
+        if temporal_resolution is None:temporal_resolution = self.data.get('temporal_resolution')
         self.fields['user_name'] = MyNameField(initial='Your Name', help_text = 'Enter a user name without special characters.Example: first name initial + last name.')
         self.fields['email'] = forms.EmailField(initial='Your e-mail', help_text='Enter a valid e-mail address at wich we can reach you.')
 
@@ -454,11 +501,17 @@ class GridDataForm3(forms.Form):
             self.fields['state'] = forms.ChoiceField(initial=kwargs.get('initial', {}).get('state', None), choices=STATE_CHOICES, help_text='US state abbreviation.')
         elif select_grid_by == 'bbox':
             self.fields['bounding_box'] = BBoxField(initial=kwargs.get('initial', {}).get('bounding_box', None), help_text=HELP_TEXTS['bbox'])
-
-        self.fields['elements'] = MultiElementField(initial=kwargs.get('initial', {}).get('elements', None), help_text=HELP_TEXTS['comma_elements'])
+        if temporal_resolution in ['mly', 'yly']:
+            if temporal_resolution == 'mly':
+                self.fields['elements'] = MultiPRISMElementField(initial='mly_maxt,mly_pcpn', help_text=HELP_TEXTS['comma_elements'])
+            else:
+                self.fields['elements'] = MultiPRISMElementField(initial='yly_maxt,yly_pcpn', help_text=HELP_TEXTS['comma_elements'])
+            self.fields['grid'] = forms.ChoiceField(choices=([('21', 'PRISM')]), help_text=HELP_TEXTS['grids'])
+        else:
+            self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
+            self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
         self.fields['start_date'] = MyDateField(max_length=10, min_length=8, initial=kwargs.get('initial', {}).get('start_date', None), help_text=HELP_TEXTS['date'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=kwargs.get('initial', {}).get('end_date', None), help_text=HELP_TEXTS['date'])
-        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, initial=kwargs.get('initial', {}).get('grid', None), help_text=HELP_TEXTS['grids'])
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='txt', help_text=HELP_TEXTS['data_format'])
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial=kwargs.get('initial', {}).get('delimiter', None), help_text='Delimiter used to seperate data values.')
@@ -577,11 +630,11 @@ class GPTimeSeriesForm(forms.Form):
             if grid is None:grid=self.data.get('grid')
 
             if lat is None:
-                 self.fields['lat'] = forms.FloatField(initial='41.8', required=True, help_text='Valid latitude.')
+                 self.fields['lat'] = forms.FloatField(initial='38.86', required=True, help_text='Valid latitude.')
             else:
                 self.fields['lat'] = forms.FloatField(initial=lat, required=True, help_text='Valid latitude.')
             if lon is None:
-                 self.fields['lon'] = forms.FloatField(initial='-77.7', required=True, help_text='Valid longitude.')
+                 self.fields['lon'] = forms.FloatField(initial='-119.76', required=True, help_text='Valid longitude.')
             else:
                 self.fields['lon'] = forms.FloatField(initial=lon, required=True, help_text='Valid longitude.')
             if element is None:
@@ -593,7 +646,7 @@ class GPTimeSeriesForm(forms.Form):
             else:
                 self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=start_date, help_text=HELP_TEXTS['date'])
             if end_date is None:
-                self.fields['end_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=today, help_text=HELP_TEXTS['date'])
+                self.fields['end_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=yesterday, help_text=HELP_TEXTS['date'])
             else:
                 self.fields['end_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=end_date, help_text=HELP_TEXTS['date'])
             if grid is None:

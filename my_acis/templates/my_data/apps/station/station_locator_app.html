@@ -5,10 +5,12 @@
 
 {% block content %}
 
-<p align="center">You are here 
-<a href="{{URL_PREFIX}}sw_ckn/home/">HOME></a>
-<a href="{{URL_PREFIX}}sw_ckn/main_map/">RESOURCES></a>
-<a href="{{URL_PREFIX}}sw_ckn/station_finder/">STATION FINDER</a>
+<p align="center">You are here
+    <a href="{{HOME_URL}}">HOME></a>
+    <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
+    <a href="{{TOOLS_URL}}">TOOLS></a>
+    <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
+    <a href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a>
 
 <div class="container">
     <div class="center-left" style="border:none;">
@@ -28,7 +30,7 @@
         <div align="center" id="tool_info" style="display:none;">
             <p>Tool to locate ACIS stations that have data for user choosen list of elements and  data range</p>
             <p>Element Choices:</p>
-            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0"/>
+            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0"/>
         </div>
 
         <div align="center" id="how_to_head"></div>
@@ -39,13 +41,6 @@
             <p>Choose a station selection method. This will define the type of area of whose station data you are interested in.</p>
             <li>Explanation of station selection choices:</li>
                 <ul>
-                    <!--<li>Station Selection = "Individual Station". Enter the Station Id of choice. If you don't know your station id, find it here:</li>
-                    <a href="{{URL_PREFIX}}sw_ckn/station_finder">Station Finder</a>
-                    or here:
-                    <a class="docu_long"target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">More on station Ids</a>
-                    
-                    <li>Station Selection = "Comma separated list of stations". Enter multiple station ids, separated by a comma.</li>
-                    -->
                     <li>Station Selection = "County FIPS code". Find data for all stations in a US county of your choice.</li>
                     <a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a>
                     <li>Station Selection = "Climate Division".  Find data for all stations in a US climate division of your choice.</li>
@@ -57,7 +52,7 @@
                     <li>Station Selection = "State". Find data for all stations in a US state of your choice.</li>
                     <li>Station Selection = "Bounding Box". Find data for all stations in a bounding box of your choice. A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. Please enter them in this order.</li>
             <li>Enter a comma seperated list of elements from the following otions</li>
-            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0"/></li>
+            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_stn.png" id="ACISElementChoices" width="450" height="450" border="0"/></li>
             <li>Start and end date should be 8 characters long and of form yyyymmdd. Alternativly you can enter
             'por' if you are interested in the period of record for this station.</li>
             <li>If interested in period of record, type <font color="#A00000">
@@ -104,7 +99,7 @@
                     <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                     {%ifequal field.label "Elements" %}
                         <div class="pop-up">
-                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices.png" id="ACISElementChoices" width="450" height="450" border="0">
+                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0">
                         </div>
                     {%else%}
                         <div class="pop-up"><p>{{field.help_text}}</p></div>
@@ -143,7 +138,9 @@
 
         <br /><br />
         <input type="hidden" id="URL_PREFIX" name="variable" value="{{ URL_PREFIX }}">
-        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">       
+        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">      
+        <input type="hidden" id="DATA_URL" name="DATA_URL" value="{{DATA_URL}}">
+        <input type="hidden" id="TOOLS_URL" name="TOOLS_URL" value="{{TOOLS_URL}}">
 
         {%if json_file%}
             <input type="hidden" id="json_file" name="variable" value="{{ json_file }}">
