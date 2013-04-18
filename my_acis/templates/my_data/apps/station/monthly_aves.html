@@ -31,7 +31,7 @@
                     </td>
                 </tr>
                 {%ifequal field.label "Station id"%}
-                    <tr><td></td><td><a target="_blank" href="/csc/sw_ckn/station_finder/">Station Finder</a></td><td></td></tr>
+                    <tr><td></td><td><a target="_blank" href="/csc/sw_ckn/apps/station/station_locator/">Station Finder</a></td><td></td></tr>
                 {%endifequal%}
                {%if field.errors%}
                  <tr><td></td><td>{{field.errors}}</td><td></td></tr>
@@ -113,15 +113,19 @@
         {%if meta%}
             <p class="pop_link" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
             <div id="metadata" style="display:none;">
-                {% for key, val in meta.items %}
-                    <p> {{key}}: {{val}} </p>
+                {% for val in meta %}
+                    <p>{{val}} </p>
                 {%endfor%}
             </div>
         {%endif%}
 
         {%if results%}
             <p class="pop_link" onClick="ShowHide('averaged_data')"><u>Click here for averaged data behind this graphic</u></p>
-            <div id="averaged_data" width="450" height="450" border="0" style="display:none;">{{averaged_data}}</div>
+            <div id="averaged_data" width="450" height="450" border="0" style="display:none;">
+            {% for el, vals in averaged_data.items%}
+                <p>{{el}} : {{vals}} 
+            {%endfor%}
+            </div>
             <a href="{{DATA_URL}}station/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}">Get raw data behind this graphic here!</a>
         {%endif%}
     </div>

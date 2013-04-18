@@ -655,7 +655,7 @@ class GPTimeSeriesForm(forms.Form):
                 self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, initial=grid, help_text=HELP_TEXTS['grids'])
 class StationLocatorForm0(forms.Form):
     select_stations_by = forms.ChoiceField(choices=STN_FIND_CHOICES_SHORT, required=False, initial='southwest', help_text=HELP_TEXTS['select_stations_by'])
-    element_selection = forms.ChoiceField(choices=([('T', 'Pick individual elements'),('F', 'All Acis elements')]), required=False, initial='F', help_text='Only look for stations that have data for certain elements.')
+    element_selection = forms.ChoiceField(choices=([('T', 'Choose climate elements'),('F', 'Any climate element')]), required=False, initial='F', help_text='Only look for stations that have data for certain elements.')
 class StationLocatorForm1(forms.Form):
     def __init__(self, *args, **kwargs):
         select_stations_by = kwargs.get('initial', {}).get('select_stations_by', None)

@@ -80,7 +80,7 @@
             <img class="map" src="{{ MEDIA_URL }}img/ToolProduct.png">
         {%endif%}
         {%if monitor_page%}
-            <img class="map" src="{{ MEDIA_URL }}img/Monitoring.png">
+            <img class="map" src="{{ MEDIA_URL }}img/Monitoring2.png">
         {%endif%}
         {%if intro_page%}
             <img class="map" src="{{ MEDIA_URL }}img/AboutUs.png">
@@ -94,23 +94,22 @@
     <!-- Nav bar at top of page-->
     <div class="breadcrumbs">
     {% block breadcrumbs %}
-    <li><a href="{{HOME_URL}}">HOME</a>
-    <li><a href="{{SW_CKN_URL}}main_map">RESOURCES</a>
-    <li><a href="{{SW_CKN_URL}}about_us/">ABOUT US</a>
+    <li><a href="{{HOME_URL}}"><font size="3">HOME |</font></a>
+    <li><a href="{{SW_CKN_URL}}about_us/"><font size="3">ABOUT US |</font></a>
     <ul>
         <li><a href="{{SW_CKN_URL}}about_us/">Overview</a></li>
         <li><a href="{{SW_CKN_URL}}who_we_are/">&nbsp;&nbsp;Who we are</a></li>
         <li><a href="{{SW_CKN_URL}}what_we_do/">&nbsp;&nbsp;What we do</a></li>
         <li><a href="{{SW_CKN_URL}}contact_us/">&nbsp;&nbsp;Contact Us</a></li>
     </ul></li>
-    <li><a href="{{DATA_URL}}">DATA PORTAL </a>
+    <li><a href="{{DATA_URL}}"><font size="3">DATA PORTAL |</font></a>
     <ul>
         <li><a href="{{DATA_URL}}">All Data</a></li>
         <li><a href="{{TOOLS_URL}}station/station_finder/">&nbsp;&nbsp;Station Finder</a></li>
         <li><a href="{{DATA_URL}}station/">&nbsp;&nbsp;Station Data</a></li>
         <li><a href="{{DATA_URL}}gridded/">&nbsp;&nbsp;Gridded Data</a></li>
     </ul></li>
-    <li><a href="{{TOOLS_URL}}">TOOLS</a>
+    <li><a href="{{TOOLS_URL}}"><font size="3">TOOLS |</font></a>
     <ul>
         <li><a href="{{TOOLS_URL}}">Overview</a></li>
         <li><a href="{{TOOLS_URL}}station/">&nbsp;&nbsp;Station Tools</a></li>
@@ -118,7 +117,8 @@
         <li><a href="{{TOOLS_URL}}gis/">&nbsp;&nbsp;Geospatial&nbsp;&nbsp;Tools</a></li>
         <li><a target="_blank" href="/csc/wrcc_apps/">&nbsp;&nbsp;WRCC-SOD</a></li>
     </ul>
-    <li><a href="{{SW_CKN_URL}}monitoring">MONITORING</a>
+    <li><a href="{{SW_CKN_URL}}monitoring"><font size="3">MONITORING |</font></a>
+    <li><a href="{{SW_CKN_URL}}main_map"><font size="3">RESOURCES |</font></a>
     </li>
     
     {% endblock %}

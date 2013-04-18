@@ -25,7 +25,8 @@
                     </div>
                     </td><td>
                     <!--<img  class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,docu,'Docu_CalTracker')">-->
-                    <img  class="qmark" style="border:4px solid #FF007F" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CalTracker')">
+                    <!--style="border:4px solid #FF007F"-->
+                    <img  class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CalTracker')">
                     </td></tr>
                     <tr><td>                    
                     <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/nev-mon/index.html" class="trigger" target="_blank">Nevada Climate Tracker(<font color="red">NV</font>)</a>
@@ -136,7 +137,7 @@
 
         <div class="major-right">
             <!-- Application documentation -->
-            <div class="docu" id="Docu_CalTracker" style="display:block;"></div>
+            <div class="docu" id="Docu_CalTracker" style="display:none;"></div>
                 <script type="text/javascript">                        
                 $("#Docu_CalTracker").load("{{MEDIA_URL}}html/commons.html #Docu_CalTracker");
                 </script>

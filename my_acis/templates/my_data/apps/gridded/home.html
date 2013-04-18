@@ -40,7 +40,8 @@
                     <p><font size="4">Climate Analysis and Mapping Tool.</font></p>
                 </div>
                 </td><td>
-                <img class="qmark" style="border:4px solid #FF007F" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_WESTMAP')">
+                <!--style="border:4px solid #FF007F" -->
+                <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_WESTMAP')">
                 </td></tr>
             </table>
  
@@ -85,7 +86,7 @@
                 <script type="text/javascript">                        
                 $("#Docu_NevTracker").load("{{MEDIA_URL}}html/commons.html #Docu_NevTracker");
                 </script>
-            <div class="docu" id="Docu_WESTMAP" style="display:block;"></div>
+            <div class="docu" id="Docu_WESTMAP" style="display:none;"></div>
                 <script type="text/javascript">                        
                 $("#Docu_WESTMAP").load("{{MEDIA_URL}}html/commons.html #Docu_WESTMAP");
                 </script>

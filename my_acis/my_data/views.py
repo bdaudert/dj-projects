@@ -79,7 +79,7 @@ def help(request):
 
 def main_map(request):
     context = {
-        'title': 'Resurces',
+        'title': 'Resources',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
         'main_page':True
     }
@@ -143,7 +143,7 @@ def contact_us(request):
 
 def dashboard(request):
     context = {
-        'title': 'Monitoring',
+        'title': 'Monitoring: Climate Dashboard',
         'monitor_page':True
     }
     #Find mon, year to locate snotel map
@@ -154,6 +154,10 @@ def dashboard(request):
     if len(month) ==1:
         month = '0%s' %month
     context['month'] = month
+    if month == '01':
+        context['month_nadm'] == '12'
+    else:
+        context['month_nadm'] = str(int(month.lstrip('0')) - 1)
     context['year'] = year
     context['year_short'] = '%s%s' % (year[-2], year[-1])
 
@@ -207,7 +211,10 @@ def data_station(request):
             else:
                 initial_params_1['select_stations_by'] = form0_point.cleaned_data['select_stations_by']
 
-
+            if form0_point in request.POST:
+                if form0_point.cleaned_data['select_stations_by'] == 'bbox':
+                    context['need_map_bbox'] = True
+                    context['bounding_box'] = '-90,40,-88,41'
             form1_point = forms.PointDataForm1(initial=initial_params_1)
             context['form1_point'] = form1_point
 
@@ -225,6 +232,9 @@ def data_station(request):
         if elements is not None:context['elements'] = elements
 
         if form1_point.is_valid():
+            if form1_point.cleaned_data['select_stations_by'] == 'bbox':
+                context['need_map_bbox'] = True
+                context['bounding_box'] = form1_point.cleaned_data['bounding_box']
             context['cleaned'] = form1_point.cleaned_data
             #Check if data request is large,
             #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
@@ -239,6 +249,9 @@ def data_station(request):
             days = (e_date - s_date).days
             #if time range > 1 year or user requests data for more than 1 station, large request via ftp
             if days > 366 and 'station_id' not in form1_point.cleaned_data.keys():
+                context['large_request'] = \
+                'At the moment we do not support data requests that exceed 1 year for multiple station. Please limit your request to one station at a time or a date range of one year or less. We will support larger requests in the near future.'
+                '''
                 context['form3_point_ready'] = True
                 context['large_request'] = 'You requested a large amount of data.Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
                 initial_params_2 = form1_point.cleaned_data
@@ -248,6 +261,7 @@ def data_station(request):
                     initial_params_2['station_ids'] = ','.join([str(stn) for stn in initial_params_2['station_ids']])
                 form3_point = forms.PointDataForm3(initial=initial_params_2)
                 context['form3_point'] = form3_point
+                '''
                 return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
             else:
                 resultsdict = AcisWS.get_point_data(form1_point.cleaned_data, 'sodlist_web')
@@ -265,7 +279,7 @@ def data_station(request):
                 context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
                 if 'delimiter' in form1_point.cleaned_data.keys():
                     if str(form1_point.cleaned_data['delimiter']) == 'comma':delimiter = ','
-                    if str(form1_point.cleaned_data['delimiter']) == 'tab':delimiter = '  '
+                    if str(form1_point.cleaned_data['delimiter']) == 'tab':delimiter = ' '
                     if str(form1_point.cleaned_data['delimiter']) == 'colon':delimiter = ':'
                     if str(form1_point.cleaned_data['delimiter']) == 'space':delimiter = ' '
                     if str(form1_point.cleaned_data['delimiter']) == 'pipe':delimiter = '|'
@@ -434,7 +448,11 @@ def data_gridded(request):
             int(form1_grid.cleaned_data['end_date'][6:8]))
             days = (e_date - s_date).days
             #if time range > 1 day and user requests data for more than 1 station, large request via ftp
-            if (days > 1 and  'location' not in form1_grid.cleaned_data.keys()) or (days > 366 and 'location' in form1_grid.cleaned_data.keys()):
+            #if (days > 1 and  'location' not in form1_grid.cleaned_data.keys()) or (days > 366 and 'location' in form1_grid.cleaned_data.keys()):
+            if (days > 7 and  'location' not in form1_grid.cleaned_data.keys()):
+                context['large_request'] = \
+                'At the moment we do not support data requests that exceed 7 days for multiple station. Please limit your request to one grid point at a time or a date range of one week or less. We will support larger requests in the near future.'
+                '''
                 context['form3_grid_ready'] = True
                 context['large_request'] = \
                 'You requested a large amount of data.Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
@@ -443,6 +461,7 @@ def data_gridded(request):
                 initial_params_2['elements'] = ','.join(initial_params_2['elements'])
                 form3_grid = forms.GridDataForm3(initial=initial_params_2)
                 context['form3_grid'] = form3_grid
+                '''
                 return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
             else:
                 if 'location' in form1_grid.cleaned_data.keys():
@@ -486,7 +505,7 @@ def data_gridded(request):
 
                 if 'delimiter' in form1_grid.cleaned_data.keys():
                     if str(form1_grid.cleaned_data['delimiter']) == 'comma':delimiter = ','
-                    if str(form1_grid.cleaned_data['delimiter']) == 'tab':delimiter = '  '
+                    if str(form1_grid.cleaned_data['delimiter']) == 'tab':delimiter = ' '
                     if str(form1_grid.cleaned_data['delimiter']) == 'colon':delimiter = ':'
                     if str(form1_grid.cleaned_data['delimiter']) == 'space':delimiter = ' '
                     if str(form1_grid.cleaned_data['delimiter']) == 'pipe':delimiter = '|'
@@ -768,7 +787,26 @@ def monthly_aves(request):
                         results[el_idx]['state'] = str(req['meta']['state'])
                 if 'meta' in req.keys():
                     Meta = WRCCUtils.format_stn_meta(req['meta'])
-                    context['meta'] = Meta
+                    #format meta data
+                    elements = ', '.join(form_graphs.cleaned_data['elements'])
+                    valid_dr = []
+                    for idx, el in enumerate(form_graphs.cleaned_data['elements']):
+                        try:
+                            valid_dr.append('%s: %s - %s ' %(str(el),str(Meta['valid_daterange'][idx][0]),str(Meta['valid_daterange'][idx][1])))
+                        except:
+                            valid_dr.append(str(el))
+
+                    meta = ['Station Name: ' +  Meta['name'],
+                            'Elements :' + elements,
+                            'Valid Daterange: ' + ', '.join(valid_dr),
+                            'Lat, Lon: ' +  str(Meta['ll']),
+                            'Elevation :' +  Meta['elev'],
+                            'State: ' + Meta['state'],
+                            'County: ' +  Meta['county'],
+                            'Climate Division: ' + Meta['climdiv'],
+                            'Unique Identifyer: ' + Meta['uid']
+                        ]
+                    context['meta'] = meta
                 context['results'] = results
                 #save to json file (necessary since we can't pass list, dicts to js via hidden vars)
                 #double quotes needed for jquery json.load
@@ -1021,6 +1059,10 @@ def station_locator_app(request):
         context['form1'] = form1
         context['form1_ready'] = True
         if form1.is_valid():
+            if 'elements' in form1.cleaned_data.keys():
+                element_list = ','.join(form1.cleaned_data['elements'])
+            else:
+                element_list = 'Any climate element'
             select_stations_by = form1.cleaned_data['select_stations_by']
             if 'station_id' in form1.cleaned_data.keys():by_type = 'station_id';val = form1.cleaned_data['station_id']
             if 'station_ids' in form1.cleaned_data.keys():by_type = 'station_ids';val = form1.cleaned_data['station_ids']
@@ -1066,9 +1108,6 @@ def station_locator_app(request):
             context['empty_json'] = False
             context['form1_ready'] = False
             context['show_legend'] = True
-        #form1 = set_as_form(request,'StationLocatorForm1')
-        #context['form1'] = form1
-        #context['form1_ready'] = True
     return render_to_response('my_data/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
 
 

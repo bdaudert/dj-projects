@@ -96,6 +96,7 @@ function initialize_station_finder() {
         var map = new google.maps.Map(document.getElementById("map"),mapOptions);
         
         var legend = document.getElementById('map_legend');
+        //Sort netork_codes according to Kelly's prefernce:
         for (var key in data.network_codes) {
             var name = data.network_codes[key];
             var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
@@ -176,8 +177,8 @@ function initialize_station_finder() {
                 data_portal_link = data_portal_link + '&elements=' + elements;
                 app_portal_link = app_portal_link + '&elements=' + elements;
             }
-            data_portal_link = data_portal_link + '">Get Data for this Station </a>'
-            app_portal_link = app_portal_link + '">Run an analysis on this Station</a>'
+            data_portal_link = data_portal_link + '">Obtain Raw Data for this Station </a>'
+            app_portal_link = app_portal_link + '">Find Tools/Applications for this Station</a>'
             var contentString = '<div id="MarkerWindow">'+
                 wrcc_info_link + '<br />' +
                 data_portal_link + '<br />' +

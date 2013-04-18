@@ -16,12 +16,18 @@ function HighLight(node,DivClass,DivId) {
     //Hide all divs with class name DivClass except the one of id=DivId 
     var divs_to_hide = document.getElementsByClassName(DivClass);
     div_to_show = document.getElementById(DivId)
-    for (i=0;i<divs_to_hide.length;i++){
-        if (divs_to_hide[i] == div_to_show){
-            divs_to_hide[i].style.display ="block";
-        }
-        else {
-            divs_to_hide[i].style.display ="none";
+    if (div_to_show.style.display == "block"){
+        div_to_show.style.display == "block";
+        div_to_show.style.border="none";
+    }
+    else{
+        for (i=0;i<divs_to_hide.length;i++){
+            if (divs_to_hide[i] == div_to_show){
+                divs_to_hide[i].style.display ="block";
+            }
+            else {
+                divs_to_hide[i].style.display ="none";
+            }
         }
     }
 }
@@ -66,8 +72,8 @@ function popup_window(mylink, windowname)
     if (! window.focus)
     {
         return true;
-        var href;
     }
+    var href;
     if (typeof(mylink) == 'string')
     {
         href=mylink;
@@ -76,7 +82,11 @@ function popup_window(mylink, windowname)
     {
         href=mylink.href;
     }
-    window.open(href, windowname, 'width=400,height=200,scrollbars=yes');
+    //var height = 800;
+    //var width = 800;
+    var height = window.height - 50;
+    var width = window.width - 50;
+    window.open(href, windowname, 'width=' + width + ',height=' + height + ',scrollbars=yes');
     return false;
 }
 

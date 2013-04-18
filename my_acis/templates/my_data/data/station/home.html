@@ -61,8 +61,13 @@
                 {{field}}
             {%else%}
                 <tr>
-                    <td>{{field.label}}:</td>
-                    <td>{{field}}</td>       
+                    {%if field.label == "Bounding box" and bounding_box %}
+                        <td>Bounding Box: </td>
+                        <td><input type="text" name="bounding_box" id="bounding_box" value="{{bounding_box}}"></td>
+                    {%else%}
+                        <td>{{field.label}}:</td>
+                        <td>{{field}}</td>
+                    {%endif%}       
                     <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>                            
                     {%ifequal field.label "Elements" %}
                         <div class="pop-up" onClick="ShowHide(this)">
@@ -74,10 +79,10 @@
                     </td>
                 </tr>
                 {%ifequal field.label "Station id"%}
-                    <tr><td></td><td align="right"><a href="/csc/sw_ckn/apps/station/station_locator/">Station Finder</a></td></tr>
+                    <tr><td></td><td align="right"><a target="_blank" href="/csc/sw_ckn/apps/station/station_locator/">Station Finder</a></td></tr>
                 {%endifequal%}
                 {%ifequal field.label "Station ids"%}
-                    <tr><td></td><td align="right"><a href="/csc/sw_ckn/apps/station/station_locator/">Station Finder</a></td></tr>
+                    <tr><td></td><td align="right"><a target="_blank" href="/csc/sw_ckn/apps/station/station_locator/">Station Finder</a></td></tr>
                 {%endifequal%}
                 {%ifequal field.label "County" %}
                     <tr><td></td><td align="right"><a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a></td></tr>
@@ -92,7 +97,7 @@
                     <tr><td></td><td align="right"><a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a></td></tr>
                 {%endifequal%}
                 {%ifequal field.label "Bounding box" %}
-                    <tr><td></td><td align="right"><p class="error">Map interface coming soon</p></td></tr>
+                    <tr><td></td><td align="right"><p class="error">Use map to define your Bounding Box</p></td></tr>
                 {%endifequal%}
                 {%if field.errors%}
                     <tr><td></td><td>{{field.errors}}</td><td></td></tr>
@@ -108,15 +113,25 @@
         {%endif%}
     {%endif%}
         <br />
+       {%if need_map_bbox  and results %}
+            <p class="error">Click and drag to define your Bounding Box!</p>
+            <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+            <div id="map" style="width: 100%; height:400px;"></div>
+            <script type="text/javascript">
+                initialize_bbox_map()
+            </script>
+        {%endif%}
+        <br />
     </div>
     <div class="major-right" style="border:none;">
-       <p class="pop_link" align="center" onClick="ShowHide('Docu_ACIS')"><img class="logo"         
-        src="{{MEDIA_URL}}img/ACIS-logo.png"><u>CLICK HERE TO SEE/HIDE WHAT'S IN ACIS?</u></p>
+        <!--
+       <p class="pop_link" align="left" onClick="ShowHide('Docu_ACIS')"><img class="logo"         
+        src="{{MEDIA_URL}}img/ACIS-logo.png"><u>Click here to see/hide what's in ACIS?</u></p>
         <div id="Docu_ACIS" style="display:none;"></div>
             <script type="text/javascript">                        
             $("#Docu_ACIS").load("{{MEDIA_URL}}html/commons.html #Docu_ACIS");
             </script>
-
+        -->
         <div class="docu" id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
@@ -235,6 +250,15 @@
                     {{results.stn_data|lookup:stn}}                    
                 {%endif%}
             {%endfor%}
+        {%else%}
+        {%if need_map_bbox %}
+            <p class="error">Click and drag to define your Bounding Box!</p>
+            <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+            <div id="map" style="width: 100%; height:400px;"></div>
+            <script type="text/javascript">
+                initialize_bbox_map()
+            </script>
+        {%endif%}    
         {%endif%}
 
   <!-- Footer -->
