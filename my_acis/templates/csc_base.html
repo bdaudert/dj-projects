@@ -60,9 +60,11 @@
 <body>
     <!-- Header -->
     <div class="header">
-        <h1 align="center">Southwest Climate Knowledge Network</h1>
-        <h2 align="center">SW-CKN</h2>
-        <a target="_blank" href="http://www.swcsc.arizona.edu/"><img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png"></a>
+        
+        <div id="header"></div>
+            <script type="text/javascript">$("#header").load("{{MEDIA_URL}}html/commons.html .header");</script>
+        <!--<h1 align="center">Southwest Climate Knowledge Network</h1>
+        <a target="_blank" href="http://www.swcsc.arizona.edu/"><img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png"></a>-->
         {%if home_page%}
             <img class="map_2" src="{{ MEDIA_URL }}img/SouthWest.jpg">
         {%endif%}
@@ -148,6 +150,7 @@
     </div> <!--end content-header-->
 
     <div class="content">
+    <p class="error" align="center" style="font-size:large;">You can make these pages stellar! <img class="icon" src="{{MEDIA_URL}}img/Stellar.png"> E-mail ANY suggestions to csc-wrcc@dri.edu</p>
     {% block content %}
         <input type="hidded" name="MEDIA_URL" id="MEDIA_URL" value={{MEDIA_URL}} />
     {% endblock %}

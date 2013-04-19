@@ -5,7 +5,7 @@
     <div class="header">
         <h1 align="center">Southwest Climate Knowledge Network</h1>
         <a target="_blank" href="http://www.swcsc.arizona.edu/"><img class="logo" src="/csc/media/img/SW-CSC-LOGO.png"></a>
-        <p class="error" align="center"><b><img class="logo" src="/csc/media/Links.png">Connecting Climate Data, Tools and Information with User Needs</b></p>
+        <p class="error" align="center"><b><img class="icon" src="/csc/media/img/Links.png">Connecting Climate Information, Data and Tools with User Needs</b></p>
     </div>
 
     <div class="searchbox">
@@ -58,10 +58,10 @@
 <div id="Docu_select_stations_by">
 <p><b>"Individual Station"</b>:<br /> Use this option if you looking for an individual station. You will need to know your station identification number. If you don't know your station id, find it here:</p>
 &nbsp;&nbsp;&nbsp;<a target="_blank" href="/csc/sw_ckn/apps/station/station_finder/">Station Finder</a>
-or here:<a class="docu_long"target="_blank" href="{{ MEDIA_URL }}html/station_id_system_docu.html">More on station Ids</a>
+or here:<a class="docu_long"target="_blank" href="/csc/media/html/stn_id_system_docu.html">More on station Ids</a>
 <p><b>"Comma separated list of stations"</b>:<br /> Enter multiple station identifiers, separated by a comma. Again, you will need to know your station ids. Use the Station Finder if needed.</p>
 <p><b>"County FIPS code"</b>:<br /> Use this option if you are looking for all stations in a particular US county.</p>
-&nbsp;&nbsp;&nbsp;<a target="_blank" href="{{MEDIA_URL}}html/US_FIPS_CountyCodes.htm">List of US FIPS County Codes</a>
+&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a>
 <p><b>"Climate Division"</b>:<br /> Use this option if you are looking for all stations in a particular US climate division.</p>
 &nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a>
 <p><b>"County Warning Area"</b>:<br /> Use this option if you are looking for all stations in a US county warning area."</p>
@@ -618,4 +618,261 @@ distinct climate regions in California.</p>
     <img class="icon" src="/csc/media/img/SadFace.png">
     <p class="error"> But coming soon to a screen near you!</p>
     <img class="icon" src="/csc/media/img/HappyFace.png">
+</div>
+
+
+<!--Element Choice docu for data portal-->
+<div id="Docu_Elements">
+
+    <div id ="maxt">
+        <h3><a name="maxt">Maximum Temperature</a></h3>
+        <p>
+        <font color="#FF007F">Temporal Resolution: </font>Daily, Monthly(PRISM), Yearly(PRISM)<br />
+        <font color="#FF007F">Available Units: </font>Fahrenheit<br />
+        </p>
+    </div>
+
+    <div id ="mint">
+        <h3><a name="mint">Minimum Temperature</a></h3>
+        <p>
+        <font color="#FF007F">Temporal Resolution: </font>Daily, Monthly(PRISM), Yearly(PRISM)<br />
+        <font color="#FF007F">Available Units: </font>Fahrenheit<br />
+        </p>
+    </div>
+
+    <div id ="avgt">
+        <h3><a name="avgt">Average Temperature</a></h3>
+        <p>
+        <font color="#FF007F">Temporal Resolution: </font>Daily<br />
+        <font color="#FF007F">Available Units: </font>Fahrenheit<br />
+        </p>
+    </div>
+
+    <div id ="obst">
+        <h3><a name="obst">Observation Time Temperature</a></h3>
+        <p>
+        <font color="#FF007F">Temporal Resolution: </font>Daily<br />
+        <font color="#FF007F">Available Units: </font>Fahrenheit<br />
+        </p>
+    </div>
+
+    <div id ="pcpn">
+        <h3><a name="pcpn">Precipitation</a></h3>
+        <p>
+        <font color="#FF007F">Temporal Resolution: </font>Daily, Monthly(PRISM), Yearly(PRISM)<br />
+        <font color="#FF007F">Available Units: </font>Inches<br />
+        </p>
+    </div>
+
+    <div id ="snow">
+        <h3><a name="maxt">Snowfall</a></h3>
+        <p>
+        <font color="#FF007F">Temporal Resolution: </font>Daily<br />
+        <font color="#FF007F">Available Units: </font>Inches<br />
+        </p>
+    </div>
+
+    <div id ="snwd">
+        <h3><a name="snwd">Snowdepth</a></h3>
+        <p>
+        <font color="#FF007F">Temporal Resolution: </font> Daily<br />
+        <font color="#FF007F">Available Units: </font>Inches<br />
+        </p>
+    </div>
+
+    <div id ="hdd">
+        <h3><a name="hdd">Heating Degree Days</a></h3>
+        <p>
+        <font color="#FF007F">Temporal Resolution: </font> Daily<br />
+        <font color="#FF007F">Available Units: </font>Fahrenheit <br />
+        </p>
+    </div>
+
+    <div id ="cdd">
+        <h3><a name="cdd">Cooling Degree Days</a></h3>
+        <p>
+        <font color="#FF007F">Temporal Resolution: </font> Daily<br />
+        <font color="#FF007F">Available Units: </font>Fahrenheit <br />
+        </p>
+    </div>
+
+    <div id ="gdd">
+        <h3><a name="gdd">Growing Degree Days</a></h3>
+        <p>
+        <font color="#FF007F">Temporal Resolution: </font>Daily<br />
+        <font color="#FF007F">Available Units: </font>Fahrenheit <br />
+        </p>
+    </div>
+
+    <div id ="dewpt">
+        <h3><a name="dept">Dewpoint</a></h3>
+        <p>
+        <font color="#FF007F">Temporal Resolution: </font>Monthly(PRISM), Yearly(PRISM)<br />
+        <font color="#FF007F">Available Units: </font>Fahrenheit<br />
+        </p>
+    </div>
+</div>
+
+<div id="Docu_Networks">
+All weather and climate stations have an ID. Many stations serve as part of multiple networks, and have a different ID in each network system.
+</div>
+
+<div id="Docu_WBAN">
+<h2><a name="WBAN">WBAN - Weather-Bureau-Army-Navy</a></h2><p>WBAN numbers were the first major attempt at a coordinated station numbering scheme among several weather reporting authorities. Original participants in the WBAN number plans were the United States Weather Bureau, Air Force, Navy, and Army, and the Canadian Department of Transportation.</p><a target="_blank" href="http://www.ncdc.noaa.gov/homr/reports/platforms;jsessionid=D55ED65183545FEDA512F1D0F19BA064.lwf2">Download the official list of WBAN ids from NOAA</a>
+</div>
+
+<div id="Docu_COOP">
+<h2>COOP - Cooperative Observer Program </h2>
+<p>A cooperative station is a site where observations are taken or other services rendered by volunteers or contractors. More than 11,000 volunteers take observations on farms, in urban and suburban areas, National Parks, seashores, and mountaintops. Observers generally record temperature and precipitation daily and electronically send those reports daily to the Nataional Weather Serbvice (NWS) and the National Climatic Data Center (NCDC).The COOP was formally created in 1890 under the Organic Act. </p>
+<a target="_blank" href="http://www.nws.noaa.gov/om/coop/">More on COOP</a>
+<a target="_blank" href="http://www.ncdc.noaa.gov/homr/reports/platforms;jsessionid=D55ED65183545FEDA512F1D0F19BA064.lwf2">Download the official list of WBAN ids from NOAA</a>
+</div>
+
+<div id="Docu_FAA">
+<h2><a name="FAA">FAA - Federal Avaiation Administration</a></h2>
+<p>The FAA location identifier (FAA LID) is a 3- or 4-digit alphanumeric designator. The Civil Aeronautics Administration began publishing three-letter identifiers starting in the 1940s. These were mostly for internal use and did not start appearing in planning documents for pilots until the mid-1960s. Use of the FAA LID ceased for observational coding purposes in 1996, but it is still widely used for aeronautical purposes in the U.S. and in some meteorological discussion products. In many cases, a three-digit identifier can be "converted" to its ICAO form by adding the appropriate ICAO region letter as the first letter. However this is NOT a reliable rule, especially in Alaska and Hawaii. While ANC may translate correctly to PANC, there are many stations where this is not the case, such as BRW, which is PABR under the ICAO form. This is a significant source of errors in some crossreference tables.</p>
+<a target="_blank" href="http://www.faa.gov/air_traffic/weather/asos/">ASOS Stationfinder</a>
+</div>
+
+<div id="Docu_WMO">
+<h2><a name="WMO">WMO - World Meteorological Organization</a></h2>
+<p>The WMO identifier scheme was introduced in 1948 by the International Meteorological Organization (later the WMO) to support the "International Meteorological Code", which was put forward to replace numerous incompatible formats used by national weather agencies across the world. The WMO identifier, often called the "index number" relies on a 5-digit numeric code to identify a land weather station. The first two digits are referred to as the "block number" and refer to the geographic area (00-29 Europe, 30-59 Asia, 60-68 Africa, 69 special use, 70-79 North America, 80-89 South America, 90-99 Oceania). The last three digits are loosely referred to as the "station number". Fortunately the WMO provides free access to all WMO identifier assignments on its website. The code remains widely used in synoptic ("6-hourly") weather reports and particularly in upper air (radiosonde and rawinsonde) reports to this day.</p>
+<a target="_blank" href="http://www.nws.noaa.gov/tg/siteloc.shtml">WMO/ICAO Stationfinder</a>
+</div>
+
+<div id="Docu_ICAO">
+<h2><a name="ICAO">ICAO - International Civil Aviation Organization</a></h2>
+<p>The ICAO location indicator system was developed around 1955 by the International Civil Aviation Administration, updated as biannual amendmen
+ts until 1967 when the system was published formally. The ICAO code consists of 4-letter identifiers published at the state (national) level in 
+section GEN 2.4 of the ICAO-standardized Aeronautical Information Publication and then diffused by the ICAO to other countries. Some ICAO identi
+fiers are considered national-level indicators, used within the country but not published internationally. Some examples of nonpublished ICAO in
+dicators are the codes for minor airports in the United States (e.g. KCDS, Childress TX). Russia also has a number of stations beginning with th
+e letter X (the Russian letter "yer" as it appears on ITU-2 compliant teletype) for a handful of military airfields and domestic airports. As of
+ September 2010, there were 13,946 official ICAO assignments in effect.
+      A special note: In our MLID list above, we categorically prohibit WSR-88D radars from possessing an ICAO or FAA code, because this causes conflicts. For example, KGRK commonly refers to both an aerodrome and a radar site, when in fact they are separated by 35 miles.</p>
+<a target="_blank" href="http://www.nws.noaa.gov/tg/siteloc.shtml">WMO/ICAO Stationfinder</a>
+</div>
+
+<div id="Docu_GHCN">
+<h2><a name="GHCN">GHCN - Global Historical Climatology Network</a></h2>
+<p>GHCN -Daily is an integrated database of daily climate summaries from land surface stations across the globe. Like its monthly counterpart (GHCN-Monthly) , GHCN-Daily is comprised of daily climate records from numerous sources that have been integrated and subjected to a common suite of quality assurance reviews.The process of integrating data from multiple sources into the GHCN-Daily dataset takes place in three steps: screening the source data for stations whose identity is unknown or questionable; classifying each station in a source dataset either as one that is already represented in GHCN-Daily or as a new site; and mingling the data from the different sources. The first two of these steps are performed whenever a new source dataset or additional stations become available, while the actual mingling of data is part of the automated processing that creates GHCN-Daily on a regular basis.</p>
+<a target="_blank" href="http://www1.ncdc.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.txt">Official GHCN Station list</a>
+</div>
+
+<div id="Docu_NWSLI">
+<h2><a name="NWSLI">NWSLI - National Weather Service Location Identifier</a></h2>
+<p>The National Weather Service uses several schemes for identifying stations. It typically relies on the ICAO and WMO identifiers, although several weather forecast offices (WFOs) and weather radar sites that have moved away from airports have been given their own codes which do not conflict with existing codes. Recently it began using four-letter-plus-one-number identifiers for specialized weather requirements such as hydrometeorological stations. These are used by the USFS RAWS system, and by the stream gauges operated by the USGS, both of which report through GOES weather satellites operated by NOAA. These use three letters which are a mnemonic for the location, followed by the first letter of the U.S. state, followed by a numeral indicating the alphabetical order within that letter (for example, North Carolina stations end with N7). The mnemonic may be the nearest town, or the name of the stream, or a combination of the two; and the same names may be rearranged into different mnemonics for different nearby locations. For example, VING1 is the gauge at Vinings, Georgia, and is differentiated from other stations along the Chattahoochee River (such as CHAG1 in nearby Oakdale) which are also at the Atlanta city limit like Vinings is, and from other streams in Atlanta such as Peachtree Creek (AANG1).</p>
+<a target="_blank" href="http://www.nws.noaa.gov/om/osd/portal.shtml">NWS Stationfinder</a>
+</div>
+
+<div id="Docu_RCC">
+<h2><a name="RCC">RCC - Regional Climate Centers</a></h2>
+<p></p>
+</div>
+
+<div id="Docu_ThreadEx">
+<h2><a name="ThreadEx">ThreadEx</a></h2>
+<p>ThreadEx is a data set of extreme daily temperature and precipitation values for 270 locations in the United States. For each day of the year at each station, ThreadEx provides the top 3 record high and low daily maximum temperatures, the top 3 record high and low daily minimum temperatures, the top 3 daily precipitation totals, along with the years the records were set for the date. Many of the time series are available back to the 1800s AD. This archive was developed for the express purpose of conveying general climate perspectives information. It is not appropriate for climate research.</p>
+<a target="_blank" href="http://threadex.rcc-acis.org/links.html">ThreadEx Inventory page</a>
+</div>
+
+<div id="Docu_CoCoRaHS">
+<h2><a name="CoCoRaHS">CoCoRaHS - Community Collaborative Rain, Hail and Snow Network</a></h2>
+<p>The National Oceanic and Atmospheric Administration (NOAA) and the National Science Foundation (NSF) are major sponsors of CoCoRaHS. CoCoRaHS is a unique, non-profit, community-based network of volunteers of all ages and backgrounds working together to measure and map precipitation (rain, hail and snow). The network originated with the Colorado Climate Center at Colorado State University in 1998 thanks in part to the Fort Collins flood a year prior. </p>
+</div>
+<!--
+<a target="_blank" href="http://www.cocorahs.org/Stations/ListStations.aspx">CoCoRaHS Stationfinder</a>
+<h2>Sources</h2>
+<a href="http://www.nws.noaa.gov/om/coop/">NOAA's Coop pages</a><br />
+<a href="http://www.ncdc.noaa.gov/oa/climate/ghcn-daily/index.php?">NOAA'GHCN pages</a><br />
+<a href="http://climatedataguide.ucar.edu/guidance/noaa-threadex-long-term-station-extremes-america">NCAR's ThreadEx page</a><br />
+<a href="http://www.cocorahs.org/">CoCoRaHS Home page</a><br />
+<a href="http://www.weathergraphics.com/identifiers/">Weathergraphics</a><br />
+<a href="http://en.wikipedia.org/wiki/Location_identifier">Wikipedia Article on Identifiers</a>
+</div>-->
+
+<!--Docu Gridded Data sets-->
+<div id="Docu_NRCC_INT">
+    <h2>NRCC Interpolated/Hi-Res</h2>
+    <p><font color="#FF007F">Source: </font>Northeast  Regional Climate Center (NRCC)<br />
+    <font color="#FF007F">Domain: </font> Continental US/ East of Rockies</br>
+    <font color="#FF007F">Date Range: </font> 1950 - Present/2007 - Present<br />
+    <font color="#FF007F">Temporal Resolution: </font> Daily<br />
+    <font color="#FF007F">Spatial Resolution: </font> 5 km<br />
+    <font color="#FF007F">Climate Elements: </font>Maximum/Minimum Temperature, Precipitation<br />
+    <a href="http://www.nrcc.cornell.edu/">NRCC Home Pages</a>
+</div>
+
+<div id="Docu_PRISM">
+    <h2>PRISM</h2>
+    <p><font color="#FF007F">Source: </font> PRISM Climate Group<br />
+    <font color="#FF007F">Domain: </font> Continental US</br>
+    <font color="#FF007F">Date Range: </font> 1895 - Present<br />
+    <font color="#FF007F">Temporal Resolution: </font> Monthly, Yearly<br />
+    <font color="#FF007F">Spatial Resolution: </font> 4 km<br />
+    <font color="#FF007F">Climate Elements: </font>Maximum/Minimum Temperature, Precipitation, Dewpoint<br />
+    <font color="#FF007F">Version: 2.5-arcmin (4 km) MONTHLY</font><br />
+    <a href="http://www.prism.oregonstate.edu/">PRISM Home Page</a>
+</div>
+
+
+<div id="Docu_CRCM">
+    <h2>CRCM - Canadian Regional Climate Model</h2>
+    <p><font color="#FF007F">Source: </font>Ouranos Climate Simulation Team / UQAM via NARRCAP<br />
+    <font color="#FF007F">Domain: </font>US</br>
+    <font color="#FF007F">Date Range: </font>1970 - 2000, 2040 - 2070<br />
+    <font color="#FF007F">Temporal Resolution: </font>Daily<br />
+    <font color="#FF007F">Spatial Resolution: </font>50km><br />
+    <font color="#FF007F">Climate Elements: </font>Maximum/Minimum Temperature, Precipitation<br />
+    <a href="http://www.ouranos.ca/fr/programmation-scientifique/science-du-climat/simulations-climatiques/MRCC/eng/crcm.html">Full Description of the 
+CRCM Model</a><br />
+    <a href="http://www.ouranos.ca/">Ouranus Home Page</a><br />
+    <a href="http://www.narccap.ucar.edu/data/model-info.html">NARCCAP Model Information Page</a>
+</div>
+
+<div id="Docu_HRM3">
+    <h2>HRM3 - Hadley Regional Model</h2>
+    <p><font color="#FF007F">Source: </font>Hadley Centre via NARCCAP<br />
+    <font color="#FF007F">Domain: </font>US<br />
+    <font color="#FF007F">Date Range: </font>1970 - 2000, 2040 - 2070<br />
+    <font color="#FF007F">Temporal Resolution: </font>Daily<br />
+    <font color="#FF007F">Spatial Resolution: </font>50km<br />
+    <font color="#FF007F">Climate Elements: </font>Maximum/Minimum Temperature, Precipitation<br />
+    <a href="http://www.metoffice.gov.uk/climate-change/resources/hadley">UK Met Office Hadley Center</a><br />
+    <a href="http://www.narccap.ucar.edu/data/model-info.html">NARCCAP Model Information Page</a>
+</div>
+
+<div id="Docu_MM5I">
+    <h2>MM5I - PSU/NCAR mesoscale model</h2>
+    <p><font color="#FF007F">Source: </font>NCAR-Mesoscale Prediction Group/Penn State via NARCCAP<br />
+    <font color="#FF007F">Domain: </font>US<br />
+    <font color="#FF007F">Date Range: </font>1970 - 2000, 2040 - 2070<br />
+    <font color="#FF007F">Temporal Resolution: </font>Daily<br />
+    <font color="#FF007F">Spatial Resolution: </font>50km<br />
+    <font color="#FF007F">Climate Elements: </font>Maximum/Minimum Temperature, Precipitation<br />
+    <a href="http://www.mmm.ucar.edu/mm5/">MM5 Home Page</a><br />
+    <a href="http://www.narccap.ucar.edu/data/model-info.html">NARCCAP Model Information Page</a>
+</div>
+
+<div id="Docu_RCM3">
+    <h2>RCM3 Regional Climate Model Version 3</h2>
+    <p><font color="#FF007F">Source: UC Santa Cruz via NARCCAP</font><br />
+    <font color="#FF007F">Domain: </font>US<br />
+    <font color="#FF007F">Date Range: </font>1970 - 2000, 2040 - 2070<br />
+    <font color="#FF007F">Temporal Resolution: </font>Daily<br />
+    <font color="#FF007F">Spatial Resolution: </font>50km<br />
+    <font color="#FF007F">Climate Elements: </font>Maximum/Minimum Temperature, Precipitation<br />
+    <a href="http://www.narccap.ucar.edu/data/model-info.html">NARCCAP Model Information Page</a>
+</div>
+
+<div id="Docu_WRFG">
+    <h2>WRFG Weather Research Forecasting Model</h2>
+    <p><font color="#FF007F">Source: </font>Mesoscale and Microscale Meteorology Division of NCAR via NARCCAP<br />
+    <font color="#FF007F">Domain: </font>US<br />
+    <font color="#FF007F">Date Range: </font>1970 - 2000, 2040 - 2070<br />
+    <font color="#FF007F">Temporal Resolution: </font>Daily<br />
+    <font color="#FF007F">Spatial Resolution: </font>50km<br />
+    <font color="#FF007F">Climate Elements: </font>Maximum/Minimum Temperature, Precipitation<br />
+    <a href="http://wrf-model.org/index.php">WRF Home Page</a><br />
+    <a href="http://www.narccap.ucar.edu/data/model-info.html">NARCCAP Model Information Page</a>
 </div>

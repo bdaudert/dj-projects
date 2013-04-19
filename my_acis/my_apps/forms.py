@@ -65,7 +65,7 @@ AEB_CHOICES = (
 
 #SODLIST CHOICES
 SL_FRMT_CHOICES = (
-        ('json', 'JSON Format'),
+        #('json', 'JSON Format'),
         ('kr','ASCII Format'),
         ('kr_csv', 'Comma Separated Values'),
         )
@@ -170,13 +170,13 @@ SX_ANALYSIS_CHOICES = (
     )
 
 SXTR_ELEMENT_CHOICES = (
-        ('pcpn', 'Precipitation'),
-        ('snow', 'Snowfall'),
-        ('snwd', 'Snowdepth'),
-        ('maxt', 'Maximum Temperature '),
-        ('mint', 'Minimum Temperature'),
-        ('avgt', 'Mean Temperature'),
-        ('dtr', 'Daily Temperatuer Range'),
+        ('pcpn', 'Daily Precipitation'),
+        ('snow', 'Daily Snowfall'),
+        ('snwd', 'Daily Snowdepth'),
+        ('maxt', 'Daily Maximum Temperature '),
+        ('mint', 'Daily Minimum Temperature'),
+        ('avgt', 'Daily Mean Temperature'),
+        ('dtr', 'Daily Temperature Range'),
         ('hdd', 'Heating Degree Days'),
         ('cdd', 'Cooling Degree Days'),
         ('gdd', 'Growing degree days'),
@@ -391,7 +391,7 @@ class SodForm(forms.Form):
             #self.fields['end_date'] = forms.CharField(max_length=8, initial='20091231')
         elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy', 'Sodpad', 'Sodsumm', 'Sodpct', 'Sodthr', 'Sodxtrmts']:
             self.fields['start_date'] = MyDateField(max_length=4, min_length=4, initial='2000', help_text="yyyy")
-            self.fields['end_date'] = MyDateField(max_length=4, min_length=4, initial='2013', help_text="yyyy")
+            self.fields['end_date'] = MyDateField(max_length=4, min_length=4, initial='2010', help_text="yyyy")
         elif app_name == 'Sodpiii':
             self.fields['start_date'] = MyDateField(max_length=6, min_length=6, initial='200001', help_text="yyyymm")
             self.fields['end_date'] = MyDateField(max_length=6, min_length=6, initial='200912', help_text="yyyymm")

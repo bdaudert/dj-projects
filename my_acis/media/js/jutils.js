@@ -3,9 +3,17 @@ var MEDIA_URL = document.getElementById("MEDIA_URL").value;
 //Highlights node by setting border, hides  all elements of class DivClass
 //and unsets the boder of all other nodes of same class type
 function HighLight(node,DivClass,DivId) {
-    node.style.border = "4px solid #FF007F";
+    //node is qmark, DivId is corresponding docu;
     NodeClassName = node.className
-    //Unborder all other nodes of same clas name
+    if (node.style.border = "4px solid #FF007F"){
+        //take border of qmark should be turned off
+        node.style.border = "none";
+        //turn off of the corresponding div
+        docu_to_turn_off = document.getElementById(DivId);
+        docu_to_turn_off.style.display = "block";
+    }
+
+    //Unborder all other nodes of same class name
     var nodes_to_blur= document.getElementsByClassName(NodeClassName);
     for (i=0;i<nodes_to_blur.length;i++){     
         if (nodes_to_blur[i] != node){
@@ -13,14 +21,15 @@ function HighLight(node,DivClass,DivId) {
             nodes_to_blur[i].style.border="none";
         }
     }
+
     //Hide all divs with class name DivClass except the one of id=DivId 
     var divs_to_hide = document.getElementsByClassName(DivClass);
     div_to_show = document.getElementById(DivId)
     if (div_to_show.style.display == "block"){
         div_to_show.style.display == "none";
-        div_to_show.style.border="none";
     }
     else{
+        div_to_show.style.display == "block";
         for (i=0;i<divs_to_hide.length;i++){
             if (divs_to_hide[i] == div_to_show){
                 divs_to_hide[i].style.display ="block";
@@ -118,9 +127,9 @@ $(function() {
   //});
 
   $('.trigger').click(function(e) {
-    $(this).next('div.pop-up').hide();
+    $(this).next('div.pop-up').css("display","block");
   }, function() {
-    $(this).next('div.pop-up').show();
+    $(this).next('div.pop-up').css("display","none");
   });
 
 }); 

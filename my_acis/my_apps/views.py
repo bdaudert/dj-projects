@@ -355,6 +355,7 @@ def sods(request, app_name):
                 context['frequency_analysis'] = form2.cleaned_data['frequency_analysis']
                 context['departures_from_averages'] = form2.cleaned_data['departures_from_averages']
                 context['analysis_type'] = form2.cleaned_data['analysis_type']
+                context['departure_from_averages'] = form2.cleaned_data['departures_from_averages']
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
                 'coop_station_ids':coop_station_ids,'station_names':station_names, \
                 'el_type':form2.cleaned_data['element'], \
@@ -424,7 +425,10 @@ def sods(request, app_name):
                 context['end_year'] = dates[-1]
             else:
                 context['start_year'] = dates[0][0:4]
-                context['end_year'] = str(int(dates[-1][0:4])+1)
+                if app_name == 'Sodxtrmts':
+                    context['end_year'] = dates[-1][0:4]
+                else:
+                    context['end_year'] = str(int(dates[-1][0:4])+1)
             context['num_yrs'] = int(dates[-1][0:4]) - int(dates[0][0:4])+1
             context['elements'] = dict([(k,v) for k,v in enumerate(elements)])
             context['data'] = dict(data)

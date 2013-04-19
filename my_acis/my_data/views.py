@@ -170,6 +170,13 @@ def data_home(request):
     }
     return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))
 
+def sw_networks(request):
+    context = {
+        'title': 'Southwest Networks',
+        'data_page':True
+    }
+    return render_to_response('my_data/data/sw_networks.html', context, context_instance=RequestContext(request))
+
 def data_station(request):
     context = {
         'title': 'Historic Station Data',
