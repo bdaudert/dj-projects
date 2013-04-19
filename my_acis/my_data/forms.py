@@ -13,10 +13,10 @@ import WRCCUtils
 #Utilities
 ############################################
 #find yestarday's data, default end_data
-tdy = datetime.datetime.today() - datetime.timedelta(days=15)
+tdy = datetime.datetime.today()
 #Choose default start_date 4 weeks back
-b = datetime.datetime.today() - datetime.timedelta(days=60)
-y = datetime.datetime.today() - datetime.timedelta(days=30)
+b = datetime.datetime.today() - datetime.timedelta(days=15)
+y = datetime.datetime.today() - datetime.timedelta(days=1)
 yr = str(tdy.year)
 mon = str(tdy.month)
 day = str(tdy.day)

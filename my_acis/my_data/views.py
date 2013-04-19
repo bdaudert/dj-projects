@@ -592,7 +592,7 @@ def apps_station(request):
 
 def apps_gridded(request):
     context = {
-        'title': 'Gridded/Modeled Data Tools',
+        'title': 'Gridded Data Tools',
         'apps_page':True
         }
     return render_to_response('my_data/apps/gridded/home.html', context, context_instance=RequestContext(request))
@@ -1010,7 +1010,9 @@ def grid_point_time_series(request):
                 datadict = {'data':data, 'dates':dates}
                 context['datadict'] = datadict
             except:
-                if 'error' in request.keys():
+                datadict = {}
+                context['datadict'] = datadict
+                if 'error' in req.keys():
                     context['error'] = str(req['error'])
                 else:
                     context['error'] = 'Unknown error ocurred when getting data'

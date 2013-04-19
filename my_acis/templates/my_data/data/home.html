@@ -11,7 +11,8 @@
 <a href="{{DATA_URL}}">DATA PORTAL</a></p>
 
 <div class="container">
-    <div class="center-left">
+
+        <div class="center-left">
         <h1>Links to other data portals</h1>
            <ul class="navbar">
                 <table>
@@ -28,7 +29,7 @@
                         <p><font size="4">An internet-based system for sharing hydrologic data. It is comprised of databases and servers, connected through web services, to client applications, allowing for the publication, discovery and access of data.</font></p>
                     </div>
                     </td></tr>
-                    <tr><td>                    
+                    <tr><td>
                     <a href="http://cida.usgs.gov/climate/gdp/" class="trigger" target="_blank"><img class="logo" src="{{MEDIA_URL}}img/USGSLogo.png">&nbsp;&nbsp;<u>USGS Geo Data Portal</u></a>&nbsp;&nbsp;
                     <div class="pop-up">
                         <p><font size="4">Access to downscaled climate projections developed in cooperation with the U.S. Geological Survey National Climate Change Wildlife Science Center.</font></p>
@@ -53,8 +54,8 @@
         <table class="dash" cellspacing="10px">
             <!--Headers-->
             <th><font size="5"><a href="{{TOOLS_URL}}station/station_finder/"><b>Station Finder</b></a></th>
-            <th><font size="5"><a href="{{DATA_URL}}station/"><b>Historic Station Data</b></a></th>
-            <th><font size="5"><a href="{{DATA_URL}}gridded/"><b>Gridded/Modeled Data</b></a></th>
+            <th><font size="5"><a href="{{DATA_URL}}station/"><b>Historic Station Data Lister</b></a></th>
+            <th><font size="5"><a href="{{DATA_URL}}gridded/"><b>Gridded/Modeled Data Lister</b></a></th>
             <!--First row of dashboard: Description-->
             <tr>
                 <td class="error">Find a station</td>
@@ -69,59 +70,57 @@
             </tr>
             <!--Third+ rows: list of content-->
             <tr>
-                <td><a class="popup_map" href="/csc/media/html/station_id_system_docu.html#Network_ID_Systems"><font class="brown"><b>Network ID Systems</b><font></a></td>
+                <td><a class="popup_map" href="/csc/media/html/stn_id_system_docu.html#Network_ID_Systems"><font class="brown"><b>Network ID Systems</b><font></a></td>
                 <td><h3 class="brown">Available Element<br />Time Resolution</h3></td>
                 <td><h3 class="brown">Dataset Information</h3></td>
             </tr>
             <tr>
-                <td><a class="popup_map" href="/csc/media/html/station_id_system_docu.html#COOP">COOP</a></td>
+                <td><a class="popup_map" href="/csc/media/html/stn_id_system_docu.html#COOP">COOP</a></td>
                 <td><b>Maximum Temperature</b><br />Daily, Monthly(PRISM), Yearly(PRISM)</td>
                 <td><p class="popup_map" href="/csc/media/html/gridded_datasets_docu.html#NRCC_INT"><u>NRCC Interpolated/Hi-Res</u></p></td>
             </tr>
             <tr>
-                <td><a class="popup_map" href="/csc/media/html/station_id_system_docu.html#GHCN">GHCN</a></td>
+                <td><a class="popup_map" href="/csc/media/html/stn_id_system_docu.html#GHCN">GHCN</a></td>
                 <td><b>Minimum Temperature</b><br />Daily, Monthly(PRISM), Yearly(PRISM)</td>
-                <td>
-                <p class="popup_map" href="/csc/media/html/gridded_datasets_docu.html#PRISM"><u>PRISM</u></p>
-                </td>
+                <td><p class="popup_map" href="/csc/media/html/gridded_datasets_docu.html#PRISM"><u>PRISM</u></p></td>
             </tr>
             <tr>
-                <td><a class="popup_map" href="/csc/media/html/station_id_system_docu.html#ICAO">ICAO</a></td>
+                <td><a class="popup_map" href="/csc/media/html/stn_id_system_docu.html#ICAO">ICAO</a></td>
                 <td><b>Average Temperature</b><br />Daily</td>
                 <td><p class="popup_map" href="/csc/media/html/gridded_datasets_docu.html#CRCM"><u>CRCM</u></p></td>
             </tr>
             <tr>
-                <td><a class="popup_map" href="/csc/media/html/station_id_system_docu.html#NWSLI">NWSLI</a></td>
+                <td><a class="popup_map" href="/csc/media/html/stn_id_system_docu.html#NWSLI">NWSLI</a></td>
                 <td><b>Observation Time Temperature</b><br />Daily</td>
-                <td><a class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.hrm3.output.html">NARCCAP HRM3</a></td>
+                <td><p class="popup_map" href="/csc/media/html/gridded_datasets_docu.html#HRMS"><u>HRM3</u></p></td>
             </tr>
             <tr>
-                <td><a class="popup_map" href="/csc/media/html/station_id_system_docu.html#FAA">FAA</a></td>
+                <td><a class="popup_map" href="/csc/media/html/stn_id_system_docu.html#FAA">FAA</a></td>
                 <td><b>Precipitation</b><br />Daily, Monthly(PRISM), Yearly(PRISM)</td>
-                <td><a class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.mm5i.output.html">NARCCAP MM5I</a></td>
+                <td><p class="popup_map" href="/csc/media/html/gridded_datasets_docu.html#RCM3"><u>RCM3</u></p></td>
             </tr>
             <tr>
-                <td><a class="popup_map" href="/csc/media/html/station_id_system_docu.html#WMO">WMO</a></td>
+                <td><a class="popup_map" href="/csc/media/html/stn_id_system_docu.html#WMO">WMO</a></td>
                 <td><b>Snowfall</b><br />Daily</td>
-                <td><a class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.rcm3.output.html">NARCCAP RCM3</a></td>
+                <td><p class="popup_map" href="/csc/media/html/gridded_datasets_docu.html#WRFG"><u>WRFG</u></p></td>
             </tr>
             <tr>
-                <td><a class="popup_map" href="/csc/media/html/station_id_system_docu.html#WBAN">WBAN</a></td>
+                <td><a class="popup_map" href="/csc/media/html/stn_id_system_docu.html#WBAN">WBAN</a></td>
                 <td><b>Snowdepth</b><br />Daily</td>
                 <td><a class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.wrfg.output.html">NARCCAP WRFG</a></td>
             </tr>
             <tr>
-                <td><a class="popup_map" href="/csc/media/html/station_id_system_docu.html#CoCoRaHS">CoCoRaHS</a></td>
+                <td><a class="popup_map" href="/csc/media/html/stn_id_system_docu.html#CoCoRaHS">CoCoRaHS</a></td>
                 <td><b>Heating Degree Days</b><br />Daily</td>
                 <td></td>
             </tr>
            <tr>
-                <td><a class="popup_map" href="/csc/media/html/station_id_system_docu.html#RCC">RCC</a></td>
+                <td><a class="popup_map" href="/csc/media/html/stn_id_system_docu.html#RCC">RCC</a></td>
                 <td><b>Cooling Degree Days</b><br />Daily</td>
                 <td></td>
             </tr>
            <tr>
-                <td><a class="popup_map" href="/csc/media/html/station_id_system_docu.html#ThreadEx">ThreadEx</a></td>
+                <td><a class="popup_map" href="/csc/media/html/stn_id_system_docu.html#ThreadEx">ThreadEx</a></td>
                 <td><b>Growing Degree Days</b><br />Daily</td>
                 <td></td>
             </tr>
@@ -130,32 +129,8 @@
                 <td><b>Dewpoint</b><br />Monthly(PRISM), Yearly(PRISM)</td>
                 <td></td>
             </tr>
-                <!--
-                <tr>
-                <td><p class="pop_link" onClick="ShowHide('acis_networks')"><b><u>Quick View: Networks in ACIS</u></b></p>
-                <div id="acis_networks" style="display:none;"><img src={{MEDIA_URL}}img/ACIS_Stn_Id_Type.png></div></td>
-                <td><p class="pop_link" onClick="ShowHide('acis_networks')"><b><u>Quick View: Networks in ACIS</u></b></p>
-                <div id="acis_networks" style="display:none;"><img src={{MEDIA_URL}}img/ACIS_Stn_Id_Type.png></div></td>
-                <td><p ass="pop_link"onClick="ShowHide('acis_griddata')"><b><u>Quick View: Gridded/Modeled data sets in ACIS</u></b></p>
-                <div id="acis_griddata" style="display:none;"><img src={{MEDIA_URL}}img/ACISGridData.png></div></td>
-            </tr>
-            <tr>
-                <td><a target="_blank" href="http://cyclone1.dri.edu/csc/media/html/station_id_system_docu.html">More information on Station Networks found in ACIS</a></td>
-                <td><a target="_blank" href="http://cyclone1.dri.edu/csc/media/html/station_id_system_docu.html">More information on Station Networks found in ACIS</a></td>
-                <td><a href="https://gist.github.com/4197956">Information on NRCC interpolated, NRCC Hi-Res data sets 1, 3</a></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td><a href="http://www.earthsystemgrid.org/project/narccap.html">Information on NARCCAPP data sets 4-16</a></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><p class="pop_link" onClick="ShowHide('acis_elements_h')"><b><u>Climate Elements in ACIS</u></b></p>
-                <div id="acis_elements_h" style="display:none;"><img src={{MEDIA_URL}}img/ACIS_Element_Choices.png></div></td>
-                <td><p class="pop_link" onClick="ShowHide('acis_elements_g')"><b><u>Climate Elements in ACIS</u></b></p>
-                <div id="acis_elements_g" style="display:none;"><img src={{MEDIA_URL}}img/ACIS_Element_Choices.png></div></td>
-            </tr>
+            </table>
+            <!--
             <tr><td colspan="3">
                  <div id="footer" align="center"></div>
                     <script type="text/javascript">                        
@@ -163,8 +138,8 @@
                   </script>
             </td></tr>
             -->
-         </table>
   </div>
+
 </div>    
 
 {%endblock%}

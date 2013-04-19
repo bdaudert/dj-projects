@@ -17,7 +17,7 @@ function HighLight(node,DivClass,DivId) {
     var divs_to_hide = document.getElementsByClassName(DivClass);
     div_to_show = document.getElementById(DivId)
     if (div_to_show.style.display == "block"){
-        div_to_show.style.display == "block";
+        div_to_show.style.display == "none";
         div_to_show.style.border="none";
     }
     else{

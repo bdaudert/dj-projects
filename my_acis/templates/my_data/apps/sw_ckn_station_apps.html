@@ -23,16 +23,16 @@
                         <tr><td>
                         <a id="sw_ckn" href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
                         <div class="pop-up" id="maves">
-                            <p><font size="4">Generates bar chart of monthly averages.</font></p>
+                            <p>Generates bar chart of monthly averages.</p>
                         </div>
                         </td><td>
-                        <img class="qmark" style="border:4px solid #FF007F" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_MAVES')">
+                        <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_MAVES')">
                         </td></tr>
                     {%else%}
                         <tr><td>
                         <a id="sw_ckn" href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
                         <div class="pop-up" id="maves">
-                            <p><font size="4">Generates bar chart of monthly averages.</font></p>
+                            <p>Generates bar chart of monthly averages.</p>
                         </div>
                         </td><td>
                         <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_MAVES')">
@@ -42,7 +42,7 @@
                     <tr><td>
                     <a id="sw_ckn" href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
                     <div class="pop-up" id="maves">
-                        <p><font size="4">Generates bar chart of monthly averages.</font></p>
+                        <p>Generates bar chart of monthly averages.</p>
                     </div>
                     </td><td>
                     <img class="qmark" style="border:4px solid #FF007F" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_MAVES')">
@@ -51,7 +51,7 @@
                 <tr><td>
                 <a id="sw_ckn" href="{{TOOLS_URL}}station/metagraph/?stn_id={{stn_id}}" class="trigger">Station Metadata Graphics(<font color="red">US, COOP only</font>)</a>
                 <div class="pop-up" id="meta">
-                    <p><font size="4">See how much data is missing over the period of record (COOP stations only).</font></p>
+                    <p>See how much data is missing over the period of record (COOP stations only).</p>
                 </div>
                 </td><td>
                 <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_META_GRAPH')">
@@ -60,7 +60,7 @@
                 <tr><td>
                 <a href="{{TOOLS_URL}}station/monthly_aves/" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
                 <div class="pop-up" id="meta">
-                    <p><font size="4">Generates bar chart of monthly averages.</font></p>
+                    <p>Generates bar chart of monthly averages.</p>
                 </div>
                 </td><td>
                 <img class="qmark" style="border:4px solid #FF007F" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_MAVES')">
@@ -68,7 +68,7 @@
                 <tr><td>
                 <a href="{{TOOLS_URL}}station/metagraph/" class="trigger">Station Metadata Graphics(<font color="red">US, COOP only</font>)</a>
                 <div class="pop-up" id="meta">
-                    <p><font size="4">See how much data is missing over the period of record (COOP stations only).</font></p>
+                    <p>See how much data is missing over the period of record (COOP stations only).</p>
                 </div>
                 </td><td>
                 <img class="qmark"  src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_META_GRAPH')">
@@ -114,14 +114,5 @@
             <script type="text/javascript">                        
             $("#Docu_NONE").load("{{MEDIA_URL}}html/commons.html #Docu_NONE");
             </script>     
-<!--
-  <!-- Footer -->
-  <div id="footer" align="center"></div>
-    <script type="text/javascript">                        
-    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
-    </script>
-        
-    </div>
--->
 </div><!-- end container -->
 {%endblock%}

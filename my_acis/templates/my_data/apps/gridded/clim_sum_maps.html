@@ -14,7 +14,6 @@
 
 <div class="container">
     <div class="major-left">
-    {%if not hide_form_0 and not form1_ready%}
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -34,7 +33,6 @@
             <input type="submit" value="Select" name="form0"/>
             </form>
         </div>
-    {%endif%}
 
     {%if form1_ready%}
         <div id='form1'>
@@ -52,7 +50,13 @@
                         <td>{{field}}</td>
                     {%endif%}
                     <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                    <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    {%if field.label == "Grid"%}
+                        <div class="pop-up">
+                        <img src="{{MEDIA_URL}}img/gridded_datasets_docu.png" id="gridded_datasets_docu.png" width="450" height="600" border="0">
+                        </div>
+                    {%else%}
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    {%endif%}
                     </td>
                 </tr>
                {%if field.errors%}

@@ -152,11 +152,11 @@ ul.navbar a {
 .pop-up {
   display: none;
   position: absolute;
-  /*width: 450px;
-  padding: 10px;*/
+  width: 450px;
+  padding: 10px;
   background: #FDEEF4;
   border: 2px solid #006666;
-  font-size: 90%;
+  font-size: 3;
   z-index:10;
 }
 
