@@ -463,6 +463,7 @@ def data_gridded(request):
             days = (e_date - s_date).days
             #if time range > 1 day and user requests data for more than 1 station, large request via ftp
             #if (days > 1 and  'location' not in form1_grid.cleaned_data.keys()) or (days > 366 and 'location' in form1_grid.cleaned_data.keys()):
+
             if ('data_summary' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['data_summary'] == 'none') or ('data_summary' not in form1_grid.cleaned_data.keys()):
                 if (days > 7 and  'location' not in form1_grid.cleaned_data.keys()):
                     context['large_request'] = \
@@ -478,74 +479,94 @@ def data_gridded(request):
                     context['form3_grid'] = form3_grid
                     '''
                     return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
+
+            if 'location' in form1_grid.cleaned_data.keys():
+                location = form1_grid.cleaned_data['location']
+                context['need_map'] = True
+                context['map_loc'] = location
+                context['lat'] = location.split(',')[1]
+                context['lon'] = location.split(',')[0]
+            elif 'bounding_box' in form1_grid.cleaned_data.keys():
+                context['need_map_bbox'] = True
+                bounding_box = form1_grid.cleaned_data['bounding_box']
+                context['bounding_box'] = bounding_box
+            elif 'state' in form1_grid.cleaned_data.keys():
+                state = form1_grid.cleaned_data['state']
+                context['state'] = state
+            context['start_date'] = form1_grid.cleaned_data['start_date'];start_date= form1_grid.cleaned_data['start_date']
+            context['end_date'] = form1_grid.cleaned_data['end_date'];end_date= form1_grid.cleaned_data['end_date']
+            context['element'] = str(form1_grid.cleaned_data['elements'][0])
+            elems_long = []
+            element_list = form1_grid.cleaned_data['elements'][0].split(',')
+            for el in element_list:
+                elems_long.append(acis_elements[el]['name_long'])
+            context['elems_long'] = elems_long
+            context['grid'] = str(form1_grid.cleaned_data['grid']);grid=str(form1_grid.cleaned_data['grid'])
+
+
+            #Generate Data
+            req = AcisWS.get_grid_data(form1_grid.cleaned_data, 'griddata_web')
+            #Visualize if desired
+            #Figure generation
+            figure_files = []
+            if 'visualize' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['visualize'] == 'T':
+                if state:
+                    figure_files = WRCCUtils.make_ACIS_maps(grid, start_date, end_date, element_list,data=req)
+                elif bounding_box:
+                    figure_files = WRCCUtils.make_ACIS_maps(grid, start_date, end_date, element_list,data=req)
+            #format data
+            if form1_grid.cleaned_data['data_format'] == 'json':
+                delimiter = None
+                context['json'] = True
+                context['grid_data']  = req
             else:
-                if 'location' in form1_grid.cleaned_data.keys():
-                    context['need_map'] = True
-                    context['map_loc'] = form1_grid.cleaned_data['location']
-                    context['lat'] = form1_grid.cleaned_data['location'].split(',')[1]
-                    context['lon'] = form1_grid.cleaned_data['location'].split(',')[0]
-                elif 'bounding_box' in form1_grid.cleaned_data.keys():
-                    context['need_map_bbox'] = True
-                    context['bounding_box'] = form1_grid.cleaned_data['bounding_box']
+                data = WRCCUtils.format_grid_data(req, form1_grid.cleaned_data)
+                context['grid_data'] = data
 
-                req = AcisWS.get_grid_data(form1_grid.cleaned_data, 'griddata_web')
-                #format data
-                if form1_grid.cleaned_data['data_format'] == 'json':
-                    delimiter = None
-                    context['json'] = True
-                    context['grid_data']  = req
-                else:
-                    data = WRCCUtils.format_grid_data(req, form1_grid.cleaned_data)
-                    context['grid_data'] = data
+            #Link to relevant apps
+            if 'elements' in form1_grid.cleaned_data.keys() and len(form1_grid.cleaned_data['elements'])==1:
+                if req or data:
+                    if 'location' in form1_grid.cleaned_data.keys():
+                        if str(form1_grid.cleaned_data['elements'][0]) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
+                            context['link_to_gp_ts'] = True
+                            context['lat'] = form1_grid.cleaned_data['location'].split(',')[1]
+                            context['lon'] = form1_grid.cleaned_data['location'].split(',')[0]
+                    else:
+                        if str(form1_grid.cleaned_data['elements'][0]) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
+                            context['link_to_clim_sum_map'] = True
+                            if 'bounding_box' in form1_grid.cleaned_data.keys():
+                                context['bounding_box'] = form1_grid.cleaned_data['bounding_box']
+                            else:
+                                context['state'] = form1_grid.cleaned_data['state']
 
-                #Link to relevant apps
-                if 'elements' in form1_grid.cleaned_data.keys() and len(form1_grid.cleaned_data['elements'])==1:
-                    if req or data:
-                        context['start_date'] = form1_grid.cleaned_data['start_date']
-                        context['end_date'] = form1_grid.cleaned_data['end_date']
-                        context['element'] = str(form1_grid.cleaned_data['elements'][0])
-                        context['grid'] = str(form1_grid.cleaned_data['grid'])
-                        if 'location' in form1_grid.cleaned_data.keys():
-                            if str(form1_grid.cleaned_data['elements'][0]) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
-                                context['link_to_gp_ts'] = True
-                                context['lat'] = form1_grid.cleaned_data['location'].split(',')[1]
-                                context['lon'] = form1_grid.cleaned_data['location'].split(',')[0]
-                        else:
-                            if str(form1_grid.cleaned_data['elements'][0]) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
-                                context['link_to_clim_sum_map'] = True
-                                if 'bounding_box' in form1_grid.cleaned_data.keys():
-                                    context['bounding_box'] = form1_grid.cleaned_data['bounding_box']
-                                else:
-                                    context['state'] = form1_grid.cleaned_data['state']
+            if 'delimiter' in form1_grid.cleaned_data.keys():
+                if str(form1_grid.cleaned_data['delimiter']) == 'comma':delimiter = ','
+                if str(form1_grid.cleaned_data['delimiter']) == 'tab':delimiter = ' '
+                if str(form1_grid.cleaned_data['delimiter']) == 'colon':delimiter = ':'
+                if str(form1_grid.cleaned_data['delimiter']) == 'space':delimiter = ' '
+                if str(form1_grid.cleaned_data['delimiter']) == 'pipe':delimiter = '|'
+            else:
+                delimiter = ' '
+            context['delimiter'] = delimiter
 
-                if 'delimiter' in form1_grid.cleaned_data.keys():
-                    if str(form1_grid.cleaned_data['delimiter']) == 'comma':delimiter = ','
-                    if str(form1_grid.cleaned_data['delimiter']) == 'tab':delimiter = ' '
-                    if str(form1_grid.cleaned_data['delimiter']) == 'colon':delimiter = ':'
-                    if str(form1_grid.cleaned_data['delimiter']) == 'space':delimiter = ' '
-                    if str(form1_grid.cleaned_data['delimiter']) == 'pipe':delimiter = '|'
-                else:
-                    delimiter = ' '
-                context['delimiter'] = delimiter
+            #Output formats
+            select_grid_by = form1_grid.cleaned_data['select_grid_by']
+            if select_grid_by == 'point':file_info =['location', re.sub(',','_',form1_grid.cleaned_data['location'])]
+            if select_grid_by == 'state':file_info = ['state', form1_grid.cleaned_data['state']]
+            if select_grid_by == 'bbox':file_info =['bounding_box', re.sub(',','_',form1_grid.cleaned_data['bounding_box'])]
+            context['file_info'] = file_info
+            if form1_grid.cleaned_data['data_format'] == 'dlm':
+                #return export_to_file_grid(request, data, el_list, file_info, delimiter, 'dat')
+                return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'dat', request=request,file_info=file_info)
+            elif form1_grid.cleaned_data['data_format'] == 'clm':
+                #return export_to_file_grid(request, data, el_list, file_info, delimiter, 'txt')
+                return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'txt', request=request,file_info=file_info)
 
-                #Output formats
-                select_grid_by = form1_grid.cleaned_data['select_grid_by']
-                if select_grid_by == 'point':file_info =['location', re.sub(',','_',form1_grid.cleaned_data['location'])]
-                if select_grid_by == 'state':file_info = ['state', form1_grid.cleaned_data['state']]
-                if select_grid_by == 'bbox':file_info =['bounding_box', re.sub(',','_',form1_grid.cleaned_data['bounding_box'])]
-                context['file_info'] = file_info
-                if form1_grid.cleaned_data['data_format'] == 'dlm':
-                    #return export_to_file_grid(request, data, el_list, file_info, delimiter, 'dat')
-                    return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'dat', request=request,file_info=file_info)
-                elif form1_grid.cleaned_data['data_format'] == 'clm':
-                    #return export_to_file_grid(request, data, el_list, file_info, delimiter, 'txt')
-                    return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'txt', request=request,file_info=file_info)
-
-                elif form1_grid.cleaned_data['data_format'] == 'xl':
-                    #return export_to_file_grid(request, data, el_list, file_info, delimiter, 'xls')
-                    return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'xls', request=request,file_info=file_info)
-                else:
-                    return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
+            elif form1_grid.cleaned_data['data_format'] == 'xl':
+                #return export_to_file_grid(request, data, el_list, file_info, delimiter, 'xls')
+                return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'xls', request=request,file_info=file_info)
+            else:
+                return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
     if 'form3_grid' in request.POST:
         form3_grid = set_as_form(request,'GridDataForm3')

@@ -2,6 +2,7 @@
 
 <meta name="keywords" content="data, gridded data, modeled data, acis">
 <meta name="description" content="SW-CKN Gridded and Modeled Data">
+{%load my_data_filters%}
 
 {% block content %} 
 
@@ -245,9 +246,10 @@
             </div>
         {%endif%}
 
-        {%if grid_data%}
+        {%if grid_data %}
+  
             <!--Link to relevant applications-->
-            {%if link_to_clim_sum_map %}
+            {%if link_to_clim_sum_map and not figure_files%}
                 {%if state%}
                     <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}&state={{state}}">Generate a climate summary map  for this data set here!</a>
                 {%endif%}
@@ -260,9 +262,14 @@
                  <a target="_blank" href="{{TOOLS_URL}}gridded/grid_point_time_series/?lat={{lat}}&lon={{lon}}&start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}">Generate a time series for this data set here!</a>
             {%endif%}            
             <br />
+            {%if figure_files%}
+                <p class="error" onClick="ShowHide('data')"><u>Click here to see/hide the raw data</u></p>
+                <div id="data">
+            {%endif%}
+
             <h2>{%for item in file_info%}{{item}}&nbsp;{%endfor%}</h2>
             {%if not json%}
-                <p>date{{delimiter}}lat{{delimiter}}lon{{delimiter}}elev{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</p>
+                <p>date range{{delimiter}}lat{{delimiter}}lon{{delimiter}}elev{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</p>
                 {%for row in grid_data%}
                     {%for val  in row%}
                         {{val}}{{delimiter}}
@@ -273,7 +280,24 @@
                 {{grid_data}}
             {%endif%}
         {%endif%}
-    
+
+        {%if figure_files%}
+            </div><!--End div data-->
+            {%for figure_file in figure_files%}
+                <p>Element: <b>{{elems_long|lookup:foorloop.counter0}}</b>
+                <p>Time Period: <b>{{start_date}}</b> to <b>{{end_date}}</b></p>
+                {%if location %}
+                    <p>Grid Point: {{location}}</p>
+                {%endif%}
+                {%if State %}
+                    <p>State: {{state}}</p>
+                {%endif%}
+                {%if bounding_box %}
+                    <p>Bounding Box: {{bounding_box}}</p>
+                {%endif%}
+                <img src="{{MEDIA_URL}}tmp/{{figure_file}}"><br /><br />
+            {%endfor%}
+        {%endif%}
     <br />
     {%if need_map and not grid_data%}
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />

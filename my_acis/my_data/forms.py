@@ -494,11 +494,11 @@ class GridDataForm1(forms.Form):
         self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=today, help_text=HELP_TEXTS['date'])
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
         self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
-        if data_summary is None or data_summary == 'none':
-            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'Coming Soon!')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
+        if data_summary is None or data_summary == 'none' or select_grid_by == 'point':
+            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'False'), ('T', 'True')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
             self.fields['data_summary'] = forms.CharField(widget=forms.HiddenInput(), required=False, initial='none', help_text='Summarization to be performed on data.')
         else:
-            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'Coming Soon!')]), required=False, initial='F', help_text='Generate a map to visualize data')
+            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'False'), ('T', 'True')]), required=False, initial='F', help_text='Generate a map to visualize data')
             self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, initial=data_summary, help_text='Summarization to be performed on data.')
 class GridDataForm3(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -536,11 +536,11 @@ class GridDataForm3(forms.Form):
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial=kwargs.get('initial', {}).get('delimiter', None), help_text='Delimiter used to seperate data values.')
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
-        if data_summary is None or data_summary == 'none':
-            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'Coming Soon!')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
+        if data_summary is None or data_summary == 'none' or select_grid_by == 'point':
+            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'False'), ('T', 'True')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
             self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, widget=forms.HiddenInput(), initial=kwargs.get('initial', {}).get('data_summary', 'none'), help_text='Summarization to be performed on data.')
         else:
-            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'Coming Soon!')]), required=False, initial='F', help_text='Generate a map to visualize data')
+            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'False'), ('T', 'True')]), required=False, initial='F', help_text='Generate a map to visualize data')
             self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, initial=data_summary, help_text='Summarization to be performed on data.')
 
 #Data Application Forms
