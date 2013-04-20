@@ -1,5 +1,3 @@
-var MEDIA_URL = document.getElementById("MEDIA_URL").value;
-
 //Highlights node by setting border, hides  all elements of class DivClass
 //and unsets the boder of all other nodes of same class type
 function HighLight(node,DivClass,DivId) {
@@ -130,16 +128,16 @@ $(function() {
   //$(this).next('div.pop-up').css('top', e.pageY).css('left', e.pageX );
   // $(this).next('div.pop-up').show().css('top', e.pageY - moveDown).css('left', e.pageX + moveLeft);
   //});
-/*
   $('.trigger').click(function(e) {
-    if ($(this).css('display') != 'none'){
+    var display = $(this).next('div.pop-up').css('display');
+    if (display != 'none') {
+        $(this).next('div.pop-up').css('display','none');
     }
-        $(this).next('div.pop-up').css("display","none");
-    else{
-        $(this).next('div.pop-up').css("display","block");
+    else {
+        $(this).next('div.pop-up').css('display','block');
     }
-
-    
+  });
+    /*
     $(this).next('div.pop-up').css("display","block");
   }, function() {
     $(this).next('div.pop-up').css("display","none");

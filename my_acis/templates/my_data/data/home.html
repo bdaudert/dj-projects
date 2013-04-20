@@ -43,130 +43,96 @@
             <!--Third+ rows: list of content-->
             <tr valign="top">
                 <td>
-                    <p class="trigger"><u><font color="#FF007F">Network<br />ID Sytems</font></u></p>
-                        <div class="pop-up">
-                        <div id="Docu_Networks"></div>
+                    <p onClick="ShowHide('Docu_Networks')"><u><font color="#FF007F">Network<br />ID Sytems</font></u></p>
+                        <div id="Docu_Networks" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_Networks").load("{{MEDIA_URL}}html/commons.html #Docu_Networks");
                         </script> 
-                        </div>
-                    <p class="trigger"><u>COOP</u></p>
-                        <div class="pop-up">
-                        <div id="Docu_COOP"></div>
+                    <p onClick="ShowHide('Docu_COOP')"><u>COOP</u></p>
+                        <div id="Docu_COOP" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_COOP").load("{{MEDIA_URL}}html/commons.html #Docu_COOP");
                         </script> 
-                        </div>
-                    <p class="trigger"><u>GHCN</u></p>
-                        <div class="pop-up">
-                        <div id="Docu_GHCN"></div>
+                    <p onClick="ShowHide('Docu_GHCN')"><u>GHCN</u></p>
+                        <div id="Docu_GHCN" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_GHCN").load("{{MEDIA_URL}}html/commons.html #Docu_GHCN");
                         </script> 
-                        </div>
-                    <p class="trigger"><u>ICAO</u></p>
-                        <div class="pop-up">
-                        <div id="Docu_ICAO"></div>
+                    <p onClick="ShowHide('Docu_GHCN')"><u>ICAO</u></p>
+                        <div id="Docu_ICAO" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_ICAO").load("{{MEDIA_URL}}html/commons.html #Docu_ICAO");
                         </script>
-                        </div>
-                    <p class="trigger"><u>NWSLI</u></p>
-                        <div class="pop-up">
-                        <div id="Docu_NWSLI"></div>
+                    <p onClick="ShowHide('Docu_NWSLI')"><u>NWSLI</u></p>
+                        <div id="Docu_NWSLI" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_NWSLI").load("{{MEDIA_URL}}html/commons.html #Docu_NWSLI");
                         </script>
-                        </div>
-                    <p class="trigger"><u>FAA</u></p>
-                        <div class="pop-up">
-                        <div id="Docu_FAA"></div>
+                    <p onClick="ShowHide('Docu_FAA')"><u>FAA</u></p>
+                        <div id="Docu_FAA" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_FAA").load("{{MEDIA_URL}}html/commons.html #Docu_FAA");
                         </script>
-                        </div>
-                    <p class="trigger"><u>WMO</u></p>
-                        <div class="pop-up">
-                        <div id="Docu_WMO"></div>
+                    <p onClick="ShowHide('Docu_WMO')"><u>WMO</u></p>
+                        <div id="Docu_WMO" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_WMO").load("{{MEDIA_URL}}html/commons.html #Docu_WMO");
                         </script>
-                        </div>
-                   <p class="trigger"><u>WBAN</u></p>
-                        <div class="pop-up">
-                        <div id="Docu_WBAN"></div>
+                   <p onClick="ShowHide('Docu_WBAN')"><u>WBAN</u></p>
+                        <div id="Docu_WBAN" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_WBAN").load("{{MEDIA_URL}}html/commons.html #Docu_WBAN");
                         </script>
-                        </div>
-                    <p class="trigger"><u>ThreadEx</u></p>
-                        <div class="pop-up">
-                        <div id="Docu_ThreadEx"></div>
+                    <p onClick="ShowHide('Docu_ThreadEx')"><u>ThreadEx</u></p>
+                        <div id="Docu_ThreadEx" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_ThreadEx").load("{{MEDIA_URL}}html/commons.html #Docu_ThreadEx");
                         </script>
-                        </div>
-                    <p class="trigger"><u>CoCoRaHS</u></p>
-                        <div class="pop-up">
-                        <div id="Docu_CoCoRaHS"></div>
+                    <p onClick="ShowHide('Docu_CoCoRaHS')"><u>CoCoRaHS</u></p>
+                        <div id="Docu_CoCoRaHS" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_CoCoRaHS").load("{{MEDIA_URL}}html/commons.html #Docu_CoCoRaHS");
                         </script>
-                        </div>
                 </td>
                 <td>
-                   <p class="trigger"><u><font color="#FF007F">Available<br />Climate Elements</font></u></p>
-                        <div class="pop-up">
-                        <div id="Docu_Elements"></div>
+                   <p onClick="ShowHide('Docu_Elements')"><u><font color="#FF007F">Available<br />Climate Elements</font></u></p>
+                        <div id="Docu_Elements" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_Elements").load("{{MEDIA_URL}}html/commons.html #Docu_Elements");
                         </script> 
-                        </div>
                 </td>
                 <td>
                    <p><font color="#FF007F">Dataset<br />Information</font></p>
-                   <p class="trigger"><u>NRCC Interpolated/Hi-Res</u></p>
-                        <div class="pop-up">
-                        <div id="Docu_NRCC_INT"></div>
+                   <p onClick="ShowHide('Docu_NRCC_INT')"><u>NRCC Interpolated/Hi-Res</u></p>
+                        <div id="Docu_NRCC_INT" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_NRCC_INT").load("{{MEDIA_URL}}html/commons.html #Docu_NRCC_INT");
                         </script>
-                        </div>
-                   <p class="trigger"><u>PRISM</u></p>
-                        <div class="pop-up">
-                        <div id="Docu_PRISM"></div>
+                   <p onClick="ShowHide('Docu_PRISM')"><u>PRISM</u></p>
+                        <div id="Docu_PRISM" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_PRISM").load("{{MEDIA_URL}}html/commons.html #Docu_PRISM");
                         </script>
-                        </div>
-                   <p class="trigger"><u>CRCM</u></p>
-                        <div class="pop-up">
-                        <div id="Docu_CRCM"></div>
+                   <p onClick="ShowHide('Docu_CRCM')"><u>CRCM</u></p>
+                        <div id="Docu_CRCM" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_CRCM").load("{{MEDIA_URL}}html/commons.html #Docu_CRCM");
                         </script>
-                        </div>
-                    <p class="trigger"><u>HRM3</u></p>
-                        <div class="pop-up">
-                        <div id="Docu_HRM3"></div>
+                    <p onClick="ShowHide('Docu_HRM3')"><u>HRM3</u></p>
+                        <div id="Docu_HRM3" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_HRM3").load("{{MEDIA_URL}}html/commons.html #Docu_HRM3");
                         </script>
-                        </div>
-                    <p class="trigger"><u>RCM3</u></p>
-                        <div class="pop-up">
-                        <div id="Docu_RCM3"></div>
+                    <p onClick="ShowHide('Docu_RCM3')"><u>RCM3</u></p>
+                        <div id="Docu_RCM3" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_RCM3").load("{{MEDIA_URL}}html/commons.html #Docu_RCM3");
                         </script>
-                        </div>
-                   <p class="trigger"><u>WRFG</u></p>
-                        <div class="pop-up">
-                        <div id="Docu_WRFG"></div>
+                   <p onClick="ShowHide('Docu_WRFG')"><u>WRFG</u></p>
+                        <div id="Docu_WRFG" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_WRFG").load("{{MEDIA_URL}}html/commons.html #Docu_WRFG");
                         </script>
-                        </div>
                 </td>
             </tr>
          </table>
