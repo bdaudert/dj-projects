@@ -239,6 +239,11 @@ def data_station(request):
         if elements is not None:context['elements'] = elements
 
         if form1_point.is_valid():
+            if 'show_flags' in form1_point.cleaned_data.keys():
+                context['show_flags'] = True
+                show_flags = 'T'
+            else:
+                show_flags = 'F'
             if form1_point.cleaned_data['select_stations_by'] == 'bbox':
                 context['need_map_bbox'] = True
                 context['bounding_box'] = form1_point.cleaned_data['bounding_box']
@@ -324,13 +329,13 @@ def data_station(request):
 
                 if form1_point.cleaned_data['data_format'] == 'dlm':
                     #return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'dat')
-                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'dat', request=request, file_info=file_info)
+                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'dat', request=request, file_info=file_info, show_flags=show_flags)
                 elif form1_point.cleaned_data['data_format'] == 'clm':
                     #return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'txt')
-                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'txt', request=request, file_info=file_info)
+                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'txt', request=request, file_info=file_info, show_flags=show_flags)
                 elif form1_point.cleaned_data['data_format'] == 'xl':
                     #return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'xls')
-                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'xls', request=request, file_info=file_info)
+                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'xls', request=request, file_info=file_info, show_flags=show_flags)
                 else:
                     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
     if 'form3_point' in request.POST:
@@ -458,20 +463,21 @@ def data_gridded(request):
             days = (e_date - s_date).days
             #if time range > 1 day and user requests data for more than 1 station, large request via ftp
             #if (days > 1 and  'location' not in form1_grid.cleaned_data.keys()) or (days > 366 and 'location' in form1_grid.cleaned_data.keys()):
-            if (days > 7 and  'location' not in form1_grid.cleaned_data.keys() and 'summary' not in form1_grid.cleaned_data.keys()):
-                context['large_request'] = \
-                'At the moment we do not support data requests that exceed 7 days for multiple station. Please limit your request to one grid point at a time or a date range of one week or less. Alternatively, you could summarize your data by using the data summary option. We will support larger requests in the near future. Thank you for your patience!'
-                '''
-                context['form3_grid_ready'] = True
-                context['large_request'] = \
-                'You requested a large amount of data.Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
-                initial_params_2 = form1_grid.cleaned_data
-                #keep MultiElements format and MultiStnField format
-                initial_params_2['elements'] = ','.join(initial_params_2['elements'])
-                form3_grid = forms.GridDataForm3(initial=initial_params_2)
-                context['form3_grid'] = form3_grid
-                '''
-                return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
+            if ('data_summary' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['data_summary'] == 'none') or ('data_summary' not in form1_grid.cleaned_data.keys()):
+                if (days > 7 and  'location' not in form1_grid.cleaned_data.keys()):
+                    context['large_request'] = \
+                    'At the moment we do not support data requests that exceed 7 days for multiple station. Please limit your request to one grid point at a time or a date range of one week or less. Alternatively, you could summarize your data by using the data summary option. We will support larger requests in the near future. Thank you for your patience!'
+                    '''
+                    context['form3_grid_ready'] = True
+                    context['large_request'] = \
+                    'You requested a large amount of data.Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
+                    initial_params_2 = form1_grid.cleaned_data
+                    #keep MultiElements format and MultiStnField format
+                    initial_params_2['elements'] = ','.join(initial_params_2['elements'])
+                    form3_grid = forms.GridDataForm3(initial=initial_params_2)
+                    context['form3_grid'] = form3_grid
+                    '''
+                    return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
             else:
                 if 'location' in form1_grid.cleaned_data.keys():
                     context['need_map'] = True

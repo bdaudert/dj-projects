@@ -404,6 +404,7 @@ class PointDataForm1(forms.Form):
         self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
         self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial=begin, help_text=HELP_TEXTS['date_por'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=today, help_text=HELP_TEXTS['date_por'])
+        self.fields['show_flags'] = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), required=False, initial='F', help_text='Show the data flag with each data point.')
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
         self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
@@ -442,6 +443,7 @@ class PointDataForm3(forms.Form):
         self.fields['elements'] = MultiElementField(initial=kwargs.get('initial', {}).get('elements', None), help_text=HELP_TEXTS['comma_elements'])
         self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('start_date', None),help_text=HELP_TEXTS['date_por'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('end_date', None), help_text=HELP_TEXTS['date_por'])
+        self.fields['show_flags'] = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), required=False, initial=kwargs.get('initial', {}).get('show_flags', 'F'), help_text='Show the data flag with each data point. Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated')
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='txt', help_text=HELP_TEXTS['data_format'])
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial=kwargs.get('initial', {}).get('delimiter', None),help_text='Delimiter used to seperate data values.')
@@ -536,7 +538,7 @@ class GridDataForm3(forms.Form):
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
         if data_summary is None or data_summary == 'none':
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'Coming Soon!')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
-            self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, widget=forms.HiddenInput(), initial='none', help_text='Summarization to be performed on data.')
+            self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, widget=forms.HiddenInput(), initial=kwargs.get('initial', {}).get('data_summary', 'none'), help_text='Summarization to be performed on data.')
         else:
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'Coming Soon!')]), required=False, initial='F', help_text='Generate a map to visualize data')
             self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, initial=data_summary, help_text='Summarization to be performed on data.')

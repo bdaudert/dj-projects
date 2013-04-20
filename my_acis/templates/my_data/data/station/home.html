@@ -12,14 +12,11 @@
 <a href="{{DATA_URL}}">DATA PORTAL></a>
 <a href="{{DATA_URL}}station/">Historic Station Data</a></p>
 
-<p class="error" align="center" style="font-size:large;">You can make these pages stellar! <img class="icon" src="{{MEDIA_URL}}img/Stellar.png"> E-mail ANY suggestions to csc-wrcc@dri.edu</p>
-
 <div class="container">
     <div class="major-left">
     <br />
     <br />
     {%if not form3_point_ready%}
-        {%if not stn_id%}
             <div id='form0'>
                 <form method="post" action="">{% csrf_token %}
                 <table class="form">
@@ -44,7 +41,6 @@
                 <input type="submit" value="Select" name="form0_point"/>
                 </form>
             </div>
-        {%endif%}
         
         {%if not form1_point_ready%}
             <p class="pop_link" onClick="ShowHide('Docu_select_stations_by')"><b><u>Station Selection Choices</u></b> explained</p>
@@ -215,8 +211,12 @@
                 </form>
             </div>
         {%endif%}
+
         {%if results%}
-            <p class="error">Results:</p>
+            <h3 class="error">Results:</h3>
+            {%if show_flags%}
+                <h3>Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated'</h3>
+            {%endif%}
             {%if results.errors%}
             <div class="error">Data Request could not be completed. The following error occurred: {{error}}</div>
             {%endif%}
@@ -241,10 +241,26 @@
                 <p class="error"> {{results.stn_errors|lookup:stn}}</p>
                  {%if not json%}   
                     <table>
-                    <th>date{{delimiter}}{%for el in results.elements%}{{el}}{{delimiter}}{%endfor%}</th>
+                    <th>date{{delimiter}}
+                        {%if show_flags%}
+                            {%for el in results.elements%}{{el}}{{delimiter}}flag{{delimiter}}{%endfor%}
+                        {%else%}
+                            {%for el in results.elements%}{{el}}{{delimiter}}{%endfor%}
+                        {%endif%}
+                    </th>
                     {%for date_vals in results.stn_data|lookup:stn%}
                         <tr><td>
-                        {%for el_val in date_vals%}{{el_val}}{{delimiter}}{%endfor%}
+                            {%for el_val in date_vals%}
+                                {%if forloop.first %}
+                                    {{el_val}}{{delimiter}}
+                                {%else%}
+                                    {%if show_flags%}
+                                        {{el_val|lookup:0}}{{delimiter}}{{el_val|lookup:1}}{{delimiter}}
+                                    {%else%}
+                                        {{el_val|lookup:0}}{{delimiter}}
+                                    {%endif%}
+                                {%endif%}
+                            {%endfor%}
                         </td></tr>
                     {%endfor%}
                     </table>
