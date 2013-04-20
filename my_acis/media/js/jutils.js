@@ -5,37 +5,42 @@ var MEDIA_URL = document.getElementById("MEDIA_URL").value;
 function HighLight(node,DivClass,DivId) {
     //node is qmark, DivId is corresponding docu;
     NodeClassName = node.className
-    if (node.style.border = "4px solid #FF007F"){
-        //take border of qmark should be turned off
+    if (node.style.border != "none"){
+        //turn off this qmark
         node.style.border = "none";
         //turn off of the corresponding div
         docu_to_turn_off = document.getElementById(DivId);
-        docu_to_turn_off.style.display = "block";
+        docu_to_turn_off.style.display = "none";
     }
-
-    //Unborder all other nodes of same class name
-    var nodes_to_blur= document.getElementsByClassName(NodeClassName);
-    for (i=0;i<nodes_to_blur.length;i++){     
-        if (nodes_to_blur[i] != node){
-            //qmarks_to_turn_off[i].blur();
-            nodes_to_blur[i].style.border="none";
-        }
-    }
-
-    //Hide all divs with class name DivClass except the one of id=DivId 
-    var divs_to_hide = document.getElementsByClassName(DivClass);
-    div_to_show = document.getElementById(DivId)
-    if (div_to_show.style.display == "block"){
-        div_to_show.style.display == "none";
-    }
-    else{
-        div_to_show.style.display == "block";
-        for (i=0;i<divs_to_hide.length;i++){
-            if (divs_to_hide[i] == div_to_show){
-                divs_to_hide[i].style.display ="block";
+    else {
+        node.style.border ="4px solid #FF007F";
+        //Unborder all other nodes of same class name
+        var nodes_to_blur= document.getElementsByClassName(NodeClassName);
+        for (i=0;i<nodes_to_blur.length;i++){     
+            if (nodes_to_blur[i] != node){
+                //qmarks_to_turn_off[i].blur();
+                nodes_to_blur[i].style.border="none";
             }
-            else {
-                divs_to_hide[i].style.display ="none";
+            else{
+                nodes_to_blur[i].style.border="4px solid #FF007F";
+            }
+        }
+
+        //Hide all divs with class name DivClass except the one of id=DivId 
+        var divs_to_hide = document.getElementsByClassName(DivClass);
+        div_to_show = document.getElementById(DivId)
+        if (div_to_show.style.display == "block"){
+            div_to_show.style.display == "none";
+        }
+        else{
+            div_to_show.style.display == "block";
+            for (i=0;i<divs_to_hide.length;i++){
+                if (divs_to_hide[i] == div_to_show){
+                    divs_to_hide[i].style.display ="block";
+                }
+                else {
+                    divs_to_hide[i].style.display ="none";
+                }   
             }
         }
     }
@@ -125,13 +130,21 @@ $(function() {
   //$(this).next('div.pop-up').css('top', e.pageY).css('left', e.pageX );
   // $(this).next('div.pop-up').show().css('top', e.pageY - moveDown).css('left', e.pageX + moveLeft);
   //});
-
+/*
   $('.trigger').click(function(e) {
+    if ($(this).css('display') != 'none'){
+    }
+        $(this).next('div.pop-up').css("display","none");
+    else{
+        $(this).next('div.pop-up').css("display","block");
+    }
+
+    
     $(this).next('div.pop-up').css("display","block");
   }, function() {
     $(this).next('div.pop-up').css("display","none");
   });
-
+    */
 }); 
 
 
