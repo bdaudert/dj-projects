@@ -49,6 +49,14 @@ TIME_PERIOD_CHOICES = (
     ('years', 'Last x years'),
 )
 
+GRID_SUMMARY_CHOICES = (
+    ('max', 'Maximum'),
+    ('min', 'Minimium'),
+    ('sum', 'Sum'),
+    ('mean', 'Mean'),
+    ('none', 'None, just get raw data')
+)
+
 ACIS_ELEMENT_CHOICES = (
         ('pcpn', 'Precipitation (Inches)'),
         ('snow', 'Snowfall (Inches)'),
@@ -442,16 +450,19 @@ class PointDataForm3(forms.Form):
 class GridDataForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=select_grid_by_CHOICES, required=False, initial='point', help_text=HELP_TEXTS['select_stations_by'])
         temporal_resolution = forms.ChoiceField(choices=([('dly', 'Daily'),('mly', 'Monthly'),('yly', 'Yearly')]), required=False, initial='dly', help_text='Time resolution of data.')
+        data_summary = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, required=False, initial='mean', help_text='Summarize Data')
 
 class GridDataForm1(forms.Form):
     def __init__(self, *args, **kwargs):
         select_grid_by = kwargs.get('initial', {}).get('select_grid_by', None)
         location = kwargs.get('initial', {}).get('location', None)
         temporal_resolution = kwargs.get('initial', {}).get('temporal_resolution', None)
+        data_summary = kwargs.get('initial', {}).get('data_summary', None)
         super(GridDataForm1, self).__init__(*args, **kwargs)
 
         if select_grid_by is None:select_grid_by = self.data.get('select_grid_by')
         if temporal_resolution is None:temporal_resolution = self.data.get('temporal_resolution')
+        if data_summary is None:data_summary = self.data.get('data_summary')
         if select_grid_by == 'point':
             self.fields['location'] = forms.CharField(initial="-77.7,41.8", help_text=HELP_TEXTS['grid_lon_lat'])
         elif select_grid_by == 'state':
@@ -481,17 +492,24 @@ class GridDataForm1(forms.Form):
         self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=today, help_text=HELP_TEXTS['date'])
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
         self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
-
+        if data_summary is None or data_summary == 'none':
+            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'Coming Soon!')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
+            self.fields['data_summary'] = forms.CharField(widget=forms.HiddenInput(), required=False, initial='none', help_text='Summarization to be performed on data.')
+        else:
+            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'Coming Soon!')]), required=False, initial='F', help_text='Generate a map to visualize data')
+            self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, initial=data_summary, help_text='Summarization to be performed on data.')
 class GridDataForm3(forms.Form):
     def __init__(self, *args, **kwargs):
         select_grid_by = kwargs.get('initial', {}).get('select_grid_by', None)
         data_format =  kwargs.get('initial', {}).get('data_format', None)
         temporal_resolution = kwargs.get('initial', {}).get('temporal_resolution', None)
+        data_summary = kwargs.get('initial', {}).get('summary', None)
         super(GridDataForm3, self).__init__(*args, **kwargs)
 
         if select_grid_by is None:select_grid_by = self.data.get('select_grid_by')
         if data_format is None:data_format = self.data.get('data_format')
         if temporal_resolution is None:temporal_resolution = self.data.get('temporal_resolution')
+        if data_summary is None:data_summary = self.data.get('data_summary')
         self.fields['user_name'] = MyNameField(initial='Your Name', help_text = 'Enter a user name without special characters.Example: first name initial + last name.')
         self.fields['email'] = forms.EmailField(initial='Your e-mail', help_text='Enter a valid e-mail address at wich we can reach you.')
 
@@ -516,6 +534,12 @@ class GridDataForm3(forms.Form):
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial=kwargs.get('initial', {}).get('delimiter', None), help_text='Delimiter used to seperate data values.')
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
+        if data_summary is None or data_summary == 'none':
+            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'Coming Soon!')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
+            self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, widget=forms.HiddenInput(), initial='none', help_text='Summarization to be performed on data.')
+        else:
+            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'Coming Soon!')]), required=False, initial='F', help_text='Generate a map to visualize data')
+            self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, initial=data_summary, help_text='Summarization to be performed on data.')
 
 #Data Application Forms
 class MetaGraphForm(forms.Form):

@@ -257,7 +257,7 @@ def data_station(request):
             #if time range > 1 year or user requests data for more than 1 station, large request via ftp
             if days > 366 and 'station_id' not in form1_point.cleaned_data.keys():
                 context['large_request'] = \
-                'At the moment we do not support data requests that exceed 1 year for multiple station. Please limit your request to one station at a time or a date range of one year or less. We will support larger requests in the near future.'
+                'At the moment we do not support data requests that exceed 1 year for multiple station. Please limit your request to one station at a time or a date range of one year or less. We will support larger requests in the near future. Thank you for your patience!'
                 '''
                 context['form3_point_ready'] = True
                 context['large_request'] = 'You requested a large amount of data.Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
@@ -372,10 +372,11 @@ def data_gridded(request):
     state = request.GET.get('state', None)
     loc = request.GET.get('loc', None)
     grid = request.GET.get('grid', None)
+    data_summary = request.GET.get('data_summary', None)
     temporal_resolution = request.GET.get('temporal_resolution', None)
     initial_1 = {}
     if temporal_resolution is not None:context['temporal_resolution'] = temporal_resolution;initial_1['temporal_resolution'] = temporal_resolution
-
+    if data_summary is not None:context['data_summary'] = data_summary;initial_1['data_summary'] = data_summary
     if start_date is not None:context['start_date'] = start_date;initial_1['start_date'] = start_date
     if end_date is not None:context['end_date'] = end_date;initial_1['end_date'] = end_date
     if bbox is not None:
@@ -418,7 +419,8 @@ def data_gridded(request):
             context['form1_grid_ready'] = True
             initial_1 = {
                 'select_grid_by':form0_grid.cleaned_data['select_grid_by'],
-                'temporal_resolution':form0_grid.cleaned_data['temporal_resolution']
+                'temporal_resolution':form0_grid.cleaned_data['temporal_resolution'],
+                'data_summary':form0_grid.cleaned_data['data_summary']
             }
             if initial_1['select_grid_by'] == 'point':
                 context['need_map'] = True
@@ -456,9 +458,9 @@ def data_gridded(request):
             days = (e_date - s_date).days
             #if time range > 1 day and user requests data for more than 1 station, large request via ftp
             #if (days > 1 and  'location' not in form1_grid.cleaned_data.keys()) or (days > 366 and 'location' in form1_grid.cleaned_data.keys()):
-            if (days > 7 and  'location' not in form1_grid.cleaned_data.keys()):
+            if (days > 7 and  'location' not in form1_grid.cleaned_data.keys() and 'summary' not in form1_grid.cleaned_data.keys()):
                 context['large_request'] = \
-                'At the moment we do not support data requests that exceed 7 days for multiple station. Please limit your request to one grid point at a time or a date range of one week or less. We will support larger requests in the near future.'
+                'At the moment we do not support data requests that exceed 7 days for multiple station. Please limit your request to one grid point at a time or a date range of one week or less. Alternatively, you could summarize your data by using the data summary option. We will support larger requests in the near future. Thank you for your patience!'
                 '''
                 context['form3_grid_ready'] = True
                 context['large_request'] = \
