@@ -246,6 +246,7 @@
             </div>
         {%endif%}
 
+
         {%if grid_data %}
   
             <!--Link to relevant applications-->
@@ -264,38 +265,35 @@
             <br />
             {%if figure_files%}
                 <p class="error" onClick="ShowHide('data')"><u>Click here to see/hide the raw data</u></p>
-                <div id="data">
+                <div id="data" style="display:none;">
             {%endif%}
 
-            <h2>{%for item in file_info%}{{item}}&nbsp;{%endfor%}</h2>
-            {%if not json%}
-                <p>date range{{delimiter}}lat{{delimiter}}lon{{delimiter}}elev{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</p>
-                {%for row in grid_data%}
-                    {%for val  in row%}
-                        {{val}}{{delimiter}}
-                    {%endfor%}<br />
-                {%endfor%}
-            {%else%}
-                <p>date,lat,lon,elev,{%for el in elements%}{{el}},{%endfor%}</p>
-                {{grid_data}}
+                <h2>{%for item in file_info%}{{item}}&nbsp;{%endfor%}</h2>
+                {%if not json%}
+                    <p>date range{{delimiter}}lat{{delimiter}}lon{{delimiter}}elev{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</p>
+                    {%for row in grid_data%}
+                        {%for val  in row%}
+                            {{val}}{{delimiter}}
+                        {%endfor%}<br />
+                    {%endfor%}
+                {%else%}
+                    <p>date,lat,lon,elev,{%for el in elements%}{{el}},{%endfor%}</p>
+                    {{grid_data}}
+                {%endif%}
             {%endif%}
-        {%endif%}
 
         {%if figure_files%}
             </div><!--End div data-->
             {%for figure_file in figure_files%}
-                <p>Element: <b>{{elems_long|lookup:foorloop.counter0}}</b>
-                <p>Time Period: <b>{{start_date}}</b> to <b>{{end_date}}</b></p>
-                {%if location %}
-                    <p>Grid Point: {{location}}</p>
-                {%endif%}
-                {%if State %}
-                    <p>State: {{state}}</p>
+                {%if state %}
+                    <p><b>State: </b>{{state}}</p>
                 {%endif%}
                 {%if bounding_box %}
-                    <p>Bounding Box: {{bounding_box}}</p>
+                    <p><b>Bounding Box: </b>{{bounding_box}}</p>
                 {%endif%}
-                <img src="{{MEDIA_URL}}tmp/{{figure_file}}"><br /><br />
+                <p><b>Element: </b>{{elems_long|lookup:forloop.counter0}}</p>
+                <p><b>Time Period: </b>{{start_date}} <b> to </b>{{end_date}}</p>
+                <img width="400px" height="400px" src="{{MEDIA_URL}}tmp/{{figure_file}}"><br /><br />
             {%endfor%}
         {%endif%}
     <br />

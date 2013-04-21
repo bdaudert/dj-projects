@@ -497,7 +497,8 @@ def data_gridded(request):
             context['end_date'] = form1_grid.cleaned_data['end_date'];end_date= form1_grid.cleaned_data['end_date']
             context['element'] = str(form1_grid.cleaned_data['elements'][0])
             elems_long = []
-            element_list = form1_grid.cleaned_data['elements'][0].split(',')
+            element_list = form1_grid.cleaned_data['elements']
+            context['element_list'] = element_list
             for el in element_list:
                 elems_long.append(acis_elements[el]['name_long'])
             context['elems_long'] = elems_long
@@ -506,14 +507,30 @@ def data_gridded(request):
 
             #Generate Data
             req = AcisWS.get_grid_data(form1_grid.cleaned_data, 'griddata_web')
-            #Visualize if desired
-            #Figure generation
-            figure_files = []
+
             if 'visualize' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['visualize'] == 'T':
-                if state:
-                    figure_files = WRCCUtils.make_ACIS_maps(grid, start_date, end_date, element_list,data=req)
-                elif bounding_box:
-                    figure_files = WRCCUtils.make_ACIS_maps(grid, start_date, end_date, element_list,data=req)
+                #Generate figures for each element, store in figure files
+                figure_files = []
+                image = dict(type='png',proj='lcc',interp='cspline',cmap='jet',
+                    overlays=['state','county:0.5:black'],width=500, height=400)
+                params = {
+                    'image':image , 'output':'json', 'grid': grid,
+                    'sdate': start_date,
+                    'edate': end_date,
+                    }
+                if 'state' in form1_grid.cleaned_data.keys():params['state']= state
+                if 'bounding_box' in form1_grid.cleaned_data.keys():params['bbox']= bounding_box
+                #Loop over element and generate figure
+                for elem in element_list:
+                    params['elems'] = [{'name':elem}]
+                    fig = WRCCClasses.GridFigure(params)
+                    results = fig.get_grid()
+                    time_stamp = datetime.datetime.now().strftime('%Y%m_%d_%H_%M_%S')
+                    figure_file = 'acis_map_' + time_stamp + '.png'
+                    file_path_big ='/tmp/' + figure_file
+                    fig.build_figure(results, file_path_big)
+                    figure_files.append(figure_file)
+                context['figure_files'] = figure_files
             #format data
             if form1_grid.cleaned_data['data_format'] == 'json':
                 delimiter = None
