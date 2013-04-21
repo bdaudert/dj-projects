@@ -67,6 +67,16 @@ $(function () {
         var json_file_path = JSON_URL + json_file;
         $.getJSON(json_file_path, function(datadict) {
             for (var i=0;i<datadict.length;i++){
+                if (datadict[i].element == 'mint' || datadict[i].element == 'maxt'){
+                    var min = -50;
+                    var max = 130;
+                }
+                if (datadict[i].element == 'pcpn' || datadict[i].element == 'snow' || datadict[i].element == 'snwd'){
+                    var min = 0;
+                }
+                if (datadict[i].element == 'hdd' || datadict[i].element == 'cdd' || datadict[i].element == 'gdd'){
+                    var min = 0;
+                }
                 var j = i + 1
                 var cntr = 'container' + j
                 var Chart;            
@@ -82,7 +92,7 @@ $(function () {
                         text: 'Date Range ' + datadict[i].record_start  + ' - '+ datadict[i].record_end
                     },
                     yAxis: {
-                    min: 0,
+                    min: min,
                     title: {
                         text: datadict[i].element + ' in ' + datadict[i].units
                         }

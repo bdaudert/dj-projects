@@ -218,10 +218,10 @@ def data_station(request):
             else:
                 initial_params_1['select_stations_by'] = form0_point.cleaned_data['select_stations_by']
 
-            if form0_point in request.POST:
+            if 'form0_point' in request.POST:
                 if form0_point.cleaned_data['select_stations_by'] == 'bbox':
                     context['need_map_bbox'] = True
-                    context['bounding_box'] = '-90,40,-88,41'
+                    context['bounding_box'] = '-115,34,-114,35'
             form1_point = forms.PointDataForm1(initial=initial_params_1)
             context['form1_point'] = form1_point
 
@@ -396,8 +396,8 @@ def data_gridded(request):
         context['lat'] = loc.split(',')[0]; context['lon'] = loc.split(',')[1]
         context['map_loc'] = loc
     else:
-        context['lat'] = '39.82'; context['lon'] = '-98.57'
-        context['map_loc'] = '-98.57,39.82'
+        context['lat'] = '39'; context['lon'] = '-119'
+        context['map_loc'] = '-119,39'
 
     if elements is not None:
         context['elements'] = elements;initial_1['elements'] = elements
@@ -420,6 +420,8 @@ def data_gridded(request):
 
     if 'form0_grid' in request.POST:
         if form0_grid.is_valid():
+            if form0_grid.cleaned_data['temporal_resolution'] in ['mly', 'yly']:
+                context['prism_flag'] = True # flag for correct element docu
             context['temporal_resolution'] = form0_grid.cleaned_data['temporal_resolution']
             context['form1_grid_ready'] = True
             initial_1 = {
@@ -433,15 +435,15 @@ def data_gridded(request):
                     context['lat'] = loc.split(',')[0]; context['lon'] = loc.split(',')[1]
                     context['map_loc'] = loc
                 else:
-                    context['lat'] = '39.82'; context['lon'] = '-98.57'
-                    context['map_loc'] = '-98.57,39.82'
+                    context['lat'] = '39'; context['lon'] = '-119'
+                    context['map_loc'] = '-119,39'
             if initial_1['select_grid_by'] == 'bbox':
                 context['need_map_bbox'] = True
                 bounding_box = request.GET.get('bounding_box', None)
                 if bounding_box is not None:
                     context['bounding_box'] = bounding_box
                 else:
-                    context['bounding_box'] = '-90,40,-88,41'
+                    context['bounding_box'] = '-115,34,-114,35'
 
             form1_grid = forms.GridDataForm1(initial=initial_1)
             context['form1_grid'] = form1_grid
@@ -504,9 +506,15 @@ def data_gridded(request):
             context['elems_long'] = elems_long
             context['grid'] = str(form1_grid.cleaned_data['grid']);grid=str(form1_grid.cleaned_data['grid'])
 
-
             #Generate Data
-            req = AcisWS.get_grid_data(form1_grid.cleaned_data, 'griddata_web')
+            form_input = form1_grid.cleaned_data
+            if str(form1_grid.cleaned_data['grid']) == '21':
+                #PRISM data need to convert elements!!
+                prism_elements = []
+                for el in form1_grid.cleaned_data['elements']:
+                    prism_elements.append('%s_%s' %(str(form1_grid.cleaned_data['temporal_resolution']), str(el)))
+                form_input['elements'] = prism_elements
+            req = AcisWS.get_grid_data(form_input, 'griddata_web')
 
             if 'visualize' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['visualize'] == 'T':
                 #Generate figures for each element, store in figure files
@@ -926,7 +934,7 @@ def clim_sum_maps(request):
                 if bounding_box is not None:
                     context['bounding_box'] = bounding_box
                 else:
-                    context['bounding_box'] = '-90,40,-88,41'
+                    context['bounding_box'] = '-115,34,-114,35'
                 context['need_map'] = True
             initial = {'select_grid_by':form0.cleaned_data['select_grid_by'], \
                       'element':form0.cleaned_data['element'], \
@@ -1107,6 +1115,9 @@ def station_locator_app(request):
             initial_params['element_selection'] = form0.cleaned_data['element_selection']
             form1 = forms.StationLocatorForm1(initial=initial_params)
             context['form1'] = form1
+            if form0.cleaned_data['select_stations_by'] == 'bbox':
+                context['need_map_bbox'] = True
+                context['bounding_box'] = '-115,34,-114,35'
 
     if 'form1' in request.POST:
         context['empty_json'] = True
@@ -1158,7 +1169,7 @@ def station_locator_app(request):
             if 'error' in stn_json.keys():
                 context['error'] = stn_json['error']
             if stn_json['stations'] == []:
-                context['error'] = "No stations found for %s : %s, elements: %s and date range %s!"  %(by_type, val, element_list, date_range)
+                context['error'] = "No stations found for %s : %s, elements: %s."  %(by_type, val, element_list)
             context['json_file'] = f_name
             context['empty_json'] = False
             context['form1_ready'] = False

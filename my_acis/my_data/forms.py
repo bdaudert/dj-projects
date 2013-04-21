@@ -327,24 +327,12 @@ class MultiPRISMElementField(forms.CharField):
     def validate(self, el_tuple):
         "Check if value consists only of valid coop_station_ids."
         for el in el_tuple:
-            if el[0:4] not in ['mly_', 'yly_']:
+            if el not in ['maxt', 'mint', 'pcpn', 'dept']:
                 raise forms.ValidationError(\
                     mark_safe('Not a valid PRISM data element') + \
                     mark_safe('Valid PRISM element choices:<br/>') + \
-                    mark_safe('mly_pcpn, mly_maxt, mly_mint, mly_dewpt, <br/>') + \
+                    mark_safe('pcpn, maxt, mint, dewpt, <br/>') + \
                     mark_safe('You entered: %s' %str(el)))
-            if el[0:4] == 'mly_':
-                if str(el) not in ['mly_pcpn', 'mly_dewpt', 'mly_maxt', 'mly_mint']:
-                    raise forms.ValidationError(\
-                    mark_safe("elements should be a comma separated list of valid element choices:<br/>") + \
-                    mark_safe("mly_pcpn, mly_maxt, mly_mint, mly_dewpt, <br/>") + \
-                    mark_safe("You entered: %s" %str(el)))
-            if el[0:4] == 'yly_':
-                if str(el) not in ['yly_pcpn', 'yly_dewpt', 'yly_maxt', 'yly_mint']:
-                    raise forms.ValidationError(\
-                    mark_safe("elements should be a comma separated list of valid element choices:<br/>") + \
-                    mark_safe("yly_pcpn, yly_maxt, yly_mint, yly_dewpt, <br/>") + \
-                    mark_safe("You entered: %s" %str(el)))
 
 #Data Retrieval Forms
 class PointDataForm0(forms.Form):
@@ -387,19 +375,19 @@ class PointDataForm1(forms.Form):
         elif select_stations_by == 'stnid':
             self.fields['station_id'] = forms.CharField(required=False,initial='266779', help_text=HELP_TEXTS['stn_id'])
         elif select_stations_by == 'stnids':
-            self.fields['station_ids'] = MultiStnField(required=False,initial='266779,103732', help_text=HELP_TEXTS['comma_stns'])
+            self.fields['station_ids'] = MultiStnField(required=False,initial='266779,050848', help_text=HELP_TEXTS['comma_stns'])
         elif select_stations_by == 'county':
-            self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='09001', help_text='Valid US county identifier.')
+            self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='08051', help_text='Valid US county identifier.')
         elif select_stations_by == 'climdiv':
             self.fields['climate_division'] = forms.CharField(required=False,max_length=4, min_length=4, initial='NV01', help_text='Valid US climate division identifier.')
         elif select_stations_by == 'cwa':
-            self.fields['county_warning_area'] = forms.CharField(required=False,max_length=3, initial='BOI', help_text='Valid US county warning area identifier.')
+            self.fields['county_warning_area'] = forms.CharField(required=False,max_length=3, initial='PUB', help_text='US county warning area identifier. Both upper and lower case are valid input formats.')
         elif select_stations_by == 'basin':
-            self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='01080205', help_text='Valid US drainage basin identifier.')
+            self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='10180002', help_text='Valid US drainage basin identifier.')
         elif select_stations_by == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='Valid US state abreviation.')
         elif select_stations_by == 'bbox':
-            self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41', help_text=HELP_TEXTS['bbox'])
+            self.fields['bounding_box'] = BBoxField(required=False,initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
 
         self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
         self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial=begin, help_text=HELP_TEXTS['date_por'])
@@ -433,7 +421,7 @@ class PointDataForm3(forms.Form):
         elif select_stations_by == 'climdiv':
             self.fields['climate_division'] = forms.CharField(max_length=4, min_length=4, initial=kwargs.get('initial', {}).get('climate_division', None),help_text='Valid US climate division identifier.')
         elif select_stations_by == 'cwa':
-            self.fields['county_warning_area'] = forms.CharField(max_length=3, initial=kwargs.get('initial', {}).get('county_warning_area', None),help_text='Valid US county warning area identifier.')
+            self.fields['county_warning_area'] = forms.CharField(max_length=3, initial=kwargs.get('initial', {}).get('county_warning_area', None),help_text='US county warning area identifier. Both upper and lower case are valid input formats.')
         elif select_stations_by == 'basin':
             self.fields['basin'] = forms.CharField(max_length=8, min_length=8, initial=kwargs.get('initial', {}).get('basin', None),help_text='Valid US drainage basin identifier.')
         elif select_stations_by == 'state':
@@ -466,23 +454,20 @@ class GridDataForm1(forms.Form):
         if temporal_resolution is None:temporal_resolution = self.data.get('temporal_resolution')
         if data_summary is None:data_summary = self.data.get('data_summary')
         if select_grid_by == 'point':
-            self.fields['location'] = forms.CharField(initial="-77.7,41.8", help_text=HELP_TEXTS['grid_lon_lat'])
+            self.fields['location'] = forms.CharField(initial="-119,39", help_text=HELP_TEXTS['grid_lon_lat'])
         elif select_grid_by == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='US state abbreviation.')
         elif select_grid_by == 'bbox':
-            self.fields['bounding_box'] = BBoxField(initial='-90,40,-88,41', help_text=HELP_TEXTS['bbox'])
+            self.fields['bounding_box'] = BBoxField(initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
         else:
-            self.fields['bounding_box'] = BBoxField(initial='-90,40,-88,41', help_text=HELP_TEXTS['bbox'])
+            self.fields['bounding_box'] = BBoxField(initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
 
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
         self.fields['temporal_resolution'] = forms.CharField(initial=temporal_resolution, widget=forms.HiddenInput())
         if location is not None:
             self.fields['location'] = forms.CharField(initial=location, help_text=HELP_TEXTS['grid_lon_lat'])
         if temporal_resolution in ['mly', 'yly']:
-            if temporal_resolution == 'mly':
-                self.fields['elements'] = MultiPRISMElementField(initial='mly_maxt,mly_pcpn', help_text=HELP_TEXTS['comma_elements'])
-            else:
-                self.fields['elements'] = MultiPRISMElementField(initial='yly_maxt,yly_pcpn', help_text=HELP_TEXTS['comma_elements'])
+            self.fields['elements'] = MultiPRISMElementField(initial='maxt,pcpn', help_text=HELP_TEXTS['comma_elements'])
             self.fields['grid'] = forms.ChoiceField(choices=([('21', 'PRISM')]), help_text=HELP_TEXTS['grids'])
         elif temporal_resolution == 'dly':
             self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
@@ -494,7 +479,7 @@ class GridDataForm1(forms.Form):
         self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=today, help_text=HELP_TEXTS['date'])
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
         self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
-        if data_summary is None or data_summary == 'none' or select_grid_by == 'point':
+        if data_summary is None or data_summary == 'none' or select_grid_by == 'point' or temporal_resolution in ['mly', 'yly']:
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'False'), ('T', 'True')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
             self.fields['data_summary'] = forms.CharField(widget=forms.HiddenInput(), required=False, initial='none', help_text='Summarization to be performed on data.')
         else:
@@ -522,10 +507,7 @@ class GridDataForm3(forms.Form):
         elif select_grid_by == 'bbox':
             self.fields['bounding_box'] = BBoxField(initial=kwargs.get('initial', {}).get('bounding_box', None), help_text=HELP_TEXTS['bbox'])
         if temporal_resolution in ['mly', 'yly']:
-            if temporal_resolution == 'mly':
-                self.fields['elements'] = MultiPRISMElementField(initial='mly_maxt,mly_pcpn', help_text=HELP_TEXTS['comma_elements'])
-            else:
-                self.fields['elements'] = MultiPRISMElementField(initial='yly_maxt,yly_pcpn', help_text=HELP_TEXTS['comma_elements'])
+            self.fields['elements'] = MultiPRISMElementField(initial='maxt,pcpn', help_text=HELP_TEXTS['comma_elements'])
             self.fields['grid'] = forms.ChoiceField(choices=([('21', 'PRISM')]), help_text=HELP_TEXTS['grids'])
         else:
             self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
@@ -536,7 +518,7 @@ class GridDataForm3(forms.Form):
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial=kwargs.get('initial', {}).get('delimiter', None), help_text='Delimiter used to seperate data values.')
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
-        if data_summary is None or data_summary == 'none' or select_grid_by == 'point':
+        if data_summary is None or data_summary == 'none' or select_grid_by == 'point' or temporal_resolution in ['mly', 'yly']:
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'False'), ('T', 'True')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
             self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, widget=forms.HiddenInput(), initial=kwargs.get('initial', {}).get('data_summary', 'none'), help_text='Summarization to be performed on data.')
         else:
@@ -570,7 +552,7 @@ class MonthlyAveragesForm(forms.Form):
         else:
             self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text=HELP_TEXTS['stn_id'])
         self.fields['elements'] = MultiElementField(initial='pcpn, snow', help_text=HELP_TEXTS['comma_elements'])
-        self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='20000101', help_text=HELP_TEXTS['date_por'])
+        self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='por', help_text=HELP_TEXTS['date_por'])
         self.fields['end_date'] = MyDateField(max_length=10, required = False, initial='por', help_text=HELP_TEXTS['date_por'])
 
 class ClimateMapForm0(forms.Form):
@@ -606,7 +588,7 @@ class ClimateMapForm1(forms.Form):
         if select_grid_by == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='US state.')
         elif select_grid_by == 'bbox':
-            self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41', help_text=HELP_TEXTS['bbox'])
+            self.fields['bounding_box'] = BBoxField(required=False,initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
         elif state is not None:
             self.fields['state'] = forms.ChoiceField(required=False, choices=STATE_CHOICES, initial=state, help_text='US state.')
         elif bounding_box is not None:
@@ -703,23 +685,23 @@ class StationLocatorForm1(forms.Form):
         elif select_stations_by == 'stnid':
             self.fields['station_id'] = forms.CharField(initial='266779',help_text=HELP_TEXTS['stn_id'])
         elif select_stations_by == 'stnids':
-            self.fields['station_ids'] = MultiStnField(required=False,initial='266779,103732', help_text=HELP_TEXTS['comma_stns'])
+            self.fields['station_ids'] = MultiStnField(required=False,initial='266779,050848', help_text=HELP_TEXTS['comma_stns'])
         elif select_stations_by == 'county':
-            self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='09001', help_text='Valid US county identifier.')
+            self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='08051', help_text='Valid US county identifier.')
         elif select_stations_by == 'climdiv':
             self.fields['climate_division'] = forms.CharField(required=False,max_length=4, min_length=4, initial='NV01', help_text='Valid US climate division identifier.')
         elif select_stations_by == 'cwa':
-            self.fields['county_warning_area'] = forms.CharField(required=False,max_length=3, initial='BOI', help_text='Valid US county warning area identifier.')
+            self.fields['county_warning_area'] = forms.CharField(required=False,max_length=3, initial='PUB', help_text='US county warning area identifier. Both upper and lower case are valid input formats.')
         elif select_stations_by == 'basin':
-            self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='01080205', help_text='Valid US darinage basin identifier.')
+            self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='10180002', help_text='Valid US darinage basin identifier.')
         elif select_stations_by == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='US state.')
         elif select_stations_by == 'states':
-            self.fields['states'] = MyStateField(initial='nv,id', help_text='Comma separated list of US state appreviations.')
+            self.fields['states'] = MyStateField(initial='nv,id', help_text='Comma separated list of US state appreviations. Both upper and lower case are valid input formats.')
         elif select_stations_by == 'sw_states':
-            self.fields['states'] = MyStateField(initial='ca,nv,co,nm,az,ut', help_text='Comma separated list of US states')
+            self.fields['states'] = MyStateField(initial='ca,nv,co,nm,az,ut', help_text='Comma separated list of US states. Both upper and lower case are valid input formats.')
         elif select_stations_by == 'bbox':
-            self.fields['bounding_box'] = BBoxField(required=False,initial='-90,40,-88,41', help_text=HELP_TEXTS['bbox'])
+            self.fields['bounding_box'] = BBoxField(required=False,initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
         if element_selection == 'T':
             self.fields['elements'] = MultiElementField(initial='mint,maxt,avgt', help_text=HELP_TEXTS['comma_elements'])
 
