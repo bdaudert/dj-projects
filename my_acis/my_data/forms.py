@@ -479,15 +479,24 @@ class GridDataForm1(forms.Form):
             self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
         if select_grid_by == 'point':
             if temporal_resolution in ['mly', 'yly']:
-                self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin_prism, help_text=HELP_TEXTS['date'])
+                self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial='20120101', help_text=HELP_TEXTS['date'])
+                #Not working for some reason
+                #self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin_prism, help_text=HELP_TEXTS['date'])
             else:
                 self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin, help_text=HELP_TEXTS['date'])
         else:
             if temporal_resolution in ['mly', 'yly']:
-                self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin_prism, help_text=HELP_TEXTS['date'])
+                self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial='20120101', help_text=HELP_TEXTS['date'])
+                #Not working for some reason
+                #self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin_prism, help_text=HELP_TEXTS['date'])
             else:
                 self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=yesterday, help_text=HELP_TEXTS['date'])
-        self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=yesterday, help_text=HELP_TEXTS['date'])
+        if temporal_resolution in ['mly', 'yly']:
+            #Not working for some reasons
+            #self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=yesterday, help_text=HELP_TEXTS['date']
+            self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial='20130101', help_text=HELP_TEXTS['date'])
+        else:
+            self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=yesterday, help_text=HELP_TEXTS['date'])
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
         self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
         if data_summary is None or data_summary == 'none' or select_grid_by == 'point':
