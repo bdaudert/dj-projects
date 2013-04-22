@@ -301,28 +301,41 @@ def data_station(request):
                         context['json'] = True
                     else:
                         delimiter = ' '
-                context['delimiter'] = delimiter
-
+                context['delim'] = form1_point.cleaned_data['delimiter']
+                context['delimiter'] =  delimiter
                 #Output formats
                 select_stations_by = form1_point.cleaned_data['select_stations_by']
                 if select_stations_by == 'stnid':
                     file_info =['StnId', form1_point.cleaned_data['station_id']]
+                    context['by_type'] = 'Individual Station: %s' %str(form1_point.cleaned_data['station_id'])
                 elif select_stations_by == 'stn_id':
                     file_info =['StnId',',',form1_point.cleaned_data['station_id']]
+                    context['by_type'] = 'Individual Station: %s' %str(form1_point.cleaned_data['station_id'])
                 elif select_stations_by == 'stnids':
                     file_info = ['Multi','Stations']
+                    stn_list = []
+                    for stn in form1_point.cleaned_data['station_ids']:
+                        stn_list.append(str(stn))
+                    stn_tuple = ','.join(stn_list)
+                    context['by_type'] = 'Multiple Stations: %s' %stn_tuple
                 elif select_stations_by == 'county':
                     file_info =['county', form1_point.cleaned_data['county']]
+                    context['by_type'] = 'County: %s' %str(form1_point.cleaned_data['county'])
                 elif select_stations_by == 'climdiv':
                     file_info =['climdiv', form1_point.cleaned_data['climate_division']]
+                    context['by_type'] = 'Climate Division: %s' %str(form1_point.cleaned_data['climate_division'])
                 elif select_stations_by == 'cwa':
                     file_info =['cwa', form1_point.cleaned_data['county_warning_area']]
+                    context['by_type'] = 'Couny Warning Area: %s' %str(form1_point.cleaned_data['county_warning_area'])
                 elif select_stations_by == 'basin':
                     file_info =['basin', form1_point.cleaned_data['basin']]
+                    context['by_type'] = 'Basin: %s' %str(form1_point.cleaned_data['basin'])
                 elif select_stations_by == 'state':
                     file_info =['state', form1_point.cleaned_data['state']]
+                    context['by_type'] = 'State: %s' %str(form1_point.cleaned_data['state'])
                 elif select_stations_by == 'bbox':
                     file_info =['bbox', re.sub(',','_',form1_point.cleaned_data['bounding_box'])]
+                    context['by_type'] = 'Bounding Box: %s' %str(form1_point.cleaned_data['bounding_box'])
                 else:
                     file_info =['Undefined','export']
                 context['file_info'] = file_info

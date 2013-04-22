@@ -213,11 +213,32 @@
         {%endif%}
 
         {%if results%}
-            <h3 class="error">Results:</h3>
             {%if show_flags%}
-                <h3>Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated'</h3>
+                <h3>Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</h3>
             {%endif%}
-            {%if results.errors%}
+            <h3 class="error">Results:</h3>
+        {%if by_type %}
+            <p><font color="#FF007F">Search Parameters:</font><br />
+            <b>{{by_type}}, </b><br />
+        {%endif%}
+
+        {%if start_date%}
+            <b>Start Date: </b>{{start_date}},
+        {%endif%}
+        {%if end_date%}
+            <b>End Date: </b>{{end_date}},<br />
+        {%endif%}
+
+        {%if elements%}
+            <b>Elements: </b>{{elements}} <br />
+        {%endif%}
+        {%if delim%}
+            <b>Delimiter: </b>{{delim}}
+        {%endif%}
+
+        {%if by_type %}</p>{%endif%}
+        
+        {%if results.errors%}
             <div class="error">Data Request could not be completed. The following error occurred: {{error}}</div>
             {%endif%}
             
