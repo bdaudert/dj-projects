@@ -239,7 +239,7 @@ def data_station(request):
         if elements is not None:context['elements'] = elements
 
         if form1_point.is_valid():
-            if 'show_flags' in form1_point.cleaned_data.keys():
+            if 'show_flags' in form1_point.cleaned_data.keys() and form1_point.cleaned_data['show_flags'] == 'T':
                 context['show_flags'] = True
                 show_flags = 'T'
             else:
