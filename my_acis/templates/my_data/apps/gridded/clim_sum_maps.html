@@ -130,14 +130,22 @@
         {%if figure_file%}
 
             {%if state%}
-            <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}">Get raw data behind this graphic here!</a>
+                {%if elems == "pcpn" or elems == "snow"%}
+                <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}&data_summary=sum&temporal_resolution=dly">Get raw data behind this graphic here!</a>
+                {%else%}
+                <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}&data_summary=mean&temporal_resolution=dly">Get raw data behind this graphic here!</a>
+                {%endif%}
             <br />
             <br />
             <p>GridACIS Map for State: <b>{{state}}</b></p>
             {%endif%}
 
             {%if bounding_box%}
-            <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bbox={{bounding_box}}">Get raw data behind this graphic here!</a>
+            {%if elems == "pcpn" or elems == "snow"%}
+            <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bbox={{bounding_box}}&data_summary=sum&temporal_resolution=dly">Get raw data behind this graphic here!</a>
+            {%else%}
+            <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bbox={{bounding_box}}&data_summary=mean&temporal_resolution=dly">Get raw data behind this graphic here!</a>
+            {%endif%}
             <br />
             <br />
             <p>GridACIS Map for Bounding Box: <b>{{bounding_box}}</b></p>

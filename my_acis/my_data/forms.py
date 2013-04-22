@@ -16,6 +16,7 @@ import WRCCUtils
 tdy = datetime.datetime.today()
 #Choose default start_date 4 weeks back
 b = datetime.datetime.today() - datetime.timedelta(days=15)
+p = datetime.datetime.today() - datetime.timedelta(days=366)
 y = datetime.datetime.today() - datetime.timedelta(days=1)
 yr = str(tdy.year)
 mon = str(tdy.month)
@@ -24,13 +25,16 @@ if len(mon) == 1:
     mon = '0%s' % mon
 if len(day) == 1:
     day = '0%s' % day
-yr_b = str(b.year)
-mon_b = str(b.month)
-day_b = str(b.day)
+yr_b = str(b.year);mon_b = str(b.month);day_b = str(b.day)
+yr_p = str(p.year);mon_p = str(p.month);day_p = str(p.day)
 if len(mon_b) == 1:
     mon_b = '0%s' % mon_b
 if len(day_b) == 1:
     day_b = '0%s' % day_b
+if len(mon_p) == 1:
+    mon_p = '0%s' % mon_p
+if len(day_p) == 1:
+    day_p = '0%s' % day_p
 yr_y = str(y.year)
 mon_y = str(y.month)
 day_y = str(y.day)
@@ -41,6 +45,7 @@ if len(day_y) == 1:
 today = '%s%s%s' % (yr, mon, day)
 begin = '%s%s%s' % (yr_b, mon_b, day_b)
 yesterday = '%s%s%s' % (yr_y, mon_y, day_y)
+begin_prism = '%s%s%s' % (yr_p, mon_p, day_p)
 
 TIME_PERIOD_CHOICES = (
     ('custom', 'Custom Date Range'),
@@ -473,13 +478,19 @@ class GridDataForm1(forms.Form):
             self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
             self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
         if select_grid_by == 'point':
-            self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin, help_text=HELP_TEXTS['date'])
+            if temporal_resolution in ['mly', 'yly']:
+                self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin_prism, help_text=HELP_TEXTS['date'])
+            else:
+                self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin, help_text=HELP_TEXTS['date'])
         else:
-            self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=yesterday, help_text=HELP_TEXTS['date'])
+            if temporal_resolution in ['mly', 'yly']:
+                self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin_prism, help_text=HELP_TEXTS['date'])
+            else:
+                self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=yesterday, help_text=HELP_TEXTS['date'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=yesterday, help_text=HELP_TEXTS['date'])
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
         self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
-        if data_summary is None or data_summary == 'none' or select_grid_by == 'point' or temporal_resolution in ['mly', 'yly']:
+        if data_summary is None or data_summary == 'none' or select_grid_by == 'point':
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'False'), ('T', 'True')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
             self.fields['data_summary'] = forms.CharField(widget=forms.HiddenInput(), required=False, initial='none', help_text='Summarization to be performed on data.')
         else:

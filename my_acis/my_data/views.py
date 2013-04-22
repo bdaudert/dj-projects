@@ -414,14 +414,8 @@ def data_gridded(request):
 
     if elements is not None:
         context['elements'] = elements;initial_1['elements'] = elements
-        #Check if we are dealing with PRISM data
-        if elements[0:4] == ['mly_']:
-            initial_1['temporal_resolution'] = 'mly'
-        if elements[0:4] == ['yly_']:
-            initial_1['temporal_resolution'] = 'yly'
-        else:
-            initial_1['temporal_resolution'] = 'dly'
-
+    if temporal_resolution is not None:
+        context['temporal_resolution'] = elements;initial_1['temporal_resolution'] = temporal_resolution
     if loc is not None or state is not None or bbox is not None:
         context['hide_form_0'] = True
         context['form1_grid_ready'] = True
