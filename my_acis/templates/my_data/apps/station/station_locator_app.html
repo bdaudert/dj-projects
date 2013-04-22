@@ -28,7 +28,7 @@
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
         </script>
         <div align="center" id="tool_info" style="display:none;">
-            <p>Tool to locate ACIS stations that have data for user choosen list of elements and  data range.</p>
+            <p>Tool to locate ACIS stations that have data for ALL user choosen list of elements and  data range.</p>
             <a target="_blank" href="http://rcc-acis.unl.edu/"><img class="logo" src="{{MEDIA_URL}}img/ACISLogo.png">ACIS Home Page</a>
             <p>Element Choices:</p>
             <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0"/>
@@ -51,8 +51,8 @@
                     <p>Station Selection = "Basin". Find data for all stations in a US drainage basin of your choice. US basins have 8-didgit identifiers. </p>
                     <a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a>
                     <p>Station Selection = "State". Find data for all stations in a US state of your choice.</p>
-                    <p>Station Selection = "Bounding Box". Find data for all stations in a bounding box of your choice. A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. Please enter them in this order.</p>
-            <p>Enter a comma seperated list of elements from the following otions</p>
+                    <p>Station Selection = "Bounding Box". Find data for all stations in a bounding box of your choice. A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</p>
+            <p>Enter a comma seperated list of elements from the following otions. Note that only stations will be listed that have data for ALL chosen elements.</p>
             <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0"/></p>
             <p>Start and end date should be 8 characters long and of form yyyymmdd. Alternativly you can enter
             'por' if you are interested in the period of record for this station.</p>
@@ -168,17 +168,27 @@
             {%endif%}
         {%endif%}
 
+        {%if by_type %}
+            <p><font color="#FF007F">Search Parameters:</font><br />
+            <b>{{by_type}}, </b>
+        {%endif%}
+
         {%if start_date%}
+            <b>Start Date: </b>{{start_date}}, 
             <input type="hidden" id="start_date" name="variable" value="{{start_date}}">
         {%endif%}
         {%if end_date%}
+            <b>Start Date: </b>{{end_date}},
             <input type="hidden" id="end_date" name="variable" value="{{end_date}}">
         {%endif%}
 
         {%if elements%}
+            <b>Elements: </b>{{elements}}
             <input type="hidden" id="elements" name="variable" value="{{elements}}">
         {%endif%}
 
+        {%if by_type %}</p>{%endif%}
+        
         <div id="map"></div>
         <script type="text/javascript">
             initialize_station_finder()

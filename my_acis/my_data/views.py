@@ -1129,16 +1129,35 @@ def station_locator_app(request):
                 element_list = ','.join(form1.cleaned_data['elements'])
             else:
                 element_list = 'Any climate element'
+                context['elements']= 'Any climate element'
             select_stations_by = form1.cleaned_data['select_stations_by']
-            if 'station_id' in form1.cleaned_data.keys():by_type = 'station_id';val = form1.cleaned_data['station_id']
-            if 'station_ids' in form1.cleaned_data.keys():by_type = 'station_ids';val = form1.cleaned_data['station_ids']
-            if 'county' in form1.cleaned_data.keys():by_type = 'county';val = form1.cleaned_data['county']
-            if 'climate_division' in form1.cleaned_data.keys():by_type = 'climate_division';val = form1.cleaned_data['climate_division']
-            if 'county_warning_area' in form1.cleaned_data.keys():by_type = 'county_warning_area';val = form1.cleaned_data['county_warning_area']
-            if 'basin' in form1.cleaned_data.keys():by_type = 'basin';val = form1.cleaned_data['basin']
-            if 'state' in form1.cleaned_data.keys():by_type = 'state';val = form1.cleaned_data['state']
-            if 'states' in form1.cleaned_data.keys():by_type = 'states';val = form1.cleaned_data['states']
-            if 'bounding_box' in form1.cleaned_data.keys():by_type = 'bounding_box';val = form1.cleaned_data['bounding_box']
+            if 'station_id' in form1.cleaned_data.keys():
+                by_type = 'station_id';val = form1.cleaned_data['station_id']
+                context['by_type'] = 'Individual Station: %s' %str(val)
+            if 'station_ids' in form1.cleaned_data.keys():
+                by_type = 'station_ids';val = form1.cleaned_data['station_ids']
+                context['by_type'] = 'Multiple Stations: %s' %str(val)
+            if 'county' in form1.cleaned_data.keys():
+                by_type = 'county';val = form1.cleaned_data['county']
+                context['by_type'] = 'County FIPS Code: %s' %str(val)
+            if 'climate_division' in form1.cleaned_data.keys():
+                by_type = 'climate_division';val = form1.cleaned_data['climate_division']
+                context['by_type'] = 'Climate Division: %s' %str(val)
+            if 'county_warning_area' in form1.cleaned_data.keys():
+                by_type = 'county_warning_area';val = form1.cleaned_data['county_warning_area']
+                context['by_type'] = 'County Warning Area: %s' %str(val)
+            if 'basin' in form1.cleaned_data.keys():
+                by_type = 'basin';val = form1.cleaned_data['basin']
+                context['by_type'] = 'Basin: %s' %str(val)
+            if 'state' in form1.cleaned_data.keys():
+                by_type = 'state';val = form1.cleaned_data['state']
+                context['by_type'] = 'State: %s' %str(val)
+            if 'states' in form1.cleaned_data.keys():
+                by_type = 'states';val = form1.cleaned_data['states']
+                context['by_type'] = 'States: %s' %str(val)
+            if 'bounding_box' in form1.cleaned_data.keys():
+                by_type = 'bounding_box';val = form1.cleaned_data['bounding_box']
+                context['by_type'] = 'Bounding Box: %s' %str(val)
 
             if form1.cleaned_data['element_selection'] == 'T':
                 date_range = [str(form1.cleaned_data['start_date']), str(form1.cleaned_data['end_date'])]

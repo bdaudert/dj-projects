@@ -385,13 +385,13 @@ class PointDataForm1(forms.Form):
         elif select_stations_by == 'basin':
             self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='10180002', help_text='Valid US drainage basin identifier.')
         elif select_stations_by == 'state':
-            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='Valid US state abreviation.')
+            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, initial='NV', help_text='Valid US state abreviation.')
         elif select_stations_by == 'bbox':
             self.fields['bounding_box'] = BBoxField(required=False,initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
 
         self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
         self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial=begin, help_text=HELP_TEXTS['date_por'])
-        self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=today, help_text=HELP_TEXTS['date_por'])
+        self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=yesterday, help_text=HELP_TEXTS['date_por'])
         self.fields['show_flags'] = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), required=False, initial='F', help_text='Show the data flag with each data point.')
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
         self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
@@ -456,7 +456,7 @@ class GridDataForm1(forms.Form):
         if select_grid_by == 'point':
             self.fields['location'] = forms.CharField(initial="-119,39", help_text=HELP_TEXTS['grid_lon_lat'])
         elif select_grid_by == 'state':
-            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='US state abbreviation.')
+            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, initial='NV', help_text='US state abbreviation.')
         elif select_grid_by == 'bbox':
             self.fields['bounding_box'] = BBoxField(initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
         else:
@@ -467,7 +467,7 @@ class GridDataForm1(forms.Form):
         if location is not None:
             self.fields['location'] = forms.CharField(initial=location, help_text=HELP_TEXTS['grid_lon_lat'])
         if temporal_resolution in ['mly', 'yly']:
-            self.fields['elements'] = MultiPRISMElementField(initial='maxt,pcpn', help_text=HELP_TEXTS['comma_elements'])
+            self.fields['elements'] = MultiPRISMElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
             self.fields['grid'] = forms.ChoiceField(choices=([('21', 'PRISM')]), help_text=HELP_TEXTS['grids'])
         elif temporal_resolution == 'dly':
             self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
@@ -476,7 +476,7 @@ class GridDataForm1(forms.Form):
             self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin, help_text=HELP_TEXTS['date'])
         else:
             self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=yesterday, help_text=HELP_TEXTS['date'])
-        self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=today, help_text=HELP_TEXTS['date'])
+        self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=yesterday, help_text=HELP_TEXTS['date'])
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
         self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
         if data_summary is None or data_summary == 'none' or select_grid_by == 'point' or temporal_resolution in ['mly', 'yly']:
@@ -586,7 +586,7 @@ class ClimateMapForm1(forms.Form):
 
         self.fields['select_grid_by'] = forms.CharField(required=False, initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
         if select_grid_by == 'state':
-            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='US state.')
+            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, initial='NV',help_text='US state.')
         elif select_grid_by == 'bbox':
             self.fields['bounding_box'] = BBoxField(required=False,initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
         elif state is not None:
@@ -603,7 +603,7 @@ class ClimateMapForm1(forms.Form):
 
         if time_period == 'custom':
             self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=begin, help_text=HELP_TEXTS['date'])
-            self.fields['end_date'] =MyDateField(max_length=10, min_length=8, required = False, initial=today, help_text=HELP_TEXTS['date'])
+            self.fields['end_date'] =MyDateField(max_length=10, min_length=8, required = False, initial=yesterday, help_text=HELP_TEXTS['date'])
         elif start_date is not None and end_date is not None:
             self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=start_date, help_text=HELP_TEXTS['date'])
             self.fields['end_date'] =MyDateField(max_length=10, min_length=8, required = False, initial=end_date, help_text=HELP_TEXTS['date'])
@@ -611,10 +611,10 @@ class ClimateMapForm1(forms.Form):
             if x is None:
                 self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial='20130101', help_text=HELP_TEXTS['date'])
             else:
-                start_date = WRCCUtils.get_start_date(time_period,today, x)
+                start_date = WRCCUtils.get_start_date(time_period,yesterday, x)
                 self.fields['start_date'] = MyDateField(required = False, initial=start_date, help_text=HELP_TEXTS['date'])
                 self.fields['start_date'].widget.attrs['readonly'] = 'readonly'
-            self.fields['end_date'] = MyDateField(required=False, initial=today, help_text=HELP_TEXTS['date'])
+            self.fields['end_date'] = MyDateField(required=False, initial=yesterday, help_text=HELP_TEXTS['date'])
             self.fields['end_date'].widget.attrs['readonly'] = 'readonly'
         if grid is None:
             self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
@@ -662,7 +662,7 @@ class GPTimeSeriesForm(forms.Form):
             else:
                 self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, initial=grid, help_text=HELP_TEXTS['grids'])
 class StationLocatorForm0(forms.Form):
-    select_stations_by = forms.ChoiceField(choices=STN_FIND_CHOICES_SHORT, required=False, initial='southwest', help_text=HELP_TEXTS['select_stations_by'])
+    select_stations_by = forms.ChoiceField(choices=STN_FIND_CHOICES_SHORT, required=False, initial='state', help_text=HELP_TEXTS['select_stations_by'])
     element_selection = forms.ChoiceField(choices=([('T', 'Choose climate elements'),('F', 'Any climate element')]), required=False, initial='F', help_text='Only look for stations that have data for certain elements.')
 class StationLocatorForm1(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -695,7 +695,7 @@ class StationLocatorForm1(forms.Form):
         elif select_stations_by == 'basin':
             self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='10180002', help_text='Valid US darinage basin identifier.')
         elif select_stations_by == 'state':
-            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, help_text='US state.')
+            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, initial='NV', help_text='US state.')
         elif select_stations_by == 'states':
             self.fields['states'] = MyStateField(initial='nv,id', help_text='Comma separated list of US state appreviations. Both upper and lower case are valid input formats.')
         elif select_stations_by == 'sw_states':
@@ -703,8 +703,8 @@ class StationLocatorForm1(forms.Form):
         elif select_stations_by == 'bbox':
             self.fields['bounding_box'] = BBoxField(required=False,initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
         if element_selection == 'T':
-            self.fields['elements'] = MultiElementField(initial='mint,maxt,avgt', help_text=HELP_TEXTS['comma_elements'])
+            self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
 
             self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='20130101',min_length=8, help_text=HELP_TEXTS['date'])
-            self.fields['end_date'] = MyDateField(max_length=10, required = False, initial=today,min_length=8, help_text= 'yyyymmdd.')
+            self.fields['end_date'] = MyDateField(max_length=10, required = False, initial=yesterday,min_length=8, help_text= 'yyyymmdd.')
 
