@@ -683,7 +683,7 @@ class GPTimeSeriesForm(forms.Form):
                 self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, initial=grid, help_text=HELP_TEXTS['grids'])
 class StationLocatorForm0(forms.Form):
     select_stations_by = forms.ChoiceField(choices=STN_FIND_CHOICES_SHORT, required=False, initial='state', help_text=HELP_TEXTS['select_stations_by'])
-    element_selection = forms.ChoiceField(choices=([('T', 'Choose climate elements'),('F', 'Any climate element')]), required=False, initial='F', help_text='Only look for stations that have data for certain elements.')
+    element_selection = forms.ChoiceField(choices=([('T', 'Choose climate elements'),('F', 'Any climate element')]), required=False, initial='F', help_text='Only look for stations that have data for all of these elements.')
 class StationLocatorForm1(forms.Form):
     def __init__(self, *args, **kwargs):
         select_stations_by = kwargs.get('initial', {}).get('select_stations_by', None)
@@ -697,7 +697,7 @@ class StationLocatorForm1(forms.Form):
 
 
         self.fields['select_stations_by'] = forms.CharField(required=False, initial=select_stations_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
-        self.fields['element_selection'] = forms.CharField(required=False, initial=element_selection, widget=forms.HiddenInput(), help_text='Only look for stations that have data for certain elements.')
+        self.fields['element_selection'] = forms.CharField(required=False, initial=element_selection, widget=forms.HiddenInput(), help_text='Only look for stations that have data for all of these elements.')
 
         if select_stations_by == 'stn_id':
             self.fields['station_id'] = forms.CharField(initial=stn_id, help_text=HELP_TEXTS['stn_id'])
