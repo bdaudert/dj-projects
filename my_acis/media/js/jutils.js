@@ -2,18 +2,21 @@
 //and unsets the boder of all other nodes of same class type
 function HighLight(node,DivClass,DivId) {
     //node is qmark, DivId is corresponding docu;
-    NodeClassName = node.className
+    var div_to_show = document.getElementById(DivId)
+    var divs_to_hide = document.getElementsByClassName(DivClass);
+    var NodeClassName = node.className
+    var nodes_to_blur= document.getElementsByClassName(NodeClassName);
     if (node.style.border != "none"){
+        //HIDE
         //turn off this qmark
         node.style.border = "none";
         //turn off of the corresponding div
-        docu_to_turn_off = document.getElementById(DivId);
-        docu_to_turn_off.style.display = "none";
+        div_to_show.style.display = "none";
     }
     else {
+        //SHOW
         node.style.border ="4px solid #FF007F";
         //Unborder all other nodes of same class name
-        var nodes_to_blur= document.getElementsByClassName(NodeClassName);
         for (i=0;i<nodes_to_blur.length;i++){     
             if (nodes_to_blur[i] != node){
                 //qmarks_to_turn_off[i].blur();
@@ -23,22 +26,13 @@ function HighLight(node,DivClass,DivId) {
                 nodes_to_blur[i].style.border="4px solid #FF007F";
             }
         }
-
-        //Hide all divs with class name DivClass except the one of id=DivId 
-        var divs_to_hide = document.getElementsByClassName(DivClass);
-        div_to_show = document.getElementById(DivId)
-        if (div_to_show.style.display == "block"){
-            div_to_show.style.display == "none";
-        }
-        else{
-            div_to_show.style.display == "block";
-            for (i=0;i<divs_to_hide.length;i++){
-                if (divs_to_hide[i] == div_to_show){
-                    divs_to_hide[i].style.display ="block";
-                }
-                else {
-                    divs_to_hide[i].style.display ="none";
-                }   
+        //Hide all divs with class name DivClass except show the one of id=DivId 
+        for (i=0;i<divs_to_hide.length;i++){
+            if (divs_to_hide[i] != div_to_show){
+                divs_to_hide[i].style.display ="none";
+            }
+            else{
+                divs_to_hide[i].style.display ="block";
             }
         }
     }

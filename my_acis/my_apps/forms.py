@@ -387,7 +387,7 @@ class SodForm(forms.Form):
 
         if app_name in ['Soddyrec', 'Sodcnv', 'Sodlist', 'Sodrun', 'Sodrunr']:
             self.fields['start_date'] = MyDateField(max_length=8, initial='20000101', help_text="yyyymmdd")
-            self.fields['end_date'] = MyDateField(max_length=8, initial=today, help_text="yyyymmdd")
+            self.fields['end_date'] = MyDateField(max_length=8, initial=20091231, help_text="yyyymmdd")
             #self.fields['end_date'] = forms.CharField(max_length=8, initial='20091231')
         elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy', 'Sodpad', 'Sodsumm', 'Sodpct', 'Sodthr', 'Sodxtrmts']:
             self.fields['start_date'] = MyDateField(max_length=4, min_length=4, initial='2000', help_text="yyyy")
