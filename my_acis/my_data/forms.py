@@ -55,10 +55,10 @@ TIME_PERIOD_CHOICES = (
 )
 
 GRID_SUMMARY_CHOICES = (
-    ('max', 'Maximum'),
-    ('min', 'Minimium'),
-    ('sum', 'Sum'),
-    ('mean', 'Mean'),
+    ('max', 'Temporal Maximum'),
+    ('min', 'Temporal Minimium'),
+    ('sum', 'Temporal Sum'),
+    ('mean', 'Temporal Mean'),
     ('none', 'None, just get raw data')
 )
 
@@ -479,9 +479,12 @@ class GridDataForm1(forms.Form):
             self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
         if select_grid_by == 'point':
             if temporal_resolution in ['mly', 'yly']:
-                self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial='20120101', help_text=HELP_TEXTS['date'])
-                #Not working for some reason
-                #self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin_prism, help_text=HELP_TEXTS['date'])
+                if select_grid_by == 'point':
+                    self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial='18950101', help_text=HELP_TEXTS['date'])
+                else:
+                    self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial='20120101', help_text=HELP_TEXTS['date'])
+                    #Not working for some reason
+                    #self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin_prism, help_text=HELP_TEXTS['date'])
             else:
                 self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin, help_text=HELP_TEXTS['date'])
         else:
@@ -501,10 +504,10 @@ class GridDataForm1(forms.Form):
         self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
         if data_summary is None or data_summary == 'none' or select_grid_by == 'point':
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'False'), ('T', 'True')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
-            self.fields['data_summary'] = forms.CharField(widget=forms.HiddenInput(), required=False, initial='none', help_text='Summarization to be performed on data.')
+            self.fields['data_summary'] = forms.CharField(widget=forms.HiddenInput(), required=False, initial='none', help_text='Temporal summarization to be performed on data.')
         else:
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'False'), ('T', 'True')]), required=False, initial='F', help_text='Generate a map to visualize data')
-            self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, initial=data_summary, help_text='Summarization to be performed on data.')
+            self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, initial=data_summary, help_text='Temporal summarization to be performed on data.')
 class GridDataForm3(forms.Form):
     def __init__(self, *args, **kwargs):
         select_grid_by = kwargs.get('initial', {}).get('select_grid_by', None)
@@ -540,10 +543,10 @@ class GridDataForm3(forms.Form):
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
         if data_summary is None or data_summary == 'none' or select_grid_by == 'point' or temporal_resolution in ['mly', 'yly']:
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'False'), ('T', 'True')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
-            self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, widget=forms.HiddenInput(), initial=kwargs.get('initial', {}).get('data_summary', 'none'), help_text='Summarization to be performed on data.')
+            self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, widget=forms.HiddenInput(), initial=kwargs.get('initial', {}).get('data_summary', 'none'), help_text='Temporal summarization to be performed on data.')
         else:
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'False'), ('T', 'True')]), required=False, initial='F', help_text='Generate a map to visualize data')
-            self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, initial=data_summary, help_text='Summarization to be performed on data.')
+            self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, initial=data_summary, help_text='Temporal summarization to be performed on data.')
 
 #Data Application Forms
 class MetaGraphForm(forms.Form):
@@ -571,7 +574,7 @@ class MonthlyAveragesForm(forms.Form):
             self.fields['station_id'] = forms.CharField(required=False, initial='266779', help_text=HELP_TEXTS['stn_id'])
         else:
             self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text=HELP_TEXTS['stn_id'])
-        self.fields['elements'] = MultiElementField(initial='pcpn, snow', help_text=HELP_TEXTS['comma_elements'])
+        self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn,snow,snwd', help_text=HELP_TEXTS['comma_elements'])
         self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='por', help_text=HELP_TEXTS['date_por'])
         self.fields['end_date'] = MyDateField(max_length=10, required = False, initial='por', help_text=HELP_TEXTS['date_por'])
 
