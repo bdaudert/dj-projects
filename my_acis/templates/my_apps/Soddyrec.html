@@ -52,12 +52,20 @@ Units       English (inches and degrees F)</br>
     <table border="0"><tr>
     {%for el, el_data in stn_data.items%}
       <td><table border="1">
-      <tr><td colspan="2"></td><td class="stronger" colspan=8 align="left">{{elements|lookup:el|safe}}</td></tr>
-      <tr><td class="stronger">Mon</td><td class="stronger">Day</td><td class="stronger">Avgt</td><td></td><td></td><td class="stronger">No</td><td class="stronger">Extrm</td><td></td><td></td><td class="stronger">Year</td></tr>
+      <tr><td colspan="2"></td><td class="stronger" colspan=6 align="left">{{elements|lookup:el|safe}}</td></tr>
+      {%if elements|lookup:el == "pcpn" or elements|lookup:el == "snow" or elements|lookup:el == "snwd"%}
+      <tr><td class="stronger">Mon</td><td class="stronger">Day</td><td class="stronger">Avgt</td><td></td><td></td><td class="stronger">No</td><td class="stronger">HI</td><td></td><td></td><td class="stronger">Year</td></tr>
       {%for vals in el_data %}
         <tr><td style="text-align:right">{{vals.0}}</td><td style="text-align:right">{{vals.1}}</td><td style="text-align:right">{{vals.2}}</td><td></td><td></td><td style="text-align:right">{{vals.3}}</td><td style="text-align:right">{{vals.4}} </td><td></td><td></td><td style="text-align:right">{{vals.5}}</td></tr>
       {%endfor%}
-      </td></table>
+      {%else%}
+      <tr><td class="stronger">Mon</td><td class="stronger">Day</td><td class="stronger">Avgt</td><td></td><td></td><td class="stronger">No</td><td class="stronger">HI</td><td></td><td></td><td class="stronger">Year</td><td class="stronger">LO</td><td></td><td></td><td class="stronger">Year</td></tr>
+      {%for vals in el_data %}
+        <tr><td style="text-align:right">{{vals.0}}</td><td style="text-align:right">{{vals.1}}</td><td style="text-align:right">{{vals.2}}</td><td></td><td></td><td style="text-align:right">{{vals.3}}</td><td style="text-align:right">{{vals.4}} </td><td></td><td></td><td style="text-align:right">{{vals.5}}</td><td style="text-align:right">{{vals.6}} </td><td></td><td></td><td style="text-align:right">{{vals.7}}<td></tr>
+      {%endfor%}
+      {%endif%}
+      </td>
+      </table>
    {%endfor%}
    </tr></table>
    {%endif%}
