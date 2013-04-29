@@ -264,9 +264,17 @@
                     <table>
                     <th>date{{delimiter}}
                         {%if show_flags%}
-                            {%for el in results.elements%}{{el}}{{delimiter}}flag{{delimiter}}{%endfor%}
+                            {%if show_observation_time%}
+                                {%for el in results.elements%}{{el}}{{delimiter}}flag{{delimiter}}obs time{{delimiter}}{%endfor%}
+                            {%else%}
+                                {%for el in results.elements%}{{el}}{{delimiter}}flag{{delimiter}}{%endfor%}
+                            {%endif%}
                         {%else%}
-                            {%for el in results.elements%}{{el}}{{delimiter}}{%endfor%}
+                            {%if show_observation_time%}
+                                {%for el in results.elements%}{{el}}{{delimiter}}obs time{{delimiter}}{%endfor%}
+                            {%else%}
+                                {%for el in results.elements%}{{el}}{{delimiter}}{%endfor%}
+                            {%endif%}
                         {%endif%}
                     </th>
                     {%for date_vals in results.stn_data|lookup:stn%}
@@ -276,9 +284,17 @@
                                     {{el_val}}{{delimiter}}
                                 {%else%}
                                     {%if show_flags%}
-                                        {{el_val|lookup:0}}{{delimiter}}{{el_val|lookup:1}}{{delimiter}}
+                                        {%if show_observation_time%}
+                                            {{el_val|lookup:0}}{{delimiter}}{{el_val|lookup:1}}{{delimiter}}{{el_val|lookup:2}}{{delimiter}}
+                                        {%else%}
+                                            {{el_val|lookup:0}}{{delimiter}}{{el_val|lookup:1}}{{delimiter}}
+                                        {%endif%}
                                     {%else%}
-                                        {{el_val|lookup:0}}{{delimiter}}
+                                        {%if show_observation_time%}
+                                            {{el_val|lookup:0}}{{delimiter}}{{el_val|lookup:2}}{{delimiter}}
+                                        {%else%}
+                                            {{el_val|lookup:0}}{{delimiter}}
+                                        {%endif%}
                                     {%endif%}
                                 {%endif%}
                             {%endfor%}

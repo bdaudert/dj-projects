@@ -65,17 +65,31 @@ $(function () {
         var json_file = document.getElementById("json_file").value;
         var JSON_URL = document.getElementById("JSON_URL").value;
         var json_file_path = JSON_URL + json_file;
+        var p_color = '#0000FF';
         $.getJSON(json_file_path, function(datadict) {
             for (var i=0;i<datadict.length;i++){
-                if (datadict[i].element == 'mint' || datadict[i].element == 'maxt'){
+                //Define element dependent vars like y-axis max, min, plot-color
+                if (datadict[i].element == 'maxt'){
                     var min = -50;
                     var max = 130;
+                    var p_color = '#FF0000';
                 }
-                if (datadict[i].element == 'pcpn' || datadict[i].element == 'snow' || datadict[i].element == 'snwd'){
+                if (datadict[i].element == 'mint'){
+                    var min = -50;
+                    var max = 130;
+                    var p_color = '#0000FF';
+                }
+                if (datadict[i].element == 'pcpn'){
                     var min = 0;
+                    var p_color = '#00FF00';
+                }
+                if (datadict[i].element == 'snow' || datadict[i].element == 'snwd'){
+                    var min = 0;
+                    var p_color = '#800080';    
                 }
                 if (datadict[i].element == 'hdd' || datadict[i].element == 'cdd' || datadict[i].element == 'gdd'){
                     var min = 0;
+                    var p_color = '#00FFFF';
                 }
                 var j = i + 1
                 var cntr = 'container' + j
@@ -99,6 +113,7 @@ $(function () {
                     },
                     series: [{
                         name: datadict[i].stn_name + ', ' + datadict[i].stn_id + ', ' + datadict[i].state,
+                        color: p_color,
                         data: datadict[i].data
 
                     }]

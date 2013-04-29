@@ -196,9 +196,9 @@ def data_station(request):
     if elements is not None:initial_params_0['elements'] = str(elements);context['elements'] = elements
 
     if initial_params_0:
-        form0_point = set_as_form(request,'PointDataForm0', init=initial_params_0)
+        form0_point = set_as_form(request,'StationDataForm0', init=initial_params_0)
     else:
-        form0_point = set_as_form(request,'PointDataForm0')
+        form0_point = set_as_form(request,'StationDataForm0')
     context['form0_point'] = form0_point
 
     if 'form0_point' in request.POST or stn_id is not None:
@@ -222,11 +222,11 @@ def data_station(request):
                 if form0_point.cleaned_data['select_stations_by'] == 'bbox':
                     context['need_map_bbox'] = True
                     context['bounding_box'] = '-115,34,-114,35'
-            form1_point = forms.PointDataForm1(initial=initial_params_1)
+            form1_point = forms.StationDataForm1(initial=initial_params_1)
             context['form1_point'] = form1_point
 
     if 'form1_point' in request.POST:
-        form1_point = set_as_form(request,'PointDataForm1')
+        form1_point = set_as_form(request,'StationDataForm1')
         context['form1_point'] = form1_point
         context['form1_point_ready'] = True
         stn_id = request.GET.get('stn_id', None)
@@ -244,6 +244,11 @@ def data_station(request):
                 show_flags = 'T'
             else:
                 show_flags = 'F'
+            if 'show_observation_time' in form1_point.cleaned_data.keys() and form1_point.cleaned_data['show_observation_time'] == 'T':
+                context['show_observation_time'] = True
+                show_observation_time = 'T'
+            else:
+                show_observation_time = 'F'
             if form1_point.cleaned_data['select_stations_by'] == 'bbox':
                 context['need_map_bbox'] = True
                 context['bounding_box'] = form1_point.cleaned_data['bounding_box']
@@ -271,12 +276,12 @@ def data_station(request):
                 initial_params_2['elements'] = ','.join(initial_params_2['elements'])
                 if 'station_ids' in initial_params_2.keys():
                     initial_params_2['station_ids'] = ','.join([str(stn) for stn in initial_params_2['station_ids']])
-                form3_point = forms.PointDataForm3(initial=initial_params_2)
+                form3_point = forms.StationDataForm3(initial=initial_params_2)
                 context['form3_point'] = form3_point
                 '''
                 return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
             else:
-                resultsdict = AcisWS.get_point_data(form1_point.cleaned_data, 'sodlist_web')
+                resultsdict = AcisWS.get_station_data(form1_point.cleaned_data, 'sodlist_web')
                 context['results'] = resultsdict
                 # If request successful, get params for link to apps page
                 if 'stn_data' in resultsdict.keys() and resultsdict['stn_data']:
@@ -341,18 +346,15 @@ def data_station(request):
                 context['file_info'] = file_info
 
                 if form1_point.cleaned_data['data_format'] == 'dlm':
-                    #return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'dat')
-                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'dat', request=request, file_info=file_info, show_flags=show_flags)
+                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'dat', request=request, file_info=file_info, show_flags=show_flags, show_observation_time=show_observation_time)
                 elif form1_point.cleaned_data['data_format'] == 'clm':
-                    #return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'txt')
-                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'txt', request=request, file_info=file_info, show_flags=show_flags)
+                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'txt', request=request, file_info=file_info, show_flags=show_flags, show_observation_time=show_observation_time)
                 elif form1_point.cleaned_data['data_format'] == 'xl':
-                    #return export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delimiter, 'xls')
-                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'xls', request=request, file_info=file_info, show_flags=show_flags)
+                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'xls', request=request, file_info=file_info, show_flags=show_flags, show_observation_time=show_observation_time)
                 else:
                     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
     if 'form3_point' in request.POST:
-        form3_point = set_as_form(request,'PointDataForm3')
+        form3_point = set_as_form(request,'StationDataForm3')
         context['form3_point'] = form3_point
         context['form3_point_ready'] = True
         context['hide_form_3'] = True

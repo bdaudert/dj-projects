@@ -240,7 +240,7 @@ class MyStateField(forms.CharField):
         for state in states_list:
             if state not in WRCCUtils.fips_state_keys.keys() and state not in WRCCUtils.state_choices:
                 raise forms.ValidationError('Need comma separated list of valid US states. Not a valid US State: %s' % state)
-#for background data requests, see GridDataForm3, PointDataForm3
+#for background data requests, see GridDataForm3, StationDataForm3
 class MyNameField(forms.CharField):
     def to_python(self, name):
         if not name:
@@ -340,10 +340,10 @@ class MultiPRISMElementField(forms.CharField):
                     mark_safe('You entered: %s' %str(el)))
 
 #Data Retrieval Forms
-class PointDataForm0(forms.Form):
+class StationDataForm0(forms.Form):
     def __init__(self, *args, **kwargs):
         stn_id = kwargs.get('initial', {}).get('stn_id', None)
-        super(PointDataForm0, self).__init__(*args, **kwargs)
+        super(StationDataForm0, self).__init__(*args, **kwargs)
 
         if stn_id is None:
             stn_id = self.data.get('stn_id')
@@ -354,13 +354,13 @@ class PointDataForm0(forms.Form):
             self.fields['select_stations_by'] = forms.ChoiceField(choices=STN_FIND_CHOICES,required=False, initial='stn_id', widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
             self.fields['stn_id'] = forms.CharField(required=False, initial=stn_id, help_text=HELP_TEXTS['stn_id'])
 
-class PointDataForm1(forms.Form):
+class StationDataForm1(forms.Form):
     def __init__(self, *args, **kwargs):
         select_stations_by = kwargs.get('initial', {}).get('select_stations_by', None)
         elements = kwargs.get('initial', {}).get('elements', None)
         data_format =  kwargs.get('initial', {}).get('data_format', None)
         stn_id = kwargs.get('initial', {}).get('stn_id', None)
-        super(PointDataForm1, self).__init__(*args, **kwargs)
+        super(StationDataForm1, self).__init__(*args, **kwargs)
 
         if select_stations_by is None:
             select_stations_by = self.data.get('select_stations_by')
@@ -398,14 +398,15 @@ class PointDataForm1(forms.Form):
         self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial=begin, help_text=HELP_TEXTS['date_por'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=yesterday, help_text=HELP_TEXTS['date_por'])
         self.fields['show_flags'] = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), required=False, initial='F', help_text='Show the data flag with each data point.')
+        self.fields['show_observation_time'] = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), required=False, initial='F', help_text='Show the time at which the observation was taken for each data point.')
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
         self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
-class PointDataForm3(forms.Form):
+class StationDataForm3(forms.Form):
    def __init__(self, *args, **kwargs):
         select_stations_by = kwargs.get('initial', {}).get('select_stations_by', None)
         data_format =  kwargs.get('initial', {}).get('data_format', None)
-        super(PointDataForm3, self).__init__(*args, **kwargs)
+        super(StationDataForm3, self).__init__(*args, **kwargs)
 
         if select_stations_by is None:
             select_stations_by = self.data.get('select_stations_by')
@@ -437,6 +438,7 @@ class PointDataForm3(forms.Form):
         self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('start_date', None),help_text=HELP_TEXTS['date_por'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('end_date', None), help_text=HELP_TEXTS['date_por'])
         self.fields['show_flags'] = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), required=False, initial=kwargs.get('initial', {}).get('show_flags', 'F'), help_text='Show the data flag with each data point. Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated')
+        self.fields['show_observation_time'] = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), required=False, initial=kwargs.get('initial', {}).get('show_observation_time', 'F'), help_text='Show the time at which the observation was taken for each data point.')
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='txt', help_text=HELP_TEXTS['data_format'])
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial=kwargs.get('initial', {}).get('delimiter', None),help_text='Delimiter used to seperate data values.')

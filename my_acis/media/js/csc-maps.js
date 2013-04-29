@@ -82,7 +82,7 @@ function initialize_station_finder() {
         var elements = document.getElementById("elements").value;
     }
     else { var elements = null } 
-    
+    //Read in stn data json file
     $.getJSON(MEDIA_URL + 'tmp/' + json_file, function(data) {
 
         //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
@@ -96,13 +96,13 @@ function initialize_station_finder() {
         var map = new google.maps.Map(document.getElementById("map"),mapOptions);
         
         var legend = document.getElementById('map_legend');
-        //Sort netork_codes according to Kelly's prefernce:
+        //Sort network_codes according to Kelly's preference and append to legend:
         for (var key in data.network_codes) {
             var name = data.network_codes[key];
             var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
             var div = document.createElement('div');
-            if (data.network_codes[key] == "COOP"){
-                //show("COOP");
+            if (data.network_codes[key] == "ICAO"){
+                //show("ICAO");
                 div.innerHTML = '<img src="' + icon + '"> ' + name +': <input type="checkbox" id="'+ name +
                                 '" onclick="my_boxclick(this,\''+ name +'\')" checked />';
             }
@@ -112,7 +112,12 @@ function initialize_station_finder() {
             }
             legend.appendChild(div);
         }
-
+        //Create 'show all networks' button first
+        var name = 'Show all Networks';
+        var icon = 'http://thydzik.com/thydzikGoogleMap/markerlink.php?text=A&color=FC6355';
+        var div = document.createElement('div');
+        div.innerHTML = '<img src="' + icon + '"> ' + name +': <input type="checkbox" id="all" onclick="my_boxclick(this,\'all\')"/><br><p class="error">Please be patient while loading all networks</p>';
+        legend.appendChild(div);
         var bounds=new google.maps.LatLngBounds();
 
         infowindow = new google.maps.InfoWindow({
@@ -214,7 +219,7 @@ function initialize_station_finder() {
                 c.stn_networks +'</td>';
 
             //Set Initial markers and station list
-            if (c.marker_category == "COOP"){
+            if (c.marker_category == "ICAO"){
                 marker.setVisible(true);
                 document.getElementById(c.marker_category).checked = true;
                 var station_list = document.getElementById('station_list');
@@ -234,14 +239,21 @@ function initialize_station_finder() {
         show = function(category) {
             var station_list = document.getElementById('station_list');
             for (var i=0; i<markers.length; i++) {
-                if (markers[i].category == category) {
+                if (category == 'all') {
                     markers[i].setVisible(true);
                     station_list.appendChild(tbl_rows[i]);
-                    //station_list.sort()
+                    for (var key in data.network_codes) {
+                        // == check all the checkboxes ==
+                        document.getElementById(data.network_codes[key]).checked = true;
+                    }
+                    document.getElementById('all').checked = true;
+                }
+                else if (markers[i].category == category) {
+                    markers[i].setVisible(true);
+                    station_list.appendChild(tbl_rows[i]);
+                    document.getElementById(category).checked = true;
                 }
             }
-            // == check the checkbox ==
-            document.getElementById(category).checked = true;
         };
 
         // == hides all markers of a particular category, and ensures the checkbox is cleared and delete station_list ==
@@ -249,14 +261,24 @@ function initialize_station_finder() {
             //remove all rows that belong to category
             var station_list = document.getElementById('station_list');
             for (var i=0; i<markers.length; i++) {
-                if (markers[i].category == category) {
+                if (category == 'all') {
                     markers[i].setVisible(false);
                     station_list.removeChild(tbl_rows[i]);
+                    for (var key in data.network_codes) {
+                        // == clear all the checkboxes ==
+                        document.getElementById(data.network_codes[key]).checked = false;
+                    }
+                    document.getElementById('all').checked = false;
                 }
-
+                else if (markers[i].category == category) {
+                    markers[i].setVisible(false);
+                    station_list.removeChild(tbl_rows[i]);
+                    // == clear the checkbox ==
+                    document.getElementById(category).checked = false;
+                    //Clear 'show all networks' button
+                    document.getElementById('all').checked = false;
+                }
             }
-            // == clear the checkbox ==
-            document.getElementById(category).checked = false;
         };
 
         boxclick = function(box, category){
