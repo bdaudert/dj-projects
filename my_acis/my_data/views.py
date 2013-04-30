@@ -255,11 +255,11 @@ def data_station(request):
             context['cleaned'] = form1_point.cleaned_data
             #Check if data request is large,
             #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
-            if form1_point.cleaned_data['start_date'] == 'por':
+            if form1_point.cleaned_data['start_date'].lower() == 'por':
                 s_date = datetime.date(1900,01,01)
             else:
                 s_date = datetime.date(int(form1_point.cleaned_data['start_date'][0:4]), int(form1_point.cleaned_data['start_date'][4:6]),int(form1_point.cleaned_data['start_date'][6:8]))
-            if form1_point.cleaned_data['end_date'] == 'por':
+            if form1_point.cleaned_data['end_date'].lower() == 'por':
                 e_date = datetime.date.today()
             else:
                 e_date = datetime.date(int(form1_point.cleaned_data['end_date'][0:4]), int(form1_point.cleaned_data['end_date'][4:6]),int(form1_point.cleaned_data['end_date'][6:8]))
@@ -836,7 +836,7 @@ def monthly_aves(request):
                         results[el_idx] = {'element_long':str(el)}
                     results[el_idx]['element'] = str(el)
                     results[el_idx]['stn_id']= str(form_graphs.cleaned_data['station_id'])
-                    if form_graphs.cleaned_data['start_date'] == 'por':
+                    if form_graphs.cleaned_data['start_date'].lower() == 'por':
                         if len(req['meta']['valid_daterange'][el_idx]) == 2:
                             results[el_idx]['record_start'] = str(req['meta']['valid_daterange'][el_idx][0])
                         else:
@@ -844,7 +844,7 @@ def monthly_aves(request):
                             results[el_idx]['record_start'] = ['0000-00-00']
                     else:
                         results[el_idx]['record_start'] = '%s-%s-%s' % (s_date[0:4], s_date[4:6], s_date[6:8])
-                    if form_graphs.cleaned_data['end_date'] == 'por':
+                    if form_graphs.cleaned_data['end_date'].lower() == 'por':
                         if len(req['meta']['valid_daterange'][el_idx]) == 2:
                             results[el_idx]['record_end'] = str(req['meta']['valid_daterange'][el_idx][1])
                         else:
@@ -1173,6 +1173,10 @@ def station_locator_app(request):
                 context['start_date'] = form1.cleaned_data['start_date']
                 context['end_date'] = form1.cleaned_data['end_date']
                 context['elements'] = ','.join(form1.cleaned_data['elements']) #tuple of elements
+                if form1.cleaned_data['constraints']=='all_all':context['constraints'] ='All Elements, All Dates'
+                if form1.cleaned_data['constraints']=='any_any':context['constraints'] ='Any Elements, Any Dates'
+                if form1.cleaned_data['constraints']=='all_any':context['constraints'] ='All Elements, Any Dates'
+                if form1.cleaned_data['constraints']=='any_all':context['constraints'] ='Any Elements, All Dates'
                 #Convert element_list to list of var majors
                 el_vX_list = []
                 for el_idx, el in enumerate(form1.cleaned_data['elements']):
@@ -1190,7 +1194,7 @@ def station_locator_app(request):
                     except:
                         el_vX_list.append(acis_elements[el]['vX'])
 
-                stn_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range)
+                stn_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=form1.cleaned_data['constraints'])
             else:
                 stn_json, f_name = AcisWS.station_meta_to_json(by_type, val)
 
@@ -1200,7 +1204,7 @@ def station_locator_app(request):
                 context['error'] = "No stations found for %s : %s, elements: %s."  %(by_type, val, element_list)
             context['json_file'] = f_name
             context['empty_json'] = False
-            context['form1_ready'] = False
+            context['form1_ready'] = True
             context['show_legend'] = True
     return render_to_response('my_data/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
 

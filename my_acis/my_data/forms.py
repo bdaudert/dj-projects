@@ -47,6 +47,13 @@ begin = '%s%s%s' % (yr_b, mon_b, day_b)
 yesterday = '%s%s%s' % (yr_y, mon_y, day_y)
 begin_prism = '%s%s%s' % (yr_p, mon_p, day_p)
 
+STN_FINDER_LOGIC =(
+    ('all_all', 'All Elements, All Dates'),
+    ('any_any', 'Any Elements, Any Dates'),
+    ('all_any', 'All Elements, Any Date'),
+    ('any_all', 'Any Element, All Dates'),
+)
+
 TIME_PERIOD_CHOICES = (
     ('custom', 'Custom Date Range'),
     ('days', 'Last x days'),
@@ -211,7 +218,7 @@ class MyDateField(forms.CharField):
             return ' '
         formatted_date = ''.join(date.split('-'))
         formatted_date = ''.join(formatted_date.split('/'))
-        return formatted_date
+        return formatted_date.lower()
 
     def validate(self, formatted_date):
         if formatted_date == 'por':
@@ -731,5 +738,6 @@ class StationLocatorForm1(forms.Form):
             self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
 
             self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='20130101',min_length=8, help_text=HELP_TEXTS['date'])
-            self.fields['end_date'] = MyDateField(max_length=10, required = False, initial=yesterday,min_length=8, help_text= 'yyyymmdd.')
+            self.fields['end_date'] = MyDateField(max_length=10, required = False, initial=yesterday,min_length=8, help_text=HELP_TEXTS['date'])
+            self.fields['constraints'] = forms.ChoiceField(choices=STN_FINDER_LOGIC, required=False, initial='all_all')
 
