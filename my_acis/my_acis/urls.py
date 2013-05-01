@@ -55,6 +55,8 @@ urlpatterns = patterns('',
     (r'^sw_ckn/apps/gis/$', 'my_data.views.apps_gis'),
     (r'^sw_ckn/apps/station/metagraph/$', 'my_data.views.metagraph'),
     (r'^sw_ckn/apps/station/metagraph/(?P<stn_id>\d+)$', 'my_data.views.metagraph'),
+    (r'^sw_ckn/apps/station/sodsumm/$', 'my_data.views.sodsumm'),
+    (r'^sw_ckn/apps/station/sodsumm/(?P<stn_id>[^,]+)(\&P<start_date>[\d{4}])(\&P<end_date>[\d{4})(\&P<element>[^,]+)$', 'my_data.views.sodsumm'),
     (r'^sw_ckn/apps/station/monthly_aves/$', 'my_data.views.monthly_aves'),
     (r'^sw_ckn/apps/monthly_aves/(?P<stn_id>[^,]+)(\&P<start_date>[\d{8,10}|por])(\&P<end_date>[\d{8,10}|por)(\&P<elements>[^,]+)$', 'my_data.views.monthly_aves'),
 

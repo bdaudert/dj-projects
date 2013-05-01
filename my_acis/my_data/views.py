@@ -267,6 +267,7 @@ def data_station(request):
             #if time range > 1 year or user requests data for more than 1 station, large request via ftp
             if days > 366 and 'station_id' not in form1_point.cleaned_data.keys():
                 context['large_request'] = \
+                '''
                 'At the moment we do not support data requests that exceed 1 year for multiple station. Please limit your request to one station at a time or a date range of one year or less. We will support larger requests in the near future. Thank you for your patience!'
                 '''
                 context['form3_point_ready'] = True
@@ -278,7 +279,6 @@ def data_station(request):
                     initial_params_2['station_ids'] = ','.join([str(stn) for stn in initial_params_2['station_ids']])
                 form3_point = forms.StationDataForm3(initial=initial_params_2)
                 context['form3_point'] = form3_point
-                '''
                 return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
             else:
                 resultsdict = AcisWS.get_station_data(form1_point.cleaned_data, 'sodlist_web')
@@ -1208,8 +1208,103 @@ def station_locator_app(request):
             context['show_legend'] = True
     return render_to_response('my_data/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
 
+######################################
+#SOD programs
+######################################
+##SOD Utils
+def set_sod_initial(request, app_name):
+    stn_id = request.GET.get('stn_id', None)
+    start_date = request.GET.get('start_date', None)
+    end_date  = request.GET.get('end_date', None)
+    start_year = request.GET.get('start_year', None)
+    end_year  = request.GET.get('end_year', None)
+    initial ={}
+    if stn_id is not None:initial['stn_id'] = stn_id
+    if app_name in ['Sodsumm']:
+        initial['date_type'] = 'y'
+        if start_year is not None:initial['start_year'] = start_year
+        if end_year is not None:initial['end_year'] = end_year
+    else:
+        initial['date_type'] = 'd'
+        if start_date is not None:initial['start_date'] = start_date
+        if end_date is not None:initial['end_date'] = end_date
+    return initial
+
+#SOD views
+def sodsumm(request):
+    context = {
+        'title': 'Sodsumm - Monthly and Seasonal Summaries of daily data',
+        'apps_page':True
+        }
+    initial = set_sod_initial(request, 'Sodsumm')
+    form1 = set_as_form(request,'SodsummForm', init=initial)
+    context['form1'] = form1
+
+    if 'form1' in request.POST:
+        form1 = set_as_form(request,'SodsummForm', init={'date_type':'y'})
+        context['form1'] = form1
+        if form1.is_valid():
+            data_params = {
+                    'coop_station_id':form1.cleaned_data['station_ID'],
+                    'start_date':form1.cleaned_data['start_year'],
+                    'end_date':form1.cleaned_data['end_year'],
+                    'element':'all'
+                    }
+            app_params = {
+                    'el_type':form1.cleaned_data['summary_type'],
+                    'max_missing_days':form1.cleaned_data['max_missing_days'],
+                    }
+            #Define application class
+            App = WRCCClasses.SODApplication('Sodsumm', data_params, app_specific_params=app_params)
+            #Get Data
+            App.get_data()
+            #Run Application
+            results = App.run_app()
+            context['results'] = dict(results[0])
+            #Input parameters:
+            context['station_ID'] = data_params['coop_station_id']
+            context['start_year'] = data_params['start_date']
+            context['end_year'] = data_params['end_date']
+            context['max_missing_days'] = app_params['max_missing_days']
+            #Sodsumm table headers for html
+            context['headers'] = set_sodsumm_headers(['temp', 'prsn', 'hdd', 'cdd', 'gdd', 'corn'])
+            #get station meta information
+            stn_meta = WRCCUtils.get_station_meta(str(form1.cleaned_data['station_ID']))
+            context['station_name'] = str(stn_meta['meta'][0]['name'])
+    return render_to_response('my_data/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
 
 #Utlities
+def set_sodsumm_headers(table_list):
+    headers = {}
+    def set_header(table):
+        rows = []
+        if table == 'temp':
+            rows.append('<th colspan="16"> <b>Temperature Statistics</b>:</th>')
+            rows.append('<th colspan="2"></th><th colspan="4">Averages, </th><th colspan="4">Daily Extremes, </th><th colspan="4">Mean Extremes, </th><th colspan="2"> >= =<  =<  =< </th>')
+        elif table == 'prsn':
+            rows.append('<th colspan="15"><b>Precipitation/Snow Statistics</b>:</th>')
+            rows.append('<th colspan="6">Total Precipitation, </th><th colspan="2">Precipitation, </th><th colspan="2"> >= =<  =<  =< </th><th colspan="3">Total Snowfall</th>')
+
+        elif table == 'hdd':
+            rows.append('<th colspan="14"><b>Heating degree days</b>:</th>')
+            rows.append('<tr><td colspan="14">Output is rounded, unlike NCDC values, which round input.</td></tr>')
+            rows.append('<tr><td colspan="14">Degree Days to selected Base Temperatures(F)</td></tr>')
+        elif table == 'cdd':
+            rows.append('<th colspan="14"><b>Cooling degree days</b>:</th>')
+            rows.append('<tr><td colspan="14">Output is rounded, unlike NCDC values, which round input.</td></tr>')
+            rows.append('<tr><td colspan="14">Degree Days to selected Base Temperatures(F)</td></tr>')
+        elif table == 'gdd':
+            rows.append('<th colspan="15"><b>Growing degree days</b>:</th>')
+            rows.append('<tr><td colspan="15">Output is rounded, unlike NCDC values, which round input.</td>')
+            rows.append('<tr><td colspan="15">Growing Degree Days to selected Base Temperatures(F)</td></tr>')
+        elif table == 'corn':
+            rows.append('<th colspan="15"><b>Corn Growing Degree Days</b></th>')
+        return "\n".join(rows)
+
+    for table in table_list:
+         headers[table] = set_header(table)
+    return headers
+
 def set_as_form(request, f_name, init = None):
     form_name = f_name
     form_class = getattr(forms, form_name)

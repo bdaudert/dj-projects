@@ -9,7 +9,7 @@ from django.forms.widgets import RadioSelect, CheckboxSelectMultiple
 import datetime
 import re
 import WRCCUtils
-
+###########################################
 #Utilities
 ############################################
 #find yestarday's data, default end_data
@@ -46,6 +46,18 @@ today = '%s%s%s' % (yr, mon, day)
 begin = '%s%s%s' % (yr_b, mon_b, day_b)
 yesterday = '%s%s%s' % (yr_y, mon_y, day_y)
 begin_prism = '%s%s%s' % (yr_p, mon_p, day_p)
+
+######################################
+#Choice Fields
+#######################################
+SDMM_ELEMENT_CHOICES = (
+        ('temp', 'Temperature'),
+        ('prsn', 'Precip/Snowfall'),
+        ('both', 'Temp/Precip'),
+        ('hc', 'Degree Days'),
+        ('g', 'Growing Degree Days'),
+        ('all', 'All Statistics'),
+        )
 
 STN_FINDER_LOGIC =(
     ('all_all', 'All Elements, All Dates'),
@@ -192,8 +204,9 @@ acis_elements = acis_elements ={'maxt': 'Maximum Daily Temperature (F)','mint': 
 acis_element_list = ''
 for el, el_long in acis_elements.iteritems():
     acis_element_list = acis_element_list + '%s : %s\n' %(el, el_long)
-
+######################################################################
 #Help texts
+######################################################################
 help_date = 'yyyymmdd, yyyy-mm-dd or yyyy/mm/dd'
 help_comma_elements = 'Comma separated list of climate elements. Available elements: \n %s' %acis_element_list
 help_acis_elements = 'Available climate elements.'
@@ -209,8 +222,9 @@ help_bbox = 'Bounding box latitudes and longitudes: West,South,East,North.'
 HELP_TEXTS = {'select_stations_by': help_stn_selection, 'stn_id':help_stn_id, 'grids': help_grids, 'acis_elements':help_acis_elements, \
             'comma_elements':help_comma_elements, 'date':help_date, 'date_por':help_date_por, 'grid_lon_lat':help_lon_lat, \
             'data_format':help_data_format, 'comma_stns':help_comma_stns, 'bbox':help_bbox}
-
+#####################################################################
 #Custom form fields
+#####################################################################
 class MyDateField(forms.CharField):
     def to_python(self, date):
         # Return an empty string if no input was given.
@@ -235,6 +249,23 @@ class MyDateField(forms.CharField):
         if formatted_date != 'por':
             if not WRCCUtils.is_leap_year(formatted_date[0:4]) and formatted_date[4:6] == '02' and formatted_date[6:8] == '29':
                 raise forms.ValidationError("%s is a leap year and February only has 28 days. Please change your date." %formatted_date[0:4])
+
+class MyYearField(forms.CharField):
+    def to_python(self, date):
+        # Return an empty string if no input was given.
+        if not date:
+            return ' '
+        return date
+
+    def validate(self, date):
+        if len(date) != 4:
+            raise forms.ValidationError("Not a vailid year.")
+        try:
+            int(date)
+            if date[0] not in ['1', '2']:
+                raise forms.ValidationError("Valid year range is: 1000 - 2999. You entered: %s" %date)
+        except:
+            raise forms.ValidationError("Year should consist of four integers. You entered: %s" %date)
 
 class MyStateField(forms.CharField):
     def to_python(self, states):
@@ -345,8 +376,63 @@ class MultiPRISMElementField(forms.CharField):
                     mark_safe('Valid PRISM element choices:<br/>') + \
                     mark_safe('pcpn, maxt, mint, dewpt, <br/>') + \
                     mark_safe('You entered: %s' %str(el)))
+######################################################################
+#Form Classes
+######################################################################
 
-#Data Retrieval Forms
+#Generic form for Kelly's SOD programs
+class SodForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        stn_id = kwargs.get('initial', {}).get('stn_id', None)
+        start_date = kwargs.get('initial', {}).get('start_date', None)
+        end_date = kwargs.get('initial', {}).get('end_date', None)
+        start_year = kwargs.get('initial', {}).get('start_year', None)
+        end_year = kwargs.get('initial', {}).get('end_year', None)
+        date_type = kwargs.get('initial', {}).get('date_type', None) #y= year, d=full 8 digit date
+        super(SodForm, self).__init__(*args, **kwargs)
+        if stn_id is None:stn_id = self.data.get('station_ID')
+        if start_date is None:start_date = self.data.get('start_date')
+        if end_date is None:end_date = self.data.get('end_date')
+        if start_year is None:start_year = self.data.get('start_year')
+        if end_year is None:end_year = self.data.get('end_year')
+        if date_type is None:date_type ='y'
+
+        self.fields['date_type'] = forms.CharField(required=False, initial=date_type, widget=forms.HiddenInput())
+
+        if stn_id is None:
+            self.fields['station_ID'] = forms.CharField(required=False, initial='266779', help_text=HELP_TEXTS['stn_id'])
+        else:
+            self.fields['station_ID'] = forms.CharField(required=False, initial=stn_id, help_text=HELP_TEXTS['stn_id'])
+
+        if date_type == 'd':
+            if start_date is not None:
+                self.fields['start_date'] = MyDateField(required=False, max_length=10, min_length=3, initial=start_date, help_text=HELP_TEXTS['date_por'])
+            else:
+                self.fields['start_date'] = MyDateField(required=False, max_length=10, min_length=3, initial=begin, help_text=HELP_TEXTS['date_por'])
+            if end_date is not None:
+                self.fields['end_date'] = MyDateField(required=False, max_length=10, min_length=3, initial=end_date, help_text=HELP_TEXTS['date_por'])
+            else:
+                self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=yesterday, help_text=HELP_TEXTS['date_por'])
+        elif date_type == 'y':
+            if start_year is not None:
+                self.fields['start_year'] = MyYearField(required=False,initial=start_year, help_text='yyyy')
+            else:
+                self.fields['start_year'] = MyYearField(required=False, initial=str(int(begin[0:4]) - 5), help_text='yyyy')
+
+            if end_year is not None:
+                self.fields['end_year'] = MyYearField(required=False,initial=end_year, help_text='yyyy')
+            else:
+                self.fields['end_year'] = MyYearField(required=False, initial=begin[0:4], help_text='yyyy')
+
+class SodsummForm(SodForm):
+    def __init__(self, *args, **kwargs):
+        super(SodsummForm, self).__init__(*args, **kwargs)
+        #self.fields.keyOrder = ['station_ID', 'start_year', 'end_year','summary_type','max_missing_days', 'generate_graphics']
+    max_missing_days = forms.IntegerField(initial=5, required=False, help_text='Ignore month with 5 or more missing data points.')
+    summary_type = forms.ChoiceField(choices=SDMM_ELEMENT_CHOICES, initial='all', help_text= 'Only generate tables/graphs for these climate elements')
+    #generate_graphics = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), initial='F', help_text= 'Generate plots from data')
+    generate_graphics = forms.ChoiceField(choices=([('F', 'False')]), initial='F', help_text= 'Coming soon')
+
 class StationDataForm0(forms.Form):
     def __init__(self, *args, **kwargs):
         stn_id = kwargs.get('initial', {}).get('stn_id', None)
@@ -405,7 +491,7 @@ class StationDataForm1(forms.Form):
         self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial=begin, help_text=HELP_TEXTS['date_por'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=yesterday, help_text=HELP_TEXTS['date_por'])
         self.fields['show_flags'] = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), required=False, initial='F', help_text='Show the data flag with each data point.')
-        self.fields['show_observation_time'] = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), required=False, initial='F', help_text='Show the time at which the observation was taken for each data point.')
+        self.fields['show_observation_time'] = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), required=False, initial='F', help_text='Show the hour at which the observation was taken for each data point.(1 - 24 =  midnight, -1 means no observation time was recorded)')
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
         self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 

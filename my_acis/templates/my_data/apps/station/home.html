@@ -40,6 +40,14 @@
                 <table>
                     {%if stn_id%}
                         <tr><td>
+                        <a id="sw_ckn" href="{{TOOLS_URL}}station/sodsumm/?stn_id={{stn_id}}" class="trigger">Monthly/Seasonal Climate Summaries(<font color="red">US</font>)</a>
+                        <div class="pop-up" id="sodsumm">
+                            <p>Generates general climatology in table and graph form.</p>
+                        </div>
+                        </td><td>
+                        <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_SODSUMM')">
+                        </td></tr>
+                        <tr><td>
                         <a id="us_wide" href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages</a>
                         <div class="pop-up">
                             <p>Generates bar chart of monthly averages.</p>
@@ -65,6 +73,14 @@
                         <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_META_GRAPH')">
                         </td></tr>
                     {%else%}
+                        <tr><td>
+                        <a id="sw_ckn" href="{{TOOLS_URL}}station/sodsumm/" class="trigger">Monthly/Seasonal Climate Summaries</a>
+                        <div class="pop-up" id="sodsumm">
+                            <p>Generates general climatology in table and graph form.</p>
+                        </div>
+                        </td><td>
+                        <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_SODSUMM')">
+                        </td></tr>
                         <tr><td>
                         <a id="us_wide" href="{{TOOLS_URL}}station/monthly_aves/" class="trigger">Monthly Averages</a>
                         <div class="pop-up">
@@ -135,6 +151,10 @@
 
         <div class="major-right">
             <!-- Application documentation -->
+            <div class="docu" id="Docu_SODSUMM" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_SODSUMM").load("{{MEDIA_URL}}html/commons.html #Docu_SODSUMM");
+                </script> 
             <div class="docu" id="Docu_CalTracker" style="display:none;"></div>
                 <script type="text/javascript">                        
                 $("#Docu_CalTracker").load("{{MEDIA_URL}}html/commons.html #Docu_CalTracker");

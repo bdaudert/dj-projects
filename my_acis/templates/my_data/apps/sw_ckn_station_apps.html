@@ -21,6 +21,14 @@
                 {%if start_date%}
                     {%if elements%}
                         <tr><td>
+                        <a id="sw_ckn" href="{{TOOLS_URL}}station/sodsumm/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}" class="trigger">Monthly/Seasonal Climate Summaries(<font color="red">US</font>)</a>
+                        <div class="pop-up" id="sodsumm">
+                            <p>Generates general climatology in table and graph form.</p>
+                        </div>
+                        </td><td>
+                        <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_SODSUMM')">
+                        </td></tr>
+                        <tr><td>
                         <a id="sw_ckn" href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
                         <div class="pop-up" id="maves">
                             <p>Generates bar chart of monthly averages.</p>
@@ -29,6 +37,14 @@
                         <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_MAVES')">
                         </td></tr>
                     {%else%}
+                        <tr><td>
+                        <a id="sw_ckn" href="{{TOOLS_URL}}station/sodsumm/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}" class="trigger">Monthly/Seasonal Climate Summaries(<font color="red">US</font>)</a>
+                        <div class="pop-up" id="sodsumm">
+                            <p>Generates general climatology in table and graph form.</p>
+                        </div>
+                        </td><td>
+                        <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_SODSUMM')">
+                        </td></tr>
                         <tr><td>
                         <a id="sw_ckn" href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
                         <div class="pop-up" id="maves">
@@ -40,12 +56,20 @@
                     {%endif%}
                 {%else%}
                     <tr><td>
+                    <a id="sw_ckn" href="{{TOOLS_URL}}station/sodsumm/?stn_id={{stn_id}}" class="trigger">Monthly/Seasonal Climate Summaries(<font color="red">US</font>)</a>
+                    <div class="pop-up" id="sodsumm">
+                        <p>Generates general climatology in table and graph form.</p>
+                    </div>
+                    </td><td>
+                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_SODSUMM')">
+                    </td></tr>
+                    <tr><td>
                     <a id="sw_ckn" href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
                     <div class="pop-up" id="maves">
                         <p>Generates bar chart of monthly averages.</p>
                     </div>
                     </td><td>
-                    <img class="qmark" style="border:4px solid #FF007F" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_MAVES')">
+                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_MAVES')">
                     </td></tr>
                 {%endif%}
                 <tr><td>
@@ -57,6 +81,14 @@
                 <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_META_GRAPH')">
                 </td></tr>
             {%else%}
+                <tr><td>
+                <a id="sw_ckn" href="{{TOOLS_URL}}station/sodsumm/" class="trigger">Monthly/Seasonal Climate Summaries(<font color="red">US</font>)</a>
+                <div class="pop-up" id="sodsumm">
+                    <p>Generates general climatology in table and graph form.</p>
+                </div>
+                </td><td>
+                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" width="15" height="15" onclick="HighLight(this,'docu','Docu_SODSUMM')">
+                </td></tr>
                 <tr><td>
                 <a href="{{TOOLS_URL}}station/monthly_aves/" class="trigger">Monthly Averages(<font color="red">US</font>)</a>
                 <div class="pop-up" id="meta">
@@ -110,6 +142,10 @@
             $("#Docu_MAVES").load("{{MEDIA_URL}}html/commons.html #Docu_MAVES");
             </script>
 
+       <div class="docu" id="Docu_SODSUMM" style="display:none;"></div>
+            <script type="text/javascript">                        
+            $("#Docu_SODSUMM").load("{{MEDIA_URL}}html/commons.html #Docu_SODSUMM");
+            </script>
        <div class="docu" id="Docu_NONE" style="display:none;"></div>
             <script type="text/javascript">                        
             $("#Docu_NONE").load("{{MEDIA_URL}}html/commons.html #Docu_NONE");
