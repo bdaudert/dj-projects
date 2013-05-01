@@ -1267,7 +1267,18 @@ def sodsumm(request):
             context['end_year'] = data_params['end_date']
             context['max_missing_days'] = app_params['max_missing_days']
             #Sodsumm table headers for html
-            context['headers'] = set_sodsumm_headers(['temp', 'prsn', 'hdd', 'cdd', 'gdd', 'corn'])
+            if form1.cleaned_data['summary_type'] == 'all':
+                table_list = ['temp', 'prsn', 'hdd', 'cdd', 'gdd', 'corn']
+            elif form1.cleaned_data['summary_type'] == 'both':
+                table_list = ['temp', 'prsn']
+            elif form1.cleaned_data['summary_type'] == 'hc':
+                table_list = ['hdd', 'cdd']
+            elif form1.cleaned_data['summary_type'] == 'g':
+                table_list = ['gdd', 'corn']
+            else:
+                table_list = [form1.cleaned_data['summary_type']]
+            context['table_list'] = table_list
+            context['headers'] = set_sodsumm_headers(table_list)
             #get station meta information
             stn_meta = WRCCUtils.get_station_meta(str(form1.cleaned_data['station_ID']))
             context['station_name'] = str(stn_meta['meta'][0]['name'])
