@@ -1245,7 +1245,7 @@ def sodsumm(request):
         context['form1'] = form1
         if form1.is_valid():
             data_params = {
-                    'coop_station_id':form1.cleaned_data['station_ID'],
+                    'sid':form1.cleaned_data['station_ID'],
                     'start_date':form1.cleaned_data['start_year'],
                     'end_date':form1.cleaned_data['end_year'],
                     'element':'all'
@@ -1256,13 +1256,11 @@ def sodsumm(request):
                     }
             #Define application class
             App = WRCCClasses.SODApplication('Sodsumm', data_params, app_specific_params=app_params)
-            #Get Data
-            App.get_data()
-            #Run Application
             results = App.run_app()
+            #context['results'] =  results
             context['results'] = dict(results[0])
             #Input parameters:
-            context['station_ID'] = data_params['coop_station_id']
+            context['station_ID'] = data_params['sid']
             context['start_year'] = data_params['start_date']
             context['end_year'] = data_params['end_date']
             context['max_missing_days'] = app_params['max_missing_days']
@@ -1278,6 +1276,7 @@ def sodsumm(request):
             else:
                 table_list = [form1.cleaned_data['summary_type']]
             context['table_list'] = table_list
+            context['run_done'] = True
             context['headers'] = set_sodsumm_headers(table_list)
             #get station meta information
             stn_meta = WRCCUtils.get_station_meta(str(form1.cleaned_data['station_ID']))

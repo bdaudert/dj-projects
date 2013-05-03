@@ -258,14 +258,15 @@ class MyYearField(forms.CharField):
         return date
 
     def validate(self, date):
-        if len(date) != 4:
+        if len(date) != 4 and date != 'por':
             raise forms.ValidationError("Not a vailid year.")
         try:
             int(date)
             if date[0] not in ['1', '2']:
                 raise forms.ValidationError("Valid year range is: 1000 - 2999. You entered: %s" %date)
         except:
-            raise forms.ValidationError("Year should consist of four integers. You entered: %s" %date)
+            if date != 'por':
+                raise forms.ValidationError("Year should consist of four integers. You entered: %s" %date)
 
 class MyStateField(forms.CharField):
     def to_python(self, states):
