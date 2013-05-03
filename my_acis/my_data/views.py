@@ -1254,15 +1254,18 @@ def sodsumm(request):
                     'el_type':form1.cleaned_data['summary_type'],
                     'max_missing_days':form1.cleaned_data['max_missing_days'],
                     }
-            #Define application class
-            App = WRCCClasses.SODApplication('Sodsumm', data_params, app_specific_params=app_params)
+            #Run data retrieval job
+            DJ = WRCCClasses.SodDataJob('Sodsumm', data_params)
+            #WARNING: station_ids, names need to be called before dates_list
+            station_ids, station_names = DJ.get_station_ids_names()
+            dates_list = DJ.get_dates_list()
+            data = DJ.get_data()
+            #Run application
+            App = WRCCClasses.SODApplication('Sodsumm', data, app_specific_params=app_params)
             results = App.run_app()
-            #context['results'] =  results
             context['results'] = dict(results[0])
             #Input parameters:
             context['station_ID'] = data_params['sid']
-            context['start_year'] = data_params['start_date']
-            context['end_year'] = data_params['end_date']
             context['max_missing_days'] = app_params['max_missing_days']
             #Sodsumm table headers for html
             if form1.cleaned_data['summary_type'] == 'all':
@@ -1275,12 +1278,75 @@ def sodsumm(request):
                 table_list = ['gdd', 'corn']
             else:
                 table_list = [form1.cleaned_data['summary_type']]
+            #Define html content
             context['table_list'] = table_list
             context['run_done'] = True
+            context['start_year'] = dates_list[0][0:4]
+            context['end_year'] = dates_list[-1][0:4]
+            context['station_name'] = station_names[0]
             context['headers'] = set_sodsumm_headers(table_list)
-            #get station meta information
-            stn_meta = WRCCUtils.get_station_meta(str(form1.cleaned_data['station_ID']))
-            context['station_name'] = str(stn_meta['meta'][0]['name'])
+
+            if form1.cleaned_data['generate_graphics'] == 'T':
+                cats = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Ann']
+                json_list = []
+                for table in table_list:
+                    if table =='temp':
+                        x_cats = cats  + ['Wi','Sp', 'Su', 'Fa']
+                        tbl_data = [[] for i in range(3)] # min, max, mean
+                        for row in results[table][1:]:
+                            for i in range(3):
+                                tbl_data[i].append(row[i+1])
+                        legend = ['Average Mean', 'Average Min', 'Average Max']
+                        element_long = 'Temperatures (F)'
+                    elif table =='prsn':
+                        x_cats = cats + ['Wi','Sp', 'Su', 'Fa']
+                        tbl_data = [[] for i in range(4)] # precip min, precip high, snow mean, snow high
+                        for row in results[table][1:]:
+                            for i in range(4):
+                                if i == 0:k = 1 #mean
+                                if i == 1:k = 2 #high
+                                if i == 2:k = 12 #mean
+                                if i == 4:k = 13 #high
+                                tbl_data[i].append(row[k])
+                        legend = ['Precip Mean', 'Precip High', 'Snow Mean', 'Snow High']
+                        element_long = 'Precipitation/Snow (In)'
+                    elif table in ['hdd', 'cdd']:
+                        x_cats =  cats
+                        tbl_data = [results[table][i+1][1:] for i in range(5)] #Bases: 55,57,60,65,70
+                        element_long = acis_elements[table]['name_long']
+                        if table == 'hdd':
+                            legend = ['Base 65', 'Base 60', 'Base 57', 'Base 55', 'Base 50']
+                        else:
+                            legend = ['Base 55', 'Base 57', 'Base 60', 'Base 65', 'Base 70']
+                    elif table == 'gdd':
+                        x_cats =  cats
+                        tbl_data = [results[table][i][1:] for i in [1,3,5,7,9]]
+                        element_long = acis_elements[table]['name_long']
+                        legend = ['Base 40', 'Base 45', 'Base 50', 'Base 55', 'Base 60']
+                    elif table == 'corn':
+                        x_cats =  cats
+                        tbl_data = [results[table][1][1:]]
+                        element_long = acis_elements[table]['name_long']
+                        legend = ['Base 50']
+                    table_dict = {
+                            'x_cats':cats,
+                            'record_start':dates_list[0][0:4],
+                            'record_end':dates_list[-1][0:4],
+                            'stn_name':station_names[0],
+                            'stn_id':data_params['sid'],
+                            'element_long':elemnt_long,
+                            'legend':legend,
+                            'data': tbl_data
+                            }
+                    json_list.append(table_dict)
+                results_json = str(json_list).replace("\'", "\"")
+                time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+                json_file = '%s_sodsumm_%s_%s_%s.json' \
+                %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
+                context['json_file'] = json_file
+                f = open('/tmp/%s' %(json_file),'w+')
+                f.write(results_json)
+                f.close()
     return render_to_response('my_data/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
 
 #Utlities
