@@ -267,8 +267,8 @@ def data_station(request):
             #if time range > 1 year or user requests data for more than 1 station, large request via ftp
             if days > 366 and 'station_id' not in form1_point.cleaned_data.keys():
                 context['large_request'] = \
-                '''
                 'At the moment we do not support data requests that exceed 1 year for multiple station. Please limit your request to one station at a time or a date range of one year or less. We will support larger requests in the near future. Thank you for your patience!'
+
                 '''
                 context['form3_point_ready'] = True
                 context['large_request'] = 'You requested a large amount of data.Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
@@ -280,6 +280,7 @@ def data_station(request):
                 form3_point = forms.StationDataForm3(initial=initial_params_2)
                 context['form3_point'] = form3_point
                 return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
+                '''
             else:
                 resultsdict = AcisWS.get_station_data(form1_point.cleaned_data, 'sodlist_web')
                 context['results'] = resultsdict
@@ -475,7 +476,7 @@ def data_gridded(request):
             #if time range > 1 day and user requests data for more than 1 station, large request via ftp
             #if (days > 1 and  'location' not in form1_grid.cleaned_data.keys()) or (days > 366 and 'location' in form1_grid.cleaned_data.keys()):
 
-            if ('data_summary' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['data_summary'] == 'none') or ('data_summary' not in form1_grid.cleaned_data.keys()):
+            if ('data_summary' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['data_summary'] == 'none' and form1_grid.cleaned_data['temporal_resolution'] == 'dly') or ('data_summary' not in form1_grid.cleaned_data.keys()):
                 if (days > 7 and  'location' not in form1_grid.cleaned_data.keys()):
                     context['large_request'] = \
                     'At the moment we do not support data requests that exceed 7 days for multiple station. Please limit your request to one grid point at a time or a date range of one week or less. Alternatively, you could summarize your data by using the data summary option. We will support larger requests in the near future. Thank you for your patience!'
@@ -1263,7 +1264,9 @@ def sodsumm(request):
             #Run application
             App = WRCCClasses.SODApplication('Sodsumm', data, app_specific_params=app_params)
             results = App.run_app()
-            context['results'] = dict(results[0])
+            #format results to single station output
+            results = dict(results[0])
+            context['results'] = results
             #Input parameters:
             context['station_ID'] = data_params['sid']
             context['max_missing_days'] = app_params['max_missing_days']
@@ -1272,12 +1275,16 @@ def sodsumm(request):
                 table_list = ['temp', 'prsn', 'hdd', 'cdd', 'gdd', 'corn']
             elif form1.cleaned_data['summary_type'] == 'both':
                 table_list = ['temp', 'prsn']
+            elif form1.cleaned_data['summary_type'] == 'temp':
+                table_list = ['temp']
+            elif form1.cleaned_data['summary_type'] == 'prsn':
+                table_list = ['prsn']
             elif form1.cleaned_data['summary_type'] == 'hc':
                 table_list = ['hdd', 'cdd']
             elif form1.cleaned_data['summary_type'] == 'g':
                 table_list = ['gdd', 'corn']
             else:
-                table_list = [form1.cleaned_data['summary_type']]
+                table_list = []
             #Define html content
             context['table_list'] = table_list
             context['run_done'] = True
@@ -1286,67 +1293,82 @@ def sodsumm(request):
             context['station_name'] = station_names[0]
             context['headers'] = set_sodsumm_headers(table_list)
 
+            #Generate grahics
             if form1.cleaned_data['generate_graphics'] == 'T':
+                context['graphics'] = True
                 cats = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Ann']
                 json_list = []
                 for table in table_list:
                     if table =='temp':
                         x_cats = cats  + ['Wi','Sp', 'Su', 'Fa']
-                        tbl_data = [[] for i in range(3)] # min, max, mean
+                        table_data = [[] for i in range(3)] # min, max, mean
                         for row in results[table][1:]:
                             for i in range(3):
-                                tbl_data[i].append(row[i+1])
+                                table_data[i].append(row[i+1])
                         legend = ['Average Mean', 'Average Min', 'Average Max']
-                        element_long = 'Temperatures (F)'
+                        colors = ['#00FF00', '#0000FF', '#FF0000']
+                        table_name_long = 'Temperatures (F)'
+                        units = 'Fahrenheit'
                     elif table =='prsn':
                         x_cats = cats + ['Wi','Sp', 'Su', 'Fa']
-                        tbl_data = [[] for i in range(4)] # precip min, precip high, snow mean, snow high
+                        table_data = [[] for i in range(4)] # precip min, precip high, snow mean, snow high
                         for row in results[table][1:]:
                             for i in range(4):
                                 if i == 0:k = 1 #mean
                                 if i == 1:k = 2 #high
                                 if i == 2:k = 12 #mean
                                 if i == 4:k = 13 #high
-                                tbl_data[i].append(row[k])
+                                table_data[i].append(row[k])
                         legend = ['Precip Mean', 'Precip High', 'Snow Mean', 'Snow High']
-                        element_long = 'Precipitation/Snow (In)'
+                        colors = ['#00FF00', '#008000', '#FF0080', '#800080']
+                        table_name_long = 'Precipitation/Snow (In)'
+                        units = 'Inches'
                     elif table in ['hdd', 'cdd']:
                         x_cats =  cats
-                        tbl_data = [results[table][i+1][1:] for i in range(5)] #Bases: 55,57,60,65,70
-                        element_long = acis_elements[table]['name_long']
+                        units = 'Fahrenheit'
+                        colors = ['#14FFFF', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
+                        table_data = [results[table][i+1][1:] for i in range(5)] #Bases: 55,57,60,65,70
+                        table_name_long = acis_elements[table]['name_long']
                         if table == 'hdd':
                             legend = ['Base 65', 'Base 60', 'Base 57', 'Base 55', 'Base 50']
                         else:
                             legend = ['Base 55', 'Base 57', 'Base 60', 'Base 65', 'Base 70']
                     elif table == 'gdd':
+                        units = 'Fahrenheit'
                         x_cats =  cats
-                        tbl_data = [results[table][i][1:] for i in [1,3,5,7,9]]
-                        element_long = acis_elements[table]['name_long']
+                        colors = ['#14FFFF', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
+                        table_data = [results[table][i][1:] for i in [1,3,5,7,9]]
+                        table_name_long = acis_elements[table]['name_long']
                         legend = ['Base 40', 'Base 45', 'Base 50', 'Base 55', 'Base 60']
                     elif table == 'corn':
                         x_cats =  cats
-                        tbl_data = [results[table][1][1:]]
-                        element_long = acis_elements[table]['name_long']
+                        units = 'Fahrenheit'
+                        colors = ['#14FFFF', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
+                        table_data = [results[table][1][1:]]
+                        table_name_long = 'Corn Degree Days (F)'
                         legend = ['Base 50']
                     table_dict = {
                             'x_cats':cats,
+                            'units':units,
                             'record_start':dates_list[0][0:4],
                             'record_end':dates_list[-1][0:4],
                             'stn_name':station_names[0],
                             'stn_id':data_params['sid'],
-                            'element_long':elemnt_long,
+                            'table_name':table,
+                            'table_name_long':table_name_long,
                             'legend':legend,
-                            'data': tbl_data
+                            'colors': colors,
+                            'table_data': table_data
                             }
                     json_list.append(table_dict)
                 results_json = str(json_list).replace("\'", "\"")
                 time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
                 json_file = '%s_sodsumm_%s_%s_%s.json' \
                 %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
-                context['json_file'] = json_file
                 f = open('/tmp/%s' %(json_file),'w+')
                 f.write(results_json)
                 f.close()
+                context['json_file'] = json_file
     return render_to_response('my_data/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
 
 #Utlities

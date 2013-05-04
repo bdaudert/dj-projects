@@ -431,8 +431,8 @@ class SodsummForm(SodForm):
         #self.fields.keyOrder = ['station_ID', 'start_year', 'end_year','summary_type','max_missing_days', 'generate_graphics']
     max_missing_days = forms.IntegerField(initial=5, required=False, help_text='Ignore month with 5 or more missing data points.')
     summary_type = forms.ChoiceField(choices=SDMM_ELEMENT_CHOICES, initial='all', help_text= 'Only generate tables/graphs for these climate elements')
-    #generate_graphics = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), initial='F', help_text= 'Generate plots from data')
-    generate_graphics = forms.ChoiceField(choices=([('F', 'False')]), initial='F', help_text= 'Coming soon')
+    generate_graphics = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), initial='F', help_text= 'Generate plots from data')
+    #generate_graphics = forms.ChoiceField(choices=([('F', 'False')]), initial='F', help_text= 'Coming soon')
 
 class StationDataForm0(forms.Form):
     def __init__(self, *args, **kwargs):
