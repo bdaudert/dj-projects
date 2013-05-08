@@ -22,6 +22,7 @@ $(function () {
                     'Dec'
                 ]
             },
+            /*
             legend: {
                 layout: 'vertical',
                 backgroundColor: '#FFFFFF',
@@ -32,6 +33,7 @@ $(function () {
                 floating: true,
                 shadow: true
             },
+            */
             tooltip: {
                 formatter: function() {
                     return ''+
@@ -70,13 +72,13 @@ $(function () {
             for (var i=0;i<datadict.length;i++){
                 //Define element dependent vars like y-axis max, min, plot-color
                 if (datadict[i].element == 'maxt'){
-                    var min = -50;
-                    var max = 130;
+                    //var min = -50;
+                    //var max = 130;
                     var p_color = '#FF0000';
                 }
                 if (datadict[i].element == 'mint'){
-                    var min = -50;
-                    var max = 130;
+                    //var min = -50;
+                    //var max = 130;
                     var p_color = '#0000FF';
                 }
                 if (datadict[i].element == 'pcpn'){
@@ -100,7 +102,7 @@ $(function () {
                 options: {
 
                     title: {
-                         text: 'Monthly Averages for ' + datadict[i].element_long
+                         text:' Monthly Averages for ' + datadict[i].element_long
                     },
                     subtitle: {
                         text: 'Date Range ' + datadict[i].record_start  + ' - '+ datadict[i].record_end

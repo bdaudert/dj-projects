@@ -14,7 +14,6 @@
 
 <div class="container">
     <div class="major-left">
-    <h2>ACIS Gridded Data</h2>
         {%if not form3_grid_ready %}
         {%if not hide_form_0 %}
         <div id='form0'>
@@ -190,12 +189,6 @@
             html format is displayed on the webpage directly.</p>
             <p>The delimiter choice defines the separation of the data values.</p>
         </div>
-        <p class="error">Other access to gridded data</p> 
-        <a id="us_wide" target="_blank" href="http://www.cefa.dri.edu/Westmap/" class="trigger">Westmap</a>
-        <br /><br />
-        <div class="pop-up">
-            <p>Climate Analysis and Mapping Tool working with the PRISM dataset.</p>
-        </div>
         {%if location and not grid_data%}
             <p class="error">You chose:</p>
             <p class="error">Lat, Lon: {{location}}</p>
@@ -228,7 +221,7 @@
             <p class="error">{{user_info}}</p>
         {%endif%}
         
-        {% if form3_grid_ready and not hide_form_3 %}
+        {% if form3_grid_ready and not hide_form3%}
             <div id='form3'>
                 <form method="post" action="">{% csrf_token %}
                 <table class="form">
@@ -240,8 +233,8 @@
                         <div class="pop-up"><p>{{field.help_text}}</p></div>
                         </td>
                     </tr>
-                    {%if field.errors%}
-                     <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                    {%if field.errors %}
+                        <tr><td></td><td>{{field.errors}}</td><td></td></tr>
                     {%endif%}
                 {%endfor%}
                 </table>
@@ -249,6 +242,7 @@
                 </form>
             </div>
         {%endif%}
+
 
 
         {%if grid_data %}

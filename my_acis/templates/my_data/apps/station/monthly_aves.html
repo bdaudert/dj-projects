@@ -97,7 +97,7 @@
             <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
             <!-- One container per element -->
             {%for result in results%}
-                <div id="container{{forloop.counter}}"style="height:300px;width:100%;"></div>
+                <div align="center" id="container{{forloop.counter}}"style="height:350px;width:80%;"></div>
                 <br /> 
             {%endfor%}         
             <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-monthly-aves.js"></script>
@@ -125,7 +125,7 @@
                 <p>{{el}} : {{vals}} 
             {%endfor%}
             </div>
-            <a href="{{DATA_URL}}station/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}">Get raw data behind this graphic here!</a>
+            <a target="_blank" href="{{DATA_URL}}station/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}">Get raw data behind this graphic here!</a>
         {%endif%}
     </div>
 

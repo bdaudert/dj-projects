@@ -4,9 +4,9 @@ from django.template import RequestContext
 #from django.contrib.auth.models import User
 #from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
-from django.views.generic.list_detail import object_detail, object_list
+#from django.views.generic.list_detail import object_detail, object_list
 from django.db.models.query import QuerySet
 from django.contrib.localflavor.us.forms import USStateField
 
@@ -265,13 +265,14 @@ def data_station(request):
                 e_date = datetime.date(int(form1_point.cleaned_data['end_date'][0:4]), int(form1_point.cleaned_data['end_date'][4:6]),int(form1_point.cleaned_data['end_date'][6:8]))
             days = (e_date - s_date).days
             #if time range > 1 year or user requests data for more than 1 station, large request via ftp
-            if days > 366 and 'station_id' not in form1_point.cleaned_data.keys():
+            if days > 366 and 'station_id' not in form1_point.cleaned_data.keys() and 'station_ids' not in form1_point.cleaned_data.keys():
+                '''
                 context['large_request'] = \
                 'At the moment we do not support data requests that exceed 1 year for multiple station. Please limit your request to one station at a time or a date range of one year or less. We will support larger requests in the near future. Thank you for your patience!'
 
                 '''
                 context['form3_point_ready'] = True
-                context['large_request'] = 'You requested a large amount of data.Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
+                context['large_request'] = 'You requested a large amount of data.Please enter your name and e-mail address.We will notify you once your request has been processed and your data is availiable on our ftp server.'
                 initial_params_2 = form1_point.cleaned_data
                 #keep MultiElements format and MultiStnField format
                 initial_params_2['elements'] = ','.join(initial_params_2['elements'])
@@ -280,7 +281,20 @@ def data_station(request):
                 form3_point = forms.StationDataForm3(initial=initial_params_2)
                 context['form3_point'] = form3_point
                 return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
+            elif 'station_ids' in form1_point.cleaned_data.keys() and len(form1_point.cleaned_data['station_ids']) > 20:
                 '''
+                context['large_request'] ='At the moment we do not support data requests that exceed 50 stations. Please limit your request to one station at a time or a date range of one year or less. We will support larger requests in the near future. Thank you for your patience!'
+                '''
+                context['form3_point_ready'] = True
+                context['large_request'] = 'You requested a large amount of data. Please enter your name and e-mail address.We will notify you once your request has been processed and your data is availiable on our ftp server.'
+                initial_params_2 = form1_point.cleaned_data
+                #keep MultiElements format and MultiStnField format
+                initial_params_2['elements'] = ','.join(initial_params_2['elements'])
+                if 'station_ids' in initial_params_2.keys():
+                    initial_params_2['station_ids'] = ','.join([str(stn) for stn in initial_params_2['station_ids']])
+                form3_point = forms.StationDataForm3(initial=initial_params_2)
+                context['form3_point'] = form3_point
+                return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
             else:
                 resultsdict = AcisWS.get_station_data(form1_point.cleaned_data, 'sodlist_web')
                 context['results'] = resultsdict
@@ -320,9 +334,7 @@ def data_station(request):
                 elif select_stations_by == 'stnids':
                     file_info = ['Multi','Stations']
                     stn_list = []
-                    for stn in form1_point.cleaned_data['station_ids']:
-                        stn_list.append(str(stn))
-                    stn_tuple = ','.join(stn_list)
+                    stn_tuple = ', '.join(form1_point.cleaned_data['station_ids'])
                     context['by_type'] = 'Multiple Stations: %s' %stn_tuple
                 elif select_stations_by == 'county':
                     file_info =['county', form1_point.cleaned_data['county']]
@@ -358,8 +370,8 @@ def data_station(request):
         form3_point = set_as_form(request,'StationDataForm3')
         context['form3_point'] = form3_point
         context['form3_point_ready'] = True
-        context['hide_form_3'] = True
         if form3_point.is_valid():
+            context['hide_form3'] = True
             user_name = form3_point.cleaned_data['user_name']
             time_stamp = datetime.datetime.now().strftime('_%Y_%m_%d_%H_%M_%S')
             f = '/tmp/data_requests/' + user_name + time_stamp + '_params.json'
@@ -375,6 +387,9 @@ def data_station(request):
             mode = os.stat(f).st_mode
             os.chmod(f, mode | stat.S_IWOTH)
             context['user_info'] = 'You will receive an email from csc-data-request@dri.edu with instructions when the data request has been processed. You provided following e-mail address: %s' % (form3_point.cleaned_data['email'])
+        else:
+            context['user_info'] ='Form not valid'
+            context['invalid_form'] = form3_point
         return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
 
     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
@@ -478,18 +493,18 @@ def data_gridded(request):
 
             if ('data_summary' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['data_summary'] == 'none' and form1_grid.cleaned_data['temporal_resolution'] == 'dly') or ('data_summary' not in form1_grid.cleaned_data.keys()):
                 if (days > 7 and  'location' not in form1_grid.cleaned_data.keys()):
+                    '''
                     context['large_request'] = \
                     'At the moment we do not support data requests that exceed 7 days for multiple station. Please limit your request to one grid point at a time or a date range of one week or less. Alternatively, you could summarize your data by using the data summary option. We will support larger requests in the near future. Thank you for your patience!'
                     '''
                     context['form3_grid_ready'] = True
                     context['large_request'] = \
-                    'You requested a large amount of data.Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
+                    'You requested a large amount of data. Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
                     initial_params_2 = form1_grid.cleaned_data
                     #keep MultiElements format and MultiStnField format
                     initial_params_2['elements'] = ','.join(initial_params_2['elements'])
                     form3_grid = forms.GridDataForm3(initial=initial_params_2)
                     context['form3_grid'] = form3_grid
-                    '''
                     return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
             if 'location' in form1_grid.cleaned_data.keys():
@@ -607,8 +622,8 @@ def data_gridded(request):
         form3_grid = set_as_form(request,'GridDataForm3')
         context['form3_grid'] = form3_grid
         context['form3_grid_ready'] = True
-        context['hide_form_3'] = True
         if form3_grid.is_valid():
+            context['hide_form3'] = True
             user_name = form3_grid.cleaned_data['user_name']
             time_stamp = datetime.datetime.now().strftime('_%Y_%m_%d_%H_%M_%S')
             f = '/tmp/data_requests/' + user_name + time_stamp + '_params.json'
@@ -623,7 +638,7 @@ def data_gridded(request):
                 json.dump(form3_grid.cleaned_data, j_file)
             mode = os.stat(f).st_mode
             os.chmod(f, mode | stat.S_IWOTH)
-            context['user_info'] = 'You will receive an email from csc-data-request@dri.edu with instructions when the data request has been processed. You provided following -mail address: %s' % (form3_grid.cleaned_data['email'])
+            context['user_info'] = 'You will receive an email from csc-data-request@dri.edu with instructions when the data request has been processed. You provided following e-mail address: %s' % (form3_grid.cleaned_data['email'])
         return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
     return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
@@ -1110,6 +1125,7 @@ def station_locator_app(request):
     context['form0'] = form0
     context['empty_json'] = False
     context['show_legend'] = True
+    context['map_title'] = 'Map of Southwest US COOP stations!'
 
     if 'form0' in request.POST:
         context['empty_json'] = True
@@ -1169,15 +1185,25 @@ def station_locator_app(request):
                 by_type = 'bounding_box';val = form1.cleaned_data['bounding_box']
                 context['by_type'] = 'Bounding Box: %s' %str(val)
 
+            context['map_title'] = by_type.upper() + ': ' + val
+
             if form1.cleaned_data['element_selection'] == 'T':
                 date_range = [str(form1.cleaned_data['start_date']), str(form1.cleaned_data['end_date'])]
                 context['start_date'] = form1.cleaned_data['start_date']
                 context['end_date'] = form1.cleaned_data['end_date']
                 context['elements'] = ','.join(form1.cleaned_data['elements']) #tuple of elements
-                if form1.cleaned_data['constraints']=='all_all':context['constraints'] ='All Elements, All Dates'
-                if form1.cleaned_data['constraints']=='any_any':context['constraints'] ='Any Elements, Any Dates'
-                if form1.cleaned_data['constraints']=='all_any':context['constraints'] ='All Elements, Any Dates'
-                if form1.cleaned_data['constraints']=='any_all':context['constraints'] ='Any Elements, All Dates'
+                if form1.cleaned_data['constraints']=='all_all':
+                    constraints = 'All Elements, All Dates'; context['constraints'] = constraints
+                if form1.cleaned_data['constraints']=='any_any':
+                    constraints = 'Any Elements, Any Dates'; context['constraints'] = constraints
+                if form1.cleaned_data['constraints']=='all_any':
+                    constraints = 'All Elements, Any Dates'; context['constraints'] = constraints
+                if form1.cleaned_data['constraints']=='any_all':
+                    constraints = 'Any Elements, All Dates'; context['constraints'] = constraints
+                context['map_title'] = by_type.upper() + ': ' + val + ', ELEMENTS: ' + \
+                                   ','.join(form1.cleaned_data['elements']) + \
+                                   ', FROM: ' + form1.cleaned_data['start_date'] + ' TO: '+ form1.cleaned_data['start_date'] + \
+                                   ', ' + constraints
                 #Convert element_list to list of var majors
                 el_vX_list = []
                 for el_idx, el in enumerate(form1.cleaned_data['elements']):
@@ -1234,7 +1260,7 @@ def set_sod_initial(request, app_name):
 #SOD views
 def sodsumm(request):
     context = {
-        'title': 'Sodsumm - Monthly and Seasonal Summaries of daily data',
+        'title': 'Sodsumm - Monthly and Seasonal Summaries of Daily Data',
         'apps_page':True
         }
     initial = set_sod_initial(request, 'Sodsumm')
@@ -1296,38 +1322,43 @@ def sodsumm(request):
             #Generate grahics
             if form1.cleaned_data['generate_graphics'] == 'T':
                 context['graphics'] = True
-                cats = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Ann']
+                cats = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
                 json_list = []
                 for table in table_list:
                     if table =='temp':
                         x_cats = cats  + ['Wi','Sp', 'Su', 'Fa']
                         table_data = [[] for i in range(3)] # min, max, mean
-                        for row in results[table][1:]:
+                        for row in results[table][1:13]:
                             for i in range(3):
-                                table_data[i].append(row[i+1])
-                        legend = ['Average Mean', 'Average Min', 'Average Max']
-                        colors = ['#00FF00', '#0000FF', '#FF0000']
+                                table_data[i].append(float(row[i+1]))
+                        legend = ['Average Max', 'Average Min', 'Average Mean']
+                        colors = ['#FF0000', '#0000FF', '#00FF00']
                         table_name_long = 'Temperatures (F)'
                         units = 'Fahrenheit'
                     elif table =='prsn':
                         x_cats = cats + ['Wi','Sp', 'Su', 'Fa']
                         table_data = [[] for i in range(4)] # precip min, precip high, snow mean, snow high
-                        for row in results[table][1:]:
+                        for row in results[table][1:13]:
                             for i in range(4):
                                 if i == 0:k = 1 #mean
                                 if i == 1:k = 2 #high
-                                if i == 2:k = 12 #mean
-                                if i == 4:k = 13 #high
-                                table_data[i].append(row[k])
-                        legend = ['Precip Mean', 'Precip High', 'Snow Mean', 'Snow High']
+                                if i == 2:k = 4 #mean
+                                if i == 3:k = 6 #high
+                                table_data[i].append(float(row[k]))
+                        legend = ['Average Precip Mean', 'Average Precip High', 'Precip Low ', 'Precip High']
                         colors = ['#00FF00', '#008000', '#FF0080', '#800080']
                         table_name_long = 'Precipitation/Snow (In)'
                         units = 'Inches'
                     elif table in ['hdd', 'cdd']:
                         x_cats =  cats
                         units = 'Fahrenheit'
-                        colors = ['#14FFFF', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-                        table_data = [results[table][i+1][1:] for i in range(5)] #Bases: 55,57,60,65,70
+                        colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
+                        table_data = [[] for i in range(5)]
+                        for i in range(5):
+                            for k in range(len(cats)):
+                                table_data[i].append(float(results[table][i+1][k+1]))
+                        #table_data = [results[table][i+1][1:] for i in range(5)] #Bases: 55,57,60,65,70
+
                         table_name_long = acis_elements[table]['name_long']
                         if table == 'hdd':
                             legend = ['Base 65', 'Base 60', 'Base 57', 'Base 55', 'Base 50']
@@ -1336,15 +1367,22 @@ def sodsumm(request):
                     elif table == 'gdd':
                         units = 'Fahrenheit'
                         x_cats =  cats
-                        colors = ['#14FFFF', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-                        table_data = [results[table][i][1:] for i in [1,3,5,7,9]]
+                        colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
+                        table_data = [[] for i in range(5)]
+                        for i in range(5):
+                            for k in range(len(x_cats)):
+                                table_data[i].append(float(results[table][2*i+1][k+2]))
+                        #table_data = [results[table][i][1:] for i in [1,3,5,7,9]]
                         table_name_long = acis_elements[table]['name_long']
                         legend = ['Base 40', 'Base 45', 'Base 50', 'Base 55', 'Base 60']
                     elif table == 'corn':
                         x_cats =  cats
                         units = 'Fahrenheit'
                         colors = ['#14FFFF', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-                        table_data = [results[table][1][1:]]
+                        table_data =[[]]
+                        for k in range(len(x_cats)):
+                            table_data[0].append(float(results[table][1][k+2]))
+                        #table_data = [results[table][1][1:]]
                         table_name_long = 'Corn Degree Days (F)'
                         legend = ['Base 50']
                     table_dict = {
@@ -1353,7 +1391,7 @@ def sodsumm(request):
                             'record_start':dates_list[0][0:4],
                             'record_end':dates_list[-1][0:4],
                             'stn_name':station_names[0],
-                            'stn_id':data_params['sid'],
+                            'stn_id':str(data_params['sid']),
                             'table_name':table,
                             'table_name_long':table_name_long,
                             'legend':legend,
@@ -1368,6 +1406,7 @@ def sodsumm(request):
                 f = open('/tmp/%s' %(json_file),'w+')
                 f.write(results_json)
                 f.close()
+                context['JSON_URL'] = '/tmp/'
                 context['json_file'] = json_file
     return render_to_response('my_data/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
 
@@ -1419,6 +1458,7 @@ def export_to_file_point(request, data, dates, station_names, station_ids, eleme
     if file_extension in ['dat', 'txt']:
         import csv
         response = HttpResponse(mimetype='text/csv')
+        #response = HttpResponse(mimetype='text/csv')
         #response['Content-Disposition'] = 'attachment;filename=export.%s' % file_extension
         response['Content-Disposition'] = 'attachment;filename=%s_%s.%s' % (file_info[0], file_info[1],file_extension)
         writer = csv.writer(response, delimiter=delim )
@@ -1450,8 +1490,8 @@ def export_to_file_point(request, data, dates, station_names, station_ids, eleme
                     for l,val in enumerate(vals[1:]):ws.write(j+1, l+1, val) #row, column, label
                 else:
                     for l,val in enumerate(vals):ws.write(j+1, l+1, val) #row, column, label
-
         response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
+        #response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
         response['Content-Disposition'] = 'attachment;filename=%s_%s.%s' % (file_info[0], file_info[1],file_extension)
         wb.save(response)
 

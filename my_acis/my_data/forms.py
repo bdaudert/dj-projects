@@ -56,12 +56,12 @@ SDMM_ELEMENT_CHOICES = (
         ('both', 'Temp/Precip'),
         ('hc', 'Degree Days'),
         ('g', 'Growing Degree Days'),
-        ('all', 'All Statistics'),
+        ('all', 'All of the above'),
         )
 
 STN_FINDER_LOGIC =(
-    ('all_all', 'All Elements, All Dates'),
     ('any_any', 'Any Elements, Any Dates'),
+    ('all_all', 'All Elements, All Dates'),
     ('all_any', 'All Elements, Any Date'),
     ('any_all', 'Any Element, All Dates'),
 )
@@ -212,7 +212,7 @@ help_comma_elements = 'Comma separated list of climate elements. Available eleme
 help_acis_elements = 'Available climate elements.'
 help_grids = 'Gridded/modeled datasets available in ACIS.'
 help_stn_selection = 'Defines the type of search area.'
-help_comma_stns = 'Comma separated list of station identifiers. Please use the station finder to find station ids.'
+help_comma_stns = 'Delimiter separated list of station identifiers. Supported delimiters: comma, space, colon, semi-colon. Please use the station finder to find station ids.'
 help_stn_id = 'Station identification number. Please use the Station Finder to find a station id.'
 help_date_por = 'yyyymmdd, yyyy-mm-dd, yyyy/mm/dd or "por" (period of record) if single station.'
 help_lon_lat = 'Grid point coordinate pair: Longitude, Latitude. Use the map interface by dragging the marker to change location.'
@@ -299,10 +299,10 @@ class MultiStnField(forms.CharField):
         # Return an empty list if no input was given.
         if not stn_list:
             return []
-        return stn_list.split(',')
+        return re.sub('\,+', ',',re.sub('[\,+\;\:\s+]', ',',stn_list).strip()).strip(',').split(',')
 
     def validate(self, stn_list):
-        "Check if value consists only of valid coop_station_ids."
+        "Check if value consists only of valid station_ids."
         for stn in stn_list:
             if not str(stn).isalnum:
                 raise forms.ValidationError("Not a valid station_id! Station ID are alphanumeric %s!" % str(stn))
@@ -474,6 +474,7 @@ class StationDataForm1(forms.Form):
         elif select_stations_by == 'stnid':
             self.fields['station_id'] = forms.CharField(required=False,initial='266779', help_text=HELP_TEXTS['stn_id'])
         elif select_stations_by == 'stnids':
+            #self.fields['station_ids'] = MultiStnField(required=False,initial='', help_text=HELP_TEXTS['comma_stns'])
             self.fields['station_ids'] = MultiStnField(required=False,initial='266779,050848', help_text=HELP_TEXTS['comma_stns'])
         elif select_stations_by == 'county':
             self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='08051', help_text='Valid US county identifier.')
@@ -489,8 +490,12 @@ class StationDataForm1(forms.Form):
             self.fields['bounding_box'] = BBoxField(required=False,initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
 
         self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
-        self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial=begin, help_text=HELP_TEXTS['date_por'])
-        self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=yesterday, help_text=HELP_TEXTS['date_por'])
+        if select_stations_by in ['stn_id', 'stnid']:
+            self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial='por', help_text=HELP_TEXTS['date_por'])
+            self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial='por', help_text=HELP_TEXTS['date_por'])
+        else:
+            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, initial=begin, help_text=HELP_TEXTS['date'])
+            self.fields['end_date'] = MyDateField(max_length=8, min_length=8, initial=yesterday, help_text=HELP_TEXTS['date'])
         self.fields['show_flags'] = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), required=False, initial='F', help_text='Show the data flag with each data point.')
         self.fields['show_observation_time'] = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), required=False, initial='F', help_text='Show the hour at which the observation was taken for each data point.(1 - 24 =  midnight, -1 means no observation time was recorded)')
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
@@ -824,7 +829,7 @@ class StationLocatorForm1(forms.Form):
         if element_selection == 'T':
             self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
 
-            self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='20130101',min_length=8, help_text=HELP_TEXTS['date'])
+            self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='18900101',min_length=8, help_text=HELP_TEXTS['date'])
             self.fields['end_date'] = MyDateField(max_length=10, required = False, initial=yesterday,min_length=8, help_text=HELP_TEXTS['date'])
-            self.fields['constraints'] = forms.ChoiceField(choices=STN_FINDER_LOGIC, required=False, initial='all_all')
+            self.fields['constraints'] = forms.ChoiceField(choices=STN_FINDER_LOGIC, required=False, initial='any_any')
 

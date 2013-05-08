@@ -101,14 +101,13 @@ function initialize_station_finder() {
             var name = data.network_codes[key];
             var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
             var div = document.createElement('div');
-            if (data.network_codes[key] == "ICAO"){
-                //show("ICAO");
-                div.innerHTML = '<img src="' + icon + '"> ' + name +': <input type="checkbox" id="'+ name +
-                                '" onclick="my_boxclick(this,\''+ name +'\')" checked />';
+            if (data.network_codes[key] == "COOP"){
+                div.innerHTML = '<input type="checkbox" id="'+ name +
+                                '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' + ' <img src="' + icon + '"> ' + name;
             }
             else {
-                div.innerHTML = '<img src="' + icon + '"> ' + name +': <input type="checkbox" id="'+ name +
-                '" onclick="my_boxclick(this,\''+ name +'\')"/>';
+                div.innerHTML = '<input type="checkbox" id="'+ name +
+                '" onclick="my_boxclick(this,\''+ name +'\')"/>' + '<img src="' + icon + '"> ' + name;
             }
             legend.appendChild(div);
         }
@@ -116,7 +115,7 @@ function initialize_station_finder() {
         var name = 'Show all Networks';
         var icon = 'http://thydzik.com/thydzikGoogleMap/markerlink.php?text=A&color=FC6355';
         var div = document.createElement('div');
-        div.innerHTML = '<img src="' + icon + '"> ' + name +': <input type="checkbox" id="all" onclick="my_boxclick(this,\'all\')"/><br><p class="error">Please be patient while loading all networks</p>';
+        div.innerHTML = '<input type="checkbox" id="all" onclick="my_boxclick(this,\'all\')"/>' + ' <img src="' + icon + '"><b> ' + name + '</b><br /><p class="error">Please be patient while loading all networks</p>';
         legend.appendChild(div);
         var bounds=new google.maps.LatLngBounds();
 
@@ -219,7 +218,7 @@ function initialize_station_finder() {
                 c.stn_networks +'</td>';
 
             //Set Initial markers and station list
-            if (c.marker_category == "ICAO"){
+            if (c.marker_category == "COOP"){
                 marker.setVisible(true);
                 document.getElementById(c.marker_category).checked = true;
                 var station_list = document.getElementById('station_list');

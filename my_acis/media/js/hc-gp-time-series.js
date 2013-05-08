@@ -32,6 +32,10 @@ $(function () {
                         'Click and drag in the plot area to zoom in' :
                         'Drag your finger over the plot to zoom in'
                 },
+                credits: {
+                        href: 'http://wrcc.dri.edu/',
+                        text: 'wrcc.dri.edu'
+                },
                 xAxis: {
                     type: 'datetime',
                     maxZoom: 1 * 24 * 3600000, // 1 day

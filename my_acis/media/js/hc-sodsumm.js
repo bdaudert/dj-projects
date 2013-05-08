@@ -1,7 +1,9 @@
 $(function () {
 //$(document).ready(function() {
     var json_file = document.getElementById("json_file").value;
-    $.getJSON(json_file, function(table_dict) {
+    var JSON_URL = document.getElementById("JSON_URL").value;
+    var json_file_path = '/csc/media/tmp/' + json_file;
+    $.getJSON(json_file_path, function(table_dict) {
         for (var i=0;i<table_dict.length;i++){
             var defaultChart = {
                 chartContent: null,
@@ -10,17 +12,22 @@ $(function () {
                     chart: {
                         type: 'column'
                     },
+                    credits: {
+                        href: 'http://wrcc.dri.edu/',
+                        text: 'wrcc.dri.edu' 
+                    },
                     xAxis: {
                         categories:table_dict[i].x_cats, 
                         labels: {
                             rotation: -41,
-                            align: right,
+                            align: 'right',
                             style: {
                                 fontSize: '13px',
                                 fontFamil: 'Verdana, sans-serif'
                             }
                         }
                     },
+                    /*
                     legend: {
                         layout: 'vertical',
                         backgroundColor: '#FFFFFF',
@@ -31,6 +38,7 @@ $(function () {
                         floating: true,
                         shadow: true
                     },
+                    */
                     tooltip: {
                         formatter: function() {
                             return ''+
@@ -88,7 +96,7 @@ $(function () {
                 options: {
 
                     title: {
-                         text: 'Summary:' + table_dict[i].table_name_long
+                         text: table_dict[i].stn_name + ', ' + table_dict[i].stn_id  + ', ' + table_dict[i].table_name_long
                     },
                     subtitle: {
                         text: 'Year Range: ' + table_dict[i].record_start  + ' - '+ table_dict[i].record_end

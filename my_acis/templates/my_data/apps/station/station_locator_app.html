@@ -17,7 +17,7 @@
         {%if show_legend%}
         <div id="map_legend">
             <h3>Legend of Station Networks</h3>
-            <p class="error">Choose <a href="/csc/media/html/stn_id_system_docu.html" onClick="return popup_window(this, 'Networks')"><font color="#FF007F">Network ID</font></a>!</td>
+            <p>Choose <a href="/csc/media/html/stn_id_system_docu.html" onClick="return popup_window(this, 'Networks')"><font color="#006666">Network ID</font></a>!</td>
         </div>
         {%endif%}
     </div>
@@ -196,7 +196,8 @@
         {%endif%}
 
         <!--{%if by_type %}</p>{%endif%}-->
-        
+       
+        <p>{{map_title}}</p>
         <div id="map"></div>
         <script type="text/javascript">
             initialize_station_finder()

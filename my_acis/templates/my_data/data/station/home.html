@@ -190,7 +190,7 @@
             <p class="error">{{user_info}}</p>
         {%endif%}
 
-        {% if form3_point_ready and not hide_form_3 %}
+        {% if form3_point_ready and not hide_form3%}
             <div id='form3'>
                 <form method="post" action="">{% csrf_token %}
                 <table class="form">
@@ -219,7 +219,7 @@
             <h3 class="error">Results:</h3>
         {%if by_type %}
             <p><font color="#FF007F">Search Parameters:</font><br />
-            <b>{{by_type}}, </b><br />
+            <b>{{by_type}} </b><br />
         {%endif%}
 
         {%if start_date%}
@@ -238,29 +238,29 @@
 
         {%if by_type %}</p>{%endif%}
         
-        {%if results.errors%}
-            <div class="error">Data Request could not be completed. The following error occurred: {{error}}</div>
-            {%endif%}
+        {%if results.error%}
+            <div class="error">{{results.error}}</div>
+        {%endif%}
             
-            <!--Link to relevant apps-->
-            {%if link_to_mon_aves %}
-                <a target="_blank" href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}">Generate bar charts for this data set here!</a>
-            {%endif%}
-            <br />
-            {%if link_to_metagraph%}
-                <a target="_blank" href="{{TOOLS_URL}}station/metagraph/?stn_id={{stn_id}}">Generate metadata graphics for this station here!</a>
-            {%endif%}            
+        <!--Link to relevant apps-->
+        {%if link_to_mon_aves %}
+            <a target="_blank" href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}">Generate bar charts for this data set here!</a>
+        {%endif%}
+        <br />
+        {%if link_to_metagraph%}
+            <a target="_blank" href="{{TOOLS_URL}}station/metagraph/?stn_id={{stn_id}}">Generate metadata graphics for this station here!</a>
+        {%endif%}            
 
-            {%for stn in stn_idx%}
-                <h3>STATION NAME:</h3> 
-                <b>{{results.stn_names|lookup:stn|safe}}</b>
-                <h3>STATION ID,STATION NETWORK PAIRS:</h3>
-                {%for id_network in results.stn_ids|lookup:stn %}
-                    <b>{{id_network}},</b>
-                {%endfor%}
-                <h3>Data:</h3> 
-                <p class="error"> {{results.stn_errors|lookup:stn}}</p>
-                 {%if not json%}   
+        {%for stn in stn_idx%}
+            <h3>STATION NAME:</h3> 
+            <b>{{results.stn_names|lookup:stn|safe}}</b>
+            <h3>STATION ID,STATION NETWORK PAIRS:</h3>
+            {%for id_network in results.stn_ids|lookup:stn %}
+                <b>{{id_network}},</b>
+            {%endfor%}
+            <h3>Data:</h3> 
+            <p class="error"> {{results.stn_errors|lookup:stn}}</p>
+                 {%if not json%}  
                     <table>
                     <th>date{{delimiter}}
                         {%if show_flags%}
