@@ -15,7 +15,7 @@ function HighLight(node,DivClass,DivId) {
     }
     else {
         //SHOW
-        node.style.border ="4px solid #FF007F";
+        node.style.border ="4px solid #00FF00";
         //Unborder all other nodes of same class name
         for (i=0;i<nodes_to_blur.length;i++){     
             if (nodes_to_blur[i] != node){
@@ -23,7 +23,7 @@ function HighLight(node,DivClass,DivId) {
                 nodes_to_blur[i].style.border="none";
             }
             else{
-                nodes_to_blur[i].style.border="4px solid #FF007F";
+                nodes_to_blur[i].style.border="4px solid #00FF00";
             }
         }
         //Hide all divs with class name DivClass except show the one of id=DivId 

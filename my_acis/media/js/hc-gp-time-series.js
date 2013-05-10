@@ -12,11 +12,6 @@ $(function () {
         var json_file = document.getElementById("json_file").value;
         var json_file_name = JSON_URL + json_file;
         
-        var start = new Array();
-        var end = new Array();
-        start = start_date.split('-')
-        end = end_date.split('-')
-        
         $.getJSON(json_file_name, function(datadict) {
             chart = new Highcharts.Chart({
                 chart: {
@@ -40,8 +35,8 @@ $(function () {
                     type: 'datetime',
                     maxZoom: 1 * 24 * 3600000, // 1 day
                     plotBands: [{
-                    from: Date.UTC(parseInt(start[0]), parseInt(start[1]) -1 , parseInt(start[2])),
-                    to: Date.UTC(parseInt(end[0]), parseInt(end[1]) - 1, parseInt(end[2])),
+                    from: Date.UTC(parseInt(start_date.slice(0,4)),parseInt(start_date.slice(4,6).replace("^0+(?!$)", "")) - 1, parseInt(start_date.slice(6,8))),
+                    to: Date.UTC(parseInt(end_date.slice(0,4)),parseInt(end_date.slice(4,6).replace("^0+(?!$)", "")) - 1, parseInt(end_date.slice(6,8)))
                     }],
                     title: {
                         text: null
@@ -92,8 +87,7 @@ $(function () {
                     type: 'area',
                     name: element,
                     pointInterval:1 * 24 * 3600000, // 1 day
-                    pointStart: Date.UTC(parseInt(start[0]), parseInt(start[1])-1, parseInt(start[2])),
-                    //pointEnd:Date.UTC(parseInt(end[0]), parseInt(end[1]), parseInt(end[2])),
+                    pointStart: Date.UTC(parseInt(start_date.slice(0,4)),parseInt(start_date.slice(4,6).replace("^0+(?!$)", "")) - 1, parseInt(start_date.slice(6,8))),
                     data:datadict.data
                 }] //end series
             });//end chart

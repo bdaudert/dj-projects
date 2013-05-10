@@ -97,13 +97,13 @@ ACIS_ELEMENT_CHOICES = (
 )
 
 ACIS_ELEMENT_CHOICES_SHORT = (
-        ('pcpn', 'Precipitation (Inches)'),
-        ('maxt', 'Maximum Temperature (F)'),
+        ('pcpn', 'Precipitation(In)'),
+        ('maxt', 'Maximum Temperature(F)'),
         ('mint', 'Minimum Temperature(F)'),
         ('avgt', 'Mean Temperature(F)'),
-        ('gdd', 'Growing Degree Days (Base 50F)'),
-        ('hdd', 'Heating Degree Days (Base 65F)'),
-        ('cdd', 'Cooling Degree Days (Base 65F)'),
+        ('gdd', 'Growing Degree Days(Base 50F)'),
+        ('hdd', 'Heating Degree Days(Base 65F)'),
+        ('cdd', 'Cooling Degree Days(Base 65F)'),
 )
 
 STN_FIND_CHOICES = (

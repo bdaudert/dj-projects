@@ -225,7 +225,8 @@
             <div id='form3'>
                 <form method="post" action="">{% csrf_token %}
                 <table class="form">
-                {%for field in form3_grid %}
+                {%for field in form3_grid.visible_fields %}
+
                     <tr>
                         <td>{{field.label}}:</td>
                         <td>{{field}}</td>

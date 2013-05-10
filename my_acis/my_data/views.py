@@ -266,7 +266,6 @@ def data_station(request):
             days = (e_date - s_date).days
             #if time range > 1 year or user requests data for more than 1 station, large request via ftp
             if days > 366 and 'station_id' not in form1_point.cleaned_data.keys() and 'station_ids' not in form1_point.cleaned_data.keys():
-                '''
                 context['large_request'] = \
                 'At the moment we do not support data requests that exceed 1 year for multiple station. Please limit your request to one station at a time or a date range of one year or less. We will support larger requests in the near future. Thank you for your patience!'
 
@@ -280,9 +279,9 @@ def data_station(request):
                     initial_params_2['station_ids'] = ','.join([str(stn) for stn in initial_params_2['station_ids']])
                 form3_point = forms.StationDataForm3(initial=initial_params_2)
                 context['form3_point'] = form3_point
+                '''
                 return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
             elif 'station_ids' in form1_point.cleaned_data.keys() and len(form1_point.cleaned_data['station_ids']) > 20:
-                '''
                 context['large_request'] ='At the moment we do not support data requests that exceed 50 stations. Please limit your request to one station at a time or a date range of one year or less. We will support larger requests in the near future. Thank you for your patience!'
                 '''
                 context['form3_point_ready'] = True
@@ -294,6 +293,7 @@ def data_station(request):
                     initial_params_2['station_ids'] = ','.join([str(stn) for stn in initial_params_2['station_ids']])
                 form3_point = forms.StationDataForm3(initial=initial_params_2)
                 context['form3_point'] = form3_point
+                '''
                 return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
             else:
                 resultsdict = AcisWS.get_station_data(form1_point.cleaned_data, 'sodlist_web')
@@ -493,7 +493,6 @@ def data_gridded(request):
 
             if ('data_summary' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['data_summary'] == 'none' and form1_grid.cleaned_data['temporal_resolution'] == 'dly') or ('data_summary' not in form1_grid.cleaned_data.keys()):
                 if (days > 7 and  'location' not in form1_grid.cleaned_data.keys()):
-                    '''
                     context['large_request'] = \
                     'At the moment we do not support data requests that exceed 7 days for multiple station. Please limit your request to one grid point at a time or a date range of one week or less. Alternatively, you could summarize your data by using the data summary option. We will support larger requests in the near future. Thank you for your patience!'
                     '''
@@ -505,6 +504,7 @@ def data_gridded(request):
                     initial_params_2['elements'] = ','.join(initial_params_2['elements'])
                     form3_grid = forms.GridDataForm3(initial=initial_params_2)
                     context['form3_grid'] = form3_grid
+                    '''
                     return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
             if 'location' in form1_grid.cleaned_data.keys():
@@ -544,7 +544,7 @@ def data_gridded(request):
             if 'visualize' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['visualize'] == 'T':
                 #Generate figures for each element, store in figure files
                 figure_files = []
-                image = dict(type='png',proj='lcc',interp='cspline',cmap='jet',
+                image = dict(type='png',proj='lcc',interp='cspline',
                     overlays=['state','county:0.5:black'],width=500, height=400)
                 params = {
                     'image':image , 'output':'json', 'grid': grid,
@@ -555,6 +555,24 @@ def data_gridded(request):
                 if 'bounding_box' in form1_grid.cleaned_data.keys():params['bbox']= bounding_box
                 #Loop over element and generate figure
                 for elem in element_list:
+                    if elem in ['pcpn', 'snow', 'snwd']:
+                        if form1_grid.cleaned_data['data_summary'] != 'sum':
+                            params['image']['levels'] =[0,0.1, 0.2, 0.5, 0.7, 1.0, 2.0, 3.0, 4.0, 5.0]
+                        else:
+                            params['image']['levels'] =[1, 2, 3, 4,5,6,7,8,9,10,15,20,30]
+                        params['image']['cmap'] = 'Spectral'
+                    elif elem in ['maxt', 'avgt']:
+                        if form1_grid.cleaned_data['data_summary'] != 'sum':
+                            params['image']['levels'] =[-50,-20,-10,0,10,20,30,40,50,60,70,80,90,100,120]
+                        params['image']['cmap'] = 'jet'
+                    elif elem == 'mint':
+                        if form1_grid.cleaned_data['data_summary'] != 'sum':
+                            params['image']['levels'] =[-70,-50,-20,0,10,20,30,40,50,60,70,80,90]
+                        params['image']['cmap'] = 'jet'
+                    elif elem in ['hdd','cdd', 'gdd']:
+                        if form1_grid.cleaned_data['data_summary'] != 'sum':
+                            params['image']['levels'] =[0, 10, 20, 30, 50, 70,80,90,100]
+                        params['image']['cmap'] = 'jet'
                     params['elems'] = [{'name':elem}]
                     fig = WRCCClasses.GridFigure(params)
                     results = fig.get_grid()
@@ -1088,11 +1106,12 @@ def grid_point_time_series(request):
             try:
                 data = []
                 dates = []
-                context['start_date'] = str(req['data'][0][0])
-                context['end_date'] = str(req['data'][-1][0])
                 for date_idx, dat in enumerate(req['data']):
                     data.append(req['data'][date_idx][1])
-                    dates.append(str(req['data'][date_idx][0]))
+                    #dates.append(str(req['data'][date_idx][0]))
+                    dates.append('%s%s%s' %(str(req['data'][date_idx][0][0:4]), str(req['data'][date_idx][0][5:7]), str(req['data'][date_idx][0][8:10])))
+                context['start_date'] = dates[0]
+                context['end_date'] = dates[-1]
                 datadict = {'data':data, 'dates':dates}
                 context['datadict'] = datadict
             except:
@@ -1326,17 +1345,15 @@ def sodsumm(request):
                 json_list = []
                 for table in table_list:
                     if table =='temp':
-                        x_cats = cats  + ['Wi','Sp', 'Su', 'Fa']
-                        table_data = [[] for i in range(3)] # min, max, mean
+                        table_data = [[] for i in range(5)] # low, ave min, ave mean,ave max, high
                         for row in results[table][1:13]:
-                            for i in range(3):
+                            for i in [9, ]:
                                 table_data[i].append(float(row[i+1]))
-                        legend = ['Average Max', 'Average Min', 'Average Mean']
-                        colors = ['#FF0000', '#0000FF', '#00FF00']
+                        legend = ['Low','Average Min','Average Mean', 'Average Max', 'High']
+                        colors = ['#FFFFFF', '#0000FF', '#00FF00', '#690000', '#FF0000']
                         table_name_long = 'Temperatures (F)'
                         units = 'Fahrenheit'
                     elif table =='prsn':
-                        x_cats = cats + ['Wi','Sp', 'Su', 'Fa']
                         table_data = [[] for i in range(4)] # precip min, precip high, snow mean, snow high
                         for row in results[table][1:13]:
                             for i in range(4):
@@ -1350,7 +1367,6 @@ def sodsumm(request):
                         table_name_long = 'Precipitation/Snow (In)'
                         units = 'Inches'
                     elif table in ['hdd', 'cdd']:
-                        x_cats =  cats
                         units = 'Fahrenheit'
                         colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
                         table_data = [[] for i in range(5)]
@@ -1366,7 +1382,6 @@ def sodsumm(request):
                             legend = ['Base 55', 'Base 57', 'Base 60', 'Base 65', 'Base 70']
                     elif table == 'gdd':
                         units = 'Fahrenheit'
-                        x_cats =  cats
                         colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
                         table_data = [[] for i in range(5)]
                         for i in range(5):
@@ -1376,7 +1391,6 @@ def sodsumm(request):
                         table_name_long = acis_elements[table]['name_long']
                         legend = ['Base 40', 'Base 45', 'Base 50', 'Base 55', 'Base 60']
                     elif table == 'corn':
-                        x_cats =  cats
                         units = 'Fahrenheit'
                         colors = ['#14FFFF', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
                         table_data =[[]]
@@ -1386,7 +1400,7 @@ def sodsumm(request):
                         table_name_long = 'Corn Degree Days (F)'
                         legend = ['Base 50']
                     table_dict = {
-                            'x_cats':cats,
+                            'cats':cats,
                             'units':units,
                             'record_start':dates_list[0][0:4],
                             'record_end':dates_list[-1][0:4],
