@@ -47,6 +47,17 @@ a:active { color: red; }
 
 .tool_info:active {color:red;}
 
+/*Submit and Select buttons*/
+input[value=Submit] {
+    background-color:#006666;
+    color:#FFEBCD;
+}
+
+input[value=Select] {
+    background-color:#8FBC8F; 
+    color:#FFEBCD;
+}
+
 #us_wide {
     color: #6B238E;
     /*color:#FF00FF;*/

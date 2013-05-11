@@ -479,6 +479,7 @@ def data_gridded(request):
         context['form1_grid_ready'] = True
         if form1_grid.is_valid():
             context['temporal_resolution'] = form1_grid.cleaned_data['temporal_resolution']
+            context['data_summary'] = form1_grid.cleaned_data['data_summary']
             el_list = form1_grid.cleaned_data['elements']
             context['elements'] =  el_list
             #Check if data request is large,
@@ -550,12 +551,15 @@ def data_gridded(request):
                     'image':image , 'output':'json', 'grid': grid,
                     'sdate': start_date,
                     'edate': end_date,
-                    'data':req
                     }
                 if 'state' in form1_grid.cleaned_data.keys():params['state']= state
                 if 'bounding_box' in form1_grid.cleaned_data.keys():params['bbox']= bounding_box
                 #Loop over element and generate figure
-                for elem in element_list:
+                for el_idx, elem in enumerate(element_list):
+                    '''
+                    if 'smry' in req.keys() and len(req['smry']) > el_idx:
+                        params['data'] = {'smry':[req['smry'][el_idx]]}
+                    '''
                     if elem in ['pcpn', 'snow', 'snwd']:
                         if form1_grid.cleaned_data['data_summary'] != 'sum':
                             params['image']['levels'] =[0,0.1, 0.2, 0.5, 0.7, 1.0, 2.0, 3.0, 4.0, 5.0]

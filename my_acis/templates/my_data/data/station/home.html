@@ -212,11 +212,6 @@
             </div>
         {%endif%}
 
-        {%if results%}
-            {%if show_flags%}
-                <h3>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</h3>
-            {%endif%}
-            <h3 class="error">Results:</h3>
         {%if by_type %}
             <p><font color="#FF007F">Search Parameters:</font><br />
             <b>{{by_type}} </b><br />
@@ -237,6 +232,17 @@
         {%endif%}
 
         {%if by_type %}</p>{%endif%}
+
+        {%if results.error%}
+            <div class="error">{{results.error}}</div>
+        {%endif%}
+
+
+        {%if results%}
+            {%if show_flags%}
+                <h3>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</h3>
+            {%endif%}
+            <h3 class="error">Results:</h3>
         
         {%if results.error%}
             <div class="error">{{results.error}}</div>
