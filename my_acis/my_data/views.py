@@ -1319,32 +1319,32 @@ def sodsumm(request):
             if form1.cleaned_data['summary_type'] == 'all':
                 table_list = ['temp', 'prsn', 'hdd', 'cdd', 'gdd', 'corn']
                 context['table_list'] = table_list
-                context['table_tab_names'] = ['Temperature', 'Precip/Snow', 'Hdd', 'Cdd', 'Gdd', 'Corn']
+                context['graph_tab_names'] = ['Temperature', 'Precip/Snow', 'Hdd', 'Cdd', 'Gdd', 'Corn']
                 context['graph_list'] = ['temp', 'pcpn', 'snow', 'hdd', 'cdd', 'gdd', 'corn']
             elif form1.cleaned_data['summary_type'] == 'both':
                 table_list = ['temp', 'prsn']
                 context['table_list'] = table_list
-                context['table_tab_names'] = ['Temperature', 'Precip/Snow']
+                context['graph_tab_names'] = ['Temperature', 'Precip/Snow']
                 context['graph_list'] = ['temp', 'pcpn', 'snow']
             elif form1.cleaned_data['summary_type'] == 'temp':
                 table_list = ['temp']
                 context['table_list'] = table_list
-                context['table_tab_names'] = ['Temperature']
+                context['graph_tab_names'] = ['Temperature']
                 context['graph_list'] = table_list
             elif form1.cleaned_data['summary_type'] == 'prsn':
                 table_list = ['prsn']
                 context['table_list'] = table_list
-                context['table_tab_names'] = ['Precip/Snow']
+                context['graph_tab_names'] = ['Precip/Snow']
                 context['graph_list'] = ['pcpn', 'snow']
             elif form1.cleaned_data['summary_type'] == 'hc':
                 table_list = ['hdd', 'cdd']
                 context['table_list'] = table_list
-                context['table_tab_names'] =  ['Hdd', 'Cdd']
+                context['graph_tab_names'] =  ['Hdd', 'Cdd']
                 context['graph_list'] = table_list
             elif form1.cleaned_data['summary_type'] == 'g':
                 table_list = ['gdd', 'corn']
                 context['table_tab_names'] =  ['Gdd', 'Corn']
-                context['table_list'] = table_list
+                context['graph_list'] = table_list
                 context['graph_list'] = table_list
             else:
                 table_list = []
