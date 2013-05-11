@@ -550,6 +550,7 @@ def data_gridded(request):
                     'image':image , 'output':'json', 'grid': grid,
                     'sdate': start_date,
                     'edate': end_date,
+                    'data':req
                     }
                 if 'state' in form1_grid.cleaned_data.keys():params['state']= state
                 if 'bounding_box' in form1_grid.cleaned_data.keys():params['bbox']= bounding_box
@@ -1319,12 +1320,12 @@ def sodsumm(request):
             if form1.cleaned_data['summary_type'] == 'all':
                 table_list = ['temp', 'prsn', 'hdd', 'cdd', 'gdd', 'corn']
                 context['table_list'] = table_list
-                context['graph_tab_names'] = ['Temperature', 'Precip/Snow', 'Hdd', 'Cdd', 'Gdd', 'Corn']
+                context['graph_tab_names'] = ['Temperature', 'Precip', 'Snowfall', 'Hdd', 'Cdd', 'Gdd', 'Corn']
                 context['graph_list'] = ['temp', 'pcpn', 'snow', 'hdd', 'cdd', 'gdd', 'corn']
             elif form1.cleaned_data['summary_type'] == 'both':
                 table_list = ['temp', 'prsn']
                 context['table_list'] = table_list
-                context['graph_tab_names'] = ['Temperature', 'Precip/Snow']
+                context['graph_tab_names'] = ['Temperature', 'Precip', 'Snow']
                 context['graph_list'] = ['temp', 'pcpn', 'snow']
             elif form1.cleaned_data['summary_type'] == 'temp':
                 table_list = ['temp']
@@ -1334,7 +1335,7 @@ def sodsumm(request):
             elif form1.cleaned_data['summary_type'] == 'prsn':
                 table_list = ['prsn']
                 context['table_list'] = table_list
-                context['graph_tab_names'] = ['Precip/Snow']
+                context['graph_tab_names'] = ['Precip', 'Snow']
                 context['graph_list'] = ['pcpn', 'snow']
             elif form1.cleaned_data['summary_type'] == 'hc':
                 table_list = ['hdd', 'cdd']
