@@ -5,146 +5,72 @@ $(function () {
     var json_file_path = '/csc/media/tmp/' + json_file;
     $.getJSON(json_file_path, function(table_dict) {
         for (var i=0;i<table_dict.length;i++){
-            if (table_dict[i].table_name == 'hdd' || table_dict[i].table_name == 'cdd' || table_dict[i].table_name == 'gdd'){
-                //regular bar chart
-                var defaultChart = {
-                    chartContent: null,
-                    highchart: null,
-                    defaults: {
-                        chart: {
-                            type: 'column'
-                        },
-                        credits: {
-                            href: 'http://wrcc.dri.edu/',
-                            text: 'wrcc.dri.edu' 
-                        },
-                        xAxis: {
-                            categories:table_dict[i].cats, 
-                            labels: {
-                                rotation: -41,
-                                align: 'right',
-                                style: {
-                                    fontSize: '13px',
-                                    fontFamil: 'Verdana, sans-serif'
-                                }
-                            }
-                        },
-                        /*
-                        legend: {
-                            layout: 'vertical',
-                            backgroundColor: '#FFFFFF',
-                            align: 'left',
-                            verticalAlign: 'top',
-                            x: 100,
-                            y: 70,
-                            floating: true,
-                            shadow: true
-                        },
-                        */
-                        tooltip: {
-                            formatter: function() {
-                                return ''+
-                                    this.x +': '+ this.y;
-                            }
-                        },
-                        plotOptions: {
-                            column: {
-                                pointPadding: 0.2,
-                                borderWidth: 0
-                            }
-                        },
-                    },//end defaults
-
-                    // here you'll merge the defauls with the object options
-
-                    init: function(options) {
-
-                        this.highchart= jQuery.extend({}, this.defaults, options);
-                        this.highchart.chart.renderTo = this.chartContent;
-                    },
-
-                    create: function() {
-
-                        new Highcharts.Chart(this.highchart);
+            if (table_dict[i].table_name == 'temp' || table_dict[i].table_name == 'pcpn' || table_dict[i].table_name == 'snow'){
+                var yAx = {
+                    stackLabels: {
+                        enabled: true,
+                        style: {
+                            fontWeight: 'bold',
+                            color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                        }
                     }
-                }; // end var defaultChart
+                };
+                var stckn = 'normal';
             }
             else {
-                //stacked bar carts
-                var defaultChart = {
-                    chartContent: null,
-                    highchart: null,
-                    defaults: {
-                        chart: {
-                            type: 'column'
-                        },
-                        credits: {
-                            href: 'http://wrcc.dri.edu/',
-                            text: 'wrcc.dri.edu' 
-                        },
-                        xAxis: {
-                            categories:table_dict[i].cats 
-                        },
-                        yAxis: {
-                            stackLabels: {
-                                enabled: true,
-                                style: {
-                                    fontWeight: 'bold',
-                                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                                }
-                            }
-                        },
-                        /*
-                        legend: {
-                            layout: 'vertical',
-                            backgroundColor: '#FFFFFF',
-                            align: 'left',
-                            verticalAlign: 'top',
-                            x: 100,
-                            y: 70,
-                            floating: true,
-                            shadow: true
-                        },
-                        */
-                        tooltip: {
-                            formatter: function() {
-                                return ''+
-                                    this.x +': '+ this.y;
-                            }
-                        },
-                        plotOptions: {
-                            column: {
-                                pointPadding: 0.2,
-                                borderWidth: 0,
-                                stacking: 'normal',
-                                dataLabels: {
-                                    enabled: true;
-                                }
-                            }
-                        },
-                    },//end defaults
-                    
-                    // here you'll merge the defauls with the object options
-
-                    init: function(options) {
-                        this.highchart= jQuery.extend({}, this.defaults, options);
-                        this.highchart.chart.renderTo = this.chartContent;
+                var yAx = {};
+                var stckn = '';
+            }
+            var defaultChart = {
+                chartContent: null,
+                highchart: null,
+                defaults: {
+                    chart: {
+                        type: 'column'
                     },
+                    credits: {
+                        href: 'http://wrcc.dri.edu/',
+                        text: 'wrcc.dri.edu' 
+                    },
+                    xAxis: {
+                        categories:table_dict[i].cats 
+                    
+                    },
+                    yAxis: yAx,
+                    tooltip: {
+                        formatter: function() {
+                            return ''+
+                                this.x +': '+ this.y;
+                        }
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0,
+                            stacking: stckn,
+                        }
+                    },
+                },//end defaults
+                
+                // here you'll merge the defauls with the object options
+                init: function(options) {
 
-                    create: function() {
+                    this.highchart= jQuery.extend({}, this.defaults, options);
+                    this.highchart.chart.renderTo = this.chartContent;
+                },
 
-                        new Highcharts.Chart(this.highchart);
-                    }
+                create: function() {
 
-                }; // end var defaultChart
-            } //end else (stacked bar chart)
-
+                    new Highcharts.Chart(this.highchart);
+                }
+            }; // end var defaultChart
+            
             //Define table_name dependent vars like y-axis max, min, plot-color
             if (table_dict[i].table_name == 'temp'){
                 var min = -50;
                 var max = 130;
             }
-            if (table_dict[i].table_name == 'prsn'){
+            if (table_dict[i].table_name == 'pcpn' || table_dict[i].table_name == 'snow'){
                 var min = 0;
             }
             if (table_dict[i].table_name == 'hdd' || table_dict[i].table_name == 'cdd' || table_dict[i].table_name == 'gdd'){
@@ -173,7 +99,7 @@ $(function () {
                         text: 'Year Range: ' + table_dict[i].record_start  + ' - '+ table_dict[i].record_end
                     },
                     yAxis: {
-                        min: min,
+                        //min: min,
                         title: {
                         text: table_dict[i].table_name_long + ' in ' + table_dict[i].units
                         }

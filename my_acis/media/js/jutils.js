@@ -110,6 +110,7 @@ function ShowHide(divId)
         }
 }
 
+//Shows documentation in pop up box upon hover
 $(function() {
   var moveLeft = 0.1;
   var moveDown = 0.1;

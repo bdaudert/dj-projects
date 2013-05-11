@@ -564,60 +564,47 @@ img.center {
 
 }
 
-/*
-#MarkerWindow {
-    padding:0px 0px 0px 0px;
-    margin:0px 0px 0px 0px;
-    font-family: 'Georgia',serif;
-    font-size:1;
+/*Tabbed content*/
+#page-wrap {
+  width: 100%;
+  margin: 10px auto;
 }
-*/
 
-/*JS puzzle, maybe temporary*/
-
-#puzzle_container{
-        line-height:20px;
-        text-align:center;
-        vertical-align:center;
-        border:10px outset #CCCCCC;
-        position:relative;
-        color: #FFFFFF;
-        background-color: #707070;
-        
-        width: 200px;   /* IE 5.x */
-        width/* */:/**/180px;   /* Other browsers */
-        width: /**/180px;   
-        
-        height: 200px;  /* IE 5.x */
-        height/* */:/**/180px;  /* Other browsers */
-        height: /**/180px;          
-
-    }
-    
-    #puzzle_container .square{
-        overflow:hidden;
-        border-left:1px solid #FFF;
-        border-top:1px solid #FFF;
-        position:absolute;
-    }
-
-    .activeImageIndicator{
-        border:1px solid #FF0000;
-        position:absolute;
-        /*z-index:1;*/
-    }
-    .revealedImage{
-        /*
-        position:absolute;
-        left:200px;
-        opacity:0;
-        filter:alpha(opacity=50);
-        top:200px;
-        0z-index:5000;
-        */
-        width:50px;
-        height:50px;
-        float:center;
-    }
-
-/*End JS puzzzle*/
+.tabs {
+  position: relative;   
+  min-height: 450px; /* This part sucks */
+  clear: both;
+  margin: 25px 0;
+}
+.tab {
+  float: left;
+}
+.tab label {
+  background: #FFEBCD; 
+  padding: 10px; 
+  border: 1px solid #ccc; 
+  margin-left: -1px; 
+  position: relative;
+  left: 1px; 
+}
+.tab [type=radio] {
+  display: none;   
+}
+#tab_content {
+  position: absolute;
+  top: 28px;
+  left: 0px;
+  background: #FFDEAD;
+  right: 0;
+  bottom: 0;
+  padding: 20px;
+  border: 1px solid #ccc; 
+}
+[type=radio]:checked ~ label {
+  background: #FFDEAD;
+  border-bottom: 1px solid white;
+  z-index: 2;
+}
+[type=radio]:checked ~ label ~ #tab_content {
+  z-index: 1;
+}

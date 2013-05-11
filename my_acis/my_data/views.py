@@ -1318,20 +1318,38 @@ def sodsumm(request):
             #Sodsumm table headers for html
             if form1.cleaned_data['summary_type'] == 'all':
                 table_list = ['temp', 'prsn', 'hdd', 'cdd', 'gdd', 'corn']
+                context['table_list'] = table_list
+                context['table_tab_names'] = ['Temperature', 'Precip/Snow', 'Hdd', 'Cdd', 'Gdd', 'Corn']
+                context['graph_list'] = ['temp', 'pcpn', 'snow', 'hdd', 'cdd', 'gdd', 'corn']
             elif form1.cleaned_data['summary_type'] == 'both':
                 table_list = ['temp', 'prsn']
+                context['table_list'] = table_list
+                context['table_tab_names'] = ['Temperature', 'Precip/Snow']
+                context['graph_list'] = ['temp', 'pcpn', 'snow']
             elif form1.cleaned_data['summary_type'] == 'temp':
                 table_list = ['temp']
+                context['table_list'] = table_list
+                context['table_tab_names'] = ['Temperature']
+                context['graph_list'] = table_list
             elif form1.cleaned_data['summary_type'] == 'prsn':
                 table_list = ['prsn']
+                context['table_list'] = table_list
+                context['table_tab_names'] = ['Precip/Snow']
+                context['graph_list'] = ['pcpn', 'snow']
             elif form1.cleaned_data['summary_type'] == 'hc':
                 table_list = ['hdd', 'cdd']
+                context['table_list'] = table_list
+                context['table_tab_names'] =  ['Hdd', 'Cdd']
+                context['graph_list'] = table_list
             elif form1.cleaned_data['summary_type'] == 'g':
                 table_list = ['gdd', 'corn']
+                context['table_tab_names'] =  ['Gdd', 'Corn']
+                context['table_list'] = table_list
+                context['graph_list'] = table_list
             else:
                 table_list = []
+                context['table_list'] = []
             #Define html content
-            context['table_list'] = table_list
             context['run_done'] = True
             context['start_year'] = dates_list[0][0:4]
             context['end_year'] = dates_list[-1][0:4]
@@ -1346,26 +1364,23 @@ def sodsumm(request):
                 for table in table_list:
                     if table =='temp':
                         table_data = [[] for i in range(5)] # low, ave min, ave mean,ave max, high
+
                         for row in results[table][1:13]:
-                            for i in [9, ]:
-                                table_data[i].append(float(row[i+1]))
-                        legend = ['Low','Average Min','Average Mean', 'Average Max', 'High']
-                        colors = ['#FFFFFF', '#0000FF', '#00FF00', '#690000', '#FF0000']
+                            for i in range(5):
+                                if i == 4:k = 6 #low
+                                if i == 3:k = 2;l = 6 #mean low
+                                if i == 2:k = 3;l = 2 #mean ave
+                                if i == 1:k = 1;l = 3 #mean high
+                                if i == 0:k = 4;l = 1 #high
+                                if i == 4 :
+                                    table_data[i].append(float(row[k]))
+                                else:
+                                    table_data[i].append(float(row[k]) - float(row[l]))
+                        legend = ['High','Average High','Average Mean', 'Average Low', 'Low']
+                        #colors = ['#FFFFFF', '#0000FF', '#00FF00', '#690000', '#FF0000']
+                        colors  = ['#FF0000', '#690000', '#00FF00', '#0000FF', '#FFFFFF']
                         table_name_long = 'Temperatures (F)'
                         units = 'Fahrenheit'
-                    elif table =='prsn':
-                        table_data = [[] for i in range(4)] # precip min, precip high, snow mean, snow high
-                        for row in results[table][1:13]:
-                            for i in range(4):
-                                if i == 0:k = 1 #mean
-                                if i == 1:k = 2 #high
-                                if i == 2:k = 4 #mean
-                                if i == 3:k = 6 #high
-                                table_data[i].append(float(row[k]))
-                        legend = ['Average Precip Mean', 'Average Precip High', 'Precip Low ', 'Precip High']
-                        colors = ['#00FF00', '#008000', '#FF0080', '#800080']
-                        table_name_long = 'Precipitation/Snow (In)'
-                        units = 'Inches'
                     elif table in ['hdd', 'cdd']:
                         units = 'Fahrenheit'
                         colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
@@ -1385,7 +1400,7 @@ def sodsumm(request):
                         colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
                         table_data = [[] for i in range(5)]
                         for i in range(5):
-                            for k in range(len(x_cats)):
+                            for k in range(len(cats)):
                                 table_data[i].append(float(results[table][2*i+1][k+2]))
                         #table_data = [results[table][i][1:] for i in [1,3,5,7,9]]
                         table_name_long = acis_elements[table]['name_long']
@@ -1394,12 +1409,13 @@ def sodsumm(request):
                         units = 'Fahrenheit'
                         colors = ['#14FFFF', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
                         table_data =[[]]
-                        for k in range(len(x_cats)):
+                        for k in range(len(cats)):
                             table_data[0].append(float(results[table][1][k+2]))
                         #table_data = [results[table][1][1:]]
                         table_name_long = 'Corn Degree Days (F)'
                         legend = ['Base 50']
-                    table_dict = {
+                    if table != 'prsn':
+                        table_dict = {
                             'cats':cats,
                             'units':units,
                             'record_start':dates_list[0][0:4],
@@ -1411,8 +1427,64 @@ def sodsumm(request):
                             'legend':legend,
                             'colors': colors,
                             'table_data': table_data
+                        }
+                        json_list.append(table_dict)
+                    if table == 'prsn':
+                        units = 'Inches'
+                        #colors = ['#00FFFF','#00009B', ' #0000FF', '#8282FF']
+                        colors = ['#8282FF', '#0000FF', '#00009B', '#00FFFF']
+                        #pcpn
+                        table_data = [[] for i in range(3)]
+                        for row in results[table][1:13]:
+                            for i in range(3):
+                                if i == 2:k = 4 #low
+                                if i == 1:k = 1;l = 4 #ave mean
+                                if i == 0:k = 2;l = 1 #high
+                                if i == 2:
+                                    table_data[i].append(float(row[k]))
+                                else:
+                                    table_data[i].append(float(row[k])- float(row[l]))
+                        legend = ['Average Precip High', 'Average Precip Mean', 'Average Precip Low']
+                        table_name_long = 'Precipitation(In)'
+                        table_dict = {
+                            'cats':cats,
+                            'units':units,
+                            'record_start':dates_list[0][0:4],
+                            'record_end':dates_list[-1][0:4],
+                            'stn_name':station_names[0],
+                            'stn_id':str(data_params['sid']),
+                            'table_name':'pcpn',
+                            'table_name_long':table_name_long,
+                            'legend':legend,
+                            'colors': colors,
+                            'table_data': table_data
                             }
-                    json_list.append(table_dict)
+                        json_list.append(table_dict)
+                        #snow
+                        table_data = [[] for i in range(3)]
+                        table_data[2] = [0.0 for k in range(13)]
+                        for row in results[table][1:13]:
+                            for i in range(2):
+                                if i == 1:
+                                    table_data[i].append(float(row[12]))
+                                if i == 0: #ave high
+                                    table_data[i].append(float(row[13]) - float(row[12]))
+                        legend = ['Average Snow High', 'Average Snow Mean', 'Average Snow Low']
+                        table_name_long = 'Snowfall(In)'
+                        table_dict = {
+                            'cats':cats,
+                            'units':units,
+                            'record_start':dates_list[0][0:4],
+                            'record_end':dates_list[-1][0:4],
+                            'stn_name':station_names[0],
+                            'stn_id':str(data_params['sid']),
+                            'table_name':'snow',
+                            'table_name_long':table_name_long,
+                            'legend':legend,
+                            'colors': colors,
+                            'table_data': table_data
+                            }
+                        json_list.append(table_dict)
                 results_json = str(json_list).replace("\'", "\"")
                 time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
                 json_file = '%s_sodsumm_%s_%s_%s.json' \
