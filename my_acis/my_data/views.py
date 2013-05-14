@@ -1325,23 +1325,37 @@ def sodsumm(request):
             context['max_missing_days'] = app_params['max_missing_days']
             #Sodsumm table headers for html
             if form1.cleaned_data['summary_type'] == 'all':
-                context['tab_names'] = ['Temperature', 'Precip', 'Snowfall', 'Hdd', 'Cdd', 'Gdd', 'Corn']
-                tab_list = ['temp', 'pcpn', 'snow', 'hdd', 'cdd', 'gdd', 'corn']
-                table_list = ['temp', 'prsn', 'prsn', 'hdd', 'cdd', 'gdd', 'corn']
+                if form1.cleaned_data['generate_graphics'] == 'T':
+                    context['tab_names'] = ['Temp', 'Precip', 'Snow', 'Hdd', 'Cdd', 'Gdd', 'Corn']
+                    tab_list = ['temp', 'pcpn', 'snow', 'hdd', 'cdd', 'gdd', 'corn']
+                    table_list = ['temp', 'prsn', 'prsn', 'hdd', 'cdd', 'gdd', 'corn']
+                else:
+                    context['tab_names'] = ['Temp', 'Precip/Snow', 'Hdd', 'Cdd', 'Gdd', 'Corn']
+                    tab_list = ['temp', 'prsn', 'hdd', 'cdd', 'gdd', 'corn']
+                    table_list = ['temp','prsn', 'hdd', 'cdd', 'gdd', 'corn']
             elif form1.cleaned_data['summary_type'] == 'both':
-                context['tab_names'] = ['Temperature', 'Precip', 'Snow']
-                tab_list = ['temp', 'pcpn', 'snow']
-                table_list = ['temp', 'prsn', 'prsn']
+                if form1.cleaned_data['generate_graphics'] == 'T':
+                    context['tab_names'] = ['Temperature', 'Precip', 'Snow']
+                    tab_list = ['temp', 'pcpn', 'snow']
+                    table_list = ['temp', 'prsn', 'prsn']
+                else:
+                    context['tab_names'] = ['Temp', 'Precip/Snow']
+                    tab_list = ['temp', 'prsn']
+                    table_list = ['temp''prsn']
             elif form1.cleaned_data['summary_type'] == 'temp':
                 table_list = ['temp']
                 context['tab_names'] = ['Temperature']
                 tab_list = ['temp']
                 table_list = ['temp']
             elif form1.cleaned_data['summary_type'] == 'prsn':
-                table_list = ['prsn']
-                context['tab_names'] = ['Precip', 'Snow']
-                tab_list = ['pcpn', 'snow']
-                table_list = ['prsn', 'prsn']
+                if form1.cleaned_data['generate_graphics'] == 'T':
+                    context['tab_names'] = ['Precip', 'Snow']
+                    tab_list = ['pcpn', 'snow']
+                    table_list = ['prsn', 'prsn']
+                else:
+                    context['tab_names'] = ['Precip/Snow']
+                    tab_list = ['prsn']
+                    table_list = ['prsn']
             elif form1.cleaned_data['summary_type'] == 'hc':
                 context['tab_names'] =  ['Hdd', 'Cdd']
                 tab_list = ['hdd', 'cdd']
@@ -1372,8 +1386,13 @@ def sodsumm(request):
                 context['graphics'] = True
                 cats = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
                 json_list = []
-                for table in list(set(table_list)):
-                    if table =='temp':
+                for tab_idx, tab in enumerate(tab_list):
+                    table = table_list[tab_idx]
+                    if tab =='temp':
+                        legend = ['Extr Low','Ave Low','Mean', 'Ave High', 'Extr High']
+                        colors  = ['#FF0000', '#690000', '#00FF00', '#ADD8E6', '#0000FF']
+                        table_name_long = 'Temperatures (F)'
+                        units = 'Fahrenheit'
                         table_data = [[] for i in range(12)]
                         #table_data = [[] for i in range(5)] # low, ave min, ave mean,ave max, high
                         for idx, row in enumerate(results[table][1:13]):
@@ -1383,7 +1402,10 @@ def sodsumm(request):
                                 if i == 2:k = 3 #mean ave
                                 if i == 3:k = 1 #mean high
                                 if i == 4:k = 4 #high
-                                table_data[idx].append(float(row[k]))
+                                try:
+                                    table_data[idx].append(float(row[k]))
+                                except:
+                                    table_data[idx].append(None)
                             '''
                                 if i == 4:k = 6 #low
                                 if i == 3:k = 2;l = 6 #mean low
@@ -1395,86 +1417,72 @@ def sodsumm(request):
                                 else:
                                     table_data[i].append(float(row[k]) - float(row[l]))
                             '''
-                        #legend = ['High','Average High','Average Mean', 'Average Low', 'Low']
-                        legend = ['Extr Low','Ave Low','Mean', 'Ave High', 'Extr High']
-                        #colors = ['#FFFFFF', '#0000FF', '#00FF00', '#690000', '#FF0000']
-                        colors  = ['#FF0000', '#690000', '#00FF00', '#ADD8E6', '#0000FF']
-                        table_name_long = 'Temperatures (F)'
-                        units = 'Fahrenheit'
-                    elif table in ['hdd', 'cdd']:
+                    elif tab in ['hdd', 'cdd']:
                         units = 'Fahrenheit'
                         colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-                        table_data = [[] for i in range(5)]
-                        for i in range(5):
-                            for k in range(len(cats)):
-                                table_data[i].append(float(results[table][i+1][k+1]))
-                        #table_data = [results[table][i+1][1:] for i in range(5)] #Bases: 55,57,60,65,70
-
-                        table_name_long = acis_elements[table]['name_long']
                         if table == 'hdd':
                             legend = ['Base 65', 'Base 60', 'Base 57', 'Base 55', 'Base 50']
                         else:
                             legend = ['Base 55', 'Base 57', 'Base 60', 'Base 65', 'Base 70']
-                    elif table == 'gdd':
-                        units = 'Fahrenheit'
-                        colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
+                        table_name_long = acis_elements[table]['name_long']
                         table_data = [[] for i in range(5)]
                         for i in range(5):
                             for k in range(len(cats)):
-                                table_data[i].append(float(results[table][2*i+1][k+2]))
-                        #table_data = [results[table][i][1:] for i in [1,3,5,7,9]]
+                                try:
+                                    table_data[i].append(float(results[table][i+1][k+1]))
+                                except:
+                                    table_data[i].append(None)
+                    elif tab == 'gdd':
+                        units = 'Fahrenheit'
+                        colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
                         table_name_long = acis_elements[table]['name_long']
                         legend = ['Base 40', 'Base 45', 'Base 50', 'Base 55', 'Base 60']
-                    elif table == 'corn':
+                        table_data = [[] for i in range(5)]
+                        for i in range(5):
+                            for k in range(len(cats)):
+                                try:
+                                    table_data[i].append(float(results[table][2*i+1][k+2]))
+                                except:
+                                    table_data[i].append(None)
+                    elif tab == 'corn':
                         units = 'Fahrenheit'
                         colors = ['#14FFFF', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-                        table_data =[[]]
-                        for k in range(len(cats)):
-                            table_data[0].append(float(results[table][1][k+2]))
-                        #table_data = [results[table][1][1:]]
                         table_name_long = 'Corn Degree Days (F)'
                         legend = ['Base 50']
-                    if table != 'prsn':
-                        table_dict = {
-                            'cats':cats,
-                            'units':units,
-                            'record_start':dates_list[0][0:4],
-                            'record_end':dates_list[-1][0:4],
-                            'stn_name':station_names[0],
-                            'stn_id':str(data_params['sid']),
-                            'table_name':table,
-                            'table_name_long':table_name_long,
-                            'legend':legend,
-                            'colors': colors,
-                            'table_data': table_data
-                        }
-                        json_list.append(table_dict)
-                    if table == 'prsn':
+                        table_data =[[]]
+                        for k in range(len(cats)):
+                            try:
+                                table_data[0].append(float(results[table][1][k+2]))
+                            except:
+                                table_data[0].append(None)
+                    elif  tab == 'pcpn':
                         units = 'Inches'
-
-                        #colors = ['#00FFFF','#00009B', ' #0000FF', '#8282FF']
-                        for tbl in ['pcpn','snow']:
-                            if tbl == 'pcpn':
-                                colors = ['#00FFFF','#00009B', ' #0000FF']
-                                legend = ['Ave Precip Low', 'Precip Mean', 'Ave Precip High']
-                                table_name_long = 'Precipitation(In)'
-                                num_bars = 3
-                            else:
-                                colors = ['#00FFFF','#00009B']
-                                legend = ['Snow Mean', 'Ave Snow High']
-                                table_name_long = 'Snow Fall(In)'
-                                num_bars = 2
-
-                            table_data = [[] for k in range(num_bars)]
-                            for idx, row in enumerate(results[table][1:13]):
-                                for i in range(num_bars):
-                                    if tbl == 'pcpn':
-                                        if i == 0:k=4
-                                        if i == 1:k=1
-                                        if i == 2:k=2
-                                    if tbl == 'snow':
-                                        if i == 0:k=12
-                                        if i == 1:k=13
+                        colors = ['#00FFFF','#00009B', ' #0000FF']
+                        legend = ['Ave Precip Low', 'Precip Mean', 'Ave Precip High']
+                        table_name_long = 'Precipitation(In)'
+                        table_data = [[] for k in range(3)]
+                        for idx, row in enumerate(results[table][1:13]):
+                            for i in range(3):
+                                if i == 0:k=4
+                                if i == 1:k=1
+                                if i == 2:k=2
+                                try:
+                                    table_data[i].append(float(row[k]))
+                                except:
+                                    table_data[i].append(None)
+                    elif tab == 'snow':
+                        colors = ['#00FFFF','#00009B']
+                        legend = ['Snow Mean', 'Ave Snow High']
+                        table_name_long = 'Snow Fall(In)'
+                        table_data = [[] for k in range(2)]
+                        for idx, row in enumerate(results[table][1:13]):
+                            for i in range(2):
+                                if i == 0:k=12
+                                if i == 1:k=13
+                                try:
+                                    table_data[i].append(float(row[k]))
+                                except:
+                                    table_data[i].append(None)
                                     '''
                                     #stacked bar
                                     if i == 2:k = 4 #low
@@ -1501,48 +1509,20 @@ def sodsumm(request):
                                         if tbl == 'pcpn':k = 6#1-day max
                                         if tbl == 'snow':k = 13
                                     '''
-                                    table_data[i].append(float(row[k]))
-                            table_dict = {
-                                'cats':cats,
-                                'units':units,
-                                'record_start':dates_list[0][0:4],
-                                'record_end':dates_list[-1][0:4],
-                                'stn_name':station_names[0],
-                                'stn_id':str(data_params['sid']),
-                                'table_name':tbl,
-                                'table_name_long':table_name_long,
-                                'legend':legend,
-                                'colors': colors,
-                                'table_data': table_data
-                                }
-                            json_list.append(table_dict)
-                        '''
-                        #snow
-                        table_data = [[] for i in range(5)]
-                        table_data[2] = [0.0 for k in range(13)]
-                        for row in results[table][1:13]:
-                            for i in range(2):
-                                if i == 1:
-                                    table_data[i].append(float(row[12]))
-                                if i == 0: #ave high
-                                    table_data[i].append(float(row[13]) - float(row[12]))
-                        legend = ['Average Snow High', 'Average Snow Mean', 'Average Snow Low']
-                        table_name_long = 'Snowfall(In)'
-                        table_dict = {
-                            'cats':cats,
-                            'units':units,
-                            'record_start':dates_list[0][0:4],
-                            'record_end':dates_list[-1][0:4],
-                            'stn_name':station_names[0],
-                            'stn_id':str(data_params['sid']),
-                            'table_name':'snow',
-                            'table_name_long':table_name_long,
-                            'legend':legend,
-                            'colors': colors,
-                            'table_data': table_data
-                            }
-                        json_list.append(table_dict)
-                        '''
+                    table_dict = {
+                        'cats':cats,
+                        'units':units,
+                        'record_start':dates_list[0][0:4],
+                        'record_end':dates_list[-1][0:4],
+                        'stn_name':station_names[0],
+                        'stn_id':str(data_params['sid']),
+                        'table_name':tab,
+                        'table_name_long':table_name_long,
+                        'legend':legend,
+                        'colors': colors,
+                        'table_data': table_data
+                        }
+                    json_list.append(table_dict)
                 results_json = str(json_list).replace("\'", "\"")
                 time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
                 json_file = '%s_sodsumm_%s_%s_%s.json' \

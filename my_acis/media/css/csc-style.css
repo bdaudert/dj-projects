@@ -583,7 +583,7 @@ img.center {
 
 .tabs {
   position: relative;   
-  min-height: 900px; /* This part sucks */
+  min-height: 750px; /* This part sucks */
   min-width:700px;
   clear: both;
   margin: 25px 0;
@@ -606,7 +606,8 @@ img.center {
   position: absolute;
   top: 28px;
   left: 0px;
-  background: #FFDEAD;
+  /*background: #FFDEAD;*/
+  background: #F8E1D0;
   right: 0;
   bottom: 0;
   padding: 20px;
@@ -614,7 +615,7 @@ img.center {
 }:w!
 
 [type=radio]:checked ~ label {
-  background: #FFDEAD;
+  background: #F8E1D0;
   border-bottom: 1px solid white;
   z-index: 2;
 }
