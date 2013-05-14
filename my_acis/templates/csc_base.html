@@ -3,14 +3,14 @@
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 
 <head>
-    <title>Southwest CSC Climate Knowledge Network
+    <title>Southwest CSC Climate Knowledge Exchange
     {% if title %} [ {% endif %} 
     {{ title|escape }}
     {% if title %} ] {% endif %}
     </title>
     {%load my_data_filters%}
-    <meta name="keywords" content="climate,climate change,Southwest US,Soutwest CSC,Climate Science Center, Climate Knowledge Network">
-    <meta name="description" content="Southwest Climate Knowledge Network">
+    <meta name="keywords" content="climate,climate change,Southwest US,Soutwest CSC,Climate Science Center, Climate Knowledge Exchange">
+    <meta name="description" content="Southwest Climate Knowledge Exchange">
     <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
     <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
     <!-- jquery -->
@@ -64,7 +64,7 @@
         
         <div id="header"></div>
             <script type="text/javascript">$("#header").load("{{MEDIA_URL}}html/commons.html .header");</script>
-        <!--<h1 align="center">Southwest Climate Knowledge Network</h1>
+        <!--<h1 align="center">Southwest Climate Knowledge Exchange</h1>
         <a target="_blank" href="http://www.swcsc.arizona.edu/"><img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png"></a>-->
         {%if home_page%}
             <img class="map_2" src="{{ MEDIA_URL }}img/SouthWest.jpg">

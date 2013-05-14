@@ -168,7 +168,7 @@ function initialize_station_finder() {
             }
 
             var data_portal_link = '<a target="_blank" href="' + DATA_URL + 'station/?stn_id=' + c.sids[0];
-            var app_portal_link = '<a target="_blank" href="' + TOOLS_URL + 'sw_ckn_station_apps/?stn_id=' + c.sids[0]; 
+            var app_portal_link = '<a target="_blank" href="' + TOOLS_URL + 'swcke_station_apps/?stn_id=' + c.sids[0]; 
             if (start_date != null){ 
                 data_portal_link = data_portal_link + '&start_date=' + start_date;
                 app_portal_link = app_portal_link + '&start_date=' + start_date; 

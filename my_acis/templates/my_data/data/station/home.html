@@ -77,10 +77,10 @@
                     </td>
                 </tr>
                 {%ifequal field.label "Station id"%}
-                    <tr><td></td><td align="right"><a target="_blank" href="/csc/sw_ckn/apps/station/station_locator/">Station Finder</a></td></tr>
+                    <tr><td></td><td align="right"><a target="_blank" href="/csc/swcke/apps/station/station_locator/">Station Finder</a></td></tr>
                 {%endifequal%}
                 {%ifequal field.label "Station ids"%}
-                    <tr><td></td><td align="right"><a target="_blank" href="/csc/sw_ckn/apps/station/station_locator/">Station Finder</a></td></tr>
+                    <tr><td></td><td align="right"><a target="_blank" href="/csc/swcke/apps/station/station_locator/">Station Finder</a></td></tr>
                 {%endifequal%}
                 {%ifequal field.label "County" %}
                     <tr><td></td><td align="right"><a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a></td></tr>
@@ -244,8 +244,9 @@
             {%endif%}
             <h3 class="error">Results:</h3>
         
-        {%if results.error%}
+        {%if results.error or results.errors %}
             <div class="error">{{results.error}}</div>
+            <div class="error">{{results.errors}}</div>
         {%endif%}
             
         <!--Link to relevant apps-->

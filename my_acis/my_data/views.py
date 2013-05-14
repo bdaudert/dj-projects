@@ -58,14 +58,14 @@ mon_lens = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 def test(request):
     context = {
-        'title': 'Southwest Climate Knowledge Network',
+        'title': 'Southwest Climate Knowledge Exchange',
         'home_page':True
     }
     return render_to_response('my_data/index.html', context, context_instance=RequestContext(request))
 
 def home(request):
     context = {
-        'title': 'Southwest Climate Knowledge Network',
+        'title': 'Southwest Climate Knowledge Exchange',
         'home_page':True
     }
     return render_to_response('my_data/home.html', context, context_instance=RequestContext(request))
@@ -713,7 +713,7 @@ def apps_gis(request):
         }
     return render_to_response('my_data/apps/gis/home.html', context, context_instance=RequestContext(request))
 
-def sw_ckn_station_apps(request):
+def swcke_station_apps(request):
     context = {
         'title': 'Historic Station Data Tools',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
@@ -729,7 +729,7 @@ def sw_ckn_station_apps(request):
     if end_date is not None:context['end_date'] = end_date
     if elements is not None:context['elements'] = elements
 
-    return render_to_response('my_data/apps/sw_ckn_station_apps.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_data/apps/swcke_station_apps.html', context, context_instance=RequestContext(request))
 
 def metagraph(request):
     context = {
@@ -961,7 +961,7 @@ def clim_sum_maps(request):
         if element and start_date and end_date:
             form1 = forms.ClimateMapForm1(initial=initial)
             context['form1'] = form1
-            context['hide_form_0'] = True
+            context['hide_form0'] = True
             context['form1_ready'] = True
         else:
             form0 = set_as_form(request,'ClimateMapForm0', init=initial)
@@ -1053,6 +1053,52 @@ def clim_sum_maps(request):
         context['form1'] = form1
     return render_to_response('my_data/apps/gridded/clim_sum_maps.html', context, context_instance=RequestContext(request))
 
+def clim_risk_maps(request):
+    context = {
+        'title': 'Climate Risk Maps',
+        'apps_page':True
+    }
+    element = request.GET.get('element', None)
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
+    grid= request.GET.get('grid', None)
+    state = request.GET.get('state', None)
+    bounding_box = request.GET.get('bounding_box', None)
+    initial = {}
+    if element is not None:initial['element'] = str(element)
+    if start_date is not None:initial['start_date'] = str(start_date)
+    if end_date is not None:initial['end_date'] = str(end_date)
+    if grid is not None:initial['grid'] = str(grid)
+    if state is not None:initial['state'] = state
+    if bounding_box is not None:initial['bounding_box'] = bounding_box
+
+    if initial:
+        if element and start_date and end_date:
+            form1 = forms.ClimateMapForm1(initial=initial)
+            context['form1'] = form1
+            context['hide_form0'] = True
+            context['form1_ready'] = True
+        else:
+            form0 = set_as_form(request,'ClimateRiskForm0', init=initial)
+            context['form0'] = form0
+    else:
+        form0 = set_as_form(request,'ClimateRiskForm0')
+        context['form0'] = form0
+
+    if 'form0' in request.POST:
+        form0 = set_as_form(request,'ClimateRiskForm0')
+        context['form0']  = form0
+
+        if form0.is_valid():
+            pass
+
+    if 'form1' in request.POST:
+        form1 = set_as_form(request,'ClimateRiskForm1')
+        context['form1']  = form1
+
+        if form1.is_valid():
+            pass
+    return render_to_response('my_data/apps/gridded/clim_risk_maps.html', context, context_instance=RequestContext(request))
 def grid_point_time_series(request):
     context = {
         'title': 'Grid Point Time Series',

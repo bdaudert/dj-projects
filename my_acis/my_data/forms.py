@@ -50,6 +50,12 @@ begin_prism = '%s%s%s' % (yr_p, mon_p, day_p)
 ######################################
 #Choice Fields
 #######################################
+CLIM_RISK_ELEMENT_CHOICES = (
+        ('maxt', 'Maximum Temperature'),
+        ('mint', 'Minimum Temperature'),
+        ('avgt', 'Average Temperature'),
+        ('pcpn', 'Precipitation')
+)
 SDMM_ELEMENT_CHOICES = (
         ('temp', 'Temperature'),
         ('prsn', 'Precip/Snowfall'),
@@ -212,6 +218,7 @@ help_comma_elements = 'Comma separated list of climate elements. Available eleme
 help_acis_elements = 'Available climate elements.'
 help_grids = 'Gridded/modeled datasets available in ACIS.'
 help_stn_selection = 'Defines the type of search area.'
+help_grid_selection = 'Defines the type of search area.'
 help_comma_stns = 'Delimiter separated list of station identifiers. Supported delimiters: comma, space, colon, semi-colon. Please use the station finder to find station ids.'
 help_stn_id = 'Station identification number. Please use the Station Finder to find a station id.'
 help_date_por = 'yyyymmdd, yyyy-mm-dd, yyyy/mm/dd or "por" (period of record) if single station.'
@@ -219,12 +226,13 @@ help_lon_lat = 'Grid point coordinate pair: Longitude, Latitude. Use the map int
 help_data_format = 'Defines format in which data will be returned. Note: html format prints to your screen.'
 help_bbox = 'Bounding box latitudes and longitudes: West,South,East,North.'
 
-HELP_TEXTS = {'select_stations_by': help_stn_selection, 'stn_id':help_stn_id, 'grids': help_grids, 'acis_elements':help_acis_elements, \
+HELP_TEXTS = {'select_stations_by': help_stn_selection, 'select_grid_by':help_grid_selection, 'stn_id':help_stn_id, 'grids': help_grids, 'acis_elements':help_acis_elements, \
             'comma_elements':help_comma_elements, 'date':help_date, 'date_por':help_date_por, 'grid_lon_lat':help_lon_lat, \
             'data_format':help_data_format, 'comma_stns':help_comma_stns, 'bbox':help_bbox}
 #####################################################################
 #Custom form fields
 #####################################################################
+
 class MyDateField(forms.CharField):
     def to_python(self, date):
         # Return an empty string if no input was given.
@@ -267,6 +275,36 @@ class MyYearField(forms.CharField):
         except:
             if date != 'por':
                 raise forms.ValidationError("Year should consist of four integers. You entered: %s" %date)
+
+class MyWindowField(forms.CharField):
+    def to_python(self, date):
+        # Return an empty string if no input was given.
+        if not date:
+            return ' '
+        return date
+
+    def validate(self, date):
+        if len(date) != 4:
+            raise forms.ValidationError("Not a vailid time window.")
+        try:
+            mon = int(date[0:2])
+            if mon < 1 or mon >12:
+                raise forms.ValidationError("Valid month range is: 01 - 12. You entered: %s" %date[0:2])
+            try:
+                day = int(date[2:4])
+                if mon == 2 and day >28:
+                    raise forms.ValidationError("Valid date range for February is: 01 - 28. You entered: %s" %date[2:4])
+            except:
+                raise forms.ValidationError("Not a valid day. You entered: %s" %date[2:4])
+        except:
+            raise forms.ValidationError("Not a valid month. You entered: %s" %date[0:2])
+        try:
+            day = int(date[2:4])
+            if day < 1 or day >13:
+                raise forms.ValidationError("Valid day range is: 01 - 31. You entered: %s" %date[2:4])
+        except:
+            raise forms.ValidationError("Not a valid day. You entered: %s" %date[2:4])
+
 
 class MyStateField(forms.CharField):
     def to_python(self, states):
@@ -431,7 +469,7 @@ class SodsummForm(SodForm):
         self.fields.keyOrder = ['station_ID', 'start_year', 'end_year','summary_type','max_missing_days', 'generate_graphics']
     max_missing_days = forms.IntegerField(initial=5, required=False, help_text='Ignore month with 5 or more missing data points.')
     summary_type = forms.ChoiceField(choices=SDMM_ELEMENT_CHOICES, initial='all', help_text= 'Only generate tables/graphs for these climate elements')
-    generate_graphics = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), initial='F', help_text= 'Generate plots from data')
+    generate_graphics = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), initial='T', help_text= 'Generate plots from data')
     #generate_graphics = forms.ChoiceField(choices=([('F', 'False')]), initial='F', help_text= 'Coming soon')
 
 class StationDataForm0(forms.Form):
@@ -679,6 +717,46 @@ class MonthlyAveragesForm(forms.Form):
         self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='por', help_text=HELP_TEXTS['date_por'])
         self.fields['end_date'] = MyDateField(max_length=10, required = False, initial='por', help_text=HELP_TEXTS['date_por'])
 
+class ClimateRiskForm0(forms.Form):
+        select_grid_by = forms.ChoiceField(choices=([('state', 'State'),('bbox', 'Bounding Box')]), required=False, initial='state', help_text=HELP_TEXTS['select_stations_by'])
+        element = forms.ChoiceField(choices=CLIM_RISK_ELEMENT_CHOICES, required=False, initial='temp', help_text='Blah')
+
+
+class ClimateRiskForm1(forms.Form):
+    def __init__(self, *args, **kwargs):
+        select_grid_by = kwargs.get('initial', {}).get('select_grid_by', None)
+        element = kwargs.get('initial', {}).get('element', None)
+        grid = kwargs.get('initial', {}).get('grid', None)
+        state = kwargs.get('initial', {}).get('state', None)
+        bounding_box = kwargs.get('initial', {}).get('bounding_box', None)
+        super(ClimateRiskForm1, self).__init__(*args, **kwargs)
+
+        if select_grid_by is None:select_grid_by = self.data.get('select_grid_by')
+        if element is None:element = self.data.get('element')
+        if grid is None:grid=self.data.get('grid')
+        if state is None:state=self.data.get('state')
+        if bounding_box is None:bounding_box=self.data.get('bounding_box')
+
+        self.fields['select_grid_by'] = forms.CharField(required=False, initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_grid_by'])
+        if select_grid_by == 'state':
+            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, initial='NV',help_text='US state.')
+        elif select_grid_by == 'bbox':
+            self.fields['bounding_box'] = BBoxField(required=False,initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
+        elif state is not None:
+            self.fields['state'] = forms.ChoiceField(required=False, choices=STATE_CHOICES, initial=state, help_text='US state.')
+        elif bounding_box is not None:
+            self.fields['bounding_box'] = BBoxField(required=False,initial=bounding_box, help_text=HELP_TEXTS['bbox'])
+        self.fields['element'] = forms.ChoiceField(choices=([('temp', 'Temperature'),('pcpn', 'Precipitation')]),initial=element, help_text='')
+        if element == 'maxt':lower='50';upper='90';max_dec = 1
+        if element == 'mint':lower='30';upper='70';max_dec = 1
+        if element == 'avgt':lower='40';upper='60';max_dec = 1
+        if element == 'pcpn':lower='0.0';upper='1.0';max_dec = 2
+        self.fields['lower_threshold'] = forms.DecimalField(max_digits=5, decimal_places=max_dec,required=False, initial=lower, help_text='Lower threshold')
+        self.fields['upper_threshold'] = forms.DecimalField(max_digits=5, decimal_places=max_dec,required=False, initial=upper, help_text='Upper threshold')
+        self.fields['number_of_days']  = forms.CharField(required=False, initial='all', help_text='Number of days the threshold conditions should be met.')
+        self.fields['window_start'] = MyWindowField(max_length=4, min_length=4, required = False, initial='por', help_text='mmdd')
+        self.fields['window_end'] = MyWindowField(max_length=4, min_length=4, required = False, initial='por', help_text='mmdd')
+
 class ClimateMapForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=([('state', 'State'),('bbox', 'Bounding Box')]), required=False, initial='state', help_text=HELP_TEXTS['select_stations_by'])
         element = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES, required=False, initial='maxt', help_text=HELP_TEXTS['acis_elements'])
@@ -693,7 +771,7 @@ class ClimateMapForm1(forms.Form):
         x = kwargs.get('initial', {}).get('x', None)
         start_date = kwargs.get('initial', {}).get('start_date', None)
         end_date = kwargs.get('initial', {}).get('end_date', None)
-        grid = kwargs.get('initial', {}).get('end_date', None)
+        grid = kwargs.get('initial', {}).get('grid', None)
         state = kwargs.get('initial', {}).get('state', None)
         bounding_box = kwargs.get('initial', {}).get('bounding_box', None)
         super(ClimateMapForm1, self).__init__(*args, **kwargs)
@@ -705,10 +783,10 @@ class ClimateMapForm1(forms.Form):
         if start_date is None:start_date = self.data.get('start_date')
         if end_date is None:end_date = self.data.get('end_date')
         if grid is None:grid=self.data.get('grid')
-        if state is None:state=self.data.get('grid')
+        if state is None:state=self.data.get('state')
         if bounding_box is None:bounding_box=self.data.get('bounding_box')
 
-        self.fields['select_grid_by'] = forms.CharField(required=False, initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
+        self.fields['select_grid_by'] = forms.CharField(required=False, initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_grid_by'])
         if select_grid_by == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, initial='NV',help_text='US state.')
         elif select_grid_by == 'bbox':
@@ -717,7 +795,10 @@ class ClimateMapForm1(forms.Form):
             self.fields['state'] = forms.ChoiceField(required=False, choices=STATE_CHOICES, initial=state, help_text='US state.')
         elif bounding_box is not None:
             self.fields['bounding_box'] = BBoxField(required=False,initial=bounding_box, help_text=HELP_TEXTS['bbox'])
-        self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES,initial=element, help_text='Valid element recognized by Acis.')
+        if element is not None:
+            self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES,initial=element, help_text='Valid element recognized by Acis.')
+        else:
+            self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES,initial=element, help_text='Valid element recognized by Acis.')
         if element == 'cddxx':
             self.fields['base_temperature_cddxx'] = forms.IntegerField(initial=65, help_text='Base temperature used to calculate cooling degree days.')
         if element == 'hddxx':

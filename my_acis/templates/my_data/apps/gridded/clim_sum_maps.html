@@ -6,7 +6,7 @@
 {% block content %}
 
 <p align="center">You are here 
-    <a href="{{HOME_URL}}sw_ckn/home/">HOME></a>
+    <a href="{{HOME_URL}}swcke/home/">HOME></a>
     <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
     <a href="{{TOOLS_URL}}">TOOLS></a>
     <a href="{{TOOLS_URL}}gridded/">GRID TOOLS></a>
@@ -14,6 +14,7 @@
 
 <div class="container">
     <div class="center-left">
+    {%if not hide_form0%}
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -33,7 +34,7 @@
             <input type="submit" value="Select" name="form0"/>
             </form>
         </div>
-
+    {%endif%}
     {%if form1_ready%}
         <div id='form1'>
             <form method="post" action="">{% csrf_token %}

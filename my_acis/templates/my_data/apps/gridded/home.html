@@ -6,7 +6,7 @@
 {% block content %}
 
     <p align="center">You are here 
-    <a href="{{HOME_URL}}sw_ckn/home/">HOME></a>
+    <a href="{{HOME_URL}}swcke/home/">HOME></a>
     <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
     <a href="{{TOOLS_URL}}">TOOLS></a>
     <a href="{{TOOLS_URL}}gridded/">GRID TOOLS</a>
@@ -17,7 +17,7 @@
         <div class="center-left">
            <h2 class="error">Gridded/Modeled Data Applications</h2>
             <ul class="navbar">
-
+            <p class="error" align ="center">* Beta version</p>
             <h4 align="center">Southwest US Applications</h4>
             <table>
                 <tr><td>
@@ -48,22 +48,19 @@
  
 
             <h4 align="center">US-Wide Applications</h4>
+            
                 <table>
                     <tr><td>
-                    <a id="us_wide" href="http://www.wrcc.dri.edu/cwd/products/" class="trigger">WRCC-North American Freezing Level Tracker</a>
+                    <a id="us_wide" href="{{TOOLS_URL}}gridded/clim_sum_maps/" class="trigger">* Climate Summary Maps</a>
                     <div class="pop-up">
-                        <p>Track through time the height of the freezing level above sea level.</p>
+                        <p>Generates climate summary maps for different elements, time ranges and region using NRCC interpolated data.</p>
+                    </div>
+                    <a id="us_wide" href="{{TOOLS_URL}}gridded/clim_risk_maps/" class="trigger">* Climate Risk Maps</a>
+                    <div class="pop-up">
+                        <p>Generates climate risk maps for different temperature and precipitation with user chosen parameters.</p>
                     </div>
                     </td><td>
-                   <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="HighLight(this,'docu','Docu_FreezTracker')">
-                    </td></tr>
-                    <tr><td>
-                    <a id="us_wide" href="{{TOOLS_URL}}gridded/clim_sum_maps/" class="trigger">Climate Summary Maps</a>
-                    <div class="pop-up">
-                        <p>Generates climate summary maps for different elements, time ranges and region usig ACIS gridded data.</p>
-                    </div>
-                    </td><td>
-                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CLIM_SUM_MAP')">
+                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CLIM_RISK_MAP')">
                     </td></tr>
                     <tr><td>
                     <a id="us_wide" href="{{TOOLS_URL}}gridded/grid_point_time_series/" class="trigger">Grid Point Time Series</a>
@@ -72,6 +69,14 @@
                     </div>
                     </td><td>
                     <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_GP_TS')">
+                    </td></tr>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.wrcc.dri.edu/cwd/products/" class="trigger">WRCC-North American Freezing Level Tracker</a>
+                    <div class="pop-up">
+                        <p>Track through time the height of the freezing level above sea level.</p>
+                    </div>
+                    </td><td>
+                   <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="HighLight(this,'docu','Docu_FreezTracker')">
                     </td></tr>
                 </table>
             </ul>

@@ -612,7 +612,7 @@ img.center {
   bottom: 0;
   padding: 20px;
   border: 1px solid #ccc; 
-}:w!
+}
 
 [type=radio]:checked ~ label {
   background: #F8E1D0;
