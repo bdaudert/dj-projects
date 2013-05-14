@@ -409,7 +409,7 @@ class SodForm(forms.Form):
             if start_date is not None:
                 self.fields['start_date'] = MyDateField(required=False, max_length=10, min_length=3, initial=start_date, help_text=HELP_TEXTS['date_por'])
             else:
-                self.fields['start_date'] = MyDateField(required=False, max_length=10, min_length=3, initial=begin, help_text=HELP_TEXTS['date_por'])
+                self.fields['start_date'] = MyDateField(required=False, max_length=10, min_length=3, initial='por', help_text=HELP_TEXTS['date_por'])
             if end_date is not None:
                 self.fields['end_date'] = MyDateField(required=False, max_length=10, min_length=3, initial=end_date, help_text=HELP_TEXTS['date_por'])
             else:
@@ -418,8 +418,8 @@ class SodForm(forms.Form):
             if start_year is not None:
                 self.fields['start_year'] = MyYearField(required=False,initial=start_year, help_text='yyyy')
             else:
-                self.fields['start_year'] = MyYearField(required=False, initial=str(int(begin[0:4]) - 5), help_text='yyyy')
-
+                #self.fields['start_year'] = MyYearField(required=False, initial=str(int(begin[0:4]) - 5), help_text='yyyy')
+                self.fields['start_year'] = MyYearField(required=False, initial='por', help_text='yyyy or "por" for period of record')
             if end_year is not None:
                 self.fields['end_year'] = MyYearField(required=False,initial=end_year, help_text='yyyy')
             else:
@@ -428,7 +428,7 @@ class SodForm(forms.Form):
 class SodsummForm(SodForm):
     def __init__(self, *args, **kwargs):
         super(SodsummForm, self).__init__(*args, **kwargs)
-        #self.fields.keyOrder = ['station_ID', 'start_year', 'end_year','summary_type','max_missing_days', 'generate_graphics']
+        self.fields.keyOrder = ['station_ID', 'start_year', 'end_year','summary_type','max_missing_days', 'generate_graphics']
     max_missing_days = forms.IntegerField(initial=5, required=False, help_text='Ignore month with 5 or more missing data points.')
     summary_type = forms.ChoiceField(choices=SDMM_ELEMENT_CHOICES, initial='all', help_text= 'Only generate tables/graphs for these climate elements')
     generate_graphics = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), initial='F', help_text= 'Generate plots from data')
