@@ -41,12 +41,20 @@
                 <table>
                     {%if stn_id%}
                         <tr><td>
-                        <a  href="{{TOOLS_URL}}station/sodsumm/?stn_id={{stn_id}}" class="trigger">*Monthly/Seasonal Climate Summaries</a>
+                        <a  href="{{TOOLS_URL}}station/sodsumm/?stn_id={{stn_id}}" class="trigger">* Monthly/Seasonal Climate Summaries</a>
                         <div class="pop-up" id="sodsumm">
                             <p>Generates general climatology in table and graph form.</p>
                         </div>
                         </td><td>
                         <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_SODSUMM')">
+                        </td></tr>
+                        <tr><td>
+                        <a  href="{{TOOLS_URL}}station/sodxtrmts/?stn_id={{stn_id}}" class="trigger">* Monthly Summaries of Extremes</a>
+                        <div class="pop-up" id="sodxtrmts">
+                            <p>This program produces monthly and annual time series of a large number of properties derived from the SOD daily data set.</p>
+                        </div>
+                        </td><td>
+                        <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_SODXTRMTS')">
                         </td></tr>
                         <tr><td>
                         <a id="us_wide" href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}" class="trigger">Monthly Averages</a>
@@ -81,6 +89,14 @@
                         </div>
                         </td><td>
                         <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_SODSUMM')">
+                        </td></tr>
+                        <tr><td>
+                        <a  href="{{TOOLS_URL}}station/sodxtrmts/" class="trigger">* Monthly Summaries of Extremes</a>
+                        <div class="pop-up" id="sodxtrmts">
+                            <p>This program produces monthly and annual time series of a large number of properties derived from the SOD daily data set.</p>
+                        </div>
+                        </td><td>
+                        <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_SODXTRMTS')">
                         </td></tr>
                         <tr><td>
                         <a id="us_wide" href="{{TOOLS_URL}}station/monthly_aves/" class="trigger">Monthly Averages</a>
@@ -155,6 +171,10 @@
             <div class="docu" id="Docu_SODSUMM" style="display:none;"></div>
                 <script type="text/javascript">                        
                 $("#Docu_SODSUMM").load("{{MEDIA_URL}}html/commons.html #Docu_SODSUMM");
+                </script>
+            <div class="docu" id="Docu_SODXTRMTS" style="display:none;"></div>
+                <script type="text/javascript">                        
+                $("#Docu_SODXTRMTS").load("{{MEDIA_URL}}html/commons.html #Docu_SODXTMTS");
                 </script> 
             <div class="docu" id="Docu_CalTracker" style="display:none;"></div>
                 <script type="text/javascript">                        

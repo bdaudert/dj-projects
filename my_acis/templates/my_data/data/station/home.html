@@ -56,7 +56,7 @@
             <table class="form">
             {%for field in form1_point %}
             {%if field.is_hidden %}
-                {{field}}
+                {{field}} 
             {%else%}
                 <tr>
                     {%if field.label == "Bounding box" and bounding_box %}
@@ -194,7 +194,7 @@
             <div id='form3'>
                 <form method="post" action="">{% csrf_token %}
                 <table class="form">
-                {%for field in form3_point.visible_fields %}
+                {%for field in form3_point%}
                     <tr>
                         <td>{{field.label}}:</td>
                         <td>{{field}}</td>
@@ -211,6 +211,8 @@
                 </form>
             </div>
         {%endif%}
+
+        {{cleaned}}
 
         {%if by_type %}
             <p><font color="#FF007F">Search Parameters:</font><br />

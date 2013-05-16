@@ -252,7 +252,6 @@ def data_station(request):
             if form1_point.cleaned_data['select_stations_by'] == 'bbox':
                 context['need_map_bbox'] = True
                 context['bounding_box'] = form1_point.cleaned_data['bounding_box']
-            context['cleaned'] = form1_point.cleaned_data
             #Check if data request is large,
             #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
             if form1_point.cleaned_data['start_date'].lower() == 'por':
@@ -265,7 +264,8 @@ def data_station(request):
                 e_date = datetime.date(int(form1_point.cleaned_data['end_date'][0:4]), int(form1_point.cleaned_data['end_date'][4:6]),int(form1_point.cleaned_data['end_date'][6:8]))
             days = (e_date - s_date).days
             #if time range > 1 year or user requests data for more than 1 station, large request via ftp
-            if days > 366 and 'station_id' not in form1_point.cleaned_data.keys() and 'station_ids' not in form1_point.cleaned_data.keys():
+            if days > 366 and 'station_id' not in form1_point.cleaned_data.keys():
+                '''
                 context['large_request'] = \
                 'At the moment we do not support data requests that exceed 1 year for multiple station. Please limit your request to one station at a time or a date range of one year or less. We will support larger requests in the near future. Thank you for your patience!'
 
@@ -279,21 +279,6 @@ def data_station(request):
                     initial_params_2['station_ids'] = ','.join([str(stn) for stn in initial_params_2['station_ids']])
                 form3_point = forms.StationDataForm3(initial=initial_params_2)
                 context['form3_point'] = form3_point
-                '''
-                return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
-            elif 'station_ids' in form1_point.cleaned_data.keys() and len(form1_point.cleaned_data['station_ids']) > 20:
-                context['large_request'] ='At the moment we do not support data requests that exceed 50 stations. Please limit your request to one station at a time or a date range of one year or less. We will support larger requests in the near future. Thank you for your patience!'
-                '''
-                context['form3_point_ready'] = True
-                context['large_request'] = 'You requested a large amount of data. Please enter your name and e-mail address.We will notify you once your request has been processed and your data is availiable on our ftp server.'
-                initial_params_2 = form1_point.cleaned_data
-                #keep MultiElements format and MultiStnField format
-                initial_params_2['elements'] = ','.join(initial_params_2['elements'])
-                if 'station_ids' in initial_params_2.keys():
-                    initial_params_2['station_ids'] = ','.join([str(stn) for stn in initial_params_2['station_ids']])
-                form3_point = forms.StationDataForm3(initial=initial_params_2)
-                context['form3_point'] = form3_point
-                '''
                 return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
             else:
                 resultsdict = AcisWS.get_station_data(form1_point.cleaned_data, 'sodlist_web')
@@ -389,7 +374,7 @@ def data_station(request):
             context['user_info'] = 'You will receive an email from csc-data-request@dri.edu with instructions when the data request has been processed. You provided following e-mail address: %s' % (form3_point.cleaned_data['email'])
         else:
             context['user_info'] ='Form not valid'
-            context['invalid_form'] = form3_point
+            context['form3_point'] = form3_point
         return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
 
     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
@@ -494,6 +479,7 @@ def data_gridded(request):
 
             if ('data_summary' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['data_summary'] == 'none' and form1_grid.cleaned_data['temporal_resolution'] == 'dly') or ('data_summary' not in form1_grid.cleaned_data.keys()):
                 if (days > 7 and  'location' not in form1_grid.cleaned_data.keys()):
+                    '''
                     context['large_request'] = \
                     'At the moment we do not support data requests that exceed 7 days for multiple station. Please limit your request to one grid point at a time or a date range of one week or less. Alternatively, you could summarize your data by using the data summary option. We will support larger requests in the near future. Thank you for your patience!'
                     '''
@@ -505,7 +491,6 @@ def data_gridded(request):
                     initial_params_2['elements'] = ','.join(initial_params_2['elements'])
                     form3_grid = forms.GridDataForm3(initial=initial_params_2)
                     context['form3_grid'] = form3_grid
-                    '''
                     return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
             if 'location' in form1_grid.cleaned_data.keys():
@@ -662,6 +647,9 @@ def data_gridded(request):
             mode = os.stat(f).st_mode
             os.chmod(f, mode | stat.S_IWOTH)
             context['user_info'] = 'You will receive an email from csc-data-request@dri.edu with instructions when the data request has been processed. You provided following e-mail address: %s' % (form3_grid.cleaned_data['email'])
+        else:
+            context['user_info'] = 'Invalid Form'
+
         return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
     return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
@@ -1317,7 +1305,7 @@ def set_sod_initial(request, app_name):
     end_year  = request.GET.get('end_year', None)
     initial ={}
     if stn_id is not None:initial['stn_id'] = stn_id
-    if app_name in ['Sodsumm']:
+    if app_name in ['Sodsumm', 'Sodxtrmts']:
         initial['date_type'] = 'y'
         if start_year is not None:initial['start_year'] = start_year
         if end_year is not None:initial['end_year'] = end_year
@@ -1326,6 +1314,64 @@ def set_sod_initial(request, app_name):
         if start_date is not None:initial['start_date'] = start_date
         if end_date is not None:initial['end_date'] = end_date
     return initial
+
+def sodxtrmts(request):
+    context = {
+        'title': 'Sodxtmts - Monthly Summaries of Extremes',
+        'apps_page':True
+        }
+    initial = set_sod_initial(request, 'Sodxtrmts')
+    form0 = set_as_form(request,'SodxtrmtsForm0', init=initial)
+    context['form0'] = form0
+    if 'form0' in request.POST:
+        form0 = set_as_form(request,'SodxtrmtsForm0', init={'date_type':'y'})
+        context['form0'] = form0
+        if form0.is_valid():
+            form1 = forms.SodxtrmtsForm1(initial=form0.cleaned_data)
+            context['form1'] = form1
+            context['hide_form0'] = True
+            context['form1_ready'] = True
+
+    if 'form1' in request.POST:
+        form1 = set_as_form(request,'SodxtrmtsForm1')
+        context['form1'] = form1
+        context['form1_ready'] = True
+        if form1.is_valid():
+            context['search_params'] = form1.cleaned_data
+            data_params = {
+                    'sid':form1.cleaned_data['station_ID'],
+                    'start_date':form1.cleaned_data['start_year'],
+                    'end_date':form1.cleaned_data['end_year'],
+                    'element':form1.cleaned_data['element']
+                    }
+            app_params = form1.cleaned_data
+            for key in ['station_ID', 'start_year', 'end_year']:
+                del app_params[key]
+            app_params['el_type'] = form1.cleaned_data['element']
+            del app_params['element']
+            #Run data retrieval job
+            DJ = WRCCClasses.SodDataJob('Sodxtrmts', data_params)
+            #WARNING: station_ids, names need to be called before dates_list
+            station_ids, station_names = DJ.get_station_ids_names()
+            if station_ids:context['station_ID'] =  station_ids[0]
+            if station_names:context['station_name'] = station_names[0]
+            dates_list = DJ.get_dates_list()
+            if dates_list:
+                context['start_year'] =  dates_list[0]
+                context['end_year'] =  dates_list[-1]
+            data = DJ.get_data()
+            #Run application
+            App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
+            results = App.run_app()
+            #format results to single station output
+            if not results:
+                results = []
+            else:
+                results = results[0][0]
+            context['run_done'] = True
+            context['results'] = results
+            context['month_list'] = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'ANN']
+    return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
 
 #SOD views
 def sodsumm(request):

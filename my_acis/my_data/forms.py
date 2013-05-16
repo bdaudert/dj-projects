@@ -50,28 +50,54 @@ begin_prism = '%s%s%s' % (yr_p, mon_p, day_p)
 ######################################
 #Choice Fields
 #######################################
+#Climate Risk Maps
 CLIM_RISK_ELEMENT_CHOICES = (
-        ('maxt', 'Maximum Temperature'),
-        ('mint', 'Minimum Temperature'),
-        ('avgt', 'Average Temperature'),
-        ('pcpn', 'Precipitation')
+    ('maxt', 'Maximum Temperature'),
+    ('mint', 'Minimum Temperature'),
+    ('avgt', 'Average Temperature'),
+    ('pcpn', 'Precipitation')
 )
+#Sodsumm
 SDMM_ELEMENT_CHOICES = (
-        ('temp', 'Temperature'),
-        ('prsn', 'Precip/Snowfall'),
-        ('both', 'Temp/Precip'),
-        ('hc', 'Degree Days'),
-        ('g', 'Growing Degree Days'),
-        ('all', 'All of the above'),
-        )
-
-STN_FINDER_LOGIC =(
-    ('any_any', 'Any Elements, Any Dates'),
-    ('all_all', 'All Elements, All Dates'),
-    ('all_any', 'All Elements, Any Date'),
-    ('any_all', 'Any Element, All Dates'),
+    ('temp', 'Temperature'),
+    ('prsn', 'Precip/Snowfall'),
+    ('both', 'Temp/Precip'),
+    ('hc', 'Degree Days'),
+    ('g', 'Growing Degree Days'),
+    ('all', 'All of the above'),
+)
+#Sodxtrmts
+SXTR_ANALYSIS_CHOICES = (
+    ('mmax', 'Monthly Maximum'),
+    ('mmin', 'Monthly Minimum'),
+    ('mave', 'Monthly Average'),
+    ('sd', 'Standard Deviation'),
+    ('ndays', 'Number of Days'),
+    ('rmon', 'Range during Month'),
+    ('msum', 'Monthly Sum'),
 )
 
+SXTR_ELEMENT_CHOICES = (
+    ('pcpn', 'Precipitation'),
+    ('snow', 'Snowfall'),
+    ('snwd', 'Snowdepth'),
+    ('maxt', 'Maximum Temperature '),
+    ('mint', 'Minimum Temperature'),
+    ('avgt', 'Mean Temperature'),
+    ('dtr', 'Temperature Range'),
+    ('hdd', 'Heating Degree Days'),
+    ('cdd', 'Cooling Degree Days'),
+    ('gdd', 'Growing degree days'),
+)
+
+F_ANALYSIS_CHOICES = (
+    ('p', 'Pearson Type III'),
+    ('g', 'Generalized Extreme Value'),
+    #('b', 'Beta-P'),
+    #('c', 'Censored Gamma'),
+)
+
+#Monthly Averages
 TIME_PERIOD_CHOICES = (
     ('custom', 'Custom Date Range'),
     ('days', 'Last x days'),
@@ -79,60 +105,13 @@ TIME_PERIOD_CHOICES = (
     ('years', 'Last x years'),
 )
 
+#GridData
 GRID_SUMMARY_CHOICES = (
     ('max', 'Temporal Maximum'),
     ('min', 'Temporal Minimium'),
     ('sum', 'Temporal Sum'),
     ('mean', 'Temporal Mean'),
     ('none', 'None, just get raw data')
-)
-
-ACIS_ELEMENT_CHOICES = (
-        ('pcpn', 'Precipitation (Inches)'),
-        ('snow', 'Snowfall (Inches)'),
-        ('snwd', 'Snowdepth (Inches)'),
-        ('maxt', 'Maximum Temperature (F)'),
-        ('mint', 'Minimum Temperature(F)'),
-        ('avgt', 'Mean Temperature(F)'),
-        ('gdd', 'Growing Degree Days (Base 50F)'),
-        ('hdd', 'Heating Degree Days (Base 65F)'),
-        ('cdd', 'Cooling Degree Days (Base 65F)'),
-        ('gddxx', 'Growing Degree Days (Base xxF)'),
-        ('hddxx', 'Heating Degree Days (Base xxF)'),
-        ('cddxx', 'Cooling Degree Days (Base xxF)'),
-)
-
-ACIS_ELEMENT_CHOICES_SHORT = (
-        ('pcpn', 'Precipitation(In)'),
-        ('maxt', 'Maximum Temperature(F)'),
-        ('mint', 'Minimum Temperature(F)'),
-        ('avgt', 'Mean Temperature(F)'),
-        ('gdd', 'Growing Degree Days(Base 50F)'),
-        ('hdd', 'Heating Degree Days(Base 65F)'),
-        ('cdd', 'Cooling Degree Days(Base 65F)'),
-)
-
-STN_FIND_CHOICES = (
-        ('stnid', 'Individual station'),
-        ('stnids', 'Comma separated list of stations '),
-        ('county', 'County FIPS code'),
-        ('climdiv', 'Climate Division'),
-        ('cwa', 'County Warning Area (CWA)'),
-        ('basin', 'Basin'),
-        ('state', 'State'),
-        ('bbox', 'Bounding Box'),
-        ('stn_id', 'Preselected Station')
-)
-
-STN_FIND_CHOICES_SHORT = (
-        ('sw_states', 'Southwest US'),
-        ('county', 'County FIPS code'),
-        ('climdiv', 'Climate Division'),
-        ('cwa', 'County Warning Area (CWA)'),
-        ('basin', 'Basin'),
-        ('state', 'State'),
-        ('states', 'Multiple States'),
-        ('bbox', 'Bounding Box')
 )
 
 select_grid_by_CHOICES = (
@@ -160,7 +139,64 @@ GRID_CHOICES = (
     ('16', 'WRFG + CGCM3'),
 )
 
+#StnData
+ACIS_ELEMENT_CHOICES = (
+        ('pcpn', 'Precipitation (Inches)'),
+        ('snow', 'Snowfall (Inches)'),
+        ('snwd', 'Snowdepth (Inches)'),
+        ('maxt', 'Maximum Temperature (F)'),
+        ('mint', 'Minimum Temperature(F)'),
+        ('avgt', 'Mean Temperature(F)'),
+        ('gdd', 'Growing Degree Days (Base 50F)'),
+        ('hdd', 'Heating Degree Days (Base 65F)'),
+        ('cdd', 'Cooling Degree Days (Base 65F)'),
+        ('gddxx', 'Growing Degree Days (Base xxF)'),
+        ('hddxx', 'Heating Degree Days (Base xxF)'),
+        ('cddxx', 'Cooling Degree Days (Base xxF)'),
+)
 
+ACIS_ELEMENT_CHOICES_SHORT = (
+        ('pcpn', 'Precipitation(In)'),
+        ('maxt', 'Maximum Temperature(F)'),
+        ('mint', 'Minimum Temperature(F)'),
+        ('avgt', 'Mean Temperature(F)'),
+        ('gdd', 'Growing Degree Days(Base 50F)'),
+        ('hdd', 'Heating Degree Days(Base 65F)'),
+        ('cdd', 'Cooling Degree Days(Base 65F)'),
+)
+
+#StnFinder
+STN_FIND_CHOICES = (
+        ('stnid', 'Individual station'),
+        ('stnids', 'Comma separated list of stations '),
+        ('county', 'County FIPS code'),
+        ('climdiv', 'Climate Division'),
+        ('cwa', 'County Warning Area (CWA)'),
+        ('basin', 'Basin'),
+        ('state', 'State'),
+        ('bbox', 'Bounding Box'),
+        ('stn_id', 'Preselected Station')
+)
+
+STN_FIND_CHOICES_SHORT = (
+        ('sw_states', 'Southwest US'),
+        ('county', 'County FIPS code'),
+        ('climdiv', 'Climate Division'),
+        ('cwa', 'County Warning Area (CWA)'),
+        ('basin', 'Basin'),
+        ('state', 'State'),
+        ('states', 'Multiple States'),
+        ('bbox', 'Bounding Box')
+)
+
+STN_FINDER_LOGIC =(
+    ('any_any', 'Any Elements, Any Dates'),
+    ('all_all', 'All Elements, All Dates'),
+    ('all_any', 'All Elements, Any Date'),
+    ('any_all', 'Any Element, All Dates'),
+)
+
+#Elements
 ELEMENT_CHOICES = (
 
         ('pcpn', 'Precipitation (Inches)'),
@@ -177,10 +213,11 @@ ELEMENT_CHOICES = (
         ('cddxx', 'Growing Degree Days base user defined (F)'),
 )
 
+#Data Formats
 DATA_FORMAT_CHOICES = (
     #('json', 'JSON'),
-    ('dlm', 'Delimited, .dat'),
     ('clm', 'Columnar, .txt'),
+    ('dlm', 'Delimited, .dat'),
     ('xl', 'Excel, .xls'),
     ('html', 'HTML, .html'),
 
@@ -194,6 +231,7 @@ DATA_FORMAT_CHOICES_LTD = (
 
 )
 
+#Delimiters
 DELIMITER_CHOICES = (
     ('comma', 'Comma (,)'),
     ('tab', 'Tab (\\t)'),
@@ -202,11 +240,24 @@ DELIMITER_CHOICES = (
     ('pipe', 'Pipe (|)'),
 )
 
-acis_elements = acis_elements ={'maxt': 'Maximum Daily Temperature (F)','mint': 'Minimum Daily Temperature (F)', \
-'avgt': 'Average Daily Temperature (F)','obst': 'Observation Time Temperature (F)', 'pcpn':'Precipitation (In)', \
-'snow':'Snowfall (In)','snwd':'Snow Depth (In)', 'cdd':'Cooling Degree Days (F, Base 65)', \
-'hdd':'Heating Degree Days (F, Base 65)', 'gdd':'Growing Degree Days (F, Base 50)', \
-'cddXX':'Cooling Degree Days (F, Base XX)', 'hddXX':'Heating Degree Days (F, Base XX)', 'gddXX':'Growing Degree Days (F, Base XX)'}
+#################
+#Element Descriptions
+##################
+acis_elements = acis_elements ={
+    'maxt': 'Maximum Daily Temperature (F)',
+    'mint': 'Minimum Daily Temperature (F)',
+    'avgt': 'Average Daily Temperature (F)',
+    'obst': 'Observation Time Temperature (F)',
+    'pcpn':'Precipitation (In)',
+    'snow':'Snowfall (In)',
+    'snwd':'Snow Depth (In)',
+    'cdd':'Cooling Degree Days (F, Base 65)',
+    'hdd':'Heating Degree Days (F, Base 65)',
+    'gdd':'Growing Degree Days (F, Base 50)',
+    'cddXX':'Cooling Degree Days (F, Base XX)',
+    'hddXX':'Heating Degree Days (F, Base XX)',
+    'gddXX':'Growing Degree Days (F, Base XX)'
+}
 acis_element_list = ''
 for el, el_long in acis_elements.iteritems():
     acis_element_list = acis_element_list + '%s : %s\n' %(el, el_long)
@@ -225,10 +276,23 @@ help_date_por = 'yyyymmdd, yyyy-mm-dd, yyyy/mm/dd or "por" (period of record) if
 help_lon_lat = 'Grid point coordinate pair: Longitude, Latitude. Use the map interface by dragging the marker to change location.'
 help_data_format = 'Defines format in which data will be returned. Note: html format prints to your screen.'
 help_bbox = 'Bounding box latitudes and longitudes: West,South,East,North.'
+help_max_missing_days = 'Ignore months with more than this number of days missing.'
 
-HELP_TEXTS = {'select_stations_by': help_stn_selection, 'select_grid_by':help_grid_selection, 'stn_id':help_stn_id, 'grids': help_grids, 'acis_elements':help_acis_elements, \
-            'comma_elements':help_comma_elements, 'date':help_date, 'date_por':help_date_por, 'grid_lon_lat':help_lon_lat, \
-            'data_format':help_data_format, 'comma_stns':help_comma_stns, 'bbox':help_bbox}
+HELP_TEXTS = {
+    'select_stations_by': help_stn_selection,
+    'select_grid_by':help_grid_selection,
+    'stn_id':help_stn_id,
+    'grids': help_grids,
+    'acis_elements':help_acis_elements,
+    'comma_elements':help_comma_elements,
+    'date':help_date,
+    'date_por':help_date_por,
+    'grid_lon_lat':help_lon_lat,
+    'data_format':help_data_format,
+    'comma_stns':help_comma_stns,
+    'bbox':help_bbox,
+    'max_missing_days':help_max_missing_days
+}
 #####################################################################
 #Custom form fields
 #####################################################################
@@ -456,7 +520,6 @@ class SodForm(forms.Form):
             if start_year is not None:
                 self.fields['start_year'] = MyYearField(required=False,initial=start_year, help_text='yyyy')
             else:
-                #self.fields['start_year'] = MyYearField(required=False, initial=str(int(begin[0:4]) - 5), help_text='yyyy')
                 self.fields['start_year'] = MyYearField(required=False, initial='por', help_text='yyyy or "por" for period of record')
             if end_year is not None:
                 self.fields['end_year'] = MyYearField(required=False,initial=end_year, help_text='yyyy')
@@ -467,10 +530,60 @@ class SodsummForm(SodForm):
     def __init__(self, *args, **kwargs):
         super(SodsummForm, self).__init__(*args, **kwargs)
         self.fields.keyOrder = ['station_ID', 'start_year', 'end_year','summary_type','max_missing_days', 'generate_graphics']
-    max_missing_days = forms.IntegerField(initial=5, required=False, help_text='Ignore month with 5 or more missing data points.')
+    max_missing_days = forms.IntegerField(initial=5, required=False, help_text=HELP_TEXTS['max_missing_days'])
     summary_type = forms.ChoiceField(choices=SDMM_ELEMENT_CHOICES, initial='all', help_text= 'Only generate tables/graphs for these climate elements')
     generate_graphics = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), initial='T', help_text= 'Generate plots from data')
-    #generate_graphics = forms.ChoiceField(choices=([('F', 'False')]), initial='F', help_text= 'Coming soon')
+
+
+class SodxtrmtsForm0(SodForm):
+    def __init__(self, *args, **kwargs):
+        super(SodxtrmtsForm0, self).__init__(*args, **kwargs)
+        self.fields.keyOrder = ['station_ID', 'start_year', 'end_year', 'element', 'analysis_type', 'frequency_analysis']
+    analysis_type = forms.ChoiceField(choices=SXTR_ANALYSIS_CHOICES, initial='mave', help_text = 'Analysis Type')
+    element = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='maxt', help_text = 'Climate Element')
+    frequency_analysis = forms.ChoiceField(choices = ([('F', 'False'),]), initial = 'F', help_text='Perform Frequency Analysis. Coming Soon!')
+
+class SodxtrmtsForm1(forms.Form):
+    def __init__(self, *args, **kwargs):
+        station_ID = kwargs.get('initial', {}).get('station_ID', None)
+        start_year = kwargs.get('initial', {}).get('end_year', None)
+        end_year = kwargs.get('initial', {}).get('end_year', None)
+        analysis_type = kwargs.get('initial', {}).get('analysis_type', None)
+        element = kwargs.get('initial', {}).get('element', None)
+        frequency_analysis = kwargs.get('initial', {}).get('frequency_analysis', None)
+        super(SodxtrmtsForm1, self).__init__(*args, **kwargs)
+
+        if station_ID is None:station_ID = self.data.get('station_ID')
+        if start_year is None:start_year = self.data.get('start_year')
+        if end_year is None:end_year = self.data.get('end_year')
+        if element is None:element = self.data.get('element')
+        if analysis_type is None:analysis_type = self.data.get('analysis_type')
+        if frequency_analysis is None:frequency_analysis = self.data.get('frequency_analysis')
+
+        self.fields['station_ID'] = forms.CharField(initial=station_ID, help_text='Station ID')
+        self.fields['start_year'] = MyYearField(required=False, max_length=4, min_length=3, initial=start_year, help_text='yyyy or "por" for period of record')
+        self.fields['end_year'] = MyYearField(required=False, max_length=4, min_length=3, initial=end_year, help_text='yyyy or "por" for period of record')
+        self.fields['element'] = forms.CharField(initial=element, help_text = 'Climate Element')
+        self.fields['element'].widget.attrs['readonly'] = 'readonly'
+        if element in ['hdd', 'cdd', 'gdd']:
+            self.fields['base_temperature'] = forms.IntegerField(initial=65, help_text = 'Base Temperature for degree day element.')
+        self.fields['analysis_type'] = forms.CharField(initial=analysis_type, help_text='Analysis Type')
+        self.fields['analysis_type'].widget.attrs['readonly'] = 'readonly'
+        if analysis_type == 'ndays':
+            self.fields['less_greater_or_between'] = forms.ChoiceField(choices=([('l','Less Than'), ('g','Greater Than'),('b','Between'), ]), initial='b', help_text = 'Define your threshold operator.')
+            self.fields['threshold_for_less_or_greater'] = forms.DecimalField(initial = 0.0, help_text = 'Set this threshold if you chose "Less Than" or "Greater Than" above')
+            self.fields['threshold_low_for_between'] = forms.DecimalField(initial = 0.0,required=False, help_text = 'Set this lower threshold if you chose "Between" above')
+            self.fields['threshold_high_for_between'] = forms.DecimalField(initial = 1.0,required=False, help_text = 'Set this upper threshold if you chose "Between" above')
+        self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False, help_text=HELP_TEXTS['max_missing_days'])
+        self.fields['start_month'] = forms.CharField(initial='01', required=False, help_text = 'Start the analysis on this month.')
+        self.fields['departures_from_averages'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F', help_text = 'Return results as departures from averages.')
+        self.fields['frequency_analysis'] = forms.CharField(initial=frequency_analysis, help_text='Perform Frequency Analysis. Coming Soon!')
+        self.fields['frequency_analysis'].widget.attrs['readonly'] = 'readonly'
+        if frequency_analysis == 'T':
+            self.fields['frequency_analysis_type'] = forms.ChoiceField(choices=F_ANALYSIS_CHOICES, required=False, initial='p', help_text='Frequency Analysis Type')
+###############
+#End SODS
+##############
 
 class StationDataForm0(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -504,15 +617,14 @@ class StationDataForm1(forms.Form):
             data_format = self.data.get('data_format')
 
 
-        self.fields['select_stations_by'] = forms.CharField(required=False, initial=select_stations_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
-
+        self.fields['select_stations_by'] = forms.CharField(initial=select_stations_by, widget=forms.HiddenInput(),help_text=HELP_TEXTS['select_stations_by'])
+        #self.fields['select_stations_by'].widget.attrs['readonly'] = 'readonly'
         if select_stations_by == 'stn_id':
             self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text=HELP_TEXTS['stn_id'])
             self.fields['station_id'].widget.attrs['readonly'] = 'readonly'
         elif select_stations_by == 'stnid':
             self.fields['station_id'] = forms.CharField(required=False,initial='266779', help_text=HELP_TEXTS['stn_id'])
         elif select_stations_by == 'stnids':
-            #self.fields['station_ids'] = MultiStnField(required=False,initial='', help_text=HELP_TEXTS['comma_stns'])
             self.fields['station_ids'] = MultiStnField(required=False,initial='266779,050848', help_text=HELP_TEXTS['comma_stns'])
         elif select_stations_by == 'county':
             self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='08051', help_text='Valid US county identifier.')
@@ -550,9 +662,11 @@ class StationDataForm3(forms.Form):
         if data_format is None:
             data_format = self.data.get('data_format')
 
+
         self.fields['user_name'] = MyNameField(initial='Your Name', help_text = 'Enter a user name without special characters (e.g. underscores are not allowed). Example: first name initial + last name.')
         self.fields['email'] = forms.EmailField(initial='Your e-mail', help_text='Enter a valid e-mail address at wich we can reach you.')
 
+        self.fields['select_stations_by'] = forms.CharField(initial=select_stations_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
         if select_stations_by == 'stn_id':
             self.fields['station_id'] = forms.CharField(initial=kwargs.get('initial', {}).get('stn_id', None), help_text=HELP_TEXTS['stn_id'])
         elif select_stations_by == 'stnid':
@@ -579,7 +693,6 @@ class StationDataForm3(forms.Form):
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='txt', help_text=HELP_TEXTS['data_format'])
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial=kwargs.get('initial', {}).get('delimiter', None),help_text='Delimiter used to seperate data values.')
-        self.fields['select_stations_by'] = forms.CharField(widget=forms.HiddenInput(), initial=select_stations_by, help_text=HELP_TEXTS['select_stations_by'])
 
 class GridDataForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=select_grid_by_CHOICES, required=False, initial='point', help_text=HELP_TEXTS['select_stations_by'])

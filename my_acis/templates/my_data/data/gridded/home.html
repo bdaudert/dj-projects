@@ -228,9 +228,11 @@
             <div id='form3'>
                 <form method="post" action="">{% csrf_token %}
                 <table class="form">
-                {%for field in form3_grid.visible_fields %}
-
-                    <tr>
+                {%for field in form3_grid%}
+                {%if field.is_hidden%}
+                    {{field}}
+                {%else%}
+                        <tr>
                         <td>{{field.label}}:</td>
                         <td>{{field}}</td>
                         <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
@@ -240,6 +242,7 @@
                     {%if field.errors %}
                         <tr><td></td><td>{{field.errors}}</td><td></td></tr>
                     {%endif%}
+                {%endif%}
                 {%endfor%}
                 </table>
                 <input type="submit" value="Submit" name="form3_grid"/>
@@ -247,7 +250,7 @@
             </div>
         {%endif%}
 
-
+        {{cleaned}}
 
         {%if grid_data %}
         <h3 class="error">Results:</h3>
