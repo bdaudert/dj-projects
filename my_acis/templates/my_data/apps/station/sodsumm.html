@@ -1,0 +1,167 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="Metadata, graph, coop station, station data, historic data,application, product, tool">
+<meta name="description" content="SW-CKN Generates Metadata graph for a coop station">
+
+{%load my_data_filters%}
+
+{% block content %}
+
+<p align="center">You are here
+    <a href="{{HOME_URL}}">HOME></a>
+    <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
+    <a href="{{TOOLS_URL}}">TOOLS></a>
+    <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
+    <a href="{{TOOLS_URL}}station/sodsumm/">Monthly/Seasonal Climate Summaries</a></p>
+
+<div class="container">
+    <div class="center-left" style="border:none;">
+        <div id='form1'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form1 %}
+                {%if not field.is_hidden%}
+                    <tr>
+                    <td>{{field.label}}:</td>                                                                    
+                    <td>{{field}}</td>                                                                                
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>                                             <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    </td>
+                    </tr>
+                    {%ifequal field.label "Station id"%}
+                        <tr><td></td><td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td><td></td></tr>
+                    {%endifequal%}
+               {%endif%}
+
+               {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form1"/>
+            </form>
+        </div>
+    </div>
+
+    <div class="center" style="border:none;background-color:X^H#947e6e;">
+        <div id=tool_info_head></div>
+        <script type="text/javascript">                        
+            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+        </script>
+        <div id="tool_info" style="display:none;"></div>
+        <script type="text/javascript">            
+            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_SODSUMM");
+        </script>
+
+        <div id="how_to_head"></div>
+        <script type="text/javascript">            
+            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+        </script>
+        <div id="how_to" style="display:none;">
+            <p></p>
+            <p>Don't know your station id? Find it here:</p>
+            <a href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a><br />
+            <p>Define your start and end year. Use "por" for both start/end year if you are
+            interested in the period of record of the station</p>
+            <p>The summary type defines the type of table/graph that will be generated. 
+            For example,  Precipitation and Snowfall statitsics are combined in one table.
+            The Temprature table contains maximum, minimum and mean temperature information.</p>
+            <p>The number of maximum missing days allowed in a month. Months with more than max_missing_days missing 
+            will be omitted from the analysis.</p>
+            <p>There is an option to generate graphis with each of the tables.</p>
+            </p>
+        </div>
+        <br />
+         
+        {%if results or graphics%}
+            <p>
+              For monthly and annual mean, thresholds and sums:</br>
+              Month with {{max_missing_days}} or more missing days are not considered.</br>
+            </p>
+            <p class="stronger" style="color:darkblue">Station: ({{station_ID}}) {{station_name.0}}</br>
+            From Year {{start_year}} To Year {{end_year}}</br>
+            </p></br>
+        {%endif%}
+        
+        <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+        <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
+        <!-- One tab per element -->
+        {%if results or graphics%}
+            <h2 class="error">Results</h2>
+            <div class="tabs">
+                {%for tab in tab_list%}
+                   <div class="tab">
+                        {%if forloop.counter0 == 0%}
+                            <input type="radio" id={{tab}} name="graphs" checked>
+                        {%else%}
+                            <input type="radio" id={{tab}} name="graphs">
+                        {%endif%}
+                       <label for={{tab}}>{{tab_names|lookup:forloop.counter0}}</label>
+
+                        <div id="tab_content">
+                            {%if graphics%}
+                                <div id="container{{forloop.counter0}}"style="height:300px;width:80%;"></div>
+                                <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodsumm.js"></script>
+                                <br />
+                            {%endif%}
+                            {%if results%}
+                                <table cellspacing="2">
+                                    {%if tab != 'pcpn'%}
+                                        {%if tab != 'snow'%}
+                                            {{headers|lookup:tab|safe}}
+                                        {%else%}
+                                            {{headers.prsn|safe}}
+                                        {%endif%}
+                                    {%else%}
+                                        {{headers.prsn|safe}}
+                                    {%endif%}
+                                </table>
+                                </br>
+                                <table cellspacing="2">
+                                    {%if tab != 'pcpn'%}
+                                        {%if tab != 'snow'%}
+                                            {%for row in results|lookup:tab%}
+                                                {%if row.0 == "An"%}
+                                                    <tr><td></td></tr>
+                                                {%endif%}
+                                                <tr>{%for val in row%}<td align="right">{{val}}</td>{%endfor%}</tr>
+                                            {%endfor%}
+                                        {%else%}
+                                            {%for row in results.prsn%}
+                                                {%if row.0 == "An"%}
+                                                    <tr><td></td></tr>
+                                                {%endif%}
+                                                <tr>{%for val in row%}<td align="right">{{val}}</td>{%endfor%}</tr>
+                                            {%endfor%}
+                                        {%endif%}
+                                    {%else%}
+                                        {%for row in results.prsn%}
+                                            {%if row.0 == "An"%}
+                                                    <tr><td></td></tr>
+                                                {%endif%}
+                                                <tr>{%for val in row%}<td align="right">{{val}}</td>{%endfor%}</tr>
+                                            {%endfor%}
+                                    {%endif%}
+                                </table>
+                            {%endif%}    
+                        </div><!--End Tab content-->
+                    </div>
+                {%endfor%}
+            </div><!--end tabs -->
+        {%else%}
+            {%if run_done%}
+                <p style="color:red">NO STATION DATA FOUND!</p></br>
+            {%endif%}
+       {%endif%}
+    
+    </div><!-- end center-->
+
+</div>
+
+  <!-- Footer -->
+<!--
+  <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+    </script>
+-->
+{%endblock%}

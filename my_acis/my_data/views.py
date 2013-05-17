@@ -191,6 +191,7 @@ def data_station(request):
     if stn_id is not None:
         initial_params_0['select_stations_by'] = 'stn_id'
         context['stn_id'] = stn_id
+        #context['hide_form0'] = True
     if start_date is not None:context['start_date'] = start_date
     if end_date is not None:context['end_date'] = end_date
     if elements is not None:initial_params_0['elements'] = str(elements);context['elements'] = elements
@@ -265,7 +266,6 @@ def data_station(request):
             days = (e_date - s_date).days
             #if time range > 1 year or user requests data for more than 1 station, large request via ftp
             if days > 366 and 'station_id' not in form1_point.cleaned_data.keys():
-                '''
                 context['large_request'] = \
                 'At the moment we do not support data requests that exceed 1 year for multiple station. Please limit your request to one station at a time or a date range of one year or less. We will support larger requests in the near future. Thank you for your patience!'
 
@@ -279,6 +279,7 @@ def data_station(request):
                     initial_params_2['station_ids'] = ','.join([str(stn) for stn in initial_params_2['station_ids']])
                 form3_point = forms.StationDataForm3(initial=initial_params_2)
                 context['form3_point'] = form3_point
+                '''
                 return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
             else:
                 resultsdict = AcisWS.get_station_data(form1_point.cleaned_data, 'sodlist_web')
@@ -479,7 +480,6 @@ def data_gridded(request):
 
             if ('data_summary' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['data_summary'] == 'none' and form1_grid.cleaned_data['temporal_resolution'] == 'dly') or ('data_summary' not in form1_grid.cleaned_data.keys()):
                 if (days > 7 and  'location' not in form1_grid.cleaned_data.keys()):
-                    '''
                     context['large_request'] = \
                     'At the moment we do not support data requests that exceed 7 days for multiple station. Please limit your request to one grid point at a time or a date range of one week or less. Alternatively, you could summarize your data by using the data summary option. We will support larger requests in the near future. Thank you for your patience!'
                     '''
@@ -491,6 +491,7 @@ def data_gridded(request):
                     initial_params_2['elements'] = ','.join(initial_params_2['elements'])
                     form3_grid = forms.GridDataForm3(initial=initial_params_2)
                     context['form3_grid'] = form3_grid
+                    '''
                     return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
             if 'location' in form1_grid.cleaned_data.keys():
@@ -907,7 +908,8 @@ def monthly_aves(request):
                 context['results'] = results
                 #save to json file (necessary since we can't pass list, dicts to js via hidden vars)
                 #double quotes needed for jquery json.load
-                results_json = str(results).replace("\'", "\"")
+                results_json = json.dumps(results)
+                #results_json = str(results).replace("\'", "\"")
                 time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
                 json_file = '%s_monthly_aves_%s_%s_%s.json' \
                 %(time_stamp, str(form_graphs.cleaned_data['station_id']), s_date, e_date)
@@ -1160,7 +1162,8 @@ def grid_point_time_series(request):
                     context['error'] = str(req['error'])
                 else:
                     context['error'] = 'Unknown error ocurred when getting data'
-            results_json = str(datadict).replace("\'", "\"")
+            #results_json = str(datadict).replace("\'", "\"")
+            results_json = json.dumps(datadict)
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
             json_file = '%s_gp_ts_%s_%s_%s_%s.json' %(time_stamp, str(form0.cleaned_data['lat']), \
                 str(form0.cleaned_data['lon']), form0.cleaned_data['start_date'], \
@@ -1335,7 +1338,7 @@ def sodxtrmts(request):
     if 'form1' in request.POST:
         form1 = set_as_form(request,'SodxtrmtsForm1')
         context['form1'] = form1
-        context['form1_ready'] = True
+        #context['form1_ready'] = True
         if form1.is_valid():
             context['search_params'] = form1.cleaned_data
             data_params = {
@@ -1357,8 +1360,8 @@ def sodxtrmts(request):
             if station_names:context['station_name'] = station_names[0]
             dates_list = DJ.get_dates_list()
             if dates_list:
-                context['start_year'] =  dates_list[0]
-                context['end_year'] =  dates_list[-1]
+                context['start_year'] =  dates_list[0][0:4]
+                context['end_year'] =  dates_list[-1][0:4]
             data = DJ.get_data()
             #Run application
             App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
@@ -1370,7 +1373,46 @@ def sodxtrmts(request):
                 results = results[0][0]
             context['run_done'] = True
             context['results'] = results
-            context['month_list'] = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'ANN']
+            month_list = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'ANN']
+            context['month_list'] = month_list
+            #generate graphics
+            if results:
+                averages = [[mon] for mon in month_list[0:-1]]
+                ranges = [[mon] for mon in month_list[0:-1]]
+                element_name = acis_elements[data_params['element']]['name_long']
+                if 'base_temperature' in form1.cleaned_data.keys():
+                    base_temperature = form1.cleaned_data['base_temperature']
+                else:
+                    base_temperature = ''
+                for i in range(12):
+                    try:
+                        averages[i].append(float(results[-6][i+1]))
+                    except:
+                        averages[i].append(None)
+                    for k in [-2, -3]:
+                        try:
+                            ranges[i].append(float(results[k][i+1]))
+                        except:
+                            ranges[i].append(None)
+                json_dict = {
+                    'element_name':element_name,
+                    'element':str(data_params['element']),
+                    'base_temperature':base_temperature,
+                    'averages':averages,
+                    'ranges':ranges,
+                    'stn_id':station_ids[0],
+                    'stn_name':station_names[0]
+                }
+                results_json = json.dumps(json_dict)
+                time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+                json_file = '%s_sodxtrmts_%s_%s_%s.json' \
+                %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
+                f = open('/tmp/%s' %(json_file),'w+')
+                f.write(results_json)
+                f.close()
+                context['JSON_URL'] = '/tmp/'
+                context['json_file'] = json_file
+
     return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
 
 #SOD views
@@ -1615,7 +1657,8 @@ def sodsumm(request):
                         'table_data': table_data
                         }
                     json_list.append(table_dict)
-                results_json = str(json_list).replace("\'", "\"")
+                #results_json = str(json_list).replace("\'", "\"")
+                results_json = json.dumps(json_list)
                 time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
                 json_file = '%s_sodsumm_%s_%s_%s.json' \
                 %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])

@@ -368,12 +368,12 @@ def sods(request, app_name):
                     context['frequency_analysis_type'] = form2.cleaned_data['frequency_analysis_type']
                     app_args['frequency_analysis_type'] = form2.cleaned_data['frequency_analysis_type']
                 if form2.cleaned_data['analysis_type'] == 'ndays':
-                    app_args['lgb'] = form2.cleaned_data['less_greater_or_between']
+                    app_args['less_greater_or_between'] = form2.cleaned_data['less_greater_or_between']
                     if form2.cleaned_data['less_greater_or_between'] == 'b':
-                        app_args['threshold_1'] = form2.cleaned_data['threshold_low_for_between']
-                        app_args['threshold_2'] = form2.cleaned_data['threshold_high_for_between']
+                        app_args['threshold_low_for_between'] = form2.cleaned_data['threshold_low_for_between']
+                        app_args['threshold_high_for_between'] = form2.cleaned_data['threshold_high_for_between']
                     else:
-                        app_args['threshold'] = form2.cleaned_data['threshold_for_less_or_greater']
+                        app_args['threshold_for_less_or_greater'] = form2.cleaned_data['threshold_for_less_or_greater']
                 if form2.cleaned_data['element'] in ['hdd', 'gdd', 'cdd']:
                     app_args['base_temperature'] = form2.cleaned_data['base_temperature']
                 context['app_arg'] = app_args

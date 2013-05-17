@@ -177,7 +177,7 @@ function initialize_station_finder() {
                 data_portal_link = data_portal_link + '&end_date=' + end_date;
                 app_portal_link = app_portal_link + '&end_date=' + end_date; 
             }
-            if (elements != null){ 
+            if (elements != null && elements != 'Any climate element'){ 
                 data_portal_link = data_portal_link + '&elements=' + elements;
                 app_portal_link = app_portal_link + '&elements=' + elements;
             }

@@ -1,0 +1,197 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="Metadata, graph, coop station, station data, historic data,application, product, tool">
+<meta name="description" content="SW-CKN Generates Metadata graph for a coop station">
+
+{%load my_data_filters%}
+
+{% block content %}
+
+<p align="center">You are here
+    <a href="{{HOME_URL}}">HOME></a>
+    <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
+    <a href="{{TOOLS_URL}}">TOOLS></a>
+    <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
+    <a href="{{TOOLS_URL}}station/sodxtrmts/"></a>Monthly Summaries of Extremes</p>
+
+<div class="container">
+    <div class="center-left" style="border:none;">
+        {%if not hide_form0%}
+        <div id='form0'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form0 %}
+                    <tr>
+                    <td>{{field.label}}:</td>                                                                    
+                    <td>{{field}}</td>                                                                                
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                    {%ifequal field.label "Analysis type"%}
+                        <div class="pop-up"><img width="400px" height="300px" src="{{MEDIA_URL}}img/SodxtrmtsAnalysisChoices.png"></div>
+                    {%else%}                                             
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    {%endifequal%}
+                    </td>
+                    </tr>
+                    {%ifequal field.label "Station id"%}
+                        <tr><td></td><td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td><td></td></tr>
+                    {%endifequal%}
+
+               {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Select" name="form0"/>
+            </form>
+        </div>
+        {%endif%}
+        {%if form1_ready%}
+        <div id='form1'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form1 %}
+                    <tr>
+                    <td>{{field.label}}:</td>
+                    <td>{{field}}</td>
+                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>                                             
+                    {%ifequal field.label "Analysis type"%}                                            
+                        <div class="pop-up"><img src="{{MEDIS_URL}}img/SodxtrmtsAnalysisChoices.png"></div>
+                    {%else%}
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    {%endifequal%}
+                    </td>
+                    </tr>
+                    {%ifequal field.label "Station id"%}
+                        <tr><td></td><td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td><td></td></tr>
+                    {%endifequal%}
+
+               {%if field.errors%}
+                     <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+               {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form1"/>
+            </form>
+        </div>
+        {%endif%}
+
+    </div>
+
+    <div class="center" style="border:none;background-color:X^H#947e6e;">
+        <div id=tool_info_head></div>
+        <script type="text/javascript">                        
+            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+        </script>
+        <div id="tool_info" style="display:none;"></div>
+        <script type="text/javascript">            
+            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_SODXTRMTS");
+        </script>
+
+        <div id="how_to_head"></div>
+        <script type="text/javascript">            
+            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+        </script>
+        <div id="how_to" style="display:none;">
+            <p></p>
+            <p>Don't know your station id? Find it here:</p>
+            <a href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a><br />
+            <p>Define your start and end year. Use "por" for both start/end year if you are
+            interested in the period of record of the station</p>
+            <p>Chose a climate element from the list provided.</p>
+            <p>The analysis type defines the type of statistics  that will be generated.
+            <ul>
+                <p style="color:#006699;">Monthly Maximum -- Computes monthly maximums for the climate element for each year and month in the period spanning start and end year.</p>
+                <p style="color:#006699;">Monthly Minimum -- Computes monthly minimums for the climate element for each year and month in the period spanning start and end year.</p>
+                <p style="color:#006699;">Monthly Average -- Computes monthly averages for the climate element for each year and month in the period spanning start and end year.</p>
+                <p style="color:#006699;">Standard deviation -- Computes monthly standard deviations for the climate element for each year and month in the period spanning start and end year.</p>
+                <p style="color:#006699;">Number of Days -- Computes number of days certain user chosen thresholds are met for each year and month in the period spanning start and end year.</p>
+                <p style="color:#006699;">Range during Month -- Computes range of values for the climate element for each year and month in the period spanning start and end year.</p>
+                <p style="color:#006699;">Monthly Sum -- Computes monthly sums for the climate element for each year and month in the period spanning start and end year.</p>
+            <ul>
+            </p>
+            <p>The number of maximum missing days allowed in a month. Months with more than max_missing_days missing
+            will be omitted from the analysis.</p>
+            <p>There is an option to perfom a frequency analysis on the results of the statistical analysis. </p>
+            <p>There is an option to generate graphis with each of the tables.</p>
+            <p>If the option departure from averages is chosen, the results will be returned as departure from averages rather than raw values.</p>
+            </p>
+        </div>
+        <br />
+        {%if results%}
+            <p>
+            <p class="error"><b>Search Parameters</b>:</p>
+            <p><b>Station</b>: {{station_ID}}, <b>Name</b>: {{station_name}}</br>
+            </b>From Year</b> {{start_year}} <b>To Year</b> {{end_year}}</br>
+            <p>
+            {%for key, val in search_params.items%}
+             <b>{{key}}</b>: {{val}},
+            {%endfor%}
+            </p>
+            </p></br>
+
+              <!--Graphics-->
+              <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+              <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
+              <div id="graph_container" style="height:300px;width:80%;"></div>
+              <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts.js"></script>
+              <br />
+              Month with {{max_missing_days}} or more missing days are not considered.</br>
+              a = 1 day missing, b = 2 days missing, c = 3 days, ..etc..,<br />
+              z = 26 or more days missing, A = Accumulations present<br /> 
+              Long-term means are based on columns; <br />
+              thus, the monthly row may not sum (or average) to the long-term annual value.
+            </p>
+        
+            <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+            <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
+            <!-- One tab per element -->
+            <h2 class="error">Results</h2>
+            <table>
+            <tr>
+            <td />YEAR</td>
+            {%for mon in month_list%}
+                {%if forloop.last%}
+                    <td></td>
+                    <td></td>
+                {%endif%}
+                <td>{{mon}}</td>
+            {%endfor%}
+            </tr>
+            {%for yr_data in results %}
+                {%if yr_data.0 == "MEAN"%}
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                {%endif%}
+                <tr>
+                {%for dat in yr_data%}
+                    {%if forloop.last%}
+                    <td></td>
+                    <td></td>
+                    {%endif%}
+                    <td style="text-align:right">{{dat}}</td>
+                {%endfor%}
+                </tr>
+            {%endfor%}
+            </table>
+        {%else%}
+            {%if run_done%}
+                <p style="color:red">NO STATION DATA FOUND!</p></br>
+            {%endif%}
+       {%endif%}
+    
+    </div><!-- end center-->
+
+</div>
+
+  <!-- Footer -->
+<!--
+  <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+    </script>
+-->
+{%endblock%}

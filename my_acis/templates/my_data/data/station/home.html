@@ -38,7 +38,9 @@
                     {%endif%}
                 {%endfor%}
                 </table>
+                {% if not hide_form0%}
                 <input type="submit" value="Select" name="form0_point"/>
+                {%endif%}
                 </form>
             </div>
         
@@ -179,7 +181,7 @@
             <p class="error">End Date: {{end_date}}</p>
         {%endif%}
         {%if elements and not results %}
-            <p class="error">ACIS Elements: {{elements}}</p>
+            <p class="error">Climate Elements: {{elements}}</p>
         {%endif%}
 
         {%if large_request %}
@@ -212,12 +214,9 @@
             </div>
         {%endif%}
 
-        {{cleaned}}
-
         {%if by_type %}
             <p><font color="#FF007F">Search Parameters:</font><br />
             <b>{{by_type}} </b><br />
-        {%endif%}
 
         {%if start_date%}
             <b>Start Date: </b>{{start_date}},
@@ -233,7 +232,8 @@
             <b>Delimiter: </b>{{delim}}
         {%endif%}
 
-        {%if by_type %}</p>{%endif%}
+        </p>
+        {%endif%}
 
         {%if results.error%}
             <div class="error">{{results.error}}</div>
