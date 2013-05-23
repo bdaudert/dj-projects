@@ -17,6 +17,7 @@
     <br />
     <br />
     {%if not form3_point_ready%}
+        {%if not hide_form0%}
             <div id='form0'>
                 <form method="post" action="">{% csrf_token %}
                 <table class="form">
@@ -38,13 +39,12 @@
                     {%endif%}
                 {%endfor%}
                 </table>
-                {% if not hide_form0%}
                 <input type="submit" value="Select" name="form0_point"/>
-                {%endif%}
                 </form>
             </div>
+        {%endif%}
         
-        {%if not form1_point_ready%}
+        {%if not form1_point_ready and not stn_id%}
             <p class="pop_link" onClick="ShowHide('Docu_select_stations_by')"><b><u>Station Selection Choices</u></b> explained</p>
             <div id="Docu_select_stations_by" style="display:none;"></div>
             <script type="text/javascript">                        
@@ -53,6 +53,8 @@
         {%endif%}
 
         {%if form1_point_ready %}
+        <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}station/'"/>
+        
         <div id="form1">
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -191,8 +193,9 @@
        {%if user_info%}
             <p class="error">{{user_info}}</p>
         {%endif%}
-
-        {% if form3_point_ready and not hide_form3%}
+        {% if form3_point_ready%}
+            <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}station/'"/>
+            {%if not hide_form3%}
             <div id='form3'>
                 <form method="post" action="">{% csrf_token %}
                 <table class="form">
@@ -212,9 +215,10 @@
                 <input type="submit" value="Submit" name="form3_point"/>
                 </form>
             </div>
+            {%endif%}
         {%endif%}
 
-        {%if by_type %}
+        {%if by_type and not form3_point_ready%}
             <p><font color="#FF007F">Search Parameters:</font><br />
             <b>{{by_type}} </b><br />
 
@@ -239,18 +243,13 @@
             <div class="error">{{results.error}}</div>
         {%endif%}
 
-
         {%if results%}
             {%if show_flags%}
                 <h3>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</h3>
             {%endif%}
-            <h3 class="error">Results:</h3>
-        
-        {%if results.error or results.errors %}
-            <div class="error">{{results.error}}</div>
-            <div class="error">{{results.errors}}</div>
-        {%endif%}
-            
+            {%if results.errors%}
+                <p class="error">{{results.errors}}</p>
+            {%endif%}
         <!--Link to relevant apps-->
         {%if link_to_mon_aves %}
             <a target="_blank" href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}">Generate bar charts for this data set here!</a>

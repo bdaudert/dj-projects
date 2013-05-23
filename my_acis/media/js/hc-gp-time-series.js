@@ -32,6 +32,9 @@ $(function () {
                         text: 'wrcc.dri.edu'
                 },
                 xAxis: {
+                    title : {
+                        text: 'Time Period: ' + start_date + ' - ' + end_date
+                    },
                     type: 'datetime',
                     maxZoom: 1 * 24 * 3600000, // 1 day
                     plotBands: [{

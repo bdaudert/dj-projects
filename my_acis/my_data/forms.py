@@ -59,14 +59,29 @@ CLIM_RISK_ELEMENT_CHOICES = (
 )
 #Sodsumm
 SDMM_ELEMENT_CHOICES = (
+    ('all', 'All of those below'),
     ('temp', 'Temperature'),
     ('prsn', 'Precip/Snowfall'),
     ('both', 'Temp/Precip'),
     ('hc', 'Degree Days'),
     ('g', 'Growing Degree Days'),
-    ('all', 'All of the above'),
 )
 #Sodxtrmts
+START_MONTH_CHOICES = (
+    ('01', 'January'),
+    ('02', 'February'),
+    ('03', 'March'),
+    ('04', 'April'),
+    ('05', 'May'),
+    ('06', 'June'),
+    ('07', 'July'),
+    ('08', 'August'),
+    ('09', 'September'),
+    ('10', 'October'),
+    ('11', 'November'),
+    ('12', 'December'),
+)
+
 SXTR_ANALYSIS_CHOICES = (
     ('mmax', 'Monthly Maximum'),
     ('mmin', 'Monthly Minimum'),
@@ -277,6 +292,7 @@ help_lon_lat = 'Grid point coordinate pair: Longitude, Latitude. Use the map int
 help_data_format = 'Defines format in which data will be returned. Note: html format prints to your screen.'
 help_bbox = 'Bounding box latitudes and longitudes: West,South,East,North.'
 help_max_missing_days = 'Ignore months with more than this number of days missing.'
+help_data_summary = 'Temporal summarization to be performed on data.'
 
 HELP_TEXTS = {
     'select_stations_by': help_stn_selection,
@@ -291,7 +307,8 @@ HELP_TEXTS = {
     'data_format':help_data_format,
     'comma_stns':help_comma_stns,
     'bbox':help_bbox,
-    'max_missing_days':help_max_missing_days
+    'max_missing_days':help_max_missing_days,
+    'data_summary': help_data_summary
 }
 #####################################################################
 #Custom form fields
@@ -307,7 +324,7 @@ class MyDateField(forms.CharField):
         return formatted_date.lower()
 
     def validate(self, formatted_date):
-        if formatted_date == 'por':
+        if formatted_date.lower() == 'por':
             if self.min_length == 8:
                 raise forms.ValidationError("Date should be of form yyyymmdd or yyyy-mm-dd or yyyy/mm/dd.")
         else:
@@ -318,7 +335,7 @@ class MyDateField(forms.CharField):
             except:
                 raise forms.ValidationError("Not a valid date.")
         #Check for leapyear
-        if formatted_date != 'por':
+        if formatted_date.lower() != 'por':
             if not WRCCUtils.is_leap_year(formatted_date[0:4]) and formatted_date[4:6] == '02' and formatted_date[6:8] == '29':
                 raise forms.ValidationError("%s is a leap year and February only has 28 days. Please change your date." %formatted_date[0:4])
 
@@ -327,17 +344,17 @@ class MyYearField(forms.CharField):
         # Return an empty string if no input was given.
         if not date:
             return ' '
-        return date
+        return date.lower()
 
     def validate(self, date):
-        if len(date) != 4 and date != 'por':
+        if len(date) != 4 and date.lower() != 'por':
             raise forms.ValidationError("Not a vailid year.")
         try:
             int(date)
             if date[0] not in ['1', '2']:
                 raise forms.ValidationError("Valid year range is: 1000 - 2999. You entered: %s" %date)
         except:
-            if date != 'por':
+            if date.lower() != 'por':
                 raise forms.ValidationError("Year should consist of four integers. You entered: %s" %date)
 
 class MyWindowField(forms.CharField):
@@ -511,20 +528,20 @@ class SodForm(forms.Form):
             if start_date is not None:
                 self.fields['start_date'] = MyDateField(required=False, max_length=10, min_length=3, initial=start_date, help_text=HELP_TEXTS['date_por'])
             else:
-                self.fields['start_date'] = MyDateField(required=False, max_length=10, min_length=3, initial='por', help_text=HELP_TEXTS['date_por'])
+                self.fields['start_date'] = MyDateField(required=False, max_length=10, min_length=3, initial='POR', help_text=HELP_TEXTS['date_por'])
             if end_date is not None:
                 self.fields['end_date'] = MyDateField(required=False, max_length=10, min_length=3, initial=end_date, help_text=HELP_TEXTS['date_por'])
             else:
                 self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=yesterday, help_text=HELP_TEXTS['date_por'])
         elif date_type == 'y':
             if start_year is not None:
-                self.fields['start_year'] = MyYearField(required=False,initial=start_year, help_text='yyyy')
+                self.fields['start_year'] = MyYearField(required=False,initial=start_year, help_text='yyyy or "POR" for period of record')
             else:
-                self.fields['start_year'] = MyYearField(required=False, initial='por', help_text='yyyy or "por" for period of record')
+                self.fields['start_year'] = MyYearField(required=False, initial='POR', help_text='yyyy or "POR" for period of record')
             if end_year is not None:
-                self.fields['end_year'] = MyYearField(required=False,initial=end_year, help_text='yyyy')
+                self.fields['end_year'] = MyYearField(required=False,initial=end_year, help_text='yyyy or "POR" for period of record')
             else:
-                self.fields['end_year'] = MyYearField(required=False, initial=begin[0:4], help_text='yyyy')
+                self.fields['end_year'] = MyYearField(required=False, initial=begin[0:4], help_text='yyyy or "POR" for period of record')
 
 class SodsummForm(SodForm):
     def __init__(self, *args, **kwargs):
@@ -532,15 +549,29 @@ class SodsummForm(SodForm):
         self.fields.keyOrder = ['station_ID', 'start_year', 'end_year','summary_type','max_missing_days', 'generate_graphics']
     max_missing_days = forms.IntegerField(initial=5, required=False, help_text=HELP_TEXTS['max_missing_days'])
     summary_type = forms.ChoiceField(choices=SDMM_ELEMENT_CHOICES, initial='all', help_text= 'Only generate tables/graphs for these climate elements')
-    generate_graphics = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), initial='T', help_text= 'Generate plots from data')
+    generate_graphics = forms.ChoiceField(choices=([('T', 'Yes'),('F', 'No')]), initial='T', help_text= 'Generate plots from data')
 
+class SodxtrmtsForm(SodForm):
+    def __init__(self, *args, **kwargs):
+        super(SodxtrmtsForm, self).__init__(*args, **kwargs)
+        self.fields.keyOrder = ['station_ID', 'start_year', 'end_year', 'element', 'base_temperature', 'monthly_statistic', 'max_missing_days', 'start_month', 'departures_from_averages', 'frequency_analysis']
+    element = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='pcpn', help_text = 'Climate Element')
+    base_temperature = forms.IntegerField(initial=65, help_text = 'Base Temperature for degree day element.')
+    start_year = MyYearField(max_length=4, min_length=3, initial='POR', help_text='yyyy or "POR" for period of record')
+    end_year = MyYearField(max_length=4, min_length=3, initial='2013', help_text='yyyy or "POR" for period of record')
+    monthly_statistic = forms.ChoiceField(choices=SXTR_ANALYSIS_CHOICES, initial='msum', help_text = 'Analysis Type')
+    max_missing_days = forms.IntegerField(initial=5, help_text=HELP_TEXTS['max_missing_days'])
+    start_month = forms.ChoiceField(choices=START_MONTH_CHOICES, initial='01',help_text = 'Start the analysis on this month. Default is January.')
+    departures_from_averages= forms.ChoiceField(choices = ([('T', 'Yes'),('F', 'No'),]), initial = 'F', help_text = 'Express results as departures from averages.')
+    frequency_analysis = forms.ChoiceField(choices = ([('F', 'False'),]), initial = 'F', help_text='Perform Frequency Analysis. Coming Soon!')
 
+'''
 class SodxtrmtsForm0(SodForm):
     def __init__(self, *args, **kwargs):
         super(SodxtrmtsForm0, self).__init__(*args, **kwargs)
-        self.fields.keyOrder = ['station_ID', 'start_year', 'end_year', 'element', 'analysis_type', 'frequency_analysis']
-    analysis_type = forms.ChoiceField(choices=SXTR_ANALYSIS_CHOICES, initial='mave', help_text = 'Analysis Type')
-    element = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='maxt', help_text = 'Climate Element')
+        self.fields.keyOrder = ['station_ID', 'start_year', 'end_year', 'element', 'monthly_statistic', 'frequency_analysis']
+    monthly_statistic = forms.ChoiceField(choices=SXTR_ANALYSIS_CHOICES, initial='msum', help_text = 'Analysis Type')
+    element = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='pcpn', help_text = 'Climate Element')
     frequency_analysis = forms.ChoiceField(choices = ([('F', 'False'),]), initial = 'F', help_text='Perform Frequency Analysis. Coming Soon!')
 
 class SodxtrmtsForm1(forms.Form):
@@ -548,7 +579,7 @@ class SodxtrmtsForm1(forms.Form):
         station_ID = kwargs.get('initial', {}).get('station_ID', None)
         start_year = kwargs.get('initial', {}).get('end_year', None)
         end_year = kwargs.get('initial', {}).get('end_year', None)
-        analysis_type = kwargs.get('initial', {}).get('analysis_type', None)
+        monthly_statistic = kwargs.get('initial', {}).get('monthly_statistic', None)
         element = kwargs.get('initial', {}).get('element', None)
         frequency_analysis = kwargs.get('initial', {}).get('frequency_analysis', None)
         super(SodxtrmtsForm1, self).__init__(*args, **kwargs)
@@ -557,30 +588,32 @@ class SodxtrmtsForm1(forms.Form):
         if start_year is None:start_year = self.data.get('start_year')
         if end_year is None:end_year = self.data.get('end_year')
         if element is None:element = self.data.get('element')
-        if analysis_type is None:analysis_type = self.data.get('analysis_type')
+        if monthly_statistic is None:monthly_statistic = self.data.get('monthly_statistic')
         if frequency_analysis is None:frequency_analysis = self.data.get('frequency_analysis')
 
         self.fields['station_ID'] = forms.CharField(initial=station_ID, help_text='Station ID')
-        self.fields['start_year'] = MyYearField(required=False, max_length=4, min_length=3, initial=start_year, help_text='yyyy or "por" for period of record')
-        self.fields['end_year'] = MyYearField(required=False, max_length=4, min_length=3, initial=end_year, help_text='yyyy or "por" for period of record')
+        self.fields['start_year'] = MyYearField(required=False, max_length=4, min_length=3, initial=start_year, help_text='yyyy or "POR" for period of record')
+        self.fields['end_year'] = MyYearField(required=False, max_length=4, min_length=3, initial=end_year, help_text='yyyy or "POR" for period of record')
         self.fields['element'] = forms.CharField(initial=element, help_text = 'Climate Element')
         self.fields['element'].widget.attrs['readonly'] = 'readonly'
         if element in ['hdd', 'cdd', 'gdd']:
             self.fields['base_temperature'] = forms.IntegerField(initial=65, help_text = 'Base Temperature for degree day element.')
-        self.fields['analysis_type'] = forms.CharField(initial=analysis_type, help_text='Analysis Type')
-        self.fields['analysis_type'].widget.attrs['readonly'] = 'readonly'
-        if analysis_type == 'ndays':
+        self.fields['monthly_statistic'] = forms.CharField(initial=monthly_statistic, help_text='Analysis Type')
+        self.fields['monthly_statistic'].widget.attrs['readonly'] = 'readonly'
+        if monthly_statistic == 'ndays':
             self.fields['less_greater_or_between'] = forms.ChoiceField(choices=([('l','Less Than'), ('g','Greater Than'),('b','Between'), ]), initial='b', help_text = 'Define your threshold operator.')
             self.fields['threshold_for_less_or_greater'] = forms.DecimalField(initial = 0.0, help_text = 'Set this threshold if you chose "Less Than" or "Greater Than" above')
             self.fields['threshold_low_for_between'] = forms.DecimalField(initial = 0.0,required=False, help_text = 'Set this lower threshold if you chose "Between" above')
             self.fields['threshold_high_for_between'] = forms.DecimalField(initial = 1.0,required=False, help_text = 'Set this upper threshold if you chose "Between" above')
         self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False, help_text=HELP_TEXTS['max_missing_days'])
-        self.fields['start_month'] = forms.CharField(initial='01', required=False, help_text = 'Start the analysis on this month.')
-        self.fields['departures_from_averages'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F', help_text = 'Return results as departures from averages.')
+        self.fields['start_month'] = forms.ChoiceField(choices=START_MONTH_CHOICES, initial='01', required=False, help_text = 'Start the analysis on this month. Default is January.')
+        self.fields['departures_from_averages'] = forms.ChoiceField(choices = ([('T', 'Yes'),('F', 'No'),]), initial = 'F', help_text = 'Express results as departures from averages.')
         self.fields['frequency_analysis'] = forms.CharField(initial=frequency_analysis, help_text='Perform Frequency Analysis. Coming Soon!')
         self.fields['frequency_analysis'].widget.attrs['readonly'] = 'readonly'
         if frequency_analysis == 'T':
             self.fields['frequency_analysis_type'] = forms.ChoiceField(choices=F_ANALYSIS_CHOICES, required=False, initial='p', help_text='Frequency Analysis Type')
+
+'''
 ###############
 #End SODS
 ##############
@@ -641,13 +674,13 @@ class StationDataForm1(forms.Form):
 
         self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
         if select_stations_by in ['stn_id', 'stnid']:
-            self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial='por', help_text=HELP_TEXTS['date_por'])
-            self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial='por', help_text=HELP_TEXTS['date_por'])
+            self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial='POR', help_text=HELP_TEXTS['date_por'])
+            self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial='POR', help_text=HELP_TEXTS['date_por'])
         else:
             self.fields['start_date'] = MyDateField(max_length=8, min_length=8, initial=begin, help_text=HELP_TEXTS['date'])
             self.fields['end_date'] = MyDateField(max_length=8, min_length=8, initial=yesterday, help_text=HELP_TEXTS['date'])
-        self.fields['show_flags'] = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), required=False, initial='F', help_text='Show the data flag with each data point.')
-        self.fields['show_observation_time'] = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), required=False, initial='F', help_text='Show the hour at which the observation was taken for each data point.(1 - 24 =  midnight, -1 means no observation time was recorded)')
+        self.fields['show_flags'] = forms.ChoiceField(choices=([('T', 'Yes'),('F', 'No')]), required=False, initial='F', help_text='Show the data flag with each data point.')
+        self.fields['show_observation_time'] = forms.ChoiceField(choices=([('T', 'Yes'),('F', 'No')]), required=False, initial='F', help_text='Show the hour at which the observation was taken for each data point.(1 - 24 =  midnight, -1 means no observation time was recorded)')
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
         self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
@@ -688,8 +721,8 @@ class StationDataForm3(forms.Form):
         self.fields['elements'] = MultiElementField(initial=kwargs.get('initial', {}).get('elements', None), help_text=HELP_TEXTS['comma_elements'])
         self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('start_date', None),help_text=HELP_TEXTS['date_por'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('end_date', None), help_text=HELP_TEXTS['date_por'])
-        self.fields['show_flags'] = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), required=False, initial=kwargs.get('initial', {}).get('show_flags', 'F'), help_text='Show the data flag with each data point. Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated')
-        self.fields['show_observation_time'] = forms.ChoiceField(choices=([('T', 'True'),('F', 'False')]), required=False, initial=kwargs.get('initial', {}).get('show_observation_time', 'F'), help_text='Show the time at which the observation was taken for each data point.')
+        self.fields['show_flags'] = forms.ChoiceField(choices=([('T', 'Yes'),('F', 'No')]), required=False, initial=kwargs.get('initial', {}).get('show_flags', 'F'), help_text='Show the data flag with each data point. Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated')
+        self.fields['show_observation_time'] = forms.ChoiceField(choices=([('T', 'Yes'),('F', 'No')]), required=False, initial=kwargs.get('initial', {}).get('show_observation_time', 'F'), help_text='Show the time at which the observation was taken for each data point.')
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='txt', help_text=HELP_TEXTS['data_format'])
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial=kwargs.get('initial', {}).get('delimiter', None),help_text='Delimiter used to seperate data values.')
@@ -697,7 +730,7 @@ class StationDataForm3(forms.Form):
 class GridDataForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=select_grid_by_CHOICES, required=False, initial='point', help_text=HELP_TEXTS['select_stations_by'])
         temporal_resolution = forms.ChoiceField(choices=([('dly', 'Daily'),('mly', 'Monthly'),('yly', 'Yearly')]), required=False, initial='dly', help_text='Time resolution of data.')
-        data_summary = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, required=False, initial='mean', help_text='Summarize Data')
+        data_summary = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, required=False, initial='mean', help_text=HELP_TEXTS['data_summary'])
 
 class GridDataForm1(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -720,7 +753,6 @@ class GridDataForm1(forms.Form):
             self.fields['bounding_box'] = BBoxField(initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
 
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
-        self.fields['temporal_resolution'] = forms.CharField(initial=temporal_resolution, widget=forms.HiddenInput())
         if location is not None:
             self.fields['location'] = forms.CharField(initial=location, help_text=HELP_TEXTS['grid_lon_lat'])
         if temporal_resolution in ['mly', 'yly']:
@@ -755,11 +787,19 @@ class GridDataForm1(forms.Form):
         self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
         self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
         if data_summary is None or data_summary == 'none' or select_grid_by == 'point':
-            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'False'), ('T', 'True')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
-            self.fields['data_summary'] = forms.CharField(widget=forms.HiddenInput(), required=False, initial='none', help_text='Temporal summarization to be performed on data.')
+            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
+            #self.fields['data_summary'] = forms.CharField(widget=forms.HiddenInput(), required=False, initial='none', help_text=HELP_TEXTS['data_summary'])
+            self.fields['data_summary'] = forms.CharField(initial='none', help_text=HELP_TEXTS['data_summary'])
+            self.fields['data_summary'].widget.attrs['readonly'] = True
         else:
-            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'False'), ('T', 'True')]), required=False, initial='F', help_text='Generate a map to visualize data')
-            self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, initial=data_summary, help_text='Temporal summarization to be performed on data.')
+            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='F', help_text='Generate a map to visualize data')
+            #self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, initial=data_summary, help_text=HELP_TEXTS['data_summary'])
+            self.fields['data_summary'] = forms.CharField(initial=data_summary, help_text=HELP_TEXTS['data_summary'])
+            self.fields['data_summary'].widget.attrs['readonly'] = True
+        #self.fields['temporal_resolution'] = forms.CharField(initial=temporal_resolution, widget=forms.HiddenInput())
+        self.fields['temporal_resolution']  = forms.CharField(initial=temporal_resolution, help_text='Time resolution of data.')
+        self.fields['temporal_resolution'].widget.attrs['readonly'] = True
+
 class GridDataForm3(forms.Form):
     def __init__(self, *args, **kwargs):
         select_grid_by = kwargs.get('initial', {}).get('select_grid_by', None)
@@ -772,6 +812,7 @@ class GridDataForm3(forms.Form):
         if data_format is None:data_format = self.data.get('data_format')
         if temporal_resolution is None:temporal_resolution = self.data.get('temporal_resolution')
         if data_summary is None:data_summary = self.data.get('data_summary')
+
         self.fields['user_name'] = MyNameField(initial='Your Name', help_text = 'Enter a user name without special characters.Example: first name initial + last name.')
         self.fields['email'] = forms.EmailField(initial='Your e-mail', help_text='Enter a valid e-mail address at wich we can reach you.')
 
@@ -794,12 +835,18 @@ class GridDataForm3(forms.Form):
             self.fields['delimiter'] = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial=kwargs.get('initial', {}).get('delimiter', None), help_text='Delimiter used to seperate data values.')
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
         if data_summary is None or data_summary == 'none' or select_grid_by == 'point' or temporal_resolution in ['mly', 'yly']:
-            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'False'), ('T', 'True')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
-            self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, widget=forms.HiddenInput(), initial=kwargs.get('initial', {}).get('data_summary', 'none'), help_text='Temporal summarization to be performed on data.')
+            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
+            #self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, widget=forms.HiddenInput(), initial=kwargs.get('initial', {}).get('data_summary', 'none'), help_text='Temporal summarization to be performed on data.')
+            self.fields['data_summary'] = forms.CharField(initial='none', help_text=HELP_TEXTS['data_summary'])
+            self.fields['data_summary'].widget.attrs['readonly'] = True
         else:
-            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'False'), ('T', 'True')]), required=False, initial='F', help_text='Generate a map to visualize data')
-            self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, initial=data_summary, help_text='Temporal summarization to be performed on data.')
-
+            self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='F', help_text='Generate a map to visualize data')
+            #self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, initial=data_summary, help_text='Temporal summarization to be performed on data.')
+            self.fields['data_summary'] = forms.CharField(initial=data_summary, help_text=HELP_TEXTS['data_summary'])
+            self.fields['data_summary'].widget.attrs['readonly'] = True
+            #self.fields['temporal_resolution'] = forms.CharField(initial=temporal_resolution, widget=forms.HiddenInput())
+            self.fields['temporal_resolution']  = forms.CharField(initial=temporal_resolution, help_text='Time resolution of data.')
+            self.fields['temporal_resolution'].widget.attrs['readonly'] = True
 #Data Application Forms
 class MetaGraphForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -827,8 +874,8 @@ class MonthlyAveragesForm(forms.Form):
         else:
             self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text=HELP_TEXTS['stn_id'])
         self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn,snow,snwd', help_text=HELP_TEXTS['comma_elements'])
-        self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='por', help_text=HELP_TEXTS['date_por'])
-        self.fields['end_date'] = MyDateField(max_length=10, required = False, initial='por', help_text=HELP_TEXTS['date_por'])
+        self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='POR', help_text=HELP_TEXTS['date_por'])
+        self.fields['end_date'] = MyDateField(max_length=10, required = False, initial='POR', help_text=HELP_TEXTS['date_por'])
 
 class ClimateRiskForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=([('state', 'State'),('bbox', 'Bounding Box')]), required=False, initial='state', help_text=HELP_TEXTS['select_stations_by'])
@@ -867,8 +914,8 @@ class ClimateRiskForm1(forms.Form):
         self.fields['lower_threshold'] = forms.DecimalField(max_digits=5, decimal_places=max_dec,required=False, initial=lower, help_text='Lower threshold')
         self.fields['upper_threshold'] = forms.DecimalField(max_digits=5, decimal_places=max_dec,required=False, initial=upper, help_text='Upper threshold')
         self.fields['number_of_days']  = forms.CharField(required=False, initial='all', help_text='Number of days the threshold conditions should be met.')
-        self.fields['window_start'] = MyWindowField(max_length=4, min_length=4, required = False, initial='por', help_text='mmdd')
-        self.fields['window_end'] = MyWindowField(max_length=4, min_length=4, required = False, initial='por', help_text='mmdd')
+        self.fields['window_start'] = MyWindowField(max_length=4, min_length=4, required = False, initial='0101', help_text='mmdd')
+        self.fields['window_end'] = MyWindowField(max_length=4, min_length=4, required = False, initial='1231', help_text='mmdd')
 
 class ClimateMapForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=([('state', 'State'),('bbox', 'Bounding Box')]), required=False, initial='state', help_text=HELP_TEXTS['select_stations_by'])

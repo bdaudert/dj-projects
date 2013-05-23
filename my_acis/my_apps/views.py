@@ -138,7 +138,7 @@ def sods(request, app_name):
                 'custom_tables':form1.cleaned_data['custom_tables'],'number_of_thresholds': form1.cleaned_data['number_of_thresholds']}
             elif app_name == 'Sodxtrmts':
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
-                'analysis_type':form1.cleaned_data['analysis_type'], 'element':form1.cleaned_data['element'], \
+                'monthly_statistic':form1.cleaned_data['monthly_statistic'], 'element':form1.cleaned_data['element'], \
                 'frequency_analysis':form1.cleaned_data['frequency_analysis']}
             elif app_name == 'Sodpiii':
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
@@ -354,20 +354,20 @@ def sods(request, app_name):
                 context['month_list'] = month_list
                 context['frequency_analysis'] = form2.cleaned_data['frequency_analysis']
                 context['departures_from_averages'] = form2.cleaned_data['departures_from_averages']
-                context['analysis_type'] = form2.cleaned_data['analysis_type']
+                context['monthly_statistic'] = form2.cleaned_data['monthly_statistic']
                 context['departure_from_averages'] = form2.cleaned_data['departures_from_averages']
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
                 'coop_station_ids':coop_station_ids,'station_names':station_names, \
                 'el_type':form2.cleaned_data['element'], \
                 'max_missing_days':form2.cleaned_data['max_missing_days'], \
                 'start_month': form2.cleaned_data['start_month'], \
-                'analysis_type': form2.cleaned_data['analysis_type'], \
+                'monthly_statistic': form2.cleaned_data['monthly_statistic'], \
                 'frequency_analysis': form2.cleaned_data['frequency_analysis'], \
                 'departures_from_averages':form2.cleaned_data['departures_from_averages']}
                 if form2.cleaned_data['frequency_analysis'] == 'T':
                     context['frequency_analysis_type'] = form2.cleaned_data['frequency_analysis_type']
                     app_args['frequency_analysis_type'] = form2.cleaned_data['frequency_analysis_type']
-                if form2.cleaned_data['analysis_type'] == 'ndays':
+                if form2.cleaned_data['monthly_statistic'] == 'ndays':
                     app_args['less_greater_or_between'] = form2.cleaned_data['less_greater_or_between']
                     if form2.cleaned_data['less_greater_or_between'] == 'b':
                         app_args['threshold_low_for_between'] = form2.cleaned_data['threshold_low_for_between']

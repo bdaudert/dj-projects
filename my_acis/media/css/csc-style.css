@@ -58,6 +58,11 @@ input[value=Select] {
     color:#FFEBCD;
 }
 
+input[value=StartOver] {
+    background-color:#8FBC8F;
+    color:#FFEBCD;
+}
+
 #us_wide {
     color: #6B238E;
     /*color:#FF00FF;*/
@@ -567,6 +572,7 @@ img.center {
     /*z-index:100;*/
 }
 
+/* Do Not Delete, station finder does not work without */
 #map {
     
     position:relative;
@@ -583,7 +589,7 @@ img.center {
 
 .tabs {
   position: relative;   
-  min-height: 750px; /* This part sucks */
+  min-height: 800px; /* This part sucks */
   min-width:700px;
   clear: both;
   margin: 25px 0;

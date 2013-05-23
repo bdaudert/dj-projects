@@ -8,24 +8,33 @@ $(function () {
     });
     $.getJSON(json_file_path, function(table_dict) {
         for (var i=0;i<table_dict.length;i++){
-            var yAx = {
-                title: {
-                    text: table_dict[i].table_name_long
-                    }
-                };
+            //Define y-axis parameters
             if (table_dict[i].table_name == 'temp'){
-                /*
                 var yAx = {
-                    stackLabels: {
-                        enabled: true,
-                        style: {
-                            fontWeight: 'bold',
-                            color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                        }
+                    tickInterval: 10,
+                    title: {
+                        text: table_dict[i].table_name_long
                     }
                 };
-                var stckn = 'normal';
-                */
+            }
+            else if (table_dict[i].table_name == 'pcpn' || table_dict[i].table_name == 'snow' || table_dict[i].table_name == 'snwd'){
+                var yAx = {
+                    tickInterval: 0.1,
+                    title: {
+                        text: table_dict[i].table_name_long
+                    }
+                };
+            }
+            else {
+                var yAx = {
+                    tickInterval: 100,
+                    title: {
+                        text: table_dict[i].table_name_long
+                    }
+                };
+            }
+            //Define other graph properties
+            if (table_dict[i].table_name == 'temp'){
                 var plot_type = 'boxplot';
                 var enable_legend = false;
                 var pl_opts = {}; 

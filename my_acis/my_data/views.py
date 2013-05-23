@@ -191,7 +191,7 @@ def data_station(request):
     if stn_id is not None:
         initial_params_0['select_stations_by'] = 'stn_id'
         context['stn_id'] = stn_id
-        #context['hide_form0'] = True
+        context['hide_form0'] = True
     if start_date is not None:context['start_date'] = start_date
     if end_date is not None:context['end_date'] = end_date
     if elements is not None:initial_params_0['elements'] = str(elements);context['elements'] = elements
@@ -205,6 +205,7 @@ def data_station(request):
     if 'form0_point' in request.POST or stn_id is not None:
         if form0_point.is_valid() or stn_id is not None:
             context['form1_point_ready'] = True
+            context['hide_form0'] = True
             initial_params_1 = {}
             stn_id = request.GET.get('stn_id', None)
             start_date = request.GET.get('start_date', None)
@@ -230,11 +231,13 @@ def data_station(request):
         form1_point = set_as_form(request,'StationDataForm1')
         context['form1_point'] = form1_point
         context['form1_point_ready'] = True
+        context['hide_form0'] = True
         stn_id = request.GET.get('stn_id', None)
         start_date = request.GET.get('start_date', None)
         end_date = request.GET.get('end_date', None)
         elements = request.GET.get('elements', None)
-        if stn_id is not None:context['stn_id'] = stn_id
+        if stn_id is not None:
+            context['stn_id'] = stn_id
         if start_date is not None:context['start_date'] = start_date
         if end_date is not None:context['end_date'] = end_date
         if elements is not None:context['elements'] = elements
@@ -267,6 +270,7 @@ def data_station(request):
             #if time range > 1 year or user requests data for more than 1 station, large request via ftp
             if days > 366 and 'station_id' not in form1_point.cleaned_data.keys():
                 context['large_request'] = \
+                '''
                 'At the moment we do not support data requests that exceed 1 year for multiple station. Please limit your request to one station at a time or a date range of one year or less. We will support larger requests in the near future. Thank you for your patience!'
 
                 '''
@@ -279,7 +283,6 @@ def data_station(request):
                     initial_params_2['station_ids'] = ','.join([str(stn) for stn in initial_params_2['station_ids']])
                 form3_point = forms.StationDataForm3(initial=initial_params_2)
                 context['form3_point'] = form3_point
-                '''
                 return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
             else:
                 resultsdict = AcisWS.get_station_data(form1_point.cleaned_data, 'sodlist_web')
@@ -352,6 +355,7 @@ def data_station(request):
                     return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'xls', request=request, file_info=file_info, show_flags=show_flags, show_observation_time=show_observation_time)
                 else:
                     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
+
     if 'form3_point' in request.POST:
         form3_point = set_as_form(request,'StationDataForm3')
         context['form3_point'] = form3_point
@@ -397,16 +401,27 @@ def data_gridded(request):
     data_summary = request.GET.get('data_summary', None)
     temporal_resolution = request.GET.get('temporal_resolution', None)
     initial_1 = {}
-    if temporal_resolution is not None:context['temporal_resolution'] = temporal_resolution;initial_1['temporal_resolution'] = temporal_resolution
-    if data_summary is not None:context['data_summary'] = data_summary;initial_1['data_summary'] = data_summary
-    if start_date is not None:context['start_date'] = start_date;initial_1['start_date'] = start_date
-    if end_date is not None:context['end_date'] = end_date;initial_1['end_date'] = end_date
+    if temporal_resolution is not None:
+        context['temporal_resolution'] = temporal_resolution
+        initial_1['temporal_resolution'] = temporal_resolution
+    if data_summary is not None:
+        context['data_summary'] = data_summary
+        initial_1['data_summary'] = data_summary
+    if start_date is not None:
+        context['start_date'] = start_date
+        initial_1['start_date'] = start_date
+    if end_date is not None:
+        context['end_date'] = end_date
+        initial_1['end_date'] = end_date
     if bbox is not None:
-        context['bbox'] = bbox;initial_1['bounding_box'] = bbox
-        context['select_grid_by'] = 'bbox';initial_1['select_grid_by'] = 'bbox'
+        context['bbox'] = bbox
+        initial_1['bounding_box'] = bbox
+        context['select_grid_by'] = 'bbox'
+        initial_1['select_grid_by'] = 'bbox'
     if state is not None:
         context['state'] = state;initial_1['state'] = state
-        context['select_grid_by'] = 'state';initial_1['select_grid_by'] = 'state'
+        context['select_grid_by'] = 'state'
+        initial_1['select_grid_by'] = 'state'
     if loc is not None:
         context['location'] = loc;initial_1['location'] = loc
         context['select_grid_by'] = 'point';initial_1['select_grid_by'] = 'point'
@@ -419,9 +434,10 @@ def data_gridded(request):
     if elements is not None:
         context['elements'] = elements;initial_1['elements'] = elements
     if temporal_resolution is not None:
-        context['temporal_resolution'] = elements;initial_1['temporal_resolution'] = temporal_resolution
+        context['temporal_resolution'] = elements
+        initial_1['temporal_resolution'] = temporal_resolution
     if loc is not None or state is not None or bbox is not None:
-        context['hide_form_0'] = True
+        context['hide_form0'] = True
         context['form1_grid_ready'] = True
         form1_grid = forms.GridDataForm1(initial=initial_1)
         context['form1_grid'] = form1_grid
@@ -458,11 +474,13 @@ def data_gridded(request):
 
             form1_grid = forms.GridDataForm1(initial=initial_1)
             context['form1_grid'] = form1_grid
+            context['hide_form0'] = True
 
     if 'form1_grid' in request.POST:
         form1_grid = set_as_form(request,'GridDataForm1')
         context['form1_grid'] = form1_grid
         context['form1_grid_ready'] = True
+        context['hide_form0'] = True
         if form1_grid.is_valid():
             context['temporal_resolution'] = form1_grid.cleaned_data['temporal_resolution']
             context['data_summary'] = form1_grid.cleaned_data['data_summary']
@@ -480,6 +498,7 @@ def data_gridded(request):
 
             if ('data_summary' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['data_summary'] == 'none' and form1_grid.cleaned_data['temporal_resolution'] == 'dly') or ('data_summary' not in form1_grid.cleaned_data.keys()):
                 if (days > 7 and  'location' not in form1_grid.cleaned_data.keys()):
+                    '''
                     context['large_request'] = \
                     'At the moment we do not support data requests that exceed 7 days for multiple station. Please limit your request to one grid point at a time or a date range of one week or less. Alternatively, you could summarize your data by using the data summary option. We will support larger requests in the near future. Thank you for your patience!'
                     '''
@@ -491,7 +510,6 @@ def data_gridded(request):
                     initial_params_2['elements'] = ','.join(initial_params_2['elements'])
                     form3_grid = forms.GridDataForm3(initial=initial_params_2)
                     context['form3_grid'] = form3_grid
-                    '''
                     return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
             if 'location' in form1_grid.cleaned_data.keys():
@@ -500,6 +518,7 @@ def data_gridded(request):
                 context['map_loc'] = location
                 context['lat'] = location.split(',')[1]
                 context['lon'] = location.split(',')[0]
+                context['location'] = location
             elif 'bounding_box' in form1_grid.cleaned_data.keys():
                 context['need_map_bbox'] = True
                 bounding_box = form1_grid.cleaned_data['bounding_box']
@@ -527,7 +546,10 @@ def data_gridded(request):
                     prism_elements.append('%s_%s' %(str(form1_grid.cleaned_data['temporal_resolution']), str(el)))
                 form_input['elements'] = prism_elements
             req = AcisWS.get_grid_data(form_input, 'griddata_web')
-
+            if 'error' in req.keys():
+                context['error'] = req['error']
+                context['grid_data'] = {}
+                return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
             if 'visualize' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['visualize'] == 'T':
                 #Generate figures for each element, store in figure files
                 figure_files = []
@@ -542,10 +564,6 @@ def data_gridded(request):
                 if 'bounding_box' in form1_grid.cleaned_data.keys():params['bbox']= bounding_box
                 #Loop over element and generate figure
                 for el_idx, elem in enumerate(element_list):
-                    '''
-                    if 'smry' in req.keys() and len(req['smry']) > el_idx:
-                        params['data'] = {'smry':[req['smry'][el_idx]]}
-                    '''
                     if elem in ['pcpn', 'snow', 'snwd']:
                         if form1_grid.cleaned_data['data_summary'] != 'sum':
                             params['image']['levels'] =[0,0.1, 0.2, 0.5, 0.7, 1.0, 2.0, 3.0, 4.0, 5.0]
@@ -867,6 +885,7 @@ def monthly_aves(request):
                     if form_graphs.cleaned_data['start_date'].lower() == 'por':
                         if len(req['meta']['valid_daterange'][el_idx]) == 2:
                             results[el_idx]['record_start'] = str(req['meta']['valid_daterange'][el_idx][0])
+                            context['start_date'] =  str(req['meta']['valid_daterange'][el_idx][0])
                         else:
                             #no valid daterange found
                             results[el_idx]['record_start'] = ['0000-00-00']
@@ -875,6 +894,7 @@ def monthly_aves(request):
                     if form_graphs.cleaned_data['end_date'].lower() == 'por':
                         if len(req['meta']['valid_daterange'][el_idx]) == 2:
                             results[el_idx]['record_end'] = str(req['meta']['valid_daterange'][el_idx][1])
+                            context['end_date'] = str(req['meta']['valid_daterange'][el_idx][1])
                         else:
                             results[el_idx]['record_end'] = ['0000-00-00']
                     else:
@@ -963,7 +983,7 @@ def clim_sum_maps(request):
     if 'form0' in request.POST:
         form0 = set_as_form(request,'ClimateMapForm0')
         context['form0']  = form0
-
+        context['hide_form0'] = True
         if form0.is_valid():
             context['form1_ready'] = True
             context['select_grid_by'] = form0.cleaned_data['select_grid_by']
@@ -984,6 +1004,7 @@ def clim_sum_maps(request):
     if 'form1' in request.POST:
         form1 = set_as_form(request,'ClimateMapForm1')
         context['form1'] = form1
+        context['hide_form0'] = True
         if form1.is_valid():
             image = dict(type='png',proj='lcc',interp='cspline',cmap='jet',
                     overlays=['state','county:0.5:black'],width=500, height=400)
@@ -1078,17 +1099,19 @@ def clim_risk_maps(request):
     if 'form0' in request.POST:
         form0 = set_as_form(request,'ClimateRiskForm0')
         context['form0']  = form0
-
+        context['hide_form0'] = True
         if form0.is_valid():
             pass
 
     if 'form1' in request.POST:
         form1 = set_as_form(request,'ClimateRiskForm1')
         context['form1']  = form1
+        context['hide_form0'] = True
 
         if form1.is_valid():
             pass
     return render_to_response('my_data/apps/gridded/clim_risk_maps.html', context, context_instance=RequestContext(request))
+
 def grid_point_time_series(request):
     context = {
         'title': 'Grid Point Time Series',
@@ -1189,6 +1212,7 @@ def station_locator_app(request):
     context['map_title'] = 'Map of Southwest US COOP stations!'
 
     if 'form0' in request.POST:
+        context['map_title'] = ''
         context['empty_json'] = True
         form0 = set_as_form(request,'StationLocatorForm0')
         context['form0']  = form0
@@ -1324,6 +1348,116 @@ def sodxtrmts(request):
         'apps_page':True
         }
     initial = set_sod_initial(request, 'Sodxtrmts')
+    form0 = set_as_form(request,'SodxtrmtsForm', init=initial)
+    context['form0'] = form0
+    if 'form0' in request.POST:
+        context['req'] = request.POST
+        form0 = set_as_form(request,'SodxtrmtsForm', init={'date_type':'y'})
+        context['form0'] = form0
+        if form0.is_valid():
+            search_params = form0.cleaned_data
+            context['search_params']= search_params
+            data_params = {
+                    'sid':form0.cleaned_data['station_ID'],
+                    'start_date':form0.cleaned_data['start_year'],
+                    'end_date':form0.cleaned_data['end_year'],
+                    'element':form0.cleaned_data['element']
+                    }
+            app_params = form0.cleaned_data
+            app_params['less_greater_or_between'] = str(request.POST['less_greater_or_between'])
+            app_params['frequency_analysis_type'] = str(request.POST['frequency_analysis_type'])
+            if str(request.POST['less_greater_or_between']) == 'b':
+                app_params['threshold_low_for_between'] = float(request.POST['threshold_low_for_between'])
+                app_params['threshold_high_for_between'] = float(request.POST['threshold_high_for_between'])
+            elif str(request.POST['less_greater_or_between']) == 'l':
+                app_params['threshold_for_less_or_greater'] = float(request.POST['less'])
+            elif str(request.POST['less_greater_or_between']) == 'g':
+                app_params['threshold_for_less_or_greater'] = float(request.POST['greater'])
+            for key in ['station_ID', 'start_year', 'end_year']:
+                del app_params[key]
+            app_params['el_type'] = form0.cleaned_data['element']
+            del app_params['element']
+            context['app_params'] = app_params
+            #Run data retrieval job
+            DJ = WRCCClasses.SodDataJob('Sodxtrmts', data_params)
+            #WARNING: station_ids, names need to be called before dates_list
+            station_ids, station_names = DJ.get_station_ids_names()
+            if station_ids:context['station_ID'] =  station_ids[0]
+            if station_names:context['station_name'] = station_names[0]
+            dates_list = DJ.get_dates_list()
+            if dates_list:
+                context['start_year'] =  dates_list[0][0:4]
+                context['end_year'] =  dates_list[-1][0:4]
+            data = DJ.get_data()
+            #Run application
+            App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
+            results = App.run_app()
+            #format results to single station output
+            if not results:
+                results = []
+            else:
+                results = results[0][0]
+            context['run_done'] = True
+            context['results'] = results
+            months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'ANN']
+            start_month = int(str(form0.cleaned_data['start_month']))
+            month_list = [mon for mon in months[(start_month -1):12]]
+            if start_month != 1:
+                month_list+=months[0:(start_month-1)]
+            month_list.append(months[-1])
+            context['month_list'] = month_list
+            #generate graphics
+            if results:
+                averages = [[mon] for mon in month_list[0:-1]]
+                ranges = [[mon] for mon in month_list[0:-1]]
+                if data_params['element'] == 'dtr':
+                    element_name = 'Temperature Range (F)'
+                else:
+                    element_name = acis_elements[data_params['element']]['name_long']
+                if 'base_temperature' in form0.cleaned_data.keys():
+                    base_temperature = form0.cleaned_data['base_temperature']
+                else:
+                    base_temperature = ''
+                for i in range(12):
+                    try:
+                        averages[i].append(float(results[-6][2*(i+1) -1]))
+                    except:
+                        averages[i].append(None)
+                    for k in [-2, -3]:
+                        try:
+                            ranges[i].append(float(results[k][2*(i+1) -1]))
+                        except:
+                            ranges[i].append(None)
+                json_dict = {
+                    'element_name':element_name,
+                    'element':str(data_params['element']),
+                    'base_temperature':base_temperature,
+                    'averages':averages,
+                    'ranges':ranges,
+                    'stn_id':station_ids[0],
+                    'stn_name':station_names[0],
+                    'month_list':month_list
+                }
+                results_json = json.dumps(json_dict)
+                time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+                json_file = '%s_sodxtrmts_%s_%s_%s.json' \
+                %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
+                f = open('/tmp/%s' %(json_file),'w+')
+                f.write(results_json)
+                f.close()
+                context['JSON_URL'] = '/tmp/'
+                context['json_file'] = json_file
+    return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
+
+
+'''
+#TWO FORM SODXTRMTS
+def sodxtrmts(request):
+    context = {
+        'title': 'Sodxtmts - Monthly Summaries of Extremes',
+        'apps_page':True
+        }
+    initial = set_sod_initial(request, 'Sodxtrmts')
     form0 = set_as_form(request,'SodxtrmtsForm0', init=initial)
     context['form0'] = form0
     if 'form0' in request.POST:
@@ -1338,9 +1472,12 @@ def sodxtrmts(request):
     if 'form1' in request.POST:
         form1 = set_as_form(request,'SodxtrmtsForm1')
         context['form1'] = form1
-        #context['form1_ready'] = True
+        context['form1_ready'] = True
+        context['hide_form0'] = True
         if form1.is_valid():
-            context['search_params'] = form1.cleaned_data
+            #FIX ME, need user versions of parameters:
+            search_params = form1.cleaned_data
+            context['search_params']= search_params
             data_params = {
                     'sid':form1.cleaned_data['station_ID'],
                     'start_date':form1.cleaned_data['start_year'],
@@ -1373,25 +1510,33 @@ def sodxtrmts(request):
                 results = results[0][0]
             context['run_done'] = True
             context['results'] = results
-            month_list = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'ANN']
+            months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'ANN']
+            start_month = int(str(form1.cleaned_data['start_month']))
+            month_list = [mon for mon in months[(start_month -1):12]]
+            if start_month != 1:
+                month_list+=months[0:(start_month-1)]
+            month_list.append(months[-1])
             context['month_list'] = month_list
             #generate graphics
             if results:
                 averages = [[mon] for mon in month_list[0:-1]]
                 ranges = [[mon] for mon in month_list[0:-1]]
-                element_name = acis_elements[data_params['element']]['name_long']
+                if data_params['element'] == 'dtr':
+                    element_name = 'Temperature Range (F)'
+                else:
+                    element_name = acis_elements[data_params['element']]['name_long']
                 if 'base_temperature' in form1.cleaned_data.keys():
                     base_temperature = form1.cleaned_data['base_temperature']
                 else:
                     base_temperature = ''
                 for i in range(12):
                     try:
-                        averages[i].append(float(results[-6][i+1]))
+                        averages[i].append(float(results[-6][2*(i+1) -1]))
                     except:
                         averages[i].append(None)
                     for k in [-2, -3]:
                         try:
-                            ranges[i].append(float(results[k][i+1]))
+                            ranges[i].append(float(results[k][2*(i+1) -1]))
                         except:
                             ranges[i].append(None)
                 json_dict = {
@@ -1401,7 +1546,8 @@ def sodxtrmts(request):
                     'averages':averages,
                     'ranges':ranges,
                     'stn_id':station_ids[0],
-                    'stn_name':station_names[0]
+                    'stn_name':station_names[0],
+                    'month_list':month_list
                 }
                 results_json = json.dumps(json_dict)
                 time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
@@ -1414,6 +1560,7 @@ def sodxtrmts(request):
                 context['json_file'] = json_file
 
     return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
+'''
 
 #SOD views
 def sodsumm(request):
@@ -1675,22 +1822,22 @@ def set_sodsumm_headers(table_list):
     def set_header(table):
         rows = []
         if table == 'temp':
-            rows.append('<th colspan="16"> <b>Temperature Statistics</b>:</th>')
-            rows.append('<th colspan="2"></th><th colspan="4">Averages, </th><th colspan="4">Daily Extremes, </th><th colspan="4">Mean Extremes, </th><th colspan="2"> >= =<  =<  =< </th>')
+            rows.append('<th colspan="16"> <b>Tempearture Statistics</b></th>')
+            rows.append('<tr><td colspan="5">-------</td><td colspan="5">Averages</td><td colspan="4">------Daily Extremes </td><td colspan="4">--------Mean Extremes </td><td colspan="4">----------Number of Days</td></tr>')
         elif table == 'prsn':
-            rows.append('<th colspan="15"><b>Precipitation/Snow Statistics</b>:</th>')
-            rows.append('<th colspan="6">Total Precipitation, </th><th colspan="2">Precipitation, </th><th colspan="2"> >= =<  =<  =< </th><th colspan="3">Total Snowfall</th>')
+            rows.append('<th colspan="15"><b>Precipitation/Snow Statistics</b></th>')
+            rows.append('<tr><td colspan="6">--------------Total Precipitation </td><td colspan="2">----------------------</td><td colspan="2">Number of Days</td><td colspan="3">-----------Total Snowfall</td></tr>')
 
         elif table == 'hdd':
-            rows.append('<th colspan="14"><b>Heating degree days</b>:</th>')
+            rows.append('<th colspan="14"><b>Heating degree days</b></th>')
             rows.append('<tr><td colspan="14">Output is rounded, unlike NCDC values, which round input.</td></tr>')
             rows.append('<tr><td colspan="14">Degree Days to selected Base Temperatures(F)</td></tr>')
         elif table == 'cdd':
-            rows.append('<th colspan="14"><b>Cooling degree days</b>:</th>')
+            rows.append('<th colspan="14"><b>Cooling degree days</b></th>')
             rows.append('<tr><td colspan="14">Output is rounded, unlike NCDC values, which round input.</td></tr>')
             rows.append('<tr><td colspan="14">Degree Days to selected Base Temperatures(F)</td></tr>')
         elif table == 'gdd':
-            rows.append('<th colspan="15"><b>Growing degree days</b>:</th>')
+            rows.append('<th colspan="15"><b>Growing degree days</b></th>')
             rows.append('<tr><td colspan="15">Output is rounded, unlike NCDC values, which round input.</td>')
             rows.append('<tr><td colspan="15">Growing Degree Days to selected Base Temperatures(F)</td></tr>')
         elif table == 'corn':

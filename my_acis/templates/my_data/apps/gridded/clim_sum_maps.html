@@ -36,6 +36,8 @@
         </div>
     {%endif%}
     {%if form1_ready%}
+        <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}gridded/clim_sum_maps/'"/>
+
         <div id='form1'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">

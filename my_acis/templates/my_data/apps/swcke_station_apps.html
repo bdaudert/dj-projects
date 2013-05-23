@@ -30,7 +30,7 @@
                         <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_SODSUMM')">
                         </td></tr>
                         <tr><td>
-                        <a  href="{{TOOLS_URL}}station/sodxtrmts/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}" class="trigger">* Monthly Summaries of Extremes</a>
+                        <a  href="{{TOOLS_URL}}station/sodxtrmts/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}" class="trigger">* Monthly Time Series</a>
                         <div class="pop-up" id="sodxtrmts">
                             <p>This program produces monthly and annual time series of a large number of properties derived from the SOD daily data set.</p>
                         </div>
@@ -55,7 +55,7 @@
                         <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_SODSUMM')">
                         </td></tr>
                         <tr><td>
-                        <a  href="{{TOOLS_URL}}station/sodxtrmts/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}" class="trigger">* Monthly Summaries of Extremes</a>
+                        <a  href="{{TOOLS_URL}}station/sodxtrmts/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}" class="trigger">* Monthly Time Series</a>
                         <div class="pop-up" id="sodxtrmts">
                             <p>This program produces monthly and annual time series of a large number of properties derived from the SOD daily data set.</p>
                         </div>
@@ -81,7 +81,7 @@
                     <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="HighLight(this,'docu','Docu_SODSUMM')">
                     </td></tr>
                     <tr><td>
-                    <a  href="{{TOOLS_URL}}station/sodxtrmts/?stn_id={{stn_id}}" class="trigger">* Monthly Summaries of Extremes</a>
+                    <a  href="{{TOOLS_URL}}station/sodxtrmts/?stn_id={{stn_id}}" class="trigger">* Monthly Time Series</a>
                     <div class="pop-up" id="sodxtrmts">
                         <p>This program produces monthly and annual time series of a large number of properties derived from the SOD daily data set.</p>
                     </div>
@@ -115,7 +115,7 @@
                     <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_SODSUMM')">
                 </td></tr>
                 <tr><td>
-                <a  href="{{TOOLS_URL}}station/sodxtrmts/" class="trigger">* Monthly Summaries of Extremes</a>
+                <a  href="{{TOOLS_URL}}station/sodxtrmts/" class="trigger">* Monthly Time Series</a>
                 <div class="pop-up" id="sodxtrmts">                        
                     <p>This program produces monthly and annual time series of a large number of properties derived from the SOD daily data set.</p>
                 </div>
@@ -161,7 +161,7 @@
             <p class="error">End Date: {{end_date}}</p>
         {%endif%}
         {%if elements%}
-            <p class="error">Acis Elements: {{elements}}</p>
+            <p class="error">Climate Elements: {{elements}}</p>
         {%endif%}
         
         <!-- Documentation -->        

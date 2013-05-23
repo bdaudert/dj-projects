@@ -1,3 +1,12 @@
+function printNode(ID){
+  var NodeToPrint=document.getElementById(ID);
+  newWin= window.open("");
+  newWin.document.write(NodeToPrint.outerHTML);
+  newWin.print();
+  newWin.close();
+}
+
+
 //Highlights node by setting border, hides  all elements of class DivClass
 //and unsets the boder of all other nodes of same class type
 function HighLight(node,DivClass,DivId) {

@@ -44,14 +44,14 @@
       Long-term means based on columns; thus, the monthly row may not</br> 
       sum (or average) to the long-term annual value.</br>
       </p></br>
-      <table>
+      <table cellpadding="0">
         <tr>
-        <td />YEARS</td>{%for mon in month_list%}<td>{{mon}}</td>{%endfor%}
+        <td><font size="+2">YEARS</font></td>{%for mon in month_list%}<td colspan="2"><font size="+2">{{mon}}<font size="+2"></td>{%endfor%}
         </tr>
          {%for cat in stn_data %}
          <tr>
          {%for dat in cat%}
-         <td style="text-align:right">{{dat}}</td>
+         <td>{{dat}}</td>
          {%endfor%}
          </tr>
          {%endfor%}

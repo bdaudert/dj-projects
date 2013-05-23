@@ -344,7 +344,7 @@ class Sod0Form(forms.Form):
             self.fields['custom_tables'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F')
             self.fields['number_of_thresholds']= forms.IntegerField(min_value=1,max_value=10, initial=1)
         if app_name == 'Sodxtrmts':
-            self.fields['analysis_type'] = forms.ChoiceField(choices=SX_ANALYSIS_CHOICES, initial='mave')
+            self.fields['monthly_statistic'] = forms.ChoiceField(choices=SX_ANALYSIS_CHOICES, initial='mave')
             self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='maxt')
             self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F')
         if app_name == 'Sodpiii':
@@ -505,29 +505,29 @@ class SodForm(forms.Form):
             self.fields['custom_tables'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = custom_tables)
             self.fields['custom_tables'].widget.attrs['readonly'] = 'readonly'
         elif app_name == 'Sodxtrmts':
-            analysis_type = kwargs.get('initial', {}).get('analysis_type', None)
+            monthly_statistic = kwargs.get('initial', {}).get('monthly_statistic', None)
             element = kwargs.get('initial', {}).get('element', None)
             frequency_analysis = kwargs.get('initial', {}).get('frequency_analysis', None)
             if element is None:element = self.data.get('element')
-            if analysis_type is None:analysis_type = self.data.get('analysis_type')
+            if monthly_statistic is None:monthly_statistic = self.data.get('monthly_statistic')
             if frequency_analysis is None:frequency_analysis = self.data.get('frequency_analysis')
             self.fields['frequency_analysis'] = forms.CharField(initial=frequency_analysis)
             self.fields['frequency_analysis'].widget.attrs['readonly'] = 'readonly'
             if frequency_analysis == 'T':
-                self.fields['frequency_analysis_type'] = forms.ChoiceField(choices=F_ANALYSIS_CHOICES, required=False, initial='p')
+                self.fields['frequency_monthly_statistic'] = forms.ChoiceField(choices=F_ANALYSIS_CHOICES, required=False, initial='p')
             self.fields['element'] = forms.CharField(initial=element)
             self.fields['element'].widget.attrs['readonly'] = 'readonly'
             if element in ['hdd', 'cdd', 'gdd']:
                 self.fields['base_temperature'] = forms.IntegerField(initial=65)
-            if analysis_type == 'ndays':
+            if monthly_statistic == 'ndays':
                 self.fields['less_greater_or_between'] = forms.ChoiceField(choices=([('l','Less Than'), ('g','Greater Than'),('b','Between'), ]), initial='b')
                 self.fields['threshold_for_less_or_greater'] = forms.DecimalField(initial = 0.0)
                 self.fields['threshold_low_for_between'] = forms.DecimalField(initial = 0.0)
                 self.fields['threshold_high_for_between'] = forms.DecimalField(initial = 1.0)
             self.fields['element'] = forms.CharField(initial=element)
             self.fields['element'].widget.attrs['readonly'] = 'readonly'
-            self.fields['analysis_type'] = forms.CharField(initial=analysis_type)
-            self.fields['analysis_type'].widget.attrs['readonly'] = 'readonly'
+            self.fields['monthly_statistic'] = forms.CharField(initial=monthly_statistic)
+            self.fields['monthly_statistic'].widget.attrs['readonly'] = 'readonly'
             self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False)
             self.fields['start_month'] = forms.CharField(initial='01', required=False)
             self.fields['departures_from_averages'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F')
