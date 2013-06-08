@@ -11,21 +11,30 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.views.generic.list_detail import object_detail, object_list
+#from django.views.generic.list_detail import object_detail, object_list
 from django.db.models.query import QuerySet
 
 #project/app imports
 import models
 import my_meta.forms as mforms
 
+#Imports for direct query to database
+import sys
+import sqlalchemy as SA
+import sqlalchemy.orm as SAO
+import wea
+from acis_db import (
+        get_session,
+        Station,
+        Subnetwork,
+        StationLocation,
+        )
+
+####################
+#Useful tables/dicts
+#####################
 
 primary_tables = { 'Station': models.Station, 'StationLocation': models.StationLocation, 'StationNetwork': models.StationNetwork, 'StationSubnetwork':models.StationSubnetwork, 'StationAltName': models.StationAltName, 'StationTimeZone': models.StationTimeZone, 'StationClimDiv': models.StationClimDiv, 'StationCounty': models.StationCounty,'StationDigital': models.StationDigital, 'StationEquipment': models.StationEquipment, 'StationMaintenance':models.StationMaintenance, 'StationPhysical': models.StationPhysical}
-#, 'Variable': models.Varable
-#, 'StationPhoto': models.StationPhoto, 'StationContact': models.StationContact }
-
-'''
-primary_tables = { 'Station': models.Station, 'StationNetwork': models.StationNetwork, 'StationSubnetwork':models.StationSubnetwork, 'StationAltName': models.StationAltName, 'StationTimeZone': models.StationTimeZone, 'StationClimDiv': models.StationClimDiv, 'StationCounty': models.StationCounty,'StationDigital': models.StationDigital, 'StationEquipment': models.StationEquipment, 'StationMaintenance':models.StationMaintenance, 'StationPhysical': models.StationPhysical }
-'''
 
 sub_tables = { 'Variable': models.Variable, 'Network': models.Network, 'Subnetwork': models.Subnetwork }
 
@@ -61,7 +70,7 @@ def by_state(request):
         'stations': stations,
         'title': "Stations by State",
     }
-    return render_to_response('my_meta/results-nina.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_meta/results.html', context, context_instance=RequestContext(request))
 def by_name(request):
     q = request.GET.get('q', '')
     if not q:
@@ -73,7 +82,7 @@ def by_name(request):
         'stations': stations,
         'title': "Station Name Search Results",
     }
-    return render_to_response('my_meta/results-nina.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_meta/results.html', context, context_instance=RequestContext(request))
 
 def by_id(request):
     q = request.GET.get('q', '')
@@ -87,7 +96,7 @@ def by_id(request):
         'stations': stations,
         'title': "Station ID Search Results",
     }
-    return render_to_response('my_meta/results-nina.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_meta/results.html', context, context_instance=RequestContext(request))
 
 def by_location(request):
     lat = request.GET.get('lat', None)
@@ -119,7 +128,7 @@ def by_location(request):
         'stations': stations,
         'title': "Station Location Search Results",
     }
-    return render_to_response('my_meta/results-nina.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_meta/results.html', context, context_instance=RequestContext(request))
 
 
 def station_detail(request):
@@ -138,6 +147,7 @@ def station_detail(request):
         context['station_physical'] = set_as_table(models.StationPhysical.objects.filter(ucan_station_id=ucan_id))
     return render_to_response('my_meta/station_detail.html', context, context_instance=RequestContext(request))
 
+'''
 def station_tables_nina(request):
     ucan_id_list = request.GET.getlist('ucan_id', [])
     context = {
@@ -146,21 +156,6 @@ def station_tables_nina(request):
     context['ucan_id_list'] = ucan_id_list
     if ucan_id_list:
         #put in list
-        '''
-        table_list = []
-        for idx, ucan_id in enumerate(ucan_id_list):
-            ucan_id = int(ucan_id)
-            table_dict = {}
-            for name, obj in primary_tables.iteritems():
-                instances = obj.objects.filter(ucan_station_id=ucan_id)
-                if instances:
-                    for i, instance in enumerate(instances):
-                        inst_name = '%s_%d' % (name, i)
-                        form = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
-                        table_dict[inst_name] = form
-            table_list.append(table_dict)
-        context['table_list'] = table_list
-        '''
         table_dict = defaultdict(list)
         for name, obj in primary_tables.iteritems():
             for idx, ucan_id in enumerate(ucan_id_list):
@@ -173,26 +168,89 @@ def station_tables_nina(request):
                     else:
                         table_dict[inst_name] =['No Table' for k in range(idx)]
                         table_dict[inst_name].append(form)
-                    '''
-                    if name == 'StationNetwork':
-                        #find all instances of IDType tables
-                        id_type_instances = models.IdType.objects.filter(id_type_key=instance.id_type)
-                    else:
-                        id_type_instances = []
-                    for k,id_type_instance in enumerate(id_type_instances):
-                        id_type_name='IdType_%s' % k
-                        form = set_as_form(request, 'IdType', q=id_type_instance, ucan_station_id=ucan_id)
-                        if id_type_name in table_dict.keys():
-                            table_dict[id_type_name].append(form)
-                        else:
-                            table_dict[id_type_name] =['No Table' for k in range(idx)]
-                            table_dict[id_type_name].append(form)
-                    '''
-        #context['table_list'] = table_list
         context['table_dict'] = dict(table_dict)
-    return render_to_response('my_meta/station_tables_nina.html', context, context_instance=RequestContext(request))
+    return render_to_response('my_meta/station_tables.html', context, context_instance=RequestContext(request))
+'''
 
 def station_tables(request):
+    ucan_id_list = request.GET.getlist('ucan_id', [])
+    context = {
+        'title': "Primary tables for this Station"
+    }
+    context['ucan_id_list'] = ucan_id_list
+    if ucan_id_list:
+        #put in list
+        table_dict = defaultdict(list)
+        results_dict = {}
+        for name, obj in primary_tables.iteritems():
+            results_dict[name] = []
+            for idx, ucan_id in enumerate(ucan_id_list):
+                instances = obj.objects.filter(ucan_station_id=ucan_id)
+                results_dict[name].append(len(instances))
+                context['results_dict']= results_dict
+                for i, instance in enumerate(instances):
+                    inst_name = '%s_%d' % (name, i)
+                    table_name = name
+                    form = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
+                    if inst_name in table_dict.keys():
+                        table_dict[inst_name].append(form)
+                    else:
+                        table_dict[inst_name] =['No Table' for k in range(idx)]
+                        table_dict[inst_name].append(form)
+        context['table_dict'] = dict(table_dict)
+    return render_to_response('my_meta/station_tables.html', context, context_instance=RequestContext(request))
+
+def station_tables_merge(request):
+    table_name = request.GET.get('tbl_name', None)
+    ucan_id_list = request.GET.getlist('ucan_id', [])
+    context = {
+        'title': table_name + ' Table Merge Tool'
+    }
+    if not table_name or not ucan_id_list:
+        return render_to_response('my_meta/station_tables_merge.html', context, context_instance=RequestContext(request))
+    context['ucan_id_list'] = ucan_id_list
+    context['table_name'] = table_name
+    table_instances = {}
+    #Find table instances for each ucan id
+    for idx, ucan_id in enumerate(ucan_id_list):
+        table_instances[ucan_id] = []
+        obj = primary_tables[table_name]
+        instances = obj.objects.filter(ucan_station_id=ucan_id)
+        for i, instance in enumerate(instances):
+            inst_name = '%s_%d' % (table_name, i)
+            form = set_as_form(request, table_name, q=instance, ucan_station_id=ucan_id)
+            table_instances[ucan_id].append(form)
+    #Reorder results for easy html formatting
+    max_instances = max([len(table_instances[uid]) for uid in ucan_id_list])
+    if  max_instances == 0:
+        return render_to_response('my_meta/station_tables_merge.html', context, context_instance=RequestContext(request))
+    results = [[[] for idx in range(len(ucan_id_list)+1)] for inst in range(max_instances)]
+    for inst in range(max_instances):
+        wrcc_id = None
+        for idx, ucan_id in enumerate(ucan_id_list):
+            if len(table_instances[ucan_id]) > inst:
+                results[inst][idx]=table_instances[ucan_id][inst]
+                results[inst][-1]=table_instances[ucan_id][inst]
+                #Check if WRCC entry is in list, if so
+                #we want to use this entry as the editable form at the end of
+                #the page. If not, we choose the first ucan_id
+                if int(ucan_id) >=1000000:
+                    wrcc_id = ucan_id
+        #Overwrite editable form with wrcc values if they exist
+        if wrcc_id:
+            results[inst][-1]= table_instances[wrcc_id][inst]
+
+        context['results'] = results
+    return render_to_response('my_meta/station_tables_merge.html', context, context_instance=RequestContext(request))
+
+def station_tables_add(request):
+    table_name = request.GET.get('tbl_name', None)
+    context = {
+        'title': table_name + 'Add Tool'
+    }
+    return render_to_response('my_meta/station_tables_add.html', context, context_instance=RequestContext(request))
+
+def station_tables_old(request):
     ucan_id = request.GET.get('ucan_id', None)
     context = {
         'title': "Primary tables for this Station"

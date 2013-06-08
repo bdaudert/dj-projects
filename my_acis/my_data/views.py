@@ -1376,10 +1376,11 @@ def sodxtrmts(request):
             for key in ['station_ID', 'start_year', 'end_year']:
                 del app_params[key]
             app_params['el_type'] = form0.cleaned_data['element']
+            context['element'] = form0.cleaned_data['element']
             del app_params['element']
             context['app_params'] = app_params
             #Run data retrieval job
-            DJ = WRCCClasses.SodDataJob('Sodxtrmts', data_params)
+            DJ = WRCCClasses.SODDataJob('Sodxtrmts', data_params)
             #WARNING: station_ids, names need to be called before dates_list
             station_ids, station_names = DJ.get_station_ids_names()
             if station_ids:context['station_ID'] =  station_ids[0]
@@ -1436,7 +1437,8 @@ def sodxtrmts(request):
                     'ranges':ranges,
                     'stn_id':station_ids[0],
                     'stn_name':station_names[0],
-                    'month_list':month_list
+                    'month_list':month_list,
+                    'data':results
                 }
                 results_json = json.dumps(json_dict)
                 time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
@@ -1449,6 +1451,35 @@ def sodxtrmts(request):
                 context['json_file'] = json_file
     return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
 
+def sodxtrmts_visualize(request):
+    context = {
+        'title': 'Time Series Plots - Monthly Summaries of Extremes',
+        'apps_page':True
+        }
+    station_ID = request.GET.get('station_ID', None)
+    element = request.GET.get('element', None)
+    json_file = request.GET.get('json_file', None)
+    initial_params_0 ={}
+    context['json_file'] = json_file
+    if station_ID is not None:
+        initial_params_0['station_ID'] = station_ID
+        context['station_ID'] = station_ID
+    if element is not None:initial_params_0['element'] = str(element);context['element'] = element
+
+    if initial_params_0:
+        form0 = set_as_form(request,'SodxtrmtsVisualizeForm', init=initial_params_0)
+    else:
+        form0 = set_as_form(request,'SodxtrmtsVisualizeForm')
+    context['form0'] = form0
+
+    if 'form0' in request.POST:
+        form0 = set_as_form(request,'SodxtrmtsVisualizeForm', init={'station_ID':station_ID, 'element':element})
+        context['form0'] = form0
+        if form0.is_valid():
+            context['json_file'] = json_file
+            for key,val in form0.cleaned_data:
+                context[key] = val
+    return render_to_response('my_data/apps/station/sodxtrmts_visualize.html', context, context_instance=RequestContext(request))
 
 '''
 #TWO FORM SODXTRMTS
@@ -1490,7 +1521,7 @@ def sodxtrmts(request):
             app_params['el_type'] = form1.cleaned_data['element']
             del app_params['element']
             #Run data retrieval job
-            DJ = WRCCClasses.SodDataJob('Sodxtrmts', data_params)
+            DJ = WRCCClasses.SODDataJob('Sodxtrmts', data_params)
             #WARNING: station_ids, names need to be called before dates_list
             station_ids, station_names = DJ.get_station_ids_names()
             if station_ids:context['station_ID'] =  station_ids[0]
@@ -1587,7 +1618,7 @@ def sodsumm(request):
                     'max_missing_days':form1.cleaned_data['max_missing_days'],
                     }
             #Run data retrieval job
-            DJ = WRCCClasses.SodDataJob('Sodsumm', data_params)
+            DJ = WRCCClasses.SODDataJob('Sodsumm', data_params)
             #WARNING: station_ids, names need to be called before dates_list
             station_ids, station_names = DJ.get_station_ids_names()
             dates_list = DJ.get_dates_list()

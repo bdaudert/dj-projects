@@ -67,6 +67,14 @@ SDMM_ELEMENT_CHOICES = (
     ('g', 'Growing Degree Days'),
 )
 #Sodxtrmts
+SUMMARY_CHOICES = (
+    ('max', 'Maximum of months'),
+    ('min', 'Minimium of months'),
+    ('sum', 'Sum of months'),
+    ('mean', 'Avererage of months'),
+    ('individual', 'Plot months separately')
+)
+
 START_MONTH_CHOICES = (
     ('01', 'January'),
     ('02', 'February'),
@@ -565,7 +573,26 @@ class SodxtrmtsForm(SodForm):
     departures_from_averages= forms.ChoiceField(choices = ([('T', 'Yes'),('F', 'No'),]), initial = 'F', help_text = 'Express results as departures from averages.')
     frequency_analysis = forms.ChoiceField(choices = ([('F', 'False'),]), initial = 'F', help_text='Perform Frequency Analysis. Coming Soon!')
 
+class SodxtrmtsVisualizeForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        element = kwargs.get('initial', {}).get('element', None)
+        station_ID = kwargs.get('initial', {}).get('station_ID', None)
+        super(SodxtrmtsVisualizeForm, self).__init__(*args, **kwargs)
+
+        if element is None:
+            element = self.data.get('elements')
+        if station_ID is None:
+            station_ID = self.data.get('station_ID')
+        self.fields['station_ID'] = forms.CharField(initial=station_ID,help_text='Station Identifier')
+        self.fields['station_ID'].widget.attrs['readonly'] = 'readonly'
+        self.fields['element'] = forms.CharField(initial=element,help_text='Climate Element')
+        self.fields['element'].widget.attrs['readonly'] = 'readonly'
+        self.fields['start_month'] = forms.ChoiceField(choices=START_MONTH_CHOICES, initial='01', required=False, help_text = 'Start the visualization on this month.')
+        self.fields['end_month'] = forms.ChoiceField(choices=START_MONTH_CHOICES, initial='02', required=False, help_text = 'End the visualization on this month.')
+        self.fields['summary'] = forms.ChoiceField(choices=SUMMARY_CHOICES, initial='mean', help_text='How to summarize the months.')
+
 '''
+#TWO FORM version of Sodxtrmts
 class SodxtrmtsForm0(SodForm):
     def __init__(self, *args, **kwargs):
         super(SodxtrmtsForm0, self).__init__(*args, **kwargs)

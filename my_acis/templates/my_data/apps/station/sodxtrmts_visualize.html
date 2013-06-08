@@ -1,0 +1,80 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="Metadata, graph, coop station, station data, historic data,application, product, tool">
+<meta name="description" content="SW-CKN Generates Metadata graph for a coop station">
+
+{%load my_data_filters%}
+
+{% block content %}
+
+<p align="center">You are here
+    <a href="{{HOME_URL}}">HOME></a>
+    <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
+    <a href="{{TOOLS_URL}}">TOOLS></a>
+    <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
+    <a href="{{TOOLS_URL}}station/sodxtrmts/">Monthly Summaries of Extremes></a>
+    <a href="{{TOOLS_URL}}station/sodxtrmts/visualize/">Time Series Plots - Monthly Summaries of Extremes</a>
+
+</p>
+
+<div class="container">
+    <div class="center-left" style="border:none;">
+        <div id='form0'>
+        <form method="post" action="">{% csrf_token %}
+        <table class="form">
+        {%for field in form0 %}
+            <tr>
+                <td>{{field.label}}:</td>
+                <td>{{field}}</td>
+                <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                <div class="pop-up"><p>{{field.help_text}}</p></div>
+                </td>
+            </tr>
+            {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+            {%endif%}
+        {%endfor%}
+        </table>
+        <input type="submit" value="Submit" name="form0"/>
+        </form>
+        </div>
+    </div>
+    
+    <div class="center" style="border:none;background-color:X^H#947e6e;">
+        <h2>{{title}}</h2>
+        <div id=tool_info_head></div>
+        <script type="text/javascript">                        
+            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+        </script>
+        <div id="tool_info" style="display:none;"></div>
+        <script type="text/javascript">            
+            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_SODXTRMTS_VIS");
+        </script>
+
+        <div id="how_to_head"></div>
+        <script type="text/javascript">            
+            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+        </script>
+        <div id="how_to" style="display:none;">
+            <p>Coming soon! <img class="icon" src="{{MEDIA_URL}}img/HappyFace.png"></p>
+        </div>
+
+        <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">
+        <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+        <input type="hidden" id="start_month" name="start_month" value="{{start_month}}">
+        <input type="hidden" id="end_month" name="end_month" value="{{end_month}}">
+        <input type="hidden" id="summary" name="summary" value="{{summary}}">
+        <div align="center" id="container" style="height:350px;width:80%;"></div>
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmt-visualize.js"></script>
+    </div><!--end center-->
+
+</div><!--end container-->
+
+  <!-- Footer -->
+<!--
+  <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+    </script>
+-->
+{%endblock%}

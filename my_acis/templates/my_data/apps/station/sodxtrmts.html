@@ -12,16 +12,17 @@
     <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
     <a href="{{TOOLS_URL}}">TOOLS></a>
     <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
-    <a href="{{TOOLS_URL}}station/sodxtrmts/"></a>Monthly Summaries of Extremes</p>
+    <a href="{{TOOLS_URL}}station/sodxtrmts/">Monthly Summaries of Extremes</a>
+</p>
 
 <div class="container">
     <!--<div class="center-left" style="border:none;">-->
-    <table border="0" cellpadding="20">
+    <table border="0" cellpadding="10">
         <tr valign="top">
         <td>
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
-            <table class="form">
+            <table class="form" cellpadding="0">
             {%for field in form0 %}
                     <tr>
                         <td>{{field.label}}:</td>                                                                    
@@ -43,8 +44,8 @@
                 {%endif%}
             {%endfor%}
             <!-- Add Extra Options -->
-            <tr><td colspan="3"><hr style="color:#006666;"></td></tr>
-            <tr><td colspan="3"><b>Thresholds for "Number of Days"</b></td></tr>
+            <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
+            <tr><td colspan="3"><b>Thresholds for "Number of Days" statistic</b></td></tr>
             <tr>
                 <td><input type="radio" name="less_greater_or_between" value="l" checked>Less Than</td>
                 <td><input type="text" name="less" step="any" value=0.005 ></td>
@@ -65,7 +66,7 @@
                 <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                 <div class="pop-up"><p>Count number of days with values between these thresholds.</p></div>
             </tr>
-            <tr><td colspan="3"><hr style="color:#006666;"></td></tr>
+            <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
             <tr><td><b>Frequency Analysis Type</b></td></td></tr>
             <tr>
                 <td><input type="radio" name="frequency_analysis_type" value="p" checked>P III</td>
@@ -80,6 +81,7 @@
     <!--</div>-->
     </td><td>
     <!--<div class="center" style="border:none;background-color:X^H#947e6e;">-->
+        <h2>{{title}}</h2>
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
@@ -136,11 +138,10 @@
         {%if results%}
             <p>
             <p class="error"><b>Search Parameters</b>:</p>
-            <p><b>Station</b>: {{station_ID}}, <b>Name</b>: {{station_name}}</br>
-            <b>From Year</b> {{start_year}} <b>To Year</b> {{end_year}}</br>
-            {%for key, val in search_params.items%}
-             <b>{{key}}</b>: {{val}},
-            {%endfor%}
+            <p><b>Station ID</b>: {{station_ID}}, <b> Station Name</b>: {{station_name}}</br>
+            <b>Start Year</b> {{start_year}} <b>End Year</b> {{end_year}}</br>
+            <b>Element</b> {{search_params.el_type}}, <b>Monthly Statistic: </b> {{search_params.monthly_statistic}}</br>
+            <b>Maximum Missing Days Allowed: </b> {{search_params.max_missing_days}}, <b>Start Month: </b> {{serach_params.start_month}}</br>
             </p>
             </br>
 
@@ -174,7 +175,7 @@
               </p>
             
             <!-- One tab per element -->
-            <img class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')">
+            <img class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')">&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/visualize/?station_ID={{station_ID}}&element={{element}}&json_file={{json_file}}">Generate Time Series Plots for this data</a>
             <table id="printable_table" cellpadding="none">
             <tr>
             <td><font size="+2">YEAR</font></td>

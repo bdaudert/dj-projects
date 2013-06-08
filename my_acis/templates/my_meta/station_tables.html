@@ -10,28 +10,29 @@
 <h1>{{title}}</h1>
 
 
+<table>
+<th></th>{%for stn_id in ucan_id_list%}<th>{{stn_id}}</th>{%endfor%}
+{%for table_name, instances in results_dict.items%}
+    <tr>
+        <td><a href="{{URL_PREFIX}}wrcc_meta/merge/?tbl_name={{table_name}}{%for stn_id in ucan_id_list%}&ucan_id={{stn_id}}{%endfor%}">{{table_name}}</a></td>
+        {%for inst in instances%}
+        <td>{{inst}}</td>
+        {%endfor%}
+    </tr>
+{%endfor%}
+</table>
 
-{% if ucan_station_id %}
-{% for tbl_name, tbl_instances in table_dir.items %}
-    
-<table style="width:100%; border:0" ><tr><td><a onClick="Toggle(this)"><img src="{{ MEDIA_URL }}img/plus.gif">{{ tbl_name }}</a><div style='display:none'>
-    
-{% for tbl_instance in tbl_instances %}
-    <li><a href="{{URL_PREFIX}}wrcc_meta/{{tbl_name}}/{{forloop.counter}}/?ucan_id={{ucan_station_id}}">{{tbl_instance}}</a></li>    
-
-{% endfor %}
-    
-{% ifequal tbl_name 'StationNetwork' %}
-    <p><span style="color:green">Variable, Network, Subnetwork</span></p>
-    <a href="{{URL_PREFIX}}wrcc_meta/add/?tbl_name=Variable&ucan_id={{ucan_station_id}}">ADD Variable</a><br />
-{% endifequal %}
-
-<a href="{{URL_PREFIX}}wrcc_meta/add/?tbl_name={{tbl_name}}&ucan_id={{ucan_station_id}}">ADD {{tbl_name}}</a><br />
-    
-</div></td></tr></table>
-
-{% endfor %}
-{% endif %}
+<!--
+<table>
+    {% for tbl_name, tbl_list in table_dict.items %}
+    <tr><td><b>TABLE: {{tbl_name}}</b></td></tr>
+    <tr>
+        {%for tbl in tbl_list%}
+            <td><table style="width:50%; height:100%; background-color:DeepSkyBlue" class="sortable">{{ tbl|safe }}</table></td>
+        {%endfor%}
+    </tr>
+    {%endfor%}
+</table>
+-->
 
 {% endblock %}
-

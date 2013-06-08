@@ -1,0 +1,100 @@
+$(function () {
+    var chart;
+
+    $(document).ready(function() {
+        var JSON_URL = document.getElementById("JSON_URL").value;
+        var json_file = document.getElementById("json_file").value;
+        var json_file_name = JSON_URL + json_file;
+        var start_month = document.getElementById("start_month").value;
+        var end_month = document.getElementById("end_month").value;
+        var summary = document.getElementById("summary").value;
+        
+        $.getJSON(json_file_name, function(datadict) {
+            var element = datadict.element;
+            var stn_id = datadict.stn_id
+            chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'container',
+                    zoomType: 'x',
+                    spacingRight: 20
+                },
+                title: {
+                    text:  datadict.element_name
+                },
+                subtitle: {
+                    text: document.ontouchstart === undefined ?
+                        'Click and drag in the plot area to zoom in' :
+                        'Drag your finger over the plot to zoom in'
+                },
+                credits: {
+                        href: 'http://wrcc.dri.edu/',
+                        text: 'wrcc.dri.edu'
+                },
+                xAxis: {
+                    title : {
+                        text: 'Time Period: ' + start_month + ' - ' + end_month
+                    },
+                    type: 'datetime',
+                    maxZoom: 1 * 24 * 3600000, // 1 day
+                    plotBands: [{
+                    from: Date.UTC(parseInt(start_date.slice(0,4)),parseInt(start_date.slice(4,6).replace("^0+(?!$)", "")) - 1, parseInt(start_date.slice(6,8))),
+                    to: Date.UTC(parseInt(end_date.slice(0,4)),parseInt(end_date.slice(4,6).replace("^0+(?!$)", "")) - 1, parseInt(end_date.slice(6,8)))
+                    }],
+                    title: {
+                        text: null
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: element_long
+                    },
+                    startOnTick: false,
+                    showFirstLabel: false
+                },
+                tooltip: {
+                    shared: true
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    area: {
+                        fillColor: {
+                            linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
+                            stops: [
+                                [0, Highcharts.getOptions().colors[0]],
+                                [1, 'rgba(2,0,0,0)']
+                            ]
+                        },
+                        lineWidth: 1,
+                        marker: {
+                            enabled: false,
+                            states: {
+                                hover: {
+                                    enabled: true,
+                                    radius: 5
+                                }
+                            }
+                        },
+                        shadow: false,
+                        states: {
+                            hover: {
+                                lineWidth: 1
+                            }
+                        }
+                    }
+                },
+        
+                series: [{
+                    type: 'area',
+                    name: element,
+                    pointInterval:1 * 24 * 3600000, // 1 day
+                    pointStart: Date.UTC(parseInt(start_date.slice(0,4)),parseInt(start_date.slice(4,6).replace("^0+(?!$)", "")) - 1, parseInt(start_date.slice(6,8))),
+                    data:datadict.data
+                }] //end series
+            });//end chart
+        });
+    });//end document ready function
+    
+});//end top function
+

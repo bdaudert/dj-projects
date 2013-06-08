@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>{{title}}</h1>
+
+{%if results %}
+<table>
+    {%for stn_id in ucan_id_list%}<th>{{stn_id}}</th>{%endfor%}<th>Form</th>
+    {%for instance in results%}
+        <tr valign="top">
+            {%for table in instance%}
+                {%if not table%}
+                <td></td>
+                {%else%}
+                <td>
+                {%if forloop.last%}
+                     <form method="post" action="">{% csrf_token %}
+                     <table style="width:100%; height:120%; background-color:MediumPurple" class="sortable">{{ table }}</table>
+                     <input type= "submit" value="Submit" name="blah"/>
+                {%else%}
+                    <table style="width:100%; height:120%; background-color:DeepSkyBlue" class="sortable">{{ table }}</table>
+                {%endif%}
+                </td>
+                {%endif%}
+            {%endfor%}
+        </tr>
+    {%endfor%}
+</table>
+{%endif%}
+
+{% endblock %}
