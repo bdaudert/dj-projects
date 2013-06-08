@@ -4,29 +4,46 @@
 
 <h1>{{title}}</h1>
 
-{%if results %}
+{%if results_2 %}
 <table>
     {%for stn_id in ucan_id_list%}<th>{{stn_id}}</th>{%endfor%}<th>Form</th>
-    {%for instance in results%}
-        <tr valign="top">
-            {%for table in instance%}
-                {%if not table%}
-                <td></td>
-                {%else%}
-                <td>
-                {%if forloop.last%}
-                     <form method="post" action="">{% csrf_token %}
-                     <table style="width:100%; height:120%; background-color:MediumPurple" class="sortable">{{ table }}</table>
-                     <input type= "submit" value="Submit" name="blah"/>
-                {%else%}
-                    <table style="width:100%; height:120%; background-color:DeepSkyBlue" class="sortable">{{ table }}</table>
-                {%endif%}
-                </td>
-                {%endif%}
-            {%endfor%}
+    {%for instance in results_2%}
+        <tr>
+        {%for table in instance%}
+        {%if not table%}
+        <td></td>
+        {%endif%}
+        <td>
+            {%if forloop.last%}
+                <br /><br />
+                <div id='form'>
+                <form method="post" action="">{% csrf_token %}
+                <table border="1" style="background-color:MediumPurple">
+                {%for key_val in table%}
+                    <tr valign="top">
+                        <td>{{key_val.0}}: <input type="text" value="{{key_val.1}}" name="{{key_val.0}}"/></td>
+                    </tr>
+                {%endfor%}
+                </table>
+                <input type="submit" value="Submit" name="form_merge"/>
+                </form>
+                </div>
+            {%else%}
+                <a href="#" onClick="ShowHide('{{stn_id}}_{{forloop.counter}}')">Click here to show/hide</a>
+                <div id="{{stn_id}}_{{forloop.counter}}" style='display:block'>
+                <table border="1" style="background-color:DeepSkyBlue">
+                {%for key_val in table%}
+                    <tr valign="top">
+                        <td>{{key_val.0}}: <input type="text" value="{{key_val.1}}" name="{{key_val.0}}"/></td>
+                    </tr>
+                {%endfor%}
+                </table>
+                </div>
+            {%endif%}
+        </td>
+        {%endfor%}
         </tr>
     {%endfor%}
 </table>
 {%endif%}
-
 {% endblock %}

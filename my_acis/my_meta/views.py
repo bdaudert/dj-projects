@@ -34,9 +34,27 @@ from acis_db import (
 #Useful tables/dicts
 #####################
 
+'''
 primary_tables = { 'Station': models.Station, 'StationLocation': models.StationLocation, 'StationNetwork': models.StationNetwork, 'StationSubnetwork':models.StationSubnetwork, 'StationAltName': models.StationAltName, 'StationTimeZone': models.StationTimeZone, 'StationClimDiv': models.StationClimDiv, 'StationCounty': models.StationCounty,'StationDigital': models.StationDigital, 'StationEquipment': models.StationEquipment, 'StationMaintenance':models.StationMaintenance, 'StationPhysical': models.StationPhysical}
+'''
 
-sub_tables = { 'Variable': models.Variable, 'Network': models.Network, 'Subnetwork': models.Subnetwork }
+primary_tables = {
+    'Station': models.Station,
+    'StationLocation': models.StationLocation,
+    'StationAltName': models.StationAltName,
+    'StationTimeZone': models.StationTimeZone,
+    'StationClimDiv': models.StationClimDiv,
+    'StationCounty': models.StationCounty,
+}
+sub_tables = { 'Variable': models.Variable, 'Network': models.Network, 'StationDigital': models.StationDigital }
+
+month_list = ['']
+
+today = datetime.datetime.today()
+today_yr = str(today.year)
+today_month = str(today.month)
+today_month_word = datetime.date(int(today_yr),int(today_month) , 1).strftime('%B')
+today_day = str(today.day)
 
 #2261 station but maybe more
 with open('/www/apps/csc/dj-projects/my_acis/media/json/lat_lon_stns_2.json', 'r') as f:
@@ -140,11 +158,18 @@ def station_detail(request):
     if ucan_id:
         ucan_id = int(ucan_id)
         context['ucan_station_id'] = ucan_id
+        context['station'] = convert_query_set(models.Station.objects.get(pk=ucan_id), 'table')
+        context['station_location'] = convert_query_set(models.StationLocation.objects.filter(ucan_station_id=ucan_id), 'table')
+        context['station_maintenance'] = convert_query_set(models.StationMaintenance.objects.filter(ucan_station_id=ucan_id), 'table')
+        context['station_equipment'] = convert_query_set(models.StationEquipment.objects.filter(ucan_station_id=ucan_id), 'table')
+        context['station_physical'] = convert_query_set(models.StationPhysical.objects.filter(ucan_station_id=ucan_id), 'table')
+        '''
         context['station'] = set_as_table(models.Station.objects.get(pk=ucan_id))
         context['station_location'] = set_as_table(models.StationLocation.objects.filter(ucan_station_id=ucan_id))
         context['station_maintenance'] = set_as_table(models.StationMaintenance.objects.filter(ucan_station_id=ucan_id))
         context['station_equipment'] = set_as_table(models.StationEquipment.objects.filter(ucan_station_id=ucan_id))
         context['station_physical'] = set_as_table(models.StationPhysical.objects.filter(ucan_station_id=ucan_id))
+        '''
     return render_to_response('my_meta/station_detail.html', context, context_instance=RequestContext(request))
 
 '''
@@ -188,16 +213,6 @@ def station_tables(request):
                 instances = obj.objects.filter(ucan_station_id=ucan_id)
                 results_dict[name].append(len(instances))
                 context['results_dict']= results_dict
-                for i, instance in enumerate(instances):
-                    inst_name = '%s_%d' % (name, i)
-                    table_name = name
-                    form = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
-                    if inst_name in table_dict.keys():
-                        table_dict[inst_name].append(form)
-                    else:
-                        table_dict[inst_name] =['No Table' for k in range(idx)]
-                        table_dict[inst_name].append(form)
-        context['table_dict'] = dict(table_dict)
     return render_to_response('my_meta/station_tables.html', context, context_instance=RequestContext(request))
 
 def station_tables_merge(request):
@@ -211,36 +226,56 @@ def station_tables_merge(request):
     context['ucan_id_list'] = ucan_id_list
     context['table_name'] = table_name
     table_instances = {}
+    table_dicts = {}
     #Find table instances for each ucan id
+    ucan_station_id_form = ucan_id_list[0]
     for idx, ucan_id in enumerate(ucan_id_list):
+        if int(ucan_id) < 100000:
+            ucan_station_id_form = ucan_id
         table_instances[ucan_id] = []
+        table_dicts[ucan_id] = []
         obj = primary_tables[table_name]
         instances = obj.objects.filter(ucan_station_id=ucan_id)
         for i, instance in enumerate(instances):
             inst_name = '%s_%d' % (table_name, i)
             form = set_as_form(request, table_name, q=instance, ucan_station_id=ucan_id)
+            inst_list = convert_query_set(instance,'python_list')
+            inst_dict = convert_query_set(instance,'python_dict')
+            table_dicts[ucan_id].append(inst_list)
             table_instances[ucan_id].append(form)
+    context['table_dicts']= table_dicts
     #Reorder results for easy html formatting
     max_instances = max([len(table_instances[uid]) for uid in ucan_id_list])
     if  max_instances == 0:
         return render_to_response('my_meta/station_tables_merge.html', context, context_instance=RequestContext(request))
     results = [[[] for idx in range(len(ucan_id_list)+1)] for inst in range(max_instances)]
+    results_2 = [[[] for idx in range(len(ucan_id_list)+1)] for inst in range(max_instances)]
     for inst in range(max_instances):
         wrcc_id = None
         for idx, ucan_id in enumerate(ucan_id_list):
-            if len(table_instances[ucan_id]) > inst:
+            if len(table_dicts[ucan_id]) > inst:
                 results[inst][idx]=table_instances[ucan_id][inst]
                 results[inst][-1]=table_instances[ucan_id][inst]
+                results_2[inst][idx]=table_dicts[ucan_id][inst]
+                results_2[inst][-1]=table_dicts[ucan_id][inst]
                 #Check if WRCC entry is in list, if so
                 #we want to use this entry as the editable form at the end of
                 #the page. If not, we choose the first ucan_id
                 if int(ucan_id) >=1000000:
                     wrcc_id = ucan_id
         #Overwrite editable form with wrcc values if they exist
+        #and replace updated_by, last _updated and ucan_id
         if wrcc_id:
             results[inst][-1]= table_instances[wrcc_id][inst]
-
+            results_2[inst][-1]= table_dicts[wrcc_id][inst]
+            context['test'] = results_2[inst][-1]
+            for idx, key_val in enumerate(results_2[inst][-1]):
+                if str(key_val[0]) == 'ucan_station_id':pass
+                if str(key_val[0]) == 'ucan_station_id': results_2[inst][-1][idx][1]= ucan_station_id_form
+                if str(key_val[0]) == 'updated_by':results_2[inst][-1][idx][1] = 'WRCCsync'
+                if str(key_val[0]) == 'last_updated':results_2[inst][-1][idx][1] = today_month_word + ' ' + today_day + ', ' + today_yr
         context['results'] = results
+        context['results_2'] = results_2
     return render_to_response('my_meta/station_tables_merge.html', context, context_instance=RequestContext(request))
 
 def station_tables_add(request):
@@ -374,12 +409,63 @@ def station_equipment(request, ucan_id):
         form = mforms.StationEquipmentForm(initial={'ucan_station_id': ucan_id})
 
     context['form'] = form
-    context['station_equipment'] = set_as_table(models.StationEquipment.objects.filter(ucan_station_id=ucan_id))
+    #context['station_equipment'] = set_as_table(models.StationEquipment.objects.filter(ucan_station_id=ucan_id))
+    context['station_equipment'] = convert_query_set(models.StationEquipment.objects.filter(ucan_station_id=ucan_id), 'table')
     return render_to_response('my_meta/station_equipment.html', context, context_instance=RequestContext(request))
 
 #
 # Utility functions
 #
+
+def convert_query_set(qs, obj):
+    """
+    Return a query set as obj.
+    Obj can be one out of table, python_dict
+    """
+    if obj not in ['table', 'python_dict', 'python_list']:
+        return qs
+    first = True
+    headers = ["<tr>", "<th>ATTRIBUTE</th>", "<th>VALUE</th>", "</tr>"]
+    rows = []
+    out_dict = {}
+    out_list = []
+    if isinstance(qs, QuerySet):
+        for i in qs:
+            if first:
+                first = False
+                headers.append("<tr>")
+                for f in i._meta.fields:
+                    headers.append("<th>%s</th>" % f.name)
+                headers.append("</tr>")
+            rows.append("<tr>")
+            for f in i._meta.fields:
+                rows.append("<td>%s</td>" % break_text(getattr(i, f.name)))
+                out_dict[f.name] = getattr(i, f.name)
+                out_list.append([f.name, getattr(i, f.name)])
+            rows.append("</tr>")
+    elif hasattr(qs, '_meta'):
+        headers.append("<tr>")
+        rows.append("<tr>")
+        for f in qs._meta.fields:
+            headers.append("<th>%s</th>" % f.name)
+            rows.append("<td>%s</td>" % break_text(getattr(qs, f.name)))
+            out_dict[f.name] = getattr(qs, f.name)
+            out_list.append([f.name, getattr(qs, f.name)])
+        headers.append("</tr>")
+        rows.append("</tr>")
+    else:
+        raise
+
+    if obj == 'table':
+        return "\n".join(headers + rows)
+    elif obj == 'python_dict':
+        return out_dict
+    elif obj == 'python_list':
+        return out_list
+    else:
+        return qs
+
+'''
 def set_as_table(qs):
     """
     Return a query set as an HTML table without <table> tags.
@@ -411,33 +497,7 @@ def set_as_table(qs):
     else:
         raise
     return "\n".join(headers + rows)
-
-def set_as_table2(qs):
-    """
-    Return a query set as an HTML table of attribute/value pairs without <table> tags.
-    """
-    first = True
-    headers = ["<tr>", "<th>ATTRIBUTE</th>", "<th>VALUE</th>", "</tr>"]
-    rows = []
-
-    if isinstance(qs, QuerySet):
-        for i in qs:
-            if first:
-                first = False
-                for f in i._meta.fields:
-                    rows.append("<tr>")
-                    rows.append("<td><b>%s</b></td>" % f.name)
-                    rows.append("<td>%s</td>" % break_text(getattr(i, f.name)))
-                    rows.append("</tr>")
-    elif hasattr(qs, '_meta'):
-        for f in qs._meta.fields:
-            rows.append("<tr>")
-            rows.append("<td><b>%s</b></td>" % f.name)
-            rows.append("<td>%s</td>" % break_text(getattr(qs, f.name)))
-            rows.append("</tr>")
-    else:
-        raise
-    return "\n".join(headers + rows)
+'''
 
 def set_as_form(request, tbl_name, q= None,  ucan_station_id = None, init = None):
     form_name = "%sForm" % tbl_name
