@@ -1440,6 +1440,12 @@ def sodxtrmts(request):
                     'month_list':month_list,
                     'data':results
                 }
+                if dates_list:
+                    json_dict['start_date'] = dates_list[0][0:4]
+                    json_dict['end_date'] = dates_list[-1][0:4]
+                else:
+                    json_dict['start_date'] = '1937'
+                    json_dict['end_date'] = '2013'
                 results_json = json.dumps(json_dict)
                 time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
                 json_file = '%s_sodxtrmts_%s_%s_%s.json' \
@@ -1460,7 +1466,6 @@ def sodxtrmts_visualize(request):
     element = request.GET.get('element', None)
     json_file = request.GET.get('json_file', None)
     initial_params_0 ={}
-    context['json_file'] = json_file
     if station_ID is not None:
         initial_params_0['station_ID'] = station_ID
         context['station_ID'] = station_ID
@@ -1476,8 +1481,9 @@ def sodxtrmts_visualize(request):
         form0 = set_as_form(request,'SodxtrmtsVisualizeForm', init={'station_ID':station_ID, 'element':element})
         context['form0'] = form0
         if form0.is_valid():
+            context['generate_plots']  = True
             context['json_file'] = json_file
-            for key,val in form0.cleaned_data:
+            for key,val in form0.cleaned_data.iteritems():
                 context[key] = val
     return render_to_response('my_data/apps/station/sodxtrmts_visualize.html', context, context_instance=RequestContext(request))
 

@@ -58,14 +58,16 @@
         <div id="how_to" style="display:none;">
             <p>Coming soon! <img class="icon" src="{{MEDIA_URL}}img/HappyFace.png"></p>
         </div>
-
-        <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">
-        <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-        <input type="hidden" id="start_month" name="start_month" value="{{start_month}}">
-        <input type="hidden" id="end_month" name="end_month" value="{{end_month}}">
-        <input type="hidden" id="summary" name="summary" value="{{summary}}">
-        <div align="center" id="container" style="height:350px;width:80%;"></div>
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmt-visualize.js"></script>
+       
+        {%if generate_plots%}
+            <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">
+            <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+            <input type="hidden" id="start_month" name="start_month" value="{{start_month}}">
+            <input type="hidden" id="end_month" name="end_month" value="{{end_month}}">
+            <input type="hidden" id="summary" name="summary" value="{{summary}}">
+            <div align="center" id="container" style="height:350px;width:100%;"></div>
+            <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts-visualize.js"></script>
+        {%endif%}
     </div><!--end center-->
 
 </div><!--end container-->

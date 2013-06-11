@@ -126,6 +126,9 @@ $(function () {
                         }
                     },
                     yAxis: {
+                        dateTimeLabelFormats: { // don't display the dummy year
+                            year: '%b'
+                        },
                         gridLineWidth: 0,
                         labels: {
                             enabled: false
