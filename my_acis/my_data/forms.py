@@ -75,7 +75,7 @@ SUMMARY_CHOICES = (
     ('individual', 'Plot months separately')
 )
 
-START_MONTH_CHOICES = (
+MONTH_CHOICES = (
     ('01', 'January'),
     ('02', 'February'),
     ('03', 'March'),
@@ -569,7 +569,7 @@ class SodxtrmtsForm(SodForm):
     end_year = MyYearField(max_length=4, min_length=3, initial='2013', help_text='yyyy or "POR" for period of record')
     monthly_statistic = forms.ChoiceField(choices=SXTR_ANALYSIS_CHOICES, initial='msum', help_text = 'Analysis Type')
     max_missing_days = forms.IntegerField(initial=5, help_text=HELP_TEXTS['max_missing_days'])
-    start_month = forms.ChoiceField(choices=START_MONTH_CHOICES, initial='01',help_text = 'Start the analysis on this month. Default is January.')
+    start_month = forms.ChoiceField(choices=MONTH_CHOICES, initial='01',help_text = 'Start the analysis on this month. Default is January.')
     departures_from_averages= forms.ChoiceField(choices = ([('T', 'Yes'),('F', 'No'),]), initial = 'F', help_text = 'Express results as departures from averages.')
     frequency_analysis = forms.ChoiceField(choices = ([('F', 'False'),]), initial = 'F', help_text='Perform Frequency Analysis. Coming Soon!')
 
@@ -587,8 +587,9 @@ class SodxtrmtsVisualizeForm(forms.Form):
         self.fields['station_ID'].widget.attrs['readonly'] = 'readonly'
         self.fields['element'] = forms.CharField(initial=element,help_text='Climate Element')
         self.fields['element'].widget.attrs['readonly'] = 'readonly'
-        self.fields['start_month'] = forms.ChoiceField(choices=START_MONTH_CHOICES, initial='01', required=False, help_text = 'Start the visualization on this month.')
-        self.fields['end_month'] = forms.ChoiceField(choices=START_MONTH_CHOICES, initial='02', required=False, help_text = 'End the visualization on this month.')
+        self.fields['months'] = forms.MultipleChoiceField(widget=CheckboxSelectMultiple, choices=MONTH_CHOICES, initial= MONTH_CHOICES[0], help_text = 'Choose one or more months to analyze.')
+        #self.fields['start_month'] = forms.ChoiceField(choices=MONTH_CHOICES, initial='01', required=False, help_text = 'Start the visualization on this month.')
+        #self.fields['end_month'] = forms.ChoiceField(choices=MONTH_CHOICES, initial='02', required=False, help_text = 'End the visualization on this month.')
         self.fields['summary'] = forms.ChoiceField(choices=SUMMARY_CHOICES, initial='mean', help_text='How to summarize the months.')
 
 '''
@@ -633,7 +634,7 @@ class SodxtrmtsForm1(forms.Form):
             self.fields['threshold_low_for_between'] = forms.DecimalField(initial = 0.0,required=False, help_text = 'Set this lower threshold if you chose "Between" above')
             self.fields['threshold_high_for_between'] = forms.DecimalField(initial = 1.0,required=False, help_text = 'Set this upper threshold if you chose "Between" above')
         self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False, help_text=HELP_TEXTS['max_missing_days'])
-        self.fields['start_month'] = forms.ChoiceField(choices=START_MONTH_CHOICES, initial='01', required=False, help_text = 'Start the analysis on this month. Default is January.')
+        self.fields['start_month'] = forms.ChoiceField(choices=MONTH_CHOICES, initial='01', required=False, help_text = 'Start the analysis on this month. Default is January.')
         self.fields['departures_from_averages'] = forms.ChoiceField(choices = ([('T', 'Yes'),('F', 'No'),]), initial = 'F', help_text = 'Express results as departures from averages.')
         self.fields['frequency_analysis'] = forms.CharField(initial=frequency_analysis, help_text='Perform Frequency Analysis. Coming Soon!')
         self.fields['frequency_analysis'].widget.attrs['readonly'] = 'readonly'

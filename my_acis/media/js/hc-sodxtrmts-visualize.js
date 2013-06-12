@@ -5,34 +5,20 @@ $(function () {
         var JSON_URL = document.getElementById("JSON_URL").value;
         var json_file = document.getElementById("json_file").value;
         var file = JSON_URL + json_file;
-        var start_month = document.getElementById("start_month").value;
-        var end_month = document.getElementById("end_month").value;
+        var month_list_str = document.getElementById("months").value;
+        //convert into javascript array
+        var month_list = month_list_str.substring(1,month_list_str.length -1).split(",")
+        document.getElementById("test").value = month_list;
+        for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
+            month_list[mon_idx] = parseInt(month_list[mon_idx]);
+        }
         var summary = document.getElementById("summary").value;
         var month_names =  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         $.getJSON(file, function(datadict) {
             var element = datadict.element;
             var stn_id = datadict.stn_id;
-            //Given user input, define data to be plotted
-            var series_data = [];
-            //Find the approprate indices holding monthly data in datadict
-            //datadict.data =[[year, month_1_val, flag, month_2_val, flag ...]]
-            var start_index = 2 * parseInt(start_month) - 1;
-            var end_index = 2 * parseInt(end_month) - 1;
-            var index = start_index;
-            var month_index =  parseInt(start_month) - 1;
-            var indices = [start_index];
-            var months = [month_names[parseInt(start_month) - 1]];
-            while (index != end_index){
-                index = index + 2;
-                month_index = month_index + 1;
-                if (index == 25){
-                    index = 1;
-                    month_index = 0;
-                }
-                indices.push(index);
-                months.push(month_names[month_index]);
-            }
             //Depending on summary, define series to be plotted
+            var series_data = [];
             var Type = 'area';
             var Start = Date.UTC(parseInt(datadict.start_date),0,01);
             var Interval = 365 * 24 * 3600000; // 1 year
@@ -55,8 +41,8 @@ $(function () {
                 var data = [];
                 for (var yr_idx=0;yr_idx<datadict.data.length - 6;yr_idx++) {
                     var vals = [];
-                    for (var mon_idx=0;mon_idx<indices.length;mon_idx++) {
-                        var val = datadict.data[yr_idx][indices[mon_idx]];
+                    for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
+                        var val = datadict.data[yr_idx][2*month_list[mon_idx] - 1];
                         if (val != '-----') {
                             vals.push(parseFloat(val));
                         }
@@ -85,11 +71,11 @@ $(function () {
                 series_data.push(series);
             }
             else { //summary = indiviual
-                for (var mon_idx=0;mon_idx<indices.length;mon_idx++) {
-                    var series = {'name':months[mon_idx],'type':Type,'pointStart':Start,'pointInterval':Interval, 'fillOpacity':'0.05'};
+                for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
+                    var series = {'name':month_names[mon_idx],'type':Type,'pointStart':Start,'pointInterval':Interval, 'fillOpacity':'0.05'};
                     var data =  [];
                     for (var yr_idx=0;yr_idx<datadict.data.length - 6;yr_idx++) {
-                        var val = datadict.data[yr_idx][indices[mon_idx]]
+                        var val = datadict.data[yr_idx][2*month_list[mon_idx] - 1]
                         if (val != '-----') {
                             data.push(precise_round(parseFloat(val),2));
                         }
@@ -123,7 +109,7 @@ $(function () {
                 },
                 xAxis: {
                     title : {
-                        text: 'Time Period: ' + start_month + ' - ' + end_month
+                        text: 'Months: ' + month_list_str
                     },
                     type: 'datetime',
                     maxZoom: 365 * 24 * 3600000, // 1 year

@@ -1484,7 +1484,10 @@ def sodxtrmts_visualize(request):
             context['generate_plots']  = True
             context['json_file'] = json_file
             for key,val in form0.cleaned_data.iteritems():
-                context[key] = val
+                if key == 'months':
+                    context[key] = [int(v) for v in val]
+                else:
+                    context[key] = str(val)
     return render_to_response('my_data/apps/station/sodxtrmts_visualize.html', context, context_instance=RequestContext(request))
 
 '''

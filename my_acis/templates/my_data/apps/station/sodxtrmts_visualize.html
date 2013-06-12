@@ -59,11 +59,11 @@
             <p>Coming soon! <img class="icon" src="{{MEDIA_URL}}img/HappyFace.png"></p>
         </div>
        
+
         {%if generate_plots%}
             <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">
             <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-            <input type="hidden" id="start_month" name="start_month" value="{{start_month}}">
-            <input type="hidden" id="end_month" name="end_month" value="{{end_month}}">
+            <input type="hidden" id="months" name="months" value="{{months}}">
             <input type="hidden" id="summary" name="summary" value="{{summary}}">
             <div align="center" id="container" style="height:350px;width:100%;"></div>
             <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts-visualize.js"></script>
