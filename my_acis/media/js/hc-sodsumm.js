@@ -38,7 +38,20 @@ $(function () {
                 var plot_type = 'boxplot';
                 var enable_legend = false;
                 var pl_opts = {}; 
-                var tool_tip = {}; 
+                var tool_tip = {};
+                /*
+                var tool_tip = {
+                    shared: true,
+                    formatter: function() {
+                    var s = '<b>'+ this.x +'</b>' + '<br/>';
+                    var descriptors = ['<br/>Minimum = ', '<br/> Average Minimum = ', '<br/> Mean = ', '<br/> Average Maximum = ', '<br/>Maximum = '];
+                    $.each(this.points, function(i, point) {
+                        s += descriptors[i] + point.y + ' F ';
+                    });
+                    return s;
+                    }
+                };
+                */ 
             }
             else {
                 var plot_type = 'column';

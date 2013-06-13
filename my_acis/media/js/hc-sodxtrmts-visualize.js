@@ -8,7 +8,6 @@ $(function () {
         var month_list_str = document.getElementById("months").value;
         //convert into javascript array
         var month_list = month_list_str.substring(1,month_list_str.length -1).split(",")
-        document.getElementById("test").value = month_list;
         for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
             month_list[mon_idx] = parseInt(month_list[mon_idx]);
         }
@@ -88,6 +87,23 @@ $(function () {
                 }
             }
 
+            //Define plot characteristics
+            var xAxisText = 'Months: ';
+            if (summary != 'individual'){
+                for (var mon in month_list) {
+                    xAxisText+= month_names[parseInt(mon)] + '  '
+                }
+            }
+            if (datadict.element == 'maxt' || datadict.element == 'mint' || datadict.element == 'avgt' || datadict.element == 'dtr'){
+                var tickInterval = 5;
+            }
+            else if (datadict.element == 'hdd' || datadict.element == 'cdd' || datadict.element == 'gdd'){
+                var tickInterval = 50;
+            }
+            else { 
+                //snow,snwd,pcpn
+                var tickInterval = 0.1;
+            }
             //Define Chart
             chart = new Highcharts.Chart({
                 chart: {
@@ -109,7 +125,7 @@ $(function () {
                 },
                 xAxis: {
                     title : {
-                        text: 'Months: ' + month_list_str
+                        text: xAxisText
                     },
                     type: 'datetime',
                     maxZoom: 365 * 24 * 3600000, // 1 year
@@ -122,6 +138,7 @@ $(function () {
                     title: {
                         text: datadict.element_name
                     },
+                    tickInterval:tickInterval,
                     startOnTick: false,
                     showFirstLabel: false
                 },

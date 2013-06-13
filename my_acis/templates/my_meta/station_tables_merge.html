@@ -4,10 +4,41 @@
 
 <h1>{{title}}</h1>
 
-{%if results_2 %}
+<script type="text/javascript">
+function populateFormField(form_id, label, value){
+    var formFields = document.getElementById(form_id).getElementsByTagName('input');
+    for (i=0;i<formFields.length;i++){
+        if (formFields[i].name == label) {
+            formFields[i].value =value;
+        }
+    }
+}
+</script>
+
+{%if results_2%}
+<div id="form">
+    <form method="post" action="">{% csrf_token %}
+    <table border="1" style="background-color:MediumPurple">
+    {%for field in results_2%}
+        <tr valign="top">
+            {%if field.value%}
+                <td>{{field.label}} <input type="text" value="{{field.value}}" name="{{field.label}}" /></td>
+            {%else%}
+                <td>{{field.label}} <input type="text" value="" name="{{field.label}}" /></td>
+            {%endif%}
+        </tr>
+    {%endfor%}
+     </table>
+    <input type="submit" value="Submit" name="form_merge"/>
+    </form>
+</div>
+{%endif%}
+
+
+{%if results%}
 <table>
     {%for stn_id in ucan_id_list%}<th>{{stn_id}}</th>{%endfor%}<th>Form</th>
-    {%for instance in results_2%}
+    {%for instance in results%}
         <tr>
         {%for table in instance%}
         {%if not table%}
@@ -18,10 +49,10 @@
                 <br /><br />
                 <div id='form'>
                 <form method="post" action="">{% csrf_token %}
-                <table border="1" style="background-color:MediumPurple">
+                <table id="merge_table" border="1" style="background-color:MediumPurple">
                 {%for key_val in table%}
                     <tr valign="top">
-                        <td>{{key_val.0}}: <input type="text" value="{{key_val.1}}" name="{{key_val.0}}"/></td>
+                        <td>{{key_val.0}} <input type="text" value="{{key_val.1}}" name="{{key_val.0}}"/></td>
                     </tr>
                 {%endfor%}
                 </table>
@@ -34,7 +65,7 @@
                 <table border="1" style="background-color:DeepSkyBlue">
                 {%for key_val in table%}
                     <tr valign="top">
-                        <td>{{key_val.0}}: <input type="text" value="{{key_val.1}}" name="{{key_val.0}}"/></td>
+                        <td>{{key_val.0}}: <input onClick="populateFormField('merge_table', '{{key_val.0}}', '{{key_val.1}}')" type="text" value="{{key_val.1}}" name="{{key_val.0}}" readonly style="background-color:#CCCCCC;"/></td>
                     </tr>
                 {%endfor%}
                 </table>

@@ -60,9 +60,6 @@ today_day = str(today.day)
 with open('/www/apps/csc/dj-projects/my_acis/media/json/lat_lon_stns_2.json', 'r') as f:
     lat_lon_stations = eval(f.read())
 
-#lat_lon_stations = {'49.02, -113.62': [1003210, 42832], '50.17, -114.72': [1003488, 42816], '49.82, -114.63': [1003325, 42834], '48.42, -123.23': [1011288, 41023], '38.14, -109.61': [1013591, 61851, 1018197], '49.62, -113.82': [1010326, 42609], '49.02, -113.65': [1003214, 42778], '49.58, -114.42': [1009742, 1012668], '63.25, -130.03': [1009743, 42100], '64.85, -147.80': [1014039, 1002370, 28876, 1017151, 20953, 20954], '47.87, -117.03': [1014451, 1003073, 1003037, 34082], '50.27, -117.82': [1009738, 41811, 41812, 26513], '51.08, -114.22': [1011287, 42639], '59.67, -151.65': [1014068, 20609], '46.22, -72.65': [1009739, 45189], '50.63, -115.28': [1003489, 42868], '50.95, -115.18': [1009740, 42873], '51.42, -105.25': [1008944, 43265], '49.62, -110.32': [1003135, 1003059, 42677], '52.93, -66.87': [1009343, 26628, 46254], '52.18, -127.47': [1010884, 41302, 26503], '61.92, -113.73': [1010327, 42162], '59.68, -151.37': [1014444, 1014457, 1011355, 1012263], '45.32, -75.67': [1010867, 1012975, 26838, 26832, 44394], '38.25, -75.16': [1004331, 1013743]}
-
-
 lat_lon_list = [key for key in lat_lon_stations.keys()]
 
 
@@ -163,39 +160,8 @@ def station_detail(request):
         context['station_maintenance'] = convert_query_set(models.StationMaintenance.objects.filter(ucan_station_id=ucan_id), 'table')
         context['station_equipment'] = convert_query_set(models.StationEquipment.objects.filter(ucan_station_id=ucan_id), 'table')
         context['station_physical'] = convert_query_set(models.StationPhysical.objects.filter(ucan_station_id=ucan_id), 'table')
-        '''
-        context['station'] = set_as_table(models.Station.objects.get(pk=ucan_id))
-        context['station_location'] = set_as_table(models.StationLocation.objects.filter(ucan_station_id=ucan_id))
-        context['station_maintenance'] = set_as_table(models.StationMaintenance.objects.filter(ucan_station_id=ucan_id))
-        context['station_equipment'] = set_as_table(models.StationEquipment.objects.filter(ucan_station_id=ucan_id))
-        context['station_physical'] = set_as_table(models.StationPhysical.objects.filter(ucan_station_id=ucan_id))
-        '''
     return render_to_response('my_meta/station_detail.html', context, context_instance=RequestContext(request))
 
-'''
-def station_tables_nina(request):
-    ucan_id_list = request.GET.getlist('ucan_id', [])
-    context = {
-        'title': "Primary tables for this Station"
-    }
-    context['ucan_id_list'] = ucan_id_list
-    if ucan_id_list:
-        #put in list
-        table_dict = defaultdict(list)
-        for name, obj in primary_tables.iteritems():
-            for idx, ucan_id in enumerate(ucan_id_list):
-                instances = obj.objects.filter(ucan_station_id=ucan_id)
-                for i, instance in enumerate(instances):
-                    inst_name = '%s_%d' % (name, i)
-                    form = set_as_form(request, name, q=instance, ucan_station_id=ucan_id)
-                    if inst_name in table_dict.keys():
-                        table_dict[inst_name].append(form)
-                    else:
-                        table_dict[inst_name] =['No Table' for k in range(idx)]
-                        table_dict[inst_name].append(form)
-        context['table_dict'] = dict(table_dict)
-    return render_to_response('my_meta/station_tables.html', context, context_instance=RequestContext(request))
-'''
 
 def station_tables(request):
     ucan_id_list = request.GET.getlist('ucan_id', [])
@@ -216,48 +182,45 @@ def station_tables(request):
     return render_to_response('my_meta/station_tables.html', context, context_instance=RequestContext(request))
 
 def station_tables_merge(request):
-    table_name = request.GET.get('tbl_name', None)
+    tbl_name = request.GET.get('tbl_name', None)
     ucan_id_list = request.GET.getlist('ucan_id', [])
     context = {
-        'title': table_name + ' Table Merge Tool'
+        'title': tbl_name + ' Table Merge Tool'
     }
-    if not table_name or not ucan_id_list:
+    if not tbl_name or not ucan_id_list:
         return render_to_response('my_meta/station_tables_merge.html', context, context_instance=RequestContext(request))
     context['ucan_id_list'] = ucan_id_list
-    context['table_name'] = table_name
-    table_instances = {}
+    context['tbl_name'] = tbl_name
     table_dicts = {}
     #Find table instances for each ucan id
     ucan_station_id_form = ucan_id_list[0]
     for idx, ucan_id in enumerate(ucan_id_list):
         if int(ucan_id) < 100000:
             ucan_station_id_form = ucan_id
-        table_instances[ucan_id] = []
         table_dicts[ucan_id] = []
-        obj = primary_tables[table_name]
+        obj = primary_tables[tbl_name]
         instances = obj.objects.filter(ucan_station_id=ucan_id)
         for i, instance in enumerate(instances):
-            inst_name = '%s_%d' % (table_name, i)
-            form = set_as_form(request, table_name, q=instance, ucan_station_id=ucan_id)
+            inst_name = '%s_%d' % (tbl_name, i)
             inst_list = convert_query_set(instance,'python_list')
-            inst_dict = convert_query_set(instance,'python_dict')
             table_dicts[ucan_id].append(inst_list)
-            table_instances[ucan_id].append(form)
     context['table_dicts']= table_dicts
     #Reorder results for easy html formatting
-    max_instances = max([len(table_instances[uid]) for uid in ucan_id_list])
+    max_instances = max([len(table_dicts[uid]) for uid in ucan_id_list])
     if  max_instances == 0:
+        #set up blank form for table
+        init = {'ucan_station_id':ucan_station_id_form, 'updated_by': 'WRCCsync', 'last_updated':today_month_word + ' ' + today_day + ', ' + today_yr}
+        form_class = getattr(mforms, tbl_name + 'Form')
+        form = form_class(initial=init)
+        context['results_2'] = form
         return render_to_response('my_meta/station_tables_merge.html', context, context_instance=RequestContext(request))
     results = [[[] for idx in range(len(ucan_id_list)+1)] for inst in range(max_instances)]
-    results_2 = [[[] for idx in range(len(ucan_id_list)+1)] for inst in range(max_instances)]
     for inst in range(max_instances):
         wrcc_id = None
         for idx, ucan_id in enumerate(ucan_id_list):
             if len(table_dicts[ucan_id]) > inst:
-                results[inst][idx]=table_instances[ucan_id][inst]
-                results[inst][-1]=table_instances[ucan_id][inst]
-                results_2[inst][idx]=table_dicts[ucan_id][inst]
-                results_2[inst][-1]=table_dicts[ucan_id][inst]
+                results[inst][idx]=table_dicts[ucan_id][inst]
+                results[inst][-1]=table_dicts[ucan_id][inst]
                 #Check if WRCC entry is in list, if so
                 #we want to use this entry as the editable form at the end of
                 #the page. If not, we choose the first ucan_id
@@ -266,46 +229,20 @@ def station_tables_merge(request):
         #Overwrite editable form with wrcc values if they exist
         #and replace updated_by, last _updated and ucan_id
         if wrcc_id:
-            results[inst][-1]= table_instances[wrcc_id][inst]
-            results_2[inst][-1]= table_dicts[wrcc_id][inst]
-            context['test'] = results_2[inst][-1]
-            for idx, key_val in enumerate(results_2[inst][-1]):
-                if str(key_val[0]) == 'ucan_station_id':pass
-                if str(key_val[0]) == 'ucan_station_id': results_2[inst][-1][idx][1]= ucan_station_id_form
-                if str(key_val[0]) == 'updated_by':results_2[inst][-1][idx][1] = 'WRCCsync'
-                if str(key_val[0]) == 'last_updated':results_2[inst][-1][idx][1] = today_month_word + ' ' + today_day + ', ' + today_yr
+            results[inst][-1]= table_dicts[wrcc_id][inst]
+            for idx, key_val in enumerate(results[inst][-1]):
+                if str(key_val[0]) == 'ucan_station_id': results[inst][-1][idx][1]= ucan_station_id_form
+                if str(key_val[0]) == 'updated_by':results[inst][-1][idx][1] = 'WRCCsync'
+                if str(key_val[0]) == 'last_updated':results[inst][-1][idx][1] = today_month_word + ' ' + today_day + ', ' + today_yr
         context['results'] = results
-        context['results_2'] = results_2
     return render_to_response('my_meta/station_tables_merge.html', context, context_instance=RequestContext(request))
 
 def station_tables_add(request):
-    table_name = request.GET.get('tbl_name', None)
+    tbl_name = request.GET.get('tbl_name', None)
     context = {
-        'title': table_name + 'Add Tool'
+        'title': tbl_name + 'Add Tool'
     }
     return render_to_response('my_meta/station_tables_add.html', context, context_instance=RequestContext(request))
-
-def station_tables_old(request):
-    ucan_id = request.GET.get('ucan_id', None)
-    context = {
-        'title': "Primary tables for this Station"
-    }
-    if ucan_id:
-        ucan_id = int(ucan_id)
-        table_dir = defaultdict(list)
-        errors = defaultdict(dict)
-        for name, obj in primary_tables.iteritems():
-            instances = obj.objects.filter(ucan_station_id=ucan_id)
-            if not instances:
-                table_dir[name]= []
-                continue
-            for i, instance in enumerate(instances):
-                inst_name = '%s_%d' % (name, i)
-                table_dir[name].append(inst_name)
-        context['ucan_station_id'] = ucan_id
-        context['table_dir'] = dict(table_dir)
-
-    return render_to_response('my_meta/station_tables.html', context, context_instance=RequestContext(request))
 
 def sub_tables(request, tbl_name, tbl_id):
     ucan_id = request.GET.get('ucan_id', None)
@@ -371,7 +308,7 @@ def station_maintenance(request, ucan_id):
         (form, ucan_found) = mforms.StationMaintenanceForm(initial={'ucan_station_id': ucan_id})
     context['ucan_found'] = ucan_found
     context['form'] = form
-    context['station_maintenance'] = set_as_table(models.StationMaintenance.objects.filter(ucan_station_id=ucan_id))
+    context['station_maintenance'] = convert_query_set(models.StationMaintenance.objects.filter(ucan_station_id=ucan_id), 'table')
     return render_to_response('my_meta/station_maintenance.html', context, context_instance=RequestContext(request))
 
 #@login_required
@@ -390,7 +327,7 @@ def station_physical(request, ucan_id):
         form = mforms.StationPhysicalForm(initial={'ucan_station_id': ucan_id})
 
     context['form'] = form
-    context['station_physical'] = set_as_table(models.StationPhysical.objects.filter(ucan_station_id=ucan_id))
+    context['station_physical'] = convert_query_set(models.StationPhysical.objects.filter(ucan_station_id=ucan_id), 'table')
     return render_to_response('my_meta/station_physical.html', context, context_instance=RequestContext(request))
 
 #@login_required
@@ -409,7 +346,6 @@ def station_equipment(request, ucan_id):
         form = mforms.StationEquipmentForm(initial={'ucan_station_id': ucan_id})
 
     context['form'] = form
-    #context['station_equipment'] = set_as_table(models.StationEquipment.objects.filter(ucan_station_id=ucan_id))
     context['station_equipment'] = convert_query_set(models.StationEquipment.objects.filter(ucan_station_id=ucan_id), 'table')
     return render_to_response('my_meta/station_equipment.html', context, context_instance=RequestContext(request))
 
@@ -429,6 +365,7 @@ def convert_query_set(qs, obj):
     rows = []
     out_dict = {}
     out_list = []
+
     if isinstance(qs, QuerySet):
         for i in qs:
             if first:
@@ -464,40 +401,6 @@ def convert_query_set(qs, obj):
         return out_list
     else:
         return qs
-
-'''
-def set_as_table(qs):
-    """
-    Return a query set as an HTML table without <table> tags.
-    """
-    first = True
-    headers = []
-    rows = []
-
-    if isinstance(qs, QuerySet):
-        for i in qs:
-            if first:
-                first = False
-                headers.append("<tr>")
-                for f in i._meta.fields:
-                    headers.append("<th>%s</th>" % f.name)
-                headers.append("</tr>")
-            rows.append("<tr>")
-            for f in i._meta.fields:
-                rows.append("<td>%s</td>" % break_text(getattr(i, f.name)))
-            rows.append("</tr>")
-    elif hasattr(qs, '_meta'):
-        headers.append("<tr>")
-        rows.append("<tr>")
-        for f in qs._meta.fields:
-            headers.append("<th>%s</th>" % f.name)
-            rows.append("<td>%s</td>" % break_text(getattr(qs, f.name)))
-        headers.append("</tr>")
-        rows.append("</tr>")
-    else:
-        raise
-    return "\n".join(headers + rows)
-'''
 
 def set_as_form(request, tbl_name, q= None,  ucan_station_id = None, init = None):
     form_name = "%sForm" % tbl_name

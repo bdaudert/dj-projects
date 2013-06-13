@@ -47,6 +47,9 @@ begin = '%s%s%s' % (yr_b, mon_b, day_b)
 yesterday = '%s%s%s' % (yr_y, mon_y, day_y)
 begin_prism = '%s%s%s' % (yr_p, mon_p, day_p)
 
+
+readonly_style = 'background-color:#CCCCCC;'
+
 ######################################
 #Choice Fields
 #######################################
@@ -584,9 +587,9 @@ class SodxtrmtsVisualizeForm(forms.Form):
         if station_ID is None:
             station_ID = self.data.get('station_ID')
         self.fields['station_ID'] = forms.CharField(initial=station_ID,help_text='Station Identifier')
-        self.fields['station_ID'].widget.attrs['readonly'] = 'readonly'
+        self.fields['station_ID'].widget.attrs = {'readonly':True, 'style':readonly_style}
         self.fields['element'] = forms.CharField(initial=element,help_text='Climate Element')
-        self.fields['element'].widget.attrs['readonly'] = 'readonly'
+        self.fields['element'].widget.attrs = {'readonly':True, 'style':readonly_style}
         self.fields['months'] = forms.MultipleChoiceField(widget=CheckboxSelectMultiple, choices=MONTH_CHOICES, initial= MONTH_CHOICES[0], help_text = 'Choose one or more months to analyze.')
         #self.fields['start_month'] = forms.ChoiceField(choices=MONTH_CHOICES, initial='01', required=False, help_text = 'Start the visualization on this month.')
         #self.fields['end_month'] = forms.ChoiceField(choices=MONTH_CHOICES, initial='02', required=False, help_text = 'End the visualization on this month.')
@@ -623,11 +626,11 @@ class SodxtrmtsForm1(forms.Form):
         self.fields['start_year'] = MyYearField(required=False, max_length=4, min_length=3, initial=start_year, help_text='yyyy or "POR" for period of record')
         self.fields['end_year'] = MyYearField(required=False, max_length=4, min_length=3, initial=end_year, help_text='yyyy or "POR" for period of record')
         self.fields['element'] = forms.CharField(initial=element, help_text = 'Climate Element')
-        self.fields['element'].widget.attrs['readonly'] = 'readonly'
+        self.fields['element'].widget.attrs = {'readonly':True, 'style':readonly_style}
         if element in ['hdd', 'cdd', 'gdd']:
             self.fields['base_temperature'] = forms.IntegerField(initial=65, help_text = 'Base Temperature for degree day element.')
         self.fields['monthly_statistic'] = forms.CharField(initial=monthly_statistic, help_text='Analysis Type')
-        self.fields['monthly_statistic'].widget.attrs['readonly'] = 'readonly'
+        self.fields['monthly_statistic'].widget.attrs = {'readonly':True, 'style':readonly_style}
         if monthly_statistic == 'ndays':
             self.fields['less_greater_or_between'] = forms.ChoiceField(choices=([('l','Less Than'), ('g','Greater Than'),('b','Between'), ]), initial='b', help_text = 'Define your threshold operator.')
             self.fields['threshold_for_less_or_greater'] = forms.DecimalField(initial = 0.0, help_text = 'Set this threshold if you chose "Less Than" or "Greater Than" above')
@@ -637,7 +640,7 @@ class SodxtrmtsForm1(forms.Form):
         self.fields['start_month'] = forms.ChoiceField(choices=MONTH_CHOICES, initial='01', required=False, help_text = 'Start the analysis on this month. Default is January.')
         self.fields['departures_from_averages'] = forms.ChoiceField(choices = ([('T', 'Yes'),('F', 'No'),]), initial = 'F', help_text = 'Express results as departures from averages.')
         self.fields['frequency_analysis'] = forms.CharField(initial=frequency_analysis, help_text='Perform Frequency Analysis. Coming Soon!')
-        self.fields['frequency_analysis'].widget.attrs['readonly'] = 'readonly'
+        self.fields['frequency_analysis'].widget.attrs = {'readonly':True, 'style':readonly_style}
         if frequency_analysis == 'T':
             self.fields['frequency_analysis_type'] = forms.ChoiceField(choices=F_ANALYSIS_CHOICES, required=False, initial='p', help_text='Frequency Analysis Type')
 
@@ -679,10 +682,10 @@ class StationDataForm1(forms.Form):
 
 
         self.fields['select_stations_by'] = forms.CharField(initial=select_stations_by, widget=forms.HiddenInput(),help_text=HELP_TEXTS['select_stations_by'])
-        #self.fields['select_stations_by'].widget.attrs['readonly'] = 'readonly'
+        #self.fields['select_stations_by'].widget.attrs = {'readonly':True, 'style':readonly_style}
         if select_stations_by == 'stn_id':
             self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text=HELP_TEXTS['stn_id'])
-            self.fields['station_id'].widget.attrs['readonly'] = 'readonly'
+            self.fields['station_id'].widget.attrs = {'readonly':True, 'style':readonly_style}
         elif select_stations_by == 'stnid':
             self.fields['station_id'] = forms.CharField(required=False,initial='266779', help_text=HELP_TEXTS['stn_id'])
         elif select_stations_by == 'stnids':
@@ -818,15 +821,15 @@ class GridDataForm1(forms.Form):
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
             #self.fields['data_summary'] = forms.CharField(widget=forms.HiddenInput(), required=False, initial='none', help_text=HELP_TEXTS['data_summary'])
             self.fields['data_summary'] = forms.CharField(initial='none', help_text=HELP_TEXTS['data_summary'])
-            self.fields['data_summary'].widget.attrs['readonly'] = True
+            self.fields['data_summary'].widget.attrs = {'readonly':True, 'style':readonly_style}
         else:
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='F', help_text='Generate a map to visualize data')
             #self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, initial=data_summary, help_text=HELP_TEXTS['data_summary'])
             self.fields['data_summary'] = forms.CharField(initial=data_summary, help_text=HELP_TEXTS['data_summary'])
-            self.fields['data_summary'].widget.attrs['readonly'] = True
+            self.fields['data_summary'].widget.attrs = {'readonly':True, 'style':readonly_style}
         #self.fields['temporal_resolution'] = forms.CharField(initial=temporal_resolution, widget=forms.HiddenInput())
         self.fields['temporal_resolution']  = forms.CharField(initial=temporal_resolution, help_text='Time resolution of data.')
-        self.fields['temporal_resolution'].widget.attrs['readonly'] = True
+        self.fields['temporal_resolution'].widget.attrs = {'readonly':True, 'style':readonly_style}
 
 class GridDataForm3(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -866,15 +869,16 @@ class GridDataForm3(forms.Form):
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
             #self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, widget=forms.HiddenInput(), initial=kwargs.get('initial', {}).get('data_summary', 'none'), help_text='Temporal summarization to be performed on data.')
             self.fields['data_summary'] = forms.CharField(initial='none', help_text=HELP_TEXTS['data_summary'])
-            self.fields['data_summary'].widget.attrs['readonly'] = True
+            self.fields['data_summary'].widget.attrs = {'readonly':True, 'style':readonly_style}
         else:
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='F', help_text='Generate a map to visualize data')
             #self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, initial=data_summary, help_text='Temporal summarization to be performed on data.')
             self.fields['data_summary'] = forms.CharField(initial=data_summary, help_text=HELP_TEXTS['data_summary'])
-            self.fields['data_summary'].widget.attrs['readonly'] = True
+            self.fields['data_summary'].widget.attrs = {'readonly':True, 'style':readonly_style}
             #self.fields['temporal_resolution'] = forms.CharField(initial=temporal_resolution, widget=forms.HiddenInput())
             self.fields['temporal_resolution']  = forms.CharField(initial=temporal_resolution, help_text='Time resolution of data.')
-            self.fields['temporal_resolution'].widget.attrs['readonly'] = True
+            self.fields['temporal_resolution'].widget.attrs = {'readonly':True, 'style':readonly_style}
+
 #Data Application Forms
 class MetaGraphForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -1006,9 +1010,9 @@ class ClimateMapForm1(forms.Form):
             else:
                 start_date = WRCCUtils.get_start_date(time_period,yesterday, x)
                 self.fields['start_date'] = MyDateField(required = False, initial=start_date, help_text=HELP_TEXTS['date'])
-                self.fields['start_date'].widget.attrs['readonly'] = 'readonly'
+                self.fields['start_date'].widget.attrs = {'readonly':True, 'style':readonly_style}
             self.fields['end_date'] = MyDateField(required=False, initial=yesterday, help_text=HELP_TEXTS['date'])
-            self.fields['end_date'].widget.attrs['readonly'] = 'readonly'
+            self.fields['end_date'].widget.attrs = {'readonly':True, 'style':readonly_style}
         if grid is None:
             self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
         else:
@@ -1074,7 +1078,7 @@ class StationLocatorForm1(forms.Form):
 
         if select_stations_by == 'stn_id':
             self.fields['station_id'] = forms.CharField(initial=stn_id, help_text=HELP_TEXTS['stn_id'])
-            self.fields['station_id'].widget.attrs['readonly'] = 'readonly'
+            self.fields['station_id'].widget.attrs = {'readonly':True, 'style':readonly_style}
         elif select_stations_by == 'stnid':
             self.fields['station_id'] = forms.CharField(initial='266779',help_text=HELP_TEXTS['stn_id'])
         elif select_stations_by == 'stnids':
