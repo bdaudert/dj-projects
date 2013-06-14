@@ -41,14 +41,41 @@ primary_tables = { 'Station': models.Station, 'StationLocation': models.StationL
 primary_tables = {
     'Station': models.Station,
     'StationLocation': models.StationLocation,
-    'StationAltName': models.StationAltName,
     'StationTimeZone': models.StationTimeZone,
     'StationClimDiv': models.StationClimDiv,
     'StationCounty': models.StationCounty,
 }
-sub_tables = { 'Variable': models.Variable, 'Network': models.Network, 'StationDigital': models.StationDigital }
+sub_tables = {
+    'Variable': models.Variable,
+    'StationNetwork': models.Network,
+    'StationDigital': models.StationDigital
+}
 
-month_list = ['']
+common_keys =['begin_date_flag', 'begin_date', 'end_date_flag', 'end_date', 'history_flag', 'src_quality_code','last_updated','updated_by']
+stn_keys  = ['ucan_station_id','station_best_name','country_key','fips_country_code','state','fips_state_abbr','fips_state_code']
+key_list = {
+    'Station': stn_keys + common_keys,
+    'StationLocation': ['ucan_station_id','latitude','longitude','unit_key','best_elevation'] + common_keys[0:5] + ['src_quality_flag'] + common_keys[6:],
+    'StationTimeZone': ['ucan_station_id', 'time_zone'] + common_keys,
+    'StationClimDiv': ['ucan_station_id', 'clim_div','clim_div_code','fips_state_code','fips_state_abbr','ncdc_state_code'] + common_keys,
+    'StationCounty': ['ucan_station_id','county','fips_state_code','fips_county_code','county_name'] + common_keys,
+    'StationNetwork':['ucan_station_id','network_stn_id','id_type_key'] + common_keys,
+    'StationDigital': ['ucan_station_id','network_station_id','network_key','begin_date','end_date'],
+    'Variable':['ucan_station_id','network_station_id','network_key','var_major_id','var_minor_id','begin_date','end_date']
+}
+
+load_tables_dir = '/tmp/'
+
+load_tables = {
+    'Station': 'raws_station.load',
+    'StationLocation': 'raws_station_location.load',
+    'StationTimeZone': 'raws_station_time_zone.load',
+    'StationClimDiv': 'raws_station_climate_division.load',
+    'StationCounty': 'raws_station_county.load',
+    'StationNetwork':'raws_station_network.load',
+    'StationDigital':'raws_station_digital.load',
+    'Variable':'raws_variable.load'
+}
 
 today = datetime.datetime.today()
 today_yr = str(today.year)
@@ -184,6 +211,7 @@ def station_tables(request):
 def station_tables_merge(request):
     tbl_name = request.GET.get('tbl_name', None)
     ucan_id_list = request.GET.getlist('ucan_id', [])
+    ucan_id_list = [str(uid) for uid in ucan_id_list]
     context = {
         'title': tbl_name + ' Table Merge Tool'
     }
@@ -204,7 +232,6 @@ def station_tables_merge(request):
             inst_name = '%s_%d' % (tbl_name, i)
             inst_list = convert_query_set(instance,'python_list')
             table_dicts[ucan_id].append(inst_list)
-    context['table_dicts']= table_dicts
     #Reorder results for easy html formatting
     max_instances = max([len(table_dicts[uid]) for uid in ucan_id_list])
     if  max_instances == 0:
@@ -212,29 +239,51 @@ def station_tables_merge(request):
         init = {'ucan_station_id':ucan_station_id_form, 'updated_by': 'WRCCsync', 'last_updated':today_month_word + ' ' + today_day + ', ' + today_yr}
         form_class = getattr(mforms, tbl_name + 'Form')
         form = form_class(initial=init)
-        context['results_2'] = form
-        return render_to_response('my_meta/station_tables_merge.html', context, context_instance=RequestContext(request))
-    results = [[[] for idx in range(len(ucan_id_list)+1)] for inst in range(max_instances)]
-    for inst in range(max_instances):
-        wrcc_id = None
-        for idx, ucan_id in enumerate(ucan_id_list):
-            if len(table_dicts[ucan_id]) > inst:
-                results[inst][idx]=table_dicts[ucan_id][inst]
-                results[inst][-1]=table_dicts[ucan_id][inst]
-                #Check if WRCC entry is in list, if so
-                #we want to use this entry as the editable form at the end of
-                #the page. If not, we choose the first ucan_id
-                if int(ucan_id) >=1000000:
-                    wrcc_id = ucan_id
-        #Overwrite editable form with wrcc values if they exist
-        #and replace updated_by, last _updated and ucan_id
-        if wrcc_id:
-            results[inst][-1]= table_dicts[wrcc_id][inst]
-            for idx, key_val in enumerate(results[inst][-1]):
-                if str(key_val[0]) == 'ucan_station_id': results[inst][-1][idx][1]= ucan_station_id_form
-                if str(key_val[0]) == 'updated_by':results[inst][-1][idx][1] = 'WRCCsync'
-                if str(key_val[0]) == 'last_updated':results[inst][-1][idx][1] = today_month_word + ' ' + today_day + ', ' + today_yr
-        context['results'] = results
+        for field in form.fields:
+            if form[field].value():
+                table_dicts[ucan_station_id_form].append([str(field), str(form[field].value())])
+            else:
+                table_dicts[ucan_station_id_form].append([str(field),''])
+        results=[[table_dicts[ucan_station_id_form]]]
+    else:
+        #Format for html display
+        results = [[[] for idx in range(len(ucan_id_list)+1)] for inst in range(max_instances)]
+        for inst in range(max_instances):
+            wrcc_id = None
+            for idx, ucan_id in enumerate(ucan_id_list):
+                if len(table_dicts[ucan_id]) > inst:
+                    results[inst][idx]=table_dicts[ucan_id][inst]
+                    results[inst][-1]=table_dicts[ucan_id][inst]
+                    #Check if WRCC entry is in list, if so
+                    #we want to use this entry as the editable form at the end of
+                    #the page. If not, we choose the first ucan_id
+                    if int(ucan_id) >=1000000:
+                        wrcc_id = ucan_id
+            #Overwrite editable form with wrcc values if they exist
+            #and replace updated_by, last _updated and ucan_id
+            if wrcc_id:
+                results[inst][-1]= table_dicts[wrcc_id][inst]
+                for idx, key_val in enumerate(results[inst][-1]):
+                    if str(key_val[0]) == 'ucan_station_id': results[inst][-1][idx][1]= ucan_station_id_form
+                    if str(key_val[0]) == 'updated_by':results[inst][-1][idx][1] = 'WRCCsync'
+                    if str(key_val[0]) == 'last_updated':results[inst][-1][idx][1] = today_month_word + ' ' + today_day + ', ' + today_yr
+    context['results'] = results
+
+    #Write merge information to metadata.load file
+    if 'form_merge' in request.POST:
+        meta_str = ''
+        with open(load_tables_dir + load_tables[tbl_name], 'a+') as f:
+            for idx,key in enumerate(key_list[tbl_name]):
+                if idx != len(key_list[tbl_name]) - 1:
+                    meta_str+=str(request.POST[key]) + '|'
+                else:
+                    meta_str+=str(request.POST[key]) + '\n'
+            f.write(meta_str)
+        #Double check
+        with open(load_tables_dir + load_tables[tbl_name], 'r') as f:
+            if f.readlines()[-1] == meta_str:
+                context['merge_successful'] = True
+
     return render_to_response('my_meta/station_tables_merge.html', context, context_instance=RequestContext(request))
 
 def station_tables_add(request):

@@ -15,19 +15,36 @@
 <body style="background-color: #FFEBCD;">
 
 <div id="header"></div>
-    <script type="text/javascript">$("#header").load("{{MEDIA_URL}}html/commons.html .header");</script>
+<script type="text/javascript">$("#header").load("{{MEDIA_URL}}html/commons.html .header");</script>
+
 
 <img class="map_2" src="/csc/media/img/SouthWest.jpg">
 <br />
 
-<div class="content-header">
-</div>
-
+<div class="content-header"></div>
+<!--
+<div id="search_box" style="position:absolute;top:0px;right:10px;"></div>
+<script type="text/javascript">$("#search_box").load("{{MEDIA_URL}}html/commons.html .searchbox");</script>
+-->
 <p align="center">You are here
 <a href="{{HOME_URL}}">HOME</a>
 
-<div id="searchbox"></div>
-<script type="text/javascript">$("#searchbox").load("{{MEDIA_URL}}html/commons.html .searchbox");</script>
+<div>
+        <!-- Search Box -->
+        <form target="_blank"  method="get" action="http://www.google.com/search">
+            <div style="width:20em;">
+            <table border="0" align="center" cellpadding="0">
+            <tr><td>
+            <input type="text"   name="q" size="25"
+            maxlength="255" value="" />
+            <input type="submit" value="Search" /></td></tr>
+            <tr><td align="center" style="font-size:75%">
+            <input type="radio"  name="sitesearch" value="http://wrcc.dri.edu{{SW_CKN_URL}}home/" checked/>Only this site
+            <input type="radio"  name="sitesearch"value="" /> The Web<br />
+            </td></tr></table>
+            </div>
+        </form>
+</div>
 
 <div class="container">
 
