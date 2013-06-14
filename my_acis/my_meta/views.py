@@ -3,6 +3,7 @@
 import datetime
 from collections import defaultdict
 import inspect
+import os
 
 #django Imports
 from django.template import RequestContext
@@ -64,7 +65,8 @@ key_list = {
     'Variable':['ucan_station_id','network_station_id','network_key','var_major_id','var_minor_id','begin_date','end_date']
 }
 
-load_tables_dir = '/tmp/'
+load_tables_dir = '/www/apps/csc/dj-projects/my_acis/media/meta-load-tables/'
+#load_tables_dir = '/tmp/'
 
 load_tables = {
     'Station': 'raws_station.load',
@@ -272,7 +274,7 @@ def station_tables_merge(request):
     #Write merge information to metadata.load file
     if 'form_merge' in request.POST:
         meta_str = ''
-        with open(load_tables_dir + load_tables[tbl_name], 'a+') as f:
+        with open(load_tables_dir + load_tables[tbl_name],'a+') as f:
             for idx,key in enumerate(key_list[tbl_name]):
                 if idx != len(key_list[tbl_name]) - 1:
                     meta_str+=str(request.POST[key]) + '|'
@@ -280,10 +282,10 @@ def station_tables_merge(request):
                     meta_str+=str(request.POST[key]) + '\n'
             f.write(meta_str)
         #Double check
+        os.chmod(load_tables_dir + load_tables[tbl_name], 0777)
         with open(load_tables_dir + load_tables[tbl_name], 'r') as f:
             if f.readlines()[-1] == meta_str:
                 context['merge_successful'] = True
-
     return render_to_response('my_meta/station_tables_merge.html', context, context_instance=RequestContext(request))
 
 def station_tables_add(request):

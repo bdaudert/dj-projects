@@ -165,7 +165,7 @@ def dashboard(request):
 
 def data_home(request):
     context = {
-        'title': 'Data Portal',
+        'title': 'Data',
         'data_page':True
     }
     return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))

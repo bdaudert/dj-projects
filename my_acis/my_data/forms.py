@@ -114,6 +114,8 @@ SXTR_ELEMENT_CHOICES = (
     ('hdd', 'Heating Degree Days'),
     ('cdd', 'Cooling Degree Days'),
     ('gdd', 'Growing degree days'),
+    ('evap', 'Evaporation'),
+    ('wind', 'Wind Movement'),
 )
 
 F_ANALYSIS_CHOICES = (
