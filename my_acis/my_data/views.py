@@ -24,37 +24,8 @@ import WRCCDataApps
 import WRCCClasses
 import my_data.forms as forms
 
-
-acis_elements = defaultdict(dict)
-acis_elements ={'maxt':{'name':'maxt', 'name_long': 'Maximum Daily Temperature (F)', 'vX':'1'}, \
-              'mint':{'name':'mint', 'name_long': 'Minimum Daily Temperature (F)', 'vX':'2'}, \
-              'avgt': {'name':'avgt', 'name_long': 'Average Daily Temperature (F)', 'vX':'43'}, \
-              'obst':{'name':'obst', 'name_long': 'Observation Time Temperature (F)', 'vX':'3'}, \
-              'pcpn': {'name': 'pcpn', 'name_long':'Precipitation (In)', 'vX':'4'}, \
-              'snow': {'name': 'snow', 'name_long':'Snowfall (In)', 'vX':'10'}, \
-              'snwd': {'name': 'snwd', 'name_long':'Snow Depth (In)', 'vX':'11'}, \
-              'cdd': {'name': 'cdd', 'name_long':'Cooling Degree Days (F)', 'vX':'45'}, \
-              'hdd': {'name': 'hdd', 'name_long':'Heating Degree Days (F)', 'vX':'45'}, \
-              'gdd': {'name': 'gdd', 'name_long':'Growing Degree Days (F)', 'vX':'45'}}
-              #bug fix needed for cdd = 44 (WAITING FOR BILL, ALSO IN PLACES BELOW, eg in station_locator_app, also in AcisWS.py)
-acis_elements_list = [['maxt','Maximum Daily Temperature (F)'], ['mint','Minimum Daily Temperature (F)'],
-                      ['avgt','Average Daily Temperature (F)'], ['obst', 'Observation Time Temperature (F)'], \
-                      ['pcpn', 'Precipitation (In)'], ['snow', 'Snowfall (In)'], \
-                      ['snwd', 'Snow Depth (In)'], ['cdd', 'Cooling Degree Days (F)'], \
-                      ['hdd','Heating Degree Days (F)'], ['gdd', 'Growing Degree Days (F)']]
-
-state_choices = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', \
-                'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', \
-                'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', \
-                'NY', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', \
-                'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
 STATIC_URL = '/www/apps/csc/dj-projects/my_acis/static/'
 MEDIA_URL = '/www/apps/csc/dj-projects/my_acis/media/'
-
-month_names = ['January', 'February', 'March', 'April', 'May', 'June',\
-               'July', 'August', 'September', 'October', 'November', 'December']
-
-mon_lens = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 def test(request):
     context = {
@@ -102,13 +73,13 @@ def main(request):
         mon = '0%s' %str(month)
     else:
         mon = str(month)
-    day  = str(mon_lens[month -1])
+    day  = str(WRCCUtils.mon_lens[month -1])
     if len(day) == 1:
         day = '0%s' %day
     context['day'] = day
     context['month'] = month
     context['mon'] = mon
-    context['month_name'] = month_names[month - 1]
+    context['month_name'] = WRCCUtils.month_names_long[month - 1]
     context['state'] = state
     context['element'] = element
     return render_to_response('my_data/main_maves.html', context, context_instance=RequestContext(request))
@@ -188,13 +159,16 @@ def data_station(request):
     end_date = request.GET.get('end_date', None)
     elements = request.GET.get('elements', None)
     initial_params_0 = {}
+    initial_params_1 = {}
     if stn_id is not None:
-        initial_params_0['select_stations_by'] = 'stn_id'
-        context['stn_id'] = stn_id
-        context['hide_form0'] = True
-    if start_date is not None:context['start_date'] = start_date
-    if end_date is not None:context['end_date'] = end_date
-    if elements is not None:initial_params_0['elements'] = str(elements);context['elements'] = elements
+        initial_params_1['station_id'] = str(stn_id)
+        initial_params_0['select_stations_by'] = 'stn_id';initial_params_1['select_stations_by'] = 'stn_id'
+        context['stn_id'] = stn_id;context['hide_form0'] = True
+    if start_date is not None:context['start_date'] = start_date;initial_params_1['start_date'] = str(start_date)
+    if end_date is not None:context['end_date'] = end_date;initial_params_1['end_date'] = str(end_date)
+    if elements is not None:
+        initial_params_0['elements'] = str(elements);initial_params_1['elements'] = elements
+        context['elements'] = elements
 
     if initial_params_0:
         form0_point = set_as_form(request,'StationDataForm0', init=initial_params_0)
@@ -206,18 +180,7 @@ def data_station(request):
         if form0_point.is_valid() or stn_id is not None:
             context['form1_point_ready'] = True
             context['hide_form0'] = True
-            initial_params_1 = {}
-            stn_id = request.GET.get('stn_id', None)
-            start_date = request.GET.get('start_date', None)
-            end_date = request.GET.get('end_date', None)
-            elements = request.GET.get('elements', None)
-            if stn_id is not None:initial_params_1['station_id'] = str(stn_id);context['stn_id'] = stn_id
-            if start_date is not None:initial_params_1['start_date'] = str(start_date);context['start_date'] = start_date
-            if end_date is not None:initial_params_1['end_date'] = str(end_date);context['end_date'] = end_date
-            if elements is not None:initial_params_1['elements'] = elements;context['elements'] = elements
-            if stn_id is not None:
-                initial_params_1['select_stations_by'] = 'stn_id'
-            else:
+            if stn_id is None:
                 initial_params_1['select_stations_by'] = form0_point.cleaned_data['select_stations_by']
 
             if 'form0_point' in request.POST:
@@ -232,15 +195,6 @@ def data_station(request):
         context['form1_point'] = form1_point
         context['form1_point_ready'] = True
         context['hide_form0'] = True
-        stn_id = request.GET.get('stn_id', None)
-        start_date = request.GET.get('start_date', None)
-        end_date = request.GET.get('end_date', None)
-        elements = request.GET.get('elements', None)
-        if stn_id is not None:
-            context['stn_id'] = stn_id
-        if start_date is not None:context['start_date'] = start_date
-        if end_date is not None:context['end_date'] = end_date
-        if elements is not None:context['elements'] = elements
 
         if form1_point.is_valid():
             if 'show_flags' in form1_point.cleaned_data.keys() and form1_point.cleaned_data['show_flags'] == 'T':
@@ -299,11 +253,7 @@ def data_station(request):
                             context['link_to_metagraph'] = True
                 context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
                 if 'delimiter' in form1_point.cleaned_data.keys():
-                    if str(form1_point.cleaned_data['delimiter']) == 'comma':delimiter = ','
-                    if str(form1_point.cleaned_data['delimiter']) == 'tab':delimiter = ' '
-                    if str(form1_point.cleaned_data['delimiter']) == 'colon':delimiter = ':'
-                    if str(form1_point.cleaned_data['delimiter']) == 'space':delimiter = ' '
-                    if str(form1_point.cleaned_data['delimiter']) == 'pipe':delimiter = '|'
+                    delimiter = WRCCUtils.delimiters[str(form1_point.cleaned_data['delimiter'])]
                 else:
                     if form1_point.cleaned_data['data_format'] == 'json':
                         delimiter = None
@@ -313,7 +263,7 @@ def data_station(request):
                 context['delim'] = form1_point.cleaned_data['delimiter']
                 context['delimiter'] =  delimiter
                 #Output formats
-                select_stations_by = form1_point.cleaned_data['select_stations_by']
+                select_stations_by = str(form1_point.cleaned_data['select_stations_by'])
                 if select_stations_by == 'stnid':
                     file_info =['StnId', form1_point.cleaned_data['station_id']]
                     context['by_type'] = 'Individual Station: %s' %str(form1_point.cleaned_data['station_id'])
@@ -533,7 +483,7 @@ def data_gridded(request):
             element_list = form1_grid.cleaned_data['elements']
             context['element_list'] = element_list
             for el in element_list:
-                elems_long.append(acis_elements[el]['name_long'])
+                elems_long.append(WRCCUtils.acis_elements_dict[el]['name_long'])
             context['elems_long'] = elems_long
             context['grid'] = str(form1_grid.cleaned_data['grid']);grid=str(form1_grid.cleaned_data['grid'])
 
@@ -617,11 +567,7 @@ def data_gridded(request):
                                 context['state'] = form1_grid.cleaned_data['state']
 
             if 'delimiter' in form1_grid.cleaned_data.keys():
-                if str(form1_grid.cleaned_data['delimiter']) == 'comma':delimiter = ','
-                if str(form1_grid.cleaned_data['delimiter']) == 'tab':delimiter = ' '
-                if str(form1_grid.cleaned_data['delimiter']) == 'colon':delimiter = ':'
-                if str(form1_grid.cleaned_data['delimiter']) == 'space':delimiter = ' '
-                if str(form1_grid.cleaned_data['delimiter']) == 'pipe':delimiter = '|'
+                delimiter = WRCCUtils.delimiters[str(form1_grid.cleaned_data['delimiter'])]
             else:
                 delimiter = ' '
             context['delimiter'] = delimiter
@@ -633,14 +579,11 @@ def data_gridded(request):
             if select_grid_by == 'bbox':file_info =['bounding_box', re.sub(',','_',form1_grid.cleaned_data['bounding_box'])]
             context['file_info'] = file_info
             if form1_grid.cleaned_data['data_format'] == 'dlm':
-                #return export_to_file_grid(request, data, el_list, file_info, delimiter, 'dat')
                 return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'dat', request=request,file_info=file_info)
             elif form1_grid.cleaned_data['data_format'] == 'clm':
-                #return export_to_file_grid(request, data, el_list, file_info, delimiter, 'txt')
                 return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'txt', request=request,file_info=file_info)
 
             elif form1_grid.cleaned_data['data_format'] == 'xl':
-                #return export_to_file_grid(request, data, el_list, file_info, delimiter, 'xls')
                 return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'xls', request=request,file_info=file_info)
             else:
                 return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
@@ -693,7 +636,7 @@ def apps_home(request):
     if element is None: element='mint'
     month = int(datetime.date.today().month)
     context['month'] = month
-    context['month_name'] = month_names[month - 1]
+    context['month_name'] = WRCCUtils.month_names_long[month - 1]
     context['state'] = state
     context['element'] = element
     return render_to_response('my_data/apps/home.html', context, context_instance=RequestContext(request))
@@ -798,7 +741,7 @@ def monthly_aves(request):
     context = {
         'title': 'Monthly Averages',
         'apps_page':True,
-        'acis_elements':dict(acis_elements)
+        'acis_elements':dict(WRCCUtils.acis_elements_dict)
     }
     stn_id = request.GET.get('stn_id', None)
     start_date = request.GET.get('start_date', None)
@@ -1013,19 +956,19 @@ def clim_sum_maps(request):
                     'edate': form1.cleaned_data['end_date']}
             if form1.cleaned_data['element'] == 'gddxx':
                 elem = 'gdd%s' %str(form1.cleaned_data['base_temperature_gddxx'])
-                context['elems_long'] = acis_elements['gdd']['name_long']
+                context['elems_long'] = WRCCUtils.acis_elements_dict['gdd']['name_long']
                 context['base_temp'] = str(form1.cleaned_data['base_temperature_gddxx'])
             elif form1.cleaned_data['element'] == 'hddxx':
                 elem = 'hdd%s' %str(form1.cleaned_data['base_temperature_hddxx'])
-                context['elems_long'] = acis_elements['hdd']['name_long']
+                context['elems_long'] = WRCCUtils.acis_elements_dict['hdd']['name_long']
                 context['base_temp'] = str(form1.cleaned_data['base_temperature_hddxx'])
             elif form1.cleaned_data['element'] == 'cddxx':
                 elem = 'cdd%s' %str(form1.cleaned_data['base_temperature_cddxx'])
-                context['elems_long'] = acis_elements['cdd']['name_long']
+                context['elems_long'] = WRCCUtils.acis_elements_dict['cdd']['name_long']
                 context['base_temp'] = str(form1.cleaned_data['base_temperature_cddxx'])
             else:
                 elem = str(form1.cleaned_data['element'])
-                context['elems_long'] = acis_elements[elem]['name_long']
+                context['elems_long'] = WRCCUtils.acis_elements_dict[elem]['name_long']
             params['elems'] = [{'name':elem}]
             if 'state' in form1.cleaned_data.keys():
                 params['state'] = form1.cleaned_data['state']
@@ -1151,7 +1094,7 @@ def grid_point_time_series(request):
             element, base_temp = WRCCUtils.get_el_and_base_temp(form0.cleaned_data['element'])
             if base_temp is not None:
                 context['base_temp'] = base_temp
-            context['element_long'] = acis_elements[element]['name_long']
+            context['element_long'] = WRCCUtils.acis_elements_dict[element]['name_long']
             context['element'] = form0.cleaned_data['element']
             context['lat'] = form0.cleaned_data['lat']
             context['lon'] = form0.cleaned_data['lon']
@@ -1304,7 +1247,7 @@ def station_locator_app(request):
                         else:
                             pass
                     except:
-                        el_vX_list.append(acis_elements[el]['vX'])
+                        el_vX_list.append(WRCCUtils.acis_elements_dict[el]['vX'])
 
                 stn_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=form1.cleaned_data['constraints'])
             else:
@@ -1414,7 +1357,7 @@ def sodxtrmts(request):
                 if data_params['element'] == 'dtr':
                     element_name = 'Temperature Range (F)'
                 else:
-                    element_name = acis_elements[data_params['element']]['name_long']
+                    element_name = WRCCUtils.acis_elements_dict[data_params['element']]['name_long']
                 if 'base_temperature' in form0.cleaned_data.keys():
                     base_temperature = form0.cleaned_data['base_temperature']
                 else:
@@ -1564,7 +1507,7 @@ def sodxtrmts(request):
                 if data_params['element'] == 'dtr':
                     element_name = 'Temperature Range (F)'
                 else:
-                    element_name = acis_elements[data_params['element']]['name_long']
+                    element_name = WRCCUtils.acis_elements_dict[data_params['element']]['name_long']
                 if 'base_temperature' in form1.cleaned_data.keys():
                     base_temperature = form1.cleaned_data['base_temperature']
                 else:
@@ -1745,7 +1688,7 @@ def sodsumm(request):
                             legend = ['Base 65', 'Base 60', 'Base 57', 'Base 55', 'Base 50']
                         else:
                             legend = ['Base 55', 'Base 57', 'Base 60', 'Base 65', 'Base 70']
-                        table_name_long = acis_elements[table]['name_long']
+                        table_name_long = WRCCUtils.acis_elements_dict[table]['name_long']
                         table_data = [[] for i in range(5)]
                         for i in range(5):
                             for k in range(len(cats)):
@@ -1756,7 +1699,7 @@ def sodsumm(request):
                     elif tab == 'gdd':
                         units = 'Fahrenheit'
                         colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-                        table_name_long = acis_elements[table]['name_long']
+                        table_name_long = WRCCUtils.acis_elements_dict[table]['name_long']
                         legend = ['Base 40', 'Base 45', 'Base 50', 'Base 55', 'Base 60']
                         table_data = [[] for i in range(5)]
                         for i in range(5):
@@ -1856,7 +1799,10 @@ def sodsumm(request):
                 context['json_file'] = json_file
     return render_to_response('my_data/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
 
+##############################
 #Utlities
+##############################
+
 def set_sodsumm_headers(table_list):
     headers = {}
     def set_header(table):
@@ -1900,99 +1846,12 @@ def set_as_form(request, f_name, init = None):
             form = form_class(initial={'stn_id': None})
     return form
 
-def export_to_file_point(request, data, dates, station_names, station_ids, elements, file_info, delim, file_extension):
-    if file_extension in ['dat', 'txt']:
-        import csv
-        response = HttpResponse(mimetype='text/csv')
-        #response = HttpResponse(mimetype='text/csv')
-        #response['Content-Disposition'] = 'attachment;filename=export.%s' % file_extension
-        response['Content-Disposition'] = 'attachment;filename=%s_%s.%s' % (file_info[0], file_info[1],file_extension)
-        writer = csv.writer(response, delimiter=delim )
-        for stn, dat in data.iteritems():
-            row = ['Station ID: %s' %str(station_ids[stn]), 'Station_name: %s' %str(station_names[stn])]
-            writer.writerow(row)
-            row = ['date']
-            for el in elements:row.append(el)
-            writer.writerow(row)
-            for j, vals in enumerate(dat):
-                row = [dates[j]]
-                if len(station_ids) == 1:
-                    for val in vals[1:]:row.append(val)
-                else:
-                    for val in vals:row.append(val)
-                writer.writerow(row)
-    else: #Excel
-        from xlwt import Workbook
-        wb = Workbook()
-        for stn, dat in data.iteritems():
-            ws = wb.add_sheet('Station_%s %s' %(str(station_ids[stn]), str(stn)))
-            #Header
-            ws.write(0, 0, 'Date')
-            for k, el in enumerate(elements):ws.write(0, k+1, el)
-            #Data
-            for j, vals in enumerate(dat):
-                ws.write(j+1, 0, dates[j])
-                if len(station_ids) == 1:
-                    for l,val in enumerate(vals[1:]):ws.write(j+1, l+1, val) #row, column, label
-                else:
-                    for l,val in enumerate(vals):ws.write(j+1, l+1, val) #row, column, label
-        response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-        #response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-        response['Content-Disposition'] = 'attachment;filename=%s_%s.%s' % (file_info[0], file_info[1],file_extension)
-        wb.save(response)
-
-    return response
-
-
-def export_to_file_grid(request, data, elements, file_info, delim, file_extension):
-    if file_extension in ['dat', 'txt']:
-        import csv
-        response = HttpResponse(mimetype='text/csv')
-        response['Content-Disposition'] = 'attachment;filename=%s_%s.%s' % (file_info[0], file_info[1],file_extension)
-        writer = csv.writer(response, delimiter=delim )
-        row = ['Date', 'Lat', 'Lon', 'Elev']
-        for el in elements:row.append(el)
-        writer.writerow(row)
-        for date_idx, date_vals in enumerate(data):
-            writer.writerow(date_vals)
-    else: #Excel
-        from xlwt import Workbook
-        wb = Workbook()
-        #Note row number limit is 65536 in some excel versions
-        row_number = 0
-        flag = 0
-        sheet_counter = 0
-        for date_idx, date_vals in enumerate(data): #row
-            for j, val in enumerate(date_vals):#column
-                if row_number == 0:
-                    flag = 1
-                else:
-                    row_number+=1
-                if row_number == 65535:flag = 1
-
-                if flag == 1:
-                    sheet_counter+=1
-                    #add new workbook sheet
-                    ws = wb.add_sheet('Sheet_%s' %sheet_counter)
-                    #Header
-                    ws.write(0, 0, 'Date')
-                    ws.write(0, 1, 'Lat')
-                    ws.write(0, 2, 'Lon')
-                    ws.write(0, 3, 'Elev')
-                    for k, el in enumerate(elements):ws.write(0, k+4, el)
-                    row_number = 1
-                    flag = 0
-
-
-                ws.write(date_idx+1, j, str(val))#row, column, label
-        response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-        response['Content-Disposition'] = 'attachment;filename=%s_%s.%s' % (file_info[0], file_info[1], file_extension)
-        wb.save(response)
-
-    return response
-
 def run_external_script(cmd):
     """ Capture a command's standard output."""
     import subprocess
     out, err = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
     return out, err
+
+#########################
+#LIST AND DICTIONARIES
+#########################
