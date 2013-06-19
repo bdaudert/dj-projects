@@ -27,7 +27,11 @@
                 <td>{{field.label}}:</td>
                 <td>{{field}}</td>
                 <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                <div class="pop-up"><p>{{field.help_text}}</p></div>
+                {%ifequal field.label "summary"%}
+                    <img src="{{MEDIA_URL}}img/SxtrSummary.png" id="ACISElementChoices" width="450" height="450" border="0">
+                {%else%}
+                    <div class="pop-up"><p>{{field.help_text}}</p></div>
+                {%endifequal%}
                 </td>
             </tr>
             {%if field.errors%}
@@ -56,10 +60,68 @@
             $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
         </script>
         <div id="how_to" style="display:none;">
-            <p>Coming soon! <img class="icon" src="{{MEDIA_URL}}img/HappyFace.png"></p>
+            <p>Pick the months that you would like to visualize.</p>
+            <p>Choose a summary otion:</p>
+            <p>
+                <b>Maximum over months</b> --<br />
+                Plots the maximum value of the chosen months for each year in the time period.<br />
+                <b>Minimum over months</b> --<br />
+                Plots the minimum value of the chosen months for each year in the time period.<br />
+                <b>Sum over months</b> --<br />
+                Plots the sum of the values of the chosen months for each year in the time period.<br />
+                <b>Average over months</b> --<br />
+                Plots the averages of the values of the chosen months for each year in the time period.<br />
+                <b>Plot months separately</b> --<br />
+                Generates a plot of time series for each of the chosen months.<br />
+            </p>
         </div>
-       
 
+        {%if search_params%}
+            <p class="pop_link" onClick="ShowHide('search_params')"><u>Show/hide the search parameters</u></p>
+            <div id="search_params" style="display:none;">
+                <p class="error"><b>Search Parameters</b>:</p>
+                {%for key, val in search_params.items%}
+                <p><b>{{key}}</b>: {{val}}</p>
+                {%endfor%}
+            </div>
+        {%endif%}
+        
+        <p class="pop_link" onClick="ShowHide('original_data')"><u>Show/hide the original data</u></p>
+        <div id='original_data' style="display:none;">
+            <table id="printable_table" cellpadding="none">
+            <tr>
+            <td><font size="+2">YEAR</font></td>
+            {%for mon in month_list%}
+                {%if forloop.last %}
+                    <td colspan="2"><font size="+2"></td>
+                    <td colspan="2"><font size="+2"></td>
+                    <td colspan="2"><font size="+2"></td>
+                {%endif%}
+                <td colspan="2"><font size="+2">{{mon}}</font></td>
+            {%endfor%}
+            </tr>
+            {%for yr_data in data %}
+                {%if yr_data.0 == "MEAN"%}
+                    <tr><td></td><td></td></tr>
+                    <tr><td></td><td></td></tr>
+                    <tr><td></td><td></td></tr>
+                    <tr><td></td><td></td></tr>
+                    <tr><td></td><td></td></tr>
+                    <tr><td></td><td></td></tr>
+                {%endif%}
+                <tr>
+                {%for dat in yr_data%}
+                    {%if forloop.revcounter0 == 1%}
+                        <td></td><td></td>
+                        <td></td><td></td>
+                        <td></td><td></td>
+                    {%endif%}
+                    <td>{{dat}}</td>
+                {%endfor%}
+                </tr>
+            {%endfor%}
+            </table>
+        </div>
         {%if generate_plots%}
             <!--<input type="text" id="test" name="test" value="blah">-->
             <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">
@@ -70,6 +132,7 @@
             <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts-visualize.js"></script>
         {%endif%}
     </div><!--end center-->
+
 
 </div><!--end container-->
 

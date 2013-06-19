@@ -8,7 +8,7 @@ from django.forms.widgets import RadioSelect, CheckboxSelectMultiple
 
 import datetime
 import re
-import WRCCUtils
+import WRCCUtils, WRCCData
 ###########################################
 #Utilities
 ############################################
@@ -69,61 +69,7 @@ SDMM_ELEMENT_CHOICES = (
     ('hc', 'Degree Days'),
     ('g', 'Growing Degree Days'),
 )
-#Sodxtrmts
-SUMMARY_CHOICES = (
-    ('max', 'Maximum of months'),
-    ('min', 'Minimium of months'),
-    ('sum', 'Sum of months'),
-    ('mean', 'Avererage of months'),
-    ('individual', 'Plot months separately')
-)
 
-MONTH_CHOICES = (
-    ('01', 'January'),
-    ('02', 'February'),
-    ('03', 'March'),
-    ('04', 'April'),
-    ('05', 'May'),
-    ('06', 'June'),
-    ('07', 'July'),
-    ('08', 'August'),
-    ('09', 'September'),
-    ('10', 'October'),
-    ('11', 'November'),
-    ('12', 'December'),
-)
-
-SXTR_ANALYSIS_CHOICES = (
-    ('mmax', 'Monthly Maximum'),
-    ('mmin', 'Monthly Minimum'),
-    ('mave', 'Monthly Average'),
-    ('sd', 'Standard Deviation'),
-    ('ndays', 'Number of Days'),
-    ('rmon', 'Range during Month'),
-    ('msum', 'Monthly Sum'),
-)
-
-SXTR_ELEMENT_CHOICES = (
-    ('pcpn', 'Precipitation'),
-    ('snow', 'Snowfall'),
-    ('snwd', 'Snowdepth'),
-    ('maxt', 'Maximum Temperature '),
-    ('mint', 'Minimum Temperature'),
-    ('avgt', 'Mean Temperature'),
-    ('dtr', 'Temperature Range'),
-    ('hdd', 'Heating Degree Days'),
-    ('cdd', 'Cooling Degree Days'),
-    ('gdd', 'Growing degree days'),
-    ('evap', 'Evaporation'),
-    ('wind', 'Wind Movement'),
-)
-
-F_ANALYSIS_CHOICES = (
-    ('p', 'Pearson Type III'),
-    ('g', 'Generalized Extreme Value'),
-    #('b', 'Beta-P'),
-    #('c', 'Censored Gamma'),
-)
 
 #Monthly Averages
 TIME_PERIOD_CHOICES = (
@@ -268,32 +214,18 @@ DELIMITER_CHOICES = (
     ('pipe', 'Pipe (|)'),
 )
 
-#################
-#Element Descriptions
-##################
-acis_elements = acis_elements ={
-    'maxt': 'Maximum Daily Temperature (F)',
-    'mint': 'Minimum Daily Temperature (F)',
-    'avgt': 'Average Daily Temperature (F)',
-    'obst': 'Observation Time Temperature (F)',
-    'pcpn':'Precipitation (In)',
-    'snow':'Snowfall (In)',
-    'snwd':'Snow Depth (In)',
-    'cdd':'Cooling Degree Days (F, Base 65)',
-    'hdd':'Heating Degree Days (F, Base 65)',
-    'gdd':'Growing Degree Days (F, Base 50)',
-    'cddXX':'Cooling Degree Days (F, Base XX)',
-    'hddXX':'Heating Degree Days (F, Base XX)',
-    'gddXX':'Growing Degree Days (F, Base XX)'
-}
-acis_element_list = ''
-for el, el_long in acis_elements.iteritems():
-    acis_element_list = acis_element_list + '%s : %s\n' %(el, el_long)
 ######################################################################
 #Help texts
 ######################################################################
+#################
+#Element Descriptions
+##################
+acis_els = ''
+for el in WRCCData.acis_elements_dict.keys():
+    acis_els+='%s : %s\n' %(el, WRCCData.acis_elements_dict[el]['name_long'])
+
 help_date = 'yyyymmdd, yyyy-mm-dd or yyyy/mm/dd'
-help_comma_elements = 'Comma separated list of climate elements. Available elements: \n %s' %acis_element_list
+help_comma_elements = 'Comma separated list of climate elements. Available elements: \n %s' %acis_els
 help_acis_elements = 'Available climate elements.'
 help_grids = 'Gridded/modeled datasets available in ACIS.'
 help_stn_selection = 'Defines the type of search area.'
@@ -409,7 +341,7 @@ class MyStateField(forms.CharField):
     def validate(self, states):
         states_list = states.split(',')
         for state in states_list:
-            if state not in WRCCUtils.fips_state_keys.keys() and state not in WRCCUtils.state_choices:
+            if state not in WRCCData.fips_state_keys.keys() and state not in WRCCData.state_choices:
                 raise forms.ValidationError('Need comma separated list of valid US states. Not a valid US State: %s' % state)
 #for background data requests, see GridDataForm3, StationDataForm3
 class MyNameField(forms.CharField):
@@ -568,16 +500,21 @@ class SodxtrmtsForm(SodForm):
     def __init__(self, *args, **kwargs):
         super(SodxtrmtsForm, self).__init__(*args, **kwargs)
         self.fields.keyOrder = ['station_ID', 'start_year', 'end_year', 'element', 'base_temperature', 'monthly_statistic', 'max_missing_days', 'start_month', 'departures_from_averages', 'frequency_analysis']
-    element = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='pcpn', help_text = 'Climate Element')
+    element = forms.ChoiceField(choices=WRCCData.SXTR_ELEMENT_CHOICES, initial='pcpn', help_text = 'Climate Element')
     base_temperature = forms.IntegerField(initial=65, help_text = 'Base Temperature for degree day element.')
     start_year = MyYearField(max_length=4, min_length=3, initial='POR', help_text='yyyy or "POR" for period of record')
     end_year = MyYearField(max_length=4, min_length=3, initial='2013', help_text='yyyy or "POR" for period of record')
-    monthly_statistic = forms.ChoiceField(choices=SXTR_ANALYSIS_CHOICES, initial='msum', help_text = 'Analysis Type')
+    monthly_statistic = forms.ChoiceField(choices=WRCCData.SXTR_ANALYSIS_CHOICES, initial='msum', help_text = 'Analysis Type')
     max_missing_days = forms.IntegerField(initial=5, help_text=HELP_TEXTS['max_missing_days'])
-    start_month = forms.ChoiceField(choices=MONTH_CHOICES, initial='01',help_text = 'Start the analysis on this month. Default is January.')
+    start_month = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial='01',help_text = 'Start the analysis on this month. Default is January.')
     departures_from_averages= forms.ChoiceField(choices = ([('T', 'Yes'),('F', 'No'),]), initial = 'F', help_text = 'Express results as departures from averages.')
     frequency_analysis = forms.ChoiceField(choices = ([('F', 'False'),]), initial = 'F', help_text='Perform Frequency Analysis. Coming Soon!')
 
+class SodxtrmtsVisualizeForm(forms.Form):
+    months = forms.MultipleChoiceField(widget=CheckboxSelectMultiple, choices=WRCCData.MONTH_CHOICES, initial=WRCCData.MONTH_CHOICES[0], help_text = 'Choose one or more months to analyze.')
+    summary = forms.ChoiceField(choices=WRCCData.SXTR_SUMMARY_CHOICES, initial='mean', help_text='How to summarize the months.')
+
+'''
 class SodxtrmtsVisualizeForm(forms.Form):
     def __init__(self, *args, **kwargs):
         element = kwargs.get('initial', {}).get('element', None)
@@ -592,10 +529,11 @@ class SodxtrmtsVisualizeForm(forms.Form):
         self.fields['station_ID'].widget.attrs = {'readonly':True, 'style':readonly_style}
         self.fields['element'] = forms.CharField(initial=element,help_text='Climate Element')
         self.fields['element'].widget.attrs = {'readonly':True, 'style':readonly_style}
-        self.fields['months'] = forms.MultipleChoiceField(widget=CheckboxSelectMultiple, choices=MONTH_CHOICES, initial= MONTH_CHOICES[0], help_text = 'Choose one or more months to analyze.')
-        #self.fields['start_month'] = forms.ChoiceField(choices=MONTH_CHOICES, initial='01', required=False, help_text = 'Start the visualization on this month.')
-        #self.fields['end_month'] = forms.ChoiceField(choices=MONTH_CHOICES, initial='02', required=False, help_text = 'End the visualization on this month.')
-        self.fields['summary'] = forms.ChoiceField(choices=SUMMARY_CHOICES, initial='mean', help_text='How to summarize the months.')
+        self.fields['months'] = forms.MultipleChoiceField(widget=CheckboxSelectMultiple, choices=WRCCData.MONTH_CHOICES, initial=WRCCData.MONTH_CHOICES[0], help_text = 'Choose one or more months to analyze.')
+        #self.fields['start_month'] = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial='01', required=False, help_text = 'Start the visualization on this month.')
+        #self.fields['end_month'] = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial='02', required=False, help_text = 'End the visualization on this month.')
+        self.fields['summary'] = forms.ChoiceField(choices=WRCCData.SXTR_SUMMARY_CHOICES, initial='mean', help_text='How to summarize the months.')
+'''
 
 '''
 #TWO FORM version of Sodxtrmts
@@ -603,8 +541,8 @@ class SodxtrmtsForm0(SodForm):
     def __init__(self, *args, **kwargs):
         super(SodxtrmtsForm0, self).__init__(*args, **kwargs)
         self.fields.keyOrder = ['station_ID', 'start_year', 'end_year', 'element', 'monthly_statistic', 'frequency_analysis']
-    monthly_statistic = forms.ChoiceField(choices=SXTR_ANALYSIS_CHOICES, initial='msum', help_text = 'Analysis Type')
-    element = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='pcpn', help_text = 'Climate Element')
+    monthly_statistic = forms.ChoiceField(choices=WRCCData.SXTR_ANALYSIS_CHOICES, initial='msum', help_text = 'Analysis Type')
+    element = forms.ChoiceField(choices=WRCCData.SXTR_ELEMENT_CHOICES, initial='pcpn', help_text = 'Climate Element')
     frequency_analysis = forms.ChoiceField(choices = ([('F', 'False'),]), initial = 'F', help_text='Perform Frequency Analysis. Coming Soon!')
 
 class SodxtrmtsForm1(forms.Form):
@@ -639,12 +577,12 @@ class SodxtrmtsForm1(forms.Form):
             self.fields['threshold_low_for_between'] = forms.DecimalField(initial = 0.0,required=False, help_text = 'Set this lower threshold if you chose "Between" above')
             self.fields['threshold_high_for_between'] = forms.DecimalField(initial = 1.0,required=False, help_text = 'Set this upper threshold if you chose "Between" above')
         self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False, help_text=HELP_TEXTS['max_missing_days'])
-        self.fields['start_month'] = forms.ChoiceField(choices=MONTH_CHOICES, initial='01', required=False, help_text = 'Start the analysis on this month. Default is January.')
+        self.fields['start_month'] = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial='01', required=False, help_text = 'Start the analysis on this month. Default is January.')
         self.fields['departures_from_averages'] = forms.ChoiceField(choices = ([('T', 'Yes'),('F', 'No'),]), initial = 'F', help_text = 'Express results as departures from averages.')
         self.fields['frequency_analysis'] = forms.CharField(initial=frequency_analysis, help_text='Perform Frequency Analysis. Coming Soon!')
         self.fields['frequency_analysis'].widget.attrs = {'readonly':True, 'style':readonly_style}
         if frequency_analysis == 'T':
-            self.fields['frequency_analysis_type'] = forms.ChoiceField(choices=F_ANALYSIS_CHOICES, required=False, initial='p', help_text='Frequency Analysis Type')
+            self.fields['frequency_analysis_type'] = forms.ChoiceField(choices=WRCCData.F_ANALYSIS_CHOICES, required=False, initial='p', help_text='Frequency Analysis Type')
 
 '''
 ###############

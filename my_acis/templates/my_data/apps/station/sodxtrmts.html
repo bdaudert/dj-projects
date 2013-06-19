@@ -105,7 +105,7 @@
             <p>If you chose any of the Degree Day elements, please specify your base temperature.</p>
             <p>The analysis type defines the type of statistics  that will be generated.
             <ul>
-                <p style="color:#006699;">Monthly Maximum --<br /> 
+                <p>Monthly Maximum --<br /> 
                 Computes monthly maximum of the climate element for each month in the period spanning start and end year.<br />
                 Monthly Minimum -- <br />
                 Computes monthly minimum of the climate element for each month in the period spanning start and end year.<br />
@@ -136,46 +136,55 @@
         </div>
         <br />
         {%if results%}
-            <p>
-            <p class="error"><b>Search Parameters</b>:</p>
-            <p><b>Station ID</b>: {{station_ID}}, <b> Station Name</b>: {{station_name}}</br>
-            <b>Start Year</b> {{start_year}} <b>End Year</b> {{end_year}}</br>
-            <b>Element</b> {{search_params.el_type}}, <b>Monthly Statistic: </b> {{search_params.monthly_statistic}}</br>
-            <b>Maximum Missing Days Allowed: </b> {{search_params.max_missing_days}}, <b>Start Month: </b> {{serach_params.start_month}}</br>
-            </p>
-            </br>
+            <!--Graphics-->
+            <p class="pop_link" onClick="ShowHide('range_plot')"><u>Show/hide plot of mean and range</u></p>
+            <div id="range_plot" style="display:none;">
+                <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+                <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
+                <div id="graph_container" style="height:350px;width:600px;"></div>
+                <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts.js"></script>
+                <br / >
+            </div>
 
-              <!--Graphics-->
-              <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-              <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
-              <div id="graph_container" style="height:300px;width:80%;"></div>
-              <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts.js"></script>
-              <br / >
-              <p align="left">
-              <b>Missing days allowed</b><br />Any month with less than or equal this user selected number will be included in the analysis.<br /> 
-              Monthly information for months with more than this number of missing values will be displayed, but not used. <br />
-              The letter indicates the number of missing days <br />
-              (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).
-              <br /></br />
-              <b>Summary Table</b><br />
-              <b>Mean</b> – <br />
-              Column mean of all months that meet criteria for number of missing days.<br /> 
-              Months with excess missing days not used.<br />
-              <b>S.D.</b> – <br />
-              Standard deviation of the column values, using only months that meet criteria for missing days.<br />
-              <b>SKW10</b> – <br />
-              Shows skewness coefficient of the values in this column, using only those months that meet criteria for missing data. <br />
-              Value is multiplied by 10.<br />
-              <b>Max</b> – <br />
-              Maximum of column values using only those months that meet missing days criteria.<br />
-              <b>Min</b> – <br />
-              Minimum of column values using only those months that meet missing days criteria.<br />
-              <b>Years</b> – <br />
-              Number of years with months that meet criteria for missing days.
-              </p>
+            {%if search_params%}
+                <p class="pop_link" onClick="ShowHide('search_params')"><u>Show/hide the search parameters</u></p>
+                <div id="search_params" style="display:none;">
+                <p class="error"><b>Search Parameters</b>:</p>
+                {%for key, val in search_params.items%}
+                <p><b>{{key}}</b>: {{val}}</p>
+                {%endfor%}
+            </div>
+            {%endif%}
+
+              <p class="pop_link" onClick="ShowHide('table_info')"><u>Show/hide information about the table</u></p>
+               <div id="table_info" style="display:none;">
+            
+                <p align="left">
+                <b>Missing days allowed</b><br />Any month with less than or equal this user selected number will be included in the analysis.<br /> 
+                Monthly information for months with more than this number of missing values will be displayed, but not used. <br />
+                The letter indicates the number of missing days <br />
+                (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).
+                <br /></br />
+                <b>Summary Table</b><br />
+                <b>Mean</b> – <br />
+                Column mean of all months that meet criteria for number of missing days.<br /> 
+                Months with excess missing days not used.<br />
+                <b>S.D.</b> – <br />
+                Standard deviation of the column values, using only months that meet criteria for missing days.<br />
+                <b>SKW10</b> – <br />
+                Shows skewness coefficient of the values in this column, using only those months that meet criteria for missing data. <br />
+                Value is multiplied by 10.<br />
+                <b>Max</b> – <br />
+                Maximum of column values using only those months that meet missing days criteria.<br />
+                <b>Min</b> – <br />
+                Minimum of column values using only those months that meet missing days criteria.<br />
+                <b>Years</b> – <br />
+                Number of years with months that meet criteria for missing days.
+                </p>
+             </div>
             
             <!-- One tab per element -->
-            <img class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/visualize/?station_ID={{station_ID}}&element={{element}}&json_file={{json_file}}" style="font-size:x-large;">Generate Time Series Plots for this data</a>
+            <img class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/visualize/?station_ID={{station_ID}}&element={{element}}&json_file={{json_file}}" style="font-size:large;">Generate Time Series Plots for this data</a>
             <table id="printable_table" cellpadding="none">
             <tr>
             <td><font size="+2">YEAR</font></td>

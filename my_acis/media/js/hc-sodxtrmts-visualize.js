@@ -18,11 +18,10 @@ $(function () {
             var stn_id = datadict.stn_id;
             //Depending on summary, define series to be plotted
             var series_data = [];
-            var Type = 'area';
             var Start = Date.UTC(parseInt(datadict.start_date),0,01);
             var Interval = 365 * 24 * 3600000; // 1 year
             if (summary != 'individual'){
-                var series = {'type':Type, 'pointStart':Start,'pointInterval':Interval};
+                var series = {'pointStart':Start,'pointInterval':Interval};
                 //Define series name
                 if (summary == 'max'){
                     series['name'] = 'Maximum of monthly values';
@@ -66,12 +65,15 @@ $(function () {
                         data.push(null);
                     }    
                 } //end for yr_idx
+                // Find max/min (needed to set plot properties)
+                var data_max = Math.max.apply(Math,data);
+                var data_min = Math.min.apply(Math,data);
                 series['data'] = data;
                 series_data.push(series);
             }
             else { //summary = indiviual
                 for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
-                    var series = {'name':month_names[mon_idx],'type':Type,'pointStart':Start,'pointInterval':Interval, 'fillOpacity':'0.05'};
+                    var series = {'name':month_names[mon_idx],'pointStart':Start,'pointInterval':Interval};
                     var data =  [];
                     for (var yr_idx=0;yr_idx<datadict.data.length - 6;yr_idx++) {
                         var val = datadict.data[yr_idx][2*month_list[mon_idx] - 1]
@@ -84,6 +86,21 @@ $(function () {
                     }
                     series['data'] =  data;
                     series_data.push(series);
+                    //Find max/min of data (needed to set plot properties)
+                    if (mon_idx == 0){
+                        var data_max = Math.max.apply(Math,data);
+                        var data_min = Math.min.apply(Math,data);
+                    }
+                    else{
+                        max = Math.max.apply(Math,data);
+                        min = Math.min.apply(Math,data);
+                        if (max > data_max){
+                            data_max = max;
+                        }
+                    if (min < data_min){
+                            data_min = min;
+                        }
+                    }
                 }
             }
 
@@ -94,30 +111,25 @@ $(function () {
                     xAxisText+= month_names[parseInt(mon)] + '  '
                 }
             }
-            if (datadict.element == 'maxt' || datadict.element == 'mint' || datadict.element == 'avgt' || datadict.element == 'dtr'){
-                var tickInterval = 5;
+            if (data_max != null && data_min != null){
+                var tickInterval = precise_round((data_max - data_min)/10, 1);
             }
-            else if (datadict.element == 'hdd' || datadict.element == 'cdd' || datadict.element == 'gdd'){
-                var tickInterval = 50;
-            }
-            else { 
-                //snow,snwd,pcpn
-                var tickInterval = 0.1;
+            else {
+                var tickInterval = null;
             }
             //Define Chart
             chart = new Highcharts.Chart({
                 chart: {
-                    renderTo: 'container',
-                    zoomType: 'x',
-                    spacingRight: 20
+                    type:'line',
+                    renderTo: 'container'
                 },
                 title: {
                     text:  datadict.element_name
                 },
+                
                 subtitle: {
-                    text: document.ontouchstart === undefined ?
-                        'Click and drag in the plot area to zoom in' :
-                        'Drag your finger over the plot to zoom in'
+                    //text: data_max + ', ' + data_min
+                    text: 'Station: (' +  stn_id + ') ' + datadict.stn_name
                 },
                 credits: {
                         href: 'http://wrcc.dri.edu/',
@@ -147,35 +159,6 @@ $(function () {
                 },
                 legend: {
                     enabled: true
-                },
-                plotOptions: {
-                    area: {
-                        /*
-                        fillColor: {
-                            linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
-                            stops: [
-                                [0, Highcharts.getOptions().colors[0]],
-                                [1, 'rgba(2,0,0,0)']
-                            ]
-                        },
-                        */
-                        lineWidth: 1,
-                        marker: {
-                            enabled: false,
-                            states: {
-                                hover: {
-                                    enabled: true,
-                                    radius: 5
-                                }
-                            }
-                        },
-                        shadow: false,
-                        states: {
-                            hover: {
-                                lineWidth: 1
-                            }
-                        }
-                    }
                 },
                 series:series_data 
             });//end chart

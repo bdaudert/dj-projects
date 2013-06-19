@@ -186,6 +186,10 @@ ul.navbar a {
     color: #33CCFF;
 }
 
+.pop_link {
+    color:#0000FF;
+}
+
 .pop_link:hover {
     color: #33CCFF;
 }
