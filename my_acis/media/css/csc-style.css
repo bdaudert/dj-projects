@@ -91,6 +91,10 @@ a#warning {
     color:#FF00FF;
 }
 
+table.right_aligned td {
+    text-align:right;
+}
+
 table.dashboard {
     /*border:1px solid #006666;*/
     text-align:center;

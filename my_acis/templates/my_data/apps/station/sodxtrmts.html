@@ -185,7 +185,7 @@
             
             <!-- One tab per element -->
             <img class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/visualize/?station_ID={{station_ID}}&element={{element}}&json_file={{json_file}}" style="font-size:large;">Generate Time Series Plots for this data</a>
-            <table id="printable_table" cellpadding="none">
+            <table id="printable_table" class="right_aligned" cellpadding="none">
             <tr>
             <td><font size="+2">YEAR</font></td>
             {%for mon in month_list%}

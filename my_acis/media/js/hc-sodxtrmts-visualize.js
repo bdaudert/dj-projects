@@ -73,7 +73,7 @@ $(function () {
             }
             else { //summary = indiviual
                 for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
-                    var series = {'name':month_names[mon_idx],'pointStart':Start,'pointInterval':Interval};
+                    var series = {'name':month_names[month_list[mon_idx]],'pointStart':Start,'pointInterval':Interval};
                     var data =  [];
                     for (var yr_idx=0;yr_idx<datadict.data.length - 6;yr_idx++) {
                         var val = datadict.data[yr_idx][2*month_list[mon_idx] - 1]
