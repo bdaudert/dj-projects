@@ -12,123 +12,114 @@
 
 <div class="container">
 
-    <div class="major-left">
+    <div class="center-left"></div>
 
-        <!--
-        <p class="pop_link" align="center" onClick="ShowHide('Docu_ACIS')"><img class="logo"         
-        src="{{MEDIA_URL}}img/ACISLogo.png"><u>Click here to see/hide what's in ACIS?</u></p>
-        <div id="Docu_ACIS" style="display:none;"></div>
-            <script type="text/javascript">                        
-            $("#Docu_ACIS").load("{{MEDIA_URL}}html/commons.html #Docu_ACIS");
-            </script>
-        -->
+    <div class="center">
 
         <table class="dash" cellspacing="10px">
-            <!--Headers-->
-            <th><font size="5"><a href="{{TOOLS_URL}}station/station_finder/"><b>Station Finder</b></a></th>
-            <th><font size="5"><a href="{{DATA_URL}}station/"><b>Historic Station Data Lister</b></a></th>
-            <th><font size="5"><a href="{{DATA_URL}}gridded/"><b>Gridded/Modeled Data</b></a></th>
-            <!--First row of dashboard: Description-->
             <tr>
-                <td class="error">Find a station</td>
-                <td class="error">Find and download station data</td>
-                <td class="error">Find and download gridded/modeled data</td>
+                <td><font size="3"><a href="{{TOOLS_URL}}station/station_finder/"><b>Station Finder</b></a></td>
+                <td><font size="3"><a href="{{DATA_URL}}station/"><b>Historic Station Data Lister</b></a></td>
+                <td><font size="3"><a href="{{DATA_URL}}gridded/"><b>Gridded/Modeled Data</b></a></td>
             </tr>
-            <!--Second row of dashboard: image-->
             <tr>
-                <td><a href="{{TOOLS_URL}}station/station_finder/"><img class="dash_img" src="{{MEDIA_URL}}img/StationFinder.png"></a></td>
-                <td><a href="{{DATA_URL}}station/"><img class="dash_img" src="{{MEDIA_URL}}img/Stn.png"></a></td>
-                <td><a href="{{DATA_URL}}gridded/"><img class="dash_img" src="{{MEDIA_URL}}img/ClimateModel2.png"></a></td>
+                <td><a href="{{TOOLS_URL}}station/station_finder/"><img alt="StationFinder" title="StationFinder" class="dash_img" src="{{MEDIA_URL}}img/StationFinder.png"></a></td>
+                <td><a href="{{DATA_URL}}station/"><img alt="Station" title="Station" class="dash_img" src="{{MEDIA_URL}}img/Stn.png"></a></td>
+                <td><a href="{{DATA_URL}}gridded/"><img alt="ClimateModel" title="ClimateModel" class="dash_img" src="{{MEDIA_URL}}img/ClimateModel2.png"></a></td>
             </tr>
-            <!--Third+ rows: list of content-->
+            <tr>
+                <td><b>Locate a climate station</b></td>
+                <td><b>Download station data</b></td>
+                <td><b>Download gridded/modeled data</b></td>
+            </tr>
             <tr valign="top">
                 <td>
-                    <p onClick="ShowHide('Docu_Networks')"><u><font color="#FF007F">Network<br />ID Sytems</font></u></p>
+                    <p class="pop_link" onClick="ShowHide('Docu_Networks')">Network<br />ID Sytems</p>
                         <div id="Docu_Networks" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_Networks").load("{{MEDIA_URL}}html/commons.html #Docu_Networks");
                         </script> 
-                    <p onClick="ShowHide('Docu_COOP')"><u>COOP</u></p>
+                    <p class="pop_link" onClick="ShowHide('Docu_COOP')">COOP</p>
                         <div id="Docu_COOP" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_COOP").load("{{MEDIA_URL}}html/commons.html #Docu_COOP");
                         </script> 
-                    <p onClick="ShowHide('Docu_GHCN')"><u>GHCN</u></p>
+                    <p class="pop_link" onClick="ShowHide('Docu_GHCN')">GHCN</p>
                         <div id="Docu_GHCN" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_GHCN").load("{{MEDIA_URL}}html/commons.html #Docu_GHCN");
                         </script> 
-                    <p onClick="ShowHide('Docu_GHCN')"><u>ICAO</u></p>
+                    <p class="pop_link" onClick="ShowHide('Docu_GHCN')">ICAO</p>
                         <div id="Docu_ICAO" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_ICAO").load("{{MEDIA_URL}}html/commons.html #Docu_ICAO");
                         </script>
-                    <p onClick="ShowHide('Docu_NWSLI')"><u>NWSLI</u></p>
+                    <p class="pop_link" onClick="ShowHide('Docu_NWSLI')">NWSLI</p>
                         <div id="Docu_NWSLI" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_NWSLI").load("{{MEDIA_URL}}html/commons.html #Docu_NWSLI");
                         </script>
-                    <p onClick="ShowHide('Docu_FAA')"><u>FAA</u></p>
+                    <p class="pop_link" onClick="ShowHide('Docu_FAA')">FAA</p>
                         <div id="Docu_FAA" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_FAA").load("{{MEDIA_URL}}html/commons.html #Docu_FAA");
                         </script>
-                    <p onClick="ShowHide('Docu_WMO')"><u>WMO</u></p>
+                    <p  class="pop_link" onClick="ShowHide('Docu_WMO')">WMO</p>
                         <div id="Docu_WMO" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_WMO").load("{{MEDIA_URL}}html/commons.html #Docu_WMO");
                         </script>
-                   <p onClick="ShowHide('Docu_WBAN')"><u>WBAN</u></p>
+                   <p class="pop_link" onClick="ShowHide('Docu_WBAN')">WBAN</p>
                         <div id="Docu_WBAN" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_WBAN").load("{{MEDIA_URL}}html/commons.html #Docu_WBAN");
                         </script>
-                    <p onClick="ShowHide('Docu_ThreadEx')"><u>ThreadEx</u></p>
+                    <p class="pop_link" onClick="ShowHide('Docu_ThreadEx')">ThreadEx</p>
                         <div id="Docu_ThreadEx" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_ThreadEx").load("{{MEDIA_URL}}html/commons.html #Docu_ThreadEx");
                         </script>
-                    <p onClick="ShowHide('Docu_CoCoRaHS')"><u>CoCoRaHS</u></p>
+                    <p class="pop_link" onClick="ShowHide('Docu_CoCoRaHS')">CoCoRaHS</p>
                         <div id="Docu_CoCoRaHS" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_CoCoRaHS").load("{{MEDIA_URL}}html/commons.html #Docu_CoCoRaHS");
                         </script>
                 </td>
                 <td>
-                   <p onClick="ShowHide('Docu_Elements')"><u><font color="#FF007F">Available<br />Climate Elements</font></u></p>
+                   <p class="pop_link" onClick="ShowHide('Docu_Elements')">Available<br />Climate Elements</font></p>
                         <div id="Docu_Elements" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_Elements").load("{{MEDIA_URL}}html/commons.html #Docu_Elements");
                         </script> 
                 </td>
                 <td>
-                   <p><font color="#FF007F">Dataset<br />Information</font></p>
-                   <p onClick="ShowHide('Docu_NRCC_INT')"><u>NRCC Interpolated/Hi-Res</u></p>
+                   <p>Dataset<br />Information</p>
+                   <p class="pop_link" onClick="ShowHide('Docu_NRCC_INT')">NRCC Interpolated/Hi-Res</p>
                         <div id="Docu_NRCC_INT" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_NRCC_INT").load("{{MEDIA_URL}}html/commons.html #Docu_NRCC_INT");
                         </script>
-                   <p onClick="ShowHide('Docu_PRISM')"><u>PRISM</u></p>
+                   <p class="pop_link" onClick="ShowHide('Docu_PRISM')">PRISM</p>
                         <div id="Docu_PRISM" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_PRISM").load("{{MEDIA_URL}}html/commons.html #Docu_PRISM");
                         </script>
-                   <p onClick="ShowHide('Docu_CRCM')"><u>NARCCAP - CRCM</u></p>
+                   <p class="pop_link" onClick="ShowHide('Docu_CRCM')">NARCCAP - CRCM</p>
                         <div id="Docu_CRCM" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_CRCM").load("{{MEDIA_URL}}html/commons.html #Docu_CRCM");
                         </script>
-                    <p onClick="ShowHide('Docu_HRM3')"><u>NARCCAP - HRM3</u></p>
+                    <p class="pop_link" onClick="ShowHide('Docu_HRM3')">NARCCAP - HRM3</p>
                         <div id="Docu_HRM3" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_HRM3").load("{{MEDIA_URL}}html/commons.html #Docu_HRM3");
                         </script>
-                    <p onClick="ShowHide('Docu_RCM3')"><u>NARCCAP - RCM3</u></p>
+                    <p class="pop_link" onClick="ShowHide('Docu_RCM3')">NARCCAP - RCM3</p>
                         <div id="Docu_RCM3" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_RCM3").load("{{MEDIA_URL}}html/commons.html #Docu_RCM3");
                         </script>
-                   <p onClick="ShowHide('Docu_WRFG')"><u>NARCCAP - WRFG</u></p>
+                   <p class="pop_link" onClick="ShowHide('Docu_WRFG')">NARCCAP - WRFG</p>
                         <div id="Docu_WRFG" style="display:none;"></div>
                         <script type="text/javascript">                        
                         $("#Docu_WRFG").load("{{MEDIA_URL}}html/commons.html #Docu_WRFG");
@@ -139,58 +130,58 @@
     </div>
 
     <div class="center-right">
-    <h1>Links to other data</h1>
+    <h3>Links to other data resources</h3>
        <ul class="navbar">
             <table>
                 <tr><td>
-                <a href="http://www.ncdc.noaa.gov/" class="trigger" target="_blank"><img class="icon" src="{{MEDIA_URL}}img/NOAALogo.png">&nbsp;&nbsp;<u>NCDC</u></a>&nbsp;&nbsp;
+                <a href="http://www.ncdc.noaa.gov/" class="trigger" target="_blank"><img alt="NOAA" title="NOAA" class="icon" src="{{MEDIA_URL}}img/NOAALogo.png">&nbsp;&nbsp;<u>NCDC</u></a>&nbsp;&nbsp;
                 <div class="pop-up">
                     <p>National Climatic Data Center</p>
                 </div>
                 </td></tr>
                 <tr><td>
-                <a href="http://wrcc.dri.edu/" class="trigger" target="_blank"><img class="logo" src="{{MEDIA_URL}}img/WRCCLogo.png">&nbsp;&nbsp;<u>WRCC</u></a>&nbsp;&nbsp;
+                <a href="http://wrcc.dri.edu/" class="trigger" target="_blank"><img alt="WRCC" title="WRCC" class="logo" src="{{MEDIA_URL}}img/WRCCLogo.png">&nbsp;&nbsp;<u>WRCC</u></a>&nbsp;&nbsp;
                 <div class="pop-up">
                     <p>Western Regional Climate Center</p>
                 </div>
                 </td></tr>
                 <tr><td>
                 <tr><td>
-                <a href="{{DATA_URL}}sw_networks/" class="trigger" target="_blank"><img class="icon" src="{{MEDIA_URL}}img/HappyFace.png">&nbsp;&nbsp;<u>Links to SW networks</u></a>&nbsp;&nbsp;
+                <a href="{{DATA_URL}}sw_networks/" class="trigger" target="_blank"><img alt="HappyFace" title="HappyFace" class="icon" src="{{MEDIA_URL}}img/HappyFace.png">&nbsp;&nbsp;<u>Links to SW networks</u></a>&nbsp;&nbsp;
                 <div class="pop-up">
                     <p> Southwest Data Networks</p>
                 </div>
                 </td></tr>
                 <tr><td>                
-                <a href="http://www.esrl.noaa.gov/psd/cgi-bin/data/getpage.pl" class="trigger" target="_blank"><img class="icon" src="{{MEDIA_URL}}img/NOAALogo.png">&nbsp;&nbsp;<u>ESRL Interactive Plotting-Analysis</u></a>&nbsp;&nbsp;
+                <a href="http://www.esrl.noaa.gov/psd/cgi-bin/data/getpage.pl" class="trigger" target="_blank"><img alt="NOAA" title="NOAA" class="icon" src="{{MEDIA_URL}}img/NOAALogo.png">&nbsp;&nbsp;<u>ESRL Interactive Plotting-Analysis</u></a>&nbsp;&nbsp;
                 <div class="pop-up">
                     <p>NOAA Earth System Research Laboratory</p>
                 </div>
                 </td></tr>
                 <tr><td>                                
-                <a href="http://www.cpc.ncep.noaa.gov/products/monitoring_and_data/" class="trigger" target="_blank"><img class="icon" src="{{MEDIA_URL}}img/NOAALogo.png">&nbsp;&nbsp;<u>CPC Monitoring and Data</u></a>&nbsp;&nbsp;
+                <a href="http://www.cpc.ncep.noaa.gov/products/monitoring_and_data/" class="trigger" target="_blank"><img alt="NOAA" title="NOAA" class="icon" src="{{MEDIA_URL}}img/NOAALogo.png">&nbsp;&nbsp;<u>CPC Monitoring and Data</u></a>&nbsp;&nbsp;
                 <div class="pop-up">
                     <p>NOAA Climate Prediction Center</p>
                 </div>
                 </td></tr>
                 <tr><td>
-                <a href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank"><img class="icon" src="{{MEDIA_URL}}img/RAWSLogo.gif">&nbsp;&nbsp;<u>Access to sub-daily RAWS data via the USA Climate Archive by WRCC</u></a>&nbsp;&nbsp;
+                <a href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank"><img alt="RAWS" title="RAWS" class="icon" src="{{MEDIA_URL}}img/RAWSLogo.gif">&nbsp;&nbsp;<u>Access to sub-daily RAWS data via the USA Climate Archive by WRCC</u></a>&nbsp;&nbsp;
                 <div class="pop-up">
                     <p>Summaries, Graphs, and other products for RAWS
                     (Remote Automatic Weather Stations).</p>
                 </div>
                 </td></tr>
                 <tr><td>
-                <a href="http://water.usgs.gov/data/" class="trigger" target="_blank"><img class="logo" src="{{MEDIA_URL}}img/USGSLogo.png">&nbsp;&nbsp;<u>USGS Water Data Discovery</u></a>&nbsp;&nbsp;
+                <a href="http://water.usgs.gov/data/" class="trigger" target="_blank"><img alt="USGS" title="USGS" class="logo" src="{{MEDIA_URL}}img/USGSLogo.png">&nbsp;&nbsp;<u>USGS Water Data Discovery</u></a>&nbsp;&nbsp;
                 </td></tr>
                 <!--<tr><td>
-                <a href="http://his.cuahsi.org/" class="trigger" target="_blank"><img class="logo" src="{{MEDIA_URL}}img/CUAHSILogo.gif">&nbsp;&nbsp;<u>CUAHSI Hydrologic Information System (HIS)</u></a>&nbsp;&nbsp;
+                <a href="http://his.cuahsi.org/" class="trigger" target="_blank"><img alt="CUAHSI" title="CUAHSI" class="logo" src="{{MEDIA_URL}}img/CUAHSILogo.gif">&nbsp;&nbsp;<u>CUAHSI Hydrologic Information System (HIS)</u></a>&nbsp;&nbsp;
                 <div class="pop-up">
                     <p>An internet-based system for sharing hydrologic data. It is comprised of databases and servers, connected through web services, to client applications, allowing for the publication, discovery and access of data.</p>
                 </div>
                 </td></tr>-->
                 <tr><td>
-                <a href="http://cida.usgs.gov/climate/gdp/" class="trigger" target="_blank"><img class="logo" src="{{MEDIA_URL}}img/USGSLogo.png">&nbsp;&nbsp;<u>USGS Geo Data Portal</u></a>&nbsp;&nbsp;
+                <a href="http://cida.usgs.gov/climate/gdp/" class="trigger" target="_blank"><img alt="USGS" title="USGS" class="logo" src="{{MEDIA_URL}}img/USGSLogo.png">&nbsp;&nbsp;<u>USGS Geo Data Portal</u></a>&nbsp;&nbsp;
                 <div class="pop-up">
                     <p>Access to downscaled climate projections developed in cooperation with the U.S. Geological Survey National Climate Change Wildlife Science Center.</p>
                 </div>
@@ -198,6 +189,6 @@
             </table>
         </ul>
 </div>
-</div>    
 
+</div>
 {%endblock%}

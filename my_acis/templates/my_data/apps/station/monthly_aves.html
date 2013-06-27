@@ -21,10 +21,10 @@
                 <tr>
                     <td>{{field.label}}:</td>
                     <td>{{field}}</td>                                                                                
-                    <td><p class="trigger"><img class="qmark" src="{{MEDIA_URL}}img/QMark.png"></p>                                     
+                    <td><p class="trigger"><img alt="QMark" title="QMark" class="qmark" src="{{MEDIA_URL}}img/QMark.png"></p>                                     
                     {%ifequal field.label "Elements" %}
                         <div class="pop-up">
-                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0">                           </div>
+                        <img alt="ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0">                           </div>
                     {%else%}
                         <div class="pop-up"><p>{{field.help_text}}</p></div>
                     {%endifequal%}
@@ -71,7 +71,7 @@
             <p>Don't know your station id? Find it here:</p>
             <a href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a>
             <p>Elements should be given as a comma separated list. Element Choices:
-            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" 
+            <img alt="ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" 
             width="450" height="450" border="0"/></p>
             <p>Start and end date should be of form yyyymmdd or yyyy-mm-dd. Alternatively, you can enter 'por' or 'POR' 
             for start or end date. In this case, we will find the start/end dates of the station's data taking record.<br />
@@ -97,7 +97,7 @@
             <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
             <!-- One container per element -->
             {%for result in results%}
-                <div align="center" id="container{{forloop.counter}}"style="height:350px;width:80%;"></div>
+                <div align="center" id="container{{forloop.counter}}"style="height:350px;width:100%;"></div>
                 <br /> 
             {%endfor%}         
             <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-monthly-aves.js"></script>

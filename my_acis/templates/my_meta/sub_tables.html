@@ -37,7 +37,7 @@
          </span>
         {% endif %}
 
-        <table border=0><tr><td><a href="javascript:void(0)" onclick="ShowHide('{{tbl_name}}')"><img src="{{ MEDIA_URL }}img/leaf.gif">{{ tbl_name }} Show/Hide</a><div></div></td></tr></table>
+        <table border=0><tr><td><a href="javascript:void(0)" onclick="ShowHide('{{tbl_name}}')"><img alt="Leaf" title="Leaf" src="{{ MEDIA_URL }}img/leaf.gif">{{ tbl_name }} Show/Hide</a><div></div></td></tr></table>
 
             <div align="right" id='{{ tbl_name }}' style='display:none'>
                 <form method="post" action="">{% csrf_token %}

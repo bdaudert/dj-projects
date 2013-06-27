@@ -22,7 +22,7 @@
                 <tr>
                     <td>{{field.label}}:</td>
                     <td>{{field}}</td>                                                                                              
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                     <div class="pop-up"><p>{{field.help_text}}</p></div>
                     </td>
                 </tr>
@@ -52,10 +52,10 @@
                     {%else%}
                         <td>{{field}}</td>
                     {%endif%}
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                     {%if field.label == "Grid"%}
                         <div class="pop-up">
-                        <img src="{{MEDIA_URL}}img/gridded_datasets_docu.png" id="gridded_datasets_docu.png" width="450" height="600" border="0">
+                        <img alt="GriddedDataDocu" title="GriddedDataDocu" src="{{MEDIA_URL}}img/gridded_datasets_docu.png" id="gridded_datasets_docu.png" width="450" height="600" border="0">
                         </div>
                     {%else%}
                         <div class="pop-up"><p>{{field.help_text}}</p></div>
@@ -156,7 +156,7 @@
             
             <p>Element: <b>{{elems_long}}</b> {%if base_temp%}Base Temperature: <b>{{base_temp}}</b>{%endif%}</p>
             <p>Time Period: <b>{{start_date}}</b> to <b>{{end_date}}</b></p>
-            <img src="{{MEDIA_URL}}tmp/{{figure_file}}">
+            <img alt="FigureFile" title="FigureFile" src="{{MEDIA_URL}}tmp/{{figure_file}}">
     
         {%endif%}
 

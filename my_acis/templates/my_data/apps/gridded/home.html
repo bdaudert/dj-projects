@@ -15,78 +15,6 @@
     <div class="container">
 
         <div class="center-left">
-           <h2 class="error">Gridded/Modeled Data Applications</h2>
-            <ul class="navbar">
-            <p class="error" align ="center">* Beta version</p>
-            <h4 align="center">Southwest US Applications</h4>
-            <table>
-                <tr><td>
-                <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/cal-mon/frames_version.html" class="trigger" target="_blank">WRCC-California Climate Tracker(<font color="red">CA</font>)</a>
-                <div class="pop-up">
-                    <p>Tracking Climate Variability and Change for the state of California.</p>
-                </div>
-                </td><td>
-                <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CalTracker')">
-                </td></tr>
-                <tr><td>
-                <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/nev-mon/index.html" class="trigger" target="_blank">WRCC-Nevada Climate Tracker(<font color="red">NV</font>)</a>
-                <div class="pop-up">
-                <p>Tracking Climate Variability and Change for the state of Nevada.</p>
-                </div>
-                </td><td>
-                <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_NevTracker')">
-                </td></tr>
-                <tr><td><a id="us_wide" target="_blank" href="http://www.cefa.dri.edu/Westmap/" class="trigger">WRCC-Westmap</a>
-                <div class="pop-up">
-                    <p>Climate Analysis and Mapping Tool.</p>
-                </div>
-                </td><td>
-                <!--style="border:4px solid #FF007F" -->
-                <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_WESTMAP')">
-                </td></tr>
-            </table>
- 
-
-            <h4 align="center">US-Wide Applications</h4>
-            
-                <table>
-                    <tr><td>
-                    <a id="us_wide" href="{{TOOLS_URL}}gridded/clim_sum_maps/" class="trigger">* Climate Summary Maps</a>
-                    <div class="pop-up">
-                        <p>Generates climate summary maps for different elements, time ranges and region using NRCC interpolated data.</p>
-                    </div>
-                    </td><td>
-                    <!--style="border:4px solid #FF007F" -->
-                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CLIM_SUM_MAP')">
-                    </td></tr>
-                    <tr><td><a id="us_wide" href="{{TOOLS_URL}}gridded/clim_risk_maps/" class="trigger">* Climate Risk Maps</a>
-                    <div class="pop-up">
-                        <p>Generates climate risk maps for different temperature and precipitation with user chosen parameters.</p>
-                    </div>
-                    </td><td>
-                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CLIM_RISK_MAP')">
-                    </td></tr>
-                    <tr><td>
-                    <a id="us_wide" href="{{TOOLS_URL}}gridded/grid_point_time_series/" class="trigger">Grid Point Time Series</a>
-                    <div class="pop-up">
-                        <p>Generates time series data and graph for a chosen grid point and time range using ACIS gridded data.</p>
-                    </div>
-                    </td><td>
-                    <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_GP_TS')">
-                    </td></tr>
-                    <tr><td>
-                    <a id="us_wide" href="http://www.wrcc.dri.edu/cwd/products/" class="trigger">WRCC-North American Freezing Level Tracker</a>
-                    <div class="pop-up">
-                        <p>Track through time the height of the freezing level above sea level.</p>
-                    </div>
-                    </td><td>
-                   <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="HighLight(this,'docu','Docu_FreezTracker')">
-                    </td></tr>
-                </table>
-            </ul>
-        </div>
-
-        <div class="major-right">
             <!-- Application documentation -->
             <div class="docu" id="Docu_CalTracker" style="display:none;"></div>
                 <script type="text/javascript">                        
@@ -121,6 +49,89 @@
                 $("#Docu_NONE").load("{{MEDIA_URL}}html/commons.html #Docu_NONE");
                 </script>
            </div>
+        </div>
+
+        <div class="center">
+            <p class="error" align ="center">(* Beta version)</p>
+            <table cellspacing="10">
+            <tr>
+                <td>
+                    <p class="trigger">* Climate Risk Maps <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CLIM_RISK_MAP')"><br /> <font color="red">Coming Soon!</font></p>
+                    <div class="pop-up" id="sodxtrmts">
+                    <p>Generates climate risk maps for different temperature and precipitation with user chosen parameters.</p>
+                    </div>
+                </td>
+                <td>
+                    <p class="trigger">* Climate Summary Maps <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CLIM_SUM_MAP')"></p>
+                    <div class="pop-up">
+                        <p>Generates climate summary maps for different elements, time ranges and region using NRCC interpolated data.</p>
+                    </div>
+                </td>
+                <td>
+                    <p class="trigger">Gridpoint Time Series <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_GP_TS')"></p>
+                    <div class="pop-up">
+                        <p>Generates time series data and graph for a chosen grid point.</p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a  href="{{TOOLS_URL}}gridded/clim_risk_maps/"><img class="sidebar" alt="RiskMaps" title="RiskMaps" src="{{MEDIA_URL}}img/HappyFace.png"></a>         </td>
+                <td>
+                    <a  href="{{TOOLS_URL}}gridded/clim_sum_maps/"><img class="sidebar" alt="SummaryMaps" title="SummaryMaps" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
+                </td>
+                <td>
+                    <a  href="{{TOOLS_URL}}gridded/grid_point_time_series/"><img class="sidebar" alt="GPTimeSeries" title="GPTimeSeries" src="{{MEDIA_URL}}img/GPTimeSeries.png"></a>
+                </td>
+            </tr>
+            </table>
+        </div>
+
+        <div class="center-right">
+           <h3 >Links to other Gridded/Modeled Data Applications</h3>
+            <ul class="navbar">
+            <h4 align="center">Southwest US Applications</h4>
+            <table>
+                <tr><td>
+                <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/cal-mon/frames_version.html" class="trigger" target="_blank">WRCC-California Climate Tracker(<font color="red">CA</font>)</a>
+                <div class="pop-up">
+                    <p>Tracking Climate Variability and Change for the state of California.</p>
+                </div>
+                </td><td>
+                <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CalTracker')">
+                </td></tr>
+                <tr><td>
+                <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/nev-mon/index.html" class="trigger" target="_blank">WRCC-Nevada Climate Tracker(<font color="red">NV</font>)</a>
+                <div class="pop-up">
+                <p>Tracking Climate Variability and Change for the state of Nevada.</p>
+                </div>
+                </td><td>
+                <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_NevTracker')">
+                </td></tr>
+                <tr><td><a id="us_wide" target="_blank" href="http://www.cefa.dri.edu/Westmap/" class="trigger">WRCC-Westmap</a>
+                <div class="pop-up">
+                    <p>Climate Analysis and Mapping Tool.</p>
+                </div>
+                </td><td>
+                <!--style="border:4px solid #FF007F" -->
+                <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_WESTMAP')">
+                </td></tr>
+            </table>
+ 
+
+            <h4 align="center">US-Wide Applications</h4>
+            
+                <table>
+                    <tr><td>
+                    <a id="us_wide" href="http://www.wrcc.dri.edu/cwd/products/" class="trigger">WRCC-North American Freezing Level Tracker</a>
+                    <div class="pop-up">
+                        <p>Track through time the height of the freezing level above sea level.</p>
+                    </div>
+                    </td><td>
+                   <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="HighLight(this,'docu','Docu_FreezTracker')">
+                    </td></tr>
+                </table>
+            </ul>
         </div>
 
     </div>

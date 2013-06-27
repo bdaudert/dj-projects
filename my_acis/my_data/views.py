@@ -723,7 +723,7 @@ def metagraph(request):
             context['station_meta'] = station_meta
             #Call perl script that generates gif graphs
             #FIX ME! Should be able to call it from html:
-            #<img src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}">
+            #<img alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}">
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_')
             context['time_stamp'] = time_stamp
             perl_out, perl_err = run_external_script("perl %sperl-scripts/csc_cliMETAgraph.pl %s %s" %(MEDIA_URL, str(form_meta.cleaned_data['station_id']), time_stamp))

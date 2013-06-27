@@ -35,13 +35,15 @@ h1.error, h2.error, h3.error, h4.error, h5.error {
 }
 
 
-a:link { color: #3300CC; }
+/*a:link { color: #3300CC; }*/
+a:link { color: #0000FF;}
 /*a:visited { color: #660099; }*/
 a:hover {
     color: #33CCFF;
     text-decoration: none;
 }
-a:active { color: red; }
+a:visited {color: #800080;}
+a:active { color:#FF0000;}
 
 .tool_how_to:active {color: red;}
 
@@ -113,19 +115,12 @@ table.page td, th {
 
 table.dash {
 padding: 10px 10px 10px 10px;
-border: 0px;
+border: none;
 text-align:center;
 color: #006666;
 /*font-size:large;*/
 }
 
-
-
-table.dash img {
-    border: 2px solid #006666;
-    width: 250px;
-    height:200px;
-}
 
 
 table.form {
@@ -192,6 +187,7 @@ ul.navbar a {
 
 .pop_link {
     color:#0000FF;
+    text-decoration:underline;
 }
 
 .pop_link:hover {
@@ -255,11 +251,11 @@ ul.navbar a {
 
 .center {
     float:left;
-    padding: 10px 10px 10px 20px;
+    padding: 10px 10px 10px 10px;
     text-align:center;
     height:1000px;
-    /*width:580px;*/
-    width:50%;
+    width:500px;
+    /*width:50%;*/
     /*border: 2px solid #006666;*/
     /*background-color:#DCA978;*/
 }
@@ -268,8 +264,8 @@ ul.navbar a {
 .center-left {
     float: left;
     padding: 10px 10px 10px 10px;
-    /*width:200px;*/
-    width:20%
+    width:300px;
+    /*width:20%;*/
     /*border: 2px solid #006666;
     background-color:#EBCEB2;*/
     background-color:#FFEBCD;
@@ -277,16 +273,15 @@ ul.navbar a {
 }
 
 .center-right {
-    float: right;
-    margin: 30px 50px 10px 10px;
+    float: left;
     padding: 10px 10px 10px 10px;
-    /*width:200px;*/
-    width:20%;
-    border: 2px solid #006666;
+    width:200px;
+    /*width:20%;*/
+    /*border: 2px solid #006666;
+    background-color:#EBCEB2;*/
     background-color:#FFEBCD;
     /*z-index:1;*/
 }
-
 
 .major-left {
     float: left;
@@ -398,10 +393,15 @@ img.map_2 {
     right:0;
 }
 
-
-img.dash_img {
+img.front_dash_img {
+    border: 2px solid #006666;
     width: 200px;
     height:200px;
+}
+
+img.dash_img {
+    width: 150px;
+    height:150px;
 }
 
 img.map_dash {
@@ -550,15 +550,10 @@ img.center {
 
 /*Map related stuff*/
 #map_legend {
-    /*
-    position:absolute;
-    top:113px;
-    right:225px;
-    */
     position:relative;
     left:20px;
     top:20px;
-    width: 80%;
+    width: 150px;
     background: #FFEBCD;
     padding: 10px;
     border:2px solid #006666; 

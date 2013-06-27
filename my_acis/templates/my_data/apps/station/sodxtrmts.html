@@ -27,9 +27,9 @@
                     <tr>
                         <td>{{field.label}}:</td>                                                                    
                         <td>{{field}}</td>                                                                                
-                        <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                        <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                         {%ifequal field.label "Monthly Statistic"%}
-                            <div class="pop-up"><img width="400px" height="300px" src="{{MEDIA_URL}}img/SodxtrmtsAnalysisChoices.png"></div>
+                            <div class="pop-up"><img alt="AnalysisChoices" title="AnalysisChoices" width="400px" height="300px" src="{{MEDIA_URL}}img/SodxtrmtsAnalysisChoices.png"></div>
                         {%else%}                                             
                             <div class="pop-up"><p>{{field.help_text}}</p></div>
                         {%endifequal%}
@@ -49,13 +49,13 @@
             <tr>
                 <td><input type="radio" name="less_greater_or_between" value="l" checked>Less Than</td>
                 <td><input type="text" name="less" step="any" value=0.005 ></td>
-                <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                 <div class="pop-up"><p>Count number of days with values less than this threshold.</p></div>
             </tr>
             <tr>               
                 <td><input type="radio" name="less_greater_or_between" value="g">Greater Than</td>                
                 <td><input type="number" name="greater" step="any" value=0.001></td>
-                <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                 <div class="pop-up"><p>Count number of days with values greater than this threshold.</p></div>
             </tr> 
             <tr>                               
@@ -63,7 +63,7 @@
                 <td><input type="number" name="threshold_low_for_between" step="any" value=0.001>
                     and<input type="number" name="threshold_high_for_between" step="any" value=0.11>
                 </td>
-                <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                 <div class="pop-up"><p>Count number of days with values between these thresholds.</p></div>
             </tr>
             <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
@@ -71,7 +71,7 @@
             <tr>
                 <td><input type="radio" name="frequency_analysis_type" value="p" checked>P III</td>
                 <td><input type="radio" name="frequency_analysis_type" value="g">GEV</td>
-                <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                 <div class="pop-up"><p>Frequency Analysis Types: Peasron III, Generalized Extreme Value.</p></div>
             </tr>
             </table>
@@ -184,7 +184,7 @@
              </div>
             
             <!-- One tab per element -->
-            <img class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/visualize/?station_ID={{station_ID}}&element={{element}}&json_file={{json_file}}" style="font-size:large;">Generate Time Series Plots for this data</a>
+            <img alt="Print" title="Print" class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/visualize/?station_ID={{station_ID}}&element={{element}}&json_file={{json_file}}" style="font-size:large;">Generate Time Series Plots for this data</a>
             <table id="printable_table" class="right_aligned" cellpadding="none">
             <tr>
             <td><font size="+2">YEAR</font></td>

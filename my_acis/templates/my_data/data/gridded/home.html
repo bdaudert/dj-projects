@@ -23,13 +23,13 @@
                 <tr>
                     <td>{{field.label}}:</td>
                     <td>{{field}}</td>
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                     {%ifequal field.label "Elements" %}
                     <div class="pop-up">
                         {%if temporal_resolution == "dly"%}
-                            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_Grid.png" id="ACISElementChoices" width="450" height="450" border="0">
+                            <img alt="ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Grid.png" id="ACISElementChoices" width="450" height="450" border="0">
                         {%else%}
-                            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_PRISM.png" id="ACISElementChoices" width="450" height="450" border="0">
+                            <img alt="ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_PRISM.png" id="ACISElementChoices" width="450" height="450" border="0">
                         {%endif%}
                     </div>
                     {%else%}
@@ -70,19 +70,19 @@
                     {%else%}
                         <td>{{field}}</td>
                     {%endif%}
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                     {%ifequal field.label "Elements" %}
                         <div class="pop-up">
                         {%if prism_flag%}
-                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_PRISM.png" id="ACISElementChoices" width="450" height="150" border="0">
+                        <img alt="ElementChoices" title="ElementChoices"  src="{{MEDIA_URL}}img/ACIS_Element_Choices_PRISM.png" id="ACISElementChoices" width="450" height="150" border="0">
                         {%else%}
-                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_Grid.png" id="ACISElementChoices" width="450" height="450" border="0">
+                        <img alt="ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Grid.png" id="ACISElementChoices" width="450" height="450" border="0">
                         {%endif%}
                         </div>
                     {%else%}
                         {%if field.label == "Grid"%}
                             <div class="pop-up">
-                            <img src="{{MEDIA_URL}}img/gridded_datasets_docu.png" id="gridded_datasets_docu.png" width="450" height="600" border="0">
+                            <img alt="GriddedDataDocu" title="GriddedDataDocu" src="{{MEDIA_URL}}img/gridded_datasets_docu.png" id="gridded_datasets_docu.png" width="450" height="600" border="0">
                             </div>
                         {%else%}
                             <div class="pop-up"><p>{{field.help_text}}</p></div>
@@ -135,7 +135,7 @@
 
     <div class="major-right" style="background-color:X^H#947e6e; border:none;">
         <!--
-        <p class="pop_link" align="left" onClick="ShowHide('Docu_ACIS')"><img class="logo"         
+        <p class="pop_link" align="left" onClick="ShowHide('Docu_ACIS')"><img alt="ACIS" title="ACIS" class="logo"         
         src="{{MEDIA_URL}}img/ACISLogo.png"><u>Click here to see/hide what's in ACIS</u></p>
         <div id="Docu_ACIS" style="display:none;"></div>
             <script type="text/javascript">                        
@@ -146,49 +146,19 @@
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
         </script>
-        <div class="docu" id="tool_info" style="display:none;">
-            <p class="error">What is it?</p>
-            <h3>Modeled/Gridded Data access point to the ACIS system.</h3>
-            <p class="error">What datasets are available?</p>
-            <a target="_blank" href="https://gist.github.com/bnoon/4197956">NRCC Interpolated/Hi-Res</a><br />
-            <a class="popup_map" href="http://www.prism.oregonstate.edu/">PRISM</a><br />
-            <p>NARCCAP(North American Regional Climate Change Assessment Program) Datasets:</p>
-            <a class="popup_map" target="_blank" href="http://www.earthsystemgrid.org/dataset/narccap.crcm.output.html">CRCM</a><br />
-            <a class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.hrm3.output.html">HRM3</a><br />
-            <a class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.mm5i.output.html">MM5I</a><br />
-            <a class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.rcm3.output.html">RCM3</a><br />
-            <a class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.wrfg.output.html">WRFG</a>
-            <p class="error">What can you do with this tool?</p>
-            <h3>Access and download data</h3>
-            <p>Available Data Formats: .xls, .dat, .txt, html(prints to screen)</p>
-            <p>Queries can be performed for single or multiple grid_points at a time.</p>
-            <a target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a>
-            <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
-            &nbsp;&nbsp;&nbsp;<a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
-            <p>For more information and direct access to NARCCAP gridded data sets:</p>
-            &nbsp;&nbsp;&nbsp;<a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
-        </div>
-
+        <div class="docu" id="tool_info" style="display:none;"></div>
+        <script type="text/javascript">                        
+            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_GriddedData");
+        </script>
 
         <div id="how_to_head"></div>
         <script type="text/javascript">            
             $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
         </script>
-        <div id="how_to" style="display:none;">
-            <p>Choose a single gridpoint, a US state or a bounding box as your search area.</p>
-            <p>Hit "Select". A second form will appear.</p>
-            <p><b>"Point Location"</b>:<br />Enter the grid point latitude and longitude if you know it or use the map interface by dragging the marker to the desired location.</p>
-            <p><b>"State"</b>:<br />Choose a state from the drop down menue.</p>
-             <p><b>"Bounding Box"</b>:<br />HANG IN THERE! A map interface to help you find your bounding box is in the works. For now, unfortunately, you will need to knoww your coordinates and enter them manually. <img class="icon" src="{{MEDIA_URL}}img/SadFace.png"></p>
-            <p>Enter one or more elements as a comma separated list.</p>
-            <p>Choose a start and end date.</p>
-            <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
-            <div id="element_choices" style="display:none"><img width="250px" height="300px" src={{MEDIA_URL}}img/ACIS_Element_Choices_Grid.png></div>
-            <p>Choose a data set from the drop down menue.</p>
-            <p>Choose a data format. .xls, .dat, .txt files will be downloaded on the user's machine.
-            html format is displayed on the webpage directly.</p>
-            <p>The delimiter choice defines the separation of the data values.</p>
-        </div>
+        <div id="how_to" style="display:none;"></div>
+        <script type="text/javascript">            
+            $("#how_to").load("{{MEDIA_URL}}html/commons.html #HowTo_GriddedData");
+        </script>
         <br />    
         {%if error%}
             <p class="error">Error: {{error}} </p>
@@ -216,7 +186,7 @@
                         <tr>
                         <td>{{field.label}}:</td>
                         <td>{{field}}</td>
-                        <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                        <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                         <div class="pop-up"><p>{{field.help_text}}</p></div>
                         </td>
                     </tr>
@@ -303,7 +273,7 @@
                 {%endif%}
                 <p><b>Element: </b>{{elems_long|lookup:forloop.counter0}}</p>
                 <p><b>Time Period: </b>{{start_date}} <b> to </b>{{end_date}}</p>
-                <img width="400px" height="400px" src="{{MEDIA_URL}}tmp/{{figure_file}}"><br /><br />
+                <img alt="FigureFile" title="FigureFile" width="400px" height="400px" src="{{MEDIA_URL}}tmp/{{figure_file}}"><br /><br />
             {%endfor%}
         {%endif%}
     <br />

@@ -25,10 +25,10 @@
                     <tr>
                         <td>{{field.label}}:</td>
                         <td>{{field}}</td>
-                        <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                        <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                         {%ifequal field.label "Elements" %}
                             <div class="pop-up"> 
-                            <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0">                   </div>
+                            <img alt="EleemntChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0">                   </div>
                         {%else%}
                             <div class="pop-up"><p>{{field.help_text}}</p></div>
                         {%endifequal%} 
@@ -70,10 +70,10 @@
                         <td>{{field.label}}:</td>
                         <td>{{field}}</td>
                     {%endif%}       
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>                            
+                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>                            
                     {%ifequal field.label "Elements" %}
                         <div class="pop-up" onClick="ShowHide(this)">
-                        <img src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0">
+                        <img alt=ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0">
                         </div>
                     {%else%}
                         <div class="pop-up"><p>{{field.help_text}}</p></div>
@@ -127,7 +127,7 @@
     </div>
     <div class="major-right" style="border:none;">
         <!--
-       <p class="pop_link" align="left" onClick="ShowHide('Docu_ACIS')"><img class="logo"         
+       <p class="pop_link" align="left" onClick="ShowHide('Docu_ACIS')"><img alt="ACIS" title="ACIS" class="logo"         
         src="{{MEDIA_URL}}img/ACISLogo.png"><u>Click here to see/hide what's in ACIS?</u></p>
         <div id="Docu_ACIS" style="display:none;"></div>
             <script type="text/javascript">                        
@@ -163,7 +163,7 @@
             <p>Hit "Select". A second form will appear.</p>
             <p>Enter one or more elements as a comma separated list.</p>
             <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
-            <div id="element_choices" style="display:none"><img width="250px" height="300px" src={{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png></div>
+            <div id="element_choices" style="display:none"><img alt="ElementChoices" title="ElementChoices" width="250px" height="300px" src={{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png></div>
             <p>Choose a start and end date.</p>
             <p>Choose a data format. .xls, .dat, .txt files will be downloaded on the user's machine. 
             html format is displayed on the webpage directly.</p>
@@ -203,7 +203,7 @@
                     <tr>
                         <td>{{field.label}}:</td>
                         <td>{{field}}</td>
-                        <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                        <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                         <div class="pop-up"><p>{{field.help_text}}</p></div>
                         </td>
                     </tr>

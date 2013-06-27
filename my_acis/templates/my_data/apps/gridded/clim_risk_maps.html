@@ -22,7 +22,7 @@
                 <tr>
                     <td>{{field.label}}:</td>
                     <td>{{field}}</td>                                                                                              
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                     <div class="pop-up"><p>{{field.help_text}}</p></div>
                     </td>
                 </tr>
@@ -51,10 +51,10 @@
                     {%else%}
                         <td>{{field}}</td>
                     {%endif%}
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                     {%if field.label == "Grid"%}
                         <div class="pop-up">
-                        <img src="{{MEDIA_URL}}img/gridded_datasets_docu.png" id="gridded_datasets_docu.png" width="450" height="600" border="0">
+                        <img alt="GriddedDataDocu" title="GriddedDataDocu" src="{{MEDIA_URL}}img/gridded_datasets_docu.png" id="gridded_datasets_docu.png" width="450" height="600" border="0">
                         </div>
                     {%else%}
                         <div class="pop-up"><p>{{field.help_text}}</p></div>
@@ -84,7 +84,7 @@
     </div><!--end center-left-->
 
     <div class="center">
-        <h2 class="error">This page is under development!</h2> <img src="{{MEDIA_URL}}img/Construction.png">
+        <h2 class="error">This page is under development!</h2> <img alt=Construction" title="Construction" src="{{MEDIA_URL}}img/Construction.png">
         <div id=tool_info_head></div>
             <script type="text/javascript">            
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");

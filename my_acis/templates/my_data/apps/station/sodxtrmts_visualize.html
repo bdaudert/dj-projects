@@ -26,9 +26,9 @@
             <tr>
                 <td>{{field.label}}:</td>
                 <td>{{field}}</td>
-                <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                 {%ifequal field.label "summary"%}
-                    <img src="{{MEDIA_URL}}img/SxtrSummary.png" id="ACISElementChoices" width="450" height="450" border="0">
+                    <img alt="SxtrSummary" title="SxtrSummary" src="{{MEDIA_URL}}img/SxtrSummary.png" id="ACISElementChoices" width="450" height="450" border="0">
                 {%else%}
                     <div class="pop-up"><p>{{field.help_text}}</p></div>
                 {%endifequal%}

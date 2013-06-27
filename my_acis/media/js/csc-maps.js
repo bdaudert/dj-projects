@@ -103,19 +103,19 @@ function initialize_station_finder() {
             var div = document.createElement('div');
             if (data.network_codes[key] == "COOP"){
                 div.innerHTML = '<input type="checkbox" id="'+ name +
-                                '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' + ' <img src="' + icon + '"> ' + name;
+                                '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' + ' <img alt="Icon" title="Icon" src="' + icon + '"> ' + name;
             }
             else {
                 div.innerHTML = '<input type="checkbox" id="'+ name +
-                '" onclick="my_boxclick(this,\''+ name +'\')"/>' + '<img src="' + icon + '"> ' + name;
+                '" onclick="my_boxclick(this,\''+ name +'\')"/>' + '<img alt="Icon" title="Icon" src="' + icon + '"> ' + name;
             }
             legend.appendChild(div);
         }
         //Create 'show all networks' button first
-        var name = 'Show all Networks';
+        var name = 'All Networks';
         var icon = 'http://thydzik.com/thydzikGoogleMap/markerlink.php?text=A&color=FC6355';
         var div = document.createElement('div');
-        div.innerHTML = '<input type="checkbox" id="all" onclick="my_boxclick(this,\'all\')"/>' + ' <img src="' + icon + '"><b> ' + name + '</b><br /><p class="error">Please be patient while loading all networks</p>';
+        div.innerHTML = '<input type="checkbox" id="all" onclick="my_boxclick(this,\'all\')"/>' + ' <img alt="Icon" title="Icon" src="' + icon + '"><b> ' + name + '</b><br /><p class="error">Please be patient while map is loading!</p>';
         legend.appendChild(div);
         var bounds=new google.maps.LatLngBounds();
 
@@ -322,7 +322,7 @@ function initialize_network_map() {
             var type = data.Types[i].type;
             var icon = MEDIA_URL + 'img/' + data.Types[i].icon;
             var div = document.createElement('div');
-            div.innerHTML = '<p><img class="icon" src="' + icon + '"> ' + type +': <input type="checkbox" id="'+ type + '" onclick="my_networkclick(this,\''+ type +'\')" checked /></p>';
+            div.innerHTML = '<p><img alt="Icon" title="Icon" class="icon" src="' + icon + '"> ' + type +': <input type="checkbox" id="'+ type + '" onclick="my_networkclick(this,\''+ type +'\')" checked /></p>';
             legend.appendChild(div);
         }
 
@@ -356,7 +356,7 @@ function initialize_network_map() {
             google.maps.event.addListener(marker, 'click', function() {
                 infowindow.close();
                 var contentString = '<div id="MarkerWindow">'+
-                '<img class="icon" src=' +  MEDIA_URL + 'img/' + c.icon + '>' +
+                '<img alt="Icon" title="Icon" class="icon" src=' +  MEDIA_URL + 'img/' + c.icon + '>' +
                 '<p class="error"><b>' + c.type +'</p><p>' + c.name + '</b><br/>'+
                 c.name_long + '<br/>' +
                 '<b>Location</b>: ' + c.location +

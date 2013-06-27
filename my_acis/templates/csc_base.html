@@ -65,31 +65,31 @@
         <div id="header"></div>
             <script type="text/javascript">$("#header").load("{{MEDIA_URL}}html/commons.html .header");</script>
         <!--<h1 align="center">Southwest Climate Knowledge Exchange</h1>
-        <a target="_blank" href="http://www.swcsc.arizona.edu/"><img class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png"></a>-->
+        <a target="_blank" href="http://www.swcsc.arizona.edu/"><img alt="SW_CSC" title="SW_CSC" class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png"></a>-->
         {%if home_page%}
-            <img class="map_2" src="{{ MEDIA_URL }}img/SouthWest.jpg">
+            <img alt="Southwest" title="Southwest" class="map_2" src="{{ MEDIA_URL }}img/SouthWest.jpg">
         {%endif%}
         {%if main_page%}
-            <img class="map" src="{{ MEDIA_URL }}img/Network.png">
-            <!--<img class="map" src="{{ MEDIA_URL }}img/KnowledgeNetwork.png">-->
+            <img alt="Network" title="Network" class="map" src="{{ MEDIA_URL }}img/Network.png">
+            <!--<img alt="Network" title="Network" class="map" src="{{ MEDIA_URL }}img/KnowledgeNetwork.png">-->
         {%endif%}
         {%if station_finder_page%}
-            <img class="map" src="{{ MEDIA_URL }}img/StationFinder.png">
+            <img alt="StationFinder" title=StationFinder" class="map" src="{{ MEDIA_URL }}img/StationFinder.png">
         {%endif%}
         {%if data_page%}
-            <img class="map" src="{{ MEDIA_URL }}img/DataPortal.png">
+            <img alt="DataPortal" title="DataPortal" class="map" src="{{ MEDIA_URL }}img/DataPortal.png">
         {%endif%}
         {%if apps_page%}
-            <img class="map" src="{{ MEDIA_URL }}img/ToolProduct.png">
+            <img alt="Tool" title="Tool" class="map" src="{{ MEDIA_URL }}img/ToolProduct.png">
         {%endif%}
         {%if monitor_page%}
-            <img class="map" src="{{ MEDIA_URL }}img/Monitoring.png">
+            <img alt="Monitoring" title="Monitoring" class="map" src="{{ MEDIA_URL }}img/Monitoring.png">
         {%endif%}
         {%if intro_page%}
-            <img class="map" src="{{ MEDIA_URL }}img/AboutUs.png">
+            <img alt="AboutUS" title="AboutUs" class="map" src="{{ MEDIA_URL }}img/AboutUs.png">
         {%endif%}
         {%if search_page%}
-            <img class="map" src="{{ MEDIA_URL }}img/Magnify.png">
+            <img alt="Magnify" title="Magnify" class="map" src="{{ MEDIA_URL }}img/Magnify.png">
         {%endif%}
 
     </div><!--end header-->
@@ -151,7 +151,7 @@
     </div> <!--end content-header-->
 
     <div class="content">
-    <p class="error" align="center" style="font-size:large;">You can make these pages stellar! <img class="icon" src="{{MEDIA_URL}}img/Stellar.png"> E-mail ANY suggestions to <a href="mailto:csc-wrcc@dri.edu">csc-wrcc@dri.edu</a></p>
+    <p class="error" align="center" style="font-size:large;">You can make these pages stellar! <img alt="Stellar" title="Stellar" class="icon" src="{{MEDIA_URL}}img/Stellar.png"> E-mail ANY suggestions to <a href="mailto:csc-wrcc@dri.edu">csc-wrcc@dri.edu</a></p>
     {% block content %}
         <input type="hidded" name="MEDIA_URL" id="MEDIA_URL" value={{MEDIA_URL}} />
     {% endblock %}

@@ -14,37 +14,6 @@
     <div class="container">
 
         <div class="center-left">
-           <h2 class="error">Geospatial Data Tools</h2>
-            <ul class="navbar">
-
-            <h4 align="center">Southwest US Applications</h4>
-            <table>
-                <tr><td>
-                <a id="us_wide" href="http://westernlandscapesexplorer.info/" class="trigger" target="_blank"><img class="logo" src="{{MEDIA_URL}}img/ILAPLogo.png"></a>
-                <div class="pop-up">
-                    <p>The Western Landscapes Explorer provides access to information used to evaluate large landscapes over time. This includes data and information developed by the Integrated Landscape Assessment Project, as well as other landscape-level information designed to facilitate decision making, research, and exploration.</p>
-                </div>
-                </td><td>
-                <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_ILAP')">
-                </td></tr>
-            </table>
- 
-
-            <h4 align="center">US-Wide Applications</h4>
-                <table>
-                    <tr><td>
-                    <a id="us_wide" href="http://databasin.org/" class="trigger"><img class="logo" src="{{MEDIA_URL}}img/DataBasinLogo.png"> DataBasin by the Conservation Biology Institute (CBI)</a>
-                    <div class="pop-up">
-                        <p>Data Basin is a science-based mapping and analysis platform that supports learning, research, and sustainable environmental stewardship.</p>
-                    </div>
-                    </td><td>
-                   <img class="qmark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="HighLight(this,'docu','Docu_DataBasin')">
-                    </td></tr>
-                </table>
-            </ul>
-        </div>
-
-        <div class="major-right">
             <!-- Application documentation -->
             <div class="docu" id="Docu_ILAP" style="display:none;"></div>
                 <script type="text/javascript">                        
@@ -56,6 +25,41 @@
                 </script>
            </div>
         </div>
+        
+        <div class="center">
+        </div>
+
+        <div class="center-right">
+           <h3>Links to other Geospatial Data Tools</h3>
+            <ul class="navbar">
+
+            <h4 align="center">Southwest US Applications</h4>
+            <table>
+                <tr><td>
+                <a id="us_wide" href="http://westernlandscapesexplorer.info/" class="trigger" target="_blank"><img alt="WLE" title="WLE" class="logo" src="{{MEDIA_URL}}img/ILAPLogo.png">Western Landscape Explorer</a>
+                <div class="pop-up">
+                    <p>The Western Landscapes Explorer provides access to information used to evaluate large landscapes over time. This includes data and information developed by the Integrated Landscape Assessment Project, as well as other landscape-level information designed to facilitate decision making, research, and exploration.</p>
+                </div>
+                </td><td>
+                <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_ILAP')">
+                </td></tr>
+            </table>
+ 
+
+            <h4 align="center">US-Wide Applications</h4>
+                <table>
+                    <tr><td>
+                    <a id="us_wide" href="http://databasin.org/" class="trigger"><img alt="DataBasin" title="DataBasin" class="logo" src="{{MEDIA_URL}}img/DataBasinLogo.png"> DataBasin by the Conservation Biology Institute (CBI)</a>
+                    <div class="pop-up">
+                        <p>Data Basin is a science-based mapping and analysis platform that supports learning, research, and sustainable environmental stewardship.</p>
+                    </div>
+                    </td><td>
+                   <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="HighLight(this,'docu','Docu_DataBasin')">
+                    </td></tr>
+                </table>
+            </ul>
+        </div>
+
 
     </div>
 

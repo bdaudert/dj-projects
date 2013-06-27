@@ -18,7 +18,7 @@
 <script type="text/javascript">$("#header").load("{{MEDIA_URL}}html/commons.html .header");</script>
 
 
-<img class="map_2" src="/csc/media/img/SouthWest.jpg">
+<img alt="SouthWest" title="SouthWest" class="map_2" src="/csc/media/img/SouthWest.jpg">
 <br />
 
 <div class="content-header"></div>
@@ -48,26 +48,21 @@
 
 <div class="container">
 
-    <p class="error" align="center" style="font-size:large;">Start by choosing one of the following:</p>
-    <table class="dash" cellspacing="15px" align="center">
-        <tr><td></td></tr>
-        <!--First row of dashboard: image-->
+    <p align="center" style="font-size:x-large;">Start by choosing one of the following:</p>
+    <table class="dash" cellspacing="10px" align="center">
         <tr>
-            <td><a href="{{DATA_URL}}"><img class="dash_img" src="{{MEDIA_URL}}img/DataPortal.png"></a></td>
-            <td><a href="{{TOOLS_URL}}"><img class="dash_img" src="{{MEDIA_URL}}img/ToolProduct.png"></a></td>
-            <td><a href="{{SW_CKN_URL}}monitoring/"><img class="dash_img" src="{{MEDIA_URL}}img/Monitoring.png"></a></td>
-            <td><a href="{{SW_CKN_URL}}main_map/"><img class="dash_img" src="{{MEDIA_URL}}img/Network.png"></a></td>
+        <td><a href="{{DATA_URL}}"><b><font size="3">DATA</font></b></a</td>
+        <td><a href="{{TOOLS_URL}}"><b><font size="4">TOOLS/APPLICATIONS</font></b></a></td>
+        <td><a href="{{SW_CKN_URL}}monitoring/"><b><font size="4">MONITORING</font></b></a></td>
+        <td><a href="{{SW_CKN_URL}}main_map/"><b><font size="4">RESOURCES</font></b></a></td>
         </tr>
         <tr>
-            <!--<td><b>SW-CKN Home Page</b></td>-->
-            <td><a class="error" href="{{DATA_URL}}"><b>DATA</b></a></td>
-            <td><a class="error" href="{{TOOLS_URL}}"><b>TOOLS/APPLICATIONS</b></a></td>
-            <td><a class="error" href="{{SW_CKN_URL}}monitoring/"><b>MONITORING</b></a></td>
-            <td><a class="error" href="{{SW_CKN_URL}}main_map/"><b>RESOURCES</a><br /></b></td>
+            <td><a href="{{DATA_URL}}"><img alt="DataPortal" title="DataPortal" class="front_dash_img" src="{{MEDIA_URL}}img/DataPortal.png"></a></td>
+            <td><a href="{{TOOLS_URL}}"><img alt="Tool" title="Tool" class="front_dash_img" src="{{MEDIA_URL}}img/ToolProduct.png"></a></td>
+            <td><a href="{{SW_CKN_URL}}monitoring/"><img alt="Monitoring" title="Monitoring" class="front_dash_img" src="{{MEDIA_URL}}img/Monitoring.png"></a></td>
+            <td><a href="{{SW_CKN_URL}}main_map/"><img alt="Network" title="Network" class="front_dash_img" src="{{MEDIA_URL}}img/Network.png"></a></td>
         </tr>
-        <!--Second+ rows: list of content-->
         <tr>
-            <!--<td><b>SW-CKN Home Page</b></td>-->
             <td><b>Access to various climate data</b></td>
             <td><b>Interactive Data Applications</b></td>
             <td><b>Current Climate Information</b></td>
@@ -95,7 +90,7 @@
             <td>Geospatial Data Layers</td>
             <td></td>
             <td>Projections</td>
-            <td>Access to all content</td>
+            <td></td>
         </tr>
     </table>
     <br />

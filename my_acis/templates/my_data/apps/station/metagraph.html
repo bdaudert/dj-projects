@@ -23,7 +23,7 @@
                 <tr>
                     <td>{{field.label}}:</td>                                                                    
                     <td>{{field}}</td>                                                                                
-                    <td><p class="trigger"><img src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>                                             <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>                                             <div class="pop-up"><p>{{field.help_text}}</p></div>
                     </td>
                 </tr>
                {%ifequal field.label "Station id"%}
@@ -74,13 +74,13 @@
         {%else%}
             {%if station_id%}
             <h1>STATION ID: {{station_id}}</h1>
-            <img src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmax.gif">
-            <img src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmin.gif">
-            <img src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_pcpn.gif">
-            <img src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_snow.gif">
-            <img src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_snwd.gif">
+            <img alt="MetaTMAX" title="MetaTMAX" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmax.gif">
+            <img alt="MetaTMIN" title="MetaTMIN" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmin.gif">
+            <img alt="MetaPCPN" title="MetaPCPN" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_pcpn.gif">
+            <img alt="MetaSNOW" title="MetaSNOW" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_snow.gif">
+            <img alt="MetaSNWD" title="MetaSNWD" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_snwd.gif">
             <!--
-            <img src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}"> 
+            <img alt="Meta" title="Meta" src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}"> 
             -->
             {%endif%}
         {%endif%} 
