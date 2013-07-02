@@ -500,6 +500,7 @@ class SodxtrmtsForm(SodForm):
     def __init__(self, *args, **kwargs):
         super(SodxtrmtsForm, self).__init__(*args, **kwargs)
         self.fields.keyOrder = ['station_ID', 'start_year', 'end_year', 'element', 'monthly_statistic', 'max_missing_days', 'start_month', 'departures_from_averages', 'frequency_analysis']
+        #'base_temperature', 'less_greater_or_between', 'threshold_low_for_between', 'threshold_low_for_between', 'threshold_for_less_or_greater', 'frequency_analysis_type'
     element = forms.ChoiceField(choices=WRCCData.SXTR_ELEMENT_CHOICES, initial='pcpn', help_text = 'Climate Element')
     #base_temperature = forms.IntegerField(initial=65, help_text = 'Base Temperature for degree day element.')
     start_year = MyYearField(max_length=4, min_length=3, initial='POR', help_text='Earliest start date. Format: yyyy or "POR" for period of record.')

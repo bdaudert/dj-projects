@@ -1253,7 +1253,7 @@ def station_locator_app(request):
                         else:
                             pass
                     except:
-                        el_vX_list.append(WRCCData.acis_elements_dict[el]['vX'])
+                        el_vX_list.append(str(WRCCData.acis_elements_dict[el]['vX']))
 
                 stn_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=form1.cleaned_data['constraints'])
             else:
@@ -1299,6 +1299,10 @@ def sodxtrmts(request):
     initial = set_sod_initial(request, 'Sodxtrmts')
     form0 = set_as_form(request,'SodxtrmtsForm', init=initial)
     context['form0'] = form0
+    context['less'] = 0.005
+    context['greater'] = 0.001
+    context['threshold_low_for_between'] = 0.001
+    context['threshold_high_for_between'] = 0.11
     if 'form0' in request.POST:
         context['req'] = request.POST
         form0 = set_as_form(request,'SodxtrmtsForm', init={'date_type':'y'})
@@ -1331,10 +1335,14 @@ def sodxtrmts(request):
             if str(request.POST['less_greater_or_between']) == 'b':
                 app_params['threshold_low_for_between'] = float(request.POST['threshold_low_for_between'])
                 app_params['threshold_high_for_between'] = float(request.POST['threshold_high_for_between'])
+                context['threshold_low_for_between'] = request.POST['threshold_low_for_between']
+                context['threshold_high_for_between'] = request.POST['threshold_high_for_between']
             elif str(request.POST['less_greater_or_between']) == 'l':
                 app_params['threshold_for_less_or_greater'] = float(request.POST['less'])
+                context['less'] = request.POST['less']
             elif str(request.POST['less_greater_or_between']) == 'g':
                 app_params['threshold_for_less_or_greater'] = float(request.POST['greater'])
+                context['greater'] = request.POST['greater']
             for key in ['station_ID', 'start_year', 'end_year']:
                 del app_params[key]
             app_params['el_type'] = form0.cleaned_data['element']
@@ -1354,7 +1362,11 @@ def sodxtrmts(request):
             if dates_list:
                 search_params[WRCCData.sodxtrmts_params['start_year']] =  dates_list[0][0:4]
                 search_params[WRCCData.sodxtrmts_params['end_year']] =  dates_list[-1][0:4]
-                context['search_params'] = search_params
+            try:
+                search_params['Elevation'] = data['meta']['elev']
+            except:
+                pass
+            context['search_params'] = search_params
             data = DJ.get_data()
             #Run application
             App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
