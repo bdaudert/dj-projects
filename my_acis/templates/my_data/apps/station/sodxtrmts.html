@@ -12,7 +12,7 @@
     <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
     <a href="{{TOOLS_URL}}">TOOLS></a>
     <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
-    <a href="{{TOOLS_URL}}station/sodxtrmts/">Monthly Summaries of Extremes</a>
+    <a href="{{TOOLS_URL}}station/sodxtrmts/">Monthly Summary Time Series from Daily Input</a>
 </p>
 
 <div class="container">
@@ -22,7 +22,7 @@
         <td>
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
-            <table class="form" cellpadding="0">
+            <table class="form">
             {%for field in form0 %}
                     <tr>
                         <td>{{field.label}}:</td>                                                                    
@@ -43,7 +43,18 @@
                  <tr><td></td><td>{{field.errors}}</td><td></td></tr>
                 {%endif%}
             {%endfor%}
+            <tr><td><input type="submit" value="Submit" name="form0"/></td></tr>
             <!-- Add Extra Options -->
+            <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
+            <tr><td colspan="3"><b color="red">Conditional Otional</b></td></tr>
+            <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
+            <tr><td colspan="3"><b>Base Temperature for Degree Days</b></td></tr>
+            <tr>
+                <td></td>
+                <td><input type="text" name="base_temperature" value=65 ></td>
+                <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                <div class="pop-up"><p>Base Temperature for Heating/Cooling or Growing Degree Days.</p></div>
+            </tr>
             <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
             <tr><td colspan="3"><b>Thresholds for "Number of Days" statistic</b></td></tr>
             <tr>
@@ -136,6 +147,7 @@
         </div>
         <br />
         {%if results%}
+            <!--
             <!--Graphics-->
             <p class="pop_link" onClick="ShowHide('range_plot')"><u>Show/hide plot of mean and range</u></p>
             <div id="range_plot" style="display:none;">
@@ -145,20 +157,21 @@
                 <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts.js"></script>
                 <br / >
             </div>
+            --->
+            <p class="pop_link" onClick="ShowHide('table_header')"><u>Show/hide table header</u></p>
+            <div id="table_header" style="display:none;">
+                {%if search_params%}
+                    {%if station_name%}
+                    <p><b>Station Name</b>: {{station_name}}</p>
+                    {%endif%}
+                    <p class="error"><b>Parameters</b>:</p>
+                    <p>
+                    {%for key, val in search_params.items%}
+                    <b>{{key}}</b>: {{val}}
+                    {%endfor%}
+                    </p>
+                {%endif%}
 
-            {%if search_params%}
-                <p class="pop_link" onClick="ShowHide('search_params')"><u>Show/hide the search parameters</u></p>
-                <div id="search_params" style="display:none;">
-                <p class="error"><b>Search Parameters</b>:</p>
-                {%for key, val in search_params.items%}
-                <p><b>{{key}}</b>: {{val}}</p>
-                {%endfor%}
-            </div>
-            {%endif%}
-
-              <p class="pop_link" onClick="ShowHide('table_info')"><u>Show/hide information about the table</u></p>
-               <div id="table_info" style="display:none;">
-            
                 <p align="left">
                 <b>Missing days allowed</b><br />Any month with less than or equal this user selected number will be included in the analysis.<br /> 
                 Monthly information for months with more than this number of missing values will be displayed, but not used. <br />
@@ -166,22 +179,22 @@
                 (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).
                 <br /></br />
                 <b>Summary Table</b><br />
-                <b>Mean</b> – <br />
+                <b>Mean</b> – 
                 Column mean of all months that meet criteria for number of missing days.<br /> 
                 Months with excess missing days not used.<br />
-                <b>S.D.</b> – <br />
+                <b>S.D.</b> – 
                 Standard deviation of the column values, using only months that meet criteria for missing days.<br />
-                <b>SKW10</b> – <br />
+                <b>SKW10</b> – 
                 Shows skewness coefficient of the values in this column, using only those months that meet criteria for missing data. <br />
                 Value is multiplied by 10.<br />
-                <b>Max</b> – <br />
+                <b>Max</b> –
                 Maximum of column values using only those months that meet missing days criteria.<br />
-                <b>Min</b> – <br />
+                <b>Min</b> –
                 Minimum of column values using only those months that meet missing days criteria.<br />
-                <b>Years</b> – <br />
+                <b>Years</b> –
                 Number of years with months that meet criteria for missing days.
                 </p>
-             </div>
+            </div>
             
             <!-- One tab per element -->
             <img alt="Print" title="Print" class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/visualize/?station_ID={{station_ID}}&element={{element}}&json_file={{json_file}}" style="font-size:large;">Generate Time Series Plots for this data</a>

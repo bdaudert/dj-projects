@@ -72,23 +72,39 @@
         </div>
 
         <div class="center">
+
+            {%if stn_id%}
+                <p class="error">Station ID: {{stn_id}}</p>
+            {%endif%}
+            {%if start_date%}
+                <p class="error">Start Date: {{start_date}}</p>
+            {%endif%}
+            {%if end_date%}
+                <p class="error">End Date: {{end_date}}</p>
+            {%endif%}
+            {%if elements%}
+                <p class="error">Climate Elements: {{elements}}</p>
+            {%endif%}
+
+            <br />
+
             <p class="error" align ="center">(* Beta version)</p>
-            <table cellspacing="10">
+            <table cellspacing="0">
             <tr>
                 <td>
-                    <p class="trigger">* Monthly Time Series <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_SODXTRMTS')"></p>
+                    <p class="trigger">* Monthly Summary Time Series<br /> from Daily Data <br /> <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_SODXTRMTS')"></p>
                     <div class="pop-up" id="sodxtrmts">
                         <p>This program produces monthly and annual time series of a large number of properties derived from the SOD daily data set.</p>
                     </div>
                 </td>
                 <td>
-                    <p class="trigger">Monthly Averages <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_MAVES')"></p>
+                    <p class="trigger">Monthly Averages <br /> <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_MAVES')"></p>
                     <div class="pop-up">
                         <p>Generates bar chart of monthly averages.</p>
                     </div>
                 </td>
                 <td>
-                    <p class="trigger">* Monthly/Seasonal <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_SODSUMM')"><br /> Climate Summaries</p>
+                    <p class="trigger">* Monthly/Seasonal <br /> Climate Summaries <br /><img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_SODSUMM')"></p>
                     <div class="pop-up" id="sodsumm">
                         <p>Generates general climatology in table and graph form.</p>
                     </div>
@@ -119,13 +135,13 @@
             </tr>
             <tr>
                 <td>
-                    <p class="trigger">Station Finder <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_NONE')"></p>
+                    <p class="trigger">Station Finder <br/><img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_NONE')"></p>
                     <div class="pop-up">
                         <p>Find stations with data for specific elements and a chosen time range.</p>
                     </div>
                 </td>
                 <td>
-                    <p class="trigger">Station Metadata Graphics <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_META_GRAPH')"></p>
+                    <p class="trigger">Station Metadata Graphics <br /><img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_META_GRAPH')"></p>
                     <div class="pop-up">
                             <p>See how much data is missing over the period of record.</p>
                         </div>
@@ -154,6 +170,7 @@
         </div>
 
         <div class="center-right">
+            {%if not stn_id%}
             <h3 align ="center">Links to other Applications</h3>
             <ul class="navbar">    
                 <h4 align="center">US-Wide Applications</h4>
@@ -199,6 +216,7 @@
                     </td></tr>
                 </table>
            </ul>
+            {%endif%}
         </div>
 
 </div>

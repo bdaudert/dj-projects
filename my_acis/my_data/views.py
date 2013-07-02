@@ -644,6 +644,14 @@ def apps_station(request):
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
         'apps_page':True
         }
+    stn_id = request.GET.get('stn_id', None)
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
+    elements = request.GET.get('elements', None)
+    if stn_id is not None:context['stn_id'] = stn_id
+    if start_date is not None:context['start_date'] = start_date
+    if end_date is not None:context['end_date'] = end_date
+    if elements is not None:context['elements'] = elements
     return render_to_response('my_data/apps/station/home.html', context, context_instance=RequestContext(request))
 
 def apps_gridded(request):
@@ -659,7 +667,7 @@ def apps_gis(request):
         'apps_page':True
         }
     return render_to_response('my_data/apps/gis/home.html', context, context_instance=RequestContext(request))
-
+'''
 def swcke_station_apps(request):
     context = {
         'title': 'Historic Station Data Tools',
@@ -677,6 +685,7 @@ def swcke_station_apps(request):
     if elements is not None:context['elements'] = elements
 
     return render_to_response('my_data/apps/swcke_station_apps.html', context, context_instance=RequestContext(request))
+'''
 
 def metagraph(request):
     context = {
@@ -1298,12 +1307,17 @@ def sodxtrmts(request):
             search_params = {}
             #search_params = form0.cleaned_data
             for key,val in form0.cleaned_data.iteritems():
-                if key == 'base_temperature' and form0.cleaned_data['element'] not in ['gdd', 'hdd', 'cdd']:
-                    continue
                 if key in ['monthly_statistic', 'frequency_analysis']:
                     search_params[WRCCData.sodxtrmts_params[key]] = WRCCData.sodxtrmts_params[str(val)]
+                elif key == 'element':
+                    search_params[WRCCData.sodxtrmts_params[key]] = WRCCData.acis_elements_dict[str(val)]['name_long']
+                elif key == 'start_month':
+                    search_params[WRCCData.sodxtrmts_params[key]] = WRCCData.month_names_long[int(val) - 1]
                 else:
                     search_params[WRCCData.sodxtrmts_params[key]] = val
+            context['search_params']= search_params
+            if form0.cleaned_data['element'] in ['gdd', 'hdd', 'cdd']:
+                search_params['base_temperature'] = str(request.POST['base_temperature'])
             context['search_params']= search_params
             data_params = {
                     'sid':form0.cleaned_data['station_ID'],
@@ -1324,6 +1338,8 @@ def sodxtrmts(request):
             for key in ['station_ID', 'start_year', 'end_year']:
                 del app_params[key]
             app_params['el_type'] = form0.cleaned_data['element']
+            context['el_type'] = form0.cleaned_data['element']
+            app_params['base_temperature']  = int(request.POST['base_temperature'])
             context['element'] = form0.cleaned_data['element']
             del app_params['element']
             context['app_params'] = app_params
@@ -1334,9 +1350,11 @@ def sodxtrmts(request):
             if station_ids:context['station_ID'] =  station_ids[0]
             if station_names:context['station_name'] = station_names[0]
             dates_list = DJ.get_dates_list()
+            #Overwrite search params to reflect actuall start/end year
             if dates_list:
-                context['start_year'] =  dates_list[0][0:4]
-                context['end_year'] =  dates_list[-1][0:4]
+                search_params[WRCCData.sodxtrmts_params['start_year']] =  dates_list[0][0:4]
+                search_params[WRCCData.sodxtrmts_params['end_year']] =  dates_list[-1][0:4]
+                context['search_params'] = search_params
             data = DJ.get_data()
             #Run application
             App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
@@ -1441,10 +1459,16 @@ def sodxtrmts_visualize(request):
             context['generate_plots']  = True
             context['json_file'] = json_file
             for key,val in form0.cleaned_data.iteritems():
+                '''
                 if key == 'months':
                     context[key] = [int(v) for v in val]
                 else:
                     context[key] = str(val)
+                '''
+                if key not in ['start_month', 'end_month']:
+                    context[key] = str(val)
+            #Find list of months
+            context['months'] = [mon for mon in range(int(form0.cleaned_data['start_month']), int(form0.cleaned_data['end_month']) +1)]
     return render_to_response('my_data/apps/station/sodxtrmts_visualize.html', context, context_instance=RequestContext(request))
 
 '''

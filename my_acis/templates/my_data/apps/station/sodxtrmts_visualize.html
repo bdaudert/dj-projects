@@ -122,12 +122,16 @@
             {%endfor%}
             </table>
         </div>
+
+        <p>Show Running Mean: {{show_running_mean}}</p>
         {%if generate_plots%}
             <!--<input type="text" id="test" name="test" value="blah">-->
             <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">
             <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
             <input type="hidden" id="months" name="months" value="{{months}}">
             <input type="hidden" id="summary" name="summary" value="{{summary}}">
+            <input type="hidden" id="show_running_mean" name="show_running_mean" value="{{show_running_mean}}">
+            <input type="hidden" id="running_mean_years" name="running_mean_years" value="{{running_mean_years}}">
             <div align="center" id="container" style="height:350px;width:100%;"></div>
             <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts-visualize.js"></script>
         {%endif%}

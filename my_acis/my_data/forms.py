@@ -499,21 +499,24 @@ class SodsummForm(SodForm):
 class SodxtrmtsForm(SodForm):
     def __init__(self, *args, **kwargs):
         super(SodxtrmtsForm, self).__init__(*args, **kwargs)
-        self.fields.keyOrder = ['station_ID', 'start_year', 'end_year', 'element', 'base_temperature', 'monthly_statistic', 'max_missing_days', 'start_month', 'departures_from_averages', 'frequency_analysis']
+        self.fields.keyOrder = ['station_ID', 'start_year', 'end_year', 'element', 'monthly_statistic', 'max_missing_days', 'start_month', 'departures_from_averages', 'frequency_analysis']
     element = forms.ChoiceField(choices=WRCCData.SXTR_ELEMENT_CHOICES, initial='pcpn', help_text = 'Climate Element')
-    base_temperature = forms.IntegerField(initial=65, help_text = 'Base Temperature for degree day element.')
-    start_year = MyYearField(max_length=4, min_length=3, initial='POR', help_text='yyyy or "POR" for period of record')
-    end_year = MyYearField(max_length=4, min_length=3, initial='2013', help_text='yyyy or "POR" for period of record')
-    monthly_statistic = forms.ChoiceField(choices=WRCCData.SXTR_ANALYSIS_CHOICES, initial='msum', help_text = 'Analysis Type')
+    #base_temperature = forms.IntegerField(initial=65, help_text = 'Base Temperature for degree day element.')
+    start_year = MyYearField(max_length=4, min_length=3, initial='POR', help_text='Earliest start date. Format: yyyy or "POR" for period of record.')
+    end_year = MyYearField(max_length=4, min_length=3, initial='2013', help_text='Latest end date. Format: yyyy or "POR" for period of record.')
+    monthly_statistic = forms.ChoiceField(choices=WRCCData.SXTR_ANALYSIS_CHOICES, initial='msum', help_text = 'Desired monthly characteristic of the selected climate element')
     max_missing_days = forms.IntegerField(initial=5, help_text=HELP_TEXTS['max_missing_days'])
-    start_month = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial='01',help_text = 'Start the analysis on this month. Default is January.')
-    departures_from_averages= forms.ChoiceField(choices = ([('T', 'Yes'),('F', 'No'),]), initial = 'F', help_text = 'Express results as departures from averages.')
+    start_month = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial='01',help_text = 'Define a year as starting with this month.')
+    departures_from_averages= forms.ChoiceField(choices = ([('T', 'Yes'),('F', 'No'),]), initial = 'F', help_text = 'Express results as departures from column averages.')
     frequency_analysis = forms.ChoiceField(choices = ([('F', 'False'),]), initial = 'F', help_text='Perform Frequency Analysis. Coming Soon!')
 
 class SodxtrmtsVisualizeForm(forms.Form):
-    months = forms.MultipleChoiceField(widget=CheckboxSelectMultiple, choices=WRCCData.MONTH_CHOICES, initial=WRCCData.MONTH_CHOICES[0], help_text = 'Choose one or more months to analyze.')
+    #months = forms.MultipleChoiceField(widget=CheckboxSelectMultiple, choices=WRCCData.MONTH_CHOICES, initial=WRCCData.MONTH_CHOICES[0], help_text = 'Choose one or more months to analyze.')
+    start_month = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial='01', required=False, help_text = 'Start the visualization on this month.')
+    end_month = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial='02', required=False, help_text = 'End the visualization on this month.')
     summary = forms.ChoiceField(choices=WRCCData.SXTR_SUMMARY_CHOICES, initial='mean', help_text='How to summarize the months.')
-
+    show_running_mean = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show running mean.')
+    running_mean_years = forms.IntegerField(initial=9,required=False, help_text='Years over which to compute the running mean.')
 '''
 class SodxtrmtsVisualizeForm(forms.Form):
     def __init__(self, *args, **kwargs):

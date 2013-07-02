@@ -6,6 +6,8 @@ $(function () {
         var json_file = document.getElementById("json_file").value;
         var file = JSON_URL + json_file;
         var month_list_str = document.getElementById("months").value;
+        var show_running_mean = document.getElementById("show_running_mean").value;
+        var running_mean_years = document.getElementById("running_mean_years").value;
         //convert into javascript array
         var month_list = month_list_str.substring(1,month_list_str.length -1).split(",")
         for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
@@ -37,6 +39,7 @@ $(function () {
                 }
                 //Define series data
                 var data = [];
+                var values = [];
                 for (var yr_idx=0;yr_idx<datadict.data.length - 6;yr_idx++) {
                     var vals = [];
                     for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
@@ -45,55 +48,100 @@ $(function () {
                             vals.push(parseFloat(val));
                         }
                     }
-                    if (vals) {
+                    if (vals.length > 0) {
                         if (summary == 'max'){
-                            data.push(Math.max.apply(Math,vals));
+                            data.push([Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1), Math.max.apply(Math,vals)]);
+                            values.push(Math.max.apply(Math,vals));
                         }
                         if (summary == 'min'){
-                            data.push(precise_round(Math.min.apply(Math,vals),2));
+                            data.push([Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1), precise_round(Math.min.apply(Math,vals),2)]);
+                            values.push(precise_round(Math.min.apply(Math,vals),2));
                         }
                         if (summary == 'sum'){
                             for(var i=0,sum=0;i<vals.length;sum+=vals[i++]);
-                            data.push(precise_round(sum,2));
+                            data.push([Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1), precise_round(sum,2)]);
+                            values.push = precise_round(sum,2);
                         }
                         if (summary == 'mean'){
                             for(var i=0,sum=0;i<vals.length;sum+=vals[i++]);
-                            data.push(precise_round(sum/vals.length,2));
+                            data.push([Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1), precise_round(sum/vals.length,2)]);
+                            values.push(precise_round(sum/vals.length,2));
                         }
                     }
                     else {
-                        data.push(null);
-                    }    
+                        data.push([Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1), null]);
+                        values.push(null);
+                    }
                 } //end for yr_idx
                 // Find max/min (needed to set plot properties)
-                var data_max = Math.max.apply(Math,data);
-                var data_min = Math.min.apply(Math,data);
+                var data_max = Math.max.apply(Math,values);
+                var data_min = Math.min.apply(Math,values);
                 series['data'] = data;
                 series_data.push(series);
+                //Running Mean
+                if (show_running_mean == 'T'){
+                    var running_mean_data = [];
+                    if (running_mean_years%2 == 0){
+                        var num_nulls =running_mean_years/2 - 1;
+                        var month_idx = 5;
+                    }
+                    else{
+                        var num_nulls =(running_mean_years - 1)/2;
+                        var month_idx = 0;
+                    }
+                    for (var yr_idx=0;yr_idx<values.length;yr_idx++) {
+                        if (yr_idx >= num_nulls &&  yr_idx <= values.length - 1 - num_nulls) {
+                            //for(var i=yr_idx - num_nulls,sum=0;i<=yr_idx + num_nulls;sum+=values[i++]);
+                            var cnt = 0;
+                            for(var i=yr_idx - num_nulls,sum=0;i<=yr_idx + num_nulls;i++){
+                                if (values[i] != null){
+                                    sum+=values[i];
+                                    cnt+=1;
+                                }
+                            }
+                            if (cnt > 0){
+                                running_mean_data.push([Date.UTC(parseInt(datadict.data[yr_idx][0]), month_idx, 1), precise_round(sum/cnt,2)]);
+                            }
+                            else{
+                                running_mean_data.push([Date.UTC(parseInt(datadict.data[yr_idx][0]), month_idx, 1), null]);
+                            }
+                        }
+                        else{
+                            running_mean_data.push([Date.UTC(parseInt(datadict.data[yr_idx][0]), month_idx, 1), null]);
+                        }
+                    }
+                    var series = {'pointStart':Date.UTC(parseInt(datadict.start_date),month_idx,01),'pointInterval':Interval};
+                    series['name'] = running_mean_years.toString() + 'Year Running Mean';
+                    series['data'] = running_mean_data;
+                    series_data.push(series);
+                }
             }
             else { //summary = indiviual
                 for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
                     var series = {'name':month_names[month_list[mon_idx]-1],'pointStart':Start,'pointInterval':Interval};
                     var data =  [];
+                    var values = [];
                     for (var yr_idx=0;yr_idx<datadict.data.length - 6;yr_idx++) {
                         var val = datadict.data[yr_idx][2*month_list[mon_idx] - 1]
                         if (val != '-----') {
-                            data.push(precise_round(parseFloat(val),2));
+                            values.push(precise_round(parseFloat(val),2));
+                            data.push([Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1), precise_round(parseFloat(val),2)]);
                         }
                         else {
-                            data.push(null);
+                            values.push(null);
+                            data.push([Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1),null]); 
                         }
                     }
                     series['data'] =  data;
                     series_data.push(series);
                     //Find max/min of data (needed to set plot properties)
                     if (mon_idx == 0){
-                        var data_max = Math.max.apply(Math,data);
-                        var data_min = Math.min.apply(Math,data);
+                        var data_max = Math.max.apply(Math,values);
+                        var data_min = Math.min.apply(Math,values);
                     }
                     else{
-                        max = Math.max.apply(Math,data);
-                        min = Math.min.apply(Math,data);
+                        max = Math.max.apply(Math,values);
+                        min = Math.min.apply(Math,values);
                         if (max > data_max){
                             data_max = max;
                         }
@@ -111,10 +159,14 @@ $(function () {
                     xAxisText+= month_names[parseInt(mon)] + '  '
                 }
             }
-            if (data_max != null && data_min != null){
-                var tickInterval = precise_round((data_max - data_min)/10, 1);
+            if (data_max == null || data_min == null){
+                var tickInterval = null;
             }
+            else if (Math.abs(data_max - data_min) < 0.001){
+                var tickInterval = null;
+            } 
             else {
+                //var tickInterval = precise_round((data_max - data_min)/10, 1);
                 var tickInterval = null;
             }
             //Define Chart
@@ -129,7 +181,7 @@ $(function () {
                 
                 subtitle: {
                     //text: data_max + ', ' + data_min
-                    text: 'Station: (' +  stn_id + ') ' + datadict.stn_name
+                    text:datadict.stn_name + '(' + stn_id + ')'
                 },
                 credits: {
                         href: 'http://wrcc.dri.edu/',
@@ -141,10 +193,15 @@ $(function () {
                     },
                     type: 'datetime',
                     maxZoom: 365 * 24 * 3600000, // 1 year
+                    dateTimeLabelFormats: { // don't display the dummy year
+                    year: '%Y'
+                    }
+                    /*
                     plotBands: [{
                     from: Date.UTC(parseInt(datadict.start_date),0,01),
                     to: Date.UTC(parseInt(datadict.end_date),0,01)
                     }],
+                    */
                 },
                 yAxis: {
                     title: {
@@ -159,6 +216,7 @@ $(function () {
                 },
                 legend: {
                     enabled: true
+                    //verticalAlign:'top'
                 },
                 series:series_data 
             });//end chart
