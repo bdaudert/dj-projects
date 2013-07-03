@@ -444,6 +444,11 @@ class MultiPRISMElementField(forms.CharField):
 ######################################################################
 #Form Classes
 ######################################################################
+#Data download form
+class DownloadForm(forms.Form):
+    data_format = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='clm', help_text=HELP_TEXTS['data_format'])
+    delimiter = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial='tab',help_text='Delimiter used to seperate data values.')
+
 
 #Generic form for Kelly's SOD programs
 class SodForm(forms.Form):
@@ -698,7 +703,7 @@ class StationDataForm3(forms.Form):
         self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('end_date', None), help_text=HELP_TEXTS['date_por'])
         self.fields['show_flags'] = forms.ChoiceField(choices=([('T', 'Yes'),('F', 'No')]), required=False, initial=kwargs.get('initial', {}).get('show_flags', 'F'), help_text='Show the data flag with each data point. Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated')
         self.fields['show_observation_time'] = forms.ChoiceField(choices=([('T', 'Yes'),('F', 'No')]), required=False, initial=kwargs.get('initial', {}).get('show_observation_time', 'F'), help_text='Show the time at which the observation was taken for each data point.')
-        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='txt', help_text=HELP_TEXTS['data_format'])
+        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='clm', help_text=HELP_TEXTS['data_format'])
         if data_format in ['dlm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial=kwargs.get('initial', {}).get('delimiter', None),help_text='Delimiter used to seperate data values.')
 

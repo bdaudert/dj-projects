@@ -145,6 +145,22 @@ def sw_networks(request):
     }
     return render_to_response('my_data/data/sw_networks.html', context, context_instance=RequestContext(request))
 
+def download(request):
+    context = {
+        'title': 'Download',
+        'apps_page':True
+    }
+    app_name = request.GET.get('app_name', None)
+    json_file = request.GET.get('json_file', None)
+    form0 = forms.DownloadForm()
+    context['form0'] = form0
+    if form0 in request.POST:
+        if form0.is_valid():
+            data_format = form0.cleaned_data['data_format']
+            delimiter = form0.cleaned_data['delimiter']
+            DDJ = WRCCClasses.DownloadDataJob(app_name,data_format,delimiter,json_file=json_file)
+    return render_to_response('my_data/download.html', context, context_instance=RequestContext(request))
+
 def data_station(request):
     context = {
         'title': 'Historic Station Data',
@@ -221,7 +237,6 @@ def data_station(request):
             #if time range > 1 year or user requests data for more than 1 station, large request via ftp
             if days > 366 and 'station_id' not in form1_point.cleaned_data.keys():
                 context['large_request'] = \
-                '''
                 'At the moment we do not support data requests that exceed 1 year for multiple station. Please limit your request to one station at a time or a date range of one year or less. We will support larger requests in the near future. Thank you for your patience!'
 
                 '''
@@ -234,6 +249,7 @@ def data_station(request):
                     initial_params_2['station_ids'] = ','.join([str(stn) for stn in initial_params_2['station_ids']])
                 form3_point = forms.StationDataForm3(initial=initial_params_2)
                 context['form3_point'] = form3_point
+                '''
                 return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
             else:
                 resultsdict = AcisWS.get_station_data(form1_point.cleaned_data, 'sodlist_web')
@@ -445,7 +461,6 @@ def data_gridded(request):
 
             if ('data_summary' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['data_summary'] == 'none' and form1_grid.cleaned_data['temporal_resolution'] == 'dly') or ('data_summary' not in form1_grid.cleaned_data.keys()):
                 if (days > 7 and  'location' not in form1_grid.cleaned_data.keys()):
-                    '''
                     context['large_request'] = \
                     'At the moment we do not support data requests that exceed 7 days for multiple station. Please limit your request to one grid point at a time or a date range of one week or less. Alternatively, you could summarize your data by using the data summary option. We will support larger requests in the near future. Thank you for your patience!'
                     '''
@@ -457,6 +472,7 @@ def data_gridded(request):
                     initial_params_2['elements'] = ','.join(initial_params_2['elements'])
                     form3_grid = forms.GridDataForm3(initial=initial_params_2)
                     context['form3_grid'] = form3_grid
+                    '''
                     return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
             if 'location' in form1_grid.cleaned_data.keys():
