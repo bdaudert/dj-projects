@@ -504,17 +504,26 @@ class SodsummForm(SodForm):
 class SodxtrmtsForm(SodForm):
     def __init__(self, *args, **kwargs):
         super(SodxtrmtsForm, self).__init__(*args, **kwargs)
-        self.fields.keyOrder = ['station_ID', 'element', 'monthly_statistic', 'start_year', 'end_year', 'max_missing_days', 'start_month', 'departures_from_averages', 'frequency_analysis']
-        #'base_temperature', 'less_greater_or_between', 'threshold_low_for_between', 'threshold_low_for_between', 'threshold_for_less_or_greater', 'frequency_analysis_type'
-    element = forms.ChoiceField(choices=WRCCData.SXTR_ELEMENT_CHOICES, initial='pcpn', help_text = 'Climate Element')
-    #base_temperature = forms.IntegerField(initial=65, help_text = 'Base Temperature for degree day element.')
-    start_year = MyYearField(max_length=4, min_length=3, initial='POR', help_text='Earliest start date. Format: yyyy or "POR" for period of record.')
-    end_year = MyYearField(max_length=4, min_length=3, initial='2013', help_text='Latest end date. Format: yyyy or "POR" for period of record.')
-    monthly_statistic = forms.ChoiceField(choices=WRCCData.SXTR_ANALYSIS_CHOICES, initial='msum', help_text = 'Desired monthly characteristic of the selected climate element')
-    max_missing_days = forms.IntegerField(initial=5, help_text=HELP_TEXTS['max_missing_days'])
-    start_month = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial='01',help_text = 'Define a year as starting with this month.')
-    departures_from_averages= forms.ChoiceField(choices = ([('T', 'Yes'),('F', 'No'),]), initial = 'F', help_text = 'Express results as departures from column averages.')
-    frequency_analysis = forms.ChoiceField(choices = ([('F', 'False'),]), initial = 'F', help_text='Perform Frequency Analysis. Coming Soon!')
+
+        #self.fields.keyOrder = ['station_ID', 'element', 'monthly_statistic', 'start_year', 'end_year', 'max_missing_days', 'start_month', 'departures_from_averages', 'frequency_analysis','base_temperature', 'less_greater_or_between', 'threshold_low_for_between', 'threshold_low_for_between', 'threshold_for_less_or_greater', 'frequency_analysis_type']
+
+        self.fields['element'] = forms.ChoiceField(choices=WRCCData.SXTR_ELEMENT_CHOICES, initial=kwargs.get('initial', {}).get('element', 'pcpn'), help_text = 'Climate Element')
+        self.fields['start_year'] = MyYearField(max_length=4, min_length=3, initial=kwargs.get('initial', {}).get('start_year', 'POR'), help_text='Earliest start date. Format: yyyy or "POR" for period of record.')
+        self.fields['end_year'] = MyYearField(max_length=4, min_length=3, initial=kwargs.get('initial', {}).get('end_year', '2013'), help_text='Latest end date. Format: yyyy or "POR" for period of record.')
+        self.fields['monthly_statistic'] = forms.ChoiceField(choices=WRCCData.SXTR_ANALYSIS_CHOICES, initial=kwargs.get('initial', {}).get('monthly_statistic', 'msum'), help_text = 'Desired monthly characteristic of the selected climate element')
+        self.fields['max_missing_days'] = forms.IntegerField(initial=kwargs.get('initial', {}).get('max_missing_days', 5), help_text=HELP_TEXTS['max_missing_days'])
+        self.fields['start_month'] = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial=kwargs.get('initial', {}).get('start_month', '01'),help_text = 'Define a year as starting with this month.')
+        self.fields['departures_from_averages']= forms.ChoiceField(choices = ([('T', 'Yes'),('F', 'No'),]), initial = kwargs.get('initial', {}).get('departures_from_averages', 'F'), help_text = 'Express results as departures from column averages.')
+        self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('F', 'False'),]), initial = kwargs.get('initial', {}).get('frequency_analysis', 'F'), help_text='Perform Frequency Analysis. Coming Soon!')
+
+        #Optional Params
+        self.fields['base_temperature'] = forms.IntegerField(initial=kwargs.get('initial', {}).get('base_temperature', 65), help_text = 'Base Temperature for degree day element.')
+        self.fields['less_greater_or_between'] = forms.ChoiceField(widget = forms.Select(attrs = {'onclick' : "SetSodxtrmtsThresh(this)",}),choices = ([('l', 'Less Than'),('g', 'Greater Than'),('b', 'Between'),]), initial = kwargs.get('initial', {}).get('less_greater_or_between', 'g'), help_text='Number of Days less than/greater thana threshold or between two threshold.')
+        self.fields['threshold_for_less_or_greater'] = forms.FloatField(initial = kwargs.get('initial', {}).get('threshold_for_less_or_greater', 0.005), help_text = 'Set this threshold if you chose "Less Than" or "Greater Than" above.')
+        self.fields['threshold_low_for_between'] = forms.FloatField(initial = kwargs.get('initial', {}).get('threshold_low_for_between', 0.001),required=False, help_text = 'Set this lower threshold if you chose "Between" above.')
+        self.fields['threshold_high_for_between'] = forms.FloatField(initial = kwargs.get('initial', {}).get('threshold_high_for_between', 0.11),required=False, help_text = 'Set this upper threshold if you chose "Between" above.')
+        self.fields['frequency_analysis_type']= forms.ChoiceField(choices = ([('p', 'Pearson III'),('g', 'GEV'),]), initial = kwargs.get('initial', {}).get('frequency_analysis_type', 'g'), help_text = 'Pearson III or Generalized Extreme Value frequency analysis otpions are available.')
+
 
 class SodxtrmtsVisualizeForm(forms.Form):
     #months = forms.MultipleChoiceField(widget=CheckboxSelectMultiple, choices=WRCCData.MONTH_CHOICES, initial=WRCCData.MONTH_CHOICES[0], help_text = 'Choose one or more months to analyze.')
@@ -523,6 +532,7 @@ class SodxtrmtsVisualizeForm(forms.Form):
     summary = forms.ChoiceField(choices=WRCCData.SXTR_SUMMARY_CHOICES, initial='mean', help_text='How to summarize the months.')
     show_running_mean = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show running mean.')
     running_mean_years = forms.IntegerField(initial=9,required=False, help_text='Years over which to compute the running mean.')
+    image_size = forms.ChoiceField(choices=WRCCData.IMAGE_SIZES, initial='medium', help_text='Select an image size.')
 '''
 class SodxtrmtsVisualizeForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -544,56 +554,6 @@ class SodxtrmtsVisualizeForm(forms.Form):
         self.fields['summary'] = forms.ChoiceField(choices=WRCCData.SXTR_SUMMARY_CHOICES, initial='mean', help_text='How to summarize the months.')
 '''
 
-'''
-#TWO FORM version of Sodxtrmts
-class SodxtrmtsForm0(SodForm):
-    def __init__(self, *args, **kwargs):
-        super(SodxtrmtsForm0, self).__init__(*args, **kwargs)
-        self.fields.keyOrder = ['station_ID', 'start_year', 'end_year', 'element', 'monthly_statistic', 'frequency_analysis']
-    monthly_statistic = forms.ChoiceField(choices=WRCCData.SXTR_ANALYSIS_CHOICES, initial='msum', help_text = 'Analysis Type')
-    element = forms.ChoiceField(choices=WRCCData.SXTR_ELEMENT_CHOICES, initial='pcpn', help_text = 'Climate Element')
-    frequency_analysis = forms.ChoiceField(choices = ([('F', 'False'),]), initial = 'F', help_text='Perform Frequency Analysis. Coming Soon!')
-
-class SodxtrmtsForm1(forms.Form):
-    def __init__(self, *args, **kwargs):
-        station_ID = kwargs.get('initial', {}).get('station_ID', None)
-        start_year = kwargs.get('initial', {}).get('end_year', None)
-        end_year = kwargs.get('initial', {}).get('end_year', None)
-        monthly_statistic = kwargs.get('initial', {}).get('monthly_statistic', None)
-        element = kwargs.get('initial', {}).get('element', None)
-        frequency_analysis = kwargs.get('initial', {}).get('frequency_analysis', None)
-        super(SodxtrmtsForm1, self).__init__(*args, **kwargs)
-
-        if station_ID is None:station_ID = self.data.get('station_ID')
-        if start_year is None:start_year = self.data.get('start_year')
-        if end_year is None:end_year = self.data.get('end_year')
-        if element is None:element = self.data.get('element')
-        if monthly_statistic is None:monthly_statistic = self.data.get('monthly_statistic')
-        if frequency_analysis is None:frequency_analysis = self.data.get('frequency_analysis')
-
-        self.fields['station_ID'] = forms.CharField(initial=station_ID, help_text='Station ID')
-        self.fields['start_year'] = MyYearField(required=False, max_length=4, min_length=3, initial=start_year, help_text='yyyy or "POR" for period of record')
-        self.fields['end_year'] = MyYearField(required=False, max_length=4, min_length=3, initial=end_year, help_text='yyyy or "POR" for period of record')
-        self.fields['element'] = forms.CharField(initial=element, help_text = 'Climate Element')
-        self.fields['element'].widget.attrs = {'readonly':True, 'style':readonly_style}
-        if element in ['hdd', 'cdd', 'gdd']:
-            self.fields['base_temperature'] = forms.IntegerField(initial=65, help_text = 'Base Temperature for degree day element.')
-        self.fields['monthly_statistic'] = forms.CharField(initial=monthly_statistic, help_text='Analysis Type')
-        self.fields['monthly_statistic'].widget.attrs = {'readonly':True, 'style':readonly_style}
-        if monthly_statistic == 'ndays':
-            self.fields['less_greater_or_between'] = forms.ChoiceField(choices=([('l','Less Than'), ('g','Greater Than'),('b','Between'), ]), initial='b', help_text = 'Define your threshold operator.')
-            self.fields['threshold_for_less_or_greater'] = forms.DecimalField(initial = 0.0, help_text = 'Set this threshold if you chose "Less Than" or "Greater Than" above')
-            self.fields['threshold_low_for_between'] = forms.DecimalField(initial = 0.0,required=False, help_text = 'Set this lower threshold if you chose "Between" above')
-            self.fields['threshold_high_for_between'] = forms.DecimalField(initial = 1.0,required=False, help_text = 'Set this upper threshold if you chose "Between" above')
-        self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False, help_text=HELP_TEXTS['max_missing_days'])
-        self.fields['start_month'] = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial='01', required=False, help_text = 'Start the analysis on this month. Default is January.')
-        self.fields['departures_from_averages'] = forms.ChoiceField(choices = ([('T', 'Yes'),('F', 'No'),]), initial = 'F', help_text = 'Express results as departures from averages.')
-        self.fields['frequency_analysis'] = forms.CharField(initial=frequency_analysis, help_text='Perform Frequency Analysis. Coming Soon!')
-        self.fields['frequency_analysis'].widget.attrs = {'readonly':True, 'style':readonly_style}
-        if frequency_analysis == 'T':
-            self.fields['frequency_analysis_type'] = forms.ChoiceField(choices=WRCCData.F_ANALYSIS_CHOICES, required=False, initial='p', help_text='Frequency Analysis Type')
-
-'''
 ###############
 #End SODS
 ##############

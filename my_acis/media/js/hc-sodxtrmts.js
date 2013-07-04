@@ -2,6 +2,10 @@ $(function () {
     var json_file = document.getElementById("json_file").value;
     var JSON_URL = document.getElementById("JSON_URL").value;
     var json_file_path = '/csc/media/tmp/' + json_file;
+    var style = {
+        color:'#000000',
+        fontSize:'14px'
+    };
     $.getJSON(json_file_path, function(table_dict) {
         var ranges = table_dict.ranges;
         //Find max/min of ranges
@@ -31,6 +35,7 @@ $(function () {
                 text: 'wrcc.dri.edu'
             },  
             title: {
+                style:style,
                 text:table_dict.stn_name + ', ID: ' + table_dict.stn_id 
             },
             subtitle: {
@@ -38,10 +43,17 @@ $(function () {
                 x: -20
             },
             xAxis: {
+                labels:{
+                    style: style
+                },   
                 categories: table_dict.month_list
             },
             yAxis: {
+                labels:{
+                    style: style
+                },
                 title: {
+                    style:style,
                     text: table_dict.element_name
                 },
                 max:max,

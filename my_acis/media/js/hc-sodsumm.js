@@ -6,11 +6,18 @@ $(function () {
     Highcharts.setOptions({
     colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5']
     });
+    var style = {
+        color:'#000000',
+        fontSize:'14px'
+        };
     $.getJSON(json_file_path, function(table_dict) {
         for (var i=0;i<table_dict.length;i++){
             //Define y-axis parameters
             if (table_dict[i].table_name == 'temp'){
                 var yAx = {
+                    labels: {
+                        style:style
+                    },
                     tickInterval: 10,
                     title: {
                         text: table_dict[i].table_name_long
@@ -19,6 +26,9 @@ $(function () {
             }
             else if (table_dict[i].table_name == 'pcpn' || table_dict[i].table_name == 'snow' || table_dict[i].table_name == 'snwd'){
                 var yAx = {
+                    labels: {
+                        style:style
+                    },
                     tickInterval: 0.1,
                     title: {
                         text: table_dict[i].table_name_long
@@ -27,6 +37,9 @@ $(function () {
             }
             else {
                 var yAx = {
+                    labels: {
+                        style:style
+                    },
                     tickInterval: 100,
                     title: {
                         text: table_dict[i].table_name_long
@@ -85,8 +98,12 @@ $(function () {
                         enabled: enable_legend
                     },
                     xAxis: {
+                        labels:{
+                            style:style
+                        },
                         categories:table_dict[i].cats, 
                         title: {
+                            style:style,
                             text: 'Month'
                         }                    
                     },
@@ -138,12 +155,16 @@ $(function () {
                 chartContent: cntr,
                 options: {
                     title: {
+                         style:style,
                          text: table_dict[i].stn_name + ', ' + table_dict[i].stn_id  + ', ' + table_dict[i].table_name_long
                     },
                     subtitle: {
                         text: 'Year Range: ' + table_dict[i].record_start  + ' - '+ table_dict[i].record_end
                     },
                     yAxis: {
+                        labels: {
+                            style:style
+                        },
                         title: {
                         text: table_dict[i].table_name_long + ' in ' + table_dict[i].units
                         }

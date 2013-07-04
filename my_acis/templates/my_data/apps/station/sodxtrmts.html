@@ -24,87 +24,63 @@
             <form method="post" action="">{% csrf_token %}
             <table class="form">
             {%for field in form0 %}
-                <!--
-                {%if field.label == "base_temperature"%}
+                {%if field.label == "Base temperature"%}
                     <tr><td><input type="submit" value="Submit" name="form0"/></td></tr>
                     <!-- Add Extra Options -->
                     <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
-                    <tr><td colspan="3"><b color="red">Conditional Otional</b></td></tr>
-                    <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
+                    <tr><td colspan="3"><b color="red">Conditional Parameters</b></td></tr>
                 {%endif%}
 
-                {%if field_label == "less_greater_or_between"%}
+                {%if field.label == "Less greater or between"%}
                     <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
                     <tr><td colspan="3"><b>Thresholds for "Number of Days" statistic</b></td></tr>
                 {%endif%}
-                
-                {%if field_label == "frequency_analysis_type"%}
+
+                {%if field.label == "Frequency analysis type"%}
                     <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
                     <tr><td><b>Frequency Analysis Type</b></td></td></tr>
                 {%endif%}
-                -->
-                    <tr>
+                    
+                <tr>
+                    {%if field.label == "Threshold for less or greater" or field.label == "Threshold low for between" or field.label == "Threshold high for between"%}
+                        {%if field.label == "Threshold for less or greater"%}
+                            <div id="threshold_for_less_or_greater" style="display:none">
+                                <td>{{field.label}}:</td>
+                                <td>{{field}}</td>
+                            </div>
+                        {%endif%}
+                        {%if field.label == "Threshold low for between"%}
+                            <div id="threshold_low_for_between" style="display:none">
+                                <td>{{field.label}}:</td>
+                                <td>{{field}}</td>
+                            </div>
+                        {%endif%}
+                        {%if field.label == "Threshold high for between"%}
+                            <div id="threshold_high_for_between" style="display:none">
+                                <td>{{field.label}}:</td>
+                                <td>{{field}}</td>
+                            </div>
+                        {%endif%}  
+                    {%else%}                    
                         <td>{{field.label}}:</td>                                                                    
                         <td>{{field}}</td>                                                                                
-                        <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                        {%ifequal field.label "Monthly Statistic"%}
-                            <div class="pop-up"><img alt="AnalysisChoices" title="AnalysisChoices" width="400px" height="300px" src="{{MEDIA_URL}}img/SodxtrmtsAnalysisChoices.png"></div>
-                        {%else%}                                             
-                            <div class="pop-up"><p>{{field.help_text}}</p></div>
-                        {%endifequal%}
-                        </td>
-                    </tr>
-                    {%ifequal field.label "Station id"%}
-                        <tr><td></td><td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td><td></td></tr>
+                    {%endif%}
+                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                    {%ifequal field.label "Monthly Statistic"%}
+                        <div class="pop-up"><img alt="AnalysisChoices" title="AnalysisChoices" width="400px" height="300px" src="{{MEDIA_URL}}img/SodxtrmtsAnalysisChoices.png"></div>
+                    {%else%}                                             
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
                     {%endifequal%}
+                    </td>
+                </tr>
+                {%ifequal field.label "Station id"%}
+                    <tr><td></td><td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td><td></td></tr>
+                {%endifequal%}
 
                {%if field.errors%}
                  <tr><td></td><td>{{field.errors}}</td><td></td></tr>
                 {%endif%}
             {%endfor%}
-
-            <tr><td><input type="submit" value="Submit" name="form0"/></td></tr>
-            <!-- Add Extra Options -->
-            <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
-            <tr><td colspan="3"><b color="red">Conditional Otional</b></td></tr>
-            <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
-            <tr><td colspan="3"><b>Base Temperature for Degree Days</b></td></tr>
-            <tr>
-                <td></td>
-                <td><input type="text" name="base_temperature" value=65 ></td>
-                <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                <div class="pop-up"><p>Base Temperature for Heating/Cooling or Growing Degree Days.</p></div>
-            </tr>
-            <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
-            <tr><td colspan="3"><b>Thresholds for "Number of Days" statistic</b></td></tr>
-            <tr>
-                <td><input type="radio" name="less_greater_or_between" value="l" checked>Less Than</td>
-                <td><input type="text" name="less" step="any" value={{less}} ></td>
-                <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                <div class="pop-up"><p>Count number of days with values less than this threshold.</p></div>
-            </tr>
-            <tr>               
-                <td><input type="radio" name="less_greater_or_between" value="g">Greater Than</td>                
-                <td><input type="number" name="greater" step="any" value={{greater}}></td>
-                <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                <div class="pop-up"><p>Count number of days with values greater than this threshold.</p></div>
-            </tr> 
-            <tr>                               
-                <td><input type="radio" name="less_greater_or_between" value="b">Between</td>
-                <td><input type="number" name="threshold_low_for_between" step="any" value={{threshold_low_for_between}}>
-                    and<input type="number" name="threshold_high_for_between" step="any" value={{threshold_high_for_between}}>
-                </td>
-                <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                <div class="pop-up"><p>Count number of days with values between these thresholds.</p></div>
-            </tr>
-            <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
-            <tr><td><b>Frequency Analysis Type</b></td></td></tr>
-            <tr>
-                <td><input type="radio" name="frequency_analysis_type" value="p" checked>P III</td>
-                <td><input type="radio" name="frequency_analysis_type" value="g">GEV</td>
-                <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                <div class="pop-up"><p>Frequency Analysis Types: Peasron III, Generalized Extreme Value.</p></div>
-            </tr>
             </table>
             <input type="submit" value="Submit" name="form0"/>
             </form>
@@ -172,16 +148,6 @@
             <!--Graphics-->
             <p class="pop_link" onClick="ShowHide('range_plot')"><u>Show/hide plot of mean and range</u></p>
             <div id="range_plot" style="display:none;">
-                {%if search_params%}
-                    {%if station_name%}
-                    <p><b>Station Name</b>: {{station_name}}</p>
-                    {%endif%}
-                    <p>
-                    {%for key, val in search_params.items%}
-                    <b>{{key}}</b>: {{val}}
-                    {%endfor%}
-                    </p>
-                {%endif%}
                 <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
                 <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
                 <div id="graph_container" style="height:350px;width:600px;"></div>
@@ -198,26 +164,24 @@
             <img alt="Download" title="Download" class="icon" src="{{MEDIA_URL}}img/Download.png"></a>-->
             <!--<a target="_blank" href="{{SW_CKN_URL}}/download/?app_name=Sodxtrmts&json_file={{json_file}}"><img alt="Download" title="Download" class="icon" src="{{MEDIA_URL}}img/Download.png"></a>-->
 
-            <div id="printable_table">
+        <div id="printable_table">
             <!--<p class="pop_link" onClick="ShowHide('table_header')"><u>Show/hide table header</u></p>-->
-            <div id="table_header">
-                {%if search_params%}
-                    {%if station_name%}
-                    <p><b>Station Name</b>: {{station_name}}</p>
-                    {%endif%}
-                    <p>
-                    {%for key, val in search_params.items%}
-                    <b>{{key}}</b>: {{val}}
-                    {%endfor%}
-                    </p>
+            <!--Header-->
+            <p>
+            {%for key_val in header%}
+                {%if key_val%}
+                    <b>{{key_val.0}}</b>: {{key_val.1}},
+                {%else%}
+                    <br />
                 {%endif%}
-
+            {%endfor%}
+            </p>
+            
             <p><b>Missing days allowed</b><br />Any month with less than or equal this user selected number will be included in the analysis.<br />
             Monthly information for months with more than this number of missing values will be displayed, but not used. <br />
             The letter indicates the number of missing days <br />
             (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
             <br /></br />
-            </div>
            
             <table class="right_aligned" cellpadding="none">
             <tr>
@@ -258,28 +222,32 @@
             {%endif%}
        {%endif%}
     </td></tr>
+    <tr>
+        <td></td>
+        <td>
+            {%if results%}
+            <p align="left">
+            <b>Summary Table</b><br />
+            <b>Mean</b> –
+            Column mean of all months that meet criteria for number of missing days.<br />
+            Months with excess missing days not used.<br />
+            <b>S.D.</b> –
+            Standard deviation of the column values, using only months that meet criteria for missing days.<br />
+            <b>SKW10</b> –
+            Shows skewness coefficient of the values in this column, using only those months that meet criteria for missing data. <br />
+            Value is multiplied by 10.<br />
+            <b>Max</b> –
+            Maximum of column values using only those months that meet missing days criteria.<br />
+            <b>Min</b> –
+            Minimum of column values using only those months that meet missing days criteria.<br />
+            <b>Years</b> –
+                Number of years with months that meet criteria for missing days.
+                </p>
+            {%endif%}
+        </div> <!--End printable table-->
+        </td>
+    <tr>
 </table>
-
-     <p align="left">
-    <b>Summary Table</b><br />
-    <b>Mean</b> –
-    Column mean of all months that meet criteria for number of missing days.<br />
-    Months with excess missing days not used.<br />
-    <b>S.D.</b> –
-    Standard deviation of the column values, using only months that meet criteria for missing days.<br />
-    <b>SKW10</b> –
-    Shows skewness coefficient of the values in this column, using only those months that meet criteria for missing data. <br />
-    Value is multiplied by 10.<br />
-    <b>Max</b> –
-    Maximum of column values using only those months that meet missing days criteria.<br />
-    <b>Min</b> –
-    Minimum of column values using only those months that meet missing days criteria.<br />
-    <b>Years</b> –
-        Number of years with months that meet criteria for missing days.
-        </p>
-    </div>
-    <!--</div> end center-->
-
 </div>
 
   <!-- Footer -->

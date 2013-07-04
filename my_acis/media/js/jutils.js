@@ -1,3 +1,22 @@
+function SetSodxtrmtsThresh(lgb){
+    if (lgb == 'l'){
+       document.getElementById('threshold_for_less_or_greater').style.display = "block";
+       document.getElementById('threshold_low_for_between').style.display = "none";
+       document.getElementById('threshold_low_for_between').style.display = "none";
+    }
+    else if (lgb == 'g'){
+        document.getElementById('threshold_for_less_or_greater').style.display = "block";
+        document.getElementById('threshold_low_for_between').style.display = "none";
+        document.getElementById('threshold_low_for_between').style.display = "none";
+    }
+    else {
+        document.getElementById('threshold_low_for_between').style.display = "block";
+        document.getElementById('threshold_low_for_between').style.display = "block";
+        document.getElementById('threshold_for_less_or_greater').style.display = "none";
+    }
+
+}
+
 function precise_round(num,decimals){
     return Math.round(num*Math.pow(10,decimals))/Math.pow(10,decimals);
 }

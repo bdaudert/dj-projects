@@ -23,6 +23,12 @@
         <form method="post" action="">{% csrf_token %}
         <table class="form">
         {%for field in form0 %}
+             {%if field.label == "Image size"%}
+                <tr><td><input type="submit" value="Submit" name="form0"/></td><td></td><td></td></tr>
+                <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
+                <tr><td colspan="3"><b>Plot Options</b></td></tr>
+                <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
+            {%endif%}
             <tr>
                 <td>{{field.label}}:</td>
                 <td>{{field}}</td>
@@ -76,17 +82,26 @@
             </p>
         </div>
 
-        {%if search_params%}
-            <p class="pop_link" onClick="ShowHide('search_params')"><u>Show/hide the search parameters</u></p>
-            <div id="search_params" style="display:none;">
-                {%for key, val in search_params.items%}
-                <p><b>{{key}}</b>: {{val}}</p>
-                {%endfor%}
-            </div>
-        {%endif%}
-        
         <p class="pop_link" onClick="ShowHide('original_data')"><u>Show/hide the original data</u></p>
         <div id='original_data' style="display:none;">
+
+            <!--Header-->
+            <p>
+            {%for key_val in header%}
+                {%if key_val%}
+                    <b>{{key_val.0}}</b>: {{key_val.1}},
+                {%else%}
+                    <br />
+                {%endif%}
+            {%endfor%}
+            </p>
+
+            <p><b>Missing days allowed</b><br />Any month with less than or equal this user selected number will be included in the analysis.<br />
+            Monthly information for months with more than this number of missing values will be displayed, but not used. <br />
+            The letter indicates the number of missing days <br />
+            (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
+            <br /></br />
+
             <table id="printable_table" cellpadding="none">
             <tr>
             <td><font size="+2">YEAR</font></td>
@@ -130,7 +145,7 @@
             <input type="hidden" id="summary" name="summary" value="{{summary}}">
             <input type="hidden" id="show_running_mean" name="show_running_mean" value="{{show_running_mean}}">
             <input type="hidden" id="running_mean_years" name="running_mean_years" value="{{running_mean_years}}">
-            <div align="center" id="container" style="height:350px;width:100%;"></div>
+            <div align="center" id="container" style="height:{{height}}px;width:{{width}}px;"></div>
             <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts-visualize.js"></script>
         {%endif%}
     </div><!--end center-->

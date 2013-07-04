@@ -11,7 +11,10 @@ $(function () {
         var end_date = document.getElementById("end_date").value;
         var json_file = document.getElementById("json_file").value;
         var json_file_name = JSON_URL + json_file;
-        
+        var style = {
+                color:'#000000',
+                fontSize:'14px'
+            };         
         $.getJSON(json_file_name, function(datadict) {
             chart = new Highcharts.Chart({
                 chart: {
@@ -32,7 +35,11 @@ $(function () {
                         text: 'wrcc.dri.edu'
                 },
                 xAxis: {
+                    labels: {
+                        style: style
+                    },
                     title : {
+                        style: style,
                         text: 'Time Period: ' + start_date + ' - ' + end_date
                     },
                     type: 'datetime',
@@ -46,7 +53,11 @@ $(function () {
                     }
                 },
                 yAxis: {
+                    labels: {
+                        style: style
+                    },
                     title: {
+                        style: style,
                         text: element_long
                     },
                     startOnTick: false,
@@ -89,6 +100,7 @@ $(function () {
                 series: [{
                     type: 'area',
                     name: element,
+                    color:'#00008B',
                     pointInterval:1 * 24 * 3600000, // 1 day
                     pointStart: Date.UTC(parseInt(start_date.slice(0,4)),parseInt(start_date.slice(4,6).replace("^0+(?!$)", "")) - 1, parseInt(start_date.slice(6,8))),
                     data:datadict.data

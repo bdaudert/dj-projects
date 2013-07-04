@@ -1,4 +1,8 @@
 $(function () {
+    var style = {
+        color:'#000000',
+        fontSize:'14px'
+    }; 
     var defaultChart = {
         chartContent: null,
         highchart: null,
@@ -6,7 +10,14 @@ $(function () {
             chart: {
                 type: 'column'
             },
+            credits: {
+                href: 'http://wrcc.dri.edu/',
+                text: 'wrcc.dri.edu'
+            },
             xAxis: {
+                labels: {
+                    style: style
+                },
                 categories: [
                     'Jan',
                     'Feb',
@@ -21,6 +32,11 @@ $(function () {
                     'Nov',
                     'Dec'
                 ]
+            },
+            yAxis: {
+                labels: {
+                    style: style
+                }
             },
             /*
             legend: {
@@ -102,7 +118,8 @@ $(function () {
                 options: {
 
                     title: {
-                         text:' Monthly Averages for ' + datadict[i].element_long
+                         style:style,
+                         text:datadict[i].stn_name + ', ' + datadict[i].stn_id + ', ' + datadict[i].state
                     },
                     subtitle: {
                         text: 'Date Range ' + datadict[i].record_start  + ' - '+ datadict[i].record_end
@@ -110,11 +127,12 @@ $(function () {
                     yAxis: {
                     min: min,
                     title: {
-                        text: datadict[i].element + ' in ' + datadict[i].units
+                        style:style,
+                        text: datadict[i].element_long + ' in ' + datadict[i].units
                         }
                     },
                     series: [{
-                        name: datadict[i].stn_name + ', ' + datadict[i].stn_id + ', ' + datadict[i].state,
+                        name: ' Monthly Averages for ' + datadict[i].element_long,
                         color: p_color,
                         data: datadict[i].data
 

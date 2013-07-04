@@ -1319,33 +1319,58 @@ def sodxtrmts(request):
         'title': 'Monthly Summaries of Extremes (Sodxtrmts)',
         'apps_page':True
         }
+    json_file = request.GET.get('json_file', None)
     initial = set_sod_initial(request, 'Sodxtrmts')
+    #check if initial dataset is given via json_file (back button from visualize)
+    if json_file:
+        with open('/tmp/' + json_file, 'r') as f:
+            json_data =  json.load(f)
+        initial = json_data['search_params']
+        form0 = set_as_form(request,'SodxtrmtsForm', init=initial)
+        context['form0'] = form0
+        context['results']  = json_data['data']
+        context['header']  = json_data['heder']
+        return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
     form0 = set_as_form(request,'SodxtrmtsForm', init=initial)
     context['form0'] = form0
-    context['less'] = 0.005
-    context['greater'] = 0.001
-    context['threshold_low_for_between'] = 0.001
-    context['threshold_high_for_between'] = 0.11
     if 'form0' in request.POST:
-        context['req'] = request.POST
         form0 = set_as_form(request,'SodxtrmtsForm', init={'date_type':'y'})
         context['form0'] = form0
         if form0.is_valid():
-            search_params = {}
-            #search_params = form0.cleaned_data
-            for key,val in form0.cleaned_data.iteritems():
-                if key in ['monthly_statistic', 'frequency_analysis']:
-                    search_params[WRCCData.sodxtrmts_params[key]] = WRCCData.sodxtrmts_params[str(val)]
-                elif key == 'element':
-                    search_params[WRCCData.sodxtrmts_params[key]] = WRCCData.acis_elements_dict[str(val)]['name_long']
-                elif key == 'start_month':
-                    search_params[WRCCData.sodxtrmts_params[key]] = WRCCData.month_names_long[int(val) - 1]
+            #Define Header Order:
+            header_order =['station_ID', '','element']
+            if form0.cleaned_data['element'] in ['gdd', 'hdd', 'cdd']:header_order+=['base_temparture']
+            header_order+=['monthly_statistic']
+            if form0.cleaned_data['departures_from_averages'] == 'T':
+                 header_order+=['departures_from_averages', '']
+            else:
+                header_order+=['']
+            if form0.cleaned_data['monthly_statistic'] == 'ndays':
+                if form0.cleaned_data['less_greater_or_between'] == 'l':
+                    header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
+                elif form0.cleaned_data['less_greater_or_between'] == 'g':
+                    header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
+                else: #between
+                    header_order+=['less_greater_or_between','threshold_low_for_between','threshold_high_for_between','']
+            header_order+=['max_missing_days']
+            if form0.cleaned_data['frequency_analysis'] == 'T':
+                if form0.cleaned_data['frequency_analysis_type'] == 'g':
+                    header_order+=['gev']
+                elif form0.cleaned_data['frequency_analysis_type'] == 'p':
+                    header_order+=['pearson']
+            header_order+=['']
+            #Define SCHTUPID header -- BEWARE this is a mess since we have  mixed form (django + request.POST)
+            context['header_order'] = header_order
+            header = []
+            for key in header_order:
+                if key in ['element']:
+                    header.append([WRCCData.sodxtrmts_params[key], WRCCData.acis_elements_dict[str(form0.cleaned_data[key])]['name_long']])
+                elif key in ['base_temperature', 'less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'monthly_statistic']:
+                    header.append([WRCCData.sodxtrmts_params[key], WRCCData.sodxtrmts_params[str(form0.cleaned_data[key])]])
+                elif key == '':
+                    header.append([])
                 else:
-                    search_params[WRCCData.sodxtrmts_params[key]] = val
-            context['search_params']= search_params
-            if form0.cleaned_data['element'] in ['gdd', 'hdd', 'cdd']:
-                search_params['base_temperature'] = str(request.POST['base_temperature'])
-            context['search_params']= search_params
+                    header.append([WRCCData.sodxtrmts_params[key], str(form0.cleaned_data[key])])
             data_params = {
                     'sid':form0.cleaned_data['station_ID'],
                     'start_date':form0.cleaned_data['start_year'],
@@ -1353,24 +1378,11 @@ def sodxtrmts(request):
                     'element':form0.cleaned_data['element']
                     }
             app_params = form0.cleaned_data
-            app_params['less_greater_or_between'] = str(request.POST['less_greater_or_between'])
-            app_params['frequency_analysis_type'] = str(request.POST['frequency_analysis_type'])
-            if str(request.POST['less_greater_or_between']) == 'b':
-                app_params['threshold_low_for_between'] = float(request.POST['threshold_low_for_between'])
-                app_params['threshold_high_for_between'] = float(request.POST['threshold_high_for_between'])
-                context['threshold_low_for_between'] = request.POST['threshold_low_for_between']
-                context['threshold_high_for_between'] = request.POST['threshold_high_for_between']
-            elif str(request.POST['less_greater_or_between']) == 'l':
-                app_params['threshold_for_less_or_greater'] = float(request.POST['less'])
-                context['less'] = request.POST['less']
-            elif str(request.POST['less_greater_or_between']) == 'g':
-                app_params['threshold_for_less_or_greater'] = float(request.POST['greater'])
-                context['greater'] = request.POST['greater']
             for key in ['station_ID', 'start_year', 'end_year']:
                 del app_params[key]
             app_params['el_type'] = form0.cleaned_data['element']
             context['el_type'] = form0.cleaned_data['element']
-            app_params['base_temperature']  = int(request.POST['base_temperature'])
+            #app_params['base_temperature']  = int(request.POST['base_temperature'])
             context['element'] = form0.cleaned_data['element']
             del app_params['element']
             context['app_params'] = app_params
@@ -1378,18 +1390,11 @@ def sodxtrmts(request):
             DJ = WRCCClasses.SODDataJob('Sodxtrmts', data_params)
             #WARNING: station_ids, names need to be called before dates_list
             station_ids, station_names = DJ.get_station_ids_names()
+            header.insert(0, ['Station Name', station_names[0]])
+            context['header']= header
             if station_ids:context['station_ID'] =  station_ids[0]
-            if station_names:context['station_name'] = station_names[0]
             dates_list = DJ.get_dates_list()
             #Overwrite search params to reflect actuall start/end year
-            if dates_list:
-                search_params[WRCCData.sodxtrmts_params['start_year']] =  dates_list[0][0:4]
-                search_params[WRCCData.sodxtrmts_params['end_year']] =  dates_list[-1][0:4]
-            try:
-                search_params['Elevation'] = data['meta']['elev']
-            except:
-                pass
-            context['search_params'] = search_params
             data = DJ.get_data()
             #Run application
             App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
@@ -1441,7 +1446,8 @@ def sodxtrmts(request):
                     'stn_name':station_names[0],
                     'month_list':month_list,
                     'data':results,
-                    'search_params':search_params
+                    'search_params':form0.cleaned_data,
+                    'header':header
                 }
                 if dates_list:
                     json_dict['start_date'] = dates_list[0][0:4]
@@ -1486,6 +1492,8 @@ def sodxtrmts_visualize(request):
         context['search_params'] = json_data['search_params']
         context['data'] = json_data['data']
         context['month_list']=json_data['month_list']
+        context['header'] = json_data['header']
+        context['search_params'] = json_data['search_params']
 
     if 'form0' in request.POST:
         form0 = set_as_form(request,'SodxtrmtsVisualizeForm', init={'station_ID':station_ID, 'element':element})
@@ -1503,7 +1511,15 @@ def sodxtrmts_visualize(request):
                 if key not in ['start_month', 'end_month']:
                     context[key] = str(val)
             #Find list of months
-            context['months'] = [mon for mon in range(int(form0.cleaned_data['start_month']), int(form0.cleaned_data['end_month']) +1)]
+            if int(form0.cleaned_data['start_month']) > int(form0.cleaned_data['end_month']):
+                context['months'] = [mon for mon in range(int(form0.cleaned_data['start_month']), 13)] +[mon for mon in range(1, int(form0.cleaned_data['end_month']) +1)]
+            elif int(form0.cleaned_data['start_month']) == int(form0.cleaned_data['end_month']):
+                context['months'] = int(form0.cleaned_data['start_month'])
+            else:
+                context['months'] = [mon for mon in range(int(form0.cleaned_data['start_month']), int(form0.cleaned_data['end_month']) +1)]
+            #Plot Options:
+            context['width'] = WRCCData.image_sizes[form0.cleaned_data['image_size']][0]
+            context['height'] = WRCCData.image_sizes[form0.cleaned_data['image_size']][1]
     return render_to_response('my_data/apps/station/sodxtrmts_visualize.html', context, context_instance=RequestContext(request))
 
 '''
