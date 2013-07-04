@@ -1,0 +1,44 @@
+{% extends "csc_base.html" %}
+
+{% block content %}
+
+<p align="center">You are here 
+<a href="{{HOME_URL}}">HOME></a>
+<a href="{{SW_CKN_URL}}download/">Download</a></p>
+
+<div class="container">
+    <div class="center-left">
+       <div id='form0'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+                {%for field in form0 %}
+                    <tr>
+                        <td>{{field.label}}:</td>
+                        <td>{{field}}</td>
+                        <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>                                                               <div class="pop-up"><p>{{field.help_text}}</p></div>
+                        </td>
+                    </tr>
+                    {%if field.errors%}
+                        <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                    {%endif%}
+                {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form0"/>
+            </form>
+        </div> 
+    </div>
+
+    <div class="center">
+        {%if response%}
+            {{response}}
+        {%endif%}
+    </div>
+
+  <!-- Footer
+  <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+    </script>-->
+
+</div>
+{% endblock %}

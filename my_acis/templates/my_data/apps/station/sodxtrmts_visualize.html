@@ -79,7 +79,6 @@
         {%if search_params%}
             <p class="pop_link" onClick="ShowHide('search_params')"><u>Show/hide the search parameters</u></p>
             <div id="search_params" style="display:none;">
-                <p class="error"><b>Search Parameters</b>:</p>
                 {%for key, val in search_params.items%}
                 <p><b>{{key}}</b>: {{val}}</p>
                 {%endfor%}
@@ -123,7 +122,6 @@
             </table>
         </div>
 
-        <p>Show Running Mean: {{show_running_mean}}</p>
         {%if generate_plots%}
             <!--<input type="text" id="test" name="test" value="blah">-->
             <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">

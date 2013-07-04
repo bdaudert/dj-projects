@@ -448,7 +448,7 @@ class MultiPRISMElementField(forms.CharField):
 class DownloadForm(forms.Form):
     data_format = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='clm', help_text=HELP_TEXTS['data_format'])
     delimiter = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial='tab',help_text='Delimiter used to seperate data values.')
-
+    output_file_name = MyNameField(required=False, initial='Output', help_text = 'Enter a name for your output file. Please do not use special characters (e.g. underscores are not allowed).')
 
 #Generic form for Kelly's SOD programs
 class SodForm(forms.Form):
@@ -504,7 +504,7 @@ class SodsummForm(SodForm):
 class SodxtrmtsForm(SodForm):
     def __init__(self, *args, **kwargs):
         super(SodxtrmtsForm, self).__init__(*args, **kwargs)
-        self.fields.keyOrder = ['station_ID', 'start_year', 'end_year', 'element', 'monthly_statistic', 'max_missing_days', 'start_month', 'departures_from_averages', 'frequency_analysis']
+        self.fields.keyOrder = ['station_ID', 'element', 'monthly_statistic', 'start_year', 'end_year', 'max_missing_days', 'start_month', 'departures_from_averages', 'frequency_analysis']
         #'base_temperature', 'less_greater_or_between', 'threshold_low_for_between', 'threshold_low_for_between', 'threshold_for_less_or_greater', 'frequency_analysis_type'
     element = forms.ChoiceField(choices=WRCCData.SXTR_ELEMENT_CHOICES, initial='pcpn', help_text = 'Climate Element')
     #base_temperature = forms.IntegerField(initial=65, help_text = 'Base Temperature for degree day element.')

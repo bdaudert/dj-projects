@@ -158,7 +158,14 @@ def download(request):
         if form0.is_valid():
             data_format = form0.cleaned_data['data_format']
             delimiter = form0.cleaned_data['delimiter']
-            DDJ = WRCCClasses.DownloadDataJob(app_name,data_format,delimiter,json_file=json_file)
+            output_file_name = form0.cleaned_data['output_file_name']
+            if json_file is None:json_file = 'emergency_json'
+            DDJ = WRCCClasses.DownloadDataJob(app_name,data_format,delimiter,output_file_name=output_file_name, request=request, json_file_path='/tmp/' + json_file)
+            if data_format in ['clm', 'dlm','xl']:
+                return DDJ.write_to_file()
+            else:
+                response = DDJ.write_to_file()
+                context['response'] = response
     return render_to_response('my_data/download.html', context, context_instance=RequestContext(request))
 
 def data_station(request):
