@@ -1,20 +1,33 @@
-function SetSodxtrmtsThresh(lgb){
-    if (lgb == 'l'){
-       document.getElementById('threshold_for_less_or_greater').style.display = "block";
-       document.getElementById('threshold_low_for_between').style.display = "none";
-       document.getElementById('threshold_low_for_between').style.display = "none";
+function SetSodxtrmtsThresh(td){
+    var lgb = td.value;
+    if (lgb == 'l' || lgb == 'g'){
+       var tds_to_show = document.getElementsByClassName('threshold_for_less_or_greater');
+       for (i=0;i<tds_to_show.length;i++){
+           tds_to_show[i].style.display = "block";
+       }
+      var tds_to_hide = document.getElementsByClassName('threshold_low_for_between');
+      for (i=0;i<tds_to_hide.length;i++){
+           tds_to_hide[i].style.display = "none";
+       }
+       var tds_to_hide = document.getElementsByClassName('threshold_high_for_between');
+       for (i=0;i<tds_to_hide.length;i++){
+           tds_to_hide[i].style.display = "none";
+       }
     }
-    else if (lgb == 'g'){
-        document.getElementById('threshold_for_less_or_greater').style.display = "block";
-        document.getElementById('threshold_low_for_between').style.display = "none";
-        document.getElementById('threshold_low_for_between').style.display = "none";
+    else if (lgb == 'b'){
+        var tds_to_show = document.getElementsByClassName('threshold_low_for_between');
+        for (i=0;i<tds_to_show.length;i++){
+            tds_to_show[i].style.display = "block";
+        }
+        var tds_to_show = document.getElementsByClassName('threshold_high_for_between');
+        for (i=0;i<tds_to_show.length;i++){
+           tds_to_show[i].style.display = "block";
+        }
+        var tds_to_hide = document.getElementsByClassName('threshold_for_less_or_greater');
+        for (i=0;i<tds_to_hide.length;i++){
+           tds_to_hide[i].style.display = "none";
+       }
     }
-    else {
-        document.getElementById('threshold_low_for_between').style.display = "block";
-        document.getElementById('threshold_low_for_between').style.display = "block";
-        document.getElementById('threshold_for_less_or_greater').style.display = "none";
-    }
-
 }
 
 function precise_round(num,decimals){

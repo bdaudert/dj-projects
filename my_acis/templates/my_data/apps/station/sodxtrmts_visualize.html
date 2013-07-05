@@ -83,26 +83,36 @@
         </div>
 
         <p class="pop_link" onClick="ShowHide('original_data')"><u>Show/hide the original data</u></p>
+
+
         <div id='original_data' style="display:none;">
 
+            <img alt="Print" title="Print" class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        
+
+            <div id="printable_table">
             <!--Header-->
             <p>
             {%for key_val in header%}
                 {%if key_val%}
-                    <b>{{key_val.0}}</b>: {{key_val.1}},
+                    <b>{{key_val.0}}</b>: {{key_val.1}}
                 {%else%}
                     <br />
                 {%endif%}
             {%endfor%}
             </p>
 
-            <p><b>Missing days allowed</b><br />Any month with less than or equal this user selected number will be included in the analysis.<br />
+            <p><b>Missing days</b><br />
+            <!--Any month with less than or equal this user selected number will be included in the analysis.<br />
             Monthly information for months with more than this number of missing values will be displayed, but not used. <br />
-            The letter indicates the number of missing days <br />
+            The letter indicates the number of missing days-->
+            Letters after months show number of missing days; after annual
+            values show missing months.  Value is displayed but not used if user-specified
+            missing day criterion exceeded.<br />
             (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
             <br /></br />
 
-            <table id="printable_table" cellpadding="none">
+            <table cellpadding="none">
             <tr>
             <td><font size="+2">YEAR</font></td>
             {%for mon in month_list%}
@@ -135,7 +145,24 @@
                 </tr>
             {%endfor%}
             </table>
-        </div>
+            <p align="left">
+            <b>Summary Table</b><br />
+            <b>Mean</b> –
+            Column mean of all months that meet criteria for number of missing days.<br />
+            Months with excess missing days not used.<br />
+            <b>S.D.</b> –
+            Standard deviation of the column values, using only months that meet criteria for missing days.<br />
+            <b>SKEW</b> –
+            Shows skewness coefficient of the values in this column, using only those months that meet criteria for missing data. <br />
+            <b>Max</b> –
+            Maximum of column values using only those months that meet missing days criteria.<br />
+            <b>Min</b> –
+            Minimum of column values using only those months that meet missing days criteria.<br />
+            <b>Years</b> –
+            Number of years with months that meet criteria for missing days.
+            </p>
+        </div><!--End printable_table-->
+    </div><!--End original data-->    
 
         {%if generate_plots%}
             <!--<input type="text" id="test" name="test" value="blah">-->
@@ -145,6 +172,13 @@
             <input type="hidden" id="summary" name="summary" value="{{summary}}">
             <input type="hidden" id="show_running_mean" name="show_running_mean" value="{{show_running_mean}}">
             <input type="hidden" id="running_mean_years" name="running_mean_years" value="{{running_mean_years}}">
+            <input type="hidden" id="graph_title" name="graph_title" value="{{graph_title}}">
+            <input type="hidden" id="major_grid" name="major_grid" value="{{major_grid}}">
+            <input type="hidden" id="minor_grid" name="minor_grid" value="{{minor_grid}}">
+            <input type="hidden" id="connector_line" name="connector_line" value="{{connector_line}}">
+            <input type="hidden" id="connector_line_width" name="connector_line_with" value="{{connector_line_width}}">
+            <input type="hidden" id="markers" name="markers" value="{{markers}}">
+            <input type="hidden" id="marker_type" name="marker_type" value="{{marker_type}}">
             <div align="center" id="container" style="height:{{height}}px;width:{{width}}px;"></div>
             <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts-visualize.js"></script>
         {%endif%}

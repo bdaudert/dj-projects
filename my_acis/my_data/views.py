@@ -1520,6 +1520,13 @@ def sodxtrmts_visualize(request):
             #Plot Options:
             context['width'] = WRCCData.image_sizes[form0.cleaned_data['image_size']][0]
             context['height'] = WRCCData.image_sizes[form0.cleaned_data['image_size']][1]
+            context['graph_title'] = form0.cleaned_data['graph_title']
+            context['major_grid'] = form0.cleaned_data['major_grid']
+            context['minor_grid'] = form0.cleaned_data['minor_grid']
+            context['connector_line'] = form0.cleaned_data['connector_line']
+            context['connector_line_width'] = form0.cleaned_data['connector_line_width']
+            context['markers'] = form0.cleaned_data['markers']
+            context['marker_type'] = form0.cleaned_data['marker_type']
     return render_to_response('my_data/apps/station/sodxtrmts_visualize.html', context, context_instance=RequestContext(request))
 
 '''

@@ -518,7 +518,7 @@ class SodxtrmtsForm(SodForm):
 
         #Optional Params
         self.fields['base_temperature'] = forms.IntegerField(initial=kwargs.get('initial', {}).get('base_temperature', 65), help_text = 'Base Temperature for degree day element.')
-        self.fields['less_greater_or_between'] = forms.ChoiceField(widget = forms.Select(attrs = {'onclick' : "SetSodxtrmtsThresh(this)",}),choices = ([('l', 'Less Than'),('g', 'Greater Than'),('b', 'Between'),]), initial = kwargs.get('initial', {}).get('less_greater_or_between', 'g'), help_text='Number of Days less than/greater thana threshold or between two threshold.')
+        self.fields['less_greater_or_between'] = forms.ChoiceField(widget=forms.RadioSelect,choices = ([('l', 'Less Than'),('g', 'Greater Than'),('b', 'Between'),]), initial = kwargs.get('initial', {}).get('less_greater_or_between', 'g'), help_text='Number of Days less than/greater thana threshold or between two threshold.')
         self.fields['threshold_for_less_or_greater'] = forms.FloatField(initial = kwargs.get('initial', {}).get('threshold_for_less_or_greater', 0.005), help_text = 'Set this threshold if you chose "Less Than" or "Greater Than" above.')
         self.fields['threshold_low_for_between'] = forms.FloatField(initial = kwargs.get('initial', {}).get('threshold_low_for_between', 0.001),required=False, help_text = 'Set this lower threshold if you chose "Between" above.')
         self.fields['threshold_high_for_between'] = forms.FloatField(initial = kwargs.get('initial', {}).get('threshold_high_for_between', 0.11),required=False, help_text = 'Set this upper threshold if you chose "Between" above.')
@@ -532,7 +532,15 @@ class SodxtrmtsVisualizeForm(forms.Form):
     summary = forms.ChoiceField(choices=WRCCData.SXTR_SUMMARY_CHOICES, initial='mean', help_text='How to summarize the months.')
     show_running_mean = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show running mean.')
     running_mean_years = forms.IntegerField(initial=9,required=False, help_text='Years over which to compute the running mean.')
+    #Plot Options
+    graph_title = forms.CharField(required=False, initial='Use default', help_text='Enter a title to appear at the top of your graph.')
     image_size = forms.ChoiceField(choices=WRCCData.IMAGE_SIZES, initial='medium', help_text='Select an image size.')
+    major_grid = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show major grid.')
+    minor_grid = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show minor grid.')
+    connector_line = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Connect data points.')
+    connector_line_width = forms.FloatField(initial=1, max_value=10, min_value=0, required=False,help_text='Choose the width of the connector line. Choose 0 if you only want to see markers. 10 is the maximum line widh allowed.')
+    markers = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show markers at each data point.')
+    marker_type = forms.ChoiceField(choices=WRCCData.MARKER_CHOICES, required=False, initial='diamond', help_text='.')
 '''
 class SodxtrmtsVisualizeForm(forms.Form):
     def __init__(self, *args, **kwargs):
