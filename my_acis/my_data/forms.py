@@ -514,7 +514,7 @@ class SodxtrmtsForm(SodForm):
         self.fields['max_missing_days'] = forms.IntegerField(initial=kwargs.get('initial', {}).get('max_missing_days', 5), help_text=HELP_TEXTS['max_missing_days'])
         self.fields['start_month'] = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial=kwargs.get('initial', {}).get('start_month', '01'),help_text = 'Define a year as starting with this month.')
         self.fields['departures_from_averages']= forms.ChoiceField(choices = ([('T', 'Yes'),('F', 'No'),]), initial = kwargs.get('initial', {}).get('departures_from_averages', 'F'), help_text = 'Express results as departures from column averages.')
-        self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('F', 'False'),]), initial = kwargs.get('initial', {}).get('frequency_analysis', 'F'), help_text='Perform Frequency Analysis. Coming Soon!')
+        self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('F', 'No'),]), initial = kwargs.get('initial', {}).get('frequency_analysis', 'F'), help_text='Perform Frequency Analysis. Coming Soon!')
 
         #Optional Params
         self.fields['base_temperature'] = forms.IntegerField(initial=kwargs.get('initial', {}).get('base_temperature', 65), help_text = 'Base Temperature for degree day element.')
@@ -532,6 +532,7 @@ class SodxtrmtsVisualizeForm(forms.Form):
     summary = forms.ChoiceField(choices=WRCCData.SXTR_SUMMARY_CHOICES, initial='mean', help_text='How to summarize the months.')
     show_running_mean = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show running mean.')
     running_mean_years = forms.IntegerField(initial=9,required=False, help_text='Years over which to compute the running mean.')
+    plot_incomplete_years = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='F', help_text='Calculate and plot values even if the "maximum number of days missing" threhsold is not met.')
     #Plot Options
     graph_title = forms.CharField(required=False, initial='Use default', help_text='Enter a title to appear at the top of your graph.')
     image_size = forms.ChoiceField(choices=WRCCData.IMAGE_SIZES, initial='medium', help_text='Select an image size.')

@@ -2,6 +2,7 @@ $(function () {
     var chart;
 
     $(document).ready(function() {
+        var mischr = ["fake","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
         var JSON_URL = document.getElementById("JSON_URL").value;
         var json_file = document.getElementById("json_file").value;
         var file = JSON_URL + json_file;
@@ -13,6 +14,7 @@ $(function () {
         var minor_grid = document.getElementById("minor_grid").value;
         var connector_line = document.getElementById("connector_line").value;
         var connector_line_width = document.getElementById("connector_line_width").value;
+        var plot_incomplete_years = document.getElementById("plot_incomplete_years").value;
         if (connector_line == 'F'){
             connector_line_width = 0;        
         }
@@ -37,6 +39,7 @@ $(function () {
         $.getJSON(file, function(datadict) {
             var element = datadict.element;
             var stn_id = datadict.stn_id;
+            var max_missing_days = parseInt(datadict.search_params.max_missing_days);
             //Depending on summary, define series to be plotted
             var series_data = [];
             var Start = Date.UTC(parseInt(datadict.start_date),0,01);
@@ -100,19 +103,33 @@ $(function () {
                     if (major_grid =='F' && minor_grid =='F'){
                         x_plotlines = null;
                     }
-                    var vals = [];
                     //Define plot data 
+                    var vals = [];
+                    var skip_year = 'F';                    
                     if (month_list[0]> month_list[month_list.length -1]){
                         var date = Date.UTC(parseInt(datadict.data[yr_idx][0]) + 1, 0, 1)
                     }
                     else {
                         var date = Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1)
-                    } 
+                    }
+                    //Month Loop
                     for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
                         var val = datadict.data[yr_idx][2*month_list[mon_idx] - 1];
+                        var flag = datadict.data[yr_idx][2*month_list[mon_idx]].toString();
+                        //Check if we need to skip this year
+                        if ((mischr.indexOf(flag) > max_missing_days || val == '-----') && plot_incomplete_years == 'F') {
+                            skip_year = 'T';
+                            break;
+                        }
+            
                         if (val != '-----') {
                             vals.push(parseFloat(val));
                         }
+                    } //end month loop
+                    if (skip_year == 'T'){
+                        data.push([date, null]);
+                        values.push(null);
+                        continue;
                     }
                     if (vals.length > 0) {
                         if (summary == 'max'){
@@ -187,6 +204,7 @@ $(function () {
                         var month_idx = 0;
                     }
                     for (var yr_idx=0;yr_idx<values.length;yr_idx++) {
+                        skip_year = 'F';
                         if (month_list[0]> month_list[month_list.length -1]){
                             var date = Date.UTC(parseInt(datadict.data[yr_idx][0]) + 1, mon_idx, 1)
                         }
@@ -201,8 +219,12 @@ $(function () {
                                     sum+=values[i];
                                     cnt+=1;
                                 }
+                                else {
+                                    skip_year = 'T';
+                                    break;
+                                }
                             }
-                            if (cnt > 0){
+                            if (cnt > 0 && skip_year =='F'){
                                 running_mean_data.push([date, precise_round(sum/cnt,2)]);
                             }
                             else{
@@ -262,7 +284,7 @@ $(function () {
 
             //Define plot characteristics
             if (graph_title == "Use default"){
-                graph_title = datadict.stn_name + '(' + stn_id + ')';
+                graph_title = datadict.stn_name + ' (' + stn_id + ')';
             }
             if (major_grid == 'F') {
                 var lineColor = 'transparent';

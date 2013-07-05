@@ -102,7 +102,7 @@
             {%endfor%}
             </p>
 
-            <p><b>Missing days</b><br />
+            <p><b>Missing values</b><br />
             <!--Any month with less than or equal this user selected number will be included in the analysis.<br />
             Monthly information for months with more than this number of missing values will be displayed, but not used. <br />
             The letter indicates the number of missing days-->
@@ -179,6 +179,7 @@
             <input type="hidden" id="connector_line_width" name="connector_line_with" value="{{connector_line_width}}">
             <input type="hidden" id="markers" name="markers" value="{{markers}}">
             <input type="hidden" id="marker_type" name="marker_type" value="{{marker_type}}">
+            <input type="hidden" id="plot_incomplete_years" name="plot_incomplete_years" value="{{plot_incomplete_years}}">
             <div align="center" id="container" style="height:{{height}}px;width:{{width}}px;"></div>
             <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts-visualize.js"></script>
         {%endif%}
