@@ -2,10 +2,15 @@ $(function () {
     var json_file = document.getElementById("json_file").value;
     var JSON_URL = document.getElementById("JSON_URL").value;
     var json_file_path = '/csc/media/tmp/' + json_file;
-    var style = {
-        color:'#000000',
-        fontSize:'14px'
-    };
+    var style_axes = {
+            color:'#000000',
+            fontSize:'14px',
+            fontWeight: 'bold'
+        };
+    var style_text = {
+            color:'#000000',
+            fontSize:'18px'
+        };
     $.getJSON(json_file_path, function(table_dict) {
         var ranges = table_dict.ranges;
         //Find max/min of ranges
@@ -21,6 +26,27 @@ $(function () {
             max = null;
             min = null;
         }
+        var x_plotlines = [];
+        for (var val=0;val<12;val++){
+            var plotline = {
+                color: '#787878',
+                dashStyle:'dash',
+                width: 1,
+                value: val,
+            };
+            x_plotlines.push(plotline);
+        }
+        var y_plotlines = [];
+        for (var val=min + (max - min)/5;val<=max + 4*(max - min)/5;val+=(max - min)/5) {
+            var plotline = {
+                color: '#787878',
+                dashStyle:'dash',
+                width: 1,
+                value: val,
+            };
+            y_plotlines.push(plotline);
+        }
+
         var averages = table_dict.averages;
         var base_temperature = table_dict.base_temperature;
         if (table_dict.element == 'gdd' || table_dict.element == 'hdd' || table_dict.element == 'cdd') {
@@ -29,35 +55,56 @@ $(function () {
         else{
             base_temperature = '';
         }
+        //Find name of monthly statistics
+        for (idx=0;idx<table_dict.header.length;idx++){
+            if (table_dict.header[idx][0] == 'Monthly Statistic'){
+                var monthly_statistic = table_dict.header[idx][1];
+            }
+        }
         $('#graph_container').highcharts({
             credits: {
                 href: 'http://wrcc.dri.edu/',
                 text: 'wrcc.dri.edu'
             },  
             title: {
-                style:style,
+                style:style_text,
                 text:table_dict.stn_name + ', ID: ' + table_dict.stn_id 
             },
             subtitle: {
-                text: 'Mean and Range. Monthly Statistic: '  + table_dict.search_params['Monthly Statistic'],
+                text: 'Mean and Range of '  + monthly_statistic + ' for ' + table_dict.element_name,
                 x: -20
+            },
+            labels:{
+                items:[{
+                    html:'Start Year: ' + table_dict.start_date + ' End Year: ' + table_dict.end_date,
+                    style:{
+                        top:'-10px',
+                        left:'100px',
+                        fontSize:'14px'
+                    }   
+                }],
+                style: {color: '#000000'}
             },
             xAxis: {
                 labels:{
-                    style: style
+                    style: style_axes
                 },   
-                categories: table_dict.month_list
+                categories: table_dict.month_list,
+                plotLines:x_plotlines
             },
             yAxis: {
                 labels:{
-                    style: style
+                    style: style_axes
                 },
                 title: {
-                    style:style,
+                    style:style_text,
                     text: table_dict.element_name
                 },
                 max:max,
-                min:min
+                min:min,
+                gridLineWidth:0,
+                plotLines:y_plotlines,
+                tickInterval:precise_round((max - min)/5, 0)
             },
         
             tooltip: {
@@ -66,16 +113,16 @@ $(function () {
                 valueSuffix: '°C'
             },
             
-            legend: {
-            },
+            //egend: {
+            //},
         
             series: [{
-                name: table_dict.element_name + ' ' + base_temperature,
+                name: monthly_statistic +  ' of ' + table_dict.element_name + ' ' + base_temperature,
                 data: averages,
                 zIndex: 1,
                 marker: {
                     fillColor: 'white',
-                    lineWidth: 2,
+                    lineWidth: 1,
                     lineColor: Highcharts.getOptions().colors[0]
                 }
             }, {

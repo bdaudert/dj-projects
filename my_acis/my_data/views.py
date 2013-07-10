@@ -1463,8 +1463,8 @@ def sodxtrmts(request):
                     json_dict['start_date'] = dates_list[0][0:4]
                     json_dict['end_date'] = dates_list[-1][0:4]
                 else:
-                    json_dict['start_date'] = '1937'
-                    json_dict['end_date'] = '2013'
+                    json_dict['start_date'] = '----'
+                    json_dict['end_date'] = '----'
                 results_json = json.dumps(json_dict)
                 time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
                 json_file = '%s_sodxtrmts_%s_%s_%s.json' \
