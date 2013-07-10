@@ -106,6 +106,16 @@ h4,h5 {
     margin-bottom: .5em;
 }
 
+a:link { color: #0000FF;}
+/*a:visited { color: #660099; }*/
+a:hover {
+    color: #33CCFF;
+    text-decoration: none;
+}
+a:visited {color: #800080;}
+a:active { color:#FF0000;}
+
+/*
 a:link { color: #0000aa; }
 a:visited { color: #000099; }
 
@@ -114,7 +124,7 @@ a:hover {
     text-decoration: none;
 }
 a:active { color: red; }
-
+*/
 
 dl {
     font-size: .8em;

@@ -238,7 +238,19 @@ def station_tables_merge(request):
     max_instances = max([len(table_dicts[uid]) for uid in ucan_id_list])
     if  max_instances == 0:
         #set up blank form for table
-        init = {'ucan_station_id':ucan_station_id_form, 'updated_by': 'WRCCsync', 'last_updated':today_month_word + ' ' + today_day + ', ' + today_yr}
+        #get station table for start, end dates and data flags
+        station = convert_query_set(models.Station.objects.filter(ucan_station_id=ucan_station_id_form), 'python_dict')
+        init = {
+            'ucan_station_id':ucan_station_id_form,
+            'begin_date':station['begin_date'],
+            'end_date':station['end_date'],
+            'begin_date_flag':station['begin_date_flag'],
+            'end_date_flag':station['end_date_flag'],
+            'history_flag':station['history_flag'],
+            'src_quality_code':station['src_quality_code'],
+            'updated_by': 'WRCCsync',
+            'last_updated':today_month_word + ' ' + today_day + ', ' + today_yr
+            }
         form_class = getattr(mforms, tbl_name + 'Form')
         form = form_class(initial=init)
         for field in form.fields:
@@ -264,11 +276,13 @@ def station_tables_merge(request):
             #Overwrite editable form with wrcc values if they exist
             #and replace updated_by, last _updated and ucan_id
             if wrcc_id:
-                results[inst][-1]= table_dicts[wrcc_id][inst]
-                for idx, key_val in enumerate(results[inst][-1]):
+                results[inst][-1]= []
+                for idx, key_val in enumerate(table_dicts[wrcc_id][inst]):
+                    results[inst][-1].append([key_val[0], key_val[1]])
                     if str(key_val[0]) == 'ucan_station_id': results[inst][-1][idx][1]= ucan_station_id_form
                     if str(key_val[0]) == 'updated_by':results[inst][-1][idx][1] = 'WRCCsync'
                     if str(key_val[0]) == 'last_updated':results[inst][-1][idx][1] = today_month_word + ' ' + today_day + ', ' + today_yr
+
     context['results'] = results
 
     #Write merge information to metadata.load file
