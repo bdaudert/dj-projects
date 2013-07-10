@@ -447,9 +447,9 @@ class MultiPRISMElementField(forms.CharField):
 #Data download form
 class DownloadForm(forms.Form):
     data_format = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='clm', help_text=HELP_TEXTS['data_format'])
-    delimiter = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial='tab',help_text='Delimiter used to seperate data values.')
+    delimiter = forms.ChoiceField(choices=DELIMITER_CHOICES, initial='tab',help_text='Delimiter used to seperate data values. Not applicable for excel output.')
     output_file_name = MyNameField(required=False, initial='Output', help_text = 'Enter a name for your output file. Please do not use special characters (e.g. underscores are not allowed).')
-
+    #output_file_name = forms.CharField(required=False,initial='Output', help_text ='Enter a name for your output file. Please do not use special characters (e.g. underscores are not allowed).')
 #Generic form for Kelly's SOD programs
 class SodForm(forms.Form):
     def __init__(self, *args, **kwargs):

@@ -154,18 +154,23 @@ def download(request):
     json_file = request.GET.get('json_file', None)
     form0 = forms.DownloadForm()
     context['form0'] = form0
-    if form0 in request.POST:
+    if 'form0' in request.POST:
+        form0 = set_as_form(request,'DownloadForm')
+        context['form0'] = form0
         if form0.is_valid():
+            context['cleaned'] = form0.cleaned_data
             data_format = form0.cleaned_data['data_format']
             delimiter = form0.cleaned_data['delimiter']
             output_file_name = form0.cleaned_data['output_file_name']
             if json_file is None:json_file = 'emergency_json'
-            DDJ = WRCCClasses.DownloadDataJob(app_name,data_format,delimiter,output_file_name=output_file_name, request=request, json_file_path='/tmp/' + json_file)
+            DDJ = WRCCClasses.DownloadDataJob(app_name,data_format,delimiter, output_file_name, request=request, json_in_file='/tmp/' + json_file)
             if data_format in ['clm', 'dlm','xl']:
                 return DDJ.write_to_file()
             else:
                 response = DDJ.write_to_file()
                 context['response'] = response
+        else:
+            context['cleaned'] = "NODODODODO"
     return render_to_response('my_data/download.html', context, context_instance=RequestContext(request))
 
 def data_station(request):
@@ -1329,7 +1334,8 @@ def sodxtrmts(request):
         form0 = set_as_form(request,'SodxtrmtsForm', init=initial)
         context['form0'] = form0
         context['results']  = json_data['data']
-        context['header']  = json_data['heder']
+        context['header']  = json_data['header']
+        context['month_list'] = json_data['month_list']
         return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
     form0 = set_as_form(request,'SodxtrmtsForm', init=initial)
     context['form0'] = form0
@@ -1377,6 +1383,9 @@ def sodxtrmts(request):
                     'end_date':form0.cleaned_data['end_year'],
                     'element':form0.cleaned_data['element']
                     }
+            search_params = {}
+            for key, val in form0.cleaned_data.iteritems():
+                search_params[key] = val
             app_params = form0.cleaned_data
             for key in ['station_ID', 'start_year', 'end_year']:
                 del app_params[key]
@@ -1414,6 +1423,7 @@ def sodxtrmts(request):
                 month_list+=months[0:(start_month-1)]
             month_list.append(months[-1])
             context['month_list'] = month_list
+            search_params['month_list'] = month_list
             #generate graphics
             if results:
                 averages = [[mon] for mon in month_list[0:-1]]
@@ -1446,7 +1456,7 @@ def sodxtrmts(request):
                     'stn_name':station_names[0],
                     'month_list':month_list,
                     'data':results,
-                    'search_params':form0.cleaned_data,
+                    'search_params':search_params,
                     'header':header
                 }
                 if dates_list:
