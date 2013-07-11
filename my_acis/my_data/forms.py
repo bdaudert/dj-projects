@@ -580,6 +580,7 @@ class StationDataForm0(forms.Form):
         else:
             self.fields['select_stations_by'] = forms.ChoiceField(choices=STN_FIND_CHOICES,required=False, initial='stn_id', widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
             self.fields['stn_id'] = forms.CharField(required=False, initial=stn_id, help_text=HELP_TEXTS['stn_id'])
+        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
 
 class StationDataForm1(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -630,8 +631,14 @@ class StationDataForm1(forms.Form):
             self.fields['end_date'] = MyDateField(max_length=8, min_length=8, initial=yesterday, help_text=HELP_TEXTS['date'])
         self.fields['show_flags'] = forms.ChoiceField(choices=([('T', 'Yes'),('F', 'No')]), required=False, initial='F', help_text='Show the data flag with each data point.')
         self.fields['show_observation_time'] = forms.ChoiceField(choices=([('T', 'Yes'),('F', 'No')]), required=False, initial='F', help_text='Show the hour at which the observation was taken for each data point.(1 - 24 =  midnight, -1 means no observation time was recorded)')
-        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
-        self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
+        if data_format:
+            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial=data_format, help_text=HELP_TEXTS['data_format'])
+            if data_format in ['clm', 'dlm', 'xl']:
+                self.fields['output_file_name'] = MyNameField(initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
+        else:
+            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
+        if data_format in ['dlm', 'clm', 'html']:
+            self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
 class StationDataForm3(forms.Form):
    def __init__(self, *args, **kwargs):
@@ -672,9 +679,14 @@ class StationDataForm3(forms.Form):
         self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('end_date', None), help_text=HELP_TEXTS['date_por'])
         self.fields['show_flags'] = forms.ChoiceField(choices=([('T', 'Yes'),('F', 'No')]), required=False, initial=kwargs.get('initial', {}).get('show_flags', 'F'), help_text='Show the data flag with each data point. Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated')
         self.fields['show_observation_time'] = forms.ChoiceField(choices=([('T', 'Yes'),('F', 'No')]), required=False, initial=kwargs.get('initial', {}).get('show_observation_time', 'F'), help_text='Show the time at which the observation was taken for each data point.')
-        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='clm', help_text=HELP_TEXTS['data_format'])
-        if data_format in ['dlm', 'html']:
-            self.fields['delimiter'] = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial=kwargs.get('initial', {}).get('delimiter', None),help_text='Delimiter used to seperate data values.')
+        if data_format:
+            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial=data_format, help_text=HELP_TEXTS['data_format'])
+            if data_format in ['clm', 'dlm', 'xl']:
+                self.fields['output_file_name'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored.')
+        else:
+            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
+        if data_format in ['dlm', 'clm', 'html']:
+            self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
 class GridDataForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=select_grid_by_CHOICES, required=False, initial='point', help_text=HELP_TEXTS['select_stations_by'])

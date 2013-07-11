@@ -223,10 +223,14 @@ def station_tables_merge(request):
     context['tbl_name'] = tbl_name
     table_dicts = {}
     #Find table instances for each ucan id
-    ucan_station_id_form = ucan_id_list[0]
+    ucan_station_id_acis = None
+    ucan_station_id_form = None
+    wrcc_id = None
     for idx, ucan_id in enumerate(ucan_id_list):
-        if int(ucan_id) < 100000:
-            ucan_station_id_form = ucan_id
+        if int(ucan_id) < 1000000:
+            ucan_station_acis = ucan_id
+        else:
+            wrcc_id = ucan_id
         table_dicts[ucan_id] = []
         obj = primary_tables[tbl_name]
         instances = obj.objects.filter(ucan_station_id=ucan_id)
@@ -234,12 +238,26 @@ def station_tables_merge(request):
             inst_name = '%s_%d' % (tbl_name, i)
             inst_list = convert_query_set(instance,'python_list')
             table_dicts[ucan_id].append(inst_list)
+    #query station_table entries in db for wrcc id entry
+    if wrcc_id:
+        station = convert_query_set(models.Station.objects.filter(ucan_station_id=wrcc_id), 'python_dict')
+        if ucan_station_id_acis:
+            ucan_station_id_form = ucan_station_id_acis
+        else:
+            ucan_station_id_form = ucan_id_list[0]
+    else:
+        if ucan_station_id_acis:
+            station = convert_query_set(models.Station.objects.filter(ucan_station_id=ucan_station_id_form), 'python_dict')
+            ucan_station_id_form = ucan_station_id_acis
+        else:
+            station = convert_query_set(models.Station.objects.filter(ucan_station_id=ucan_id_list[0]), 'python_dict')
+            ucan_station_id_form = ucan_id_list[0]
+
     #Reorder results for easy html formatting
     max_instances = max([len(table_dicts[uid]) for uid in ucan_id_list])
     if  max_instances == 0:
         #set up blank form for table
         #get station table for start, end dates and data flags
-        station = convert_query_set(models.Station.objects.filter(ucan_station_id=ucan_station_id_form), 'python_dict')
         init = {
             'ucan_station_id':ucan_station_id_form,
             'begin_date':station['begin_date'],
@@ -263,26 +281,28 @@ def station_tables_merge(request):
         #Format for html display
         results = [[[] for idx in range(len(ucan_id_list)+1)] for inst in range(max_instances)]
         for inst in range(max_instances):
-            wrcc_id = None
             for idx, ucan_id in enumerate(ucan_id_list):
                 if len(table_dicts[ucan_id]) > inst:
                     results[inst][idx]=table_dicts[ucan_id][inst]
-                    results[inst][-1]=table_dicts[ucan_id][inst]
-                    #Check if WRCC entry is in list, if so
-                    #we want to use this entry as the editable form at the end of
-                    #the page. If not, we choose the first ucan_id
-                    if int(ucan_id) >=1000000:
-                        wrcc_id = ucan_id
+                    if ucan_id >1000000:
+                        results[inst][-1] = []
+                        for idx, key_val in enumerate(table_dicts[ucan_id][inst]):
+                            results[inst][-1].append([key_val[0], key_val[1]])
+            if not results[inst][-1]:
+                for idx, key_val in enumerate(table_dicts[ucan_id_list[-1]][inst]):
+                    results[inst][-1].append([key_val[0], key_val[1]])
             #Overwrite editable form with wrcc values if they exist
             #and replace updated_by, last _updated and ucan_id
-            if wrcc_id:
-                results[inst][-1]= []
-                for idx, key_val in enumerate(table_dicts[wrcc_id][inst]):
-                    results[inst][-1].append([key_val[0], key_val[1]])
-                    if str(key_val[0]) == 'ucan_station_id': results[inst][-1][idx][1]= ucan_station_id_form
-                    if str(key_val[0]) == 'updated_by':results[inst][-1][idx][1] = 'WRCCsync'
-                    if str(key_val[0]) == 'last_updated':results[inst][-1][idx][1] = today_month_word + ' ' + today_day + ', ' + today_yr
-
+            for idx, key_val in enumerate(results[inst][-1]):
+                if str(key_val[0]) == 'ucan_station_id': results[inst][-1][idx][1]= ucan_station_id_form
+                if str(key_val[0]) == 'begin_date_flag': results[inst][-1][idx][1]= station['begin_date_flag']
+                if str(key_val[0]) == 'begin_date': results[inst][-1][idx][1]= station['begin_date']
+                if str(key_val[0]) == 'end_date_flag': results[inst][-1][idx][1]= station['end_date_flag']
+                if str(key_val[0]) == 'end_date': results[inst][-1][idx][1]= station['end_date']
+                if str(key_val[0]) == 'history_flag': results[inst][-1][idx][1]= station['history_flag']
+                if str(key_val[0]) == 'src_quality_code': results[inst][-1][idx][1]= station['src_quality_code']
+                if str(key_val[0]) == 'last_updated':results[inst][-1][idx][1]= today_month_word + ' ' + today_day + ', ' + today_yr
+                if str(key_val[0]) == 'updated_by':results[inst][-1][idx][1]= 'WRCCSync'
     context['results'] = results
 
     #Write merge information to metadata.load file

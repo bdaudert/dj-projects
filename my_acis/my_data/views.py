@@ -207,6 +207,7 @@ def data_station(request):
             context['hide_form0'] = True
             if stn_id is None:
                 initial_params_1['select_stations_by'] = form0_point.cleaned_data['select_stations_by']
+                initial_params_1['data_format'] = form0_point.cleaned_data['data_format']
 
             if 'form0_point' in request.POST:
                 if form0_point.cleaned_data['select_stations_by'] == 'bbox':
@@ -278,6 +279,7 @@ def data_station(request):
                             context['link_to_metagraph'] = True
                 context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
                 if 'delimiter' in form1_point.cleaned_data.keys():
+                    context['delimiter_word'] = form1_point.cleaned_data['delimiter']
                     delimiter = WRCCData.delimiters[str(form1_point.cleaned_data['delimiter'])]
                 else:
                     if form1_point.cleaned_data['data_format'] == 'json':
@@ -285,51 +287,11 @@ def data_station(request):
                         context['json'] = True
                     else:
                         delimiter = ' '
-                context['delim'] = form1_point.cleaned_data['delimiter']
                 context['delimiter'] =  delimiter
-                #Output formats
-                select_stations_by = str(form1_point.cleaned_data['select_stations_by'])
-                if select_stations_by == 'stnid':
-                    file_info =['StnId', form1_point.cleaned_data['station_id']]
-                    context['by_type'] = 'Individual Station: %s' %str(form1_point.cleaned_data['station_id'])
-                elif select_stations_by == 'stn_id':
-                    file_info =['StnId',',',form1_point.cleaned_data['station_id']]
-                    context['by_type'] = 'Individual Station: %s' %str(form1_point.cleaned_data['station_id'])
-                elif select_stations_by == 'stnids':
-                    file_info = ['Multi','Stations']
-                    stn_list = []
-                    stn_tuple = ', '.join(form1_point.cleaned_data['station_ids'])
-                    context['by_type'] = 'Multiple Stations: %s' %stn_tuple
-                elif select_stations_by == 'county':
-                    file_info =['county', form1_point.cleaned_data['county']]
-                    context['by_type'] = 'County: %s' %str(form1_point.cleaned_data['county'])
-                elif select_stations_by == 'climdiv':
-                    file_info =['climdiv', form1_point.cleaned_data['climate_division']]
-                    context['by_type'] = 'Climate Division: %s' %str(form1_point.cleaned_data['climate_division'])
-                elif select_stations_by == 'cwa':
-                    file_info =['cwa', form1_point.cleaned_data['county_warning_area']]
-                    context['by_type'] = 'Couny Warning Area: %s' %str(form1_point.cleaned_data['county_warning_area'])
-                elif select_stations_by == 'basin':
-                    file_info =['basin', form1_point.cleaned_data['basin']]
-                    context['by_type'] = 'Basin: %s' %str(form1_point.cleaned_data['basin'])
-                elif select_stations_by == 'state':
-                    file_info =['state', form1_point.cleaned_data['state']]
-                    context['by_type'] = 'State: %s' %str(form1_point.cleaned_data['state'])
-                elif select_stations_by == 'bbox':
-                    file_info =['bbox', re.sub(',','_',form1_point.cleaned_data['bounding_box'])]
-                    context['by_type'] = 'Bounding Box: %s' %str(form1_point.cleaned_data['bounding_box'])
-                else:
-                    file_info =['Undefined','export']
-                context['file_info'] = file_info
-
-                if form1_point.cleaned_data['data_format'] == 'dlm':
-                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'dat', request=request, file_info=file_info, show_flags=show_flags, show_observation_time=show_observation_time)
-                elif form1_point.cleaned_data['data_format'] == 'clm':
-                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'txt', request=request, file_info=file_info, show_flags=show_flags, show_observation_time=show_observation_time)
-                elif form1_point.cleaned_data['data_format'] == 'xl':
-                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, 'xls', request=request, file_info=file_info, show_flags=show_flags, show_observation_time=show_observation_time)
-                else:
+                if form1_point.cleaned_data['data_format'] == 'html':
                     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
+                else:
+                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, WRCCData.file_extensions[str(form1_point.cleaned_data['data_format'])], request=request, output_file_name=str(form1_point.cleaned_data['output_file_name']), show_flags=show_flags, show_observation_time=show_observation_time)
 
     if 'form3_point' in request.POST:
         form3_point = set_as_form(request,'StationDataForm3')
