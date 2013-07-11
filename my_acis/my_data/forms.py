@@ -692,6 +692,7 @@ class GridDataForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=select_grid_by_CHOICES, required=False, initial='point', help_text=HELP_TEXTS['select_stations_by'])
         temporal_resolution = forms.ChoiceField(choices=([('dly', 'Daily'),('mly', 'Monthly'),('yly', 'Yearly')]), required=False, initial='dly', help_text='Time resolution of data.')
         data_summary = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, required=False, initial='mean', help_text=HELP_TEXTS['data_summary'])
+        data_format = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
 
 class GridDataForm1(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -699,11 +700,14 @@ class GridDataForm1(forms.Form):
         location = kwargs.get('initial', {}).get('location', None)
         temporal_resolution = kwargs.get('initial', {}).get('temporal_resolution', None)
         data_summary = kwargs.get('initial', {}).get('data_summary', None)
+        data_format =  kwargs.get('initial', {}).get('data_format', None)
         super(GridDataForm1, self).__init__(*args, **kwargs)
 
         if select_grid_by is None:select_grid_by = self.data.get('select_grid_by')
         if temporal_resolution is None:temporal_resolution = self.data.get('temporal_resolution')
         if data_summary is None:data_summary = self.data.get('data_summary')
+        if data_format is None:data_format = self.data.get('data_format')
+
         if select_grid_by == 'point':
             self.fields['location'] = forms.CharField(initial="-119,39", help_text=HELP_TEXTS['grid_lon_lat'])
         elif select_grid_by == 'state':
@@ -745,8 +749,14 @@ class GridDataForm1(forms.Form):
             self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial='20130101', help_text=HELP_TEXTS['date'])
         else:
             self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=yesterday, help_text=HELP_TEXTS['date'])
-        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
-        self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
+        if data_format:
+            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial=data_format, help_text=HELP_TEXTS['data_format'])
+            if data_format in ['clm', 'dlm', 'xl']:
+                self.fields['output_file_name'] = MyNameField(initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
+        else:
+            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
+        if data_format in ['dlm', 'clm', 'html']:
+            self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
         if data_summary is None or data_summary == 'none' or select_grid_by == 'point':
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
             #self.fields['data_summary'] = forms.CharField(widget=forms.HiddenInput(), required=False, initial='none', help_text=HELP_TEXTS['data_summary'])
@@ -791,9 +801,14 @@ class GridDataForm3(forms.Form):
             self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
         self.fields['start_date'] = MyDateField(max_length=10, min_length=8, initial=kwargs.get('initial', {}).get('start_date', None), help_text=HELP_TEXTS['date'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=kwargs.get('initial', {}).get('end_date', None), help_text=HELP_TEXTS['date'])
-        self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='txt', help_text=HELP_TEXTS['data_format'])
-        if data_format in ['dlm', 'html']:
-            self.fields['delimiter'] = forms.ChoiceField(required=False,choices=DELIMITER_CHOICES, initial=kwargs.get('initial', {}).get('delimiter', None), help_text='Delimiter used to seperate data values.')
+        if data_format:
+            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial=data_format, help_text=HELP_TEXTS['data_format'])
+            if data_format in ['clm', 'dlm', 'xl']:
+                self.fields['output_file_name'] = MyNameField(initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
+        else:
+            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
+        if data_format in ['dlm', 'clm', 'html']:
+            self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
         if data_summary is None or data_summary == 'none' or select_grid_by == 'point' or temporal_resolution in ['mly', 'yly']:
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')

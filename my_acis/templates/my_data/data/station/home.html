@@ -16,12 +16,12 @@
     <div class="major-left">
     <br />
     <br />
-    {%if not form3_point_ready%}
+    {%if not form2_ready%}
         {%if not hide_form0%}
             <div id='form0'>
                 <form method="post" action="">{% csrf_token %}
                 <table class="form">
-                {%for field in form0_point %}
+                {%for field in form0 %}
                     <tr>
                         <td>{{field.label}}:</td>
                         <td>{{field}}</td>
@@ -39,12 +39,12 @@
                     {%endif%}
                 {%endfor%}
                 </table>
-                <input type="submit" value="Select" name="form0_point"/>
+                <input type="submit" value="Select" name="form0"/>
                 </form>
             </div>
         {%endif%}
         
-        {%if not form1_point_ready and not stn_id%}
+        {%if not form1_ready and not stn_id%}
             <p class="pop_link" onClick="ShowHide('Docu_select_stations_by')"><b><u>Station Selection Choices</u></b> explained</p>
             <div id="Docu_select_stations_by" style="display:none;"></div>
             <script type="text/javascript">                        
@@ -52,13 +52,13 @@
             </script>
         {%endif%}
 
-        {%if form1_point_ready %}
+        {%if form1_ready %}
         <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}station/'"/>
         
         <div id="form1">
             <form method="post" action="">{% csrf_token %}
             <table class="form">
-            {%for field in form1_point %}
+            {%for field in form1 %}
             {%if field.is_hidden %}
                 {{field}} 
             {%else%}
@@ -107,7 +107,7 @@
             {%endif%}
             {%endfor%}
             </table>
-            <input type="submit" value="Submit" name="form1_point"/>
+            <input type="submit" value="Submit" name="form1"/>
             </form>
         </div>
             </br>
@@ -193,13 +193,13 @@
        {%if user_info%}
             <p class="error">{{user_info}}</p>
         {%endif%}
-        {% if form3_point_ready%}
+        {% if form2_ready%}
             <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}station/'"/>
             {%if not hide_form3%}
             <div id='form3'>
                 <form method="post" action="">{% csrf_token %}
                 <table class="form">
-                {%for field in form3_point%}
+                {%for field in form2%}
                     <tr>
                         <td>{{field.label}}:</td>
                         <td>{{field}}</td>
@@ -212,13 +212,13 @@
                     {%endif%}
                 {%endfor%}
                 </table>
-                <input type="submit" value="Submit" name="form3_point"/>
+                <input type="submit" value="Submit" name="form2"/>
                 </form>
             </div>
             {%endif%}
         {%endif%}
 
-        {%if by_type and not form3_point_ready%}
+        {%if by_type and not form2_ready%}
             <p><font color="#FF007F">Search Parameters:</font><br />
             <b>{{by_type}} </b><br />
 

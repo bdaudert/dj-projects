@@ -196,110 +196,110 @@ def data_station(request):
         context['elements'] = elements
 
     if initial_params_0:
-        form0_point = set_as_form(request,'StationDataForm0', init=initial_params_0)
+        form0 = set_as_form(request,'StationDataForm0', init=initial_params_0)
     else:
-        form0_point = set_as_form(request,'StationDataForm0')
-    context['form0_point'] = form0_point
+        form0 = set_as_form(request,'StationDataForm0')
+    context['form0'] = form0
 
-    if 'form0_point' in request.POST or stn_id is not None:
-        if form0_point.is_valid() or stn_id is not None:
-            context['form1_point_ready'] = True
+    if 'form0' in request.POST or stn_id is not None:
+        if form0.is_valid() or stn_id is not None:
+            context['form1_ready'] = True
             context['hide_form0'] = True
             if stn_id is None:
-                initial_params_1['select_stations_by'] = form0_point.cleaned_data['select_stations_by']
-                initial_params_1['data_format'] = form0_point.cleaned_data['data_format']
+                initial_params_1['select_stations_by'] = form0.cleaned_data['select_stations_by']
+                initial_params_1['data_format'] = form0.cleaned_data['data_format']
 
-            if 'form0_point' in request.POST:
-                if form0_point.cleaned_data['select_stations_by'] == 'bbox':
+            if 'form0' in request.POST:
+                if form0.cleaned_data['select_stations_by'] == 'bbox':
                     context['need_map_bbox'] = True
                     context['bounding_box'] = '-115,34,-114,35'
-            form1_point = forms.StationDataForm1(initial=initial_params_1)
-            context['form1_point'] = form1_point
+            form1 = forms.StationDataForm1(initial=initial_params_1)
+            context['form1'] = form1
 
-    if 'form1_point' in request.POST:
-        form1_point = set_as_form(request,'StationDataForm1')
-        context['form1_point'] = form1_point
-        context['form1_point_ready'] = True
+    if 'form1' in request.POST:
+        form1 = set_as_form(request,'StationDataForm1')
+        context['form1'] = form1
+        context['form1_ready'] = True
         context['hide_form0'] = True
 
-        if form1_point.is_valid():
-            if 'show_flags' in form1_point.cleaned_data.keys() and form1_point.cleaned_data['show_flags'] == 'T':
+        if form1.is_valid():
+            if 'show_flags' in form1.cleaned_data.keys() and form1.cleaned_data['show_flags'] == 'T':
                 context['show_flags'] = True
                 show_flags = 'T'
             else:
                 show_flags = 'F'
-            if 'show_observation_time' in form1_point.cleaned_data.keys() and form1_point.cleaned_data['show_observation_time'] == 'T':
+            if 'show_observation_time' in form1.cleaned_data.keys() and form1.cleaned_data['show_observation_time'] == 'T':
                 context['show_observation_time'] = True
                 show_observation_time = 'T'
             else:
                 show_observation_time = 'F'
-            if form1_point.cleaned_data['select_stations_by'] == 'bbox':
+            if form1.cleaned_data['select_stations_by'] == 'bbox':
                 context['need_map_bbox'] = True
-                context['bounding_box'] = form1_point.cleaned_data['bounding_box']
+                context['bounding_box'] = form1.cleaned_data['bounding_box']
             #Check if data request is large,
             #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
-            if form1_point.cleaned_data['start_date'].lower() == 'por':
+            if form1.cleaned_data['start_date'].lower() == 'por':
                 s_date = datetime.date(1900,01,01)
             else:
-                s_date = datetime.date(int(form1_point.cleaned_data['start_date'][0:4]), int(form1_point.cleaned_data['start_date'][4:6]),int(form1_point.cleaned_data['start_date'][6:8]))
-            if form1_point.cleaned_data['end_date'].lower() == 'por':
+                s_date = datetime.date(int(form1.cleaned_data['start_date'][0:4]), int(form1.cleaned_data['start_date'][4:6]),int(form1.cleaned_data['start_date'][6:8]))
+            if form1.cleaned_data['end_date'].lower() == 'por':
                 e_date = datetime.date.today()
             else:
-                e_date = datetime.date(int(form1_point.cleaned_data['end_date'][0:4]), int(form1_point.cleaned_data['end_date'][4:6]),int(form1_point.cleaned_data['end_date'][6:8]))
+                e_date = datetime.date(int(form1.cleaned_data['end_date'][0:4]), int(form1.cleaned_data['end_date'][4:6]),int(form1.cleaned_data['end_date'][6:8]))
             days = (e_date - s_date).days
             #if time range > 1 year or user requests data for more than 1 station, large request via ftp
-            if days > 366 and 'station_id' not in form1_point.cleaned_data.keys():
+            if days > 366 and 'station_id' not in form1.cleaned_data.keys():
                 context['large_request'] = \
                 'At the moment we do not support data requests that exceed 1 year for multiple station. Please limit your request to one station at a time or a date range of one year or less. We will support larger requests in the near future. Thank you for your patience!'
 
                 '''
-                context['form3_point_ready'] = True
+                context['form2_ready'] = True
                 context['large_request'] = 'You requested a large amount of data.Please enter your name and e-mail address.We will notify you once your request has been processed and your data is availiable on our ftp server.'
-                initial_params_2 = form1_point.cleaned_data
+                initial_params_2 = form1.cleaned_data
                 #keep MultiElements format and MultiStnField format
                 initial_params_2['elements'] = ','.join(initial_params_2['elements'])
                 if 'station_ids' in initial_params_2.keys():
                     initial_params_2['station_ids'] = ','.join([str(stn) for stn in initial_params_2['station_ids']])
-                form3_point = forms.StationDataForm3(initial=initial_params_2)
-                context['form3_point'] = form3_point
+                form2 = forms.StationDataForm3(initial=initial_params_2)
+                context['form2'] = form2
                 '''
                 return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
             else:
-                resultsdict = AcisWS.get_station_data(form1_point.cleaned_data, 'sodlist_web')
+                resultsdict = AcisWS.get_station_data(form1.cleaned_data, 'sodlist_web')
                 context['results'] = resultsdict
                 # If request successful, get params for link to apps page
                 if 'stn_data' in resultsdict.keys() and resultsdict['stn_data']:
-                    context['elements'] = ','.join(form1_point.cleaned_data['elements'])
-                    context['start_date'] = form1_point.cleaned_data['start_date']
-                    context['end_date'] = form1_point.cleaned_data['end_date']
-                    if 'station_id' in form1_point.cleaned_data.keys():
-                        context['stn_id']= form1_point.cleaned_data['station_id']
+                    context['elements'] = ','.join(form1.cleaned_data['elements'])
+                    context['start_date'] = form1.cleaned_data['start_date']
+                    context['end_date'] = form1.cleaned_data['end_date']
+                    if 'station_id' in form1.cleaned_data.keys():
+                        context['stn_id']= form1.cleaned_data['station_id']
                         context['link_to_mon_aves'] = True
                         if 'stn_ids' in resultsdict.keys() and resultsdict['stn_ids'][0][0].split(' ')[1] == 'COOP':
                             context['link_to_metagraph'] = True
                 context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
-                if 'delimiter' in form1_point.cleaned_data.keys():
-                    context['delimiter_word'] = form1_point.cleaned_data['delimiter']
-                    delimiter = WRCCData.delimiters[str(form1_point.cleaned_data['delimiter'])]
+                if 'delimiter' in form1.cleaned_data.keys():
+                    context['delimiter_word'] = form1.cleaned_data['delimiter']
+                    delimiter = WRCCData.delimiters[str(form1.cleaned_data['delimiter'])]
                 else:
-                    if form1_point.cleaned_data['data_format'] == 'json':
+                    if form1.cleaned_data['data_format'] == 'json':
                         delimiter = None
                         context['json'] = True
                     else:
                         delimiter = ' '
                 context['delimiter'] =  delimiter
-                if form1_point.cleaned_data['data_format'] == 'html':
+                if form1.cleaned_data['data_format'] == 'html':
                     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
                 else:
-                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, WRCCData.file_extensions[str(form1_point.cleaned_data['data_format'])], request=request, output_file_name=str(form1_point.cleaned_data['output_file_name']), show_flags=show_flags, show_observation_time=show_observation_time)
+                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, WRCCData.file_extensions[str(form1.cleaned_data['data_format'])], request=request, output_file_name=str(form1.cleaned_data['output_file_name']), show_flags=show_flags, show_observation_time=show_observation_time)
 
-    if 'form3_point' in request.POST:
-        form3_point = set_as_form(request,'StationDataForm3')
-        context['form3_point'] = form3_point
-        context['form3_point_ready'] = True
-        if form3_point.is_valid():
+    if 'form2' in request.POST:
+        form2 = set_as_form(request,'StationDataForm3')
+        context['form2'] = form2
+        context['form2_ready'] = True
+        if form2.is_valid():
             context['hide_form3'] = True
-            user_name = form3_point.cleaned_data['user_name']
+            user_name = form2.cleaned_data['user_name']
             time_stamp = datetime.datetime.now().strftime('_%Y_%m_%d_%H_%M_%S')
             f = '/tmp/data_requests/' + user_name + time_stamp + '_params.json'
             context['json'] = f
@@ -310,13 +310,13 @@ def data_station(request):
             except:
                 os.mkdir(dr)
             with open( f, 'w+') as j_file:
-                json.dump(form3_point.cleaned_data, j_file)
+                json.dump(form2.cleaned_data, j_file)
             mode = os.stat(f).st_mode
             os.chmod(f, mode | stat.S_IWOTH)
-            context['user_info'] = 'You will receive an email from csc-data-request@dri.edu with instructions when the data request has been processed. You provided following e-mail address: %s' % (form3_point.cleaned_data['email'])
+            context['user_info'] = 'You will receive an email from csc-data-request@dri.edu with instructions when the data request has been processed. You provided following e-mail address: %s' % (form2.cleaned_data['email'])
         else:
             context['user_info'] ='Form not valid'
-            context['form3_point'] = form3_point
+            context['form2'] = form2
         return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
 
     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
@@ -375,23 +375,24 @@ def data_gridded(request):
         initial_1['temporal_resolution'] = temporal_resolution
     if loc is not None or state is not None or bbox is not None:
         context['hide_form0'] = True
-        context['form1_grid_ready'] = True
-        form1_grid = forms.GridDataForm1(initial=initial_1)
-        context['form1_grid'] = form1_grid
+        context['form1_ready'] = True
+        form1 = forms.GridDataForm1(initial=initial_1)
+        context['form1'] = form1
     else:
-        form0_grid = set_as_form(request,'GridDataForm0')
-        context['form0_grid'] = form0_grid
+        form0 = set_as_form(request,'GridDataForm0')
+        context['form0'] = form0
 
-    if 'form0_grid' in request.POST:
-        if form0_grid.is_valid():
-            if form0_grid.cleaned_data['temporal_resolution'] in ['mly', 'yly']:
+    if 'form0' in request.POST:
+        if form0.is_valid():
+            if form0.cleaned_data['temporal_resolution'] in ['mly', 'yly']:
                 context['prism_flag'] = True # flag for correct element docu
-            context['temporal_resolution'] = form0_grid.cleaned_data['temporal_resolution']
-            context['form1_grid_ready'] = True
+            context['temporal_resolution'] = form0.cleaned_data['temporal_resolution']
+            context['form1_ready'] = True
             initial_1 = {
-                'select_grid_by':form0_grid.cleaned_data['select_grid_by'],
-                'temporal_resolution':form0_grid.cleaned_data['temporal_resolution'],
-                'data_summary':form0_grid.cleaned_data['data_summary']
+                'select_grid_by':form0.cleaned_data['select_grid_by'],
+                'temporal_resolution':form0.cleaned_data['temporal_resolution'],
+                'data_summary':form0.cleaned_data['data_summary'],
+                'data_format':form0.cleaned_data['data_format']
             }
             if initial_1['select_grid_by'] == 'point':
                 context['need_map'] = True
@@ -409,85 +410,85 @@ def data_gridded(request):
                 else:
                     context['bounding_box'] = '-115,34,-114,35'
 
-            form1_grid = forms.GridDataForm1(initial=initial_1)
-            context['form1_grid'] = form1_grid
+            form1 = forms.GridDataForm1(initial=initial_1)
+            context['form1'] = form1
             context['hide_form0'] = True
 
-    if 'form1_grid' in request.POST:
-        form1_grid = set_as_form(request,'GridDataForm1')
-        context['form1_grid'] = form1_grid
-        context['form1_grid_ready'] = True
+    if 'form1' in request.POST:
+        form1 = set_as_form(request,'GridDataForm1')
+        context['form1'] = form1
+        context['form1_ready'] = True
         context['hide_form0'] = True
-        if form1_grid.is_valid():
-            context['temporal_resolution'] = form1_grid.cleaned_data['temporal_resolution']
-            context['data_summary'] = form1_grid.cleaned_data['data_summary']
-            el_list = form1_grid.cleaned_data['elements']
+        if form1.is_valid():
+            context['temporal_resolution'] = form1.cleaned_data['temporal_resolution']
+            context['data_summary'] = form1.cleaned_data['data_summary']
+            el_list = form1.cleaned_data['elements']
             context['elements'] =  el_list
             #Check if data request is large,
             #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
-            s_date = datetime.date(int(form1_grid.cleaned_data['start_date'][0:4]), int(form1_grid.cleaned_data['start_date'][4:6]), \
-            int(form1_grid.cleaned_data['start_date'][6:8]))
-            e_date = datetime.date(int(form1_grid.cleaned_data['end_date'][0:4]), int(form1_grid.cleaned_data['end_date'][4:6]), \
-            int(form1_grid.cleaned_data['end_date'][6:8]))
+            s_date = datetime.date(int(form1.cleaned_data['start_date'][0:4]), int(form1.cleaned_data['start_date'][4:6]), \
+            int(form1.cleaned_data['start_date'][6:8]))
+            e_date = datetime.date(int(form1.cleaned_data['end_date'][0:4]), int(form1.cleaned_data['end_date'][4:6]), \
+            int(form1.cleaned_data['end_date'][6:8]))
             days = (e_date - s_date).days
             #if time range > 1 day and user requests data for more than 1 station, large request via ftp
-            #if (days > 1 and  'location' not in form1_grid.cleaned_data.keys()) or (days > 366 and 'location' in form1_grid.cleaned_data.keys()):
+            #if (days > 1 and  'location' not in form1.cleaned_data.keys()) or (days > 366 and 'location' in form1.cleaned_data.keys()):
 
-            if ('data_summary' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['data_summary'] == 'none' and form1_grid.cleaned_data['temporal_resolution'] == 'dly') or ('data_summary' not in form1_grid.cleaned_data.keys()):
-                if (days > 7 and  'location' not in form1_grid.cleaned_data.keys()):
+            if ('data_summary' in form1.cleaned_data.keys() and form1.cleaned_data['data_summary'] == 'none' and form1.cleaned_data['temporal_resolution'] == 'dly') or ('data_summary' not in form1.cleaned_data.keys()):
+                if (days > 7 and  'location' not in form1.cleaned_data.keys()):
                     context['large_request'] = \
                     'At the moment we do not support data requests that exceed 7 days for multiple station. Please limit your request to one grid point at a time or a date range of one week or less. Alternatively, you could summarize your data by using the data summary option. We will support larger requests in the near future. Thank you for your patience!'
                     '''
-                    context['form3_grid_ready'] = True
+                    context['form2_ready'] = True
                     context['large_request'] = \
                     'You requested a large amount of data. Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
-                    initial_params_2 = form1_grid.cleaned_data
+                    initial_params_2 = form1.cleaned_data
                     #keep MultiElements format and MultiStnField format
                     initial_params_2['elements'] = ','.join(initial_params_2['elements'])
-                    form3_grid = forms.GridDataForm3(initial=initial_params_2)
-                    context['form3_grid'] = form3_grid
+                    form2 = forms.GridDataForm3(initial=initial_params_2)
+                    context['form2'] = form2
                     '''
                     return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
-            if 'location' in form1_grid.cleaned_data.keys():
-                location = form1_grid.cleaned_data['location']
+            if 'location' in form1.cleaned_data.keys():
+                location = form1.cleaned_data['location']
                 context['need_map'] = True
                 context['map_loc'] = location
                 context['lat'] = location.split(',')[1]
                 context['lon'] = location.split(',')[0]
                 context['location'] = location
-            elif 'bounding_box' in form1_grid.cleaned_data.keys():
+            elif 'bounding_box' in form1.cleaned_data.keys():
                 context['need_map_bbox'] = True
-                bounding_box = form1_grid.cleaned_data['bounding_box']
+                bounding_box = form1.cleaned_data['bounding_box']
                 context['bounding_box'] = bounding_box
-            elif 'state' in form1_grid.cleaned_data.keys():
-                state = form1_grid.cleaned_data['state']
+            elif 'state' in form1.cleaned_data.keys():
+                state = form1.cleaned_data['state']
                 context['state'] = state
-            context['start_date'] = form1_grid.cleaned_data['start_date'];start_date= form1_grid.cleaned_data['start_date']
-            context['end_date'] = form1_grid.cleaned_data['end_date'];end_date= form1_grid.cleaned_data['end_date']
-            context['element'] = str(form1_grid.cleaned_data['elements'][0])
+            context['start_date'] = form1.cleaned_data['start_date'];start_date= form1.cleaned_data['start_date']
+            context['end_date'] = form1.cleaned_data['end_date'];end_date= form1.cleaned_data['end_date']
+            context['element'] = str(form1.cleaned_data['elements'][0])
             elems_long = []
-            element_list = form1_grid.cleaned_data['elements']
+            element_list = form1.cleaned_data['elements']
             context['element_list'] = element_list
             for el in element_list:
                 elems_long.append(WRCCData.acis_elements_dict[el]['name_long'])
             context['elems_long'] = elems_long
-            context['grid'] = str(form1_grid.cleaned_data['grid']);grid=str(form1_grid.cleaned_data['grid'])
+            context['grid'] = str(form1.cleaned_data['grid']);grid=str(form1.cleaned_data['grid'])
 
             #Generate Data
-            form_input = form1_grid.cleaned_data
-            if str(form1_grid.cleaned_data['grid']) == '21':
+            form_input = form1.cleaned_data
+            if str(form1.cleaned_data['grid']) == '21':
                 #PRISM data need to convert elements!!
                 prism_elements = []
-                for el in form1_grid.cleaned_data['elements']:
-                    prism_elements.append('%s_%s' %(str(form1_grid.cleaned_data['temporal_resolution']), str(el)))
+                for el in form1.cleaned_data['elements']:
+                    prism_elements.append('%s_%s' %(str(form1.cleaned_data['temporal_resolution']), str(el)))
                 form_input['elements'] = prism_elements
             req = AcisWS.get_grid_data(form_input, 'griddata_web')
             if 'error' in req.keys():
                 context['error'] = req['error']
                 context['grid_data'] = {}
                 return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
-            if 'visualize' in form1_grid.cleaned_data.keys() and form1_grid.cleaned_data['visualize'] == 'T':
+            if 'visualize' in form1.cleaned_data.keys() and form1.cleaned_data['visualize'] == 'T':
                 #Generate figures for each element, store in figure files
                 figure_files = []
                 image = dict(type='png',proj='lcc',interp='cspline',
@@ -497,26 +498,26 @@ def data_gridded(request):
                     'sdate': start_date,
                     'edate': end_date,
                     }
-                if 'state' in form1_grid.cleaned_data.keys():params['state']= state
-                if 'bounding_box' in form1_grid.cleaned_data.keys():params['bbox']= bounding_box
+                if 'state' in form1.cleaned_data.keys():params['state']= state
+                if 'bounding_box' in form1.cleaned_data.keys():params['bbox']= bounding_box
                 #Loop over element and generate figure
                 for el_idx, elem in enumerate(element_list):
                     if elem in ['pcpn', 'snow', 'snwd']:
-                        if form1_grid.cleaned_data['data_summary'] != 'sum':
+                        if form1.cleaned_data['data_summary'] != 'sum':
                             params['image']['levels'] =[0,0.1, 0.2, 0.5, 0.7, 1.0, 2.0, 3.0, 4.0, 5.0]
                         else:
                             params['image']['levels'] =[1, 2, 3, 4,5,6,7,8,9,10,15,20,30]
                         params['image']['cmap'] = 'Spectral'
                     elif elem in ['maxt', 'avgt']:
-                        if form1_grid.cleaned_data['data_summary'] != 'sum':
+                        if form1.cleaned_data['data_summary'] != 'sum':
                             params['image']['levels'] =[-50,-20,-10,0,10,20,30,40,50,60,70,80,90,100,120]
                         params['image']['cmap'] = 'jet'
                     elif elem == 'mint':
-                        if form1_grid.cleaned_data['data_summary'] != 'sum':
+                        if form1.cleaned_data['data_summary'] != 'sum':
                             params['image']['levels'] =[-70,-50,-20,0,10,20,30,40,50,60,70,80,90]
                         params['image']['cmap'] = 'jet'
                     elif elem in ['hdd','cdd', 'gdd']:
-                        if form1_grid.cleaned_data['data_summary'] != 'sum':
+                        if form1.cleaned_data['data_summary'] != 'sum':
                             params['image']['levels'] =[0, 10, 20, 30, 50, 70,80,90,100]
                         params['image']['cmap'] = 'jet'
                     params['elems'] = [{'name':elem}]
@@ -529,59 +530,63 @@ def data_gridded(request):
                     figure_files.append(figure_file)
                 context['figure_files'] = figure_files
             #format data
-            if form1_grid.cleaned_data['data_format'] == 'json':
+            if form1.cleaned_data['data_format'] == 'json':
                 delimiter = None
                 context['json'] = True
                 context['grid_data']  = req
             else:
-                data = WRCCUtils.format_grid_data(req, form1_grid.cleaned_data)
+                data = WRCCUtils.format_grid_data(req, form1.cleaned_data)
                 context['grid_data'] = data
 
             #Link to relevant apps
-            if 'elements' in form1_grid.cleaned_data.keys() and len(form1_grid.cleaned_data['elements'])==1:
+            if 'elements' in form1.cleaned_data.keys() and len(form1.cleaned_data['elements'])==1:
                 if req or data:
-                    if 'location' in form1_grid.cleaned_data.keys():
-                        if str(form1_grid.cleaned_data['elements'][0]) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
+                    if 'location' in form1.cleaned_data.keys():
+                        if str(form1.cleaned_data['elements'][0]) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
                             context['link_to_gp_ts'] = True
-                            context['lat'] = form1_grid.cleaned_data['location'].split(',')[1]
-                            context['lon'] = form1_grid.cleaned_data['location'].split(',')[0]
+                            context['lat'] = form1.cleaned_data['location'].split(',')[1]
+                            context['lon'] = form1.cleaned_data['location'].split(',')[0]
                     else:
-                        if str(form1_grid.cleaned_data['elements'][0]) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
+                        if str(form1.cleaned_data['elements'][0]) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
                             context['link_to_clim_sum_map'] = True
-                            if 'bounding_box' in form1_grid.cleaned_data.keys():
-                                context['bounding_box'] = form1_grid.cleaned_data['bounding_box']
+                            if 'bounding_box' in form1.cleaned_data.keys():
+                                context['bounding_box'] = form1.cleaned_data['bounding_box']
                             else:
-                                context['state'] = form1_grid.cleaned_data['state']
+                                context['state'] = form1.cleaned_data['state']
 
-            if 'delimiter' in form1_grid.cleaned_data.keys():
-                delimiter = WRCCData.delimiters[str(form1_grid.cleaned_data['delimiter'])]
+            if 'delimiter' in form1.cleaned_data.keys():
+                delimiter = WRCCData.delimiters[str(form1.cleaned_data['delimiter'])]
             else:
                 delimiter = ' '
             context['delimiter'] = delimiter
-
+            if form1.cleaned_data['data_format'] == 'html':
+                return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
+            else:
+                return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,WRCCData.file_extensions[form1.cleaned_data['data_format']], request=request,output_file_name =form1.cleaned_data['output_file_name'])
+            '''
             #Output formats
-            select_grid_by = form1_grid.cleaned_data['select_grid_by']
-            if select_grid_by == 'point':file_info =['location', re.sub(',','_',form1_grid.cleaned_data['location'])]
-            if select_grid_by == 'state':file_info = ['state', form1_grid.cleaned_data['state']]
-            if select_grid_by == 'bbox':file_info =['bounding_box', re.sub(',','_',form1_grid.cleaned_data['bounding_box'])]
+            select_grid_by = form1.cleaned_data['select_grid_by']
+            if select_grid_by == 'point':file_info =['location', re.sub(',','_',form1.cleaned_data['location'])]
+            if select_grid_by == 'state':file_info = ['state', form1.cleaned_data['state']]
+            if select_grid_by == 'bbox':file_info =['bounding_box', re.sub(',','_',form1.cleaned_data['bounding_box'])]
             context['file_info'] = file_info
-            if form1_grid.cleaned_data['data_format'] == 'dlm':
+            if form1.cleaned_data['data_format'] == 'dlm':
                 return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'dat', request=request,file_info=file_info)
-            elif form1_grid.cleaned_data['data_format'] == 'clm':
+            elif form1.cleaned_data['data_format'] == 'clm':
                 return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'txt', request=request,file_info=file_info)
 
-            elif form1_grid.cleaned_data['data_format'] == 'xl':
+            elif form1.cleaned_data['data_format'] == 'xl':
                 return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'xls', request=request,file_info=file_info)
             else:
                 return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
-
-    if 'form3_grid' in request.POST:
-        form3_grid = set_as_form(request,'GridDataForm3')
-        context['form3_grid'] = form3_grid
-        context['form3_grid_ready'] = True
-        if form3_grid.is_valid():
+            '''
+    if 'form2' in request.POST:
+        form2 = set_as_form(request,'GridDataForm3')
+        context['form2'] = form2
+        context['form2_ready'] = True
+        if form2.is_valid():
             context['hide_form3'] = True
-            user_name = form3_grid.cleaned_data['user_name']
+            user_name = form2.cleaned_data['user_name']
             time_stamp = datetime.datetime.now().strftime('_%Y_%m_%d_%H_%M_%S')
             f = '/tmp/data_requests/' + user_name + time_stamp + '_params.json'
             context['json'] = f
@@ -592,10 +597,10 @@ def data_gridded(request):
             except:
                 os.mkdir(dr)
             with open(f, 'w+') as j_file:
-                json.dump(form3_grid.cleaned_data, j_file)
+                json.dump(form2.cleaned_data, j_file)
             mode = os.stat(f).st_mode
             os.chmod(f, mode | stat.S_IWOTH)
-            context['user_info'] = 'You will receive an email from csc-data-request@dri.edu with instructions when the data request has been processed. You provided following e-mail address: %s' % (form3_grid.cleaned_data['email'])
+            context['user_info'] = 'You will receive an email from csc-data-request@dri.edu with instructions when the data request has been processed. You provided following e-mail address: %s' % (form2.cleaned_data['email'])
         else:
             context['user_info'] = 'Invalid Form'
 
