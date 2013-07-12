@@ -563,23 +563,7 @@ def data_gridded(request):
                 return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
             else:
                 return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,WRCCData.file_extensions[form1.cleaned_data['data_format']], request=request,output_file_name =form1.cleaned_data['output_file_name'])
-            '''
-            #Output formats
-            select_grid_by = form1.cleaned_data['select_grid_by']
-            if select_grid_by == 'point':file_info =['location', re.sub(',','_',form1.cleaned_data['location'])]
-            if select_grid_by == 'state':file_info = ['state', form1.cleaned_data['state']]
-            if select_grid_by == 'bbox':file_info =['bounding_box', re.sub(',','_',form1.cleaned_data['bounding_box'])]
-            context['file_info'] = file_info
-            if form1.cleaned_data['data_format'] == 'dlm':
-                return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'dat', request=request,file_info=file_info)
-            elif form1.cleaned_data['data_format'] == 'clm':
-                return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'txt', request=request,file_info=file_info)
 
-            elif form1.cleaned_data['data_format'] == 'xl':
-                return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,'xls', request=request,file_info=file_info)
-            else:
-                return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
-            '''
     if 'form2' in request.POST:
         form2 = set_as_form(request,'GridDataForm3')
         context['form2'] = form2
@@ -662,25 +646,6 @@ def apps_gis(request):
         'apps_page':True
         }
     return render_to_response('my_data/apps/gis/home.html', context, context_instance=RequestContext(request))
-'''
-def swcke_station_apps(request):
-    context = {
-        'title': 'Historic Station Data Tools',
-        'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
-        'apps_page':True
-
-    }
-    stn_id = request.GET.get('stn_id', None)
-    start_date = request.GET.get('start_date', None)
-    end_date = request.GET.get('end_date', None)
-    elements = request.GET.get('elements', None)
-    if stn_id is not None:context['stn_id'] = stn_id
-    if start_date is not None:context['start_date'] = start_date
-    if end_date is not None:context['end_date'] = end_date
-    if elements is not None:context['elements'] = elements
-
-    return render_to_response('my_data/apps/swcke_station_apps.html', context, context_instance=RequestContext(request))
-'''
 
 def metagraph(request):
     context = {
@@ -754,26 +719,26 @@ def monthly_aves(request):
     if end_date is not None:initial['end_date']= str(end_date);context['end_date'] = end_date
     if elements is not None:initial['elements']= elements;context['elements'] = elements
     if initial:
-        form_graphs = set_as_form(request,'MonthlyAveragesForm', init=initial)
+        form = set_as_form(request,'MonthlyAveragesForm', init=initial)
     else:
-        form_graphs = set_as_form(request,'MonthlyAveragesForm')
-    context['form_graphs'] = form_graphs
-    if 'form_graphs' in request.POST:
-        form_graphs = set_as_form(request,'MonthlyAveragesForm')
-        context['form_graphs']  = form_graphs
-        if form_graphs.is_valid():
-            s_date = str(form_graphs.cleaned_data['start_date'])
-            e_date = str(form_graphs.cleaned_data['end_date'])
-            stn_id = form_graphs.cleaned_data['station_id']
+        form = set_as_form(request,'MonthlyAveragesForm')
+    context['form'] = form
+    if 'form' in request.POST:
+        form = set_as_form(request,'MonthlyAveragesForm')
+        context['form']  = form
+        if form.is_valid():
+            s_date = str(form.cleaned_data['start_date'])
+            e_date = str(form.cleaned_data['end_date'])
+            stn_id = form.cleaned_data['station_id']
             context['stn_id'] = stn_id
             context['start_date'] = s_date
             context['end_date'] = e_date
-            context['elems'] = ','.join(form_graphs.cleaned_data['elements'])
+            context['elems'] = ','.join(form.cleaned_data['elements'])
             params = dict(sid=stn_id, sdate=s_date, edate=e_date, \
             meta='valid_daterange,name,state,sids,ll,elev,uid,county,climdiv', \
-            elems=[dict(name=el, groupby="year")for el in form_graphs.cleaned_data['elements']])
+            elems=[dict(name=el, groupby="year")for el in form.cleaned_data['elements']])
             monthly_aves = {}
-            results = [{} for k in form_graphs.cleaned_data['elements']]
+            results = [{} for k in form.cleaned_data['elements']]
             #results = defaultdict(dict)
 
             #req = WRCCClasses.DataJob('StnData', params).make_data_call()
@@ -786,14 +751,15 @@ def monthly_aves(request):
                 context['raw_data'] = req['data']
 
                 try:
-                    monthly_aves = WRCCDataApps.monthly_aves(req, form_graphs.cleaned_data['elements'])
+                    monthly_aves = WRCCDataApps.monthly_aves(req, form.cleaned_data['elements'])
                     context['averaged_data'] = dict(monthly_aves)
                 except:
                     pass
 
-                for el_idx, el in enumerate(form_graphs.cleaned_data['elements']):
+                for el_idx, el in enumerate(form.cleaned_data['elements']):
                     el_strip = re.sub(r'(\d+)(\d+)', '', el)   #strip digits from gddxx, hddxx, cddxx
                     b = el[-2:len(el)]
+                    base_temp = ''
                     try:
                         base_temp = int(b)
                     except:
@@ -801,32 +767,13 @@ def monthly_aves(request):
                             base_temp = '65'
                         elif b == 'dd' and el == 'gdd':
                             base_temp = '50'
-
-                    if el_strip == 'pcpn':
-                        results[el_idx] = {'element_long': 'Total Rainfall', 'units':'in'}
-                    elif el_strip == 'snow':
-                        results[el_idx] = {'element_long': 'Total Snowfall', 'units':'in'}
-                    elif el_strip == 'maxt':
-                        results[el_idx] = {'element_long': 'Maximum Temperature', 'units':'F'}
-                    elif el_strip == 'mint':
-                        results[el_idx] = {'element_long': 'Minimum Temperature', 'units':'F'}
-                    elif el_strip == 'avgt':
-                        results[el_idx] = {'element_long': 'Mean Temperature', 'units':'F'}
-                    elif el_strip == 'obst':
-                        results[el_idx] = {'element_long': 'Observation Time Temperature', 'units':'F'}
-                    elif el_strip == 'snwd':
-                        results[el_idx] = {'element_long': 'Snow Depth', 'units':'in'}
-                    elif el_strip == 'cdd':
-                        results[el_idx] = {'element_long': 'Growing Degree Days, Base Temp %s' %base_temp, 'units':'days'}
-                    elif el_strip == 'hdd':
-                        results[el_idx] = {'element_long': 'Heading Degree Days, Base Temp %s' %base_temp, 'units':'days'}
-                    elif el_strip == 'gdd':
-                        results[el_idx] = {'element_long': 'Cooling Degree Days, Base Temp %s' %base_temp, 'units':'days'}
+                    if base_temp:
+                        results[el_idx] = {'element_long': WRCCData.acis_elements_dict[el_strip]['name_long'] + 'Base Temperature: ' + base_temp}
                     else:
-                        results[el_idx] = {'element_long':str(el)}
+                        results[el_idx] = {'element_long': WRCCData.acis_elements_dict[el_strip]['name_long']}
                     results[el_idx]['element'] = str(el)
-                    results[el_idx]['stn_id']= str(form_graphs.cleaned_data['station_id'])
-                    if form_graphs.cleaned_data['start_date'].lower() == 'por':
+                    results[el_idx]['stn_id']= str(form.cleaned_data['station_id'])
+                    if form.cleaned_data['start_date'].lower() == 'por':
                         if len(req['meta']['valid_daterange'][el_idx]) == 2:
                             results[el_idx]['record_start'] = str(req['meta']['valid_daterange'][el_idx][0])
                             context['start_date'] =  str(req['meta']['valid_daterange'][el_idx][0])
@@ -835,7 +782,7 @@ def monthly_aves(request):
                             results[el_idx]['record_start'] = ['0000-00-00']
                     else:
                         results[el_idx]['record_start'] = '%s-%s-%s' % (s_date[0:4], s_date[4:6], s_date[6:8])
-                    if form_graphs.cleaned_data['end_date'].lower() == 'por':
+                    if form.cleaned_data['end_date'].lower() == 'por':
                         if len(req['meta']['valid_daterange'][el_idx]) == 2:
                             results[el_idx]['record_end'] = str(req['meta']['valid_daterange'][el_idx][1])
                             context['end_date'] = str(req['meta']['valid_daterange'][el_idx][1])
@@ -850,9 +797,9 @@ def monthly_aves(request):
                 if 'meta' in req.keys():
                     Meta = WRCCUtils.format_stn_meta(req['meta'])
                     #format meta data
-                    elements = ', '.join(form_graphs.cleaned_data['elements'])
+                    elements = ', '.join(form.cleaned_data['elements'])
                     valid_dr = []
-                    for idx, el in enumerate(form_graphs.cleaned_data['elements']):
+                    for idx, el in enumerate(form.cleaned_data['elements']):
                         try:
                             valid_dr.append('%s: %s - %s ' %(str(el),str(Meta['valid_daterange'][idx][0]),str(Meta['valid_daterange'][idx][1])))
                         except:
@@ -876,7 +823,7 @@ def monthly_aves(request):
                 #results_json = str(results).replace("\'", "\"")
                 time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
                 json_file = '%s_monthly_aves_%s_%s_%s.json' \
-                %(time_stamp, str(form_graphs.cleaned_data['station_id']), s_date, e_date)
+                %(time_stamp, str(form.cleaned_data['station_id']), s_date, e_date)
                 context['json_file'] = json_file
                 f = open('/tmp/%s' %(json_file),'w+')
                 f.write(results_json)

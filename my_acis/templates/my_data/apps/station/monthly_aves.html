@@ -14,10 +14,10 @@
 
 <div class="container">
     <div class="center-left" style="border:none;">
-        <div id='form_graphs'>
+        <div id='form'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
-            {%for field in form_graphs %}
+            {%for field in form %}
                 <tr>
                     <td>{{field.label}}:</td>
                     <td>{{field}}</td>                                                                                
@@ -38,7 +38,7 @@
                 {%endif%}
             {%endfor%}
             </table>
-            <input type="submit" value="Submit" name="form_graphs"/>
+            <input type="submit" value="Submit" name="form"/>
             </form>
         </div>
         <br />
@@ -78,18 +78,20 @@
             If you are interested in the complete <b>p</b>eriod <b>o</b>f <b>r</b>ecord for this station, type 'por' or 'POR' for both, start date and end date.</p>
         </div>
 
-        {%if stn_id%}
-            <p class="error">Station ID: {{stn_id}}</p>
+        {%if not results%}
+            {%if stn_id%}
+                <p class="error">Station ID: {{stn_id}}</p>
+            {%endif%}
+            {%if start_date%}
+                <p class="error">Start Date: {{start_date}}</p>
+            {%endif%}
+            {%if end_date%}
+                <p class="error">End Date: {{end_date}}</p>
+            {%endif%}
+            {%if elements%}
+                <p class="error">ACIS Elements: {{elements}}</p>
+            {%endif%}       
         {%endif%}
-        {%if start_date%}
-            <p class="error">Start Date: {{start_date}}</p>
-        {%endif%}
-        {%if end_date%}
-            <p class="error">End Date: {{end_date}}</p>
-        {%endif%}
-        {%if elements%}
-            <p class="error">ACIS Elements: {{elements}}</p>
-        {%endif%}       
 
         {%if results%}
             <h2>Plots of Monthly Averages</h2>

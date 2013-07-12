@@ -1,8 +1,23 @@
 $(function () {
-    var style = {
+    var style_axes = {
         color:'#000000',
-        fontSize:'14px'
-    }; 
+        fontSize:'14px',
+        fontWeight: 'bold'
+    };
+    var style_text = {
+        color:'#000000',
+        fontSize:'18px'
+    };
+    var x_plotlines = [];
+    for (var val=0;val<12;val++){
+        var plotline = {
+            color: '#787878',
+            dashStyle:'dash',
+            width: 1,
+            value: val,
+            };
+            x_plotlines.push(plotline);
+    }
     var defaultChart = {
         chartContent: null,
         highchart: null,
@@ -16,8 +31,9 @@ $(function () {
             },
             xAxis: {
                 labels: {
-                    style: style
+                    style: style_axes
                 },
+                plotLines: x_plotlines,
                 categories: [
                     'Jan',
                     'Feb',
@@ -35,21 +51,9 @@ $(function () {
             },
             yAxis: {
                 labels: {
-                    style: style
+                    style: style_axes
                 }
             },
-            /*
-            legend: {
-                layout: 'vertical',
-                backgroundColor: '#FFFFFF',
-                align: 'left',
-                verticalAlign: 'top',
-                x: 100,
-                y: 70,
-                floating: true,
-                shadow: true
-            },
-            */
             tooltip: {
                 formatter: function() {
                     return ''+
@@ -86,27 +90,34 @@ $(function () {
         var p_color = '#0000FF';
         $.getJSON(json_file_path, function(datadict) {
             for (var i=0;i<datadict.length;i++){
+                //Find max/min values of data
+                var max = Math.max.apply(Math,datadict[i].data);
+                var min = Math.min.apply(Math,datadict[i].data);
+                //Horizontal Plotlines
+                var y_plotlines = [];
+                for (var val=min + (max - min)/5;val<=max + 4*(max - min)/5;val+=(max - min)/5) {
+                    var plotline = {
+                        color: '#787878',
+                        dashStyle:'dash',
+                        width: 1,
+                        value: val,
+                    };
+                    y_plotlines.push(plotline);
+                }
                 //Define element dependent vars like y-axis max, min, plot-color
                 if (datadict[i].element == 'maxt'){
-                    //var min = -50;
-                    //var max = 130;
                     var p_color = '#FF0000';
                 }
                 if (datadict[i].element == 'mint'){
-                    //var min = -50;
-                    //var max = 130;
                     var p_color = '#0000FF';
                 }
                 if (datadict[i].element == 'pcpn'){
-                    var min = 0;
                     var p_color = '#00FF00';
                 }
                 if (datadict[i].element == 'snow' || datadict[i].element == 'snwd'){
-                    var min = 0;
                     var p_color = '#800080';    
                 }
                 if (datadict[i].element == 'hdd' || datadict[i].element == 'cdd' || datadict[i].element == 'gdd'){
-                    var min = 0;
                     var p_color = '#00FFFF';
                 }
                 var j = i + 1
@@ -118,27 +129,30 @@ $(function () {
                 options: {
 
                     title: {
-                         style:style,
+                         style:style_text,
                          text:datadict[i].stn_name + ', ' + datadict[i].stn_id + ', ' + datadict[i].state
                     },
                     subtitle: {
                         text: 'Date Range ' + datadict[i].record_start  + ' - '+ datadict[i].record_end
                     },
                     yAxis: {
-                    min: min,
-                    title: {
-                        style:style,
-                        text: datadict[i].element_long + ' in ' + datadict[i].units
-                        }
+                        min: min,
+                        max: max,
+                        gridLineWidth:0,
+                        plotLines:y_plotlines,
+                        //tickInterval:precise_round((max - min)/5, 0),
+                        title: {
+                            style:style_text,
+                            text: datadict[i].element_long
+                            }
                     },
                     series: [{
-                        name: ' Monthly Averages for ' + datadict[i].element_long,
+                        name: ' Monthly Averages: ' + datadict[i].element_long,
                         color: p_color,
                         data: datadict[i].data
-
                     }]
                 },
-            };
+                };
             Chart= jQuery.extend(true, {}, defaultChart, Chart);
             Chart.init(Chart.options);
             Chart.create();
