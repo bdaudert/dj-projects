@@ -151,26 +151,39 @@ def download(request):
         'apps_page':True
     }
     app_name = request.GET.get('app_name', None)
-    json_file = request.GET.get('json_file', None)
+    json_file_name = request.GET.get('json_file', None)
+    json_file = '/tmp/' + json_file_name
+    json_in_file_name = json_file_name
+    tab = request.GET.get('tab', None)
     form0 = forms.DownloadForm()
     context['form0'] = form0
     if 'form0' in request.POST:
         form0 = set_as_form(request,'DownloadForm')
         context['form0'] = form0
         if form0.is_valid():
-            context['cleaned'] = form0.cleaned_data
+            #context['data_dict'] = form0.cleaned_data
             data_format = form0.cleaned_data['data_format']
             delimiter = form0.cleaned_data['delimiter']
             output_file_name = form0.cleaned_data['output_file_name']
-            if json_file is None:json_file = 'emergency_json'
-            DDJ = WRCCClasses.DownloadDataJob(app_name,data_format,delimiter, output_file_name, request=request, json_in_file='/tmp/' + json_file)
+            #If Sodsumm, we need to fine the right data set
+            if app_name == 'Sodsumm':
+                with open(json_file, 'r') as json_f:
+                    json_data = WRCCUtils.u_convert(json.loads(json_f.read()))
+                #find the correct data set corresponding to the tab name
+                for idx, data_dict in enumerate(json_data):
+                    if data_dict['table_name'] == tab:
+                        #context['data_dict'] = data_dict
+                        #Overwrite json_in_file
+                        json_in_file_name = json_file_name + '_in'
+                        with open('/tmp/' + json_in_file_name, 'w+') as json_f:
+                            json.dump(data_dict,json_f)
+                        break
+            DDJ = WRCCClasses.DownloadDataJob(app_name,data_format,delimiter, output_file_name, request=request, json_in_file='/tmp/' + json_in_file_name)
             if data_format in ['clm', 'dlm','xl']:
                 return DDJ.write_to_file()
             else:
                 response = DDJ.write_to_file()
                 context['response'] = response
-        else:
-            context['cleaned'] = "NODODODODO"
     return render_to_response('my_data/download.html', context, context_instance=RequestContext(request))
 
 def data_station(request):
@@ -1454,119 +1467,6 @@ def sodxtrmts_visualize(request):
             context['plot_incomplete_years'] = form0.cleaned_data['plot_incomplete_years']
     return render_to_response('my_data/apps/station/sodxtrmts_visualize.html', context, context_instance=RequestContext(request))
 
-'''
-#TWO FORM SODXTRMTS
-def sodxtrmts(request):
-    context = {
-        'title': 'Sodxtmts - Monthly Summaries of Extremes',
-        'apps_page':True
-        }
-    initial = set_sod_initial(request, 'Sodxtrmts')
-    form0 = set_as_form(request,'SodxtrmtsForm0', init=initial)
-    context['form0'] = form0
-    if 'form0' in request.POST:
-        form0 = set_as_form(request,'SodxtrmtsForm0', init={'date_type':'y'})
-        context['form0'] = form0
-        if form0.is_valid():
-            form1 = forms.SodxtrmtsForm1(initial=form0.cleaned_data)
-            context['form1'] = form1
-            context['hide_form0'] = True
-            context['form1_ready'] = True
-
-    if 'form1' in request.POST:
-        form1 = set_as_form(request,'SodxtrmtsForm1')
-        context['form1'] = form1
-        context['form1_ready'] = True
-        context['hide_form0'] = True
-        if form1.is_valid():
-            #FIX ME, need user versions of parameters:
-            search_params = form1.cleaned_data
-            context['search_params']= search_params
-            data_params = {
-                    'sid':form1.cleaned_data['station_ID'],
-                    'start_date':form1.cleaned_data['start_year'],
-                    'end_date':form1.cleaned_data['end_year'],
-                    'element':form1.cleaned_data['element']
-                    }
-            app_params = form1.cleaned_data
-            for key in ['station_ID', 'start_year', 'end_year']:
-                del app_params[key]
-            app_params['el_type'] = form1.cleaned_data['element']
-            del app_params['element']
-            #Run data retrieval job
-            DJ = WRCCClasses.SODDataJob('Sodxtrmts', data_params)
-            #WARNING: station_ids, names need to be called before dates_list
-            station_ids, station_names = DJ.get_station_ids_names()
-            if station_ids:context['station_ID'] =  station_ids[0]
-            if station_names:context['station_name'] = station_names[0]
-            dates_list = DJ.get_dates_list()
-            if dates_list:
-                context['start_year'] =  dates_list[0][0:4]
-                context['end_year'] =  dates_list[-1][0:4]
-            data = DJ.get_data()
-            #Run application
-            App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
-            results = App.run_app()
-            #format results to single station output
-            if not results:
-                results = []
-            else:
-                results = results[0][0]
-            context['run_done'] = True
-            context['results'] = results
-            months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'ANN']
-            start_month = int(str(form1.cleaned_data['start_month']))
-            month_list = [mon for mon in months[(start_month -1):12]]
-            if start_month != 1:
-                month_list+=months[0:(start_month-1)]
-            month_list.append(months[-1])
-            context['month_list'] = month_list
-            #generate graphics
-            if results:
-                averages = [[mon] for mon in month_list[0:-1]]
-                ranges = [[mon] for mon in month_list[0:-1]]
-                if data_params['element'] == 'dtr':
-                    element_name = 'Temperature Range (F)'
-                else:
-                    element_name = WRCCData.acis_elements_dict[data_params['element']]['name_long']
-                if 'base_temperature' in form1.cleaned_data.keys():
-                    base_temperature = form1.cleaned_data['base_temperature']
-                else:
-                    base_temperature = ''
-                for i in range(12):
-                    try:
-                        averages[i].append(float(results[-6][2*(i+1) -1]))
-                    except:
-                        averages[i].append(None)
-                    for k in [-2, -3]:
-                        try:
-                            ranges[i].append(float(results[k][2*(i+1) -1]))
-                        except:
-                            ranges[i].append(None)
-                json_dict = {
-                    'element_name':element_name,
-                    'element':str(data_params['element']),
-                    'base_temperature':base_temperature,
-                    'averages':averages,
-                    'ranges':ranges,
-                    'stn_id':station_ids[0],
-                    'stn_name':station_names[0],
-                    'month_list':month_list
-                }
-                results_json = json.dumps(json_dict)
-                time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
-                json_file = '%s_sodxtrmts_%s_%s_%s.json' \
-                %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
-                f = open('/tmp/%s' %(json_file),'w+')
-                f.write(results_json)
-                f.close()
-                context['JSON_URL'] = '/tmp/'
-                context['json_file'] = json_file
-
-    return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
-'''
-
-#SOD views
 def sodsumm(request):
     context = {
         'title': 'Sodsumm - Monthly and Seasonal Summaries of Daily Data',
@@ -1609,50 +1509,14 @@ def sodsumm(request):
             context['station_ID'] = data_params['sid']
             context['max_missing_days'] = app_params['max_missing_days']
             #Sodsumm table headers for html
-            if form1.cleaned_data['summary_type'] == 'all':
-                if form1.cleaned_data['generate_graphics'] == 'T':
-                    context['tab_names'] = ['Temp', 'Precip', 'Snow', 'Hdd', 'Cdd', 'Gdd', 'Corn']
-                    tab_list = ['temp', 'pcpn', 'snow', 'hdd', 'cdd', 'gdd', 'corn']
-                    table_list = ['temp', 'prsn', 'prsn', 'hdd', 'cdd', 'gdd', 'corn']
-                else:
-                    context['tab_names'] = ['Temp', 'Precip/Snow', 'Hdd', 'Cdd', 'Gdd', 'Corn']
-                    tab_list = ['temp', 'prsn', 'hdd', 'cdd', 'gdd', 'corn']
-                    table_list = ['temp','prsn', 'hdd', 'cdd', 'gdd', 'corn']
-            elif form1.cleaned_data['summary_type'] == 'both':
-                if form1.cleaned_data['generate_graphics'] == 'T':
-                    context['tab_names'] = ['Temperature', 'Precip', 'Snow']
-                    tab_list = ['temp', 'pcpn', 'snow']
-                    table_list = ['temp', 'prsn', 'prsn']
-                else:
-                    context['tab_names'] = ['Temp', 'Precip/Snow']
-                    tab_list = ['temp', 'prsn']
-                    table_list = ['temp''prsn']
-            elif form1.cleaned_data['summary_type'] == 'temp':
-                table_list = ['temp']
-                context['tab_names'] = ['Temperature']
-                tab_list = ['temp']
-                table_list = ['temp']
-            elif form1.cleaned_data['summary_type'] == 'prsn':
-                if form1.cleaned_data['generate_graphics'] == 'T':
-                    context['tab_names'] = ['Precip', 'Snow']
-                    tab_list = ['pcpn', 'snow']
-                    table_list = ['prsn', 'prsn']
-                else:
-                    context['tab_names'] = ['Precip/Snow']
-                    tab_list = ['prsn']
-                    table_list = ['prsn']
-            elif form1.cleaned_data['summary_type'] == 'hc':
-                context['tab_names'] =  ['Hdd', 'Cdd']
-                tab_list = ['hdd', 'cdd']
-                table_list = ['hdd', 'cdd']
-            elif form1.cleaned_data['summary_type'] == 'g':
-                table_list = ['gdd', 'corn']
-                context['tab_names'] =  ['Gdd', 'Corn']
-                tab_list = ['gdd', 'corn']
-                table_list = ['gdd', 'corn']
+            if form1.cleaned_data['generate_graphics'] == 'T':
+                context['tab_names'] = WRCCData.tab_names_with_graphics[form1.cleaned_data['summary_type']]
+                tab_list = WRCCData.tab_list_with_graphics[form1.cleaned_data['summary_type']]
+                table_list =WRCCData.table_list_with_graphics[form1.cleaned_data['summary_type']]
             else:
-                table_list = []
-                tab_list = []
+                context['tab_names'] = WRCCData.tab_names_no_graphics[form1.cleaned_data['summary_type']]
+                tab_list = WRCCData.tab_list_no_graphics[form1.cleaned_data['summary_type']]
+                table_list =WRCCData.table_list_no_graphics[form1.cleaned_data['summary_type']]
             context['table_list'] = table_list
             context['tab_list'] = tab_list
             #Define html content
@@ -1669,145 +1533,147 @@ def sodsumm(request):
             #Generate grahics
             if form1.cleaned_data['generate_graphics'] == 'T' and results:
                 context['graphics'] = True
-                cats = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-                json_list = []
-                for tab_idx, tab in enumerate(tab_list):
-                    table = table_list[tab_idx]
-                    if tab =='temp':
-                        legend = ['Extr Low','Ave Low','Mean', 'Ave High', 'Extr High']
-                        colors  = ['#FF0000', '#690000', '#00FF00', '#ADD8E6', '#0000FF']
-                        table_name_long = 'Temperatures (F)'
-                        units = 'Fahrenheit'
-                        table_data = [[] for i in range(12)]
-                        #table_data = [[] for i in range(5)] # low, ave min, ave mean,ave max, high
-                        for idx, row in enumerate(results[table][1:13]):
-                            for i in range(5):
-                                if i == 0:k = 6 #low
-                                if i == 1:k = 2 #mean low
-                                if i == 2:k = 3 #mean ave
-                                if i == 3:k = 1 #mean high
-                                if i == 4:k = 4 #high
-                                try:
-                                    table_data[idx].append(float(row[k]))
-                                except:
-                                    table_data[idx].append(None)
-                            '''
-                                if i == 4:k = 6 #low
-                                if i == 3:k = 2;l = 6 #mean low
-                                if i == 2:k = 3;l = 2 #mean ave
-                                if i == 1:k = 1;l = 3 #mean high
-                                if i == 0:k = 4;l = 1 #high
-                                if i == 4 :
-                                    table_data[i].append(float(row[k]))
-                                else:
-                                    table_data[i].append(float(row[k]) - float(row[l]))
-                            '''
-                    elif tab in ['hdd', 'cdd']:
-                        units = 'Fahrenheit'
-                        colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-                        if table == 'hdd':
-                            legend = ['Base 65', 'Base 60', 'Base 57', 'Base 55', 'Base 50']
-                        else:
-                            legend = ['Base 55', 'Base 57', 'Base 60', 'Base 65', 'Base 70']
-                        table_name_long = WRCCData.acis_elements_dict[table]['name_long']
-                        table_data = [[] for i in range(5)]
+
+            cats = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+            json_list = []
+            for tab_idx, tab in enumerate(tab_list):
+                table = table_list[tab_idx]
+                if tab =='temp':
+                    legend = ['Extr Low','Ave Low','Mean', 'Ave High', 'Extr High']
+                    colors  = ['#FF0000', '#690000', '#00FF00', '#ADD8E6', '#0000FF']
+                    table_name_long = 'Temperatures (F)'
+                    units = 'Fahrenheit'
+                    graph_data = [[] for i in range(12)]
+                    #graph_data = [[] for i in range(5)] # low, ave min, ave mean,ave max, high
+                    for idx, row in enumerate(results[table][1:13]):
                         for i in range(5):
-                            for k in range(len(cats)):
-                                try:
-                                    table_data[i].append(float(results[table][i+1][k+1]))
-                                except:
-                                    table_data[i].append(None)
-                    elif tab == 'gdd':
-                        units = 'Fahrenheit'
-                        colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-                        table_name_long = WRCCData.acis_elements_dict[table]['name_long']
-                        legend = ['Base 40', 'Base 45', 'Base 50', 'Base 55', 'Base 60']
-                        table_data = [[] for i in range(5)]
-                        for i in range(5):
-                            for k in range(len(cats)):
-                                try:
-                                    table_data[i].append(float(results[table][2*i+1][k+2]))
-                                except:
-                                    table_data[i].append(None)
-                    elif tab == 'corn':
-                        units = 'Fahrenheit'
-                        colors = ['#14FFFF', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-                        table_name_long = 'Corn Degree Days (F)'
-                        legend = ['Base 50']
-                        table_data =[[]]
+                            if i == 0:k = 6 #low
+                            if i == 1:k = 2 #mean low
+                            if i == 2:k = 3 #mean ave
+                            if i == 3:k = 1 #mean high
+                            if i == 4:k = 4 #high
+                            try:
+                                graph_data[idx].append(float(row[k]))
+                            except:
+                                graph_data[idx].append(None)
+                        '''
+                            if i == 4:k = 6 #low
+                            if i == 3:k = 2;l = 6 #mean low
+                            if i == 2:k = 3;l = 2 #mean ave
+                            if i == 1:k = 1;l = 3 #mean high
+                            if i == 0:k = 4;l = 1 #high
+                            if i == 4 :
+                                graph_data[i].append(float(row[k]))
+                            else:
+                                graph_data[i].append(float(row[k]) - float(row[l]))
+                        '''
+                elif tab in ['hdd', 'cdd']:
+                    units = 'Fahrenheit'
+                    colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
+                    if table == 'hdd':
+                        legend = ['Base 65', 'Base 60', 'Base 57', 'Base 55', 'Base 50']
+                    else:
+                        legend = ['Base 55', 'Base 57', 'Base 60', 'Base 65', 'Base 70']
+                    table_name_long = WRCCData.acis_elements_dict[table]['name_long']
+                    graph_data = [[] for i in range(5)]
+                    for i in range(5):
                         for k in range(len(cats)):
                             try:
-                                table_data[0].append(float(results[table][1][k+2]))
+                                graph_data[i].append(float(results[table][i+1][k+1]))
                             except:
-                                table_data[0].append(None)
-                    elif  tab == 'pcpn':
-                        units = 'Inches'
-                        colors = ['#00FFFF','#00009B', ' #0000FF']
-                        legend = ['Ave Precip Low', 'Precip Mean', 'Ave Precip High']
-                        table_name_long = 'Precipitation(In)'
-                        table_data = [[] for k in range(3)]
-                        for idx, row in enumerate(results[table][1:13]):
-                            for i in range(3):
-                                if i == 0:k=4
-                                if i == 1:k=1
-                                if i == 2:k=2
-                                try:
-                                    table_data[i].append(float(row[k]))
-                                except:
-                                    table_data[i].append(None)
-                    elif tab == 'snow':
-                        colors = ['#00FFFF','#00009B']
-                        legend = ['Snow Mean', 'Ave Snow High']
-                        table_name_long = 'Snow Fall(In)'
-                        table_data = [[] for k in range(2)]
-                        for idx, row in enumerate(results[table][1:13]):
-                            for i in range(2):
-                                if i == 0:k=12
-                                if i == 1:k=13
-                                try:
-                                    table_data[i].append(float(row[k]))
-                                except:
-                                    table_data[i].append(None)
-                                    '''
-                                    #stacked bar
-                                    if i == 2:k = 4 #low
-                                    if i == 1:k = 1;l = 4 #ave mean
-                                    if i == 0:k = 2;l = 1 #high
-                                    if i == 2:
-                                        table_data[i].append(float(row[k]))
-                                    else:
-                                        table_data[i].append(float(row[k])- float(row[l]))
-                                    '''
+                                graph_data[i].append(None)
+                elif tab == 'gdd':
+                    units = 'Fahrenheit'
+                    colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
+                    table_name_long = WRCCData.acis_elements_dict[table]['name_long']
+                    legend = ['Base 40', 'Base 45', 'Base 50', 'Base 55', 'Base 60']
+                    graph_data = [[] for i in range(5)]
+                    for i in range(5):
+                        for k in range(len(cats)):
+                            try:
+                                graph_data[i].append(float(results[table][2*i+1][k+2]))
+                            except:
+                                graph_data[i].append(None)
+                elif tab == 'corn':
+                    units = 'Fahrenheit'
+                    colors = ['#14FFFF', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
+                    table_name_long = 'Corn Degree Days (F)'
+                    legend = ['Base 50']
+                    graph_data =[[]]
+                    for k in range(len(cats)):
+                        try:
+                            graph_data[0].append(float(results[table][1][k+2]))
+                        except:
+                            graph_data[0].append(None)
+                elif  tab == 'pcpn':
+                    units = 'Inches'
+                    colors = ['#00FFFF','#00009B', ' #0000FF']
+                    legend = ['Ave Precip Low', 'Precip Mean', 'Ave Precip High']
+                    table_name_long = 'Precipitation(In)'
+                    graph_data = [[] for k in range(3)]
+                    for idx, row in enumerate(results[table][1:13]):
+                        for i in range(3):
+                            if i == 0:k=4
+                            if i == 1:k=1
+                            if i == 2:k=2
+                            try:
+                                graph_data[i].append(float(row[k]))
+                            except:
+                                graph_data[i].append(None)
+                elif tab == 'snow':
+                    colors = ['#00FFFF','#00009B']
+                    legend = ['Snow Mean', 'Ave Snow High']
+                    table_name_long = 'Snow Fall(In)'
+                    graph_data = [[] for k in range(2)]
+                    for idx, row in enumerate(results[table][1:13]):
+                        for i in range(2):
+                            if i == 0:k=12
+                            if i == 1:k=13
+                            try:
+                                graph_data[i].append(float(row[k]))
+                            except:
+                                graph_data[i].append(None)
+                                '''
+                                #stacked bar
+                                if i == 2:k = 4 #low
+                                if i == 1:k = 1;l = 4 #ave mean
+                                if i == 0:k = 2;l = 1 #high
+                                if i == 2:
+                                    graph_data[i].append(float(row[k]))
+                                else:
+                                    graph_data[i].append(float(row[k])- float(row[l]))
+                                '''
 
-                                    '''
-                                    #boxplot
-                                    if i == 1:
-                                        if tbl == 'pcpn':k = 4 #low
-                                        if tbl == 'snow':k = 0
-                                    if i == 2:
-                                        if tbl == 'pcpn':k = 1#ave mean
-                                        if tbl == 'snow':k = 12
-                                    if i == 3:
-                                        if tbl == 'pcpn':k = 2#high
-                                        if tbl == 'snow':k = 13
-                                    if i == 4:
-                                        if tbl == 'pcpn':k = 6#1-day max
-                                        if tbl == 'snow':k = 13
-                                    '''
-                    table_dict = {
-                        'cats':cats,
-                        'units':units,
-                        'record_start':dates_list[0][0:4],
-                        'record_end':dates_list[-1][0:4],
-                        'stn_name':station_names[0],
-                        'stn_id':str(data_params['sid']),
-                        'table_name':tab,
-                        'table_name_long':table_name_long,
-                        'legend':legend,
-                        'colors': colors,
-                        'table_data': table_data
-                        }
-                    json_list.append(table_dict)
+                                '''
+                                #boxplot
+                                if i == 1:
+                                    if tbl == 'pcpn':k = 4 #low
+                                    if tbl == 'snow':k = 0
+                                if i == 2:
+                                    if tbl == 'pcpn':k = 1#ave mean
+                                    if tbl == 'snow':k = 12
+                                if i == 3:
+                                    if tbl == 'pcpn':k = 2#high
+                                    if tbl == 'snow':k = 13
+                                if i == 4:
+                                    if tbl == 'pcpn':k = 6#1-day max
+                                    if tbl == 'snow':k = 13
+                                '''
+                table_dict = {
+                    'cats':cats,
+                    'units':units,
+                    'record_start':dates_list[0][0:4],
+                    'record_end':dates_list[-1][0:4],
+                    'stn_name':station_names[0],
+                    'stn_id':str(data_params['sid']),
+                    'table_name':tab,
+                    'table_name_long':table_name_long,
+                    'legend':legend,
+                    'colors': colors,
+                    'graph_data': graph_data,
+                    'table_data':results[table]
+                    }
+                json_list.append(table_dict)
                 #results_json = str(json_list).replace("\'", "\"")
                 results_json = json.dumps(json_list)
                 time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')

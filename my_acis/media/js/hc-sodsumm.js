@@ -104,7 +104,8 @@ $(function () {
                         categories:table_dict[i].cats, 
                         title: {
                             style:style,
-                            text: 'Month'
+                            //text: 'Month'
+                            text: 'Length of series: ' + len
                         }                    
                     },
                     yAxis: yAx,
@@ -137,20 +138,21 @@ $(function () {
                         linearGradient: [0, 0, 0, 300],
                         stops: [[0, 'rgb(69, 114, 167)'],[1, 'rgba(2,0,0,0)']]
                     },
-                    data:table_dict[i].table_data 
+                    data:table_dict[i].graph_data 
                 };
                 series.push(s);
             }
             else {
-                for (var k=0;k<table_dict[i].table_data.length;k++){
+                for (var k=0;k<table_dict[i].graph_data.length;k++){
                     var s = {
                         name: table_dict[i].legend[k],
                         color: table_dict[i].colors[k],
-                        data: table_dict[i].table_data[k]
+                        data: table_dict[i].graph_data[k]
                     };
                     series.push(s);
                 }
-            }          
+            }
+            var len = series.length
             Chart = {
                 chartContent: cntr,
                 options: {
@@ -166,7 +168,7 @@ $(function () {
                             style:style
                         },
                         title: {
-                        text: table_dict[i].table_name_long + ' in ' + table_dict[i].units
+                            text: table_dict[i].table_name_long + ' in ' + table_dict[i].units
                         }
                     },
                     series: series

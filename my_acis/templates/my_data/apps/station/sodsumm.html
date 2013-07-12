@@ -77,7 +77,7 @@
               For monthly and annual mean, thresholds and sums:</br>
               Month with {{max_missing_days}} or more missing days are not considered.</br>
             </p>
-            <p class="stronger" style="color:darkblue">Station: ({{station_ID}}) {{station_name.0}}</br>
+            <p class="stronger">Station: ({{station_ID}}) {{station_name.0}}</br>
             From Year {{start_year}} To Year {{end_year}}</br>
             </p></br>
         {%endif%}
@@ -103,12 +103,13 @@
                                 <br />
                             {%endif%}
                             {%if results%}
+                             <a target="_blank" href="{{SW_CKN_URL}}download/?app_name=Sodsumm&json_file={{json_file}}&tab={{tab}}"><img alt="Download" title="Download" class="icon" src="{{MEDIA_URL}}img/Download.png"> Download Table Data</a>
                                 <table cellspacing="2">
                                     {%if tab != 'pcpn'%}
                                         {%if tab != 'snow'%}
-                                            {{headers|lookup:tab|safe}}
+                                            <p>{{headers|lookup:tab|safe}}&nbsp;&nbsp;</p>
                                         {%else%}
-                                            {{headers.prsn|safe}}
+                                            <p>{{headers.prsn|safe}}&nbsp;&nbsp;</p>
                                         {%endif%}
                                     {%else%}
                                         {{headers.prsn|safe}}

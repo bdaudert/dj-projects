@@ -595,7 +595,7 @@ img.center {
 
 .tabs {
   position: relative;   
-  min-height: 800px; /* This part sucks */
+  min-height: 900px; /* This part sucks */
   min-width:700px;
   clear: both;
   margin: 25px 0;
