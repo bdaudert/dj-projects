@@ -42,7 +42,8 @@ $(function () {
                     },
                     tickInterval: 100,
                     title: {
-                        text: table_dict[i].table_name_long
+                        text: table_dict[i].table_name_long,
+                        style: style
                     }
                 };
             }
@@ -82,6 +83,17 @@ $(function () {
                     }
                 };
             }
+            //Vertical plotlines
+            var x_plotlines = [];
+            for (var val=0;val<12;val++){
+                var plotline = {
+                    color: '#787878',
+                    dashStyle:'dash',
+                    width: 1,
+                    value: val,
+                };
+                x_plotlines.push(plotline);
+            }
             //Set up Chart
             var defaultChart = {
                 chartContent: null,
@@ -101,11 +113,11 @@ $(function () {
                         labels:{
                             style:style
                         },
+                        plotLines:x_plotlines,
                         categories:table_dict[i].cats, 
                         title: {
                             style:style,
-                            //text: 'Month'
-                            text: 'Length of series: ' + len
+                            text: 'Month'
                         }                    
                     },
                     yAxis: yAx,
@@ -130,6 +142,20 @@ $(function () {
             var cntr = 'container' + i;
             var Chart;
             var series = [];
+            var max = -9999.0;
+            var min = 9999.0;
+            var y_plotlines = [];
+            //Find max, min of data
+            for (var k=0;k<table_dict[i].graph_data.length;k++){
+                var max_test = Math.max.apply(Math, table_dict[i].graph_data[k]);
+                var min_test = Math.min.apply(Math,table_dict[i].graph_data[k]);
+                if ( max_test > max){
+                    max = max_test;
+                }
+                if ( min_test < min){
+                    min = min_test;
+                }
+            }
             if (table_dict[i].table_name == 'temp'){
                 var s = {
                     name:table_dict[i].table_name_long,
@@ -152,6 +178,15 @@ $(function () {
                     series.push(s);
                 }
             }
+            for (var val=min + (max - min)/5;val<=max + 4*(max - min)/5;val+=(max - min)/5) {
+                var plotline = {
+                    color: '#787878',
+                    dashStyle:'dash',
+                    width: 1,
+                    value: val,
+                };
+                y_plotlines.push(plotline);
+            }
             var len = series.length
             Chart = {
                 chartContent: cntr,
@@ -168,8 +203,12 @@ $(function () {
                             style:style
                         },
                         title: {
-                            text: table_dict[i].table_name_long + ' in ' + table_dict[i].units
-                        }
+                            text: table_dict[i].table_name_long + ' in ' + table_dict[i].units,
+                            style: style
+                        },
+                        gridLineWidth:0,
+                        plotLines:y_plotlines,
+                        tickInterval:precise_round((max - min)/5, 0)
                     },
                     series: series
                 } 
