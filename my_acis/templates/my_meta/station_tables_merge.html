@@ -1,24 +1,12 @@
 {% extends "base.html" %}
-
+{%load my_meta_filters%}
 {% block content %}
+
 
 <h1>{{title}}</h1>
 
-
-<script type="text/javascript">
-function populateFormField(form_id, label, value){
-    var formFields = document.getElementById(form_id).getElementsByTagName('input');
-    for (i=0;i<formFields.length;i++){
-        if (formFields[i].name == label) {
-            formFields[i].value =value;
-        }
-    }
-}
-</script>
-
 <a href="/csc/wrcc_meta/station_tables/?{%for id in ucan_id_list%}ucan_id={{id}}{%if not forloop.last%}&{%endif%}{%endfor%}">Back to Station Tables</a>
 <br />
-
 {%if merge_successful%}
     <p><b>Table merge/add was successful!</b></p>
     
@@ -30,9 +18,6 @@ function populateFormField(form_id, label, value){
         {%for instance in results%}
             <tr>
             {%for table in instance%}
-            {%if not table%}
-            <td></td>
-            {%endif%}
             <td>
                 {%if forloop.last%}
                     <br /><br />
@@ -49,15 +34,26 @@ function populateFormField(form_id, label, value){
                     </form>
                     </div>
                 {%else%}
-                    <a href="#" onClick="ShowHide('{{stn_id}}_{{forloop.counter}}')">Click here to show/hide</a>
+                    {%if table%}
+                        <a href="#" onClick="ShowHide('{{stn_id}}_{{forloop.counter}}')">Click here to show/hide</a>
+                    {%endif%}
                     <div id="{{stn_id}}_{{forloop.counter}}" style='display:block'>
-                    <table border="1" style="background-color:DeepSkyBlue">
-                    {%for key_val in table%}
-                        <tr valign="top">
-                            <td>{{key_val.0}}: <input onClick="populateFormField('merge_table', '{{key_val.0}}', '{{key_val.1}}')" type="text" value="{{key_val.1}}" name="{{key_val.0}}" readonly style="background-color:#CCCCCC;"/></td>
-                        </tr>
-                    {%endfor%}
-                    </table>
+                        <table border="1" style="background-color:DeepSkyBlue">
+                        {%for key_val in table%}
+                            <tr valign="top">
+                                <td>{{key_val.0}}: <input onClick="populateFormField('merge_table', '{{key_val.0}}', '{{key_val.1}}')" type="text" value="{{key_val.1}}" name="{{key_val.0}}" readonly style="background-color:#CCCCCC;"/></td>
+                            </tr>
+                        {%endfor%}
+                        </table>
+
+                        {%if network_station_ids_dict%}
+                        {%if table%}
+                        <a href="/csc/wrcc_meta/sub_tables/?tbl_name=Variable&ucan_id={{table.0.1}}{%for id in network_station_ids_dict|lookup:table.0.1%}&network_station_id={{id}}{%endfor%}">Go to Variable Tables</a>
+                        <br />              
+                        <a href="/csc/wrcc_meta/sub_tables/?tbl_name=StationDigital&ucan_id={{table.0.1}}{%for id in network_station_ids_dict|lookup:table.0.1%}&network_station_id={{id}}{%endfor%}">Go to StationDigital Tables</a>
+                        {%endif%}
+                        {%endif%}
+                        <br />
                     </div>
                 {%endif%}
             </td>

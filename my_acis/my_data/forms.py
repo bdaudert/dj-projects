@@ -518,11 +518,12 @@ class SodxtrmtsForm(SodForm):
 
         #Optional Params
         self.fields['base_temperature'] = forms.IntegerField(initial=kwargs.get('initial', {}).get('base_temperature', 65), help_text = 'Base Temperature for degree day element.')
-        self.fields['less_greater_or_between'] = forms.ChoiceField(widget=forms.RadioSelect,choices = ([('l', 'Less Than'),('g', 'Greater Than'),('b', 'Between'),]), initial = kwargs.get('initial', {}).get('less_greater_or_between', 'g'), help_text='Number of Days less than/greater thana threshold or between two threshold.')
+        #self.fields['less_greater_or_between'] = forms.ChoiceField(widget=forms.Select(attrs = {'onclick' :"SetSodxtrmtsThresh(this)"}),choices = ([('l', 'Less Than'),('g', 'Greater Than'),('b', 'Between'),]), initial = kwargs.get('initial', {}).get('less_greater_or_between', 'g'), help_text='Number of Days less than/greater thana threshold or between two threshold.')
+        self.fields['less_greater_or_between'] = forms.ChoiceField(widget=forms.RadioSelect,choices = ([('l', 'Less Than'),('g', 'Greater Than'),('b', 'Between'),]), initial = kwargs.get('initial', {}).get('less_greater_or_between', 'g'), help_text='Choose if you want to count the number of days that are less than/greater than a threshold or the number of days between an upper and lower thershold! Then choose the desired threshold(s) below!')
         self.fields['threshold_for_less_or_greater'] = forms.FloatField(initial = kwargs.get('initial', {}).get('threshold_for_less_or_greater', 0.005), help_text = 'Set this threshold if you chose "Less Than" or "Greater Than" above.')
         self.fields['threshold_low_for_between'] = forms.FloatField(initial = kwargs.get('initial', {}).get('threshold_low_for_between', 0.001),required=False, help_text = 'Set this lower threshold if you chose "Between" above.')
         self.fields['threshold_high_for_between'] = forms.FloatField(initial = kwargs.get('initial', {}).get('threshold_high_for_between', 0.11),required=False, help_text = 'Set this upper threshold if you chose "Between" above.')
-        self.fields['frequency_analysis_type']= forms.ChoiceField(choices = ([('p', 'Pearson III'),('g', 'GEV'),]), initial = kwargs.get('initial', {}).get('frequency_analysis_type', 'g'), help_text = 'Pearson III or Generalized Extreme Value frequency analysis otpions are available.')
+        #self.fields['frequency_analysis_type']= forms.ChoiceField(choices = ([('p', 'Pearson III'),('g', 'GEV'),]), initial = kwargs.get('initial', {}).get('frequency_analysis_type', 'g'), help_text = 'Pearson III or Generalized Extreme Value frequency analysis otpions are available.')
 
 
 class SodxtrmtsVisualizeForm(forms.Form):

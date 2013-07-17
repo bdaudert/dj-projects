@@ -22,10 +22,6 @@ $(function () {
         }
         var max = Math.max.apply(Math,max_vals);
         var min = Math.min.apply(Math,min_vals);
-        if (max == null || min == null || Math.abs(max - min) < 0.001){
-            max = null;
-            min = null;
-        }
         var x_plotlines = [];
         for (var val=0;val<12;val++){
             var plotline = {
@@ -37,7 +33,7 @@ $(function () {
             x_plotlines.push(plotline);
         }
         var y_plotlines = [];
-        for (var val=min + (max - min)/5;val<=max + 4*(max - min)/5;val+=(max - min)/5) {
+        for (var val=min + (max - min)/10;val<=max + 4*(max - min)/10;val+=(max - min)/10) {
             var plotline = {
                 color: '#787878',
                 dashStyle:'dash',
@@ -45,6 +41,21 @@ $(function () {
                 value: val,
             };
             y_plotlines.push(plotline);
+        }
+        if (y_plotlines.length == 0 ){
+            y_plotlines = null;
+        }
+        if (max == null || min == null || Math.abs(max - min) < 0.0001){
+            var tickInterval = null;
+        }
+        else {
+            if (table_dict.element != 'pcpn' && table_dict.element != 'snow' && table_dict.element != 'snwd'){
+                var tickInterval = precise_round((max - min)/10,0);
+                //var tickInterval = null;
+            }
+            else {
+                var tickInterval = precise_round((max - min)/10,1);
+            }
         }
 
         var averages = table_dict.averages;
@@ -103,8 +114,8 @@ $(function () {
                 max:max,
                 min:min,
                 gridLineWidth:0,
-                plotLines:y_plotlines,
-                tickInterval:precise_round((max - min)/5, 0)
+                tickInterval:tickInterval,
+                plotLines:y_plotlines
             },
         
             tooltip: {

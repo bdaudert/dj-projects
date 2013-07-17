@@ -36,6 +36,23 @@ $(function () {
                 color:'#000000',
                 fontSize:'18px'
             };
+        //Define Summary Text
+        if (summary == 'max'){
+            var SummaryText = 'Maximum';
+        }
+        if (summary == 'min'){
+            var SummaryText = 'Minimum';
+        }
+        if (summary == 'sum'){
+            var SummaryText = 'Sum';
+        }
+        if (summary == 'mean'){
+            var SummaryText = 'Average';
+        }
+        if (summary == 'individual'){
+            var SummaryText = ' ';
+        }
+
         $.getJSON(file, function(datadict) {
             var element = datadict.element;
             var stn_id = datadict.stn_id;
@@ -52,18 +69,7 @@ $(function () {
                     series['marker'] = {enabled:false}
                 }
                 //Define series name
-                if (summary == 'max'){
-                    series['name'] = 'Maximum over the months';
-                }
-                if (summary == 'min'){
-                    series['name'] = 'Minimum over the months';
-                }
-                if (summary == 'sum'){
-                    series['name'] = 'Sum over the months';
-                }
-                if (summary == 'mean'){
-                    series['name'] = 'Average over the months';
-                }
+                series['name'] = SummaryText;
                 series['color'] = '#00008B';
                 //Define series data
                 var data = [];
@@ -142,8 +148,12 @@ $(function () {
                         }
                         if (summary == 'sum'){
                             for(var i=0,sum=0;i<vals.length;sum+=vals[i++]);
+                            /*
+                            for(var i=0;sum=0;i<vals.length;i++){
+                                sum+=vals[i];
+                            }*/
                             data.push([date, precise_round(sum,2)]);
-                            values.push = precise_round(sum,2);
+                            values.push(precise_round(sum,2));
                         }
                         if (summary == 'mean'){
                             for(var i=0,sum=0;i<vals.length;sum+=vals[i++]);
@@ -163,32 +173,6 @@ $(function () {
                 }
                 else{
                     var data_min = Math.min.apply(Math,values);
-                }
-                //Define y_plotlines
-                if (major_grid =='T'){
-                    for (var val=data_min + (data_max - data_min)/5;val<=data_max + 4*(data_max - data_min)/5;val+=(data_max - data_min)/5) {
-                        var plotline = {
-                            color: '#787878',
-                            dashStyle:'dash',
-                            width: 1,
-                            value: val,
-                            };
-                            y_plotlines.push(plotline);
-                    }
-                }
-                if (minor_grid =='T'){
-                    for (var val=data_min + (data_max - data_min)/10;val<=data_max + 4*(data_max - data_min)/10;val+=(data_max - data_min)/10) {
-                        var plotline = {
-                            color: '#787878',
-                            dashStyle:'dash',
-                            width: 0.5,
-                            value: val,
-                            };
-                            y_plotlines.push(plotline);
-                    }
-                }
-                if (major_grid =='F' && minor_grid =='F'){
-                    y_plotlines = null;
                 }
                 series['data'] = data;
                 series_data.push(series);
@@ -283,6 +267,33 @@ $(function () {
             }
 
             //Define plot characteristics
+            //Define y_plotlines
+            if (major_grid =='T'){
+                for (var val=data_min + (data_max - data_min)/5;val<=data_max + 4*(data_max - data_min)/5;val+=(data_max - data_min)/5) {
+                    var plotline = {
+                        color: '#787878',
+                        dashStyle:'dash',
+                        width: 1,
+                        value: val,
+                        };
+                        y_plotlines.push(plotline);
+                }
+            }
+            if (minor_grid =='T'){
+                for (var val=data_min + (data_max - data_min)/10;val<=data_max + 4*(data_max - data_min)/10;val+=(data_max - data_min)/10) {
+                    var plotline = {
+                        color: '#787878',
+                        dashStyle:'dash',
+                        width: 0.5,
+                        value: val,
+                        };
+                        y_plotlines.push(plotline);
+                }
+            }
+            if (major_grid =='F' && minor_grid =='F'){
+                y_plotlines = null;
+            }
+
             if (graph_title == "Use default"){
                 graph_title = datadict.stn_name + ' (' + stn_id + ')';
             }
@@ -298,27 +309,29 @@ $(function () {
                 var gridLineWidth = 1;
                 var gridLineColor = '#C0C0C0';
             }
-            var xAxisText = 'Months: ';
+            //var xAxisText = 'Months: ';
+            var xAxisText = SummaryText + '  ' +  datadict.element_name + ' Months: '; 
             if (month_list[0]> month_list[month_list.length -1]){
                 var apdx = 'Ending Year ' //+ datadict.data[datadict.data.length -8][0]
             }
             else {
                 var apdx = 'Year ' //+ datadict.data[datadict.data.length -7][0]
             }
-            if (summary != 'individual'){
-                for (var mon_idx=0;mon_idx<month_list.length;mon_idx++)  {
-                    xAxisText+= month_names[month_list[mon_idx] - 1] + ' ' 
-                }
+            for (var mon_idx=0;mon_idx<month_list.length;mon_idx++)  {
+                xAxisText+= month_names[month_list[mon_idx] - 1] + ' ' 
             }
-            if (data_max == null || data_min == null){
+            if (data_max == null || data_min == null || Math.abs(data_max - data_min) < 0.001){
                 var tickInterval = null;
             }
-            else if (Math.abs(data_max - data_min) < 0.001){
-                var tickInterval = null;
-            } 
             else {
-                //var tickInterval = precise_round((data_max - data_min)/10, 1);
-                var tickInterval = null;
+                if (datadict.element != 'pcpn' && datadict.element != 'snow' && datadict.element != 'snwd'){
+                    var tickInterval = precise_round((data_max - data_min)/10,0);
+                    //var tickInterval = null;
+                }
+                else {
+                    
+                    var tickInterval = precise_round((data_max - data_min)/10,1);
+                }
             }
             //Define Chart
             chart = new Highcharts.Chart({

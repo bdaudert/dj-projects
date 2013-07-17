@@ -6,10 +6,11 @@ from django.template.defaultfilters import stringfilter
 
 register = template.Library()
 
+
 @register.filter(name='lookup')
 def lookup(dict, index):
-    if index in dict:
-        return dict[index]
+    if str(index) in dict:
+        return dict[str(index)]
     return ''
 
 @register.filter(name='get_id')

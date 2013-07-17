@@ -41,14 +41,14 @@ primary_tables = { 'Station': models.Station, 'StationLocation': models.StationL
 
 primary_tables = {
     'Station': models.Station,
+    'StationNetwork':models.StationNetwork,
     'StationLocation': models.StationLocation,
     'StationTimeZone': models.StationTimeZone,
     'StationClimDiv': models.StationClimDiv,
     'StationCounty': models.StationCounty,
 }
-sub_tables = {
+secondary_tables = {
     'Variable': models.Variable,
-    'StationNetwork': models.Network,
     'StationDigital': models.StationDigital
 }
 
@@ -226,6 +226,7 @@ def station_tables_merge(request):
     ucan_station_id_acis = None
     ucan_station_id_form = None
     wrcc_id = None
+    network_station_ids_dict = {}
     for idx, ucan_id in enumerate(ucan_id_list):
         if int(ucan_id) < 1000000:
             ucan_station_acis = ucan_id
@@ -233,11 +234,19 @@ def station_tables_merge(request):
             wrcc_id = ucan_id
         table_dicts[ucan_id] = []
         obj = primary_tables[tbl_name]
+        if tbl_name == 'StationNetwork':
+            network_station_ids_dict[ucan_id] = []
         instances = obj.objects.filter(ucan_station_id=ucan_id)
         for i, instance in enumerate(instances):
-            inst_name = '%s_%d' % (tbl_name, i)
             inst_list = convert_query_set(instance,'python_list')
             table_dicts[ucan_id].append(inst_list)
+            #Get network_station_id for Variable, StationDigital tables
+            #if we are looking at the StationNetwork table
+            if tbl_name == 'StationNetwork':
+                inst_dict = convert_query_set(instance,'python_dict')
+                network_station_ids_dict[ucan_id].append(str(inst_dict['network_station_id']))
+    context['network_station_ids_dict'] = network_station_ids_dict
+
     #query station_table entries in db for wrcc id entry
     if wrcc_id:
         station = convert_query_set(models.Station.objects.filter(ucan_station_id=wrcc_id), 'python_dict')
@@ -322,13 +331,42 @@ def station_tables_merge(request):
                 context['merge_successful'] = True
     return render_to_response('my_meta/station_tables_merge.html', context, context_instance=RequestContext(request))
 
-def station_tables_add(request):
+def sub_tables(request):
     tbl_name = request.GET.get('tbl_name', None)
+    ucan_id = request.GET.get('ucan_id', None)
+    network_station_id_list = request.GET.getlist('network_station_id', [])
+    network_station_id_list = [str(n_id) for n_id in network_station_id_list]
     context = {
-        'title': tbl_name + 'Add Tool'
+        'title': ' Table Merge Tool',
+        'network_station_id_list':network_station_id_list,
+        'ucan_id': ucan_id
     }
-    return render_to_response('my_meta/station_tables_add.html', context, context_instance=RequestContext(request))
+    obj = secondary_tables[tbl_name]
+    table_dicts = {}
+    max_instances = 0
+    for idx, network_station_id in enumerate(network_station_id_list):
+        table_dicts[network_station_id] = []
+        instances = obj.objects.filter(network_station_id=network_station_id)
+        if len(instances) > max_instances:max_instances = len(instances)
+        for inst_idx, inst in enumerate(instances):
+            inst_list = convert_query_set(inst,'python_list')
+            table_dicts[network_station_id].append(inst_list)
+    #Format for html loop
+    results = [[[] for idx in range(len(network_station_id_list)+1)] for inst in range(max_instances)]
+    for inst in range(max_instances):
+        for idx, network_station_id in enumerate(network_station_id_list):
+            if len(table_dicts[network_station_id]) > inst:
+                results[inst][idx]=table_dicts[network_station_id][inst]
+        #Define ADD form
+        if inst == 0:
+            for key_val in results[inst][0]:
+                results[inst][-1].append([key_val[0], ''])
 
+    context['results'] = results
+    return render_to_response('my_meta/sub_tables.html', context, context_instance=RequestContext(request))
+
+
+'''
 def sub_tables(request, tbl_name, tbl_id):
     ucan_id = request.GET.get('ucan_id', None)
     context = {
@@ -357,7 +395,7 @@ def sub_tables(request, tbl_name, tbl_id):
         context['errors'] = dict(errors)
         context['tables'] = tables
     return render_to_response('my_meta/sub_tables.html', context, context_instance=RequestContext(request))
-
+'''
 def add(request):
     tbl_name = request.GET.get('tbl_name', None)
     ucan_id = request.GET.get('ucan_id', None)
@@ -374,6 +412,13 @@ def add(request):
 
     return render_to_response('my_meta/add.html', context, context_instance=RequestContext(request))
 
+
+def station_tables_add(request):
+    tbl_name = request.GET.get('tbl_name', None)
+    context = {
+        'title': tbl_name + 'Add Tool'
+    }
+    return render_to_response('my_meta/station_tables_add.html', context, context_instance=RequestContext(request))
 
 #@login_required
 def station_maintenance(request, ucan_id):
