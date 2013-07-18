@@ -199,6 +199,7 @@ def data_station(request):
     initial_params_0 = {}
     initial_params_1 = {}
     if stn_id is not None:
+        initial_params_1['data_format'] = 'html'
         initial_params_1['station_id'] = str(stn_id)
         initial_params_0['select_stations_by'] = 'stn_id';initial_params_1['select_stations_by'] = 'stn_id'
         context['stn_id'] = stn_id;context['hide_form0'] = True

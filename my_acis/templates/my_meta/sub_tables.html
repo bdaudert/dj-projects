@@ -9,55 +9,64 @@
 
 <h1>{{title}}</h1>
 <h2>Secondary Tables</h2>
+    <!--
+   <a href="/csc/wrcc_meta/sub_tables/?tbl_name=Variable&ucan_id={{ucan_id}}{%for id in network_station_ids_list%}network_station_id={{id}}{%endfor%}">Back to StationNetwork Tables</a>
+    <br />
+    -->
+{%if merge_successful%}
+    <p><b>Table merge/add was successful!</b></p>
+        
+{%else%}
 
+    <table>
+        {%for network_station_id in network_station_ids_list%}
+            <th>Network Station ID: {{network_station_id }}</th>
+        {%endfor%}
 
-<table>
-    {%for network_station_id in network_station_ids_list%}
-        <th>Network Station ID: {{network_station_id }}</th>
-    {%endfor%}
-
-    {%for instance in results%}
-        <tr>
-        {%for table in instance%}
-            <td>
-                {%if forloop.last%}
-                    <br /><br />
-                    <div id='form'>
-                    <form method="post" action="">{% csrf_token %}
-                    <table id="add_table" border="1" style="background-color:MediumPurple">
-                    {%for key_val in table%}
-                        <tr valign="top">
-                            <td>{{key_val.0}} <input type="text" value="{{key_val.1}}" name="{{key_val.0}}"/></td>
-                        </tr>
-                    {%endfor%}
-                    </table>
-                    {%if table%}
-                    <input type="submit" value="ADD" name="form_add"/>
-                    {%endif%}
-                    </form>
-                    </div>
-                {%else%}
-                    {%if table%}
-                    <a href="#" onClick="ShowHide('{{table.0.1}}_{{forloop.counter}}')">Click here to show/hide</a>
-                    {%endif%}
-                    <div id="{{table.0.1}}_{{forloop.counter}}" style='display:block'>
+        {%for instance in results%}
+            <tr>
+            {%for table in instance%}
+                <td>
+                    {%if forloop.last%}
+                        <br /><br />
+                        <div id='form'>
                         <form method="post" action="">{% csrf_token %}
-                        <table id="edit_table" border="1" style="background-color:DeepSkyBlue">
+                        <table id="add_table" border="1" style="background-color:MediumPurple">
                         {%for key_val in table%}
                             <tr valign="top">
-                                <td>{{key_val.0}}: <input onClick="populateFormField('add_table', '{{key_val.0}}', '{{key_val.1}}')" type="text" value="{{key_val.1}}" name="{{key_val.0}}" style="background-color:#CCCCCC;"/></td>
+                                <td>{{key_val.0}} <input type="text" value="{{key_val.1}}" name="{{key_val.0}}"/></td>
                             </tr>
                         {%endfor%}
                         </table>
                         {%if table%}
-                        <input type="submit" value="EDIT" name="form_edit_{{table.0.1}}"/>
+                        <input type="submit" value="ADD" name="form_add"/>
                         {%endif%}
-                    </div>
-                {%endif%}   
-            </td>
+                        </form>
+                        </div>
+                    {%else%}
+                        {%if table%}
+                        <a href="#" onClick="ShowHide('{{table.0.1}}_{{forloop.counter}}')">Click here to show/hide</a>
+                        {%endif%}
+                        <div id="{{table.0.1}}_{{forloop.counter}}" style='display:block'>
+                            <form method="post" action="">{% csrf_token %}
+                            <table id="edit_table" border="1" style="background-color:DeepSkyBlue">
+                            {%for key_val in table%}
+                                <tr valign="top">
+                                    <td>{{key_val.0}}: <input onClick="populateFormField('add_table', '{{key_val.0}}', '{{key_val.1}}')" type="text" value="{{key_val.1}}" name="{{key_val.0}}" style="background-color:#CCCCCC;"/></td>
+                                </tr>
+                            {%endfor%}
+                            </table>
+                            {%if table%}
+                            <input type="submit" value="EDIT" name="form_edit"/>
+                            {%endif%}
+                        </div>
+                    {%endif%}   
+                </td>
+            {%endfor%}
+            </tr>
         {%endfor%}
-        </tr>
-    {%endfor%}
-</table>
+    </table>
+
+{%endif%}
 {% endblock %}
 

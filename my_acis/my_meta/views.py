@@ -61,8 +61,8 @@ key_list = {
     'StationClimDiv': ['ucan_station_id', 'clim_div','clim_div_code','fips_state_code','fips_state_abbr','ncdc_state_code'] + common_keys,
     'StationCounty': ['ucan_station_id','county','fips_state_code','fips_county_code','county_name'] + common_keys,
     'StationNetwork':['ucan_station_id','network_stn_id','id_type_key'] + common_keys,
-    'StationDigital': ['ucan_station_id','network_station_id','network_key','begin_date','end_date'],
-    'Variable':['ucan_station_id','network_station_id','network_key','var_major_id','var_minor_id','begin_date','end_date']
+    'StationDigital': ['ucan_station_id','network_station_id','network','begin_date','end_date'],
+    'Variable':['ucan_station_id','network_station_id','network','var_major_id','var_minor_id','begin_date','end_date']
 }
 
 load_tables_dir = '/www/apps/csc/dj-projects/my_acis/media/meta-load-tables/'
@@ -334,17 +334,18 @@ def station_tables_merge(request):
 def sub_tables(request):
     tbl_name = request.GET.get('tbl_name', None)
     ucan_id = request.GET.get('ucan_id', None)
-    network_station_id_list = request.GET.getlist('network_station_id', [])
-    network_station_id_list = [str(n_id) for n_id in network_station_id_list]
+    network_station_ids_list = request.GET.getlist('network_station_id', [])
+    network_station_ids_list = [str(n_id) for n_id in network_station_ids_list]
     context = {
-        'title': ' Table Merge Tool',
-        'network_station_id_list':network_station_id_list,
+        'title': 'Table Merge Tool',
+        'tbl_name': tbl_name,
+        'network_station_ids_list':network_station_ids_list,
         'ucan_id': ucan_id
     }
     obj = secondary_tables[tbl_name]
     table_dicts = {}
     max_instances = 0
-    for idx, network_station_id in enumerate(network_station_id_list):
+    for idx, network_station_id in enumerate(network_station_ids_list):
         table_dicts[network_station_id] = []
         instances = obj.objects.filter(network_station_id=network_station_id)
         if len(instances) > max_instances:max_instances = len(instances)
@@ -352,16 +353,32 @@ def sub_tables(request):
             inst_list = convert_query_set(inst,'python_list')
             table_dicts[network_station_id].append(inst_list)
     #Format for html loop
-    results = [[[] for idx in range(len(network_station_id_list)+1)] for inst in range(max_instances)]
+    results = [[[] for idx in range(len(network_station_ids_list)+1)] for inst in range(max_instances)]
     for inst in range(max_instances):
-        for idx, network_station_id in enumerate(network_station_id_list):
+        for idx, network_station_id in enumerate(network_station_ids_list):
             if len(table_dicts[network_station_id]) > inst:
                 results[inst][idx]=table_dicts[network_station_id][inst]
         #Define ADD form
         if inst == 0:
             for key_val in results[inst][0]:
                 results[inst][-1].append([key_val[0], ''])
-
+    if 'form_add' in request.POST or 'form_edit' in request.POST:
+        meta_str = ''
+        with open(load_tables_dir + load_tables[tbl_name],'a+') as f:
+            for idx,key in enumerate(key_list[tbl_name]):
+                if idx != len(key_list[tbl_name]) - 1:
+                    meta_str+=str(request.POST[key]) + '|'
+                else:
+                    meta_str+=str(request.POST[key]) + '\n'
+            if 'form_edit' in request.POST:
+                pass
+            else:
+                f.write(meta_str)
+        #Double check
+        os.chmod(load_tables_dir + load_tables[tbl_name], 0777)
+        with open(load_tables_dir + load_tables[tbl_name], 'r') as f:
+            if f.readlines()[-1] == meta_str:
+                context['merge_successful'] = True
     context['results'] = results
     return render_to_response('my_meta/sub_tables.html', context, context_instance=RequestContext(request))
 

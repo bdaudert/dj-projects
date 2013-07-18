@@ -208,7 +208,7 @@ DATA_FORMAT_CHOICES_LTD = (
 #Delimiters
 DELIMITER_CHOICES = (
     ('comma', 'Comma (,)'),
-    ('tab', 'Tab (\\t)'),
+    ('tab', 'Tab (\t)'),
     ('space', 'Space ()'),
     ('colon', 'Colon (:)'),
     ('pipe', 'Pipe (|)'),
@@ -635,9 +635,10 @@ class StationDataForm1(forms.Form):
         if data_format:
             self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial=data_format, help_text=HELP_TEXTS['data_format'])
             if data_format in ['clm', 'dlm', 'xl']:
-                self.fields['output_file_name'] = MyNameField(initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
+                self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
         else:
-            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
+            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='dlm', help_text=HELP_TEXTS['data_format'])
+            self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
         if data_format in ['dlm', 'clm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
@@ -683,9 +684,10 @@ class StationDataForm3(forms.Form):
         if data_format:
             self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial=data_format, help_text=HELP_TEXTS['data_format'])
             if data_format in ['clm', 'dlm', 'xl']:
-                self.fields['output_file_name'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored.')
+                self.fields['output_file_name'] = forms.ChoiceField(required=False, initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored.')
         else:
-            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
+            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='dlm', help_text=HELP_TEXTS['data_format'])
+            self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
         if data_format in ['dlm', 'clm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
@@ -753,9 +755,10 @@ class GridDataForm1(forms.Form):
         if data_format:
             self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial=data_format, help_text=HELP_TEXTS['data_format'])
             if data_format in ['clm', 'dlm', 'xl']:
-                self.fields['output_file_name'] = MyNameField(initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
+                self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
         else:
-            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
+            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='dlm', help_text=HELP_TEXTS['data_format'])
+            self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
         if data_format in ['dlm', 'clm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
         if data_summary is None or data_summary == 'none' or select_grid_by == 'point':
@@ -805,9 +808,10 @@ class GridDataForm3(forms.Form):
         if data_format:
             self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial=data_format, help_text=HELP_TEXTS['data_format'])
             if data_format in ['clm', 'dlm', 'xl']:
-                self.fields['output_file_name'] = MyNameField(initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
+                self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
         else:
-            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='html', help_text=HELP_TEXTS['data_format'])
+            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='dlm', help_text=HELP_TEXTS['data_format'])
+            self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
         if data_format in ['dlm', 'clm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
