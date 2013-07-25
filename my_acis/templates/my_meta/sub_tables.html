@@ -52,13 +52,14 @@
                             <table id="edit_table" border="1" style="background-color:DeepSkyBlue">
                             {%for key_val in table%}
                                 <tr valign="top">
-                                    <td>{{key_val.0}}: <input onClick="populateFormField('add_table', '{{key_val.0}}', '{{key_val.1}}')" type="text" value="{{key_val.1}}" name="{{key_val.0}}" style="background-color:#CCCCCC;"/></td>
+                                    <td>{{key_val.0}}: <input onClick="populateFormField('add_table', '{{key_val.0}}', '{{key_val.1}}')" type="text" value="{{key_val.1}}" name="{{key_val.0}}"  readonly style="background-color:#CCCCCC;"/></td>
                                 </tr>
                             {%endfor%}
                             </table>
+                            <!--
                             {%if table%}
                             <input type="submit" value="EDIT" name="form_edit"/>
-                            {%endif%}
+                            {%endif%}-->
                         </div>
                     {%endif%}   
                 </td>

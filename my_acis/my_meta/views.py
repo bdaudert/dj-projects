@@ -30,6 +30,8 @@ from acis_db import (
         Subnetwork,
         StationLocation,
         )
+import WRCCUtils
+
 
 ####################
 #Useful tables/dicts
@@ -60,8 +62,8 @@ key_list = {
     'StationTimeZone': ['ucan_station_id', 'time_zone'] + common_keys,
     'StationClimDiv': ['ucan_station_id', 'clim_div','clim_div_code','fips_state_code','fips_state_abbr','ncdc_state_code'] + common_keys,
     'StationCounty': ['ucan_station_id','county','fips_state_code','fips_county_code','county_name'] + common_keys,
-    'StationNetwork':['ucan_station_id','network_stn_id','id_type_key'] + common_keys,
-    'StationDigital': ['ucan_station_id','network_station_id','network','begin_date','end_date'],
+    'StationNetwork':['ucan_station_id','network_station_id','id_type'] + common_keys,
+    'StationDigital': ['ucan_station_id','network_station_id','network_id','begin_date','end_date'],
     'Variable':['ucan_station_id','network_station_id','network','var_major_id','var_minor_id','begin_date','end_date']
 }
 
@@ -269,14 +271,14 @@ def station_tables_merge(request):
         #get station table for start, end dates and data flags
         init = {
             'ucan_station_id':ucan_station_id_form,
-            'begin_date':station['begin_date'],
-            'end_date':station['end_date'],
+            'begin_date':WRCCUtils.convert_db_dates(station['begin_date']),
+            'end_date':WRCCUtils.convert_db_dates(station['end_date']),
             'begin_date_flag':station['begin_date_flag'],
             'end_date_flag':station['end_date_flag'],
             'history_flag':station['history_flag'],
             'src_quality_code':station['src_quality_code'],
             'updated_by': 'WRCCsync',
-            'last_updated':today_month_word + ' ' + today_day + ', ' + today_yr
+            'last_updated':today_yr + '-' + today_month + '-' + today_day
             }
         form_class = getattr(mforms, tbl_name + 'Form')
         form = form_class(initial=init)
@@ -305,12 +307,12 @@ def station_tables_merge(request):
             for idx, key_val in enumerate(results[inst][-1]):
                 if str(key_val[0]) == 'ucan_station_id': results[inst][-1][idx][1]= ucan_station_id_form
                 if str(key_val[0]) == 'begin_date_flag': results[inst][-1][idx][1]= station['begin_date_flag']
-                if str(key_val[0]) == 'begin_date': results[inst][-1][idx][1]= station['begin_date']
+                if str(key_val[0]) == 'begin_date': results[inst][-1][idx][1]= WRCCUtils.convert_db_dates(station['begin_date'])
                 if str(key_val[0]) == 'end_date_flag': results[inst][-1][idx][1]= station['end_date_flag']
-                if str(key_val[0]) == 'end_date': results[inst][-1][idx][1]= station['end_date']
+                if str(key_val[0]) == 'end_date': results[inst][-1][idx][1]= WRCCUtils.convert_db_dates(station['end_date'])
                 if str(key_val[0]) == 'history_flag': results[inst][-1][idx][1]= station['history_flag']
                 if str(key_val[0]) == 'src_quality_code': results[inst][-1][idx][1]= station['src_quality_code']
-                if str(key_val[0]) == 'last_updated':results[inst][-1][idx][1]= today_month_word + ' ' + today_day + ', ' + today_yr
+                if str(key_val[0]) == 'last_updated':today_yr + '-' + today_month + '-' + today_day
                 if str(key_val[0]) == 'updated_by':results[inst][-1][idx][1]= 'WRCCSync'
     context['results'] = results
 
@@ -353,15 +355,49 @@ def sub_tables(request):
             inst_list = convert_query_set(inst,'python_list')
             table_dicts[network_station_id].append(inst_list)
     #Format for html loop
-    results = [[[] for idx in range(len(network_station_ids_list)+1)] for inst in range(max_instances)]
+    if max_instances == 0:
+        results = [[[] for idx in range(len(network_station_ids_list)+1)] for inst in range(1)]
+    else:
+        results = [[[] for idx in range(len(network_station_ids_list)+1)] for inst in range(max_instances)]
     for inst in range(max_instances):
         for idx, network_station_id in enumerate(network_station_ids_list):
             if len(table_dicts[network_station_id]) > inst:
                 results[inst][idx]=table_dicts[network_station_id][inst]
         #Define ADD form
         if inst == 0:
+            station = convert_query_set(models.Station.objects.filter(ucan_station_id=ucan_id), 'python_dict')
             for key_val in results[inst][0]:
-                results[inst][-1].append([key_val[0], ''])
+                if key_val[0] in ['begin_date', 'end_date', 'last_updated']:
+                    results[inst][-1].append([key_val[0], WRCCUtils.convert_db_dates(station[key_val[0]])])
+                elif key_val[0] == 'updated_by':
+                    results[inst][-1].append([key_val[0], 'WRCCSync'])
+
+                elif key_val[0] in ['ucan_station_id', 'network_station_id']:
+                    results[inst][-1].append([key_val[0], key_val[1]])
+                else:
+                    results[inst][-1].append([key_val[0], ''])
+
+    #Add ADD form if max_instances = 0
+    if max_instances == 0:
+        station = convert_query_set(models.Station.objects.filter(ucan_station_id=ucan_id), 'python_dict')
+        init = {
+            'ucan_station_id':ucan_id,
+            'begin_date':WRCCUtils.convert_db_dates(station['begin_date']),
+            'end_date':WRCCUtils.convert_db_dates(station['end_date']),
+            }
+        form_class = getattr(mforms, tbl_name)
+        form = form_class()
+        for idx, network_station_id in enumerate(network_station_ids_list):
+            init['network_station_id'] = network_station_id
+            for key, val in form.__dict__.iteritems():
+                if key[0]!= '_':
+                    if key in init.keys():
+                        results[0][idx].append([key, init[key]])
+                    else:
+                        results[0][idx].append([key, val])
+        results[0][-1] = results[0][-2]
+
+    #Write to metadata load file
     if 'form_add' in request.POST or 'form_edit' in request.POST:
         meta_str = ''
         with open(load_tables_dir + load_tables[tbl_name],'a+') as f:

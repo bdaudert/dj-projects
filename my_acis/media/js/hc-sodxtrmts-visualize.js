@@ -27,15 +27,19 @@ $(function () {
         }
         var summary = document.getElementById("summary").value;
         var month_names =  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        var style_axes = {
+        var axes_style = set_AxesStyle();
+        var lable_style = set_LableStyle();
+        /*
+        var axes_style = {
                 color:'#000000',
-                fontSize:'14px',
+                fontSize:'13px',
                 fontWeight: 'bold'
             };
-        var style_text = {
+        var lable_style = {
                 color:'#000000',
                 fontSize:'18px'
             };
+        */
         //Define Summary Text
         if (summary == 'max'){
             var SummaryText = 'Maximum';
@@ -83,8 +87,11 @@ $(function () {
                 } 
                 for (var yr_idx=0;yr_idx<datadict.data.length - end_idx;yr_idx++) {
                     //Add vertical plot lines every 10 years or every year
-                    if (major_grid =='T'){
-                        if (parseInt(datadict.data[yr_idx][0])%10 == 0 && yr_idx > 0){
+                    if (major_grid =='F' && minor_grid =='F'){
+                        x_plotlines = null;
+                    }
+                    else if (minor_grid =='T'){
+                        if (parseInt(datadict.data[yr_idx][0])%5 == 0 && yr_idx > 0){
                             var plotline = {
                                 color: '#787878',
                                 dashStyle:'dash',
@@ -94,9 +101,9 @@ $(function () {
                             x_plotlines.push(plotline);
                         }
                     }
-                    if (minor_grid =='T'){
+                    else if (major_grid =='T' && minor_grid == 'F'){
                         //leave cluncy code in case we want differnent minor grid
-                        if (parseInt(datadict.data[yr_idx][0])%5 == 0 && yr_idx > 0){
+                        if (parseInt(datadict.data[yr_idx][0])%10 == 0 && yr_idx > 0){
                             var plotline = {
                                 color: '#787878',
                                 dashStyle:'dash',
@@ -106,9 +113,6 @@ $(function () {
                             x_plotlines.push(plotline);
                         }
                     } 
-                    if (major_grid =='F' && minor_grid =='F'){
-                        x_plotlines = null;
-                    }
                     //Define plot data 
                     var vals = [];
                     var skip_year = 'F';                    
@@ -268,18 +272,12 @@ $(function () {
 
             //Define plot characteristics
             //Define y_plotlines
-            if (major_grid =='T'){
-                for (var val=data_min + (data_max - data_min)/5;val<=data_max + 4*(data_max - data_min)/5;val+=(data_max - data_min)/5) {
-                    var plotline = {
-                        color: '#787878',
-                        dashStyle:'dash',
-                        width: 1,
-                        value: val,
-                        };
-                        y_plotlines.push(plotline);
-                }
+            if (major_grid =='F' && minor_grid == 'F'){
+                var divider = null;
             }
-            if (minor_grid =='T'){
+            else if (minor_grid =='T'){
+                var divider = 10.0;
+                /*
                 for (var val=data_min + (data_max - data_min)/10;val<=data_max + 4*(data_max - data_min)/10;val+=(data_max - data_min)/10) {
                     var plotline = {
                         color: '#787878',
@@ -289,15 +287,33 @@ $(function () {
                         };
                         y_plotlines.push(plotline);
                 }
+                */
             }
-            if (major_grid =='F' && minor_grid =='F'){
-                y_plotlines = null;
+            else if (major_grid =='T' && minor_grid == 'F'){
+                var divider = 5.0;
+                /*
+                for (var val=data_min + (data_max - data_min)/5;val<=data_max + 4*(data_max - data_min)/5;val+=(data_max - data_min)/5) {
+                    var plotline = {
+                        color: '#787878',
+                        dashStyle:'dash',
+                        width: 1,
+                        value: val,
+                        };
+                        y_plotlines.push(plotline);
+                
+                }
+                */
             }
+            //Tick marks and y_axis plotlines
+            y_plotlines = set_plotLines(data_max, data_min, divider, null);
+            //y_plotlines = set_plotLines(data_max, data_min, divider, {color:'#787878',dashStyle:'dash',width: 0.5});
+            var tickInterval =set_tickInterval(data_max, data_min, divider);
+            //var tickInterval = null;
 
             if (graph_title == "Use default"){
                 graph_title = datadict.stn_name + ' (' + stn_id + ')';
             }
-            if (major_grid == 'F') {
+            if (major_grid == 'F' && minor_grid == 'F') {
                 var lineColor = 'transparent';
                 var minorGridLineColor ='transparent';
                 var gridLineWidth = 0;
@@ -320,19 +336,6 @@ $(function () {
             for (var mon_idx=0;mon_idx<month_list.length;mon_idx++)  {
                 xAxisText+= month_names[month_list[mon_idx] - 1] + ' ' 
             }
-            if (data_max == null || data_min == null || Math.abs(data_max - data_min) < 0.001){
-                var tickInterval = null;
-            }
-            else {
-                if (datadict.element != 'pcpn' && datadict.element != 'snow' && datadict.element != 'snwd'){
-                    var tickInterval = precise_round((data_max - data_min)/10,0);
-                    //var tickInterval = null;
-                }
-                else {
-                    
-                    var tickInterval = precise_round((data_max - data_min)/10,1);
-                }
-            }
             //Define Chart
             chart = new Highcharts.Chart({
                 chart: {
@@ -345,7 +348,7 @@ $(function () {
                     marginRigh:0 
                 },
                 title: {
-                    style:style_text,
+                    style:lable_style,
                     text: graph_title
                 },
                 subtitle: {
@@ -362,11 +365,11 @@ $(function () {
                 xAxis: [
                     {
                         title : {
-                            style:style_text,
+                            style:lable_style,
                             text: apdx
                         },
                         labels: {
-                            style:style_axes
+                            style:axes_style
                         },
                         lineColor:lineColor,
                         plotLines:x_plotlines,
@@ -383,7 +386,7 @@ $(function () {
                         opposite: true,
                         linkedTo: 0,
                         labels: {
-                            style:style_axes
+                            style:axes_style
                         },
                         plotLines:x_plotlines,
                         gridLineWidth: gridLineWidth,
@@ -398,11 +401,11 @@ $(function () {
                 yAxis: [
                     {
                         title: {
-                            style:style_text,
+                            style:lable_style,
                             text: datadict.element_name
                         },
                         labels: {
-                            style:style_axes
+                            style:axes_style
                         },
                         gridLineWidth:0,
                         gridLineColor: gridLineColor,
@@ -417,11 +420,11 @@ $(function () {
                         opposite: true,
                         linkedTo: 0,
                         title: {
-                            style:style_text,
+                            style:lable_style,
                             text: ' ' 
                         },
                         labels: {
-                            style:style_axes
+                            style:axes_style
                         },
                         gridLineWidth:0,
                         gridLineColor: gridLineColor,
