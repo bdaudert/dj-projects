@@ -331,6 +331,7 @@ def station_tables_merge(request):
         with open(load_tables_dir + load_tables[tbl_name], 'r') as f:
             if f.readlines()[-1] == meta_str:
                 context['merge_successful'] = True
+                context['form_id'] = int(request.POST['form_id'])
     return render_to_response('my_meta/station_tables_merge.html', context, context_instance=RequestContext(request))
 
 def sub_tables(request):
@@ -339,7 +340,7 @@ def sub_tables(request):
     network_station_ids_list = request.GET.getlist('network_station_id', [])
     network_station_ids_list = [str(n_id) for n_id in network_station_ids_list]
     context = {
-        'title': 'Table Merge Tool',
+        'title': 'Table ADD Tool',
         'tbl_name': tbl_name,
         'network_station_ids_list':network_station_ids_list,
         'ucan_id': ucan_id
@@ -355,38 +356,16 @@ def sub_tables(request):
             inst_list = convert_query_set(inst,'python_list')
             table_dicts[network_station_id].append(inst_list)
     #Format for html loop
+    station = convert_query_set(models.Station.objects.filter(ucan_station_id=ucan_id), 'python_dict')
+    init = {
+        'ucan_station_id':ucan_id,
+        'begin_date':WRCCUtils.convert_db_dates(station['begin_date']),
+        'end_date':WRCCUtils.convert_db_dates(station['end_date']),
+    }
+    form_class = getattr(mforms, tbl_name)
+    form = form_class()
     if max_instances == 0:
         results = [[[] for idx in range(len(network_station_ids_list)+1)] for inst in range(1)]
-    else:
-        results = [[[] for idx in range(len(network_station_ids_list)+1)] for inst in range(max_instances)]
-    for inst in range(max_instances):
-        for idx, network_station_id in enumerate(network_station_ids_list):
-            if len(table_dicts[network_station_id]) > inst:
-                results[inst][idx]=table_dicts[network_station_id][inst]
-        #Define ADD form
-        if inst == 0:
-            station = convert_query_set(models.Station.objects.filter(ucan_station_id=ucan_id), 'python_dict')
-            for key_val in results[inst][0]:
-                if key_val[0] in ['begin_date', 'end_date', 'last_updated']:
-                    results[inst][-1].append([key_val[0], WRCCUtils.convert_db_dates(station[key_val[0]])])
-                elif key_val[0] == 'updated_by':
-                    results[inst][-1].append([key_val[0], 'WRCCSync'])
-
-                elif key_val[0] in ['ucan_station_id', 'network_station_id']:
-                    results[inst][-1].append([key_val[0], key_val[1]])
-                else:
-                    results[inst][-1].append([key_val[0], ''])
-
-    #Add ADD form if max_instances = 0
-    if max_instances == 0:
-        station = convert_query_set(models.Station.objects.filter(ucan_station_id=ucan_id), 'python_dict')
-        init = {
-            'ucan_station_id':ucan_id,
-            'begin_date':WRCCUtils.convert_db_dates(station['begin_date']),
-            'end_date':WRCCUtils.convert_db_dates(station['end_date']),
-            }
-        form_class = getattr(mforms, tbl_name)
-        form = form_class()
         for idx, network_station_id in enumerate(network_station_ids_list):
             init['network_station_id'] = network_station_id
             for key, val in form.__dict__.iteritems():
@@ -396,6 +375,28 @@ def sub_tables(request):
                     else:
                         results[0][idx].append([key, val])
         results[0][-1] = results[0][-2]
+        for idx in range(len(results[0]) - 1):
+            results[0][idx] = []
+    else:
+        results = [[[] for idx in range(len(network_station_ids_list)+1)] for inst in range(max_instances)]
+        for inst in range(max_instances):
+            for idx, network_station_id in enumerate(network_station_ids_list):
+                if len(table_dicts[network_station_id]) > inst:
+                    results[inst][idx]=table_dicts[network_station_id][inst]
+                else:
+                    continue
+        #add forms at end of each row
+        for idx, network_station_id in enumerate(network_station_ids_list):
+            if not table_dicts[network_station_id]:
+                init['network_station_id'] = network_station_id
+                for key, val in form.__dict__.iteritems():
+                    if key[0]!= '_':
+                        if key in init.keys():
+                            results[idx][-1].append([key, init[key]])
+                        else:
+                            results[idx][-1].append([key, val])
+            else:
+                results[idx][-1]=results[idx][idx]
 
     #Write to metadata load file
     if 'form_add' in request.POST or 'form_edit' in request.POST:
@@ -403,9 +404,17 @@ def sub_tables(request):
         with open(load_tables_dir + load_tables[tbl_name],'a+') as f:
             for idx,key in enumerate(key_list[tbl_name]):
                 if idx != len(key_list[tbl_name]) - 1:
-                    meta_str+=str(request.POST[key]) + '|'
+                    end_char = '|'
                 else:
-                    meta_str+=str(request.POST[key]) + '\n'
+                    end_char = '\n'
+                try:
+                    meta_str+=str(request.POST[key]) + end_char
+                except:
+                    #WTF?? Some db Variable tables have 'network' key but some have 'network_id' key
+                    #instead
+                    if key == 'network':
+                        meta_str+=str(request.POST['network_id']) + end_char
+
             if 'form_edit' in request.POST:
                 pass
             else:
@@ -415,40 +424,10 @@ def sub_tables(request):
         with open(load_tables_dir + load_tables[tbl_name], 'r') as f:
             if f.readlines()[-1] == meta_str:
                 context['merge_successful'] = True
+                context['form_id'] = int(request.POST['form_id'])
     context['results'] = results
     return render_to_response('my_meta/sub_tables.html', context, context_instance=RequestContext(request))
 
-
-'''
-def sub_tables(request, tbl_name, tbl_id):
-    ucan_id = request.GET.get('ucan_id', None)
-    context = {
-        'title': "Secondary tables for this Station"
-    }
-    context['primary_table'] = "%s_%d" % (tbl_name, int(tbl_id))
-    if ucan_id:
-        tables = {}
-        errors = defaultdict(dict)
-        tbl_name_idxed = "%s_%d" % ( tbl_name, int(tbl_id))
-        context['primary_table_name'] = tbl_name_idxed
-        obj = primary_tables[tbl_name]
-        primary_inst = obj.objects.filter(ucan_station_id=ucan_id)[int(tbl_id) - 1]
-        form = set_as_form(request, tbl_name, q=primary_inst, ucan_station_id=ucan_id)
-        primary_table = form
-        context['primary_table'] = primary_table
-        errors[tbl_name_idxed] = form.errors
-        if tbl_name == "StationNetwork":
-            var_s = models.Variable.objects.filter(ucan_station_id=ucan_id, network_station_id=primary_inst.network_station_id)
-            for j, v in enumerate(var_s):
-                var_name = 'Variable_%d_%d' % (int(tbl_id), j)
-                form = set_as_form(request, 'Variable', q=v, ucan_station_id=ucan_id)
-                tables[var_name] = form
-                errors[var_name] = form.errors
-        context['ucan_station_id'] = ucan_id
-        context['errors'] = dict(errors)
-        context['tables'] = tables
-    return render_to_response('my_meta/sub_tables.html', context, context_instance=RequestContext(request))
-'''
 def add(request):
     tbl_name = request.GET.get('tbl_name', None)
     ucan_id = request.GET.get('ucan_id', None)

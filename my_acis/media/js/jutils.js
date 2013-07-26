@@ -1,10 +1,11 @@
-function populateFormField(form_id, label, value){
+function populateFormField(form_name, form_id, label, value){
+    //var formFields = document.getElementById(form_name).getElementsByTagName('input');
     var formFields = document.getElementById(form_id).getElementsByTagName('input');
     for (i=0;i<formFields.length;i++){
         if (formFields[i].name == label) {
             formFields[i].value =value;
         }
-    }
+    }   
 }
 
 function SetSodxtrmtsThresh(td){
