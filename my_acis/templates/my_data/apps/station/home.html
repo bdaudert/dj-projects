@@ -112,22 +112,22 @@
             </tr>
             <tr>
                 <td>
-                    {%if stn_id%}
-                        <a  href="{{TOOLS_URL}}station/sodxtrmts/?stn_id={{stn_id}}"><img class="sidebar" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
+                    {%if initial %}
+                        <a  href="{{TOOLS_URL}}station/sodxtrmts/?{%for key, val in initial.items %}{{key}}={{val}}&{%endfor%}"><img class="sidebar" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
                     {%else%}
                         <a  href="{{TOOLS_URL}}station/sodxtrmts/"><img  class="sidebar" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
                     {%endif%}
                 </td>
                 <td>
-                    {%if stn_id%}
-                        <a  href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}"><img class="sidebar" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
+                    {%if initial%}
+                        <a  href="{{TOOLS_URL}}station/monthly_aves/?{%for key, val in initial.items %}{{key}}={{val}}&{%endfor%}"><img class="sidebar" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
                     {%else%}
                         <a  href="{{TOOLS_URL}}station/monthly_aves/"><img class="sidebar" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
                     {%endif%}
                 </td>
                 <td>
-                    {%if stn_id%}
-                        <a  href="{{TOOLS_URL}}station/sodsumm/?stn_id={{stn_id}}"><img class="sidebar" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
+                    {%if initial%}
+                        <a  href="{{TOOLS_URL}}station/sodsumm/?{%for key, val in initial.items %}{{key}}={{val}}&{%endfor%}"><img class="sidebar" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
                     {%else%}
                         <a  href="{{TOOLS_URL}}station/sodsumm/"><img class="sidebar" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
                     {%endif%}

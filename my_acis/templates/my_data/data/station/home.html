@@ -247,17 +247,15 @@
             {%if show_flags%}
                 <h3>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</h3>
             {%endif%}
+            <br />
             {%if results.errors%}
                 <p class="error">{{results.errors}}</p>
             {%endif%}
         <!--Link to relevant apps-->
-        {%if link_to_mon_aves %}
-            <a target="_blank" href="{{TOOLS_URL}}station/monthly_aves/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}">Generate bar charts for this data set here!</a>
+        {%if link_to_station_apps %}
+            <a target="_blank" href="{{TOOLS_URL}}station/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}">Run an application on this data set</a>
         {%endif%}
         <br />
-        {%if link_to_metagraph%}
-            <a target="_blank" href="{{TOOLS_URL}}station/metagraph/?stn_id={{stn_id}}">Generate metadata graphics for this station here!</a>
-        {%endif%}            
 
         {%for stn in stn_idx%}
             <h3>STATION NAME:</h3> 

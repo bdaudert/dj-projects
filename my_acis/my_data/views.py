@@ -286,11 +286,9 @@ def data_station(request):
                     context['elements'] = ','.join(form1.cleaned_data['elements'])
                     context['start_date'] = form1.cleaned_data['start_date']
                     context['end_date'] = form1.cleaned_data['end_date']
-                    if 'station_id' in form1.cleaned_data.keys():
+                    if 'station_id' in form1.cleaned_data.keys() and resultsdict['stn_errors'][0] != 'No data found!':
                         context['stn_id']= form1.cleaned_data['station_id']
-                        context['link_to_mon_aves'] = True
-                        if 'stn_ids' in resultsdict.keys() and resultsdict['stn_ids'][0][0].split(' ')[1] == 'COOP':
-                            context['link_to_metagraph'] = True
+                        context['link_to_station_apps'] = True
                 context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
                 if 'delimiter' in form1.cleaned_data.keys():
                     context['delimiter_word'] = form1.cleaned_data['delimiter']
@@ -641,10 +639,12 @@ def apps_station(request):
     start_date = request.GET.get('start_date', None)
     end_date = request.GET.get('end_date', None)
     elements = request.GET.get('elements', None)
-    if stn_id is not None:context['stn_id'] = stn_id
-    if start_date is not None:context['start_date'] = start_date
-    if end_date is not None:context['end_date'] = end_date
-    if elements is not None:context['elements'] = elements
+    initial = {}
+    if stn_id is not None:context['stn_id'] = stn_id;initial['stn_id'] = stn_id
+    if start_date is not None:context['start_date'] = start_date;initial['start_date'] = start_date
+    if end_date is not None:context['end_date'] = end_date;initial['end_date'] = end_date
+    if elements is not None:context['elements'] = elements;initial['elements'] = elements
+    context['initial'] = initial
     return render_to_response('my_data/apps/station/home.html', context, context_instance=RequestContext(request))
 
 def apps_gridded(request):
@@ -750,7 +750,7 @@ def monthly_aves(request):
             context['elems'] = ','.join(form.cleaned_data['elements'])
             params = dict(sid=stn_id, sdate=s_date, edate=e_date, \
             meta='valid_daterange,name,state,sids,ll,elev,uid,county,climdiv', \
-            elems=[dict(name=el, groupby="year")for el in form.cleaned_data['elements']])
+            elems=[dict(vX=WRCCData.acis_elements_dict[el]['vX'], groupby="year")for el in form.cleaned_data['elements']])
             monthly_aves = {}
             results = [{} for k in form.cleaned_data['elements']]
             #results = defaultdict(dict)
@@ -1235,12 +1235,17 @@ def set_sod_initial(request, app_name):
     end_date  = request.GET.get('end_date', None)
     start_year = request.GET.get('start_year', None)
     end_year  = request.GET.get('end_year', None)
+    element = request.GET.get('elements', None)
+    if element is None:element = request.GET.get('element', None)
     initial ={}
+    if element is not None:initial['element'] = element
     if stn_id is not None:initial['stn_id'] = stn_id
     if app_name in ['Sodsumm', 'Sodxtrmts']:
         initial['date_type'] = 'y'
         if start_year is not None:initial['start_year'] = start_year
         if end_year is not None:initial['end_year'] = end_year
+        if start_date is not None and not start_year:initial['start_year'] = start_date[0:4]
+        if end_date is not None and not end_year:initial['end_year'] = end_date[0:4]
     else:
         initial['date_type'] = 'd'
         if start_date is not None:initial['start_date'] = start_date
@@ -1254,6 +1259,7 @@ def sodxtrmts(request):
         }
     json_file = request.GET.get('json_file', None)
     initial = set_sod_initial(request, 'Sodxtrmts')
+    context['initial'] = initial
     #check if initial dataset is given via json_file (back button from visualize)
     if json_file:
         with open('/tmp/' + json_file, 'r') as f:

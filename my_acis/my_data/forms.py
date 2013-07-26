@@ -408,12 +408,12 @@ class MultiElementField(forms.CharField):
         "Check if value consists only of valid coop_station_ids."
         for el in el_tuple:
             el_strip= re.sub(r'(\d+)(\d+)', '', el) #strip digits from gddxx, hddxx, cddxx
-            if str(el_strip) not in ['pcpn', 'snow', 'snwd', 'maxt', 'mint', 'avgt', 'obst', 'cdd', 'hdd', 'gdd']:
+            if str(el_strip) not in ['pcpn', 'snow', 'snwd', 'maxt', 'mint', 'avgt', 'obst', 'cdd', 'hdd', 'gdd', 'evap', 'wdmv']:
                 raise forms.ValidationError(\
                 mark_safe("elements should be a comma separated list of valid element choices:<br/>") + \
                 mark_safe("pcpn, snow, snwd, <br/>") + \
                 mark_safe("maxt, mint, avgt, <br/>") + \
-                mark_safe("obst, cdd, hdd, gdd <br/>") + \
+                mark_safe("evap, wdmv, obst, cdd, hdd, gdd <br/>") + \
                 mark_safe(" or cddxx, hddxx, gddxx where xx is the base temperature in Fahrenheit, e.g. 68<br/>") + \
                 mark_safe("You entered: %s" %str(el)))
 
@@ -543,26 +543,6 @@ class SodxtrmtsVisualizeForm(forms.Form):
     connector_line_width = forms.FloatField(initial=1, max_value=10, min_value=0, required=False,help_text='Choose the width of the connector line. Choose 0 if you only want to see markers. 10 is the maximum line widh allowed.')
     markers = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show markers at each data point.')
     marker_type = forms.ChoiceField(choices=WRCCData.MARKER_CHOICES, required=False, initial='diamond', help_text='.')
-'''
-class SodxtrmtsVisualizeForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        element = kwargs.get('initial', {}).get('element', None)
-        station_ID = kwargs.get('initial', {}).get('station_ID', None)
-        super(SodxtrmtsVisualizeForm, self).__init__(*args, **kwargs)
-
-        if element is None:
-            element = self.data.get('elements')
-        if station_ID is None:
-            station_ID = self.data.get('station_ID')
-        self.fields['station_ID'] = forms.CharField(initial=station_ID,help_text='Station Identifier')
-        self.fields['station_ID'].widget.attrs = {'readonly':True, 'style':readonly_style}
-        self.fields['element'] = forms.CharField(initial=element,help_text='Climate Element')
-        self.fields['element'].widget.attrs = {'readonly':True, 'style':readonly_style}
-        self.fields['months'] = forms.MultipleChoiceField(widget=CheckboxSelectMultiple, choices=WRCCData.MONTH_CHOICES, initial=WRCCData.MONTH_CHOICES[0], help_text = 'Choose one or more months to analyze.')
-        #self.fields['start_month'] = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial='01', required=False, help_text = 'Start the visualization on this month.')
-        #self.fields['end_month'] = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial='02', required=False, help_text = 'End the visualization on this month.')
-        self.fields['summary'] = forms.ChoiceField(choices=WRCCData.SXTR_SUMMARY_CHOICES, initial='mean', help_text='How to summarize the months.')
-'''
 
 ###############
 #End SODS
