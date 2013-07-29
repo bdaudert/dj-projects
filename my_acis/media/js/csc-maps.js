@@ -601,15 +601,30 @@ function initialize_polygon_map() {
             // mouses down on it.
             var newShape = e.overlay;
             newShape.type = e.type;
-            var polygon = newShape.getPath();
-            polCoords = [];
-            for (var j = 0;j<polygon.length;j++) {
-                var lat = precise_round(polygon.getAt(j).lat(),2);
-                var lon = precise_round(polygon.getAt(j).lng(),2);
-                polCoords.push(lon);
-                polCoords.push(lat);
+            if (e.type == google.maps.drawing.OverlayType.POLYGON || e.type == google.maps.drawing.OverlayType.POLYLINE) {
+                var polygon = newShape.getPath();
+                polCoords = [];
+                for (var j = 0;j<polygon.length;j++) {
+                    var lat = precise_round(polygon.getAt(j).lat(),2);
+                    var lon = precise_round(polygon.getAt(j).lng(),2);
+                    polCoords.push(lon);
+                    polCoords.push(lat);
+                }
+                document.getElementById("polygon").value = polCoords;
             }
-            document.getElementById("polygon").value = polCoords;
+            if (e.type == google.maps.drawing.OverlayType.RECTANGLE){
+                var bounds=newShape.getBounds();
+                //set new bounding box
+                var w = precise_round(bounds.getSouthWest().lng(),2);
+                var s = precise_round(bounds.getSouthWest().lat(),2);
+                var e = precise_round(bounds.getNorthEast().lng(),2);
+                var n = precise_round(bounds.getNorthEast().lat(),2);
+                document.getElementById("bounding_box").value = w + ',' + s + ',' + e + ',' + n;
+            }
+            if (e.type == google.maps.drawing.OverlayType.CIRCLE){
+                center = newShape.getCenter();
+                radius = newShape.getRadius();
+            }
             google.maps.event.addListener(newShape, 'click', function() {
               setSelection(newShape);
             });
@@ -627,4 +642,3 @@ function initialize_polygon_map() {
       }
       google.maps.event.addDomListener(window, 'load', initialize);
 }
-

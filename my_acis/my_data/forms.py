@@ -865,16 +865,19 @@ class ClimateRiskForm1(forms.Form):
     def __init__(self, *args, **kwargs):
         select_grid_by = kwargs.get('initial', {}).get('select_grid_by', None)
         element = kwargs.get('initial', {}).get('element', None)
-        grid = kwargs.get('initial', {}).get('grid', None)
         state = kwargs.get('initial', {}).get('state', None)
         bounding_box = kwargs.get('initial', {}).get('bounding_box', None)
+        start_date = kwargs.get('initial', {}).get('start_date', None)
+        end_date = kwargs.get('initial', {}).get('end_date', None)
         super(ClimateRiskForm1, self).__init__(*args, **kwargs)
 
         if select_grid_by is None:select_grid_by = self.data.get('select_grid_by')
         if element is None:element = self.data.get('element')
-        if grid is None:grid=self.data.get('grid')
         if state is None:state=self.data.get('state')
         if bounding_box is None:bounding_box=self.data.get('bounding_box')
+        if start_date is None:start_date=self.data.get('start_date')
+        if end_date is None:end_date=self.data.get('end_date')
+
 
         self.fields['select_grid_by'] = forms.CharField(required=False, initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_grid_by'])
 
@@ -890,6 +893,18 @@ class ClimateRiskForm1(forms.Form):
             self.fields['bounding_box'] = BBoxField(required=False,initial=bounding_box, help_text=HELP_TEXTS['bbox'])
         self.fields['element'] = forms.ChoiceField(choices=CLIM_RISK_ELEMENT_CHOICES,initial=element, help_text='Climate Element')
         self.fields['element'].widget.attrs = {'readonly':True, 'style':readonly_style}
+        if start_date is None:
+            self.fields['start_date'] = MyDateField(required = False, initial=begin, help_text=HELP_TEXTS['date'])
+        else:
+            self.fields['start_date'] = MyDateField(required = False, initial=start_date, help_text=HELP_TEXTS['date'])
+        if end_date is None:
+            self.fields['end_date'] = MyDateField(required = False, initial=today, help_text=HELP_TEXTS['date'])
+        else:
+            self.fields['end_date'] = MyDateField(required = False, initial=end_date, help_text=HELP_TEXTS['date'])
+        self.fields['summary'] = forms.ChoiceField(choices=WRCCData.CLIM_RISK_SUMMARY_CHOICES, initial='mean',help_text='How to spatially summarize gridpoints lying in polygon.')
+        self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
+
+        '''
         if element == 'maxt':lower='50';upper='90';max_dec = 1
         if element == 'mint':lower='30';upper='70';max_dec = 1
         if element == 'avgt':lower='40';upper='60';max_dec = 1
@@ -899,7 +914,7 @@ class ClimateRiskForm1(forms.Form):
         self.fields['number_of_days']  = forms.CharField(required=False, initial='all', help_text='Number of days the threshold conditions should be met.')
         self.fields['window_start'] = MyWindowField(max_length=4, min_length=4, required = False, initial='0101', help_text='mmdd')
         self.fields['window_end'] = MyWindowField(max_length=4, min_length=4, required = False, initial='1231', help_text='mmdd')
-
+        '''
 class ClimateMapForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=([('state', 'State'),('bbox', 'Bounding Box')]), required=False, initial='state', help_text=HELP_TEXTS['select_stations_by'])
         element = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES, required=False, initial='maxt', help_text=HELP_TEXTS['acis_elements'])

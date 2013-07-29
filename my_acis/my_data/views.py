@@ -1014,7 +1014,7 @@ def clim_risk_maps(request):
                 context['need_bbox_map'] = True
             if form0.cleaned_data['select_grid_by'] == 'polygon':
                 context['need_polymap'] = True
-                context['polygon'] = '-115,34, -115, 35,-114,35, -114, 34'
+                context['shape'] = '-115,34, -115, 35,-114,35, -114, 34'
     if 'form1' in request.POST:
         form1 = set_as_form(request,'ClimateRiskForm1')
         context['form1']  = form1
