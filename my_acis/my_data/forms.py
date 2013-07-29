@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from django import forms
 
 from django.forms.fields import ChoiceField, MultipleChoiceField
@@ -384,6 +385,22 @@ class BBoxField(forms.CharField):
         if len(bbox_list)!= 4:
             raise forms.ValidationError("Not a valid bounding box. Missing lat or lon! %s" %str(bbox_str))
         for ll in bbox_list:
+            try:
+                float(ll)
+            except:
+                raise forms.ValidationError("Not a valid lat/lon. %s" %str(ll))
+
+class PolyField(forms.CharField):
+    def to_python(self, poly_str):
+        "Normalize data to a list of strings."
+        # Return an empty string if no input was given.
+        if not poly_str:
+            return ' '
+        return str(poly_str)
+    def validate(self, poly_str):
+        "Check if bbox_str is a valid bounding box."
+        poly_list = poly_str.split(',')
+        for ll in poly_list:
             try:
                 float(ll)
             except:
@@ -840,8 +857,8 @@ class MonthlyAveragesForm(forms.Form):
         self.fields['end_date'] = MyDateField(max_length=10, required = False, initial='POR', help_text=HELP_TEXTS['date_por'])
 
 class ClimateRiskForm0(forms.Form):
-        select_grid_by = forms.ChoiceField(choices=([('state', 'State'),('bbox', 'Bounding Box')]), required=False, initial='state', help_text=HELP_TEXTS['select_stations_by'])
-        element = forms.ChoiceField(choices=CLIM_RISK_ELEMENT_CHOICES, required=False, initial='temp', help_text='Blah')
+        select_grid_by = forms.ChoiceField(choices=([('state', 'State'),('bbox', 'Bounding Box'), ('polygon', 'Polygon')]), required=False, initial='state', help_text=HELP_TEXTS['select_stations_by'])
+        element = forms.ChoiceField(choices=CLIM_RISK_ELEMENT_CHOICES, required=False, initial='maxt', help_text='Climate Element')
 
 
 class ClimateRiskForm1(forms.Form):
@@ -860,7 +877,10 @@ class ClimateRiskForm1(forms.Form):
         if bounding_box is None:bounding_box=self.data.get('bounding_box')
 
         self.fields['select_grid_by'] = forms.CharField(required=False, initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_grid_by'])
-        if select_grid_by == 'state':
+
+        if select_grid_by == 'polygon':
+            self.fields['polygon'] = PolyField(required=False,initial='-115,34, -115, 35,-114,35, -114, 34', help_text='Use the map interface to select your polygon.')
+        elif select_grid_by == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, initial='NV',help_text='US state.')
         elif select_grid_by == 'bbox':
             self.fields['bounding_box'] = BBoxField(required=False,initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
@@ -868,7 +888,8 @@ class ClimateRiskForm1(forms.Form):
             self.fields['state'] = forms.ChoiceField(required=False, choices=STATE_CHOICES, initial=state, help_text='US state.')
         elif bounding_box is not None:
             self.fields['bounding_box'] = BBoxField(required=False,initial=bounding_box, help_text=HELP_TEXTS['bbox'])
-        self.fields['element'] = forms.ChoiceField(choices=([('temp', 'Temperature'),('pcpn', 'Precipitation')]),initial=element, help_text='')
+        self.fields['element'] = forms.ChoiceField(choices=CLIM_RISK_ELEMENT_CHOICES,initial=element, help_text='Climate Element')
+        self.fields['element'].widget.attrs = {'readonly':True, 'style':readonly_style}
         if element == 'maxt':lower='50';upper='90';max_dec = 1
         if element == 'mint':lower='30';upper='70';max_dec = 1
         if element == 'avgt':lower='40';upper='60';max_dec = 1

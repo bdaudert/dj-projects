@@ -1006,7 +1006,14 @@ def clim_risk_maps(request):
         context['form0']  = form0
         context['hide_form0'] = True
         if form0.is_valid():
-            pass
+            initial = form0.cleaned_data
+            context['form1'] = forms.ClimateRiskForm1(initial=initial)
+            context['form1_ready'] = True
+            if form0.cleaned_data['select_grid_by'] == 'bbox':
+                context['bounding_box'] = '-115,34,-114,35'
+                context['need_bbox_map'] = True
+            if form0.cleaned_data['select_grid_by'] == 'polygon':
+                context['need_polymap'] = True
 
     if 'form1' in request.POST:
         form1 = set_as_form(request,'ClimateRiskForm1')
@@ -1225,33 +1232,9 @@ def station_locator_app(request):
             context['show_legend'] = True
     return render_to_response('my_data/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
 
-######################################
+#######################
 #SOD programs
-######################################
-##SOD Utils
-def set_sod_initial(request, app_name):
-    stn_id = request.GET.get('stn_id', None)
-    start_date = request.GET.get('start_date', None)
-    end_date  = request.GET.get('end_date', None)
-    start_year = request.GET.get('start_year', None)
-    end_year  = request.GET.get('end_year', None)
-    element = request.GET.get('elements', None)
-    if element is None:element = request.GET.get('element', None)
-    initial ={}
-    if element is not None:initial['element'] = element
-    if stn_id is not None:initial['stn_id'] = stn_id
-    if app_name in ['Sodsumm', 'Sodxtrmts']:
-        initial['date_type'] = 'y'
-        if start_year is not None:initial['start_year'] = start_year
-        if end_year is not None:initial['end_year'] = end_year
-        if start_date is not None and not start_year:initial['start_year'] = start_date[0:4]
-        if end_date is not None and not end_year:initial['end_year'] = end_date[0:4]
-    else:
-        initial['date_type'] = 'd'
-        if start_date is not None:initial['start_date'] = start_date
-        if end_date is not None:initial['end_date'] = end_date
-    return initial
-
+######################
 def sodxtrmts(request):
     context = {
         'title': 'Monthly Summaries of Extremes (Sodxtrmts)',
@@ -1277,40 +1260,8 @@ def sodxtrmts(request):
         form0 = set_as_form(request,'SodxtrmtsForm', init={'date_type':'y'})
         context['form0'] = form0
         if form0.is_valid():
-            #Define Header Order:
-            header_order =['station_ID', '','element']
-            if form0.cleaned_data['element'] in ['gdd', 'hdd', 'cdd']:header_order+=['base_temparture']
-            header_order+=['monthly_statistic']
-            if form0.cleaned_data['departures_from_averages'] == 'T':
-                 header_order+=['departures_from_averages', '']
-            else:
-                header_order+=['']
-            if form0.cleaned_data['monthly_statistic'] == 'ndays':
-                if form0.cleaned_data['less_greater_or_between'] == 'l':
-                    header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
-                elif form0.cleaned_data['less_greater_or_between'] == 'g':
-                    header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
-                else: #between
-                    header_order+=['less_greater_or_between','threshold_low_for_between','threshold_high_for_between','']
-            header_order+=['max_missing_days']
-            if form0.cleaned_data['frequency_analysis'] == 'T':
-                if form0.cleaned_data['frequency_analysis_type'] == 'g':
-                    header_order+=['gev']
-                elif form0.cleaned_data['frequency_analysis_type'] == 'p':
-                    header_order+=['pearson']
-            header_order+=['']
-            #Define SCHTUPID header -- BEWARE this is a mess since we have  mixed form (django + request.POST)
-            context['header_order'] = header_order
-            header = []
-            for key in header_order:
-                if key in ['element']:
-                    header.append([WRCCData.sodxtrmts_params[key], WRCCData.acis_elements_dict[str(form0.cleaned_data[key])]['name_long']])
-                elif key in ['base_temperature', 'less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'monthly_statistic']:
-                    header.append([WRCCData.sodxtrmts_params[key], WRCCData.sodxtrmts_params[str(form0.cleaned_data[key])]])
-                elif key == '':
-                    header.append([])
-                else:
-                    header.append([WRCCData.sodxtrmts_params[key], str(form0.cleaned_data[key])])
+            #Define header
+            header = set_sodxtrmts_header(form0)
             data_params = {
                     'sid':form0.cleaned_data['station_ID'],
                     'start_date':form0.cleaned_data['start_year'],
@@ -1446,12 +1397,6 @@ def sodxtrmts_visualize(request):
             context['generate_plots']  = True
             context['json_file'] = json_file
             for key,val in form0.cleaned_data.iteritems():
-                '''
-                if key == 'months':
-                    context[key] = [int(v) for v in val]
-                else:
-                    context[key] = str(val)
-                '''
                 if key not in ['start_month', 'end_month']:
                     context[key] = str(val)
             #Find list of months
@@ -1696,6 +1641,65 @@ def sodsumm(request):
 ##############################
 #Utlities
 ##############################
+##SOD Utils
+def set_sod_initial(request, app_name):
+    stn_id = request.GET.get('stn_id', None)
+    start_date = request.GET.get('start_date', None)
+    end_date  = request.GET.get('end_date', None)
+    start_year = request.GET.get('start_year', None)
+    end_year  = request.GET.get('end_year', None)
+    element = request.GET.get('elements', None)
+    if element is None:element = request.GET.get('element', None)
+    initial ={}
+    if element is not None:initial['element'] = element
+    if stn_id is not None:initial['stn_id'] = stn_id
+    if app_name in ['Sodsumm', 'Sodxtrmts']:
+        initial['date_type'] = 'y'
+        if start_year is not None:initial['start_year'] = start_year
+        if end_year is not None:initial['end_year'] = end_year
+        if start_date is not None and not start_year:initial['start_year'] = start_date[0:4]
+        if end_date is not None and not end_year:initial['end_year'] = end_date[0:4]
+    else:
+        initial['date_type'] = 'd'
+        if start_date is not None:initial['start_date'] = start_date
+        if end_date is not None:initial['end_date'] = end_date
+    return initial
+
+def set_sodxtrmts_header(form):
+    #Define Header Order:
+    header_order =['station_ID', '','element']
+    if form.cleaned_data['element'] in ['gdd', 'hdd', 'cdd']:header_order+=['base_temperature']
+    header_order+=['monthly_statistic']
+    if form.cleaned_data['departures_from_averages'] == 'T':
+         header_order+=['departures_from_averages', '']
+    else:
+        header_order+=['']
+    if form.cleaned_data['monthly_statistic'] == 'ndays':
+        if form.cleaned_data['less_greater_or_between'] == 'l':
+            header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
+        elif form.cleaned_data['less_greater_or_between'] == 'g':
+            header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
+        else: #between
+            header_order+=['less_greater_or_between','threshold_low_for_between','threshold_high_for_between','']
+    header_order+=['max_missing_days']
+    if form.cleaned_data['frequency_analysis'] == 'T':
+        if form.cleaned_data['frequency_analysis_type'] == 'g':
+            header_order+=['gev']
+        elif form.cleaned_data['frequency_analysis_type'] == 'p':
+            header_order+=['pearson']
+    header_order+=['']
+    #Define SCHTUPID header
+    header = []
+    for key in header_order:
+        if key in ['element']:
+            header.append([WRCCData.sodxtrmts_params[key], WRCCData.acis_elements_dict[str(form.cleaned_data[key])]['name_long']])
+        elif key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'monthly_statistic']:
+            header.append([WRCCData.sodxtrmts_params[key], WRCCData.sodxtrmts_params[str(form.cleaned_data[key])]])
+        elif key == '':
+            header.append([])
+        else:
+            header.append([WRCCData.sodxtrmts_params[key], str(form.cleaned_data[key])])
+    return header
 
 def set_sodsumm_headers(table_list):
     headers = {}
@@ -1745,7 +1749,3 @@ def run_external_script(cmd):
     import subprocess
     out, err = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
     return out, err
-
-#########################
-#LIST AND DICTIONARIES
-#########################

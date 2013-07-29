@@ -634,3 +634,35 @@ img.center {
 [type=radio]:checked ~ label ~ #tab_content {
   z-index: 1;
 }
+
+/*Polygon map stuff*/
+#polymap {
+padding: 0;
+margin: 0;
+height: 100%;
+}
+
+#panel {
+width: 200px;
+font-family: Arial, sans-serif;
+font-size: 13px;
+float: right;
+margin: 10px;
+}
+
+#color-palette {
+clear: both;
+}
+
+.color-button {
+width: 14px;
+height: 14px;
+font-size: 0;
+margin: 2px;
+float: left;
+cursor: pointer;
+}
+
+#delete-button {
+margin-top: 5px;
+}

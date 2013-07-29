@@ -72,12 +72,32 @@
         </div> 
     {%endif%} 
 
-    {%if need_map  and  figure_file%}
+    {%if need_bbox_map  and  figure_file%}
         <p class="error">Click and drag to define your Bounding Box!</p>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
         <div id="map" style="width: 100%; height:400px;"></div>
         <script type="text/javascript">
             initialize_bbox_map()
+        </script>
+    {%endif%}
+
+    {%if need_polymap and figure_file%}
+        <div id="panel">
+            <div id="color-palette"></div>
+            <div>
+                <button id="delete-button">Delete Selected Shape</button>
+            </div>
+        </div>
+        <div id="polymap" style="width: 100%; height:400px;"></div>
+        {%if lat and lon %}
+            <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+            <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+        {%else%}
+            <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
+            <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+        {%endif%}
+        <script type="text/javascript">
+            initialize_polygon_map()
         </script>
     {%endif%}
 
@@ -91,7 +111,7 @@
             </script>
 
         <div id="tool_info" style="display:none;">
-            <p>A risk map for an element of choice and a 
+            <p>A probability map for an element of choice and a 
             user defined time period is created</p>
             <p>For all other elements, daily values are averaged</p>
             <p>Daily gridded data is obtained through ACIS Webservices.</p>
@@ -113,16 +133,14 @@
             <p><b>Grid selection</b> is made either by US state or by a user defined bounding box.</p>
                     <p><b>Select grid by</b> = "State". Enter a US state of choice.</p>                    
                     <p><b>Select grid by</b> = "Bounding Box". Find data for all stations in a bounding box of your choice.                         <p>A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. 
-                    Please enter them in this order.</p>
+                    Please enter them in this order OR better, use the map interface to define your bounding box.</p>
+                    <p><b>Select grid by</b> = "Polygon". Draw a custom polygon via the map interface.</p>
                 More to come soon ...
             </p>
         </div>
         
-        {%if figure_file%}
 
-        {%endif%}
-
-        {%if need_map  and not figure_file%}
+        {%if need_bbox_map and not figure_file%}
         <p class="error">Click and drag to define your Bounding Box!</p>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
         <div id="map" style="width: 100%; height:400px;"></div>
@@ -131,6 +149,25 @@
         </script>
         {%endif%}
 
+        {%if need_polymap and not figure_file%}
+        <div id="panel">
+            <div id="color-palette"></div>
+            <div>
+                <button id="delete-button">Delete Selected Shape</button>
+            </div>
+        </div>
+        <div id="polymap" style="width: 100%; height:400px;"></div>
+        {%if lat and lon %}
+            <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+            <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+        {%else%}
+            <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
+            <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+        {%endif%}
+        <script type="text/javascript">
+            initialize_polygon_map()
+        </script>
+        {%endif%}
        </div><!--end center -->
 
   <!-- Footer -->
