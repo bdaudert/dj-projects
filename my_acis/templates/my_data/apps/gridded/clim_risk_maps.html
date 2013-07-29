@@ -49,7 +49,11 @@
                     {%if field.label == "Bounding box" and bounding_box %}
                         <td><input type="text" name="bounding_box" id="bounding_box" value="{{bounding_box}}"></td>
                     {%else%}
-                        <td>{{field}}</td>
+                        {%if field.label == "Polygon" %}
+                            <td><input type="text" name="polygon" id="polygon" value="{{polygon}}"></td>
+                        {%else%}
+                            <td>{{field}}</td>
+                        {%endif%}
                     {%endif%}
                     <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                     {%if field.label == "Grid"%}

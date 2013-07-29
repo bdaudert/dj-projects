@@ -601,6 +601,15 @@ function initialize_polygon_map() {
             // mouses down on it.
             var newShape = e.overlay;
             newShape.type = e.type;
+            var polygon = newShape.getPath();
+            polCoords = [];
+            for (var j = 0;j<polygon.length;j++) {
+                var lat = precise_round(polygon.getAt(j).lat(),2);
+                var lon = precise_round(polygon.getAt(j).lng(),2);
+                polCoords.push(lon);
+                polCoords.push(lat);
+            }
+            document.getElementById("polygon").value = polCoords;
             google.maps.event.addListener(newShape, 'click', function() {
               setSelection(newShape);
             });
