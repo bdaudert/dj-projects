@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response
 #from django.views.generic.list_detail import object_detail, object_list
 from django.db.models.query import QuerySet
 from django.contrib.localflavor.us.forms import USStateField
+from django.core.mail import send_mail
 
 #Python imports
 import datetime
@@ -27,21 +28,19 @@ MEDIA_URL = '/www/apps/csc/dj-projects/my_acis/media/'
 def test(request):
     context = {
         'title': 'Southwest Climate Knowledge Exchange',
-        'home_page':True
     }
     return render_to_response('my_data/index.html', context, context_instance=RequestContext(request))
 
 def home(request):
     context = {
         'title': 'Southwest Climate Knowledge Exchange',
-        'home_page':True
     }
     return render_to_response('my_data/home.html', context, context_instance=RequestContext(request))
 
 def help(request):
     context = {
         'title': 'Help Tool',
-        'search_page':True
+        'icon':'Magnify.png'
     }
     return render_to_response('my_data/help/home.html', context, context_instance=RequestContext(request))
 
@@ -49,7 +48,7 @@ def main_map(request):
     context = {
         'title': 'Resources',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
-        'main_page':True
+        'icon':'Network.png'
     }
     context['json_file'] = 'Network.json'
     return render_to_response('my_data/main_map.html', context, context_instance=RequestContext(request))
@@ -59,7 +58,7 @@ def main(request):
     context = {
         'title': 'Resources',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
-        'main_page':True
+        'icon':'Network.png'
     }
     state = request.GET.get('state_key', None)
     element = request.GET.get('element', None)
@@ -84,35 +83,35 @@ def main(request):
 def about_us(request):
     context = {
         'title': 'About Us',
-        'intro_page':True
+        'icon':'AboutUs.png'
     }
     return render_to_response('my_data/about_us.html', context, context_instance=RequestContext(request))
 
 def who_we_are(request):
     context = {
         'title': 'Who we are',
-        'intro_page':True
+        'icon':'AboutUs.png'
     }
     return render_to_response('my_data/who_we_are.html', context, context_instance=RequestContext(request))
 
 def what_we_do(request):
     context = {
         'title': 'What we do',
-        'intro_page':True
+        'icon':'AboutUs.png'
     }
     return render_to_response('my_data/what_we_do.html', context, context_instance=RequestContext(request))
 
 def contact_us(request):
     context = {
         'title': 'Contact Us',
-        'intro_page':True
+        'icon':'AboutUs.png'
     }
     return render_to_response('my_data/contact_us.html', context, context_instance=RequestContext(request))
 
 def dashboard(request):
     context = {
         'title': 'Monitoring: Climate Dashboard',
-        'monitor_page':True
+        'icon':'Monitoring.png'
     }
     #Find mon, year to locate snotel map
     year = str(datetime.datetime.today().year)
@@ -134,21 +133,46 @@ def dashboard(request):
 def data_home(request):
     context = {
         'title': 'Data',
-        'data_page':True
+        'icon':'DataPortal.png'
     }
     return render_to_response('my_data/data/home.html', context, context_instance=RequestContext(request))
 
 def sw_networks(request):
     context = {
         'title': 'Southwest Networks',
-        'data_page':True
+        'icon':'DataPortal.png'
     }
     return render_to_response('my_data/data/sw_networks.html', context, context_instance=RequestContext(request))
+
+def feedback(request):
+    context = {
+        'title': 'Feedback',
+        'icon':'AboutUs.png'
+    }
+    errors = []
+    if request.method == 'POST':
+        if not request.POST.get('subject', ''):
+            errors.append('Enter a subject.')
+        if not request.POST.get('message', ''):
+            errors.append('Enter a message.')
+        if request.POST.get('email') and '@' not in request.POST['email']:
+            errors.append('Enter a valid e-mail address.')
+        if not errors:
+            send_mail(
+                request.POST['subject'],
+                request.POST['message'],
+                request.POST.get('email', 'noreply@example.com'),
+                ['csc-wrcc@dri.edu'],
+            )
+            context['errors'] = 'Thank you for your input!'
+        else:
+            context['errors'] = errors
+    return render_to_response('my_data/feedback.html', context, context_instance=RequestContext(request))
 
 def download(request):
     context = {
         'title': 'Download',
-        'apps_page':True
+        'icon':'ToolProduct.png'
     }
     app_name = request.GET.get('app_name', None)
     json_file_name = request.GET.get('json_file', None)
@@ -189,7 +213,7 @@ def download(request):
 def data_station(request):
     context = {
         'title': 'Historic Station Data',
-        'data_page':True
+        'icon':'DataPortal.png'
     }
     context['json_file'] = 'SW_stn.json'
     stn_id = request.GET.get('stn_id', None)
@@ -336,7 +360,7 @@ def data_station(request):
 def data_gridded(request):
     context = {
         'title': 'Gridded/Modeled Data',
-        'data_page':True
+        'icon':'ToolProduct.png'
     }
 
     elements = request.GET.get('elements', None)
@@ -610,7 +634,7 @@ def apps_home(request):
     context = {
         'title': 'Tools/Applications',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
-        'apps_page':True
+        'icon':'ToolProduct.png'
     }
     stn_id = request.GET.get('stn_id', None)
     if stn_id is None:
@@ -633,7 +657,7 @@ def apps_station(request):
     context = {
         'title': 'Station Data Tools',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
-        'apps_page':True
+        'icon':'ToolProduct.png'
         }
     stn_id = request.GET.get('stn_id', None)
     start_date = request.GET.get('start_date', None)
@@ -650,21 +674,21 @@ def apps_station(request):
 def apps_gridded(request):
     context = {
         'title': 'Gridded Data Tools',
-        'apps_page':True
+        'icon':'ToolProduct.png'
         }
     return render_to_response('my_data/apps/gridded/home.html', context, context_instance=RequestContext(request))
 
 def apps_gis(request):
     context = {
         'title': 'Geospatial Data Tools',
-        'apps_page':True
+        'icon':'ToolProduct.png'
         }
     return render_to_response('my_data/apps/gis/home.html', context, context_instance=RequestContext(request))
 
 def metagraph(request):
     context = {
         'title': 'Station Metadata Graphics',
-        'apps_page':True
+        'icon':'ToolProduct.png'
     }
     stn_id = request.GET.get('stn_id', None)
     if stn_id is None:
@@ -720,7 +744,7 @@ def metagraph(request):
 def monthly_aves(request):
     context = {
         'title': 'Monthly Averages',
-        'apps_page':True,
+        'icon':'ToolProduct.png',
         'acis_elements':dict(WRCCData.acis_elements_dict)
     }
     stn_id = request.GET.get('stn_id', None)
@@ -851,7 +875,7 @@ def monthly_aves(request):
 def clim_sum_maps(request):
     context = {
         'title': 'Climate Summary Maps',
-        'apps_page':True
+        'icon':'ToolProduct.png'
     }
     lat = request.GET.get('lat', None)
     lon = request.GET.get('lon', None)
@@ -972,7 +996,7 @@ def clim_sum_maps(request):
 def clim_risk_maps(request):
     context = {
         'title': 'Climate Risk Maps',
-        'apps_page':True
+        'icon':'ToolProduct.png'
     }
     element = request.GET.get('element', None)
     start_date = request.GET.get('start_date', None)
@@ -1027,7 +1051,7 @@ def clim_risk_maps(request):
 def grid_point_time_series(request):
     context = {
         'title': 'Grid Point Time Series',
-        'apps_page':True
+        'icon':'ToolProduct.png'
     }
     lat = request.GET.get('lat', None)
     lon = request.GET.get('lon', None)
@@ -1115,7 +1139,7 @@ def station_locator_app(request):
     call(["touch", "/tmp/Empty.json"])
     context = {
         'title': 'Station Finder',
-        'search_page':True
+        'icon':'Magnify.png'
     }
     form0 = set_as_form(request,'StationLocatorForm0')
     context['form0'] = form0
@@ -1238,7 +1262,7 @@ def station_locator_app(request):
 def sodxtrmts(request):
     context = {
         'title': 'Monthly Summaries of Extremes (Sodxtrmts)',
-        'apps_page':True
+        'icon':'ToolProduct.png'
         }
     json_file = request.GET.get('json_file', None)
     initial = set_sod_initial(request, 'Sodxtrmts')
@@ -1364,7 +1388,7 @@ def sodxtrmts(request):
 def sodxtrmts_visualize(request):
     context = {
         'title': 'Time Series Plots - Monthly Summaries of Extremes',
-        'apps_page':True
+        'icon':'ToolProduct.png'
         }
     station_ID = request.GET.get('station_ID', None)
     element = request.GET.get('element', None)
@@ -1422,7 +1446,7 @@ def sodxtrmts_visualize(request):
 def sodsumm(request):
     context = {
         'title': 'Sodsumm - Monthly and Seasonal Summaries of Daily Data',
-        'apps_page':True
+        'icon':'ToolProduct.png'
         }
     initial = set_sod_initial(request, 'Sodsumm')
     form1 = set_as_form(request,'SodsummForm', init=initial)

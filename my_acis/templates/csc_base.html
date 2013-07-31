@@ -60,103 +60,76 @@
 </head>
 
 <body>
+<div class="container">
     <!-- Header -->
-    <div class="header">
-        
-        <div id="header"></div>
-            <script type="text/javascript">$("#header").load("{{MEDIA_URL}}html/commons.html .header");</script>
-        <!--<h1 align="center">Southwest Climate Knowledge Exchange</h1>
-        <a target="_blank" href="http://www.swcsc.arizona.edu/"><img alt="SW_CSC" title="SW_CSC" class="logo" src="{{ MEDIA_URL }}img/SW-CSC-LOGO.png"></a>-->
-        {%if home_page%}
-            <img alt="Southwest" title="Southwest" class="map_2" src="{{ MEDIA_URL }}img/SouthWest.jpg">
-        {%endif%}
-        {%if main_page%}
-            <img alt="Network" title="Network" class="map" src="{{ MEDIA_URL }}img/Network.png">
-            <!--<img alt="Network" title="Network" class="map" src="{{ MEDIA_URL }}img/KnowledgeNetwork.png">-->
-        {%endif%}
-        {%if station_finder_page%}
-            <img alt="StationFinder" title=StationFinder" class="map" src="{{ MEDIA_URL }}img/StationFinder.png">
-        {%endif%}
-        {%if data_page%}
-            <img alt="DataPortal" title="DataPortal" class="map" src="{{ MEDIA_URL }}img/DataPortal.png">
-        {%endif%}
-        {%if apps_page%}
-            <img alt="Tool" title="Tool" class="map" src="{{ MEDIA_URL }}img/ToolProduct.png">
-        {%endif%}
-        {%if monitor_page%}
-            <img alt="Monitoring" title="Monitoring" class="map" src="{{ MEDIA_URL }}img/Monitoring.png">
-        {%endif%}
-        {%if intro_page%}
-            <img alt="AboutUS" title="AboutUs" class="map" src="{{ MEDIA_URL }}img/AboutUs.png">
-        {%endif%}
-        {%if search_page%}
-            <img alt="Magnify" title="Magnify" class="map" src="{{ MEDIA_URL }}img/Magnify.png">
-        {%endif%}
-
-    </div><!--end header-->
-
+    <img src="{{ MEDIA_URL }}img/SWBanner.png">
     <!-- Nav bar at top of page-->
-    <div class="breadcrumbs">
-    {% block breadcrumbs %}
-    <li><a href="{{HOME_URL}}"><font size="3">HOME|</font></a>
-    <li><a href="{{SW_CKN_URL}}about_us/"><font size="3">ABOUT US|</font></a>
-    <ul>
-        <li><a href="{{SW_CKN_URL}}about_us/">Overview</a></li>
-        <li><a href="{{SW_CKN_URL}}who_we_are/">&nbsp;&nbsp;Who we are</a></li>
-        <li><a href="{{SW_CKN_URL}}what_we_do/">&nbsp;&nbsp;What we do</a></li>
-        <li><a href="{{SW_CKN_URL}}contact_us/">&nbsp;&nbsp;Contact Us</a></li>
-    </ul></li>
-    <li><a href="{{DATA_URL}}"><font size="3">DATA|</font></a>
-    <ul>
-        <li><a href="{{DATA_URL}}">All Data</a></li>
-        <li><a href="{{TOOLS_URL}}station/station_finder/">&nbsp;&nbsp;Station Finder</a></li>
-        <li><a href="{{DATA_URL}}station/">&nbsp;&nbsp;Historic Station<br />&nbsp;&nbsp;Data</a></li>
-        <li><a href="{{DATA_URL}}gridded/">&nbsp;&nbsp;Gridded/Modeled<br />&nbsp;&nbsp;Data</a></li>
-    </ul></li>
-    <li><a href="{{TOOLS_URL}}"><font size="3">TOOLS|</font></a>
-    <ul>
-        <li><a href="{{TOOLS_URL}}">Overview</a></li>
-        <li><a href="{{TOOLS_URL}}station/">&nbsp;&nbsp;Station Data<br />&nbsp;&nbsp;Tools</a></li>
-        <li><a href="{{TOOLS_URL}}gridded/">&nbsp;&nbsp;Gridded Data<br />&nbsp;&nbsp;Tools</a></li>
-        <li><a href="{{TOOLS_URL}}gis/">&nbsp;&nbsp;Geospatial <br />&nbsp;&nbsp;Data Tools</a></li>
-        <li><a target="_blank" href="/csc/wrcc_apps/">&nbsp;&nbsp;WRCC-SOD</a></li>
-    </ul>
-    <li><a href="{{SW_CKN_URL}}monitoring"><font size="3">MONITORING|</font></a>
-    <li><a href="{{SW_CKN_URL}}main_map"><font size="3">RESOURCES</font></a>
-    </li>
+    <div id="menu">
+    <ul id="nav">
+        <li><a href="{{HOME_URL}}"><font size="3">HOME</font></a></li>
+        <li><a href="{{SW_CKN_URL}}about_us/"><font size="3">ABOUT US</font></a>
+            <ul>
+            <li><a href="{{SW_CKN_URL}}about_us/">Overview</a></li>
+            <li><a href="{{SW_CKN_URL}}who_we_are/">Who we are</a></li>
+            <li><a href="{{SW_CKN_URL}}what_we_do/">What we do</a></li>
+            <li><a href="{{SW_CKN_URL}}contact_us/">Contact Us</a></li>
+            </ul>
+        </li>
+        <li><a href="{{DATA_URL}}"><font size="3">DATA</font></a>
+            <ul>
+            <li><a href="{{DATA_URL}}">All Data</a></li>
+            <li><a href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></li>
+            <li><a href="{{DATA_URL}}station/">Historic Station Data</a></li>
+            <li><a href="{{DATA_URL}}gridded/">Gridded/Modeled Data</a></li>
+            </ul>
+        </li>
+        <li><a href="{{TOOLS_URL}}"><font size="3">TOOLS</font></a>
+            <ul>
+            <li><a href="{{TOOLS_URL}}">Overview</a></li>
+            <li><a href="{{TOOLS_URL}}station/">Station Data Tools</a></li>
+            <li><a href="{{TOOLS_URL}}gridded/">Gridded Data Tools</a></li>
+            <li><a href="{{TOOLS_URL}}gis/">Geospatial Data Tools</a></li>
+            <li><a target="_blank" href="/csc/wrcc_apps/">WRCC-SOD</a></li>
+            </ul>
+        </li>
+        <li><a href="{{SW_CKN_URL}}monitoring"><font size="3">MONITORING</font></a></li>
+        <li><a href="{{SW_CKN_URL}}main_map"><font size="3">RESOURCES</font></a></li>
+     </ul>
     
-    {% endblock %}
-    </div><!--end breadcrumbs-->
+    </div><!--End menue -->
+ 
 
-    <div class="content-header">
-    {% block content-header %}
-       <h1 align="center" style="color:#FFEBCD;">{{title}}</h1>
-        
-        <div class="searchbox">
+    <div class="searchbox">
         <!-- Search Box -->
         <form target="_blank"  method="get" action="http://www.google.com/search">
             <div style="width:20em;">
-            <table border="0" align="center" cellpadding="0">
-            <tr><td>
-            <input type="text"   name="q" size="25"
-            maxlength="255" value="" />
-            <input type="submit" value="Search" /></td></tr>
-            <tr><td align="center" style="font-size:75%">                
-            <input type="radio"  name="sitesearch" value="http://wrcc.dri.edu{{SW_CKN_URL}}home/" checked/>Only this site
-            <input type="radio"  name="sitesearch"value="" /> The Web<br />
-            </td></tr></table>
+            <table border="0">
+            <tr>
+                <td><input type="text"   name="q" size="25" maxlength="255" value="" /></td>
+                <td><input type="submit" value="Search" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="radio"  name="sitesearch" value="http://wrcc.dri.edu/csc/swcke/home/" checked />This Site
+                    <input type="radio"  name="sitesearch"value="" />The Web
+                </td>
+                <td></td>
+            </tr>
+            </table>
             </div>
         </form>
-        </div>
-    {% endblock %}
-    </div> <!--end content-header-->
-
+    </div>
+    
     <div class="content">
-    <p class="error" align="center" style="font-size:large;">You can make these pages stellar! <img alt="Stellar" title="Stellar" class="icon" src="{{MEDIA_URL}}img/Stellar.png"> E-mail ANY suggestions to <a href="mailto:csc-wrcc@dri.edu">csc-wrcc@dri.edu</a></p>
-    {% block content %}
-        <input type="hidded" name="MEDIA_URL" id="MEDIA_URL" value={{MEDIA_URL}} />
-    {% endblock %}
-    </div> <!-- END content -->
+        <br /><br />
+        <p align="center" style="font-size:large;"><a href="{{SW_CKN_URL}}/feedback/">Give us feedback!</a>
+    </form>
+        <!-- 
+        <p class="error" align="center" style="font-size:large;">You can make these pages stellar! <img alt="Stellar" title="Stellar" class="icon" src="{{MEDIA_URL}}img/Stellar.png"> E-mail ANY suggestions to <a href="mailto:csc-wrcc@dri.edu">csc-wrcc@dri.edu</a></p>-->
+        {% block content %}
+        {% endblock content%}
+    </div><!-- END content --> 
 
+</div><!-- END container -->
 </body>
 </html>

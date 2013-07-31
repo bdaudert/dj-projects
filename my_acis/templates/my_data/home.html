@@ -12,24 +12,11 @@
     <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
 </head>
 
-<body style="background-color: #FFEBCD;">
+<body>
 
-<div id="header"></div>
-<script type="text/javascript">$("#header").load("{{MEDIA_URL}}html/commons.html .header");</script>
-
-
-<img alt="SouthWest" title="SouthWest" class="map_2" src="/csc/media/img/SouthWest.jpg">
-<br />
-
-<div class="content-header"></div>
-<!--
-<div id="search_box" style="position:absolute;top:0px;right:10px;"></div>
-<script type="text/javascript">$("#search_box").load("{{MEDIA_URL}}html/commons.html .searchbox");</script>
--->
-<p align="center">You are here
-<a href="{{HOME_URL}}">HOME</a>
-
-<div>
+<div class="container">
+    <img src="{{ MEDIA_URL }}img/SWBanner.png">
+    <div class="searchbox">
         <!-- Search Box -->
         <form target="_blank"  method="get" action="http://www.google.com/search">
             <div style="width:20em;">
@@ -44,9 +31,7 @@
             </td></tr></table>
             </div>
         </form>
-</div>
-
-<div class="container">
+    </div>
 
     <p align="center" style="font-size:x-large;">Start by choosing one of the following:</p>
     <table class="dash" cellspacing="10px" align="center">
@@ -94,13 +79,12 @@
         </tr>
     </table>
     <br />
-    <br />
 
     <!-- Footer -->
-    <div id="footer" align="center"></div>
+    <div id="footer" align="center" valign="bottom"></div>
     <script type="text/javascript">                        
     $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
     </script>
-</div>
+</div> <!--end container-->
 </body>
 </html>

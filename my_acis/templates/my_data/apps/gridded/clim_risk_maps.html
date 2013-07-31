@@ -12,8 +12,7 @@
     <a href="{{TOOLS_URL}}gridded/">GRID TOOLS></a>
     <a href="{{TOOLS_URL}}gridded/clim_risk_maps/">Climate Risk Maps</a></p>
 
-<div class="container">
-    <div class="center-left">
+    <div class="major-left">
     {%if not hide_form0%}
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
@@ -107,7 +106,7 @@
 
     </div><!--end center-left-->
 
-    <div class="center">
+    <div class="major-right">
         <h2 class="error">This page is under development!</h2> <img alt=Construction" title="Construction" src="{{MEDIA_URL}}img/Construction.png">
         <div id=tool_info_head></div>
             <script type="text/javascript">            
@@ -181,6 +180,5 @@
     $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
     </script>
 -->
-</div> <!--end container -->
 
 {%endblock%}

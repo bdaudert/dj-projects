@@ -9,13 +9,12 @@
 <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
 <a href="{{SW_CKN_URL}}monitoring/">MONITORING</a></p>
 
-<div class="container">
 <table class="dashboard">
     <th><h1>The Southwest</h1></th><th><h1>The Rest</h1></th>
    <!--Weather-->
     <tr><td>
         <h2 style="color:#FF007F;">Current Weather</h2>
-        <table border="1px solid #006666">
+        <table>
             <th>National Weather Service</th><th>Infrared Satellite Image</th><th>Radar Mosaic</th>
             <tr>
             <td><a href="http://www.wrh.noaa.gov/" onClick="return popup_window(this, 'NWS West')"><img alt="NWS" title="NWS" src="http://forecast.weather.gov/wwamap/png/wr.png" class="sidebar"></a></td>
@@ -31,7 +30,7 @@
        <a target="_blank" href="http://www.weather.gov/Radar">NWS Radar Images</a></p><br />
     </td><td>
         <h2 style="color:#FF007F;">Current Weather</h2>
-        <table border="1px solid #006666">
+        <table>
             <th>National Weather Service</th><th>Infrared Satellite Image</th><th>Radar Mosaic</th>
             <tr>
             <td><a href="http://www.weather.gov/" onClick="return popup_window(this, 'NWS US')"><img alt="NWS" title="NWS" src="{{ MEDIA_URL }}img/NWS_US.png" class="sidebar"></a></td>
@@ -49,7 +48,7 @@
     <tr><td>
         <!-- The Southwest -->
         <h2 style="color:#FF007F;">Temperature Anomaly Maps</h2>
-        <table border="1px solid #006666">
+        <table>
             <th>Water Year</th><th>30-day</th><th>7-day</th>
             <tr>
             <!--
@@ -68,7 +67,7 @@
     </td><td>
         <!-- US-->
         <h2 style="color:#FF007F;">Temperature Anomaly Maps</h2>
-        <table border="1px solid #006666">
+        <table>
             <th>Water Year</th><th>30-day</th><th>7-day</th>
             <tr>
             <td><a href="http://www.hprcc.unl.edu/products/maps/acis/WaterTDeptUS.png" class="popup_map"><img alt="WaterTempUs" title="WaterTempUS" src="http://www.hprcc.unl.edu/products/maps/acis/WaterTDeptUS.png" class="sidebar"></a></td>
@@ -81,7 +80,7 @@
     <!--Precip-->
     <tr><td>
         <h2 style="color:#FF007F;">Percent of Normal Precipitation</h2>
-        <table border="1px solid #006666">
+        <table>
             <th>Water Year</th><th>30-day</th><th>7-day</th>
             <tr>
             <!--                
@@ -100,7 +99,7 @@
         <a target="_blank" href="http://www.hprcc.unl.edu/maps/current/index.php?state=SW&region=WRCC&product=PNorm">HPRCC Precipitation Anomaly Map Tool</a></p><br />
     </td><td>
         <h2 style="color:#FF007F;">Percent of Normal Precipitation</h2>
-        <table border="1px solid #006666">
+        <table>
             <th>Water Year</th><th>30-day</th><th>7-day</th>
             <tr>
             <td><a href="http://www.hprcc.unl.edu/products/maps/acis/WaterPNormUS.png" class="popup_map"><img alt="WaterPUS" title="WaterPUS" src="http://www.hprcc.unl.edu/products/maps/acis/WaterPNormUS.png" class="sidebar"></a></td>
@@ -118,7 +117,7 @@
     <!-- Drought-->
     <tr><td>
         <h2 style="color:#FF007F;">Drought Information</h2>
-        <table border="1px solid #006666">
+        <table>
             <th>Water Year SPI</th><th>30-day SPI</th><th>60-day SPI</th>
             <tr>
             <td><a href="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterSPIDataWRCC.png" class="popup_map"><img alt="WaterSPI" title="WaterSPI" src="http://www.hprcc.unl.edu/products/maps/acis/wrcc/WaterSPIDataWRCC.png" class="sidebar"></a></td>
@@ -134,7 +133,7 @@
         <a target="_blank" href="http://www.wrcc.dri.edu/wwdt/">WWDT</a></p><br />
     </td><td>
         <h2 style="color:#FF007F;">Drought Information</H2>
-        <table border="1px solid #006666">
+        <table>
             <th>Water Year SPI</th><th>30-day SPI</th><th>60-day SPI</th>
             <tr>
             <td><a href="http://www.hprcc.unl.edu/products/maps/acis/WaterSPIDataUS.png" class="popup_map"><img alt="WaterSPIUS" title="WaterSPIUS" src="http://www.hprcc.unl.edu/products/maps/acis/WaterSPIDataUS.png" class="sidebar"></a></td>
@@ -159,7 +158,7 @@
     <!--WATER-->
     <tr><td>
             <h2 style="color:#FF007F;">West US Water Conditions</h2>
-        <table border="1px solid #006666">
+        <table>
             <th>CA/NV River <br /> Forecast</th><th>CO Basin River <br />Forecast</th><th>West Gulf River<br /> Forecast</th><th>Northwest Pacific<br /> Forecast</th>
             <tr>
             <td><a href="http://www.cnrfc.noaa.gov/" onClick="return popup_window(this, 'CNRFC')"><img alt="CNRFC" title="CNRFC" src="http://www.cnrfc.noaa.gov/images/official_zoom0.png" class="sidebar"></a></td>
@@ -179,7 +178,7 @@
         <a target="_blank" href="http://www.usbr.gov/main/water/">Reclamation Pages</a></p><br />
     </td><td>
             <h2 style="color:#FF007F;">US Water Conditions</h2>
-        <table border="1px solid #006666">
+        <table>
             <th>Real time <br />comparative streamflow</th><th>7-Day <br />comparative streamflow</th><th> 7-Day Percent <br />Normal Precipitation</th>
             <tr>
             <td><a href="http://waterwatch.usgs.gov/images/real/us/realb.gif" class="popup_map"><img alt="RTStreamFlow" title="RTStreamFlow" src="http://waterwatch.usgs.gov/images/real/us/realb.gif" class="sidebar"></a></td>
@@ -198,7 +197,7 @@
     <!--Snow-->
     <tr><td>
         <h2 style="color:#FF007F;">SNOTEL Snow Data</h2>
-        <table border="1px solid #006666">
+        <table>
         <th>Water Year<br />Precipitation % of Normal</th><th>Current Snow<br /> Water Equivalent %</th><th>Water Year<br />Snowpack</th>
             <tr>
             <td><a href="http://www.wcc.nrcs.usda.gov/gis/images/west_wytdprecpctnormal_update.png" onClick="return popup_window(this, 'WYTP')"><img alt="WaterSnotel" title="WaterSnotel" src="http://www.wcc.nrcs.usda.gov/gis/images/west_mtdprecpctnormal_update.png" class="sidebar"></a></td>
@@ -214,7 +213,7 @@
         <a target="_blank" href="http://www.wcc.nrcs.usda.gov/">Historical Snowpack</a><br />--> 
     </td><td>
         <h2 style="color:#FF007F;">Snow data from NOHRSC (NOAA)</h2>
-        <table border="1px solid #006666">
+        <table>
             <th>National <br /> Snow Analysis</th><th>Interactive <br /> Snow Maps</th><th>Forecasts</th>
             <tr>
             <td><a href="http://www.nohrsc.noaa.gov/nsa/" onClick="return popup_window(this, 'SnowAnalysis')"><img alt="NatSnow" title="NatSnow" src="{{MEDIA_URL}}img/SnowAnalysis.png" class="sidebar"></a></td>
@@ -231,7 +230,7 @@
 <!--US only tables-->
    <!--New table: ENSO, AO/NAO, MJO Updates  US only-->
         <h2 align="center" style="color:#FF007F;">ENSO, AO/NAO, MJO Updates</h2>
-        <table align="center" border="1px solid #006666">
+        <table align="center">
         <th>Global SST Anomaly</th><th>Pacific SST Anomaly</th><th>365-day ENSO SST Anomalies</th><th>MEI ENSO Index</th><th>Daily MJO Index</th><th>AO Ensemble forecasts</th>
         <tr>
         <td><a href="http://www.esrl.noaa.gov/psd/map/images/sst/sst.anom.gif" class="popup_map"><img alt="SST" title="SST" src="http://www.esrl.noaa.gov/psd/map/images/sst/sst.anom.gif" class="sidebar"></a></td>
@@ -251,7 +250,7 @@
    <!--New table: Predictions US only-->
         <h2 align="center" style="color:#FF007F;">Projections</h2>
         <h2  align="center">NWS 1-2 Week, Monthly, Seasonal Outlooks</h2>
-        <table align="center" border="1px solid #006666">
+        <table align="center">
         <th>Week 1 Precipitation</th><th>Week 2 Precipitation</th><th>Week 1 Temperature</th><th>Week 2 Temperature</th>
         <tr>
         <td><a href="http://www.cpc.ncep.noaa.gov/products/predictions/610day/610prcp.new.gif" onClick="return popup_window(this, 'NWS 1 week P')"><img alt="1WP" title="1WP" src="http://www.cpc.ncep.noaa.gov/products/predictions/610day/610prcp.new.gif" class="sidebar"></a></td>
@@ -265,7 +264,7 @@
 
         <h2 align="center" style="color:#FF007F;">Experimental Projections</h2>
         <h2  align="center">National Multi-Model Ensemble Experimental Forecasts (NMME)</h2>
-        <table align="center" border="1px solid #006666">
+        <table align="center">
         <th>Next Month <br />Precipitation Rate</th><th>Next Month <br /> Temperature Departure</th><th>Next Season <br />Precipitation Rate</th><th>Next Season<br /> Temperature Departure</th>
         <tr>
         <td><a href="http://www.cpc.ncep.noaa.gov/products/NMME/current/usprate_Lead1.html" onClick="return popup_window(this, 'Lead 1 Prate')"><img alt="NextMonth" title="NextMonth" src="http://www.cpc.ncep.noaa.gov/products/NMME/current/images/NMME_ensemble_prate_us_lead1.png" class="sidebar"></a></td>
@@ -279,7 +278,7 @@
         
         <h2  align="center" style="color:#FF007F;">Climate Forecast System Weekly Experimental from CEFA/DRI</h2>
         <h2 align="center">Mean/Anom Geopotential Height [500 mb] (dam)</h2>
-        <table align="center" border="1px solid #006666">
+        <table align="center">
             <th>Week 1</th><th>Week 2</th><th>Week 3</th><th>Week 4</th><th>Week 5</th>
             <tr>
             <td><a href="http://www.cefa.dri.edu/CFS/images/h5.0.png" class="popup_map"><img alt="Week1" title="Week1" src="http://www.cefa.dri.edu/CFS/images/h5.0.png" class="sidebar"></a></td>
@@ -298,7 +297,7 @@
             <h2 style="color:#FF007F;">Soil</h2>
     </td><td>
             <h2 style="color:#FF007F;">Soil</h2>
-        <table border="1px solid #006666">
+        <table>
             <th>Soil Moisture</th><th>SCAN Data</th><th></th>
             <tr>
                 <td><a href="http://www.cpc.ncep.noaa.gov/products/Soilmst_Monitoring/US/Soilmst/Soilmst.shtml#" class="popup_map"><img alt="SoilMoist" title="SoilMoist" src="{{MEDIA_URL}}img/SMoistUS.png" class="sidebar"></a></td>
@@ -316,7 +315,6 @@
     <script type="text/javascript">                        
     $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
     </script>
-</div>
 {% endblock %}
 
 <!--BLANK TO USE

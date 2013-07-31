@@ -12,7 +12,6 @@
     <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
     <a href="{{TOOLS_URL}}station/monthly_aves/">Monthly Averages</a></p>
 
-<div class="container">
     <div class="center-left" style="border:none;">
         <div id='form'>
             <form method="post" action="">{% csrf_token %}
@@ -42,9 +41,27 @@
             </form>
         </div>
         <br />
+        {%if meta%}
+            <p class="pop_link" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
+            <div id="metadata" style="display:none;">
+                {% for val in meta %}
+                    <p>{{val}} </p>
+                {%endfor%}
+            </div>
+        {%endif%}
+
+        {%if results%}
+            <p class="pop_link" onClick="ShowHide('averaged_data')"><u>Click here for averaged data<br /> behind this graphic</u></p>
+            <div id="averaged_data" width="450" height="450" border="0" style="display:none;">
+            {% for el, vals in averaged_data.items%}
+                <p>{{el}} : {{vals}}
+            {%endfor%}
+            </div>
+            <a target="_blank" href="{{DATA_URL}}station/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}">Get raw data behind this graphic here!</a>
+        {%endif%}
     </div>
 
-    <div class="center" style="border:none;">
+    <div class="wide-right" style="border:none;">
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
@@ -110,27 +127,6 @@
         {%endif%}
     </div>
 
-    <div class="center-right" style="border:none;">
-        {%if meta%}
-            <p class="pop_link" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
-            <div id="metadata" style="display:none;">
-                {% for val in meta %}
-                    <p>{{val}} </p>
-                {%endfor%}
-            </div>
-        {%endif%}
-
-        {%if results%}
-            <p class="pop_link" onClick="ShowHide('averaged_data')"><u>Click here for averaged data behind this graphic</u></p>
-            <div id="averaged_data" width="450" height="450" border="0" style="display:none;">
-            {% for el, vals in averaged_data.items%}
-                <p>{{el}} : {{vals}} 
-            {%endfor%}
-            </div>
-            <a target="_blank" href="{{DATA_URL}}station/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}">Get raw data behind this graphic here!</a>
-        {%endif%}
-    </div>
-
   <!-- Footer -->
   <!--
   <div id="footer" align="center"></div>
@@ -138,5 +134,4 @@
     $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-sw-ckn");
     </script>
   -->
-</div>
 {%endblock%}

@@ -5,17 +5,11 @@
 
 {% block content %}
 
-<div id="header"></div>
-<script type="text/javascript">                        
-    $("#header").load("{{MEDIA_URL}}html/commons.html .header");
-</script>
-
 <p  align="center">You are here
 <a href="{{HOME_URL}}">HOME></a>
 <a href="{{SW_CKN_URL}}main_map/">RESOURCES</a>
 
 
-<div class="container">
 
     <h2 class="error" align="center">This page is under development! <img alt="Construction" title="Construction" src="{{MEDIA_URL}}img/Construction.png"></h2>
    <table class="page" cellspacing="2">
@@ -37,5 +31,4 @@
     </td></tr>
     </table>
 
-</div> <!-- end container -->
 {% endblock %}

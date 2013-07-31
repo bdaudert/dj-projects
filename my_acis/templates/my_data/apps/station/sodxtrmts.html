@@ -15,8 +15,6 @@
     <a href="{{TOOLS_URL}}station/sodxtrmts/">Monthly Summary Time Series from Daily Input</a>
 </p>
 
-<div class="container">
-    <!--<div class="center-left" style="border:none;">-->
     <table border="0" cellpadding="10">
         <tr valign="top">
         <td>
@@ -84,10 +82,7 @@
             <input type="submit" value="Submit" name="form0"/>
             </form>
         </div>
-    <!--</div>-->
     </td><td>
-    <!--<div class="center" style="border:none;background-color:X^H#947e6e;">-->
-        <h2>{{title}}</h2>
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
@@ -142,9 +137,27 @@
         </div>
         <br />
         {%if results%}
+            <p>
+            {%for key_val in header%}
+                {%if key_val%}
+                    <b>{{key_val.0}}</b>: {{key_val.1}}
+                {%else%}
+                    <br />
+                {%endif%}
+            {%endfor%}
+            </p>
+
+            <p><b>Missing values</b><br />
+            <!--Any month with less than or equal this user selected number will be included in the analysis.<br />
+            Monthly information for months with more than this number of missing values will be displayed, but not used. <br />
+            The letter indicates the number of missing days-->
+            Letters after months show number of missing days; after annual
+            values show missing months.  Value is displayed but not used if user-specified
+            missing day criterion exceeded.<br />
+            (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
+
             <!--Graphics-->
-            <p class="pop_link" onClick="ShowHide('range_plot')"><u>Show/hide plot of mean and range</u></p>
-            <div id="range_plot" style="display:none;">
+            <div id="range_plot">
                 <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
                 <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
                 <div id="graph_container" style="height:350px;width:600px;"></div>
@@ -154,15 +167,14 @@
 
             <a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/visualize/?station_ID={{station_ID}}&element={{element}}&json_file={{json_file}}">Generate Time Series Plots for this data</a><br /><br />
 
-            <img alt="Print" title="Print" class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            
-            <!--<a href="{{SW_CKN_URL}}/download/?app_name=Sodxtrmts&json_file={{json_file}}" onClick="return popup_window(this, 'Download Table')">
-            <img alt="Download" title="Download" class="icon" src="{{MEDIA_URL}}img/Download.png"></a>-->
-            <a target="_blank" href="{{SW_CKN_URL}}/download/?app_name=Sodxtrmts&json_file={{json_file}}"><img alt="Download" title="Download" class="icon" src="{{MEDIA_URL}}img/Download.png"> Download Table Data</a>
+            <p class="pop_link" onClick="ShowHide('printable_table')"><u>Show/hide table data</u></p>
 
-        <div id="printable_table">
-            <!--<p class="pop_link" onClick="ShowHide('table_header')"><u>Show/hide table header</u></p>-->
+        <div id="printable_table" style="display:none;">
+            <img alt="Print" title="Print" class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            
+
+            <a target="_blank" href="{{SW_CKN_URL}}/download/?app_name=Sodxtrmts&json_file={{json_file}}"><img alt="Download" title="Download" class="icon" src="{{MEDIA_URL}}img/Download.png"> Download Table Data</a>
+            <br />
             <!--Header-->
             <p>
             {%for key_val in header%}
@@ -186,14 +198,14 @@
  
             <table class="right_aligned" cellpadding="none">
             <tr>
-            <td><font size="+2"> YEAR</font></td>
+            <td><font size="+1"> YEAR</font></td>
             {%for mon in month_list%}
                 {%if forloop.last %}
-                    <td colspan="2"><font size="+2"></td>
-                    <td colspan="2"><font size="+2"></td>
-                    <td colspan="2"><font size="+2"></td>
+                    <td colspan="2"><font size="+1"></td>
+                    <td colspan="2"><font size="+1"></td>
+                    <td colspan="2"><font size="+1"></td>
                 {%endif%}
-                <td colspan="2"><font size="+2">{{mon}}</font></td>
+                <td colspan="2"><font size="+1">{{mon}}</font></td>
             {%endfor%}
             </tr>
             {%for yr_data in results %}
@@ -222,10 +234,11 @@
                 <p style="color:red">NO STATION DATA FOUND!</p></br>
             {%endif%}
        {%endif%}
-    </td></tr>
-    <tr>
+        </td></tr>
+        <tr>
         <td></td>
         <td>
+            <!--
             {%if results%}
             <p align="left">
             <b>Summary Table</b><br />
@@ -244,11 +257,11 @@
                 Number of years with months that meet criteria for missing days.
                 </p>
             {%endif%}
+        -->
         </div> <!--End printable table-->
-        </td>
-    <tr>
-</table>
-</div>
+        </td></tr>
+        </table>
+
 
   <!-- Footer -->
 <!--

@@ -17,8 +17,16 @@
 
 </p>
 
-<div class="container">
     <div class="center-left" style="border:none;">
+        <p> 
+        {%for key_val in header%}
+            {%if key_val%}
+                <b>{{key_val.0}}</b>: {{key_val.1}}
+            {%else%}
+                <br />
+            {%endif%}
+        {%endfor%}
+        </p>
         <div id='form0'>
         <form method="post" action="">{% csrf_token %}
         <table class="form">
@@ -50,8 +58,7 @@
         </div>
     </div>
     
-    <div class="center" style="border:none;background-color:X^H#947e6e;">
-        <h2>{{title}}</h2>
+    <div class="major-right">
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
@@ -83,13 +90,17 @@
         </div>
 
         <a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/?json_file={{json_file}}">Back to Data Analysis</a>
+
         <p class="pop_link" onClick="ShowHide('original_data')"><u>Show/hide the original data</u></p>
 
 
         <div id='original_data' style="display:none;">
 
             <img alt="Print" title="Print" class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <a target="_blank" href="{{SW_CKN_URL}}/download/?app_name=Sodxtrmts&json_file={{json_file}}"><img alt="Download" title="Download" class="icon" src="{{MEDIA_URL}}img/Download.png"> Download Table Data</a>
+            <br />
 
             <div id="printable_table">
             <!--Header-->
@@ -115,14 +126,14 @@
 
             <table cellpadding="none">
             <tr>
-            <td><font size="+2">YEAR</font></td>
+            <td><font size="+1">YEAR</font></td>
             {%for mon in month_list%}
                 {%if forloop.last %}
-                    <td colspan="2"><font size="+2"></td>
-                    <td colspan="2"><font size="+2"></td>
-                    <td colspan="2"><font size="+2"></td>
+                    <td colspan="2"><font size="+1"></td>
+                    <td colspan="2"><font size="+1"></td>
+                    <td colspan="2"><font size="+1"></td>
                 {%endif%}
-                <td colspan="2"><font size="+2">{{mon}}</font></td>
+                <td colspan="2"><font size="+1">{{mon}}</font></td>
             {%endfor%}
             </tr>
             {%for yr_data in data %}
@@ -186,8 +197,6 @@
         {%endif%}
     </div><!--end center-->
 
-
-</div><!--end container-->
 
   <!-- Footer -->
 <!--

@@ -12,8 +12,7 @@
     <a href="{{TOOLS_URL}}gridded/">GRID TOOLS></a>
     <a href="{{TOOLS_URL}}gridded/clim_sum_maps/">Climate Summary Maps</a></p>
 
-<div class="container">
-    <div class="center-left">
+    <div class="major-left">
     {%if not hide_form0%}
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
@@ -156,7 +155,7 @@
             
             <p>Element: <b>{{elems_long}}</b> {%if base_temp%}Base Temperature: <b>{{base_temp}}</b>{%endif%}</p>
             <p>Time Period: <b>{{start_date}}</b> to <b>{{end_date}}</b></p>
-            <img alt="FigureFile" title="FigureFile" src="{{MEDIA_URL}}tmp/{{figure_file}}">
+            <img alt="FigureFile" width="100%" height="500px" title="FigureFile" src="{{MEDIA_URL}}tmp/{{figure_file}}">
     
         {%endif%}
 
@@ -178,6 +177,5 @@
     $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
     </script>
 -->
-</div> <!--end container -->
 
 {%endblock%}
