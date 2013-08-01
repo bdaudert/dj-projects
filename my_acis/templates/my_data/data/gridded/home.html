@@ -12,7 +12,8 @@
 <a href="{{DATA_URL}}">DATA></a>
 <a href="{{DATA_URL}}gridded/">Modeled/Gridded Data</a></p>
 
-    <div class="major-left">
+    <table cellpadding="20">
+    <td valign="top" width="40%">
         {%if not form2_ready %}
         {%if not hide_form0 %}
         <div id='form0'>
@@ -130,9 +131,8 @@
                 initialize_bbox_map()
             </script>
         {%endif%}
-    </div>
-
-    <div class="major-right" style="background-color:X^H#947e6e; border:none;">
+    </td>
+    <td valign="top" width="60%">
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
@@ -295,7 +295,8 @@
             initialize_bbox_map()
         </script>
     {%endif%}
-
+    </td>
+    </table>
   <!-- Footer -->
 <!--
   <div id="footer" align="center"></div>

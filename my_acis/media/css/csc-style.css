@@ -20,7 +20,7 @@ body {
 .container {
     margin: 0 auto;
     width: 960px;
-    min-height:3000px;
+    min-height:1000px;
     color:#006666;
     background-color: #FFEFD5;
 }
