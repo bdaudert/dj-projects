@@ -11,8 +11,8 @@
     <a href="{{TOOLS_URL}}">TOOLS></a>
     <a href="{{TOOLS_URL}}station/">STATION TOOLS</a>
 
-
-        <div class="center-left">
+    <table cellpadding="20">
+    <td valign="top" width=25%>
            <!-- Application documentation -->
             <div class="docu" id="Docu_SODSUMM" style="display:none;"></div>
                 <script type="text/javascript">                        
@@ -68,10 +68,8 @@
                 </script>
             </div>
 
-        </div>
-
-        <div class="major-right">
-
+    </td>
+    <td valign="top" width=50%>    
             {%if stn_id%}
                 <p class="error">Station ID: {{stn_id}}</p>
             {%endif%}
@@ -88,21 +86,21 @@
             <br />
 
             <p class="error" align ="center">(* Beta version)</p>
-            <table cellspacing="0">
+            <table cellpadding="5">
             <tr>
-                <td>
-                    <p class="trigger">* Monthly Summary Time Series<br /> from Daily Data <br /> <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_SODXTRMTS')"></p>
+                <td valign="top">
+                    <p class="trigger">* Monthly Summary<br /> Time Series<br /> from Daily Data <br /> <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_SODXTRMTS')"></p>
                     <div class="pop-up" id="sodxtrmts">
                         <p>This program produces monthly and annual time series of a large number of properties derived from the SOD daily data set.</p>
                     </div>
                 </td>
-                <td>
+                <td valign="top">
                     <p class="trigger">Monthly Averages <br /> <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_MAVES')"></p>
                     <div class="pop-up">
                         <p>Generates bar chart of monthly averages.</p>
                     </div>
                 </td>
-                <td>
+                <td valign="top">
                     <p class="trigger">* Monthly/Seasonal <br /> Climate Summaries <br /><img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_SODSUMM')"></p>
                     <div class="pop-up" id="sodsumm">
                         <p>Generates general climatology in table and graph form.</p>
@@ -110,21 +108,21 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td valign="top">
                     {%if initial %}
                         <a  href="{{TOOLS_URL}}station/sodxtrmts/?{%for key, val in initial.items %}{{key}}={{val}}&{%endfor%}"><img class="sidebar" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
                     {%else%}
                         <a  href="{{TOOLS_URL}}station/sodxtrmts/"><img  class="sidebar" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
                     {%endif%}
                 </td>
-                <td>
+                <td valign="top">
                     {%if initial%}
                         <a  href="{{TOOLS_URL}}station/monthly_aves/?{%for key, val in initial.items %}{{key}}={{val}}&{%endfor%}"><img class="sidebar" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
                     {%else%}
                         <a  href="{{TOOLS_URL}}station/monthly_aves/"><img class="sidebar" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
                     {%endif%}
                 </td>
-                <td>
+                <td valign="top">
                     {%if initial%}
                         <a  href="{{TOOLS_URL}}station/sodsumm/?{%for key, val in initial.items %}{{key}}={{val}}&{%endfor%}"><img class="sidebar" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
                     {%else%}
@@ -133,42 +131,41 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td valign="top"> 
                     <p class="trigger">Station Finder <br/><img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_NONE')"></p>
                     <div class="pop-up">
                         <p>Find stations with data for specific elements and a chosen time range.</p>
                     </div>
                 </td>
-                <td>
+                <td valign="top">
                     <p class="trigger">Station Metadata Graphics <br /><img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_META_GRAPH')"></p>
                     <div class="pop-up">
                             <p>See how much data is missing over the period of record.</p>
                         </div>
                 </td>
-                <td></td>
+                <td valign="top"></td>
             </tr>
             <tr>
-                <td>
+                <td valign="top">
                     {%if stn_id%}                                                
                         <a  href="{{TOOLS_URL}}station/station_finder/?stn_id={{stn_id}}"><img class="sidebar" alt="StationFinder" title="StationFinder" src="{{MEDIA_URL}}img/StationFinder.png"></a>
                     {%else%}
                         <a  href="{{TOOLS_URL}}station/station_finder/"><img class="sidebar" alt="StationFinder" title="StationFinder" src="{{MEDIA_URL}}img/StationFinder.png"></a>
                     {%endif%}
                 </td>
-                <td>
+                <td valign="top">
                     {%if stn_id%}                        
                         <a  href="{{TOOLS_URL}}station/metagraph/?stn_id={{stn_id}}"><img class="sidebar" alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}img/MetaGraph.png"></a>
                     {%else%}
                         <a  href="{{TOOLS_URL}}station/metagraph/"><img class="sidebar" alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}img/MetaGraph.png"></a>
                     {%endif%}
                 </td>
-                <td>
+                <td valign="top">
                 </td>
             </tr>
             </table>
-        </div>
-
-        <div class="center-right">
+    </td>
+    <td valign="top" width=25%>    
             {%if not stn_id%}
             <h3 align ="center">Links to other Applications</h3>
             <ul class="navbar">    
@@ -216,8 +213,8 @@
                 </table>
            </ul>
             {%endif%}
-        </div>
-
+    </td>
+    </table>
 
  <!-- Footer -->
 <!--
