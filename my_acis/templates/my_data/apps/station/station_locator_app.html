@@ -11,8 +11,10 @@
     <a href="{{TOOLS_URL}}">TOOLS></a>
     <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
     <a href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a>
+    
+    <table cellpadding="20">
+    <td valign="top" width="70%">
 
-    <div class="wide-left">
         <div align="center" id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
@@ -20,7 +22,7 @@
         <div align="center" id="tool_info" style="display:none;">
             <p>Tool to locate stations that have data for user chosen elements and date range.</p>
         </div>
-        
+
         {%if not form1_ready%}
             <div align="center" id="how_to_head"></div>
             <script type="text/javascript">            
@@ -40,7 +42,7 @@
                     <a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a>
                     <p>Station Selection = "State". Find data for all stations in a US state of your choice.</p>
                     <p>Station Selection = "Bounding Box". Find data for all stations in a bounding box of your choice. A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</p>
-                    
+
                 </ul>
             <p class="error">Explanation of element selection choices:</p>
                 <ul>
@@ -49,33 +51,30 @@
                     <p>Element List:</p><img alt="ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0"/></p>
                 </ul>
             </div>
-      {%endif%}
-
-
-        {%if not form1_ready%} 
-        <div id='form0'>
-            <form method="post" action="">{% csrf_token %}
-            <table class="form">
-            <tr>
-            <td colspan="3"><p class="error">Refine your search here!</p></td>
-            </tr>
-            {%for field in form0 %}
+        
+            <div id='form0'>
+                <form method="post" action="">{% csrf_token %}
+                <table class="form">
                 <tr>
+                <td colspan="3"><p class="error">Refine your search here!</p></td>
+                </tr>
+                {%for field in form0 %}
+                    <tr>
                     <td>{{field.label}}:</td>
                     <td>{{field}}</td>
                     <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                     <div class="pop-up"><p>{{field.help_text}}</p></div>
                     </td>
-                </tr>
-               {%if field.errors%}
-                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
-                {%endif%}
-            {%endfor%}
+                    </tr>
+                    {%if field.errors%}
+                        <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                    {%endif%}
+                {%endfor%}
                 <tr><td></td><td></td><td><input type="submit" value="Select" name="form0"/></td></tr>
-            </table>
-            </form>
-        </div>
-        {%endif%}        
+                </table>
+                </form>
+            </div>
+        {%endif%}
 
         {%if form1_ready%}
         <p align="left"><input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/station_finder/'"/></p>
@@ -113,31 +112,31 @@
                 {%ifequal field.label "County" %}
                 <tr><td></td><td align="right"><a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a></td></tr>
                 {%endifequal%}
-                {%ifequal field.label "Climate division" %}                        
-                <tr><td></td><td align="right"><a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a></td></tr>                
+                {%ifequal field.label "Climate division" %}
+                <tr><td></td><td align="right"><a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a></td></tr>
                 {%endifequal%}
-                {%ifequal field.label "County warning area" %}                
+                {%ifequal field.label "County warning area" %}
                 <tr><td></td><td align="right"><a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a></td></tr>
                 {%endifequal%}
-                {%ifequal field.label "Basin" %}                                        
-                <tr><td></td><td align="right"><a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a></td></tr>                
+                {%ifequal field.label "Basin" %}
+                <tr><td></td><td align="right"><a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a></td></tr>
                 {%endifequal%}
-                {%ifequal field.label "Bounding box" %}                                                         
+                {%ifequal field.label "Bounding box" %}
                 <tr><td></td><td align="right"><p class="error">Use map to define your Bounding Box.</p></td></tr>
                 {%endifequal%}
                {%if field.errors%}
                  <tr><td></td><td>{{field.errors}}</td><td></td></tr>
                 {%endif%}
-                {%endif%}
+               {%endif%}
             {%endfor%}
             <tr><td></td><td></td><td><input type="submit" value="Submit" name="form1"/></td></tr>
             </table>
             </form>
             <p class="error" align="left">Map may take a little time to load after Submit button is pressed. Thank you for being patient!</p>
         </div>
-        {%endif%} 
-        
-        {%if need_map_bbox  and  not json_file %}
+        {%endif%}
+
+       {%if need_map_bbox  and  not json_file %}
             <p class="error">Click and drag to define your Bounding Box!</p>
             <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
             <div id="map" style="width: 100%; height:300px;"></div>
@@ -152,7 +151,7 @@
 
         <br /><br />
         <input type="hidden" id="URL_PREFIX" name="variable" value="{{ URL_PREFIX }}">
-        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">      
+        <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
         <input type="hidden" id="DATA_URL" name="DATA_URL" value="{{DATA_URL}}">
         <input type="hidden" id="TOOLS_URL" name="TOOLS_URL" value="{{TOOLS_URL}}">
 
@@ -166,28 +165,18 @@
             {%endif%}
         {%endif%}
 
-        <!--
-        {%if by_type %}
-            <p><font color="#FF007F">Search Parameters:</font><br />
-            <b>{{by_type}}, </b>
-        {%endif%}
-        -->
-        {%if start_date%}
-           <!-- <b>Start Date: </b>{{start_date}},--> 
+       {%if start_date%}
             <input type="hidden" id="start_date" name="variable" value="{{start_date}}">
         {%endif%}
         {%if end_date%}
-            <!--<b>End Date: </b>{{end_date}},-->
             <input type="hidden" id="end_date" name="variable" value="{{end_date}}">
         {%endif%}
 
         {%if elements%}
-            <!--<b>Elements: </b>{{elements}}-->
             <input type="hidden" id="elements" name="variable" value="{{elements}}">
         {%endif%}
 
-        <!--{%if by_type %}</p>{%endif%}-->
-       
+
         <p>{{map_title}}</p>
         <div id="map" style="width:100%;height:400px;"></div>
         <script type="text/javascript">
@@ -209,14 +198,8 @@
             </table>
         </div>
 
-    <div id="footer" align="center"></div>
-    <script type="text/javascript">                        
-    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-sw-ckn");
-    </script>
-
-    </div>
-
-    <div class="center-right">
+    </td>
+    <td valign="top" width="30%">
         <h2>Links to other Networks</h2>
            <ul class="navbar">
                 <table>
@@ -308,6 +291,7 @@
                     <p>Choose <a href="/csc/media/html/stn_id_system_docu.html" onClick="return popup_window(this, 'Networks')"><font color="#006666">Network ID</font></a>!</td>
                     </div>
                 {%endif%}
-    </div>
+    </td>
+    </table>
 
 {%endblock%}

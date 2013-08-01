@@ -14,7 +14,8 @@
     <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
     <a href="{{TOOLS_URL}}station/metagraph/">Station Metadata Graphs</a></p>
 
-    <div class="center-left" style="border:none;">
+    <table cellpadding="20">
+    <td valign="top" width="30%">
         <div id='form1'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -36,9 +37,8 @@
             <input type="submit" value="Submit" name="form_meta"/>
             </form>
         </div>
-    </div>
-
-    <div class="center" style="border:none;background-color:X^H#947e6e;">
+    </td>
+    <td valign="top" width="70%">
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
@@ -96,8 +96,8 @@
             <a href="{{DATA_URL}}station/?stn_id={{station_meta.coop_id}}&start_date=por&end_date=por&elements=maxt,mint,pcpn,snow,snwd">Get raw data behind these plots here!</a>
         {%endif%}
 
-    </div>
-
+    </td>
+    </table>
   <!-- Footer -->
 <!--
   <div id="footer" align="center"></div>

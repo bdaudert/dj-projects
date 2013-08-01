@@ -12,7 +12,8 @@
     <a href="{{TOOLS_URL}}gridded/">GRID TOOLS></a>
     <a href="{{TOOLS_URL}}gridded/clim_sum_maps/">Climate Summary Maps</a></p>
 
-    <div class="major-left">
+    <table cellpadding="20">
+    <td valign="top" width="30%">
     {%if not hide_form0%}
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
@@ -81,9 +82,8 @@
         </script>
     {%endif%}
 
-    </div><!--end center-left-->
-
-    <div class="center">
+    </td>
+    <td valign="top" width="70%">
         <div id=tool_info_head></div>
             <script type="text/javascript">            
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
@@ -168,7 +168,8 @@
         </script>
         {%endif%}
 
-       </div><!--end center -->
+       </td>
+       </table>
 
   <!-- Footer -->
 <!--

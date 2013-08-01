@@ -16,8 +16,8 @@
     <a href="{{TOOLS_URL}}station/sodxtrmts/visualize/">Time Series Plots - Monthly Summaries of Extremes</a>
 
 </p>
-
-    <div class="center-left" style="border:none;">
+    <table cellpadding="20">
+    <td valign="top" width="40%">
         <p> 
         {%for key_val in header%}
             {%if key_val%}
@@ -56,9 +56,8 @@
         <input type="submit" value="Submit" name="form0"/>
         </form>
         </div>
-    </div>
-    
-    <div class="major-right">
+    </td>
+    <td valign="top" width="60%">
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
@@ -195,7 +194,8 @@
             <div align="center" id="container" style="height:{{height}}px;width:{{width}}px;"></div>
             <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts-visualize.js"></script>
         {%endif%}
-    </div><!--end center-->
+    </td>
+    </table>
 
 
   <!-- Footer -->

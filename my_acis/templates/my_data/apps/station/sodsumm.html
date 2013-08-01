@@ -14,7 +14,8 @@
     <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
     <a href="{{TOOLS_URL}}station/sodsumm/">Monthly/Seasonal Climate Summaries</a></p>
 
-    <div class="center-left" style="border:none;">
+    <table cellpadding="10">
+    <td valign="top" width="20%">
         <div id='form1'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -39,8 +40,8 @@
             <input type="submit" value="Submit" name="form1"/>
             </form>
         </div>
-    </div>
-
+    </td>
+    <td valign="top" width="80%">
     <div class="center" style="border:none;background-color:X^H#947e6e;">
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
@@ -152,8 +153,8 @@
             {%endif%}
        {%endif%}
     
-    </div><!-- end center-->
-
+    </td><!-- end center-->
+    </table>
   <!-- Footer -->
 <!--
   <div id="footer" align="center"></div>

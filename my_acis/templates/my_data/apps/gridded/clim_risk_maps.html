@@ -12,7 +12,8 @@
     <a href="{{TOOLS_URL}}gridded/">GRID TOOLS></a>
     <a href="{{TOOLS_URL}}gridded/clim_risk_maps/">Climate Risk Maps</a></p>
 
-    <div class="major-left">
+    <table cellpadding="20">
+    <td valign="top" width="30%">
     {%if not hide_form0%}
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
@@ -104,9 +105,8 @@
         </script>
     {%endif%}
 
-    </div><!--end center-left-->
-
-    <div class="major-right">
+    </td>
+    <td valign="top" width="70%">
         <h2 class="error">This page is under development!</h2> <img alt=Construction" title="Construction" src="{{MEDIA_URL}}img/Construction.png">
         <div id=tool_info_head></div>
             <script type="text/javascript">            
@@ -171,8 +171,8 @@
             initialize_polygon_map()
         </script>
         {%endif%}
-       </div><!--end center -->
-
+    </td><!--end center -->
+    </table>
   <!-- Footer -->
 <!--
     <div id="footer" align="center"></div>

@@ -610,7 +610,7 @@ function initialize_polygon_map() {
                     polCoords.push(lon);
                     polCoords.push(lat);
                 }
-                document.getElementById("polygon").value = polCoords;
+                document.getElementById("shape").value = polCoords;
             }
             if (e.type == google.maps.drawing.OverlayType.RECTANGLE){
                 var bounds=newShape.getBounds();

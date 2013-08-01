@@ -224,7 +224,7 @@ $(function () {
                         }
                     }
                     var series = {'pointStart':Date.UTC(parseInt(datadict.start_date),month_idx,01),'pointInterval':Interval,marker:{symbol:marker_type}};
-                    series['name'] = running_mean_years.toString() + 'Year Running Mean';
+                    series['name'] = running_mean_years.toString() + '-Year Running Mean';
                     series['data'] = running_mean_data;
                     series['color'] = 'red';
                     series['marker'] = {enabled:false}

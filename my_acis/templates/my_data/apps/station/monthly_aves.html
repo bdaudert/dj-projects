@@ -11,8 +11,9 @@
     <a href="{{TOOLS_URL}}">TOOLS></a>
     <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
     <a href="{{TOOLS_URL}}station/monthly_aves/">Monthly Averages</a></p>
-
-    <div class="center-left" style="border:none;">
+    
+    <table cellpadding="20">
+    <td valign="top" width="30%">
         <div id='form'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -59,9 +60,9 @@
             </div>
             <a target="_blank" href="{{DATA_URL}}station/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}">Get raw data behind this graphic here!</a>
         {%endif%}
-    </div>
+    </td>
+    <td valign="top" width="70%">
 
-    <div class="wide-right" style="border:none;">
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
@@ -125,7 +126,8 @@
         {%if error%}
             <p class="error">{{error}}</p>
         {%endif%}
-    </div>
+    </td>
+    </table>
 
   <!-- Footer -->
   <!--
