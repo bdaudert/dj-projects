@@ -995,7 +995,7 @@ def clim_sum_maps(request):
 
 def clim_risk_maps(request):
     context = {
-        'title': 'Climate Risk Maps',
+        'title': 'Climate Probability Maps',
         'icon':'ToolProduct.png'
     }
     element = request.GET.get('element', None)
@@ -1036,7 +1036,7 @@ def clim_risk_maps(request):
             if form0.cleaned_data['select_grid_by'] == 'bbox':
                 context['bounding_box'] = '-115,34,-114,35'
                 context['need_bbox_map'] = True
-            if form0.cleaned_data['select_grid_by'] == 'polygon':
+            if form0.cleaned_data['select_grid_by'] == 'shape':
                 context['need_polymap'] = True
                 context['shape'] = '-115,34, -115, 35,-114,35, -114, 34'
     if 'form1' in request.POST:
@@ -1261,7 +1261,7 @@ def station_locator_app(request):
 ######################
 def sodxtrmts(request):
     context = {
-        'title': 'Monthly Summaries of Extremes (Sodxtrmts)',
+        'title': 'Monthly Summary Time Series',
         'icon':'ToolProduct.png'
         }
     json_file = request.GET.get('json_file', None)

@@ -46,25 +46,37 @@
                 {%else%}
                 <tr>
                     <td>{{field.label}}:</td>
-                    {%if field.label == "Bounding box" and bounding_box %}
-                        <td><input type="text" name="bounding_box" id="bounding_box" value="{{bounding_box}}"></td>
+                    {%ifequal field.label "Shape" %}
+                        <td><input type="text" name="shape" id="shape" value="{{shape}}"></td>
                     {%else%}
-                        {%if field.label == "Polygon" %}
-                            <td><input type="text" name="shape" id="shape" value="{{shape}}"></td>
-                        {%else%}
-                            <td>{{field}}</td>
-                        {%endif%}
-                    {%endif%}
+                        <td>{{field}}</td>
+                    {%endifequal%}
+                    
                     <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                    {%if field.label == "Grid"%}
-                        <div class="pop-up">
-                        <img alt="GriddedDataDocu" title="GriddedDataDocu" src="{{MEDIA_URL}}img/gridded_datasets_docu.png" id="gridded_datasets_docu.png" width="450" height="600" border="0">
-                        </div>
-                    {%else%}
-                        <div class="pop-up"><p>{{field.help_text}}</p></div>
-                    {%endif%}
+                {%if field.label == "Grid"%}
+                    <div class="pop-up">
+                    <img alt="GriddedDataDocu" title="GriddedDataDocu" src="{{MEDIA_URL}}img/gridded_datasets_docu.png" id="gridded_datasets_docu.png" width="450" hei
+ght="600" border="0">
+                    </div>
+                {%else%}
+                    <div class="pop-up"><p>{{field.help_text}}</p></div>
+                {%endif%}
                     </td>
                 </tr>
+
+                    {%ifequal field.label "County" %}
+                    <tr><td></td><td align="right"><a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a></td><td></td</tr>
+                {%endifequal%}
+                {%ifequal field.label "Climate division" %}
+                    <tr><td></td><td align="right"><a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a></td><td></td</tr>
+                {%endifequal%}
+                {%ifequal field.label "County warning area" %}
+                    <tr><td></td><td align="right"><a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a></td><td></td></tr>
+                {%endifequal%}
+                {%ifequal field.label "Basin" %}
+                    <tr><td></td><td align="right"><a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a></td><td></td></tr>
+                {%endifequal%}
+                    
                {%if field.errors%}
                  <tr><td></td><td>{{field.errors}}</td><td></td></tr>
                 {%endif%}
@@ -137,7 +149,7 @@
                     <p><b>Select grid by</b> = "State". Enter a US state of choice.</p>                    
                     <p><b>Select grid by</b> = "Bounding Box". Find data for all stations in a bounding box of your choice.                         <p>A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. 
                     Please enter them in this order OR better, use the map interface to define your bounding box.</p>
-                    <p><b>Select grid by</b> = "Polygon". Draw a custom polygon via the map interface.</p>
+                    <p><b>Select grid by</b> = "Shape". Draw a custom shape via the map interface.</p>
                 More to come soon ...
             </p>
         </div>

@@ -593,14 +593,14 @@ function initialize_polygon_map() {
         });
 
         google.maps.event.addListener(drawingManager, 'overlaycomplete', function(e) {
+            var newShape = e.overlay;
+            newShape.type = e.type;
             if (e.type != google.maps.drawing.OverlayType.MARKER) {
             // Switch back to non-drawing mode after drawing a shape.
             drawingManager.setDrawingMode(null);
 
             // Add an event listener that selects the newly-drawn shape when the user
             // mouses down on it.
-            var newShape = e.overlay;
-            newShape.type = e.type;
             if (e.type == google.maps.drawing.OverlayType.POLYGON || e.type == google.maps.drawing.OverlayType.POLYLINE) {
                 var polygon = newShape.getPath();
                 polCoords = [];
@@ -619,17 +619,25 @@ function initialize_polygon_map() {
                 var s = precise_round(bounds.getSouthWest().lat(),2);
                 var e = precise_round(bounds.getNorthEast().lng(),2);
                 var n = precise_round(bounds.getNorthEast().lat(),2);
-                document.getElementById("bounding_box").value = w + ',' + s + ',' + e + ',' + n;
+                document.getElementById("shape").value = w + ',' + s + ',' + e + ',' + n;
             }
             if (e.type == google.maps.drawing.OverlayType.CIRCLE){
-                center = newShape.getCenter();
-                radius = newShape.getRadius();
+                var center = newShape.getCenter();
+                var radius = newShape.getRadius();
+                document.getElementById("shape").value = precise_round(center.lng(),2) + ',' + precise_round(center.lat(),2) + ',' + precise_round(radius,2);
             }
             google.maps.event.addListener(newShape, 'click', function() {
               setSelection(newShape);
             });
             setSelection(newShape);
           }
+          /*
+          else{ //MARKER
+            var lat = e.latLng.lat();
+            var lon = e.latLng.lng();
+            document.getElementById("shape").value = precise_round(lon,2) + ',' + precise_round(lat,2);
+          }
+         */
         });
 
         // Clear the current selection when the drawing mode is changed, or when the

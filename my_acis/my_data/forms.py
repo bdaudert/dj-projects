@@ -140,6 +140,15 @@ ACIS_ELEMENT_CHOICES_SHORT = (
         ('cdd', 'Cooling Degree Days(Base 65F)'),
 )
 
+GRID_FIND_CHOICES = (
+        ('county', 'County FIPS code'),
+        ('climdiv', 'Climate Division'),
+        ('cwa', 'County Warning Area (CWA)'),
+        ('basin', 'Basin'),
+        ('state', 'State'),
+        ('shape', 'Custom Shape'),
+)
+
 #StnFinder
 STN_FIND_CHOICES = (
         ('stnid', 'Individual station'),
@@ -857,7 +866,7 @@ class MonthlyAveragesForm(forms.Form):
         self.fields['end_date'] = MyDateField(max_length=10, required = False, initial='POR', help_text=HELP_TEXTS['date_por'])
 
 class ClimateRiskForm0(forms.Form):
-        select_grid_by = forms.ChoiceField(choices=([('state', 'State'),('bbox', 'Bounding Box'), ('polygon', 'Polygon')]), required=False, initial='state', help_text=HELP_TEXTS['select_stations_by'])
+        select_grid_by = forms.ChoiceField(choices=GRID_FIND_CHOICES, required=False, initial='shape', help_text=HELP_TEXTS['select_stations_by'])
         element = forms.ChoiceField(choices=CLIM_RISK_ELEMENT_CHOICES, required=False, initial='maxt', help_text='Climate Element')
 
 
@@ -881,16 +890,20 @@ class ClimateRiskForm1(forms.Form):
 
         self.fields['select_grid_by'] = forms.CharField(required=False, initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_grid_by'])
 
-        if select_grid_by == 'polygon':
-            self.fields['polygon'] = PolyField(required=False,initial='-115,34, -115, 35,-114,35, -114, 34', help_text='Use the map interface to select your polygon.')
+        if select_grid_by == 'shape' or bounding_box is not None:
+            self.fields['shape'] = PolyField(required=False,initial='-115,34, -115, 35,-114,35, -114, 34', help_text='Use the map interface to select your polygon.')
         elif select_grid_by == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, initial='NV',help_text='US state.')
-        elif select_grid_by == 'bbox':
-            self.fields['bounding_box'] = BBoxField(required=False,initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
+        elif select_grid_by == 'county':
+            self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='08051', help_text='Valid US county identifier.')
+        elif select_grid_by == 'climdiv':
+            self.fields['climate_division'] = forms.CharField(required=False,max_length=4, min_length=4, initial='NV01', help_text='Valid US climate division identifier.')
+        elif select_grid_by == 'cwa':
+            self.fields['county_warning_area'] = forms.CharField(required=False,max_length=3, initial='PUB', help_text='US county warning area identifier. Both upper and lower case are valid input formats.')
+        elif select_grid_by == 'basin':
+            self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='10180002', help_text='Valid US darinage basin identifier.')
         elif state is not None:
             self.fields['state'] = forms.ChoiceField(required=False, choices=STATE_CHOICES, initial=state, help_text='US state.')
-        elif bounding_box is not None:
-            self.fields['bounding_box'] = BBoxField(required=False,initial=bounding_box, help_text=HELP_TEXTS['bbox'])
         self.fields['element'] = forms.ChoiceField(choices=CLIM_RISK_ELEMENT_CHOICES,initial=element, help_text='Climate Element')
         self.fields['element'].widget.attrs = {'readonly':True, 'style':readonly_style}
         if start_date is None:
