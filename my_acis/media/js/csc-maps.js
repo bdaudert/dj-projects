@@ -626,18 +626,15 @@ function initialize_polygon_map() {
                 var radius = newShape.getRadius();
                 document.getElementById("shape").value = precise_round(center.lng(),2) + ',' + precise_round(center.lat(),2) + ',' + precise_round(radius,2);
             }
-            google.maps.event.addListener(newShape, 'click', function() {
+          }
+          else{ //MARKER
+            pos = newShape.position;
+            document.getElementById("shape").value = precise_round(pos.lng(),2) + ',' + precise_round(pos.lat(),2);
+          }
+        google.maps.event.addListener(newShape, 'click', function() {
               setSelection(newShape);
             });
-            setSelection(newShape);
-          }
-          /*
-          else{ //MARKER
-            var lat = e.latLng.lat();
-            var lon = e.latLng.lng();
-            document.getElementById("shape").value = precise_round(lon,2) + ',' + precise_round(lat,2);
-          }
-         */
+        setSelection(newShape);
         });
 
         // Clear the current selection when the drawing mode is changed, or when the
