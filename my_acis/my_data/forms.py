@@ -140,12 +140,18 @@ ACIS_ELEMENT_CHOICES_SHORT = (
         ('cdd', 'Cooling Degree Days(Base 65F)'),
 )
 
+'''
 GRID_FIND_CHOICES = (
         ('county', 'County FIPS code'),
         ('climdiv', 'Climate Division'),
         ('cwa', 'County Warning Area (CWA)'),
         ('basin', 'Basin'),
         ('state', 'State'),
+        ('shape', 'Custom Shape'),
+)
+'''
+
+GRID_FIND_CHOICES = (
         ('shape', 'Custom Shape'),
 )
 
@@ -867,7 +873,7 @@ class MonthlyAveragesForm(forms.Form):
 
 class ClimateRiskForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=GRID_FIND_CHOICES, required=False, initial='shape', help_text=HELP_TEXTS['select_stations_by'])
-        element = forms.ChoiceField(choices=CLIM_RISK_ELEMENT_CHOICES, required=False, initial='maxt', help_text='Climate Element')
+        element = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES, required=False, initial='maxt', help_text='Climate Element')
 
 
 class ClimateRiskForm1(forms.Form):
@@ -904,7 +910,7 @@ class ClimateRiskForm1(forms.Form):
             self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='10180002', help_text='Valid US darinage basin identifier.')
         elif state is not None:
             self.fields['state'] = forms.ChoiceField(required=False, choices=STATE_CHOICES, initial=state, help_text='US state.')
-        self.fields['element'] = forms.ChoiceField(choices=CLIM_RISK_ELEMENT_CHOICES,initial=element, help_text='Climate Element')
+        self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES,initial=element, help_text='Climate Element')
         self.fields['element'].widget.attrs = {'readonly':True, 'style':readonly_style}
         if start_date is None:
             self.fields['start_date'] = MyDateField(required = False, initial=begin, help_text=HELP_TEXTS['date'])

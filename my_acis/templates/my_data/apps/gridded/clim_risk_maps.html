@@ -88,7 +88,7 @@ ght="600" border="0">
         </div> 
     {%endif%} 
 
-    {%if need_bbox_map  and  figure_file%}
+    {%if need_bbox_map  and  results%}
         <p class="error">Click and drag to define your Bounding Box!</p>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
         <div id="map" style="width: 100%; height:400px;"></div>
@@ -97,7 +97,7 @@ ght="600" border="0">
         </script>
     {%endif%}
 
-    {%if need_polymap and figure_file%}
+    {%if need_polymap and results%}
         <div id="panel">
             <div id="color-palette"></div>
             <div>
@@ -153,9 +153,10 @@ ght="600" border="0">
                 More to come soon ...
             </p>
         </div>
-        
-
-        {%if need_bbox_map and not figure_file%}
+       
+        <p>Results: {{results}}</p> 
+        <p>BBOX: {{bbox}}</p>
+        {%if need_bbox_map and not results%}
         <p class="error">Click and drag to define your Bounding Box!</p>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
         <div id="map" style="width: 100%; height:400px;"></div>
@@ -164,7 +165,7 @@ ght="600" border="0">
         </script>
         {%endif%}
 
-        {%if need_polymap and not figure_file%}
+        {%if need_polymap and not results%}
         <div id="panel">
             <div id="color-palette"></div>
             <div>

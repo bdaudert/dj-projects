@@ -1043,9 +1043,42 @@ def clim_risk_maps(request):
         form1 = set_as_form(request,'ClimateRiskForm1')
         context['form1']  = form1
         context['hide_form0'] = True
-
         if form1.is_valid():
-            pass
+            if not 'shape' in form1.cleaned_data:
+                context['results'] = "Only shape is supported right now"
+            shape = form1.cleaned_data['shape'].split(',')
+            shape = [float(s) for s in shape]
+            #find enclosing bbok
+            lons = [s for idx,s in enumerate(shape) if idx%2 == 1]
+            lats = [s for idx,s in enumerate(shape) if idx%2 == 0]
+            try:
+                bbox = str(min(lons)) + ',' + str(max(lons)) + ',' + str(min(lats)) + ',' + str(max(lats))
+            except:
+                bbox = ''
+            context['bbox'] = bbox
+            if bbox!= '':
+                params = {
+                    'bbox':bbox,
+                    'sdate':form1.cleaned_data['start_date'],
+                    'edate':form1.cleaned_data['start_date'],
+                    'grid':form1.cleaned_data['grid'],
+                    'elems':form1.cleaned_data['element'],
+                    'meta':"ll,elev"
+                }
+                try:
+                    req = AcisWS.GridData(params)
+                    context['results'] = 'Data found!'
+                    #context['results'] = req['data']
+                except Exception, e:
+                    context['results'] = 'Error in data request: ' + str(e)
+            else:
+                context['results'] = 'No data found!'
+            if len(shape) == 3: #circle
+                pass
+                #point_in = WRCCUtils.point_in_circle(x,y,shape)
+            else:
+                pass
+                #point_in = WRCCUtils.point_in_poly(x,y,shape)
     return render_to_response('my_data/apps/gridded/clim_risk_maps.html', context, context_instance=RequestContext(request))
 
 def grid_point_time_series(request):
