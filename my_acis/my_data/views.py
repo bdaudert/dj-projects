@@ -1014,7 +1014,7 @@ def clim_risk_maps(request):
 
     if initial:
         if element and start_date and end_date:
-            form1 = forms.ClimateMapForm1(initial=initial)
+            form1 = forms.ClimateRiskForm1(initial=initial)
             context['form1'] = form1
             context['hide_form0'] = True
             context['form1_ready'] = True
@@ -1037,25 +1037,25 @@ def clim_risk_maps(request):
                 context['need_polymap'] = True
                 context['shape'] = '-115,34, -115, 35,-114,35, -114, 34'
     if 'form1' in request.POST:
+        context['shape'] = str(request.POST['shape'])
         form1 = set_as_form(request,'ClimateRiskForm1')
         context['form1']  = form1
         context['hide_form0'] = True
+        context['form1_ready'] = True
         if form1.is_valid():
-            if not 'shape' in form1.cleaned_data:
-                context['results'] = "Only shape is supported right now"
             shape = form1.cleaned_data['shape'].split(',')
             shape = [float(s) for s in shape]
             #find enclosing bbox
-            lons_shape = [s for idx,s in enumerate(shape) if idx%2 == 1]
-            lats_shape = [s for idx,s in enumerate(shape) if idx%2 == 0]
-            try:
-                bbox = str(min(lons_shape)) + ',' + str(max(lons_shape)) + ',' + str(min(lats_shape)) + ',' + str(max(lats_shape))
-            except:
-                bbox = ''
-            context['bbox'] = bbox
-            if bbox == '':
-                context['results'] = 'No data found!'
-                return render_to_response('my_data/apps/gridded/clim_risk_maps.html', context, context_instance=RequestContext(request))
+            if len(shape) == 3:
+                bbox = str(shape[0] - shape[2]) + ',' + str(shape[1] - shape[2]) + str(shape[0] + shape[2]) + ',' + str(shape[1] + shape[2])
+            else:
+                lons_shape = [s for idx,s in enumerate(shape) if idx%2 == 0]
+                lats_shape = [s for idx,s in enumerate(shape) if idx%2 == 1]
+                try:
+                    bbox = str(min(lons_shape)) + ',' + str(min(lats_shape)) + ',' + str(max(lons_shape)) + ',' + str(max(lats_shape))
+                except:
+                    context['results'] = 'No data found!'
+                    return render_to_response('my_data/apps/gridded/clim_risk_maps.html', context, context_instance=RequestContext(request))
             #Find data for enclosing bounding box
             params = {
                 'bbox':bbox,
@@ -1067,34 +1067,51 @@ def clim_risk_maps(request):
             }
             try:
                 req = AcisWS.GridData(params)
-                #context['results'] = req['data']
-                lats_bbox = req['meta']['lat']
-                lons_bbox  =  req['meta']['lon']
+                #Find unique lats,lons
+                lats_bbox_unique = [lat_grid[0] for lat_grid in req['meta']['lat']]
+                lons_bbox_unique = req['meta']['lon'][0]
+                #lats_bbox_unique = list(set(lats_bbox_list))
+                #lons_bbox_unique = list(set(lons_bbox_list))
             except Exception, e:
                 context['results'] = 'Error in data request: ' + str(e)
-                lats_bbox = []
-                lons_bbox = []
+                return render_to_response('my_data/apps/gridded/clim_risk_maps.html', context, context_instance=RequestContext(request))
 
-            if not lats_bbox or not lons_bbox:
+            if not lats_bbox_unique or not lons_bbox_unique:
                 context['results'] = 'No data found!'
                 return render_to_response('my_data/apps/gridded/clim_risk_maps.html', context, context_instance=RequestContext(request))
+
             #Find data lying within shape
             if len(shape) == 3: #circle
                 poly = shape
                 PointIn = getattr(WRCCUtils,'point_in_circle')
             else: #polygon
-                poly = [(shape[2*idx], shape[2*idx+1]) for idx in range(len(shape)/2)]
+                poly = [(shape[2*idx],shape[2*idx+1]) for idx in range(len(shape)/2)]
                 PointIn = getattr(WRCCUtils,'point_in_poly')
             data_poly = [[str(dat[0])] for dat in req['data']]
-            for grid_idx, lat_grid in enumerate(lats_bbox):
-                for lat_idx, lat in enumerate(lat_grid):
-                    lon = lons_bbox[grid_idx][lat_idx]
-                    #Check if point lies in shape
-                    point_in = PointIn(lat, lon, poly)
+            values_poly = [[] for dat in req['data']] #list of list holding just the data values for each day at each gridpoint
+            summary_time_series = [[str(dat[0])] for dat in req['data']]
+            #Check each bbox unique lat, lon combintation for containment in the polygon
+            p_in = []
+            for lat_idx,lat in enumerate(lats_bbox_unique):
+                for lon_idx, lon in enumerate(lons_bbox_unique):
+                    point_in = PointIn(lon, lat, poly)
                     if point_in:
-                        for date_idx, date_data in eumerate(req['data']):
-                            data_poly[date_idx].append([lat, lon, date_data[1][grid_idx][lat_idx]])
-            context['results'] = data_poly
+                        #point lies witin shape, add data to data_poly
+                        for date_idx, date_data in enumerate(req['data']):
+                            data_poly[date_idx].append([round(lon,2), round(lat,2), date_data[1][lat_idx][lon_idx]])
+                            values_poly[date_idx].append(date_data[1][lat_idx][lon_idx])
+            #Perform Summary Analysis
+            for date_idx, val_list in enumerate(values_poly):
+                if form1.cleaned_data['summary'] == 'sum':
+                    summary_time_series[date_idx].append(round(sum(val_list),2))
+                elif form1.cleaned_data['summary'] == 'max':
+                    summary_time_series[date_idx].append(round(max(val_list),2))
+                elif form1.cleaned_data['summary'] == 'min':
+                    summary_time_series[date_idx].append(round(min(val_list),2))
+                elif form1.cleaned_data['summary'] == 'mean':
+                    if val_list:
+                        summary_time_series[date_idx].append(round(sum(val_list) / len(val_list),2))
+            context['results'] = summary_time_series
     return render_to_response('my_data/apps/gridded/clim_risk_maps.html', context, context_instance=RequestContext(request))
 
 def grid_point_time_series(request):

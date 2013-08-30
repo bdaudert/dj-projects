@@ -349,7 +349,12 @@ ul.navbar a {
     color:#FF007F;
     font-size:4;
 }
-  
+
+img.info {
+    width: 120px;
+    height:34px;
+}
+
 img.icon {
     width: 30px;
     height:30px;

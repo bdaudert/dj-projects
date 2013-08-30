@@ -51,7 +51,6 @@
                     {%else%}
                         <td>{{field}}</td>
                     {%endifequal%}
-                    
                     <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                 {%if field.label == "Grid"%}
                     <div class="pop-up">
@@ -153,9 +152,7 @@ ght="600" border="0">
                 More to come soon ...
             </p>
         </div>
-       
-        <p>Results: {{results}}</p> 
-        <p>BBOX: {{bbox}}</p>
+        <p>Results: {{results}}</p>
         {%if need_bbox_map and not results%}
         <p class="error">Click and drag to define your Bounding Box!</p>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />

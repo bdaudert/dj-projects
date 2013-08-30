@@ -882,6 +882,7 @@ class ClimateRiskForm1(forms.Form):
         element = kwargs.get('initial', {}).get('element', None)
         state = kwargs.get('initial', {}).get('state', None)
         bounding_box = kwargs.get('initial', {}).get('bounding_box', None)
+        shape = kwargs.get('initial', {}).get('shape', None)
         start_date = kwargs.get('initial', {}).get('start_date', None)
         end_date = kwargs.get('initial', {}).get('end_date', None)
         super(ClimateRiskForm1, self).__init__(*args, **kwargs)
@@ -890,14 +891,17 @@ class ClimateRiskForm1(forms.Form):
         if element is None:element = self.data.get('element')
         if state is None:state=self.data.get('state')
         if bounding_box is None:bounding_box=self.data.get('bounding_box')
+        if shape is None:shape = self.data.get('shape')
         if start_date is None:start_date=self.data.get('start_date')
         if end_date is None:end_date=self.data.get('end_date')
 
 
         self.fields['select_grid_by'] = forms.CharField(required=False, initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_grid_by'])
-
-        if select_grid_by == 'shape' or bounding_box is not None:
-            self.fields['shape'] = PolyField(required=False,initial='-115,34, -115, 35,-114,35, -114, 34', help_text='Use the map interface to select your polygon.')
+        if select_grid_by == 'shape':
+            if shape is not None:
+                self.fields['shape'] = PolyField(required=False,initial=shape, help_text='Use the map interface to select your polygon.')
+            else:
+                self.fields['shape'] = PolyField(required=False,initial='-115,34, -115, 35,-114,35, -114, 34', help_text='Use the map interface to select your polygon.')
         elif select_grid_by == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, initial='NV',help_text='US state.')
         elif select_grid_by == 'county':
