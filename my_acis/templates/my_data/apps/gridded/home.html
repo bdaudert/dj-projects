@@ -39,9 +39,9 @@
                 <script type="text/javascript">                        
                 $("#Docu_CLIM_SUM_MAP").load("{{MEDIA_URL}}html/commons.html #Docu_CLIM_SUM_MAP");
                 </script>
-           <div class="docu" id="Docu_CLIM_RISK_MAP" style="display:none;"></div>
+           <div class="docu" id="Docu_CLIM_PROB_MAP" style="display:none;"></div>
                 <script type="text/javascript">                        
-                $("#Docu_CLIM_RISK_MAP").load("{{MEDIA_URL}}html/commons.html #Docu_CLIM_RISK_MAP");
+                $("#Docu_CLIM_PROB_MAP").load("{{MEDIA_URL}}html/commons.html #Docu_CLIM_PROB_MAP");
                 </script>
            <div class="docu" id="Docu_NONE" style="display:none;"></div>
                 <script type="text/javascript">                        
@@ -53,33 +53,40 @@
             <p class="error" align ="center">(* Beta version)</p>
             <table cellspacing="10">
             <tr>
-                <td>
-                    <p class="trigger">* Climate Probability Maps <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CLIM_RISK_MAP')"><br /> <font color="red">Coming Soon!</font></p>
-                    <div class="pop-up" id="sodxtrmts">
-                    <p>Generates climate risk maps for different temperature and precipitation with user chosen parameters.</p>
-                    </div>
-                </td>
-                <td>
-                    <p class="trigger">* Climate Summary Maps <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CLIM_SUM_MAP')"></p>
-                    <div class="pop-up">
-                        <p>Generates climate summary maps for different elements, time ranges and region using NRCC interpolated data.</p>
-                    </div>
-                </td>
-                <td>
-                    <p class="trigger">Gridpoint Time Series <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_GP_TS')"></p>
+                <td valign="top">
+                    <p class="trigger">Gridpoint<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_GP_TS')"><br />Time Series</p>
                     <div class="pop-up">
                         <p>Generates time series data and graph for a chosen grid point.</p>
                     </div>
+                    <a  href="{{TOOLS_URL}}gridded/grid_point_time_series/"><img class="sidebar" alt="GPTimeSeries" title="GPTimeSeries" src="{{MEDIA_URL}}img/GPTimeSeries.png"></a>
+                </td>
+                <td valign="top">
+                    <p class="trigger">* Area Time Series<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_AREA_TIME_SERIES')"></font></p>
+                    <div class="pop-up" id="area_time_series">
+                    <p>Generates climate summary time series over custom search areas.</p>
+                    </div>
+                    <br />
+                    <a  href="{{TOOLS_URL}}gridded/area_time_series/"><img class="sidebar" alt="RiskMaps" title="RiskMaps" src="{{MEDIA_URL}}img/Area_TS.png"></a>
+                </td>
+                <td valign="top">
                 </td>
             </tr>
             <tr>
-                <td>
-                    <a  href="{{TOOLS_URL}}gridded/clim_risk_maps/"><img class="sidebar" alt="RiskMaps" title="RiskMaps" src="{{MEDIA_URL}}img/HappyFace.png"></a>         </td>
-                <td>
+                <td valign="top">
+                    <p class="trigger">* Summary Maps <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CLIM_SUM_MAP')"></p>
+                    <div class="pop-up">                        
+                    <p>Generates climate summary maps for different elements, time ranges and region using NRCC interpolated data.</p>                          </div>
+                    <br />
                     <a  href="{{TOOLS_URL}}gridded/clim_sum_maps/"><img class="sidebar" alt="SummaryMaps" title="SummaryMaps" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
                 </td>
-                <td>
-                    <a  href="{{TOOLS_URL}}gridded/grid_point_time_series/"><img class="sidebar" alt="GPTimeSeries" title="GPTimeSeries" src="{{MEDIA_URL}}img/GPTimeSeries.png"></a>
+                <td valign="top">
+                    <p class="trigger">* Probability Maps <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CLIM_PROB_MAP')"><br /> <font color="red">Coming Soon!</font></p>
+                    <div class="pop-up" id="sodxtrmts">
+                    <p>Generates climate probability maps for different temperature and precipitation with user chosen parameters.</p>
+                    </div>
+                    <a  href="{{TOOLS_URL}}gridded/clim_prob_maps/"><img class="sidebar" alt="RiskMaps" title="RiskMaps" src="{{MEDIA_URL}}img/HappyFace.png"></a> 
+                </td>
+                <td valign="top">
                 </td>
             </tr>
             </table>

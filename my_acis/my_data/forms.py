@@ -140,18 +140,13 @@ ACIS_ELEMENT_CHOICES_SHORT = (
         ('cdd', 'Cooling Degree Days(Base 65F)'),
 )
 
-'''
 GRID_FIND_CHOICES = (
         ('county', 'County FIPS code'),
         ('climdiv', 'Climate Division'),
         ('cwa', 'County Warning Area (CWA)'),
         ('basin', 'Basin'),
         ('state', 'State'),
-        ('shape', 'Custom Shape'),
-)
-'''
-
-GRID_FIND_CHOICES = (
+        ('bbox', 'Bounding Box'),
         ('shape', 'Custom Shape'),
 )
 
@@ -183,6 +178,11 @@ STN_FINDER_LOGIC =(
     ('any_any', 'Any Elements, Any Dates'),
     ('all_all', 'All Elements, All Dates'),
     ('all_any', 'All Elements, Any Date'),
+    ('any_all', 'Any Element, All Dates'),
+)
+
+STN_FINDER_LOGIC_SHORT =(
+    ('any_any', 'Any Elements, Any Dates'),
     ('any_all', 'Any Element, All Dates'),
 )
 
@@ -357,7 +357,8 @@ class MyStateField(forms.CharField):
     def validate(self, states):
         states_list = states.split(',')
         for state in states_list:
-            if state not in WRCCData.fips_state_keys.keys() and state not in WRCCData.state_choices:
+            st = state.lower()
+            if st not in WRCCData.fips_state_keys.keys() and st not in WRCCData.state_choices:
                 raise forms.ValidationError('Need comma separated list of valid US states. Not a valid US State: %s' % state)
 #for background data requests, see GridDataForm3, StationDataForm3
 class MyNameField(forms.CharField):
@@ -564,10 +565,10 @@ class SodxtrmtsVisualizeForm(forms.Form):
     end_month = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial='02', required=False, help_text = 'End the visualization on this month.')
     summary = forms.ChoiceField(choices=WRCCData.SXTR_SUMMARY_CHOICES, initial='mean', help_text='How to summarize the months.')
     show_running_mean = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show running mean.')
-    running_mean_years = forms.IntegerField(initial=9,required=False, help_text='Years over which to compute the running mean.')
+    running_mean_years = forms.IntegerField(initial=9,required=False, help_text='Number of years over which to compute the running mean.')
     plot_incomplete_years = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='F', help_text='Calculate and plot values even if the "maximum number of days missing" threhsold is not met.')
     #Plot Options
-    graph_title = forms.CharField(required=False, initial='Use default', help_text='Enter a title to appear at the top of your graph.')
+    graph_title = forms.CharField(required=False, initial='Use default', help_text='Enter a title to appear at the top of your graph. Default will list station name/ID, climate element, summary and months.')
     image_size = forms.ChoiceField(choices=WRCCData.IMAGE_SIZES, initial='medium', help_text='Select an image size.')
     major_grid = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show major grid.')
     minor_grid = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show minor grid.')
@@ -651,6 +652,7 @@ class StationDataForm1(forms.Form):
         else:
             self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='dlm', help_text=HELP_TEXTS['data_format'])
             self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
+        self.fields['data_format'].widget.attrs = {'disabled':'disabled', 'style':readonly_style}
         if data_format in ['dlm', 'clm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
@@ -700,6 +702,7 @@ class StationDataForm3(forms.Form):
         else:
             self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='dlm', help_text=HELP_TEXTS['data_format'])
             self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
+        self.fields['data_format'].widget.attrs = {'disabled':'disabled', 'style':readonly_style}
         if data_format in ['dlm', 'clm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
@@ -771,6 +774,7 @@ class GridDataForm1(forms.Form):
         else:
             self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='dlm', help_text=HELP_TEXTS['data_format'])
             self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
+        self.fields['data_format'].widget.attrs = {'disabled':'disabled', 'style':readonly_style}
         if data_format in ['dlm', 'clm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
         if data_summary is None or data_summary == 'none' or select_grid_by == 'point':
@@ -824,6 +828,7 @@ class GridDataForm3(forms.Form):
         else:
             self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='dlm', help_text=HELP_TEXTS['data_format'])
             self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
+        self.fields['data_format'].widget.attrs = {'disabled':'disabled', 'style':readonly_style}
         if data_format in ['dlm', 'clm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
@@ -902,6 +907,11 @@ class ClimateRiskForm1(forms.Form):
                 self.fields['shape'] = PolyField(required=False,initial=shape, help_text='Use the map interface to select your polygon.')
             else:
                 self.fields['shape'] = PolyField(required=False,initial='-115,34, -115, 35,-114,35, -114, 34', help_text='Use the map interface to select your polygon.')
+        elif select_grid_by == 'bbox':
+            if bounding_box is not None:
+                self.fields['bounding_box'] = BBoxField(required=False,initial=bounding_box, help_text=HELP_TEXTS['bbox'])
+            else:
+                 self.fields['bounding_box'] = BBoxField(required=False,initial='-115,34,-114,34', help_text=HELP_TEXTS['bbox'])
         elif select_grid_by == 'state':
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, initial='NV',help_text='US state.')
         elif select_grid_by == 'county':
@@ -914,8 +924,11 @@ class ClimateRiskForm1(forms.Form):
             self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='10180002', help_text='Valid US darinage basin identifier.')
         elif state is not None:
             self.fields['state'] = forms.ChoiceField(required=False, choices=STATE_CHOICES, initial=state, help_text='US state.')
+
         self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES,initial=element, help_text='Climate Element')
-        self.fields['element'].widget.attrs = {'readonly':True, 'style':readonly_style}
+        self.fields['element'].widget.attrs = {'disabled':'disabled', 'style':readonly_style}
+        if element in ['hddxx','gddxx', 'cddxx']:
+            self.fields['base_temperature'] = forms.IntegerField(initial=65, help_text='Base temperature used to calculate degree days.')
         if start_date is None:
             self.fields['start_date'] = MyDateField(required = False, initial=begin, help_text=HELP_TEXTS['date'])
         else:
@@ -926,7 +939,17 @@ class ClimateRiskForm1(forms.Form):
             self.fields['end_date'] = MyDateField(required = False, initial=end_date, help_text=HELP_TEXTS['date'])
         self.fields['summary'] = forms.ChoiceField(choices=WRCCData.CLIM_RISK_SUMMARY_CHOICES, initial='mean',help_text='How to spatially summarize gridpoints lying in polygon.')
         self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
-
+        #Plot Options
+        self.fields['show_running_mean'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show running mean.')
+        self.fields['running_mean_days'] = forms.IntegerField(initial=9,required=False, help_text='Number of days over which to compute the running mean.')
+        self.fields['graph_title'] = forms.CharField(required=False, initial='Use default', help_text='Enter a title to appear at the top of your graph. Default will show information about the search area, e.g. polygon coordinates.')
+        self.fields['image_size'] = forms.ChoiceField(choices=WRCCData.IMAGE_SIZES, initial='medium', help_text='Select an image size.')
+        self.fields['show_major_grid'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show major grid lines.')
+        self.fields['show_minor_grid'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show minor grid lines.')
+        self.fields['connector_line'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Connect data points.')
+        self.fields['connector_line_width'] = forms.FloatField(initial=1, max_value=10, min_value=0, required=False,help_text='Choose the width of the connector line. Choose 0 if you only want to see markers. 10 is the maximum line widh allowed.')
+        self.fields['markers'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show markers at each data point.')
+        self.fields['marker_type'] = forms.ChoiceField(choices=WRCCData.MARKER_CHOICES, required=False, initial='diamond', help_text='.')
         '''
         if element == 'maxt':lower='50';upper='90';max_dec = 1
         if element == 'mint':lower='30';upper='70';max_dec = 1
@@ -1088,10 +1111,11 @@ class StationLocatorForm1(forms.Form):
             self.fields['states'] = MyStateField(initial='ca,nv,co,nm,az,ut', help_text='Comma separated list of US states. Both upper and lower case are valid input formats.')
         elif select_stations_by == 'bbox':
             self.fields['bounding_box'] = BBoxField(required=False,initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
+        self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='18900101',min_length=8, help_text=HELP_TEXTS['date'])
+        self.fields['end_date'] = MyDateField(max_length=10, required = False, initial=yesterday,min_length=8, help_text=HELP_TEXTS['date'])
         if element_selection == 'T':
             self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
-
-            self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='18900101',min_length=8, help_text=HELP_TEXTS['date'])
-            self.fields['end_date'] = MyDateField(max_length=10, required = False, initial=yesterday,min_length=8, help_text=HELP_TEXTS['date'])
             self.fields['constraints'] = forms.ChoiceField(choices=STN_FINDER_LOGIC, required=False, initial='any_any')
+        else:
+            self.fields['constraints'] = forms.ChoiceField(choices=STN_FINDER_LOGIC_SHORT, required=False, initial='any_any', help_text='Any Dates: At least one data record for at least one climate element can be found in date range. All Dates: data records for at least one climate element for all dates in date range can be found.')
 

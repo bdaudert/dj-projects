@@ -471,19 +471,19 @@ def data_gridded(request):
             #if (days > 1 and  'location' not in form1.cleaned_data.keys()) or (days > 366 and 'location' in form1.cleaned_data.keys()):
 
             if ('data_summary' in form1.cleaned_data.keys() and form1.cleaned_data['data_summary'] == 'none' and form1.cleaned_data['temporal_resolution'] == 'dly') or ('data_summary' not in form1.cleaned_data.keys()):
+
                 if (days > 7 and  'location' not in form1.cleaned_data.keys()):
                     context['large_request'] = \
                     'At the moment we do not support data requests that exceed 7 days for multiple station. Please limit your request to one grid point at a time or a date range of one week or less. Alternatively, you could summarize your data by using the data summary option. We will support larger requests in the near future. Thank you for your patience!'
-                    '''
-                    context['form2_ready'] = True
-                    context['large_request'] = \
-                    'You requested a large amount of data. Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
-                    initial_params_2 = form1.cleaned_data
+
+                    #context['form2_ready'] = True
+                    #context['large_request'] = \
+                    #'You requested a large amount of data. Please enter your name and e-mail address. We will notify you once your request has been processed and your data is availiable on our ftp server.'
+                    #initial_params_2 = form1.cleaned_data
                     #keep MultiElements format and MultiStnField format
-                    initial_params_2['elements'] = ','.join(initial_params_2['elements'])
-                    form2 = forms.GridDataForm3(initial=initial_params_2)
-                    context['form2'] = form2
-                    '''
+                    #initial_params_2['elements'] = ','.join(initial_params_2['elements'])
+                    #form2 = forms.GridDataForm3(initial=initial_params_2)
+                    #context['form2'] = form2
                     return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
             if 'location' in form1.cleaned_data.keys():
@@ -993,9 +993,16 @@ def clim_sum_maps(request):
         context['form1'] = form1
     return render_to_response('my_data/apps/gridded/clim_sum_maps.html', context, context_instance=RequestContext(request))
 
-def clim_risk_maps(request):
+def clim_prob_maps(request):
     context = {
         'title': 'Climate Probability Maps',
+        'icon':'ToolProduct.png'
+    }
+    return render_to_response('my_data/apps/gridded/clim_prob_maps.html', context, context_instance=RequestContext(request))
+
+def area_time_series(request):
+    context = {
+        'title': 'Area Time Series',
         'icon':'ToolProduct.png'
     }
     element = request.GET.get('element', None)
@@ -1036,83 +1043,170 @@ def clim_risk_maps(request):
             if form0.cleaned_data['select_grid_by'] == 'shape':
                 context['need_polymap'] = True
                 context['shape'] = '-115,34, -115, 35,-114,35, -114, 34'
+            if form0.cleaned_data['select_grid_by'] == 'bbox':
+                context['need_bbox_map'] = True
+                context['bounding_box'] = '-115,34,-114,34'
     if 'form1' in request.POST:
-        context['shape'] = str(request.POST['shape'])
+        if 'shape' in request.POST.keys():context['shape'] = str(request.POST['shape'])
+        if 'bounding_box' in request.POST.keys():context['bounding_box'] = str(request.POST['bounding_box'])
         form1 = set_as_form(request,'ClimateRiskForm1')
         context['form1']  = form1
         context['hide_form0'] = True
         context['form1_ready'] = True
         if form1.is_valid():
-            shape = form1.cleaned_data['shape'].split(',')
-            shape = [float(s) for s in shape]
-            #find enclosing bbox
-            if len(shape) == 3:
-                bbox = str(shape[0] - shape[2]) + ',' + str(shape[1] - shape[2]) + str(shape[0] + shape[2]) + ',' + str(shape[1] + shape[2])
-            else:
-                lons_shape = [s for idx,s in enumerate(shape) if idx%2 == 0]
-                lats_shape = [s for idx,s in enumerate(shape) if idx%2 == 1]
-                try:
-                    bbox = str(min(lons_shape)) + ',' + str(min(lats_shape)) + ',' + str(max(lons_shape)) + ',' + str(max(lats_shape))
-                except:
-                    context['results'] = 'No data found!'
-                    return render_to_response('my_data/apps/gridded/clim_risk_maps.html', context, context_instance=RequestContext(request))
-            #Find data for enclosing bounding box
+            if form1.cleaned_data['summary'] == 'sum':smry= 'Sum '
+            if form1.cleaned_data['summary'] == 'min':smry= 'Minimum '
+            if form1.cleaned_data['summary'] == 'max':smry= 'Maximum '
+            if form1.cleaned_data['summary'] == 'mean':smry= 'Mean '
+            #Set up data request params
             params = {
-                'bbox':bbox,
                 'sdate':form1.cleaned_data['start_date'],
                 'edate':form1.cleaned_data['end_date'],
                 'grid':form1.cleaned_data['grid'],
-                'elems':form1.cleaned_data['element'],
                 'meta':"ll,elev"
             }
+            if form1.cleaned_data['element'] in ['hddxx','gddxx', 'cddxx']:
+                element_name = WRCCData.acis_elements_dict[str(form1.cleaned_data['element'])[0:3]]['name_long'] + 'Base temperature ' + str(form1.cleaned_data['base_temperature'])
+                yAxisText = smry + ' ' + str(form1.cleaned_data['element'])[0:3] + str(form1.cleaned_data['base_temperature'])
+                params['elems'] = str(form1.cleaned_data['element'])[0:3] + str(form1.cleaned_data['base_temperature'])
+
+            else:
+                element_name = WRCCData.acis_elements_dict[str(form1.cleaned_data['element'])]['name_long']
+                yAxisText = smry + ' ' + WRCCData.acis_elements_dict[str(form1.cleaned_data['element'])]['name_long']
+                params['elems'] = form1.cleaned_data['element']
+            #Find search area param
+            if 'shape' in form1.cleaned_data.keys():
+                #Custom shape, need to find enclosing bbox
+                shape = form1.cleaned_data['shape'].split(',')
+                shape = [float(s) for s in shape]
+                #find enclosing bbox
+                if len(shape) == 3:
+                    graph_title = 'Circle (lat, lon, radius (meter)): ' + str(form1.cleaned_data['shape'])
+                    bbox = WRCCUtils.find_bbox_of_circle(shape[0], shape[1], shape[2])
+                else:
+                    graph_title = 'Custom Shape: ' + str(form1.cleaned_data['shape'])
+                    lons_shape = [s for idx,s in enumerate(shape) if idx%2 == 0]
+                    lats_shape = [s for idx,s in enumerate(shape) if idx%2 == 1]
+                    try:
+                        bbox = str(min(lons_shape)) + ',' + str(min(lats_shape)) + ',' + str(max(lons_shape)) + ',' + str(max(lats_shape))
+                    except:
+                        context['results'] = 'No data found!'
+                        return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
+                params['bbox'] = bbox
+            elif 'bounding_box' in form1.cleaned_data.keys():
+                graph_title = 'Bounding Box: ' + str(form1.cleaned_data['bounding_box'])
+                params['bbox'] = form1.cleaned_data['bounding_box']
+            elif 'county' in form1.cleaned_data.keys():
+                graph_title = 'County: ' + str(form1.cleaned_data['county'])
+                params['county'] = form1.cleaned_data['county']
+            elif 'climate_divison' in form1.cleaned_data.keys():
+                graph_title = 'Climate Division: ' + str(form1.cleaned_data['climate_division'])
+                params['climdiv'] = form1.cleaned_data['climate_divison']
+            elif 'basin' in form1.cleaned_data.keys():
+                graph_title = 'Basin: ' + str(form1.cleaned_data['basin'])
+                params['basin'] = form1.cleaned_data['basin']
+            elif 'county_warning_area' in form1.cleaned_data.keys():
+                graph_title = 'County Warning Area: ' + str(form1.cleaned_data['county_warning_area'])
+                params['cwa'] = form1.cleaned_data['county_warning_area']
+            elif 'state' in form1.cleaned_data.keys():
+                graph_title = 'State: ' + str(form1.cleaned_data['state'])
+                params['state'] = form1.cleaned_data['state']
+
+            #Overwrite graph_title if user specific
+            if form1.cleaned_data['graph_title'] != 'Use default':
+                graph_title = str(form1.cleaned_data['graph_title'])
+            #Find data
             try:
                 req = AcisWS.GridData(params)
                 #Find unique lats,lons
                 lats_bbox_unique = [lat_grid[0] for lat_grid in req['meta']['lat']]
                 lons_bbox_unique = req['meta']['lon'][0]
-                #lats_bbox_unique = list(set(lats_bbox_list))
-                #lons_bbox_unique = list(set(lons_bbox_list))
             except Exception, e:
                 context['results'] = 'Error in data request: ' + str(e)
-                return render_to_response('my_data/apps/gridded/clim_risk_maps.html', context, context_instance=RequestContext(request))
+                return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
 
             if not lats_bbox_unique or not lons_bbox_unique:
                 context['results'] = 'No data found!'
-                return render_to_response('my_data/apps/gridded/clim_risk_maps.html', context, context_instance=RequestContext(request))
+                return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
 
             #Find data lying within shape
-            if len(shape) == 3: #circle
-                poly = shape
-                PointIn = getattr(WRCCUtils,'point_in_circle')
-            else: #polygon
-                poly = [(shape[2*idx],shape[2*idx+1]) for idx in range(len(shape)/2)]
-                PointIn = getattr(WRCCUtils,'point_in_poly')
+            if 'shape' in form1.cleaned_data.keys():
+                if len(shape) == 3: #circle
+                    poly = shape
+                    PointIn = getattr(WRCCUtils,'point_in_circle')
+                else: #polygon
+                    poly = [(shape[2*idx],shape[2*idx+1]) for idx in range(len(shape)/2)]
+                    PointIn = getattr(WRCCUtils,'point_in_poly')
+            else:
+                poly = 'Not Needed'
+
             data_poly = [[str(dat[0])] for dat in req['data']]
             values_poly = [[] for dat in req['data']] #list of list holding just the data values for each day at each gridpoint
             summary_time_series = [[str(dat[0])] for dat in req['data']]
+
             #Check each bbox unique lat, lon combintation for containment in the polygon
-            p_in = []
             for lat_idx,lat in enumerate(lats_bbox_unique):
                 for lon_idx, lon in enumerate(lons_bbox_unique):
-                    point_in = PointIn(lon, lat, poly)
+                    if poly == 'Not Needed':
+                        point_in = True
+                    else:
+                        point_in = PointIn(lon, lat, poly)
                     if point_in:
                         #point lies witin shape, add data to data_poly
                         for date_idx, date_data in enumerate(req['data']):
-                            data_poly[date_idx].append([round(lon,2), round(lat,2), date_data[1][lat_idx][lon_idx]])
-                            values_poly[date_idx].append(date_data[1][lat_idx][lon_idx])
+                            if abs(date_data[1][lat_idx][lon_idx]+999.0) > 0.001 and abs(date_data[1][lat_idx][lon_idx]-999.0)>0.001:
+                                data_poly[date_idx].append([round(lon,2), round(lat,2), date_data[1][lat_idx][lon_idx]])
+                                values_poly[date_idx].append(date_data[1][lat_idx][lon_idx])
             #Perform Summary Analysis
-            for date_idx, val_list in enumerate(values_poly):
-                if form1.cleaned_data['summary'] == 'sum':
-                    summary_time_series[date_idx].append(round(sum(val_list),2))
-                elif form1.cleaned_data['summary'] == 'max':
-                    summary_time_series[date_idx].append(round(max(val_list),2))
-                elif form1.cleaned_data['summary'] == 'min':
-                    summary_time_series[date_idx].append(round(min(val_list),2))
-                elif form1.cleaned_data['summary'] == 'mean':
-                    if val_list:
-                        summary_time_series[date_idx].append(round(sum(val_list) / len(val_list),2))
-            context['results'] = summary_time_series
-    return render_to_response('my_data/apps/gridded/clim_risk_maps.html', context, context_instance=RequestContext(request))
+            if not values_poly:
+                summary_time_series[date_idx].append('-----')
+            else:
+                for date_idx, val_list in enumerate(values_poly):
+                    if not val_list:
+                        summary_time_series[date_idx].append('-----')
+                        continue
+                    if form1.cleaned_data['summary'] == 'sum':
+                        summary_time_series[date_idx].append(round(sum(val_list),2))
+                    elif form1.cleaned_data['summary'] == 'max':
+                        summary_time_series[date_idx].append(round(max(val_list),2))
+                    elif form1.cleaned_data['summary'] == 'min':
+                        summary_time_series[date_idx].append(round(min(val_list),2))
+                    elif form1.cleaned_data['summary'] == 'mean':
+                        if val_list:
+                            summary_time_series[date_idx].append(round(sum(val_list) / len(val_list),2))
+                        else:
+                            summary_time_series[date_idx].append('-----')
+        context['results']= summary_time_series
+        #width and height of graph image
+        context['width'] = WRCCData.image_sizes[form1.cleaned_data['image_size']][0]
+        context['height'] = WRCCData.image_sizes[form1.cleaned_data['image_size']][1]
+        #Write results to json file
+
+        if 'base_temperature' in form1.cleaned_data.keys():
+            base_temperature = str(form1.cleaned_data['base_temperature'])
+        else:
+            base_temperature = ''
+        search_params = {}
+        for key, val in form1.cleaned_data.iteritems():
+            search_params[key] = str(val)
+        context['bbox'] = search_params
+        json_dict = {
+            'search_params':search_params,
+            'element_name':element_name,
+            'yAxisText':yAxisText,
+            'data':summary_time_series,
+            'graph_title':graph_title,
+            'summary':smry
+        }
+        results_json = json.dumps(json_dict)
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+        json_file = '%s_climrisk.json' %(time_stamp)
+        f = open('/tmp/%s' %(json_file),'w+')
+        f.write(results_json)
+        f.close()
+        context['JSON_URL'] = '/tmp/'
+        context['json_file'] = json_file
+    return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
 
 def grid_point_time_series(request):
     context = {
@@ -1263,7 +1357,7 @@ def station_locator_app(request):
                 by_type = 'basin';val = form1.cleaned_data['basin']
                 context['by_type'] = 'Basin: %s' %str(val)
             if 'state' in form1.cleaned_data.keys():
-                by_type = 'state';val = form1.cleaned_data['state']
+                by_type = 'state';val = form1.cleaned_data['state'].upper()
                 context['by_type'] = 'State: %s' %str(val)
             if 'states' in form1.cleaned_data.keys():
                 by_type = 'states';val = form1.cleaned_data['states']
@@ -1274,23 +1368,24 @@ def station_locator_app(request):
 
             context['map_title'] = by_type.upper() + ': ' + val
 
+            date_range = [str(form1.cleaned_data['start_date']), str(form1.cleaned_data['end_date'])]
+            context['start_date'] = form1.cleaned_data['start_date']
+            context['end_date'] = form1.cleaned_data['end_date']
+            if form1.cleaned_data['constraints']=='all_all':
+                constraints = 'All Elements, All Dates'; context['constraints'] = constraints
+            if form1.cleaned_data['constraints']=='any_any':
+                constraints = 'Any Elements, Any Dates'; context['constraints'] = constraints
+            if form1.cleaned_data['constraints']=='all_any':
+                constraints = 'All Elements, Any Dates'; context['constraints'] = constraints
+            if form1.cleaned_data['constraints']=='any_all':
+                constraints = 'Any Elements, All Dates'; context['constraints'] = constraints
+
             if form1.cleaned_data['element_selection'] == 'T':
-                date_range = [str(form1.cleaned_data['start_date']), str(form1.cleaned_data['end_date'])]
-                context['start_date'] = form1.cleaned_data['start_date']
-                context['end_date'] = form1.cleaned_data['end_date']
-                context['elements'] = ','.join(form1.cleaned_data['elements']) #tuple of elements
-                if form1.cleaned_data['constraints']=='all_all':
-                    constraints = 'All Elements, All Dates'; context['constraints'] = constraints
-                if form1.cleaned_data['constraints']=='any_any':
-                    constraints = 'Any Elements, Any Dates'; context['constraints'] = constraints
-                if form1.cleaned_data['constraints']=='all_any':
-                    constraints = 'All Elements, Any Dates'; context['constraints'] = constraints
-                if form1.cleaned_data['constraints']=='any_all':
-                    constraints = 'Any Elements, All Dates'; context['constraints'] = constraints
                 context['map_title'] = by_type.upper() + ': ' + val + ', ELEMENTS: ' + \
-                                   ','.join(form1.cleaned_data['elements']) + \
-                                   ', FROM: ' + form1.cleaned_data['start_date'] + ' TO: '+ form1.cleaned_data['start_date'] + \
-                                   ', ' + constraints
+                                ','.join(form1.cleaned_data['elements']) + \
+                                ', FROM: ' + form1.cleaned_data['start_date'] + ' TO: '+ form1.cleaned_data['start_date'] + \
+                                ', ' + constraints
+                context['elements'] = ','.join(form1.cleaned_data['elements']) #tuple of elements
                 #Convert element_list to list of var majors
                 el_vX_list = []
                 for el_idx, el in enumerate(form1.cleaned_data['elements']):
@@ -1310,7 +1405,12 @@ def station_locator_app(request):
 
                 stn_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=form1.cleaned_data['constraints'])
             else:
-                stn_json, f_name = AcisWS.station_meta_to_json(by_type, val)
+                context['map_title'] = by_type.upper() + ': ' + val + \
+                                ', FROM: ' + form1.cleaned_data['start_date'] + ' TO: '+ form1.cleaned_data['start_date'] + \
+                                ', ' + constraints
+                el_vX_list = ['1', '2', '4', '10', '11', '45']
+                context['elements'] = 'maxt, mint, pcpn, snow, snwd, hdd, cdd, gdd' #tuple of elements
+                stn_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=form1.cleaned_data['constraints'])
 
             if 'error' in stn_json.keys():
                 context['error'] = stn_json['error']

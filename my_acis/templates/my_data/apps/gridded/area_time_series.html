@@ -10,7 +10,7 @@
     <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
     <a href="{{TOOLS_URL}}">TOOLS></a>
     <a href="{{TOOLS_URL}}gridded/">GRID TOOLS></a>
-    <a href="{{TOOLS_URL}}gridded/clim_risk_maps/">Climate Risk Maps</a></p>
+    <a href="{{TOOLS_URL}}gridded/area_time_series/">Area Time Series</a></p>
 
     <table cellpadding="20">
     <td valign="top" width="30%">
@@ -36,11 +36,18 @@
         </div>
     {%endif%}
     {%if form1_ready%}
-        <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}gridded/clim_risk_maps/'"/>
+        <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}gridded/area_time_series/'"/>
         <div id='form1'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
             {%for field in form1 %}
+                {%if field.label == "Image size"%}
+                    <tr><td><input type="submit" value="Submit" name="form1"/></td><td></td><td></td></tr>
+                    <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
+                    <tr><td colspan="3"><b>Plot Options</b></td></tr>
+                    <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
+                {%endif%}
+
                 {%if field.is_hidden %}
                     {{field}}
                 {%else%}
@@ -49,7 +56,11 @@
                     {%ifequal field.label "Shape" %}
                         <td><input type="text" name="shape" id="shape" value="{{shape}}"></td>
                     {%else%}
-                        <td>{{field}}</td>
+                        {%ifequal field.label "Bounding box" %}
+                            <td><input type="text" id="bounding_box" value={{bounding_box}}></td>
+                        {%else%}
+                            <td>{{field}}</td>
+                        {%endifequal%}
                     {%endifequal%}
                     <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                 {%if field.label == "Grid"%}
@@ -63,7 +74,7 @@ ght="600" border="0">
                     </td>
                 </tr>
 
-                    {%ifequal field.label "County" %}
+                {%ifequal field.label "County" %}
                     <tr><td></td><td align="right"><a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a></td><td></td</tr>
                 {%endifequal%}
                 {%ifequal field.label "Climate division" %}
@@ -123,20 +134,12 @@ ght="600" border="0">
             <script type="text/javascript">            
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
             </script>
-
-        <div id="tool_info" style="display:none;">
-            <p>A probability map for an element of choice and a 
-            user defined time period is created</p>
-            <p>For all other elements, daily values are averaged</p>
-            <p>Daily gridded data is obtained through ACIS Webservices.</p>
-            <p>Information on different gridded data sets:</p>
-            <p>Information on gridded data sets:</p>
-                <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
-                <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
-                <p>For more information and direct access to NARCCAP                         
-                (North American Regional Climate Change Assessment Program) gridded data sets:</p>
-                <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
         </div>
+
+        <div id="tool_info" style="display:none;"></div>
+        <script type="text/javascript">            
+            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_AREA_TIME_SERIES");
+        </script>
         
         <div id="how_to_head"></div>
             <script type="text/javascript">
@@ -144,15 +147,15 @@ ght="600" border="0">
             </script>
 
         <div id="how_to" style="display:none;">
-            <p><b>Grid selection</b> is made either by US state or by a user defined bounding box.</p>
-                    <p><b>Select grid by</b> = "State". Enter a US state of choice.</p>                    
-                    <p><b>Select grid by</b> = "Bounding Box". Find data for all stations in a bounding box of your choice.                         <p>A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. 
-                    Please enter them in this order OR better, use the map interface to define your bounding box.</p>
-                    <p><b>Select grid by</b> = "Shape". Draw a custom shape via the map interface.</p>
-                More to come soon ...
-            </p>
+            <div id="Howto_AREA_TIME_SERIES"></div>
+            <script type="text/javascript">
+            $("#Howto_AREA_TIME_SERIES").load("{{MEDIA_URL}}html/commons.html #Howto_AREA_TIME_SERIES");
+            </script>
         </div>
+        <!--
+        <p>BBOX: {{bbox}}</p>
         <p>Results: {{results}}</p>
+        -->
         {%if need_bbox_map and not results%}
         <p class="error">Click and drag to define your Bounding Box!</p>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
@@ -180,6 +183,13 @@ ght="600" border="0">
         <script type="text/javascript">
             initialize_polygon_map()
         </script>
+        {%endif%}
+
+        {%if results%}
+        <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">
+            <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+            <div align="center" id="container" style="height:{{height}}px;width:{{width}}px;"></div>
+            <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-area-ts.js"></script>
         {%endif%}
     </td><!--end center -->
     </table>

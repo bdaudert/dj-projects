@@ -109,38 +109,20 @@
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
         </script>
-        <div align="center" id="tool_info" style="display:none;">
-            <p>Tool to locate stations that have data for user chosen elements and date range.</p>
-        </div>
+        <div align="left" id="tool_info" style="display:none;"></div>
+        <script type="text/javascript">                        
+            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #About_station_finder");
+        </script>
 
 
-            <div align="center" id="how_to_head"></div>
-            <script type="text/javascript">            
-                $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
-            </script>
-            <div align="center" id="how_to" style="display:none;">
-            <p>Choose a station selection method. This will define the type of area of whose station data you are interested in.</p>
-            <p class="error">Explanation of station selection choices:</p>
-                <ul>
-                    <p>Station Selection = "County FIPS code". Find data for all stations in a US county of your choice. County FIPS codes are 5 digit identifiers.</p>
-                    <a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a>
-                    <p>Station Selection = "Climate Division".  Find data for all stations in a US climate division of your choice. Use a a 2-letter state and 2-digit division abbreviation (e.g. NV01 or nv01).</p>
-                    <a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a>
-                    <p>Station Selection = "County Warning Area (CWA). Find data for all stations in a US county warning area of your choice. Use a three letter CWA abbreviation. Both upper and lower case are allowed."</p>
-                    <a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a>
-                    <p>Station Selection = "Basin". Find data for all stations in a US drainage basin of your choice. US basins have 8-didgit identifiers. </p>
-                    <a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a>
-                    <p>Station Selection = "State". Find data for all stations in a US state of your choice.</p>
-                    <p>Station Selection = "Bounding Box". Find data for all stations in a bounding box of your choice. A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</p>
-
-                </ul>
-            <p class="error">Explanation of element selection choices:</p>
-                <ul>
-                    <p>Element Selection = "Any climate Element". Finds stations that have data for any of the elements listed below.</p>
-                    <p>Element Selection = "Chose climate elements". Finds stations that have data for a list of elements chosen by the you.</p>
-                    <p>Element List:</p><img alt="ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0"/></p>
-                </ul>
-            </div>    
+        <div align="center" id="how_to_head"></div>
+        <script type="text/javascript">            
+            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+        </script>
+        <div align="left" id="how_to" style="display:none"></div>
+        <script type="text/javascript">            
+            $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_station_finder");
+        </script>
     </td>
     <!--Third Column: Links-->
     <td valign="top" width="30%">
@@ -229,11 +211,10 @@
                     </table>
                 </ul>
     </td>
-
     </tr></table>
 
     <!--Second Table: Legend Maps-->
-    <table cellpadding="10">
+    <table cellpadding="10" width="100%">
     <!--First Row-->
     <tr>
     <!--First Column: Legend-->
@@ -250,7 +231,7 @@
        {%if need_map_bbox  and  not json_file %}
             <p class="error">Click and drag to define your Bounding Box!</p>
             <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-            <div id="map" style="width: 100%; height:300px;"></div>
+            <div id="map" style="width: 100%; height:400px;"></div>
             <script type="text/javascript">
                 initialize_bbox_map()
             </script>

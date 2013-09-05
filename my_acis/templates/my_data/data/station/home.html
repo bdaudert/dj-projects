@@ -122,41 +122,23 @@
     <!--RIGHT-->
     </td>
     <td valign="top" width="60%">
-        <div class="docu" id=tool_info_head></div>
+       <div id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
         </script>
-        <div class="docu" id="tool_info" style="display:none;">
-            <p class="error">What is it?</p>
-            <h3>Data access point to the ACIS system.</h3>
-            <p class="error">What datasets are available?</p>
-            <h3>Observed Quantities:</h3>
-            <p>Maximum Temperature(F), Minimum Temperature(F), Observation Time Temperature</p>
-            <p>Snowfall, Snowdepth</p>
-            <h3>Derived Quantities:</h3>
-            <p>Average Temperature(F), Heating/Cooling/Growing Degree Days(F), </p>
-            <p class="error">What can you do with this tool?</p>
-            <h3>Access and download data</h3>
-            <p>Available Data Formats: .xls, .dat, .txt, html(prints to screen)</p>
-            <p>Queries can be performed for multiple elements/stations at a time.</p>
-            <a target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a>
-        </div>
+        <div class="docu" id="tool_info" style="display:none;"></div>
+        <script type="text/javascript">                        
+            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #About_station_data");
+        </script>
 
-        <div class="docu" id="how_to_head"></div>
+        <div id="how_to_head"></div>
         <script type="text/javascript">            
             $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
         </script>
-        <div id="how_to" style="display:none;">
-            <p>Make your station selection choice.</p>
-            <p>Hit "Select". A second form will appear.</p>
-            <p>Enter one or more elements as a comma separated list.</p>
-            <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
-            <div id="element_choices" style="display:none"><img alt="ElementChoices" title="ElementChoices" width="250px" height="300px" src={{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png></div>
-            <p>Choose a start and end date.</p>
-            <p>Choose a data format. .xls, .dat, .txt files will be downloaded on the user's machine. 
-            html format is displayed on the webpage directly.</p>
-            <p>The delimiter choice defines the separation of the data values.</p>
-        </div>
+        <div id="how_to" style="display:none;"></div>
+        <script type="text/javascript">            
+            $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_station_data");
+        </script> 
 
         <div id="docu_long"></div>
 

@@ -1,0 +1,30 @@
+{% extends "csc_base.html" %}
+
+{% block content %}
+
+<p align="center">You are here 
+<a href="{{HOME_URL}}">HOME></a>
+<a href="{{SW_CKN_URL}}feedback/">FEEDBACK></a>
+</p>
+
+
+    <div align="center">
+        {{errors}}
+        {%block feedback%}{%endblock%}
+
+       <h1 align="center">{%if icon%} <img class="icon" src="{{MEDIA_URL}}img/{{icon}}">{%endif%} {{title}}</h1>
+        <form action="" method="post">{% csrf_token %}
+        <p>Subject: <input type="text" name="subject"></p>
+        <p>Your e-mail (optional): <input type="text" name="email"></p>
+        <p>Message: <textarea name="message" rows="10" cols="50"></textarea></p>
+        <input type="submit" value="Submit">
+        </form>
+ 
+    </div>
+  <!-- Footer
+  <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+    </script>-->
+
+{% endblock %}

@@ -1,0 +1,206 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="Climate Risk Maps, gridded data, application, product, tool">
+<meta name="description" content="SW-CKN Generates a climate summary map">
+
+{% block content %}
+
+<p align="center">You are here 
+    <a href="{{HOME_URL}}swcke/home/">HOME></a>
+    <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
+    <a href="{{TOOLS_URL}}">TOOLS></a>
+    <a href="{{TOOLS_URL}}gridded/">GRID TOOLS></a>
+    <a href="{{TOOLS_URL}}gridded/clim_prob_maps/">Climate Probability Maps</a></p>
+
+    <table cellpadding="20">
+    <td valign="top" width="30%">
+    {%if not hide_form0%}
+        <div id='form0'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form0 %}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    <td>{{field}}</td>                                                                                              
+                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                    <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    </td>
+                </tr>
+               {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Select" name="form0"/>
+            </form>
+        </div>
+    {%endif%}
+    {%if form1_ready%}
+        <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}gridded/clim_prob_maps/'"/>
+        <div id='form1'>
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+            {%for field in form1 %}
+                {%if field.label == "Image size"%}
+                    <tr><td><input type="submit" value="Submit" name="form1"/></td><td></td><td></td></tr>
+                    <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
+                    <tr><td colspan="3"><b>Plot Options</b></td></tr>
+                    <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
+                {%endif%}
+
+                {%if field.is_hidden %}
+                    {{field}}
+                {%else%}
+                <tr>
+                    <td>{{field.label}}:</td>
+                    {%ifequal field.label "Shape" %}
+                        <td><input type="text" name="shape" id="shape" value="{{shape}}"></td>
+                    {%else%}
+                        {%ifequal field.label "Bounding box" %}
+                            <td><input type="text" id="bounding_box" value={{bounding_box}}></td>
+                        {%else%}
+                            <td>{{field}}</td>
+                        {%endifequal%}
+                    {%endifequal%}
+                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
+                {%if field.label == "Grid"%}
+                    <div class="pop-up">
+                    <img alt="GriddedDataDocu" title="GriddedDataDocu" src="{{MEDIA_URL}}img/gridded_datasets_docu.png" id="gridded_datasets_docu.png" width="450" hei
+ght="600" border="0">
+                    </div>
+                {%else%}
+                    <div class="pop-up"><p>{{field.help_text}}</p></div>
+                {%endif%}
+                    </td>
+                </tr>
+
+                {%ifequal field.label "County" %}
+                    <tr><td></td><td align="right"><a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a></td><td></td</tr>
+                {%endifequal%}
+                {%ifequal field.label "Climate division" %}
+                    <tr><td></td><td align="right"><a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a></td><td></td</tr>
+                {%endifequal%}
+                {%ifequal field.label "County warning area" %}
+                    <tr><td></td><td align="right"><a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a></td><td></td></tr>
+                {%endifequal%}
+                {%ifequal field.label "Basin" %}
+                    <tr><td></td><td align="right"><a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a></td><td></td></tr>
+                {%endifequal%}
+                    
+               {%if field.errors%}
+                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                {%endif%}
+                {%endif%}
+            {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form1"/>
+            </form>
+        </div> 
+    {%endif%} 
+
+    {%if need_bbox_map  and  results%}
+        <p class="error">Click and drag to define your Bounding Box!</p>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+        <div id="map" style="width: 100%; height:400px;"></div>
+        <script type="text/javascript">
+            initialize_bbox_map()
+        </script>
+    {%endif%}
+
+    {%if need_polymap and results%}
+        <div id="panel">
+            <div id="color-palette"></div>
+            <div>
+                <button id="delete-button">Delete Selected Shape</button>
+            </div>
+        </div>
+        <div id="polymap" style="width: 100%; height:400px;"></div>
+        {%if lat and lon %}
+            <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+            <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+        {%else%}
+            <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
+            <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+        {%endif%}
+        <script type="text/javascript">
+            initialize_polygon_map()
+        </script>
+    {%endif%}
+
+    </td>
+    <td valign="top" width="70%">
+        <h2 class="error">This page is under development!</h2> <img alt=Construction" title="Construction" src="{{MEDIA_URL}}img/Construction.png">
+        <div id=tool_info_head></div>
+            <script type="text/javascript">            
+            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+            </script>
+
+        <div id="tool_info" style="display:none;"></div>
+        <script type="text/javascript">            
+            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_CLIM_PROB_MAPS");
+        </script>
+        
+        <div id="how_to_head"></div>
+            <script type="text/javascript">
+            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+            </script>
+
+        <div id="how_to" style="display:none;">
+            <p><b>Grid selection</b> is made either by US state or by a user defined bounding box.</p>
+                    <p><b>Select grid by</b> = "State". Enter a US state of choice.</p>                    
+                    <p><b>Select grid by</b> = "Bounding Box". Find data for all stations in a bounding box of your choice.                         <p>A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. 
+                    Please enter them in this order OR better, use the map interface to define your bounding box.</p>
+                    <p><b>Select grid by</b> = "Shape". Draw a custom shape via the map interface.</p>
+                More to come soon ...
+            </p>
+        </div>
+        <!--
+        <p>BBOX: {{bbox}}</p>
+        <p>Results: {{results}}</p>
+        -->
+        {%if need_bbox_map and not results%}
+        <p class="error">Click and drag to define your Bounding Box!</p>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+        <div id="map" style="width: 100%; height:400px;"></div>
+        <script type="text/javascript">
+            initialize_bbox_map()
+        </script>
+        {%endif%}
+
+        {%if need_polymap and not results%}
+        <div id="panel">
+            <div id="color-palette"></div>
+            <div>
+                <button id="delete-button">Delete Selected Shape</button>
+            </div>
+        </div>
+        <div id="polymap" style="width: 100%; height:400px;"></div>
+        {%if lat and lon %}
+            <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+            <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+        {%else%}
+            <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
+            <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+        {%endif%}
+        <script type="text/javascript">
+            initialize_polygon_map()
+        </script>
+        {%endif%}
+
+        {%if results%}
+        <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">
+            <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+            <div align="center" id="container" style="height:{{height}}px;width:{{width}}px;"></div>
+            <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-climprob.js"></script>
+        {%endif%}
+    </td><!--end center -->
+    </table>
+  <!-- Footer -->
+<!--
+    <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+    </script>
+-->
+
+{%endblock%}
