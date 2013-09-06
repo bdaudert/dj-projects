@@ -12,21 +12,21 @@
 
 
     <h2 class="error" align="center">This page is under development! <img alt="Construction" title="Construction" src="{{MEDIA_URL}}img/Construction.png"></h2>
-   <table class="page" cellspacing="2">
-   <tr><td valign="top" width="250px">
+   <table class="page">
+   <tr align="left"><td valign="top" width="150px">
         <div id="map_legend">
             <h3>Legend</h3>
             <p class="error"></p>
         </div>
-    </td><td valign="top">
+    </td><td valign="top" width="600px">
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
         <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
         <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-        <div id="map" style="width:600px; height:500px;"></div>
+        <div id="map" style="width:100%; height:400px;"></div>
         <script type="text/javascript">
             initialize_network_map()
         </script>
-    </td><td valign="top" width="250px">
+    </td><td valign="top" width="200px">
         <div id="network_docu"></div>
     </td></tr>
     </table>

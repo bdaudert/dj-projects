@@ -322,7 +322,7 @@ function initialize_network_map() {
             var type = data.Types[i].type;
             var icon = MEDIA_URL + 'img/' + data.Types[i].icon;
             var div = document.createElement('div');
-            div.innerHTML = '<p><img alt="Icon" title="Icon" class="icon" src="' + icon + '"> ' + type +': <input type="checkbox" id="'+ type + '" onclick="my_networkclick(this,\''+ type +'\')" checked /></p>';
+            div.innerHTML = '<p><img alt="Icon" title="Icon" class="icon" src="' + icon + '"> ' + type +'<input type="checkbox" id="'+ type + '" onclick="my_networkclick(this,\''+ type +'\')" checked /></p>';
             legend.appendChild(div);
         }
 
@@ -356,8 +356,9 @@ function initialize_network_map() {
             google.maps.event.addListener(marker, 'click', function() {
                 infowindow.close();
                 var contentString = '<div id="MarkerWindow">'+
-                '<img alt="Icon" title="Icon" class="icon" src=' +  MEDIA_URL + 'img/' + c.icon + '>' +
-                '<p class="error"><b>' + c.type +'</p><p>' + c.name + '</b><br/>'+
+                '<p class="error"><b>' + c.type + 
+                ' <img alt="Icon" title="Icon" class="icon" src=' + MEDIA_URL + 'img/' + c.icon + '>' +
+                '</p><p>' + c.name + '</b><br/>'+
                 c.name_long + '<br/>' +
                 '<b>Location</b>: ' + c.location +
                 '</p>' +'</div>';

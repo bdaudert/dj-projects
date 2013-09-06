@@ -118,7 +118,7 @@ or here:<a class="docu_long"target="_blank" href="/csc/media/html/stn_id_system_
 
 <div id="Howto_station_data">
     <p><b>FORM 1</b><br />
-           <b>Select station by </b>Several area options are available. Most require you to know the appropriate identifiers, e.g. station ID(s), County Warning Area codes, etc.. However, links or map interfaces that help you find the identifiers will be provided when filling out FORM 2.<br />
+           <b>Select station by </b>Several area options are available. Most require you to know the appropriate identifiers, e.g. station ID(s), county warning area codes, etc.. However, links or map interfaces that help you find the identifiers will be provided when filling out FORM 2.<br />
            <b>Data format </b>Data can be downloaded as .dat, .txt or .xls file. Choosing .html will display the data request results on your screen.<br />
            Click the <b>Select</b> button. A second form will appear.
     </p>
@@ -281,6 +281,13 @@ the decade 2000 - 2010<br />
            </ul>
            <b>Elements </b>Please enter a comma separated list of element abreviations.
             <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
+           <b>Grid </b>This option defines the gridded dataset to be used. The first two options are the NRCC interpolated and the NRCC Hi-Res datasets developed at the Northeast Regional Climate Center (NRCC).Several NARRCAPP datasets are available.
+            <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
+            <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
+            <p>For more information and direct access to NARCCAP
+            (North American Regional Climate Change Assessment Program) gridded data sets:</p>
+            <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+
            <div id="element_choices" style="display:none"><img alt="ElementChoices" title="ElementChoices" width="400px" height="400px" src=/csc/media/img/ACIS_Element_Choices_Grid.png></div><br />
            <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd<br />
            <b>Delimiter</b> Unless you have chosen the excel <b>Data format</b> this option will appear. It defines the delimiter that will separate the data values of your request.<br />
@@ -326,7 +333,7 @@ CRCM Model</a><br />
     <a href="http://www.narccap.ucar.edu/data/model-info.html">NARCCAP Model Information Page</a>
 </div>
 
-v id="Docu_HRM3">
+<div id="Docu_HRM3">
     <h2>Hadley Regional Model</h2>
     <p><font color="#FF007F">Source: </font>Hadley Centre via NARCCAP<br />
     <font color="#FF007F">Domain: </font>US<br />
@@ -410,7 +417,7 @@ v id="Docu_HRM3">
     <h3>Download Data, Maps</h3>
 </div>
 
-v id="Docu_AREA_TIME_SERIES">
+<div id="Docu_AREA_TIME_SERIES">
     <p class="error">What is the <b>Area Time Series</b> Tool?</p>
     <p>An interactive web-based tool that can be used to generate time series of summaries (max, min,sum,mean)<br /> over custom search areas. Summaries can be generated for the 8 major climate elements.</p>
     <p class="error">What dataset is being used?</p>
@@ -429,13 +436,56 @@ v id="Docu_AREA_TIME_SERIES">
 </div>
 
 <div id="Howto_AREA_TIME_SERIES">
-    <p><b>Form 1: </b><br />
-        &nbsp;&nbsp;&nbsp;<p><b>Select grid By </b></p>
+    <p>
+        <b>FORM 1: </b><br />
+        <b>Select grid by </b>Several area options are available. Most require you to know the appropriate identifiers, e.g. climate division IDs, county warning area codes, etc.. However, links or map interfaces that help you find the identifiers will be provided when filling out FORM 2.<br />
+        <b>Element</b><br />
+        Element coices comprise the 8 standard climate elements as well as degree days with custom base temperatures.
     </p>
-    <p><b>Element</b></p>
-    &nbsp;&nbsp;&nbsp;<p>Element coices comprise the 8 standard elements as well as degree days with custom base temperatures.</p>
-    <p><b>Summary</b></p>
-    &nbsp;&nbsp;&nbsp;<p>
+    <p>
+        <b>FORM2 2 </b><br />
+        Depending on your <b>Select grid by </b>choice from FORM 1, you will see: <br >
+           <ul>
+                <li><b>County </b>Enter a county FIPS code. If you don't know your FIPS code, please use the link below the form field to find it.</li>
+                <li><b>Climate division </b>Enter a climate division code. If you don't know your climate division code, please use the link below the form field to find it.</li>
+                <li><b>County Warning Area </b>Enter a county waring area code. If you don't know your county warning area code, please use the link below the form field to find it.</li>
+                <li><b>Basin </b>Enter a US basin code. If you don't know your basin code, please use the link below the form field to find it.</li>
+                <li><b>State </b>Choose a US state from the drop down menue</li>
+                <li><b>"Bounding Box" </b>A bounding box has four coordinates: <br />West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</li>
+                <li><b>Shape </b> Enter the lon, lat coordinates of your custom shape or use the map interface to define it. You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend.
+                    <ul>
+                        <li><b>Marker </b>Point and click on the map.</li>
+                        <li><b>Connected line segments </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
+                        <li><b>Rectangle </b> Point at a corner of your rectangle, click, hold and drag.</li>
+                        <li><b>Circle </b>Point at the center of your circle,  click, hold and drag.</li>
+                        <li><b>Polygon </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
+                    </ul>
+                </li>
+                
+           </ul>
+        <b>Element </b>Please choose an element from the dropdown menue.<br />
+        <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd<br />
+        <b>Summary </b>This option defines how the data will be summarized over the grid points of your shape at each point in time.<br />
+        <b>Grid </b>This option defines the gridded dataset to be used. The first two options are the NRCC interpolated and the NRCC Hi-Res datasets developed at the Northeast Regional Climate Center (NRCC).Several NARRCAPP datasets are available.
+            <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
+            <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
+            <p>For more information and direct access to NARCCAP
+            (North American Regional Climate Change Assessment Program) gridded data sets:</p>
+            <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+        <b>Show running mean </b> Choose "Yes" if you want a running mean to be computed and shown on the final graph<br />
+        <b>Running mean days </b> Defines the number of days used to compute the running mean.
+        <b>Graph title </b> If you choose "Use default" information about your shape, the climate element and the summary type will be displayed. Enter your own title if you want different information in your title.<br />
+        <b>Plot options</b> Several plot options are available.
+        <ul>
+            <li><b>Image size </b>Choose your image size from the drop down menue.</li>
+            <li><b>Show major grid </b>Dashed grid lines will be places at a step size of 1/5(data_max - data_min) </li>
+            <li><b>Show minor grid </b>Dashed gridlines will be placed at a step size of 1/10(data_max - data_min). </li>
+            <li><b>Connector line </b>Choose "Yes" if you would like your data points connected by a line.</li>
+            <li><b>Connector line width </b>Defines the width of the line connecting that data points. 10 is the maximum line width allowed. Choosing 0 is the same as choosing no connector line.</li>
+            <li><b>Markers </b>Choose yes if you would like to see a marker at each data point.</li>
+            <li><b>Marker type </b>Choose a marker type from the drop down menue.</li>
+        </ul> 
+    </p>
 </div>
 
 <div id="Docu_CLIM_SUM_MAP">
@@ -574,6 +624,67 @@ v id="Docu_AREA_TIME_SERIES">
 </div>
 
 <!--EXTERNAL RESOURCES/LINKS-->
+<div id="Docu_ScienceBase">
+    <p><a target="_blank" href="https://www.sciencebase.gov/catalog/?community=LC+MAP+-+Landscape+Conservation+Management+and+Analysis+Portal"><img alt="LC MAP" title="LC MAP" class="logo" src="/csc/media/img/LCMAPLogo.png"></a></p>
+    <p class="error"><b>Landscape Conservation Management and Analysis Tool (LC MAP)</b><br />
+    <p>
+    Collaborative data management platform for USGS scientists and partners. Users can share, access and analyze common datasets and perform intensive Geospatial analyses on a landscape scale.<br />
+    <b>Capabilities</b><br />
+    <ul>
+        <li>Central search and discovery application</li>
+        <ul>
+            <li>Browse by category (data, project, website), by tag or location (map interface)</li>
+            <li>Filtered searches</li>
+            <li>Access common data themes (lineages, versions0)</li>
+            <li>Efficiently vet data for uses and limitations</li>
+        </ul>
+        <li><b>Data</b> storage and sharing</li>
+            <ul>
+                <li>Wide variety of datasets available</li>
+                <li>Management of data at the project level</li>
+            </ul>
+        <li><b>Analysis and modleing</b></li>
+        <ul>
+            <li>Geospatial analysis capabilities of <b>ArcGIS 10</b></li>
+            <li>Shared work environment for real-time distributed research collaboration</li>
+        </ul>
+    </ul>
+    <b>Links</b>
+    <a  target="_blank" href="https://www.sciencebase.gov/catalog/?community=LC+MAP+-+Landscape+Conservation+Management+and+Analysis+Portal#">LC MAP Home Page</a><br />
+    <a  target="_blank" href="http://greatnorthernlcc.org/lcmap">LC MAP Information page</a><br />
+    <a  target="_blank" href="http://www.fort.usgs.gov/WebApps/SciBase.asp">Science Base Inforation Page</a><br />
+    </p>
+</div>
+
+
+<div id="Docu_GDP">
+    <p><a target="_blank" href="http://www.dri.edu"><img alt="DRI" title="DRI" class="logo" src="/csc/media/img/DRILogo.png"></a></p>
+    <p class="error"><b>GeoDataPortal (GDP) by USGS Center for Integrated Data Analysis (CIDA)</b></p>
+    <p>
+    Access to <b>Data</b>
+    <ul>
+    <li>Downscaled Climate Projections for the US</li>
+    <li>Sea Level Rise Projections</li>
+    <li>Landscape Change Projections</li>
+    </ul>
+    <b>Capabilities</b><br />
+    <ul>
+        <li>Upload shape files to specify area of interest</li>
+        <li>Download large datasets (historic and future climate datasets)</li>
+        <li>Obtain spatially averaged summaries</li>
+        <li>Different outut formats (NetCDF, csv)</li>
+        <li>Data Visualization (Climate Indices maps)</li>
+        <li>Dataset comparison</li>
+        <li>Environmental Data Discovery and Tramsormation Tool (EnDDaT)</li>
+    </ul>
+    <b>Links</b><br />
+    <a target="_blank" href="http://cida.usgs.gov/climate/gdp/">GeoDataPortal</a><br />
+    <a target="_blank" href="http://cida.usgs.gov/climate/derivative/">GeoDataPortal Derivative (Visualization)</a><br />
+    <a target="_blank" href="http://cida.usgs.gov/enddat/">EnDDaT</a><br />
+    <a target="_blank" href="http://pubs.usgs.gov/fs/2013/3019/pdf/FS_2013-3019_508.pdf">Featured:GDP Facts Sheet</a><br />
+    </p>
+</div>
+
 <div id="Docu_DRI">
     <p><a target="_blank" href="http://www.dri.edu"><img alt="DRI" title="DRI" class="logo" src="/csc/media/img/DRILogo.png"></a></p>
     <p class="error"><b>Desert Research Institute</b></p>
@@ -837,7 +948,7 @@ v id="Docu_AREA_TIME_SERIES">
 <div id="Docu_NCDC">
    <p class="error"><a target="_blank" href="http://www.ncdc.noaa.gov/"><img alt="NOAA-NCDC" title="NOAA-NCDC" src="/csc/media/img/NOAALogo.png" class="icon"></a></p>
     <p class="error"><b>National Climatic Data Center (NCDC)</b></p>
-    <p>Access To:<br/>
+    <p>Access to US <b>Data</b><br/>
     <ul>
     <li>Land Based Station Data</li>
     <li>Satellite/Radar Data</li>
@@ -847,15 +958,34 @@ v id="Docu_AREA_TIME_SERIES">
     <li>Severe Weather Data</li>
     </ul>
     </p>
-    <p>A list of data products is also available (e.g. Climate maps, Summary Tables)</p>
+    <p>A variety of data <b>Products</b> are also available. Examples are</p>
+    <ul>
+    <li>Climate Maps</li>
+    <li>Climate Summaries</li>
+    <li>Climate Indices</li>
+    <li>Global Summary of the Day</li>
+    <li>Weather maps and charts</li>
+    </ul>
+    <p>Access to <b>Climate Information</b></p>
+    <ul>
+    <li>Climate of the the United States</li>
+    <li>Analyses of weather and climate events</li>
+    <li>Extreme events</li>
+    <li>Statistical weather and climate information</li>
+    <li>Sectoral and regional resources</li>
+    <li>Global collaborations</li>
+    <li>Science papers and publications</li>
+    </ul>
+    <p>Links</p>
     <a target="_blank" href="http://www.ncdc.noaa.gov/data-access">Data Access</a></br>
     <a target="_blank" href="http://www.ncdc.noaa.gov/data-access/quick-links">Products</a></br>
+    <a target="_blank" href="http://www.ncdc.noaa.gov/climate-information">Climate Information</a></br>
     <a target="_blank" href="http://www.ncdc.noaa.gov/sotc/national/" >Featured: Monthly Climate Overview for US</a></br>
 </div>
 
 <div id="Docu_Cake">
    <p class="error"><a target="_blank" href="http://www.cakex.org/"><img alt="Cake" title="Cake" src="/csc/media/img/CakeLogo.png" class="icon"></a></p>
-    <p class="error"><b>Climate Adaptation Knowledge Exchange</b></p>
+    <p class="error"><b>Climate Adaptation Knowledge Exchange (Cake)</b></p>
     <p>Aims to build a shared knowledge base for managing natural and built systems in the face of rapid climate change.</p>
     <p>Access to:<br/>
     <ul>
