@@ -1086,14 +1086,14 @@ def area_time_series(request):
             if search_type == 'default':
                 params[acis_param] = val
                 poly = 'Not Needed'
-                shape = None;shape_name = None
+                shape = None;shape_name = ''
             else:
                 #search area county/climdiv/basin/cwa or custom shape
                 # need to find coordinates of shape and enclosing bbox
                 if key == 'shape':
                     shape = val.split(',')
                     shape = [float(s) for s in shape]
-                    shape_name = None
+                    shape_name = ''
                     if len(shape)==3:
                         bbox = WRCCUtils.find_bbox_of_circle(shape[0], shape[1], shape[2])
                         poly = shape
@@ -1103,6 +1103,7 @@ def area_time_series(request):
                         lats_shape = [s for idx,s in enumerate(shape) if idx%2 == 1]
                         #convert to tuples
                         poly = [(shape[2*idx],shape[2*idx+1]) for idx in range(len(shape)/2)]
+                        context['shape_coords'] = [[shape[2*idx],shape[2*idx+1]] for idx in range(len(shape)/2)]
                         PointIn = getattr(WRCCUtils,'point_in_poly')
                         try:
                             bbox = str(min(lons_shape)) + ',' + str(min(lats_shape)) + ',' + str(max(lons_shape)) + ',' + str(max(lats_shape))
@@ -1116,6 +1117,7 @@ def area_time_series(request):
                     try:
                         gen_req = AcisWS.General(acis_param, gen_params)
                         shape = gen_req['meta'][0]['geojson']['coordinates'][0][0]
+                        context['shape_coords'] = shape
                         bbox = gen_req['meta'][0]['bbox']
                         shape_name = gen_req['meta'][0]['name']
                     except:
@@ -1131,10 +1133,10 @@ def area_time_series(request):
             if form1.cleaned_data['graph_title'] != 'Use default':
                 graph_title = search_params['graph_title']
             else:
-                if shape_name:
-                    graph_title = name_long + ':' + shape_name + ' (' + search_params[key] + ')'
+                if 'shape' in search_params.keys():
+                    graph_title = name_long + ': Polygon'
                 else:
-                    graph_title = name_long + ':' + search_params[key]
+                    graph_title = name_long + ': ' + shape_name + ' (' + search_params[key] + ')'
             #Find data
             try:
                 req = AcisWS.GridData(params)
@@ -1187,12 +1189,14 @@ def area_time_series(request):
                             summary_time_series[date_idx].append(round(sum(val_list) / len(val_list),2))
                         else:
                             summary_time_series[date_idx].append('-----')
+            #Set context variables
             context['results']= summary_time_series
-            #width and height of graph image
             context['width'] = WRCCData.image_sizes[form1.cleaned_data['image_size']][0]
             context['height'] = WRCCData.image_sizes[form1.cleaned_data['image_size']][1]
-            #Write results to json file
+            context['graph_title'] = graph_title
+            context['graph_subtitle'] = smry + element_name
 
+            #Write results to json file
             if 'base_temperature' in form1.cleaned_data.keys():
                 base_temperature = str(form1.cleaned_data['base_temperature'])
             else:

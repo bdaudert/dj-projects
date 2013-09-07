@@ -65,8 +65,7 @@
                     <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                 {%if field.label == "Grid"%}
                     <div class="pop-up">
-                    <img alt="GriddedDataDocu" title="GriddedDataDocu" src="{{MEDIA_URL}}img/gridded_datasets_docu.png" id="gridded_datasets_docu.png" width="450" hei
-ght="600" border="0">
+                    <img alt="GriddedDataDocu" title="GriddedDataDocu" src="{{MEDIA_URL}}img/ACIS_Grids.png" id="ACIS_Grids" width="350" height="300" border="0">
                     </div>
                 {%else%}
                     <div class="pop-up"><p>{{field.help_text}}</p></div>
@@ -157,40 +156,71 @@ ght="600" border="0">
         <p>BBOX: {{bbox}}</p>
         <p>Results: {{results}}</p>-->
         {%if need_bbox_map and not results%}
-        <p class="error">Click and drag to define your Bounding Box!</p>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-        <div id="map" style="width: 100%; height:400px;"></div>
-        <script type="text/javascript">
-            initialize_bbox_map()
-        </script>
-        {%endif%}
+            <p class="error">Click and drag to define your Bounding Box!</p>
+            <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+            <div id="map" style="width: 100%; height:400px;"></div>
+            
+            <script type="text/javascript">
+                initialize_bbox_map()
+            </script>
+        {%endif%}<!--if need_bbox_map and not results-->
 
         {%if need_polymap and not results%}
-        <div id="panel">
-            <div id="color-palette"></div>
-            <div>
-                <button id="delete-button">Delete Selected Shape</button>
+            <div id="panel">
+                <div id="color-palette"></div>
+                <div>
+                    <button id="delete-button">Delete Selected Shape</button>
+                </div>
             </div>
-        </div>
-        <div id="polymap" style="width: 100%; height:400px;"></div>
-        {%if lat and lon %}
-            <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
-            <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
-        {%else%}
-            <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
-            <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
-        {%endif%}
-        <script type="text/javascript">
-            initialize_polygon_map()
-        </script>
-        {%endif%}
+            
+            <div id="polymap" style="width: 100%; height:400px;"></div>
+            {%if lat and lon %}
+                <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+                <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+            {%else%}
+                <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
+                <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+            {%endif%}
+            
+            <script type="text/javascript">
+                initialize_polygon_map()
+            </script>
+        {%endif%}<!--if need_polymap and not results-->
 
         {%if results%}
         <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">
             <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
             <div align="center" id="container" style="height:{{height}}px;width:{{width}}px;"></div>
             <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-area-ts.js"></script>
-        {%endif%}
+
+            <p class="pop_link" onClick="ShowHide('printable_table')"><u>Show/hide table data</u></p>
+            
+            <img alt="Print" title="Print" class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a target="_blank" href="{{SW_CKN_URL}}/download/?app_name=area_time_series&json_file={{json_file}}"><img alt="Download" title="Download" class="icon" src="{{MEDIA_URL}}img/Download.png"></a>
+            <br />
+
+            <!--Table Data with download and print option-->
+            <div id="printable_table" style="display:none;">
+                <!--time series table-->
+                <!--Header-->
+                <p>{{graph_title}}</p>
+                {%if shape_coords%}
+                    <p class="pop_link" onClick="ShowHide('shape_coords')"><u>Show/hide polygon boundary coordiates in table data (lon, lat pairs)</u></p>   
+                {%endif%}
+                <div id="shape_coords" style="display:none;">Boundary coordinates: {{shape_coords}}</div>
+                <p>{{graph_subtitle}}</p>
+                <table border=1>
+                <th>DATE</th><th>DATA</th>
+                {%for date_data in results%}
+                    <tr>
+                        <td>{{date_data.0}}</td><td>{{date_data.1}}</td>
+                    </tr>
+                {%endfor%}
+                </table>
+            </div><!--printable table-->
+        {%endif%}<!--if results-->
+
     </td><!--end center -->
     </table>
   <!-- Footer -->

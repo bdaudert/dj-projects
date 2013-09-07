@@ -300,7 +300,7 @@ ul.navbar a {
 .pop-up {
   display: none;
   position: absolute;
-  width: 450px;
+  /*width: 450px;*/
   padding: 10px;
   background: #FFEFD5;
   border: 2px solid #006666;
