@@ -188,7 +188,7 @@
         {%endif%}<!--if need_polymap and not results-->
 
         {%if results%}
-        <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">
+            <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">
             <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
             <div align="center" id="container" style="height:{{height}}px;width:{{width}}px;"></div>
             <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-area-ts.js"></script>
@@ -208,7 +208,19 @@
                 {%if shape_coords%}
                     <p class="pop_link" onClick="ShowHide('shape_coords')"><u>Show/hide polygon boundary coordiates in table data (lon, lat pairs)</u></p>   
                 {%endif%}
-                <div id="shape_coords" style="display:none;">Boundary coordinates: {{shape_coords}}</div>
+                <div id="shape_coords" style="display:none;"><b>Boundary coordinates</b>: {{shape_coords}}</div>
+                <p class="pop_link" onClick="ShowHide('parameters')"><u>Show/hide other analysis parameters</u></p>
+                <div id="parameters" style="display:none;">
+                <p>
+                <b>Parameters</b>:<br />
+                {% for param in display_params_list%}
+                    {%if not forloop.first%}, {%endif%}
+                    {%if forloop.counter|divisibleby:"3" %}<br />{%endif %}
+                    {{param.0}}: {{param.1}}
+                {% endfor %}
+                </p>
+                </div>
+                <b>Data</b>: 
                 <p>{{graph_subtitle}}</p>
                 <table border=1>
                 <th>DATE</th><th>DATA</th>

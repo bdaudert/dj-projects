@@ -1054,15 +1054,35 @@ def area_time_series(request):
         context['hide_form0'] = True
         context['form1_ready'] = True
         if form1.is_valid():
+            #Take care of unicode issue and define display parameters
             search_params = {}
-            #Take care of unicode issue
+            display_params = {}
+            key_order = ['element', 'start_date', 'end_date', 'summary', 'grid', 'show_running_mean', 'running_mean_days', 'graph_title']
+            display_params_list = [[] for k in range(len(key_order))]
             for key, val in form1.cleaned_data.iteritems():
                 search_params[key] = str(val)
-
-            if search_params['summary'] == 'sum':smry= 'Sum '
-            if search_params['summary'] == 'min':smry= 'Minimum '
-            if search_params['summary'] == 'max':smry= 'Maximum '
-            if search_params['summary'] == 'mean':smry= 'Mean '
+                if key == 'grid':
+                    display_params[WRCCData.display_params[key]] = WRCCData.GRID_CHOICES[val]
+                    display_params_list[4] = [WRCCData.display_params[key], WRCCData.GRID_CHOICES[val]]
+                elif key == 'summary':
+                    smry = WRCCData.display_params[val]
+                    display_params[WRCCData.display_params[key]] = WRCCData.display_params[val]
+                    display_params_list[3] = [WRCCData.display_params[key], WRCCData.display_params[val]]
+                elif key == 'element':
+                    display_params[WRCCData.display_params[key]] = WRCCData.display_params[val]
+                    display_params_list[0] = [WRCCData.display_params[key], WRCCData.display_params[val]]
+                elif key == 'shape':
+                    display_params[WRCCData.display_params[key]] = ''
+                else:
+                    value = str(val)
+                    if val =='T':value='Yes'
+                    if val == 'F':value = 'No'
+                    display_params[WRCCData.display_params[key]] = value
+                    try:
+                        idx = key_order.index(key)
+                        display_params_list[idx] = [WRCCData.display_params[key], value]
+                    except ValueError:
+                        pass
             #Set up data request params
             params = {
                 'sdate':search_params['start_date'],
@@ -1195,7 +1215,8 @@ def area_time_series(request):
             context['height'] = WRCCData.image_sizes[form1.cleaned_data['image_size']][1]
             context['graph_title'] = graph_title
             context['graph_subtitle'] = smry + element_name
-
+            context['display_params'] = display_params
+            context['display_params_list'] = display_params_list
             #Write results to json file
             if 'base_temperature' in form1.cleaned_data.keys():
                 base_temperature = str(form1.cleaned_data['base_temperature'])
