@@ -97,8 +97,7 @@ select_grid_by_CHOICES = (
 
 GRID_CHOICES = (
     ('1', 'NRCC Interpolated (US)'),
-    ('2', 'NRCC Hi-Res (East of Rockies)'),
-    ('3', 'NARCCAP (US)'),
+    ('3', 'NRCC Hi-Res (East of Rockies)'),
     ('4', 'CRCM + NCEP (Historical only)'),
     ('5', 'CRCM + CCSM'),
     ('6', 'CRCM + CCSM3'),
