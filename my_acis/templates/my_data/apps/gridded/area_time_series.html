@@ -57,7 +57,7 @@
                         <td><input type="text" name="shape" id="shape" value="{{shape}}"></td>
                     {%else%}
                         {%ifequal field.label "Bounding box" %}
-                            <td><input type="text" id="bounding_box" value={{bounding_box}}></td>
+                            <td><input type="text" name="bounding_box" id="bounding_box" value="{{bounding_box}}"></td>
                         {%else%}
                             <td>{{field}}</td>
                         {%endifequal%}
@@ -88,7 +88,7 @@ ght="600" border="0">
                 {%endifequal%}
                     
                {%if field.errors%}
-                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+                 <tr><td></td><td><font color="red">{{field.errors}}</font></td><td></td></tr>
                 {%endif%}
                 {%endif%}
             {%endfor%}
@@ -152,10 +152,10 @@ ght="600" border="0">
             $("#Howto_AREA_TIME_SERIES").load("{{MEDIA_URL}}html/commons.html #Howto_AREA_TIME_SERIES");
             </script>
         </div>
+
         <!--
         <p>BBOX: {{bbox}}</p>
-        <p>Results: {{results}}</p>
-        -->
+        <p>Results: {{results}}</p>-->
         {%if need_bbox_map and not results%}
         <p class="error">Click and drag to define your Bounding Box!</p>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />

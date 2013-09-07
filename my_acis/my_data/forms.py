@@ -652,7 +652,7 @@ class StationDataForm1(forms.Form):
         else:
             self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='dlm', help_text=HELP_TEXTS['data_format'])
             self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
-        self.fields['data_format'].widget.attrs = {'disabled':'disabled', 'style':readonly_style}
+        self.fields['data_format'].widget.attrs = {'readonly':True, 'style':readonly_style}
         if data_format in ['dlm', 'clm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
@@ -702,7 +702,7 @@ class StationDataForm3(forms.Form):
         else:
             self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='dlm', help_text=HELP_TEXTS['data_format'])
             self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
-        self.fields['data_format'].widget.attrs = {'disabled':'disabled', 'style':readonly_style}
+        self.fields['data_format'].widget.attrs = {'readonly':True, 'style':readonly_style}
         if data_format in ['dlm', 'clm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
@@ -774,7 +774,7 @@ class GridDataForm1(forms.Form):
         else:
             self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='dlm', help_text=HELP_TEXTS['data_format'])
             self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
-        self.fields['data_format'].widget.attrs = {'disabled':'disabled', 'style':readonly_style}
+        self.fields['data_format'].widget.attrs = {'readonly':True, 'style':readonly_style}
         if data_format in ['dlm', 'clm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
         if data_summary is None or data_summary == 'none' or select_grid_by == 'point':
@@ -828,7 +828,7 @@ class GridDataForm3(forms.Form):
         else:
             self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='dlm', help_text=HELP_TEXTS['data_format'])
             self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
-        self.fields['data_format'].widget.attrs = {'disabled':'disabled', 'style':readonly_style}
+        self.fields['data_format'].widget.attrs = {'readonly':True, 'style':readonly_style}
         if data_format in ['dlm', 'clm', 'html']:
             self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
@@ -876,12 +876,12 @@ class MonthlyAveragesForm(forms.Form):
         self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='POR', help_text=HELP_TEXTS['date_por'])
         self.fields['end_date'] = MyDateField(max_length=10, required = False, initial='POR', help_text=HELP_TEXTS['date_por'])
 
-class ClimateRiskForm0(forms.Form):
+class AreaTimeSeriesForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=GRID_FIND_CHOICES, required=False, initial='shape', help_text=HELP_TEXTS['select_stations_by'])
         element = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES, required=False, initial='maxt', help_text='Climate Element')
 
 
-class ClimateRiskForm1(forms.Form):
+class AreaTimeSeriesForm1(forms.Form):
     def __init__(self, *args, **kwargs):
         select_grid_by = kwargs.get('initial', {}).get('select_grid_by', None)
         element = kwargs.get('initial', {}).get('element', None)
@@ -890,7 +890,7 @@ class ClimateRiskForm1(forms.Form):
         shape = kwargs.get('initial', {}).get('shape', None)
         start_date = kwargs.get('initial', {}).get('start_date', None)
         end_date = kwargs.get('initial', {}).get('end_date', None)
-        super(ClimateRiskForm1, self).__init__(*args, **kwargs)
+        super(AreaTimeSeriesForm1, self).__init__(*args, **kwargs)
 
         if select_grid_by is None:select_grid_by = self.data.get('select_grid_by')
         if element is None:element = self.data.get('element')
@@ -926,7 +926,7 @@ class ClimateRiskForm1(forms.Form):
             self.fields['state'] = forms.ChoiceField(required=False, choices=STATE_CHOICES, initial=state, help_text='US state.')
 
         self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES,initial=element, help_text='Climate Element')
-        self.fields['element'].widget.attrs = {'disabled':'disabled', 'style':readonly_style}
+        #self.fields['element'].widget.attrs = {'readonly':True, 'style':readonly_style}
         if element in ['hddxx','gddxx', 'cddxx']:
             self.fields['base_temperature'] = forms.IntegerField(initial=65, help_text='Base temperature used to calculate degree days.')
         if start_date is None:

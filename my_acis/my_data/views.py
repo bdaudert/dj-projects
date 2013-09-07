@@ -1017,28 +1017,28 @@ def area_time_series(request):
     if end_date is not None:initial['end_date'] = str(end_date)
     if grid is not None:initial['grid'] = str(grid)
     if state is not None:initial['state'] = state
-    if bounding_box is not None:initial['bounding_box'] = bounding_box
-
+    if bounding_box is not None:
+        initial['bounding_box'] = bounding_box
     if initial:
         if element and start_date and end_date:
-            form1 = forms.ClimateRiskForm1(initial=initial)
+            form1 = forms.AreaTimeSeriesForm1(initial=initial)
             context['form1'] = form1
             context['hide_form0'] = True
             context['form1_ready'] = True
         else:
-            form0 = set_as_form(request,'ClimateRiskForm0', init=initial)
+            form0 = set_as_form(request,'AreaTimeSeriesForm0', init=initial)
             context['form0'] = form0
     else:
-        form0 = set_as_form(request,'ClimateRiskForm0')
+        form0 = set_as_form(request,'AreaTimeSeriesForm0')
         context['form0'] = form0
 
     if 'form0' in request.POST:
-        form0 = set_as_form(request,'ClimateRiskForm0')
+        form0 = set_as_form(request,'AreaTimeSeriesForm0')
         context['form0']  = form0
         context['hide_form0'] = True
         if form0.is_valid():
             initial = form0.cleaned_data
-            context['form1'] = forms.ClimateRiskForm1(initial=initial)
+            context['form1'] = forms.AreaTimeSeriesForm1(initial=initial)
             context['form1_ready'] = True
             if form0.cleaned_data['select_grid_by'] == 'shape':
                 context['need_polymap'] = True
@@ -1049,75 +1049,96 @@ def area_time_series(request):
     if 'form1' in request.POST:
         if 'shape' in request.POST.keys():context['shape'] = str(request.POST['shape'])
         if 'bounding_box' in request.POST.keys():context['bounding_box'] = str(request.POST['bounding_box'])
-        form1 = set_as_form(request,'ClimateRiskForm1')
+        form1 = set_as_form(request,'AreaTimeSeriesForm1')
         context['form1']  = form1
         context['hide_form0'] = True
         context['form1_ready'] = True
         if form1.is_valid():
-            if form1.cleaned_data['summary'] == 'sum':smry= 'Sum '
-            if form1.cleaned_data['summary'] == 'min':smry= 'Minimum '
-            if form1.cleaned_data['summary'] == 'max':smry= 'Maximum '
-            if form1.cleaned_data['summary'] == 'mean':smry= 'Mean '
+            search_params = {}
+            #Take care of unicode issue
+            for key, val in form1.cleaned_data.iteritems():
+                search_params[key] = str(val)
+
+            if search_params['summary'] == 'sum':smry= 'Sum '
+            if search_params['summary'] == 'min':smry= 'Minimum '
+            if search_params['summary'] == 'max':smry= 'Maximum '
+            if search_params['summary'] == 'mean':smry= 'Mean '
             #Set up data request params
             params = {
-                'sdate':form1.cleaned_data['start_date'],
-                'edate':form1.cleaned_data['end_date'],
-                'grid':form1.cleaned_data['grid'],
+                'sdate':search_params['start_date'],
+                'edate':search_params['end_date'],
+                'grid':search_params['grid'],
                 'meta':"ll,elev"
             }
-            if form1.cleaned_data['element'] in ['hddxx','gddxx', 'cddxx']:
-                element_name = WRCCData.acis_elements_dict[str(form1.cleaned_data['element'])[0:3]]['name_long'] + 'Base temperature ' + str(form1.cleaned_data['base_temperature'])
-                yAxisText = smry + ' ' + str(form1.cleaned_data['element'])[0:3] + str(form1.cleaned_data['base_temperature'])
-                params['elems'] = str(form1.cleaned_data['element'])[0:3] + str(form1.cleaned_data['base_temperature'])
+            #find element parameter
+            if search_params['element'] in ['hddxx','gddxx', 'cddxx']:
+                element_name = WRCCData.acis_elements_dict[str(search_params['element'])[0:3]]['name_long'] + 'Base temperature ' + str(search_params['base_temperature'])
+                yAxisText = smry + ' ' + search_params['element'][0:3] + search_params['base_temperature']
+                params['elems'] = search_params['element'][0:3] + search_params['base_temperature']
 
             else:
-                element_name = WRCCData.acis_elements_dict[str(form1.cleaned_data['element'])]['name_long']
-                yAxisText = smry + ' ' + WRCCData.acis_elements_dict[str(form1.cleaned_data['element'])]['name_long']
-                params['elems'] = form1.cleaned_data['element']
-            #Find search area param
-            if 'shape' in form1.cleaned_data.keys():
-                #Custom shape, need to find enclosing bbox
-                shape = form1.cleaned_data['shape'].split(',')
-                shape = [float(s) for s in shape]
-                #find enclosing bbox
-                if len(shape) == 3:
-                    graph_title = 'Circle (lat, lon, radius (meter)): ' + str(form1.cleaned_data['shape'])
-                    bbox = WRCCUtils.find_bbox_of_circle(shape[0], shape[1], shape[2])
-                else:
-                    graph_title = 'Custom Shape: ' + str(form1.cleaned_data['shape'])
-                    lons_shape = [s for idx,s in enumerate(shape) if idx%2 == 0]
-                    lats_shape = [s for idx,s in enumerate(shape) if idx%2 == 1]
-                    try:
-                        bbox = str(min(lons_shape)) + ',' + str(min(lats_shape)) + ',' + str(max(lons_shape)) + ',' + str(max(lats_shape))
-                    except:
-                        context['results'] = 'No data found!'
-                        return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
-                params['bbox'] = bbox
-            elif 'bounding_box' in form1.cleaned_data.keys():
-                graph_title = 'Bounding Box: ' + str(form1.cleaned_data['bounding_box'])
-                params['bbox'] = form1.cleaned_data['bounding_box']
-            elif 'county' in form1.cleaned_data.keys():
-                graph_title = 'County: ' + str(form1.cleaned_data['county'])
-                params['county'] = form1.cleaned_data['county']
-            elif 'climate_divison' in form1.cleaned_data.keys():
-                graph_title = 'Climate Division: ' + str(form1.cleaned_data['climate_division'])
-                params['climdiv'] = form1.cleaned_data['climate_divison']
-            elif 'basin' in form1.cleaned_data.keys():
-                graph_title = 'Basin: ' + str(form1.cleaned_data['basin'])
-                params['basin'] = form1.cleaned_data['basin']
-            elif 'county_warning_area' in form1.cleaned_data.keys():
-                graph_title = 'County Warning Area: ' + str(form1.cleaned_data['county_warning_area'])
-                params['cwa'] = form1.cleaned_data['county_warning_area']
-            elif 'state' in form1.cleaned_data.keys():
-                graph_title = 'State: ' + str(form1.cleaned_data['state'])
-                params['state'] = form1.cleaned_data['state']
+                element_name = WRCCData.acis_elements_dict[search_params['element']]['name_long']
+                yAxisText = smry + ' ' + WRCCData.acis_elements_dict[search_params['element']]['name_long']
+                params['elems'] = search_params['element']
 
-            #Overwrite graph_title if user specific
+            #Find search area parameters, shape and bounding box if needed
+            key, val, acis_param, name_long, search_type = WRCCUtils.get_search_area_values(search_params, 'gridded')
+            if search_type == 'default':
+                params[acis_param] = val
+                poly = 'Not Needed'
+                shape = None;shape_name = None
+            else:
+                #search area county/climdiv/basin/cwa or custom shape
+                # need to find coordinates of shape and enclosing bbox
+                if key == 'shape':
+                    shape = val.split(',')
+                    shape = [float(s) for s in shape]
+                    shape_name = None
+                    if len(shape)==3:
+                        bbox = WRCCUtils.find_bbox_of_circle(shape[0], shape[1], shape[2])
+                        poly = shape
+                        PointIn = getattr(WRCCUtils,'point_in_circle')
+                    else:
+                        lons_shape = [s for idx,s in enumerate(shape) if idx%2 == 0]
+                        lats_shape = [s for idx,s in enumerate(shape) if idx%2 == 1]
+                        #convert to tuples
+                        poly = [(shape[2*idx],shape[2*idx+1]) for idx in range(len(shape)/2)]
+                        PointIn = getattr(WRCCUtils,'point_in_poly')
+                        try:
+                            bbox = str(min(lons_shape)) + ',' + str(min(lats_shape)) + ',' + str(max(lons_shape)) + ',' + str(max(lats_shape))
+                        except:
+                            context['results'] = 'No bounding box could be found!'
+                            return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
+                else:
+                    #Need to find shape coordinates and enclosing bbox
+                    #via ACIS general call
+                    gen_params={'id':str(val),'meta':'geojson,bbox,name,id'}
+                    try:
+                        gen_req = AcisWS.General(acis_param, gen_params)
+                        shape = gen_req['meta'][0]['geojson']['coordinates'][0][0]
+                        bbox = gen_req['meta'][0]['bbox']
+                        shape_name = gen_req['meta'][0]['name']
+                    except:
+                        context['results'] = 'Shape or bounding box could not be found!'
+                        return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
+                    poly = [(s[0],s[1]) for s in shape]
+                    #poly = [(shape[2*idx],shape[2*idx+1]) for idx in range(len(shape)/2)]
+                    PointIn = getattr(WRCCUtils,'point_in_poly')
+
+                params['bbox'] = bbox
+
+            #Set graph title
             if form1.cleaned_data['graph_title'] != 'Use default':
-                graph_title = str(form1.cleaned_data['graph_title'])
+                graph_title = search_params['graph_title']
+            else:
+                if shape_name:
+                    graph_title = name_long + ':' + shape_name + ' (' + search_params[key] + ')'
+                else:
+                    graph_title = name_long + ':' + search_params[key]
             #Find data
             try:
                 req = AcisWS.GridData(params)
+                #context['bbox']= req
                 #Find unique lats,lons
                 lats_bbox_unique = [lat_grid[0] for lat_grid in req['meta']['lat']]
                 lons_bbox_unique = req['meta']['lon'][0]
@@ -1130,16 +1151,6 @@ def area_time_series(request):
                 return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
 
             #Find data lying within shape
-            if 'shape' in form1.cleaned_data.keys():
-                if len(shape) == 3: #circle
-                    poly = shape
-                    PointIn = getattr(WRCCUtils,'point_in_circle')
-                else: #polygon
-                    poly = [(shape[2*idx],shape[2*idx+1]) for idx in range(len(shape)/2)]
-                    PointIn = getattr(WRCCUtils,'point_in_poly')
-            else:
-                poly = 'Not Needed'
-
             data_poly = [[str(dat[0])] for dat in req['data']]
             values_poly = [[] for dat in req['data']] #list of list holding just the data values for each day at each gridpoint
             summary_time_series = [[str(dat[0])] for dat in req['data']]
@@ -1176,36 +1187,32 @@ def area_time_series(request):
                             summary_time_series[date_idx].append(round(sum(val_list) / len(val_list),2))
                         else:
                             summary_time_series[date_idx].append('-----')
-        context['results']= summary_time_series
-        #width and height of graph image
-        context['width'] = WRCCData.image_sizes[form1.cleaned_data['image_size']][0]
-        context['height'] = WRCCData.image_sizes[form1.cleaned_data['image_size']][1]
-        #Write results to json file
+            context['results']= summary_time_series
+            #width and height of graph image
+            context['width'] = WRCCData.image_sizes[form1.cleaned_data['image_size']][0]
+            context['height'] = WRCCData.image_sizes[form1.cleaned_data['image_size']][1]
+            #Write results to json file
 
-        if 'base_temperature' in form1.cleaned_data.keys():
-            base_temperature = str(form1.cleaned_data['base_temperature'])
-        else:
-            base_temperature = ''
-        search_params = {}
-        for key, val in form1.cleaned_data.iteritems():
-            search_params[key] = str(val)
-        context['bbox'] = search_params
-        json_dict = {
-            'search_params':search_params,
-            'element_name':element_name,
-            'yAxisText':yAxisText,
-            'data':summary_time_series,
-            'graph_title':graph_title,
-            'summary':smry
-        }
-        results_json = json.dumps(json_dict)
-        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
-        json_file = '%s_climrisk.json' %(time_stamp)
-        f = open('/tmp/%s' %(json_file),'w+')
-        f.write(results_json)
-        f.close()
-        context['JSON_URL'] = '/tmp/'
-        context['json_file'] = json_file
+            if 'base_temperature' in form1.cleaned_data.keys():
+                base_temperature = str(form1.cleaned_data['base_temperature'])
+            else:
+                base_temperature = ''
+            json_dict = {
+                'search_params':search_params,
+                'element_name':element_name,
+                'yAxisText':yAxisText,
+                'data':summary_time_series,
+                'graph_title':graph_title,
+                'summary':smry
+            }
+            results_json = json.dumps(json_dict)
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+            json_file = '%s_climrisk.json' %(time_stamp)
+            f = open('/tmp/%s' %(json_file),'w+')
+            f.write(results_json)
+            f.close()
+            context['JSON_URL'] = '/tmp/'
+            context['json_file'] = json_file
     return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
 
 def grid_point_time_series(request):
