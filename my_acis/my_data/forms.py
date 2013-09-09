@@ -924,8 +924,9 @@ class AreaTimeSeriesForm1(forms.Form):
         elif state is not None:
             self.fields['state'] = forms.ChoiceField(required=False, choices=STATE_CHOICES, initial=state, help_text='US state.')
 
-        self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES,initial=element, help_text='Climate Element')
-        #self.fields['element'].widget.attrs = {'readonly':True, 'style':readonly_style}
+        #self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES,initial=element, help_text='Climate Element')
+        self.fields['element'] = forms.CharField(initial=element, help_text = 'Climate element')
+        self.fields['element'].widget.attrs = {'readonly':True, 'style':readonly_style}
         if element in ['hddxx','gddxx', 'cddxx']:
             self.fields['base_temperature'] = forms.IntegerField(initial=65, help_text='Base temperature used to calculate degree days.')
         if start_date is None:

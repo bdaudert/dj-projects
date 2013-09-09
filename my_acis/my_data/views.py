@@ -1160,7 +1160,6 @@ def area_time_series(request):
             #Find data
             try:
                 req = AcisWS.GridData(params)
-                #context['bbox']= req
                 #Find unique lats,lons
                 lats_bbox_unique = [lat_grid[0] for lat_grid in req['meta']['lat']]
                 lons_bbox_unique = req['meta']['lon'][0]
@@ -1176,7 +1175,6 @@ def area_time_series(request):
             data_poly = [[str(dat[0])] for dat in req['data']]
             values_poly = [[] for dat in req['data']] #list of list holding just the data values for each day at each gridpoint
             summary_time_series = [[str(dat[0])] for dat in req['data']]
-
             #Check each bbox unique lat, lon combintation for containment in the polygon
             for lat_idx,lat in enumerate(lats_bbox_unique):
                 for lon_idx, lon in enumerate(lons_bbox_unique):
@@ -1209,6 +1207,7 @@ def area_time_series(request):
                             summary_time_series[date_idx].append(round(sum(val_list) / len(val_list),2))
                         else:
                             summary_time_series[date_idx].append('-----')
+            context['bbox'] = summary_time_series
             #Set context variables
             context['results']= summary_time_series
             context['width'] = WRCCData.image_sizes[form1.cleaned_data['image_size']][0]
