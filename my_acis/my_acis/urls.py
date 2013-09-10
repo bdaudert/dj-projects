@@ -27,6 +27,14 @@ urlpatterns = patterns('',
     #(r'^my_meta/Station/(?P<tbl_id>\d+)/$', 'my_meta.views.sub_tables'),
     (r'^wrcc_meta/add/$', 'my_meta.views.station_tables_add'),
     (r'^wrcc_meta/merge/$', 'my_meta.views.station_tables_merge'),
+    (r'^wrcc_apps/$', 'my_apps.views.home_view'),
+    #sub process apps: FIX ME: Need to be converted to module approach
+    #module approach apps
+    (r'^wrcc_apps/cemp/$', 'my_apps.views.cemp'),
+    (r'^wrcc_apps/nevcan/$', 'my_apps.views.nevcan'),
+    (r'^wrcc_apps/(?P<app_name>Sodsum)/$', 'my_apps.views.sodsum'),
+    (r'^wrcc_apps/(?P<app_name>[Soddyrec|Soddynorm|Soddd|Sodpad|Sodsumm|Sodrun|Sodrunr|Sodpct|Sodthr|Sodxtrmts|Sodpiii]*)/$', 'my_apps.views.sods'),
+    (r'^wrcc_apps/(?P<app_name>[Sodlist|Sodmonline|Sodmonlinemy|Sodcnv]*)/$', 'my_apps.views.sodlist'),
     (r'^swcke/test/$', 'my_data.views.test'),
     (r'^swcke/main/$', 'my_data.views.main'),
     (r'^swcke/main_map/$', 'my_data.views.main_map'),
@@ -80,12 +88,6 @@ urlpatterns = patterns('',
     (r'^swcke/apps/gridded/clim_prob_maps/(?P<start_date>[\d{8,10}])(\&P<end_date>[\d{8,10})(\&P<element>[^,]+)(\&P<grid>[^,]+)(\&P<state>[^,]+)$', 'my_data.views.clim_prob_maps'),
     (r'^swcke/apps/gridded/clim_prob_maps/(\?P<start_date>[\d{8,10}])(\&P<end_date>[\d{8,10})(\&P<element>[^,]+)(\&P<grid>[^,]+)(\&P<bounding_box>[^,]+)$', 'my_data.views.clim_prob_maps'),
     (r'^swcke/apps/station/station_locator/$', 'my_data.views.station_locator_app'),
-    (r'^wrcc_apps/$', 'my_apps.views.home_view'),
-    #sub process apps: FIX ME: Need to be converted to module approach
-    #module approach apps
-    (r'^wrcc_apps/(?P<app_name>Sodsum)/$', 'my_apps.views.sodsum'),
-    (r'^wrcc_apps/(?P<app_name>[Soddyrec|Soddynorm|Soddd|Sodpad|Sodsumm|Sodrun|Sodrunr|Sodpct|Sodthr|Sodxtrmts|Sodpiii]*)/$', 'my_apps.views.sods'),
-    (r'^wrcc_apps/(?P<app_name>[Sodlist|Sodmonline|Sodmonlinemy|Sodcnv]*)/$', 'my_apps.views.sodlist'),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

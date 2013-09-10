@@ -236,8 +236,8 @@ DELIMITER_CHOICES = (
 #Element Descriptions
 ##################
 acis_els = ''
-for el in WRCCData.acis_elements_dict.keys():
-    acis_els+='%s : %s\n' %(el, WRCCData.acis_elements_dict[el]['name_long'])
+for el in WRCCData.ACIS_ELEMENTS_DICT.keys():
+    acis_els+='%s : %s\n' %(el, WRCCData.ACIS_ELEMENTS_DICT[el]['name_long'])
 
 help_date = 'yyyymmdd, yyyy-mm-dd or yyyy/mm/dd'
 help_comma_elements = 'Comma separated list of climate elements. Available elements: \n %s' %acis_els
@@ -357,7 +357,7 @@ class MyStateField(forms.CharField):
         states_list = states.split(',')
         for state in states_list:
             st = state.lower()
-            if st not in WRCCData.fips_state_keys.keys() and st not in WRCCData.state_choices:
+            if st not in WRCCData.FIPS_STATE_KEYS.keys() and st not in WRCCData.STATE_CHOICES:
                 raise forms.ValidationError('Need comma separated list of valid US states. Not a valid US State: %s' % state)
 #for background data requests, see GridDataForm3, StationDataForm3
 class MyNameField(forms.CharField):

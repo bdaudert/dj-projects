@@ -96,45 +96,11 @@
         <script type="text/javascript">            
             $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
         </script>
-        <div id="how_to" style="display:none;">
-            <p></p>
-            <p>Don't know your station id? Find it here:</p>
-            <a href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a><br />
-            <p>Define your start and end year. Use "POR" for both start/end year if you are
-                        interested in the period of record of the station</p>
-            <p>Chose a climate element from the list provided.</p>
-            <p>If you chose any of the Degree Day elements, please specify your base temperature.</p>
-            <p>The analysis type defines the type of statistics  that will be generated.
-            <ul>
-                <p>Monthly Maximum --<br /> 
-                Computes monthly maximum of the climate element for each month in the period spanning start and end year.<br />
-                Monthly Minimum -- <br />
-                Computes monthly minimum of the climate element for each month in the period spanning start and end year.<br />
-                Monthly Average -- <br />
-                Computes monthly average of the climate element for each month in the period spanning start and end year, <br />
-                as the sum of the daily non-missing values divided by the number of non-missing values.<br />
-                Standard deviation -- <br />
-                Compute standard deviation of individual daily values<br />
-                of the climate element within each month. Uses N-1 degrees of freedom.<br />
-                Number of Days -- <br />
-                Computes number of days that daily values of the climate element meet<br />
-                user selected threshold criteria for each month in the period spanning the start to end year.<br />
-                Range during Month -- <br />
-                Computes the difference (Highest minus Lowest daily value) of the selected climate element <br />
-                for each month in the period spanning the start to end year.<br />
-                Monthly Sum -- <br />
-                Computes monthly sum of daily values of the climate element <br />
-                for each month in the period spanning the start to end year.</p>
-            <ul>
-            </p>
-            <p>The number of maximum missing days allowed in a month. Months with more than max_missing_days missing
-            will be omitted from the analysis.</p>
-            <p>Chose a month for the start of your analysis.</p>
-            <p>If the option departure from averages is chosen, the results will be returned as departure from averages rather than raw values.</p>
-            <p>There is an option to perfom a frequency analysis on the results of the statistical analysis.</p>
-            <p>If you opt for a frequency analysis, please choose your analysis type.</p>
-            </p>
-        </div>
+        <div id="how_to" style="display:none;"></div>
+        <script type="text/javascript">            
+            $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_Sodxtrmts");
+        </script>
+        
         <br />
         {%if results%}
             <p>

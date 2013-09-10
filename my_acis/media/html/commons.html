@@ -603,15 +603,62 @@ CRCM Model</a><br />
     <p class="error">What can you do with this tool?</p>
     <br /><br /><br /><br />
     <h3>Generate summary tables</h3>
-    <img alt="SodxtrmtsTable" title="SodxtrmtsTable" width="100%" height="200px" src="/csc/media/img/SodxtrmtsTable.png">
+    <img alt="SodxtrmtsTable" title="SodxtrmtsTable" width="25:w!
+0px" height="200px" src="/csc/media/img/SodxtrmtsTable.png">
     <h3>Generate summary graphs</h3>
-    <img alt="SodxtrmtsTS" title="SodxtrmtsTS" width="100%" height="200px" src="/csc/media/img/SodxtrmtsTS.png">
+    <img alt="SodxtrmtsTS" title="SodxtrmtsTS" width="250px" height="200px" src="/csc/media/img/SodxtrmtsTS.png">
     <h3>Get raw data behind the graphics</h3>
+</div>
+
+<div id="Howto_Sodxtrmts">
+    <p>
+    <b>Station ID </b>Enter the station ID. If you don't know your ID, please use the link to the station finder tool to find it.<br />    
+    <a href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a><br />
+    <b>Start/End Year</b>Define your start and end year. Use "POR" for both start/end year if you are interested in the period of record of the station<br />
+    <b>Element </b>Chose a climate element from drop down menue.<br />
+    If you chose any of the Degree Day elements, please specify your base temperature.<br />
+    <b>Monthly Statistic</b> The type of statistics  that will be generated.<br />
+        <ul>
+        <li><b>Monthly Maximum</b><br />
+        Computes monthly maximum of the climate element for each month in the period spanning start and end year.</li>
+        <li><b>Monthly Minimum</b><br />
+        Computes monthly minimum of the climate element for each month in the period spanning start and end year.</li>
+        <li><b>Monthly Average</b><br />
+        Computes monthly average of the climate element for each month in the period spanning start and end year, as the sum of the daily non-missing values divided by the number of non-missing values.</li>
+        <li><b>Standard Deviation</b><br />
+        Compute standard deviation of individual daily values of the climate element within each month. Uses N-1 degrees of freedom.</li>
+        <li><b>Number of Days</b><br />
+        Computes number of days that daily values of the climate element meet user selected threshold criteria for each month in the period spanning the start to end year.</li>
+        <li><b>Range during Month</b><br />
+        Computes the difference (Highest minus Lowest daily value) of the selected climate element for each month in the period spanning the start to end year.</li>
+        <li><b>Monthly Sum</b><br />
+        Computes monthly sum of daily values of the climate element for each month in the period spanning the start to end year.</li>
+        </ul>
+    <b>Max dissing days </b>The number of maximum missing days allowed in a month. Months with more than max_missing_days missing will be omitted from the analysis.<br />
+    <b>Start month </b>Chose a month for the start of your analysis.<br />
+    <b>Departure from averages </b>Choose "Yes" if the results should be returned as departure from averages rather than raw values.<br />
+    <b>Frequency analysis </b>Choose "Yes" if you wish to perfom a frequency analysis on the results of the statistical analysis.<br />
+    If you opt for a frequency analysis, please choose your analysis type.<br />
+    <b>Conditional parameters</b><br />
+    &nbsp;&nbsp;&nbsp;&nbsp;<b>Base temperature </b>If you choose Heating, Cooling or Growing Degrees as your climate element, please choose your base temperature. For example, Cooling Degree Days are caluclated as folows: (max temp - min temp)/2 - base temperature<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;<b>Degree Day Calculation</b><br />
+    <ul>
+        <li><b>Heating Degree Days </b>base temperature - (max temperature - min temperature)/2 </li>
+        <li><b>Cooling Degree Days </b>(max temperature - min temperature)/2 - base temperature</li>
+        <li><b>Growing degree Days </b>(max temperature - min temperature)/2 - base temperature</li>
+    </ul>
+    <b>Thresholds for "Number of Days" statistic</b> Fill out this sub section if your monthly statitic is "Number of Days."<br />
+        <ul>
+            <li><b>Less greater or between </b>Count the number of days less than/greater than or between threshold(s).</li> 
+            <li><b>Threshold </b>If you choose less than or greater than above, enter your threshold here.</li>
+            <li><b>Above/Below </b>If you choose between above, enter your lower(Above) and upper(Below) thresholds here.</li>
+        <ul>
+    </p>
 </div>
 
 <div id="Docu_SODXTRMTS_VIS">
     <p class="error">What is the <b>Visualization</b> Tool?</p>
-    <p>After running the  <b>Monthly Time Series</b> youcan use this tool to generate customized time series plots<br />
+    <p>After running the  <b>Monthly Time Series </b> application, you can use this tool to generate customized time series plots<br />
     <p class="error">What dataset is being used?</p>
     <p>This tool works with station data found in the ACIS system. <br />
     A variety of data sets from different networks are available.</p>
@@ -622,6 +669,33 @@ CRCM Model</a><br />
     <img alt="SodxtrmtsTS" title="SodxtrmtsTS" width="500px" height="300px" src="/csc/media/img/SodxtrmtsTS.png">
     <h3>Print plots</h3>
 </div>
+
+<div id="Howto_SODXTRMTS_VIS">
+    <p>
+    <b>Start/End month </b>Start/end the visualization on these months.<br />
+    <b>Summary </b>Choose how you want to summarize the data over the months spanning <b>Start/end month</b>
+            <ul>
+                <li><b>Maximum over months </b>Plots the maximum value of the months for each year in the time period .</li>
+                <li><b>Minimum over months </b>Plots the minimum value of the chosen months for each year in the time period.</li>
+                <li><b>Sum over months </b>Plots the sum of the values of the chosen months for each year in the time period.</li>
+                <li><b>Average over months </b>Plots the averages of the values of the chosen months for each year in the time period.</li>
+                <li><b>Plot months separately </b>Generates a plot of time series for each of the chosen months.</li>
+            </ul>
+    <b>Show running mean </b> Choose "Yes" if you want a running mean to be computed and shown on the final graph<br />
+    <b>Running mean years</b> Defines the number of years used to compute the running mean.<br />
+    <b>Plot incomplete years </b> Choose "yes" if you want to compute the summary for a year exceeding the maximum number of missing days allowed.<br />
+    <b>Plot options</b> Several plot options are available.
+        <ul>
+            <li><b>Image size </b>Choose your image size from the drop down menue.</li>
+            <li><b>Show major grid </b>Dashed grid lines will be places at a step size of 1/5(data_max - data_min) </li>
+            <li><b>Show minor grid </b>Dashed gridlines will be placed at a step size of 1/10(data_max - data_min). </li>
+            <li><b>Connector line </b>Choose "Yes" if you would like your data points connected by a line.</li>
+            <li><b>Connector line width </b>Defines the width of the line connecting that data points. 10 is the maximum line width allowed. Choosing 0 is the same as choosing no connector line.</li>
+            <li><b>Markers </b>Choose yes if you would like to see a marker at each data point.</li>
+            <li><b>Marker type </b>Choose a marker type from the drop down menue.</li>
+        </ul>
+</div>
+
 
 <!--EXTERNAL RESOURCES/LINKS-->
 <div id="Docu_ScienceBase">

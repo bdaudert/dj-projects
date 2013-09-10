@@ -69,13 +69,13 @@ def main(request):
         mon = '0%s' %str(month)
     else:
         mon = str(month)
-    day  = str(WRCCData.month_lens[month -1])
+    day  = str(WRCCData.MONTH_LENGTHS[month -1])
     if len(day) == 1:
         day = '0%s' %day
     context['day'] = day
     context['month'] = month
     context['mon'] = mon
-    context['month_name'] = WRCCData.month_names_long[month - 1]
+    context['month_name'] = WRCCData.MONTH_NAMES_LONG[month - 1]
     context['state'] = state
     context['element'] = element
     return render_to_response('my_data/main_maves.html', context, context_instance=RequestContext(request))
@@ -316,7 +316,7 @@ def data_station(request):
                 context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
                 if 'delimiter' in form1.cleaned_data.keys():
                     context['delimiter_word'] = form1.cleaned_data['delimiter']
-                    delimiter = WRCCData.delimiters[str(form1.cleaned_data['delimiter'])]
+                    delimiter = WRCCData.DELIMITERS[str(form1.cleaned_data['delimiter'])]
                 else:
                     if form1.cleaned_data['data_format'] == 'json':
                         delimiter = None
@@ -327,7 +327,7 @@ def data_station(request):
                 if form1.cleaned_data['data_format'] == 'html':
                     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
                 else:
-                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, WRCCData.file_extensions[str(form1.cleaned_data['data_format'])], request=request, output_file_name=str(form1.cleaned_data['output_file_name']), show_flags=show_flags, show_observation_time=show_observation_time)
+                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, WRCCData.FILE_EXTENSIONS[str(form1.cleaned_data['data_format'])], request=request, output_file_name=str(form1.cleaned_data['output_file_name']), show_flags=show_flags, show_observation_time=show_observation_time)
 
     if 'form2' in request.POST:
         form2 = set_as_form(request,'StationDataForm3')
@@ -507,7 +507,7 @@ def data_gridded(request):
             element_list = form1.cleaned_data['elements']
             context['element_list'] = element_list
             for el in element_list:
-                elems_long.append(WRCCData.acis_elements_dict[el]['name_long'])
+                elems_long.append(WRCCData.ACIS_ELEMENTS_DICT[el]['name_long'])
             context['elems_long'] = elems_long
             context['grid'] = str(form1.cleaned_data['grid']);grid=str(form1.cleaned_data['grid'])
 
@@ -591,14 +591,14 @@ def data_gridded(request):
                                 context['state'] = form1.cleaned_data['state']
 
             if 'delimiter' in form1.cleaned_data.keys():
-                delimiter = WRCCData.delimiters[str(form1.cleaned_data['delimiter'])]
+                delimiter = WRCCData.DELIMITERS[str(form1.cleaned_data['delimiter'])]
             else:
                 delimiter = ' '
             context['delimiter'] = delimiter
             if form1.cleaned_data['data_format'] == 'html':
                 return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
             else:
-                return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,WRCCData.file_extensions[form1.cleaned_data['data_format']], request=request,output_file_name =form1.cleaned_data['output_file_name'])
+                return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,WRCCData.FILE_EXTENSIONS[form1.cleaned_data['data_format']], request=request,output_file_name =form1.cleaned_data['output_file_name'])
 
     if 'form2' in request.POST:
         form2 = set_as_form(request,'GridDataForm3')
@@ -648,7 +648,7 @@ def apps_home(request):
     if element is None: element='mint'
     month = int(datetime.date.today().month)
     context['month'] = month
-    context['month_name'] = WRCCData.month_names_long[month - 1]
+    context['month_name'] = WRCCData.MONTH_NAMES_LONG[month - 1]
     context['state'] = state
     context['element'] = element
     return render_to_response('my_data/apps/home.html', context, context_instance=RequestContext(request))
@@ -745,7 +745,7 @@ def monthly_aves(request):
     context = {
         'title': 'Monthly Averages',
         'icon':'ToolProduct.png',
-        'acis_elements':dict(WRCCData.acis_elements_dict)
+        'acis_elements':dict(WRCCData.ACIS_ELEMENTS_DICT)
     }
     stn_id = request.GET.get('stn_id', None)
     start_date = request.GET.get('start_date', None)
@@ -774,7 +774,7 @@ def monthly_aves(request):
             context['elems'] = ','.join(form.cleaned_data['elements'])
             params = dict(sid=stn_id, sdate=s_date, edate=e_date, \
             meta='valid_daterange,name,state,sids,ll,elev,uid,county,climdiv', \
-            elems=[dict(vX=WRCCData.acis_elements_dict[el]['vX'], groupby="year")for el in form.cleaned_data['elements']])
+            elems=[dict(vX=WRCCData.ACIS_ELEMENTS_DICT[el]['vX'], groupby="year")for el in form.cleaned_data['elements']])
             monthly_aves = {}
             results = [{} for k in form.cleaned_data['elements']]
             #results = defaultdict(dict)
@@ -806,9 +806,9 @@ def monthly_aves(request):
                         elif b == 'dd' and el == 'gdd':
                             base_temp = '50'
                     if base_temp:
-                        results[el_idx] = {'element_long': WRCCData.acis_elements_dict[el_strip]['name_long'] + 'Base Temperature: ' + base_temp}
+                        results[el_idx] = {'element_long': WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + 'Base Temperature: ' + base_temp}
                     else:
-                        results[el_idx] = {'element_long': WRCCData.acis_elements_dict[el_strip]['name_long']}
+                        results[el_idx] = {'element_long': WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long']}
                     results[el_idx]['element'] = str(el)
                     results[el_idx]['stn_id']= str(form.cleaned_data['station_id'])
                     if form.cleaned_data['start_date'].lower() == 'por':
@@ -942,19 +942,19 @@ def clim_sum_maps(request):
                     'edate': form1.cleaned_data['end_date']}
             if form1.cleaned_data['element'] == 'gddxx':
                 elem = 'gdd%s' %str(form1.cleaned_data['base_temperature_gddxx'])
-                context['elems_long'] = WRCCData.acis_elements_dict['gdd']['name_long']
+                context['elems_long'] = WRCCData.ACIS_ELEMENTS_DICT['gdd']['name_long']
                 context['base_temp'] = str(form1.cleaned_data['base_temperature_gddxx'])
             elif form1.cleaned_data['element'] == 'hddxx':
                 elem = 'hdd%s' %str(form1.cleaned_data['base_temperature_hddxx'])
-                context['elems_long'] = WRCCData.acis_elements_dict['hdd']['name_long']
+                context['elems_long'] = WRCCData.ACIS_ELEMENTS_DICT['hdd']['name_long']
                 context['base_temp'] = str(form1.cleaned_data['base_temperature_hddxx'])
             elif form1.cleaned_data['element'] == 'cddxx':
                 elem = 'cdd%s' %str(form1.cleaned_data['base_temperature_cddxx'])
-                context['elems_long'] = WRCCData.acis_elements_dict['cdd']['name_long']
+                context['elems_long'] = WRCCData.ACIS_ELEMENTS_DICT['cdd']['name_long']
                 context['base_temp'] = str(form1.cleaned_data['base_temperature_cddxx'])
             else:
                 elem = str(form1.cleaned_data['element'])
-                context['elems_long'] = WRCCData.acis_elements_dict[elem]['name_long']
+                context['elems_long'] = WRCCData.ACIS_ELEMENTS_DICT[elem]['name_long']
             params['elems'] = [{'name':elem}]
             if 'state' in form1.cleaned_data.keys():
                 params['state'] = form1.cleaned_data['state']
@@ -1054,35 +1054,8 @@ def area_time_series(request):
         context['hide_form0'] = True
         context['form1_ready'] = True
         if form1.is_valid():
-            #Take care of unicode issue and define display parameters
-            search_params = {}
-            display_params = {}
-            key_order = ['element', 'start_date', 'end_date', 'summary', 'grid', 'show_running_mean', 'running_mean_days', 'graph_title']
-            display_params_list = [[] for k in range(len(key_order))]
-            for key, val in form1.cleaned_data.iteritems():
-                search_params[key] = str(val)
-                if key == 'grid':
-                    display_params[WRCCData.display_params[key]] = WRCCData.GRID_CHOICES[val]
-                    display_params_list[4] = [WRCCData.display_params[key], WRCCData.GRID_CHOICES[val]]
-                elif key == 'summary':
-                    smry = WRCCData.display_params[val]
-                    display_params[WRCCData.display_params[key]] = WRCCData.display_params[val]
-                    display_params_list[3] = [WRCCData.display_params[key], WRCCData.display_params[val]]
-                elif key == 'element':
-                    display_params[WRCCData.display_params[key]] = WRCCData.display_params[val]
-                    display_params_list[0] = [WRCCData.display_params[key], WRCCData.display_params[val]]
-                elif key == 'shape':
-                    display_params[WRCCData.display_params[key]] = ''
-                else:
-                    value = str(val)
-                    if val =='T':value='Yes'
-                    if val == 'F':value = 'No'
-                    display_params[WRCCData.display_params[key]] = value
-                    try:
-                        idx = key_order.index(key)
-                        display_params_list[idx] = [WRCCData.display_params[key], value]
-                    except ValueError:
-                        pass
+            search_params, display_params_list =  set_area_time_series_params(form1)
+            smry = WRCCData.DISPLAY_PARAMS[form1.cleaned_data['summary']]
             #Set up data request params
             params = {
                 'sdate':search_params['start_date'],
@@ -1092,13 +1065,13 @@ def area_time_series(request):
             }
             #find element parameter
             if search_params['element'] in ['hddxx','gddxx', 'cddxx']:
-                element_name = WRCCData.acis_elements_dict[str(search_params['element'])[0:3]]['name_long'] + 'Base temperature ' + str(search_params['base_temperature'])
+                element_name = WRCCData.ACIS_ELEMENTS_DICT[str(search_params['element'])[0:3]]['name_long'] + 'Base temperature ' + str(search_params['base_temperature'])
                 yAxisText = smry + ' ' + search_params['element'][0:3] + search_params['base_temperature']
                 params['elems'] = search_params['element'][0:3] + search_params['base_temperature']
 
             else:
-                element_name = WRCCData.acis_elements_dict[search_params['element']]['name_long']
-                yAxisText = smry + ' ' + WRCCData.acis_elements_dict[search_params['element']]['name_long']
+                element_name = WRCCData.ACIS_ELEMENTS_DICT[search_params['element']]['name_long']
+                yAxisText = smry + ' ' + WRCCData.ACIS_ELEMENTS_DICT[search_params['element']]['name_long']
                 params['elems'] = search_params['element']
 
             #Find search area parameters, shape and bounding box if needed
@@ -1210,11 +1183,10 @@ def area_time_series(request):
             context['bbox'] = summary_time_series
             #Set context variables
             context['results']= summary_time_series
-            context['width'] = WRCCData.image_sizes[form1.cleaned_data['image_size']][0]
-            context['height'] = WRCCData.image_sizes[form1.cleaned_data['image_size']][1]
+            context['width'] = WRCCData.IMAGE_SIZES[form1.cleaned_data['image_size']][0]
+            context['height'] = WRCCData.IMAGE_SIZES[form1.cleaned_data['image_size']][1]
             context['graph_title'] = graph_title
             context['graph_subtitle'] = smry + element_name
-            context['display_params'] = display_params
             context['display_params_list'] = display_params_list
             #Write results to json file
             if 'base_temperature' in form1.cleaned_data.keys():
@@ -1278,7 +1250,7 @@ def grid_point_time_series(request):
             element, base_temp = WRCCUtils.get_el_and_base_temp(form0.cleaned_data['element'])
             if base_temp is not None:
                 context['base_temp'] = base_temp
-            context['element_long'] = WRCCData.acis_elements_dict[element]['name_long']
+            context['element_long'] = WRCCData.ACIS_ELEMENTS_DICT[element]['name_long']
             context['element'] = form0.cleaned_data['element']
             context['lat'] = form0.cleaned_data['lat']
             context['lon'] = form0.cleaned_data['lon']
@@ -1432,7 +1404,7 @@ def station_locator_app(request):
                         else:
                             pass
                     except:
-                        el_vX_list.append(str(WRCCData.acis_elements_dict[el]['vX']))
+                        el_vX_list.append(str(WRCCData.ACIS_ELEMENTS_DICT[el]['vX']))
 
                 stn_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=form1.cleaned_data['constraints'])
             else:
@@ -1521,7 +1493,7 @@ def sodxtrmts(request):
                 results = results[0][0]
             context['run_done'] = True
             context['results'] = results
-            months = WRCCData.month_names_short_cap + ['ANN']
+            months = WRCCData.MONTH_NAMES_SHORT_CAP + ['ANN']
             #months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'ANN']
             start_month = int(str(form0.cleaned_data['start_month']))
             month_list = [mon for mon in months[(start_month -1):12]]
@@ -1537,7 +1509,7 @@ def sodxtrmts(request):
                 if data_params['element'] == 'dtr':
                     element_name = 'Temperature Range (F)'
                 else:
-                    element_name = WRCCData.acis_elements_dict[data_params['element']]['name_long']
+                    element_name = WRCCData.ACIS_ELEMENTS_DICT[data_params['element']]['name_long']
                 if 'base_temperature' in form0.cleaned_data.keys():
                     base_temperature = form0.cleaned_data['base_temperature']
                 else:
@@ -1628,8 +1600,8 @@ def sodxtrmts_visualize(request):
             else:
                 context['months'] = [mon for mon in range(int(form0.cleaned_data['start_month']), int(form0.cleaned_data['end_month']) +1)]
             #Plot Options:
-            context['width'] = WRCCData.image_sizes[form0.cleaned_data['image_size']][0]
-            context['height'] = WRCCData.image_sizes[form0.cleaned_data['image_size']][1]
+            context['width'] = WRCCData.IMAGE_SIZES[form0.cleaned_data['image_size']][0]
+            context['height'] = WRCCData.IMAGE_SIZES[form0.cleaned_data['image_size']][1]
             context['graph_title'] = form0.cleaned_data['graph_title']
             context['major_grid'] = form0.cleaned_data['major_grid']
             context['minor_grid'] = form0.cleaned_data['minor_grid']
@@ -1683,13 +1655,13 @@ def sodsumm(request):
             context['max_missing_days'] = app_params['max_missing_days']
             #Sodsumm table headers for html
             if form1.cleaned_data['generate_graphics'] == 'T':
-                context['tab_names'] = WRCCData.tab_names_with_graphics[form1.cleaned_data['summary_type']]
-                tab_list = WRCCData.tab_list_with_graphics[form1.cleaned_data['summary_type']]
-                table_list =WRCCData.table_list_with_graphics[form1.cleaned_data['summary_type']]
+                context['tab_names'] = WRCCData.TAB_NAMES_WITH_GRAPHICS[form1.cleaned_data['summary_type']]
+                tab_list = WRCCData.TAB_LIST_WITH_GRAPHICS[form1.cleaned_data['summary_type']]
+                table_list =WRCCData.TABLE_LIST_WITH_GRAPHICS[form1.cleaned_data['summary_type']]
             else:
-                context['tab_names'] = WRCCData.tab_names_no_graphics[form1.cleaned_data['summary_type']]
-                tab_list = WRCCData.tab_list_no_graphics[form1.cleaned_data['summary_type']]
-                table_list =WRCCData.table_list_no_graphics[form1.cleaned_data['summary_type']]
+                context['tab_names'] = WRCCData.TAB_NAMES_NO_GRAPHICS[form1.cleaned_data['summary_type']]
+                tab_list = WRCCData.TAB_LIST_NO_GRAPHICS[form1.cleaned_data['summary_type']]
+                table_list =WRCCData.TABLE_LIST_NO_GRAPHICS[form1.cleaned_data['summary_type']]
             context['table_list'] = table_list
             context['tab_list'] = tab_list
             #Define html content
@@ -1747,7 +1719,7 @@ def sodsumm(request):
                         legend = ['Base 65', 'Base 60', 'Base 57', 'Base 55', 'Base 50']
                     else:
                         legend = ['Base 55', 'Base 57', 'Base 60', 'Base 65', 'Base 70']
-                    table_name_long = WRCCData.acis_elements_dict[table]['name_long']
+                    table_name_long = WRCCData.ACIS_ELEMENTS_DICT[table]['name_long']
                     graph_data = [[] for i in range(5)]
                     for i in range(5):
                         for k in range(len(cats)):
@@ -1758,7 +1730,7 @@ def sodsumm(request):
                 elif tab == 'gdd':
                     units = 'Fahrenheit'
                     colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-                    table_name_long = WRCCData.acis_elements_dict[table]['name_long']
+                    table_name_long = WRCCData.ACIS_ELEMENTS_DICT[table]['name_long']
                     legend = ['Base 40', 'Base 45', 'Base 50', 'Base 55', 'Base 60']
                     graph_data = [[] for i in range(5)]
                     for i in range(5):
@@ -1862,7 +1834,6 @@ def sodsumm(request):
 ##############################
 #Utlities
 ##############################
-##SOD Utils
 def set_sod_initial(request, app_name):
     stn_id = request.GET.get('stn_id', None)
     start_date = request.GET.get('start_date', None)
@@ -1888,7 +1859,7 @@ def set_sod_initial(request, app_name):
 
 def set_sodxtrmts_header(form):
     #Define Header Order:
-    header_order =['station_ID', '','element']
+    header_order =['station_ID','start_year', 'end_year', '','element']
     if form.cleaned_data['element'] in ['gdd', 'hdd', 'cdd']:header_order+=['base_temperature']
     header_order+=['monthly_statistic']
     if form.cleaned_data['departures_from_averages'] == 'T':
@@ -1912,14 +1883,12 @@ def set_sodxtrmts_header(form):
     #Define SCHTUPID header
     header = []
     for key in header_order:
-        if key in ['element']:
-            header.append([WRCCData.sodxtrmts_params[key], WRCCData.acis_elements_dict[str(form.cleaned_data[key])]['name_long']])
-        elif key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'monthly_statistic']:
-            header.append([WRCCData.sodxtrmts_params[key], WRCCData.sodxtrmts_params[str(form.cleaned_data[key])]])
+        if key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'monthly_statistic', 'elements']:
+            header.append([WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[str(form.cleaned_data[key])]])
         elif key == '':
             header.append([])
         else:
-            header.append([WRCCData.sodxtrmts_params[key], str(form.cleaned_data[key])])
+            header.append([WRCCData.DISPLAY_PARAMS[key], str(form.cleaned_data[key])])
     return header
 
 def set_sodsumm_headers(table_list):
@@ -1952,6 +1921,30 @@ def set_sodsumm_headers(table_list):
     for table in table_list:
          headers[table] = set_header(table)
     return headers
+
+def set_area_time_series_params(form):
+    key_order = ['element', 'start_date', 'end_date', 'summary', 'grid', 'show_running_mean', 'running_mean_days', 'graph_title']
+    display_params_list = [[] for k in range(len(key_order))]
+    search_params = {}
+    for key, val in form.cleaned_data.iteritems():
+        #Convert to string to avoid unicode issues
+        search_params[key] = str(val)
+        if key == 'grid':
+            display_params_list[4] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.GRID_CHOICES[val]]
+        elif key == 'summary':
+            display_params_list[3] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[val]]
+        elif key == 'element':
+            display_params_list[0] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[val]]
+        else:
+            value = str(val)
+            if val =='T':value='Yes'
+            if val == 'F':value = 'No'
+            try:
+                idx = key_order.index(key)
+                display_params_list[idx] = [WRCCData.DISPLAY_PARAMS[key], value]
+            except ValueError:
+                pass
+    return search_params, display_params_list
 
 def set_as_form(request, f_name, init = None):
     form_name = f_name

@@ -71,22 +71,11 @@
         <script type="text/javascript">            
             $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
         </script>
-        <div id="how_to" style="display:none;">
-            <p>Pick the months that you would like to visualize.</p>
-            <p>Choose a summary otion:</p>
-            <p>
-                <b>Maximum over months</b> --<br />
-                Plots the maximum value of the chosen months for each year in the time period.<br />
-                <b>Minimum over months</b> --<br />
-                Plots the minimum value of the chosen months for each year in the time period.<br />
-                <b>Sum over months</b> --<br />
-                Plots the sum of the values of the chosen months for each year in the time period.<br />
-                <b>Average over months</b> --<br />
-                Plots the averages of the values of the chosen months for each year in the time period.<br />
-                <b>Plot months separately</b> --<br />
-                Generates a plot of time series for each of the chosen months.<br />
-            </p>
-        </div>
+        <div id="how_to" style="display:none;"></div>
+        <script type="text/javascript">            
+            $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_SODXTRMTS_VIS");
+        </script>
+
 
         <a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/?json_file={{json_file}}">Back to Data Analysis</a>
 
