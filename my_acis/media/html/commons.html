@@ -137,7 +137,7 @@ or here:<a class="docu_long"target="_blank" href="/csc/media/html/stn_id_system_
            <b>Elements </b>Please enter a comma separated list of element abreviations.
             <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
            <div id="element_choices" style="display:none"><img alt="ElementChoices" title="ElementChoices" width="400px" height="400px" src=/csc/media/img/ACIS_Element_Choices_Stn.png></div><br />
-           <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd<br />
+           <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd. Enter "POR" if you are interested in the period of record.<br />
            <b>Show flags </b>Choose 'Yes' if you want the data flags to be appended to your data values. <br />
            <b>Show observation time </b>Choose 'Yes' if you want the time the observation was made  to be appended to your data values.<br />
            <b>Delimiter</b> Unless you have chosen the excel <b>Data format</b> this option will appear. It defines the delimiter that will separate the data values, flags and observation time of your request.<br /> 
@@ -183,7 +183,7 @@ or here:<a class="docu_long"target="_blank" href="/csc/media/html/stn_id_system_
             <li><b>Basin </b>Enter a US basin code. If you don't know your basin code, please use the link below the form field to find it.</li>
             <li><b>"Bounding Box" </b>A bounding box has four coordinates:West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</li>
         </ul>
-        <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd<br />
+        <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd.<br />
         <b>Elements </b>This option will appear only if you chose <b>Choose climate elements</b>
             <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
            <div id="element_choices" style="display:none"><img alt="ElementChoices" title="ElementChoices" width="400px" height="400px" src=/csc/media/img/ACIS_Element_Choices_Stn_Finder.png></div><br />
@@ -198,19 +198,7 @@ the decade 2000 - 2010<br />
 
 </div>
 
-<div id="Docu_META_GRAPH">
-    <p class="error">What is the <b>Metadata Graphics</b> Tool?</p>
-    <p>An interactive web-based interface that can be used to investigate availability of daily data for the period of record of a station in the COOP network for the 5 most common climate elements: Maximum Temperature, Minimum Temperature, Total Precipitation, Total Snowfall, Total Snowdepth.</p>
-    <p class="error">What dataset is being used?</p>
-    <p>This tool works with COOP station data found in the ACIS system.</p>
-    <p><a  target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a></p>
-    <p><a  target="_blank" href="http://www.nws.noaa.gov/om/coop/">More on COOP data</a></a>
-    <p class="error">What can you do with this tool?</p>
-    <h3>Get a graphic summary of the availablity of data over the period of record of a COOP station</h3>
-    <img alt="MetaGraph" title="MetaGraph" class="dash_img" src="/csc/media/img/MetaGraph.png">
-</div>
-
-<div id="Docu_MAVES">
+<div id="Docu_MON_AVES">
     <p class="error">What is the <b>Monthly Averages</b> Tool?</p>
     <p>An interactive web-based tool that can be used to visualize monthly averages of daily data over user chosen range of years at a station location.</p>
     <p class="error">What dataset is being used?</p>
@@ -221,6 +209,28 @@ the decade 2000 - 2010<br />
     <h3>Generate bar charts</h3>
     <img alt="MonAves" title="MonAves" class="dash_img" src="/csc/media/img/MonAves.png">
     <h3>Get raw data behind the graphics</h3>
+</div>
+
+<div id="Howto_MON_AVES">
+    <b>"Station ID" </b>Enter the station ID. If you don't know your ID, please use the link to the station finder tool to find it.<br />
+    <p><a href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a></p>
+    <b>Elements </b>Please enter a comma separated list of element abreviations.
+    <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
+    <div id="element_choices" style="display:none"><img alt="ElementChoices" title="ElementChoices" width="400px" height="400px" src=/csc/media/img/ACIS_Element_Choices_Stn.png></div><br />
+    <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd. Enter "POR" if you are interested in the period of record.<br />
+</div>
+
+
+<div id="Docu_META_GRAPH">
+    <p class="error">What is the <b>Metadata Graphics</b> Tool?</p>
+    <p>An interactive web-based interface that can be used to investigate availability of daily data for the period of record of a station in the COOP network for the 5 most common climate elements: Maximum Temperature, Minimum Temperature, Total Precipitation, Total Snowfall, Total Snowdepth.</p>
+    <p class="error">What dataset is being used?</p>
+    <p>This tool works with COOP station data found in the ACIS system.</p>
+    <p><a  target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a></p>
+    <p><a  target="_blank" href="http://www.nws.noaa.gov/om/coop/">More on COOP data</a></a>
+    <p class="error">What can you do with this tool?</p>
+    <h3>Get a graphic summary of the availablity of data over the period of record of a COOP station</h3>
+    <img alt="MetaGraph" title="MetaGraph" class="dash_img" src="/csc/media/img/MetaGraph.png">
 </div>
 
 <!--GRIDDED-->
@@ -289,7 +299,7 @@ the decade 2000 - 2010<br />
             <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
 
            <div id="element_choices" style="display:none"><img alt="ElementChoices" title="ElementChoices" width="400px" height="400px" src=/csc/media/img/ACIS_Element_Choices_Grid.png></div><br />
-           <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd<br />
+           <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd.<br />
            <b>Delimiter</b> Unless you have chosen the excel <b>Data format</b> this option will appear. It defines the delimiter that will separate the data values of your request.<br />
            Click the <b>Submit</b> button.
     </p>
@@ -590,7 +600,7 @@ CRCM Model</a><br />
     <p>
     <b>"Station ID" </b>Enter the station ID. If you don't know your ID, please use the link to the station finder tool to find it.<br />
     <a href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a><br />
-    <b>Start/End Year </b>Define your start and end year. Use "POR" for both start/end year if you are interested in the period of record of the station<br />
+    <b>Start/End Year </b>Define your start and end year. Use "POR" for both start/end year if you are interested in the period of record of the station. Enter "POR" if you are interested in the period of record.<br />
     <b>Summary type </b>
     <ul>
         <li><b>All of those below </b>Temperature, Precipitation, Snow and Degree Day statistics.</li>
@@ -602,11 +612,13 @@ CRCM Model</a><br />
             <li><b>Heating Degree Days </b>Base Temperatures: 65F, 60F, 57F, 55F, 50F </li>
             <li><b>Cooling Degree Days </b>Base Temperatures: 55F, 57F, 60F, 65F, 70F </li>
             </ul>
-        <li><b>Growing Degree Days </b></li>
+        </li>
+        <li><b>Growing Degree Days </b>
             <ul>
             <li><b>Growing Degree Days </b>Base Temperatures: 40F, 45F, 50F, 55F, 60F </li>
             <li><b>Corn Degree Days </b>Base Temperatures: 50F </li>
             </ul>
+        </li>
     </ul>
     <b>Max dissing days </b>The number of maximum missing days allowed in a month. Months with more than max_missing_days missing will be omitted from the analysis.<br />
     <b>Generate Graphics </b> Choose "Yes" if you would like graphics as well table results. 
@@ -641,7 +653,7 @@ CRCM Model</a><br />
     <p>
     <b>Station ID </b>Enter the station ID. If you don't know your ID, please use the link to the station finder tool to find it.<br />    
     <a href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a><br />
-    <b>Start/End Year </b>Define your start and end year. Use "POR" for both start/end year if you are interested in the period of record of the station<br />
+    <b>Start/End Year </b>Define your start and end year. Use "POR" for both start/end year if you are interested in the period of record of the station.<br />
     <b>Element </b>Chose a climate element from drop down menue.<br />
     If you chose any of the Degree Day elements, please specify your base temperature.<br />
     <b>Monthly Statistic </b>The type of statistics  that will be generated.<br />

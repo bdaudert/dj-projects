@@ -1122,7 +1122,7 @@ def area_time_series(request):
                 params['bbox'] = bbox
 
             #Set graph title
-            if form1.cleaned_data['graph_title'] != 'Use default':
+            if search_params['graph_title'] != 'Use default':
                 graph_title = search_params['graph_title']
             else:
                 if 'shape' in search_params.keys():
@@ -1168,28 +1168,28 @@ def area_time_series(request):
                     if not val_list:
                         summary_time_series[date_idx].append('-----')
                         continue
-                    if form1.cleaned_data['summary'] == 'sum':
+                    if search_params['summary'] == 'sum':
                         summary_time_series[date_idx].append(round(sum(val_list),2))
-                    elif form1.cleaned_data['summary'] == 'max':
+                    elif search_params['summary'] == 'max':
                         summary_time_series[date_idx].append(round(max(val_list),2))
-                    elif form1.cleaned_data['summary'] == 'min':
+                    elif search_params['summary'] == 'min':
                         summary_time_series[date_idx].append(round(min(val_list),2))
-                    elif form1.cleaned_data['summary'] == 'mean':
+                    elif search_params['summary'] == 'mean':
                         if val_list:
                             summary_time_series[date_idx].append(round(sum(val_list) / len(val_list),2))
                         else:
                             summary_time_series[date_idx].append('-----')
-            context['bbox'] = summary_time_series
             #Set context variables
             context['results']= summary_time_series
-            context['width'] = WRCCData.IMAGE_SIZES[form1.cleaned_data['image_size']][0]
-            context['height'] = WRCCData.IMAGE_SIZES[form1.cleaned_data['image_size']][1]
+            context['width'] = WRCCData.IMAGE_SIZES[search_params['image_size']][0]
+            context['height'] = WRCCData.IMAGE_SIZES[search_params['image_size']][1]
+            context['bbox'] = WRCCData.IMAGE_SIZES
             context['graph_title'] = graph_title
             context['graph_subtitle'] = smry + element_name
             context['display_params_list'] = display_params_list
             #Write results to json file
-            if 'base_temperature' in form1.cleaned_data.keys():
-                base_temperature = str(form1.cleaned_data['base_temperature'])
+            if 'base_temperature' in search_params.keys():
+                base_temperature = search_params['base_temperature']
             else:
                 base_temperature = ''
             json_dict = {

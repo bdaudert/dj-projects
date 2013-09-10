@@ -129,6 +129,7 @@ ACIS_ELEMENT_CHOICES = (
         ('cddxx', 'Cooling Degree Days (Base xxF)'),
 )
 
+
 ACIS_ELEMENT_CHOICES_SHORT = (
         ('pcpn', 'Precipitation(In)'),
         ('maxt', 'Maximum Temperature(F)'),
@@ -568,7 +569,7 @@ class SodxtrmtsVisualizeForm(forms.Form):
     plot_incomplete_years = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='F', help_text='Calculate and plot values even if the "maximum number of days missing" threhsold is not met.')
     #Plot Options
     graph_title = forms.CharField(required=False, initial='Use default', help_text='Enter a title to appear at the top of your graph. Default will list station name/ID, climate element, summary and months.')
-    image_size = forms.ChoiceField(choices=WRCCData.IMAGE_SIZES, initial='medium', help_text='Select an image size.')
+    image_size = forms.ChoiceField(choices=WRCCData.FORM_IMAGE_SIZES, initial='medium', help_text='Select an image size.')
     major_grid = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show major grid.')
     minor_grid = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show minor grid.')
     connector_line = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Connect data points.')
@@ -877,7 +878,7 @@ class MonthlyAveragesForm(forms.Form):
 
 class AreaTimeSeriesForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=GRID_FIND_CHOICES, required=False, initial='shape', help_text=HELP_TEXTS['select_stations_by'])
-        element = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES, required=False, initial='maxt', help_text='Climate Element')
+        element = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, required=False, initial='maxt', help_text='Climate Element')
 
 
 class AreaTimeSeriesForm1(forms.Form):
@@ -943,7 +944,7 @@ class AreaTimeSeriesForm1(forms.Form):
         self.fields['show_running_mean'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show running mean.')
         self.fields['running_mean_days'] = forms.IntegerField(initial=9,required=False, help_text='Number of days over which to compute the running mean.')
         self.fields['graph_title'] = forms.CharField(required=False, initial='Use default', help_text='Enter a title to appear at the top of your graph. Default will show information about the search area, e.g. polygon coordinates.')
-        self.fields['image_size'] = forms.ChoiceField(choices=WRCCData.IMAGE_SIZES, initial='medium', help_text='Select an image size.')
+        self.fields['image_size'] = forms.ChoiceField(choices=WRCCData.FORM_IMAGE_SIZES, initial='medium', help_text='Select an image size.')
         self.fields['show_major_grid'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show major grid lines.')
         self.fields['show_minor_grid'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show minor grid lines.')
         self.fields['connector_line'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Connect data points.')

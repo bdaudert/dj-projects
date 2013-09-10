@@ -56,22 +56,11 @@
         <script type="text/javascript">            
             $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
         </script>
-        <div id="how_to" style="display:none;">
-            <p></p>
-            <p>Don't know your station id? Find it here:</p>
-            <a href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a><br />
-            <p>Define your start and end year. Use "por" for both start/end year if you are
-            interested in the period of record of the station</p>
-            <p>The summary type defines the type of table/graph that will be generated. 
-            For example,  Precipitation and Snowfall statitsics are combined in one table.
-            The Temprature table contains maximum, minimum and mean temperature information.</p>
-            <p>The number of maximum missing days allowed in a month. Months with more than max_missing_days missing 
-            will be omitted from the analysis.</p>
-            <p>There is an option to generate graphis with each of the tables.</p>
-            </p>
-        </div>
-        <br />
-         
+        <div align="left" id="how_to" style="display:none;"></div>
+        <script type="text/javascript">            
+            $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_SODSUMM");
+        </script>
+
         {%if results or graphics%}
             <p>
               For monthly and annual mean, thresholds and sums:</br>
