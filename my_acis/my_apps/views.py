@@ -9,7 +9,6 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
-#from django.views.generic.list_detail import object_detail, object_list
 from django.db.models.query import QuerySet
 from django.conf import settings
 #My imports

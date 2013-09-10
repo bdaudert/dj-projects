@@ -6,7 +6,6 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
-#from django.views.generic.list_detail import object_detail, object_list
 from django.db.models.query import QuerySet
 from django.contrib.localflavor.us.forms import USStateField
 from django.core.mail import send_mail
@@ -1701,17 +1700,6 @@ def sodsumm(request):
                                 graph_data[idx].append(float(row[k]))
                             except:
                                 graph_data[idx].append(None)
-                        '''
-                            if i == 4:k = 6 #low
-                            if i == 3:k = 2;l = 6 #mean low
-                            if i == 2:k = 3;l = 2 #mean ave
-                            if i == 1:k = 1;l = 3 #mean high
-                            if i == 0:k = 4;l = 1 #high
-                            if i == 4 :
-                                graph_data[i].append(float(row[k]))
-                            else:
-                                graph_data[i].append(float(row[k]) - float(row[l]))
-                        '''
                 elif tab in ['hdd', 'cdd']:
                     units = 'Fahrenheit'
                     colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
@@ -1778,32 +1766,6 @@ def sodsumm(request):
                                 graph_data[i].append(float(row[k]))
                             except:
                                 graph_data[i].append(None)
-                                '''
-                                #stacked bar
-                                if i == 2:k = 4 #low
-                                if i == 1:k = 1;l = 4 #ave mean
-                                if i == 0:k = 2;l = 1 #high
-                                if i == 2:
-                                    graph_data[i].append(float(row[k]))
-                                else:
-                                    graph_data[i].append(float(row[k])- float(row[l]))
-                                '''
-
-                                '''
-                                #boxplot
-                                if i == 1:
-                                    if tbl == 'pcpn':k = 4 #low
-                                    if tbl == 'snow':k = 0
-                                if i == 2:
-                                    if tbl == 'pcpn':k = 1#ave mean
-                                    if tbl == 'snow':k = 12
-                                if i == 3:
-                                    if tbl == 'pcpn':k = 2#high
-                                    if tbl == 'snow':k = 13
-                                if i == 4:
-                                    if tbl == 'pcpn':k = 6#1-day max
-                                    if tbl == 'snow':k = 13
-                                '''
                 table_dict = {
                     'cats':cats,
                     'units':units,
