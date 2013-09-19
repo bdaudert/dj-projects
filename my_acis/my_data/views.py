@@ -472,8 +472,9 @@ def data_gridded(request):
             for key, val in form1.cleaned_data.iteritems():
                 pms[key] = val
             #Set basic context variables and determine map type needed
-            display_params_list= set_gridded_data_params(pms)
+            display_params_list, params_dict = set_gridded_data_params(pms)
             context['display_params_list'] = display_params_list
+            context['params_dict'] = params_dict
             if form1.cleaned_data['select_grid_by'] == 'point':
                 location = form1.cleaned_data['location']
                 context['need_map'] = True;context['map_loc'] = location
@@ -485,26 +486,8 @@ def data_gridded(request):
                 context['need_polymap'] = True
             if form1.cleaned_data['select_grid_by'] in ['basin', 'cwa', 'climdiv', 'county']:
                 context['need_overlay_map'] = True
+            #Needed for polygon overlays
             context[form1.cleaned_data['select_grid_by']] = form1.cleaned_data[WRCCData.ACIS_TO_SEARCH_AREA[form1.cleaned_data['select_grid_by']]]
-            context['temporal_resolution'] = form1.cleaned_data['temporal_resolution']
-            context['data_summary'] = form1.cleaned_data['data_summary']
-            el_list = list(form1.cleaned_data['elements'])
-            context['elements'] =  el_list
-            context['element'] = str(form1.cleaned_data['elements'][0])
-            elems_long = []
-            for el in el_list:
-                elems_long.append(WRCCData.ACIS_ELEMENTS_DICT[el]['name_long'])
-            context['elems_long'] = elems_long
-            #Find delimiter
-            if 'delimiter' in form1.cleaned_data.keys():
-                delimiter = WRCCData.DELIMITERS[str(form1.cleaned_data['delimiter'])]
-            else:
-                delimiter = ' '
-            context['delimiter'] = delimiter
-            context['start_date'] = form1.cleaned_data['start_date'];start_date= form1.cleaned_data['start_date']
-            context['end_date'] = form1.cleaned_data['end_date'];end_date= form1.cleaned_data['end_date']
-            context['elems_long'] = elems_long
-            context['grid'] = str(form1.cleaned_data['grid']);grid=str(form1.cleaned_data['grid'])
 
             #Check if data request is large,
             #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
@@ -555,6 +538,7 @@ def data_gridded(request):
                 context['grid_data'] = data
 
             #Link to relevant apps
+            '''
             if 'elements' in form1.cleaned_data.keys() and len(form1.cleaned_data['elements'])==1:
                 if req or data:
                     if 'location' in form1.cleaned_data.keys():
@@ -569,6 +553,7 @@ def data_gridded(request):
                                 context['bbox'] = form1.cleaned_data['bounding_box']
                             else:
                                 context['state'] = form1.cleaned_data['state']
+            '''
 
             #Data Visualization
             if 'visualize' in form1.cleaned_data.keys() and form1.cleaned_data['visualize'] == 'T':
@@ -1905,23 +1890,91 @@ def set_gridded_data_params(form):
 
     key_order = ['select_grid_by', 'elements', 'grid', 'start_date', 'end_date', 'data_summary', 'temporal_resolution']
     display_params_list = [[] for k in range(len(key_order))]
+    params_dict = {}
     for key, val in form.iteritems():
         #Convert to string to avoid unicode issues
-        form[key] = str(val)
+        if key != 'elements':
+            form[key] = str(val)
+        if key == 'grid':
+            display_params_list[2] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.GRID_CHOICES[val]]
+            params_dict['grid'] = val
+        elif key in ['data_summary','temporal_resolution']:
+            display_params_list[3] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[val]]
+            params_dict[WRCCData.DISPLAY_PARAMS[key]] = WRCCData.DISPLAY_PARAMS[val]
+        elif key == 'elements':
+            elems_long = []
+            display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key], '']
+            params_dict[WRCCData.DISPLAY_PARAMS[key]] = ''
+            for el_idx, el in enumerate(val):
+                try:
+                    int(el[3:5])
+                    display_params_list[1][1]+=WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5]
+                    params_dict[WRCCData.DISPLAY_PARAMS[key]]+=WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5]
+                    elems_long.append(WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5])
+                except:
+                    display_params_list[1][1]+=WRCCData.DISPLAY_PARAMS[el]
+                    params_dict[WRCCData.DISPLAY_PARAMS[key]]+=WRCCData.DISPLAY_PARAMS[el]
+                    elems_long.append(WRCCData.DISPLAY_PARAMS[el])
+                if el_idx != 0 and el_idx != len(form['elements']) - 1:
+                    display_params_list[1][1]+=', '
+                    params_dict[WRCCData.DISPLAY_PARAMS[key]]+=', '
+            params_dict['elems_long'] = elems_long
+            #determine which apps to link to
+            if len(val) == 1:
+                try:
+                    int(val[3:5])
+                    el = val[0:3]
+                    base_temp = val[3:5]
+                except:
+                    el = val[0];base_temp=''
+                if str(el) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
+                    params_dict['element'] = el + base_temp
+                    if 'location' in form.keys():
+                        params_dict['link_to_gp_ts'] = True
+                        params_dict['lat'] = str(form['location'].split(',')[1])
+                        params_dict['lon'] = str(form['location'].split(',')[0])
+                    elif 'state' in form.keys():
+                        params_dict['state'] = form['state']
+                        params_dict['link_to_clim_sum_map'] = True
+                    elif 'bounding_box' in form.keys():
+                        params_dict['link_to_clim_sum_map'] = True
+                        params_dict['bbox'] = form['bounding_box']
+        if key == 'delimiter':
+            params_dict['delimiter'] = WRCCData.DELIMITERS[val]
+        else:
+            try:
+                idx = key_order.index(key)
+                display_params_list[idx] = [WRCCData.DISPLAY_PARAMS[key], str(val)]
+                params_dict[key] = str(val)
+            except ValueError:
+                pass
+    return display_params_list, params_dict
+
+def set_station_data_params(form):
+    if not form:
+        return {}
+
+    key_order = ['select_stations_by', 'elements', 'start_date', 'end_date']
+    display_params_list = [[] for k in range(len(key_order))]
+    for key, val in form.iteritems():
+        #Convert to string to avoid unicode issues
+        if key != 'elements':
+            form[key] = str(val)
         if key == 'grid':
             display_params_list[2] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.GRID_CHOICES[val]]
         elif key in ['data_summary','temporal_resolution']:
             display_params_list[3] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[val]]
         elif key == 'elements':
-            display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key], val]
-            '''
-            for el in list(form['elements']):
+            #display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key], val]
+            display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key], '']
+            for el_idx, el in enumerate(form['elements']):
                 try:
                     int(el[3:5])
-                    display_params_list[1].append([WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5]])
+                    display_params_list[1][1]+=WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5]
                 except:
-                    display_params_list[1].append([WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[el]])
-            '''
+                    display_params_list[1][1]+=WRCCData.DISPLAY_PARAMS[el]
+                if el_idx != 0 and el_idx != len(form['elements']) - 1:
+                    display_params_list[1][1]+=', '
         else:
             try:
                 idx = key_order.index(key)
