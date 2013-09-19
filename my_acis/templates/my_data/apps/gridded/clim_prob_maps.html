@@ -57,7 +57,7 @@
                         <td><input type="text" name="shape" id="shape" value="{{shape}}"></td>
                     {%else%}
                         {%ifequal field.label "Bounding box" %}
-                            <td><input type="text" id="bounding_box" value={{bounding_box}}></td>
+                            <td><input type="text" id="bbox" value={{bbox}}></td>
                         {%else%}
                             <td>{{field}}</td>
                         {%endifequal%}

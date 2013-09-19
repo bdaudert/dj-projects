@@ -65,8 +65,18 @@
                         {%else%}
                             <td><input type="text" name="location" id="location" value="{{map_loc}}"></td>
                         {%endif%}
-                    {%elif field.label == "Bounding box" and bounding_box %}
-                        <td><input type="text" name="bounding_box" id="bounding_box" value="{{bounding_box}}"></td>
+                    {%elif field.label == "Shape" %}
+                        <td><input type="text" name="shape" id="shape" value="{{shape}}"></td>
+                    {%elif field.label == "Bounding box"%}
+                        <td><input type="text" name="bounding_box" id="bbox" value="{{bbox}}"></td>
+                    {%elif field.label == "County" %}
+                        <td><input type="text" name="county" id="county" value="{{county}}"></td>
+                    {%elif field.label == "Climate division" %}
+                        <td><input type="text" name="climate_division" id="climdiv" value="{{climdiv}}"></td>
+                    {%elif field.label == "Basin" %}
+                        <td><input type="text" name="basin" id="basin" value="{{basin}}"></td>
+                    {%elif field.label == "County warning area" %}
+                        <td><input type="text" name="county_warning_area" id="cwa" value="{{cwa}}"></td>
                     {%else%}
                         <td>{{field}}</td>
                     {%endif%}
@@ -131,6 +141,28 @@
                 initialize_bbox_map()
             </script>
         {%endif%}
+
+        {%if need_polymap and grid_data%}
+            <div id="panel">
+                <div id="color-palette"></div>
+                <div>
+                    <button id="delete-button">Delete Selected Shape</button>
+                </div>
+            </div>
+            <div id="polymap" style="width: 100%; height:400px;"></div>
+            {%if lat and lon %}
+                <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+                <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+            {%else%}
+                <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
+                <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+            {%endif%}
+            <script type="text/javascript">
+                initialize_polygon_map()
+            </script>
+        {%endif%}
+
+
     </td>
     <td valign="top" width="60%">
         <div id=tool_info_head></div>
@@ -193,32 +225,20 @@
             {%endif%}
         {%endif%}
 
-        {%if location %}
-            <p><font color="#FF007F">Search Parameters:</font><br />
-            <b>Lat, Lon</b>: {{location}} , <br />
-        {%endif%}
-        {%if state%}
-            <p><font color="#FF007F">Search Parameters:</font><br />
-            <b>State</b>: {{state}}, <br />
-        {%endif%}
-        {%if bbox and not grid_data%}
-            <p><font color="#FF007F">Search Parameters:</font><br />
-            <b>Bounding Box</b>: {{bbox}}, <br />
-        {%endif%}
-        
-        {%if grid_data%}
-        <b>Temporal resolution</b>: {{temporal_resolution}}, 
-        <b>Data Summary</b>: {{data_summary}}, <br />
-        <b>Elements</b>: {%for el in elements%} {{el}}{%endfor%}<br />
-        {%endif%} 
 
-        {%if start_date %}
-            <b>Start Date</b>: {{start_date}}, 
+        {%if display_params_list%}
+            <p><b>Search Parameters</b>:<br />
+            {%for param in display_params_list%}
+                {%if not forloop.first and param.0 and param.1%}, {%endif%}
+                    {%if forloop.counter|divisibleby:"3" %}<br />
+                {%endif %}
+                {%if param.0 and param.1%}
+                    <b>{{param.0}}</b>: {{param.1}}
+                {%endif%}
+            {%endfor%}
+            </p>
         {%endif%}
-        {%if end_date%}
-            <b>End Date</b>: {{end_date}}
-        {%endif%}
-
+    
         {%if grid_data %}
             <!--Link to relevant applications-->
             {%if link_to_clim_sum_map and not figure_files%}
@@ -226,8 +246,8 @@
                     <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}&state={{state}}">Generate a climate summary map  for this data set here!</a>
                     <br />
                 {%endif%}
-                {%if bounding_box%}                    
-                    <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}&bounding_box={{bounding_box}}&">Generate a climate summary map  for this data set here!</a>
+                {%if bbox%}                    
+                    <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?start_date={{start_date}}&end_date={{end_date}}&element={{element}}&grid={{grid}}&bounding_box={{bbox}}&">Generate a climate summary map  for this data set here!</a>
                     <br />
                 {%endif%}
             {%endif%}
@@ -240,6 +260,7 @@
                 <div id="data" style="display:none;">
             {%endif%}
 
+                <p><b>DATA</b>:</p> 
                 {%if not json%}
                     <p>date range{{delimiter}}lat{{delimiter}}lon{{delimiter}}elev{{delimiter}}{%for el in elements%}{{el}}{{delimiter}}{%endfor%}</p>
                     {%for row in grid_data%}
@@ -259,8 +280,8 @@
                 {%if state %}
                     <p><b>State: </b>{{state}}</p>
                 {%endif%}
-                {%if bounding_box %}
-                    <p><b>Bounding Box: </b>{{bounding_box}}</p>
+                {%if bbox %}
+                    <p><b>Bounding Box: </b>{{bbox}}</p>
                 {%endif%}
                 <p><b>Element: </b>{{elems_long|lookup:forloop.counter0}}</p>
                 <p><b>Time Period: </b>{{start_date}} <b> to </b>{{end_date}}</p>
@@ -268,6 +289,7 @@
             {%endfor%}
         {%endif%}
     <br />
+
 
     {%if need_map and not grid_data%}
         <p class="error">Drag map marker to change location</p>
@@ -295,6 +317,27 @@
             initialize_bbox_map()
         </script>
     {%endif%}
+
+    {%if need_polymap and not grid_data%}
+        <div id="panel">
+            <div id="color-palette"></div>
+            <div>
+                <button id="delete-button">Delete Selected Shape</button>
+            </div>
+        </div>
+        <div id="polymap" style="width: 100%; height:400px;"></div>
+        {%if lat and lon %}
+            <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+            <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+        {%else%}
+            <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
+            <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+        {%endif%}
+        <script type="text/javascript">
+            initialize_polygon_map()
+        </script>
+    {%endif%}
+
     </td>
     </table>
   <!-- Footer -->

@@ -91,8 +91,13 @@ GRID_SUMMARY_CHOICES = (
 
 select_grid_by_CHOICES = (
     ('point', 'Point Location'),
+    #('county', 'County FIPS code'),
+    #('climdiv', 'Climate Division'),
+    #('cwa', 'County Warning Area (CWA)'),
+    #('basin', 'Basin'),
     ('state', 'State'),
     ('bbox', 'Bounding Box'),
+    ('shape', 'Custom Shape')
 )
 
 GRID_CHOICES = (
@@ -160,7 +165,8 @@ STN_FIND_CHOICES = (
         ('basin', 'Basin'),
         ('state', 'State'),
         ('bbox', 'Bounding Box'),
-        ('stn_id', 'Preselected Station')
+        ('shape', 'Custom Shape'),
+        ('stn_id', '')
 )
 
 STN_FIND_CHOICES_SHORT = (
@@ -171,7 +177,8 @@ STN_FIND_CHOICES_SHORT = (
         ('basin', 'Basin'),
         ('state', 'State'),
         ('states', 'Multiple States'),
-        ('bbox', 'Bounding Box')
+        ('bbox', 'Bounding Box'),
+        ('shape', 'Custom Shape'),
 )
 
 STN_FINDER_LOGIC =(
@@ -635,6 +642,8 @@ class StationDataForm1(forms.Form):
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, initial='NV', help_text='Valid US state abreviation.')
         elif select_stations_by == 'bbox':
             self.fields['bounding_box'] = BBoxField(required=False,initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
+        elif select_stations_by == 'shape':
+            self.fields['shape'] = PolyField(required=False,initial='-115,34, -115, 35,-114,35, -114, 34', help_text='Use the map interface to select your polygon.')
 
         self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
         if select_stations_by in ['stn_id', 'stnid']:
@@ -690,6 +699,9 @@ class StationDataForm3(forms.Form):
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, initial=kwargs.get('initial', {}).get('state', None),help_text='Valid US state abreviation.')
         elif select_stations_by == 'bbox':
             self.fields['bounding_box'] = BBoxField(initial=kwargs.get('initial', {}).get('bounding_box', None),help_text=HELP_TEXTS['bbox'])
+        elif select_stations_by == 'shape':
+            self.fields['shape'] = PolyField(required=False,initial='-115,34, -115, 35,-114,35, -114, 34', help_text='Use the map interface to select your polygon.')
+
         self.fields['elements'] = MultiElementField(initial=kwargs.get('initial', {}).get('elements', None), help_text=HELP_TEXTS['comma_elements'])
         self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('start_date', None),help_text=HELP_TEXTS['date_por'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=kwargs.get('initial', {}).get('end_date', None), help_text=HELP_TEXTS['date_por'])
@@ -732,8 +744,16 @@ class GridDataForm1(forms.Form):
             self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, initial='NV', help_text='US state abbreviation.')
         elif select_grid_by == 'bbox':
             self.fields['bounding_box'] = BBoxField(initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
-        else:
-            self.fields['bounding_box'] = BBoxField(initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
+        elif select_grid_by == 'county':
+            self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='08051', help_text='Valid US county identifier.')
+        elif select_grid_by == 'climdiv':
+            self.fields['climate_division'] = forms.CharField(required=False,max_length=4, min_length=4, initial='NV01', help_text='Valid US climate division identifier.')
+        elif select_grid_by == 'cwa':
+            self.fields['county_warning_area'] = forms.CharField(required=False,max_length=3, initial='PUB', help_text='US county warning area identifier. Both upper and lower case are valid input formats.')
+        elif select_grid_by == 'basin':
+            self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='10180002', help_text='Valid US drainage basin identifier.')
+        elif select_grid_by == 'shape':
+            self.fields['shape'] = PolyField(required=False,initial='-115,34, -115, 35,-114,35, -114, 34', help_text='Use the map interface to select your polygon.')
 
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
         if location is not None:
@@ -813,6 +833,17 @@ class GridDataForm3(forms.Form):
             self.fields['state'] = forms.ChoiceField(initial=kwargs.get('initial', {}).get('state', None), choices=STATE_CHOICES, help_text='US state abbreviation.')
         elif select_grid_by == 'bbox':
             self.fields['bounding_box'] = BBoxField(initial=kwargs.get('initial', {}).get('bounding_box', None), help_text=HELP_TEXTS['bbox'])
+        elif select_grid_by == 'county':
+            self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='08051', help_text='Valid US county identifier.')
+        elif select_grid_by == 'climdiv':
+            self.fields['climate_division'] = forms.CharField(required=False,max_length=4, min_length=4, initial='NV01', help_text='Valid US climate division identifier.')
+        elif select_grid_by == 'cwa':
+            self.fields['county_warning_area'] = forms.CharField(required=False,max_length=3, initial='PUB', help_text='US county warning area identifier. Both upper and lower case are valid input formats.')
+        elif select_grid_by == 'basin':
+            self.fields['basin'] = forms.CharField(required=False,max_length=8, min_length=8, initial='10180002', help_text='Valid US drainage basin identifier.')
+        elif select_grid_by == 'shape':
+            self.fields['shape'] = PolyField(required=False,initial='-115,34, -115, 35,-114,35, -114, 34', help_text='Use the map interface to select your polygon.')
+
         if temporal_resolution in ['mly', 'yly']:
             self.fields['elements'] = MultiPRISMElementField(initial='maxt,pcpn', help_text=HELP_TEXTS['comma_elements'])
             self.fields['grid'] = forms.ChoiceField(choices=([('21', 'PRISM')]), help_text=HELP_TEXTS['grids'])
@@ -1112,6 +1143,9 @@ class StationLocatorForm1(forms.Form):
             self.fields['states'] = MyStateField(initial='ca,nv,co,nm,az,ut', help_text='Comma separated list of US states. Both upper and lower case are valid input formats.')
         elif select_stations_by == 'bbox':
             self.fields['bounding_box'] = BBoxField(required=False,initial='-115,34,-114,35', help_text=HELP_TEXTS['bbox'])
+        elif select_stations_by == 'shape':
+            self.fields['shape'] = PolyField(required=False,initial='-115,34, -115, 35,-114,35, -114, 34', help_text='Use the map interface to select your polygon.')
+
         self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='18900101',min_length=8, help_text=HELP_TEXTS['date'])
         self.fields['end_date'] = MyDateField(max_length=10, required = False, initial=yesterday,min_length=8, help_text=HELP_TEXTS['date'])
         if element_selection == 'T':

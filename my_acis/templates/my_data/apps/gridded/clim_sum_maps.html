@@ -47,8 +47,8 @@
                 {%else%}
                 <tr>
                     <td>{{field.label}}:</td>
-                    {%if field.label == "Bounding box" and bounding_box %}
-                        <td><input type="text" name="bounding_box" id="bounding_box" value="{{bounding_box}}"></td>
+                    {%if field.label == "Bounding box" and bbox %}
+                        <td><input type="text" name="bbox" id="bbox" value="{{bbox}}"></td>
                     {%else%}
                         <td>{{field}}</td>
                     {%endif%}
@@ -142,15 +142,15 @@
             <p>GridACIS Map for State: <b>{{state}}</b></p>
             {%endif%}
 
-            {%if bounding_box%}
+            {%if bbox%}
             {%if elems == "pcpn" or elems == "snow"%}
-            <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bbox={{bounding_box}}&data_summary=sum&temporal_resolution=dly">Get raw data behind this graphic here!</a>
+            <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bbox={{bbox}}&data_summary=sum&temporal_resolution=dly">Get raw data behind this graphic here!</a>
             {%else%}
-            <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bbox={{bounding_box}}&data_summary=mean&temporal_resolution=dly">Get raw data behind this graphic here!</a>
+            <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bbox={{bbox}}&data_summary=mean&temporal_resolution=dly">Get raw data behind this graphic here!</a>
             {%endif%}
             <br />
             <br />
-            <p>GridACIS Map for Bounding Box: <b>{{bounding_box}}</b></p>
+            <p>GridACIS Map for Bounding Box: <b>{{bbox}}</b></p>
             {%endif%}
             
             <p>Element: <b>{{elems_long}}</b> {%if base_temp%}Base Temperature: <b>{{base_temp}}</b>{%endif%}</p>

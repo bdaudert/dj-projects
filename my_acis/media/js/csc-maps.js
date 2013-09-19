@@ -412,7 +412,7 @@ function my_networkclick(box, category){
 
 function initialize_bbox_map() {
       //create map
-     var bbox_list = ','.split(document.getElementById("bounding_box").value)
+     var bbox_list = ','.split(document.getElementById("bbox").value)
      var west = new google.maps.LatLng(bbox_list[3],bbox_list[0]);
      var south = new google.maps.LatLng(bbox_list[1],bbox_list[0]);
      var east = new google.maps.LatLng(bbox_list[1],bbox_list[2]);
@@ -466,7 +466,7 @@ function initialize_bbox_map() {
             var s = precise_round(bounds.getSouthWest().lat(),2);
             var e = precise_round(bounds.getNorthEast().lng(),2);
             var n = precise_round(bounds.getNorthEast().lat(),2);
-            document.getElementById("bounding_box").value = w + ',' + s + ',' + e + ',' + n;
+            document.getElementById("bbox").value = w + ',' + s + ',' + e + ',' + n;
         }
         if (event.type == google.maps.drawing.OverlayType.CIRCLE) {
             var radius = event.overlay.getRadius();
@@ -647,4 +647,41 @@ function initialize_polygon_map() {
         buildColorPalette();
       }
       google.maps.event.addDomListener(window, 'load', initialize);
+}
+
+function initialize_map_overlays(type) {
+    var myLatLng = new google.maps.LatLng(39.5, -98.35);
+    //var myLatLng = new google.maps.LatLng(41.875696,-87.624207);
+    var mapOptions = {
+        zoom: 11,
+        center: myLatLng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    //Determine which kml file to use
+    if (type == 'county'){kml_file ='US_Counties.kml';}
+    else if (type == 'climdiv'){kml_file ='US_Climdivs.kml';}
+    else if (type == 'cwa'){kml_file ='US_CWAs.kml';}
+    else if (type == 'basin'){kml_file ='US_Basins.kml';}
+    else if (type == 'test'){kml_file = 'US_Test.kml';}
+    else{kml_file = 'US_Test.kml';}
+
+    var map = new google.maps.Map(document.getElementById("map-overlay"), mapOptions);
+
+    var Layer = new google.maps.KmlLayer({
+        //url: 'http://wrcc.dri.edu//csc/media/json/' + kml_file, 
+        url:'http://wrcc.dri.edu/csc/media/json/US_Test.kml',
+        suppressInfoWindows: true,
+        map: map
+    });
+    Layer.setMap(map);
+    google.maps.event.addListener(Layer, 'click', function(kmlEvent) {
+        var text = kmlEvent.featureData.Description;
+         document.getElementById(type).value = kmlEvent.featureData.name;
+        showInDiv(text);
+    });
+
+    function showInDiv(text) {
+        var sidediv = document.getElementById('contentWindow');
+        sidediv.innerHTML = text;
+    }
 }

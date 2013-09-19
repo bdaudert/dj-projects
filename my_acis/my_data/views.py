@@ -247,13 +247,16 @@ def data_station(request):
                 initial_params_1['data_format'] = form0.cleaned_data['data_format']
 
             if 'form0' in request.POST:
-                if form0.cleaned_data['select_stations_by'] == 'bbox':
-                    context['need_map_bbox'] = True
-                    context['bounding_box'] = '-115,34,-114,35'
+                if form0.cleaned_data['select_stations_by'] == 'bbox':context['need_map_bbox'] = True
+                if form0.cleaned_data['select_stations_by'] == 'shape':context['need_polymap'] = True
+                if form0.cleaned_data['select_stations_by'] in ['basin', 'cwa', 'climdiv', 'county']:context['need_overlay_map'] = True
+                context[form0.cleaned_data['select_stations_by']] = WRCCData.AREA_DEFAULTS[form0.cleaned_data['select_stations_by']]
+
             form1 = forms.StationDataForm1(initial=initial_params_1)
             context['form1'] = form1
 
     if 'form1' in request.POST:
+        context[request.POST['select_stations_by']] = str(request.POST[WRCCData.ACIS_TO_SEARCH_AREA[str(request.POST['select_stations_by'])]])
         form1 = set_as_form(request,'StationDataForm1')
         context['form1'] = form1
         context['form1_ready'] = True
@@ -261,18 +264,18 @@ def data_station(request):
 
         if form1.is_valid():
             if 'show_flags' in form1.cleaned_data.keys() and form1.cleaned_data['show_flags'] == 'T':
-                context['show_flags'] = True
-                show_flags = 'T'
+                context['show_flags'] = True;show_flags = 'T'
             else:
                 show_flags = 'F'
             if 'show_observation_time' in form1.cleaned_data.keys() and form1.cleaned_data['show_observation_time'] == 'T':
-                context['show_observation_time'] = True
-                show_observation_time = 'T'
+                context['show_observation_time'] = True;show_observation_time = 'T'
             else:
                 show_observation_time = 'F'
-            if form1.cleaned_data['select_stations_by'] == 'bbox':
-                context['need_map_bbox'] = True
-                context['bounding_box'] = form1.cleaned_data['bounding_box']
+            #Set map type needes
+            if form1.cleaned_data['select_stations_by'] == 'bbox':context['need_map_bbox'] = True
+            if form1.cleaned_data['select_stations_by'] == 'shape':context['need_polymap'] = True
+            if form1.cleaned_data['select_stations_by'] in ['basin', 'cwa', 'climdiv', 'county']:context['need_overlay_map'] = True
+            context[form1.cleaned_data['select_stations_by']] = WRCCData.AREA_DEFAULTS[form1.cleaned_data['select_stations_by']]
             #Check if data request is large,
             #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
             if form1.cleaned_data['start_date'].lower() == 'por':
@@ -301,34 +304,35 @@ def data_station(request):
                 context['form2'] = form2
                 '''
                 return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
+
+            resultsdict = AcisWS.get_station_data(form1.cleaned_data, 'sodlist_web')
+            context['results'] = resultsdict
+            # If request successful, get params for link to apps page
+            if 'stn_data' in resultsdict.keys() and resultsdict['stn_data']:
+                context['elements'] = ','.join(form1.cleaned_data['elements'])
+                context['start_date'] = form1.cleaned_data['start_date']
+                context['end_date'] = form1.cleaned_data['end_date']
+                if 'station_id' in form1.cleaned_data.keys() and resultsdict['stn_errors'][0] != 'No data found!':
+                    context['stn_id']= form1.cleaned_data['station_id']
+                    context['link_to_station_apps'] = True
+            context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
+            if 'delimiter' in form1.cleaned_data.keys():
+                context['delimiter_word'] = form1.cleaned_data['delimiter']
+                delimiter = WRCCData.DELIMITERS[str(form1.cleaned_data['delimiter'])]
             else:
-                resultsdict = AcisWS.get_station_data(form1.cleaned_data, 'sodlist_web')
-                context['results'] = resultsdict
-                # If request successful, get params for link to apps page
-                if 'stn_data' in resultsdict.keys() and resultsdict['stn_data']:
-                    context['elements'] = ','.join(form1.cleaned_data['elements'])
-                    context['start_date'] = form1.cleaned_data['start_date']
-                    context['end_date'] = form1.cleaned_data['end_date']
-                    if 'station_id' in form1.cleaned_data.keys() and resultsdict['stn_errors'][0] != 'No data found!':
-                        context['stn_id']= form1.cleaned_data['station_id']
-                        context['link_to_station_apps'] = True
-                context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
-                if 'delimiter' in form1.cleaned_data.keys():
-                    context['delimiter_word'] = form1.cleaned_data['delimiter']
-                    delimiter = WRCCData.DELIMITERS[str(form1.cleaned_data['delimiter'])]
+                if form1.cleaned_data['data_format'] == 'json':
+                    delimiter = None
+                    context['json'] = True
                 else:
-                    if form1.cleaned_data['data_format'] == 'json':
-                        delimiter = None
-                        context['json'] = True
-                    else:
-                        delimiter = ' '
-                context['delimiter'] =  delimiter
-                if form1.cleaned_data['data_format'] == 'html':
-                    return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
-                else:
-                    return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, WRCCData.FILE_EXTENSIONS[str(form1.cleaned_data['data_format'])], request=request, output_file_name=str(form1.cleaned_data['output_file_name']), show_flags=show_flags, show_observation_time=show_observation_time)
+                     delimiter = ' '
+            context['delimiter'] =  delimiter
+            if form1.cleaned_data['data_format'] == 'html':
+                return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
+            else:
+                return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, WRCCData.FILE_EXTENSIONS[str(form1.cleaned_data['data_format'])], request=request, output_file_name=str(form1.cleaned_data['output_file_name']), show_flags=show_flags, show_observation_time=show_observation_time)
 
     if 'form2' in request.POST:
+        context[request.POST['select_stations_by']] = str(request.POST[WRCCData.ACIS_TO_SEARCH_AREA[str(request.POST['select_stations_by'])]])
         form2 = set_as_form(request,'StationDataForm3')
         context['form2'] = form2
         context['form2_ready'] = True
@@ -361,7 +365,7 @@ def data_gridded(request):
         'title': 'Gridded/Modeled Data',
         'icon':'ToolProduct.png'
     }
-
+    #Set initial form values
     elements = request.GET.get('elements', None)
     start_date = request.GET.get('start_date', None)
     end_date = request.GET.get('end_date', None)
@@ -402,7 +406,6 @@ def data_gridded(request):
     else:
         context['lat'] = '39'; context['lon'] = '-119'
         context['map_loc'] = '-119,39'
-
     if elements is not None:
         context['elements'] = elements;initial_1['elements'] = elements
     if temporal_resolution is not None:
@@ -416,6 +419,9 @@ def data_gridded(request):
     else:
         form0 = set_as_form(request,'GridDataForm0')
         context['form0'] = form0
+
+    #display_params_list= set_gridded_data_params(initial_1)
+    #context['display_params_list'] = display_params_list
 
     if 'form0' in request.POST:
         if form0.is_valid():
@@ -437,28 +443,69 @@ def data_gridded(request):
                 else:
                     context['lat'] = '39'; context['lon'] = '-119'
                     context['map_loc'] = '-119,39'
-            if initial_1['select_grid_by'] == 'bbox':
+            if form0.cleaned_data['select_grid_by'] == 'bbox':
                 context['need_map_bbox'] = True
-                bounding_box = request.GET.get('bounding_box', None)
-                if bounding_box is not None:
-                    context['bounding_box'] = bounding_box
-                else:
-                    context['bounding_box'] = '-115,34,-114,35'
+            if form0.cleaned_data['select_grid_by'] == 'shape':
+                context['need_polymap'] = True
+            if form0.cleaned_data['select_grid_by'] in ['basin', 'cwa', 'climdiv', 'county']:
+                context['need_overlay_map'] = True
+
+            bounding_box = request.GET.get('bounding_box', None)
+            if bounding_box is not None:
+                context['bbox'] = bounding_box
+            else:
+                context[form0.cleaned_data['select_grid_by']] = WRCCData.AREA_DEFAULTS[form0.cleaned_data['select_grid_by']]
+
 
             form1 = forms.GridDataForm1(initial=initial_1)
             context['form1'] = form1
             context['hide_form0'] = True
 
     if 'form1' in request.POST:
+        context[request.POST['select_grid_by']] = str(request.POST[WRCCData.ACIS_TO_SEARCH_AREA[str(request.POST['select_grid_by'])]])
         form1 = set_as_form(request,'GridDataForm1')
         context['form1'] = form1
         context['form1_ready'] = True
         context['hide_form0'] = True
         if form1.is_valid():
+            pms = {}
+            for key, val in form1.cleaned_data.iteritems():
+                pms[key] = val
+            #Set basic context variables and determine map type needed
+            display_params_list= set_gridded_data_params(pms)
+            context['display_params_list'] = display_params_list
+            if form1.cleaned_data['select_grid_by'] == 'point':
+                location = form1.cleaned_data['location']
+                context['need_map'] = True;context['map_loc'] = location
+                context['lat'] = location.split(',')[1];context['lon'] = location.split(',')[0]
+                context['location'] = location
+            if form1.cleaned_data['select_grid_by'] == 'bbox':
+                context['need_map_bbox'] = True
+            if form1.cleaned_data['select_grid_by'] == 'shape':
+                context['need_polymap'] = True
+            if form1.cleaned_data['select_grid_by'] in ['basin', 'cwa', 'climdiv', 'county']:
+                context['need_overlay_map'] = True
+            context[form1.cleaned_data['select_grid_by']] = form1.cleaned_data[WRCCData.ACIS_TO_SEARCH_AREA[form1.cleaned_data['select_grid_by']]]
             context['temporal_resolution'] = form1.cleaned_data['temporal_resolution']
             context['data_summary'] = form1.cleaned_data['data_summary']
-            el_list = form1.cleaned_data['elements']
+            el_list = list(form1.cleaned_data['elements'])
             context['elements'] =  el_list
+            context['element'] = str(form1.cleaned_data['elements'][0])
+            elems_long = []
+            for el in el_list:
+                elems_long.append(WRCCData.ACIS_ELEMENTS_DICT[el]['name_long'])
+            context['elems_long'] = elems_long
+            #Find delimiter
+            if 'delimiter' in form1.cleaned_data.keys():
+                delimiter = WRCCData.DELIMITERS[str(form1.cleaned_data['delimiter'])]
+            else:
+                delimiter = ' '
+            context['delimiter'] = delimiter
+            context['start_date'] = form1.cleaned_data['start_date'];start_date= form1.cleaned_data['start_date']
+            context['end_date'] = form1.cleaned_data['end_date'];end_date= form1.cleaned_data['end_date']
+            context['elems_long'] = elems_long
+            context['grid'] = str(form1.cleaned_data['grid']);grid=str(form1.cleaned_data['grid'])
+
             #Check if data request is large,
             #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
             s_date = datetime.date(int(form1.cleaned_data['start_date'][0:4]), int(form1.cleaned_data['start_date'][4:6]), \
@@ -485,31 +532,6 @@ def data_gridded(request):
                     #context['form2'] = form2
                     return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
-            if 'location' in form1.cleaned_data.keys():
-                location = form1.cleaned_data['location']
-                context['need_map'] = True
-                context['map_loc'] = location
-                context['lat'] = location.split(',')[1]
-                context['lon'] = location.split(',')[0]
-                context['location'] = location
-            elif 'bounding_box' in form1.cleaned_data.keys():
-                context['need_map_bbox'] = True
-                bounding_box = form1.cleaned_data['bounding_box']
-                context['bounding_box'] = bounding_box
-            elif 'state' in form1.cleaned_data.keys():
-                state = form1.cleaned_data['state']
-                context['state'] = state
-            context['start_date'] = form1.cleaned_data['start_date'];start_date= form1.cleaned_data['start_date']
-            context['end_date'] = form1.cleaned_data['end_date'];end_date= form1.cleaned_data['end_date']
-            context['element'] = str(form1.cleaned_data['elements'][0])
-            elems_long = []
-            element_list = form1.cleaned_data['elements']
-            context['element_list'] = element_list
-            for el in element_list:
-                elems_long.append(WRCCData.ACIS_ELEMENTS_DICT[el]['name_long'])
-            context['elems_long'] = elems_long
-            context['grid'] = str(form1.cleaned_data['grid']);grid=str(form1.cleaned_data['grid'])
-
             #Generate Data
             form_input = form1.cleaned_data
             if str(form1.cleaned_data['grid']) == '21':
@@ -523,6 +545,32 @@ def data_gridded(request):
                 context['error'] = req['error']
                 context['grid_data'] = {}
                 return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
+            #format data
+            if form1.cleaned_data['data_format'] == 'json':
+                delimiter = None
+                context['json'] = True
+                context['grid_data']  = req
+            else:
+                data = WRCCUtils.format_grid_data(req, form1.cleaned_data)
+                context['grid_data'] = data
+
+            #Link to relevant apps
+            if 'elements' in form1.cleaned_data.keys() and len(form1.cleaned_data['elements'])==1:
+                if req or data:
+                    if 'location' in form1.cleaned_data.keys():
+                        if str(form1.cleaned_data['elements'][0]) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
+                            context['link_to_gp_ts'] = True
+                            context['lat'] = form1.cleaned_data['location'].split(',')[1]
+                            context['lon'] = form1.cleaned_data['location'].split(',')[0]
+                    else:
+                        if str(form1.cleaned_data['elements'][0]) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
+                            context['link_to_clim_sum_map'] = True
+                            if 'bounding_box' in form1.cleaned_data.keys():
+                                context['bbox'] = form1.cleaned_data['bounding_box']
+                            else:
+                                context['state'] = form1.cleaned_data['state']
+
+            #Data Visualization
             if 'visualize' in form1.cleaned_data.keys() and form1.cleaned_data['visualize'] == 'T':
                 #Generate figures for each element, store in figure files
                 figure_files = []
@@ -564,42 +612,16 @@ def data_gridded(request):
                     fig.build_figure(results, file_path_big)
                     figure_files.append(figure_file)
                 context['figure_files'] = figure_files
-            #format data
-            if form1.cleaned_data['data_format'] == 'json':
-                delimiter = None
-                context['json'] = True
-                context['grid_data']  = req
-            else:
-                data = WRCCUtils.format_grid_data(req, form1.cleaned_data)
-                context['grid_data'] = data
 
-            #Link to relevant apps
-            if 'elements' in form1.cleaned_data.keys() and len(form1.cleaned_data['elements'])==1:
-                if req or data:
-                    if 'location' in form1.cleaned_data.keys():
-                        if str(form1.cleaned_data['elements'][0]) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
-                            context['link_to_gp_ts'] = True
-                            context['lat'] = form1.cleaned_data['location'].split(',')[1]
-                            context['lon'] = form1.cleaned_data['location'].split(',')[0]
-                    else:
-                        if str(form1.cleaned_data['elements'][0]) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
-                            context['link_to_clim_sum_map'] = True
-                            if 'bounding_box' in form1.cleaned_data.keys():
-                                context['bounding_box'] = form1.cleaned_data['bounding_box']
-                            else:
-                                context['state'] = form1.cleaned_data['state']
-
-            if 'delimiter' in form1.cleaned_data.keys():
-                delimiter = WRCCData.DELIMITERS[str(form1.cleaned_data['delimiter'])]
-            else:
-                delimiter = ' '
-            context['delimiter'] = delimiter
+            #Render to page if html format was chosen, else save to file
             if form1.cleaned_data['data_format'] == 'html':
                 return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
             else:
                 return WRCCUtils.write_griddata_to_file(data, el_list,delimiter,WRCCData.FILE_EXTENSIONS[form1.cleaned_data['data_format']], request=request,output_file_name =form1.cleaned_data['output_file_name'])
 
+    #Large Data requests
     if 'form2' in request.POST:
+        context[request.POST['select_grid_by']] = str(request.POST[WRCCData.ACIS_TO_SEARCH_AREA[str(request.POST['select_grid_by'])]])
         form2 = set_as_form(request,'GridDataForm3')
         context['form2'] = form2
         context['form2_ready'] = True
@@ -918,9 +940,9 @@ def clim_sum_maps(request):
             if form0.cleaned_data['select_grid_by'] == 'bbox':
                 bounding_box = request.GET.get('bounding_box', None)
                 if bounding_box is not None:
-                    context['bounding_box'] = bounding_box
+                    context['bbox'] = bounding_box
                 else:
-                    context['bounding_box'] = '-115,34,-114,35'
+                    context['bbox'] = '-115,34,-114,35'
                 context['need_map'] = True
             initial = {'select_grid_by':form0.cleaned_data['select_grid_by'], \
                       'element':form0.cleaned_data['element'], \
@@ -961,10 +983,10 @@ def clim_sum_maps(request):
                 context['state'] = form1.cleaned_data['state']
             elif 'bounding_box' in form1.cleaned_data.keys():
                 context['need_map'] = True
-                context['bounding_box'] = form1.cleaned_data['bounding_box']
+                context['bbox'] = form1.cleaned_data['bounding_box']
                 params['bbox'] = form1.cleaned_data['bounding_box']
                 region = 'bbox_' + re.sub(',','_',form1.cleaned_data['bounding_box'])
-                context['bounding_box'] = form1.cleaned_data['bounding_box']
+                context['bbox'] = form1.cleaned_data['bounding_box']
 
             context['elems'] = elem
             context['start_date']= form1.cleaned_data['start_date']
@@ -1017,7 +1039,7 @@ def area_time_series(request):
     if grid is not None:initial['grid'] = str(grid)
     if state is not None:initial['state'] = state
     if bounding_box is not None:
-        initial['bounding_box'] = bounding_box
+        initial['bbox'] = bounding_box
     if initial:
         if element and start_date and end_date:
             form1 = forms.AreaTimeSeriesForm1(initial=initial)
@@ -1039,15 +1061,17 @@ def area_time_series(request):
             initial = form0.cleaned_data
             context['form1'] = forms.AreaTimeSeriesForm1(initial=initial)
             context['form1_ready'] = True
+
             if form0.cleaned_data['select_grid_by'] == 'shape':
                 context['need_polymap'] = True
-                context['shape'] = '-115,34, -115, 35,-114,35, -114, 34'
             if form0.cleaned_data['select_grid_by'] == 'bbox':
                 context['need_bbox_map'] = True
-                context['bounding_box'] = '-115,34,-114,34'
+            if form0.cleaned_data['select_grid_by'] in ['basin', 'cwa', 'climdiv', 'county']:
+                context['need_overlay_map'] = True
+            context[form0.cleaned_data['select_grid_by']] = WRCCData.AREA_DEFAULTS[form0.cleaned_data['select_grid_by']]
     if 'form1' in request.POST:
         if 'shape' in request.POST.keys():context['shape'] = str(request.POST['shape'])
-        if 'bounding_box' in request.POST.keys():context['bounding_box'] = str(request.POST['bounding_box'])
+        if 'bounding_box' in request.POST.keys():context['bbox'] = str(request.POST['bounding_box'])
         form1 = set_as_form(request,'AreaTimeSeriesForm1')
         context['form1']  = form1
         context['hide_form0'] = True
@@ -1086,22 +1110,18 @@ def area_time_series(request):
                     shape = val.split(',')
                     shape = [float(s) for s in shape]
                     shape_name = ''
-                    if len(shape)==3:
-                        bbox = WRCCUtils.find_bbox_of_circle(shape[0], shape[1], shape[2])
-                        poly = shape
+                    #find enclosing bounding box
+                    shape_type, bbox = WRCCUtils.get_bbox(val)
+                    if bbox is None:
+                        context['results'] = 'No bounding box could be found!'
+                        return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
+                    if shape_type == 'circle':
                         PointIn = getattr(WRCCUtils,'point_in_circle')
-                    else:
-                        lons_shape = [s for idx,s in enumerate(shape) if idx%2 == 0]
-                        lats_shape = [s for idx,s in enumerate(shape) if idx%2 == 1]
-                        #convert to tuples
+                        poly = shape
+                    elif shape_type == 'polygon':
+                        PointIn = getattr(WRCCUtils,'point_in_poly')
                         poly = [(shape[2*idx],shape[2*idx+1]) for idx in range(len(shape)/2)]
                         context['shape_coords'] = [[shape[2*idx],shape[2*idx+1]] for idx in range(len(shape)/2)]
-                        PointIn = getattr(WRCCUtils,'point_in_poly')
-                        try:
-                            bbox = str(min(lons_shape)) + ',' + str(min(lats_shape)) + ',' + str(max(lons_shape)) + ',' + str(max(lats_shape))
-                        except:
-                            context['results'] = 'No bounding box could be found!'
-                            return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
                 else:
                     #Need to find shape coordinates and enclosing bbox
                     #via ACIS general call
@@ -1116,7 +1136,6 @@ def area_time_series(request):
                         context['results'] = 'Shape or bounding box could not be found!'
                         return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
                     poly = [(s[0],s[1]) for s in shape]
-                    #poly = [(shape[2*idx],shape[2*idx+1]) for idx in range(len(shape)/2)]
                     PointIn = getattr(WRCCUtils,'point_in_poly')
 
                 params['bbox'] = bbox
@@ -1326,9 +1345,13 @@ def station_locator_app(request):
             context['form1'] = form1
             if form0.cleaned_data['select_stations_by'] == 'bbox':
                 context['need_map_bbox'] = True
-                context['bounding_box'] = '-115,34,-114,35'
-
+            if form0.cleaned_data['select_stations_by'] == 'shape':
+                context['need_polymap'] = True
+            if form0.cleaned_data['select_stations_by'] in ['basin', 'cwa', 'climdiv', 'county']:
+                context['need_overlay_map'] = True
+            context[form0.cleaned_data['select_stations_by']] = WRCCData.AREA_DEFAULTS[form0.cleaned_data['select_stations_by']]
     if 'form1' in request.POST:
+        context[request.POST['select_stations_by']] = str(request.POST[WRCCData.ACIS_TO_SEARCH_AREA[str(request.POST['select_stations_by'])]])
         context['empty_json'] = True
         form1 = set_as_form(request,'StationLocatorForm1')
         context['form1'] = form1
@@ -1339,49 +1362,17 @@ def station_locator_app(request):
             else:
                 element_list = 'Any climate element'
                 context['elements']= 'Any climate element'
-            select_stations_by = form1.cleaned_data['select_stations_by']
-            if 'station_id' in form1.cleaned_data.keys():
-                by_type = 'station_id';val = form1.cleaned_data['station_id']
-                context['by_type'] = 'Individual Station: %s' %str(val)
-            if 'station_ids' in form1.cleaned_data.keys():
-                by_type = 'station_ids';val = form1.cleaned_data['station_ids']
-                context['by_type'] = 'Multiple Stations: %s' %str(val)
-            if 'county' in form1.cleaned_data.keys():
-                by_type = 'county';val = form1.cleaned_data['county']
-                context['by_type'] = 'County FIPS Code: %s' %str(val)
-            if 'climate_division' in form1.cleaned_data.keys():
-                by_type = 'climate_division';val = form1.cleaned_data['climate_division']
-                context['by_type'] = 'Climate Division: %s' %str(val)
-            if 'county_warning_area' in form1.cleaned_data.keys():
-                by_type = 'county_warning_area';val = form1.cleaned_data['county_warning_area']
-                context['by_type'] = 'County Warning Area: %s' %str(val)
-            if 'basin' in form1.cleaned_data.keys():
-                by_type = 'basin';val = form1.cleaned_data['basin']
-                context['by_type'] = 'Basin: %s' %str(val)
-            if 'state' in form1.cleaned_data.keys():
-                by_type = 'state';val = form1.cleaned_data['state'].upper()
-                context['by_type'] = 'State: %s' %str(val)
-            if 'states' in form1.cleaned_data.keys():
-                by_type = 'states';val = form1.cleaned_data['states']
-                context['by_type'] = 'States: %s' %str(val)
-            if 'bounding_box' in form1.cleaned_data.keys():
-                by_type = 'bounding_box';val = form1.cleaned_data['bounding_box']
-                context['by_type'] = 'Bounding Box: %s' %str(val)
 
+            by_type = WRCCData.ACIS_TO_SEARCH_AREA[form1.cleaned_data['select_stations_by']]
+            val = form1.cleaned_data[WRCCData.ACIS_TO_SEARCH_AREA[form1.cleaned_data['select_stations_by']]]
+            context['by_type'] = WRCCData.DISPLAY_PARAMS[WRCCData.ACIS_TO_SEARCH_AREA[form1.cleaned_data['select_stations_by']]] + str(val)
             context['map_title'] = by_type.upper() + ': ' + val
 
             date_range = [str(form1.cleaned_data['start_date']), str(form1.cleaned_data['end_date'])]
             context['start_date'] = form1.cleaned_data['start_date']
             context['end_date'] = form1.cleaned_data['end_date']
-            if form1.cleaned_data['constraints']=='all_all':
-                constraints = 'All Elements, All Dates'; context['constraints'] = constraints
-            if form1.cleaned_data['constraints']=='any_any':
-                constraints = 'Any Elements, Any Dates'; context['constraints'] = constraints
-            if form1.cleaned_data['constraints']=='all_any':
-                constraints = 'All Elements, Any Dates'; context['constraints'] = constraints
-            if form1.cleaned_data['constraints']=='any_all':
-                constraints = 'Any Elements, All Dates'; context['constraints'] = constraints
-
+            constraints = WRCCData.DISPLAY_PARAMS[str(form1.cleaned_data['constraints'])]
+            context['constraints'] = constraints
             if form1.cleaned_data['element_selection'] == 'T':
                 context['map_title'] = by_type.upper() + ': ' + val + ', ELEMENTS: ' + \
                                 ','.join(form1.cleaned_data['elements']) + \
@@ -1907,6 +1898,37 @@ def set_area_time_series_params(form):
             except ValueError:
                 pass
     return search_params, display_params_list
+
+def set_gridded_data_params(form):
+    if not form:
+        return {}
+
+    key_order = ['select_grid_by', 'elements', 'grid', 'start_date', 'end_date', 'data_summary', 'temporal_resolution']
+    display_params_list = [[] for k in range(len(key_order))]
+    for key, val in form.iteritems():
+        #Convert to string to avoid unicode issues
+        form[key] = str(val)
+        if key == 'grid':
+            display_params_list[2] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.GRID_CHOICES[val]]
+        elif key in ['data_summary','temporal_resolution']:
+            display_params_list[3] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[val]]
+        elif key == 'elements':
+            display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key], val]
+            '''
+            for el in list(form['elements']):
+                try:
+                    int(el[3:5])
+                    display_params_list[1].append([WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5]])
+                except:
+                    display_params_list[1].append([WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[el]])
+            '''
+        else:
+            try:
+                idx = key_order.index(key)
+                display_params_list[idx] = [WRCCData.DISPLAY_PARAMS[key], val]
+            except ValueError:
+                pass
+    return display_params_list
 
 def set_as_form(request, f_name, init = None):
     form_name = f_name

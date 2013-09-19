@@ -43,30 +43,19 @@
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
         </script>
-        <div id="tool_info" style="display:none;">
-            <p>Graphic representation of availablility of daily data of the five most common elements
-            at a station belonging to the COOP network. <a href="http://www.nws.noaa.gov/om/coop/">More information on the COOP Network</a></p>
-            <p>Daily data of following elements are queried via ACIS Webservices.
-                <ul><p>Maximum Temperature</p>
-                <p>Minimum Temperature</p>
-                <p>Total Precipitation</p>
-                <p>Total Snowfall</p>
-                <p>Total Snowdepth</p>
-            <p>A colored pixel means a valid data entry was found for the particular day of the year.</p>
-            <p>A white space indicates that data was not recorded at that date.</p>
-        </div>
+        <div id="tool_info" style="display:none;"></div>
+        <script type="text/javascript">                        
+            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_META_GRAPH");
+        </script>
 
         <div id="how_to_head"></div>
         <script type="text/javascript">            
             $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
         </script>
-        <div id="how_to" style="display:none;">
-            <p>Station ID should be a 6 digit coop id.</p>
-            <p>Don't know your coop station id? Find it here:</p>
-            <a href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a><br />
-            <p><a target="_blank" href="http://www.nws.noaa.gov/om/coop/">More information on the COOP Network</a></p></ul>
-            </p>
-        </div>
+        <div id="how_to" style="display:none;"></div>
+        <script type="text/javascript">            
+            $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_META_GRAPH");
+        </script>
 
          {%if perl_err%}
             <h1 class="error">{{perl_err}}</h1>

@@ -416,7 +416,7 @@ def sods(request, app_name):
                     duration[0] = '%i Days' % int(form2.cleaned_data['number_of_days'])
                 elif form2.cleaned_data['days'] == '5':
                     for k in range(5):
-                        duration[k] = '%i Days' % lisdur[k + 2]
+                        duration[k] = lisdur[k + 2]
                 elif form2.cleaned_data['days'] == 'a':
                     for k in range(len(lisdur)):
                         duration[k] = lisdur[k]

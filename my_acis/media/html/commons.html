@@ -78,20 +78,21 @@
 
 <!--STATION-->
 <div id="Docu_select_stations_by">
-&nbsp;&nbsp;&nbsp;<p><b>"Individual Station"</b>:<br /> Use this option if you looking for an individual station. You will need to know your station identification number.</p>
+&nbsp;&nbsp;&nbsp;<p><b>Individual Station</b>:<br /> Use this option if you looking for an individual station. You will need to know your station identification number.</p>
 &nbsp;&nbsp;&nbsp; If you don't know your station id, find it here: <a target="_blank" href="/csc/swcke/apps/station/station_finder/">Station Finder</a>
 or here:<a class="docu_long"target="_blank" href="/csc/media/html/stn_id_system_docu.html">More on station Ids</a>
-&nbsp;&nbsp;&nbsp;<p><b>"Comma separated list of stations"</b>:<br /> Enter multiple station identifiers, separated by a comma. Again, you will need to know your station ids.</p>
-&nbsp;&nbsp;&nbsp;<p><b>"County FIPS code"</b>:<br /> Use this option if you are looking for all stations in a particular US county.</p>
+&nbsp;&nbsp;&nbsp;<p><b>Comma separated list of stations</b>:<br /> Enter multiple station identifiers, separated by a comma. Again, you will need to know your station ids.</p>
+&nbsp;&nbsp;&nbsp;<p><b>County FIPS code</b>:<br /> Use this option if you are looking for all stations in a particular US county.</p>
 &nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a>
-&nbsp;&nbsp;&nbsp;<p><b>"Climate Division"</b>:<br /> Use this option if you are looking for all stations in a particular US climate division.</p>
+&nbsp;&nbsp;&nbsp;<p><b>Climate Division</b>:<br /> Use this option if you are looking for all stations in a particular US climate division.</p>
 &nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a>
-&nbsp;&nbsp;&nbsp;<p><b>"County Warning Area"</b>:<br /> Use this option if you are looking for all stations in a US county warning area."</p>
+&nbsp;&nbsp;&nbsp;<p><b>County Warning Area</b>:<br /> Use this option if you are looking for all stations in a US county warning area."</p>
 &nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a>
-&nbsp;&nbsp;&nbsp;<p><b>"Basin"</b>:<br /> Use this option if you are looking for all stations in a US drainage basin.</p>
+&nbsp;&nbsp;&nbsp;<p><b>Basin</b>:<br /> Use this option if you are looking for all stations in a US drainage basin.</p>
 &nbsp;&nbsp;&nbsp;<a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a>
-&nbsp;&nbsp;&nbsp;<p><b>"State"</b>:<br /> Use this option if you are lookingfor all stations in a US state.</p>
-&nbsp;&nbsp;&nbsp;<p><b>"Bounding Box"</b>:<br />Use this option if you are looking for all stations in a bounding box. A bounding box has four coordinates: <br />West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the mapinterface to define your bounding box.</p>
+&nbsp;&nbsp;&nbsp;<p><b>State</b>:<br /> Use this option if you are lookingfor all stations in a US state.</p>
+&nbsp;&nbsp;&nbsp;<p><b>Bounding Box</b>:<br />Use this option if you are looking for all stations in a bounding box. A bounding box has four coordinates: <br />West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the mapinterface to define your bounding box.</p>
+&nbsp;&nbsp;&nbsp;<p><b>Custom Shape</b>:<br />Define your own shape using the m map interface provided. You can place a marker on the map, draw connected line segments, rectangle, circles or polygons.</p>
 </p>
 </div>
 
@@ -118,21 +119,30 @@ or here:<a class="docu_long"target="_blank" href="/csc/media/html/stn_id_system_
 
 <div id="Howto_station_data">
     <p><b>FORM 1</b><br />
-           <b>Select station by </b>Several area options are available. Most require you to know the appropriate identifiers, e.g. station ID(s), county warning area codes, etc.. However, links or map interfaces that help you find the identifiers will be provided when filling out FORM 2.<br />
+           <b>Select station by </b>Several area options are available. Most require you to know the appropriate identifiers, e.g. station ID(s), county warning area codes, etc.. However, links or map interfaces that help you find the identifiers will be provided when filling out FORM 2. Use the custom shape option if you wish to define your own shape.<br />
            <b>Data format </b>Data can be downloaded as .dat, .txt or .xls file. Choosing .html will display the data request results on your screen.<br />
            Click the <b>Select</b> button. A second form will appear.
     </p>
     <p><b>FORM 2</b><br />
            Depending on your <b>Select station by </b>choice from FORM 1, you will see: <br >
            <ul>
-                <li><b>"Station ID" </b>Enter the station ID. If you don't know your ID, please use the link to the station finder tool to find it.</li>
-                <li><b>"Station IDs" </b>Enter a comma separated list of station IDs. If you don't know your IDs, please use the link to the station finder tool to find them.</li>
+                <li><b>Station ID </b>Enter the station ID. If you don't know your ID, please use the link to the station finder tool to find it.</li>
+                <li><b>Station IDs </b>Enter a comma separated list of station IDs. If you don't know your IDs, please use the link to the station finder tool to find them.</li>
                 <li><b>County </b>Enter a county FIPS code. If you don't know your FIPS code, please use the link below the form field to find it.</li>
                 <li><b>Climate division </b>Enter a climate division code. If you don't know your climate division code, please use the link below the form field to find it.</li>
                 <li><b>County Warning Area </b>Enter a county waring area code. If you don't know your county warning area code, please use the link below the form field to find it.</li>
                 <li><b>Basin </b>Enter a US basin code. If you don't know your basin code, please use the link below the form field to find it.</li>
                 <li><b>State </b>Choose a US state from the drop down menue</li>
-                <li><b>"Bounding Box" </b>A bounding box has four coordinates: <br />West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</li>
+                <li><b>Bounding Box </b>A bounding box has four coordinates: <br />West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</li>
+                <li><b>Shape </b> Enter the lon, lat coordinates of your custom shape or use the map interface to define it. You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend.
+                    <ul>
+                        <li><b>Marker </b>Point and click on the map.</li>
+                        <li><b>Connected line segments </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
+                        <li><b>Rectangle </b> Point at a corner of your rectangle, click, hold and drag.</li>
+                        <li><b>Circle </b>Point at the center of your circle,  click, hold and drag.</li>
+                        <li><b>Polygon </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
+                    </ul>
+                </li>
            </ul>
            <b>Elements </b>Please enter a comma separated list of element abreviations.
             <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
@@ -158,7 +168,7 @@ or here:<a class="docu_long"target="_blank" href="/csc/media/html/stn_id_system_
 
 <div id="Howto_station_finder">
     <p><b>FORM 1</b><br />
-        <b>Select station by </b>Several area options are available. Most require you to know the appropriate identifiers, e.g. station ID(s), County Warning Area codes, etc.. However, links or map interfaces that help you find the identifiers will be provided when filling out FORM 2.<br />
+        <b>Select station by </b>Several area options are available. Most require you to know the appropriate identifiers, e.g. station ID(s), County Warning Area codes, etc.. However, links or map interfaces that help you find the identifiers will be provided when filling out FORM 2. Use the custom shape option if you wish to define your own shape.<br />
         <b>Element Selection</b>
         <ul>
             <li><b>Any climate element </b> This search will look for stations that have data for any of the 8 standard climate elements:</li>
@@ -177,11 +187,20 @@ or here:<a class="docu_long"target="_blank" href="/csc/media/html/stn_id_system_
     <p><b>FORM 2</b><br /> 
         Depending on your <b>Select station by </b>choice from FORM 1, you will see:
         <ul>
-            <li><b>"State" </b>Enter a US state abbreviation (not case sensitive).</li>
-            <li><b>"States" </b>Enter a comma separarted list of US state abbreviations (not case sensitive).</li>
+            <li><b>State </b>Enter a US state abbreviation (not case sensitive).</li>
+            <li><b>States </b>Enter a comma separarted list of US state abbreviations (not case sensitive).</li>
             <li><b>County Warning Area </b>Enter a county waring area code. If you don't know your county warning area code, please use the link below the form field to find it.</li>
             <li><b>Basin </b>Enter a US basin code. If you don't know your basin code, please use the link below the form field to find it.</li>
-            <li><b>"Bounding Box" </b>A bounding box has four coordinates:West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</li>
+            <li><b>Bounding Box </b>A bounding box has four coordinates:West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</li>
+            <li><b>Shape </b> Enter the lon, lat coordinates of your custom shape or use the map interface to define it. You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend.
+                    <ul>
+                        <li><b>Marker </b>Point and click on the map.</li>
+                        <li><b>Connected line segments </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
+                        <li><b>Rectangle </b> Point at a corner of your rectangle, click, hold and drag.</li>
+                        <li><b>Circle </b>Point at the center of your circle,  click, hold and drag.</li>
+                        <li><b>Polygon </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
+                    </ul>
+                </li>
         </ul>
         <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd.<br />
         <b>Elements </b>This option will appear only if you chose <b>Choose climate elements</b>
@@ -212,7 +231,7 @@ the decade 2000 - 2010<br />
 </div>
 
 <div id="Howto_MON_AVES">
-    <b>"Station ID" </b>Enter the station ID. If you don't know your ID, please use the link to the station finder tool to find it.<br />
+    <b>Station ID </b>Enter the station ID. If you don't know your ID, please use the link to the station finder tool to find it.<br />
     <p><a href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a></p>
     <b>Elements </b>Please enter a comma separated list of element abreviations.
     <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
@@ -233,21 +252,28 @@ the decade 2000 - 2010<br />
     <img alt="MetaGraph" title="MetaGraph" class="dash_img" src="/csc/media/img/MetaGraph.png">
 </div>
 
+<div id="Howto_META_GRAPH">
+    <b>"Station ID" </b>Enter the station ID. If you don't know your ID, please use the link to the station finder tool to find it.<br />
+    <p><a href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a></p>
+    <p>A colored pixel means a valid data entry was found for the particular day of the year.</p>
+    <p>A white space indicates that data was not recorded at that date.</p>
+</div>
+
 <!--GRIDDED-->
 <div id="Docu_select_grid_by">
 <p><b>Grid selection</b></p>
-&nbsp;&nbsp;&nbsp;<p><b>"Point Location" </b><br /> Use this option if you are looking a particular grid point. A grid point has two coordinates: longitude and latitude. Please enter them in this order or use the map interface to define your grid point.</p>
-&nbsp;&nbsp;&nbsp;<p><b>"County FIPS code" </b><br /> Use this option if you are looking for all grid points in a particular US county.</p>
+&nbsp;&nbsp;&nbsp;<p><b>Point Location </b><br /> Use this option if you are looking a particular grid point. A grid point has two coordinates: longitude and latitude. Please enter them in this order or use the map interface to define your grid point.</p>
+&nbsp;&nbsp;&nbsp;<p><b>County FIPS code </b><br /> Use this option if you are looking for all grid points in a particular US county.</p>
 &nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a>
-&nbsp;&nbsp;&nbsp;<p><b>"Climate Division" </b><br /> Use this option if you are looking for all grid points in a particular US climate division.</p>
+&nbsp;&nbsp;&nbsp;<p><b>Climate Division </b><br /> Use this option if you are looking for all grid points in a particular US climate division.</p>
 &nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a>
-&nbsp;&nbsp;&nbsp;<p><b>"County Warning Area" </b><br /> Use this option if you are looking for all grid points in a US county warning area."</p>
+&nbsp;&nbsp;&nbsp;<p><b>County Warning Area </b><br /> Use this option if you are looking for all grid points in a US county warning area."</p>
 &nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a>
-&nbsp;&nbsp;&nbsp;<p><b>"Basin" </b><br /> Use this option if you are looking for all grid points in a US drainage basin.</p>
+&nbsp;&nbsp;&nbsp;<p><b>Basin" </b><br /> Use this option if you are looking for all grid points in a US drainage basin.</p>
 &nbsp;&nbsp;&nbsp;<a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a>
-&nbsp;&nbsp;&nbsp;<p><b>"State" </b><br /> Use this option if you are looking for all grid points in a US state.</p>
-&nbsp;&nbsp;&nbsp;<p><b>"Bounding Box" </b><br />Use this option if you are looking for all grid points in a bounding box. A bounding box has four coordinates: <br />West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</p>
-&nbsp;&nbsp;&nbsp;<p><b>Shape </b><br /> Use this option if you are looking for all grid points in a custom shape or circle. A map interface to help you define your search area will be provided.</p>
+&nbsp;&nbsp;&nbsp;<p><b>State" </b><br /> Use this option if you are looking for all grid points in a US state.</p>
+&nbsp;&nbsp;&nbsp;<p><b>Bounding Box </b><br />Use this option if you are looking for all grid points in a bounding box. A bounding box has four coordinates: <br />West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</p>
+&nbsp;&nbsp;&nbsp;<p><b>Custom Shape </b><br /> Use this option if you are looking for all grid points in a custom shape or circle. A map interface to help you define your search area will be provided.</p>
 </p>
 
 <div id="About_gridded_data">
@@ -275,7 +301,7 @@ the decade 2000 - 2010<br />
 
 <div id="Howto_gridded_data">
     <p><b>FORM 1</b><br />
-           <b>Select grid by </b>Choose a single gridpoint, a US state or a bounding box as your search area.<br />
+           <b>Select grid by </b>Several area options are available. Most require you to know the appropriate identifiers, e.g. county codes, county warning area codes, etc.. However, links or map interfaces that help you find the identifiers will be provided when filling out FORM 2. Use the custom shape option if you wish to define your own shape.<br />
            <b>Temporal resolution </b>Choose daily, monthly or yearly data. Note that monthy and yearly data are only available from the PRISM dataset. Daily gridded data from multiple sources are available.<br />
            <b>Data summary </b>Data summaries are performed over time at each grid point. If you choose to get raw data without perfoming any data summary, be aware that data request are limited to 7 day periods for state and bounding box requests. We plan to accommodate larger requests in the future. Please contact us at csc-wrcc@dri.edu if your data needs are not met.<br />
            <b>Data format </b>Data can be downloaded as .dat, .txt or .xls file. Choosing .html will display the data request results on your screen.<br />
@@ -285,9 +311,18 @@ the decade 2000 - 2010<br />
     <p><b>FORM 2</b><br />
            Depending on your <b>Select grid by </b>choice from FORM 1, you will see: <br >
            <ul>
-                <li><b>"Location" </b>A grid point has two coordinates: longitude and latitude. Please enter them in this order or use the map interface to define your grid point.</li>
-                <li><b>"State" </b>Choose a state from the drop down menue.</li>
-                <li><b>"Bounding Box" </b>A bounding box has four coordinates: <br />West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</li>
+                <li><b>Location </b>A grid point has two coordinates: longitude and latitude. Please enter them in this order or use the map interface to define your grid point.</li>
+                <li><b>State </b>Choose a state from the drop down menue.</li>
+                <li><b>Bounding Box </b>A bounding box has four coordinates: <br />West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</li>
+                <li><b>Shape </b> Enter the lon, lat coordinates of your custom shape or use the map interface to define it. You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend.
+                    <ul>
+                        <li><b>Marker </b>Point and click on the map.</li>
+                        <li><b>Connected line segments </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
+                        <li><b>Rectangle </b> Point at a corner of your rectangle, click, hold and drag.</li>
+                        <li><b>Circle </b>Point at the center of your circle,  click, hold and drag.</li>
+                        <li><b>Polygon </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
+                    </ul>
+                </li>
            </ul>
            <b>Elements </b>Please enter a comma separated list of element abreviations.
             <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>

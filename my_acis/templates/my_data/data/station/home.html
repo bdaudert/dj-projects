@@ -62,13 +62,22 @@
                 {{field}} 
             {%else%}
                 <tr>
-                    {%if field.label == "Bounding box" and bounding_box %}
-                        <td>Bounding Box: </td>
-                        <td><input type="text" name="bounding_box" id="bounding_box" value="{{bounding_box}}"></td>
+                    <td>{{field.label}}:</td>
+                    {%if field.label == "Shape" %}
+                        <td><input type="text" name="shape" id="shape" value="{{shape}}"></td>
+                    {%elif field.label == "Bounding box"%}
+                        <td><input type="text" name="bounding_box" id="bbox" value="{{bbox}}"></td>
+                    {%elif field.label == "County" %}
+                        <td><input type="text" name="county" id="county" value="{{county}}"></td>
+                    {%elif field.label == "Climate division" %}
+                        <td><input type="text" name="climate_division" id="climdiv" value="{{climdiv}}"></td>
+                    {%elif field.label == "Basin" %}
+                        <td><input type="text" name="basin" id="basin" value="{{basin}}"></td>
+                    {%elif field.label == "County warning area" %}
+                        <td><input type="text" name="county_warning_area" id="cwa" value="{{cwa}}"></td>
                     {%else%}
-                        <td>{{field.label}}:</td>
                         <td>{{field}}</td>
-                    {%endif%}       
+                    {%endif%}
                     <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>                            
                     {%ifequal field.label "Elements" %}
                         <div class="pop-up" onClick="ShowHide(this)">
@@ -117,6 +126,26 @@
         <div id="map" style="width: 100%; height:400px;"></div>
         <script type="text/javascript">
             initialize_bbox_map()
+        </script>
+    {%endif%}
+
+    {%if need_polymap and results%}
+        <div id="panel">
+            <div id="color-palette"></div>
+            <div>
+                <button id="delete-button">Delete Selected Shape</button>
+            </div>
+        </div>
+        <div id="polymap" style="width: 100%; height:400px;"></div>
+        {%if lat and lon %}
+            <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+            <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+        {%else%}
+            <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
+            <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+        {%endif%}
+        <script type="text/javascript">
+            initialize_polygon_map()
         </script>
     {%endif%}
     <!--RIGHT-->
@@ -213,6 +242,7 @@
             <div class="error">{{results.error}}</div>
         {%endif%}
 
+
         {%if results%}
             {%if show_flags%}
                 <h3>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</h3>
@@ -221,13 +251,14 @@
             {%if results.errors%}
                 <p class="error">{{results.errors}}</p>
             {%endif%}
-        <!--Link to relevant apps-->
-        {%if link_to_station_apps %}
+            <!--Link to relevant apps-->
+            {%if link_to_station_apps %}
             <a target="_blank" href="{{TOOLS_URL}}station/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}">Run an application on this data set</a>
-        {%endif%}
-        <br />
+            {%endif%}
+         <br />
 
         {%for stn in stn_idx%}
+          {%if results.stn_data|lookup:stn%}
             <h3>STATION NAME:</h3> 
             <b>{{results.stn_names|lookup:stn|safe}}</b>
             <h3>STATION ID,STATION NETWORK PAIRS:</h3>
@@ -280,17 +311,40 @@
                 {%else%}
                     {{results.stn_data|lookup:stn}}                    
                 {%endif%}
-            {%endfor%}
-        {%else%}
-        {%if need_map_bbox %}
+              {%endif%}<!--End if results.stn_data|lookup:stn-->
+            {%endfor%}<!--End station loop-->
+        {%else%}<!--End if results-->
+
+        {%if need_map_bbox and not results%}
             <p class="error">Click and drag to define your Bounding Box!</p>
             <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
             <div id="map" style="width: 100%; height:400px;"></div>
             <script type="text/javascript">
                 initialize_bbox_map()
             </script>
-        {%endif%}    
         {%endif%}
+
+       {%if need_polymap and not results%}
+            <div id="panel">
+                <div id="color-palette"></div>
+                <div>
+                    <button id="delete-button">Delete Selected Shape</button>
+                </div>
+            </div>
+            <div id="polymap" style="width: 100%; height:400px;"></div>
+            {%if lat and lon %}
+                <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+                <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+            {%else%}
+                <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
+                <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+            {%endif%}
+            <script type="text/javascript">
+                initialize_polygon_map()
+            </script>
+      {%endif%}
+   
+      {%endif%}<!--End if results-->
     </td></table>
 
   <!-- Footer -->

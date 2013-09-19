@@ -12,8 +12,10 @@
     <a href="{{TOOLS_URL}}gridded/">GRID TOOLS></a>
     <a href="{{TOOLS_URL}}gridded/area_time_series/">Area Time Series</a></p>
 
+
     <table cellpadding="20">
     <td valign="top" width="30%">
+    <!--Form 0-->
     {%if not hide_form0%}
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
@@ -35,6 +37,7 @@
             </form>
         </div>
     {%endif%}
+    <!--Form 1-->
     {%if form1_ready%}
         <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}gridded/area_time_series/'"/>
         <div id='form1'>
@@ -53,15 +56,22 @@
                 {%else%}
                 <tr>
                     <td>{{field.label}}:</td>
-                    {%ifequal field.label "Shape" %}
+                    {%if field.label == "Shape" %}
                         <td><input type="text" name="shape" id="shape" value="{{shape}}"></td>
-                    {%else%}
-                        {%ifequal field.label "Bounding box" %}
-                            <td><input type="text" name="bounding_box" id="bounding_box" value="{{bounding_box}}"></td>
-                        {%else%}
-                            <td>{{field}}</td>
-                        {%endifequal%}
-                    {%endifequal%}
+                    {%elif field.label == "Bounding box"%}
+                        <td><input type="text" name="bbox" id="bbox" value="{{bbox}}"></td>
+                    {%elif field.label == "County" %}
+                        <td><input type="text" name="county" id="county" value="{{county}}"></td>
+                    {%elif field.label == "Climate division" %}
+                        <td><input type="text" name="climdiv" id="climdiv" value="{{climdiv}}"></td>
+                    {%elif field.label == "Basin" %}
+                        <td><input type="text" name="basin" id="basin" value="{{basin}}"></td>
+                    {%elif field.label == "County warning area" %}
+                        <td><input type="text" name="cwa" id="cwa" value="{{cwa}}"></td>
+                    {%else%}                                
+                        <td>{{field}}</td>
+                    {%endif%}
+
                     <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
                 {%if field.label == "Grid"%}
                     <div class="pop-up">
@@ -126,6 +136,16 @@
         </script>
     {%endif%}
 
+    {%if need_overlay_map and results%}
+        
+        <div id="map-overlay" style="width:100%; height:400px;"></div>
+        <div id="content-window" style="width:100px; height:100px;"></div>
+        {%if county %}<script type="text/javascript">initialize_map_overlays("test")</script>{%endif%}
+        {%if climdiv %}<script type="text/javascript">initialize_map_overlays("climdiv")</script>{%endif%}
+        {%if cwa %}<script type="text/javascript">initialize_map_overlays("cwa")</script>{%endif%}
+        {%if basin %}<script type="text/javascript">initialize_map_overlays("basin")</script>{%endif%}
+    {%endif%} 
+
     </td>
     <td valign="top" width="70%">
         <h2 class="error">This page is under development!</h2> <img alt=Construction" title="Construction" src="{{MEDIA_URL}}img/Construction.png">
@@ -183,6 +203,15 @@
                 initialize_polygon_map()
             </script>
         {%endif%}<!--if need_polymap and not results-->
+
+         {%if need_overlay_map and not results%}
+            <div id="map-overlay" style="width:100%; height:400px;"></div>
+            <div id="content-window" style="width:100px; height:100px;"></div>
+            {%if county %}<script type="text/javascript">initialize_map_overlays("test")</script>{%endif%}
+            {%if climdiv %}<script type="text/javascript">initialize_map_overlays("climdiv")</script>{%endif%}
+            {%if cwa %}<script type="text/javascript">initialize_map_overlays("cwa")</script>{%endif%}
+            {%if basin %}<script type="text/javascript">initialize_map_overlays("basin")</script>{%endif%}
+        {%endif%} 
 
 
         {%if results%}

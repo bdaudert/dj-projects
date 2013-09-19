@@ -34,7 +34,7 @@
     START YEAR {{start_year}} END YEAR {{end_year}}</br>
     START MONTH {{start_month}} END MONTH {{end_month}}</br>
     ELEMENT {{el_type}} UNITS {{units}}</br>
-    DURATION {{duration|lookup:tbl_idx|safe}}</br>
+    DURATION {{duration|lookup:forloop.counter0}}</br>
     </p></br>
     <table>
       <tr>
