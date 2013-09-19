@@ -653,7 +653,7 @@ function initialize_map_overlays(type) {
     var myLatLng = new google.maps.LatLng(39.5, -98.35);
     //var myLatLng = new google.maps.LatLng(41.875696,-87.624207);
     var mapOptions = {
-        zoom: 11,
+        zoom: 4,
         center: myLatLng,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     }
@@ -668,8 +668,8 @@ function initialize_map_overlays(type) {
     var map = new google.maps.Map(document.getElementById("map-overlay"), mapOptions);
 
     var Layer = new google.maps.KmlLayer({
-        //url: 'http://wrcc.dri.edu//csc/media/json/' + kml_file, 
-        url:'http://wrcc.dri.edu/csc/media/json/US_Test.kml',
+        url: 'http://wrcc.dri.edu//csc/media/json/' + kml_file, 
+        //url:'http://wrcc.dri.edu/csc/media/json/US_Test.kml',
         suppressInfoWindows: true,
         map: map
     });

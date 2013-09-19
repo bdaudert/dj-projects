@@ -172,19 +172,6 @@
         <div id="docu_long"></div>
 
 
-        {%if stn_id and not results %}
-            <p class="error">Station ID: {{stn_id}}</p>
-        {%endif%}
-        {%if start_date and not results %}
-            <p class="error">Start Date: {{start_date}}</p>
-        {%endif%}
-        {%if end_date and not results %}
-            <p class="error">End Date: {{end_date}}</p>
-        {%endif%}
-        {%if elements and not results %}
-            <p class="error">Climate Elements: {{elements}}</p>
-        {%endif%}
-
         {%if large_request %}
             <p class="error">{{large_request}}</p>
         {%endif%}
@@ -219,41 +206,48 @@
 
         {%if by_type and not form2_ready%}
             <p><font color="#FF007F">Search Parameters:</font><br />
-            <b>{{by_type}} </b><br />
-
-        {%if start_date%}
-            <b>Start Date: </b>{{start_date}},
-        {%endif%}
-        {%if end_date%}
-            <b>End Date: </b>{{end_date}},<br />
+            <b>{{by_type}} </b><br /></p>
         {%endif%}
 
-        {%if elements%}
-            <b>Elements: </b>{{elements}} <br />
-        {%endif%}
-        {%if delimiter_word%}
-            <b>Delimiter: </b>{{delimiter_word}}
-        {%endif%}
-
-        </p>
-        {%endif%}
 
         {%if results.error%}
             <div class="error">{{results.error}}</div>
         {%endif%}
 
 
+       {%if display_params_list%}
+            <p><b>SEARCH PARAMETERS</b>:<br />
+            {%for param in display_params_list%}
+                {%if not forloop.first and param.0 and param.1%}, {%endif%}
+                    {%if forloop.counter|divisibleby:"3" %}<br />
+                {%endif %}
+                {%if param.0 == "Elements"%}<br />{%endif%}
+                {%if param.0 and param.1%}
+                    <b>{{param.0}}</b>: 
+                    {%if param.0 == "shape"%}
+                        <p class="error" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
+                        <div id="coords" style="display:none;">{{params.1}}</div>
+                    {%else%}
+                        {{param.1}}
+                    {%endif%}
+                {%endif%}
+            {%endfor%}
+            </p>
+        {%endif%}
+
         {%if results%}
-            {%if show_flags%}
+
+            {%if params_dict.show_flags == "T"%}
                 <h3>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</h3>
             {%endif%}
             <br />
             {%if results.errors%}
                 <p class="error">{{results.errors}}</p>
             {%endif%}
+
             <!--Link to relevant apps-->
-            {%if link_to_station_apps %}
-            <a target="_blank" href="{{TOOLS_URL}}station/?stn_id={{stn_id}}&start_date={{start_date}}&end_date={{end_date}}&elements={{elements}}">Run an application on this data set</a>
+            {%if params_dict.stn_id %}
+            <a target="_blank" href="{{TOOLS_URL}}station/?stn_id={{params_dict.stn_id}}&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}">Run an application on this data set</a>
             {%endif%}
          <br />
 
@@ -269,18 +263,18 @@
             <p class="error"> {{results.stn_errors|lookup:stn}}</p>
                  {%if not json%}  
                     <table>
-                    <th>date{{delimiter}}
-                        {%if show_flags%}
-                            {%if show_observation_time%}
-                                {%for el in results.elements%}{{el}}{{delimiter}}flag{{delimiter}}obs time{{delimiter}}{%endfor%}
+                    <th>date{{params_dict.delimiter}}
+                        {%if params_dict.show_flags == "T"%}
+                            {%if params_dict.show_observation_time == "T"%}
+                                {%for el in results.elements%}{{el}}{{params_dict.delimiter}}flag{{params_dict.delimiter}}obs time{{params_dict.delimiter}}{%endfor%}
                             {%else%}
-                                {%for el in results.elements%}{{el}}{{delimiter}}flag{{delimiter}}{%endfor%}
+                                {%for el in results.elements%}{{el}}{{params_dict.delimiter}}flag{{params_dict.delimiter}}{%endfor%}
                             {%endif%}
                         {%else%}
-                            {%if show_observation_time%}
-                                {%for el in results.elements%}{{el}}{{delimiter}}obs time{{delimiter}}{%endfor%}
+                            {%if params_dict.show_observation_time == "T"%}
+                                {%for el in results.elements%}{{el}}{{params_dict.delimiter}}obs time{{params_dict.delimiter}}{%endfor%}
                             {%else%}
-                                {%for el in results.elements%}{{el}}{{delimiter}}{%endfor%}
+                                {%for el in results.elements%}{{el}}{{params_dict.delimiter}}{%endfor%}
                             {%endif%}
                         {%endif%}
                     </th>
@@ -288,19 +282,19 @@
                         <tr><td>
                             {%for el_val in date_vals%}
                                 {%if forloop.first %}
-                                    {{el_val}}{{delimiter}}
+                                    {{el_val}}{{params_dict.delimiter}}
                                 {%else%}
-                                    {%if show_flags%}
-                                        {%if show_observation_time%}
-                                            {{el_val|lookup:0}}{{delimiter}}{{el_val|lookup:1}}{{delimiter}}{{el_val|lookup:2}}{{delimiter}}
+                                    {%if params_dict.show_flags == "T"%}
+                                        {%if params_dict.show_observation_time == "T"%}
+                                            {{el_val|lookup:0}}{{params_dict.delimiter}}{{el_val|lookup:1}}{{params_dict.delimiter}}{{el_val|lookup:2}}{{params_dict.delimiter}}
                                         {%else%}
-                                            {{el_val|lookup:0}}{{delimiter}}{{el_val|lookup:1}}{{delimiter}}
+                                            {{el_val|lookup:0}}{{params_dict.delimiter}}{{el_val|lookup:1}}{{params_dict.delimiter}}
                                         {%endif%}
                                     {%else%}
-                                        {%if show_observation_time%}
-                                            {{el_val|lookup:0}}{{delimiter}}{{el_val|lookup:2}}{{delimiter}}
+                                        {%if params_dict.show_observation_time == "T"%}
+                                            {{el_val|lookup:0}}{{params_dict.delimiter}}{{el_val|lookup:2}}{{params_dict.delimiter}}
                                         {%else%}
-                                            {{el_val|lookup:0}}{{delimiter}}
+                                            {{el_val|lookup:0}}{{params_dict.delimiter}}
                                         {%endif%}
                                     {%endif%}
                                 {%endif%}

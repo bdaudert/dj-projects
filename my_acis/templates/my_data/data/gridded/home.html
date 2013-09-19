@@ -234,11 +234,13 @@
                 {%endif %}
                 {%if param.0 == "Elements"%}<br />{%endif%}
                 {%if param.0 and param.1%}
-                    <b>{{param.0}}</b>: {{param.1}}
-                {%endif%}
-                {%if params.1 == "shape"%}
-                    <p class="error" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
-                    <div id="coords" style="display:none;">{{coords}}</div>
+                    <b>{{param.0}}</b>:
+                    {%if param.0 == "shape"%}
+                        <p class="error" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
+                        <div id="coords" style="display:none;">{{param.1}}</div>
+                    {%else%}
+                        {{param.1}}
+                    {%endif%}
                 {%endif%}
             {%endfor%}
             </p>
