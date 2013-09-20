@@ -91,10 +91,10 @@ GRID_SUMMARY_CHOICES = (
 
 select_grid_by_CHOICES = (
     ('point', 'Point Location'),
-    #('county', 'County FIPS code'),
-    #('climdiv', 'Climate Division'),
-    #('cwa', 'County Warning Area (CWA)'),
-    #('basin', 'Basin'),
+    ('county', 'County FIPS code'),
+    ('climdiv', 'Climate Division'),
+    ('cwa', 'County Warning Area (CWA)'),
+    ('basin', 'Basin'),
     ('state', 'State'),
     ('bbox', 'Bounding Box'),
     ('shape', 'Custom Shape')

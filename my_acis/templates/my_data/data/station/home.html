@@ -148,6 +148,16 @@
             initialize_polygon_map()
         </script>
     {%endif%}
+
+    {%if need_overlay_map and results%}
+        
+        <div id="map-overlay" style="width:100%; height:400px;"></div>
+        <div id="content-window" style="width:100px; height:100px;"></div>
+        {%if county %}<script type="text/javascript">initialize_map_overlays("county")</script>{%endif%}
+        {%if climdiv %}<script type="text/javascript">initialize_map_overlays("climdiv")</script>{%endif%}
+        {%if cwa %}<script type="text/javascript">initialize_map_overlays("cwa")</script>{%endif%}
+        {%if basin %}<script type="text/javascript">initialize_map_overlays("basin")</script>{%endif%}
+    {%endif%} 
     <!--RIGHT-->
     </td>
     <td valign="top" width="60%">
@@ -337,7 +347,17 @@
                 initialize_polygon_map()
             </script>
       {%endif%}
-   
+  
+
+      {%if need_overlay_map and not results%}
+        
+         <div id="map-overlay" style="width:100%; height:400px;"></div>
+         <div id="content-window" style="width:100px; height:100px;"></div>
+         {%if county %}<script type="text/javascript">initialize_map_overlays("county")</script>{%endif%}
+         {%if climdiv %}<script type="text/javascript">initialize_map_overlays("climdiv")</script>{%endif%}
+         {%if cwa %}<script type="text/javascript">initialize_map_overlays("cwa")</script>{%endif%}
+         {%if basin %}<script type="text/javascript">initialize_map_overlays("basin")</script>{%endif%}
+      {%endif%} 
       {%endif%}<!--End if results-->
     </td></table>
 

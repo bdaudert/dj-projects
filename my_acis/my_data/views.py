@@ -223,9 +223,9 @@ def data_station(request):
     initial_params_0 = {}
     initial_params_1 = {}
     if data_format is not None:
-        initial_1['data_format'] = data_format
+        initial_params_1['data_format'] = data_format
     else:
-        initial_1['data_format'] = 'clm'
+        initial_params_1['data_format'] = 'clm'
     if stn_id is not None:
         initial_params_1['data_format'] = 'html'
         initial_params_1['station_id'] = str(stn_id)

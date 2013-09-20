@@ -662,7 +662,6 @@ function initialize_map_overlays(type) {
     else if (type == 'climdiv'){kml_file ='US_Climdivs.kml';}
     else if (type == 'cwa'){kml_file ='US_CWAs.kml';}
     else if (type == 'basin'){kml_file ='US_Basins.kml';}
-    else if (type == 'test'){kml_file = 'US_Test.kml';}
     else{kml_file = 'US_Test.kml';}
 
     var map = new google.maps.Map(document.getElementById("map-overlay"), mapOptions);
