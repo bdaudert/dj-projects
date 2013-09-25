@@ -114,7 +114,7 @@ $(function () {
                 max:max,
                 min:min,
                 gridLineWidth:0,
-                tickInterval:tickInterval,
+                //tickPixelInterval:tickInterval,
                 plotLines:y_plotlines
             },
         

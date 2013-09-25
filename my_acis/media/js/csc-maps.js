@@ -650,10 +650,11 @@ function initialize_polygon_map() {
 }
 
 function initialize_map_overlays(type) {
-    var myLatLng = new google.maps.LatLng(39.5, -98.35);
+    //var myLatLng = new google.maps.LatLng(39.5, -98.35);
     //var myLatLng = new google.maps.LatLng(41.875696,-87.624207);
+    var myLatLng = new google.maps.LatLng(37.0, -114.05);
     var mapOptions = {
-        zoom: 4,
+        zoom: 5,
         center: myLatLng,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     }
@@ -661,7 +662,7 @@ function initialize_map_overlays(type) {
     if (type == 'county'){kml_file ='US_Counties.kml';}
     else if (type == 'climdiv'){kml_file ='US_Climdivs.kml';}
     else if (type == 'cwa'){kml_file ='US_CWAs.kml';}
-    else if (type == 'basin'){kml_file ='US_Basins.kml';}
+    else if (type == 'basin'){kml_file ='NV_Basins.kml';}
     else{kml_file = 'US_Test.kml';}
 
     var map = new google.maps.Map(document.getElementById("map-overlay"), mapOptions);

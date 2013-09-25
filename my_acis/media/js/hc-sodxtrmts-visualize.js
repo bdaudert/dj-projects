@@ -412,7 +412,8 @@ $(function () {
                         lineColor:lineColor,
                         plotLines:y_plotlines,
                         minorGridLineColor:minorGridLineColor,
-                        tickInterval:tickInterval,
+                        //tickPixelInterval:tickInterval,
+                        //tickPixelInterval:null,
                         startOnTick: false,
                         showFirstLabel: false
                     },
@@ -431,7 +432,8 @@ $(function () {
                         lineColor:lineColor,
                         plotLines:y_plotlines,
                         minorGridLineColor:minorGridLineColor,
-                        tickInterval:tickInterval,
+                        //tickPixelInterval:tickInterval,
+                        //tickPixelInterval:null,
                         startOnTick: false,
                         showFirstLabel: false
                     }],

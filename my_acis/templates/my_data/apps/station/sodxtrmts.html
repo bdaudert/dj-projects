@@ -17,7 +17,7 @@
 
     <table border="0" cellpadding="10">
         <tr valign="top">
-        <td>
+        <td valign="top" width="15%">
         <div id='form0'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -82,7 +82,7 @@
             <input type="submit" value="Submit" name="form0"/>
             </form>
         </div>
-    </td><td>
+    </td><td valign="top" width="85%">
         <div id=tool_info_head></div>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
@@ -164,14 +164,14 @@
  
             <table class="right_aligned" cellpadding="none">
             <tr>
-            <td><font size="+1"> YEAR</font></td>
+            <td><font size="+0"> YEAR</font></td>
             {%for mon in month_list%}
                 {%if forloop.last %}
-                    <td colspan="2"><font size="+1"></td>
-                    <td colspan="2"><font size="+1"></td>
-                    <td colspan="2"><font size="+1"></td>
+                    <td colspan="2"><font size="+0"></td>
+                    <td colspan="2"><font size="+0"></td>
+                    <td colspan="2"><font size="+0"></td>
                 {%endif%}
-                <td colspan="2"><font size="+1">{{mon}}</font></td>
+                <td colspan="2"><font size="+0">{{mon}}</font></td>
             {%endfor%}
             </tr>
             {%for yr_data in results %}

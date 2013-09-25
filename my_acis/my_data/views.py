@@ -341,7 +341,7 @@ def data_station(request):
             if form1.cleaned_data['data_format'] == 'html':
                 return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
             else:
-                return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],display_params['delimiter'], WRCCData.FILE_EXTENSIONS[str(form1.cleaned_data['data_format'])], request=request, output_file_name=str(form1.cleaned_data['output_file_name']), show_flags=display_params['show_flags'], show_observation_time=display_params['show_observation_time'])
+                return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],params_dict['delimiter'], WRCCData.FILE_EXTENSIONS[str(form1.cleaned_data['data_format'])], request=request, output_file_name=str(form1.cleaned_data['output_file_name']), show_flags=params_dict['show_flags'], show_observation_time=params_dict['show_observation_time'])
     if 'form2' in request.POST:
         context[request.POST['select_stations_by']] = str(request.POST[WRCCData.ACIS_TO_SEARCH_AREA[str(request.POST['select_stations_by'])]])
         form2 = set_as_form(request,'StationDataForm3')

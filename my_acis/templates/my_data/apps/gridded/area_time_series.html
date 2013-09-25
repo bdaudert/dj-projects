@@ -136,7 +136,6 @@
         </script>
     {%endif%}
 
-    <p>COUNTY: {{county}}</p>
     {%if need_overlay_map and results%}
         
         <div id="map-overlay" style="width:100%; height:400px;"></div>
@@ -204,6 +203,7 @@
                 initialize_polygon_map()
             </script>
         {%endif%}<!--if need_polymap and not results-->
+
 
          {%if need_overlay_map and not results%}
             <div id="map-overlay" style="width:100%; height:400px;"></div>

@@ -39,7 +39,7 @@ STARTING YEAR : {{start_year}}  ENDING YEAR : {{end_year}}</br>
     {%for stn, stn_data in results.items %}
     <h2>STATION: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;NUMBER: {{coop_station_ids|lookup:stn|safe}}</h2>
     <table>
-    <th colspan="2">YEAR</th><th colspan="2">JAN</th><th colspan="2">FEB</th><th colspan="2">MAR</th><th colspan="2">APR</th><th colspan="2">MAY<th colspan="2">JUN</th><th colspan="2">JUL</th><th colspan="2">AUG</th><th colspan="2">SEP</th><th colspan="2">OCT</th><th colspan="2">NOV</th><th colspan="2">DEC</th>
+    <th colspan="2">YEAR</th><th colspan="2">JAN</th><th colspan="2">FEB</th><th colspan="2">MAR</th><th colspan="2">APR</th><th colspan="2">MAY<th colspan="2">JUN</th><th colspan="2">JUL</th><th colspan="2">AUG</th><th colspan="2">SEP</th><th colspan="2">OCT</th><th colspan="2">NOV</th><th colspan="2">DEC</th><th colspan="2">ANN</th>
     {%for year_val in stn_data%}
      <tr>
      {%for mon_val in year_val%}
