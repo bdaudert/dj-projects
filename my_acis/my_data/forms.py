@@ -100,6 +100,13 @@ select_grid_by_CHOICES = (
     ('shape', 'Custom Shape')
 )
 
+SEARCH_AREA_CHOICES = (
+    ('county', 'County FIPS code'),
+    ('climdiv', 'Climate Division'),
+    ('cwa', 'County Warning Area (CWA)'),
+    ('basin', 'Basin')
+)
+
 GRID_CHOICES = (
     ('1', 'NRCC Interpolated (US)'),
     ('3', 'NRCC Hi-Res (East of Rockies)'),
@@ -485,6 +492,46 @@ class MultiPRISMElementField(forms.CharField):
 #Form Classes
 ######################################################################
 #Data download form
+class StateForm(forms.Form):
+        def __init__(self, *args, **kwargs):
+            select_grid_by = kwargs.get('initial', {}).get('select_grid_by', None)
+            select_stations_by = kwargs.get('initial', {}).get('select_stations_by', None)
+            element = kwargs.get('initial', {}).get('element', None)
+            element_selection = kwargs.get('initial', {}).get('element_selection', None)
+            data_format = kwargs.get('initial', {}).get('data_format', None)
+            temporal_resolution = kwargs.get('initial', {}).get('temporal_resolution', None)
+            data_summary = kwargs.get('initial', {}).get('data_summary', None)
+
+            super(StateForm, self).__init__(*args, **kwargs)
+
+            if select_grid_by is None:select_grid_by = self.data.get('select_grid_by')
+            if select_stations_by is None:select_stations_by = self.data.get('select_stations_by')
+            if element is None:element = self.data.get('element')
+            if element_selection is None:element_selection = self.data.get('element_selection')
+            if data_format is None:data_format = self.data.get('data_format')
+            if temporal_resolution is None:temporal_resolution = self.data.get('temporal_resolution')
+            if data_summary is None:data_summary = self.data.get('data_summary')
+
+            if element is  None:element = 'maxt'
+            if element_selection is None:element_selection = 'F'
+            if data_format is None:data_format = 'html'
+            if temporal_resolution is None:temporal_resolution = 'dly'
+            if data_summary is None:data_summary = 'mean'
+
+            if select_grid_by is not None:
+                self.fields['select_grid_by'] = forms.ChoiceField(choices=SEARCH_AREA_CHOICES, initial=select_grid_by, help_text='Search area by')
+            if select_stations_by is not None:
+                self.fields['select_stations_by'] = forms.ChoiceField(choices=SEARCH_AREA_CHOICES, initial=select_grid_by, help_text='Search area by')
+            self.fields['state'] = forms.ChoiceField(choices=STATE_CHOICES, initial='NV',help_text='Valid US state abreviation.')
+            self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, initial=element, widget=forms.HiddenInput())
+            self.fields['element_selection'] = forms.ChoiceField(choices=([('T', 'Choose climate elements'),('F', 'Any climate element')]), required=False, initial=element_selection, widget=forms.HiddenInput())
+            self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial=data_format, help_text=HELP_TEXTS['data_format'], widget=forms.HiddenInput())
+            self.fields['data_summary'] = forms.ChoiceField(choices=GRID_SUMMARY_CHOICES, required=False, initial=data_summary, help_text=HELP_TEXTS['data_summary'], widget=forms.HiddenInput())
+            self.fields['temporal_resolution'] = forms.ChoiceField(choices=([('dly', 'Daily'),('mly', 'Monthly'),('yly', 'Yearly')]), initial=temporal_resolution, help_text='Time resolution of data.', widget=forms.HiddenInput())
+
+
+
+
 class DownloadForm(forms.Form):
     data_format = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='clm', help_text=HELP_TEXTS['data_format'])
     delimiter = forms.ChoiceField(choices=DELIMITER_CHOICES, initial='tab',help_text='Delimiter used to seperate data values. Not applicable for excel output.')

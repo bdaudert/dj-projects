@@ -110,10 +110,10 @@
             <input type="submit" value="Submit" name="form1"/>
             </form>
         </div>
-        </br>
-        </br>
         {%endif%}
         {%endif%}
+        
+        <br /><br />
 
         {%if need_map and  grid_data%}
             <p class="error">Drag map marker to change location</p>
@@ -163,13 +163,26 @@
         {%endif%}
 
         {%if need_overlay_map and grid_data%}
-
+            <div id="form3">
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+                {%for field in form3 %}
+                    <tr>
+                    {%if not field.is_hidden %}
+                       <td>{{field.label}}:</td><td>{{field}}</td>
+                    {%else%}
+                       <td style="display:none;">{{field.label}}</td><td style="display:none;">{{field}}</td>
+                    {%endif%}
+                    </tr>
+                {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form3"/>
+            </form>
+            </div>
+            <p class="error">{{overlay_error}}</p>
             <div id="map-overlay" style="width:100%; height:400px;"></div>
             <div id="content-window" style="width:100px; height:100px;"></div>
-            {%if county %}<script type="text/javascript">initialize_map_overlays("county")</script>{%endif%}
-            {%if climdiv %}<script type="text/javascript">initialize_map_overlays("climdiv")</script>{%endif%}
-            {%if cwa %}<script type="text/javascript">initialize_map_overlays("cwa")</script>{%endif%}
-            {%if basin %}<script type="text/javascript">initialize_map_overlays("basin")</script>{%endif%}
+            <script type="text/javascript">initialize_map_overlays("{{type}}","{{host}}", "{{kml_file_path}}")</script>
         {%endif%}
 
     </td>
@@ -351,13 +364,26 @@
     {%endif%}
 
     {%if need_overlay_map and not grid_data%}
-
+        <div id="form3">
+            <form method="post" action="">{% csrf_token %}
+            <table class="form">
+                {%for field in form3 %}
+                    <tr>
+                    {%if not field.is_hidden %}
+                       <td>{{field.label}}:</td><td>{{field}}</td>
+                    {%else%}
+                       <td style="display:none;">{{field.label}}</td><td style="display:none;">{{field}}</td>
+                    {%endif%}
+                    </tr>
+                {%endfor%}
+            </table>
+            <input type="submit" value="Submit" name="form3"/>
+            </form>
+        </div>
+        <p class="error">{{overlay_error}}</p>
         <div id="map-overlay" style="width:100%; height:400px;"></div>
         <div id="content-window" style="width:100px; height:100px;"></div>
-        {%if county %}<script type="text/javascript">initialize_map_overlays("county")</script>{%endif%}
-        {%if climdiv %}<script type="text/javascript">initialize_map_overlays("climdiv")</script>{%endif%}
-        {%if cwa %}<script type="text/javascript">initialize_map_overlays("cwa")</script>{%endif%}
-        {%if basin %}<script type="text/javascript">initialize_map_overlays("basin")</script>{%endif%}
+        <script type="text/javascript">initialize_map_overlays("{{type}}","{{host}}", "{{kml_file_path}}")</script>
     {%endif%}
     </td>
     </table>
