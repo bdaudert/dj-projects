@@ -53,6 +53,9 @@
         <div id="form1">
             <form method="post" action="">{% csrf_token %}
             <table class="form">
+            {%if need_bbox_map or need_polymap or need_map or need_overlay_map%}
+            <p class="error">Use the map interface to populate first field.</p>
+            {%endif%}
             {%for field in form1 %}
             {%if field.is_hidden %}
                 {{field}}
@@ -101,10 +104,10 @@
                     {%endifequal%}
                     </td>
                 </tr>
+                {%endif%}
                 {%if field.errors%}
                  <tr><td></td><td>{{field.errors}}</td><td></td></tr>
                 {%endif%}
-            {%endif%}
             {%endfor%}
             </table>
             <input type="submit" value="Submit" name="form1"/>
@@ -268,7 +271,7 @@
             </p>
         {%endif%}
    
-
+        {{pms}}
         {%if grid_data %}
             <!--Link to relevant applications-->
             {%if params_dict.element and not figure_files%}

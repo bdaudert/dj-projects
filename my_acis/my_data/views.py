@@ -23,8 +23,10 @@ import my_data.forms as forms
 
 STATIC_URL = '/www/apps/csc/dj-projects/my_acis/static/'
 MEDIA_URL = '/www/apps/csc/dj-projects/my_acis/media/'
-WEB_SERVER_DIR = '/csc/dj-projects/my_acis/media/tmp/'
+
+WEB_SERVER_DIR = '/csc/media/kml/'
 TEMP_FILE_DIR = '/tmp/'
+
 
 def test(request):
     context = {
@@ -260,6 +262,9 @@ def data_station(request):
                     context['need_overlay_map'] = True
                     form3 =forms.StateForm(initial=form0.cleaned_data)
                     context['form3'] = form3
+                    context['host'] = 'wrcc.dri.edu'
+                    context['type'] = form0.cleaned_data['select_stations_by']
+                    context['kml_file_path'] = WEB_SERVER_DIR + 'nv_' + form0.cleaned_data['select_stations_by'] + '.kml'
                 context[form0.cleaned_data['select_stations_by']] = WRCCData.AREA_DEFAULTS[form0.cleaned_data['select_stations_by']]
 
             form1 = forms.StationDataForm1(initial=initial_params_1)
@@ -274,7 +279,7 @@ def data_station(request):
         context['hide_form0'] = True
 
         if form1.is_valid():
-            #Set parameters forhtml display
+            #Set parameters for html display
             pms = {}
             for key, val in form1.cleaned_data.iteritems():
                 pms[key] = val
@@ -288,7 +293,6 @@ def data_station(request):
                 context['need_overlay_map'] = True
                 form3=forms.StateForm(initial=form1.cleaned_data)
                 context['form3'] = form3
-            context[form1.cleaned_data['select_stations_by']] = WRCCData.AREA_DEFAULTS[form1.cleaned_data['select_stations_by']]
             #Check if data request is large,
             #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
             if form1.cleaned_data['start_date'].lower() == 'por':
@@ -399,8 +403,7 @@ def data_station(request):
                 context['overlay_error'] = status
             else:
                 context['host'] = 'wrcc.dri.edu'
-                #context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-                context['kml_file_path'] = '/csc/media/kml/' + kml_file_name
+                context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
 
     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
 
@@ -498,6 +501,9 @@ def data_gridded(request):
                 context['need_overlay_map'] = True
                 form3 = forms.StateForm(initial = form0.cleaned_data)
                 context['form3'] = form3
+                context['type'] = form0.cleaned_data['select_grid_by']
+                context['host'] = 'wrcc.dri.edu'
+                context['kml_file_path'] = WEB_SERVER_DIR + 'nv_' + form0.cleaned_data['select_grid_by'] + '.kml'
             bounding_box = request.GET.get('bounding_box', None)
             if bounding_box is not None:
                 context['bbox'] = bounding_box
@@ -523,6 +529,7 @@ def data_gridded(request):
             display_params_list, params_dict = set_gridded_data_params(pms)
             context['display_params_list'] = display_params_list
             context['params_dict'] = params_dict
+            context['elements']= form1.cleaned_data['elements']
             if form1.cleaned_data['select_grid_by'] == 'point':
                 location = form1.cleaned_data['location']
                 context['need_map'] = True;context['map_loc'] = location
@@ -536,8 +543,6 @@ def data_gridded(request):
                 context['need_overlay_map'] = True
                 form3 = forms.StateForm(initial = form1.cleaned_data)
                 context['form3'] = form3
-            #Needed for polygon overlays
-            context[form1.cleaned_data['select_grid_by']] = form1.cleaned_data[WRCCData.ACIS_TO_SEARCH_AREA[form1.cleaned_data['select_grid_by']]]
 
             #Check if data request is large,
             #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
@@ -704,8 +709,7 @@ def data_gridded(request):
                 context['overlay_error'] = status
             else:
                 context['host'] = 'wrcc.dri.edu'
-                #context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-                context['kml_file_path'] = '/csc/media/kml/' + kml_file_name
+                context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
 
     return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
@@ -1130,11 +1134,15 @@ def area_time_series(request):
                 context['need_overlay_map'] = True
                 form2 = forms.StateForm(initial = initial)
                 context['form2'] = form2
+                context['host'] = 'wrcc.dri.edu'
+                context['type'] = form0.cleaned_data['select_grid_by']
+                context['kml_file_path'] = WEB_SERVER_DIR + 'nv_' + form0.cleaned_data['select_grid_by'] + '.kml'
             context[form0.cleaned_data['select_grid_by']] = WRCCData.AREA_DEFAULTS[form0.cleaned_data['select_grid_by']]
 
     if 'form1' in request.POST:
-        if 'shape' in request.POST.keys():context['shape'] = str(request.POST['shape'])
-        if 'bounding_box' in request.POST.keys():context['bbox'] = str(request.POST['bounding_box'])
+        context[request.POST['select_grid_by']] = str(request.POST[WRCCData.ACIS_TO_SEARCH_AREA[str(request.POST['select_grid_by'])]])
+        #if 'shape' in request.POST.keys():context['shape'] = str(request.POST['shape'])
+        #if 'bounding_box' in request.POST.keys():context['bbox'] = str(request.POST['bounding_box'])
         form1 = set_as_form(request,'AreaTimeSeriesForm1')
         context['form1']  = form1
         context['hide_form0'] = True
@@ -1171,6 +1179,8 @@ def area_time_series(request):
                 # need to find coordinates of shape and enclosing bbox
                 if key == 'shape':
                     shape = val.split(',')
+                    if len(shape) == 4:#bbox, turn into shape with 4 vertices
+                        shape = [shape[0], shape[1], shape[2], shape[1], shape[0],shape[3], shape[2],shape[3]]
                     shape = [float(s) for s in shape]
                     shape_name = ''
                     #find enclosing bounding box
@@ -1265,7 +1275,7 @@ def area_time_series(request):
             context['results']= summary_time_series
             context['width'] = WRCCData.IMAGE_SIZES[search_params['image_size']][0]
             context['height'] = WRCCData.IMAGE_SIZES[search_params['image_size']][1]
-            context['bbox'] = WRCCData.IMAGE_SIZES
+            #context['bbox'] = bbox
             context['graph_title'] = graph_title
             context['graph_subtitle'] = smry + element_name
             context['display_params_list'] = display_params_list
@@ -1314,8 +1324,7 @@ def area_time_series(request):
                 context['overlay_error'] = status
             else:
                 context['host'] = 'wrcc.dri.edu'
-                #context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-                context['kml_file_path'] = '/csc/media/kml/' + kml_file_name
+                context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
 
     return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
 
@@ -1445,6 +1454,9 @@ def station_locator_app(request):
                 }
                 form2 =forms.StateForm(initial=initial)
                 context['form2'] = form2
+                context['host'] = 'wrcc.dri.edu'
+                context['type'] = form0.cleaned_data['select_stations_by']
+                context['kml_file_path'] = WEB_SERVER_DIR + 'nv_' + form0.cleaned_data['select_stations_by'] + '.kml'
             context[form0.cleaned_data['select_stations_by']] = WRCCData.AREA_DEFAULTS[form0.cleaned_data['select_stations_by']]
 
     if 'form1' in request.POST:
@@ -1454,6 +1466,7 @@ def station_locator_app(request):
         context['form1'] = form1
         context['form1_ready'] = True
         if form1.is_valid():
+            context[form1.cleaned_data['select_stations_by']] = form1.cleaned_data[form1.cleaned_data['select_stations_by']]
             if 'elements' in form1.cleaned_data.keys():
                 element_list = ','.join(form1.cleaned_data['elements'])
             else:
@@ -1532,8 +1545,7 @@ def station_locator_app(request):
                 context['overlay_error'] = status
             else:
                 context['host'] = 'wrcc.dri.edu'
-                #context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-                context['kml_file_path'] = '/csc/media/kml/' + kml_file_name
+                context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
 
 
     return render_to_response('my_data/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
@@ -2031,8 +2043,9 @@ def set_gridded_data_params(form):
     params_dict = {}
     for key, val in form.iteritems():
         #Convert to string to avoid unicode issues
-        if key != 'elements':
-            form[key] = str(val)
+        #if key != 'elements':
+        #    form[key] = str(val)
+
         if key == 'grid':
             display_params_list[2] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.GRID_CHOICES[val]]
             params_dict['grid'] = val
@@ -2041,6 +2054,7 @@ def set_gridded_data_params(form):
             params_dict[WRCCData.DISPLAY_PARAMS[key]] = WRCCData.DISPLAY_PARAMS[val]
         elif key == 'elements':
             if isinstance(val, str):
+
                 el_list = val.split(',')
             else:
                 el_list = val

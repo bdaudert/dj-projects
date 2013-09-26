@@ -43,6 +43,9 @@
         <div id='form1'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
+            {%if need_bbox_map or need_polymap or need_map or need_overlay_map%}
+                <p class="error">Use the map interface to populate first field.</p>
+            {%endif%}
             {%for field in form1 %}
                 {%if field.label == "Image size"%}
                     <tr><td><input type="submit" value="Submit" name="form1"/></td><td></td><td></td></tr>
@@ -59,47 +62,34 @@
                     {%if field.label == "Shape" %}
                         <td><input type="text" name="shape" id="shape" value="{{shape}}"></td>
                     {%elif field.label == "Bounding box"%}
-                        <td><input type="text" name="bbox" id="bbox" value="{{bbox}}"></td>
+                        <td><input type="text" name="bounding_box" id="bbox" value="{{bbox}}"></td>
                     {%elif field.label == "County" %}
                         <td><input type="text" name="county" id="county" value="{{county}}"></td>
                     {%elif field.label == "Climate division" %}
-                        <td><input type="text" name="climdiv" id="climdiv" value="{{climdiv}}"></td>
+                        <td><input type="text" name="climate_division" id="climdiv" value="{{climdiv}}"></td>
                     {%elif field.label == "Basin" %}
                         <td><input type="text" name="basin" id="basin" value="{{basin}}"></td>
                     {%elif field.label == "County warning area" %}
-                        <td><input type="text" name="cwa" id="cwa" value="{{cwa}}"></td>
+                        <td><input type="text" name="county_warning_area" id="cwa" value="{{cwa}}"></td>
                     {%else%}                                
                         <td>{{field}}</td>
                     {%endif%}
 
                     <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                {%if field.label == "Grid"%}
-                    <div class="pop-up">
-                    <img alt="GriddedDataDocu" title="GriddedDataDocu" src="{{MEDIA_URL}}img/ACIS_Grids.png" id="ACIS_Grids" width="350" height="300" border="0">
-                    </div>
-                {%else%}
-                    <div class="pop-up"><p>{{field.help_text}}</p></div>
-                {%endif%}
+                    {%if field.label == "Grid"%}
+                        <div class="pop-up">
+                        <img alt="GriddedDataDocu" title="GriddedDataDocu" src="{{MEDIA_URL}}img/ACIS_Grids.png" id="ACIS_Grids" width="350" height="300" border="0">
+                        </div>
+                    {%else%}
+                        <div class="pop-up"><p>{{field.help_text}}</p></div>
+                    {%endif%}
                     </td>
                 </tr>
 
-                {%ifequal field.label "County" %}
-                    <tr><td></td><td align="right"><a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a></td><td></td</tr>
-                {%endifequal%}
-                {%ifequal field.label "Climate division" %}
-                    <tr><td></td><td align="right"><a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a></td><td></td</tr>
-                {%endifequal%}
-                {%ifequal field.label "County warning area" %}
-                    <tr><td></td><td align="right"><a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a></td><td></td></tr>
-                {%endifequal%}
-                {%ifequal field.label "Basin" %}
-                    <tr><td></td><td align="right"><a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a></td><td></td></tr>
-                {%endifequal%}
-                    
-               {%if field.errors%}
-                 <tr><td></td><td><font color="red">{{field.errors}}</font></td><td></td></tr>
+                {%if field.errors%}
+                     <tr><td></td><td><font color="red">{{field.errors}}</font></td><td></td></tr>
                 {%endif%}
-                {%endif%}
+             {%endif%}
             {%endfor%}
             </table>
             <input type="submit" value="Submit" name="form1"/>
@@ -219,7 +209,6 @@
 
 
          {%if need_overlay_map and not results%}
-            <!--<p>REQ: {{req}}</p>-->
             <div id="form2">
             <form method="post" action="">{% csrf_token %}
                 <table class="form">

@@ -48,6 +48,9 @@
         <div id='form1'>
             <form method="post" action="">{% csrf_token %}
             <table class="form">
+            {%if need_bbox_map or need_polymap or need_map or need_overlay_map%}
+                <p class="error">Use the map interface to populate first field.</p>
+            {%endif%}
             {%for field in form1 %}
                 {%if field.is_hidden %}
                     {{field}}
