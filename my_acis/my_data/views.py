@@ -1178,8 +1178,6 @@ def area_time_series(request):
                 # need to find coordinates of shape and enclosing bbox
                 if key == 'shape':
                     shape = val.split(',')
-                    if len(shape) == 4:#bbox, turn into shape with 4 vertices
-                        shape = [shape[0], shape[1], shape[2], shape[1], shape[0],shape[3], shape[2],shape[3]]
                     shape = [float(s) for s in shape]
                     shape_name = ''
                     #find enclosing bounding box
@@ -1190,10 +1188,13 @@ def area_time_series(request):
                     if shape_type == 'circle':
                         PointIn = getattr(WRCCUtils,'point_in_circle')
                         poly = shape
-                    elif shape_type == 'polygon':
+                    elif shape_type in ['polygon', 'bbox', 'point']:
+                        if shape_type == 'bbox':
+                            shape = [shape[0], shape[1], shape[2], shape[1], shape[0],shape[3], shape[2],shape[3]]
                         PointIn = getattr(WRCCUtils,'point_in_poly')
                         poly = [(shape[2*idx],shape[2*idx+1]) for idx in range(len(shape)/2)]
                         context['shape_coords'] = [[shape[2*idx],shape[2*idx+1]] for idx in range(len(shape)/2)]
+
                 else:
                     #Need to find shape coordinates and enclosing bbox
                     #via ACIS general call

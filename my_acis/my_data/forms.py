@@ -378,9 +378,11 @@ class MyStateField(forms.CharField):
 class MyNameField(forms.CharField):
     def to_python(self, name):
         if not name:
-            return ' '
+            return 'DataRequest'
         #format name to single string without spaces
         formatted_name = ''.join(name.split(' '))
+        if formatted_name =='' or formatted_name == ' ':
+            formatted_name = 'DataRequest'
         return formatted_name
 
     def validate(self, formatted_name):
