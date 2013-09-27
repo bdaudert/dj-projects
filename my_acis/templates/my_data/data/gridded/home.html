@@ -270,8 +270,7 @@
             {%endfor%}
             </p>
         {%endif%}
-   
-        {{pms}}
+  
         {%if grid_data %}
             <!--Link to relevant applications-->
             {%if params_dict.element and not figure_files%}
@@ -293,19 +292,14 @@
                 <div id="data" style="display:none;">
             {%endif%}
 
-            <p><b>DATA</b>:<br /> 
-            {%if not json%}
-                <p>date range{{params_dict.delimiter}}lat{{params_dict.delimiter}}lon{{params_dict.delimiter}}elev{{params_dict.delimiter}}{%for el in elements%}{{el}}{{params_dict.delimiter}}{%endfor%}</p>
-                {%for row in grid_data%}
-                    {%for val  in row%}
-                        {{val}}{{params_dict.delimiter}}
-                    {%endfor%}<br />
-                {%endfor%}
-            {%else%}
-                <p>date,lat,lon,elev,{%for el in elements%}{{el}},{%endfor%}</p>
-                {{grid_data}}
-            {%endif%}
-            </p>
+            <p><b>DATA</b>:</p>
+            {{req}}
+            <p>date range{{params_dict.delimiter}}lat{{params_dict.delimiter}}lon{{params_dict.delimiter}}elev{{params_dict.delimiter}}{%for el in elements%}{{el}}{{params_dict.delimiter}}{%endfor%}</p>
+            {%for row in grid_data%}
+                {%for val  in row%}
+                    {{val}}{{params_dict.delimiter}}
+                {%endfor%}<br />
+            {%endfor%}
         {%endif%}<!--End if grid_data-->
 
         {%if figure_files%}
@@ -316,7 +310,6 @@
             {%endfor%}
         {%endif%}
 
-    <br />
 
 
     {%if need_map and not grid_data%}

@@ -698,7 +698,9 @@ function initialize_map_overlays(type, host, kml_file_path) {
     }
 
     var map = new google.maps.Map(document.getElementById("map-overlay"), mapOptions);
-
+    var infowindow = new google.maps.InfoWindow({
+        content: 'oi'
+    });
     var Layer = new google.maps.KmlLayer({
         url: 'http://'+ host + kml_file_path,
         //url:'http://wrcc.dri.edu/tmp/nv_basin.kml',
@@ -707,9 +709,15 @@ function initialize_map_overlays(type, host, kml_file_path) {
     });
     Layer.setMap(map);
     google.maps.event.addListener(Layer, 'click', function(kmlEvent) {
-        var text = kmlEvent.featureData.Description;
-         document.getElementById(type).value = kmlEvent.featureData.name;
-        showInDiv(text);
+        //var text = kmlEvent.featureData.description;
+        document.getElementById(type).value = kmlEvent.featureData.name;
+        //showInDiv(text);
+        var contentString = '<div id="LayerWindow">'+
+            kmlEvent.featureData.description +
+            '</div>';
+        infowindow.close();
+        infowindow.setContent(contentString);
+        infowindow.open(map, Layer);
     });
 
     function showInDiv(text) {

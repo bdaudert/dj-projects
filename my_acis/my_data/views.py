@@ -571,14 +571,13 @@ def data_gridded(request):
                     return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
             #Generate Data
-            form_input = form1.cleaned_data
             if str(form1.cleaned_data['grid']) == '21':
                 #PRISM data need to convert elements!!
                 prism_elements = []
                 for el in form1.cleaned_data['elements']:
                     prism_elements.append('%s_%s' %(str(form1.cleaned_data['temporal_resolution']), str(el)))
-                form_input['elements'] = prism_elements
-            req = AcisWS.get_grid_data(form_input, 'griddata_web')
+                form1.cleaned_data['elements'] = prism_elements
+            req = AcisWS.get_grid_data(form1.cleaned_data, 'griddata_web')
             if 'error' in req.keys():
                 context['error'] = req['error']
                 context['grid_data'] = {}
@@ -657,7 +656,7 @@ def data_gridded(request):
             if form1.cleaned_data['data_format'] == 'html':
                 return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
             else:
-                return WRCCUtils.write_griddata_to_file(data, params_dict['elements'],params_dict['delimiter'],WRCCData.FILE_EXTENSIONS[form1.cleaned_data['data_format']], request=request,output_file_name =form1.cleaned_data['output_file_name'])
+                return WRCCUtils.write_griddata_to_file(data, form1.cleaned_data['elements'],params_dict['delimiter'],WRCCData.FILE_EXTENSIONS[form1.cleaned_data['data_format']], request=request,output_file_name =form1.cleaned_data['output_file_name'])
 
     #Large Data requests
     if 'form2' in request.POST:
@@ -2043,8 +2042,8 @@ def set_gridded_data_params(form):
     params_dict = {}
     for key, val in form.iteritems():
         #Convert to string to avoid unicode issues
-        #if key != 'elements':
-        #    form[key] = str(val)
+        if key != 'elements':
+            form[key] = str(val)
 
         if key == 'grid':
             display_params_list[2] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.GRID_CHOICES[val]]
@@ -2053,8 +2052,9 @@ def set_gridded_data_params(form):
             display_params_list[3] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[val]]
             params_dict[WRCCData.DISPLAY_PARAMS[key]] = WRCCData.DISPLAY_PARAMS[val]
         elif key == 'elements':
-            if isinstance(val, str):
-
+            if isinstance(val, list):
+                el_list = val
+            elif isinstance(val, str):
                 el_list = val.split(',')
             else:
                 el_list = val
@@ -2107,6 +2107,8 @@ def set_gridded_data_params(form):
             except ValueError:
                 if key in ['basin', 'county_warning_area', 'climate_division', 'state', 'bounding_box', 'shape']:
                     display_params_list.insert(1, [WRCCData.DISPLAY_PARAMS[key], str(val)])
+    if 'delimiter' not in params_dict.keys():
+        params_dict['delimiter'] = ' '
     return display_params_list, params_dict
 
 def set_station_data_params(form):
@@ -2157,6 +2159,8 @@ def set_station_data_params(form):
             except ValueError:
                 if key in ['station_id','station_ids', 'stnid', 'stn_id','basin', 'county_warning_area', 'climate_division', 'state', 'bounding_box', 'shape']:
                     display_params_list.insert(1, [WRCCData.DISPLAY_PARAMS[key], str(val)])
+    if 'delimiter' not in params_dict.keys():
+        params_dict['delimiter'] = ' '
     return display_params_list, params_dict
 
 
