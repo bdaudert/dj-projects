@@ -23,8 +23,8 @@ import my_data.forms as forms
 
 STATIC_URL = '/www/apps/csc/dj-projects/my_acis/static/'
 MEDIA_URL = '/www/apps/csc/dj-projects/my_acis/media/'
-
-WEB_SERVER_DIR = '/csc/media/kml/'
+STATIC_KML = '/csc/media/kml/'
+WEB_SERVER_DIR = '/csc/media/tmp/'
 TEMP_FILE_DIR = '/tmp/'
 
 
@@ -264,7 +264,7 @@ def data_station(request):
                     context['form3'] = form3
                     context['host'] = 'wrcc.dri.edu'
                     context['type'] = form0.cleaned_data['select_stations_by']
-                    context['kml_file_path'] = WEB_SERVER_DIR + 'nv_' + form0.cleaned_data['select_stations_by'] + '.kml'
+                    context['kml_file_path'] = STATIC_KML + 'nv_' + form0.cleaned_data['select_stations_by'] + '.kml'
                 context[form0.cleaned_data['select_stations_by']] = WRCCData.AREA_DEFAULTS[form0.cleaned_data['select_stations_by']]
 
             form1 = forms.StationDataForm1(initial=initial_params_1)
@@ -503,7 +503,7 @@ def data_gridded(request):
                 context['form3'] = form3
                 context['type'] = form0.cleaned_data['select_grid_by']
                 context['host'] = 'wrcc.dri.edu'
-                context['kml_file_path'] = WEB_SERVER_DIR + 'nv_' + form0.cleaned_data['select_grid_by'] + '.kml'
+                context['kml_file_path'] = STATIC_KML + 'nv_' + form0.cleaned_data['select_grid_by'] + '.kml'
             bounding_box = request.GET.get('bounding_box', None)
             if bounding_box is not None:
                 context['bbox'] = bounding_box
@@ -1135,7 +1135,7 @@ def area_time_series(request):
                 context['form2'] = form2
                 context['host'] = 'wrcc.dri.edu'
                 context['type'] = form0.cleaned_data['select_grid_by']
-                context['kml_file_path'] = WEB_SERVER_DIR + 'nv_' + form0.cleaned_data['select_grid_by'] + '.kml'
+                context['kml_file_path'] = STATIC_KML + 'nv_' + form0.cleaned_data['select_grid_by'] + '.kml'
             context[form0.cleaned_data['select_grid_by']] = WRCCData.AREA_DEFAULTS[form0.cleaned_data['select_grid_by']]
 
     if 'form1' in request.POST:
@@ -1456,7 +1456,7 @@ def station_locator_app(request):
                 context['form2'] = form2
                 context['host'] = 'wrcc.dri.edu'
                 context['type'] = form0.cleaned_data['select_stations_by']
-                context['kml_file_path'] = WEB_SERVER_DIR + 'nv_' + form0.cleaned_data['select_stations_by'] + '.kml'
+                context['kml_file_path'] = STATIC_KML + 'nv_' + form0.cleaned_data['select_stations_by'] + '.kml'
             context[form0.cleaned_data['select_stations_by']] = WRCCData.AREA_DEFAULTS[form0.cleaned_data['select_stations_by']]
 
     if 'form1' in request.POST:
