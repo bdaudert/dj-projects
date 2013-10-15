@@ -446,14 +446,23 @@ img.center {
     height:250px;
 }
 
-
+/*
 .searchbox {
     position:absolute;
     top:230px;
-    /*right:200px;*/
 
 }
+*/
 
+.searchbox {
+    position:relative;
+    top:20px;
+    left:10px;
+    width:30%;
+    height:5%;
+    background-color:#FFEFD5;
+    color:#006666;
+}
 
 /*Map related stuff*/
 #map_legend {

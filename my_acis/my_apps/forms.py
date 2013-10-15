@@ -514,7 +514,7 @@ class SodForm(forms.Form):
             self.fields['frequency_analysis'] = forms.CharField(initial=frequency_analysis)
             self.fields['frequency_analysis'].widget.attrs['readonly'] = 'readonly'
             if frequency_analysis == 'T':
-                self.fields['frequency_monthly_statistic'] = forms.ChoiceField(choices=F_ANALYSIS_CHOICES, required=False, initial='p')
+                self.fields['frequency_analysis_type'] = forms.ChoiceField(choices=F_ANALYSIS_CHOICES, required=False, initial='p')
             self.fields['element'] = forms.CharField(initial=element)
             self.fields['element'].widget.attrs['readonly'] = 'readonly'
             if element in ['hdd', 'cdd', 'gdd']:
