@@ -1,6 +1,5 @@
 $(function () {
     var chart;
-
     $(document).ready(function() {
         var mischr = ["fake","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
         var JSON_URL = document.getElementById("JSON_URL").value;
@@ -15,6 +14,8 @@ $(function () {
         var connector_line = document.getElementById("connector_line").value;
         var connector_line_width = document.getElementById("connector_line_width").value;
         var plot_incomplete_years = document.getElementById("plot_incomplete_years").value;
+        var axis_min = document.getElementById("axis_min").value;
+        var axis_max = document.getElementById("axis_max").value;
         if (connector_line == 'F'){
             connector_line_width = 0;        
         }
@@ -29,17 +30,6 @@ $(function () {
         var month_names =  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         var axes_style = set_AxesStyle();
         var lable_style = set_LableStyle();
-        /*
-        var axes_style = {
-                color:'#000000',
-                fontSize:'13px',
-                fontWeight: 'bold'
-            };
-        var lable_style = {
-                color:'#000000',
-                fontSize:'18px'
-            };
-        */
         //Define Summary Text
         if (summary == 'max'){
             var SummaryText = 'Maximum';
@@ -91,7 +81,7 @@ $(function () {
                         x_plotlines = null;
                     }
                     else if (minor_grid =='T'){
-                        if (parseInt(datadict.data[yr_idx][0])%5 == 0 && yr_idx > 0){
+                        if (yr_idx == 0 || ((yr_idx) % 5 == 0 && yr_idx > 0)){
                             var plotline = {
                                 color: '#787878',
                                 dashStyle:'dash',
@@ -103,7 +93,7 @@ $(function () {
                     }
                     else if (major_grid =='T' && minor_grid == 'F'){
                         //leave cluncy code in case we want differnent minor grid
-                        if (parseInt(datadict.data[yr_idx][0])%10 == 0 && yr_idx > 0){
+                        if (yr_idx == 0 || ((yr_idx) % 10 ==0 && yr_idx > 0)){
                             var plotline = {
                                 color: '#787878',
                                 dashStyle:'dash',
@@ -152,10 +142,6 @@ $(function () {
                         }
                         if (summary == 'sum'){
                             for(var i=0,sum=0;i<vals.length;sum+=vals[i++]);
-                            /*
-                            for(var i=0;sum=0;i<vals.length;i++){
-                                sum+=vals[i];
-                            }*/
                             data.push([date, precise_round(sum,2)]);
                             values.push(precise_round(sum,2));
                         }
@@ -171,12 +157,37 @@ $(function () {
                     }
                 } //end for yr_idx
                 // Find max/min (needed to set plot properties)
-                var data_max = Math.max.apply(Math,values);
-                if (datadict.element == 'pcpn' || datadict.element == 'snow' || datadict.element == 'snwd' || datadict.element == 'wdmv' || datadict.element == 'evap'){
-                    var data_min = 0;
+                if (axis_max == "Use default") { 
+                    var data_max = Math.max.apply(Math,values);
                 }
                 else{
-                    var data_min = Math.min.apply(Math,values);
+                    try{
+                        var data_max = parseFloat(axis_max);
+                    }
+                    catch(e){
+                        var data_max = Math.max.apply(Math,values);
+                    }
+                }
+                if (axis_min == "Use default"){
+                    if (datadict.element == 'pcpn' || datadict.element == 'snow' || datadict.element == 'snwd' || datadict.element == 'wdmv' || datadict.element == 'evap'){
+                        var data_min = 0;
+                    }
+                    else{
+                        var data_min = Math.min.apply(Math,values);
+                    }
+                }
+                else{
+                    try {
+                        var data_min = parseFloat(axis_min);
+                    }
+                    catch(e){
+                        if (datadict.element == 'pcpn' || datadict.element == 'snow' || datadict.element == 'snwd' || datadict.element == 'wdmv' || datadict.element == 'evap'){
+                            var data_min = 0;
+                        }
+                        else{
+                            var data_min = Math.min.apply(Math,values);
+                        }
+                    }
                 }
                 series['data'] = data;
                 series_data.push(series);
@@ -268,50 +279,50 @@ $(function () {
                         }
                     }
                 }
+                // Override max/min if needed
+                if (axis_max != "Use default") {
+                    try{
+                        var data_max = parseFloat(axis_max);
+                    }
+                    catch(e){}
+                }
+                if (axis_min != "Use default"){
+                    try {
+                        var data_min = parseFloat(axis_min);
+                    }
+                    catch(e){}
+                }
             }
 
             //Define plot characteristics
             //Define y_plotlines
             if (major_grid =='F' && minor_grid == 'F'){
-                var divider = null;
+                var divider = 1.0;
             }
             else if (minor_grid =='T'){
                 var divider = 10.0;
-                /*
-                for (var val=data_min + (data_max - data_min)/10;val<=data_max + 4*(data_max - data_min)/10;val+=(data_max - data_min)/10) {
-                    var plotline = {
-                        color: '#787878',
-                        dashStyle:'dash',
-                        width: 0.5,
-                        value: val,
-                        };
-                        y_plotlines.push(plotline);
-                }
-                */
             }
             else if (major_grid =='T' && minor_grid == 'F'){
                 var divider = 5.0;
-                /*
-                for (var val=data_min + (data_max - data_min)/5;val<=data_max + 4*(data_max - data_min)/5;val+=(data_max - data_min)/5) {
-                    var plotline = {
-                        color: '#787878',
-                        dashStyle:'dash',
-                        width: 1,
-                        value: val,
-                        };
-                        y_plotlines.push(plotline);
+            }
+            
+            var tickInterval = (data_max - data_min)/divider;
+            for (var val=data_min;val<=data_max + 2*tickInterval;val+=tickInterval) {
+                var plotline = {
+                    color: '#787878',
+                    dashStyle:'dash',
+                    width: 1,
+                    value: val,
+                };
+                y_plotlines.push(plotline);
                 
-                }
-                */
             }
             //Tick marks and y_axis plotlines
-            y_plotlines = set_plotLines(data_max, data_min, divider, null);
+            //y_plotlines = set_plotLines(data_max, data_min, divider, null);
             //y_plotlines = set_plotLines(data_max, data_min, divider, {color:'#787878',dashStyle:'dash',width: 0.5});
-            var tickInterval =set_tickInterval(data_max, data_min, divider);
-            //var tickInterval = null;
-
+            //var tickInterval = set_tickInterval(data_max, data_min, divider);
             if (graph_title == "Use default"){
-                graph_title = datadict.stn_name + ' (' + stn_id + ')';
+                graph_title = datadict.stn_name + ' (' + stn_id + '), ' + datadict.stn_state;
             }
             if (major_grid == 'F' && minor_grid == 'F') {
                 var lineColor = 'transparent';
@@ -322,11 +333,11 @@ $(function () {
             else {
                 var lineColor = '#C0D0E0';
                 var minorGridLineColor = '#E0E0E0';
-                var gridLineWidth = 1;
+                var gridLineWidth = 0;
                 var gridLineColor = '#C0C0C0';
             }
             //var xAxisText = 'Months: ';
-            var xAxisText = SummaryText + '  ' +  datadict.element_name + ' Months: '; 
+            var xAxisText = SummaryText + '  ' +  datadict.element_name + ', Months: '; 
             if (month_list[0]> month_list[month_list.length -1]){
                 var apdx = 'Ending Year ' //+ datadict.data[datadict.data.length -8][0]
             }
@@ -381,22 +392,6 @@ $(function () {
                             year: '%Y'
                         },
                     }
-                    /*
-                    {
-                        opposite: true,
-                        linkedTo: 0,
-                        labels: {
-                            style:axes_style
-                        },
-                        plotLines:x_plotlines,
-                        gridLineWidth: gridLineWidth,
-                        gridLineColor: gridLineColor,
-                        type: 'datetime',
-                        maxZoom: 365 * 24 * 3600000, // 1 year
-                        dateTimeLabelFormats: { // don't display the dummy year
-                            year: '%Y'
-                        }
-                    }*/
                     ],
                 yAxis: [
                     {
@@ -407,13 +402,14 @@ $(function () {
                         labels: {
                             style:axes_style
                         },
+                        min:data_min,
+                        max:data_max,
                         gridLineWidth:0,
                         gridLineColor: gridLineColor,
                         lineColor:lineColor,
                         plotLines:y_plotlines,
                         minorGridLineColor:minorGridLineColor,
-                        //tickPixelInterval:tickInterval,
-                        //tickPixelInterval:null,
+                        tickInterval:tickInterval,
                         startOnTick: false,
                         showFirstLabel: false
                     },
@@ -427,12 +423,14 @@ $(function () {
                         labels: {
                             style:axes_style
                         },
+                        min:data_min,
+                        max:data_max,
                         gridLineWidth:0,
                         gridLineColor: gridLineColor,
                         lineColor:lineColor,
                         plotLines:y_plotlines,
                         minorGridLineColor:minorGridLineColor,
-                        //tickPixelInterval:tickInterval,
+                        tickInterval:tickInterval,
                         //tickPixelInterval:null,
                         startOnTick: false,
                         showFirstLabel: false

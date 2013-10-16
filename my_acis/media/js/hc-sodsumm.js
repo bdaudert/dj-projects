@@ -117,7 +117,7 @@ $(function () {
                         categories:table_dict[i].cats, 
                         title: {
                             style:style,
-                            text: 'Month'
+                            text: table_dict[i].record_start + ' - ' + table_dict[i].record_end
                         }                    
                     },
                     yAxis: yAx,
@@ -193,10 +193,10 @@ $(function () {
                 options: {
                     title: {
                          style:style,
-                         text: table_dict[i].stn_name + ', ' + table_dict[i].stn_id  + ', ' + table_dict[i].table_name_long
+                         text: table_dict[i].stn_name + ', ' + table_dict[i].stn_state  + ', ' + table_dict[i].table_name_long
                     },
                     subtitle: {
-                        text: 'Year Range: ' + table_dict[i].record_start  + ' - '+ table_dict[i].record_end
+                        text: 'Network: ' + table_dict[i].stn_network + ', ID: ' + table_dict[i].stn_id
                     },
                     yAxis: {
                         labels: {
