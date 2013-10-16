@@ -79,20 +79,30 @@ $(function () {
             },  
             title: {
                 style:style_text,
-                text:table_dict.stn_name + ', ID: ' + table_dict.stn_id 
+                text:table_dict.stn_name + ', ' + table_dict.stn_state 
             },
             subtitle: {
-                text: 'Mean and Range of '  + monthly_statistic + ' for ' + table_dict.element_name,
+                text: 'Network: ' + table_dict.stn_network + ', ID: ' + table_dict.stn_id,
+                //text: 'Mean and Range of '  + monthly_statistic + ' for ' + table_dict.element_name,
                 x: -20
             },
             labels:{
                 items:[{
-                    html:'Start Year: ' + table_dict.start_date + ' End Year: ' + table_dict.end_date,
+                    html:'Mean and Range of '  + monthly_statistic + ' for ' + table_dict.element_name, 
+                    //html:'Start Year: ' + table_dict.start_date + ' End Year: ' + table_dict.end_date,
                     style:{
                         top:'-10px',
                         left:'100px',
                         fontSize:'14px'
-                    }   
+                    }
+                },
+                {
+                    html:'Start Year: ' + table_dict.start_date + ' End Year: ' + table_dict.end_date,
+                    style:{
+                        top:'292px',
+                        left:'150px',
+                        fontSize:'12px'
+                    }
                 }],
                 style: {color: '#000000'}
             },

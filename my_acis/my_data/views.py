@@ -1601,7 +1601,8 @@ def sodxtrmts(request):
             #Run data retrieval job
             DJ = WRCCClasses.SODDataJob('Sodxtrmts', data_params)
             #WARNING: station_ids, names need to be called before dates_list
-            station_ids, station_names = DJ.get_station_ids_names()
+            #station_ids, station_names = DJ.get_station_ids_names()
+            station_names, station_states, station_ids, station_networks, station_lls, station_elevs, station_uids, station_climdivs, station_counties  = DJ.get_station_meta()
             header.insert(0, ['Station Name', station_names[0]])
             context['header']= header
             if station_ids:context['station_ID'] =  station_ids[0]
@@ -1657,6 +1658,8 @@ def sodxtrmts(request):
                     'ranges':ranges,
                     'stn_id':station_ids[0],
                     'stn_name':station_names[0],
+                    'stn_network':station_networks[0],
+                    'stn_state':station_states[0],
                     'month_list':month_list,
                     'data':results,
                     'search_params':search_params,
@@ -1763,7 +1766,8 @@ def sodsumm(request):
             #Run data retrieval job
             DJ = WRCCClasses.SODDataJob('Sodsumm', data_params)
             #WARNING: station_ids, names need to be called before dates_list
-            station_ids, station_names = DJ.get_station_ids_names()
+            #station_ids, station_names = DJ.get_station_ids_names()
+            station_names, station_states, station_ids, station_networks, station_lls, station_elevs, station_uids, station_climdivs, station_counties  = DJ.get_station_meta()
             dates_list = DJ.get_dates_list()
             data = DJ.get_data()
             #Run application
@@ -1898,6 +1902,8 @@ def sodsumm(request):
                     'record_start':dates_list[0][0:4],
                     'record_end':dates_list[-1][0:4],
                     'stn_name':station_names[0],
+                    'stn_network':station_networks[0],
+                    'stn_state':station_states[0],
                     'stn_id':str(data_params['sid']),
                     'table_name':tab,
                     'table_name_long':table_name_long,

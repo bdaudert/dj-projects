@@ -1015,7 +1015,7 @@ class AreaTimeSeriesForm1(forms.Form):
         else:
             self.fields['start_date'] = MyDateField(required = False, initial=start_date, help_text=HELP_TEXTS['date'])
         if end_date is None:
-            self.fields['end_date'] = MyDateField(required = False, initial=today, help_text=HELP_TEXTS['date'])
+            self.fields['end_date'] = MyDateField(required = False, initial=yesterday, help_text=HELP_TEXTS['date'])
         else:
             self.fields['end_date'] = MyDateField(required = False, initial=end_date, help_text=HELP_TEXTS['date'])
         self.fields['summary'] = forms.ChoiceField(choices=WRCCData.CLIM_RISK_SUMMARY_CHOICES, initial='mean',help_text='How to spatially summarize gridpoints lying in polygon.')
