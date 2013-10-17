@@ -1033,6 +1033,8 @@ class AreaTimeSeriesForm1(forms.Form):
         self.fields['connector_line_width'] = forms.FloatField(initial=1, max_value=10, min_value=0, required=False,help_text='Choose the width of the connector line. Choose 0 if you only want to see markers. 10 is the maximum line widh allowed.')
         self.fields['markers'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show markers at each data point.')
         self.fields['marker_type'] = forms.ChoiceField(choices=WRCCData.MARKER_CHOICES, required=False, initial='diamond', help_text='.')
+        self.fields['axis_min'] = forms.CharField(required=False, initial='Use default', help_text='Set the y-axis minimum value.')
+        self.fields['axis_max'] = forms.CharField(required=False, initial='Use default', help_text='Set the y-axis maximium value')
         '''
         if element == 'maxt':lower='50';upper='90';max_dec = 1
         if element == 'mint':lower='30';upper='70';max_dec = 1
