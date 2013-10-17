@@ -22,42 +22,9 @@ $(function () {
         }
         var max = Math.max.apply(Math,max_vals);
         var min = Math.min.apply(Math,min_vals);
-        var x_plotlines = [];
-        for (var val=0;val<12;val++){
-            var plotline = {
-                color: '#787878',
-                dashStyle:'dash',
-                width: 1,
-                value: val,
-            };
-            x_plotlines.push(plotline);
-        }
-        var y_plotlines = [];
-        for (var val=min + (max - min)/10;val<=max + 4*(max - min)/10;val+=(max - min)/10) {
-            var plotline = {
-                color: '#787878',
-                dashStyle:'dash',
-                width: 1,
-                value: val,
-            };
-            y_plotlines.push(plotline);
-        }
-        if (y_plotlines.length == 0 ){
-            y_plotlines = null;
-        }
-        if (max == null || min == null || Math.abs(max - min) < 0.0001){
-            var tickInterval = null;
-        }
-        else {
-            if (table_dict.element != 'pcpn' && table_dict.element != 'snow' && table_dict.element != 'snwd'){
-                var tickInterval = precise_round((max - min)/10,0);
-                //var tickInterval = null;
-            }
-            else {
-                var tickInterval = precise_round((max - min)/10,1);
-            }
-        }
-
+        var  x_plotlines = set_plotLines(11, 0, 11);
+        var y_plotlines = set_plotLines(max, min, 10.0);
+        var tickInterval = set_tickInterval(max, min, 10.0)
         var averages = table_dict.averages;
         var base_temperature = table_dict.base_temperature;
         if (table_dict.element == 'gdd' || table_dict.element == 'hdd' || table_dict.element == 'cdd') {
@@ -88,11 +55,11 @@ $(function () {
             },
             labels:{
                 items:[{
-                    html:'Mean and Range of '  + monthly_statistic + ' for ' + table_dict.element_name, 
+                    html:'Mean and Range of '  + monthly_statistic + ', ' + table_dict.element_name, 
                     //html:'Start Year: ' + table_dict.start_date + ' End Year: ' + table_dict.end_date,
                     style:{
                         top:'-10px',
-                        left:'100px',
+                        left:'50px',
                         fontSize:'14px'
                     }
                 },
@@ -124,7 +91,7 @@ $(function () {
                 max:max,
                 min:min,
                 gridLineWidth:0,
-                //tickPixelInterval:tickInterval,
+                tickInterval:tickInterval,
                 plotLines:y_plotlines
             },
         

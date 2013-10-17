@@ -26,6 +26,13 @@ $(function () {
         for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
             month_list[mon_idx] = parseInt(month_list[mon_idx]);
         }
+        //Find end year index 
+        if (month_list[0]> month_list[month_list.length -1]){
+            var end_idx = 7
+        }
+        else {
+            var end_idx = 6
+        }
         var summary = document.getElementById("summary").value;
         var month_names =  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         var axes_style = set_AxesStyle();
@@ -57,6 +64,32 @@ $(function () {
             var Interval = 365 * 24 * 3600000; // 1 year
             var x_plotlines = [];
             var y_plotlines = [];
+            //Define x_plotline and plot data
+            if (major_grid =='F' && minor_grid =='F'){
+                var x_step = datadict.data.length + 1;
+            }
+            else if (minor_grid =='T'){
+                var x_step = Math.round(datadict.data.length/10.0);
+            }
+            else if (major_grid =='T' && minor_grid == 'F'){
+                var x_step = x_step = Math.round(datadict.data.length/5.0);
+            }
+            for (var yr_idx=0;yr_idx<datadict.data.length - end_idx;yr_idx++) {
+                if (yr_idx == 0 || yr_idx == datadict.data.length - end_idx -1 ||((yr_idx) % x_step ==0 && yr_idx > 0)){
+                    var plotline = {
+                        color: '#787878',
+                        dashStyle:'dash',
+                        width: 0.5,
+                        value: Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1),
+                    };
+                    x_plotlines.push(plotline);
+                }
+            }
+            if (x_plotlines.length == 0){
+                x_plotlines = null;
+            }
+            
+            //Case 1 Plot: summary over Month
             if (summary != 'individual'){
                 var series = {'pointStart':Start,'pointInterval':Interval, marker:{symbol:marker_type}, lineWidth:connector_line_width};
                 if (markers == 'F'){
@@ -68,42 +101,8 @@ $(function () {
                 //Define series data
                 var data = [];
                 var values = [];
-                //Find end year index 
-                if (month_list[0]> month_list[month_list.length -1]){
-                    var end_idx = 7
-                }
-                else {
-                    var end_idx = 6
-                } 
+                //Define plot data
                 for (var yr_idx=0;yr_idx<datadict.data.length - end_idx;yr_idx++) {
-                    //Add vertical plot lines every 10 years or every year
-                    if (major_grid =='F' && minor_grid =='F'){
-                        x_plotlines = null;
-                    }
-                    else if (minor_grid =='T'){
-                        if (yr_idx == 0 || ((yr_idx) % 5 == 0 && yr_idx > 0)){
-                            var plotline = {
-                                color: '#787878',
-                                dashStyle:'dash',
-                                width: 1,
-                                value: Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1),
-                            };
-                            x_plotlines.push(plotline);
-                        }
-                    }
-                    else if (major_grid =='T' && minor_grid == 'F'){
-                        //leave cluncy code in case we want differnent minor grid
-                        if (yr_idx == 0 || ((yr_idx) % 10 ==0 && yr_idx > 0)){
-                            var plotline = {
-                                color: '#787878',
-                                dashStyle:'dash',
-                                width: 0.5,
-                                value: Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1),
-                            };
-                            x_plotlines.push(plotline);
-                        }
-                    } 
-                    //Define plot data 
                     var vals = [];
                     var skip_year = 'F';                    
                     if (month_list[0]> month_list[month_list.length -1]){
@@ -242,7 +241,7 @@ $(function () {
                     series_data.push(series);
                 }
             }
-            else { //summary = indiviual
+            else { //Case2: Plot indiviual months
                 for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
                     var series = {'name':month_names[month_list[mon_idx]-1],'pointStart':Start,'pointInterval':Interval,marker:{symbol:marker_type}};
                     if (markers == 'F'){
@@ -295,7 +294,7 @@ $(function () {
             }
 
             //Define plot characteristics
-            //Define y_plotlines
+            //Define y_plotlines and tickInterval
             if (major_grid =='F' && minor_grid == 'F'){
                 var divider = 1.0;
             }
@@ -305,22 +304,10 @@ $(function () {
             else if (major_grid =='T' && minor_grid == 'F'){
                 var divider = 5.0;
             }
-            
-            var tickInterval = (data_max - data_min)/divider;
-            for (var val=data_min;val<=data_max + 2*tickInterval;val+=tickInterval) {
-                var plotline = {
-                    color: '#787878',
-                    dashStyle:'dash',
-                    width: 1,
-                    value: val,
-                };
-                y_plotlines.push(plotline);
-                
-            }
             //Tick marks and y_axis plotlines
             //y_plotlines = set_plotLines(data_max, data_min, divider, null);
-            //y_plotlines = set_plotLines(data_max, data_min, divider, {color:'#787878',dashStyle:'dash',width: 0.5});
-            //var tickInterval = set_tickInterval(data_max, data_min, divider);
+            y_plotlines = set_plotLines(data_max, data_min, divider, {color:'#787878',dashStyle:'dash',width: 0.5});
+            var tickInterval = set_tickInterval(data_max, data_min, divider);
             if (graph_title == "Use default"){
                 graph_title = datadict.stn_name + ' (' + stn_id + '), ' + datadict.stn_state;
             }
