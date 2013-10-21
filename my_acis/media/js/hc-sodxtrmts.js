@@ -20,11 +20,24 @@ $(function () {
             max_vals.push(parseFloat(table_dict.ranges[mon_idx][2]));
             min_vals.push(parseFloat(table_dict.ranges[mon_idx][1]));
         }
+
         var max = Math.max.apply(Math,max_vals);
-        var min = Math.min.apply(Math,min_vals);
-        var  x_plotlines = set_plotLines(11, 0, 11);
-        var y_plotlines = set_plotLines(max, min, 10.0);
+        if (table_dict.element == 'snow' || table_dict.element == 'snwd' || table_dict.element == 'pcpn') {
+            min = 0.0; 
+        }
+        else{
+            var min = Math.min.apply(Math,min_vals);
+        }
+        var  x_plotlines = set_plotLines(11, 0, 1);
         var tickInterval = set_tickInterval(max, min, 10.0)
+        if (table_dict.element == 'snow' || table_dict.element == 'snwd' || table_dict.element == 'pcpn') {
+            var axis_min = 0.0;
+        }
+        else{
+            var axis_min = min - tickInterval;
+        }
+        var axis_max = max + tickInterval;
+        var y_plotlines = set_plotLines(axis_max, axis_min, tickInterval);
         var averages = table_dict.averages;
         var base_temperature = table_dict.base_temperature;
         if (table_dict.element == 'gdd' || table_dict.element == 'hdd' || table_dict.element == 'cdd') {
@@ -75,7 +88,8 @@ $(function () {
             },
             xAxis: {
                 labels:{
-                    style: style_axes
+                    style: style_axes,
+                    step:2
                 },   
                 categories: table_dict.month_list,
                 plotLines:x_plotlines
@@ -88,8 +102,8 @@ $(function () {
                     style:style_text,
                     text: table_dict.element_name
                 },
-                max:max,
-                min:min,
+                max:axis_max,
+                min:axis_min,
                 gridLineWidth:0,
                 tickInterval:tickInterval,
                 plotLines:y_plotlines

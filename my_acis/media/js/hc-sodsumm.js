@@ -114,7 +114,10 @@ $(function () {
                             style:style
                         },
                         plotLines:x_plotlines,
-                        categories:table_dict[i].cats, 
+                        categories:table_dict[i].cats,
+                        labels: {
+                        step:2
+                        },
                         title: {
                             style:style,
                             text: table_dict[i].record_start + ' - ' + table_dict[i].record_end

@@ -30,7 +30,7 @@
   {%if not stn_data%}
     <p style="color:red">NO STATION DATA FOUND!</p></br>
   {%else%}
-  <table>
+  <table cellpadding="5">
   <th>DOY</th><th>MON</th><th>DAY</th><th>MAXT AVE</th><th>MAXT STD</th><th>MAXT YRS<th>MINT AVE</th><th>MINT STD</th><th>MINT YRS</th><th>PCPN AVE</th><th>PCPN YRS</th>
   {%for day_data in stn_data%}
    <tr>

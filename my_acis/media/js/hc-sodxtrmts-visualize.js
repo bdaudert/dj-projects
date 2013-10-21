@@ -305,9 +305,15 @@ $(function () {
                 var divider = 5.0;
             }
             //Tick marks and y_axis plotlines
-            //y_plotlines = set_plotLines(data_max, data_min, divider, null);
-            y_plotlines = set_plotLines(data_max, data_min, divider, {color:'#787878',dashStyle:'dash',width: 0.5});
             var tickInterval = set_tickInterval(data_max, data_min, divider);
+            if (datadict.element == 'snow' || datadict.element == 'snwd' || datadict.element == 'pcpn') {
+                var data_min = 0.0;
+            }
+            else{
+                var data_min = data_min - tickInterval;
+            }
+            var data_max = data_max + tickInterval;
+            var y_plotlines = set_plotLines(data_max, data_min, tickInterval, null);
             if (graph_title == "Use default"){
                 graph_title = datadict.stn_name + ' (' + stn_id + '), ' + datadict.stn_state;
             }
@@ -367,7 +373,8 @@ $(function () {
                             text: apdx
                         },
                         labels: {
-                            style:axes_style
+                            style:axes_style,
+                            step:2
                         },
                         lineColor:lineColor,
                         plotLines:x_plotlines,

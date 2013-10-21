@@ -13,8 +13,7 @@ from django.db.models.query import QuerySet
 from django.conf import settings
 #My imports
 import AcisWS
-import WRCCUtils
-import WRCCDataApps
+import WRCCUtils, WRCCDataApps, WRCCData
 import my_apps.forms as forms
 
 #Prefix to location of executables
@@ -355,7 +354,7 @@ def sods(request, app_name):
             elif app_name == 'Sodxtrmts':
                 context['el_type'] = form2.cleaned_data['element']
                 context['max_missing_days'] = form2.cleaned_data['max_missing_days']
-                context['start_month'] = form2.cleaned_data['start_month']
+                context['start_month'] = WRCCData.NUMBER_TO_MONTH_NAME[form2.cleaned_data['start_month']]
                 mon_start = int(form2.cleaned_data['start_month'].lstrip('0'))
                 month_list = []
                 for mon_idx in range(mon_start -1,12):
@@ -364,10 +363,9 @@ def sods(request, app_name):
                     month_list.append(months[mon_idx])
                 month_list.append('ANN')
                 context['month_list'] = month_list
-                context['frequency_analysis'] = form2.cleaned_data['frequency_analysis']
-                context['departures_from_averages'] = form2.cleaned_data['departures_from_averages']
-                context['monthly_statistic'] = form2.cleaned_data['monthly_statistic']
-                context['departure_from_averages'] = form2.cleaned_data['departures_from_averages']
+                context['frequency_analysis'] = WRCCData.DISPLAY_PARAMS[form2.cleaned_data['frequency_analysis']]
+                context['monthly_statistic'] = WRCCData.DISPLAY_PARAMS[form2.cleaned_data['monthly_statistic']]
+                context['departure_from_averages'] = WRCCData.DISPLAY_PARAMS[form2.cleaned_data['departures_from_averages']]
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
                 'coop_station_ids':coop_station_ids,'station_names':station_names, \
                 'el_type':form2.cleaned_data['element'], \

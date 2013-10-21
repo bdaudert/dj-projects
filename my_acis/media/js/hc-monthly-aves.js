@@ -31,7 +31,8 @@ $(function () {
             },
             xAxis: {
                 labels: {
-                    style: style_axes
+                    style: style_axes, 
+                    step:2
                 },
                 plotLines: x_plotlines,
                 categories: [
