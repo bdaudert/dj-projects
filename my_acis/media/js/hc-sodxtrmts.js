@@ -2,15 +2,8 @@ $(function () {
     var json_file = document.getElementById("json_file").value;
     var JSON_URL = document.getElementById("JSON_URL").value;
     var json_file_path = '/csc/media/tmp/' + json_file;
-    var style_axes = {
-            color:'#000000',
-            fontSize:'14px',
-            fontWeight: 'bold'
-        };
-    var style_text = {
-            color:'#000000',
-            fontSize:'18px'
-        };
+    var style_axes = set_AxesStyle();
+    var style_text = set_LableStyle();
     $.getJSON(json_file_path, function(table_dict) {
         //Find max/min of ranges
         var max_vals = [];
@@ -19,22 +12,12 @@ $(function () {
             max_vals.push(parseFloat(table_dict.ranges[mon_idx][2]));
             min_vals.push(parseFloat(table_dict.ranges[mon_idx][1]));
         }
-        var max = Math.max.apply(Math,max_vals);
-        if (table_dict.element == 'snow' || table_dict.element == 'snwd' || table_dict.element == 'pcpn') {
-            min = 0.0; 
-        }
-        else{
-            var min = Math.min.apply(Math,min_vals);
-        }
+        var max = find_max(max_vals, table_dict.element);
+        var min = find_min(min_vals, table_dict.element);
         var  x_plotlines = set_plotLines(11, 0, 1);
         var tickInterval = set_tickInterval(max, min,10.0)
-        if (table_dict.element == 'snow' || table_dict.element == 'snwd' || table_dict.element == 'pcpn') {
-            var axis_min = 0.0;
-        }
-        else{
-            var axis_min = min - tickInterval;
-        }
-        var axis_max = max + tickInterval;
+        var axis_min = set_axis_min(min, table_dict.element, tickInterval);
+        var axis_max = set_axis_max(max, table_dict.element, tickInterval);
         var y_plotlines = set_plotLines(axis_max, axis_min, tickInterval);
         var averages = table_dict.averages;
         var base_temperature = table_dict.base_temperature;
@@ -119,9 +102,6 @@ $(function () {
                 valueSuffix: '°C'
             },
             
-            //egend: {
-            //},
-        
             series: [{
                 name: monthly_statistic +  ' of ' + table_dict.element_name + ' ' + base_temperature,
                 data: averages,
