@@ -329,16 +329,12 @@ $(function () {
                 var gridLineWidth = 0;
                 var gridLineColor = '#C0C0C0';
             }
-            //var xAxisText = 'Months: ';
-            var xAxisText = SummaryText + '  ' +  datadict.element_name + ', Months: '; 
+            var xAxisText = SummaryText + '  ' +  datadict.element_name + ', Months: ' + month_names[0] + ' - '+ month_names[month_list.length - 1]; 
             if (month_list[0]> month_list[month_list.length -1]){
                 var apdx = 'Ending Year ' //+ datadict.data[datadict.data.length -8][0]
             }
             else {
                 var apdx = 'Year ' //+ datadict.data[datadict.data.length -7][0]
-            }
-            for (var mon_idx=0;mon_idx<month_list.length;mon_idx++)  {
-                xAxisText+= month_names[month_list[mon_idx] - 1] + ' ' 
             }
             //Define Chart
             chart = new Highcharts.Chart({
@@ -356,11 +352,25 @@ $(function () {
                     text: graph_title
                 },
                 subtitle: {
-                    text:xAxisText,
+                    text:'Network: ' + datadict.stn_network + ', ID: ' + datadict.stn_id
+                    /*
                     style: {
                         color:'#0000FF',
                         fontSize:15
                     }
+                    */
+                },
+                labels: {
+                    items:[{
+                        html:xAxisText,
+                        style:{
+                            top:'-10px',
+                            left:'90px',
+                            fontSize:'14px',
+                            color:'#0000FF',
+                        }
+                    }],
+                    style: {color: '#000000'}
                 },
                 credits: {
                         href: 'http://wrcc.dri.edu/',
@@ -405,7 +415,7 @@ $(function () {
                         minorGridLineColor:minorGridLineColor,
                         tickInterval:tickInterval,
                         startOnTick: false,
-                        showFirstLabel: false
+                        showFirstLabel: true
                     },
                     {
                         opposite: true,
@@ -427,7 +437,7 @@ $(function () {
                         tickInterval:tickInterval,
                         //tickPixelInterval:null,
                         startOnTick: false,
-                        showFirstLabel: false
+                        showFirstLabel: true
                     }],
                 tooltip: {
                     shared: true

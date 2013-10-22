@@ -713,8 +713,8 @@ class StationDataForm1(forms.Form):
             self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='dlm', help_text=HELP_TEXTS['data_format'])
             self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
         self.fields['data_format'].widget.attrs = {'readonly':True, 'style':readonly_style}
-        if data_format in ['dlm', 'clm', 'html']:
-            self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
+        #if data_format in ['dlm', 'clm', 'html']:
+        self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
 class StationDataForm3(forms.Form):
    def __init__(self, *args, **kwargs):
@@ -766,8 +766,8 @@ class StationDataForm3(forms.Form):
             self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='dlm', help_text=HELP_TEXTS['data_format'])
             self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
         self.fields['data_format'].widget.attrs = {'readonly':True, 'style':readonly_style}
-        if data_format in ['dlm', 'clm', 'html']:
-            self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
+        #if data_format in ['dlm', 'clm', 'html']:
+        self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
 
 class GridDataForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=select_grid_by_CHOICES, required=False, initial='point', help_text=HELP_TEXTS['select_stations_by'])
@@ -846,8 +846,8 @@ class GridDataForm1(forms.Form):
             self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='dlm', help_text=HELP_TEXTS['data_format'])
             self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
         self.fields['data_format'].widget.attrs = {'readonly':True, 'style':readonly_style}
-        if data_format in ['dlm', 'clm', 'html']:
-            self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
+        #if data_format in ['dlm', 'clm', 'html']:
+        self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
         if data_summary is None or data_summary == 'none' or select_grid_by == 'point':
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')
             #self.fields['data_summary'] = forms.CharField(widget=forms.HiddenInput(), required=False, initial='none', help_text=HELP_TEXTS['data_summary'])
@@ -911,8 +911,8 @@ class GridDataForm3(forms.Form):
             self.fields['data_format'] = forms.ChoiceField(choices=DATA_FORMAT_CHOICES, initial='dlm', help_text=HELP_TEXTS['data_format'])
             self.fields['output_file_name'] = MyNameField(required=False,initial='DataRequest', help_text='Name of output file. Special characters are not allowed. Spaces will be ignored')
         self.fields['data_format'].widget.attrs = {'readonly':True, 'style':readonly_style}
-        if data_format in ['dlm', 'clm', 'html']:
-            self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
+        #if data_format in ['dlm', 'clm', 'html']:
+        self.fields['delimiter'] = forms.ChoiceField(choices=DELIMITER_CHOICES, help_text='Delimiter used to seperate data values.')
         self.fields['select_grid_by'] = forms.CharField(initial=select_grid_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
         if data_summary is None or data_summary == 'none' or select_grid_by == 'point' or temporal_resolution in ['mly', 'yly']:
             self.fields['visualize'] = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), widget=forms.HiddenInput(),required=False, initial='F', help_text='Generate a map to visualize data')

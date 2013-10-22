@@ -254,6 +254,7 @@ def data_station(request):
             if stn_id is None:
                 initial_params_1['select_stations_by'] = form0.cleaned_data['select_stations_by']
                 initial_params_1['data_format'] = form0.cleaned_data['data_format']
+                initial_params_1['delimiter'] = 'comma'
 
             if 'form0' in request.POST:
                 if form0.cleaned_data['select_stations_by'] == 'bbox':context['need_map_bbox'] = True
