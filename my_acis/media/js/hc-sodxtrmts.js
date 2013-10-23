@@ -14,11 +14,21 @@ $(function () {
         }
         var max = find_max(max_vals, table_dict.element);
         var min = find_min(min_vals, table_dict.element);
-        var  x_plotlines = set_plotLines(11, 0, 1);
+        var x_plotLines = set_plotLines(11, 0, 1);
+        var y_axis_props = set_axis_properties(max, min, table_dict.element,10.0);
+        /*
+        var tickInterval = y_axis_props.tickInterval;
+        var axisMin = y_axis_props.axisMin;
+        var axisMax = y_axis_props.axisMax;
+        var y_plotLines = y_axis_props.plotLines;
+        */
+
+        /*
         var tickInterval = set_tickInterval(max, min,10.0)
-        var axis_min = set_axis_min(min, table_dict.element, tickInterval);
-        var axis_max = set_axis_max(max, table_dict.element, tickInterval);
-        var y_plotlines = set_plotLines(axis_max, axis_min, tickInterval);
+        var axisMin = set_axisMin(min, table_dict.element, tickInterval);
+        var axisMax = set_axisMax(max, table_dict.element, tickInterval);
+        var y_plotLines = set_plotLines(axisMax, axisMin, tickInterval);
+        */
         var averages = table_dict.averages;
         var base_temperature = table_dict.base_temperature;
         if (table_dict.element == 'gdd' || table_dict.element == 'hdd' || table_dict.element == 'cdd') {
@@ -79,7 +89,7 @@ $(function () {
                     step:2
                 },   
                 categories: table_dict.month_list,
-                plotLines:x_plotlines
+                plotLines:x_plotLines
             },
             yAxis: {
                 labels:{
@@ -89,17 +99,18 @@ $(function () {
                     style:style_text,
                     text: table_dict.element_name
                 },
-                max:axis_max,
-                min:axis_min,
+                max:y_axis_props.axisMax,
+                min:y_axis_props.axisMin,
                 gridLineWidth:0,
-                tickInterval:tickInterval,
-                plotLines:y_plotlines
+                tickInterval:y_axis_props.tickInterval,
+                startOnTick:false,
+                plotLines:y_axis_props.plotLines
             },
         
             tooltip: {
                 crosshairs: true,
-                shared: true,
-                valueSuffix: '°C'
+                shared: true
+                //valueSuffix: 'in'
             },
             
             series: [{
