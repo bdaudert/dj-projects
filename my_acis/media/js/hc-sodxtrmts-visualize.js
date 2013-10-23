@@ -35,8 +35,9 @@ $(function () {
         }
         var summary = document.getElementById("summary").value;
         var month_names =  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        var axes_style = set_AxesStyle();
-        var lable_style = set_LableStyle();
+        var axesStyle = set_AxesStyle();
+        var titleStyle = set_TitleStyle();
+        var subtitleStyle = set_SubtitleStyle();
         //Define Summary Text
         if (summary == 'max'){
             var SummaryText = 'Maximum';
@@ -55,8 +56,6 @@ $(function () {
         }
 
         $.getJSON(file, function(datadict) {
-            var element = datadict.element;
-            var stn_id = datadict.stn_id;
             var max_missing_days = parseInt(datadict.search_params.max_missing_days);
             //Depending on summary, define series to be plotted
             var series_data = [];
@@ -294,28 +293,45 @@ $(function () {
             }
 
             //Define plot characteristics
-            //Define y_plotlines and tickInterval
-            if (major_grid =='F' && minor_grid == 'F'){
-                var divider = 1.0;
+            var x_plotlines = [];
+            var y_plotlines = [];
+            //Define x_plotline and plot data
+            if (major_grid =='F' && minor_grid =='F'){
+                var x_step = datadict.data.length + 1;
             }
             else if (minor_grid =='T'){
-                var divider = 10.0;
+                var x_step = Math.round(datadict.data.length/10.0);
             }
             else if (major_grid =='T' && minor_grid == 'F'){
-                var divider = 5.0;
+                var x_step = x_step = Math.round(datadict.data.length/5.0);
             }
-            //Tick marks and y_axis plotlines
-            var tickInterval = set_tickInterval(data_max, data_min, divider);
-            if (datadict.element == 'snow' || datadict.element == 'snwd' || datadict.element == 'pcpn') {
-                var data_min = 0.0;
+            for (var yr_idx=0;yr_idx<datadict.data.length - end_idx;yr_idx++) {
+                if (yr_idx == 0 || yr_idx == datadict.data.length - end_idx -1 ||((yr_idx) % x_step ==0 && yr_idx > 0)){
+                    var plotline = {
+                        color: '#787878',
+                        dashStyle:'dash',
+                        width: 0.5,
+                        value: Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1),
+                    };
+                    x_plotlines.push(plotline);
+                }
             }
-            else{
-                var data_min = data_min - tickInterval;
+            if (x_plotlines.length == 0){
+                x_plotlines = null;
             }
-            var data_max = data_max + tickInterval;
-            var y_plotlines = set_plotLines(data_max, data_min, tickInterval, null);
+            //Define y_plotlines and tickInterval
+            if (major_grid =='F' && minor_grid == 'F'){
+                var plotline_no  = 1.0;
+            }
+            else if (minor_grid =='T'){
+                var plotline_no = 10.0;
+            }
+            else if (major_grid =='T' && minor_grid == 'F'){
+                var plotline_no = 5.0;
+            }
+            var y_axis_props = set_axis_properties(data_max, data_min, datadict.element,plotline_no);
             if (graph_title == "Use default"){
-                graph_title = datadict.stn_name + ' (' + stn_id + '), ' + datadict.stn_state;
+                graph_title = datadict.stn_name + ', ' + datadict.stn_state + '<br />';
             }
             if (major_grid == 'F' && minor_grid == 'F') {
                 var lineColor = 'transparent';
@@ -348,27 +364,24 @@ $(function () {
                     marginRigh:0 
                 },
                 title: {
-                    style:lable_style,
+                    style:titleStyle,
                     text: graph_title
                 },
                 subtitle: {
-                    text:'Network: ' + datadict.stn_network + ', ID: ' + datadict.stn_id
-                    /*
-                    style: {
-                        color:'#0000FF',
-                        fontSize:15
-                    }
-                    */
+                    text:xAxisText,
+                    //text:'Network: ' + datadict.stn_network + ', ID: ' + datadict.stn_id,
+                    style: subtitleStyle        
                 },
                 labels: {
                     items:[{
-                        html:xAxisText,
+                        html:'Network: ' + datadict.stn_network + ', ID: ' + datadict.stn_id,
                         style:{
-                            top:'-10px',
-                            left:'90px',
-                            fontSize:'14px',
-                            color:'#0000FF',
-                        }
+                            //position:'absolute',
+                            top:'0px',
+                            left:'0px',
+                            fontSize:'12px',
+                            color:'#3E576F'
+                        }   
                     }],
                     style: {color: '#000000'}
                 },
@@ -379,11 +392,11 @@ $(function () {
                 xAxis: [
                     {
                         title : {
-                            style:lable_style,
+                            style:titleStyle,
                             text: apdx
                         },
                         labels: {
-                            style:axes_style,
+                            style:axesStyle,
                             step:2
                         },
                         lineColor:lineColor,
@@ -400,20 +413,20 @@ $(function () {
                 yAxis: [
                     {
                         title: {
-                            style:lable_style,
+                            style:titleStyle,
                             text: datadict.element_name
                         },
                         labels: {
-                            style:axes_style
+                            style:axesStyle
                         },
-                        min:data_min,
-                        max:data_max,
+                        min:y_axis_props.axisMin,
+                        max:y_axis_props.axisMax,
                         gridLineWidth:0,
                         gridLineColor: gridLineColor,
                         lineColor:lineColor,
-                        plotLines:y_plotlines,
+                        plotLines:y_axis_props.plotLines,
                         minorGridLineColor:minorGridLineColor,
-                        tickInterval:tickInterval,
+                        tickInterval:y_axis_props.tickInterval,
                         startOnTick: false,
                         showFirstLabel: true
                     },
@@ -421,23 +434,12 @@ $(function () {
                         opposite: true,
                         linkedTo: 0,
                         title: {
-                            style:lable_style,
+                            style:titleStyle,
                             text: ' ' 
                         },
                         labels: {
-                            style:axes_style
-                        },
-                        min:data_min,
-                        max:data_max,
-                        gridLineWidth:0,
-                        gridLineColor: gridLineColor,
-                        lineColor:lineColor,
-                        plotLines:y_plotlines,
-                        minorGridLineColor:minorGridLineColor,
-                        tickInterval:tickInterval,
-                        //tickPixelInterval:null,
-                        startOnTick: false,
-                        showFirstLabel: true
+                            style:axesStyle
+                        }
                     }],
                 tooltip: {
                     shared: true

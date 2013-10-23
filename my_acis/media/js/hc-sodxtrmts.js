@@ -2,8 +2,9 @@ $(function () {
     var json_file = document.getElementById("json_file").value;
     var JSON_URL = document.getElementById("JSON_URL").value;
     var json_file_path = '/csc/media/tmp/' + json_file;
-    var style_axes = set_AxesStyle();
-    var style_text = set_LableStyle();
+    var axesStyle = set_AxesStyle();
+    var titleStyle = set_TitleStyle();
+    var subtitleStyle = set_SubtitleStyle();
     $.getJSON(json_file_path, function(table_dict) {
         //Find max/min of ranges
         var max_vals = [];
@@ -16,19 +17,6 @@ $(function () {
         var min = find_min(min_vals, table_dict.element);
         var x_plotLines = set_plotLines(11, 0, 1);
         var y_axis_props = set_axis_properties(max, min, table_dict.element,10.0);
-        /*
-        var tickInterval = y_axis_props.tickInterval;
-        var axisMin = y_axis_props.axisMin;
-        var axisMax = y_axis_props.axisMax;
-        var y_plotLines = y_axis_props.plotLines;
-        */
-
-        /*
-        var tickInterval = set_tickInterval(max, min,10.0)
-        var axisMin = set_axisMin(min, table_dict.element, tickInterval);
-        var axisMax = set_axisMax(max, table_dict.element, tickInterval);
-        var y_plotLines = set_plotLines(axisMax, axisMin, tickInterval);
-        */
         var averages = table_dict.averages;
         var base_temperature = table_dict.base_temperature;
         if (table_dict.element == 'gdd' || table_dict.element == 'hdd' || table_dict.element == 'cdd') {
@@ -50,32 +38,26 @@ $(function () {
             },
             margin:[50,50,50,50],
             title: {
-                style:style_text,
+                style:titleStyle,
                 text:table_dict.stn_name + ', ' + table_dict.stn_state 
             },
             subtitle: {
-                text: 'Network: ' + table_dict.stn_network + ', ID: ' + table_dict.stn_id,
-                //text: 'Mean and Range of '  + monthly_statistic + ' for ' + table_dict.element_name,
-                x: -20
+                //text: 'Network: ' + table_dict.stn_network + ', ID: ' + table_dict.stn_id,
+                text: 'Mean and Range of '  + monthly_statistic + ' for ' + table_dict.element_name,
+                style:subtitleStyle
             },
             labels:{
                 items:[{
-                    html:'Mean and Range of '  + monthly_statistic + ', ' + table_dict.element_name, 
+                    html:'Network: ' + table_dict.stn_network + ', ID: ' + table_dict.stn_id,
+                    //html:'Mean and Range of '  + monthly_statistic + ', ' + table_dict.element_name, 
                     //html:'Start Year: ' + table_dict.start_date + ' End Year: ' + table_dict.end_date,
                     style:{
-                        top:'-10px',
-                        left:'50px',
-                        fontSize:'14px',
-                        color:'#0000FF'
-                    }
-                },
-                {
-                    html:'Start Year: ' + table_dict.start_date + ' End Year: ' + table_dict.end_date,
-                    style:{
-                        top:'330px',
-                        left:'150px',
+                        //position:'absolute',
+                        //top:'329px',
+                        top:'0px',
+                        left:'0px',
                         fontSize:'12px',
-                        color:'#000000'
+                        color:'#3E576F'
                     }
                 }],
                 style: {color: '#000000'}
@@ -85,18 +67,22 @@ $(function () {
             },
             xAxis: {
                 labels:{
-                    style: style_axes,
+                    style: axesStyle,
                     step:2
-                },   
+                },
+                title:{
+                    style:axesStyle,
+                    text:'Start Year: ' + table_dict.start_date + ' End Year: ' + table_dict.end_date,
+                },
                 categories: table_dict.month_list,
                 plotLines:x_plotLines
             },
             yAxis: {
                 labels:{
-                    style: style_axes
+                    style: axesStyle
                 },
                 title: {
-                    style:style_text,
+                    style:titleStyle,
                     text: table_dict.element_name
                 },
                 max:y_axis_props.axisMax,
