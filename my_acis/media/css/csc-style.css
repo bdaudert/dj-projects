@@ -379,6 +379,10 @@ img.sidebar {
     height:100px;
 }
 
+img.app_img {
+    width: 150px;
+    height:150px;
+}
 
 img.map {
     width: 300px;

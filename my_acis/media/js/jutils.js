@@ -56,7 +56,7 @@ function printNode(ID){
 //Highlights node by setting border, hides  all elements of class DivClass
 //and unsets the boder of all other nodes of same class type
 function HighLight(node,DivClass,DivId) {
-    //node is qmark, DivId is corresponding docu;
+    //node is qmark, divclass is 'docu', DivId is corresponding docu;
     var div_to_show = document.getElementById(DivId)
     var divs_to_hide = document.getElementsByClassName(DivClass);
     var NodeClassName = node.className
@@ -70,7 +70,7 @@ function HighLight(node,DivClass,DivId) {
     }
     else {
         //SHOW
-        node.style.border ="4px solid #00FF00";
+        node.style.border ="4px solid #006666";
         //Unborder all other nodes of same class name
         for (i=0;i<nodes_to_blur.length;i++){     
             if (nodes_to_blur[i] != node){
@@ -78,7 +78,7 @@ function HighLight(node,DivClass,DivId) {
                 nodes_to_blur[i].style.border="none";
             }
             else{
-                nodes_to_blur[i].style.border="4px solid #00FF00";
+                nodes_to_blur[i].style.border="4px solid #006666";
             }
         }
         //Hide all divs with class name DivClass except show the one of id=DivId 
@@ -91,6 +91,10 @@ function HighLight(node,DivClass,DivId) {
             }
         }
     }
+}
+
+function ShowPopupDocu(DivId){
+    $( '#' + DivId ).dialog();
 }
 
 function Toggle(node)
@@ -125,7 +129,6 @@ function Toggle(node)
     }
 
 }
-
 
 
 function popup_window(mylink, windowname)

@@ -12,79 +12,76 @@
     <a href="{{TOOLS_URL}}gridded/">GRID TOOLS</a>
 
 
+    <!-- Application documentation -->
+    <div class="docu" id="Docu_CalTracker" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_CalTracker").load("{{MEDIA_URL}}html/commons.html #Docu_CalTracker");
+        </script>
+    <div class="docu" id="Docu_NevTracker" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_NevTracker").load("{{MEDIA_URL}}html/commons.html #Docu_NevTracker");
+        </script>
+    <div class="docu" id="Docu_WESTMAP" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_WESTMAP").load("{{MEDIA_URL}}html/commons.html #Docu_WESTMAP");
+        </script>
+   <div class="docu" id="Docu_FreezTracker" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_FreezTracker").load("{{MEDIA_URL}}html/commons.html #Docu_FreezTracker");
+        </script>
+   <div class="docu" id="Docu_GP_TS" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_GP_TS").load("{{MEDIA_URL}}html/commons.html #Docu_GP_TS");
+        </script>
+   <div class="docu" id="Docu_CLIM_SUM_MAP" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_CLIM_SUM_MAP").load("{{MEDIA_URL}}html/commons.html #Docu_CLIM_SUM_MAP");
+        </script>
+   <div class="docu" id="Docu_CLIM_PROB_MAP" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_CLIM_PROB_MAP").load("{{MEDIA_URL}}html/commons.html #Docu_CLIM_PROB_MAP");
+        </script>
+   <div class="docu" id="Docu_NONE" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_NONE").load("{{MEDIA_URL}}html/commons.html #Docu_NONE");
+        </script>
+   </div>
+
     <table cellpadding="20">
-    <td valign="top" width="25%">
-            <!-- Application documentation -->
-            <div class="docu" id="Docu_CalTracker" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_CalTracker").load("{{MEDIA_URL}}html/commons.html #Docu_CalTracker");
-                </script>
-            <div class="docu" id="Docu_NevTracker" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_NevTracker").load("{{MEDIA_URL}}html/commons.html #Docu_NevTracker");
-                </script>
-            <div class="docu" id="Docu_WESTMAP" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_WESTMAP").load("{{MEDIA_URL}}html/commons.html #Docu_WESTMAP");
-                </script>
-           <div class="docu" id="Docu_FreezTracker" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_FreezTracker").load("{{MEDIA_URL}}html/commons.html #Docu_FreezTracker");
-                </script>
-           <div class="docu" id="Docu_GP_TS" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_GP_TS").load("{{MEDIA_URL}}html/commons.html #Docu_GP_TS");
-                </script>
-           <div class="docu" id="Docu_CLIM_SUM_MAP" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_CLIM_SUM_MAP").load("{{MEDIA_URL}}html/commons.html #Docu_CLIM_SUM_MAP");
-                </script>
-           <div class="docu" id="Docu_CLIM_PROB_MAP" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_CLIM_PROB_MAP").load("{{MEDIA_URL}}html/commons.html #Docu_CLIM_PROB_MAP");
-                </script>
-           <div class="docu" id="Docu_NONE" style="display:none;"></div>
-                <script type="text/javascript">                        
-                $("#Docu_NONE").load("{{MEDIA_URL}}html/commons.html #Docu_NONE");
-                </script>
-           </div>
-    </td>
-    <td valign="top" width="50%">
+    <td valign="top" width="75%">
             <p class="error" align ="center">(* Beta version)</p>
             <table cellspacing="10">
             <tr>
                 <td valign="top">
-                    <p class="trigger">Gridpoint<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_GP_TS')"><br />Time Series</p>
+                    <p class="trigger">Gridpoint &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_GP_TS')"><br />Time Series</p>
                     <div class="pop-up">
-                        <p>Generates time series data and graph for a chosen grid point.</p>
+                        <p>Generates time series data and graph for a chosen grid point. <br/>Click on the question mark for more information!</p>
                     </div>
-                    <a  href="{{TOOLS_URL}}gridded/grid_point_time_series/"><img class="sidebar" alt="GPTimeSeries" title="GPTimeSeries" src="{{MEDIA_URL}}img/GPTimeSeries.png"></a>
+                    <a  href="{{TOOLS_URL}}gridded/grid_point_time_series/"><img class="app_img" alt="GPTimeSeries" title="GPTimeSeries" src="{{MEDIA_URL}}img/GPTimeSeries.png"></a>
                 </td>
                 <td valign="top">
-                    <p class="trigger">* Area Time Series<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_AREA_TIME_SERIES')"></font></p>
+                    <p class="trigger">* Area Time Series &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_AREA_TIME_SERIES')"></font></p>
                     <div class="pop-up" id="area_time_series">
-                    <p>Generates climate summary time series over custom search areas.</p>
+                    <p>Generates climate summary time series over custom search areas. <br/>Click on the question mark for more information!</p>
                     </div>
                     <br />
-                    <a  href="{{TOOLS_URL}}gridded/area_time_series/"><img class="sidebar" alt="RiskMaps" title="RiskMaps" src="{{MEDIA_URL}}img/Area_TS.png"></a>
+                    <a  href="{{TOOLS_URL}}gridded/area_time_series/"><img class="app_img" alt="RiskMaps" title="RiskMaps" src="{{MEDIA_URL}}img/Area_TS.png"></a>
                 </td>
                 <td valign="top">
                 </td>
-            </tr>
-            <tr>
                 <td valign="top">
-                    <p class="trigger">* Summary Maps <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CLIM_SUM_MAP')"></p>
+                    <p class="trigger">* Summary Maps &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_CLIM_SUM_MAP')"></p>
                     <div class="pop-up">                        
-                    <p>Generates climate summary maps for different elements, time ranges and region using NRCC interpolated data.</p>                          </div>
+                    <p>Generates climate summary maps for different elements, time ranges and region using NRCC interpolated data. <br/>Click on the question mark for more information!</p>                          </div>
                     <br />
-                    <a  href="{{TOOLS_URL}}gridded/clim_sum_maps/"><img class="sidebar" alt="SummaryMaps" title="SummaryMaps" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
+                    <a  href="{{TOOLS_URL}}gridded/clim_sum_maps/"><img class="app_img" alt="SummaryMaps" title="SummaryMaps" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
                 </td>
                 <td valign="top">
-                    <p class="trigger">* Probability Maps <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CLIM_PROB_MAP')"><br /> <font color="red">Coming Soon!</font></p>
+                    <p class="trigger">* Probability Maps &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_CLIM_PROB_MAP')"><br /> <font color="red">Coming Soon!</font></p>
                     <div class="pop-up" id="sodxtrmts">
-                    <p>Generates climate probability maps for different temperature and precipitation with user chosen parameters.</p>
+                    <p>Generates climate probability maps for different temperature and precipitation with user chosen parameters. <br/>Click on the question mark for more information!</p>
                     </div>
-                    <a  href="{{TOOLS_URL}}gridded/clim_prob_maps/"><img class="sidebar" alt="RiskMaps" title="RiskMaps" src="{{MEDIA_URL}}img/HappyFace.png"></a> 
+                    <a  href="{{TOOLS_URL}}gridded/clim_prob_maps/"><img class="app_img" alt="RiskMaps" title="RiskMaps" src="{{MEDIA_URL}}img/HappyFace.png"></a> 
                 </td>
                 <td valign="top">
                 </td>
@@ -103,7 +100,7 @@
                     <p>Tracking Climate Variability and Change for the state of California.</p>
                 </div>
                 </td><td>
-                <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_CalTracker')">
+                <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_CalTracker')">
                 </td></tr>
                 <tr><td>
                 <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/nev-mon/index.html" class="trigger" target="_blank">WRCC-Nevada Climate Tracker(<font color="red">NV</font>)</a>
@@ -111,7 +108,7 @@
                 <p>Tracking Climate Variability and Change for the state of Nevada.</p>
                 </div>
                 </td><td>
-                <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_NevTracker')">
+                <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_NevTracker')">
                 </td></tr>
                 <tr><td><a id="us_wide" target="_blank" href="http://www.cefa.dri.edu/Westmap/" class="trigger">WRCC-Westmap</a>
                 <div class="pop-up">
@@ -119,7 +116,7 @@
                 </div>
                 </td><td>
                 <!--style="border:4px solid #FF007F" -->
-                <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="HighLight(this,'docu','Docu_WESTMAP')">
+                <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_WESTMAP')">
                 </td></tr>
             </table>
  
@@ -133,7 +130,7 @@
                         <p>Track through time the height of the freezing level above sea level.</p>
                     </div>
                     </td><td>
-                   <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="HighLight(this,'docu','Docu_FreezTracker')">
+                   <img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="ShowPopupDocu('Docu_FreezTracker')">
                     </td></tr>
                 </table>
             </ul>
