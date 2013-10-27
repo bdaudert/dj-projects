@@ -22,6 +22,24 @@ $(function () {
         var markers = document.getElementById("markers").value;
         var marker_type = document.getElementById("marker_type").value;
         var height = document.getElementById("height").value;
+        //set postion of network info label
+        var top_dist = (parseFloat(height)*4/5).toString() +'px';
+        if (Math.abs(parseFloat(height) -  290) < 0.001){
+            //small image
+            top_dist = (parseFloat(height)*3/4).toString() +'px';
+        }
+        if (Math.abs(parseFloat(height) -  480) < 0.001){
+            //large image
+            top_dist = (parseFloat(height)*5/6).toString() +'px';
+        }
+        if (Math.abs(parseFloat(height) -  610) < 0.001){
+            //larger image
+            top_dist = (parseFloat(height)*6/7).toString() +'px';
+        }
+        if (Math.abs(parseFloat(height) -  820) < 0.001){
+            //extra large image
+            top_dist = (parseFloat(height)*7/8).toString() +'px';
+        }
         //convert into javascript array
         var month_list = month_list_str.substring(1,month_list_str.length -1).split(",")
         for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
@@ -360,9 +378,9 @@ $(function () {
                     items:[{
                         html:'Network: ' + datadict.stn_network + ', ID: ' + datadict.stn_id,
                         style:{
-                            //position:'absolute',
+                            position:'absolute',
                             margin:'0px',
-                            top:(parseFloat(height) + 50).toString() +'px',
+                            top:top_dist,
                             left:'0px',
                             fontSize:'12px',
                             color:'#3E576F'
@@ -392,11 +410,9 @@ $(function () {
                         lineColor:lineColor,
                         plotLines:x_plotlines,
                         tickPositions:tickPositions,
-                        //tickInterval:x_plotlines.length*365 * 24 * 3600*1000,//One year(milliseconds)
                         gridLineWidth: gridLineWidth,
                         gridLineColor: gridLineColor,
                         type: 'datetime',
-                        //maxZoom: 365 * 24 * 3600000, // 1 year
                         dateTimeLabelFormats: { // don't display the dummy year
                             year: '%Y'
                         },

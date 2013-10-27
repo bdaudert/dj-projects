@@ -170,22 +170,19 @@
             {%endfor%}
             </table>
             <br />
-
+            <!--Graphics-->
+            <p class="pop_link" onClick="ShowHide('range_plot')"><u><font size=4>Show/hide table summary</font></u></p>
+            <div id="range_plot" style="display:none;">
+            <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+            <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
+            <div id="graph_container" style="height:400px;width:620px;"></div>
+            <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts.js"></script>
+            </div>
         {%else%}
             {%if run_done%}
                 <p style="color:red">NO STATION DATA FOUND!</p></br>
             {%endif%}
        {%endif%}
-        <br/>
-        <!--Graphics-->
-        <p class="pop_link" onClick="ShowHide('range_plot')"><u><font size=4>Show/hide table summary</font></u></p>
-        <div id="range_plot" style="display:none;">
-            <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-            <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
-            <div id="graph_container" style="height:400px;width:620px;"></div>
-            <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts.js"></script>
-            <br / >
-        </div>
         </td></tr>
         <tr>
         <td></td>
