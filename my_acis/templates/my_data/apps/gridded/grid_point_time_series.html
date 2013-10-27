@@ -70,8 +70,23 @@
         </div>
     </td>
     <td valign="top" width="60%">
-   
-        <div id=tool_info_head></div>
+        <table>
+            <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
+        </table>
+        <script type="text/javascript">            
+            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+        </script>
+        <div id="tool_info" style="display:none;"></div>
+       <script type="text/javascript">            
+            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_GP_TS");
+        </script>
+        <script type="text/javascript">
+            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+        </script>
+        <div id="how_to" style="display:none;"></div>
+        <script type="text/javascript">            
+            $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_GP_TS");
+        </script> 
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
         </script>
@@ -87,8 +102,6 @@
                 (North American Regional Climate Change Assessment Program) gridded data sets:</p>
                 <a href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
         </div>
-
-        <div id="how_to_head"></div>
         <script type="text/javascript">            
             $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
         </script>

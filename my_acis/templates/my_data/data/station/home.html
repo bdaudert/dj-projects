@@ -163,7 +163,9 @@
     <!--RIGHT-->
     </td>
     <td valign="top" width="60%">
-       <div id=tool_info_head></div>
+        <table>
+            <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
+        </table>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
         </script>
@@ -171,8 +173,6 @@
         <script type="text/javascript">                        
             $("#tool_info").load("{{MEDIA_URL}}html/commons.html #About_station_data");
         </script>
-
-        <div id="how_to_head"></div>
         <script type="text/javascript">            
             $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
         </script>

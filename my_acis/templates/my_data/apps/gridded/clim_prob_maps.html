@@ -129,12 +129,12 @@
     </td>
     <td valign="top" width="70%">
         <h2 class="error">This page is under development!</h2> <img alt=Construction" title="Construction" src="{{MEDIA_URL}}img/Construction.png">
-        <div id=tool_info_head></div>
-            <script type="text/javascript">            
+        <table>
+            <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
+        </table>
+        <script type="text/javascript">            
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
-            </script>
-
-        <div id="tool_info" style="display:none;"></div>
+        </script>
         <script type="text/javascript">            
             $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_CLIM_PROB_MAPS");
         </script>

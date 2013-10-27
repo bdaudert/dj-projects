@@ -21,6 +21,7 @@ $(function () {
         }
         var markers = document.getElementById("markers").value;
         var marker_type = document.getElementById("marker_type").value;
+        var height = document.getElementById("height").value;
         //convert into javascript array
         var month_list = month_list_str.substring(1,month_list_str.length -1).split(",")
         for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
@@ -278,14 +279,15 @@ $(function () {
             var y_plotlines = [];
             //Define x_plotline and plot data
             if (major_grid =='F' && minor_grid =='F'){
-                var x_step = datadict.data.length + 1;
+               var x_step = datadict.data.length + 1;
             }
             else if (minor_grid =='T'){
                 var x_step = Math.round(datadict.data.length/10.0);
             }
             else if (major_grid =='T' && minor_grid == 'F'){
-                var x_step = x_step = Math.round(datadict.data.length/5.0);
+                var x_step = Math.round(datadict.data.length/5.0);
             }
+            var tickPositions = [];
             for (var yr_idx=0;yr_idx<datadict.data.length - end_idx;yr_idx++) {
                 if (yr_idx == 0 || yr_idx == datadict.data.length - end_idx -1 ||((yr_idx) % x_step ==0 && yr_idx > 0)){
                     var plotline = {
@@ -294,6 +296,7 @@ $(function () {
                         width: 0.5,
                         value: Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1),
                     };
+                    tickPositions.push(Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1));
                     x_plotlines.push(plotline);
                 }
             }
@@ -358,7 +361,8 @@ $(function () {
                         html:'Network: ' + datadict.stn_network + ', ID: ' + datadict.stn_id,
                         style:{
                             //position:'absolute',
-                            top:'0px',
+                            margin:'0px',
+                            top:(parseFloat(height) + 50).toString() +'px',
                             left:'0px',
                             fontSize:'12px',
                             color:'#3E576F'
@@ -376,16 +380,23 @@ $(function () {
                             style:titleStyle,
                             text: apdx
                         },
+                        
                         labels: {
-                            style:axesStyle,
-                            step:2
+                            formatter: function () {
+                                return Highcharts.dateFormat('%Y', this.value);
+                            },
+                            //rotation:-90,
+                            style:axesStyle
+                            //step:0.5
                         },
                         lineColor:lineColor,
                         plotLines:x_plotlines,
+                        tickPositions:tickPositions,
+                        //tickInterval:x_plotlines.length*365 * 24 * 3600*1000,//One year(milliseconds)
                         gridLineWidth: gridLineWidth,
                         gridLineColor: gridLineColor,
                         type: 'datetime',
-                        maxZoom: 365 * 24 * 3600000, // 1 year
+                        //maxZoom: 365 * 24 * 3600000, // 1 year
                         dateTimeLabelFormats: { // don't display the dummy year
                             year: '%Y'
                         },

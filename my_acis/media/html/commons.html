@@ -426,6 +426,7 @@ CRCM Model</a><br />
 </div>
 
 
+
 <div id="Docu_GP_TS" title="Gridpoint Time Series">
     <p class="error">What is the <b>Gridpoint Time Series</b> Tool?</p>
     <p>An interactive web-based interface that can be used to look at time series plots of various climate elements at individual grid points.</p>
@@ -442,6 +443,15 @@ CRCM Model</a><br />
     <h3>Create Time Series Plots</h3>
     <img alt="GPTS" title="GPTS" class="dash_img" src="/csc/media/img/GPTimeSeries.png">
     <h3>Download Data, Plots</h3>
+</div>
+
+<div id="Howto_GP_TS" title="Gridpoint Time Series">
+    <p>
+        <b>FORM </b><br />
+        <b>Select grid by </b>Several area options are available. Most require you to know the appropriate identifiers, e.g. climate division IDs, county warning area codes, etc.. However, links or map interfaces that help you find the identifiers will be provided when filling out FORM 2.<br />
+        <b>Element</b><br />
+        Element coices comprise the 8 standard climate elements as well as degree days with custom base temperatures.
+    </p>    
 </div>
 
 <div id="Docu_CLIM_PROB_MAP" title="Climate Probability Map">
@@ -549,6 +559,39 @@ CRCM Model</a><br />
     <h3>Generate Comosite Maps</h3>
     <img alt="ClimSumMap" title="ClimSumMap" class="dash_img" src="/csc/media/img/ClimSumMap.png">
     <h3>Download Data, Maps</h3>
+</div>
+
+
+<div id="Howto_CLIM_SUM_MAP" title="Climate Summary Map">
+    <p>
+        <b>FORM 1</b><br />
+        <b>Select grid by </b>You can generate a map for a US state or a bounding box of your choice. A map interface helping you to define your bounding box will appear once you click "Select"<br />
+        <b>Element</b><br />
+        Element coices comprise the 8 standard climate elements as well as degree days with custom base temperatures.
+        <b>Time Period</b> This is the time period that your data will be summarized over. Precipitation and snowfall data will be summed over the time period. All other climate elements will be averaged over the time period.<br />
+        <ul>
+            <li><b>Custom Date Range </b>Allows you to enter specific start/end dates.</li>
+            <li><b>Last x years </b>Summarize over the last x years.</li>
+            <li><b>Last x months </b>Summarize over the last x months.</li>
+            <li><b>Last x years </b>Summarize over the last x years.</li>
+        </ul>       
+        <b>X</b> Number of years/month/days. 
+    </p>
+    <p>
+        <b>FORM2 2 </b><br />
+        Depending on your <b>Select grid by </b>choice from FORM 1, you will see: <br >
+           <ul>
+                <li><b>State </b>Choose a US state from the drop down menue</li>
+                <li><b>"Bounding Box" </b>A bounding box has four coordinates: <br />West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</li>
+           </ul>
+        <b>Element/Start Date/End Date</b>These fields are populated from your completed form 1. They should not be changed at this point.<br />
+        <b>Grid </b>This option defines the gridded dataset to be used. The first two options are the NRCC interpolated and the NRCC Hi-Res datasets developed at the Northeast Regional Climate Center (NRCC).Several NARRCAPP datasets are available.
+            <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
+            <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
+            <p>For more information and direct access to NARCCAP
+            (North American Regional Climate Change Assessment Program) gridded data sets:</p>
+            <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+    </p>
 </div>
 
 <!--SOD PROGRAMS-->

@@ -62,13 +62,12 @@
         {%endif%}
     </td>
     <td valign="top" width="70%">
-
-        <div id=tool_info_head></div>
+        <table>
+            <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
+        </table>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
         </script>
-
-        <div id="tool_info" style="display:none;"></div>
         <script type="text/javascript">                        
             $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_MON_AVES");
         </script> 

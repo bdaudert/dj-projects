@@ -58,7 +58,9 @@
         </div>
     </td>
     <td valign="top" width="60%">
-        <div id=tool_info_head></div>
+        <table>
+            <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
+        </table>
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
         </script>
@@ -66,8 +68,6 @@
         <script type="text/javascript">            
             $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_SODXTRMTS_VIS");
         </script>
-
-        <div id="how_to_head"></div>
         <script type="text/javascript">            
             $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
         </script>
@@ -77,9 +77,9 @@
         </script>
 
 
-        <a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/?json_file={{json_file}}">Back to Data Analysis</a>
+        <a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/?json_file={{json_file}}"><font size=4>Back to Data Analysis</font></a>
 
-        <p class="pop_link" onClick="ShowHide('original_data')"><u>Show/hide the original data</u></p>
+        <p class="pop_link" onClick="ShowHide('original_data')"><u><font size=4>Show/hide the original data</font></u></p>
 
 
         <div id='original_data' style="display:none;">
@@ -182,6 +182,8 @@
             <input type="hidden" id="plot_incomplete_years" name="plot_incomplete_years" value="{{plot_incomplete_years}}">
             <input type="hidden" id="axis_min" name="axis_min" value="{{axis_min}}">
             <input type="hidden" id="axis_max" name="axis_max" value="{{axis_max}}">
+            <input type="hidden" id="width" name="width" value="{{axis_max}}">
+            <input type="hidden" id="height" name="height" value="{{height}}">
             <div align="center" id="container" style="height:{{height}}px;width:{{width}}px;"></div>
             <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts-visualize.js"></script>
         {%endif%}
