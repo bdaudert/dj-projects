@@ -1578,15 +1578,118 @@ def sodxtrmts(request):
         context['header']  = json_data['header']
         context['month_list'] = json_data['month_list']
         return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
+
     if 'formSodxtrmts' in request.POST:
-        #header = set_sodxtrmts_header(form0)
-        req = {}
-        for key,val in dict(request.POST.items()).iteritems():
-            req[str(key)] = str(val)
-        context["req"] = req
-        #context["req"] = request.POST.get('base_temperature')
-        initial,checkbox_vals = set_sodxtrmts_init(req)
+        #Set initial formparameters for html
+        initial,checkbox_vals = set_sodxtrmts_initial(request)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        #Turn request object into python dict
+        form = {}
+        for key,val in dict(request.POST.items()).iteritems():
+            form[str(key)] = str(val)
+        #Define header for html display
+        header = set_sodxtrmts_head(form)
+        #context['req']=header
+        data_params = {
+            'sid':form['station_ID'],
+            'start_date':form['start_year'],
+            'end_date':form['end_year'],
+            'element':form['element']
+        }
+        search_params = {}
+        for key, val in form.iteritems():
+            search_params[key] = val
+        app_params = form
+        for key in ['station_ID', 'start_year', 'end_year']:
+            del app_params[key]
+        app_params['el_type'] = form['element']
+        context['el_type'] = form['element']
+        #app_params['base_temperature']  = int(request.POST['base_temperature'])
+        context['element'] = form['element']
+        del app_params['element']
+        context['app_params'] = app_params
+        #Run data retrieval job
+        DJ = WRCCClasses.SODDataJob('Sodxtrmts', data_params)
+        #WARNING: station_ids, names need to be called before dates_list
+        #station_ids, station_names = DJ.get_station_ids_names()
+        station_names, station_states, station_ids, station_networks, station_lls, station_elevs, station_uids, station_climdivs, station_counties  = DJ.get_station_meta()
+        header.insert(0, ['Station Name', station_names[0]])
+        context['header']= header
+        if station_ids:context['station_ID'] =  station_ids[0]
+        dates_list = DJ.get_dates_list()
+
+        #Overwrite search params to reflect actuall start/end year
+        data = DJ.get_data()
+        #Run application
+        App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
+        results = App.run_app()
+        #format results to single station output
+        if not results:
+            results = []
+        else:
+            results = results[0][0]
+        context['run_done'] = True
+        context['results'] = results
+        months = WRCCData.MONTH_NAMES_SHORT_CAP + ['ANN']
+        start_month = int(form['start_month'])
+        month_list = [mon for mon in months[(start_month -1):12]]
+        if start_month != 1:
+            month_list+=months[0:(start_month-1)]
+        month_list.append(months[-1])
+        context['month_list'] = month_list
+        search_params['month_list'] = month_list
+        #generate graphics
+        if results:
+            averages = [[mon] for mon in month_list[0:-1]]
+            ranges = [[mon] for mon in month_list[0:-1]]
+            if data_params['element'] == 'dtr':
+                element_name = 'Temperature Range (F)'
+            else:
+                element_name = WRCCData.ACIS_ELEMENTS_DICT[data_params['element']]['name_long']
+            if 'base_temperature' in form.keys():
+                base_temperature = int(form['base_temperature'])
+            else:
+                base_temperature = ''
+            for i in range(12):
+                try:
+                    averages[i].append(float(results[-6][2*(i+1) -1]))
+                except:
+                    averages[i].append(None)
+                for k in [-2, -3]:
+                    try:
+                        ranges[i].append(float(results[k][2*(i+1) -1]))
+                    except:
+                        ranges[i].append(None)
+            json_dict = {
+                'element_name':element_name,
+                'element':str(data_params['element']),
+                'base_temperature':base_temperature,
+                'averages':averages,
+                'ranges':ranges,
+                'stn_id':station_ids[0],
+                'stn_name':station_names[0],
+                'stn_network':station_networks[0],
+                'stn_state':station_states[0],
+                'month_list':month_list,
+                'data':results,
+                'search_params':search_params,
+                'header':header
+            }
+            if dates_list:
+                json_dict['start_date'] = dates_list[0][0:4]
+                json_dict['end_date'] = dates_list[-1][0:4]
+            else:
+                json_dict['start_date'] = '----'
+                json_dict['end_date'] = '----'
+            results_json = json.dumps(json_dict)
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+            json_file = '%s_sodxtrmts_%s_%s_%s.json' \
+            %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
+            f = open(TEMP_FILE_DIR + '%s' %(json_file),'w+')
+            f.write(results_json)
+            f.close()
+            context['JSON_URL'] = TEMP_FILE_DIR
+            context['json_file'] = json_file
     return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
 
 
@@ -1862,44 +1965,6 @@ def set_sod_initial(request, app_name):
         if end_date is not None:initial['end_date'] = end_date
     return initial
 
-def set_sodxtrmts_init(req_dict):
-    checkbox_vals = {}
-    #Set dynamic parameters
-    initial = {
-        'base_temperature':None,
-        'less_greater_or_between':None,
-        'threshold_for_less_or_greater':None,
-        'threshold_low_for_between':None,
-        'threshold_high_for_between':None
-    }
-    for key,val in req_dict.iteritems():
-        initial[str(key)]= str(val)
-    #set the check box values
-    for el in WRCCData.SXTR_ELEMENT_LIST:
-        checkbox_vals[el + '_selected'] =''
-        if el == initial['element']:
-            checkbox_vals[el + '_selected'] ='selected'
-    for start_month in ['01','02','03','04','05','06','07','08','09','10','11','12']:
-        checkbox_vals[start_month + '_selected']=''
-        if initial['start_month'] == start_month:
-            checkbox_vals[start_month + '_selected']='selected'
-    for bl in ['T','F']:
-        checkbox_vals['DA_' + bl + '_selected'] = ''
-        checkbox_vals['FS_' + bl + '_selected'] = ''
-        if initial['departures_from_averages'] == bl:
-            checkbox_vals['DA_' + bl + '_selected'] = 'selected'
-        if initial['frequency_analysis'] == bl:
-            checkbox_vals['FS_' + bl + '_selected'] = 'selected'
-    for stat in ['mmax','mmin','mave','sd','ndays','rmon','msum']:
-        checkbox_vals[stat + '_checked'] =''
-        if initial['monthly_statistic'] == stat:
-            checkbox_vals[stat + '_checked'] ='checked'
-    for lgb in ['l', 'g', 'b']:
-        checkbox_vals[lgb + '_selected'] =''
-        if initial['less_greater_or_between'] == lgb:
-            checkbox_vals[lgb + '_selected'] ='selected'
-    return initial,checkbox_vals
-
 def set_sodxtrmts_initial(request):
     initial = {}
     checkbox_vals = {}
@@ -1957,6 +2022,40 @@ def set_sodxtrmts_initial(request):
             checkbox_vals[lgb + '_selected'] ='selected'
     return initial, checkbox_vals
 
+def set_sodxtrmts_head(form):
+    #Define Header Order:
+    header_order =['station_ID','start_year', 'end_year', '','element']
+    if form['element'] in ['gdd', 'hdd', 'cdd']:header_order+=['base_temperature']
+    header_order+=['monthly_statistic']
+    if form['departures_from_averages'] == 'T':
+         header_order+=['departures_from_averages', '']
+    else:
+        header_order+=['']
+    if form['monthly_statistic'] == 'ndays':
+        if form['less_greater_or_between'] == 'l':
+            header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
+        elif form['less_greater_or_between'] == 'g':
+            header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
+        else: #between
+            header_order+=['less_greater_or_between','threshold_low_for_between','threshold_high_for_between','']
+    header_order+=['max_missing_days']
+    if form['frequency_analysis'] == 'T':
+        if form['frequency_analysis_type'] == 'g':
+            header_order+=['gev']
+        elif form['frequency_analysis_type'] == 'p':
+            header_order+=['pearson']
+    header_order+=['']
+    #Define SCHTUPID header
+    header = []
+    for key in header_order:
+        if key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'monthly_statistic', 'elements']:
+            header.append([WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[str(form[key])]])
+        elif key == '':
+            header.append([])
+        else:
+            header.append([WRCCData.DISPLAY_PARAMS[key], str(form[key])])
+    return header
+'''
 def set_sodxtrmts_header(form):
     #Define Header Order:
     header_order =['station_ID','start_year', 'end_year', '','element']
@@ -1990,41 +2089,7 @@ def set_sodxtrmts_header(form):
         else:
             header.append([WRCCData.DISPLAY_PARAMS[key], str(form.cleaned_data[key])])
     return header
-
-def set_sodxtrmts_header(form):
-    #Define Header Order:
-    header_order =['station_ID','start_year', 'end_year', '','element']
-    if form.cleaned_data['element'] in ['gdd', 'hdd', 'cdd']:header_order+=['base_temperature']
-    header_order+=['monthly_statistic']
-    if form.cleaned_data['departures_from_averages'] == 'T':
-         header_order+=['departures_from_averages', '']
-    else:
-        header_order+=['']
-    if form.cleaned_data['monthly_statistic'] == 'ndays':
-        if form.cleaned_data['less_greater_or_between'] == 'l':
-            header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
-        elif form.cleaned_data['less_greater_or_between'] == 'g':
-            header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
-        else: #between
-            header_order+=['less_greater_or_between','threshold_low_for_between','threshold_high_for_between','']
-    header_order+=['max_missing_days']
-    if form.cleaned_data['frequency_analysis'] == 'T':
-        if form.cleaned_data['frequency_analysis_type'] == 'g':
-            header_order+=['gev']
-        elif form.cleaned_data['frequency_analysis_type'] == 'p':
-            header_order+=['pearson']
-    header_order+=['']
-    #Define SCHTUPID header
-    header = []
-    for key in header_order:
-        if key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'monthly_statistic', 'elements']:
-            header.append([WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[str(form.cleaned_data[key])]])
-        elif key == '':
-            header.append([])
-        else:
-            header.append([WRCCData.DISPLAY_PARAMS[key], str(form.cleaned_data[key])])
-    return header
-
+'''
 def set_sodsumm_headers(table_list):
     headers = {}
     def set_header(table):

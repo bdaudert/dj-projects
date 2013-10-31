@@ -26,22 +26,26 @@
             <td>Station ID: </td>
             <td><input type="text" id="station_ID" name="station_ID" value="{{initial.station_ID}}"></td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_station_ID')"></td>
-            </tr><tr>
+            </tr>
+            <tr>
             <td></td>
             <td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td>
             <td></td>
-            </tr><tr>
+            </tr>
+            <tr>
             <td>Start Year: </td>
             <td><input type="text" id="start_year" name="start_year" value="{{initial.start_year}}"></td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_station_ID')"></td>
-            </tr><tr>
+            </tr>
+            <tr>
             <td>End Year: </td>
             <td><input type="text" id="end_year" name="end_year" value="{{initial.end_year}}"></td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_station_ID')"></td>
-            </tr><tr>
+            </tr>
+            <tr>
             <td>Element: </td>
             <td>
-                <select id="element" name="element" onchange="set_BaseTemp_and_Thresh('Sodxtrmts',this);">
+                <select id="element" name="element" onchange="set_BaseTemp_and_Threshes('Sodxtrmts',this);">
                     <option value="pcpn" {{checkbox_vals.pcpn_selected}}>Daily Precipitation</option>
                     <option value="snow" {{checkbox_vals.snow_selected}}>Daily Snowfall</option>
                     <option value="snwd" {{checkbox_vals.snwd_selected}}>Daily Snowdepth</option>
@@ -57,13 +61,15 @@
                     </select>
             </td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_element')"></td>
+            </tr>
             {%if initial.base_temperature%}
-            </tr><tr id="base_temperature">
+            <tr id="base_temp">
             <td>Base Temperature: </td>
             <td><input type="text" id="base_temperature" name="base_temperature" value="{{initial.base_temperature}}"></td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_base_temperature')"></td>  
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_base_temperature')"></td>
+            </tr> 
             {%endif%}
-            </tr><tr>
+            <tr>
             <td>Monthly Statistic: </td>
             <td>
                 <select id="monthly_statistic" name="monthly_statistic" onchange="set_NDays_thresholds('Sodxtrmts',this);">
@@ -78,7 +84,8 @@
             </td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_element')"></td>
             {%if initial.less_greater_or_between%}
-            </tr><tr id="threshold_type">
+            </tr>
+            <tr id="threshold_type">
             <td>Number of Days: </td>
             <td>
                 <select id="less_greater_or_between" name="less_greater_or_between" onchange="change_lgb()">
@@ -88,28 +95,30 @@
                 </select>
             </td>
             <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_lgb')"></td>
+            </tr>
             {%endif%}
-            {%if initial.less_greater_or_between == "b" and checkbox_vals.between%}
-            </tr><tr id="threshold">
+            {%if initial.less_greater_or_between == "b"%}
+            <tr id="threshold">
             <td>Between <br/> And</td>
             <td><input type="text" id="threshold_low_for_between" name="threshold_low_for_between" value={{initial.threshold_low_for_between}}><br />
                 <input type="text" id="threshold_low_for_between" name="threshold_high_for_between" value={{initial.threshold_high_for_between}}>
             </td>
-            <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_b')"></td>    
-            {%endif%}
-            {%if initial.less_greater_or_between == "l" and checkbox_vals.less_tahn%}
-            </tr><tr id="threshold">
+            <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_b')"></td>
+            </tr> 
+            {%elif initial.less_greater_or_between == "l"%}
+            <tr id="threshold">
             <td>Less Than</td>
             <td><input type="text" id="threshold_for_less_or_greater" name="threshold_for_less_or_greater" value={{initial.threshold_for_less_or_greater}}></td>
-            <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_l')"></td>     
-            {%endif%}
-            {%if initial.less_greater_or_between == "g" and checkbox_vals.greater_than%}
-            </tr><tr id="threshold">
+            <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_l')"></td>
+            </tr> 
+            {%elif initial.less_greater_or_between == "g"%}
+            <tr id="threshold">
             <td>Greater Than</td>
             <td><input type="text" id="threshold_for_less_or_greater" name="threshold_for_less_or_greater" value={{initial.threshold_for_less_or_greater}}></td>
             <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_h')"></td>
+            </tr>
             {%endif%}
-            </tr><tr>
+            <tr>
             <td>Max Missing Days: </td>
             <td><input type="text" name="max_missing_days" value="{{initial.max_missing_days}}"></td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_max_missing_days')"></td>
@@ -133,7 +142,8 @@
                 </select>
             </td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_start_month')"></td>
-            </tr><tr>
+            </tr>
+            <tr>
             <td>Departures from Averages: </td>
             <td>
                 <select id="departures_from_averages" name="departures_from_averages">
@@ -142,7 +152,8 @@
             </td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpT
 ext('ht_departures_from_averages')"></td>
-            </tr><tr>
+            </tr>
+            <tr>
             <td>Frequency Analysis: </td>
             <td>
                 <select id="frequency_analysis" name="frequency_analysis">
@@ -151,16 +162,119 @@ ext('ht_departures_from_averages')"></td>
             </td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_frequency_analysis')"></td>
             </tr>
-            
         </table> 
             <input type="submit" value="Submit" name="formSodxtrmts"/>
             </form>
         </div>
     </td>
     <td valign="top" width="70%">
-            {{initial}}<br /><br />{{req}}
-    </td><tr>
-</table>
+        <table>
+            <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
+        </table>
+        <script type="text/javascript">                        
+            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+        </script>
+        <div id="tool_info" style="display:none;"></div>
+        <script type="text/javascript">            
+            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_SODXTRMTS");
+        </script>
 
+        <script type="text/javascript">            
+            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+        </script>
+        <div id="how_to" style="display:none;"></div>
+        <script type="text/javascript">            
+            $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_SODXTRMTS");
+        </script>
+        <br />
+        {{req}}
+        {%if results%}
+            <a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/visualize/?station_ID={{station_ID}}&element={{element}}&json_file={{json_file}}"><font size=4>Generate Time Series Plots for this data</font></a><br /><br />
+
+        <!--<p class="pop_link" onClick="ShowHide('printable_table')"><u><font size=4>Show/hide table data</font></u></p>-->
+
+        <div id="printable_table">
+            
+            <img alt="Print" title="Print" class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            
+
+            <a target="_blank" href="{{SW_CKN_URL}}/download/?app_name=Sodxtrmts&json_file={{json_file}}"><img alt="Download" title="Download" class="icon" src="{{MEDIA_URL}}img/Download.png"></a>
+            <br />
+            <!--Header-->
+            <p>
+            {%for key_val in header%}
+                {%if key_val%}
+                    <b>{{key_val.0}}</b>: {{key_val.1}}
+                {%else%}
+                    <br />
+                {%endif%}
+            {%endfor%}
+            </p>
+            
+            <p><b>Missing values</b><br />
+            <!--Any month with less than or equal this user selected number will be included in the analysis.<br />
+            Monthly information for months with more than this number of missing values will be displayed, but not used. <br />
+            The letter indicates the number of missing days--> 
+            Letters after months show number of missing days; after annual
+            values show missing months.  Value is displayed but not used if user-specified
+            missing day criterion exceeded.<br />
+            (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
+            <br /><br/>
+ 
+            <table class="right_aligned" cellpadding="none">
+            <tr>
+            <td><font size="+0"> YEAR</font></td>
+            {%for mon in month_list%}
+                {%if forloop.last %}
+                    <td colspan="2"><font size="+0"></td>
+                    <td colspan="2"><font size="+0"></td>
+                    <td colspan="2"><font size="+0"></td>
+                {%endif%}
+                <td colspan="2"><font size="+0">{{mon}}</font></td>
+            {%endfor%}
+            </tr>
+            {%for yr_data in results %}
+                {%if yr_data.0 == "MEAN"%}
+                    <tr><td></td><td></td></tr>
+                    <tr><td></td><td></td></tr>
+                    <tr><td></td><td></td></tr>
+                    <tr><td></td><td></td></tr>
+                    <tr><td></td><td></td></tr>
+                    <tr><td></td><td></td></tr>
+                {%endif%}
+                <tr>
+                {%for dat in yr_data%}
+                    {%if forloop.revcounter0 == 1%}
+                        <td></td><td></td>
+                        <td></td><td></td>
+                        <td></td><td></td>
+                    {%endif%}
+                    <td>{{dat}}</td>
+                {%endfor%}
+                </tr>
+            {%endfor%}
+            </table>
+            <br />
+            <!--Graphics-->
+            <p class="pop_link" onClick="ShowHide('range_plot')"><u><font size=4>Show/hide table summary</font></u></p>
+            <div id="range_plot" style="display:none;">
+            <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+            <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
+            <div id="graph_container" style="height:400px;width:620px;"></div>
+            <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts.js"></script>
+            </div>
+        {%else%}
+            {%if run_done%}
+                <p style="color:red">NO STATION DATA FOUND!</p></br>
+            {%endif%}
+       {%endif%}
+        </td></tr>
+        <tr>
+        <td></td>
+        <td>
+        </div> <!--End printable table-->
+        </td></tr>
+        </table>
 
 {%endblock%}
+
