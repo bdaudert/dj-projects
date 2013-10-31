@@ -27,6 +27,11 @@ STATIC_KML = '/csc/media/kml/'
 WEB_SERVER_DIR = '/csc/media/tmp/'
 TEMP_FILE_DIR = '/tmp/'
 
+#Set dates
+today = WRCCUtils.set_back_date(0)
+begin_10yr = WRCCUtils.set_back_date(3660)
+yesterday = WRCCUtils.set_back_date(1)
+
 
 def test(request):
     context = {
@@ -1554,134 +1559,31 @@ def station_locator_app(request):
 #######################
 #SOD programs
 ######################
+
 def sodxtrmts(request):
     context = {
         'title': 'Monthly Summary Time Series',
         'icon':'ToolProduct.png'
-        }
+    }
     json_file = request.GET.get('json_file', None)
-    initial = set_sod_initial(request, 'Sodxtrmts')
+    initial = set_sodxtrmts_initial(request)
     context['initial'] = initial
     #check if initial dataset is given via json_file (back button from visualize)
     if json_file:
         with open(TEMP_FILE_DIR + json_file, 'r') as f:
             json_data =  json.load(f)
         initial = json_data['search_params']
-        form0 = set_as_form(request,'SodxtrmtsForm', init=initial)
-        context['form0'] = form0
+        context['initial'] = initial
         context['results']  = json_data['data']
         context['header']  = json_data['header']
         context['month_list'] = json_data['month_list']
         return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
-    form0 = set_as_form(request,'SodxtrmtsForm', init=initial)
-    context['form0'] = form0
-    if 'form0' in request.POST:
-        form0 = set_as_form(request,'SodxtrmtsForm', init={'date_type':'y'})
-        context['form0'] = form0
-        if form0.is_valid():
-            #Define header
-            header = set_sodxtrmts_header(form0)
-            data_params = {
-                    'sid':form0.cleaned_data['station_ID'],
-                    'start_date':form0.cleaned_data['start_year'],
-                    'end_date':form0.cleaned_data['end_year'],
-                    'element':form0.cleaned_data['element']
-                    }
-            search_params = {}
-            for key, val in form0.cleaned_data.iteritems():
-                search_params[key] = val
-            app_params = form0.cleaned_data
-            for key in ['station_ID', 'start_year', 'end_year']:
-                del app_params[key]
-            app_params['el_type'] = form0.cleaned_data['element']
-            context['el_type'] = form0.cleaned_data['element']
-            #app_params['base_temperature']  = int(request.POST['base_temperature'])
-            context['element'] = form0.cleaned_data['element']
-            del app_params['element']
-            context['app_params'] = app_params
-            #Run data retrieval job
-            DJ = WRCCClasses.SODDataJob('Sodxtrmts', data_params)
-            #WARNING: station_ids, names need to be called before dates_list
-            #station_ids, station_names = DJ.get_station_ids_names()
-            station_names, station_states, station_ids, station_networks, station_lls, station_elevs, station_uids, station_climdivs, station_counties  = DJ.get_station_meta()
-            header.insert(0, ['Station Name', station_names[0]])
-            context['header']= header
-            if station_ids:context['station_ID'] =  station_ids[0]
-            dates_list = DJ.get_dates_list()
-            #Overwrite search params to reflect actuall start/end year
-            data = DJ.get_data()
-            #Run application
-            App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
-            results = App.run_app()
-            #format results to single station output
-            if not results:
-                results = []
-            else:
-                results = results[0][0]
-            context['run_done'] = True
-            context['results'] = results
-            months = WRCCData.MONTH_NAMES_SHORT_CAP + ['ANN']
-            #months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'ANN']
-            start_month = int(str(form0.cleaned_data['start_month']))
-            month_list = [mon for mon in months[(start_month -1):12]]
-            if start_month != 1:
-                month_list+=months[0:(start_month-1)]
-            month_list.append(months[-1])
-            context['month_list'] = month_list
-            search_params['month_list'] = month_list
-            #generate graphics
-            if results:
-                averages = [[mon] for mon in month_list[0:-1]]
-                ranges = [[mon] for mon in month_list[0:-1]]
-                if data_params['element'] == 'dtr':
-                    element_name = 'Temperature Range (F)'
-                else:
-                    element_name = WRCCData.ACIS_ELEMENTS_DICT[data_params['element']]['name_long']
-                if 'base_temperature' in form0.cleaned_data.keys():
-                    base_temperature = form0.cleaned_data['base_temperature']
-                else:
-                    base_temperature = ''
-                for i in range(12):
-                    try:
-                        averages[i].append(float(results[-6][2*(i+1) -1]))
-                    except:
-                        averages[i].append(None)
-                    for k in [-2, -3]:
-                        try:
-                            ranges[i].append(float(results[k][2*(i+1) -1]))
-                        except:
-                            ranges[i].append(None)
-                json_dict = {
-                    'element_name':element_name,
-                    'element':str(data_params['element']),
-                    'base_temperature':base_temperature,
-                    'averages':averages,
-                    'ranges':ranges,
-                    'stn_id':station_ids[0],
-                    'stn_name':station_names[0],
-                    'stn_network':station_networks[0],
-                    'stn_state':station_states[0],
-                    'month_list':month_list,
-                    'data':results,
-                    'search_params':search_params,
-                    'header':header
-                }
-                if dates_list:
-                    json_dict['start_date'] = dates_list[0][0:4]
-                    json_dict['end_date'] = dates_list[-1][0:4]
-                else:
-                    json_dict['start_date'] = '----'
-                    json_dict['end_date'] = '----'
-                results_json = json.dumps(json_dict)
-                time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
-                json_file = '%s_sodxtrmts_%s_%s_%s.json' \
-                %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
-                f = open(TEMP_FILE_DIR + '%s' %(json_file),'w+')
-                f.write(results_json)
-                f.close()
-                context['JSON_URL'] = TEMP_FILE_DIR
-                context['json_file'] = json_file
+    context['initial'] = initial
+    if 'formSodxtrmts' in request.POST:
+        #header = set_sodxtrmts_header(form0)
+        context["req"] = request.POST.get("station_ID","Blah")
     return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
+
 
 def sodxtrmts_visualize(request):
     context = {
@@ -1952,6 +1854,45 @@ def set_sod_initial(request, app_name):
         initial['date_type'] = 'd'
         if start_date is not None:initial['start_date'] = start_date
         if end_date is not None:initial['end_date'] = end_date
+    return initial
+
+def set_sodxtrmts_initial(request):
+    initial = {}
+    initial['station_ID'] = request.GET.get('stn_id','266779')
+    initial['start_year'] = request.GET.get('start_year', 'POR')
+    initial['end_year']  = request.GET.get('end_year', yesterday[0:4])
+    initial['monthly_statistic'] = request.GET.get('monthly_statistic', 'msum')
+    initial['max_missing_days'] = request.GET.get('max_missing_days', '5')
+    initial['start_month'] = request.GET.get('start_month', '01')
+    initial['departures_from_averages'] = request.GET.get('departures_from_averages', 'F')
+    initial['frequency_analysis'] = request.GET.get('frequency_analysis', 'F')
+    initial['less_greater_or_between']= request.GET.get('less_greater_or_between', 'l')
+    #initial['threshold_for_less_or_greater']= request.GET.get('threshold_for_less_or_greater', None)
+    #initial['threshold_low_for_between']= request.GET.get('threshold_low_for_between', None)
+    #initial['threshold_high_for_between']= request.GET.get('threshold_high_for_between', None)
+    element = request.GET.get('elements', None)
+    if element is None:element = request.GET.get('element', 'pcpn')
+    initial['element'] = element
+    #set the check box values
+    for el in WRCCData.SXTR_ELEMENT_LIST:
+        initial[el + '_selected'] =''
+        if el == element:
+            initial[el + '_selected'] ='selected'
+    for start_month in ['01','02','03','04','05','06','07','08','09','10','11','12']:
+        initial[start_month + '_selected']=''
+        if initial['start_month'] == start_month:
+            initial[start_month + '_selected']='selected'
+    for bl in ['T','F']:
+        initial['DA_' + bl + '_selected'] = ''
+        initial['FS_' + bl + '_selected'] = ''
+        if initial['departures_from_averages'] == bl:
+            initial['DA_' + bl + '_selected'] = 'selected'
+        if initial['frequency_analysis'] == bl:
+            initial['FS_' + bl + '_selected'] = 'selected'
+    for stat in ['mmax','mmin','mave','sd','ndays','rmon','msum']:
+        initial[stat + '_checked'] =''
+        if initial['monthly_statistic'] == stat:
+            initial[stat + '_checked'] ='checked'
     return initial
 
 def set_sodxtrmts_header(form):

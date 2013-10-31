@@ -13,7 +13,9 @@ import WRCCUtils, WRCCData
 ###########################################
 #Utilities
 ############################################
-#find yestarday's data, default end_data
+
+'''
+#find yesterday's data, default end_data
 tdy = datetime.datetime.today()
 #Choose default start_date 4 weeks back
 b = datetime.datetime.today() - datetime.timedelta(days=15)
@@ -47,7 +49,12 @@ today = '%s%s%s' % (yr, mon, day)
 begin = '%s%s%s' % (yr_b, mon_b, day_b)
 yesterday = '%s%s%s' % (yr_y, mon_y, day_y)
 begin_prism = '%s%s%s' % (yr_p, mon_p, day_p)
-
+'''
+#Set dates
+today = WRCCUtils.set_back_date(0)
+begin_14 = WRCCUtils.set_back_date(14)
+yesterday = WRCCUtils.set_back_date(1)
+begin_prism = WRCCUtils.set_back_date(366)
 
 readonly_style = 'background-color:#CCCCCC;'
 
@@ -580,7 +587,7 @@ class SodForm(forms.Form):
             if end_year is not None:
                 self.fields['end_year'] = MyYearField(required=False,initial=end_year, help_text='yyyy or "POR" for period of record')
             else:
-                self.fields['end_year'] = MyYearField(required=False, initial=begin[0:4], help_text='yyyy or "POR" for period of record')
+                self.fields['end_year'] = MyYearField(required=False, initial=begin_14[0:4], help_text='yyyy or "POR" for period of record')
 
 class SodsummForm(SodForm):
     def __init__(self, *args, **kwargs):
@@ -701,7 +708,7 @@ class StationDataForm1(forms.Form):
             self.fields['start_date'] = MyDateField(max_length=10, min_length=3, initial='POR', help_text=HELP_TEXTS['date_por'])
             self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial='POR', help_text=HELP_TEXTS['date_por'])
         else:
-            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, initial=begin, help_text=HELP_TEXTS['date'])
+            self.fields['start_date'] = MyDateField(max_length=8, min_length=8, initial=begin_14, help_text=HELP_TEXTS['date'])
             self.fields['end_date'] = MyDateField(max_length=8, min_length=8, initial=yesterday, help_text=HELP_TEXTS['date'])
         self.fields['show_flags'] = forms.ChoiceField(choices=([('T', 'Yes'),('F', 'No')]), required=False, initial='F', help_text='Show the data flag with each data point.')
         self.fields['show_observation_time'] = forms.ChoiceField(choices=([('T', 'Yes'),('F', 'No')]), required=False, initial='F', help_text='Show the hour at which the observation was taken for each data point.(1 - 24 =  midnight, -1 means no observation time was recorded)')
@@ -824,7 +831,7 @@ class GridDataForm1(forms.Form):
                     #Not working for some reason
                     #self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin_prism, help_text=HELP_TEXTS['date'])
             else:
-                self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin, help_text=HELP_TEXTS['date'])
+                self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial=begin_14, help_text=HELP_TEXTS['date'])
         else:
             if temporal_resolution in ['mly', 'yly']:
                 self.fields['start_date'] = MyDateField(max_length=10, min_length=8,initial='20120101', help_text=HELP_TEXTS['date'])
@@ -1013,7 +1020,7 @@ class AreaTimeSeriesForm1(forms.Form):
         if element in ['hddxx','gddxx', 'cddxx']:
             self.fields['base_temperature'] = forms.IntegerField(initial=65, help_text='Base temperature used to calculate degree days.')
         if start_date is None:
-            self.fields['start_date'] = MyDateField(required = False, initial=begin, help_text=HELP_TEXTS['date'])
+            self.fields['start_date'] = MyDateField(required = False, initial=begin_14, help_text=HELP_TEXTS['date'])
         else:
             self.fields['start_date'] = MyDateField(required = False, initial=start_date, help_text=HELP_TEXTS['date'])
         if end_date is None:
@@ -1096,7 +1103,7 @@ class ClimateMapForm1(forms.Form):
             self.fields['base_temperature_gddxx'] = forms.IntegerField(initial=50, help_text='Base temperature used to calculate growing degree days.')
 
         if time_period == 'custom':
-            self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=begin, help_text=HELP_TEXTS['date'])
+            self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=begin_14, help_text=HELP_TEXTS['date'])
             self.fields['end_date'] =MyDateField(max_length=10, min_length=8, required = False, initial=yesterday, help_text=HELP_TEXTS['date'])
         elif start_date is not None and end_date is not None:
             self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial=start_date, help_text=HELP_TEXTS['date'])

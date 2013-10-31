@@ -1,3 +1,4 @@
+
 function populateFormField(form_name, form_id, label, value){
     //var formFields = document.getElementById(form_name).getElementsByTagName('input');
     var formFields = document.getElementById(form_id).getElementsByTagName('input');
@@ -8,37 +9,6 @@ function populateFormField(form_name, form_id, label, value){
     }   
 }
 
-function SetSodxtrmtsThresh(td){
-    var lgb = td.value;
-    if (lgb == 'l' || lgb == 'g'){
-       var tds_to_show = document.getElementsByClassName('threshold_for_less_or_greater');
-       for (i=0;i<tds_to_show.length;i++){
-           tds_to_show[i].style.display = "block";
-       }
-      var tds_to_hide = document.getElementsByClassName('threshold_low_for_between');
-      for (i=0;i<tds_to_hide.length;i++){
-           tds_to_hide[i].style.display = "none";
-       }
-       var tds_to_hide = document.getElementsByClassName('threshold_high_for_between');
-       for (i=0;i<tds_to_hide.length;i++){
-           tds_to_hide[i].style.display = "none";
-       }
-    }
-    else if (lgb == 'b'){
-        var tds_to_show = document.getElementsByClassName('threshold_low_for_between');
-        for (i=0;i<tds_to_show.length;i++){
-            tds_to_show[i].style.display = "block";
-        }
-        var tds_to_show = document.getElementsByClassName('threshold_high_for_between');
-        for (i=0;i<tds_to_show.length;i++){
-           tds_to_show[i].style.display = "block";
-        }
-        var tds_to_hide = document.getElementsByClassName('threshold_for_less_or_greater');
-        for (i=0;i<tds_to_hide.length;i++){
-           tds_to_hide[i].style.display = "none";
-       }
-    }
-}
 
 function precise_round(num,decimals){
     return Math.round(num*Math.pow(10,decimals))/Math.pow(10,decimals);
@@ -96,6 +66,23 @@ function HighLight(node,DivClass,DivId) {
 function ShowPopupDocu(DivId){
     $( '#' + DivId ).dialog();
 }
+
+function ShowHelpText(divId){
+    var pop_up = document.createElement('div');
+    pop_up.setAttribute("class", "pop-up");
+    pop_up.setAttribute("id", 'help_' + divId);
+    pop_up.innerHTML = $("#" + 'help_' + divId).load("/csc/media/html/commons.html #" + divId );
+    //$( "#"+divId ).show();
+    if (pop_up.style.display == "none"){
+        pop_up.style.display = "block";
+    }
+    else{
+        pop_up.style.display = "none";
+    }
+    document.body.appendChild(pop_up);
+}
+
+
 
 function Toggle(node)
 {

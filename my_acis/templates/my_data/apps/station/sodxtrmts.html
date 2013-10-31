@@ -12,211 +12,118 @@
     <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
     <a href="{{TOOLS_URL}}">TOOLS></a>
     <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
-    <a href="{{TOOLS_URL}}station/sodxtrmts/">Monthly Summary Time Series from Daily Input</a>
+    <a href="{{TOOLS_URL}}station/sodxtrmts/"></a>Monthly Summaries of Extremes</p>
 </p>
 
-    <table border="0" cellpadding="10">
-        <tr valign="top">
-        <td valign="top" width="15%">
-        <div id='form0'>
-            <form method="post" action="">{% csrf_token %}
-            <table class="form">
-            {%for field in form0 %}
-                {%if field.label == "Base temperature"%}
-                    <tr><td><input type="submit" value="Submit" name="form0"/></td></tr>
-                    <!-- Add Extra Options -->
-                    <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
-                    <tr><td colspan="3"><b color="red">Conditional Parameters</b></td></tr>
-                {%endif%}
-
-                {%if field.label == "Less greater or between"%}
-                    <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
-                    <tr><td colspan="3"><b>Thresholds for "Number of Days" statistic</b></td></tr>
-                {%endif%}
-
-                {%if field.label == "Frequency analysis type"%}
-                    <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
-                    <tr><td><b>Frequency Analysis Type</b></td></td></tr>
-                {%endif%}
-                    
-                <tr>
-                    {%if field.label == "Threshold for less or greater" or field.label == "Threshold low for between" or field.label == "Threshold high for between"%}
-                        {%if field.label == "Threshold for less or greater"%}
-                            <td class="threshold_for_less_or_greater"><p>Threshold (Less Than/Greater Than):</p></td>
-                            <td class="threshold_for_less_or_greater">{{field}}</td>
-                        {%endif%}
-                        {%if field.label == "Threshold low for between"%}
-                            <td class="threshold_low_for_between"><p>Above:</p></td>
-                            <td class="threshold_low_for_between">{{field}}</td>
-                        {%endif%}
-                        {%if field.label == "Threshold high for between"%}
-                            <td class="threshold_high_for_between"><p>Below:</p></td>
-                            <td class="threshold_high_for_between">{{field}}</td>
-                        {%endif%}  
-                    {%else%}                    
-                        <td>{{field.label}}:</td>
-                        {%if field.label == "Less greater or between"%}
-                            <td value="{{field.value}}" onClick="SetSodxtrmtsThresh(this)">{{field}}</td>
-                            
-                        {%else%} 
-                            <td>{{field}}</td> 
-                        {%endif%}                                                                               
-                    {%endif%}
-                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                    {%ifequal field.label "Monthly Statistic"%}
-                        <div class="pop-up"><img alt="AnalysisChoices" title="AnalysisChoices" width="400px" height="300px" src="{{MEDIA_URL}}img/SodxtrmtsAnalysisChoices.png"></div>
-                    {%else%}                                             
-                        <div class="pop-up"><p>{{field.help_text}}</p></div>
-                    {%endifequal%}
-                    </td>
-                </tr>
-                {%ifequal field.label "Station id"%}
-                    <tr><td></td><td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td><td></td></tr>
-                {%endifequal%}
-
-               {%if field.errors%}
-                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
-                {%endif%}
-            {%endfor%}
-            </table>
-            <input type="submit" value="Submit" name="form0"/>
+<table border="0" cellpadding="10">
+    <tr valign="top">
+    <td valign="top" width="50%">
+        <div id="formSodxtrmts" class="form">
+            <form method="post">
+            {% csrf_token %}
+            <table id="Sodxtrmts">
+            <tr>
+            <td>Station ID: </td>
+            <td><input type="text" name="station_ID" value="{{initial.station_ID}}"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_station_ID')"></td>
+            </tr><tr>
+            <td></td>
+            <td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td>
+            <td></td>
+            </tr><tr>
+            <td>Start Year: </td>
+            <td><input type="text" name="start_year" value="{{initial.start_year}}"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_station_ID')"></td>
+            </tr><tr>
+            <td>End Year: </td>
+            <td><input type="text" name="end_year" value="{{initial.end_year}}"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_station_ID')"></td>
+            </tr><tr>
+            <td>Element: </td>
+            <td>
+                <select id="element" onchange="set_BaseTemp_and_Thresh('Sodxtrmts',this);">
+                    <option value="pcpn" {{initial.pcpn_selected}}>Daily Precipitation</option>
+                    <option value="snow" {{initial.snow_selected}}>Daily Snowfall</option>
+                    <option value="snwd" {{initial.snwd_selected}}>Daily Snowdepth</option>
+                    <option value="maxt" {{initial.maxt_selected}}>Daily Maximum Temperature</option>
+                    <option value="mint" {{initial.mint_selected}}>Daily Minimum Temperature</option>
+                    <option value="avgt" {{initial.avgt_selected}}>Daily Mean Temperature</option>
+                    <option value="dtr" {{initial.dtr_selected}}>Daily Temperature Range</option>
+                    <option value="hdd" {{initial.hdd_selected}}>Heating Degree Days</option>
+                    <option value="cdd" {{initial.cdd_selected}}>Cooling Degree Days</option>
+                    <option value="gdd" {{initial.gdd_selected}}>Growing Degree Days</option>
+                    <option value="evap" {{initial.evap_selected}}>Daily Pan Evaporation</option>
+                    <option value="wdmv" {{initial.wdmv_selected}}>Daily Wind Movement</option>
+                    </select>
+            </td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_element')"></td>
+            </tr><tr>
+            </tr><tr>
+            <td>Monthly Statistic: </td>
+            <td>
+                <select id="monthly_statistic" onchange="set_NDays_thresholds('Sodxtrmts',this);">
+                    <option value="mmax" {{initial.mmax_selected}}>Monthly Maximum</option>
+                    <option value="mmin" {{initial.mmin_selected}}>Monthly Minimum</option>
+                    <option value="mave" {{initial.mave_selected}}>Monthly Average</option>
+                    <option value="sd" {{initial.sd_selected}}>Standard Deviation</option>
+                    <option value="ndays" {{initial.ndays_selected}}>Number of Days</option>
+                    <option value="rmon" {{initial.rmon_selected}}>Range during Month</option>
+                    <option value="msum" {{initial.msum_selected}}>Monthly Sum</option>
+                    </select>
+            </td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_element')"></td>
+            </tr><tr>
+            <td>Max Missing Days: </td>
+            <td><input type="text" name="max_missing_days" value="{{initial.max_missing_days}}"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_max_missing_days')"></td>
+            </tr>
+            <tr>
+            <td>Start Month: </td>
+            <td>
+                <select>
+                <option value="01" {{initial.01_selected}}>January</option>
+                <option value="02" {{initial.02_selected}}>February</option>
+                <option value="03" {{initial.03_selected}}>March</option>
+                <option value="04" {{initial.04_selected}}>April</option>
+                <option value="05" {{initial.05_selected}}>May</option>
+                <option value="06" {{initial.06_selected}}>June</option>
+                <option value="07" {{initial.07_selected}}>July</option>
+                <option value="08" {{initial.08_selected}}>August</option>
+                <option value="09" {{initial.09_selected}}>September</option>
+                <option value="10" {{initial.10_selected}}>October</option>
+                <option value="11" {{initial.11_selected}}>November</option>
+                <option value="12" {{initial.12_selected}}>December</option>
+                </select>
+            </td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_start_month')"></td>
+            </tr><tr>
+            <td>Departures from Averages: </td>
+            <td>
+                <select>
+                <option value="T" {{initial.DA_T_selected}}>Yes</option>
+                <option value="F" {{initial.DA_F_selected}}>No</option>
+            </td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpT
+ext('ht_departures_from_averages')"></td>
+            </tr><tr>
+            <td>Frequency Analysis: </td>
+            <td>
+                <select>
+                <option value="T" {{initial.FS_T_selected}}>Yes</option>
+                <option value="F" {{initial.FS_F_selected}}>No</option>
+            </td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_frequency_analysis')"></td>
+            </tr>
+            
+        </table> 
+            <input type="submit" value="Submit" name="formSodxtrmts"/>
             </form>
         </div>
-    </td><td valign="top" width="85%">
-        <table>
-            <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
-        </table>
-        <script type="text/javascript">                        
-            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
-        </script>
-        <div id="tool_info" style="display:none;"></div>
-        <script type="text/javascript">            
-            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_SODXTRMTS");
-        </script>
-
-        <script type="text/javascript">            
-            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
-        </script>
-        <div id="how_to" style="display:none;"></div>
-        <script type="text/javascript">            
-            $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_SODXTRMTS");
-        </script>
-        
-        <br />
-        {%if results%}
-            <a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/visualize/?station_ID={{station_ID}}&element={{element}}&json_file={{json_file}}"><font size=4>Generate Time Series Plots for this data</font></a><br /><br />
-
-        <!--<p class="pop_link" onClick="ShowHide('printable_table')"><u><font size=4>Show/hide table data</font></u></p>-->
-
-        <div id="printable_table">
-            
-            <img alt="Print" title="Print" class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            
-
-            <a target="_blank" href="{{SW_CKN_URL}}/download/?app_name=Sodxtrmts&json_file={{json_file}}"><img alt="Download" title="Download" class="icon" src="{{MEDIA_URL}}img/Download.png"></a>
-            <br />
-            <!--Header-->
-            <p>
-            {%for key_val in header%}
-                {%if key_val%}
-                    <b>{{key_val.0}}</b>: {{key_val.1}}
-                {%else%}
-                    <br />
-                {%endif%}
-            {%endfor%}
-            </p>
-            
-            <p><b>Missing values</b><br />
-            <!--Any month with less than or equal this user selected number will be included in the analysis.<br />
-            Monthly information for months with more than this number of missing values will be displayed, but not used. <br />
-            The letter indicates the number of missing days--> 
-            Letters after months show number of missing days; after annual
-            values show missing months.  Value is displayed but not used if user-specified
-            missing day criterion exceeded.<br />
-            (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
-            <br /><br/>
- 
-            <table class="right_aligned" cellpadding="none">
-            <tr>
-            <td><font size="+0"> YEAR</font></td>
-            {%for mon in month_list%}
-                {%if forloop.last %}
-                    <td colspan="2"><font size="+0"></td>
-                    <td colspan="2"><font size="+0"></td>
-                    <td colspan="2"><font size="+0"></td>
-                {%endif%}
-                <td colspan="2"><font size="+0">{{mon}}</font></td>
-            {%endfor%}
-            </tr>
-            {%for yr_data in results %}
-                {%if yr_data.0 == "MEAN"%}
-                    <tr><td></td><td></td></tr>
-                    <tr><td></td><td></td></tr>
-                    <tr><td></td><td></td></tr>
-                    <tr><td></td><td></td></tr>
-                    <tr><td></td><td></td></tr>
-                    <tr><td></td><td></td></tr>
-                {%endif%}
-                <tr>
-                {%for dat in yr_data%}
-                    {%if forloop.revcounter0 == 1%}
-                        <td></td><td></td>
-                        <td></td><td></td>
-                        <td></td><td></td>
-                    {%endif%}
-                    <td>{{dat}}</td>
-                {%endfor%}
-                </tr>
-            {%endfor%}
-            </table>
-            <br />
-            <!--Graphics-->
-            <p class="pop_link" onClick="ShowHide('range_plot')"><u><font size=4>Show/hide table summary</font></u></p>
-            <div id="range_plot" style="display:none;">
-            <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-            <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
-            <div id="graph_container" style="height:400px;width:620px;"></div>
-            <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts.js"></script>
-            </div>
-        {%else%}
-            {%if run_done%}
-                <p style="color:red">NO STATION DATA FOUND!</p></br>
-            {%endif%}
-       {%endif%}
-        </td></tr>
-        <tr>
-        <td></td>
-        <td>
-            <!--
-            {%if results%}
-            <p align="left">
-            <b>Summary Table</b><br />
-            <b>Mean</b> –
-            Column mean of all months that meet criteria for number of missing days.<br />
-            Months with excess missing days not used.<br />
-            <b>S.D.</b> –
-            Standard deviation of the column values, using only months that meet criteria for missing days.<br />
-            <b>SKEW</b> –
-            Shows skewness coefficient of the values in this column, using only those months that meet criteria for missing data. <br />
-            <b>Max</b> –
-            Maximum of column values using only those months that meet missing days criteria.<br />
-            <b>Min</b> –
-            Minimum of column values using only those months that meet missing days criteria.<br />
-            <b>Years</b> –
-                Number of years with months that meet criteria for missing days.
-                </p>
-            {%endif%}
-        -->
-        </div> <!--End printable table-->
-        </td></tr>
-        </table>
+    </td>
+    <td valign="top" width="50%">
+            {{req}}
+    </td><tr>
+</table>
 
 
-  <!-- Footer -->
-<!--
-  <div id="footer" align="center"></div>
-    <script type="text/javascript">                        
-    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
-    </script>
--->
 {%endblock%}
