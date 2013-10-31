@@ -1566,8 +1566,8 @@ def sodxtrmts(request):
         'icon':'ToolProduct.png'
     }
     json_file = request.GET.get('json_file', None)
-    initial = set_sodxtrmts_initial(request)
-    context['initial'] = initial
+    initial,checkbox_vals = set_sodxtrmts_initial(request)
+    context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #check if initial dataset is given via json_file (back button from visualize)
     if json_file:
         with open(TEMP_FILE_DIR + json_file, 'r') as f:
@@ -1578,10 +1578,15 @@ def sodxtrmts(request):
         context['header']  = json_data['header']
         context['month_list'] = json_data['month_list']
         return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
-    context['initial'] = initial
     if 'formSodxtrmts' in request.POST:
         #header = set_sodxtrmts_header(form0)
-        context["req"] = request.POST.get("station_ID","Blah")
+        req = {}
+        for key,val in dict(request.POST.items()).iteritems():
+            req[str(key)] = str(val)
+        context["req"] = req
+        #context["req"] = request.POST.get('base_temperature')
+        initial,checkbox_vals = set_sodxtrmts_init(req)
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
 
 
@@ -1592,6 +1597,7 @@ def sodxtrmts_visualize(request):
         }
     station_ID = request.GET.get('station_ID', None)
     element = request.GET.get('element', None)
+
     json_file = request.GET.get('json_file', None)
     initial_params_0 ={}
     if station_ID is not None:
@@ -1856,44 +1862,134 @@ def set_sod_initial(request, app_name):
         if end_date is not None:initial['end_date'] = end_date
     return initial
 
-def set_sodxtrmts_initial(request):
-    initial = {}
-    initial['station_ID'] = request.GET.get('stn_id','266779')
-    initial['start_year'] = request.GET.get('start_year', 'POR')
-    initial['end_year']  = request.GET.get('end_year', yesterday[0:4])
-    initial['monthly_statistic'] = request.GET.get('monthly_statistic', 'msum')
-    initial['max_missing_days'] = request.GET.get('max_missing_days', '5')
-    initial['start_month'] = request.GET.get('start_month', '01')
-    initial['departures_from_averages'] = request.GET.get('departures_from_averages', 'F')
-    initial['frequency_analysis'] = request.GET.get('frequency_analysis', 'F')
-    initial['less_greater_or_between']= request.GET.get('less_greater_or_between', 'l')
-    #initial['threshold_for_less_or_greater']= request.GET.get('threshold_for_less_or_greater', None)
-    #initial['threshold_low_for_between']= request.GET.get('threshold_low_for_between', None)
-    #initial['threshold_high_for_between']= request.GET.get('threshold_high_for_between', None)
-    element = request.GET.get('elements', None)
-    if element is None:element = request.GET.get('element', 'pcpn')
-    initial['element'] = element
+def set_sodxtrmts_init(req_dict):
+    checkbox_vals = {}
+    #Set dynamic parameters
+    initial = {
+        'base_temperature':None,
+        'less_greater_or_between':None,
+        'threshold_for_less_or_greater':None,
+        'threshold_low_for_between':None,
+        'threshold_high_for_between':None
+    }
+    for key,val in req_dict.iteritems():
+        initial[str(key)]= str(val)
     #set the check box values
     for el in WRCCData.SXTR_ELEMENT_LIST:
-        initial[el + '_selected'] =''
-        if el == element:
-            initial[el + '_selected'] ='selected'
+        checkbox_vals[el + '_selected'] =''
+        if el == initial['element']:
+            checkbox_vals[el + '_selected'] ='selected'
     for start_month in ['01','02','03','04','05','06','07','08','09','10','11','12']:
-        initial[start_month + '_selected']=''
+        checkbox_vals[start_month + '_selected']=''
         if initial['start_month'] == start_month:
-            initial[start_month + '_selected']='selected'
+            checkbox_vals[start_month + '_selected']='selected'
     for bl in ['T','F']:
-        initial['DA_' + bl + '_selected'] = ''
-        initial['FS_' + bl + '_selected'] = ''
+        checkbox_vals['DA_' + bl + '_selected'] = ''
+        checkbox_vals['FS_' + bl + '_selected'] = ''
         if initial['departures_from_averages'] == bl:
-            initial['DA_' + bl + '_selected'] = 'selected'
+            checkbox_vals['DA_' + bl + '_selected'] = 'selected'
         if initial['frequency_analysis'] == bl:
-            initial['FS_' + bl + '_selected'] = 'selected'
+            checkbox_vals['FS_' + bl + '_selected'] = 'selected'
     for stat in ['mmax','mmin','mave','sd','ndays','rmon','msum']:
-        initial[stat + '_checked'] =''
+        checkbox_vals[stat + '_checked'] =''
         if initial['monthly_statistic'] == stat:
-            initial[stat + '_checked'] ='checked'
-    return initial
+            checkbox_vals[stat + '_checked'] ='checked'
+    for lgb in ['l', 'g', 'b']:
+        checkbox_vals[lgb + '_selected'] =''
+        if initial['less_greater_or_between'] == lgb:
+            checkbox_vals[lgb + '_selected'] ='selected'
+    return initial,checkbox_vals
+
+def set_sodxtrmts_initial(request):
+    initial = {}
+    checkbox_vals = {}
+    if request.method == 'GET':
+        Get = getattr(request.GET, 'get')
+    if request.POST:
+        Get = getattr(request.POST, 'get')
+    initial['station_ID'] = Get('stn_id','266779')
+    initial['start_year'] = Get('start_year', 'POR')
+    initial['end_year']  = Get('end_year', yesterday[0:4])
+    initial['monthly_statistic'] = Get('monthly_statistic', 'msum')
+    initial['max_missing_days'] = Get('max_missing_days', '5')
+    initial['start_month'] = Get('start_month', '01')
+    initial['departures_from_averages'] = Get('departures_from_averages', 'F')
+    initial['frequency_analysis'] = Get('frequency_analysis', 'F')
+    initial['less_greater_or_between']= Get('less_greater_or_between', None)
+    initial['threshold_for_less_or_greater']= Get('threshold_for_less_or_greater', None)
+    initial['threshold_low_for_between']= Get('threshold_low_for_between', None)
+    initial['threshold_high_for_between']= Get('threshold_high_for_between', None)
+    element = Get('elements', None)
+    if element is None:element = Get('element', 'pcpn')
+    initial['element'] = element
+    initial['base_temperature'] = Get('base_temperature',None)
+    #FIX ME request.POST.get does not return base_temperature and thresholds
+    if request.POST:
+        ks = ['base_temperature','less_greater_or_between','threshold_for_less_or_greater','threshold_low_for_between','threshold_high_for_between']
+        req_dict = dict(request.POST.items())
+        for k in ks:
+            if k in req_dict.keys():
+                initial[k] = str(req_dict[k])
+
+    #set the check box values
+    for el in WRCCData.SXTR_ELEMENT_LIST:
+        checkbox_vals[el + '_selected'] =''
+        if el == initial['element']:
+            checkbox_vals[el + '_selected'] ='selected'
+    for start_month in ['01','02','03','04','05','06','07','08','09','10','11','12']:
+        checkbox_vals[start_month + '_selected']=''
+        if initial['start_month'] == start_month:
+            checkbox_vals[start_month + '_selected']='selected'
+    for bl in ['T','F']:
+        checkbox_vals['DA_' + bl + '_selected'] = ''
+        checkbox_vals['FS_' + bl + '_selected'] = ''
+        if initial['departures_from_averages'] == bl:
+            checkbox_vals['DA_' + bl + '_selected'] = 'selected'
+        if initial['frequency_analysis'] == bl:
+            checkbox_vals['FS_' + bl + '_selected'] = 'selected'
+    for stat in ['mmax','mmin','mave','sd','ndays','rmon','msum']:
+        checkbox_vals[stat + '_checked'] =''
+        if initial['monthly_statistic'] == stat:
+            checkbox_vals[stat + '_checked'] ='checked'
+    for lgb in ['l', 'g', 'b']:
+        checkbox_vals[lgb + '_selected'] =''
+        if initial['less_greater_or_between'] == lgb:
+            checkbox_vals[lgb + '_selected'] ='selected'
+    return initial, checkbox_vals
+
+def set_sodxtrmts_header(form):
+    #Define Header Order:
+    header_order =['station_ID','start_year', 'end_year', '','element']
+    if form.cleaned_data['element'] in ['gdd', 'hdd', 'cdd']:header_order+=['base_temperature']
+    header_order+=['monthly_statistic']
+    if form.cleaned_data['departures_from_averages'] == 'T':
+         header_order+=['departures_from_averages', '']
+    else:
+        header_order+=['']
+    if form.cleaned_data['monthly_statistic'] == 'ndays':
+        if form.cleaned_data['less_greater_or_between'] == 'l':
+            header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
+        elif form.cleaned_data['less_greater_or_between'] == 'g':
+            header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
+        else: #between
+            header_order+=['less_greater_or_between','threshold_low_for_between','threshold_high_for_between','']
+    header_order+=['max_missing_days']
+    if form.cleaned_data['frequency_analysis'] == 'T':
+        if form.cleaned_data['frequency_analysis_type'] == 'g':
+            header_order+=['gev']
+        elif form.cleaned_data['frequency_analysis_type'] == 'p':
+            header_order+=['pearson']
+    header_order+=['']
+    #Define SCHTUPID header
+    header = []
+    for key in header_order:
+        if key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'monthly_statistic', 'elements']:
+            header.append([WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[str(form.cleaned_data[key])]])
+        elif key == '':
+            header.append([])
+        else:
+            header.append([WRCCData.DISPLAY_PARAMS[key], str(form.cleaned_data[key])])
+    return header
 
 def set_sodxtrmts_header(form):
     #Define Header Order:

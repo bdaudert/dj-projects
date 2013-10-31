@@ -17,14 +17,14 @@
 
 <table border="0" cellpadding="10">
     <tr valign="top">
-    <td valign="top" width="50%">
+    <td valign="top" width="30%">
         <div id="formSodxtrmts" class="form">
             <form method="post">
             {% csrf_token %}
             <table id="Sodxtrmts">
             <tr>
             <td>Station ID: </td>
-            <td><input type="text" name="station_ID" value="{{initial.station_ID}}"></td>
+            <td><input type="text" id="station_ID" name="station_ID" value="{{initial.station_ID}}"></td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_station_ID')"></td>
             </tr><tr>
             <td></td>
@@ -32,46 +32,83 @@
             <td></td>
             </tr><tr>
             <td>Start Year: </td>
-            <td><input type="text" name="start_year" value="{{initial.start_year}}"></td>
+            <td><input type="text" id="start_year" name="start_year" value="{{initial.start_year}}"></td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_station_ID')"></td>
             </tr><tr>
             <td>End Year: </td>
-            <td><input type="text" name="end_year" value="{{initial.end_year}}"></td>
+            <td><input type="text" id="end_year" name="end_year" value="{{initial.end_year}}"></td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_station_ID')"></td>
             </tr><tr>
             <td>Element: </td>
             <td>
-                <select id="element" onchange="set_BaseTemp_and_Thresh('Sodxtrmts',this);">
-                    <option value="pcpn" {{initial.pcpn_selected}}>Daily Precipitation</option>
-                    <option value="snow" {{initial.snow_selected}}>Daily Snowfall</option>
-                    <option value="snwd" {{initial.snwd_selected}}>Daily Snowdepth</option>
-                    <option value="maxt" {{initial.maxt_selected}}>Daily Maximum Temperature</option>
-                    <option value="mint" {{initial.mint_selected}}>Daily Minimum Temperature</option>
-                    <option value="avgt" {{initial.avgt_selected}}>Daily Mean Temperature</option>
-                    <option value="dtr" {{initial.dtr_selected}}>Daily Temperature Range</option>
-                    <option value="hdd" {{initial.hdd_selected}}>Heating Degree Days</option>
-                    <option value="cdd" {{initial.cdd_selected}}>Cooling Degree Days</option>
-                    <option value="gdd" {{initial.gdd_selected}}>Growing Degree Days</option>
-                    <option value="evap" {{initial.evap_selected}}>Daily Pan Evaporation</option>
-                    <option value="wdmv" {{initial.wdmv_selected}}>Daily Wind Movement</option>
+                <select id="element" name="element" onchange="set_BaseTemp_and_Thresh('Sodxtrmts',this);">
+                    <option value="pcpn" {{checkbox_vals.pcpn_selected}}>Daily Precipitation</option>
+                    <option value="snow" {{checkbox_vals.snow_selected}}>Daily Snowfall</option>
+                    <option value="snwd" {{checkbox_vals.snwd_selected}}>Daily Snowdepth</option>
+                    <option value="maxt" {{checkbox_vals.maxt_selected}}>Daily Maximum Temperature</option>
+                    <option value="mint" {{checkbox_vals.mint_selected}}>Daily Minimum Temperature</option>
+                    <option value="avgt" {{checkbox_vals.avgt_selected}}>Daily Mean Temperature</option>
+                    <option value="dtr" {{checkbox_vals.dtr_selected}}>Daily Temperature Range</option>
+                    <option value="hdd" {{checkbox_vals.hdd_selected}}>Heating Degree Days</option>
+                    <option value="cdd" {{checkbox_vals.cdd_selected}}>Cooling Degree Days</option>
+                    <option value="gdd" {{checkbox_vals.gdd_selected}}>Growing Degree Days</option>
+                    <option value="evap" {{checkbox_vals.evap_selected}}>Daily Pan Evaporation</option>
+                    <option value="wdmv" {{checkbox_vals.wdmv_selected}}>Daily Wind Movement</option>
                     </select>
             </td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_element')"></td>
-            </tr><tr>
+            {%if initial.base_temperature%}
+            </tr><tr id="base_temperature">
+            <td>Base Temperature: </td>
+            <td><input type="text" id="base_temperature" name="base_temperature" value="{{initial.base_temperature}}"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_base_temperature')"></td>  
+            {%endif%}
             </tr><tr>
             <td>Monthly Statistic: </td>
             <td>
-                <select id="monthly_statistic" onchange="set_NDays_thresholds('Sodxtrmts',this);">
-                    <option value="mmax" {{initial.mmax_selected}}>Monthly Maximum</option>
-                    <option value="mmin" {{initial.mmin_selected}}>Monthly Minimum</option>
-                    <option value="mave" {{initial.mave_selected}}>Monthly Average</option>
-                    <option value="sd" {{initial.sd_selected}}>Standard Deviation</option>
-                    <option value="ndays" {{initial.ndays_selected}}>Number of Days</option>
-                    <option value="rmon" {{initial.rmon_selected}}>Range during Month</option>
-                    <option value="msum" {{initial.msum_selected}}>Monthly Sum</option>
-                    </select>
+                <select id="monthly_statistic" name="monthly_statistic" onchange="set_NDays_thresholds('Sodxtrmts',this);">
+                <option value="mmax" {{checkbox_vals.mmax_selected}}>Monthly Maximum</option>
+                <option value="mmin" {{checkbox_vals.mmin_selected}}>Monthly Minimum</option>
+                <option value="mave" {{checkbox_vals.mave_selected}}>Monthly Average</option>
+                <option value="sd" {{checkbox_vals.sd_selected}}>Standard Deviation</option>
+                <option value="ndays" {{checkbox_vals.ndays_selected}}>Number of Days</option>
+                <option value="rmon" {{checkbox_vals.rmon_selected}}>Range during Month</option>
+                <option value="msum" {{checkbox_vals.msum_selected}}>Monthly Sum</option>
+                </select>
             </td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_element')"></td>
+            {%if initial.less_greater_or_between%}
+            </tr><tr id="threshold_type">
+            <td>Number of Days: </td>
+            <td>
+                <select id="less_greater_or_between" name="less_greater_or_between" onchange="change_lgb()">
+                <option value="l">Less Than {{checkbox_vals.l_selected}}</option>
+                <option value="g">Greater Than {{checkbox_vals.g_selected}}</option>
+                <option value="b">Between {{checkbox_vals.b_selected}}</option>
+                </select>
+            </td>
+            <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_lgb')"></td>
+            {%endif%}
+            {%if initial.less_greater_or_between == "b" and checkbox_vals.between%}
+            </tr><tr id="threshold">
+            <td>Between <br/> And</td>
+            <td><input type="text" id="threshold_low_for_between" name="threshold_low_for_between" value={{initial.threshold_low_for_between}}><br />
+                <input type="text" id="threshold_low_for_between" name="threshold_high_for_between" value={{initial.threshold_high_for_between}}>
+            </td>
+            <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_b')"></td>    
+            {%endif%}
+            {%if initial.less_greater_or_between == "l" and checkbox_vals.less_tahn%}
+            </tr><tr id="threshold">
+            <td>Less Than</td>
+            <td><input type="text" id="threshold_for_less_or_greater" name="threshold_for_less_or_greater" value={{initial.threshold_for_less_or_greater}}></td>
+            <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_l')"></td>     
+            {%endif%}
+            {%if initial.less_greater_or_between == "g" and checkbox_vals.greater_than%}
+            </tr><tr id="threshold">
+            <td>Greater Than</td>
+            <td><input type="text" id="threshold_for_less_or_greater" name="threshold_for_less_or_greater" value={{initial.threshold_for_less_or_greater}}></td>
+            <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_h')"></td>
+            {%endif%}
             </tr><tr>
             <td>Max Missing Days: </td>
             <td><input type="text" name="max_missing_days" value="{{initial.max_missing_days}}"></td>
@@ -80,37 +117,37 @@
             <tr>
             <td>Start Month: </td>
             <td>
-                <select>
-                <option value="01" {{initial.01_selected}}>January</option>
-                <option value="02" {{initial.02_selected}}>February</option>
-                <option value="03" {{initial.03_selected}}>March</option>
-                <option value="04" {{initial.04_selected}}>April</option>
-                <option value="05" {{initial.05_selected}}>May</option>
-                <option value="06" {{initial.06_selected}}>June</option>
-                <option value="07" {{initial.07_selected}}>July</option>
-                <option value="08" {{initial.08_selected}}>August</option>
-                <option value="09" {{initial.09_selected}}>September</option>
-                <option value="10" {{initial.10_selected}}>October</option>
-                <option value="11" {{initial.11_selected}}>November</option>
-                <option value="12" {{initial.12_selected}}>December</option>
+                <select id="start_month" name="start_month">
+                <option value="01" {{checkbox_vals.01_selected}}>January</option>
+                <option value="02" {{checkbox_vals.02_selected}}>February</option>
+                <option value="03" {{checkbox_vals.03_selected}}>March</option>
+                <option value="04" {{checkbox_vals.04_selected}}>April</option>
+                <option value="05" {{checkbox_vals.05_selected}}>May</option>
+                <option value="06" {{checkbox_vals.06_selected}}>June</option>
+                <option value="07" {{checkbox_vals.07_selected}}>July</option>
+                <option value="08" {{checkbox_vals.08_selected}}>August</option>
+                <option value="09" {{checkbox_vals.09_selected}}>September</option>
+                <option value="10" {{checkbox_vals.10_selected}}>October</option>
+                <option value="11" {{checkbox_vals.11_selected}}>November</option>
+                <option value="12" {{checkbox_vals.12_selected}}>December</option>
                 </select>
             </td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_start_month')"></td>
             </tr><tr>
             <td>Departures from Averages: </td>
             <td>
-                <select>
-                <option value="T" {{initial.DA_T_selected}}>Yes</option>
-                <option value="F" {{initial.DA_F_selected}}>No</option>
+                <select id="departures_from_averages" name="departures_from_averages">
+                <option value="T" {{checkbox_vals.DA_T_selected}}>Yes</option>
+                <option value="F" {{checkbox_vals.DA_F_selected}}>No</option>
             </td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpT
 ext('ht_departures_from_averages')"></td>
             </tr><tr>
             <td>Frequency Analysis: </td>
             <td>
-                <select>
-                <option value="T" {{initial.FS_T_selected}}>Yes</option>
-                <option value="F" {{initial.FS_F_selected}}>No</option>
+                <select id="frequency_analysis" name="frequency_analysis">
+                <option value="T" {{checkbox_vals.FS_T_selected}}>Yes</option>
+                <option value="F" {{checkbox_vals.FS_F_selected}}>No</option>
             </td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_frequency_analysis')"></td>
             </tr>
@@ -120,8 +157,8 @@ ext('ht_departures_from_averages')"></td>
             </form>
         </div>
     </td>
-    <td valign="top" width="50%">
-            {{req}}
+    <td valign="top" width="70%">
+            {{initial}}<br /><br />{{req}}
     </td><tr>
 </table>
 
