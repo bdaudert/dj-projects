@@ -18,7 +18,7 @@ import json
 import sys, os, stat, re
 
 #My modules
-import WRCCUtils, AcisWS, WRCCDataApps, WRCCClasses, WRCCData
+import WRCCUtils, AcisWS, WRCCDataApps, WRCCClasses, WRCCData, WRCCFormCheck
 import my_data.forms as forms
 
 STATIC_URL = '/www/apps/csc/dj-projects/my_acis/static/'
@@ -1580,7 +1580,7 @@ def sodxtrmts(request):
         return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
 
     if 'formSodxtrmts' in request.POST:
-        #Set initial formparameters for html
+        #Set initial form parameters for html
         initial,checkbox_vals = set_sodxtrmts_initial(request)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         #Turn request object into python dict
@@ -1589,7 +1589,12 @@ def sodxtrmts(request):
             form[str(key)] = str(val)
         #Define header for html display
         header = set_sodxtrmts_head(form)
-        #context['req']=header
+        #Form sanity check
+        form_error = check_sodxtrmts_form(form)
+        if form_error:
+            context['form_error'] = form_error
+            return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
+        #context['req']=request.POST.get('less_greater_or_between')
         data_params = {
             'sid':form['station_ID'],
             'start_date':form['start_year'],
@@ -1972,7 +1977,7 @@ def set_sodxtrmts_initial(request):
         Get = getattr(request.GET, 'get')
     if request.POST:
         Get = getattr(request.POST, 'get')
-    initial['station_ID'] = Get('stn_id','266779')
+    initial['station_ID'] = Get('station_ID','266779')
     initial['start_year'] = Get('start_year', 'POR')
     initial['end_year']  = Get('end_year', yesterday[0:4])
     initial['monthly_statistic'] = Get('monthly_statistic', 'msum')
@@ -2013,14 +2018,15 @@ def set_sodxtrmts_initial(request):
         if initial['frequency_analysis'] == bl:
             checkbox_vals['FS_' + bl + '_selected'] = 'selected'
     for stat in ['mmax','mmin','mave','sd','ndays','rmon','msum']:
-        checkbox_vals[stat + '_checked'] =''
+        checkbox_vals[stat + '_selected'] =''
         if initial['monthly_statistic'] == stat:
-            checkbox_vals[stat + '_checked'] ='checked'
+            checkbox_vals[stat + '_selected'] ='selected'
     for lgb in ['l', 'g', 'b']:
         checkbox_vals[lgb + '_selected'] =''
         if initial['less_greater_or_between'] == lgb:
             checkbox_vals[lgb + '_selected'] ='selected'
     return initial, checkbox_vals
+
 
 def set_sodxtrmts_head(form):
     #Define Header Order:
@@ -2048,7 +2054,7 @@ def set_sodxtrmts_head(form):
     #Define SCHTUPID header
     header = []
     for key in header_order:
-        if key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'monthly_statistic', 'elements']:
+        if key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'monthly_statistic', 'elements','element']:
             header.append([WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[str(form[key])]])
         elif key == '':
             header.append([])
@@ -2293,3 +2299,19 @@ def run_external_script(cmd):
     import subprocess
     out, err = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
     return out, err
+
+#FORM SANITY CHECKS
+def check_sodxtrmts_form(form):
+    '''
+    Sanity check for Sodxtrmst form
+    form is given as dict
+    '''
+    form_error = {}
+    fields_to_check = ['start_year', 'end_year','max_missing_days']
+    for field in fields_to_check:
+        checker = getattr(WRCCFormCheck, 'check_' + field)
+        err = checker(form)
+        if err:
+            form_error[WRCCData.DISPLAY_PARAMS[field]] = err
+
+    return form_error

@@ -21,8 +21,8 @@
         <div id="formSodxtrmts" class="form">
             <form method="post">
             {% csrf_token %}
-            <table id="Sodxtrmts">
-            <tr>
+            <table id="tableSodxtrmts">
+            <tr valign="top">
             <td>Station ID: </td>
             <td><input type="text" id="station_ID" name="station_ID" value="{{initial.station_ID}}"></td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_station_ID')"></td>
@@ -32,17 +32,17 @@
             <td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td>
             <td></td>
             </tr>
-            <tr>
-            <td>Start Year: </td>
+            <tr valign="top">
+            <td id="Start Year">Start Year: </td>
             <td><input type="text" id="start_year" name="start_year" value="{{initial.start_year}}"></td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_station_ID')"></td>
             </tr>
-            <tr>
-            <td>End Year: </td>
+            <tr valign="top">
+            <td id="End Year">End Year: </td>
             <td><input type="text" id="end_year" name="end_year" value="{{initial.end_year}}"></td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_station_ID')"></td>
             </tr>
-            <tr>
+            <tr valign="top">
             <td>Element: </td>
             <td>
                 <select id="element" name="element" onchange="set_BaseTemp_and_Threshes('Sodxtrmts',this);">
@@ -63,13 +63,13 @@
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_element')"></td>
             </tr>
             {%if initial.base_temperature%}
-            <tr id="base_temp">
+            <tr id="base_temp" valign="top">
             <td>Base Temperature: </td>
             <td><input type="text" id="base_temperature" name="base_temperature" value="{{initial.base_temperature}}"></td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_base_temperature')"></td>
             </tr> 
             {%endif%}
-            <tr>
+            <tr valign="top">
             <td>Monthly Statistic: </td>
             <td>
                 <select id="monthly_statistic" name="monthly_statistic" onchange="set_NDays_thresholds('Sodxtrmts',this);">
@@ -85,20 +85,20 @@
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_element')"></td>
             {%if initial.less_greater_or_between%}
             </tr>
-            <tr id="threshold_type">
+            <tr id="threshold_type" valign="top">
             <td>Number of Days: </td>
             <td>
                 <select id="less_greater_or_between" name="less_greater_or_between" onchange="change_lgb()">
-                <option value="l">Less Than {{checkbox_vals.l_selected}}</option>
-                <option value="g">Greater Than {{checkbox_vals.g_selected}}</option>
-                <option value="b">Between {{checkbox_vals.b_selected}}</option>
+                <option value="l" {{checkbox_vals.l_selected}}>Less Than</option>
+                <option value="g" {{checkbox_vals.g_selected}}>Greater Than</option>
+                <option value="b" {{checkbox_vals.b_selected}}>Between</option>
                 </select>
             </td>
             <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_lgb')"></td>
             </tr>
             {%endif%}
             {%if initial.less_greater_or_between == "b"%}
-            <tr id="threshold">
+            <tr id="threshold" valign="top">
             <td>Between <br/> And</td>
             <td><input type="text" id="threshold_low_for_between" name="threshold_low_for_between" value={{initial.threshold_low_for_between}}><br />
                 <input type="text" id="threshold_low_for_between" name="threshold_high_for_between" value={{initial.threshold_high_for_between}}>
@@ -112,18 +112,18 @@
             <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_l')"></td>
             </tr> 
             {%elif initial.less_greater_or_between == "g"%}
-            <tr id="threshold">
+            <tr id="threshold" valign="top">
             <td>Greater Than</td>
             <td><input type="text" id="threshold_for_less_or_greater" name="threshold_for_less_or_greater" value={{initial.threshold_for_less_or_greater}}></td>
             <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_h')"></td>
             </tr>
             {%endif%}
-            <tr>
-            <td>Max Missing Days: </td>
+            <tr valign="top">
+            <td id="Maximum Number of Missing Days">Max Missing Days: </td>
             <td><input type="text" name="max_missing_days" value="{{initial.max_missing_days}}"></td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_max_missing_days')"></td>
             </tr>
-            <tr>
+            <tr valign="top">
             <td>Start Month: </td>
             <td>
                 <select id="start_month" name="start_month">
@@ -143,7 +143,7 @@
             </td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_start_month')"></td>
             </tr>
-            <tr>
+            <tr valign="top">
             <td>Departures from Averages: </td>
             <td>
                 <select id="departures_from_averages" name="departures_from_averages">
@@ -153,7 +153,7 @@
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpT
 ext('ht_departures_from_averages')"></td>
             </tr>
-            <tr>
+            <tr valign="top">
             <td>Frequency Analysis: </td>
             <td>
                 <select id="frequency_analysis" name="frequency_analysis">
@@ -187,7 +187,7 @@ ext('ht_departures_from_averages')"></td>
             $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_SODXTRMTS");
         </script>
         <br />
-        {{req}}
+        {{initial}}<br /><br /> {{req}}
         {%if results%}
             <a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/visualize/?station_ID={{station_ID}}&element={{element}}&json_file={{json_file}}"><font size=4>Generate Time Series Plots for this data</font></a><br /><br />
 
@@ -266,6 +266,11 @@ ext('ht_departures_from_averages')"></td>
         {%else%}
             {%if run_done%}
                 <p style="color:red">NO STATION DATA FOUND!</p></br>
+            {%endif%}
+            {%if form_error%}
+                {%for key, val in form_error.items%}
+                    <script type="text/javascript">highlight_form_field("tableSodxtrmts","{{key}}","{{val}}")</script>
+                {%endfor%}
             {%endif%}
        {%endif%}
         </td></tr>
