@@ -51,7 +51,7 @@
             <tr valign="top">
             <td>Element: </td>
             <td>
-                <select id="element" name="element" onchange="set_BaseTemp_and_Threshes('Sodxtrmts',this);">
+                <select id="element" name="element" onchange="set_BaseTemp_and_Threshes('tableSodxtrmts',this);">
                     <option value="pcpn" {{checkbox_vals.pcpn_selected}}>Daily Precipitation</option>
                     <option value="snow" {{checkbox_vals.snow_selected}}>Daily Snowfall</option>
                     <option value="snwd" {{checkbox_vals.snwd_selected}}>Daily Snowdepth</option>
@@ -78,7 +78,7 @@
             <tr valign="top">
             <td>Monthly Statistic: </td>
             <td>
-                <select id="monthly_statistic" name="monthly_statistic" onchange="set_NDays_thresholds('Sodxtrmts',this);">
+                <select id="monthly_statistic" name="monthly_statistic" onchange="set_NDays_thresholds('tableSodxtrmts',this);">
                 <option value="mmax" {{checkbox_vals.mmax_selected}}>Monthly Maximum</option>
                 <option value="mmin" {{checkbox_vals.mmin_selected}}>Monthly Minimum</option>
                 <option value="mave" {{checkbox_vals.mave_selected}}>Monthly Average</option>

@@ -86,6 +86,7 @@ $(function () {
                 series['color'] = '#00008B';
                 //Define series data
                 var data = [];
+                var acis_data = [];
                 var values = [];
                 //Find end year index --> omit table (mean, skew...) summaries at end of array 
                 if (month_list[0]> month_list[month_list.length -1]){
@@ -101,9 +102,11 @@ $(function () {
                     var skip_year = 'F';                    
                     if (month_list[0]> month_list[month_list.length -1]){
                         var date = Date.UTC(parseInt(datadict.data[yr_idx][0]) + 1, 0, 1)
+                        var acis_date = datadict.data[yr_idx][0];
                     }
                     else {
                         var date = Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1)
+                        var acis_date = datadict.data[yr_idx][0];
                     }
                     //Month Loop
                     for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
@@ -121,76 +124,61 @@ $(function () {
                     } //end month loop
                     if (skip_year == 'T'){
                         data.push([date, null]);
+                        acis_data.push([parseInt(acis_date),null]);
                         //values.push(null);
                         continue;
                     }
                     if (vals.length > 0) {
                         if (summary == 'max'){
                             data.push([date, Math.max.apply(Math,vals)]);
+                            acis_data.push([parseInt(acis_date), Math.max.apply(Math,vals)]);
                             values.push(Math.max.apply(Math,vals));
                         }
                         if (summary == 'min'){
                             data.push([date, precise_round(Math.min.apply(Math,vals),2)]);
+                            acis_data.push([parseInt(acis_date), precise_round(Math.min.apply(Math,vals),2)]);
                             values.push(precise_round(Math.min.apply(Math,vals),2));
                         }
                         if (summary == 'sum'){
                             for(var i=0,sum=0;i<vals.length;sum+=vals[i++]);
                             data.push([date, precise_round(sum,2)]);
+                            acis_data.push([parseInt(acis_date), precise_round(sum,2)]);
                             values.push(precise_round(sum,2));
                         }
                         if (summary == 'mean'){
                             for(var i=0,sum=0;i<vals.length;sum+=vals[i++]);
                             data.push([date, precise_round(sum/vals.length,2)]);
+                            acis_data.push([parseInt(acis_date), precise_round(sum/vals.length,2)]);
                             values.push(precise_round(sum/vals.length,2));
                         }
                     }
                     else {
                         data.push([date, null]);
+                        acis_data.push([parseInt(acis_date), null]);
                         //values.push(null);
                     }
                 } //end for yr_idx
-            
+                series['data'] = data;
+                series_data.push(series);
                 // Find max/min (needed to set plot properties)
-                if (values.length == 0){
-                    data_max = 0;
-                    data_min = 0;
-                }
-                else{
-                    if (vertical_axis_max == "Use default") { 
-                        var data_max = Math.max.apply(Math,values);
-                    }
-                    else{
+                data_max = 0;
+                data_min = 0;
+                if (values.length > 0){
+                    var data_max = find_max(values,datadict.element);
+                    var data_min = find_min(values,datadict.element);
+                    if (vertical_axis_max != "Use default") { 
                         try{
                             var data_max = parseFloat(vertical_axis_max);
                         }
-                        catch(e){
-                            var data_max = Math.max.apply(Math,values);
-                        }
+                        catch(e){}
                     }
-                    if (vertical_axis_min == "Use default"){
-                        if (datadict.element == 'pcpn' || datadict.element == 'snow' || datadict.element == 'snwd' || datadict.element == 'wdmv' || datadict.element == 'evap'){
-                            var data_min = 0;
-                        }
-                        else{
-                            var data_min = Math.min.apply(Math,values);
-                        }
-                    }
-                    else{
-                        try {
+                    if (vertical_axis_min != "Use default") {                                                                                                   
+                        try{
                             var data_min = parseFloat(vertical_axis_min);
                         }
-                        catch(e){
-                            if (datadict.element == 'pcpn' || datadict.element == 'snow' || datadict.element == 'snwd' || datadict.element == 'wdmv' || datadict.element == 'evap'){
-                                var data_min = 0;
-                            }
-                            else{
-                                var data_min = Math.min.apply(Math,values);
-                            }
-                        }
+                        catch(e){}
                     }
                 }
-                series['data'] = data;
-                series_data.push(series);
                 //Running Mean
                 if (show_running_mean == 'T'){
                     var running_mean_data = [];
@@ -249,16 +237,23 @@ $(function () {
                         series['marker'] = {enabled:false}
                     }
                     var data =  [];
+                    var acis_data = [];
                     var values = [];
                     for (var yr_idx=0;yr_idx<datadict.data.length - 6;yr_idx++) {
                         var val = datadict.data[yr_idx][2*month_list[mon_idx] - 1]
                         if (val != '-----') {
                             values.push(precise_round(parseFloat(val),2));
                             data.push([Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1), precise_round(parseFloat(val),2)]);
+                            if (mon_idx ==0){
+                                acis_data.push([parseInt(datadict.data[yr_idx][0]), precise_round(parseFloat(val),2)]);
+                            }
                         }
                         else {
                             values.push(null);
-                            data.push([Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1),null]); 
+                            data.push([Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1),null]);
+                            if (mon_idx == 0){ 
+                                acis_data.push([parseInt(datadict.data[yr_idx][0]),null]);
+                            }
                         }
                     }
                     series['data'] =  data;
@@ -295,9 +290,31 @@ $(function () {
             }
 
             //Define plot characteristics
+            //Define x_plotlines
+            //Sets new data for plotting,minor,major plotlines
             var x_plotlines = [];
-            var y_plotlines = [];
-            //Define x_plotline and plot data
+            var tickPositions = [];
+            var d_min_maj = set_yr_plotlines(acis_data);
+            if (minor_grid =='T'){
+                var pls = d_min_maj[1];
+            }
+            else if (major_grid =='T' && minor_grid == 'F'){
+                var pls = d_min_maj[2];
+            }
+            //convert to Date
+            for (var pl_idx=0;pl_idx<pls.length - 1;pl_idx++) {
+                var x_plotline = pls[pl_idx];
+                //alert(x_plotline.value);
+                var val = Date.UTC(pls[pl_idx].value,0,1);
+                x_plotline.value = val;
+                x_plotlines.push(x_plotline);
+                tickPositions.push(val);
+            }
+            var x_min = d_min_maj[0][0][0];
+            var x_max = d_min_maj[0][d_min_maj[0].length -1][0]; 
+            //Set tickPositions to match plotlines 
+            /*
+            var x_plotlines = [];
             if (major_grid =='F' && minor_grid =='F'){
                var x_step = datadict.data.length + 1;
             }
@@ -323,7 +340,9 @@ $(function () {
             if (x_plotlines.length == 0){
                 x_plotlines = null;
             }
+            */
             //Define y_plotlines and tickInterval
+            var y_plotlines = [];
             if (major_grid =='F' && minor_grid == 'F'){
                 var plotline_no  = 1.0;
             }

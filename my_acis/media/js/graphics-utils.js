@@ -43,7 +43,7 @@ function set_yrdata_grids(num_yrs){
             the axis start/end points should be divisble by
     */
     //Case 0: no years
-    if (num_data == 0){
+    if (num_yrs == 0){
         return [null, null, null];
     }
     //Case 1: less than 5 years
@@ -51,13 +51,13 @@ function set_yrdata_grids(num_yrs){
     var minor = 1;
     var major = 5;
     //Case 2: 5 to 10 years
-    if (5 < num_years <= 10){
+    if (5 < num_yrs && num_yrs <= 10){
         divisor = 2;
         minor = 1;
         major = 2;
     }
     //Case 3: more than 10 years
-    else if (10 < num_years){
+    else if (10 < num_yrs){
         divisor = 10;
         minor = 5;
         major = 10;
@@ -79,7 +79,7 @@ function find_max(vals,element){
 
 function find_min(vals, element){
     var min = null;
-    if (element == 'snow' || element == 'snwd' || element == 'pcpn') {
+    if (element == 'snow' || element == 'snwd' || element == 'pcpn' || element == 'evap' || element == 'wdmv') {
         min = 0.0;
     }
     else{
@@ -126,7 +126,7 @@ function set_plotlines(data,step,axis,plotline_opts){
     data : [[x1,y1],[x2,y2], ...]
     if axis == 'x', set x_plotlines
     if axis == 'y', set y_potlines
-    */ 
+    */
     if (axis == 'x'){idx = 0;}
     if (axis == 'y'){idx = 1;}
     var plotLines = [];
@@ -159,12 +159,14 @@ function set_yr_plotlines(data, plotline_opts){
     var yr_min = parseInt(data[0][0]);
     var yr_max = parseInt(data[num_years -1 ][0]);
     var new_data = data;
+    /*
     //Replace Acis dates with Date.UTC
     for (yr_idx=0;yr_idx< new_data.length;yr_idx++){
         new_data[yr_idx][0] = Date.UTC(parseInt(data[yr_idx][0]), 0, 1);
     }
+    */
     //Set step sizes and divisor(depends on data and data_length)
-    var min_maj_div = set_yrdata_grids(num_years,'year');
+    var min_maj_div = set_yrdata_grids(num_years);
     //Find closest axis points less/greater
     //than axis_min/axis_max  that are divisble by divisor
     var new_yr_min = find_closest_smaller(yr_min,min_maj_div[2]);
@@ -175,13 +177,16 @@ function set_yr_plotlines(data, plotline_opts){
     }
     if (yr_max % min_maj_div[2] == 0){
         new_yr_max = find_closest_larger(yr_max + 1,min_maj_div[2]);
-    } 
+    }
     //Insert new data points at start/end
     for (idx=1;idx<=yr_min - new_yr_min;idx++){
-        new_data.splice(0,0,[Date.UTC(yr_min - idx,0,1), null]);
+        //new_data.splice(0,0,[Date.UTC(yr_min - idx,0,1), null]);
+        new_data.splice(0,0,[yr_min - idx, null]);
     }
     for (idx=1;idx<=new_yr_max - yr_max;idx++){
-        new_data.concat([Date.UTC(yr_max + idx,0,1), null]);
+        //new_data.concat([Date.UTC(yr_max + idx,0,1), null]);
+        //new_data.concat([yr_max + idx, null]);
+        new_data.splice(new_data.length,0,[yr_max + idx, null]);
     }
     //Define plotlines
     var plotlines_minor = set_plotlines(new_data,min_maj_div[0],'x',plotline_opts);
@@ -211,11 +216,6 @@ function set_axis_properties(data_max, data_min, element,plotline_no){
         props.axisMin = 0.0;
     }
     var diff = Math.abs(props.axisMax - props.axisMin);
-    /*
-    alert(props.axisMin);
-    alert(props.axisMax);
-    alert(diff);
-    */
     //Deal with small differences
     steps = [0,plotline_no / 100, plotline_no / 50, plotline_no / 25,plotline_no / 10, plotline_no / 5, plotline_no / 2];
     for (idx=0;idx<=steps.length - 2 ;idx+=1){
@@ -325,7 +325,6 @@ function set_plotLines(data_max, data_min, tickInterval, options_dict){
             var v = precise_round(val,1);
         }
         pL.value = v;
-        //alert(pL.value); 
         plotLines.push(pL);
     }
     if (plotLines.length == 0){
