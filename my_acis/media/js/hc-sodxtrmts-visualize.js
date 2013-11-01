@@ -40,8 +40,8 @@ $(function () {
             //extra large image
             top_dist = (parseFloat(height)*7/8).toString() +'px';
         }
-        //convert into javascript array
-
+        //convert month_list input into javascript array
+        //Hidden vars only passed as string
         var month_list = month_list_str.substring(1,month_list_str.length - 1).split(",")
         for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
             month_list[mon_idx] = parseInt(month_list[mon_idx]);
@@ -349,7 +349,8 @@ $(function () {
                 var gridLineWidth = 0;
                 var gridLineColor = '#C0C0C0';
             }
-            var xAxisText = SummaryText + '  ' +  datadict.element_name + ', Months: ' + month_names[0] + ' - '+ month_names[month_list.length - 1]; 
+            var xAxisText = SummaryText + '  ' +  datadict.element_name + ', Months: ' + 
+                month_names[month_list[0] - 1] + ' - '+ month_names[month_list[month_list.length - 1] - 1]; 
             if (month_list[0]> month_list[month_list.length -1]){
                 var apdx = 'Ending Year ' //+ datadict.data[datadict.data.length -8][0]
             }

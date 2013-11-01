@@ -1741,7 +1741,7 @@ def sodxtrmts_visualize(request):
             if int(form0.cleaned_data['start_month']) > int(form0.cleaned_data['end_month']):
                 context['months'] = [mon for mon in range(int(form0.cleaned_data['start_month']), 13)] +[mon for mon in range(1, int(form0.cleaned_data['end_month']) +1)]
             elif int(form0.cleaned_data['start_month']) == int(form0.cleaned_data['end_month']):
-                context['months'] = int(form0.cleaned_data['start_month'])
+                context['months'] = [int(form0.cleaned_data['start_month'])]
             else:
                 context['months'] = [mon for mon in range(int(form0.cleaned_data['start_month']), int(form0.cleaned_data['end_month']) +1)]
             #Plot Options:
