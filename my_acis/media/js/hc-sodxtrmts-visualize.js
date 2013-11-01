@@ -41,17 +41,10 @@ $(function () {
             top_dist = (parseFloat(height)*7/8).toString() +'px';
         }
         //convert into javascript array
-        var month_list = month_list_str.substring(1,month_list_str.length -1).split(",")
+
+        var month_list = month_list_str.substring(1,month_list_str.length - 1).split(",")
         for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
             month_list[mon_idx] = parseInt(month_list[mon_idx]);
-        }
-        //Find end year index 
-        if (month_list[0]>= month_list[month_list.length -1]){
-            //first month > last
-            var end_idx = 7
-        }
-        else {
-            var end_idx = 6
         }
         var summary = document.getElementById("summary").value;
         var month_names =  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -94,6 +87,14 @@ $(function () {
                 //Define series data
                 var data = [];
                 var values = [];
+                //Find end year index --> omit table (mean, skew...) summaries at end of array 
+                if (month_list[0]> month_list[month_list.length -1]){
+                    //first month > last
+                    var end_idx = 7;
+                }
+                else {
+                    var end_idx = 6;
+                }
                 //Define plot data
                 for (var yr_idx=0;yr_idx<datadict.data.length - end_idx;yr_idx++) {
                     var vals = [];
