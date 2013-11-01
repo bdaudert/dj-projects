@@ -57,7 +57,12 @@ function HighLight(node,DivClass,DivId) {
                 divs_to_hide[i].style.display ="none";
             }
             else{
-                divs_to_hide[i].style.display ="block";
+                if (divs_to_hide[i].style.display == "none"){
+                    divs_to_hide[i].style.display ="block";
+                }
+                else{
+                    divs_to_hide[i].style.display ="block";
+                }
             }
         }
     }
@@ -68,18 +73,48 @@ function ShowPopupDocu(DivId){
 }
 
 function ShowHelpText(divId){
-    var pop_up = document.createElement('div');
-    pop_up.setAttribute("class", "pop-up");
-    pop_up.setAttribute("id", 'help_' + divId);
-    pop_up.innerHTML = $("#" + 'help_' + divId).load("/csc/media/html/commons.html #" + divId );
-    //$( "#"+divId ).show();
-    if (pop_up.style.display == "none"){
-        pop_up.style.display = "block";
+    var pop_up_id = divId;
+    var pop_up = document.getElementById(pop_up_id);
+    pop_up.innerHTML = $('#' + pop_up_id).load('/csc/media/html/commons.html #' + pop_up_id);
+    var divs_to_hide = document.getElementsByClassName('pop-up');
+    for (i=0;i<divs_to_hide.length;i++){
+        if (divs_to_hide[i] != pop_up){
+            divs_to_hide[i].style.display ="none";
+        }
+        else{
+            if (pop_up.style.display == "none"){
+                divs_to_hide[i].style.display ="block";
+            }
+            else{
+                pop_up.style.display = "none";
+            }
+        }
     }
-    else{
-        pop_up.style.display = "none";
+    /*
+    if ($('#'+ pop_up_id).length){
+        var pop_up = document.getElementById(pop_up_id);
+        //document.getElementById(pop_up_id).remove();
+        if (pop_up.style.display == "none"){
+            pop_up.style.display = "block";
+        }
+        else{
+            pop_up.style.display = "none";
+        }
     }
-    document.body.appendChild(pop_up);
+    else {
+        var pop_up = document.createElement('div');
+        //pop_up.setAttribute("class", "pop-up");
+        pop_up.setAttribute("id", pop_up_id);
+        pop_up.setAttribute("style", "display:block;");
+        document.body.appendChild(pop_up);
+         
+        //pop_up.innerHTML ="blah";
+        //var text = $('#' + pop_up_id).load('/csc/media/html/commons.html #' + pop_up_id);
+        var text = $('#help_ht_start_year').load('/csc/media/html/commons.html #ht_start_year';
+        pop_up.innerHTML = text;
+        //$( "#"+ pop_up_id ).show();
+    }
+    */
 }
 
 

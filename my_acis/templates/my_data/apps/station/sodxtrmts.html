@@ -35,12 +35,12 @@
             <tr valign="top">
             <td id="Start Year">Start Year: </td>
             <td><input type="text" id="start_year" name="start_year" value="{{initial.start_year}}"></td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_station_ID')"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_start_year')"></td>
             </tr>
             <tr valign="top">
             <td id="End Year">End Year: </td>
             <td><input type="text" id="end_year" name="end_year" value="{{initial.end_year}}"></td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_station_ID')"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_end_year')"></td>
             </tr>
             <tr valign="top">
             <td>Element: </td>
@@ -82,7 +82,7 @@
                 <option value="msum" {{checkbox_vals.msum_selected}}>Monthly Sum</option>
                 </select>
             </td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_element')"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_monthly_statistic')"></td>
             {%if initial.less_greater_or_between%}
             </tr>
             <tr id="threshold_type" valign="top">
@@ -150,8 +150,7 @@
                 <option value="T" {{checkbox_vals.DA_T_selected}}>Yes</option>
                 <option value="F" {{checkbox_vals.DA_F_selected}}>No</option>
             </td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpT
-ext('ht_departures_from_averages')"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_departures_from_averages')"></td>
             </tr>
             <tr valign="top">
             <td>Frequency Analysis: </td>
@@ -166,6 +165,15 @@ ext('ht_departures_from_averages')"></td>
             <input type="submit" value="Submit" name="formSodxtrmts"/>
             </form>
         </div>
+        <div id="ht_station_ID" class="pop-up" style="display:none;"></div>
+        <div id="ht_start_year" class="pop-up" style="display:none;"></div>
+        <div id="ht_end_year" class="pop-up" style="display:none;"></div>
+        <div id="ht_element" class="pop-up" style="display:none;"></div>
+        <div id="ht_monthly_statistic" class="pop-up" style="display:none;"></div>
+        <div id="ht_max_missing_days" class="pop-up" style="display:none;"></div>
+        <div id="ht_start_month" class="pop-up" style="display:none;"></div>
+        <div id="ht_departures_from_averages" class="pop-up" style="display:none;"></div>
+        <div id="ht_frequency_analysis" class="pop-up" style="display:none;"></div>
     </td>
     <td valign="top" width="70%">
         <table>
@@ -187,7 +195,6 @@ ext('ht_departures_from_averages')"></td>
             $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_SODXTRMTS");
         </script>
         <br />
-        {{initial}}<br /><br /> {{req}}
         {%if results%}
             <a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/visualize/?station_ID={{station_ID}}&element={{element}}&json_file={{json_file}}"><font size=4>Generate Time Series Plots for this data</font></a><br /><br />
 
