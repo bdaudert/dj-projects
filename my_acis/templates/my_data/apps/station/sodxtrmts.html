@@ -25,7 +25,13 @@
             <tr valign="top">
             <td>Station ID: </td>
             <td><input type="text" id="station_ID" name="station_ID" value="{{initial.station_ID}}"></td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_station_ID')"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
+                <script type="text/javascript">                        
+                $("#ht_station_ID").load("{{MEDIA_URL}}html/commons.html #ht_staton_ID");
+                </script>
+            </div>
+            </td>
             </tr>
             <tr>
             <td></td>
@@ -202,13 +208,13 @@
 
         <div id="printable_table">
             
-            <img alt="Print" title="Print" class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')">
+            <img alt="Print" title="Print" class="icon" src="{{MEDIA_URL}}img/Print.png" onClick="printNode('printable_table')"><b>Print</b>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            
 
-            <a target="_blank" href="{{SW_CKN_URL}}/download/?app_name=Sodxtrmts&json_file={{json_file}}"><img alt="Download" title="Download" class="icon" src="{{MEDIA_URL}}img/Download.png"></a>
+            <a target="_blank" href="{{SW_CKN_URL}}/download/?app_name=Sodxtrmts&json_file={{json_file}}"><img alt="Download" title="Download" class="icon" src="{{MEDIA_URL}}img/Download.png"><b>Download</b></a>
             <br />
             <!--Header-->
-            <p>
+            <p class="black">
             {%for key_val in header%}
                 {%if key_val%}
                     <b>{{key_val.0}}</b>: {{key_val.1}}
@@ -218,8 +224,7 @@
             {%endfor%}
             </p>
             
-            <p><b>Missing values</b><br />
-            <!--Any month with less than or equal this user selected number will be included in the analysis.<br />
+            <p class="black"><b>Missing values</b><br />
             Monthly information for months with more than this number of missing values will be displayed, but not used. <br />
             The letter indicates the number of missing days--> 
             Letters after months show number of missing days; after annual

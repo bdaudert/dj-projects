@@ -1755,8 +1755,8 @@ def sodxtrmts_visualize(request):
             context['markers'] = form0.cleaned_data['markers']
             context['marker_type'] = form0.cleaned_data['marker_type']
             context['plot_incomplete_years'] = form0.cleaned_data['plot_incomplete_years']
-            context['axis_min'] = form0.cleaned_data['axis_min']
-            context['axis_max'] = form0.cleaned_data['axis_max']
+            context['vertical_axis_min'] = form0.cleaned_data['vertical_axis_min']
+            context['vertical_axis_max'] = form0.cleaned_data['vertical_axis_max']
     return render_to_response('my_data/apps/station/sodxtrmts_visualize.html', context, context_instance=RequestContext(request))
 
 def sodsumm(request):

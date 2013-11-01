@@ -14,8 +14,8 @@ $(function () {
         var connector_line = document.getElementById("connector_line").value;
         var connector_line_width = document.getElementById("connector_line_width").value;
         var plot_incomplete_years = document.getElementById("plot_incomplete_years").value;
-        var axis_min = document.getElementById("axis_min").value;
-        var axis_max = document.getElementById("axis_max").value;
+        var vertical_axis_min = document.getElementById("vertical_axis_min").value;
+        var vertical_axis_max = document.getElementById("vertical_axis_max").value;
         if (connector_line == 'F'){
             connector_line_width = 0;        
         }
@@ -46,7 +46,8 @@ $(function () {
             month_list[mon_idx] = parseInt(month_list[mon_idx]);
         }
         //Find end year index 
-        if (month_list[0]> month_list[month_list.length -1]){
+        if (month_list[0]>= month_list[month_list.length -1]){
+            //first month > last
             var end_idx = 7
         }
         else {
@@ -154,18 +155,18 @@ $(function () {
                     data_min = 0;
                 }
                 else{
-                    if (axis_max == "Use default") { 
+                    if (vertical_axis_max == "Use default") { 
                         var data_max = Math.max.apply(Math,values);
                     }
                     else{
                         try{
-                            var data_max = parseFloat(axis_max);
+                            var data_max = parseFloat(vertical_axis_max);
                         }
                         catch(e){
                             var data_max = Math.max.apply(Math,values);
                         }
                     }
-                    if (axis_min == "Use default"){
+                    if (vertical_axis_min == "Use default"){
                         if (datadict.element == 'pcpn' || datadict.element == 'snow' || datadict.element == 'snwd' || datadict.element == 'wdmv' || datadict.element == 'evap'){
                             var data_min = 0;
                         }
@@ -175,7 +176,7 @@ $(function () {
                     }
                     else{
                         try {
-                            var data_min = parseFloat(axis_min);
+                            var data_min = parseFloat(vertical_axis_min);
                         }
                         catch(e){
                             if (datadict.element == 'pcpn' || datadict.element == 'snow' || datadict.element == 'snwd' || datadict.element == 'wdmv' || datadict.element == 'evap'){
@@ -278,15 +279,15 @@ $(function () {
                     }
                 }
                 // Override max/min if needed
-                if (axis_max != "Use default") {
+                if (vertical_axis_max != "Use default") {
                     try{
-                        var data_max = parseFloat(axis_max);
+                        var data_max = parseFloat(vertical_axis_max);
                     }
                     catch(e){}
                 }
-                if (axis_min != "Use default"){
+                if (vertical_axis_min != "Use default"){
                     try {
-                        var data_min = parseFloat(axis_min);
+                        var data_min = parseFloat(vertical_axis_min);
                     }
                     catch(e){}
                 }

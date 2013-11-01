@@ -639,8 +639,8 @@ class SodxtrmtsVisualizeForm(forms.Form):
     connector_line_width = forms.FloatField(initial=1, max_value=10, min_value=0, required=False,help_text='Choose the width of the connector line. Choose 0 if you only want to see markers. 10 is the maximum line widh allowed.')
     markers = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show markers at each data point.')
     marker_type = forms.ChoiceField(choices=WRCCData.MARKER_CHOICES, required=False, initial='diamond', help_text='.')
-    axis_min = forms.CharField(required=False, initial='Use default', help_text='Set the y-axis minimum value.')
-    axis_max = forms.CharField(required=False, initial='Use default', help_text='Set the y-axis maximium value')
+    vertical_axis_min = forms.CharField(required=False, initial='Use default', help_text='Set the y-axis minimum value.')
+    vertical_axis_max = forms.CharField(required=False, initial='Use default', help_text='Set the y-axis maximium value')
 
 ###############
 #End SODS
