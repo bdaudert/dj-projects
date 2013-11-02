@@ -44,7 +44,11 @@ function set_yrdata_grids(num_yrs){
     */
     //Case 0: no years
     if (num_yrs == 0){
-        return [null, null, null];
+        return {
+            'minor_step':null, 
+            'major_step':null, 
+            'divisor':null
+        };
     }
     //Case 1: less than 5 years
     var divisor = 5;
@@ -62,24 +66,31 @@ function set_yrdata_grids(num_yrs){
         minor = 5;
         major = 10;
     }
-    return [minor, major, divisor];
+    return {
+        'minor_step':minor, 
+        'major_step':major, 
+        'divisor':divisor
+        };
 }
 
 
 
 //Algoritmhms
-function find_max(vals,element){
+function find_max(vals,element,statistic){
     var max = null;
     try{
         max = Math.max.apply(Math,vals);
     }
     catch(e){}
+    if (statistic == 'ndays'){
+        max = 35;
+    }
     return max;
 }
 
-function find_min(vals, element){
+function find_min(vals, element,statistic){
     var min = null;
-    if (element == 'snow' || element == 'snwd' || element == 'pcpn' || element == 'evap' || element == 'wdmv') {
+    if ((element == 'snow' || element == 'snwd' || element == 'pcpn' || element == 'evap' || element == 'wdmv') && (statistic !='ndays' && statistic !='sd')) {
         min = 0.0;
     }
     else{
@@ -141,7 +152,10 @@ function set_plotlines(data,step,axis,plotline_opts){
         var plotLine = plotline_opts;
     }
     for (dat_idx=0;dat_idx<data.length;dat_idx+=step){
-        var pl = plotLine;
+        var pl ={};
+        for (var key in plotLine){
+            pl[key] = plotLine[key];
+        }
         pl.value = data[dat_idx][idx];
         plotLines.push(pl);
     }
@@ -155,47 +169,41 @@ function set_yr_plotlines(data, plotline_opts){
     where new_data = [[Date.UCT1, dat1],[Date.UTC2,dat2]]
     */
     //Find new axis_min/axis_max
-    var num_years = data.length;
     var yr_min = parseInt(data[0][0]);
-    var yr_max = parseInt(data[num_years -1 ][0]);
+    var yr_max = parseInt(data[data.length - 1][0]);
     var new_data = data;
-    /*
-    //Replace Acis dates with Date.UTC
-    for (yr_idx=0;yr_idx< new_data.length;yr_idx++){
-        new_data[yr_idx][0] = Date.UTC(parseInt(data[yr_idx][0]), 0, 1);
-    }
-    */
     //Set step sizes and divisor(depends on data and data_length)
-    var min_maj_div = set_yrdata_grids(num_years);
+    var mmd = set_yrdata_grids(data.length);
     //Find closest axis points less/greater
     //than axis_min/axis_max  that are divisble by divisor
-    var new_yr_min = find_closest_smaller(yr_min,min_maj_div[2]);
-    var new_yr_max = find_closest_larger(yr_max,min_maj_div[2]);
+    var new_yr_min = find_closest_smaller(yr_min,mmd.divisor);
+    var new_yr_max = find_closest_larger(yr_max,mmd.divisor);
     //make sure axis starts/end before/after first/last data point
-    if (yr_min % min_maj_div[2] == 0){
-        new_yr_min = find_closest_smaller(yr_min - 1,min_maj_div[2]);
+    if (yr_min % mmd.divisor == 0){
+        new_yr_min = find_closest_smaller(yr_min - 1,mmd.divisor);
     }
-    if (yr_max % min_maj_div[2] == 0){
-        new_yr_max = find_closest_larger(yr_max + 1,min_maj_div[2]);
+    if (yr_max % mmd.divisor == 0){
+        new_yr_max = find_closest_larger(yr_max + 1,mmd.divisor);
     }
     //Insert new data points at start/end
     for (idx=1;idx<=yr_min - new_yr_min;idx++){
-        //new_data.splice(0,0,[Date.UTC(yr_min - idx,0,1), null]);
         new_data.splice(0,0,[yr_min - idx, null]);
     }
     for (idx=1;idx<=new_yr_max - yr_max;idx++){
-        //new_data.concat([Date.UTC(yr_max + idx,0,1), null]);
-        //new_data.concat([yr_max + idx, null]);
         new_data.splice(new_data.length,0,[yr_max + idx, null]);
     }
     //Define plotlines
-    var plotlines_minor = set_plotlines(new_data,min_maj_div[0],'x',plotline_opts);
-    var plotlines_major = set_plotlines(new_data,min_maj_div[1],'x',plotline_opts);
-    return [new_data,plotlines_minor, plotlines_major]; 
+    var plotlines_minor = set_plotlines(new_data,mmd.minor_step,'x',plotline_opts);
+    var plotlines_major = set_plotlines(new_data,mmd.major_step,'x',plotline_opts);
+    return {
+        'new_data':new_data,
+        'plotlines_minor':plotlines_minor,
+        'plotlines_major':plotlines_major
+    };
 }
 
 
-function set_axis_properties(data_max, data_min, element,plotline_no){
+function set_axis_properties(data_max, data_min, element,statistic,plotline_no){
     var props = {
         'axisMin':data_min,
         'axisMax':data_max,
@@ -212,8 +220,11 @@ function set_axis_properties(data_max, data_min, element,plotline_no){
         return props; 
     }
     //Override data_min if necessary
-    if (element == 'snow' || element == 'snwd' || element == 'pcpn') {
+    if ((element == 'snow' || element == 'snwd' || element == 'pcpn') && (statistic !='ndays' && statistic !='sd')) {
         props.axisMin = 0.0;
+    }
+    if (statistic == 'ndays'){
+        props.axisMax = 32;
     }
     var diff = Math.abs(props.axisMax - props.axisMin);
     //Deal with small differences
@@ -267,10 +278,31 @@ function set_axis_properties(data_max, data_min, element,plotline_no){
         for (var key in plotLine){
             pL[key] = plotLine[key];
         }
-        pL.value = val;
+        //rounding
+        var intRegex = /^\d+$/;
+        if (0 <= val && val < 0.1 ){
+            var v = precise_round(val,2);
+        }
+        else if (0.1 <= val && !intRegex.test(val)){
+            var v = precise_round(val,1);
+        }
+        else{
+            var v = val;
+        }
+        pL.value = v;
         props.plotLines.push(pL);
     }
     return props;
+}
+
+function align_ticks(plotlines){
+    //Aligns axis ticks with plotlines
+    tickPositions = [];
+    for (idx=0;idx<plotlines.length -1;idx++){
+        var tp = plotlines[idx].value;
+        tickPositions.push(tp);
+    }
+    return tickPositions;
 }
 
 function set_tickInterval(data_max, data_min, divider){

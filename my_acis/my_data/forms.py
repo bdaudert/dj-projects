@@ -634,7 +634,7 @@ class SodxtrmtsVisualizeForm(forms.Form):
     graph_title = forms.CharField(required=False, initial='Use default', help_text='Enter a title to appear at the top of your graph. Default will list station name/ID, climate element, summary and months.')
     image_size = forms.ChoiceField(choices=WRCCData.FORM_IMAGE_SIZES, initial='medium', help_text='Select an image size.')
     major_grid = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show major grid.')
-    minor_grid = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show minor grid.')
+    minor_grid = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='F', help_text='Show minor grid.')
     connector_line = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Connect data points.')
     connector_line_width = forms.FloatField(initial=1, max_value=10, min_value=0, required=False,help_text='Choose the width of the connector line. Choose 0 if you only want to see markers. 10 is the maximum line widh allowed.')
     markers = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show markers at each data point.')

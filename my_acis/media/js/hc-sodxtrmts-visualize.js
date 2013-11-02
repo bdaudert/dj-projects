@@ -102,11 +102,11 @@ $(function () {
                     var skip_year = 'F';                    
                     if (month_list[0]> month_list[month_list.length -1]){
                         var date = Date.UTC(parseInt(datadict.data[yr_idx][0]) + 1, 0, 1)
-                        var acis_date = datadict.data[yr_idx][0];
+                        var acis_date = parseInt(datadict.data[yr_idx][0]);
                     }
                     else {
                         var date = Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1)
-                        var acis_date = datadict.data[yr_idx][0];
+                        var acis_date = parseInt(datadict.data[yr_idx][0]);
                     }
                     //Month Loop
                     for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
@@ -124,37 +124,37 @@ $(function () {
                     } //end month loop
                     if (skip_year == 'T'){
                         data.push([date, null]);
-                        acis_data.push([parseInt(acis_date),null]);
+                        acis_data.push([acis_date,null]);
                         //values.push(null);
                         continue;
                     }
                     if (vals.length > 0) {
                         if (summary == 'max'){
                             data.push([date, Math.max.apply(Math,vals)]);
-                            acis_data.push([parseInt(acis_date), Math.max.apply(Math,vals)]);
+                            acis_data.push([acis_date, Math.max.apply(Math,vals)]);
                             values.push(Math.max.apply(Math,vals));
                         }
                         if (summary == 'min'){
                             data.push([date, precise_round(Math.min.apply(Math,vals),2)]);
-                            acis_data.push([parseInt(acis_date), precise_round(Math.min.apply(Math,vals),2)]);
+                            acis_data.push([acis_date, precise_round(Math.min.apply(Math,vals),2)]);
                             values.push(precise_round(Math.min.apply(Math,vals),2));
                         }
                         if (summary == 'sum'){
                             for(var i=0,sum=0;i<vals.length;sum+=vals[i++]);
                             data.push([date, precise_round(sum,2)]);
-                            acis_data.push([parseInt(acis_date), precise_round(sum,2)]);
+                            acis_data.push([acis_date, precise_round(sum,2)]);
                             values.push(precise_round(sum,2));
                         }
                         if (summary == 'mean'){
                             for(var i=0,sum=0;i<vals.length;sum+=vals[i++]);
                             data.push([date, precise_round(sum/vals.length,2)]);
-                            acis_data.push([parseInt(acis_date), precise_round(sum/vals.length,2)]);
+                            acis_data.push([acis_date, precise_round(sum/vals.length,2)]);
                             values.push(precise_round(sum/vals.length,2));
                         }
                     }
                     else {
                         data.push([date, null]);
-                        acis_data.push([parseInt(acis_date), null]);
+                        acis_data.push([acis_date, null]);
                         //values.push(null);
                     }
                 } //end for yr_idx
@@ -164,8 +164,8 @@ $(function () {
                 data_max = 0;
                 data_min = 0;
                 if (values.length > 0){
-                    var data_max = find_max(values,datadict.element);
-                    var data_min = find_min(values,datadict.element);
+                    var data_max = find_max(values,datadict.element,datadict.search_params.monthly_statistic);
+                    var data_min = find_min(values,datadict.element,datadict.search_params.monthly_statistic);
                     if (vertical_axis_max != "Use default") { 
                         try{
                             var data_max = parseFloat(vertical_axis_max);
@@ -293,66 +293,43 @@ $(function () {
             //Define x_plotlines
             //Sets new data for plotting,minor,major plotlines
             var x_plotlines = [];
-            var tickPositions = [];
-            var d_min_maj = set_yr_plotlines(acis_data);
+            var x_tickPositions = [];
+            var dmm = set_yr_plotlines(acis_data);
+            var yr_step = 1;
             if (minor_grid =='T'){
-                var pls = d_min_maj[1];
+                var pls = dmm.plotlines_minor;
+                var yr_step = 2;
             }
             else if (major_grid =='T' && minor_grid == 'F'){
-                var pls = d_min_maj[2];
+                var pls = dmm.plotlines_major;
             }
             //convert to Date
             for (var pl_idx=0;pl_idx<pls.length - 1;pl_idx++) {
-                var x_plotline = pls[pl_idx];
-                //alert(x_plotline.value);
-                var val = Date.UTC(pls[pl_idx].value,0,1);
-                x_plotline.value = val;
-                x_plotlines.push(x_plotline);
-                tickPositions.push(val);
-            }
-            var x_min = d_min_maj[0][0][0];
-            var x_max = d_min_maj[0][d_min_maj[0].length -1][0]; 
-            //Set tickPositions to match plotlines 
-            /*
-            var x_plotlines = [];
-            if (major_grid =='F' && minor_grid =='F'){
-               var x_step = datadict.data.length + 1;
-            }
-            else if (minor_grid =='T'){
-                var x_step = Math.round(datadict.data.length/10.0);
-            }
-            else if (major_grid =='T' && minor_grid == 'F'){
-                var x_step = Math.round(datadict.data.length/5.0);
-            }
-            var tickPositions = [];
-            for (var yr_idx=0;yr_idx<datadict.data.length - end_idx;yr_idx++) {
-                if (yr_idx == 0 || yr_idx == datadict.data.length - end_idx -1 ||((yr_idx) % x_step ==0 && yr_idx > 0)){
-                    var plotline = {
-                        color: '#787878',
-                        dashStyle:'dash',
-                        width: 0.5,
-                        value: Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1),
-                    };
-                    tickPositions.push(Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1));
-                    x_plotlines.push(plotline);
+                var pl ={};
+                for (var key in pls[pl_idx]){
+                    pl[key] = pls[pl_idx][key];
                 }
+                pl.value = Date.UTC(pls[pl_idx].value,0,1);
+                x_plotlines.push(pl);
+                x_tickPositions.push(pl.value);
             }
-            if (x_plotlines.length == 0){
-                x_plotlines = null;
-            }
-            */
+            var x_min = Date.UTC(dmm.new_data[0][0],0,1);
+            var x_max = Date.UTC(dmm.new_data[dmm.new_data.length -1][0],0,1);
             //Define y_plotlines and tickInterval
             var y_plotlines = [];
             if (major_grid =='F' && minor_grid == 'F'){
                 var plotline_no  = 1.0;
             }
             else if (minor_grid =='T'){
-                var plotline_no = 10.0;
+                //var plotline_no = 10.0;
+                var plotline_no = x_plotlines.length;
             }
             else if (major_grid =='T' && minor_grid == 'F'){
-                var plotline_no = 5.0;
+                //var plotline_no = 5.0;
+                var plotline_no = x_plotlines.length;
             }
-            var y_axis_props = set_axis_properties(data_max, data_min, datadict.element,plotline_no);
+            var y_axis_props = set_axis_properties(data_max, data_min, datadict.element,datadict.search_params.monthly_statistic,plotline_no);
+            var y_tickPositions = align_ticks(y_axis_props.plotLines);
             if (graph_title == "Use default"){
                 graph_title = datadict.stn_name + ', ' + datadict.stn_state + '<br />';
             }
@@ -426,12 +403,15 @@ $(function () {
                                 return Highcharts.dateFormat('%Y', this.value);
                             },
                             //rotation:-90,
-                            style:axesStyle
-                            //step:0.5
+                            style:axesStyle,
+                            //step:yr_step
                         },
+                        min:x_min,
+                        max:x_max,
                         lineColor:lineColor,
                         plotLines:x_plotlines,
-                        tickPositions:tickPositions,
+                        tickPositions:x_tickPositions,
+                        //endOnTick:true,
                         gridLineWidth: gridLineWidth,
                         gridLineColor: gridLineColor,
                         type: 'datetime',
@@ -455,8 +435,9 @@ $(function () {
                         gridLineColor: gridLineColor,
                         lineColor:lineColor,
                         plotLines:y_axis_props.plotLines,
+                        tickPositions:y_tickPositions,
                         minorGridLineColor:minorGridLineColor,
-                        tickInterval:y_axis_props.tickInterval,
+                        //tickInterval:y_axis_props.tickInterval,
                         startOnTick: false,
                         showFirstLabel: true
                     },

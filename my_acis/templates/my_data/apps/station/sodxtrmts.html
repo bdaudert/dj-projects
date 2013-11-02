@@ -27,8 +27,10 @@
             <td><input type="text" id="station_ID" name="station_ID" value="{{initial.station_ID}}"></td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
             <div class="pop-up">
+                <div id="ht_station_ID"></div>
+                <!--<p>Station Identifier.</p>-->
                 <script type="text/javascript">                        
-                $("#ht_station_ID").load("{{MEDIA_URL}}html/commons.html #ht_staton_ID");
+                $("#ht_station_ID").load("{{MEDIA_URL}}html/commons.html #ht_station_ID");
                 </script>
             </div>
             </td>
@@ -41,12 +43,28 @@
             <tr valign="top">
             <td id="Start Year">Start Year: </td>
             <td><input type="text" id="start_year" name="start_year" value="{{initial.start_year}}"></td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_start_year')"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
+                <div id="ht_start_year"></div>
+                <!--<p>Station Identifier.</p>-->
+                <script type="text/javascript">                        
+                $("#ht_start_year").load("{{MEDIA_URL}}html/commons.html #ht_start_year");
+                </script>
+            </div>
+            </td>
             </tr>
             <tr valign="top">
             <td id="End Year">End Year: </td>
             <td><input type="text" id="end_year" name="end_year" value="{{initial.end_year}}"></td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_end_year')"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
+                <div id="ht_end_year"></div>
+                <!--<p>Station Identifier.</p>-->
+                <script type="text/javascript">                        
+                $("#ht_end_year").load("{{MEDIA_URL}}html/commons.html #ht_end_year");
+                </script>
+            </div>
+            </td>
             </tr>
             <tr valign="top">
             <td>Element: </td>
@@ -66,13 +84,29 @@
                     <option value="wdmv" {{checkbox_vals.wdmv_selected}}>Daily Wind Movement</option>
                     </select>
             </td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_element')"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
+                <div id="ht_element"></div>
+                <!--<p>Station Identifier.</p>-->
+                <script type="text/javascript">                        
+                $("#ht_element").load("{{MEDIA_URL}}html/commons.html #ht_element");
+                </script>
+            </div>
+            </td>
             </tr>
             {%if initial.base_temperature%}
             <tr id="base_temp" valign="top">
             <td>Base Temperature: </td>
             <td><input type="text" id="base_temperature" name="base_temperature" value="{{initial.base_temperature}}"></td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_base_temperature')"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
+                <div id="ht_base_temperature"></div>
+                <!--<p>Station Identifier.</p>-->
+                <script type="text/javascript">                        
+                $("#ht_base_temperature").load("{{MEDIA_URL}}html/commons.html #ht_base_temperature");
+                </script>
+            </div>
+            </td>
             </tr> 
             {%endif%}
             <tr valign="top">
@@ -88,7 +122,15 @@
                 <option value="msum" {{checkbox_vals.msum_selected}}>Monthly Sum</option>
                 </select>
             </td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_monthly_statistic')"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
+                <div id="ht_monthly_statistic"></div>
+                <!--<p>Station Identifier.</p>-->
+                <script type="text/javascript">                        
+                $("#ht_monthly_statistic").load("{{MEDIA_URL}}html/commons.html #ht_monthly_statistic");
+                </script>
+            </div>
+            </td>
             {%if initial.less_greater_or_between%}
             </tr>
             <tr id="threshold_type" valign="top">
@@ -100,7 +142,15 @@
                 <option value="b" {{checkbox_vals.b_selected}}>Between</option>
                 </select>
             </td>
-            <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_lgb')"></td>
+            <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">
+            <div class="pop-up">
+                <div id="ht_lgb"></div>
+                <!--<p>Station Identifier.</p>-->
+                <script type="text/javascript">                        
+                $("#ht_lgb").load("{{MEDIA_URL}}html/commons.html #ht_lgb");
+                </script>
+            </div>
+            </td>
             </tr>
             {%endif%}
             {%if initial.less_greater_or_between == "b"%}
@@ -109,25 +159,57 @@
             <td><input type="text" id="threshold_low_for_between" name="threshold_low_for_between" value={{initial.threshold_low_for_between}}><br />
                 <input type="text" id="threshold_low_for_between" name="threshold_high_for_between" value={{initial.threshold_high_for_between}}>
             </td>
-            <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_b')"></td>
+            <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">
+            <div class="pop-up">
+                <div id="ht_b"></div>
+                <!--<p>Station Identifier.</p>-->
+                <script type="text/javascript">                        
+                $("#ht_b").load("{{MEDIA_URL}}html/commons.html #ht_b");
+                </script>
+            </div>
+            </td>
             </tr> 
             {%elif initial.less_greater_or_between == "l"%}
             <tr id="threshold">
             <td>Less Than</td>
             <td><input type="text" id="threshold_for_less_or_greater" name="threshold_for_less_or_greater" value={{initial.threshold_for_less_or_greater}}></td>
-            <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_l')"></td>
+            <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">
+            <div class="pop-up">
+                <div id="ht_l"></div>
+                <!--<p>Station Identifier.</p>-->
+                <script type="text/javascript">                        
+                $("#ht_l").load("{{MEDIA_URL}}html/commons.html #ht_l");
+                </script>
+            </div>
+            </td>
             </tr> 
             {%elif initial.less_greater_or_between == "g"%}
             <tr id="threshold" valign="top">
             <td>Greater Than</td>
             <td><input type="text" id="threshold_for_less_or_greater" name="threshold_for_less_or_greater" value={{initial.threshold_for_less_or_greater}}></td>
-            <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_h')"></td>
+            <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">
+            <div class="pop-up">
+                <div id="ht_g"></div>
+                <!--<p>Station Identifier.</p>-->
+                <script type="text/javascript">                        
+                $("#ht_g").load("{{MEDIA_URL}}html/commons.html #ht_g");
+                </script>
+            </div>
+            </td>
             </tr>
             {%endif%}
             <tr valign="top">
             <td id="Maximum Number of Missing Days">Max Missing Days: </td>
             <td><input type="text" name="max_missing_days" value="{{initial.max_missing_days}}"></td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_max_missing_days')"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
+                <div id="ht_max_missing_days"></div>
+                <!--<p>Station Identifier.</p>-->
+                <script type="text/javascript">                        
+                $("#ht_max_missing_days").load("{{MEDIA_URL}}html/commons.html #ht_max_missing_days");
+                </script>
+            </div>
+            </td>
             </tr>
             <tr valign="top">
             <td>Start Month: </td>
@@ -147,7 +229,15 @@
                 <option value="12" {{checkbox_vals.12_selected}}>December</option>
                 </select>
             </td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_start_month')"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
+                <div id="ht_start_month"></div>
+                <!--<p>Station Identifier.</p>-->
+                <script type="text/javascript">                        
+                $("#ht_start_month").load("{{MEDIA_URL}}html/commons.html #ht_start_month");
+                </script>
+            </div>
+            </td>
             </tr>
             <tr valign="top">
             <td>Departures from Averages: </td>
@@ -156,22 +246,38 @@
                 <option value="T" {{checkbox_vals.DA_T_selected}}>Yes</option>
                 <option value="F" {{checkbox_vals.DA_F_selected}}>No</option>
             </td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_departures_from_averages')"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
+                <div id="ht_departures_from_averages"></div>
+                <!--<p>Station Identifier.</p>-->
+                <script type="text/javascript">                        
+                $("#ht_departures_from_averages").load("{{MEDIA_URL}}html/commons.html #ht_departures_from_averages");
+                </script>
+            </div>
+            </td>
             </tr>
             <tr valign="top">
             <td>Frequency Analysis: </td>
             <td>
                 <select id="frequency_analysis" name="frequency_analysis">
-                <option value="T" {{checkbox_vals.FS_T_selected}}>Yes</option>
+                <!--<option value="T" {{checkbox_vals.FS_T_selected}}>Yes</option>-->
                 <option value="F" {{checkbox_vals.FS_F_selected}}>No</option>
             </td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small" onClick="ShowHelpText('ht_frequency_analysis')"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
+                <div id="ht_frequency_analysis"></div>
+                <!--<p>Station Identifier.</p>-->
+                <script type="text/javascript">                        
+                $("#ht_frequency_analysis").load("{{MEDIA_URL}}html/commons.html #ht_frequency_analysis");
+                </script>
+            </div>
+            </td>
             </tr>
         </table> 
             <input type="submit" value="Submit" name="formSodxtrmts"/>
             </form>
         </div>
-        <div id="ht_station_ID" class="pop-up" style="display:none;"></div>
+        <!--<div id="ht_station_ID" class="pop-up" style="display:none;"></div>-->
         <div id="ht_start_year" class="pop-up" style="display:none;"></div>
         <div id="ht_end_year" class="pop-up" style="display:none;"></div>
         <div id="ht_element" class="pop-up" style="display:none;"></div>

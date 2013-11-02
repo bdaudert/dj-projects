@@ -5,30 +5,34 @@ $(function () {
     var axesStyle = set_AxesStyle();
     var titleStyle = set_TitleStyle();
     var subtitleStyle = set_SubtitleStyle();
-    $.getJSON(json_file_path, function(table_dict) {
+    $.getJSON(json_file_path, function(datadict) {
         //Find max/min of ranges
         var max_vals = [];
         var min_vals = [];
-        for (var mon_idx=0;mon_idx<table_dict.ranges.length;mon_idx++) {
-            max_vals.push(parseFloat(table_dict.ranges[mon_idx][2]));
-            min_vals.push(parseFloat(table_dict.ranges[mon_idx][1]));
+        for (var mon_idx=0;mon_idx<datadict.ranges.length;mon_idx++) {
+            max_vals.push(parseFloat(datadict.ranges[mon_idx][2]));
+            min_vals.push(parseFloat(datadict.ranges[mon_idx][1]));
         }
-        var max = find_max(max_vals, table_dict.element);
-        var min = find_min(min_vals, table_dict.element);
+        var max = find_max(max_vals, datadict.element,datadict.search_params.monthly_statistic);
+        var min = find_min(min_vals, datadict.element,datadict.search_params.monthly_statistic);
         var x_plotLines = set_plotLines(11, 0, 1);
-        var y_axis_props = set_axis_properties(max, min, table_dict.element,10.0);
-        var averages = table_dict.averages;
-        var base_temperature = table_dict.base_temperature;
-        if (table_dict.element == 'gdd' || table_dict.element == 'hdd' || table_dict.element == 'cdd') {
+        //Align x ticks with plotlines
+        var x_tickPositions = align_ticks(x_plotLines);
+        var y_axis_props = set_axis_properties(max, min, datadict.element,datadict.search_params.monthly_statistic,10.0);
+        //Align y ticks with plotlines
+        var y_tickPositions = align_ticks(y_axis_props.plotLines);
+        var averages = datadict.averages;
+        var base_temperature = datadict.base_temperature;
+        if (datadict.element == 'gdd' || datadict.element == 'hdd' || datadict.element == 'cdd') {
             base_temperature = 'Base Temperature: ' + base_temperature;
         }
         else{
             base_temperature = '';
         }
         //Find name of monthly statistics
-        for (idx=0;idx<table_dict.header.length;idx++){
-            if (table_dict.header[idx][0] == 'Monthly Statistic'){
-                var monthly_statistic = table_dict.header[idx][1];
+        for (idx=0;idx<datadict.header.length;idx++){
+            if (datadict.header[idx][0] == 'Monthly Statistic'){
+                var monthly_statistic = datadict.header[idx][1];
             }
         }
         $('#graph_container').highcharts({
@@ -39,18 +43,18 @@ $(function () {
             margin:[50,50,50,50],
             title: {
                 style:titleStyle,
-                text:table_dict.stn_name + ', ' + table_dict.stn_state 
+                text:datadict.stn_name + ', ' + datadict.stn_state 
             },
             subtitle: {
-                //text: 'Network: ' + table_dict.stn_network + ', ID: ' + table_dict.stn_id,
-                text: 'Mean and Range of '  + monthly_statistic + ' for ' + table_dict.element_name,
+                //text: 'Network: ' + datadict.stn_network + ', ID: ' + datadict.stn_id,
+                text: 'Mean and Range of '  + monthly_statistic + ' for ' + datadict.element_name,
                 style:subtitleStyle
             },
             labels:{
                 items:[{
-                    html:'Network: ' + table_dict.stn_network + ', ID: ' + table_dict.stn_id,
-                    //html:'Mean and Range of '  + monthly_statistic + ', ' + table_dict.element_name, 
-                    //html:'Start Year: ' + table_dict.start_date + ' End Year: ' + table_dict.end_date,
+                    html:'Network: ' + datadict.stn_network + ', ID: ' + datadict.stn_id,
+                    //html:'Mean and Range of '  + monthly_statistic + ', ' + datadict.element_name, 
+                    //html:'Start Year: ' + datadict.start_date + ' End Year: ' + datadict.end_date,
                     style:{
                         //position:'absolute',
                         //top:'329px',
@@ -72,10 +76,11 @@ $(function () {
                 },
                 title:{
                     style:axesStyle,
-                    text:'Start Year: ' + table_dict.start_date + ' End Year: ' + table_dict.end_date,
+                    text:'Start Year: ' + datadict.start_date + ' End Year: ' + datadict.end_date,
                 },
-                categories: table_dict.month_list,
-                plotLines:x_plotLines
+                categories: datadict.month_list,
+                plotLines:x_plotLines,
+                tickPositions:x_tickPositions
             },
             yAxis: {
                 labels:{
@@ -83,14 +88,15 @@ $(function () {
                 },
                 title: {
                     style:titleStyle,
-                    text: table_dict.element_name
+                    text: datadict.element_name
                 },
+                gridLineWidth:0,
                 max:y_axis_props.axisMax,
                 min:y_axis_props.axisMin,
-                gridLineWidth:0,
-                tickInterval:y_axis_props.tickInterval,
-                startOnTick:false,
-                plotLines:y_axis_props.plotLines
+                plotLines:y_axis_props.plotLines,
+                tickPositions:y_tickPositions,
+                //tickInterval:y_axis_props.tickInterval,
+                startOnTick:false
             },
         
             tooltip: {
@@ -100,7 +106,7 @@ $(function () {
             },
             
             series: [{
-                name: monthly_statistic +  ' of ' + table_dict.element_name + ' ' + base_temperature,
+                name: monthly_statistic +  ' of ' + datadict.element_name + ' ' + base_temperature,
                 data: averages,
                 zIndex: 1,
                 marker: {
@@ -110,7 +116,7 @@ $(function () {
                 }
             }, {
                 name: 'Range',
-                data: table_dict.ranges,
+                data: datadict.ranges,
                 type: 'arearange',
                 lineWidth: 0,
                 linkedTo: ':previous',
