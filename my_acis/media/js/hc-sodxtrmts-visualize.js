@@ -304,7 +304,7 @@ $(function () {
                 var pls = dmm.plotlines_major;
             }
             //convert to Date
-            for (var pl_idx=0;pl_idx<pls.length - 1;pl_idx++) {
+            for (var pl_idx=0;pl_idx<pls.length;pl_idx++) {
                 var pl ={};
                 for (var key in pls[pl_idx]){
                     pl[key] = pls[pl_idx][key];
@@ -359,6 +359,8 @@ $(function () {
                     type:'line',
                     borderColor:'#006666',
                     borderWidth: 2,
+                    //plotBorderColor: '#787878',
+                    //plotBorderWidth: 0.5,
                     renderTo: 'container',
                     //marginLeft: 60,
                     marginBottom: 100,
@@ -404,10 +406,12 @@ $(function () {
                             },
                             //rotation:-90,
                             style:axesStyle,
-                            //step:yr_step
+                            step:yr_step
                         },
                         min:x_min,
                         max:x_max,
+                        showLastLabel:true,
+                        showFirstLabel:true,
                         lineColor:lineColor,
                         plotLines:x_plotlines,
                         tickPositions:x_tickPositions,
@@ -457,8 +461,9 @@ $(function () {
                         gridLineColor: gridLineColor,
                         lineColor:lineColor,
                         plotLines:y_axis_props.plotLines,
+                        tickPositions:y_tickPositions,
                         minorGridLineColor:minorGridLineColor,
-                        tickInterval:y_axis_props.tickInterval,
+                        //tickInterval:y_axis_props.tickInterval,
                         startOnTick: false,
                         showFirstLabel: true
                     }],

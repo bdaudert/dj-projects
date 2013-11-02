@@ -61,7 +61,7 @@ function set_yrdata_grids(num_yrs){
         major = 2;
     }
     //Case 3: more than 10 years
-    else if (10 < num_yrs){
+    if (50 < num_yrs){
         divisor = 10;
         minor = 5;
         major = 10;
@@ -179,17 +179,19 @@ function set_yr_plotlines(data, plotline_opts){
     var new_yr_min = find_closest_smaller(yr_min,mmd.divisor);
     var new_yr_max = find_closest_larger(yr_max,mmd.divisor);
     //make sure axis starts/end before/after first/last data point
+    /*
     if (yr_min % mmd.divisor == 0){
         new_yr_min = find_closest_smaller(yr_min - 1,mmd.divisor);
     }
     if (yr_max % mmd.divisor == 0){
         new_yr_max = find_closest_larger(yr_max + 1,mmd.divisor);
     }
+    */
     //Insert new data points at start/end
     for (idx=1;idx<=yr_min - new_yr_min;idx++){
         new_data.splice(0,0,[yr_min - idx, null]);
     }
-    for (idx=1;idx<=new_yr_max - yr_max;idx++){
+    for (idx=1;idx<=new_yr_max - yr_max ;idx++){
         new_data.splice(new_data.length,0,[yr_max + idx, null]);
     }
     //Define plotlines
@@ -236,7 +238,7 @@ function set_axis_properties(data_max, data_min, element,statistic,plotline_no){
             props.tickInterval = upper / plotline_no;
             //Make sure upper is close to max value
             while (upper - props.axisMax > props.tickInterval){
-                upper = upper - props.tickInterval;
+                upper = precise_round(upper - props.tickInterval,2);
             }
             props.axisMax = props.axisMin + upper;
             break
@@ -266,6 +268,10 @@ function set_axis_properties(data_max, data_min, element,statistic,plotline_no){
             props.axisMin = props.axisMin + props.tickInterval;
         }
         props.axisMax = props.axisMin + upper;
+    }
+    //Sanity check
+    while (Math.abs(data_max) > Math.abs(props.axisMax)){
+        props.axisMax+=props.tickInterval;
     }
     //plotlines
     var plotLine = {
