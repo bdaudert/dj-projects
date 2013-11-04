@@ -164,3 +164,23 @@ function change_lgb(){
     var threshes = set_threshes(document.getElementById("element").value).split(",");
     set_NDays_threshold_cells(lgb, threshes,cell0, cell1);
 }
+
+function set_delimiter(data_format_node, divId){
+    if (data_format_node.value == 'clm' ||  data_format_node.value == 'dlm' || data_format_node.value == 'html'){
+        document.getElementById(divId).style.display = "block";
+    }
+    else {
+        document.getElementById(divID).style.display = "none";
+    }
+}
+
+function show_if_true(node, divID){
+    if (node.value == 'T'){
+        alert('BOO');
+        document.getElementById(divID).style.display = "block";
+    }
+    else if (node.value == 'F'){
+        alert('Hey');
+        document.getElementById(divID).style.display = "none";
+    }
+}

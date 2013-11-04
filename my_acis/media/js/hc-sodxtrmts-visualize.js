@@ -292,16 +292,20 @@ $(function () {
             //Define plot characteristics
             //Define x_plotlines
             //Sets new data for plotting,minor,major plotlines
+            var pls = [];
             var x_plotlines = [];
             var x_tickPositions = [];
             var dmm = set_yr_plotlines(acis_data);
             var yr_step = 1;
             if (minor_grid =='T'){
-                var pls = dmm.plotlines_minor;
+                pls = dmm.plotlines_minor;
                 var yr_step = 2;
             }
             else if (major_grid =='T' && minor_grid == 'F'){
-                var pls = dmm.plotlines_major;
+                pls = dmm.plotlines_major;
+            }
+            else {
+                pls = dmm.plotlines_major;
             }
             //convert to Date
             for (var pl_idx=0;pl_idx<pls.length;pl_idx++) {
@@ -310,13 +314,22 @@ $(function () {
                     pl[key] = pls[pl_idx][key];
                 }
                 pl.value = Date.UTC(pls[pl_idx].value,0,1);
-                x_plotlines.push(pl);
+                if (major_grid =='F' && minor_grid == 'F'){
+                    if (pl_idx ==0 || pl_idx == pls.length -1){
+                        x_plotlines.push(pl);
+                    }
+                }
+                else {
+                    x_plotlines.push(pl);
+                }
                 x_tickPositions.push(pl.value);
             }
             var x_min = Date.UTC(dmm.new_data[0][0],0,1);
             var x_max = Date.UTC(dmm.new_data[dmm.new_data.length -1][0],0,1);
             //Define y_plotlines and tickInterval
             var y_plotlines = [];
+            var plotline_no = x_plotlines.length;
+            /*
             if (major_grid =='F' && minor_grid == 'F'){
                 var plotline_no  = 1.0;
             }
@@ -328,6 +341,7 @@ $(function () {
                 //var plotline_no = 5.0;
                 var plotline_no = x_plotlines.length;
             }
+            */
             var y_axis_props = set_axis_properties(data_max, data_min, datadict.element,datadict.search_params.monthly_statistic,plotline_no);
             var y_tickPositions = align_ticks(y_axis_props.plotLines);
             if (graph_title == "Use default"){
@@ -408,6 +422,7 @@ $(function () {
                             style:axesStyle,
                             step:yr_step
                         },
+                        offset:2,
                         min:x_min,
                         max:x_max,
                         showLastLabel:true,

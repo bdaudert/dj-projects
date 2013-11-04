@@ -62,7 +62,7 @@ function set_yrdata_grids(num_yrs){
     }
     //Case 3: more than 10 years
     if (50 < num_yrs){
-        divisor = 10;
+        divisor = 5;
         minor = 5;
         major = 10;
     }

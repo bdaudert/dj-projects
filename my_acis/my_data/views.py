@@ -1579,6 +1579,7 @@ def sodxtrmts(request):
         context['month_list'] = json_data['month_list']
         return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
 
+    #Time Serie Table Generation
     if 'formSodxtrmts' in request.POST:
         #Set initial form parameters for html
         initial,checkbox_vals = set_sodxtrmts_initial(request)
@@ -1695,6 +1696,17 @@ def sodxtrmts(request):
             f.close()
             context['JSON_URL'] = TEMP_FILE_DIR
             context['json_file'] = json_file
+
+    #Downlaod Table Data
+    if 'formDownload' in request.POST:
+        #context['data_dict'] = form0.cleaned_data
+        data_format = request.POST.get('data_format', 'clm')
+        delimiter = request.POST.get('delimiter', 'comma')
+        output_file_name = request.POST.get('output_file_name', 'output')
+        json_file = request.POST.get('json_file', None)
+        DDJ = WRCCClasses.DownloadDataJob('Sodxtrmts',data_format,delimiter, output_file_name, request=request, json_in_file=TEMP_FILE_DIR + json_file)
+        return DDJ.write_to_file()
+
     return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
 
 
@@ -1989,6 +2001,9 @@ def set_sodxtrmts_initial(request):
     initial['threshold_for_less_or_greater']= Get('threshold_for_less_or_greater', None)
     initial['threshold_low_for_between']= Get('threshold_low_for_between', None)
     initial['threshold_high_for_between']= Get('threshold_high_for_between', None)
+    initial['generate_graph']= Get('generate_graph', 'F')
+    initial['graph_start_month'] = Get('start_month', '01')
+    initial['graph_end_month'] = Get('end_month', '02')
     element = Get('elements', None)
     if element is None:element = Get('element', 'pcpn')
     initial['element'] = element
@@ -2007,16 +2022,15 @@ def set_sodxtrmts_initial(request):
         if el == initial['element']:
             checkbox_vals[el + '_selected'] ='selected'
     for start_month in ['01','02','03','04','05','06','07','08','09','10','11','12']:
-        checkbox_vals[start_month + '_selected']=''
-        if initial['start_month'] == start_month:
-            checkbox_vals[start_month + '_selected']='selected'
+        for mon_type in ['start_month', 'graph_start_month', 'graph_end_month']:
+            checkbox_vals[mon_type + '_' + start_month + '_selected']=''
+        if initial[mon_type] == start_month:
+            checkbox_vals[mon_type + '_' + start_month + '_selected']='selected'
     for bl in ['T','F']:
-        checkbox_vals['DA_' + bl + '_selected'] = ''
-        checkbox_vals['FS_' + bl + '_selected'] = ''
-        if initial['departures_from_averages'] == bl:
-            checkbox_vals['DA_' + bl + '_selected'] = 'selected'
-        if initial['frequency_analysis'] == bl:
-            checkbox_vals['FS_' + bl + '_selected'] = 'selected'
+        for cbv in ['departures_from_averages', 'frequency_analysis', 'generate_graph']:
+            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
+        if initial[cbv] == bl:
+            checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
     for stat in ['mmax','mmin','mave','sd','ndays','rmon','msum']:
         checkbox_vals[stat + '_selected'] =''
         if initial['monthly_statistic'] == stat:
