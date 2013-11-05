@@ -136,7 +136,7 @@
         <tr id="threshold_type" valign="top">
         <td>Number of Days: </td>
         <td>
-            <select id="less_greater_or_between" name="less_greater_or_between" onchange="change_lgb()">
+            <select id="less_greater_or_between" name="less_greater_or_between" onchange="change_lgb();">
             <option value="l" {{checkbox_vals.l_selected}}>Less Than</option>
             <option value="g" {{checkbox_vals.g_selected}}>Greater Than</option>
             <option value="b" {{checkbox_vals.b_selected}}>Between</option>
@@ -245,11 +245,11 @@
             <select id="departures_from_averages" name="departures_from_averages">
             <option value="T" {{checkbox_vals.departures_from_averages_T_selected}}>Yes</option>
             <option value="F" {{checkbox_vals.departures_from_averages_F_selected}}>No</option>
+            </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_departures_from_averages"></div>
-            <!--<p>Station Identifier.</p>-->
             <script type="text/javascript">                        
             $("#ht_departures_from_averages").load("{{MEDIA_URL}}html/commons.html #ht_departures_from_averages");
             </script>
@@ -262,23 +262,23 @@
             <select id="frequency_analysis" name="frequency_analysis">
             <!--<option value="T" {{checkbox_vals.frequency_analysis_T_selected}}>Yes</option>-->
             <option value="F" {{checkbox_vals.frequency_analysis_F_selected}}>No</option>
+            </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_frequency_analysis"></div>
-            <!--<p>Station Identifier.</p>-->
             <script type="text/javascript">                        
             $("#ht_frequency_analysis").load("{{MEDIA_URL}}html/commons.html #ht_frequency_analysis");
             </script>
         </div>
         </td>
-        <tr><td><input type="submit" value="Submit" name="formSodxtrmts"/></td><td></td><td></td></tr>
-        <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
         </tr>
+        <tr><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
+        <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
         <tr valign="top">
         <td>Generate a time series graph: </td>
         <td>
-            <select id="generate_graph" name="generate_graph" onchange="show_if_true(this, 'formGraph')">
+            <select id="generate_graph" name="generate_graph" onchange="show_if_true(this, 'formGraph');">
             <option value="F" {{checkbox_vals.generate_graph_F_selected}}>No</option>
             <option value="T" {{checkbox_vals.generate_graph_T_selected}}>Yes</option>
         </td>
@@ -291,70 +291,306 @@
         </div>
         </td>
         </tr>
-        <div id="formGraph" style="display:none;">
-        <!--<tr valign="top"><td>Choose the</td><td>range of months over which to summarize.</td><td></td></tr>-->
-        <tr valign="top">
+        <tr valign="top" class="formGraph" style="display:none;">
         <td>Start Month: </td>
         <td>
             <select id="graph_start_month" name="graph_start_month">
-            <option value="01" {{checkbox_vals.graph_start_month_01_selected}}>January</option>
-            <option value="02" {{checkbox_vals.graph_start_month_02_selected}}>February</option>
-            <option value="03" {{checkbox_vals.graph_start_month_03_selected}}>March</option>
-            <option value="04" {{checkbox_vals.graph_start_month_04_selected}}>April</option>
-            <option value="05" {{checkbox_vals.graph_start_month_05_selected}}>May</option>
-            <option value="06" {{checkbox_vals.graph_start_month_06_selected}}>June</option>
-            <option value="07" {{checkbox_vals.graph_start_month_07_selected}}>July</option>
-            <option value="08" {{checkbox_vals.graph_start_month_08_selected}}>August</option>
-            <option value="09" {{checkbox_vals.graph_start_month_09_selected}}>September</option>
-            <option value="10" {{checkbox_vals.graph_start_month_10_selected}}>October</option>
-            <option value="11" {{checkbox_vals.graph_start_month_11_selected}}>November</option>
-            <option value="12" {{checkbox_vals.graph_start_month_12_selected}}>December</option>
+            <option value="01" {{checkbox_vals_graph.graph_start_month_01_selected}}>January</option>
+            <option value="02" {{checkbox_vals_graph.graph_start_month_02_selected}}>February</option>
+            <option value="03" {{checkbox_vals_graph.graph_start_month_03_selected}}>March</option>
+            <option value="04" {{checkbox_vals_graph.graph_start_month_04_selected}}>April</option>
+            <option value="05" {{checkbox_vals_graph.graph_start_month_05_selected}}>May</option>
+            <option value="06" {{checkbox_vals_graph.graph_start_month_06_selected}}>June</option>
+            <option value="07" {{checkbox_vals_graph.graph_start_month_07_selected}}>July</option>
+            <option value="08" {{checkbox_vals_graph.graph_start_month_08_selected}}>August</option>
+            <option value="09" {{checkbox_vals_graph.graph_start_month_09_selected}}>September</option>
+            <option value="10" {{checkbox_vals_graph.graph_start_month_10_selected}}>October</option>
+            <option value="11" {{checkbox_vals_graph.graph_start_month_11_selected}}>November</option>
+            <option value="12" {{checkbox_vals_graph.graph_start_month_12_selected}}>December</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_graph_start_month"></div>
-            <!--<p>Station Identifier.</p>-->
             <script type="text/javascript">                        
             $("#ht_graph_start_month").load("{{MEDIA_URL}}html/commons.html #ht_graph_start_month");
             </script>
         </div>
         </td>
         </tr>
-        <tr valign="top">
+        <tr valign="top" class="formGraph" style="display:none;">
         <td>End Month: </td>
         <td>
             <select id="graph_end_month" name="graph_end_month">
-            <option value="01" {{checkbox_vals.graph_end_month_01_selected}}>January</option>
-            <option value="02" {{checkbox_vals.graph_end_month_02_selected}}>February</option>
-            <option value="03" {{checkbox_vals.graph_end_month_03_selected}}>March</option>
-            <option value="04" {{checkbox_vals.graph_end_month_04_selected}}>April</option>
-            <option value="05" {{checkbox_vals.graph_end_month_05_selected}}>May</option>
-            <option value="06" {{checkbox_vals.graph_end_month_06_selected}}>June</option>
-            <option value="07" {{checkbox_vals.graph_end_month_07_selected}}>July</option>
-            <option value="08" {{checkbox_vals.graph_end_month_08_selected}}>August</option>
-            <option value="09" {{checkbox_vals.graph_end_month_09_selected}}>September</option>
-            <option value="10" {{checkbox_vals.graph_end_month_10_selected}}>October</option>
-            <option value="11" {{checkbox_vals.graph_end_month_11_selected}}>November</option>
-            <option value="12" {{checkbox_vals.graph_end_month_12_selected}}>December</option>
+            <option value="01" {{checkbox_vals_graph.graph_end_month_01_selected}}>January</option>
+            <option value="02" {{checkbox_vals_graph.graph_end_month_02_selected}}>February</option>
+            <option value="03" {{checkbox_vals_graph.graph_end_month_03_selected}}>March</option>
+            <option value="04" {{checkbox_vals_graph.graph_end_month_04_selected}}>April</option>
+            <option value="05" {{checkbox_vals_graph.graph_end_month_05_selected}}>May</option>
+            <option value="06" {{checkbox_vals_graph.graph_end_month_06_selected}}>June</option>
+            <option value="07" {{checkbox_vals_graph.graph_end_month_07_selected}}>July</option>
+            <option value="08" {{checkbox_vals_graph.graph_end_month_08_selected}}>August</option>
+            <option value="09" {{checkbox_vals_graph.graph_end_month_09_selected}}>September</option>
+            <option value="10" {{checkbox_vals_graph.graph_end_month_10_selected}}>October</option>
+            <option value="11" {{checkbox_vals_graph.graph_end_month_11_selected}}>November</option>
+            <option value="12" {{checkbox_vals_graph.graph_end_month_12_selected}}>December</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_graph_end_month"></div>
-            <!--<p>Station Identifier.</p>-->
             <script type="text/javascript">                        
             $("#ht_graph_end_month").load("{{MEDIA_URL}}html/commons.html #ht_graph_end_month");
             </script>
         </div>
         </td>
         </tr>
-        </div> <!--end formGraph-->
+        <tr valign="top" class="formGraph" style="display:none;">
+        <td>Summary: </td>
+        <td>
+            <select id="graph_summary" name="graph_summary">
+            <option value="max" {{checkbox_vals_graph.graph_summary_max_selected}}>Maximum over months</option>
+            <option value="min" {{checkbox_vals_graph.graph_summary_min_selected}}>Minimum over months</option>
+            <option value="sum" {{checkbox_vals_graph.graph_summary_sum_selected}}>Sum over months</option>
+            <option value="mean" {{checkbox_vals_graph.graph_summary_mean_selected}}>Average over months</option>
+            <option value="individual" {{checkbox_vals_graph.graph_summary_individual_selected}}>Plot months separately</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_graph_summary"></div>
+            <script type="text/javascript">                        
+            $("#ht_graph_summary").load("{{MEDIA_URL}}html/commons.html #ht_graph_summary");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top" class="formGraph" style="display:none;">
+        <td>Show Running Mean?</td>
+        <td>
+            <select id="graph_show_running_mean" name="graph_show_running_mean" onchange="show_div_if_true(this,'rm_years');">
+            <option value="T" {{checkbox_vals_graph.graph_show_running_mean_T_selected}}>Yes</option>
+            <option value="F" {{checkbox_vals_graph.graph_show_running_mean_F_selected}}>No</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_show_running_mean"></div>
+            <script type="text/javascript">                        
+            $("#ht_show_running_mean").load("{{MEDIA_URL}}html/commons.html #ht_show_running_mean");
+            </script>
+        </div>
+        </td>
+        </tr>
+        {%if initial.show_running_mean == "T"%}
+            <tr valign="top" id="rm_years">
+        {%else%}
+            <tr valign="top" id="rm_years" style="display:none;">
+        {%endif%}
+        <td>Running Mean Years: </td>
+        <td><input type="text" id="graph_running_mean_years" name="graph_running_mean_years" value="{{initial_graph.running_mean_years}}"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_running_mean_years"></div>
+            <script type="text/javascript">                        
+            $("#ht_running_mean_years").load("{{MEDIA_URL}}html/commons.html #ht_running_mean_years");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top" class="formGraph" style="display:none;">
+        <td>Plot incomplete years? </td>
+        <td>
+            <select id="graph_plot_incomplete_years" name="graph_plot_incomplete_years">
+            <option value="T" {{checkbox_vals_graph.graph_plot_incomplete_years_T_selected}}>Yes</option>
+            <option value="F" {{checkbox_vals_graph.graph_plot_incomplete_years_F_selected}}>No</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_plot_incomplete_years"></div>
+            <script type="text/javascript">                        
+            $("#ht_plot_incomplete_years").load("{{MEDIA_URL}}html/commons.html #ht_plot_incomplete_years");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr class="formGraph" style="display:none;"><td colspan="3"><hr style="border-color:#006666;"></td></tr>
+        <tr class="formGraph" style="display:none;"><td colspan="3"><b>Plot Options</b></td></tr>
+        <tr class="formGraph" style="display:none;"><td colspan="3"><hr style="border-color:#006666;"></td></tr>
+        <tr valign="top" class="formGraph" style="display:none;">
+        <td>Graph Title:</td>
+        <td><input type="text" id="graph_title" name="graph_title" value="{{initial_graph.graph_title}}"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_graph_title"></div>
+            <script type="text/javascript">                        
+            $("#ht_graph_title").load("{{MEDIA_URL}}html/commons.html #ht_graph_title");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top" class="formGraph" style="display:none;">
+        <td>Image Size: </td>
+        <td>
+            <select id="image_size" name="image_size">
+            <option value="small" {{checkbox_vals_graph.image_size_small_selected}}>Small(510px, 290px)</option>
+            <option value="medium" {{checkbox_vals_graph.image_size_medium_selected_selected}}>Medium(650px,370px)</option>
+            <option value="large" {{checkbox_vals_graph.image_size_large_selected}}>Large(850px, 480px)</option>
+            <option value="larger" {{checkbox_vals_graph.image_size_larger_selected_selected}}>Larger(1150px,610x)</option>
+            <option value="extra_large" {{checkbox_vals_graph.image_size_extra_large_selected}}>Extra Large(1450px, 820px)</option>
+            <option value="wide" {{checkbox_vals_graph.image_size_wide_selected_selected}}>Wide(1850px,610px)</option>
+            <option value="wider" {{checkbox_vals_graph.image_size_wider_selected}}>Wider(2450px, 610px)</option>
+            <option value="widest" {{checkbox_vals_graph.image_size_widest_selected_selected}}>Widest(3450px,610px)</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_image_size"></div>
+            <script type="text/javascript">                        
+            $("#ht_image_size").load("{{MEDIA_URL}}html/commons.html #ht_plot_image_size");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top" class="formGraph" style="display:none;">
+        <td>Show Major Grid?</td>
+        <td>
+            <select id="major_grid">
+            <option value="T" {{checkbox_vals_graph.major_grid_T_selected}}>Yes</option>
+            <option value="F" {{checkbox_vals_graph.major_grid_F_selected}}>No</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_major_grid"></div>
+            <script type="text/javascript">                        
+            $("#ht_major_grid").load("{{MEDIA_URL}}html/commons.html #ht_major_grid");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top" class="formGraph" style="display:none;">
+        <td>Show Minor Grid?</td>
+        <td>
+            <select id="minor_grid">
+            <option value="T" {{checkbox_vals_graph.minor_grid_T_selected}}>Yes</option>
+            <option value="F" {{checkbox_vals_graph.minor_grid_F_selected}}>No</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_minor_grid"></div>
+            <script type="text/javascript">                        
+            $("#ht_minor_grid").load("{{MEDIA_URL}}html/commons.html #ht_major_minor");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top" class="formGraph" style="display:none;">
+        <td>Show Connector Line?</td>
+        <td>
+            <select id="connector_line" onchange="show_div_if_true(this, 'cl_width');">
+            <option value="T" {{checkbox_vals_graph.connector_line_T_selected}}>Yes</option>
+            <option value="F" {{checkbox_vals_graph.connector_line_F_selected}}>No</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_connector_line"></div>
+            <script type="text/javascript">                        
+            $("#ht_connector_line").load("{{MEDIA_URL}}html/commons.html #ht_connector_line");
+            </script>
+        </div>
+        </td>
+        </tr>
+        {%if initial_graph.connector_line == "T"%}
+            <tr valign="top" id="cl_width">
+        {%else%}
+            <tr valign="top" id="cl_width" style="display:none;">
+        {%endif%}
+        <td>Connector line width:</td>
+        <td><input type="text" id="connector_line_width" name="connector_line_width" value="{{initial_graph.connector_line_width}}"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_connector_line_width"></div>
+            <script type="text/javascript">                        
+            $("#ht_connector_line_width").load("{{MEDIA_URL}}html/commons.html #ht_connector_line_width");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top" class="formGraph" style="display:none;">
+        <td>Show Markers?</td>
+        <td>
+            <select id="markers" onchange="show_div_if_true(this, 'mk_type');">
+            <option value="T" {{checkbox_vals_graph.markers_T_selected}}>Yes</option>
+            <option value="F" {{checkbox_vals_graph.markers_line_F_selected}}>No</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_markers"></div>
+            <script type="text/javascript">                        
+            $("#ht_markers").load("{{MEDIA_URL}}html/commons.html #ht_markers");
+            </script>
+        </div>
+        </td>
+        </tr>
+        {%if initial_graph.markers == "T"%}
+            <tr valign="top" id="mk_type">
+        {%else%}
+            <tr valign="top" id="mk_type" style="display:none;">
+        {%endif%}
+        <td>Marker type:</td>
+        <td>
+            <select id="marker_type" name="marker_type">
+            <option value="diamond" {{checkbox_vals_graph.marker_type_diamond_selected}}>Diamond</option>
+            <option value="circle" {{checkbox_vals_graph.marker_type_circle_selected_selected}}>Circle</option>
+            <option value="square" {{checkbox_vals_graph.marker_type_square_selected}}>Square</option>
+            <option value="triangle" {{checkbox_vals_graph.marker_type_triangle_selected_selected}}>Triangle</option>
+            <option value="triangle_down" {{checkbox_vals_graph.marker_type_triangle_down_selected}}>Downward Triangle</option>
+            </select>
+        </td> 
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_marker_type"></div>
+            <script type="text/javascript">                        
+            $("#ht_marker_type").load("{{MEDIA_URL}}html/commons.html #ht_marker_type");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top" class="formGraph" style="display:none;">
+        <td>Vertical axis min:</td>
+        <td><input type="text" id="vertical_axis_min" name="vertical_axis_min" value="{{initial_graph.vertical_axis_min}}"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_vertical_axis_min"></div>
+            <script type="text/javascript">                        
+            $("#ht_vertical_axis_min").load("{{MEDIA_URL}}html/commons.html #ht_vertical_axis_min");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top" class="formGraph" style="display:none;">
+        <td>Vertical axis max:</td>
+        <td><input type="text" id="vertical_axis_max" name="vertical_axis_max" value="{{initial_graph.vertical_axis_max}}"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_vertical_axis_max"></div>
+            <script type="text/javascript">                        
+            $("#ht_vertical_axis_max").load("{{MEDIA_URL}}html/commons.html #ht_vertical_axis_max");
+            </script>
+        </div>
+        </td>
+        </tr>
         </table> 
-        <input type="submit" value="Submit" name="formSodxtrmts"/>
+        <input type="submit" value="Submit" name="formSodxtrmts">
         </form>
     </div><!--end formSodxtrmts-->
-</td>
+
+</td><!--end left form partition of page-->
 <td valign="top" width="70%">
     <table>
         <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
@@ -377,46 +613,42 @@
     <br />
     {%if results%}
         <a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/visualize/?station_ID={{station_ID}}&element={{element}}&json_file={{json_file}}"><font size=4>Generate Time Series Plots for this data</font></a><br /><br />
-
-    <!--<p class="pop_link" onClick="ShowHide('printable_table')"><u><font size=4>Show/hide table data</font></u></p>-->
-
+    {%endif%}
     {%if results%}
     <table>
-    <td>
-    <p onClick="printNode('printable_table')"><img alt="Print" title="Print" class="icon" src="{{MEDIA_URL}}img/Print.png"><b>Print</b></p>
-    </td><td>
-    <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" class="icon" src="{{MEDIA_URL}}img/Download.png"><b>Download</b></p>
-        <!--<a target="_blank" href="{{SW_CKN_URL}}/download/?app_name=Sodxtrmts&json_file={{json_file}}"><img alt="Download" title="Download" class="icon" src="{{MEDIA_URL}}img/Download.png"><b>Download</b></a>-->
-    </td>
-    <td> 
-    <!--Download form-->
-    <div id="formDownload" class="form" style="display:none;">
-        <form method="post">
-        {% csrf_token %}
-        <table id="tableDownload">
-        <tr valign="top">
-        <td>Data Format: </td>
         <td>
-            <select id="data_format" name="data_format" onchange="set_delimiter(this, 'delim')">
+        <p onClick="printNode('printable_table')"><img alt="Print" title="Print" class="icon" src="{{MEDIA_URL}}img/Print.png"><b>Print</b></p>
+        </td><td>
+        <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" class="icon" src="{{MEDIA_URL}}img/Download.png"><b>Download</b></p>
+        </td><td> 
+        <!--Download form-->
+        <div id="formDownload" class="form" style="display:none;">
+            <form method="post">
+            {% csrf_token %}
+            <table id="tableDownload">
+            <tr valign="top">
+            <td>Data Format: </td>
+            <td>
+            <select id="data_format" name="data_format" onchange="set_delimiter(this, 'delim');">
             <option value="clm">Columnar, .txt</option>
             <option value="dlm">Delimited, .dat</option>
             <option value="xl" selected>Excel, .xls</option>
             </select>
-        </td>
-        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
+            </td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
             <div id="ht_data_format"></div>
             <!--<p>Station Identifier.</p>-->
             <script type="text/javascript">                        
-            $("#ht_data_format").load("{{MEDIA_URL}}html/commons.html #ht_data_format");
+                $("#ht_data_format").load("{{MEDIA_URL}}html/commons.html #ht_data_format");
             </script>
-        </div>
-        </td>
-        </tr>
-        <!--Only show when format is clm or dlm, don't show if xl-->
-        <tr valign="top" id="delim" style="display:none;">
-        <td>Delimiter:</td>
-        <td>
+            </div>
+            </td>
+            </tr>
+            <!--Only show when format is clm or dlm, don't show if xl-->
+            <tr valign="top" id="delim" style="display:none;">
+            <td>Delimiter:</td>
+            <td>
             <select id="delimiter" name="delimiter">
             <option value="comma" selected>Comma (,)</option>
             <option value="tab">Tab (    )</option>
@@ -424,39 +656,38 @@
             <option value="colon">Colon (:)</option>
             <option value="pipe">pipe(|)</option>
             </select>
-        </td>
-        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
+            </td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
             <div id="ht_delimiter"></div>
             <!--<p>Station Identifier.</p>-->
             <script type="text/javascript">                        
-            $("#ht_delimiter").load("{{MEDIA_URL}}html/commons.html #ht_delimiter");
+                $("#ht_delimiter").load("{{MEDIA_URL}}html/commons.html #ht_delimiter");
             </script>
-        </div>
-        </td>
-        </tr>
-        <tr valign="top">
-        <td>Outputfile Name: </td>
-        <td><input type="text" id="output_file_name" name="output_file_name" value="Output"></td>
-        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
+            </div>
+            </td>
+            </tr>
+            <tr valign="top">
+            <td>Outputfile Name: </td>
+            <td><input type="text" id="output_file_name" name="output_file_name" value="Output"></td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
             <div id="ht_output_file_name"></div>
             <!--<p>Station Identifier.</p>-->
             <script type="text/javascript">                        
-            $("#ht_output_file_name").load("{{MEDIA_URL}}html/commons.html #ht_output_file_name");
+                $("#ht_output_file_name").load("{{MEDIA_URL}}html/commons.html #ht_output_file_name");
             </script>
-        </div>
-        </td>
-        </tr>
-        </table>
-        <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-        <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
-        <input type="submit" value="Submit" name="formDownload"/>
-        </form>
-    </div>
+            </div>
+            </td>
+            </tr>
+            </table>
+            <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+            <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
+            <input type="submit" value="Submit" name="formDownload">
+            </form>
+    </div><!--end formDownload-->
     </td>
-    </table>
-    {%endif%}<!--end if results show download print buttons
+    </table><!--End table about/howto/download form-->
     
     <div id="printable_table">
         
@@ -513,16 +744,19 @@
             </tr>
         {%endfor%}
         </table>
-        <br />
-        <!--Graphics-->
-        <p class="pop_link" onClick="ShowHide('range_plot')"><u><font size=4>Show/hide table summary</font></u></p>
-        <div id="range_plot" style="display:none;">
+    </div><!--End div="printable_table"-->
+        
+    <br />
+    <!--Graphics-->
+    <p class="pop_link" onClick="ShowHide('range_plot')"><u><font size=4>Show/hide table summary</font></u></p>
+    <div id="range_plot" style="display:none;">
         <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
         <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
         <div id="graph_container" style="height:400px;width:620px;"></div>
         <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts.js"></script>
-        </div>
-    {%else%}
+    </div>
+
+    {%else%} <!--No results-->
         {%if run_done%}
             <p style="color:red">NO STATION DATA FOUND!</p></br>
         {%endif%}
@@ -532,13 +766,9 @@
             {%endfor%}
         {%endif%}
    {%endif%}
-    </td></tr>
-    <tr>
-    <td></td>
-    <td>
-    </div> <!--End printable table-->
-</td></tr>
-</table>
+
+</td></tr><!--right page side end-->
+</table><!--End page table--> 
 
 {%endblock%}
 

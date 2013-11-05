@@ -1959,6 +1959,39 @@ def sodsumm(request):
 ##############################
 #Utlities
 ##############################
+def set_plot_options(request):
+    initial = {}
+    checkbox_vals = {}
+    if request.method == 'GET':
+        Get = getattr(request.GET, 'get')
+    if request.POST:
+        Get = getattr(request.POST, 'get')
+    initial['graph_title'] = Get('graph_title','Use default')
+    initial['image_size'] = Get('image_size', 'medium')
+    initial['major_grid']  = Get('major_grid', 'T')
+    initial['minor_grid'] = Get('minor_grid', 'F')
+    initial['connector_line'] = Get('connector_line', 'T')
+    initial['connector_line_width'] = Get('connector_line_width', '1')
+    initial['markers'] = Get('markers', 'T')
+    initial['marker_type'] = Get('marker_type', 'diamond')
+    initial['vertical_axis_min']= Get('vertical_axis_min', 'Use default')
+    initial['vertical_axis_min']= Get('vertical_axis_max', 'Use default')
+    #set the check box values
+    for bl in ['T','F']:
+        for cbv in ['major_grid', 'minor_grid','connector_line', 'marker']:
+            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
+        if initial[cbv] == bl:
+            checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
+    for image_size in ['small', 'medium', 'large', 'larger', 'extra_large', 'wide', 'wider', 'widest']:
+        checkbox_vals['image_size' + '_' + image_size + '_selected'] = ''
+        if initial['image_size'] == image_size:
+            checkbox_vals['image_size' + '_' + image_size + '_selected'] = 'selected'
+    for marker_type in ['diamond', 'circle', 'square', 'triangle', 'triangle_down']:
+        checkbox_vals['marker_type' + '_' + marker_type + '_selected'] = ''
+        if initial['marker_type'] == marker_type:
+            checkbox_vals['marker_type' + '_' + marker_type + '_selected'] = 'selected'
+    return initial, checkbox_vals
+
 def set_sod_initial(request, app_name):
     stn_id = request.GET.get('stn_id', None)
     start_date = request.GET.get('start_date', None)
@@ -2002,8 +2035,6 @@ def set_sodxtrmts_initial(request):
     initial['threshold_low_for_between']= Get('threshold_low_for_between', None)
     initial['threshold_high_for_between']= Get('threshold_high_for_between', None)
     initial['generate_graph']= Get('generate_graph', 'F')
-    initial['graph_start_month'] = Get('start_month', '01')
-    initial['graph_end_month'] = Get('end_month', '02')
     element = Get('elements', None)
     if element is None:element = Get('element', 'pcpn')
     initial['element'] = element
@@ -2022,7 +2053,7 @@ def set_sodxtrmts_initial(request):
         if el == initial['element']:
             checkbox_vals[el + '_selected'] ='selected'
     for start_month in ['01','02','03','04','05','06','07','08','09','10','11','12']:
-        for mon_type in ['start_month', 'graph_start_month', 'graph_end_month']:
+        for mon_type in ['start_month']:
             checkbox_vals[mon_type + '_' + start_month + '_selected']=''
         if initial[mon_type] == start_month:
             checkbox_vals[mon_type + '_' + start_month + '_selected']='selected'
@@ -2041,6 +2072,34 @@ def set_sodxtrmts_initial(request):
             checkbox_vals[lgb + '_selected'] ='selected'
     return initial, checkbox_vals
 
+def set_sodxtrmts_graph_initial(request):
+    initial = {}
+    checkbox_vals = {}
+    if request.method == 'GET':
+        Get = getattr(request.GET, 'get')
+    if request.POST:
+        Get = getattr(request.POST, 'get')
+    initial['graph_start_month'] = Get('graph_start_month', '01')
+    initial['graph_end_month'] = Get('graph_end_month', '02')
+    initial['graph_summary'] = Get('graph_summary', 'mean')
+    initial['graph_show_running_mean'] = Get('graph_show_running_mean', 'T')
+    initial['graph_running_mean_years'] = Get('graph_running_mean_years', '9')
+    initial['graph_plot_incomplete_years'] = Get('graph_plot_incomplete_years', 'F')
+    for graph_month in ['01','02','03','04','05','06','07','08','09','10','11','12']:
+        for mon_type in ['graph_start_month', 'graph_end_month']:
+            checkbox_vals[mon_type + '_' + graph_month + '_selected']=''
+        if initial[mon_type] == graph_month:
+            checkbox_vals[mon_type + '_' + graph_month + '_selected']='selected'
+    for bl in ['T','F']:
+        for cbv in ['graph_show_running_mean', 'graph_plot_incomplete_years']:
+            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
+        if initial[cbv] == bl:
+            checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
+    for graph_summary in ['max','min','mean','sum','individual']:
+        checkbox_vals[ 'graph_summary_' + graph_summary + '_selected'] = ''
+        if initial['graph_summary'] == graph_summary:
+            checkbox_vals['graph_summary_' + graph_summary + '_selected'] = 'selected'
+    return initial, checkbox_vals
 
 def set_sodxtrmts_head(form):
     #Define Header Order:

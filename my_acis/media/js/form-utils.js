@@ -166,21 +166,35 @@ function change_lgb(){
 }
 
 function set_delimiter(data_format_node, divId){
-    if (data_format_node.value == 'clm' ||  data_format_node.value == 'dlm' || data_format_node.value == 'html'){
-        document.getElementById(divId).style.display = "block";
+    if (data_format_node.value == 'clm' ||  data_format_node.value == 'dlm' || data_format_node.value == 'html'){ 
+        document.getElementById(divId).style.display = "table-row";
     }
     else {
         document.getElementById(divID).style.display = "none";
     }
 }
 
-function show_if_true(node, divID){
+function show_if_true(node, rowClass){
+    //if node.value=true, shows all table rows of class name rowClass
+    //if node.value=fals, hides all table rows of class name rowClass
+    trs = document.getElementsByClassName(rowClass);
     if (node.value == 'T'){
-        alert('BOO');
-        document.getElementById(divID).style.display = "block";
+        for (idx=0;idx<trs.length;idx++){
+            trs[idx].style.display = "table-row";
+        }
     }
     else if (node.value == 'F'){
-        alert('Hey');
+        for (idx=0;idx<trs.length-1;idx++){
+            trs[idx].style.display = "none";
+        }
+    }
+}
+
+function show_div_if_true(node, divID){
+    if (node.value == 'T'){
+        document.getElementById(divID).style.display = "table-row";
+    }
+    else{
         document.getElementById(divID).style.display = "none";
     }
 }
