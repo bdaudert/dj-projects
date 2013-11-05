@@ -16,7 +16,6 @@
 </p>
 
 <table border="0" cellpadding="10">
-<tr valign="top">
 <td valign="top" width="30%">
     <div id="formSodxtrmts" class="form">
         <form method="post">
@@ -46,7 +45,6 @@
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_start_year"></div>
-            <!--<p>Station Identifier.</p>-->
             <script type="text/javascript">                        
             $("#ht_start_year").load("{{MEDIA_URL}}html/commons.html #ht_start_year");
             </script>
@@ -59,7 +57,6 @@
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_end_year"></div>
-            <!--<p>Station Identifier.</p>-->
             <script type="text/javascript">                        
             $("#ht_end_year").load("{{MEDIA_URL}}html/commons.html #ht_end_year");
             </script>
@@ -243,8 +240,8 @@
         <td>Departures from Averages: </td>
         <td>
             <select id="departures_from_averages" name="departures_from_averages">
-            <option value="T" {{checkbox_vals.departures_from_averages_T_selected}}>Yes</option>
             <option value="F" {{checkbox_vals.departures_from_averages_F_selected}}>No</option>
+            <option value="T" {{checkbox_vals.departures_from_averages_T_selected}}>Yes</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -275,6 +272,7 @@
         </tr>
         <tr><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
         <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
+        {%if results%}
         <tr valign="top">
         <td>Generate a time series graph: </td>
         <td>
@@ -291,6 +289,7 @@
         </div>
         </td>
         </tr>
+        {%endif%}
         <tr valign="top" class="formGraph" style="display:none;">
         <td>Start Month: </td>
         <td>
@@ -346,6 +345,32 @@
         </td>
         </tr>
         <tr valign="top" class="formGraph" style="display:none;">
+        <td id="Start Year">Graph Start Year: </td>
+        <td><input type="text" id="graph_start_year" name="graph_start_year" value="{{initial_graph.graph_start_year}}"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_graph_start_year"></div>
+            <!--<p>Station Identifier.</p>-->
+            <script type="text/javascript">                        
+            $("#ht_graph_start_year").load("{{MEDIA_URL}}html/commons.html #ht_graph_start_year");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top" class="formGraph" style="display:none;">
+        <td id="End Year">End Year: </td>
+        <td><input type="text" id="graph_end_year" name="end_year" value="{{initial_graph.graph_end_year}}"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_graph_end_year"></div>
+            <!--<p>Station Identifier.</p>-->
+            <script type="text/javascript">                        
+            $("#ht_graph_end_year").load("{{MEDIA_URL}}html/commons.html #ht_graph_and_year");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top" class="formGraph" style="display:none;">
         <td>Summary: </td>
         <td>
             <select id="graph_summary" name="graph_summary">
@@ -382,13 +407,13 @@
         </div>
         </td>
         </tr>
-        {%if initial.show_running_mean == "T"%}
-            <tr valign="top" id="rm_years">
+        {%if initial.show_running_mean == "T" and initial.generate_graph == "T"%}
+            <tr valign="top" class="formGraph" id="rm_years">
         {%else%}
-            <tr valign="top" id="rm_years" style="display:none;">
+            <tr valign="top" class="formGraph" id="rm_years" style="display:none;">
         {%endif%}
         <td>Running Mean Years: </td>
-        <td><input type="text" id="graph_running_mean_years" name="graph_running_mean_years" value="{{initial_graph.running_mean_years}}"></td>
+        <td><input type="text" id="graph_running_mean_years" name="graph_running_mean_years" value="{{initial_graph.graph_running_mean_years}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_running_mean_years"></div>
@@ -504,10 +529,10 @@
         </div>
         </td>
         </tr>
-        {%if initial_graph.connector_line == "T"%}
-            <tr valign="top" id="cl_width">
+        {%if initial_graph.connector_line == "T" and initial.generate_graph == "T"%}
+            <tr valign="top" class="formGraph" id="cl_width">
         {%else%}
-            <tr valign="top" id="cl_width" style="display:none;">
+            <tr valign="top" class="formGraph" id="cl_width" style="display:none;">
         {%endif%}
         <td>Connector line width:</td>
         <td><input type="text" id="connector_line_width" name="connector_line_width" value="{{initial_graph.connector_line_width}}"></td>
@@ -537,10 +562,10 @@
         </div>
         </td>
         </tr>
-        {%if initial_graph.markers == "T"%}
-            <tr valign="top" id="mk_type">
+        {%if initial_graph.markers == "T" and initial.generate_graph == "T"%}
+            <tr valign="top" class="formGraph" id="mk_type">
         {%else%}
-            <tr valign="top" id="mk_type" style="display:none;">
+            <tr valign="top" class="formGraph" id="mk_type" style="display:none;">
         {%endif%}
         <td>Marker type:</td>
         <td>
@@ -688,7 +713,21 @@
     </div><!--end formDownload-->
     </td>
     </table><!--End table about/howto/download form-->
+
+    {%if initial.generate_graph == "T" and json_file%} 
+    <p onClick="ShowHide('user_graph')"><font color="blue" size="4"><u>Show/Hide Time Series Graph</u></font></p>
+    <div id="user_graph" style="display:none;">
+    GRAPH HERE
+        <div align="center" id="container" style="height:{{height}}px;width:{{width}}px;"></div>
+        <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+        <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
+        <input type="hidden" id="initial_graph" name="initial_graph" value="{{initial_graph}}">
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts-visualize.js"></script>
+    </div>
+    {%endif%}
     
+    {{req}}
+ 
     <div id="printable_table">
         
         <!--Header-->
@@ -704,7 +743,7 @@
         
         <p class="black"><b>Missing values</b><br />
         Monthly information for months with more than this number of missing values will be displayed, but not used. <br />
-        The letter indicates the number of missing days--> 
+        The letter indicates the number of missing days
         Letters after months show number of missing days; after annual
         values show missing months.  Value is displayed but not used if user-specified
         missing day criterion exceeded.<br />
@@ -767,7 +806,7 @@
         {%endif%}
    {%endif%}
 
-</td></tr><!--right page side end-->
+</td><!--right page side end-->
 </table><!--End page table--> 
 
 {%endblock%}

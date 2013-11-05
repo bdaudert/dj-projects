@@ -2,52 +2,36 @@ $(function () {
     var chart;
     $(document).ready(function() {
         var mischr = ["fake","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+        var month_names =  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         var JSON_URL = document.getElementById("JSON_URL").value;
         var json_file = document.getElementById("json_file").value;
-        var file = JSON_URL + json_file;
-        var month_list_str = document.getElementById("months").value;
-        var show_running_mean = document.getElementById("show_running_mean").value;
-        var running_mean_years = document.getElementById("running_mean_years").value;
-        var graph_title = document.getElementById("graph_title").value;
-        var major_grid = document.getElementById("major_grid").value;
-        var minor_grid = document.getElementById("minor_grid").value;
-        var connector_line = document.getElementById("connector_line").value;
-        var connector_line_width = document.getElementById("connector_line_width").value;
-        var plot_incomplete_years = document.getElementById("plot_incomplete_years").value;
-        var vertical_axis_min = document.getElementById("vertical_axis_min").value;
-        var vertical_axis_max = document.getElementById("vertical_axis_max").value;
+        var initial_graph = document.getElementById("initial_graph").value;
+        //Graph Options
+        var summary = initial_graph.graph_summary;
+        var show_running_mean = initial_graph.graph_show_running_mean;
+        var running_mean_years = initial_graph.graph_running_mean_years;
+        var plot_incomplete_years = initial_graph.graph_plot_incomplete_years;
+        //Plot Options
+        var graph_title = initial_graph.graph_title;
+        var major_grid = initial_graph.major_grid;
+        var minor_grid = initial_graph.minor_grid
+        var connector_line = initial_graph.connector_line;
+        var connector_line_width = initial_graph.connector_line_width;
+        var markers = initial_graph.markers;
+        var marker_type = initial_graph.marker_type;
+        var vertical_axis_min = initial_graph.vertical_axis_min;
+        var vertical_axis_max = initial_graph.vertical_axis_max;
+        var image_height = initial_graph.image_height;
+        var month_list = [];
+        for (mon = parseInt(initial_graph.graph_start_month);mon<=parseInt(initial_graph.graph_end_month);mon++)
+            month_list.push(mon);
+
         if (connector_line == 'F'){
             connector_line_width = 0;        
         }
-        var markers = document.getElementById("markers").value;
-        var marker_type = document.getElementById("marker_type").value;
-        var height = document.getElementById("height").value;
+
         //set postion of network info label
-        var top_dist = (parseFloat(height)*4/5).toString() +'px';
-        if (Math.abs(parseFloat(height) -  290) < 0.001){
-            //small image
-            top_dist = (parseFloat(height)*3/4).toString() +'px';
-        }
-        if (Math.abs(parseFloat(height) -  480) < 0.001){
-            //large image
-            top_dist = (parseFloat(height)*5/6).toString() +'px';
-        }
-        if (Math.abs(parseFloat(height) -  610) < 0.001){
-            //larger image
-            top_dist = (parseFloat(height)*6/7).toString() +'px';
-        }
-        if (Math.abs(parseFloat(height) -  820) < 0.001){
-            //extra large image
-            top_dist = (parseFloat(height)*7/8).toString() +'px';
-        }
-        //convert month_list input into javascript array
-        //Hidden vars only passed as string
-        var month_list = month_list_str.substring(1,month_list_str.length - 1).split(",")
-        for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
-            month_list[mon_idx] = parseInt(month_list[mon_idx]);
-        }
-        var summary = document.getElementById("summary").value;
-        var month_names =  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var top_dist = set_label_position(image_height);
         var axesStyle = set_AxesStyle();
         var titleStyle = set_TitleStyle();
         var subtitleStyle = set_SubtitleStyle();
@@ -68,7 +52,7 @@ $(function () {
             var SummaryText = ' ';
         }
 
-        $.getJSON(file, function(datadict) {
+        $.getJSON(JSON_URL + json_file, function(datadict) {
             var max_missing_days = parseInt(datadict.search_params.max_missing_days);
             //Depending on summary, define series to be plotted
             var series_data = [];

@@ -184,7 +184,7 @@ function show_if_true(node, rowClass){
         }
     }
     else if (node.value == 'F'){
-        for (idx=0;idx<trs.length-1;idx++){
+        for (idx=0;idx<trs.length;idx++){
             trs[idx].style.display = "none";
         }
     }

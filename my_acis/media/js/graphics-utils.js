@@ -32,6 +32,27 @@ function set_Labelstyle() {
     return style;
 }
 
+function set_label_position(image_height){
+    var top_dist = (parseFloat(image_height)*4/5).toString() +'px';
+    if (Math.abs(parseFloat(image_height) -  290) < 0.001){
+        //small image
+        top_dist = (parseFloat(image_height)*3/4).toString() +'px';
+    }
+    if (Math.abs(parseFloat(image_height) -  480) < 0.001){
+        //large image
+        top_dist = (parseFloat(image_height)*5/6).toString() +'px';
+    }
+    if (Math.abs(parseFloat(image_height) -  610) < 0.001){
+        //larger image
+        top_dist = (parseFloat(image_height)*6/7).toString() +'px';
+    }
+    if (Math.abs(parseFloat(image_height) -  820) < 0.001){
+        //extra large image
+        top_dist = (parseFloat(height)*7/8).toString() +'px';
+    }
+    return top_dist;
+}
+
 function set_yrdata_grids(num_yrs){
     /*
     Sets major and minor grid step size and divisor

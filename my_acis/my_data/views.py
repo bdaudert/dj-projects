@@ -1568,6 +1568,15 @@ def sodxtrmts(request):
     json_file = request.GET.get('json_file', None)
     initial,checkbox_vals = set_sodxtrmts_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+    #Set graph and plot options
+    initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(request)
+    initial_pl_opts, checkbox_vals_pl_opts = set_plot_options(request)
+    #combine the graph options with the plot options
+    for key, val in initial_pl_opts.iteritems():
+        initial_graph[key] = val
+    for key, val in checkbox_vals_pl_opts.iteritems():
+        checkbox_vals_graph[key] = val
+    context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
     #check if initial dataset is given via json_file (back button from visualize)
     if json_file:
         with open(TEMP_FILE_DIR + json_file, 'r') as f:
@@ -1579,15 +1588,25 @@ def sodxtrmts(request):
         context['month_list'] = json_data['month_list']
         return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
 
-    #Time Serie Table Generation
+    #Time Serie Table Generation and graph if desired
     if 'formSodxtrmts' in request.POST:
         #Set initial form parameters for html
         initial,checkbox_vals = set_sodxtrmts_initial(request)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        #Set graph and plot options
+        initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(request)
+        initial_pl_opts, checkbox_vals_pl_opts = set_plot_options(request)
+        #combine the graph options with the plot options
+        for key, val in initial_pl_opts.iteritems():
+            initial_graph[key] = val
+        for key, val in checkbox_vals_pl_opts.iteritems():
+            checkbox_vals_graph[key] = val
+        context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
         #Turn request object into python dict
         form = {}
         for key,val in dict(request.POST.items()).iteritems():
             form[str(key)] = str(val)
+        context['req'] = form
         #Define header for html display
         header = set_sodxtrmts_head(form)
         #Form sanity check
@@ -1644,8 +1663,9 @@ def sodxtrmts(request):
         month_list.append(months[-1])
         context['month_list'] = month_list
         search_params['month_list'] = month_list
-        #generate graphics
+        #generate Graphics
         if results:
+            #Mean and Range Plot
             averages = [[mon] for mon in month_list[0:-1]]
             ranges = [[mon] for mon in month_list[0:-1]]
             if data_params['element'] == 'dtr':
@@ -1697,6 +1717,13 @@ def sodxtrmts(request):
             context['JSON_URL'] = TEMP_FILE_DIR
             context['json_file'] = json_file
 
+            #User graphics
+            if 'generate_graph' in form.keys() and form['generate_graph'] == 'T':
+                context['generate_graph']  = True
+                context['width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
+                context['height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
+                initial_graph['image_width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
+                initial_graph['image_height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
     #Downlaod Table Data
     if 'formDownload' in request.POST:
         #context['data_dict'] = form0.cleaned_data
@@ -1975,10 +2002,10 @@ def set_plot_options(request):
     initial['markers'] = Get('markers', 'T')
     initial['marker_type'] = Get('marker_type', 'diamond')
     initial['vertical_axis_min']= Get('vertical_axis_min', 'Use default')
-    initial['vertical_axis_min']= Get('vertical_axis_max', 'Use default')
+    initial['vertical_axis_max']= Get('vertical_axis_max', 'Use default')
     #set the check box values
     for bl in ['T','F']:
-        for cbv in ['major_grid', 'minor_grid','connector_line', 'marker']:
+        for cbv in ['major_grid', 'minor_grid','connector_line', 'markers']:
             checkbox_vals[cbv + '_' + bl + '_selected'] = ''
         if initial[cbv] == bl:
             checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
@@ -2022,7 +2049,11 @@ def set_sodxtrmts_initial(request):
         Get = getattr(request.GET, 'get')
     if request.POST:
         Get = getattr(request.POST, 'get')
-    initial['station_ID'] = Get('station_ID','266779')
+    stn_id = Get('stn_id', None)
+    if stn_id is not None:
+        initial['station_ID'] = stn_id
+    else:
+        initial['station_ID'] = Get('station_ID','266779')
     initial['start_year'] = Get('start_year', 'POR')
     initial['end_year']  = Get('end_year', yesterday[0:4])
     initial['monthly_statistic'] = Get('monthly_statistic', 'msum')
@@ -2081,6 +2112,8 @@ def set_sodxtrmts_graph_initial(request):
         Get = getattr(request.POST, 'get')
     initial['graph_start_month'] = Get('graph_start_month', '01')
     initial['graph_end_month'] = Get('graph_end_month', '02')
+    initial['graph_start_year'] = Get('graph_start_year', Get('start_year', 'POR'))
+    initial['graph_end_year'] = Get('graph_end_year', Get('end_year', '2013'))
     initial['graph_summary'] = Get('graph_summary', 'mean')
     initial['graph_show_running_mean'] = Get('graph_show_running_mean', 'T')
     initial['graph_running_mean_years'] = Get('graph_running_mean_years', '9')
