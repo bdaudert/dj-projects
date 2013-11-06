@@ -1717,32 +1717,16 @@ def sodxtrmts(request):
             context['JSON_URL'] = TEMP_FILE_DIR
             context['json_file'] = json_file
 
-    #User graphics
-    if 'formGraph' in request.POST:
-        #Turn request object into python dict
-        form = {}
-        for key,val in dict(request.POST.items()).iteritems():
-            form[str(key)] = str(val)
-        context['generate_graph']  = True
-        context['width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
-        context['height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
-        initial_graph['image_width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
-        initial_graph['image_height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
-        #Set graph and plot options
-        #Set initial analysis parameters for html
-        #initial,checkbox_vals = set_sodxtrmts_initial(dict(form['initial_analysis']))
-        #context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-        initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(request)
-        initial_pl_opts, checkbox_vals_pl_opts = set_plot_options(request)
-        #combine the graph options with the plot options
-        for key, val in initial_pl_opts.iteritems():
-            initial_graph[key] = val
-        for key, val in checkbox_vals_pl_opts.iteritems():
-            checkbox_vals_graph[key] = val
-        context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
-        #grab json_file and url
-        context['json_file'] = form['j_f']
-        context['JSON_URL'] = form['J_U']
+            #User graphics
+            if  'generate_graph'  in form.keys() and form['generate_graph'] == 'T':
+                context['generate_graph']  = True
+                context['width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
+                context['height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
+                initial_graph['image_width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
+                initial_graph['image_height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
+                #grab json_file and url
+                context['json_file'] = json_file
+                context['JSON_URL'] = TEMP_FILE_DIR
     #Downlaod Table Data
     if 'formDownload' in request.POST:
         #context['data_dict'] = form0.cleaned_data
