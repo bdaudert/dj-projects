@@ -1566,27 +1566,35 @@ def sodxtrmts(request):
         'icon':'ToolProduct.png'
     }
     json_file = request.GET.get('json_file', None)
+    context['json_file'] = json_file
     initial,checkbox_vals = set_sodxtrmts_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set graph and plot options
     initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(request)
     initial_pl_opts, checkbox_vals_pl_opts = set_plot_options(request)
     #combine the graph options with the plot options
-    for key, val in initial_pl_opts.iteritems():
-        initial_graph[key] = val
-    for key, val in checkbox_vals_pl_opts.iteritems():
-        checkbox_vals_graph[key] = val
+    join_graph_plot_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
     context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
-    #check if initial dataset is given via json_file (back button from visualize)
+
+    #check if initial dataset is given
+
     if json_file:
         with open(TEMP_FILE_DIR + json_file, 'r') as f:
-            json_data =  json.load(f)
-        initial = json_data['search_params']
-        context['initial'] = initial
-        context['results']  = json_data['data']
-        context['header']  = json_data['header']
-        context['month_list'] = json_data['month_list']
-        return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
+            json_dict =  json.load(f)
+        initial_old = json_dict['initial'];checkbox_vals_old = json_dict['checkbox_vals']
+        initial_graph_old = json_dict['initial_graph'];checkbox_vals_graph_old = json_dict['checkbox_vals_graph']
+        #context['initial'] = initial;context['initial_graph'] = initial_graph
+        #context['checkbox_vals'] = checkbox_vals;context['checkbox_vals_graph'] = checkbox_vals_graph
+        #Check if analysis parameters where changed by user
+        diff_init = [k for k in initial if initial[k] != initial_old[k]]
+        diff_check_vals = [k for k in checkbox_vals if checkbox_vals[k] != checkbox_vals_old[k]]
+        if not diff_init and not diff_check_vals:
+            #check if user wants to generate graph
+            if 'generate_graph' in initial.keys() and checkbox_vals['generate_graph'] == 'T':
+                context['generate_graph'] == True
+                context['json_file'] = json_file
+                context['JSON_URL'] = TEMP_FILE_DIR
+                return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
 
     #Time Serie Table Generation and graph if desired
     if 'formSodxtrmts' in request.POST:
@@ -1597,24 +1605,18 @@ def sodxtrmts(request):
         initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(request)
         initial_pl_opts, checkbox_vals_pl_opts = set_plot_options(request)
         #combine the graph options with the plot options
-        for key, val in initial_pl_opts.iteritems():
-            initial_graph[key] = val
-        for key, val in checkbox_vals_pl_opts.iteritems():
-            checkbox_vals_graph[key] = val
+        join_graph_plot_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
         context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
         #Turn request object into python dict
-        form = {}
-        for key,val in dict(request.POST.items()).iteritems():
-            form[str(key)] = str(val)
-        context['req'] = form
-        #Define header for html display
-        header = set_sodxtrmts_head(form)
+        form = set_form(request)
         #Form sanity check
         form_error = check_sodxtrmts_form(form)
         if form_error:
             context['form_error'] = form_error
             return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
-        #context['req']=request.POST.get('less_greater_or_between')
+
+        #Define header for html display
+        header = set_sodxtrmts_head(form)
         data_params = {
             'sid':form['station_ID'],
             'start_date':form['start_year'],
@@ -1628,19 +1630,18 @@ def sodxtrmts(request):
         for key in ['station_ID', 'start_year', 'end_year']:
             del app_params[key]
         app_params['el_type'] = form['element']
-        context['el_type'] = form['element']
         #app_params['base_temperature']  = int(request.POST['base_temperature'])
-        context['element'] = form['element']
+        #context['element'] = form['element']
         del app_params['element']
-        context['app_params'] = app_params
+        #context['app_params'] = app_params
         #Run data retrieval job
         DJ = WRCCClasses.SODDataJob('Sodxtrmts', data_params)
         #WARNING: station_ids, names need to be called before dates_list
         #station_ids, station_names = DJ.get_station_ids_names()
         station_names, station_states, station_ids, station_networks, station_lls, station_elevs, station_uids, station_climdivs, station_counties  = DJ.get_station_meta()
         header.insert(0, ['Station Name', station_names[0]])
-        context['header']= header
-        if station_ids:context['station_ID'] =  station_ids[0]
+        #context['header']= header
+        #if station_ids:context['station_ID'] =  station_ids[0]
         dates_list = DJ.get_dates_list()
 
         #Overwrite search params to reflect actuall start/end year
@@ -1654,18 +1655,17 @@ def sodxtrmts(request):
         else:
             results = results[0][0]
         context['run_done'] = True
-        context['results'] = results
+        #context['results'] = results
         months = WRCCData.MONTH_NAMES_SHORT_CAP + ['ANN']
         start_month = int(form['start_month'])
         month_list = [mon for mon in months[(start_month -1):12]]
         if start_month != 1:
             month_list+=months[0:(start_month-1)]
         month_list.append(months[-1])
-        context['month_list'] = month_list
+        #context['month_list'] = month_list
         search_params['month_list'] = month_list
-        #generate Graphics
+        #generate Mean/Range Graphics
         if results:
-            #Mean and Range Plot
             averages = [[mon] for mon in month_list[0:-1]]
             ranges = [[mon] for mon in month_list[0:-1]]
             if data_params['element'] == 'dtr':
@@ -1699,7 +1699,11 @@ def sodxtrmts(request):
                 'month_list':month_list,
                 'data':results,
                 'search_params':search_params,
-                'header':header
+                'header':header,
+                'initial':initial,
+                'initial_graph':initial_graph,
+                'checkbox_vals':checkbox_vals,
+                'checkbox_vals_graph':checkbox_vals_graph
             }
             if dates_list:
                 json_dict['start_date'] = dates_list[0][0:4]
@@ -1714,26 +1718,43 @@ def sodxtrmts(request):
             f = open(TEMP_FILE_DIR + '%s' %(json_file),'w+')
             f.write(results_json)
             f.close()
+            json_dict['JSON_URL'] = TEMP_FILE_DIR
+            json_dict['json_file'] = json_file
             context['JSON_URL'] = TEMP_FILE_DIR
             context['json_file'] = json_file
+            if not 'generate_graph'  in form.keys() or form['generate_graph'] == 'F':
+                context['json_dict'] = dict(json_dict)
+    '''
+    #User graphics
+    if  'formGraph' in request.POST:
+        #json_file = request.GET.get('json_file')
+        form = set_form(request)
+        #Set graph and plot options
+        initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(form)
+        initial_pl_opts, checkbox_vals_pl_opts = set_plot_options(form)
+        #combine the graph options with the plot options
+        join_graph_plot_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
+        context['initial_graph']=initial_graph;context['checkbox_vals_graph']=checkbox_vals_graph
+        json_file = form['json_file']
+        if json_file is not None:
+            with open(TEMP_FILE_DIR + json_file, 'r') as f:
+                json_dict =  json.load(f)
+            context['json_dict'] = json_dict
+        context['width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
+        context['height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
+        initial_graph['image_width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
+        initial_graph['image_height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
+    '''
 
-            #User graphics
-            if  'generate_graph'  in form.keys() and form['generate_graph'] == 'T':
-                context['generate_graph']  = True
-                context['width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
-                context['height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
-                initial_graph['image_width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
-                initial_graph['image_height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
-                #grab json_file and url
-                context['json_file'] = json_file
-                context['JSON_URL'] = TEMP_FILE_DIR
     #Downlaod Table Data
     if 'formDownload' in request.POST:
-        #context['data_dict'] = form0.cleaned_data
         data_format = request.POST.get('data_format', 'clm')
         delimiter = request.POST.get('delimiter', 'comma')
         output_file_name = request.POST.get('output_file_name', 'output')
         json_file = request.POST.get('json_file', None)
+        with open(TEMP_FILE_DIR + json_file, 'r') as f:
+            json_dict =  json.load(f)
+        context['json_dict'] = json_dict
         DDJ = WRCCClasses.DownloadDataJob('Sodxtrmts',data_format,delimiter, output_file_name, request=request, json_in_file=TEMP_FILE_DIR + json_file)
         return DDJ.write_to_file()
 
@@ -1989,12 +2010,24 @@ def sodsumm(request):
 ##############################
 #Utlities
 ##############################
+def set_form(request):
+    form = {}
+    for key,val in dict(request.POST.items()).iteritems():
+        form[str(key)] = str(val)
+    return form
+
 def set_plot_options(request):
     initial = {}
     checkbox_vals = {}
-    if request.method == 'GET':
+    if type(request) == dict:
+        def Get(key, default):
+            if key in request.keys():
+                return request[key]
+            else:
+                return default
+    elif request.method == 'GET':
         Get = getattr(request.GET, 'get')
-    if request.POST:
+    elif request.POST:
         Get = getattr(request.POST, 'get')
     initial['graph_title'] = Get('graph_title','Use default')
     initial['image_size'] = Get('image_size', 'medium')
@@ -2021,29 +2054,6 @@ def set_plot_options(request):
         if initial['marker_type'] == marker_type:
             checkbox_vals['marker_type' + '_' + marker_type + '_selected'] = 'selected'
     return initial, checkbox_vals
-
-def set_sod_initial(request, app_name):
-    stn_id = request.GET.get('stn_id', None)
-    start_date = request.GET.get('start_date', None)
-    end_date  = request.GET.get('end_date', None)
-    start_year = request.GET.get('start_year', None)
-    end_year  = request.GET.get('end_year', None)
-    element = request.GET.get('elements', None)
-    if element is None:element = request.GET.get('element', None)
-    initial ={}
-    if element is not None:initial['element'] = element
-    if stn_id is not None:initial['stn_id'] = stn_id
-    if app_name in ['Sodsumm', 'Sodxtrmts']:
-        initial['date_type'] = 'y'
-        if start_year is not None:initial['start_year'] = start_year
-        if end_year is not None:initial['end_year'] = end_year
-        if start_date is not None and not start_year:initial['start_year'] = start_date[0:4]
-        if end_date is not None and not end_year:initial['end_year'] = end_date[0:4]
-    else:
-        initial['date_type'] = 'd'
-        if start_date is not None:initial['start_date'] = start_date
-        if end_date is not None:initial['end_date'] = end_date
-    return initial
 
 def set_sodxtrmts_initial(request):
     initial = {}
@@ -2074,7 +2084,8 @@ def set_sodxtrmts_initial(request):
     initial['threshold_for_less_or_greater']= Get('threshold_for_less_or_greater', None)
     initial['threshold_low_for_between']= Get('threshold_low_for_between', None)
     initial['threshold_high_for_between']= Get('threshold_high_for_between', None)
-    initial['generate_graph']= Get('generate_graph', 'F')
+    initial['generate_graph'] = Get('generate_graph', 'F')
+    #initial['generate_graph']= str(Get('generate_graph', 'F'))
     element = Get('elements', None)
     if element is None:element = Get('element', 'pcpn')
     initial['element'] = element
@@ -2115,10 +2126,17 @@ def set_sodxtrmts_initial(request):
 def set_sodxtrmts_graph_initial(request):
     initial = {}
     checkbox_vals = {}
-    if request.method == 'GET':
+    if type(request) == dict:
+        def Get(key, default):
+            if key in request.keys():
+                return request[key]
+            else:
+                return default
+    elif request.method == 'GET':
         Get = getattr(request.GET, 'get')
-    if request.POST:
+    elif request.POST:
         Get = getattr(request.POST, 'get')
+    initial['graph_generate_graph']= str(Get('graph_generate_graph', 'F'))
     initial['graph_start_month'] = Get('graph_start_month', '01')
     initial['graph_end_month'] = Get('graph_end_month', '02')
     initial['graph_start_year'] = Get('graph_start_year', Get('start_year', 'POR'))
@@ -2127,13 +2145,15 @@ def set_sodxtrmts_graph_initial(request):
     initial['graph_show_running_mean'] = Get('graph_show_running_mean', 'T')
     initial['graph_running_mean_years'] = Get('graph_running_mean_years', '9')
     initial['graph_plot_incomplete_years'] = Get('graph_plot_incomplete_years', 'F')
+    #initial['json_file'] = Get('json_file', None)
+    #initial['JSON_URL'] = Get('JSON_URL', '/tmp/')
     for graph_month in ['01','02','03','04','05','06','07','08','09','10','11','12']:
         for mon_type in ['graph_start_month', 'graph_end_month']:
             checkbox_vals[mon_type + '_' + graph_month + '_selected']=''
         if initial[mon_type] == graph_month:
             checkbox_vals[mon_type + '_' + graph_month + '_selected']='selected'
     for bl in ['T','F']:
-        for cbv in ['graph_show_running_mean', 'graph_plot_incomplete_years']:
+        for cbv in ['graph_show_running_mean', 'graph_plot_incomplete_years', 'graph_generate_graph']:
             checkbox_vals[cbv + '_' + bl + '_selected'] = ''
         if initial[cbv] == bl:
             checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
@@ -2142,6 +2162,13 @@ def set_sodxtrmts_graph_initial(request):
         if initial['graph_summary'] == graph_summary:
             checkbox_vals['graph_summary_' + graph_summary + '_selected'] = 'selected'
     return initial, checkbox_vals
+
+def join_graph_plot_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts):
+    #combine the graph options with the plot options
+    for key, val in initial_pl_opts.iteritems():
+        initial_graph[key] = val
+    for key, val in checkbox_vals_pl_opts.iteritems():
+        checkbox_vals_graph[key] = val
 
 def set_sodxtrmts_head(form):
     #Define Header Order:
@@ -2211,6 +2238,31 @@ def set_sodxtrmts_header(form):
             header.append([WRCCData.DISPLAY_PARAMS[key], str(form.cleaned_data[key])])
     return header
 '''
+
+#Depreciate after Sodsumm conversion
+def set_sod_initial(request, app_name):
+    stn_id = request.GET.get('stn_id', None)
+    start_date = request.GET.get('start_date', None)
+    end_date  = request.GET.get('end_date', None)
+    start_year = request.GET.get('start_year', None)
+    end_year  = request.GET.get('end_year', None)
+    element = request.GET.get('elements', None)
+    if element is None:element = request.GET.get('element', None)
+    initial ={}
+    if element is not None:initial['element'] = element
+    if stn_id is not None:initial['stn_id'] = stn_id
+    if app_name in ['Sodsumm', 'Sodxtrmts']:
+        initial['date_type'] = 'y'
+        if start_year is not None:initial['start_year'] = start_year
+        if end_year is not None:initial['end_year'] = end_year
+        if start_date is not None and not start_year:initial['start_year'] = start_date[0:4]
+        if end_date is not None and not end_year:initial['end_year'] = end_date[0:4]
+    else:
+        initial['date_type'] = 'd'
+        if start_date is not None:initial['start_date'] = start_date
+        if end_date is not None:initial['end_date'] = end_date
+    return initial
+
 def set_sodsumm_headers(table_list):
     headers = {}
     def set_header(table):

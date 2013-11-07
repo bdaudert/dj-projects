@@ -177,16 +177,15 @@ function set_delimiter(data_format_node, divId){
 function show_if_true(node, rowClass){
     //if node.value=true, shows all table rows of class name rowClass
     //if node.value=fals, hides all table rows of class name rowClass
-    trs = document.getElementsByClassName(rowClass);
+    var trs = document.getElementsByClassName(rowClass);
     if (node.value == 'T'){
-        for (idx=0;idx<trs.length;idx++){
-            trs[idx].style.display = "table-row";
-        }
+        var disp = "table-row";
     }
-    else if (node.value == 'F'){
-        for (idx=0;idx<trs.length;idx++){
-            trs[idx].style.display = "none";
-        }
+    else{
+        var disp = "none";
+    }
+    for (idx=0;idx<trs.length;idx++){
+        trs[idx].style.display = disp;
     }
 }
 
@@ -196,5 +195,20 @@ function show_div_if_true(node, divID){
     }
     else{
         document.getElementById(divID).style.display = "none";
+    }
+}
+
+function show_formGraph(TF, rowClass) {
+    //alert(TF);
+    //alert(rowClass);
+    var trs = document.getElementsByClassName(rowClass);
+    if (TF == 'T'){
+        var disp = "table-row";
+    }
+    else{
+        var disp = "none";
+    }
+    for (idx=0;idx<trs.length;idx++){
+        trs[idx].style.display = disp;
     }
 }
