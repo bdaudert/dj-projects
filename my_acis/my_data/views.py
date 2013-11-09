@@ -1644,25 +1644,19 @@ def sodxtrmts(request):
             'end_date':form['end_year'],
             'element':form['element']
         }
-        search_params = {}
-        for key, val in form.iteritems():
-            search_params[key] = val
+        #search_params = {}
+        #for key, val in form.iteritems():
+        #    search_params[key] = val
         app_params = form
         for key in ['station_ID', 'start_year', 'end_year']:
             del app_params[key]
         app_params['el_type'] = form['element']
-        #app_params['base_temperature']  = int(request.POST['base_temperature'])
-        #context['element'] = form['element']
         del app_params['element']
-        #context['app_params'] = app_params
         #Run data retrieval job
         DJ = WRCCClasses.SODDataJob('Sodxtrmts', data_params)
         #WARNING: station_ids, names need to be called before dates_list
-        #station_ids, station_names = DJ.get_station_ids_names()
         station_names, station_states, station_ids, station_networks, station_lls, station_elevs, station_uids, station_climdivs, station_counties  = DJ.get_station_meta()
         header.insert(0, ['Station Name', station_names[0]])
-        #context['header']= header
-        #if station_ids:context['station_ID'] =  station_ids[0]
         dates_list = DJ.get_dates_list()
 
         #Overwrite search params to reflect actuall start/end year
@@ -1676,19 +1670,15 @@ def sodxtrmts(request):
         else:
             results = results[0][0]
         context['run_done'] = True
-        #context['results'] = results
-        months = WRCCData.MONTH_NAMES_SHORT_CAP + ['ANN']
+        months = WRCCData.MONTH_NAMES_SHORT_CAP
         start_month = int(form['start_month'])
         month_list = [mon for mon in months[(start_month -1):12]]
         if start_month != 1:
             month_list+=months[0:(start_month-1)]
-        month_list.append(months[-1])
-        #context['month_list'] = month_list
-        search_params['month_list'] = month_list
         #generate Mean/Range Graphics
         if results:
-            averages = [[mon] for mon in month_list[0:-1]]
-            ranges = [[mon] for mon in month_list[0:-1]]
+            averages = [[mon] for mon in month_list]
+            ranges = [[mon] for mon in month_list]
             if data_params['element'] == 'dtr':
                 element_name = 'Temperature Range (F)'
             else:
@@ -1717,9 +1707,8 @@ def sodxtrmts(request):
                 'stn_name':station_names[0],
                 'stn_network':station_networks[0],
                 'stn_state':station_states[0],
-                'month_list':month_list,
+                'month_list':month_list + ['ANN'],
                 'data':results,
-                'search_params':search_params,
                 'header':header,
                 'initial':initial,
                 'initial_graph':initial_graph,
@@ -1743,27 +1732,6 @@ def sodxtrmts(request):
             context['json_dict'] = json_dict
             context['json_file'] = json_file
             context['JSON_URL'] = TEMP_FILE_DIR
-    '''
-    #User graphics
-    if  'formGraph' in request.POST:
-        #json_file = request.GET.get('json_file')
-        form = set_form(request)
-        #Set graph and plot options
-        initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(form)
-        initial_pl_opts, checkbox_vals_pl_opts = set_plot_options(form)
-        #combine the graph options with the plot options
-        join_graph_plot_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
-        context['initial_graph']=initial_graph;context['checkbox_vals_graph']=checkbox_vals_graph
-        json_file = form['json_file']
-        if json_file is not None:
-            with open(TEMP_FILE_DIR + json_file, 'r') as f:
-                json_dict =  json.load(f)
-            context['json_dict'] = json_dict
-        context['width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
-        context['height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
-        initial_graph['image_width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
-        initial_graph['image_height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
-    '''
 
     #Downlaod Table Data
     if 'formDownload' in request.POST:
@@ -2493,7 +2461,8 @@ def check_sodxtrmts_form(form):
     form is given as dict
     '''
     form_error = {}
-    fields_to_check = ['start_year', 'end_year','max_missing_days', 'graph_start_year', 'graph_end_year']
+    fields_to_check = ['start_year', 'end_year','max_missing_days', 'graph_start_year', 'graph_end_year', \
+        'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
     for field in fields_to_check:
         checker = getattr(WRCCFormCheck, 'check_' + field)
         err = checker(form)

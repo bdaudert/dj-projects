@@ -1,7 +1,7 @@
 {% extends "csc_base.html" %}
 
-<meta name="keywords" content="Metadata, graph, coop station, station data, historic data,application, product, tool">
-<meta name="description" content="SW-CKN Generates Metadata graph for a coop station">
+<meta name="keywords" content="Time Series, Monthly Summary,graph, coop station, station data, historic data,application, product, tool">
+<meta name="description" content="SW-CKN Generates Monthly Summary Time Series">
 
 {%load my_data_filters%}
 
@@ -460,6 +460,11 @@
         </td>
         </tr>
         {%if initial.generate_graph == "T"%}
+        <tr style="display:table-row;" class="formGraph"><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
+        {%else%}
+        <tr style="display:none;" class="formGraph"><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
+        {%endif%}
+        {%if initial.generate_graph == "T"%}
         <tr valign="top" class="formGraph" style="display:table-row;">
         {%else%}
         <tr valign="top" class="formGraph" style="display:none;">
@@ -509,7 +514,7 @@
             <option value="large" {{checkbox_vals_graph.image_size_large_selected}}>Large(850px, 480px)</option>
             <option value="larger" {{checkbox_vals_graph.image_size_larger_selected}}>Larger(1150px,610x)</option>
             <option value="extra_large" {{checkbox_vals_graph.image_size_extra_large_selected}}>Extra Large(1450px, 820px)</option>
-            <option value="wide" {{checkbox_vals_graph.image_size_wide_selected_selected}}>Wide(1850px,610px)</option>
+            <option value="wide" {{checkbox_vals_graph.image_size_wide_selected}}>Wide(1850px,610px)</option>
             <option value="wider" {{checkbox_vals_graph.image_size_wider_selected}}>Wider(2450px, 610px)</option>
             <option value="widest" {{checkbox_vals_graph.image_size_widest_selected}}>Widest(3450px,610px)</option>
             </select>
@@ -552,8 +557,8 @@
         <td>Show Minor Grid?</td>
         <td>
             <select id="minor_grid">
-            <option value="T" {{checkbox_vals_graph.minor_grid_T_selected}}>Yes</option>
             <option value="F" {{checkbox_vals_graph.minor_grid_F_selected}}>No</option>
+            <option value="T" {{checkbox_vals_graph.minor_grid_T_selected}}>Yes</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -591,7 +596,7 @@
         {%else%}
             <tr valign="top" class="formGraph" id="cl_width" style="display:none;">
         {%endif%}
-        <td>Connector line width:</td>
+        <td id="Connector Line Width">Connector Line width:</td>
         <td><input type="text" id="connector_line_width" name="connector_line_width" value="{{initial_graph.connector_line_width}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
@@ -632,9 +637,9 @@
         <td>
             <select id="marker_type" name="marker_type">
             <option value="diamond" {{checkbox_vals_graph.marker_type_diamond_selected}}>Diamond</option>
-            <option value="circle" {{checkbox_vals_graph.marker_type_circle_selected_selected}}>Circle</option>
+            <option value="circle" {{checkbox_vals_graph.marker_type_circle_selected}}>Circle</option>
             <option value="square" {{checkbox_vals_graph.marker_type_square_selected}}>Square</option>
-            <option value="triangle" {{checkbox_vals_graph.marker_type_triangle_selected_selected}}>Triangle</option>
+            <option value="triangle" {{checkbox_vals_graph.marker_type_triangle_selected}}>Triangle</option>
             <option value="triangle_down" {{checkbox_vals_graph.marker_type_triangle_down_selected}}>Downward Triangle</option>
             </select>
         </td> 
@@ -652,7 +657,7 @@
         {%else%}
         <tr valign="top" class="formGraph" style="display:none;">
         {%endif%}
-        <td>Vertical axis min:</td>
+        <td id="Vertical Axis Minimum">Vertical axis min:</td>
         <td><input type="text" id="vertical_axis_min" name="vertical_axis_min" value="{{initial_graph.vertical_axis_min}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
@@ -668,7 +673,7 @@
         {%else%}
         <tr valign="top" class="formGraph" style="display:none;">
         {%endif%}
-        <td>Vertical axis max:</td>
+        <td id="Vertical Axis Maximum">Vertical axis max:</td>
         <td><input type="text" id="vertical_axis_max" name="vertical_axis_max" value="{{initial_graph.vertical_axis_max}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
@@ -711,9 +716,6 @@
     </script>
     <br />
 
-    {%if json_dict.data%}
-        <a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/visualize/?station_ID={{json_dict.station_ID}}&element={{json_dict.element}}&json_file={{json_dict.json_file}}"><font size=4>Generate Time Series Plots for this data</font></a><br /><br />
-    {%endif%}
     {%if json_dict.data%}
     <table>
         <td>

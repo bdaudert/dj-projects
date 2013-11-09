@@ -325,7 +325,7 @@ function set_axis_properties(data_max, data_min, element,statistic,plotline_no){
 function align_ticks(plotlines){
     //Aligns axis ticks with plotlines
     tickPositions = [];
-    for (idx=0;idx<plotlines.length -1;idx++){
+    for (idx=0;idx<plotlines.length;idx++){
         var tp = plotlines[idx].value;
         tickPositions.push(tp);
     }
@@ -384,6 +384,7 @@ function set_plotLines(data_max, data_min, tickInterval, options_dict){
             var v = precise_round(val,1);
         }
         pL.value = v;
+        alert(v);
         plotLines.push(pL);
     }
     if (plotLines.length == 0){

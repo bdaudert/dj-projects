@@ -13,12 +13,12 @@ $(function () {
             max_vals.push(parseFloat(datadict.ranges[mon_idx][2]));
             min_vals.push(parseFloat(datadict.ranges[mon_idx][1]));
         }
-        var max = find_max(max_vals, datadict.element,datadict.search_params.monthly_statistic);
-        var min = find_min(min_vals, datadict.element,datadict.search_params.monthly_statistic);
+        var max = find_max(max_vals, datadict.element,datadict.initial.monthly_statistic);
+        var min = find_min(min_vals, datadict.element,datadict.initial.monthly_statistic);
         var x_plotLines = set_plotLines(11, 0, 1);
         //Align x ticks with plotlines
-        var x_tickPositions = align_ticks(x_plotLines);
-        var y_axis_props = set_axis_properties(max, min, datadict.element,datadict.search_params.monthly_statistic,10.0);
+        var x_tickPositions = align_ticks(x_plotLines); 
+        var y_axis_props = set_axis_properties(max, min, datadict.element,datadict.initial.monthly_statistic,10.0);
         //Align y ticks with plotlines
         var y_tickPositions = align_ticks(y_axis_props.plotLines);
         var averages = datadict.averages;
@@ -78,9 +78,12 @@ $(function () {
                     style:axesStyle,
                     text:'Start Year: ' + datadict.start_date + ' End Year: ' + datadict.end_date,
                 },
-                categories: datadict.month_list,
+                categories: datadict.month_list.splice(datadict.month_list.length -1,0),
                 plotLines:x_plotLines,
-                tickPositions:x_tickPositions
+                TickPositions:x_tickPositions,
+                tickInterval:null,
+                min:0.5,
+                max:10.5
             },
             yAxis: {
                 labels:{

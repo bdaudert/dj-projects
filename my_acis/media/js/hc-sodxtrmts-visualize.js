@@ -54,7 +54,7 @@ $(function () {
                 var SummaryText = ' ';
             }
 
-            var max_missing_days = parseInt(datadict.search_params.max_missing_days);
+            var max_missing_days = parseInt(datadict.initial.max_missing_days);
             //Depending on summary, define series to be plotted
             //Find start end end index
             var yr_start_idx = 0;
@@ -158,8 +158,8 @@ $(function () {
                 data_max = 0;
                 data_min = 0;
                 if (values.length > 0){
-                    var data_max = find_max(values,datadict.element,datadict.search_params.monthly_statistic);
-                    var data_min = find_min(values,datadict.element,datadict.search_params.monthly_statistic);
+                    var data_max = find_max(values,datadict.element,datadict.initial.monthly_statistic);
+                    var data_min = find_min(values,datadict.element,datadict.initial.monthly_statistic);
                     if (vertical_axis_max != "Use default") { 
                         try{
                             var data_max = parseFloat(vertical_axis_max);
@@ -336,7 +336,21 @@ $(function () {
                 var plotline_no = x_plotlines.length;
             }
             */
-            var y_axis_props = set_axis_properties(data_max, data_min, datadict.element,datadict.search_params.monthly_statistic,plotline_no);
+            var y_axis_props = set_axis_properties(data_max, data_min, datadict.element,datadict.initial.monthly_statistic,plotline_no);
+           
+            //Override axis max/ min if needed:
+            if (vertical_axis_max != "Use default") {
+                try{
+                    y_axis_prop.axisMax = parseFloat(vertical_axis_max);
+                }
+                catch(e){}
+            }
+            if (vertical_axis_min != "Use default") {                                                                       
+                try{
+                    y_axis_prop.axisMin = parseFloat(vertical_axis_min);
+                }
+                catch(e){}
+            }            
             var y_tickPositions = align_ticks(y_axis_props.plotLines);
             if (graph_title == "Use default"){
                 graph_title = datadict.stn_name + ', ' + datadict.stn_state + '<br />';
