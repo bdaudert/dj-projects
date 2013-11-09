@@ -341,10 +341,8 @@ function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis
             catch(e){}
             //continue;
         }
-        else{
-            pL.value = v;
-            props.plotLines.push(pL);
-        }
+        pL.value = v;
+        props.plotLines.push(pL);
     }
     return props;
 }
