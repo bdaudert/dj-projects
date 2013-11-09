@@ -1626,6 +1626,7 @@ def sodxtrmts(request):
                     json_dict['initial'] = initial;json_dict['checkbox_vals'] = checkbox_vals
                     json_dict['initial_graph'] = initial_graph;json_dict['checkbox_vals_graph'] = checkbox_vals_graph
                     context['json_dict'] = json_dict
+                    #context['req'] =checkbox_vals_graph
                     results_json = json.dumps(json_dict)
                     with open(TEMP_FILE_DIR + '%s' %(json_file),'w+') as f:
                         f.write(results_json)
@@ -1633,10 +1634,16 @@ def sodxtrmts(request):
                     context['JSON_URL'] = TEMP_FILE_DIR
                     return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
             else:
+                #New data analysis
                 initial['generate_graph']='F'
                 checkbox_vals['generate_graph_T_selected'] = ''
                 checkbox_vals['generate_graph_F_selected'] = 'selected'
-
+                #Reset initial_graph
+                initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial({'start_year':initial['start_year'], 'end_year':initial['end_year']})
+                initial_pl_opts, checkbox_vals_pl_opts = set_plot_options({})
+                #combine the graph options with the plot options
+                join_graph_plot_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
+                context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
         #Data Table generation
         data_params = {
             'sid':form['station_ID'],
@@ -1644,9 +1651,6 @@ def sodxtrmts(request):
             'end_date':form['end_year'],
             'element':form['element']
         }
-        #search_params = {}
-        #for key, val in form.iteritems():
-        #    search_params[key] = val
         app_params = form
         for key in ['station_ID', 'start_year', 'end_year']:
             del app_params[key]
@@ -1999,8 +2003,12 @@ def sodsumm(request):
 ##############################
 def set_form(request):
     form = {}
-    for key,val in dict(request.POST.items()).iteritems():
-        form[str(key)] = str(val)
+    if request.method == 'POST':
+        for key,val in dict(request.POST.items()).iteritems():
+            form[str(key)] = str(val)
+    elif request.method == 'GET':
+        for key,val in dict(request.GET.items()).iteritems():
+            form[str(key)] = str(val)
     return form
 
 def set_plot_options(request):
@@ -2014,13 +2022,13 @@ def set_plot_options(request):
                 return default
     elif request.method == 'GET':
         Get = getattr(request.GET, 'get')
-    elif request.POST:
+    elif request.method == 'POST':
         Get = getattr(request.POST, 'get')
     initial['graph_title'] = Get('graph_title','Use default')
     initial['image_size'] = Get('image_size', 'medium')
     initial['major_grid']  = Get('major_grid', 'T')
     initial['minor_grid'] = Get('minor_grid', 'F')
-    initial['connector_line'] = Get('connector_line', 'T')
+    initial['connector_line'] = str(Get('connector_line', 'T'))
     initial['connector_line_width'] = Get('connector_line_width', '1')
     initial['markers'] = Get('markers', 'T')
     initial['marker_type'] = Get('marker_type', 'diamond')
@@ -2030,8 +2038,9 @@ def set_plot_options(request):
     for bl in ['T','F']:
         for cbv in ['major_grid', 'minor_grid','connector_line', 'markers']:
             checkbox_vals[cbv + '_' + bl + '_selected'] = ''
-        if initial[cbv] == bl:
-            checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
+            if initial[cbv] == bl:
+                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
+                checkbox_vals[cbv + '_' + bl + '_TEST'] = initial['major_grid']
     for image_size in ['small', 'medium', 'large', 'larger', 'extra_large', 'wide', 'wider', 'widest']:
         checkbox_vals['image_size' + '_' + image_size + '_selected'] = ''
         if initial['image_size'] == image_size:
@@ -2053,7 +2062,7 @@ def set_sodxtrmts_initial(request):
                 return default
     elif request.method == 'GET':
         Get = getattr(request.GET, 'get')
-    elif request.POST:
+    elif request.method == 'POST':
         Get = getattr(request.POST, 'get')
     stn_id = Get('stn_id', None)
     if stn_id is not None:
@@ -2098,8 +2107,8 @@ def set_sodxtrmts_initial(request):
     for bl in ['T','F']:
         for cbv in ['departures_from_averages', 'frequency_analysis', 'generate_graph']:
             checkbox_vals[cbv + '_' + bl + '_selected'] = ''
-        if initial[cbv] == bl:
-            checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
+            if initial[cbv] == bl:
+                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
     for stat in ['mmax','mmin','mave','sd','ndays','rmon','msum']:
         checkbox_vals[stat + '_selected'] =''
         if initial['monthly_statistic'] == stat:
@@ -2121,7 +2130,7 @@ def set_sodxtrmts_graph_initial(request):
                 return default
     elif request.method == 'GET':
         Get = getattr(request.GET, 'get')
-    elif request.POST:
+    elif request.method == 'POST':
         Get = getattr(request.POST, 'get')
     initial['graph_generate_graph']= str(Get('graph_generate_graph', 'F'))
     initial['graph_start_month'] = Get('graph_start_month', '01')
@@ -2142,8 +2151,8 @@ def set_sodxtrmts_graph_initial(request):
     for bl in ['T','F']:
         for cbv in ['graph_show_running_mean', 'graph_plot_incomplete_years', 'graph_generate_graph']:
             checkbox_vals[cbv + '_' + bl + '_selected'] = ''
-        if initial[cbv] == bl:
-            checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
+            if initial[cbv] == bl:
+                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
     for graph_summary in ['max','min','mean','sum','individual']:
         checkbox_vals[ 'graph_summary_' + graph_summary + '_selected'] = ''
         if initial['graph_summary'] == graph_summary:

@@ -18,7 +18,7 @@ $(function () {
         var x_plotLines = set_plotLines(11, 0, 1);
         //Align x ticks with plotlines
         var x_tickPositions = align_ticks(x_plotLines); 
-        var y_axis_props = set_axis_properties(max, min, datadict.element,datadict.initial.monthly_statistic,10.0);
+        var y_axis_props = set_axis_properties(max,'Use default', min, 'Use default',datadict.element,datadict.initial.monthly_statistic,10.0);
         //Align y ticks with plotlines
         var y_tickPositions = align_ticks(y_axis_props.plotLines);
         var averages = datadict.averages;
@@ -80,8 +80,8 @@ $(function () {
                 },
                 categories: datadict.month_list.splice(datadict.month_list.length -1,0),
                 plotLines:x_plotLines,
-                TickPositions:x_tickPositions,
-                tickInterval:null,
+                //tickPositions:x_tickPositions,
+                tickInterval:0,
                 min:0.5,
                 max:10.5
             },

@@ -535,7 +535,7 @@
         {%endif%}
         <td>Show Major Grid?</td>
         <td>
-            <select id="major_grid">
+            <select id="major_grid" name="major_grid">
             <option value="T" {{checkbox_vals_graph.major_grid_T_selected}}>Yes</option>
             <option value="F" {{checkbox_vals_graph.major_grid_F_selected}}>No</option>
             </select>
@@ -556,7 +556,7 @@
         {%endif%}
         <td>Show Minor Grid?</td>
         <td>
-            <select id="minor_grid">
+            <select id="minor_grid" name="minor_grid">
             <option value="F" {{checkbox_vals_graph.minor_grid_F_selected}}>No</option>
             <option value="T" {{checkbox_vals_graph.minor_grid_T_selected}}>Yes</option>
             </select>
@@ -577,7 +577,7 @@
         {%endif%}
         <td>Show Connector Line?</td>
         <td>
-            <select id="connector_line" onchange="show_div_if_true(this, 'cl_width');">
+            <select id="connector_line" name="connector_line" onchange="show_div_if_true(this, 'cl_width');">
             <option value="T" {{checkbox_vals_graph.connector_line_T_selected}}>Yes</option>
             <option value="F" {{checkbox_vals_graph.connector_line_F_selected}}>No</option>
             </select>
@@ -614,9 +614,9 @@
         {%endif%}
         <td>Show Markers?</td>
         <td>
-            <select id="markers" onchange="show_div_if_true(this, 'mk_type');">
+            <select name="markers" id="markers" onchange="show_div_if_true(this, 'mk_type');">
             <option value="T" {{checkbox_vals_graph.markers_T_selected}}>Yes</option>
-            <option value="F" {{checkbox_vals_graph.markers_line_F_selected}}>No</option>
+            <option value="F" {{checkbox_vals_graph.markers_F_selected}}>No</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -715,7 +715,7 @@
         $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_SODXTRMTS");
     </script>
     <br />
-
+    {{req}}
     {%if json_dict.data%}
     <table>
         <td>

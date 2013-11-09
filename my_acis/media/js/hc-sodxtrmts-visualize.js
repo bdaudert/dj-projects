@@ -58,7 +58,7 @@ $(function () {
             //Depending on summary, define series to be plotted
             //Find start end end index
             var yr_start_idx = 0;
-            var yr_end_idx = datadict.data.length;
+            var yr_end_idx = datadict.data.length - 6;
             if (initial_graph.graph_start_year.toLowerCase() !='por'){
                 yr_start_idx = parseInt(initial_graph.graph_start_year) - parseInt(datadict.start_date);
             }
@@ -82,6 +82,7 @@ $(function () {
                 var data = [];
                 var acis_data = [];
                 var values = [];
+                /*
                 //Find end year index --> omit table (mean, skew...) summaries at end of array 
                 if (month_list[0]> month_list[month_list.length -1]){
                     //first month > last
@@ -90,8 +91,9 @@ $(function () {
                 else {
                     var end_idx = 6;
                 }
+                */
                 //Define plot data
-                for (var yr_idx=yr_start_idx;yr_idx<yr_end_idx - end_idx;yr_idx++) {
+                for (var yr_idx=yr_start_idx;yr_idx<yr_end_idx;yr_idx++) {
                     var vals = [];
                     var skip_year = 'F';                    
                     if (month_list[0]> month_list[month_list.length -1]){
@@ -225,15 +227,15 @@ $(function () {
                 }
             }
             else { //Case2: Plot indiviual months
+                var acis_data = [];
                 for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
                     var series = {'name':month_names[month_list[mon_idx]-1],'pointStart':Start,'pointInterval':Interval,marker:{symbol:marker_type}};
                     if (markers == 'F'){
                         series['marker'] = {enabled:false}
                     }
                     var data =  [];
-                    var acis_data = [];
                     var values = [];
-                    for (var yr_idx=yr_start_idx;yr_idx<yr_end_idx - 6;yr_idx++) {
+                    for (var yr_idx=yr_start_idx;yr_idx<yr_end_idx;yr_idx++) {
                         var val = datadict.data[yr_idx][2*month_list[mon_idx] - 1]
                         if (val != '-----') {
                             values.push(precise_round(parseFloat(val),2));
@@ -293,7 +295,12 @@ $(function () {
             var yr_step = 1;
             if (minor_grid =='T'){
                 pls = dmm.plotlines_minor;
-                var yr_step = 2;
+                if (pls.length > 20){
+                    yr_step = 5;
+                }
+                else{
+                    yr_step = 2;
+                }
             }
             else if (major_grid =='T' && minor_grid == 'F'){
                 pls = dmm.plotlines_major;
@@ -323,34 +330,18 @@ $(function () {
             //Define y_plotlines and tickInterval
             var y_plotlines = [];
             var plotline_no = x_plotlines.length;
-            /*
-            if (major_grid =='F' && minor_grid == 'F'){
-                var plotline_no  = 1.0;
-            }
-            else if (minor_grid =='T'){
-                //var plotline_no = 10.0;
-                var plotline_no = x_plotlines.length;
-            }
-            else if (major_grid =='T' && minor_grid == 'F'){
-                //var plotline_no = 5.0;
-                var plotline_no = x_plotlines.length;
-            }
-            */
-            var y_axis_props = set_axis_properties(data_max, data_min, datadict.element,datadict.initial.monthly_statistic,plotline_no);
-           
-            //Override axis max/ min if needed:
-            if (vertical_axis_max != "Use default") {
-                try{
-                    y_axis_prop.axisMax = parseFloat(vertical_axis_max);
+            if (plotline_no > 20){
+                if (major_grid =='F' && minor_grid == 'F'){
+                    var plotline_no  = 1.0;
                 }
-                catch(e){}
-            }
-            if (vertical_axis_min != "Use default") {                                                                       
-                try{
-                    y_axis_prop.axisMin = parseFloat(vertical_axis_min);
+                else if (minor_grid =='T'){
+                    var plotline_no = 10.0;
                 }
-                catch(e){}
-            }            
+                else if (major_grid =='T' && minor_grid == 'F'){
+                    var plotline_no = 5.0;
+                }
+            }
+            var y_axis_props = set_axis_properties(data_max, vertical_axis_max,data_min, vertical_axis_min,datadict.element,datadict.initial.monthly_statistic,plotline_no);
             var y_tickPositions = align_ticks(y_axis_props.plotLines);
             if (graph_title == "Use default"){
                 graph_title = datadict.stn_name + ', ' + datadict.stn_state + '<br />';

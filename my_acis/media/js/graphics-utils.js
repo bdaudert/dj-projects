@@ -226,7 +226,7 @@ function set_yr_plotlines(data, plotline_opts){
 }
 
 
-function set_axis_properties(data_max, data_min, element,statistic,plotline_no){
+function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis_min, element,statistic,plotline_no){
     var props = {
         'axisMin':data_min,
         'axisMax':data_max,
@@ -294,13 +294,31 @@ function set_axis_properties(data_max, data_min, element,statistic,plotline_no){
     while (Math.abs(data_max) > Math.abs(props.axisMax)){
         props.axisMax+=props.tickInterval;
     }
+    //Override max/min custom requested by user
+    var add_top = 1;
+    if (vertical_axis_max != "Use default") {
+        try{
+            props.axisMax = parseFloat(vertical_axis_max);
+            add_top = 1;
+        }   
+        catch(e){}
+    }
+    if (vertical_axis_min != "Use default") {            
+        try{
+            props.axisMin = parseFloat(vertical_axis_min);
+        }
+        catch(e){}
+    }
+    if (statistic == 'ndays'){
+        props.axisMax = 31;
+    }
     //plotlines
     var plotLine = {
         color:'#787878',
         dashStyle:'dash',
         width: 0.5
     }
-    for (val=props.axisMin;val<=props.axisMax + props.tickInterval;val+=props.tickInterval) {
+    for (val=props.axisMin;val<=props.axisMax + add_top*props.tickInterval;val+=props.tickInterval) {
         var pL = {};
         for (var key in plotLine){
             pL[key] = plotLine[key];
@@ -316,8 +334,17 @@ function set_axis_properties(data_max, data_min, element,statistic,plotline_no){
         else{
             var v = val;
         }
-        pL.value = v;
-        props.plotLines.push(pL);
+        if (v > props.axisMax && vertical_axis_max != "Use default"){
+            try{
+                v = parseFloat(vertical_axis_max);
+            }
+            catch(e){}
+            //continue;
+        }
+        else{
+            pL.value = v;
+            props.plotLines.push(pL);
+        }
     }
     return props;
 }
@@ -384,7 +411,6 @@ function set_plotLines(data_max, data_min, tickInterval, options_dict){
             var v = precise_round(val,1);
         }
         pL.value = v;
-        alert(v);
         plotLines.push(pL);
     }
     if (plotLines.length == 0){
