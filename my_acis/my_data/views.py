@@ -629,7 +629,7 @@ def data_gridded(request):
                 if 'state' in form1.cleaned_data.keys():params['state']= state
                 if 'bounding_box' in form1.cleaned_data.keys():params['bbox']= bounding_box
                 #Loop over element and generate figure
-                for el_idx, elem in enumerate(element_list):
+                for el_idx, elem in enumerate(form1.cleaned_data['elements']):
                     if elem in ['pcpn', 'snow', 'snwd']:
                         if form1.cleaned_data['data_summary'] != 'sum':
                             params['image']['levels'] =[0,0.1, 0.2, 0.5, 0.7, 1.0, 2.0, 3.0, 4.0, 5.0]
@@ -1565,8 +1565,11 @@ def sodxtrmts(request):
         'title': 'Monthly Summary Time Series',
         'icon':'ToolProduct.png'
     }
+    json_dict =  None
     json_file = request.GET.get('json_file', None)
-    context['json_file'] = json_file
+    if json_file is not None:
+        context['json_file'] =json_file
+        context['JSON_URL'] = TEMP_FILE_DIR
     initial,checkbox_vals = set_sodxtrmts_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set graph and plot options
@@ -1575,26 +1578,6 @@ def sodxtrmts(request):
     #combine the graph options with the plot options
     join_graph_plot_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
     context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
-
-    #check if initial dataset is given
-
-    if json_file:
-        with open(TEMP_FILE_DIR + json_file, 'r') as f:
-            json_dict =  json.load(f)
-        initial_old = json_dict['initial'];checkbox_vals_old = json_dict['checkbox_vals']
-        initial_graph_old = json_dict['initial_graph'];checkbox_vals_graph_old = json_dict['checkbox_vals_graph']
-        #context['initial'] = initial;context['initial_graph'] = initial_graph
-        #context['checkbox_vals'] = checkbox_vals;context['checkbox_vals_graph'] = checkbox_vals_graph
-        #Check if analysis parameters where changed by user
-        diff_init = [k for k in initial if initial[k] != initial_old[k]]
-        diff_check_vals = [k for k in checkbox_vals if checkbox_vals[k] != checkbox_vals_old[k]]
-        if not diff_init and not diff_check_vals:
-            #check if user wants to generate graph
-            if 'generate_graph' in initial.keys() and checkbox_vals['generate_graph'] == 'T':
-                context['generate_graph'] == True
-                context['json_file'] = json_file
-                context['JSON_URL'] = TEMP_FILE_DIR
-                return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
 
     #Time Serie Table Generation and graph if desired
     if 'formSodxtrmts' in request.POST:
@@ -1609,6 +1592,7 @@ def sodxtrmts(request):
         context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
         #Turn request object into python dict
         form = set_form(request)
+
         #Form sanity check
         form_error = check_sodxtrmts_form(form)
         if form_error:
@@ -1617,6 +1601,43 @@ def sodxtrmts(request):
 
         #Define header for html display
         header = set_sodxtrmts_head(form)
+
+        #Check if we should only generate graphics
+        if json_file is None:
+            json_file = request.POST.get('j_file', None)
+        if json_file:
+            with open(TEMP_FILE_DIR + json_file, 'r') as f:
+                json_dict = WRCCUtils.u_convert(json.loads(f.read()))
+                context['json_dict'] = json_dict
+            initial_old = json_dict['initial'];checkbox_vals_old = json_dict['checkbox_vals']
+            #initial_graph_old = json_dict['initial_graph'];checkbox_vals_graph_old = json_dict['checkbox_vals_graph']
+            #Check if analysis parameters where changed by user
+            diff_init = [k for k in initial if initial[k] != initial_old[k] and k!= 'generate_graph']
+            diff_check_vals = [k for k in checkbox_vals if checkbox_vals[k] != checkbox_vals_old[k] and k not in ['generate_graph_T_selected', 'generate_graph_F_selected']]
+            if not diff_init and not diff_check_vals:
+                #check if user wants to generate graph
+                if 'generate_graph' in initial.keys() and initial['generate_graph'] == 'T':
+                    context['generate_graph'] = True
+                    context['width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
+                    context['height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
+                    initial_graph['image_width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
+                    initial_graph['image_height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
+                    #Override initials
+                    json_dict['initial'] = initial;json_dict['checkbox_vals'] = checkbox_vals
+                    json_dict['initial_graph'] = initial_graph;json_dict['checkbox_vals_graph'] = checkbox_vals_graph
+                    context['json_dict'] = json_dict
+                    results_json = json.dumps(json_dict)
+                    with open(TEMP_FILE_DIR + '%s' %(json_file),'w+') as f:
+                        f.write(results_json)
+                    context['json_file'] =json_file
+                    context['JSON_URL'] = TEMP_FILE_DIR
+                    return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
+            else:
+                initial['generate_graph']='F'
+                checkbox_vals['generate_graph_T_selected'] = ''
+                checkbox_vals['generate_graph_F_selected'] = 'selected'
+
+        #Data Table generation
         data_params = {
             'sid':form['station_ID'],
             'start_date':form['start_year'],
@@ -1711,19 +1732,17 @@ def sodxtrmts(request):
             else:
                 json_dict['start_date'] = '----'
                 json_dict['end_date'] = '----'
-            results_json = json.dumps(json_dict)
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
             json_file = '%s_sodxtrmts_%s_%s_%s.json' \
             %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
-            f = open(TEMP_FILE_DIR + '%s' %(json_file),'w+')
-            f.write(results_json)
-            f.close()
-            json_dict['JSON_URL'] = TEMP_FILE_DIR
             json_dict['json_file'] = json_file
-            context['JSON_URL'] = TEMP_FILE_DIR
+            json_dict['JSON_URL'] = TEMP_FILE_DIR
+            results_json = json.dumps(json_dict)
+            with open(TEMP_FILE_DIR + '%s' %(json_file),'w+') as f:
+                f.write(results_json)
+            context['json_dict'] = json_dict
             context['json_file'] = json_file
-            if not 'generate_graph'  in form.keys() or form['generate_graph'] == 'F':
-                context['json_dict'] = dict(json_dict)
+            context['JSON_URL'] = TEMP_FILE_DIR
     '''
     #User graphics
     if  'formGraph' in request.POST:
@@ -2474,7 +2493,7 @@ def check_sodxtrmts_form(form):
     form is given as dict
     '''
     form_error = {}
-    fields_to_check = ['start_year', 'end_year','max_missing_days']
+    fields_to_check = ['start_year', 'end_year','max_missing_days', 'graph_start_year', 'graph_end_year']
     for field in fields_to_check:
         checker = getattr(WRCCFormCheck, 'check_' + field)
         err = checker(form)

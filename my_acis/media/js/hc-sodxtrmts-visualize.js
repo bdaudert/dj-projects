@@ -5,60 +5,70 @@ $(function () {
         var month_names =  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         var JSON_URL = document.getElementById("JSON_URL").value;
         var json_file = document.getElementById("json_file").value;
-        var initial_graph = document.getElementById("initial_graph").value;
-        //Graph Options
-        var summary = initial_graph.graph_summary;
-        var show_running_mean = initial_graph.graph_show_running_mean;
-        var running_mean_years = initial_graph.graph_running_mean_years;
-        var plot_incomplete_years = initial_graph.graph_plot_incomplete_years;
-        //Plot Options
-        var graph_title = initial_graph.graph_title;
-        var major_grid = initial_graph.major_grid;
-        var minor_grid = initial_graph.minor_grid
-        var connector_line = initial_graph.connector_line;
-        var connector_line_width = initial_graph.connector_line_width;
-        var markers = initial_graph.markers;
-        var marker_type = initial_graph.marker_type;
-        var vertical_axis_min = initial_graph.vertical_axis_min;
-        var vertical_axis_max = initial_graph.vertical_axis_max;
-        var image_height = initial_graph.image_height;
-        var month_list = [];
-        for (mon = parseInt(initial_graph.graph_start_month);mon<=parseInt(initial_graph.graph_end_month);mon++)
-            month_list.push(mon);
+        $.getJSON('/csc/media/tmp/' + json_file, function(datadict) {
+            var initial = datadict.initial;
+            var initial_graph = datadict.initial_graph;
+            //Graph Options
+            var summary = initial_graph.graph_summary;
+            var show_running_mean = initial_graph.graph_show_running_mean;
+            var running_mean_years = initial_graph.graph_running_mean_years;
+            var plot_incomplete_years = initial_graph.graph_plot_incomplete_years;
+            //Plot Options
+            var graph_title = initial_graph.graph_title;
+            var major_grid = initial_graph.major_grid;
+            var minor_grid = initial_graph.minor_grid
+            var connector_line = initial_graph.connector_line;
+            var connector_line_width = parseInt(initial_graph.connector_line_width);
+            var markers = initial_graph.markers;
+            var marker_type = initial_graph.marker_type;
+            var vertical_axis_min = initial_graph.vertical_axis_min;
+            var vertical_axis_max = initial_graph.vertical_axis_max;
+            var image_height = initial_graph.image_height;
+            var month_list = [];
+            for (mon = parseInt(initial_graph.graph_start_month);mon<=parseInt(initial_graph.graph_end_month);mon++)
+                month_list.push(mon);
 
-        if (connector_line == 'F'){
-            connector_line_width = 0;        
-        }
+            if (connector_line == 'F'){
+                connector_line_width = 0;
+            }
 
-        //set postion of network info label
-        var top_dist = set_label_position(image_height);
-        var axesStyle = set_AxesStyle();
-        var titleStyle = set_TitleStyle();
-        var subtitleStyle = set_SubtitleStyle();
-        //Define Summary Text
-        if (summary == 'max'){
-            var SummaryText = 'Maximum';
-        }
-        if (summary == 'min'){
-            var SummaryText = 'Minimum';
-        }
-        if (summary == 'sum'){
-            var SummaryText = 'Sum';
-        }
-        if (summary == 'mean'){
-            var SummaryText = 'Average';
-        }
-        if (summary == 'individual'){
-            var SummaryText = ' ';
-        }
+            //set postion of network info label
+            var top_dist = set_label_position(image_height);
+            var axesStyle = set_AxesStyle();
+            var titleStyle = set_TitleStyle();
+            var subtitleStyle = set_SubtitleStyle();
+            //Define Summary Text
+            if (summary == 'max'){
+                var SummaryText = 'Maximum';
+            }
+            if (summary == 'min'){
+                var SummaryText = 'Minimum';
+            }
+            if (summary == 'sum'){
+                var SummaryText = 'Sum';
+            }
+            if (summary == 'mean'){
+                var SummaryText = 'Average';
+            }
+            if (summary == 'individual'){
+                var SummaryText = ' ';
+            }
 
-        $.getJSON(JSON_URL + json_file, function(datadict) {
             var max_missing_days = parseInt(datadict.search_params.max_missing_days);
             //Depending on summary, define series to be plotted
+            //Find start end end index
+            var yr_start_idx = 0;
+            var yr_end_idx = datadict.data.length;
+            if (initial_graph.graph_start_year.toLowerCase() !='por'){
+                yr_start_idx = parseInt(initial_graph.graph_start_year) - parseInt(datadict.start_date);
+            }
+            if (initial_graph.graph_end_year.toLowerCase() !='por'){
+                yr_end_idx = yr_end_idx - (datadict.end_date - parseInt(initial_graph.graph_end_year));
+            }
+
             var series_data = [];
-            var Start = Date.UTC(parseInt(datadict.start_date),0,01);
+            var Start = Date.UTC(parseInt(datadict.data[yr_start_idx][0]),0,01);
             var Interval = 365 * 24 * 3600000; // 1 year
-            
             //Case 1 Plot: summary over Months
             if (summary != 'individual'){
                 var series = {'pointStart':Start,'pointInterval':Interval, marker:{symbol:marker_type}, lineWidth:connector_line_width};
@@ -81,7 +91,7 @@ $(function () {
                     var end_idx = 6;
                 }
                 //Define plot data
-                for (var yr_idx=0;yr_idx<datadict.data.length - end_idx;yr_idx++) {
+                for (var yr_idx=yr_start_idx;yr_idx<yr_end_idx - end_idx;yr_idx++) {
                     var vals = [];
                     var skip_year = 'F';                    
                     if (month_list[0]> month_list[month_list.length -1]){
@@ -177,10 +187,10 @@ $(function () {
                     for (var yr_idx=0;yr_idx<values.length;yr_idx++) {
                         skip_year = 'F';
                         if (month_list[0]> month_list[month_list.length -1]){
-                            var date = Date.UTC(parseInt(datadict.data[yr_idx][0]) + 1, mon_idx, 1)
+                            var date = Date.UTC(parseInt(datadict.data[yr_idx + yr_start_idx][0]) + 1, mon_idx, 1)
                         }
                         else {
-                            var date = Date.UTC(parseInt(datadict.data[yr_idx][0]), mon_idx, 1)
+                            var date = Date.UTC(parseInt(datadict.data[yr_idx + yr_start_idx][0]), mon_idx, 1)
                         }
                         if (yr_idx >= num_nulls &&  yr_idx <= values.length - 1 - num_nulls) {
                             //for(var i=yr_idx - num_nulls,sum=0;i<=yr_idx + num_nulls;sum+=values[i++]);
@@ -223,7 +233,7 @@ $(function () {
                     var data =  [];
                     var acis_data = [];
                     var values = [];
-                    for (var yr_idx=0;yr_idx<datadict.data.length - 6;yr_idx++) {
+                    for (var yr_idx=yr_start_idx;yr_idx<yr_end_idx - 6;yr_idx++) {
                         var val = datadict.data[yr_idx][2*month_list[mon_idx] - 1]
                         if (val != '-----') {
                             values.push(precise_round(parseFloat(val),2));

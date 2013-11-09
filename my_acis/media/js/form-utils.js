@@ -1,5 +1,5 @@
 //Dynamic form functions
-function highlight_form_field(table_id,td_id, err){
+function highlight_form_field(td_id, err){
     //var td = $('table#tableSodxtrmts td#' + td_id);
     var td = document.getElementById(td_id);
     //td.setAttribute("style","color:red");
@@ -10,23 +10,22 @@ function highlight_form_field(table_id,td_id, err){
 }
 
 
-//SODXTRMTS
 function set_threshes(element){
-    var threshes = '0.01,0.005,0.005,0.01';
+    var threshes = '0.1,0.01,0.01,0.1';
     if (element == 'avgt' || element == 'dtr'){
         threshes = '65,65,40,65';
     }
     if (element == 'maxt'){
-        threshes = '90,90,50,80';
+        threshes = '40,90,65,80';
     }
     if (element == 'mint'){
-        threshes = '32,32,32,40';
+        threshes = '32,70,32,40';
     }
     if (element == 'hdd' || element == 'gdd' || element == 'cdd'){
-        threshes = '100,100,50,100';
+        threshes = '10,30,10,30';
     }
     if (element == 'wdmv'){
-        threshes = '30,30,10,20';
+        threshes = '100,200,100,200';
     }
     return threshes;
 }
@@ -199,8 +198,6 @@ function show_div_if_true(node, divID){
 }
 
 function show_formGraph(TF, rowClass) {
-    //alert(TF);
-    //alert(rowClass);
     var trs = document.getElementsByClassName(rowClass);
     if (TF == 'T'){
         var disp = "table-row";
@@ -212,3 +209,4 @@ function show_formGraph(TF, rowClass) {
         trs[idx].style.display = disp;
     }
 }
+
