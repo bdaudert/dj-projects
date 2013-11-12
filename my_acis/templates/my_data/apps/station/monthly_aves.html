@@ -18,24 +18,24 @@
             <form method="post" action="">{% csrf_token %}
             <table class="form">
             {%for field in form %}
-                <tr>
-                    <td>{{field.label}}:</td>
-                    <td>{{field}}</td>                                                                                
-                    <td><p class="trigger"><img alt="QMark" title="QMark" class="qmark" src="{{MEDIA_URL}}img/QMark.png"></p>                                     
-                    {%ifequal field.label "Elements" %}
-                        <div class="pop-up">
-                        <img alt="ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0">                           </div>
-                    {%else%}
-                        <div class="pop-up"><p>{{field.help_text}}</p></div>
-                    {%endifequal%}
-                    </td>
-                </tr>
-                {%ifequal field.label "Station id"%}
-                    <tr><td></td><td><a target="_blank" href="/csc/swcke/apps/station/station_locator/">Station Finder</a></td><td></td></tr>
-                {%endifequal%}
-               {%if field.errors%}
-                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
-                {%endif%}
+            <tr>
+            <td>{{field.label}}:</td>
+            <td>{{field}}</td>                                                                                
+            <td><img alt="QMark" title="QMark" class="trigger" src="{{MEDIA_URL}}img/QMark.png"> 
+            {%ifequal field.label "Elements" %}
+            <div class="pop-up">
+                    <img alt="ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0">                           </div>
+            {%else%}
+            <div class="pop-up"><p>{{field.help_text}}</p></div>
+            {%endifequal%}
+            </td>
+            </tr>
+            {%ifequal field.label "Station id"%}
+            <tr><td></td><td><a target="_blank" href="/csc/swcke/apps/station/station_locator/">Station Finder</a></td><td></td></tr>
+            {%endifequal%}
+            {%if field.errors%}
+            <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+            {%endif%}
             {%endfor%}
             </table>
             <input type="submit" value="Submit" name="form"/>
@@ -68,6 +68,7 @@
         <script type="text/javascript">                        
             $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
         </script>
+        <div id="tool_info" style="display:none;"></div>
         <script type="text/javascript">                        
             $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_MON_AVES");
         </script> 

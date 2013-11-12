@@ -528,7 +528,7 @@ img.center {
 
 .tabs {
   position: relative;   
-  min-height: 900px; /* This part sucks */
+  min-height: 1000px; /* This part sucks */
   min-width:600px;
   clear: both;
   margin: 25px 0;
@@ -547,7 +547,8 @@ img.center {
 .tab [type=radio] {
   display: none;   
 }
-#tab_content {
+
+.tab_content {
   position: absolute;
   top: 28px;
   left: 0px;
@@ -564,7 +565,7 @@ img.center {
   border-bottom: 1px solid white;
   z-index: 2;
 }
-[type=radio]:checked ~ label ~ #tab_content {
+[type=radio]:checked ~ label ~ .tab_content {
   z-index: 1;
 }
 

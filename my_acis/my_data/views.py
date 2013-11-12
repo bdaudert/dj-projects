@@ -1644,6 +1644,7 @@ def sodxtrmts(request):
                 #combine the graph options with the plot options
                 join_graph_plot_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
                 context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
+
         #Data Table generation
         data_params = {
             'sid':form['station_ID'],
@@ -1751,7 +1752,7 @@ def sodxtrmts(request):
 
     return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
 
-
+'''
 def sodxtrmts_visualize(request):
     context = {
         'title': 'Time Series Plots - Monthly Summaries of Extremes',
@@ -1812,6 +1813,7 @@ def sodxtrmts_visualize(request):
             context['vertical_axis_min'] = form0.cleaned_data['vertical_axis_min']
             context['vertical_axis_max'] = form0.cleaned_data['vertical_axis_max']
     return render_to_response('my_data/apps/station/sodxtrmts_visualize.html', context, context_instance=RequestContext(request))
+'''
 
 def sodsumm(request):
     context = {
@@ -1869,8 +1871,8 @@ def sodsumm(request):
             #Define html content
             context['run_done'] = True
             if dates_list:
-                context['start_year'] = dates_list[0]
-                context['end_year'] = dates_list[-1]
+                context['start_year'] = dates_list[0][0:4]
+                context['end_year'] = dates_list[-1][0:4]
             else:
                 context['start_year'] = '0000'
                 context['end_year'] = '0000'
@@ -1996,6 +1998,29 @@ def sodsumm(request):
                 f.close()
                 context['JSON_URL'] = TEMP_FILE_DIR
                 context['json_file'] = json_file
+
+    #Downlaod Table Data
+    for table_idx in range(7):
+        if 'formDownload' + str(table_idx) in request.POST:
+            data_format = request.POST.get('data_format', 'clm')
+            delimiter = request.POST.get('delimiter', 'comma')
+            output_file_name = request.POST.get('output_file_name', 'output')
+            json_file = request.POST.get('json_file', None)
+            tab = request.POST.get('tab', None)
+            with open(TEMP_FILE_DIR + json_file, 'r') as json_f:
+                json_data = WRCCUtils.u_convert(json.loads(json_f.read()))
+                #find the correct data set corresponding to the tab name
+                for idx, data_dict in enumerate(json_data):
+                    if data_dict['table_name'] == tab:
+                        #Overwrite json_in_file
+                        json_in_file_name = json_file + '_in'
+                        with open(TEMP_FILE_DIR + json_in_file_name, 'w+') as json_f:
+                            json.dump(data_dict,json_f)
+                        break
+
+            DDJ = WRCCClasses.DownloadDataJob('Sodsumm',data_format,delimiter, output_file_name, request=request, json_in_file=TEMP_FILE_DIR + json_in_file_name)
+            return DDJ.write_to_file()
+
     return render_to_response('my_data/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
 
 ##############################

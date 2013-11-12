@@ -168,8 +168,8 @@ function set_delimiter(data_format_node, divId){
     if (data_format_node.value == 'clm' ||  data_format_node.value == 'dlm' || data_format_node.value == 'html'){ 
         document.getElementById(divId).style.display = "table-row";
     }
-    else {
-        document.getElementById(divID).style.display = "none";
+    else if (data_format_node.value == 'xl'){
+        document.getElementById(divId).style.display = "none";
     }
 }
 
