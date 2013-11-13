@@ -796,34 +796,19 @@ def metagraph(request):
             params = {'sids':str(form_meta.cleaned_data['station_id'])}
             meta_request = AcisWS.StnMeta(params)
             #meta_request = WRCCClasses.DataJob('StnMeta', params).make_data_call()
-            key_order = ['name', 'coop_id','state','ll','elev','uid','sids']
-            station_meta = [[WRCCData.DISPLAY_PARAMS[key]] for key in key_order]
+            key_order = ['name','state','ll','elev','uid','sids']
+            #station_meta = [[WRCCData.DISPLAY_PARAMS[key]] for key in key_order]
             if 'meta' in meta_request.keys():
                 if len(meta_request['meta']) == 0:
-                    station_meta['error'] = 'No meta data found for station: %s.' %stn_id
+                    #station_meta['error'] = 'No metadata found for station: %s.' %stn_id
+                    station_meta = {'error': 'No metadata found for station: %s.' %stn_id}
                 else:
-                    for key, val in meta_request['meta'][0].iteritems():
-                        try:
-                            idx = key_order.index(key)
-                        except:
-                            continue
-                        if key == 'sids':
-                            sid_list = []
-                            for sid in val:
-                                sid_l = sid.split()
-                                if sid_l[1] == '2':
-                                    station_meta[1].append(str(sid_l[0]))
-                                sid_list.append('%s %s' %(str(sid_l[0]), WRCCData.NETWORK_CODES[str(sid_l[1])]))
-                                #sid_list.append(sid.encode('ascii', 'ignore'))
-                            #station_meta[WRCCData.DISPLAY_PARAMS[key]] = sid_list
-                            station_meta[idx].append(sid_list)
-                        else:
-                            station_meta[idx].append(str(val))
+                    station_meta = WRCCUtils.metadict_to_display(meta_request['meta'][0], key_order)
             else:
                 if 'error' in meta_request.keys():
-                    station_meta['error'] = meta_request['error']
+                    station_meta = {'error': meta_request['error']}
                 else:
-                    station_meta['error'] = 'No meta data found for station: %s.' %stn_id
+                    station_meta = {'error':'No meta data found for station: %s.' %stn_id}
 
             context['station_meta'] = station_meta
             #Call perl script that generates gif graphs
@@ -906,16 +891,19 @@ def monthly_aves(request):
                 monthly_aves = WRCCDataApps.monthly_aves(req, form.cleaned_data['elements'])
             except:
                 pass
-            context['averaged_data'] = dict(monthly_aves)
+            context['averaged_data'] = monthly_aves
             #Write results dict
             try:
                 results = write_monthly_aves_results(req, form.cleaned_data, monthly_aves)
             except:
                 context['error'] = 'No data found for parameters.Please check your station ID, start and end dates.'
             context['results'] = results
+            context['req'] = results
+            '''
             if 'meta' in req.keys():
                 meta = write_monthly_aves_meta(req, form.cleaned_data)
                 context['meta'] = meta
+            '''
             #save to json file (necessary since we can't pass list, dicts to js via hidden vars)
             #double quotes needed for jquery json.load
             results_json = json.dumps(results)
@@ -2285,6 +2273,21 @@ def write_monthly_aves_meta(req, form_data):
         except:
             valid_dr.append(str(el))
 
+    key_order = ['name', 'valid_daterange', 'll', 'elev', 'state', 'county', 'climdiv', 'uid']
+    meta = WRCCUtils.metadict_to_display(Meta, key_order)
+    #Override valid daterange
+    meta_vd = ['Valid Daterange']
+    vd =''
+    for idx,el in enumerate(form_data['elements']):
+        try:
+            v_el = str(Meta['valid_daterange'][idx])
+        except:
+            v_el = '[]'
+        vd+= el + ': ' + v_el
+    meta_vd.append(vd)
+    meta[1] = meta_vd
+    meta.insert(1, ['Elements', elements])
+    '''
     meta = ['Station Name: ' +  Meta['name'],
             'Elements :' + elements,
             'Valid Daterange: ' + ', '.join(valid_dr),
@@ -2295,6 +2298,7 @@ def write_monthly_aves_meta(req, form_data):
             'Climate Division: ' + Meta['climdiv'],
             'Unique Identifier: ' + Meta['uid']
             ]
+    '''
     return meta
 
 def set_area_time_series_params(form):

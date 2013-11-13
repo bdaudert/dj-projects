@@ -42,24 +42,14 @@
         </form>
     </div>
     <br />
-    {%if meta%}
-    <p class="pop_link" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
-    <div id="metadata" style="display:none;">
-        {% for val in meta %}
-        <p>{{val}} </p>
-        {%endfor%}
-    </div>
-    {%endif%}
 
     {%if results%}
-    <p class="pop_link" onClick="ShowHide('averaged_data')"><u>Click here for averaged data<br /> behind this graphic</u></p>
+    <img onClick="ShowHide('averaged_data')" alt="averaged_data" title="averaged_data" src="{{MEDIA_URL}}img/show_hide_button.png">
     <div id="averaged_data" width="450" height="450" border="0" style="display:none;">
         {% for el, vals in averaged_data.items%}
         <p>{{el}} : {{vals}}
         {%endfor%}
     </div>
-    
-    <a target="_blank" href="{{DATA_URL}}station/?stn_id={{search_params.stn_id}}&start_date={{search_params.start_date}}&end_date={{search_params.end_date}}&elements={{search_params.elems}}">Get raw data behind this graphic here!</a>
     {%endif%}
 </td>
 <td valign="top" width="70%">
@@ -98,9 +88,22 @@
     {%endif%}       
     {%endif%}
         
-    {{req}}
 
     {%if results%}
+    <table>
+    <td>
+    <img onClick="ShowHide('metadata')" alt="metadata" title="metadata" src="{{MEDIA_URL}}img/metadata_button.png">
+    </td>
+    <td>
+    <a target="_blank" href="{{DATA_URL}}station/?stn_id={{search_params.stn_id}}&start_date={{search_params.start_date}}&end_date={{search_params.end_date}}&elements={{search_params.elems}}">Get raw data behind this graphic here!</a>
+    </td>
+    </table>
+
+    <div id="metadata" style="display:none;">
+        {% for val in meta %}
+        <p><b>{{val.0}}</b>: {{val.1}}</p>
+        {%endfor%}
+    </div>
     <h2>Plots of Monthly Averages</h2>
     <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">
     <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
@@ -108,10 +111,11 @@
     {%for result in results%}
     {%if result.error%}
     <p class="error">{{result.error}}</p>
-    {%else%}
-    <div align="center" id="container{{forloop.counter}}"style="height:350px;width:100%;"></div>
-    <br /> 
     {%endif%}
+
+    <div align="left" id="container{{forloop.counter}}"style="height:350px;width:100%;"></div>
+    <br /> 
+    
     {%if not result.data%}
     <p class="error">No data found for {{result.element_long}}</p>
     {%endif%}

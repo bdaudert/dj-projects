@@ -100,7 +100,7 @@ $(function () {
                 }
                 //Horizontal Plotlines
                 var y_plotlines = [];
-                if (max && min){
+                if (max && min && Math.abs(max - min) > 0.00001){
                     for (var val=min + (max - min)/5;val<=max + 4*(max - min)/5;val+=(max - min)/5) {
                         var plotline = {
                             color: '#787878',
@@ -118,7 +118,7 @@ $(function () {
                 if (datadict[i].element == 'mint'){
                     var p_color = '#0000FF';
                 }
-                if (datadict[i].element == 'pcpn'){
+                if (datadict[i].element == 'pcpn' || datadict[i].element == 'evap' || datadict[i].element == 'wdmv'){
                     var p_color = '#00FF00';
                 }
                 if (datadict[i].element == 'snow' || datadict[i].element == 'snwd'){

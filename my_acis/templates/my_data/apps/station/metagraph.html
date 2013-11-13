@@ -39,16 +39,6 @@
         </form>
     </div>
 
-    {%if station_meta%}
-    <p class="pop_link" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
-    <div id="metadata" style="display:none;">
-        {% for key_val in station_meta %}
-        <p><b>{{key_val.0}}</b>: {{key_val.1}} </p>
-        {%endfor%}
-    </div>
-    <a href="{{DATA_URL}}station/?stn_id={{station_meta.coop_id}}&start_date=por&end_date=por&elements=maxt,mint,pcpn,snow,snwd">Get raw data behind these plots here!</a>
-    {%endif%}
-
 </td>
 <td valign="top" width="70%">
     <table>
@@ -75,7 +65,16 @@
     <p class="error">{{station_meta.error}}</p>
     {%else%}
     {%if station_id%}
-    <h1>STATION ID: {{station_id}}</h1>
+    <p>STATION ID: {{station_id}}&nbsp;&nbsp; 
+    <img onClick="ShowHide('metadata')" alt="metadata" title="metadata" src="{{MEDIA_URL}}img/metadata_button.png">
+    <div id="metadata" style="display:none;">
+        {% for key_val in station_meta %}
+        <p><b>{{key_val.0}}</b>: {{key_val.1}} </p>
+        {%endfor%}
+    </div>
+    <br />
+    <a href="{{DATA_URL}}station/?stn_id={{station_meta.coop_id}}&start_date=por&end_date=por&elements=maxt,mint,pcpn,snow,snwd">Get raw data behind these plots here!</a>
+    </p>
     <img alt="MetaTMAX" title="MetaTMAX" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmax.gif">
     <img alt="MetaTMIN" title="MetaTMIN" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmin.gif">
     <img alt="MetaPCPN" title="MetaPCPN" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_pcpn.gif">
