@@ -14,84 +14,75 @@
     <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
     <a href="{{TOOLS_URL}}station/metagraph/">Station Metadata Graphs</a></p>
 
-    <table cellpadding="20">
-    <td valign="top" width="30%">
-        <div id='form1'>
-            <form method="post" action="">{% csrf_token %}
-            <table class="form">
-            {%for field in form_meta %}
-                <tr>
-                    <td>{{field.label}}:</td>                                                                    
-                    <td>{{field}}</td>                                                                                
-                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>                                             <div class="pop-up"><p>{{field.help_text}}</p></div>
-                    </td>
-                </tr>
-               {%ifequal field.label "Station id"%}
-                  <tr><td></td><td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td><td></td></tr>
-               {%endifequal%}
-               {%if field.errors%}
-                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
-                {%endif%}
-            {%endfor%}
-            </table>
-            <input type="submit" value="Submit" name="form_meta"/>
-            </form>
-        </div>
-    </td>
-    <td valign="top" width="70%">
-        <table>
-            <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
+<table cellpadding="20">
+<td valign="top" width="30%">
+    <div id='form1'>
+        <form method="post" action="">{% csrf_token %}
+        <table class="form">
+        {%for field in form_meta %}
+        <tr>
+        <td>{{field.label}}:</td>                                                                    
+        <td>{{field}}</td>                                                                                
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">                                             
+        <div class="pop-up"><p>{{field.help_text}}</p></div>
+        </td>
+        </tr>
+        {%ifequal field.label "Station id"%}
+        <tr><td></td><td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td><td></td></tr>
+        {%endifequal%}
+        {%if field.errors%}
+        <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+        {%endif%}
+        {%endfor%}
         </table>
-        <script type="text/javascript">                        
-            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
-        </script>
-        <div id="tool_info" style="display:none;"></div>
-        <script type="text/javascript">                        
-            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_META_GRAPH");
-        </script>
-        <script type="text/javascript">            
-            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
-        </script>
-        <div id="how_to" style="display:none;"></div>
-        <script type="text/javascript">            
-            $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_META_GRAPH");
-        </script>
-
-         {%if perl_err%}
-            <h1 class="error">{{perl_err}}</h1>
-        {%else%}
-            {%if station_id%}
-            <h1>STATION ID: {{station_id}}</h1>
-            <img alt="MetaTMAX" title="MetaTMAX" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmax.gif">
-            <img alt="MetaTMIN" title="MetaTMIN" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmin.gif">
-            <img alt="MetaPCPN" title="MetaPCPN" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_pcpn.gif">
-            <img alt="MetaSNOW" title="MetaSNOW" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_snow.gif">
-            <img alt="MetaSNWD" title="MetaSNWD" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_snwd.gif">
-            <!--
-            <img alt="Meta" title="Meta" src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}"> 
-            -->
-            {%endif%}
-        {%endif%} 
+        <input type="submit" value="Submit" name="form_meta"/>
+        </form>
     </div>
 
-    <div class="center-right" style="border:none;">
-        {%if station_meta%}
-            <p class="pop_link" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
-            <div id="metadata" style="display:none;">
-                {% for key, val in station_meta.items %}
-                    <p> {{key}}: {{val}} </p>
-                {%endfor%}
-            </div>
-            <a href="{{DATA_URL}}station/?stn_id={{station_meta.coop_id}}&start_date=por&end_date=por&elements=maxt,mint,pcpn,snow,snwd">Get raw data behind these plots here!</a>
-        {%endif%}
+    {%if station_meta%}
+    <p class="pop_link" onClick="ShowHide('metadata')"><u>Click here for station metadata</u></p>
+    <div id="metadata" style="display:none;">
+        {% for key_val in station_meta %}
+        <p><b>{{key_val.0}}</b>: {{key_val.1}} </p>
+        {%endfor%}
+    </div>
+    <a href="{{DATA_URL}}station/?stn_id={{station_meta.coop_id}}&start_date=por&end_date=por&elements=maxt,mint,pcpn,snow,snwd">Get raw data behind these plots here!</a>
+    {%endif%}
 
-    </td>
+</td>
+<td valign="top" width="70%">
+    <table>
+    <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
     </table>
-  <!-- Footer -->
-<!--
-  <div id="footer" align="center"></div>
     <script type="text/javascript">                        
-    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+        $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
     </script>
--->
+    <div id="tool_info" style="display:none;"></div>
+    <script type="text/javascript">                        
+        $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_META_GRAPH");
+    </script>
+    <script type="text/javascript">            
+        $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+    </script>
+    <div id="how_to" style="display:none;"></div>
+    <script type="text/javascript">            
+        $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_META_GRAPH");
+    </script>
+
+    {%if perl_err%}
+    <p class="error">{{perl_err}}</p>
+    {%elif station_meta.error%}
+    <p class="error">{{station_meta.error}}</p>
+    {%else%}
+    {%if station_id%}
+    <h1>STATION ID: {{station_id}}</h1>
+    <img alt="MetaTMAX" title="MetaTMAX" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmax.gif">
+    <img alt="MetaTMIN" title="MetaTMIN" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmin.gif">
+    <img alt="MetaPCPN" title="MetaPCPN" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_pcpn.gif">
+    <img alt="MetaSNOW" title="MetaSNOW" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_snow.gif">
+    <img alt="MetaSNWD" title="MetaSNWD" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_snwd.gif">
+    {%endif%}
+    {%endif%} 
+</td>
+</table>
 {%endblock%}

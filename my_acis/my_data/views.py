@@ -793,30 +793,38 @@ def metagraph(request):
         context['form_meta']  = form_meta
         if form_meta.is_valid():
             context['station_id'] = form_meta.cleaned_data['station_id']
-            station_meta = {}
             params = {'sids':str(form_meta.cleaned_data['station_id'])}
             meta_request = AcisWS.StnMeta(params)
             #meta_request = WRCCClasses.DataJob('StnMeta', params).make_data_call()
+            key_order = ['name', 'coop_id','state','ll','elev','uid','sids']
+            station_meta = [[WRCCData.DISPLAY_PARAMS[key]] for key in key_order]
             if 'meta' in meta_request.keys():
                 if len(meta_request['meta']) == 0:
                     station_meta['error'] = 'No meta data found for station: %s.' %stn_id
                 else:
                     for key, val in meta_request['meta'][0].iteritems():
+                        try:
+                            idx = key_order.index(key)
+                        except:
+                            continue
                         if key == 'sids':
                             sid_list = []
                             for sid in val:
                                 sid_l = sid.split()
                                 if sid_l[1] == '2':
-                                    station_meta['coop_id'] = str(sid_l[0])
-                                sid_list.append(sid.encode('ascii', 'ignore'))
-                            station_meta['sids'] = sid_list
+                                    station_meta[1].append(str(sid_l[0]))
+                                sid_list.append('%s %s' %(str(sid_l[0]), WRCCData.NETWORK_CODES[str(sid_l[1])]))
+                                #sid_list.append(sid.encode('ascii', 'ignore'))
+                            #station_meta[WRCCData.DISPLAY_PARAMS[key]] = sid_list
+                            station_meta[idx].append(sid_list)
                         else:
-                            station_meta[key] = str(val)
+                            station_meta[idx].append(str(val))
             else:
                 if 'error' in meta_request.keys():
                     station_meta['error'] = meta_request['error']
                 else:
                     station_meta['error'] = 'No meta data found for station: %s.' %stn_id
+
             context['station_meta'] = station_meta
             #Call perl script that generates gif graphs
             #FIX ME! Should be able to call it from html:

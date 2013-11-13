@@ -147,6 +147,13 @@ STN_FIND_CHOICES = (
         ('state', 'State'),
         ('bbox', 'Bounding Box'),
         )
+
+#FIX ME: SODDYREC not working for other station_selections
+STN_FIND_CHOICES_SODDYREC = (
+       ('stnid', 'Individual station'),
+       ('stnids', 'Comma separated list of stations '),
+)
+
 #sodsumm element choices
 SMM_ELEMENT_CHOICES = (
         ('all', '[maxt, mint, avgt, pcpn, snow,hdd, cdd, gdd]'),
@@ -180,7 +187,10 @@ SXTR_ELEMENT_CHOICES = (
         ('hdd', 'Heating Degree Days'),
         ('cdd', 'Cooling Degree Days'),
         ('gdd', 'Growing degree days'),
-    )
+        ('evap', 'Daily Evaporation'),
+        #('pet'), 'Potential ET'),
+        ('wdmv', 'Daily Wind Movement'),
+)
 
 PIII_ELEMENT_CHOICES = (
         ('pcpn', 'Precipitation'),
@@ -327,8 +337,10 @@ class Sod0Form(forms.Form):
     def __init__(self, *args, **kwargs):
         app_name = kwargs.get('initial', {}).get('app_name', None)
         super(Sod0Form, self).__init__(*args, **kwargs)
-
-        self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid')
+        if app_name == 'Soddyrec':
+            self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES_SODDYREC, required=False, initial='stnid')
+        else:
+            self.fields['station_selection'] = forms.ChoiceField(choices=STN_FIND_CHOICES, required=False, initial='stnid')
         self.fields['app_name'] = forms.ChoiceField(choices=APP_NAME_CHOICES, required=False, initial='Soddd', widget=forms.HiddenInput())
         if app_name is None:
             app_name = self.data.get('app_name')

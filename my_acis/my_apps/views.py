@@ -172,7 +172,6 @@ def sods(request, app_name):
             truncate = None
             context['cleaned'] = form2.cleaned_data
             (data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
-
             #get contexts for the different apps and run data application
             if app_name in ['Sodrun', 'Sodrunr']:
                 if elements == ['maxt', 'mint']:
@@ -196,6 +195,7 @@ def sods(request, app_name):
                 form2.cleaned_data['filter_type'], form2.cleaned_data['number_of_days'])
             elif app_name == 'Soddyrec':
                 results = run_data_app(app_name, data, dates, elements, coop_station_ids, station_names)
+                #context['data'] =results
             elif app_name == 'Soddd':
                 base_temp = form2.cleaned_data['base_temperature']
                 output_type = form2.cleaned_data['output_type']
@@ -428,7 +428,10 @@ def sods(request, app_name):
                 results = {}
 
             #general context
-            context['results'] = dict(results)
+            try:
+                context['results'] = dict(results)
+            except:
+                context['results'] = results
             context['dates'] = dates
             if app_name in ['Sodrun', 'Sodrunr', 'Soddyrec', 'Sodcnv', 'Sodlist']:
                 context['start_year'] = dates[0]
