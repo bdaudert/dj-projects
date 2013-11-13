@@ -842,15 +842,18 @@ def monthly_aves(request):
     end_date = request.GET.get('end_date', None)
     elements = request.GET.get('elements', None)
     initial = {}
-    if stn_id is not None:initial['stn_id']= str(stn_id);context['stn_id'] = stn_id
-    if start_date is not None:initial['start_date']= str(start_date);context['start_date'] = start_date
-    if end_date is not None:initial['end_date']= str(end_date);context['end_date'] = end_date
-    if elements is not None:initial['elements']= elements;context['elements'] = elements
+    search_params = {}
+    if stn_id is not None:initial['stn_id']= str(stn_id);search_params['stn_id'] = stn_id
+    if start_date is not None:initial['start_date']= str(start_date);search_params['start_date'] = start_date
+    if end_date is not None:initial['end_date']= str(end_date);search_params['end_date'] = end_date
+    if elements is not None:initial['elements']= elements;search_params['elements'] = elements
+    context['search_params'] = search_params
     if initial:
         form = set_as_form(request,'MonthlyAveragesForm', init=initial)
     else:
         form = set_as_form(request,'MonthlyAveragesForm')
     context['form'] = form
+
     if 'form' in request.POST:
         form = set_as_form(request,'MonthlyAveragesForm')
         context['form']  = form
@@ -858,108 +861,63 @@ def monthly_aves(request):
             s_date = str(form.cleaned_data['start_date'])
             e_date = str(form.cleaned_data['end_date'])
             stn_id = form.cleaned_data['station_id']
-            context['stn_id'] = stn_id
-            context['start_date'] = s_date
-            context['end_date'] = e_date
-            context['elems'] = ','.join(form.cleaned_data['elements'])
+            context['search_params'] ={
+                'stn_id':stn_id,
+                'start_date':s_date,
+                'end_date':e_date,
+                'elems': ','.join(form.cleaned_data['elements'])
+            }
             params = dict(sid=stn_id, sdate=s_date, edate=e_date, \
             meta='valid_daterange,name,state,sids,ll,elev,uid,county,climdiv', \
             elems=[dict(vX=WRCCData.ACIS_ELEMENTS_DICT[el]['vX'], groupby="year")for el in form.cleaned_data['elements']])
-            monthly_aves = {}
-            results = [{} for k in form.cleaned_data['elements']]
-            #results = defaultdict(dict)
-
+            #Data request
             #req = WRCCClasses.DataJob('StnData', params).make_data_call()
             req = AcisWS.StnData(params)
+            #Sanity check
             if not req:
-                context['error']= 'Bad Data request for parameters: %s' %str(params)
-            elif 'data' not in req.keys() or 'meta' not in req.keys():
-                context['error']= 'Bad Data request for parameters: %s' %str(params)
-            else:
-                context['raw_data'] = req['data']
-
-                try:
-                    monthly_aves = WRCCDataApps.monthly_aves(req, form.cleaned_data['elements'])
-                    context['averaged_data'] = dict(monthly_aves)
-                except:
-                    pass
-
-                for el_idx, el in enumerate(form.cleaned_data['elements']):
-                    el_strip = re.sub(r'(\d+)(\d+)', '', el)   #strip digits from gddxx, hddxx, cddxx
-                    b = el[-2:len(el)]
-                    base_temp = ''
-                    try:
-                        base_temp = int(b)
-                    except:
-                        if b == 'dd' and el in ['hdd', 'cdd']:
-                            base_temp = '65'
-                        elif b == 'dd' and el == 'gdd':
-                            base_temp = '50'
-                    if base_temp:
-                        results[el_idx] = {'element_long': WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + 'Base Temperature: ' + base_temp}
-                    else:
-                        results[el_idx] = {'element_long': WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long']}
-                    results[el_idx]['element'] = str(el)
-                    results[el_idx]['stn_id']= str(form.cleaned_data['station_id'])
-                    if form.cleaned_data['start_date'].lower() == 'por':
-                        if len(req['meta']['valid_daterange'][el_idx]) == 2:
-                            results[el_idx]['record_start'] = str(req['meta']['valid_daterange'][el_idx][0])
-                            context['start_date'] =  str(req['meta']['valid_daterange'][el_idx][0])
-                        else:
-                            #no valid daterange found
-                            results[el_idx]['record_start'] = ['0000-00-00']
-                    else:
-                        results[el_idx]['record_start'] = '%s-%s-%s' % (s_date[0:4], s_date[4:6], s_date[6:8])
-                    if form.cleaned_data['end_date'].lower() == 'por':
-                        if len(req['meta']['valid_daterange'][el_idx]) == 2:
-                            results[el_idx]['record_end'] = str(req['meta']['valid_daterange'][el_idx][1])
-                            context['end_date'] = str(req['meta']['valid_daterange'][el_idx][1])
-                        else:
-                            results[el_idx]['record_end'] = ['0000-00-00']
-                    else:
-                        results[el_idx]['record_end'] = '%s-%s-%s' % (e_date[0:4], e_date[4:6], e_date[6:8])
-                    results[el_idx]['data'] = monthly_aves[el]
-                    if 'meta' in req.keys():
-                        results[el_idx]['stn_name'] = str(req['meta']['name'])
-                        results[el_idx]['state'] = str(req['meta']['state'])
-                if 'meta' in req.keys():
-                    Meta = WRCCUtils.format_stn_meta(req['meta'])
-                    #format meta data
-                    elements = ', '.join(form.cleaned_data['elements'])
-                    valid_dr = []
-                    for idx, el in enumerate(form.cleaned_data['elements']):
-                        try:
-                            valid_dr.append('%s: %s - %s ' %(str(el),str(Meta['valid_daterange'][idx][0]),str(Meta['valid_daterange'][idx][1])))
-                        except:
-                            valid_dr.append(str(el))
-
-                    meta = ['Station Name: ' +  Meta['name'],
-                            'Elements :' + elements,
-                            'Valid Daterange: ' + ', '.join(valid_dr),
-                            'Lat, Lon: ' +  str(Meta['ll']),
-                            'Elevation :' +  Meta['elev'],
-                            'State: ' + Meta['state'],
-                            'County: ' +  Meta['county'],
-                            'Climate Division: ' + Meta['climdiv'],
-                            'Unique Identifyer: ' + Meta['uid']
-                        ]
-                    context['meta'] = meta
-                context['results'] = results
-                #save to json file (necessary since we can't pass list, dicts to js via hidden vars)
-                #double quotes needed for jquery json.load
-                results_json = json.dumps(results)
-                #results_json = str(results).replace("\'", "\"")
-                time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
-                json_file = '%s_monthly_aves_%s_%s_%s.json' \
-                %(time_stamp, str(form.cleaned_data['station_id']), s_date, e_date)
-                context['json_file'] = json_file
-                f = open(TEMP_FILE_DIR + '%s' %(json_file),'w+')
+                context['error']= 'No data found for parameters. Please check your station ID.'
+                return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
+            if 'error' in req.keys():
+                context['error']= req['error']
+                return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
+            if 'data' not in req.keys() or 'meta' not in req.keys():
+                context['error']= 'No data found for parameters.Please check your station ID, start and end dates.'
+                return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
+            if 'meta' not in req.keys():
+                context['error']= 'No metadata found for parameters.Please check your station ID.'
+                return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
+            #Find averages and write results dict
+            monthly_aves = {}
+            for el in form.cleaned_data['elements']:
+                monthly_aves[el] = []
+            results = [{} for k in form.cleaned_data['elements']]
+            try:
+                monthly_aves = WRCCDataApps.monthly_aves(req, form.cleaned_data['elements'])
+            except:
+                pass
+            context['averaged_data'] = dict(monthly_aves)
+            #Write results dict
+            '''
+            try:
+                results = write_monthly_aves_results(req, form.cleaned_data, monthly_aves)
+            except:
+                context['error'] = 'No data found for parameters.Please check your station ID, start and end dates.'
+            '''
+            results = write_monthly_aves_results(req, form.cleaned_data, monthly_aves)
+            context['results'] = results
+            if 'meta' in req.keys():
+                meta = write_monthly_aves_meta(req, form.cleaned_data)
+                context['meta'] = meta
+            #save to json file (necessary since we can't pass list, dicts to js via hidden vars)
+            #double quotes needed for jquery json.load
+            results_json = json.dumps(results)
+            #results_json = str(results).replace("\'", "\"")
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+            json_file = '%s_monthly_aves_%s_%s_%s.json' \
+            %(time_stamp, str(form.cleaned_data['station_id']), s_date, e_date)
+            context['json_file'] = json_file
+            with  open(TEMP_FILE_DIR + '%s' %(json_file),'w+') as f:
                 f.write(results_json)
-                f.close()
-
-        #else:
-        #    stn_id = None
-
     return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
 
 def clim_sum_maps(request):
@@ -1752,68 +1710,6 @@ def sodxtrmts(request):
 
     return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
 
-'''
-def sodxtrmts_visualize(request):
-    context = {
-        'title': 'Time Series Plots - Monthly Summaries of Extremes',
-        'icon':'ToolProduct.png'
-        }
-    station_ID = request.GET.get('station_ID', None)
-    element = request.GET.get('element', None)
-
-    json_file = request.GET.get('json_file', None)
-    initial_params_0 ={}
-    if station_ID is not None:
-        initial_params_0['station_ID'] = station_ID
-        context['station_ID'] = station_ID
-    if element is not None:initial_params_0['element'] = str(element);context['element'] = element
-
-    if initial_params_0:
-        form0 = set_as_form(request,'SodxtrmtsVisualizeForm', init=initial_params_0)
-    else:
-        form0 = set_as_form(request,'SodxtrmtsVisualizeForm')
-    context['form0'] = form0
-
-    #Get search parameters
-    with open(TEMP_FILE_DIR + json_file, 'r') as f:
-        json_data =  json.load(f)
-        context['search_params'] = json_data['search_params']
-        context['data'] = json_data['data']
-        context['month_list']=json_data['month_list']
-        context['header'] = json_data['header']
-        context['search_params'] = json_data['search_params']
-
-    if 'form0' in request.POST:
-        form0 = set_as_form(request,'SodxtrmtsVisualizeForm', init={'station_ID':station_ID, 'element':element})
-        context['form0'] = form0
-        if form0.is_valid():
-            context['generate_plots']  = True
-            context['json_file'] = json_file
-            for key,val in form0.cleaned_data.iteritems():
-                if key not in ['start_month', 'end_month']:
-                    context[key] = str(val)
-            #Find list of months
-            if int(form0.cleaned_data['start_month']) > int(form0.cleaned_data['end_month']):
-                context['months'] = [mon for mon in range(int(form0.cleaned_data['start_month']), 13)] +[mon for mon in range(1, int(form0.cleaned_data['end_month']) +1)]
-            elif int(form0.cleaned_data['start_month']) == int(form0.cleaned_data['end_month']):
-                context['months'] = [int(form0.cleaned_data['start_month'])]
-            else:
-                context['months'] = [mon for mon in range(int(form0.cleaned_data['start_month']), int(form0.cleaned_data['end_month']) +1)]
-            #Plot Options:
-            context['width'] = WRCCData.IMAGE_SIZES[form0.cleaned_data['image_size']][0]
-            context['height'] = WRCCData.IMAGE_SIZES[form0.cleaned_data['image_size']][1]
-            context['graph_title'] = form0.cleaned_data['graph_title']
-            context['major_grid'] = form0.cleaned_data['major_grid']
-            context['minor_grid'] = form0.cleaned_data['minor_grid']
-            context['connector_line'] = form0.cleaned_data['connector_line']
-            context['connector_line_width'] = form0.cleaned_data['connector_line_width']
-            context['markers'] = form0.cleaned_data['markers']
-            context['marker_type'] = form0.cleaned_data['marker_type']
-            context['plot_incomplete_years'] = form0.cleaned_data['plot_incomplete_years']
-            context['vertical_axis_min'] = form0.cleaned_data['vertical_axis_min']
-            context['vertical_axis_max'] = form0.cleaned_data['vertical_axis_max']
-    return render_to_response('my_data/apps/station/sodxtrmts_visualize.html', context, context_instance=RequestContext(request))
-'''
 
 def sodsumm(request):
     context = {
@@ -1883,121 +1779,27 @@ def sodsumm(request):
             if form1.cleaned_data['generate_graphics'] == 'T' and results:
                 context['graphics'] = True
 
-            cats = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
             json_list = []
             for tab_idx, tab in enumerate(tab_list):
                 table = table_list[tab_idx]
-                if tab =='temp':
-                    legend = ['Extr Low','Ave Low','Mean', 'Ave High', 'Extr High']
-                    colors  = ['#FF0000', '#690000', '#00FF00', '#ADD8E6', '#0000FF']
-                    table_name_long = 'Temperatures (F)'
-                    units = 'Fahrenheit'
-                    graph_data = [[] for i in range(12)]
-                    #graph_data = [[] for i in range(5)] # low, ave min, ave mean,ave max, high
-                    for idx, row in enumerate(results[table][1:13]):
-                        for i in range(5):
-                            if i == 0:k = 6 #low
-                            if i == 1:k = 2 #mean low
-                            if i == 2:k = 3 #mean ave
-                            if i == 3:k = 1 #mean high
-                            if i == 4:k = 4 #high
-                            try:
-                                graph_data[idx].append(float(row[k]))
-                            except:
-                                graph_data[idx].append(None)
-                elif tab in ['hdd', 'cdd']:
-                    units = 'Fahrenheit'
-                    colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-                    if table == 'hdd':
-                        legend = ['Base 65', 'Base 60', 'Base 57', 'Base 55', 'Base 50']
-                    else:
-                        legend = ['Base 55', 'Base 57', 'Base 60', 'Base 65', 'Base 70']
-                    table_name_long = WRCCData.ACIS_ELEMENTS_DICT[table]['name_long']
-                    graph_data = [[] for i in range(5)]
-                    for i in range(5):
-                        for k in range(len(cats)):
-                            try:
-                                graph_data[i].append(float(results[table][i+1][k+1]))
-                            except:
-                                graph_data[i].append(None)
-                elif tab == 'gdd':
-                    units = 'Fahrenheit'
-                    colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-                    table_name_long = WRCCData.ACIS_ELEMENTS_DICT[table]['name_long']
-                    legend = ['Base 40', 'Base 45', 'Base 50', 'Base 55', 'Base 60']
-                    graph_data = [[] for i in range(5)]
-                    for i in range(5):
-                        for k in range(len(cats)):
-                            try:
-                                graph_data[i].append(float(results[table][2*i+1][k+2]))
-                            except:
-                                graph_data[i].append(None)
-                elif tab == 'corn':
-                    units = 'Fahrenheit'
-                    colors = ['#14FFFF', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-                    table_name_long = 'Corn Degree Days (F)'
-                    legend = ['Base 50']
-                    graph_data =[[]]
-                    for k in range(len(cats)):
-                        try:
-                            graph_data[0].append(float(results[table][1][k+2]))
-                        except:
-                            graph_data[0].append(None)
-                elif  tab == 'pcpn':
-                    units = 'Inches'
-                    colors = ['#00FFFF','#00009B', ' #0000FF']
-                    legend = ['Ave Precip Low', 'Precip Mean', 'Ave Precip High']
-                    table_name_long = 'Precipitation(In)'
-                    graph_data = [[] for k in range(3)]
-                    for idx, row in enumerate(results[table][1:13]):
-                        for i in range(3):
-                            if i == 0:k=4
-                            if i == 1:k=1
-                            if i == 2:k=2
-                            try:
-                                graph_data[i].append(float(row[k]))
-                            except:
-                                graph_data[i].append(None)
-                elif tab == 'snow':
-                    colors = ['#00FFFF','#00009B']
-                    legend = ['Snow Mean', 'Ave Snow High']
-                    table_name_long = 'Snow Fall(In)'
-                    graph_data = [[] for k in range(2)]
-                    for idx, row in enumerate(results[table][1:13]):
-                        for i in range(2):
-                            if i == 0:k=12
-                            if i == 1:k=13
-                            try:
-                                graph_data[i].append(float(row[k]))
-                            except:
-                                graph_data[i].append(None)
-                table_dict = {
-                    'cats':cats,
-                    'units':units,
-                    'record_start':dates_list[0][0:4],
-                    'record_end':dates_list[-1][0:4],
-                    'stn_name':station_names[0],
-                    'stn_network':station_networks[0],
-                    'stn_state':station_states[0],
-                    'stn_id':str(data_params['sid']),
-                    'table_name':tab,
-                    'table_name_long':table_name_long,
-                    'legend':legend,
-                    'colors': colors,
-                    'graph_data': graph_data,
-                    'table_data':results[table]
-                    }
+                table_dict = generate_sodsumm_graphics(results,tab,table)
+                #Add other params to table_dict
+                table_dict['record_start'] = dates_list[0][0:4]
+                table_dict['record_end'] = dates_list[-1][0:4]
+                table_dict['stn_name'] = station_names[0]
+                table_dict['stn_network'] = station_networks[0]
+                table_dict['stn_state'] = station_states[0]
+                table_dict['stn_id'] = str(data_params['sid'])
                 json_list.append(table_dict)
-                #results_json = str(json_list).replace("\'", "\"")
-                results_json = json.dumps(json_list)
-                time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
-                json_file = '%s_sodsumm_%s_%s_%s.json' \
-                %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
-                f = open(TEMP_FILE_DIR + '%s' %(json_file),'w+')
-                f.write(results_json)
-                f.close()
-                context['JSON_URL'] = TEMP_FILE_DIR
-                context['json_file'] = json_file
+            results_json = json.dumps(json_list)
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+            json_file = '%s_sodsumm_%s_%s_%s.json' \
+            %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
+            f = open(TEMP_FILE_DIR + '%s' %(json_file),'w+')
+            f.write(results_json)
+            f.close()
+            context['JSON_URL'] = TEMP_FILE_DIR
+            context['json_file'] = json_file
 
     #Downlaod Table Data
     for table_idx in range(7):
@@ -2035,6 +1837,25 @@ def set_form(request):
         for key,val in dict(request.GET.items()).iteritems():
             form[str(key)] = str(val)
     return form
+
+
+def set_as_form(request, f_name, init = None):
+    form_name = f_name
+    form_class = getattr(forms, form_name)
+    if request.POST:
+        form = form_class(request.POST)
+    else:
+        if init is not None:
+            form = form_class(initial=init)
+        else:
+            form = form_class(initial={'stn_id': None})
+    return form
+
+def run_external_script(cmd):
+    """ Capture a command's standard output."""
+    import subprocess
+    out, err = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    return out, err
 
 def set_plot_options(request):
     initial = {}
@@ -2224,43 +2045,24 @@ def set_sodxtrmts_head(form):
         else:
             header.append([WRCCData.DISPLAY_PARAMS[key], str(form[key])])
     return header
-'''
-def set_sodxtrmts_header(form):
-    #Define Header Order:
-    header_order =['station_ID','start_year', 'end_year', '','element']
-    if form.cleaned_data['element'] in ['gdd', 'hdd', 'cdd']:header_order+=['base_temperature']
-    header_order+=['monthly_statistic']
-    if form.cleaned_data['departures_from_averages'] == 'T':
-         header_order+=['departures_from_averages', '']
-    else:
-        header_order+=['']
-    if form.cleaned_data['monthly_statistic'] == 'ndays':
-        if form.cleaned_data['less_greater_or_between'] == 'l':
-            header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
-        elif form.cleaned_data['less_greater_or_between'] == 'g':
-            header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
-        else: #between
-            header_order+=['less_greater_or_between','threshold_low_for_between','threshold_high_for_between','']
-    header_order+=['max_missing_days']
-    if form.cleaned_data['frequency_analysis'] == 'T':
-        if form.cleaned_data['frequency_analysis_type'] == 'g':
-            header_order+=['gev']
-        elif form.cleaned_data['frequency_analysis_type'] == 'p':
-            header_order+=['pearson']
-    header_order+=['']
-    #Define SCHTUPID header
-    header = []
-    for key in header_order:
-        if key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'monthly_statistic', 'elements']:
-            header.append([WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[str(form.cleaned_data[key])]])
-        elif key == '':
-            header.append([])
-        else:
-            header.append([WRCCData.DISPLAY_PARAMS[key], str(form.cleaned_data[key])])
-    return header
-'''
 
-#Depreciate after Sodsumm conversion
+#FORM SANITY CHECKS
+def check_sodxtrmts_form(form):
+    '''
+    Sanity check for Sodxtrmst form
+    form is given as dict
+    '''
+    form_error = {}
+    fields_to_check = ['start_year', 'end_year','max_missing_days', 'graph_start_year', 'graph_end_year', \
+        'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
+    for field in fields_to_check:
+        checker = getattr(WRCCFormCheck, 'check_' + field)
+        err = checker(form)
+        if err:
+            form_error[WRCCData.DISPLAY_PARAMS[field]] = err
+
+    return form_error
+
 def set_sod_initial(request, app_name):
     stn_id = request.GET.get('stn_id', None)
     start_date = request.GET.get('start_date', None)
@@ -2314,6 +2116,178 @@ def set_sodsumm_headers(table_list):
     for table in table_list:
          headers[table] = set_header(table)
     return headers
+
+def generate_sodsumm_graphics(results, tab, table):
+    cats = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+    if tab =='temp':
+        legend = ['Extr Low','Ave Low','Mean', 'Ave High', 'Extr High']
+        colors  = ['#FF0000', '#690000', '#00FF00', '#ADD8E6', '#0000FF']
+        table_name_long = 'Temperatures (F)'
+        units = 'Fahrenheit'
+        graph_data = [[] for i in range(12)]
+        #graph_data = [[] for i in range(5)] # low, ave min, ave mean,ave max, high
+        for idx, row in enumerate(results[table][1:13]):
+            for i in range(5):
+                if i == 0:k = 6 #low
+                if i == 1:k = 2 #mean low
+                if i == 2:k = 3 #mean ave
+                if i == 3:k = 1 #mean high
+                if i == 4:k = 4 #high
+                try:
+                    graph_data[idx].append(float(row[k]))
+                except:
+                    graph_data[idx].append(None)
+    elif tab in ['hdd', 'cdd']:
+        units = 'Fahrenheit'
+        colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
+        if table == 'hdd':
+            legend = ['Base 65', 'Base 60', 'Base 57', 'Base 55', 'Base 50']
+        else:
+            legend = ['Base 55', 'Base 57', 'Base 60', 'Base 65', 'Base 70']
+        table_name_long = WRCCData.ACIS_ELEMENTS_DICT[table]['name_long']
+        graph_data = [[] for i in range(5)]
+        for i in range(5):
+            for k in range(len(cats)):
+                try:
+                    graph_data[i].append(float(results[table][i+1][k+1]))
+                except:
+                    graph_data[i].append(None)
+    elif tab == 'gdd':
+        units = 'Fahrenheit'
+        colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
+        table_name_long = WRCCData.ACIS_ELEMENTS_DICT[table]['name_long']
+        legend = ['Base 40', 'Base 45', 'Base 50', 'Base 55', 'Base 60']
+        graph_data = [[] for i in range(5)]
+        for i in range(5):
+            for k in range(len(cats)):
+                try:
+                    graph_data[i].append(float(results[table][2*i+1][k+2]))
+                except:
+                    graph_data[i].append(None)
+    elif tab == 'corn':
+        units = 'Fahrenheit'
+        colors = ['#14FFFF', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
+        table_name_long = 'Corn Degree Days (F)'
+        legend = ['Base 50']
+        graph_data =[[]]
+        for k in range(len(cats)):
+            try:
+                graph_data[0].append(float(results[table][1][k+2]))
+            except:
+                graph_data[0].append(None)
+    elif  tab == 'pcpn':
+        units = 'Inches'
+        colors = ['#00FFFF','#00009B', ' #0000FF']
+        legend = ['Ave Precip Low', 'Precip Mean', 'Ave Precip High']
+        table_name_long = 'Precipitation(In)'
+        graph_data = [[] for k in range(3)]
+        for idx, row in enumerate(results[table][1:13]):
+            for i in range(3):
+                if i == 0:k=4
+                if i == 1:k=1
+                if i == 2:k=2
+                try:
+                    graph_data[i].append(float(row[k]))
+                except:
+                    graph_data[i].append(None)
+    elif tab == 'snow':
+        units = 'Inches'
+        colors = ['#00FFFF','#00009B']
+        legend = ['Snow Mean', 'Ave Snow High']
+        table_name_long = 'Snow Fall(In)'
+        graph_data = [[] for k in range(2)]
+        for idx, row in enumerate(results[table][1:13]):
+            for i in range(2):
+                if i == 0:k=12
+                if i == 1:k=13
+                try:
+                    graph_data[i].append(float(row[k]))
+                except:
+                    graph_data[i].append(None)
+    table_dict = {
+        'cats':cats,
+        'units':units,
+        'table_name':tab,
+        'table_name_long':table_name_long,
+        'legend':legend,
+        'colors': colors,
+        'graph_data': graph_data,
+        'table_data':results[table]
+        }
+    return table_dict
+
+def write_monthly_aves_results(req, form_data, monthly_aves):
+    results = [{} for k in form_data['elements']]
+    for el_idx, el in enumerate(form_data['elements']):
+        el_strip = re.sub(r'(\d+)(\d+)', '', el)   #strip digits from gddxx, hddxx, cddxx
+        b = el[-2:len(el)]
+        base_temp = ''
+        try:
+            base_temp = int(b)
+        except:
+            if b == 'dd' and el in ['hdd', 'cdd']:
+                base_temp = '65'
+            elif b == 'dd' and el == 'gdd':
+                base_temp = '50'
+        if base_temp:
+            results[el_idx] = {'element_long': WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + 'Base Temperature: ' + base_temp}
+        else:
+            results[el_idx] = {'element_long': WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long']}
+        results[el_idx]['element'] = str(el)
+        results[el_idx]['stn_id']= str(form_data['station_id'])
+
+        if form_data['start_date'].lower() == 'por':
+            if len(req['meta']['valid_daterange'][el_idx]) == 2:
+                results[el_idx]['record_start'] = str(req['meta']['valid_daterange'][el_idx][0])
+            else:
+                #no valid daterange found
+                results[el_idx]['record_start'] = ['0000-00-00']
+        else:
+            results[el_idx]['record_start'] = '%s-%s-%s' % (form_data['start_date'][0:4], form_data['start_date'][4:6], form_data['start_date'][6:8])
+
+        if form_data['end_date'].lower() == 'por':
+            if len(req['meta']['valid_daterange'][el_idx]) == 2:
+                results[el_idx]['record_end'] = str(req['meta']['valid_daterange'][el_idx][1])
+            else:
+                results[el_idx]['record_end'] = ['0000-00-00']
+        else:
+            results[el_idx]['record_end'] = '%s-%s-%s' % (form_data['end_date'][0:4], form_data['end_date'][4:6], form_data['end_date'][6:8])
+        #Check if user dates lie outside of POR of station
+        if form_data['start_date'].lower() != 'por' and form_data['end_date'].lower() != 'por' and len(req['meta']['valid_daterange'][el_idx]) == 2:
+            user_st = datetime.datetime(int(form_data['start_date'][0:4]), int(form_data['start_date'][4:6]), int(form_data['start_date'][6:8]))
+            user_end = datetime.datetime(int(form_data['end_date'][0:4]), int(form_data['end_date'][4:6]), int(form_data['end_date'][6:8]))
+            por_st = datetime.datetime(int(req['meta']['valid_daterange'][el_idx][0][0:4]), int(req['meta']['valid_daterange'][el_idx][0][5:7]), int(req['meta']['valid_daterange'][el_idx][0][8:10]))
+            por_end = datetime.datetime(int(req['meta']['valid_daterange'][el_idx][1][0:4]), int(req['meta']['valid_daterange'][el_idx][1][5:7]), int(req['meta']['valid_daterange'][el_idx][1][8:10]))
+            if (user_end < por_st and user_st <por_st) or (user_st >por_end and user_end >por_end):
+                results[el_idx]['error'] = 'Start and End date lie outside of period of record for %s. Period of record is: %s - %s' %(el, req['meta']['valid_daterange'][el_idx][0], req['meta']['valid_daterange'][el_idx][1])
+        results[el_idx]['data'] = monthly_aves[el]
+        if 'meta' in req.keys():
+            results[el_idx]['stn_name'] = str(req['meta']['name'])
+            results[el_idx]['state'] = str(req['meta']['state'])
+    return results
+
+def write_monthly_aves_meta(req, form_data):
+    Meta = WRCCUtils.format_stn_meta(req['meta'])
+    #format meta data
+    elements = ', '.join(form_data['elements'])
+    valid_dr = []
+    for idx, el in enumerate(form_data['elements']):
+        try:
+            valid_dr.append('%s: %s - %s ' %(str(el),str(Meta['valid_daterange'][idx][0]),str(Meta['valid_daterange'][idx][1])))
+        except:
+            valid_dr.append(str(el))
+
+    meta = ['Station Name: ' +  Meta['name'],
+            'Elements :' + elements,
+            'Valid Daterange: ' + ', '.join(valid_dr),
+            'Lat, Lon: ' +  str(Meta['ll']),
+            'Elevation :' +  Meta['elev'],
+            'State: ' + Meta['state'],
+            'County: ' +  Meta['county'],
+            'Climate Division: ' + Meta['climdiv'],
+            'Unique Identifier: ' + Meta['uid']
+            ]
+    return meta
 
 def set_area_time_series_params(form):
     key_order = ['element', 'start_date', 'end_date', 'summary', 'grid', 'show_running_mean', 'running_mean_days', 'graph_title']
@@ -2469,38 +2443,3 @@ def set_station_data_params(form):
         params_dict['delimiter'] = ' '
     return display_params_list, params_dict
 
-
-def set_as_form(request, f_name, init = None):
-    form_name = f_name
-    form_class = getattr(forms, form_name)
-    if request.POST:
-        form = form_class(request.POST)
-    else:
-        if init is not None:
-            form = form_class(initial=init)
-        else:
-            form = form_class(initial={'stn_id': None})
-    return form
-
-def run_external_script(cmd):
-    """ Capture a command's standard output."""
-    import subprocess
-    out, err = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-    return out, err
-
-#FORM SANITY CHECKS
-def check_sodxtrmts_form(form):
-    '''
-    Sanity check for Sodxtrmst form
-    form is given as dict
-    '''
-    form_error = {}
-    fields_to_check = ['start_year', 'end_year','max_missing_days', 'graph_start_year', 'graph_end_year', \
-        'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
-    for field in fields_to_check:
-        checker = getattr(WRCCFormCheck, 'check_' + field)
-        err = checker(form)
-        if err:
-            form_error[WRCCData.DISPLAY_PARAMS[field]] = err
-
-    return form_error

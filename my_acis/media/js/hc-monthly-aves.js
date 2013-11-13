@@ -92,18 +92,24 @@ $(function () {
         $.getJSON(json_file_path, function(datadict) {
             for (var i=0;i<datadict.length;i++){
                 //Find max/min values of data
-                var max = Math.max.apply(Math,datadict[i].data);
-                var min = Math.min.apply(Math,datadict[i].data);
+                var max = null;
+                var min = null;
+                if (datadict.data){
+                    var max = Math.max.apply(Math,datadict[i].data);
+                    var min = Math.min.apply(Math,datadict[i].data);
+                }
                 //Horizontal Plotlines
                 var y_plotlines = [];
-                for (var val=min + (max - min)/5;val<=max + 4*(max - min)/5;val+=(max - min)/5) {
-                    var plotline = {
-                        color: '#787878',
-                        dashStyle:'dash',
-                        width: 1,
-                        value: val,
-                    };
-                    y_plotlines.push(plotline);
+                if (max && min && max != min){
+                    for (var val=min + (max - min)/5;val<=max + 4*(max - min)/5;val+=(max - min)/5) {
+                        var plotline = {
+                            color: '#787878',
+                            dashStyle:'dash',
+                            width: 1,
+                            value: val,
+                        };
+                        y_plotlines.push(plotline);
+                    }
                 }
                 //Define element dependent vars like y-axis max, min, plot-color
                 if (datadict[i].element == 'maxt'){
