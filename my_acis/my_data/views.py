@@ -878,7 +878,10 @@ def monthly_aves(request):
                 context['error']= 'No data found for parameters. Please check your station ID.'
                 return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
             if 'error' in req.keys():
-                context['error']= req['error']
+                if req['error'] == 'Unknown sId':
+                    context['error'] = '%s is not a valid station identifyier.' %form.cleaned_data['station_id']
+                else:
+                    context['error']= req['error']
                 return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
             if 'data' not in req.keys() or 'meta' not in req.keys():
                 context['error']= 'No data found for parameters.Please check your station ID, start and end dates.'
@@ -897,13 +900,10 @@ def monthly_aves(request):
                 pass
             context['averaged_data'] = dict(monthly_aves)
             #Write results dict
-            '''
             try:
                 results = write_monthly_aves_results(req, form.cleaned_data, monthly_aves)
             except:
                 context['error'] = 'No data found for parameters.Please check your station ID, start and end dates.'
-            '''
-            results = write_monthly_aves_results(req, form.cleaned_data, monthly_aves)
             context['results'] = results
             if 'meta' in req.keys():
                 meta = write_monthly_aves_meta(req, form.cleaned_data)

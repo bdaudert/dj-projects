@@ -94,13 +94,13 @@ $(function () {
                 //Find max/min values of data
                 var max = null;
                 var min = null;
-                if (datadict.data){
-                    var max = Math.max.apply(Math,datadict[i].data);
-                    var min = Math.min.apply(Math,datadict[i].data);
+                if (datadict[i].data){
+                    max = Math.max.apply(Math,datadict[i].data);
+                    min = Math.min.apply(Math,datadict[i].data);
                 }
                 //Horizontal Plotlines
                 var y_plotlines = [];
-                if (max && min && max != min){
+                if (max && min){
                     for (var val=min + (max - min)/5;val<=max + 4*(max - min)/5;val+=(max - min)/5) {
                         var plotline = {
                             color: '#787878',
