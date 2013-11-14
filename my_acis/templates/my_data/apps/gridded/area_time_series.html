@@ -13,30 +13,31 @@
     <a href="{{TOOLS_URL}}gridded/area_time_series/">Area Time Series</a></p>
 
 
-    <table cellpadding="20">
-    <td valign="top" width="30%">
+<table cellpadding="20">
+<td valign="top" width="30%">
     <!--Form 0-->
     {%if not hide_form0%}
-        <div id='form0'>
-            <form method="post" action="">{% csrf_token %}
-            <table class="form">
-            {%for field in form0 %}
-                <tr>
-                    <td>{{field.label}}:</td>
-                    <td>{{field}}</td>                                                                                              
-                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                    <div class="pop-up"><p>{{field.help_text}}</p></div>
-                    </td>
-                </tr>
-               {%if field.errors%}
-                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
-                {%endif%}
-            {%endfor%}
-            </table>
-            <input type="submit" value="Select" name="form0"/>
-            </form>
-        </div>
+    <div id='form0'>
+        <form method="post" action="">{% csrf_token %}
+        <table class="form">
+        {%for field in form0 %}
+        <tr>
+        <td>{{field.label}}:</td>
+        <td>{{field}}</td>                                                                                              
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up"><p>{{field.help_text}}</p></div>
+        </td>
+        </tr>
+        {%if field.errors%}
+        <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+        {%endif%}
+        {%endfor%}
+        </table>
+        <input type="submit" value="Select" name="form0"/>
+        </form>
+    </div>
     {%endif%}
+    
     <!--Form 1-->
     {%if form1_ready%}
         <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}gridded/area_time_series/'"/>

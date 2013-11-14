@@ -1347,7 +1347,10 @@ def grid_point_time_series(request):
                 data = []
                 dates = []
                 for date_idx, dat in enumerate(req['data']):
-                    data.append(req['data'][date_idx][1])
+                    if abs(req['data'][date_idx][1] - 999.0) < 0.0001 or abs(req['data'][date_idx][1] + 999.0) < 0.0001:
+                        data.append(None)
+                    else:
+                        data.append(req['data'][date_idx][1])
                     #dates.append(str(req['data'][date_idx][0]))
                     dates.append('%s%s%s' %(str(req['data'][date_idx][0][0:4]), str(req['data'][date_idx][0][5:7]), str(req['data'][date_idx][0][8:10])))
                 context['start_date'] = dates[0]
