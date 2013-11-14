@@ -12,145 +12,129 @@
     <a href="{{TOOLS_URL}}gridded/">GRID TOOLS></a>
     <a href="{{TOOLS_URL}}gridded/clim_sum_maps/">Climate Summary Maps</a></p>
 
-    <table cellpadding="20">
-    <td valign="top" width="30%">
+<table cellpadding="20">
+<td valign="top" width="30%">
     {%if not hide_form0%}
-        <div id='form0'>
-            <form method="post" action="">{% csrf_token %}
-            <table class="form">
-            {%for field in form0 %}
-                <tr>
-                    <td>{{field.label}}:</td>
-                    <td>{{field}}</td>                                                                                              
-                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                    <div class="pop-up"><p>{{field.help_text}}</p></div>
-                    </td>
-                </tr>
-               {%if field.errors%}
-                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
-                {%endif%}
-            {%endfor%}
-            </table>
-            <input type="submit" value="Select" name="form0"/>
-            </form>
-        </div>
+    <div id='form0'>
+        <form method="post" action="">{% csrf_token %}
+        <table class="form">
+        {%for field in form0 %}
+        <tr>
+        <td>{{field.label}}:</td>
+        <td>{{field}}</td>                                                                                                    <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up"><p>{{field.help_text}}</p></div>
+        </td>
+        </tr>
+        {%if field.errors%}
+        <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+        {%endif%}
+        {%endfor%}
+        </table>
+        <input type="submit" value="Select" name="form0"/>
+        </form>
+    </div>
     {%endif%}
     {%if form1_ready%}
-        <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}gridded/clim_sum_maps/'"/>
-
-        <div id='form1'>
-            <form method="post" action="">{% csrf_token %}
-            <table class="form">
-            {%for field in form1 %}
-                {%if field.is_hidden %}
-                    {{field}}
-                {%else%}
-                <tr>
-                    <td>{{field.label}}:</td>
-                    {%if field.label == "Bounding box" and bbox %}
-                        <td><input type="text" name="bbox" id="bbox" value="{{bbox}}"></td>
-                    {%else%}
-                        <td>{{field}}</td>
-                    {%endif%}
-                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                    {%if field.label == "Grid"%}
-                        <div class="pop-up">
-                        <img alt="GriddedDataDocu" title="GriddedDataDocu" src="{{MEDIA_URL}}img/ACIS_Grids.png" id="ACIS_Grids" width="350" height="300" border="0">
-                        </div>
-                    {%else%}
-                        <div class="pop-up"><p>{{field.help_text}}</p></div>
-                    {%endif%}
-                    </td>
-                </tr>
-               {%if field.errors%}
-                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
-                {%endif%}
-                {%endif%}
-            {%endfor%}
-            </table>
-            <input type="submit" value="Submit" name="form1"/>
-            </form>
-        </div> 
+    <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}gridded/clim_sum_maps/'"/>
+    <div id='form1'>
+        <form method="post" action="">{% csrf_token %}
+        <table class="form">
+        {%for field in form1 %}
+        {%if field.is_hidden %}
+        {{field}}
+        {%else%}
+        <tr>
+        <td>{{field.label}}:</td>
+        {%if field.label == "Bounding box" and bbox %}
+        <td><input type="text" name="bbox" id="bbox" value="{{bbox}}"></td>
+        {%else%}
+        <td>{{field}}</td>
+        {%endif%}
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        {%if field.label == "Grid"%}
+        <div class="pop-up">
+            <img alt="GriddedDataDocu" title="GriddedDataDocu" src="{{MEDIA_URL}}img/ACIS_Grids.png" id="ACIS_Grids" width="350" height="300" border="0">
+        </div>
+        {%else%}
+        <div class="pop-up"><p>{{field.help_text}}</p></div>
+        {%endif%}
+        </td>
+        </tr>
+        {%if field.errors%}
+        <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+        {%endif%}
+        {%endif%}
+        {%endfor%}
+        </table>
+        <input type="submit" value="Submit" name="form1"/>
+        </form>
+    </div> 
     {%endif%} 
 
     {%if need_map  and  figure_file%}
-        <p class="error">Click and drag to define your Bounding Box!</p>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-        <div id="map" style="width: 100%; height:400px;"></div>
-        <script type="text/javascript">
-            initialize_bbox_map()
-        </script>
+    <p class="error">Click and drag to define your Bounding Box!</p>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+    <div id="map" style="width: 100%; height:400px;"></div>
+    <script type="text/javascript">
+        initialize_bbox_map()
+    </script>
     {%endif%}
 
-    </td>
-    <td valign="top" width="70%">
-        <table>
-            <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
-        </table> 
-        <script type="text/javascript">            
-            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
-        </script>
-
-        <div id="tool_info" style="display:none;"></div>
-       <script type="text/javascript">            
-            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_CLIM_SUM_MAP");
-        </script> 
-        <script type="text/javascript">
-            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
-        </script>
-        <div id="how_to" style="display:none;"></div>
-        <script type="text/javascript">            
-            $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_CLIM_SUM_MAP");
-        </script>
-        
-        {%if figure_file%}
-
-            {%if state%}
-                {%if elems == "pcpn" or elems == "snow"%}
-                <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}&data_summary=sum&temporal_resolution=dly"><font size=4>Get raw data behind this graphic here!</font></a>
-                {%else%}
-                <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}&data_summary=mean&temporal_resolution=dly"><font size=4>Get raw data behind this graphic here!</font></a>
-                {%endif%}
-            <br />
-            <br />
-            <p>GridACIS Map for State: <b>{{state}}</b></p>
-            {%endif%}
-
-            {%if bbox%}
-            {%if elems == "pcpn" or elems == "snow"%}
-            <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bbox={{bbox}}&data_summary=sum&temporal_resolution=dly"><font size=4>Get raw data behind this graphic here!</font></a>
-            {%else%}
-            <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bbox={{bbox}}&data_summary=mean&temporal_resolution=dly"><font size=4>Get raw data behind this graphic here!</font></a>
-            {%endif%}
-            <br />
-            <br />
-            <p>GridACIS Map for Bounding Box: <b>{{bbox}}</b></p>
-            {%endif%}
-            
-            <p>Element: <b>{{elems_long}}</b> {%if base_temp%}Base Temperature: <b>{{base_temp}}</b>{%endif%}</p>
-            <p>Time Period: <b>{{start_date}}</b> to <b>{{end_date}}</b></p>
-            <img alt="FigureFile" width="500px" height="600px" title="FigureFile" src="{{MEDIA_URL}}tmp/{{figure_file}}">
-    
-        {%endif%}
-
-        {%if need_map  and not figure_file%}
-        <p class="error">Click and drag to define your Bounding Box!</p>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-        <div id="map" style="width: 100%; height:400px;"></div>
-        <script type="text/javascript">
-            initialize_bbox_map()
-        </script>
-        {%endif%}
-
-       </td>
-       </table>
-
-  <!-- Footer -->
-<!--
-    <div id="footer" align="center"></div>
-    <script type="text/javascript">                        
-    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+</td>
+<td valign="top" width="70%">
+    <table>
+    <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
+    </table> 
+    <script type="text/javascript">            
+        $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
     </script>
--->
+    <div id="tool_info" style="display:none;"></div>
+    <script type="text/javascript">            
+        $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_CLIM_SUM_MAP");
+    </script> 
+    <script type="text/javascript">
+        $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+    </script>
+    <div id="how_to" style="display:none;"></div>
+    <script type="text/javascript">            
+        $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_CLIM_SUM_MAP");
+    </script>
+        
+    {%if figure_file%}
+    {%if state%}
+    {%if elems == "pcpn" or elems == "snow"%}
+    <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}&data_summary=sum&temporal_resolution=dly"><font size=4>Get raw data behind this graphic here!</font></a>
+    {%else%}
+    <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}&data_summary=mean&temporal_resolution=dly"><font size=4>Get raw data behind this graphic here!</font></a>
+    {%endif%}
+    <br />
+    <br />
+    <p>GridACIS Map for State: <b>{{state}}</b></p>
+    {%endif%}
+    {%if bbox%}
+    {%if elems == "pcpn" or elems == "snow"%}
+    <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bbox={{bbox}}&data_summary=sum&temporal_resolution=dly"><font size=4>Get raw data behind this graphic here!</font></a>
+    {%else%}
+    <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&bbox={{bbox}}&data_summary=mean&temporal_resolution=dly"><font size=4>Get raw data behind this graphic here!</font></a>
+    {%endif%}
+    <br />
+    <br />
+    <p>GridACIS Map for Bounding Box: <b>{{bbox}}</b></p>
+    {%endif%}
+    <p>Element: <b>{{elems_long}}</b> {%if base_temp%}Base Temperature: <b>{{base_temp}}</b>{%endif%}</p>
+    <p>Time Period: <b>{{start_date}}</b> to <b>{{end_date}}</b></p>
+    <img alt="FigureFile" width="500px" height="600px" title="FigureFile" src="{{MEDIA_URL}}tmp/{{figure_file}}">
+    {%endif%}
+    {%if need_map  and not figure_file%}
+    <p class="error">Click and drag to define your Bounding Box!</p>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+    <div id="map" style="width: 100%; height:400px;"></div>
+    <script type="text/javascript">
+        initialize_bbox_map()
+    </script>
+    {%endif%}
+
+</td>
+</table>
 
 {%endblock%}

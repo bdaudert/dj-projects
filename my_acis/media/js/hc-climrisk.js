@@ -4,7 +4,7 @@ $(function () {
         var json_file = document.getElementById("json_file").value;
         var file = JSON_URL + json_file;
         var axes_style = set_AxesStyle();
-        var lable_style = set_LableStyle();
+        var lable_style = set_LabelStyle();
 
         $.getJSON(file, function(datadict) {
             //Define Summary Text

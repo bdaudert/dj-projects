@@ -771,7 +771,8 @@ CRCM Model</a><br />
             <li><b>Last x years </b>Summarize over the last x years.</li>
             <li><b>Last x months </b>Summarize over the last x months.</li>
             <li><b>Last x years </b>Summarize over the last x years.</li>
-        </ul>       
+        </ul>
+    </p><p>
         <b>X</b> Number of years/month/days. 
     </p>
     <p>
@@ -781,6 +782,7 @@ CRCM Model</a><br />
                 <li><b>State </b>Choose a US state from the drop down menue</li>
                 <li><b>"Bounding Box" </b>A bounding box has four coordinates: <br />West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</li>
            </ul>
+    </p><p>
         <b>Element/Start Date/End Date</b>These fields are populated from your completed form 1. They should not be changed at this point.<br />
         <b>Grid </b>This option defines the gridded dataset to be used. The first two options are the NRCC interpolated and the NRCC Hi-Res datasets developed at the Northeast Regional Climate Center (NRCC).Several NARRCAPP datasets are available.
             <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
@@ -925,6 +927,7 @@ CRCM Model</a><br />
 
 <div id="Howto_SODXTRMTS" title="Monthly Time Series">
     <p>
+    <b>DATA ANALYSIS</b><br />
     <b>Station ID </b>Enter the station ID. If you don't know your ID, please use the link to the station finder tool to find it.<br />    
     <a href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a><br />
     <b>Start/End Year </b>Define your start and end year. Use "POR" for both start/end year if you are interested in the period of record of the station.<br />
@@ -947,25 +950,54 @@ CRCM Model</a><br />
         <li><b>Monthly Sum</b><br />
         Computes monthly sum of daily values of the climate element for each month in the period spanning the start to end year.</li>
         </ul>
+    </p><p>
     <b>Max dissing days </b>The number of maximum missing days allowed in a month. Months with more than max_missing_days missing will be omitted from the analysis.<br />
     <b>Start month </b>Chose a month for the start of your analysis.<br />
     <b>Departure from averages </b>Choose "Yes" if the results should be returned as departure from averages rather than raw values.<br />
     <b>Frequency analysis </b>Choose "Yes" if you wish to perfom a frequency analysis on the results of the statistical analysis.<br />
     If you opt for a frequency analysis, please choose your analysis type.<br />
-    <b>Conditional parameters</b><br />
-    &nbsp;&nbsp;&nbsp;&nbsp;<b>Base temperature </b>If you choose Heating, Cooling or Growing Degrees as your climate element, please choose your base temperature. For example, Cooling Degree Days are caluclated as folows: (max temp - min temp)/2 - base temperature<br />
-    &nbsp;&nbsp;&nbsp;&nbsp;<b>Degree Day Calculation</b><br />
+    <br />
+    <b>CONDITIONAL PARAMETERS</b><br />
+    <b>Base temperature </b>If you choose Heating, Cooling or Growing Degrees as your climate element, please choose your base temperature. For example, Cooling Degree Days are caluclated as folows: (max temp - min temp)/2 - base temperature<br />
+    <b>Degree Day Calculation</b><br />
     <ul>
         <li><b>Heating Degree Days </b>base temperature - (max temperature - min temperature)/2 </li>
         <li><b>Cooling Degree Days </b>(max temperature - min temperature)/2 - base temperature</li>
         <li><b>Growing degree Days </b>(max temperature - min temperature)/2 - base temperature</li>
     </ul>
+    </p><p>
     <b>Thresholds for "Number of Days" statistic</b> Fill out this sub section if your monthly statitic is "Number of Days."<br />
         <ul>
             <li><b>Less greater or between </b>Count the number of days less than/greater than or between threshold(s).</li> 
             <li><b>Threshold </b>If you choose less than or greater than above, enter your threshold here.</li>
             <li><b>Above/Below </b>If you choose between above, enter your lower(Above) and upper(Below) thresholds here.</li>
+        </ul>
+    </p><p>
+    <b>DATA VISUALIZATION</b><br />
+    <b>Start/End month </b>Start/end the visualization on these months.<br />
+    <b>Graph Start/End Year</b>Start and End Year of the graph. Defaults to Start/End Year of the analysis.<br />
+    <b>Summary </b>Choose how you want to summarize the data over the months spanning<br />
+            <ul>
+                <li><b>Maximum over months </b>Plots the maximum value of the months for each year in the time period .</li>
+                <li><b>Minimum over months </b>Plots the minimum value of the chosen months for each year in the time period.</li>
+                <li><b>Sum over months </b>Plots the sum of the values of the chosen months for each year in the time period.</li>
+                <li><b>Average over months </b>Plots the averages of the values of the chosen months for each year in the time period.</li>
+                <li><b>Plot months separately </b>Generates a plot of time series for each of the chosen months.</li>
+            </ul>
+    </p><p>
+    <b>Show running mean </b> Choose "Yes" if you want a running mean to be computed and shown on the final graph<br />
+    <b>Running mean years</b> Defines the number of years used to compute the running mean.<br />
+    <b>Plot incomplete years </b> Choose "yes" if you want to compute the summary for a year exceeding the maximum number of missing days allowed.<br />
+    <b>PLOT OPTIONS</b> Several plot options are available.
         <ul>
+            <li><b>Image size </b>Choose your image size from the drop down menue.</li>
+            <li><b>Show major grid </b>Dashed grid lines will be places at a step size of 1/5(data_max - data_min) </li>
+            <li><b>Show minor grid </b>Dashed gridlines will be placed at a step size of 1/10(data_max - data_min). </li>
+            <li><b>Connector line </b>Choose "Yes" if you would like your data points connected by a line.</li>
+            <li><b>Connector line width </b>Defines the width of the line connecting that data points. 10 is the maximum line width allowed. Choosing 0 is the same as choosing no connector line.</li>
+            <li><b>Markers </b>Choose yes if you would like to see a marker at each data point.</li>
+            <li><b>Marker type </b>Choose a marker type from the drop down menue.</li>
+        </ul>
     </p>
 </div>
 

@@ -24,7 +24,7 @@ function set_AxesStyle() {
     return style;
 }
 
-function set_Labelstyle() {
+function set_LabelStyle() {
     var style = {
         color:'#3E576F',
         fontSize:'14px'
