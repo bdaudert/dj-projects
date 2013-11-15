@@ -295,7 +295,7 @@ function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis
         props.axisMax+=props.tickInterval;
     }
     //Override max/min custom requested by user
-    var add_top = 1;
+    var add_top = 2;
     if (vertical_axis_max != "Use default") {
         try{
             props.axisMax = parseFloat(vertical_axis_max);
