@@ -31,7 +31,7 @@ TEMP_FILE_DIR = '/tmp/'
 today = WRCCUtils.set_back_date(0)
 begin_10yr = WRCCUtils.set_back_date(3660)
 yesterday = WRCCUtils.set_back_date(1)
-
+fourtnight = WRCCUtils.set_back_date(14)
 
 def test(request):
     context = {
@@ -223,7 +223,86 @@ def data_station(request):
         'title': 'Historic Station Data',
         'icon':'DataPortal.png'
     }
-    context['json_file'] = 'SW_stn.json'
+    initial, checkbox_vals = set_station_data_initial(request)
+    context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+    #Set up maps if needed
+    if initial['select_stations_by'] == 'bbox':context['need_map_bbox'] = True
+    if initial['select_stations_by'] == 'shape':context['need_polymap'] = True
+    if initial['select_stations_by'] in ['basin', 'cwa', 'climdiv', 'county']:
+        context['need_overlay_map'] = True
+        formOverlay =forms.StateForm(initial=form)
+        context['formOverlay'] = formOverlay
+        context['host'] = 'wrcc.dri.edu'
+        context['type'] = form['select_stations_by']
+        context['kml_file_path'] = STATIC_KML + 'nv_' + form['select_stations_by'] + '.kml'
+        context[form['select_stations_by']] = WRCCData.AREA_DEFAULTS[form['select_stations_by']]
+
+    if 'formData' in request.POST:
+        #Set initial form parameters for html
+        initial,checkbox_vals = set_sodxtrmts_initial(request)
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        #Turn request object into python dict
+        form = set_form(request)
+        display_params_list, params_dict = set_station_data_params(form)
+        context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
+        #Set up maps if needed
+        if form.cleaned_data['select_stations_by'] == 'bbox':context['need_map_bbox'] = True
+        if form.cleaned_data['select_stations_by'] == 'shape':context['need_polymap'] = True
+        if form.cleaned_data['select_stations_by'] in ['basin', 'cwa', 'climdiv', 'county']:
+            context['need_overlay_map'] = True
+            formOverlay=forms.StateForm(initial=form)
+            context['formOverlay'] = formOverlay
+        #Check if data request is large,
+        #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
+        if form['start_date'].lower() == 'por':
+            s_date = datetime.date(1900,01,01)
+        else:
+            s_date = datetime.date(int(form['start_date'][0:4]), int(form['start_date'][4:6]),int(form['start_date'][6:8]))
+        if form1['end_date'].lower() == 'por':
+                e_date = datetime.date.today()
+        else:
+            e_date = datetime.date(int(form['end_date'][0:4]), int(form['end_date'][4:6]),int(form['end_date'][6:8]))
+        days = (e_date - s_date).days
+        #if time range > 1 year or user requests data for more than 1 station, large request via ftp
+        if days > 366 and 'station_id' not in form.keys():
+            context['large_request'] = \
+            'At the moment we do not support data requests that exceed 1 year for multiple station.\
+             Please limit your request to one station at a time or a date range of one year or less.\
+             We will support larger requests in the near future. Thank you for your patience!'
+            return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
+
+        #Data request
+        resultsdict = AcisWS.get_station_data(form, 'sodlist_web')
+        context['results'] = resultsdict
+
+    #overlay map generation
+    if 'formOverlay' in request.POST:
+        formOverlay = set_as_form(request,'StateForm')
+        context['formOverlay'] = formOverlay
+        context['need_overlay_map'] = True
+        if formOverlay.is_valid():
+            initial = {'select_stations_by':str(formOverlay.cleaned_data['select_stations_by']), 'data_format':str(formOverlay.cleaned_data['data_format'])}
+            context[formOverlay.cleaned_data['select_stations_by']] = WRCCData.AREA_DEFAULTS[formOverlay.cleaned_data['select_stations_by']]
+            context['type'] = formOverlay.cleaned_data['select_stations_by']
+            at = str(formOverlay.cleaned_data['select_stations_by'])
+            st = str(formOverlay.cleaned_data['state']).lower()
+            kml_file_name = st + '_' + at + '.kml'
+            dir_location = TEMP_FILE_DIR
+            status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
+            if not status == 'Success':
+                context['overlay_error'] = status
+            else:
+                context['host'] = 'wrcc.dri.edu'
+                context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
+
+    return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
+
+
+def station_data(request):
+    context = {
+        'title': 'Historic Station Data',
+        'icon':'DataPortal.png'
+    }
     stn_id = request.GET.get('stn_id', None)
     start_date = request.GET.get('start_date', None)
     end_date = request.GET.get('end_date', None)
@@ -346,7 +425,8 @@ def data_station(request):
             else:
                 if form1.cleaned_data['data_format'] == 'json':
                     delimiter = None
-                    context['json'] = True
+
++        context['json'] = True
                 else:
                      delimiter = ' '
 
@@ -1885,7 +1965,6 @@ def set_plot_options(request):
             checkbox_vals[cbv + '_' + bl + '_selected'] = ''
             if initial[cbv] == bl:
                 checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
-                checkbox_vals[cbv + '_' + bl + '_TEST'] = initial['major_grid']
     for image_size in ['small', 'medium', 'large', 'larger', 'extra_large', 'wide', 'wider', 'widest']:
         checkbox_vals['image_size' + '_' + image_size + '_selected'] = ''
         if initial['image_size'] == image_size:
@@ -2406,6 +2485,7 @@ def set_gridded_data_params(form):
         params_dict['delimiter'] = ' '
     return display_params_list, params_dict
 
+
 def set_station_data_params(form):
     if not form:
         return {}
@@ -2457,4 +2537,56 @@ def set_station_data_params(form):
     if 'delimiter' not in params_dict.keys():
         params_dict['delimiter'] = ' '
     return display_params_list, params_dict
+
+def set_station_data_initial(request):
+    initial = {}
+    checkbox_vals = {}
+    if type(request) == dict:
+        def Get(key, default):
+            if key in request.keys():
+                return request[key]
+            else:
+                return default
+    elif request.method == 'GET':
+        Get = getattr(request.GET, 'get')
+    elif request.method == 'POST':
+        Get = getattr(request.POST, 'get')
+    initial['select_stations_by'] = Get('select_stations_by', 'station_id')
+    initial[initial['select_stations_by']] = Get(initial['select_stations_by'], WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
+    initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
+    initial['area_type_value'] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
+    initial['elements'] = Get('elements', 'maxt,mint,pcpn')
+    initial['start_date']  = Get('start_date', fourtnight)
+    initial['end_date']  = Get('end_date', yesterday)
+    initial['show_flags'] = Get('show_flags', 'F')
+    initial['show_observation_time'] = Get('show_observation_time', 'F')
+    initial['data_format'] = Get('data_format', 'html')
+    initial['delimiter'] = Get('delimiter', ',')
+    '''
+    #FIX ME request.POST.get does not return area_type, delimiter
+    if request.POST:        ks = ['area_type','delimiter']
+        req_dict = dict(request.POST.items())
+        for k in ks:
+            if k in req_dict.keys():
+                initial[k] = str(req_dict[k])
+    '''
+    #set the check box values
+    for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
+        checkbox_vals[area_type + '_selected'] =''
+        if area_type == initial['select_stations_by']:
+            checkbox_vals[area_type + '_selected'] ='selected'
+    for df in ['clm', 'dlm','xl', 'html']:
+        checkbox_vals[df + '_selected'] =''
+        if df == initial['data_format']:
+            checkbox_vals[df + '_selected'] ='selected'
+    for dl in ['comma', 'tab', 'space', 'colon', 'pipe']:
+        checkbox_vals[dl + '_selected'] =''
+        if dl == initial['delimiter']:
+            checkbox_vals[dl + '_selected'] ='selected'
+    for bl in ['T','F']:
+        for cbv in ['show_flags', 'show_observation_time']:
+            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
+            if initial[cbv] == bl:
+                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
+    return initial, checkbox_vals
 

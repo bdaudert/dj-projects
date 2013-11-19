@@ -129,7 +129,12 @@ function set_NDays_thresholds(table_id,node){
         '<option value="l">Less Than</option>' +
         '<option value="g">Greater Than</option>' +
         '<option value="b">Between</option></select>';
-        cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText(\'ht_element\')">';
+        cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">' +
+        ' <div class="pop-up"><div id="ht_element"></div>' +
+        ' <script type="text/javascript">' +
+        '$("#ht_element").load("{{MEDIA_URL}}html/commons.html #ht_element");' + 
+        '</script></div>';
+        //cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText(\'ht_element\')">';
 
         //Set up thresholds
         var row = table.insertRow(idx + 1);
@@ -140,7 +145,12 @@ function set_NDays_thresholds(table_id,node){
         var lgb = document.getElementById("less_greater_or_between").value;
         var threshes = set_threshes(document.getElementById("element").value).split(",");
         set_NDays_threshold_cells(lgb, threshes,cell0, cell1);
-        cell2.innerHTML= '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText(\'ht_element\')">'
+        cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">' +
+        ' <div class="pop-up"><div id="ht_element"></div>' +
+        ' <script type="text/javascript">' +
+        '$("#ht_element").load("{{MEDIA_URL}}html/commons.html #ht_element");' +
+        '</script></div>';
+        //cell2.innerHTML= '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText(\'ht_element\')">'
 
         //Set onchange function
         document.getElementById("less_greater_or_between").onchange = function(){
@@ -208,5 +218,127 @@ function show_formGraph(TF, rowClass) {
     for (idx=0;idx<trs.length;idx++){
         trs[idx].style.display = disp;
     }
+}
+
+//Station Data
+function set_area_label_value(area_type){
+    var lv = {
+        'label':'Station ID',
+        'value':'266779'
+    }
+    if (area_type == 'station_ids'){
+        lv.label = 'Station IDs';
+        lv.value ='266779,050848';
+    }
+    if (area_type == 'county'){
+        lv.label ='County';
+        lv.value ='08051';
+    }
+    if (area_type == 'climate_division'){
+        lv.label ='Climate Division';
+        lv.value ='NV01';
+    }
+    if (area_type == 'county_warning_area'){
+        lv.label ='County Warning Area';
+        lv.value ='PUB';
+    }
+    if (area_type == 'basin'){
+        lv.label ='Basin';
+        lv.value ='10180002';
+    }
+    if (area_type == 'state'){
+        lv.label ='State';
+        lv.value ='NV';
+    }
+    if (area_type == 'bounding_box'){
+        lv.label ='Bounding Box';
+        lv.value ='-115,34,-114,35';
+    }
+    if (area_type == 'shape'){
+        lv.label ='Custom Shape';
+        lv.value ='-115,34, -115, 35,-114,35, -114, 34';
+    }
+    //Set up maps for display
+    if (area_type =='county' || area_type =='climate_division' || area_type == 'basin' || area_type == 'county_warning_area'){
+        document.getElementById('OverlayMap').style.display = "block";
+        var map = document.getElementById('map-overlay');
+        map.style.width = '100%';
+        map.style.height = '400px';
+        map = document.getElementById('content-window');
+        map.style.width = '100px';
+        map.style.height = '100px';
+        //hide bbox_map/poly_map
+        document.getElementById('BboxMap').style.display = "none";
+        map = document.getElementById('map');
+        map.style.width = '0%';
+        map.style.height = '0px';
+        document.getElementById('PolyMap').style.display = "none";
+        map = document.getElementById('polymap');
+        map.style.width = '0%';
+        map.style.height = '0px';
+    } 
+    else if (area_type == 'shape') {
+        document.getElementById('OverlayMap').style.display = "none";
+        var map = document.getElementById('map-overlay');
+        map.style.width = '0%';
+        map.style.height = '0px';
+        map = document.getElementById('content-window');
+        map.style.width = '0px';
+        map.style.height = '0px';
+        //hide bbox_map/poly_map
+        document.getElementById('BboxMap').style.display = "none";
+        map = document.getElementById('map');
+        map.style.width = '0%';
+        map.style.height = '0px';
+        document.getElementById('PolyMap').style.display = "block";
+        map = document.getElementById('polymap');
+        map.style.width = '1000%';
+        map.style.height = '400px';
+    }
+    else if (area_type == 'bounding_box') {
+        document.getElementById('OverlayMap').style.display = "none";
+        var map = document.getElementById('map-overlay');
+        map.style.width = '0%';
+        map.style.height = '0px';
+        map = document.getElementById('content-window');
+        map.style.width = '0px';
+        map.style.height = '0px';
+        //hide bbox_map/poly_map
+        document.getElementById('BboxMap').style.display = "block";
+        map = document.getElementById('map');
+        map.style.width = '100%';
+        map.style.height = '400px';
+        document.getElementById('PolyMap').style.display = "none";
+        map = document.getElementById('polymap');
+        map.style.width = '0%';
+        map.style.height = '0px';
+    }
+    
+    return lv;
+}
+
+function set_station_select(row_id,node){
+    /*
+    //Delete existing table row
+    if ($('#' + row_id).length){
+        $('table#' + table_id + ' tr#' + row_id).remove();
+    }
+    */
+    var lv = set_area_label_value(node.value); 
+    var tbl_row = document.getElementById(row_id);
+    //Override table row
+    //cell1 = Label
+    var cell0 = tbl_row.firstChild.nextSibling;
+    cell0.innerHTML= lv.label + ': ';
+    //cell2 input
+    var cell1 = cell0.nextSibling.nextSibling;
+    cell1.innerHTML= '<input type="text" id="' + node.value + '" name="'+ node.value +'" value="' +  lv.value + '">'
+    //cell3 = helptext
+    cell2 = cell1.nextSibling.nextSibling;
+    cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">' + 
+    ' <div class="pop-up"><div id="ht_' + node.value  + '"></div>' + 
+    ' <script type="text/javascript">' +                         
+    '$("#ht_' + node.value + '").load("/csc/media/html/commons.html #ht_'+ node.value + '");' + 
+    '</script></div>';
 }
 

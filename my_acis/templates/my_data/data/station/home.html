@@ -1,6 +1,6 @@
 {% extends "csc_base.html" %}
 <meta name="keywords" content="data, station data, historic data, acis">
-<meta name="description" content="SW-CKN Historic Station Data">
+<meta name="description" content="SWCKE Historic Station Data">
 
 {%load my_data_filters%}
 
@@ -12,378 +12,408 @@
 <a href="{{DATA_URL}}">DATA></a>
 <a href="{{DATA_URL}}station/">Historic Station Data</a></p>
 
-    <table cellpadding="20">
-    <!--LEFT-->
-    <td valign="top" width="40%">
-    {%if not form2_ready%}
-        {%if not hide_form0%}
-            <div id='form0'>
-                <form method="post" action="">{% csrf_token %}
-                <table class="form">
-                {%for field in form0 %}
-                    <tr>
-                        <td>{{field.label}}:</td>
-                        <td>{{field}}</td>
-                        <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                        {%ifequal field.label "Elements" %}
-                            <div class="pop-up"> 
-                            <img alt="EleemntChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0">                   </div>
-                        {%else%}
-                            <div class="pop-up"><p>{{field.help_text}}</p></div>
-                        {%endifequal%} 
-                        </td>
-                    </tr>
-                    {%if field.errors%}
-                     <tr><td></td><td>{{field.errors}}</td><td></td></tr>
-                    {%endif%}
-                {%endfor%}
-                </table>
-                <input type="submit" value="Select" name="form0"/>
-                </form>
-            </div>
-        {%endif%}
-        
-        {%if not form1_ready and not stn_id%}
-            <p class="pop_link" onClick="ShowHide('Docu_select_stations_by')"><b><u>Station Selection Choices</u></b> explained</p>
-            <div id="Docu_select_stations_by" style="display:none;"></div>
+<table cellpadding="20">
+<!--LEFT-->
+{{initial}}
+<td valign="top" width="30%">
+    <div id='formData'>
+        <form method="post" action="">{% csrf_token %}
+        <table class="form" id="tableData">
+        <tr valign="top">
+        <td>Select stations by:</td>
+        <td>
+            <select id="select_stations_by" name="select_stations_by" onchange="set_station_select('area_type',this);">
+            <option value="station_id" {{checkbox_vals.station_id_selected}}>Individual station</option>
+            <option value="station_ids" {{checkbox_vals.station_nids_selected}}>Comma separated list of stations</option>
+            <option value="county" {{checkbox_vals.county_selected}}>County</option>
+            <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
+            <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
+            <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
+            <option value="state" {{checkbox_vals.state_selected}}>State</option>
+            <option value="bounding_box" {{checkbox_vals.bounding_box_selected}}>Bounding Box</option>
+            <option value="shape" {{checkbox_vals.shape_selected}}>Custom Shape</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_select_stations_by"></div>
             <script type="text/javascript">                        
-            $("#Docu_select_stations_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_stations_by");
+                $("#ht_select_stations_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_stations_by");
             </script>
-        {%endif%}
-
-        {%if form1_ready %}
-        <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}station/'"/>
-        
-        <div id="form1">
-            <form method="post" action="">{% csrf_token %}
-            <table class="form">
-            {%if need_bbox_map or need_polymap or need_map or need_overlay_map%}
-                <p class="error">Use the map interface to populate first field.</p>
-            {%endif%}
-            {%for field in form1 %}
-            {%if field.is_hidden %}
-                {{field}} 
-            {%else%}
-                <tr>
-                    <td>{{field.label}}:</td>
-                    {%if field.label == "Shape" %}
-                        <td><input type="text" name="shape" id="shape" value="{{shape}}"></td>
-                    {%elif field.label == "Bounding box"%}
-                        <td><input type="text" name="bounding_box" id="bbox" value="{{bbox}}"></td>
-                    {%elif field.label == "County" %}
-                        <td><input type="text" name="county" id="county" value="{{county}}"></td>
-                    {%elif field.label == "Climate division" %}
-                        <td><input type="text" name="climate_division" id="climdiv" value="{{climdiv}}"></td>
-                    {%elif field.label == "Basin" %}
-                        <td><input type="text" name="basin" id="basin" value="{{basin}}"></td>
-                    {%elif field.label == "County warning area" %}
-                        <td><input type="text" name="county_warning_area" id="cwa" value="{{cwa}}"></td>
-                    {%else%}
-                        <td>{{field}}</td>
-                    {%endif%}
-                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>                            
-                    {%ifequal field.label "Elements" %}
-                        <div class="pop-up" onClick="ShowHide(this)">
-                        <img alt=ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0">
-                        </div>
-                    {%else%}
-                        <div class="pop-up"><p>{{field.help_text}}</p></div>
-                    {%endifequal%}
-                    </td>
-                </tr>
-                {%ifequal field.label "Station id"%}
-                    <tr><td></td><td align="right"><a target="_blank" href="/csc/swcke/apps/station/station_locator/">Station Finder</a></td></tr>
-                {%endifequal%}
-                {%ifequal field.label "Station ids"%}
-                    <tr><td></td><td align="right"><a target="_blank" href="/csc/swcke/apps/station/station_locator/">Station Finder</a></td></tr>
-                {%endifequal%}
-                {%if field.errors%}
-                    <tr><td></td><td>{{field.errors}}</td><td></td></tr>
-                {%endif%}
-            {%endif%}
-            {%endfor%}
-            </table>
-            <input type="submit" value="Submit" name="form1"/>
-            </form>
         </div>
+        </td>
+        </tr>
+        <tr id="area_type" valign="top">
+        <td>{{initial.area_type_label}}: </td>
+        <td><input type="text" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_station_id"></div>
+            <script type="text/javascript">                        
+            $("#ht_{{initial.select_stations_by}}").load("{{MEDIA_URL}}html/commons.html #ht_{{initial.select_stations_by}}");
+            </script>
+        </div>
+        </td>
+        </tr>
+        {%if initial.station_id or initial.station_ids%}
+        <tr>
+        <td></td>
+        <td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td>
+        <td></td>
+        </td>
         {%endif%}
-    {%endif%}
+        <tr valign="top">
+        <td>Elements: </td>
+        <td><input type="text" id="elements" name="elements" value="{{initial.elements}}"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_elements"></div>
+            <script type="text/javascript">                        
+            $("#ht_elements").load("{{MEDIA_URL}}html/commons.html #ht_elements");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td>Start Date: </td>
+        <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_start_date"></div>
+            <script type="text/javascript">                        
+            $("#ht_start_date").load("{{MEDIA_URL}}html/commons.html #ht_date");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td>End Date: </td>
+        <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_end_date"></div>
+            <script type="text/javascript">                        
+            $("#ht_end_date").load("{{MEDIA_URL}}html/commons.html #ht_date");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td>Show Flags: </td>
+        <td>
+            <select id="show_flags" name="show_flags">
+            <option value="F" {{checkbox_vals.show_flags_F_selected}}>No</option>
+            <option value="T" {{checkbox_vals.show_flags_T_selected}}>Yes</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_show_flags"></div>
+            <script type="text/javascript">                        
+            $("#ht_show_flags").load("{{MEDIA_URL}}html/commons.html #ht_show_flags");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td>Show Observation Time: </td>
+        <td>
+            <select id="show_observation_time" name="show_observation_time">
+            <option value="F" {{checkbox_vals.show_observation_time_F_selected}}>No</option>
+            <option value="T" {{checkbox_vals.show_observation_time_T_selected}}>Yes</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_show_observation_time"></div>
+            <script type="text/javascript">                        
+            $("#ht_show_observation_time").load("{{MEDIA_URL}}html/commons.html #ht_show_observation_time");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td>Data Format: </td>
+        <td>
+        <select id="data_format" name="data_format" onchange="set_delimiter(this, 'delim');">
+        <option value="clm">Html (display on page)</option>
+        <option value="clm">Columnar, .txt</option>
+        <option value="dlm">Delimited, .dat</option>
+        <option value="xl" selected>Excel, .xls</option>
+        </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_data_format"></div>
+        <script type="text/javascript">                        
+            $("#ht_data_format").load("{{MEDIA_URL}}html/commons.html #ht_data_format");
+        </script>
+        </div>
+        </td>
+        </tr>
+        <!--Only show when format is clm or dlm, don't show if xl-->
+        <tr valign="top" id="delim" style="display:none;">
+        <td>Delimiter:</td>
+        <td>
+        <select id="delimiter" name="delimiter">
+        <option value="comma" selected>Comma (,)</option>
+        <option value="tab">Tab (    )</option>
+        <option value="space">Space ( )</option>
+        <option value="colon">Colon (:)</option>
+        <option value="pipe">pipe(|)</option>
+        </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_delimiter"></div>
+        <script type="text/javascript">                        
+            $("#ht_delimiter").load("{{MEDIA_URL}}html/commons.html #ht_delimiter");
+        </script>
+        </div>
+        </td>
+        </tr>
+        </table>
+        <input type="submit" value="Submit" name="formData"/>
+        </form>
+    </div>
+        
+    <p class="pop_link" onClick="ShowHide('Docu_select_stations_by')"><b><u>Station Selection Choices</u></b> explained</p>
+    <div id="Docu_select_stations_by" style="display:none;"></div>
+        <script type="text/javascript">                        
+            $("#Docu_select_stations_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_stations_by");
+        </script>
+
     <br /><br />
     {%if need_map_bbox  and results %}
-        <p class="error">Click and drag to define your Bounding Box!</p>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-        <div id="map" style="width: 100%; height:400px;"></div>
-        <script type="text/javascript">
-            initialize_bbox_map()
-        </script>
+    <p class="error">Click and drag to define your Bounding Box!</p>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+    <div id="map" style="width: 100%; height:400px;"></div>
+    <script type="text/javascript">
+        initialize_bbox_map()
+    </script>
     {%endif%}
 
     {%if need_polymap and results%}
+    <div id="panel">
+        <div id="color-palette"></div>
+        <div>
+            <button id="delete-button">Delete Selected Shape</button>
+        </div>
+    </div>
+    <div id="polymap" style="width: 100%; height:400px;"></div>
+    {%if lat and lon %}
+    <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+    <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+    {%else%}
+    <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
+    <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+    {%endif%}
+    <script type="text/javascript">
+        initialize_polygon_map()
+    </script>
+    {%endif%}
+
+    {%if need_overlay_map and results%}
+    <div id="formOverlay">
+        <form method="post" action="">{% csrf_token %}
+        <table class="form">
+        {%for field in formOverlay %}
+        <tr>
+        {%if not field.is_hidden %}
+        <td>{{field.label}}:</td><td>{{field}}</td>
+        {%else%}
+        <td style="display:none;">{{field.label}}</td><td style="display:none;">{{field}}</td>
+        {%endif%}
+        </tr>
+        {%endfor%}
+        </table>
+        <input type="submit" value="Submit" name="formOverlay"/>
+        </form>
+    </div>
+    <p class="error">{{overlay_error}}</p>
+    <div id="map-overlay" style="width:100%; height:400px;"></div>
+    <div id="content-window" style="width:100px; height:100px;"></div>
+    <script type="text/javascript">initialize_map_overlays("{{initial.select_stations_by}}","{{host}}", "{{kml_file_path}}")</script>
+    {%endif%} 
+    
+<!--RIGHT-->
+</td>
+<td valign="top" width="60%">
+    <table>
+    <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
+    </table>
+    <script type="text/javascript">                        
+        $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+    </script>
+    <div class="docu" id="tool_info" style="display:none;"></div>
+    <script type="text/javascript">                        
+        $("#tool_info").load("{{MEDIA_URL}}html/commons.html #About_station_data");
+    </script>
+    <script type="text/javascript">            
+        $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+    </script>
+    <div id="how_to" style="display:none;"></div>
+    <script type="text/javascript">            
+        $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_station_data");
+    </script> 
+
+    <div id="docu_long"></div>
+
+
+    {%if large_request %}
+    <p class="error">{{large_request}}</p>
+    {%endif%}
+
+    {%if user_info%}
+    <p class="error">{{user_info}}</p>
+    {%endif%}
+
+    {%if display_params_list%}
+    <p><b>SEARCH PARAMETERS</b>:<br />
+    {%for param in display_params_list%}
+    {%if not forloop.first and param.0 and param.1%}, {%endif%}
+    {%if forloop.counter|divisibleby:"3" %}<br />
+    {%endif %}
+    {%if param.0 == "Elements"%}<br />{%endif%}
+    {%if param.0 and param.1%}
+    <b>{{param.0}}</b>: 
+    {%if param.0 == "shape"%}
+    <p class="error" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
+    <div id="coords" style="display:none;">{{params.1}}</div>
+    {%else%}
+    {{param.1}}
+    {%endif%}
+    {%endif%}
+    {%endfor%}
+    </p>
+    {%endif%}
+
+
+    {%if results%}
+    {%if params_dict.show_flags == "T"%}
+    <h3>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</h3>
+    {%endif%}
+    <br />
+    {%if results.errors%}
+    <p class="error">{{results.errors}}</p>
+    {%endif%}
+
+    <!--Link to relevant apps-->
+    {%if params_dict.stn_id %}
+    <a target="_blank" href="{{TOOLS_URL}}station/?stn_id={{params_dict.stn_id}}&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}">Run an application on this data set</a>
+    {%endif%}
+    <br />
+
+    {%for stn in stn_idx%}
+    {%if results.stn_data|lookup:stn%}
+    <h3>STATION NAME:</h3> 
+    <b>{{results.stn_names|lookup:stn|safe}}</b>
+    <h3>STATION ID,STATION NETWORK PAIRS:</h3>
+    {%for id_network in results.stn_ids|lookup:stn %}
+    <b>{{id_network}},</b>
+    {%endfor%}
+    <h3>Data:</h3> 
+    <p class="error"> {{results.stn_errors|lookup:stn}}</p>
+    {%if not json%}  
+    <table>
+    <th>date{{params_dict.delimiter}}
+    {%if params_dict.show_flags == "T"%}
+    {%if params_dict.show_observation_time == "T"%}
+    {%for el in results.elements%}{{el}}{{params_dict.delimiter}}flag{{params_dict.delimiter}}obs time{{params_dict.delimiter}}{%endfor%}
+    {%else%}
+    {%for el in results.elements%}{{el}}{{params_dict.delimiter}}flag{{params_dict.delimiter}}{%endfor%}
+    {%endif%}
+    {%else%}
+    {%if params_dict.show_observation_time == "T"%}
+    {%for el in results.elements%}{{el}}{{params_dict.delimiter}}obs time{{params_dict.delimiter}}{%endfor%}
+    {%else%}
+    {%for el in results.elements%}{{el}}{{params_dict.delimiter}}{%endfor%}
+    {%endif%}
+    {%endif%}
+    </th>
+    {%for date_vals in results.stn_data|lookup:stn%}
+    <tr><td>
+    {%for el_val in date_vals%}
+    {%if forloop.first %}
+    {{el_val}}{{params_dict.delimiter}}
+    {%else%}
+    {%if params_dict.show_flags == "T"%}
+    {%if params_dict.show_observation_time == "T"%}
+    {{el_val|lookup:0}}{{params_dict.delimiter}}{{el_val|lookup:1}}{{params_dict.delimiter}}{{el_val|lookup:2}}{{params_dict.delimiter}}
+    {%else%}
+    {{el_val|lookup:0}}{{params_dict.delimiter}}{{el_val|lookup:1}}{{params_dict.delimiter}}
+    {%endif%}
+    {%else%}
+    {%if params_dict.show_observation_time == "T"%}
+    {{el_val|lookup:0}}{{params_dict.delimiter}}{{el_val|lookup:2}}{{params_dict.delimiter}}
+    {%else%}
+    {{el_val|lookup:0}}{{params_dict.delimiter}}
+    {%endif%}
+    {%endif%}
+    {%endif%}
+    {%endfor%}
+    </td></tr>
+    {%endfor%}
+    </table>
+    {%else%}
+    {{results.stn_data|lookup:stn}}                    
+    {%endif%}
+    {%endif%}<!--End if results.stn_data|lookup:stn-->
+    {%endfor%}<!--End station loop-->
+    {%else%}<!--End if results-->
+
+    <div id="BboxMap" style="display:none;">
+        <p class="error">Click and drag to define your Bounding Box!</p>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+        <div id="map" style="width: 0%;height:0px;"></div>
+        <script type="text/javascript">
+            initialize_bbox_map()
+        </script>
+    </div>
+
+    <div id="PolyMap" style="display:none;">
         <div id="panel">
-            <div id="color-palette"></div>
+        <div id="color-palette"></div>
             <div>
                 <button id="delete-button">Delete Selected Shape</button>
             </div>
         </div>
-        <div id="polymap" style="width: 100%; height:400px;"></div>
+        <div id="polymap" style="width:0%;height:0px;"></div>
         {%if lat and lon %}
-            <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
-            <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+        <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+        <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
         {%else%}
-            <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
-            <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+        <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
+        <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
         {%endif%}
         <script type="text/javascript">
             initialize_polygon_map()
         </script>
-    {%endif%}
+    </div>
 
-    {%if need_overlay_map and results%}
+    <div id="OverlayMap" style="display:none;">
         <div id="form3">
             <form method="post" action="">{% csrf_token %}
             <table class="form">
-                {%for field in form3 %}
-                    <tr>
-                    {%if not field.is_hidden %}
-                       <td>{{field.label}}:</td><td>{{field}}</td>
-                    {%else%}
-                       <td style="display:none;">{{field.label}}</td><td style="display:none;">{{field}}</td>
-                    {%endif%}
-                    </tr>
-                {%endfor%}
-            </table>
-            <input type="submit" value="Submit" name="form3"/>
-            </form>
-        </div>
-        <p class="error">{{overlay_error}}</p>
-        <div id="map-overlay" style="width:100%; height:400px;"></div>
-        <div id="content-window" style="width:100px; height:100px;"></div>
-        <script type="text/javascript">initialize_map_overlays("{{type}}","{{host}}", "{{kml_file_path}}")</script>
-    {%endif%} 
-    <!--RIGHT-->
-    </td>
-    <td valign="top" width="60%">
-        <table>
-            <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
-        </table>
-        <script type="text/javascript">                        
-            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
-        </script>
-        <div class="docu" id="tool_info" style="display:none;"></div>
-        <script type="text/javascript">                        
-            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #About_station_data");
-        </script>
-        <script type="text/javascript">            
-            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
-        </script>
-        <div id="how_to" style="display:none;"></div>
-        <script type="text/javascript">            
-            $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_station_data");
-        </script> 
-
-        <div id="docu_long"></div>
-
-
-        {%if large_request %}
-            <p class="error">{{large_request}}</p>
-        {%endif%}
-
-       {%if user_info%}
-            <p class="error">{{user_info}}</p>
-        {%endif%}
-        {% if form2_ready%}
-            <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}station/'"/>
-            {%if not hide_form3%}
-            <div id='form3'>
-                <form method="post" action="">{% csrf_token %}
-                <table class="form">
-                {%for field in form2%}
-                    <tr>
-                        <td>{{field.label}}:</td>
-                        <td>{{field}}</td>
-                        <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                        <div class="pop-up"><p>{{field.help_text}}</p></div>
-                        </td>
-                    </tr>
-                    {%if field.errors%}
-                     <tr><td></td><td>{{field.errors}}</td><td></td></tr>
-                    {%endif%}
-                {%endfor%}
-                </table>
-                <input type="submit" value="Submit" name="form2"/>
-                </form>
-            </div>
-            {%endif%}
-        {%endif%}
-
-        {%if by_type and not form2_ready%}
-            <p><font color="#FF007F">Search Parameters:</font><br />
-            <b>{{by_type}} </b><br /></p>
-        {%endif%}
-
-
-        {%if results.error%}
-            <div class="error">{{results.error}}</div>
-        {%endif%}
-
-
-       {%if display_params_list%}
-            <p><b>SEARCH PARAMETERS</b>:<br />
-            {%for param in display_params_list%}
-                {%if not forloop.first and param.0 and param.1%}, {%endif%}
-                    {%if forloop.counter|divisibleby:"3" %}<br />
-                {%endif %}
-                {%if param.0 == "Elements"%}<br />{%endif%}
-                {%if param.0 and param.1%}
-                    <b>{{param.0}}</b>: 
-                    {%if param.0 == "shape"%}
-                        <p class="error" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
-                        <div id="coords" style="display:none;">{{params.1}}</div>
-                    {%else%}
-                        {{param.1}}
-                    {%endif%}
-                {%endif%}
-            {%endfor%}
-            </p>
-        {%endif%}
-
-
-        {%if results%}
-
-            {%if params_dict.show_flags == "T"%}
-                <h3>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</h3>
-            {%endif%}
-            <br />
-            {%if results.errors%}
-                <p class="error">{{results.errors}}</p>
-            {%endif%}
-
-            <!--Link to relevant apps-->
-            {%if params_dict.stn_id %}
-            <a target="_blank" href="{{TOOLS_URL}}station/?stn_id={{params_dict.stn_id}}&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}">Run an application on this data set</a>
-            {%endif%}
-         <br />
-
-        {%for stn in stn_idx%}
-          {%if results.stn_data|lookup:stn%}
-            <h3>STATION NAME:</h3> 
-            <b>{{results.stn_names|lookup:stn|safe}}</b>
-            <h3>STATION ID,STATION NETWORK PAIRS:</h3>
-            {%for id_network in results.stn_ids|lookup:stn %}
-                <b>{{id_network}},</b>
-            {%endfor%}
-            <h3>Data:</h3> 
-            <p class="error"> {{results.stn_errors|lookup:stn}}</p>
-                 {%if not json%}  
-                    <table>
-                    <th>date{{params_dict.delimiter}}
-                        {%if params_dict.show_flags == "T"%}
-                            {%if params_dict.show_observation_time == "T"%}
-                                {%for el in results.elements%}{{el}}{{params_dict.delimiter}}flag{{params_dict.delimiter}}obs time{{params_dict.delimiter}}{%endfor%}
-                            {%else%}
-                                {%for el in results.elements%}{{el}}{{params_dict.delimiter}}flag{{params_dict.delimiter}}{%endfor%}
-                            {%endif%}
-                        {%else%}
-                            {%if params_dict.show_observation_time == "T"%}
-                                {%for el in results.elements%}{{el}}{{params_dict.delimiter}}obs time{{params_dict.delimiter}}{%endfor%}
-                            {%else%}
-                                {%for el in results.elements%}{{el}}{{params_dict.delimiter}}{%endfor%}
-                            {%endif%}
-                        {%endif%}
-                    </th>
-                    {%for date_vals in results.stn_data|lookup:stn%}
-                        <tr><td>
-                            {%for el_val in date_vals%}
-                                {%if forloop.first %}
-                                    {{el_val}}{{params_dict.delimiter}}
-                                {%else%}
-                                    {%if params_dict.show_flags == "T"%}
-                                        {%if params_dict.show_observation_time == "T"%}
-                                            {{el_val|lookup:0}}{{params_dict.delimiter}}{{el_val|lookup:1}}{{params_dict.delimiter}}{{el_val|lookup:2}}{{params_dict.delimiter}}
-                                        {%else%}
-                                            {{el_val|lookup:0}}{{params_dict.delimiter}}{{el_val|lookup:1}}{{params_dict.delimiter}}
-                                        {%endif%}
-                                    {%else%}
-                                        {%if params_dict.show_observation_time == "T"%}
-                                            {{el_val|lookup:0}}{{params_dict.delimiter}}{{el_val|lookup:2}}{{params_dict.delimiter}}
-                                        {%else%}
-                                            {{el_val|lookup:0}}{{params_dict.delimiter}}
-                                        {%endif%}
-                                    {%endif%}
-                                {%endif%}
-                            {%endfor%}
-                        </td></tr>
-                    {%endfor%}
-                    </table>
-                {%else%}
-                    {{results.stn_data|lookup:stn}}                    
-                {%endif%}
-              {%endif%}<!--End if results.stn_data|lookup:stn-->
-            {%endfor%}<!--End station loop-->
-        {%else%}<!--End if results-->
-
-        {%if need_map_bbox and not results%}
-            <p class="error">Click and drag to define your Bounding Box!</p>
-            <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-            <div id="map" style="width: 100%; height:400px;"></div>
-            <script type="text/javascript">
-                initialize_bbox_map()
-            </script>
-        {%endif%}
-
-       {%if need_polymap and not results%}
-            <div id="panel">
-                <div id="color-palette"></div>
-                <div>
-                    <button id="delete-button">Delete Selected Shape</button>
-                </div>
-            </div>
-            <div id="polymap" style="width: 100%; height:400px;"></div>
-            {%if lat and lon %}
-                <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
-                <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+            {%for field in form3 %}
+            <tr>
+            {%if not field.is_hidden %}
+            <td>{{field.label}}:</td><td>{{field}}</td>
             {%else%}
-                <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
-                <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+            <td style="display:none;">{{field.label}}</td><td style="display:none;">{{field}}</td>
             {%endif%}
-            <script type="text/javascript">
-                initialize_polygon_map()
-            </script>
-      {%endif%}
-  
-
-      {%if need_overlay_map and not results%}
-        <div id="form3">
-            <form method="post" action="">{% csrf_token %}
-            <table class="form">
-                {%for field in form3 %}
-                    <tr>
-                    {%if not field.is_hidden %}
-                       <td>{{field.label}}:</td><td>{{field}}</td>
-                    {%else%}
-                       <td style="display:none;">{{field.label}}</td><td style="display:none;">{{field}}</td>
-                    {%endif%}
-                    </tr>
-                {%endfor%}
+            </tr>
+            {%endfor%}
             </table>
             <input type="submit" value="Submit" name="form3"/>
             </form>
         </div>
         <p class="error">{{overlay_error}}</p>
-        <div id="map-overlay" style="width:100%; height:400px;"></div>
-        <div id="content-window" style="width:100px; height:100px;"></div>
+        <div id="map-overlay" style="width:0%;height:0px;"></div>
+        <div id="content-window" style="width:0px; height:0px;"></div>
         <script type="text/javascript">initialize_map_overlays("{{type}}","{{host}}", "{{kml_file_path}}")</script>  
-      {%endif%} 
-
-      {%endif%}<!--End if results-->
-    </td></table>
-
-  <!-- Footer -->
-<!--
-  <div id="footer" align="center"></div>
-    <script type="text/javascript">                        
-    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-sw-ckn");
-    </script>
---> 
-
+    </div>
+    
+    {%endif%}<!--End if results-->
+</td></table>
 {%endblock%}
