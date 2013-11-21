@@ -12,9 +12,12 @@
 <a href="{{DATA_URL}}">DATA></a>
 <a href="{{DATA_URL}}station/">Historic Station Data</a></p>
 
+<input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
+<input type="hidden" id="host" name="host" value="{{host}}">
+<input type="hidden" id="kml_file_path" name="kml_file_path" value="{{kml_file_path}}">
+
 <table cellpadding="20">
 <!--LEFT-->
-{{initial}}
 <td valign="top" width="30%">
     <div id='formData'>
         <form method="post" action="">{% csrf_token %}
@@ -22,7 +25,7 @@
         <tr valign="top">
         <td>Select stations by:</td>
         <td>
-            <select id="select_stations_by" name="select_stations_by" onchange="set_station_select('area_type',this);">
+            <select id="select_stations_by" name="select_stations_by" onchange="set_station_select('area',this);">
             <option value="station_id" {{checkbox_vals.station_id_selected}}>Individual station</option>
             <option value="station_ids" {{checkbox_vals.station_nids_selected}}>Comma separated list of stations</option>
             <option value="county" {{checkbox_vals.county_selected}}>County</option>
@@ -30,7 +33,7 @@
             <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
             <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
             <option value="state" {{checkbox_vals.state_selected}}>State</option>
-            <option value="bounding_box" {{checkbox_vals.bounding_box_selected}}>Bounding Box</option>
+            <!--<option value="bounding_box" {{checkbox_vals.bounding_box_selected}}>Bounding Box</option>-->
             <option value="shape" {{checkbox_vals.shape_selected}}>Custom Shape</option>
             </select>
         </td>
@@ -43,7 +46,7 @@
         </div>
         </td>
         </tr>
-        <tr id="area_type" valign="top">
+        <tr id="area" valign="top">
         <td>{{initial.area_type_label}}: </td>
         <td><input type="text" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -173,6 +176,7 @@
         </td>
         </tr>
         </table>
+        <input type="hidden" name="overlay_state" value="{{initial.overlay_state}}">
         <input type="submit" value="Submit" name="formData"/>
         </form>
     </div>
@@ -184,61 +188,9 @@
         </script>
 
     <br /><br />
-    {%if need_map_bbox  and results %}
-    <p class="error">Click and drag to define your Bounding Box!</p>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-    <div id="map" style="width: 100%; height:400px;"></div>
-    <script type="text/javascript">
-        initialize_bbox_map()
-    </script>
-    {%endif%}
-
-    {%if need_polymap and results%}
-    <div id="panel">
-        <div id="color-palette"></div>
-        <div>
-            <button id="delete-button">Delete Selected Shape</button>
-        </div>
-    </div>
-    <div id="polymap" style="width: 100%; height:400px;"></div>
-    {%if lat and lon %}
-    <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
-    <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
-    {%else%}
-    <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
-    <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
-    {%endif%}
-    <script type="text/javascript">
-        initialize_polygon_map()
-    </script>
-    {%endif%}
-
-    {%if need_overlay_map and results%}
-    <div id="formOverlay">
-        <form method="post" action="">{% csrf_token %}
-        <table class="form">
-        {%for field in formOverlay %}
-        <tr>
-        {%if not field.is_hidden %}
-        <td>{{field.label}}:</td><td>{{field}}</td>
-        {%else%}
-        <td style="display:none;">{{field.label}}</td><td style="display:none;">{{field}}</td>
-        {%endif%}
-        </tr>
-        {%endfor%}
-        </table>
-        <input type="submit" value="Submit" name="formOverlay"/>
-        </form>
-    </div>
-    <p class="error">{{overlay_error}}</p>
-    <div id="map-overlay" style="width:100%; height:400px;"></div>
-    <div id="content-window" style="width:100px; height:100px;"></div>
-    <script type="text/javascript">initialize_map_overlays("{{initial.select_stations_by}}","{{host}}", "{{kml_file_path}}")</script>
-    {%endif%} 
-    
 <!--RIGHT-->
 </td>
-<td valign="top" width="60%">
+<td valign="top" width="70%">
     <table>
     <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
     </table>
@@ -258,7 +210,6 @@
     </script> 
 
     <div id="docu_long"></div>
-
 
     {%if large_request %}
     <p class="error">{{large_request}}</p>
@@ -362,15 +313,6 @@
     {%endfor%}<!--End station loop-->
     {%else%}<!--End if results-->
 
-    <div id="BboxMap" style="display:none;">
-        <p class="error">Click and drag to define your Bounding Box!</p>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-        <div id="map" style="width: 0%;height:0px;"></div>
-        <script type="text/javascript">
-            initialize_bbox_map()
-        </script>
-    </div>
-
     <div id="PolyMap" style="display:none;">
         <div id="panel">
         <div id="color-palette"></div>
@@ -378,7 +320,6 @@
                 <button id="delete-button">Delete Selected Shape</button>
             </div>
         </div>
-        <div id="polymap" style="width:0%;height:0px;"></div>
         {%if lat and lon %}
         <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
         <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
@@ -386,32 +327,125 @@
         <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
         <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
         {%endif%}
-        <script type="text/javascript">
-            initialize_polygon_map()
-        </script>
     </div>
-
     <div id="OverlayMap" style="display:none;">
-        <div id="form3">
+         <div id="formOverlay" style="display:inherit;">
             <form method="post" action="">{% csrf_token %}
             <table class="form">
-            {%for field in form3 %}
-            <tr>
-            {%if not field.is_hidden %}
-            <td>{{field.label}}:</td><td>{{field}}</td>
-            {%else%}
-            <td style="display:none;">{{field.label}}</td><td style="display:none;">{{field}}</td>
-            {%endif%}
+            <tr valign="top">
+            <td>Select stations by:</td>
+            <td>
+                <select id="select_overlay_by" name="select_overlay_by" onchange="set_station_select('area',this);">
+                <option value="county" {{checkbox_vals.county_selected}}>County</option>
+                <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
+                <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
+                <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
+                </select>
+            </td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
+            <div id="ht_select_overlay_by"></div>
+            <script type="text/javascript">                        
+                $("#ht_select_overlay_by_by").load("{{MEDIA_URL}}html/commons.html #ht_select_stations_by");
+            </script>
+            </div>
+            </td>
             </tr>
-            {%endfor%}
+            <tr>
+            <td>State: </td>
+            <td>
+                <select name="overlay_state" id="overlay_state">
+                <option value="al">Alabama</option>
+                <option value="ak">Alaska</option>
+                <option value="az">Arizona</option>
+                <option value="ar">Arkansas</option>
+                <option value="ca">California</option>
+                <option value="co">Colorado</option>
+                <option value="ct">Connecticut</option>
+                <option value="de">Delaware</option>
+                <option value="dc">District of Columbia</option>
+                <option value="fl">Florida</option>
+                <option value="ga">Georgia</option>
+                <option value="hi">Hawaii</option>
+                <option value="id">Idaho</option>
+                <option value="il">Illinois</option>
+                <option value="in">Indiana</option>
+                <option value="ia">Iowa</option>
+                <option value="ks">Kansas</option>
+                <option value="ky">Kentucky</option>
+                <option value="la">Louisiana</option>
+                <option value="me">Maine</option>
+                <option value="md">Maryland</option>
+                <option value="ma">Massachusetts</option>
+                <option value="mi">Michigan</option>
+                <option value="mn">Minnesota</option>
+                <option value="ms">Mississippi</option>
+                <option value="mo">Missouri</option>
+                <option value="mt">Montana</option>
+                <option value="ne">Nebraska</option>
+                <option value="nv" selected>Nevada</option>
+                <option value="nh">New Hampshire</option>
+                <option value="nj">New Jersey</option>
+                <option value="nm">New Mexico</option>
+                <option value="ny">New York</option>
+                <option value="nc">North Carolina</option>
+                <option value="nd">North Dakota</option>
+                <option value="oh">Ohio</option>
+                <option value="ok">Oklahoma</option>
+                <option value="or">Oregon</option>
+                <option value="pa">Pennsylvania</option>
+                <option value="ri">Rhode Island</option>
+                <option value="sc">South Carolina</option>
+                <option value="sd">South Dakota</option>
+                <option value="tn">Tennessee</option>
+                <option value="tx">Texas</option>
+                <option value="ut">Utah</option>
+                <option value="vt">Vermont</option>
+                <option value="va">Virginia</option>
+                <option value="wa">Washington</option>
+                <option value="wv">West Virginia</option>
+                <option value="wi">Wisconsin</option>
+                <option value="wy">Wyoming</option>
+            </select>
+            </td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
+                <div id="ht_select_overlay_by">Specify US State</div>
+            </div>
+            </td>
+            </tr>
             </table>
-            <input type="submit" value="Submit" name="form3"/>
+            {%if initial.station_id%}
+            <input type="hidden" value="{{initial.station_id}}" name="station_id">
+            {%endif%}
+            {%if initial.station_ids%}
+            <input type="hidden" value="{{initial.station_ids}}" name="station_ids">
+            {%endif%}
+            {%if initial.basin%}
+            <input type="hidden" value="{{initial.basin}}" name="basin">
+            {%endif%}
+            {%if initial.climate_division%}
+            <input type="hidden" value="{{initial.climate_division}}" name="climate_division">
+            {%endif%}
+           {%if initial.county_warning_area%}
+            <input type="hidden" value="{{initial.county_warning_area}}" name="county_warning_area">
+            {%endif%}
+            {%if initial.county%}
+            <input type="hidden" value="{{initial.county}}" name="county">
+            {%endif%}
+            {%if initial.shape%}
+            <input type="hidden" value="{{initial.shape}}" name="shape">
+            {%endif%}
+            <input type="hidden" value="{{initial.elements}}" name="elements">
+            <input type="hidden" value="{{initial.start_date}}" name="start_date">
+            <input type="hidden" value="{{initial.end_date}}" name="end_date">
+            <input type="hidden" value="{{initial.show_flags}}" name="show_flags">
+            <input type="hidden" value="{{initial.show_observation_time}}" name="show_observation_time">
+            <input type="hidden" value="{{initial.data_format}}" name="data_format">
+            <input type="submit" value="Submit" name="formOverlay"/>
             </form>
         </div>
         <p class="error">{{overlay_error}}</p>
-        <div id="map-overlay" style="width:0%;height:0px;"></div>
-        <div id="content-window" style="width:0px; height:0px;"></div>
-        <script type="text/javascript">initialize_map_overlays("{{type}}","{{host}}", "{{kml_file_path}}")</script>  
     </div>
     
     {%endif%}<!--End if results-->

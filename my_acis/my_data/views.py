@@ -221,26 +221,33 @@ def download(request):
 def data_station(request):
     context = {
         'title': 'Historic Station Data',
-        'icon':'DataPortal.png'
     }
+    #status = WRCCUtils.generate_kml_file('climate_division', 'nv' , 'nv_county_warning_area.kml', TEMP_FILE_DIR)
     initial, checkbox_vals = set_station_data_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set up maps if needed
-    if initial['select_stations_by'] == 'bbox':context['need_map_bbox'] = True
-    if initial['select_stations_by'] == 'shape':context['need_polymap'] = True
-    if initial['select_stations_by'] in ['basin', 'cwa', 'climdiv', 'county']:
-        context['need_overlay_map'] = True
-        formOverlay =forms.StateForm(initial=form)
-        context['formOverlay'] = formOverlay
-        context['host'] = 'wrcc.dri.edu'
-        context['type'] = form['select_stations_by']
-        context['kml_file_path'] = STATIC_KML + 'nv_' + form['select_stations_by'] + '.kml'
-        context[form['select_stations_by']] = WRCCData.AREA_DEFAULTS[form['select_stations_by']]
+    context['host'] = 'wrcc.dri.edu'
+    context['area_type'] = initial['select_stations_by']
+    context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
+    if initial['select_stations_by'] in ['basin', 'county', 'county_warning_area', 'climate_division']:
+        kml_file = initial['overlay_state'] + '_' + initial['select_stations_by'] + '.kml'
+    else:
+        kml_file = 'nv_climate_division.kml'
+    context['kml_file_path'] = WEB_SERVER_DIR +  kml_file
+    #Check if kml file exists, if not generate it
+    try:
+        with open(TEMP_FILE_DIR + kml_file):
+            if os.stat(TEMP_FILE_DIR + kml_file).st_size==0:
+                status = WRCCUtils.generate_kml_file(initial['select_stations_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
+    except IOError:
+        status = WRCCUtils.generate_kml_file(initial['select_stations_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
+
+    context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
 
     if 'formData' in request.POST:
         #Set initial form parameters for html
         initial,checkbox_vals = set_sodxtrmts_initial(request)
-        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+
         #Turn request object into python dict
         form = set_form(request)
         display_params_list, params_dict = set_station_data_params(form)
@@ -252,6 +259,11 @@ def data_station(request):
             context['need_overlay_map'] = True
             formOverlay=forms.StateForm(initial=form)
             context['formOverlay'] = formOverlay
+            context['host'] = 'wrcc.dri.edu'
+            context['area_type'] = form['select_stations_by']
+            context['kml_file_path'] = STATIC_KML + 'nv_' + form['select_stations_by'] + '.kml'
+            context[form['select_stations_by']] = WRCCData.AREA_DEFAULTS[form['select_stations_by']]
+
         #Check if data request is large,
         #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
         if form['start_date'].lower() == 'por':
@@ -277,23 +289,20 @@ def data_station(request):
 
     #overlay map generation
     if 'formOverlay' in request.POST:
-        formOverlay = set_as_form(request,'StateForm')
-        context['formOverlay'] = formOverlay
-        context['need_overlay_map'] = True
-        if formOverlay.is_valid():
-            initial = {'select_stations_by':str(formOverlay.cleaned_data['select_stations_by']), 'data_format':str(formOverlay.cleaned_data['data_format'])}
-            context[formOverlay.cleaned_data['select_stations_by']] = WRCCData.AREA_DEFAULTS[formOverlay.cleaned_data['select_stations_by']]
-            context['type'] = formOverlay.cleaned_data['select_stations_by']
-            at = str(formOverlay.cleaned_data['select_stations_by'])
-            st = str(formOverlay.cleaned_data['state']).lower()
-            kml_file_name = st + '_' + at + '.kml'
-            dir_location = TEMP_FILE_DIR
-            status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
-            if not status == 'Success':
-                context['overlay_error'] = status
-            else:
-                context['host'] = 'wrcc.dri.edu'
-                context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
+        form = set_form(request)
+        initial, checkbox_vals = set_station_data_initial(request)
+        initial['select_stations_by'] = form['select_overlay_by']
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        at = form['select_overlay_by']
+        st = form['overlay_state']
+        kml_file_name = st + '_' + at + '.kml'
+        dir_location = TEMP_FILE_DIR
+        status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
+        if not status == 'Success':
+            context['overlay_error'] = status
+        else:
+            context['host'] = 'wrcc.dri.edu'
+            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
 
     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
 
@@ -2555,6 +2564,7 @@ def set_station_data_initial(request):
     initial[initial['select_stations_by']] = Get(initial['select_stations_by'], WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
     initial['area_type_value'] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
+    initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['elements'] = Get('elements', 'maxt,mint,pcpn')
     initial['start_date']  = Get('start_date', fourtnight)
     initial['end_date']  = Get('end_date', yesterday)

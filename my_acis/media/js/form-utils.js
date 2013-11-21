@@ -221,7 +221,7 @@ function show_formGraph(TF, rowClass) {
 }
 
 //Station Data
-function set_area_label_value(area_type){
+function set_area_and_map(area_type){
     var lv = {
         'label':'Station ID',
         'value':'266779'
@@ -258,62 +258,86 @@ function set_area_label_value(area_type){
         lv.label ='Custom Shape';
         lv.value ='-115,34, -115, 35,-114,35, -114, 34';
     }
+
+    //Change value of hidden var area_type
+    document.getElementById('area_type').value = area_type;
+    var state = document.getElementById('overlay_state').value;
+    document.getElementById('kml_file_path').value='/csc/media/tmp/' + state + '_' + area_type + '.kml';
+    if (area_type == 'basin' || area_type == 'county' || area_type == 'county_warning_area' || area_type =='climate_division'){
+        document.getElementById('select_overlay_by').value= area_type;
+        document.getElementById('select_stations_by').value=area_type;
+
+    }
     //Set up maps for display
     if (area_type =='county' || area_type =='climate_division' || area_type == 'basin' || area_type == 'county_warning_area'){
-        document.getElementById('OverlayMap').style.display = "block";
-        var map = document.getElementById('map-overlay');
-        map.style.width = '100%';
-        map.style.height = '400px';
-        map = document.getElementById('content-window');
-        map.style.width = '100px';
-        map.style.height = '100px';
-        //hide bbox_map/poly_map
-        document.getElementById('BboxMap').style.display = "none";
-        map = document.getElementById('map');
-        map.style.width = '0%';
-        map.style.height = '0px';
+        //Make overlay map visible
+        var ol_map_div = document.getElementById('OverlayMap');
+        ol_map_div.style.display = "block";
+        var area_type = document.getElementById('area_type').value;
+        var host = document.getElementById('host').value;
+        var kml_file_path = document.getElementById('kml_file_path').value;
+        if (!$('#map-overlay').length){ 
+            var m = document.createElement('div');
+            m.setAttribute('id', 'map-overlay');
+            m.setAttribute('style', 'width:500px;height:400px;')
+            ol_map_div.appendChild(m);
+        }
+        if (!$('#content-window').length){
+            var w = document.createElement('div');
+            w.setAttribute('id', 'content-window');
+            w.setAttribute('style', 'width:100px;height:100px;')
+            ol_map_div.appendChild(w);
+        }
+        //Generate Map
+        initialize_map_overlays(area_type,host,kml_file_path);
+        //Hide poly_map
         document.getElementById('PolyMap').style.display = "none";
-        map = document.getElementById('polymap');
-        map.style.width = '0%';
-        map.style.height = '0px';
+        if ($('#polymap').length){
+            m = document.getElementById('polymap');
+            m.parentNode.removeChild(m);
+        }
     } 
     else if (area_type == 'shape') {
+        //Hide overlay map
         document.getElementById('OverlayMap').style.display = "none";
-        var map = document.getElementById('map-overlay');
-        map.style.width = '0%';
-        map.style.height = '0px';
-        map = document.getElementById('content-window');
-        map.style.width = '0px';
-        map.style.height = '0px';
-        //hide bbox_map/poly_map
-        document.getElementById('BboxMap').style.display = "none";
-        map = document.getElementById('map');
-        map.style.width = '0%';
-        map.style.height = '0px';
-        document.getElementById('PolyMap').style.display = "block";
-        map = document.getElementById('polymap');
-        map.style.width = '1000%';
-        map.style.height = '400px';
+        if ($('#map-overlay').length){
+            var m = document.getElementById('map-overlay');
+            m.parentNode.removeChild(m);
+        }
+        if ($('#content-window').length){
+            var w = document.getElementById('content-window');
+            w.parentNode.removeChild(w);
+        }
+        //Show polygon map
+        var p_map_div = document.getElementById('PolyMap');
+        p_map_div.style.display = "block";
+        if (!$('#polymap').length){
+            var m = document.createElement('div');
+            m.setAttribute('id', 'polymap');
+            m.setAttribute('style', 'width:500px;height:400px;');
+            p_map_div.appendChild(m);
+        }
+        //Generate Map
+        initialize_polygon_map_new();
     }
-    else if (area_type == 'bounding_box') {
+    else {
+        //Hide overlay map
         document.getElementById('OverlayMap').style.display = "none";
-        var map = document.getElementById('map-overlay');
-        map.style.width = '0%';
-        map.style.height = '0px';
-        map = document.getElementById('content-window');
-        map.style.width = '0px';
-        map.style.height = '0px';
-        //hide bbox_map/poly_map
-        document.getElementById('BboxMap').style.display = "block";
-        map = document.getElementById('map');
-        map.style.width = '100%';
-        map.style.height = '400px';
+        if ($('#map-overlay').length){
+            var m = document.getElementById('map-overlay');
+            m.parentNode.removeChild(m);
+        }
+        if ($('#content-window').length){
+            var w = document.getElementById('content-window');
+            w.parentNode.removeChild(w);
+        }
+        //Hide poly_map
         document.getElementById('PolyMap').style.display = "none";
-        map = document.getElementById('polymap');
-        map.style.width = '0%';
-        map.style.height = '0px';
+        if ($('#polymap').length){
+            m = document.getElementById('polymap');
+            m.parentNode.removeChild(m);
+        }
     }
-    
     return lv;
 }
 
@@ -324,7 +348,7 @@ function set_station_select(row_id,node){
         $('table#' + table_id + ' tr#' + row_id).remove();
     }
     */
-    var lv = set_area_label_value(node.value); 
+    var lv = set_area_and_map(node.value);
     var tbl_row = document.getElementById(row_id);
     //Override table row
     //cell1 = Label

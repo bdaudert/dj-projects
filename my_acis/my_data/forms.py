@@ -539,8 +539,6 @@ class StateForm(forms.Form):
             self.fields['temporal_resolution'] = forms.ChoiceField(choices=([('dly', 'Daily'),('mly', 'Monthly'),('yly', 'Yearly')]), initial=temporal_resolution, help_text='Time resolution of data.', widget=forms.HiddenInput())
 
 
-
-
 class DownloadForm(forms.Form):
     data_format = forms.ChoiceField(choices=DATA_FORMAT_CHOICES_LTD, initial='clm', help_text=HELP_TEXTS['data_format'])
     delimiter = forms.ChoiceField(choices=DELIMITER_CHOICES, initial='tab',help_text='Delimiter used to seperate data values. Not applicable for excel output.')
