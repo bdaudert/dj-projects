@@ -26,8 +26,10 @@
 
 {%if results %}
 <p>DEGREE DAYS {{a_b}} BASE TEMPERATURE {{base_temp}}</br>
-TRUNCATES MAXIMUMS ABOVE {%if trunc_high%}{{trunc_high}}{%else%}999{%endif%}</br>
-TRUNCATES MAXIMUMS ABOVE {%if trunc_low%}{{trunc_low}}{%else%}-999{%endif%}</br>
+SKIP DAYS WITH MAXIMUM ABOVE: {{skip_max_above}}</br>
+SKIP DAYS MINIMUM BELOW :{{skip_min_below}}</br>
+TRUNCATES MAXIMUMS ABOVE: {{trunc_high}}</br>
+TRUNCATES MINIMUMS BELOW: {{trunc_low}}</br>
 UP TO {{max_miss}} DAYS MAY BE ESTIMATED FROM MEAN DAILY NORMALS</br>
 NCDC ROUND-OFF PROCEDURE is {%if not ncdc_round%}NOT{%endif%} SIMULATED{%if not ncdc_round%}, EXACT ROUND-OFF USED{%endif%}</br>
 STARTING YEAR : {{start_year}}  ENDING YEAR : {{end_year}}</br>

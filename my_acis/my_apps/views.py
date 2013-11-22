@@ -166,10 +166,9 @@ def sods(request, app_name):
     if 'app_form' in request.POST:
         form2 = set_as_form(request, 'Sod')
         context['form2'] = form2
+        context['req'] = request.POST
         #import pdb; pdb.set_trace()
         if  form2.is_valid():
-            skip_days = None
-            truncate = None
             context['cleaned'] = form2.cleaned_data
             (data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
             #get contexts for the different apps and run data application
@@ -201,21 +200,29 @@ def sods(request, app_name):
                 output_type = form2.cleaned_data['output_type']
                 max_miss = form2.cleaned_data['max_missing_days']
                 a_b = form2.cleaned_data['above_or_below']
+                if a_b == 'a':
+                    context['a_b'] = 'ABOVE'
+                else:
+                    context['a_b'] = 'BELOW'
                 max_miss = form2.cleaned_data['max_missing_days']
                 ncdc_round = form2.cleaned_data['ncdc_roundoff']
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
                 'coop_station_ids':coop_station_ids,'station_names':station_names,\
                 'base_temp':base_temp, 'a_b':a_b,'output_type':output_type, \
                 'max_miss':max_miss, 'ncdc_round':ncdc_round}
-                if skip_days:
+                context['skip_max_above'] = 'NO DAYS SKIPPED'
+                context['skip_min_below'] = 'NO DAYS SKIPPED'
+                context['trunc_high'] = 'NONE'
+                context['trunc_low'] = 'NONE'
+                if form2.cleaned_data['skip_days']:
                      skip_max_above = form2.cleaned_data['skip_days_with_max_above']
                      skip_min_below = form2.cleaned_data['skip_days_with_min_below']
                      app_args['skip_max_above'] = skip_max_above
                      app_args['skip_min_below'] = skip_min_below
                      context['skip_max_above'] = skip_max_above
                      context['skip_min_below'] = skip_min_below
-                if truncate:
-                    trunc_high = form2.cleaned_data['truncation_higher_limit']
+                if form2.cleaned_data['truncate']:
+                    trunc_high = form2.cleaned_data['truncation_upper_limit']
                     trunc_low = form2.cleaned_data['truncation_lower_limit']
                     app_args['trunc_high'] = trunc_high
                     app_args['trunc_low'] = trunc_low
@@ -436,6 +443,9 @@ def sods(request, app_name):
             if app_name in ['Sodrun', 'Sodrunr', 'Soddyrec', 'Sodcnv', 'Sodlist']:
                 context['start_year'] = dates[0]
                 context['end_year'] = dates[-1]
+            elif app_name == 'Soddd':
+                context['start_year'] = dates[0][0:4]
+                context['end_year'] = str(int(dates[-1][0:4]) - 1)
             else:
                 context['start_year'] = dates[0][0:4]
                 if app_name == 'Sodxtrmts':

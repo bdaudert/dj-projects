@@ -415,27 +415,7 @@
             </td>
             </tr>
             </table>
-            {%if initial.station_id%}
-            <input type="hidden" value="{{initial.station_id}}" name="station_id">
-            {%endif%}
-            {%if initial.station_ids%}
-            <input type="hidden" value="{{initial.station_ids}}" name="station_ids">
-            {%endif%}
-            {%if initial.basin%}
-            <input type="hidden" value="{{initial.basin}}" name="basin">
-            {%endif%}
-            {%if initial.climate_division%}
-            <input type="hidden" value="{{initial.climate_division}}" name="climate_division">
-            {%endif%}
-           {%if initial.county_warning_area%}
-            <input type="hidden" value="{{initial.county_warning_area}}" name="county_warning_area">
-            {%endif%}
-            {%if initial.county%}
-            <input type="hidden" value="{{initial.county}}" name="county">
-            {%endif%}
-            {%if initial.shape%}
-            <input type="hidden" value="{{initial.shape}}" name="shape">
-            {%endif%}
+            <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
             <input type="hidden" value="{{initial.elements}}" name="elements">
             <input type="hidden" value="{{initial.start_date}}" name="start_date">
             <input type="hidden" value="{{initial.end_date}}" name="end_date">

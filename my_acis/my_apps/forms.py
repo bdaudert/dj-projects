@@ -398,15 +398,15 @@ class SodForm(forms.Form):
             app_name = self.data.get('app_name')
 
         if app_name in ['Soddyrec', 'Sodcnv', 'Sodlist', 'Sodrun', 'Sodrunr']:
-            self.fields['start_date'] = MyDateField(max_length=8, initial='20000101', help_text="yyyymmdd")
-            self.fields['end_date'] = MyDateField(max_length=8, initial=20091231, help_text="yyyymmdd")
+            self.fields['start_date'] = MyDateField(max_length=8, initial='19400101', help_text="yyyymmdd")
+            self.fields['end_date'] = MyDateField(max_length=8, initial=19491231, help_text="yyyymmdd")
             #self.fields['end_date'] = forms.CharField(max_length=8, initial='20091231')
         elif app_name in ['Soddynorm', 'Soddd', 'Sodmonline', 'Sodmonlinemy', 'Sodpad', 'Sodsumm', 'Sodpct', 'Sodthr', 'Sodxtrmts']:
-            self.fields['start_date'] = MyDateField(max_length=4, min_length=4, initial='2000', help_text="yyyy")
-            self.fields['end_date'] = MyDateField(max_length=4, min_length=4, initial='2010', help_text="yyyy")
+            self.fields['start_date'] = MyDateField(max_length=4, min_length=4, initial='1940', help_text="yyyy")
+            self.fields['end_date'] = MyDateField(max_length=4, min_length=4, initial='1950', help_text="yyyy")
         elif app_name == 'Sodpiii':
-            self.fields['start_date'] = MyDateField(max_length=6, min_length=6, initial='200001', help_text="yyyymm")
-            self.fields['end_date'] = MyDateField(max_length=6, min_length=6, initial='200912', help_text="yyyymm")
+            self.fields['start_date'] = MyDateField(max_length=6, min_length=6, initial='194001', help_text="yyyymm")
+            self.fields['end_date'] = MyDateField(max_length=6, min_length=6, initial='194912', help_text="yyyymm")
 
         if app_name in ['Sodrun', 'Sodrunr']:
             if app_name == 'Sodrunr':
@@ -428,17 +428,23 @@ class SodForm(forms.Form):
             self.fields['base_temperature'] = forms.IntegerField(initial=65)
             self.fields['above_or_below'] = forms.ChoiceField(choices=([('a','Above'), ('b','Below'), ]), initial='a')
             self.fields['output_type'] = forms.ChoiceField(choices=([('m','Monthly Time Series'), ('d','Daily Long-term Averages'), ]), initial='m')
-            self.fields['max_missing_days'] = forms.IntegerField(initial=0, required=False)
+            self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False)
             self.fields['ncdc_roundoff'] = forms.BooleanField(initial=False, required=False)
 
-            skip_days = kwargs.get('initial', {}).get('skip_days', False)
-            truncate = kwargs.get('initial', {}).get('truncate', False)
-            if skip_days:
-                self.fields['skip_days_with_max_above'] = forms.IntegerField(initial=110)
-                self.fields['skip_days_with_min_below'] = forms.IntegerField(initial=20)
-            if truncate:
-                self.fields['truncation_upper_limit'] = forms.IntegerField(initial=110)
-                self.fields['truncation_lower_limit'] = forms.IntegerField(initial=20)
+            skip_days = str(kwargs.get('initial', {}).get('skip_days', False))
+            truncate = str(kwargs.get('initial', {}).get('truncate', False))
+            if skip_days == 'False':
+                skip_days = str(self.data.get('skip_days', False))
+            if truncate == 'False':
+                truncate = str(self.data.get('truncate', False))
+            self.fields['skip_days'] = forms.BooleanField(initial=skip_days, required=False, widget=forms.HiddenInput())
+            self.fields['truncate'] = forms.BooleanField(initial=truncate, required=False, widget=forms.HiddenInput())
+            if skip_days == 'True':
+                self.fields['skip_days_with_max_above'] = forms.IntegerField(initial=90, required=False)
+                self.fields['skip_days_with_min_below'] = forms.IntegerField(initial=30, required=False)
+            if truncate == 'True':
+                self.fields['truncation_upper_limit'] = forms.IntegerField(initial=90, required=False)
+                self.fields['truncation_lower_limit'] = forms.IntegerField(initial=30, required=False)
         elif app_name == 'Sodsumm':
             self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False)
             self.fields['element'] = forms.ChoiceField(choices=SDMM_ELEMENT_CHOICES, initial='all')
@@ -504,18 +510,19 @@ class SodForm(forms.Form):
                 self.fields['number_of_thresholds'] = forms.IntegerField(initial=number_of_thresholds)
                 self.fields['number_of_thresholds'].widget.attrs['readonly'] = 'readonly'
                 if number_of_thresholds is not None:
+                    i_thresh = 40
                     for thresh in range(int(number_of_thresholds)):
-                        self.fields['threshold_%s' % thresh] = forms.DecimalField(initial = 0.0)
+                        self.fields['threshold_%s' % thresh] = forms.DecimalField(initial = i_thresh + 10*thresh)
                         self.fields['time_series_%s' % thresh] = forms.BooleanField(required=False, initial = False)
                 self.fields['latest_or_earliest_for_period_1'] = forms.ChoiceField(choices=([('e','Earliest'), ('l','Latest'), ]), initial='e')
-                self.fields['latest_or_earliest_for_period_2'] = forms.ChoiceField(choices=([('e','Latest'), ('l','Earliest'), ]), initial='l')
+                self.fields['latest_or_earliest_for_period_2'] = forms.ChoiceField(choices=([('e','Earliest'), ('l','Latest'), ]), initial='l')
                 self.fields['above_or_below'] = forms.ChoiceField(choices=([('a','Above'), ('b','Below'), ]), initial='b')
             else:
                 self.fields['number_of_thresholds'] = forms.IntegerField(initial=None, widget=forms.HiddenInput())
             self.fields['max_missing_days_first_and_last'] = forms.IntegerField(initial=10, required=False)
             self.fields['max_missing_days_differences'] = forms.IntegerField(initial=10, required=False)
-            self.fields['custom_tables'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = custom_tables)
-            self.fields['custom_tables'].widget.attrs['readonly'] = 'readonly'
+            self.fields['custom_tables'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = custom_tables, widget=forms.HiddenInput())
+            #self.fields['custom_tables'].widget.attrs['readonly'] = 'readonly'
         elif app_name == 'Sodxtrmts':
             monthly_statistic = kwargs.get('initial', {}).get('monthly_statistic', None)
             element = kwargs.get('initial', {}).get('element', None)

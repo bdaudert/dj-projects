@@ -291,7 +291,9 @@ def data_station(request):
     if 'formOverlay' in request.POST:
         form = set_form(request)
         initial, checkbox_vals = set_station_data_initial(request)
+        #Override initial where needed
         initial['select_stations_by'] = form['select_overlay_by']
+        initial['area_type_value'] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         at = form['select_overlay_by']
         st = form['overlay_state']
