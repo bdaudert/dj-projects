@@ -183,6 +183,21 @@ function set_delimiter(data_format_node, divId){
     }
 }
 
+function set_delimiter_and_output_file(data_format_node, delim_divId, out_file_divId){
+    if (data_format_node.value == 'clm' ||  data_format_node.value == 'dlm' || data_format_node.value == 'html'){
+        document.getElementById(delim_divId).style.display = "table-row";
+    }
+    else if (data_format_node.value == 'xl'){
+        document.getElementById(delim_divId).style.display = "none";
+    }
+    if (data_format_node.value == 'clm' ||  data_format_node.value == 'dlm' || data_format_node.value == 'xl'){
+        document.getElementById(out_file_divId).style.display = "table-row";
+    }
+    else if (data_format_node.value == 'html'){
+        document.getElementById(out_file_divId).style.display = "none";
+    }
+}
+
 function show_if_true(node, rowClass){
     //if node.value=true, shows all table rows of class name rowClass
     //if node.value=fals, hides all table rows of class name rowClass

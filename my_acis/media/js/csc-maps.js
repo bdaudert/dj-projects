@@ -824,45 +824,6 @@ function initialize_polygon_map_new() {
     buildColorPalette();
 }
 
-/*
-function initialize_map_overlays(type) {
-    //var myLatLng = new google.maps.LatLng(39.5, -98.35);
-    //var myLatLng = new google.maps.LatLng(41.875696,-87.624207);
-    var myLatLng = new google.maps.LatLng(37.0, -114.05);
-    var mapOptions = {
-        zoom: 5,
-        center: myLatLng,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    }
-    //Determine which kml file to use
-    if (type == 'county'){kml_file ='US_Counties.kml';}
-    else if (type == 'climdiv'){kml_file ='US_Climdivs.kml';}
-    else if (type == 'cwa'){kml_file ='US_CWAs.kml';}
-    else if (type == 'basin'){kml_file ='NV_Basins.kml';}
-    else{kml_file = 'US_Test.kml';}
-
-    var map = new google.maps.Map(document.getElementById("map-overlay"), mapOptions);
-
-    var Layer = new google.maps.KmlLayer({
-        url: 'http://wrcc.dri.edu//csc/media/json/' + kml_file, 
-        //url:'http://wrcc.dri.edu/csc/media/json/US_Test.kml',
-        suppressInfoWindows: true,
-        map: map
-    });
-    Layer.setMap(map);
-    google.maps.event.addListener(Layer, 'click', function(kmlEvent) {
-        var text = kmlEvent.featureData.Description;
-         document.getElementById(type).value = kmlEvent.featureData.name;
-        showInDiv(text);
-    });
-
-    function showInDiv(text) {
-        var sidediv = document.getElementById('content-window');
-        sidediv.innerHTML = text;
-    }
-}
-*/
-
 function initialize_map_overlays(type, host, kml_file_path) {
     //type is one of: basin, cwa, climdiv, county
     var myLatLng = new google.maps.LatLng(37.0, -114.05);
@@ -878,7 +839,6 @@ function initialize_map_overlays(type, host, kml_file_path) {
     });
     var Layer = new google.maps.KmlLayer({
         url: 'http://'+ host + kml_file_path,
-        //url:'http://wrcc.dri.edu/tmp/nv_basin.kml',
         suppressInfoWindows: true,
         map: map
     });

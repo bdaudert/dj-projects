@@ -27,7 +27,7 @@
         <td>
             <select id="select_stations_by" name="select_stations_by" onchange="set_station_select('area',this);">
             <option value="station_id" {{checkbox_vals.station_id_selected}}>Individual station</option>
-            <option value="station_ids" {{checkbox_vals.station_nids_selected}}>Comma separated list of stations</option>
+            <option value="station_ids" {{checkbox_vals.station_ids_selected}}>Comma separated list of stations</option>
             <option value="county" {{checkbox_vals.county_selected}}>County</option>
             <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
             <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
@@ -138,11 +138,11 @@
         <tr valign="top">
         <td>Data Format: </td>
         <td>
-        <select id="data_format" name="data_format" onchange="set_delimiter(this, 'delim');">
-        <option value="clm">Html (display on page)</option>
+        <select id="data_format" name="data_format" onchange="set_delimiter_and_output_file(this, 'delim','out_file');">
+        <option value="html" selected>Html (display on page)</option>
         <option value="clm">Columnar, .txt</option>
         <option value="dlm">Delimited, .dat</option>
-        <option value="xl" selected>Excel, .xls</option>
+        <option value="xl" >Excel, .xls</option>
         </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -155,7 +155,7 @@
         </td>
         </tr>
         <!--Only show when format is clm or dlm, don't show if xl-->
-        <tr valign="top" id="delim" style="display:none;">
+        <tr valign="top" id="delim" style="display:table-row">
         <td>Delimiter:</td>
         <td>
         <select id="delimiter" name="delimiter">
@@ -171,6 +171,19 @@
         <div id="ht_delimiter"></div>
         <script type="text/javascript">                        
             $("#ht_delimiter").load("{{MEDIA_URL}}html/commons.html #ht_delimiter");
+        </script>
+        </div>
+        </td>
+        </tr>
+        <!--Only show when data_format is clm,xl or dlm, don't show if html-->
+        <tr valign="top" id="out_file" style="display:none;">
+        <td>Outputfile Name: </td>
+        <td><input type="text" id="output_file_name" name="output_file_name" value="Output"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_output_file_name"></div>
+        <script type="text/javascript">                        
+            $("#ht_output_file_name").load("{{MEDIA_URL}}html/commons.html #ht_output_file_name");
         </script>
         </div>
         </td>
@@ -239,6 +252,7 @@
     </p>
     {%endif%}
 
+    {{initial}}    
 
     {%if results%}
     {%if params_dict.show_flags == "T"%}
@@ -311,7 +325,7 @@
     {%endif%}
     {%endif%}<!--End if results.stn_data|lookup:stn-->
     {%endfor%}<!--End station loop-->
-    {%else%}<!--End if results-->
+    {%else%}<!--End if results, next no results-->
 
     <div id="PolyMap" style="display:none;">
         <div id="panel">
@@ -328,7 +342,11 @@
         <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
         {%endif%}
     </div>
+    {%if need_overlay_map%}
+    <div id="OverlayMap" style="display:block;">
+    {%else%}
     <div id="OverlayMap" style="display:none;">
+    {%endif%}
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="">{% csrf_token %}
             <table class="form">
@@ -355,57 +373,57 @@
             <td>State: </td>
             <td>
                 <select name="overlay_state" id="overlay_state">
-                <option value="al">Alabama</option>
-                <option value="ak">Alaska</option>
-                <option value="az">Arizona</option>
-                <option value="ar">Arkansas</option>
-                <option value="ca">California</option>
-                <option value="co">Colorado</option>
-                <option value="ct">Connecticut</option>
-                <option value="de">Delaware</option>
-                <option value="dc">District of Columbia</option>
-                <option value="fl">Florida</option>
-                <option value="ga">Georgia</option>
-                <option value="hi">Hawaii</option>
-                <option value="id">Idaho</option>
-                <option value="il">Illinois</option>
-                <option value="in">Indiana</option>
-                <option value="ia">Iowa</option>
-                <option value="ks">Kansas</option>
-                <option value="ky">Kentucky</option>
-                <option value="la">Louisiana</option>
-                <option value="me">Maine</option>
-                <option value="md">Maryland</option>
-                <option value="ma">Massachusetts</option>
-                <option value="mi">Michigan</option>
-                <option value="mn">Minnesota</option>
-                <option value="ms">Mississippi</option>
-                <option value="mo">Missouri</option>
-                <option value="mt">Montana</option>
-                <option value="ne">Nebraska</option>
-                <option value="nv" selected>Nevada</option>
-                <option value="nh">New Hampshire</option>
-                <option value="nj">New Jersey</option>
-                <option value="nm">New Mexico</option>
-                <option value="ny">New York</option>
-                <option value="nc">North Carolina</option>
-                <option value="nd">North Dakota</option>
-                <option value="oh">Ohio</option>
-                <option value="ok">Oklahoma</option>
-                <option value="or">Oregon</option>
-                <option value="pa">Pennsylvania</option>
-                <option value="ri">Rhode Island</option>
-                <option value="sc">South Carolina</option>
-                <option value="sd">South Dakota</option>
-                <option value="tn">Tennessee</option>
-                <option value="tx">Texas</option>
-                <option value="ut">Utah</option>
-                <option value="vt">Vermont</option>
-                <option value="va">Virginia</option>
-                <option value="wa">Washington</option>
-                <option value="wv">West Virginia</option>
-                <option value="wi">Wisconsin</option>
-                <option value="wy">Wyoming</option>
+                <option value="al" {{al_selected}}>Alabama</option>
+                <option value="ak" {{ak_selected}}>Alaska</option>
+                <option value="az" {{az_selected}}>Arizona</option>
+                <option value="ar" {{ar_selected}}>Arkansas</option>
+                <option value="ca" {{ca_selected}}>California</option>
+                <option value="co" {{co_selected}}>Colorado</option>
+                <option value="ct" {{ct_selected}}>Connecticut</option>
+                <option value="de" {{de_selected}}>Delaware</option>
+                <option value="dc" {{dc_selected}}>District of Columbia</option>
+                <option value="fl" {{fl_selected}}>Florida</option>
+                <option value="ga" {{ga_selected}}>Georgia</option>
+                <option value="hi" {{hi_selected}}>Hawaii</option>
+                <option value="id" {{id_selected}}>Idaho</option>
+                <option value="il" {{il_selected}}>Illinois</option>
+                <option value="in" {{in_selected}}>Indiana</option>
+                <option value="ia" {{ia_selected}}>Iowa</option>
+                <option value="ks" {{ks_selected}}>Kansas</option>
+                <option value="ky" {{ky_selected}}>Kentucky</option>
+                <option value="la" {{la_selected}}>Louisiana</option>
+                <option value="me" {{me_selected}}>Maine</option>
+                <option value="md" {{md_selected}}>Maryland</option>
+                <option value="ma" {{ma_selected}}>Massachusetts</option>
+                <option value="mi" {{mi_selected}}>Michigan</option>
+                <option value="mn" {{mn_selected}}>Minnesota</option>
+                <option value="ms" {{ms_selected}}>Mississippi</option>
+                <option value="mo" {{mo_selected}}>Missouri</option>
+                <option value="mt" {{mt_selected}}>Montana</option>
+                <option value="ne" {{ne_selected}}>Nebraska</option>
+                <option value="nv" {{nv_selected}}>Nevada</option>
+                <option value="nh" {{nh_selected}}>New Hampshire</option>
+                <option value="nj" {{nj_selected}}>New Jersey</option>
+                <option value="nm" {{nm_selected}}>New Mexico</option>
+                <option value="ny" {{ny_selected}}>New York</option>
+                <option value="nc" {{nc_selected}}>North Carolina</option>
+                <option value="nd" {{nd_selected}}>North Dakota</option>
+                <option value="oh" {{oh_selected}}>Ohio</option>
+                <option value="ok" {{ok_selected}}>Oklahoma</option>
+                <option value="or" {{or_selected}}>Oregon</option>
+                <option value="pa" {{pa_selected}}>Pennsylvania</option>
+                <option value="ri" {{ri_selected}}>Rhode Island</option>
+                <option value="sc" {{sc_selected}}>South Carolina</option>
+                <option value="sd" {{sd_selected}}>South Dakota</option>
+                <option value="tn" {{tn_selected}}>Tennessee</option>
+                <option value="tx" {{tx_selected}}>Texas</option>
+                <option value="ut" {{ut_selected}}>Utah</option>
+                <option value="vt" {{vt_selected}}>Vermont</option>
+                <option value="va" {{va_selected}}>Virginia</option>
+                <option value="wa" {{wa_selected}}>Washington</option>
+                <option value="wv" {{wv_selected}}>West Virginia</option>
+                <option value="wi" {{wi_selected}}>Wisconsin</option>
+                <option value="wy" {{wy_selected}}>Wyoming</option>
             </select>
             </td>
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -425,9 +443,18 @@
             <input type="submit" value="Submit" name="formOverlay"/>
             </form>
         </div>
-        <p class="error">{{overlay_error}}</p>
     </div>
-    
-    {%endif%}<!--End if results-->
+
+    {%if need_overlay_map%}
+    {%if overlay_error%}
+    <p class="error">{{overlay_error}}</p>
+    {%else%}
+    <div id="map-overlay" style="width:100%; height:400px;"></div>
+    <div id="content-window" style="width:100px; height:100px;"></div>
+    <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
+    {%endif%} 
+    {%endif%}
+
+    {%endif%}<!--End else: no results-->
 </td></table>
 {%endblock%}
