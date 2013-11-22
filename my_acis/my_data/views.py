@@ -229,11 +229,8 @@ def data_station(request):
     context['host'] = 'wrcc.dri.edu'
     context['area_type'] = initial['select_stations_by']
     context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
-    if initial['select_stations_by'] in ['basin', 'county', 'county_warning_area', 'climate_division']:
-        kml_file = initial['overlay_state'] + '_' + initial['select_stations_by'] + '.kml'
-    else:
-        kml_file = 'nv_climate_division.kml'
-    #context['nv_selected'] = 'selected'
+    kml_file = initial['overlay_state'] + '_' + initial['select_stations_by'] + '.kml'
+    context[initial['overlay_state'] + '_selected'] = 'selected'
     context['kml_file_path'] = WEB_SERVER_DIR +  kml_file
     #Check if kml file exists, if not generate it
     try:
@@ -246,23 +243,24 @@ def data_station(request):
     context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
 
     if 'formData' in request.POST:
-        #Set initial form parameters for html
-        initial,checkbox_vals = set_station_data_initial(request)
-        context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
         #Turn request object into python dict
         form = set_form(request)
+        fields_to_check = ['start_date', 'end_date','elements']
+        form_error = check_form(form, fields_to_check)
+        if form_error:
+            context['form_error'] = form_error
+            return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
+        context['req'] = form
+        if form['select_stations_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
+            context['host'] = 'wrcc.dri.edu'
+            kml_file_name = form['overlay_state'] + '_' + form['select_stations_by'] + '.kml'
+            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
+            context['area_type'] = form['select_stations_by']
+
+        initial,checkbox_vals = set_station_data_initial(form)
+        context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
         display_params_list, params_dict = set_station_data_params(form)
         context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
-        '''
-        #Set up maps if needed
-        if form['select_stations_by'] == 'shape':context['need_polymap'] = True
-        if form['select_stations_by'] in ['basin', 'cwa', 'climdiv', 'county']:
-            context['need_overlay_map'] = True
-            context['host'] = 'wrcc.dri.edu'
-            context['area_type'] = form['select_stations_by']
-            context['kml_file_path'] = STATIC_KML + 'nv_' + form['select_stations_by'] + '.kml'
-            context[form['select_stations_by']] = WRCCData.AREA_DEFAULTS[form['select_stations_by']]
-        '''
         #Check if data request is large,
         #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
         if form['start_date'].lower() == 'por':
@@ -1650,7 +1648,10 @@ def sodxtrmts(request):
         form = set_form(request)
 
         #Form sanity check
-        form_error = check_sodxtrmts_form(form)
+        #form_error = check_sodxtrmts_form(form)
+        fields_to_check = ['start_year', 'end_year','max_missing_days', 'graph_start_year', 'graph_end_year', \
+        'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
+        form_error = check_form(form, fields_to_check)
         if form_error:
             context['form_error'] = form_error
             return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
@@ -2144,14 +2145,12 @@ def set_sodxtrmts_head(form):
     return header
 
 #FORM SANITY CHECKS
-def check_sodxtrmts_form(form):
+def check_form(form, fields_to_check):
     '''
     Sanity check for Sodxtrmst form
     form is given as dict
     '''
     form_error = {}
-    fields_to_check = ['start_year', 'end_year','max_missing_days', 'graph_start_year', 'graph_end_year', \
-        'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
     for field in fields_to_check:
         checker = getattr(WRCCFormCheck, 'check_' + field)
         err = checker(form)
@@ -2573,7 +2572,7 @@ def set_station_data_initial(request):
     initial['select_stations_by'] = Get('select_stations_by', 'station_id')
     initial[str(initial['select_stations_by'])] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
-    initial['area_type_value'] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
+    initial['area_type_value'] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['elements'] = Get('elements', 'maxt,mint,pcpn')
     initial['start_date']  = Get('start_date', fourtnight)
@@ -2582,14 +2581,6 @@ def set_station_data_initial(request):
     initial['show_observation_time'] = Get('show_observation_time', 'F')
     initial['data_format'] = Get('data_format', 'html')
     initial['delimiter'] = Get('delimiter', ',')
-    '''
-    #FIX ME request.POST.get does not return area_type, delimiter
-    if request.POST:        ks = ['area_type','delimiter']
-        req_dict = dict(request.POST.items())
-        for k in ks:
-            if k in req_dict.keys():
-                initial[k] = str(req_dict[k])
-    '''
     #set the check box values
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
         checkbox_vals[area_type + '_selected'] =''

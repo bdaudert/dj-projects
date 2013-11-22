@@ -263,7 +263,7 @@ function set_area_and_map(area_type){
     }
     if (area_type == 'state'){
         lv.label ='State';
-        lv.value ='NV';
+        lv.value ='nv';
     }
     if (area_type == 'bounding_box'){
         lv.label ='Bounding Box';
@@ -277,7 +277,8 @@ function set_area_and_map(area_type){
     //Change value of hidden var area_type
     document.getElementById('area_type').value = area_type;
     var state = document.getElementById('overlay_state').value;
-    document.getElementById('kml_file_path').value='/csc/media/tmp/' + state + '_' + area_type + '.kml';
+    var kml_file_path = '/csc/media/tmp/' + state + '_' + area_type + '.kml';
+    document.getElementById('kml_file_path').value=kml_file_path;
     if (area_type == 'basin' || area_type == 'county' || area_type == 'county_warning_area' || area_type =='climate_division'){
         document.getElementById('select_overlay_by').value= area_type;
         document.getElementById('select_stations_by').value=area_type;
@@ -290,7 +291,6 @@ function set_area_and_map(area_type){
         ol_map_div.style.display = "block";
         var area_type = document.getElementById('area_type').value;
         var host = document.getElementById('host').value;
-        var kml_file_path = document.getElementById('kml_file_path').value;
         if (!$('#map-overlay').length){ 
             var m = document.createElement('div');
             m.setAttribute('id', 'map-overlay');
