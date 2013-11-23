@@ -17,6 +17,7 @@
 
 <table border="0" cellpadding="10">
 <td valign="top" width="30%">
+    <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/sodxtrmts/'"/>
     <div id="formSodxtrmts" class="form">
         {%if json_dict%}
             <form method="post" action="?json_file={{json_dict.json_file}}">

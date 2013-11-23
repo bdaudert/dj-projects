@@ -1872,7 +1872,8 @@ def sodsumm(request):
                 context['start_year'] = '0000'
                 context['end_year'] = '0000'
             context['station_name'] = station_names
-            context['headers'] = set_sodsumm_headers(table_list)
+            headers = set_sodsumm_headers(table_list)
+            context['headers'] = headers
 
             #Generate grahics
             if form1.cleaned_data['generate_graphics'] == 'T' and results:
@@ -2139,7 +2140,8 @@ def set_sodxtrmts_head(form):
         if key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'monthly_statistic', 'elements','element']:
             header.append([WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[str(form[key])]])
         elif key == '':
-            header.append([])
+            #header.append([])
+            pass
         else:
             header.append([WRCCData.DISPLAY_PARAMS[key], str(form[key])])
     return header
@@ -2574,6 +2576,7 @@ def set_station_data_initial(request):
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
     initial['area_type_value'] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
+    initial['autofill_list'] = 'US_' + initial['select_stations_by'] + '.json'
     initial['elements'] = Get('elements', 'maxt,mint,pcpn')
     initial['start_date']  = Get('start_date', fourtnight)
     initial['end_date']  = Get('end_date', yesterday)

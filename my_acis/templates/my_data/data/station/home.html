@@ -19,6 +19,7 @@
 <table cellpadding="20">
 <!--LEFT-->
 <td valign="top" width="30%">
+    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}station/'"/>
     <div id='formData'>
         <form method="post" action="">{% csrf_token %}
         <table class="form" id="tableData">
@@ -48,7 +49,7 @@
         </tr>
         <tr id="area" valign="top">
         <td>{{initial.area_type_label}}: </td>
-        <td><input type="text" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}"></td>
+        <td id="autofill"><input type="text" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list={{initial.autofill_list}}></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_station_id"></div>

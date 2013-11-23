@@ -1,3 +1,22 @@
+function set_autofill(datalist, tdId){
+    td = document.getElementById(tdId);
+    dl = document.createElement('datalist');
+    dl.setAttribute('id',datalist);
+    $.getJSON(MEDIA_URL + 'json/' + datalist + '.json', function(metadata) {
+        for (stn_idx=0;stn_idx<metadata.length;stn_idx++){
+            var name = metadata[stn_idx].name;
+            var id = metadata[stn_idx].id;
+            var opt = document.createElement('option');
+            opt.value = name;
+            dl.appendChild(opt);
+            opt = document.createElement('option');
+            opt.value = id;
+            dl.appendChild;
+        }
+    }
+}
+
+
 //Dynamic form functions
 function highlight_form_field(td_id, err){
     //var td = $('table#tableSodxtrmts td#' + td_id);
