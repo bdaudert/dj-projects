@@ -315,201 +315,6 @@ def data_station(request):
     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
 
 
-def station_data(request):
-    context = {
-        'title': 'Historic Station Data',
-        'icon':'DataPortal.png'
-    }
-    stn_id = request.GET.get('stn_id', None)
-    start_date = request.GET.get('start_date', None)
-    end_date = request.GET.get('end_date', None)
-    elements = request.GET.get('elements', None)
-    data_format = request.GET.get('data_format', None)
-    initial_params_0 = {}
-    initial_params_1 = {}
-    if data_format is not None:
-        initial_params_1['data_format'] = data_format
-    else:
-        initial_params_1['data_format'] = 'clm'
-    if stn_id is not None:
-        initial_params_1['data_format'] = 'html'
-        initial_params_1['station_id'] = str(stn_id)
-        initial_params_0['select_stations_by'] = 'stn_id';initial_params_1['select_stations_by'] = 'stn_id'
-        context['stn_id'] = stn_id;context['hide_form0'] = True
-    if start_date is not None:context['start_date'] = start_date;initial_params_1['start_date'] = str(start_date)
-    if end_date is not None:context['end_date'] = end_date;initial_params_1['end_date'] = str(end_date)
-    if elements is not None:
-        initial_params_0['elements'] = str(elements);initial_params_1['elements'] = str(elements)
-        context['elements'] = elements
-
-    if initial_params_0:
-        form0 = set_as_form(request,'StationDataForm0', init=initial_params_0)
-    else:
-        form0 = set_as_form(request,'StationDataForm0')
-    context['form0'] = form0
-
-    if 'form0' in request.POST or stn_id is not None:
-        if form0.is_valid() or stn_id is not None:
-            context['form1_ready'] = True
-            context['hide_form0'] = True
-            if stn_id is None:
-                initial_params_1['select_stations_by'] = form0.cleaned_data['select_stations_by']
-                initial_params_1['data_format'] = form0.cleaned_data['data_format']
-                initial_params_1['delimiter'] = 'comma'
-
-            if 'form0' in request.POST:
-                if form0.cleaned_data['select_stations_by'] == 'bbox':context['need_map_bbox'] = True
-                if form0.cleaned_data['select_stations_by'] == 'shape':context['need_polymap'] = True
-                if form0.cleaned_data['select_stations_by'] in ['basin', 'cwa', 'climdiv', 'county']:
-                    context['need_overlay_map'] = True
-                    form3 =forms.StateForm(initial=form0.cleaned_data)
-                    context['form3'] = form3
-                    context['host'] = 'wrcc.dri.edu'
-                    context['type'] = form0.cleaned_data['select_stations_by']
-                    context['kml_file_path'] = STATIC_KML + 'nv_' + form0.cleaned_data['select_stations_by'] + '.kml'
-                context[form0.cleaned_data['select_stations_by']] = WRCCData.AREA_DEFAULTS[form0.cleaned_data['select_stations_by']]
-
-            form1 = forms.StationDataForm1(initial=initial_params_1)
-            context['form1'] = form1
-        display_params_list, params_dict = set_station_data_params(initial_params_1)
-        context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
-    if 'form1' in request.POST:
-        context[request.POST['select_stations_by']] = str(request.POST[WRCCData.ACIS_TO_SEARCH_AREA[str(request.POST['select_stations_by'])]])
-        form1 = set_as_form(request,'StationDataForm1')
-        context['form1'] = form1
-        context['form1_ready'] = True
-        context['hide_form0'] = True
-
-        if form1.is_valid():
-            #Set parameters for html display
-            pms = {}
-            for key, val in form1.cleaned_data.iteritems():
-                pms[key] = val
-            display_params_list, params_dict = set_station_data_params(pms)
-            context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
-
-            #Set map type needes
-            if form1.cleaned_data['select_stations_by'] == 'bbox':context['need_map_bbox'] = True
-            if form1.cleaned_data['select_stations_by'] == 'shape':context['need_polymap'] = True
-            if form1.cleaned_data['select_stations_by'] in ['basin', 'cwa', 'climdiv', 'county']:
-                context['need_overlay_map'] = True
-                form3=forms.StateForm(initial=form1.cleaned_data)
-                context['form3'] = form3
-            #Check if data request is large,
-            #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
-            if form1.cleaned_data['start_date'].lower() == 'por':
-                s_date = datetime.date(1900,01,01)
-            else:
-                s_date = datetime.date(int(form1.cleaned_data['start_date'][0:4]), int(form1.cleaned_data['start_date'][4:6]),int(form1.cleaned_data['start_date'][6:8]))
-            if form1.cleaned_data['end_date'].lower() == 'por':
-                e_date = datetime.date.today()
-            else:
-                e_date = datetime.date(int(form1.cleaned_data['end_date'][0:4]), int(form1.cleaned_data['end_date'][4:6]),int(form1.cleaned_data['end_date'][6:8]))
-            days = (e_date - s_date).days
-            #if time range > 1 year or user requests data for more than 1 station, large request via ftp
-            if days > 366 and 'station_id' not in form1.cleaned_data.keys():
-                context['large_request'] = \
-                'At the moment we do not support data requests that exceed 1 year for multiple station. Please limit your request to one station at a time or a date range of one year or less. We will support larger requests in the near future. Thank you for your patience!'
-
-                '''
-                context['form2_ready'] = True
-                context['large_request'] = 'You requested a large amount of data.Please enter your name and e-mail address.We will notify you once your request has been processed and your data is availiable on our ftp server.'
-                initial_params_2 = form1.cleaned_data
-                #keep MultiElements format and MultiStnField format
-                initial_params_2['elements'] = ','.join(initial_params_2['elements'])
-                if 'station_ids' in initial_params_2.keys():
-                    initial_params_2['station_ids'] = ','.join([str(stn) for stn in initial_params_2['station_ids']])
-                form2 = forms.StationDataForm3(initial=initial_params_2)
-                context['form2'] = form2
-                '''
-                return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
-
-            resultsdict = AcisWS.get_station_data(form1.cleaned_data, 'sodlist_web')
-            context['results'] = resultsdict
-            # If request successful, get params for link to apps page
-            if 'stn_data' in resultsdict.keys() and resultsdict['stn_data']:
-                context['elements'] = ','.join(form1.cleaned_data['elements'])
-                context['start_date'] = form1.cleaned_data['start_date']
-                context['end_date'] = form1.cleaned_data['end_date']
-                if 'station_id' in form1.cleaned_data.keys() and resultsdict['stn_errors'][0] != 'No data found!':
-                    context['stn_id']= form1.cleaned_data['station_id']
-                    context['link_to_station_apps'] = True
-            context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
-            '''
-            if 'delimiter' in form1.cleaned_data.keys():
-                context['delimiter_word'] = form1.cleaned_data['delimiter']
-                delimiter = WRCCData.DELIMITERS[str(form1.cleaned_data['delimiter'])]
-            else:
-                if form1.cleaned_data['data_format'] == 'json':
-                    delimiter = None
-
-+        context['json'] = True
-                else:
-                     delimiter = ' '
-
-            if form1.cleaned_data['data_format'] == 'html':
-                return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
-            else:
-                return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],delimiter, WRCCData.FILE_EXTENSIONS[str(form1.cleaned_data['data_format'])], request=request, output_file_name=str(form1.cleaned_data['output_file_name']), show_flags=show_flags, show_observation_time=show_observation_time)
-
-            '''
-            if form1.cleaned_data['data_format'] == 'html':
-                return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
-            else:
-                return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],params_dict['delimiter'], WRCCData.FILE_EXTENSIONS[str(form1.cleaned_data['data_format'])], request=request, output_file_name=str(form1.cleaned_data['output_file_name']), show_flags=params_dict['show_flags'], show_observation_time=params_dict['show_observation_time'])
-    if 'form2' in request.POST:
-        context[request.POST['select_stations_by']] = str(request.POST[WRCCData.ACIS_TO_SEARCH_AREA[str(request.POST['select_stations_by'])]])
-        form2 = set_as_form(request,'StationDataForm3')
-        context['form2'] = form2
-        context['form2_ready'] = True
-        if form2.is_valid():
-            context['hide_form3'] = True
-            user_name = form2.cleaned_data['user_name']
-            time_stamp = datetime.datetime.now().strftime('_%Y_%m_%d_%H_%M_%S')
-            f = TEMP_FILE_DIR + 'data_requests/' + user_name + time_stamp + '_params.json'
-            context['json'] = f
-            #check if directory /tmp/data_requests exists, else create it
-            dr = os.path.dirname(f)
-            try:
-                os.stat(dr)
-            except:
-                os.mkdir(dr)
-            with open( f, 'w+') as j_file:
-                json.dump(form2.cleaned_data, j_file)
-            mode = os.stat(f).st_mode
-            os.chmod(f, mode | stat.S_IWOTH)
-            context['user_info'] = 'You will receive an email from csc-data-request@dri.edu with instructions when the data request has been processed. You provided following e-mail address: %s' % (form2.cleaned_data['email'])
-        else:
-            context['user_info'] ='Form not valid'
-            context['form2'] = form2
-        return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
-
-    #overlay map generation
-    if 'form3' in request.POST:
-        form3 = set_as_form(request,'StateForm')
-        context['form3'] = form3
-        context['need_overlay_map'] = True
-        context['hide_form0'] = True
-        if form3.is_valid():
-            initial = {'select_stations_by':str(form3.cleaned_data['select_stations_by']), 'data_format':str(form3.cleaned_data['data_format'])}
-            context[form3.cleaned_data['select_stations_by']] = WRCCData.AREA_DEFAULTS[form3.cleaned_data['select_stations_by']]
-            context['type'] = form3.cleaned_data['select_stations_by']
-            form1 = forms.StationDataForm1(initial=initial)
-            context['form1']  = form1
-            context['form1_ready'] = True
-            at = str(form3.cleaned_data['select_stations_by'])
-            st = str(form3.cleaned_data['state']).lower()
-            kml_file_name = st + '_' + at + '.kml'
-            dir_location = TEMP_FILE_DIR
-            status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
-            if not status == 'Success':
-                context['overlay_error'] = status
-            else:
-                context['host'] = 'wrcc.dri.edu'
-                context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-
-    return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
-
 def data_gridded(request):
     context = {
         'title': 'Gridded/Modeled Data',
@@ -890,7 +695,7 @@ def metagraph(request):
         context['form_meta']  = form_meta
         if form_meta.is_valid():
             context['station_id'] = form_meta.cleaned_data['station_id']
-            params = {'sids':str(form_meta.cleaned_data['station_id'])}
+            params = {'sids':find_stn_id(form_meta.cleaned_data['station_id'])}
             meta_request = AcisWS.StnMeta(params)
             #meta_request = WRCCClasses.DataJob('StnMeta', params).make_data_call()
             key_order = ['name','state','ll','elev','uid','sids']
@@ -913,7 +718,7 @@ def metagraph(request):
             #<img alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}">
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_')
             context['time_stamp'] = time_stamp
-            perl_out, perl_err = run_external_script("perl %sperl-scripts/csc_cliMETAgraph.pl %s %s" %(MEDIA_URL, str(form_meta.cleaned_data['station_id']), time_stamp))
+            perl_out, perl_err = run_external_script("perl %sperl-scripts/csc_cliMETAgraph.pl %s %s" %(MEDIA_URL, find_stn_id(form_meta.cleaned_data['station_id']), time_stamp))
             context['perl_err'] = perl_err
             context['perl_out'] = perl_out
         else:
@@ -950,7 +755,7 @@ def monthly_aves(request):
         if form.is_valid():
             s_date = str(form.cleaned_data['start_date'])
             e_date = str(form.cleaned_data['end_date'])
-            stn_id = form.cleaned_data['station_id']
+            stn_id = find_stn_id(form.cleaned_data['station_id'])
             context['search_params'] ={
                 'stn_id':stn_id,
                 'start_date':s_date,
@@ -1704,13 +1509,13 @@ def sodxtrmts(request):
 
         #Data Table generation
         data_params = {
-            'sid':form['station_ID'],
+            'sid':form['station_id'],
             'start_date':form['start_year'],
             'end_date':form['end_year'],
             'element':form['element']
         }
         app_params = form
-        for key in ['station_ID', 'start_year', 'end_year']:
+        for key in ['station_id', 'start_year', 'end_year']:
             del app_params[key]
         app_params['el_type'] = form['element']
         del app_params['element']
@@ -1718,7 +1523,10 @@ def sodxtrmts(request):
         DJ = WRCCClasses.SODDataJob('Sodxtrmts', data_params)
         #WARNING: station_ids, names need to be called before dates_list
         station_names, station_states, station_ids, station_networks, station_lls, station_elevs, station_uids, station_climdivs, station_counties  = DJ.get_station_meta()
-        header.insert(0, ['Station Name', station_names[0]])
+        try:
+            header.insert(0, ['Station Name', station_names[0]])
+        except:
+            header.insert(0, ['Station Name', ''])
         dates_list = DJ.get_dates_list()
 
         #Overwrite search params to reflect actuall start/end year
@@ -1824,7 +1632,7 @@ def sodsumm(request):
         context['form1'] = form1
         if form1.is_valid():
             data_params = {
-                    'sid':form1.cleaned_data['station_ID'],
+                    'sid':find_stn_id(form1.cleaned_data['station_id']),
                     'start_date':form1.cleaned_data['start_year'],
                     'end_date':form1.cleaned_data['end_year'],
                     'element':'all'
@@ -1850,7 +1658,7 @@ def sodsumm(request):
                 results = dict(results[0])
             context['results'] = results
             #Input parameters:
-            context['station_ID'] = data_params['sid']
+            context['station_id'] = data_params['sid']
             context['max_missing_days'] = app_params['max_missing_days']
             #Sodsumm table headers for html
             if form1.cleaned_data['generate_graphics'] == 'T':
@@ -1928,14 +1736,31 @@ def sodsumm(request):
 ##############################
 #Utlities
 ##############################
+def find_stn_id(form_input_stn):
+    '''
+    Deals with autofill by station name.
+    Note: Autofill sis set up to return name, id
+    so we just pick up the id for data analysis
+    '''
+    stn_id = str(form_input_stn)
+    name_id_list = str(form_input_stn).replace(' ','').split(',')
+    if len(name_id_list) ==2:
+        stn_id= str(name_id_list[1])
+    return stn_id
+
 def set_form(request):
     form = {}
+    q_dict = {}
     if request.method == 'POST':
-        for key,val in dict(request.POST.items()).iteritems():
-            form[str(key)] = str(val)
+        q_dict = dict(request.POST.items())
     elif request.method == 'GET':
-        for key,val in dict(request.GET.items()).iteritems():
-            form[str(key)] = WRCCUtils.convert_element_str_to_list(str(val))
+        q_dict = dict(request.GET.items())
+
+    for key,val in q_dict.iteritems():
+        form[str(key)] = str(val)
+        #Check if user autofilled name, if so, change to id
+        if key in ['station_id','county', 'basin', 'county_warning_area', 'climate_divison']:
+            form[str(key)] = find_stn_id(str(val))
     return form
 
 
@@ -2011,9 +1836,9 @@ def set_sodxtrmts_initial(request):
         Get = getattr(request.POST, 'get')
     stn_id = Get('stn_id', None)
     if stn_id is not None:
-        initial['station_ID'] = stn_id
+        initial['station_id'] = stn_id
     else:
-        initial['station_ID'] = Get('station_ID','266779')
+        initial['station_id'] = Get('station_id','266779')
     initial['start_year'] = Get('start_year', 'POR')
     initial['end_year']  = Get('end_year', yesterday[0:4])
     initial['monthly_statistic'] = Get('monthly_statistic', 'msum')
@@ -2113,7 +1938,7 @@ def join_graph_plot_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,
 
 def set_sodxtrmts_head(form):
     #Define Header Order:
-    header_order =['station_ID','start_year', 'end_year', '','element']
+    header_order =['station_id','start_year', 'end_year', '','element']
     if form['element'] in ['gdd', 'hdd', 'cdd']:header_order+=['base_temperature']
     header_order+=['monthly_statistic']
     if form['departures_from_averages'] == 'T':
@@ -2574,9 +2399,11 @@ def set_station_data_initial(request):
     initial['select_stations_by'] = Get('select_stations_by', 'station_id')
     initial[str(initial['select_stations_by'])] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
+    if initial['select_stations_by'] in ['station_id', 'station_ids', 'basin', 'county', 'county_warning_area', 'climate_division']:
+        initial['area_type_label']+='/Name'
     initial['area_type_value'] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
-    initial['autofill_list'] = 'US_' + initial['select_stations_by'] + '.json'
+    initial['autofill_list'] = 'US_' + initial['select_stations_by']
     initial['elements'] = Get('elements', 'maxt,mint,pcpn')
     initial['start_date']  = Get('start_date', fourtnight)
     initial['end_date']  = Get('end_date', yesterday)

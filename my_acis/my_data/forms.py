@@ -554,7 +554,7 @@ class SodForm(forms.Form):
         end_year = kwargs.get('initial', {}).get('end_year', None)
         date_type = kwargs.get('initial', {}).get('date_type', None) #y= year, d=full 8 digit date
         super(SodForm, self).__init__(*args, **kwargs)
-        if stn_id is None:stn_id = self.data.get('station_ID')
+        if stn_id is None:stn_id = self.data.get('station_id')
         if start_date is None:start_date = self.data.get('start_date')
         if end_date is None:end_date = self.data.get('end_date')
         if start_year is None:start_year = self.data.get('start_year')
@@ -564,9 +564,9 @@ class SodForm(forms.Form):
         self.fields['date_type'] = forms.CharField(required=False, initial=date_type, widget=forms.HiddenInput())
 
         if stn_id is None:
-            self.fields['station_ID'] = forms.CharField(required=False, initial='266779', help_text=HELP_TEXTS['stn_id'])
+            self.fields['station_id'] = forms.CharField(required=False, initial='266779', help_text=HELP_TEXTS['stn_id'])
         else:
-            self.fields['station_ID'] = forms.CharField(required=False, initial=stn_id, help_text=HELP_TEXTS['stn_id'])
+            self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text=HELP_TEXTS['stn_id'])
 
         if date_type == 'd':
             if start_date is not None:
@@ -590,7 +590,7 @@ class SodForm(forms.Form):
 class SodsummForm(SodForm):
     def __init__(self, *args, **kwargs):
         super(SodsummForm, self).__init__(*args, **kwargs)
-        self.fields.keyOrder = ['station_ID', 'start_year', 'end_year','summary_type','max_missing_days', 'generate_graphics']
+        self.fields.keyOrder = ['station_id', 'start_year', 'end_year','summary_type','max_missing_days', 'generate_graphics']
     max_missing_days = forms.IntegerField(initial=5, required=False, help_text=HELP_TEXTS['max_missing_days'])
     summary_type = forms.ChoiceField(choices=SDMM_ELEMENT_CHOICES, initial='all', help_text= 'Only generate tables/graphs for these climate elements')
     generate_graphics = forms.ChoiceField(choices=([('T', 'Yes'),('F', 'No')]), initial='T', help_text= 'Generate plots from data')
@@ -599,7 +599,7 @@ class SodxtrmtsForm(SodForm):
     def __init__(self, *args, **kwargs):
         super(SodxtrmtsForm, self).__init__(*args, **kwargs)
 
-        #self.fields.keyOrder = ['station_ID', 'element', 'monthly_statistic', 'start_year', 'end_year', 'max_missing_days', 'start_month', 'departures_from_averages', 'frequency_analysis','base_temperature', 'less_greater_or_between', 'threshold_low_for_between', 'threshold_low_for_between', 'threshold_for_less_or_greater', 'frequency_analysis_type']
+        #self.fields.keyOrder = ['station_id', 'element', 'monthly_statistic', 'start_year', 'end_year', 'max_missing_days', 'start_month', 'departures_from_averages', 'frequency_analysis','base_temperature', 'less_greater_or_between', 'threshold_low_for_between', 'threshold_low_for_between', 'threshold_for_less_or_greater', 'frequency_analysis_type']
 
         self.fields['element'] = forms.ChoiceField(choices=WRCCData.SXTR_ELEMENT_CHOICES, initial=kwargs.get('initial', {}).get('element', 'pcpn'), help_text = 'Climate Element')
         self.fields['start_year'] = MyYearField(max_length=4, min_length=3, initial=kwargs.get('initial', {}).get('start_year', 'POR'), help_text='Earliest start date. Format: yyyy or "POR" for period of record.')

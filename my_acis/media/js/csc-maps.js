@@ -844,15 +844,20 @@ function initialize_map_overlays(type, host, kml_file_path) {
     });
     Layer.setMap(map);
     google.maps.event.addListener(Layer, 'click', function(kmlEvent) {
-        //var text = kmlEvent.featureData.description;
+        var text = kmlEvent.featureData.description;
         document.getElementById(type).value = kmlEvent.featureData.name;
         //showInDiv(text);
         var contentString = '<div id="LayerWindow">'+
             kmlEvent.featureData.description +
             '</div>';
         infowindow.close();
-        infowindow.setContent(contentString);
-        infowindow.open(map, Layer);
+        //infowindow.setContent(contentString);
+        infowindow.setOptions({
+                content: kmlEvent.featureData.description,
+                position: kmlEvent.position
+        });
+        //infowindow.open(map, Layer);
+        infowindow.open(map);
     });
 
     function showInDiv(text) {

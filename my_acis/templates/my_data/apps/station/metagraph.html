@@ -14,6 +14,9 @@
     <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
     <a href="{{TOOLS_URL}}station/metagraph/">Station Metadata Graphs</a></p>
 
+<!--Autofill-->
+<script type="text/javascript">set_autofill("US_coop_station_ids");</script>
+
 <table cellpadding="20">
 <td valign="top" width="30%">
     <div id='form1'>
@@ -21,8 +24,12 @@
         <table class="form">
         {%for field in form_meta %}
         <tr>
-        <td>{{field.label}}:</td>                                                                    
-        <td>{{field}}</td>                                                                                
+        <td>{{field.label}}:</td>
+        {%if field.label == "Station id"%}
+            <td><input type="text" id="station_id" name="station_id" value="{{field.value}}" list="US_coop_station_ids"></td>
+        {%else%}
+            <td>{{field}}</td>
+        {%endif%}
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">                                             
         <div class="pop-up"><p>{{field.help_text}}</p></div>
         </td>

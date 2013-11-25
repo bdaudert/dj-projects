@@ -14,6 +14,8 @@
     <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
     <a href="{{TOOLS_URL}}station/sodsumm/">Monthly/Seasonal Climate Summaries</a></p>
 
+<script type="text/javascript">set_autofill("US_station_id");</script>
+
 <table cellpadding="10">
 <td valign="top" width="20%">
     <div id='form1'>
@@ -22,8 +24,12 @@
         {%for field in form1 %}
         {%if not field.is_hidden%}
         <tr>
-        <td>{{field.label}}:</td>                                                                    
-        <td>{{field}}</td>                                                                                
+        <td>{{field.label}}:</td>
+        {%if field.label == "Station id"%}
+            <td><input type="text" id="station_id" name="station_id" value="{{field.value}}" list="US_station_id"></td>
+        {%else%}
+            <td>{{field}}</td>
+        {%endif%}
         <td>
         <img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">{{field.help_text}}</div>
@@ -68,7 +74,7 @@
         For monthly and annual mean, thresholds and sums:</br>
         Month with {{max_missing_days}} or more missing days are not considered.</br>
         </p>
-        <p class="stronger">Station: ({{station_ID}}) {{station_name.0}}</br>
+        <p class="stronger">Station: ({{station_id}}) {{station_name.0}}</br>
         From Year {{start_year}} To Year {{end_year}}</br>
         </p></br>
         {%endif%}

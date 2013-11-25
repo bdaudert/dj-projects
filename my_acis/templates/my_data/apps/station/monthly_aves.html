@@ -11,7 +11,10 @@
     <a href="{{TOOLS_URL}}">TOOLS></a>
     <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
     <a href="{{TOOLS_URL}}station/monthly_aves/">Monthly Averages</a></p>
-    
+
+<!--Autofill-->
+<script type="text/javascript">set_autofill("US_station_id");</script>
+
 <table cellpadding="20">
 <td valign="top" width="30%">
     <div id='form'>
@@ -20,7 +23,11 @@
         {%for field in form %}
         <tr>
         <td>{{field.label}}:</td>
-        <td>{{field}}</td>                                                                                
+        {%if field.label == "Station id"%}
+            <td><input type="text" id="station_id" name="station_id" value="{{field.value}}" list="US_station_id"></td>
+        {%else%}
+            <td>{{field}}</td>                                                                                
+        {%endif%}
         <td><img alt="QMark" title="QMark" class="trigger" src="{{MEDIA_URL}}img/QMark.png"> 
         {%ifequal field.label "Elements" %}
         <div class="pop-up">

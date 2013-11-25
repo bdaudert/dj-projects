@@ -15,6 +15,9 @@
     <a href="{{TOOLS_URL}}station/sodxtrmts/"></a>Monthly Summaries of Extremes</p>
 </p>
 
+<!--Set up autofill-->
+<script type="text/javascript">set_autofill("US_station_id");</script>
+
 <table border="0" cellpadding="10">
 <td valign="top" width="30%">
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/sodxtrmts/'"/>
@@ -27,13 +30,13 @@
         {% csrf_token %}
         <table id="tableSodxtrmts">
         <tr valign="top">
-        <td>Station ID: </td>
-        <td><input type="text" id="station_ID" name="station_ID" value="{{initial.station_ID}}"></td>
+        <td>Station ID/Name: </td>
+        <td><input type="text" id="station_id" name="station_id" value="{{initial.station_id}}" list="US_station_id"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
-            <div id="ht_station_ID"></div>
+            <div id="ht_station_id"></div>
             <script type="text/javascript">                        
-            $("#ht_station_ID").load("{{MEDIA_URL}}html/commons.html #ht_station_ID");
+            $("#ht_station_id").load("{{MEDIA_URL}}html/commons.html #ht_station_id");
             </script>
         </div>
         </td>

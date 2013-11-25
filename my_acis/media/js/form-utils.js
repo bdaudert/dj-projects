@@ -1,21 +1,30 @@
-function set_autofill(datalist, tdId){
-    td = document.getElementById(tdId);
+function set_autofill(datalist){
     dl = document.createElement('datalist');
     dl.setAttribute('id',datalist);
-    $.getJSON(MEDIA_URL + 'json/' + datalist + '.json', function(metadata) {
-        for (stn_idx=0;stn_idx<metadata.length;stn_idx++){
-            var name = metadata[stn_idx].name;
-            var id = metadata[stn_idx].id;
+    dl.setAttribute('class', datalist.replace('US_',''));
+    $.getJSON('/csc/media/json/' + datalist + '.json', function(metadata) {
+        for (idx=0;idx<metadata.length;idx++){
+            var name = metadata[idx].name;
+            var id = metadata[idx].id;
+            if (id == '' || !id){
+                continue
+            }
             var opt = document.createElement('option');
-            opt.value = name;
+            opt.value = name + ', ' + id;
+            opt.setAttribute('class','name')
+            //opt.innerHTML = id;
             dl.appendChild(opt);
+            /*
             opt = document.createElement('option');
             opt.value = id;
-            dl.appendChild;
+            opt.setAttribute('class','id')
+            opt.innerHTML = name;
+            dl.appendChild(opt);
+            */
         }
-    }
+    });
+    document.body.appendChild(dl);
 }
-
 
 //Dynamic form functions
 function highlight_form_field(td_id, err){
@@ -258,7 +267,8 @@ function show_formGraph(TF, rowClass) {
 function set_area_and_map(area_type){
     var lv = {
         'label':'Station ID',
-        'value':'266779'
+        'value':'266779',
+        'autofill_list':'US_' + area_type
     }
     if (area_type == 'station_ids'){
         lv.label = 'Station IDs';
@@ -383,6 +393,8 @@ function set_station_select(row_id,node){
     }
     */
     var lv = set_area_and_map(node.value);
+    //Set up autofill if needed
+    set_autofill(lv.autofill_list);
     var tbl_row = document.getElementById(row_id);
     //Override table row
     //cell1 = Label
@@ -390,7 +402,7 @@ function set_station_select(row_id,node){
     cell0.innerHTML= lv.label + ': ';
     //cell2 input
     var cell1 = cell0.nextSibling.nextSibling;
-    cell1.innerHTML= '<input type="text" id="' + node.value + '" name="'+ node.value +'" value="' +  lv.value + '">'
+    cell1.innerHTML= '<input type="text" id="' + node.value + '" name="'+ node.value +'" value="' +  lv.value + '" list="' + lv.autofill_list +'">'
     //cell3 = helptext
     cell2 = cell1.nextSibling.nextSibling;
     cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">' + 

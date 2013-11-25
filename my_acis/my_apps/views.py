@@ -166,7 +166,6 @@ def sods(request, app_name):
     if 'app_form' in request.POST:
         form2 = set_as_form(request, 'Sod')
         context['form2'] = form2
-        context['req'] = request.POST
         #import pdb; pdb.set_trace()
         if  form2.is_valid():
             context['cleaned'] = form2.cleaned_data
@@ -490,7 +489,6 @@ def set_as_form2(init=None):
 def run_data_app(app_name,*args, **kwargs):
     data_app = getattr(WRCCDataApps, app_name)
     try:
-        data_app = getattr(WRCCDataApps, app_name)
         results = data_app(*args, **kwargs)
     except:
         results = 'Error: Could not run data app %s. Check arguments:'  % data_app
