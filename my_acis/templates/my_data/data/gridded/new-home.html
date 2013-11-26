@@ -10,7 +10,7 @@
 <a href="{{HOME_URL}}">HOME></a>
 <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
 <a href="{{DATA_URL}}">DATA></a>
-<a href="{{DATA_URL}}station/">Historic Station Data</a></p>
+<a href="{{DATA_URL}}gridded/">Modeled/Gridded Data</a></p>
 
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
 <input type="hidden" id="host" name="host" value="{{host}}">
@@ -22,76 +22,75 @@
 <table cellpadding="20">
 <!--LEFT-->
 <td valign="top" width="30%">
-    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}station/'"/>
+    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}gridded/'"/>
     <div id='formData'>
         <form method="post" action="">{% csrf_token %}
         <table class="form" id="tableData">
         <tr valign="top">
         <td>Select stations by:</td>
         <td>
-            <select id="select_stations_by" name="select_stations_by" onchange="set_station_select('area',this);">
-            <option value="station_id" {{checkbox_vals.station_id_selected}}>Individual station</option>
-            <option value="station_ids" {{checkbox_vals.station_ids_selected}}>Comma separated list of stations</option>
+            <select id="select_grid_by" name="select_grid_by" onchange="set_grid_select('area',this);">
+            <option value="point" {{checkbox_vals.point_selected}}>Individual station</option>
             <option value="county" {{checkbox_vals.county_selected}}>County</option>
             <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
             <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
             <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
             <option value="state" {{checkbox_vals.state_selected}}>State</option>
-            <!--<option value="bounding_box" {{checkbox_vals.bounding_box_selected}}>Bounding Box</option>-->
             <option value="shape" {{checkbox_vals.shape_selected}}>Custom Shape</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
-            <div id="ht_select_stations_by"></div>
+            <div id="ht_select_grid_by"></div>
             <script type="text/javascript">                        
-                $("#ht_select_stations_by").load("{{MEDIA_URL}}html/commons.html #ht_select_stations_by");
+                $("#ht_select_grid_by").load("{{MEDIA_URL}}html/commons.html #ht_select_grid_by");
             </script>
-            <!--
-            <script type="text/javascript">                        
-                $("#ht_select_stations_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_stations_by");
-            </script>-->
         </div>
         </td>
         </tr>
         <tr>
         <td></td>
-        <td><div class="pop_link" onClick="ShowHide('Docu_select_stations_by')"><b><u>Station Selection Choices</u></b> explained</div></td>
+        <td><div class="pop_link" onClick="ShowHide('Docu_select_grid_by')"><b><u>Station Selection Choices</u></b> explained</div></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
                <div class="pop-up">
-            <div id="ht_select_stations_by"></div>
+            <div id="ht_select_grid_by"></div>
             <script type="text/javascript">                        
-                $("#ht_select_stations_by").load("{{MEDIA_URL}}html/commons.html #ht_select_stations_by");
+                $("#ht_select_grid_by").load("{{MEDIA_URL}}html/commons.html #ht_select_grid_by");
             </script>
         </div>
         </td>
         </tr>
         <tr id="area" valign="top">
         <td>{{initial.area_type_label}}: </td>
-        <td><input type="text" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="set_area_id(this)"></td>
+        <td><input type="text" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="set_area_id(this)"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
-            <div id="ht_{{initial.select_stations_by}}"></div>
+            <div id="ht_{{initial.select_grid_by}}"></div>
             <script type="text/javascript">                        
-            $("#ht_" + {{initial.select_stations_by}} + "\"").load("{{MEDIA_URL}}html/commons.html #ht_" + {{initial.select_stations_by}} + "\"");
+            $("#ht_" + {{initial.select_grid_by}} + "\"").load("{{MEDIA_URL}}html/commons.html #ht_" + {{initial.select_grid_by}} + "\"");
             </script>
         </div>
         </td>
         </tr>
-        {%if initial.station_id or initial.station_ids%}
         <tr>
-        <td></td>
-        <td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td>
-        <td></td>
+        <td>Temporal Resolution: </td>
+        <td> <td><input type="text" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" onchange="set_grid_and els(this)"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_temporal_resolution"></div>
+        <script type="text/javascript">                        
+            $("#ht_temporal_resolution").load("{{MEDIA_URL}}html/commons.html #ht_temporal_resolution");
+        </script>
+        </div>
         </td>
-        {%endif%}
-        <tr valign="top">
+        </tr>
+        <tr id="els" valign="top">
         <td id="Elements">Elements: </td>
         <td><input type="text" id="elements" name="elements" value="{{initial.elements}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_elements">
-                <img alt=ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0">
+                <img alt=ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Grid.png" id="ACISElementChoices" width="450" height="450" border="0">
             </div>
             <!--
             <script type="text/javascript">                        
@@ -124,12 +123,25 @@
         </div>
         </td>
         </tr>
-        <tr valign="top">
-        <td>Show Flags: </td>
+        <tr id="grid_type" valign="top">
+        <td>Grid: </td>
         <td>
-            <select id="show_flags" name="show_flags">
-            <option value="F" {{checkbox_vals.show_flags_F_selected}}>No</option>
-            <option value="T" {{checkbox_vals.show_flags_T_selected}}>Yes</option>
+            <select id="grid" name="grid">
+            <option value="1" {{checkbox_vals.1_selected}}>NRCC Interpolated(1950-Present)</option>
+            <option value="3" {{checkbox_vals.2_selected}}>NRCC Int. Hi-Res(East of Rockies/2007-Present)</option>
+            <option value="4" {{checkbox_vals.4_selected}}>CRCM+NCEP(1970-2000,2040-2070)</option>
+            <option value="5" {{checkbox_vals.5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>
+            <option value="6" {{checkbox_vals.6_selected}}>CRCM+CCSM3(1970-2000,2040-2070)</option>
+            <option value="7" {{checkbox_vals.7_selected}}>HRM3+NCEP(1970-2000,2040-2070)</option>
+            <option value="8" {{checkbox_vals.8_selected}}>HRM3+HadCM3(1970-2000,2040-2070)</option>
+            <option value="9" {{checkbox_vals.8_selected}}>MM5I+NCEP(1970-2000,2040-2070)</option>
+            <option value="10" {{checkbox_vals.10_selected}}>MM5I+CCSM(1970-2000,2040-2070)</option>
+            <option value="11" {{checkbox_vals.11_selected}}>RCM3+NCEP(1970-2000,2040-2070)</option>
+            <option value="12" {{checkbox_vals.12_selected}}>RCM3+CGCM3(1970-2000,2040-2070)</option>
+            <option value="13" {{checkbox_vals.13_selected}}>RCM3+GFDL(1970-2000,2040-2070)</option>
+            <option value="14" {{checkbox_vals.14_selected}}>WRFG+NCEP(1970-2000,2040-2070)</option>
+            <option value="15" {{checkbox_vals.15_selected}}>WRFG+CCSM(1970-2000,2040-2070)</option>
+            <option value="16" {{checkbox_vals.16_selected}}>WRFG+CGCM3(1970-2000,2040-2070)</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -137,6 +149,18 @@
             <div id="ht_show_flags"></div>
             <script type="text/javascript">                        
             $("#ht_show_flags").load("{{MEDIA_URL}}html/commons.html #ht_show_flags");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr>
+        <td></td>
+        <td><div class="pop_link" onClick="ShowHide('Docu_grids')"><b><u>Gridded datasets</u></b> explained</div></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+               <div class="pop-up">
+            <div id="ht_grid"></div>
+            <script type="text/javascript">                        
+                $("#ht_grid").load("{{MEDIA_URL}}html/commons.html #ht_grid");
             </script>
         </div>
         </td>
@@ -239,9 +263,9 @@
     </script> 
     <div id="docu_long"></div>
 
-    <div id="Docu_select_stations_by" style="display:none;"></div>
+    <div id="Docu_select_grid_by" style="display:none;"></div>
     <script type="text/javascript">                        
-        $("#Docu_select_stations_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_stations_by");
+        $("#Docu_select_grid_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_grid_by");
     </script>    
 
     {%if form_error%}
@@ -287,7 +311,7 @@
             <div class="pop-up">
             <div id="ht_select_overlay_by"></div>
             <script type="text/javascript">                        
-                $("#ht_select_overlay_by").load("{{MEDIA_URL}}html/commons.html #ht_select_stations_by");
+                $("#ht_select_overlay_by").load("{{MEDIA_URL}}html/commons.html #ht_select_grid_by");
             </script>
             </div>
             </td>

@@ -288,7 +288,7 @@ def data_station(request):
         if form['data_format'] != 'html':
             return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],params_dict['delimiter'], WRCCData.FILE_EXTENSIONS[str(form['data_format'])], request=request, output_file_name=str(form['output_file_name']), show_flags=params_dict['show_flags'], show_observation_time=params_dict['show_observation_time'])
 
-    #overlay map generation
+   #overlay map generation
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
         form = set_form(request)
@@ -313,6 +313,12 @@ def data_station(request):
             context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
             context['area_type'] = form['select_overlay_by']
     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
+
+
+def gridded_data(request):
+    context = {
+        'title': 'Gridded/Modeled Data',
+    }
 
 
 def data_gridded(request):
