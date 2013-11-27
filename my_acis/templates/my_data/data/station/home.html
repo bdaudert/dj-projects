@@ -29,7 +29,7 @@
         <tr valign="top">
         <td>Select stations by:</td>
         <td>
-            <select id="select_stations_by" name="select_stations_by" onchange="set_station_select('area',this);">
+            <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this);">
             <option value="station_id" {{checkbox_vals.station_id_selected}}>Individual station</option>
             <option value="station_ids" {{checkbox_vals.station_ids_selected}}>Comma separated list of stations</option>
             <option value="county" {{checkbox_vals.county_selected}}>County</option>
@@ -59,21 +59,21 @@
         <td><div class="pop_link" onClick="ShowHide('Docu_select_stations_by')"><b><u>Station Selection Choices</u></b> explained</div></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
                <div class="pop-up">
-            <div id="ht_select_stations_by"></div>
+            <div id="ht_station_selections_explained"></div>
             <script type="text/javascript">                        
-                $("#ht_select_stations_by").load("{{MEDIA_URL}}html/commons.html #ht_select_stations_by");
+                $("#ht_station_selections_explained").load("{{MEDIA_URL}}html/commons.html #ht_station_selection_explained");
             </script>
         </div>
         </td>
         </tr>
         <tr id="area" valign="top">
         <td>{{initial.area_type_label}}: </td>
-        <td><input type="text" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="set_area_id(this)"></td>
+        <td><input type="text" size="35" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_{{initial.select_stations_by}}"></div>
             <script type="text/javascript">                        
-            $("#ht_" + {{initial.select_stations_by}} + "\"").load("{{MEDIA_URL}}html/commons.html #ht_" + {{initial.select_stations_by}} + "\"");
+            $("#ht_{{initial.select_stations_by}}").load("{{MEDIA_URL}}html/commons.html #ht_{{initial.select_stations_by}}");
             </script>
         </div>
         </td>
@@ -276,7 +276,7 @@
             <tr valign="top">
             <td>Select stations by:</td>
             <td>
-                <select id="select_overlay_by" name="select_overlay_by" onchange="set_station_select('area',this);">
+                <select id="select_overlay_by" name="select_overlay_by" onchange="set_station_grid_select('area',this);">
                 <option value="county" {{checkbox_vals.county_selected}}>County</option>
                 <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
                 <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
@@ -368,6 +368,7 @@
         </div>
     </div>
 
+    <div id="GridpointMap" style="display:none;"></div>
 
     {%if need_overlay_map%}
     {%if overlay_error%}
@@ -382,10 +383,6 @@
     <!--Results section-->
     {%if large_request %}
     <p class="error">{{large_request}}</p>
-    {%endif%}
-
-    {%if user_info%}
-    <p class="error">{{user_info}}</p>
     {%endif%}
 
     {%if results.error%}

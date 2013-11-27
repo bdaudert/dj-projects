@@ -1,7 +1,7 @@
 {% extends "csc_base.html" %}
+<meta name="keywords" content="data, station data, historic data, acis">
+<meta name="description" content="SWCKE Historic Station Data">
 
-<meta name="keywords" content="data, gridded data, modeled data, acis">
-<meta name="description" content="SW-CKN Gridded and Modeled Data">
 {%load my_data_filters%}
 
 {% block content %} 
@@ -12,384 +12,506 @@
 <a href="{{DATA_URL}}">DATA></a>
 <a href="{{DATA_URL}}gridded/">Modeled/Gridded Data</a></p>
 
-    <table cellpadding="20">
-    <td valign="top" width="40%">
-        {%if not form2_ready %}
-        {%if not hide_form0 %}
-        <div id='form0'>
-            <form method="post" action="">{% csrf_token %}
-            <table class="form">
-            {%for field in form0 %}
-                <tr>
-                    <td>{{field.label}}:</td>
-                    <td>{{field}}</td>
-                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                    {%ifequal field.label "Elements" %}
-                    <div class="pop-up">
-                        {%if temporal_resolution == "dly"%}
-                            <img alt="ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Grid.png" id="ACISElementChoices" width="450" height="450" border="0">
-                        {%else%}
-                            <img alt="ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_PRISM.png" id="ACISElementChoices" width="450" height="450" border="0">
-                        {%endif%}
-                    </div>
-                    {%else%}
-                        <div class="pop-up"><p>{{field.help_text}}</p></div>
-                    {%endifequal%}
-                    </td>
-                </tr>
-                {%if field.errors%}
-                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>   
-                {%endif%}
-            {%endfor%}
-            </table>
-            <input type="submit" value="Select" name="form0"/>
-            </form>
+<input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
+<input type="hidden" id="host" name="host" value="{{host}}">
+<input type="hidden" id="kml_file_path" name="kml_file_path" value="{{kml_file_path}}">
+
+<!--Set up autofill-->
+<script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
+
+<table cellpadding="20">
+<!--LEFT-->
+<td valign="top" width="30%">
+    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}gridded/'"/>
+    <div id='formData'>
+        <form method="post" action="">{% csrf_token %}
+        <table class="form" id="tableData">
+        <tr valign="top">
+        <td>Select grid by:</td>
+        <td>
+            <select id="select_grid_by" name="select_grid_by" onchange="set_station_grid_select('area',this);">
+            <option value="point" {{checkbox_vals.point_selected}}>Individual grid point</option>
+            <option value="county" {{checkbox_vals.county_selected}}>County</option>
+            <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
+            <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
+            <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
+            <option value="state" {{checkbox_vals.state_selected}}>State</option>
+            <option value="shape" {{checkbox_vals.shape_selected}}>Custom Shape</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_select_grid_by"></div>
+            <script type="text/javascript">                        
+                $("#ht_select_grid_by").load("{{MEDIA_URL}}html/commons.html #ht_select_grid_by");
+            </script>
         </div>
-        {%endif%}
-
-        {%if form1_ready%}
-        <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}gridded/'"/>
-
-        <div id="form1">
-            <form method="post" action="">{% csrf_token %}
-            <table class="form">
-            {%if need_bbox_map or need_polymap or need_map or need_overlay_map%}
-            <p class="error">Use the map interface to populate first field.</p>
-            {%endif%}
-            {%for field in form1 %}
-            {%if field.is_hidden %}
-                {{field}}
-            {%else%}
-                <tr>
-                    <td>{{field.label}}:</td>
-                    {%if field.label == "Location" %}
-                        {%if not map_loc %}
-                            <td><input type="text" name="location" id="location" value="{{location}}"></td>
-                        {%else%}
-                            <td><input type="text" name="location" id="location" value="{{map_loc}}"></td>
-                        {%endif%}
-                    {%elif field.label == "Shape" %}
-                        <td><input type="text" name="shape" id="shape" value="{{shape}}"></td>
-                    {%elif field.label == "Bounding box"%}
-                        <td><input type="text" name="bounding_box" id="bbox" value="{{bbox}}"></td>
-                    {%elif field.label == "County" %}
-                        <td><input type="text" name="county" id="county" value="{{county}}"></td>
-                    {%elif field.label == "Climate division" %}
-                        <td><input type="text" name="climate_division" id="climdiv" value="{{climdiv}}"></td>
-                    {%elif field.label == "Basin" %}
-                        <td><input type="text" name="basin" id="basin" value="{{basin}}"></td>
-                    {%elif field.label == "County warning area" %}
-                        <td><input type="text" name="county_warning_area" id="cwa" value="{{cwa}}"></td>
-                    {%else%}
-                        <td>{{field}}</td>
-                    {%endif%}
-                    <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                    {%ifequal field.label "Elements" %}
-                        <div class="pop-up">
-                        {%if prism_flag%}
-                        <img alt="ElementChoices" title="ElementChoices"  src="{{MEDIA_URL}}img/ACIS_Element_Choices_PRISM.png" id="ACISElementChoices" width="450" height="150" border="0">
-                        {%else%}
-                        <img alt="ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Grid.png" id="ACISElementChoices" width="450" height="450" border="0">
-                        {%endif%}
-                        </div>
-                    {%else%}
-                        {%if field.label == "Grid"%}
-                            <div class="pop-up">
-                            <img alt="GriddedDataDocu" title="GriddedDataDocu" src="{{MEDIA_URL}}img/ACIS_Grids.png" id="ACIS_Grids" width="350" height="300" border="0">
-                            </div>
-                        {%else%}
-                            <div class="pop-up"><p>{{field.help_text}}</p></div>
-                        {%endif%}
-                            <div class="pop-up"><p>{{field.help_text}}</p></div>
-                    {%endifequal%}
-                    </td>
-                </tr>
-                {%endif%}
-                {%if field.errors%}
-                 <tr><td></td><td>{{field.errors}}</td><td></td></tr>
-                {%endif%}
-            {%endfor%}
-            </table>
-            <input type="submit" value="Submit" name="form1"/>
-            </form>
+        </td>
+        </tr>
+        <tr>
+        <td></td>
+        <td><div class="pop_link" onClick="ShowHide('Docu_select_grid_by')"><b><u>Grid Selection Choices</u></b> explained</div></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_gridselections_explained"></div>
+            <script type="text/javascript">                        
+                $("#ht_grid_selections_explained").load("{{MEDIA_URL}}html/commons.html #ht_grid_selections_explained");
+            </script>
         </div>
-        {%endif%}
-        {%endif%}
-        
-        <br /><br />
-
-        {%if need_map and  grid_data%}
-            <p class="error">Drag map marker to change location</p>
-            <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-            <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
-            <input type="hidden" id="DATA_URL" name="DATA_URL" value="{{DATA_URL}}">
-            <input type="hidden" id="TOOLS_URL" name="TOOLS_URL" value="{{TOOLS_URL}}">
-            <input type="hidden" id="lat" name="lat" value={{lat}}>
-            <input type="hidden" id="lon" name="lon" value={{lon}}>
-            <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
-            <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
-            <input type="hidden" id="zoom_level" name="zoom_level" value="5">
-            <input type="hidden" id="app" name="app" value="grid_data">
-            <div id="map" style="width: 100%; height:400px;"></div>
-            <script type="text/javascript">
-                initialize_grid_point_map()
+        </td>
+        </tr>
+        <tr id="area" valign="top">
+        <td>{{initial.area_type_label}}: </td>
+        <td><input type="text" size="35" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_{{initial.select_grid_by}}"></div>
+            <script type="text/javascript">                        
+            $("#ht_{{initial.select_grid_by}}").load("{{MEDIA_URL}}html/commons.html #ht_{{initial.select_grid_by}}");
             </script>
-        {%endif%}
-
-        {%if need_map_bbox  and grid_data %}
-            <p class="error">Click and drag to define your Bounding Box!</p>
-            <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-            <div id="map" style="width: 100%; height:400px;"></div>
-            <script type="text/javascript">
-                initialize_bbox_map()
-            </script>
-        {%endif%}
-
-        {%if need_polymap and grid_data%}
-            <div id="panel">
-                <div id="color-palette"></div>
-                <div>
-                    <button id="delete-button">Delete Selected Shape</button>
-                </div>
+        </div>
+        </td>
+        </tr>
+        <tr>
+        <td>Temporal Resolution: </td>
+        <td>
+            <select id="temporal_resolution" name="temporal_resolution" onchange="set_grid_and els(this, 'grid', 'els')">
+            <option value="dly" {{checkbox_vals.temporal_resolution_dly_selected}}>Daily</option>
+            <option value="mly" {{checkbox_vals.temporal_resolution_mly_selected}}>Monthly (PRISM)</option>
+            <option value="yly" {{checkbox_vals.temporal_resolution_yly_selected}}>Yearly (PRISM)</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_temporal_resolution"></div>
+        <script type="text/javascript">                        
+            $("#ht_temporal_resolution").load("{{MEDIA_URL}}html/commons.html #ht_temporal_resolution");
+        </script>
+        </div>
+        </td>
+        </tr>
+        <tr id="els" valign="top">
+        <td id="Elements">Elements: </td>
+        <td><input type="text" id="elements" name="elements" value="{{initial.elements}}"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_elements">
+                <img alt=ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Grid.png" id="ACISElementChoices" width="450" height="450" border="0">
             </div>
-            <div id="polymap" style="width: 100%; height:400px;"></div>
-            {%if lat and lon %}
-                <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
-                <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
-            {%else%}
-                <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
-                <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
-            {%endif%}
-            <script type="text/javascript">
-                initialize_polygon_map()
+            <!--
+            <script type="text/javascript">                        
+            $("#ht_elements").load("{{MEDIA_URL}}html/commons.html #ht_elements");
+            </script>-->
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td id="Start Date">Start Date: </td>
+        <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_start_date"></div>
+            <script type="text/javascript">                        
+            $("#ht_start_date").load("{{MEDIA_URL}}html/commons.html #ht_date");
             </script>
-        {%endif%}
-
-        {%if need_overlay_map and grid_data%}
-            <div id="form3">
-            <form method="post" action="">{% csrf_token %}
-            <table class="form">
-                {%for field in form3 %}
-                    <tr>
-                    {%if not field.is_hidden %}
-                       <td>{{field.label}}:</td><td>{{field}}</td>
-                    {%else%}
-                       <td style="display:none;">{{field.label}}</td><td style="display:none;">{{field}}</td>
-                    {%endif%}
-                    </tr>
-                {%endfor%}
-            </table>
-            <input type="submit" value="Submit" name="form3"/>
-            </form>
-            </div>
-            <p class="error">{{overlay_error}}</p>
-            <div id="map-overlay" style="width:100%; height:400px;"></div>
-            <div id="content-window" style="width:100px; height:100px;"></div>
-            <script type="text/javascript">initialize_map_overlays("{{type}}","{{host}}", "{{kml_file_path}}")</script>
-        {%endif%}
-
-    </td>
-    <td valign="top" width="60%">
-        <table>
-            <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td id="End Date">End Date: </td>
+        <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_end_date"></div>
+            <script type="text/javascript">                        
+            $("#ht_end_date").load("{{MEDIA_URL}}html/commons.html #ht_date");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr id="grid_type" valign="top">
+        <td>Grid: </td>
+        <td>
+            <select id="grid" name="grid">
+            <option value="1" {{checkbox_vals.1_selected}}>NRCC Interpolated(1950-Present)</option>
+            <option value="3" {{checkbox_vals.2_selected}}>NRCC Int. Hi-Res(East of Rockies/2007-Present)</option>
+            <option value="4" {{checkbox_vals.4_selected}}>CRCM+NCEP(1970-2000,2040-2070)</option>
+            <option value="5" {{checkbox_vals.5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>
+            <option value="6" {{checkbox_vals.6_selected}}>CRCM+CCSM3(1970-2000,2040-2070)</option>
+            <option value="7" {{checkbox_vals.7_selected}}>HRM3+NCEP(1970-2000,2040-2070)</option>
+            <option value="8" {{checkbox_vals.8_selected}}>HRM3+HadCM3(1970-2000,2040-2070)</option>
+            <option value="9" {{checkbox_vals.8_selected}}>MM5I+NCEP(1970-2000,2040-2070)</option>
+            <option value="10" {{checkbox_vals.10_selected}}>MM5I+CCSM(1970-2000,2040-2070)</option>
+            <option value="11" {{checkbox_vals.11_selected}}>RCM3+NCEP(1970-2000,2040-2070)</option>
+            <option value="12" {{checkbox_vals.12_selected}}>RCM3+CGCM3(1970-2000,2040-2070)</option>
+            <option value="13" {{checkbox_vals.13_selected}}>RCM3+GFDL(1970-2000,2040-2070)</option>
+            <option value="14" {{checkbox_vals.14_selected}}>WRFG+NCEP(1970-2000,2040-2070)</option>
+            <option value="15" {{checkbox_vals.15_selected}}>WRFG+CCSM(1970-2000,2040-2070)</option>
+            <option value="16" {{checkbox_vals.16_selected}}>WRFG+CGCM3(1970-2000,2040-2070)</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_grid"></div>
+            <script type="text/javascript">                        
+            $("#ht_grid").load("{{MEDIA_URL}}html/commons.html #ht_grid");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr>
+        <td></td>
+        <td><div class="pop_link" onClick="ShowHide('Docu_grids')"><b><u>Gridded datasets</u></b> explained</div></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+               <div class="pop-up">
+            <div id="ht_grid_choices_explained"></div>
+            <script type="text/javascript">                        
+                $("#ht_grid_choices_explained").load("{{MEDIA_URL}}html/commons.html #ht_grid_choices_explained");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top" id="summary_type" onchange="set_data_summary(this, 'temp_summary','spat_summary')">
+        <td>Data Summary: </td>
+        <td>
+            <select id="data_summary" name="data_summary">
+            <option value="none" {{checkbox_vals.data_summary_none_selected}}>None, just get raw data</option>
+            <option value="temporal" {{checkbox_vals.data_summary_temporal_selected}}>Temporal</option>
+            <option value="temporal" {{checkbox_vals.data_summary_temporal_selected}}>Spatial</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_data_summary"></div>
+            <script type="text/javascript">                        
+            $("#ht_data_smmary").load("{{MEDIA_URL}}html/commons.html #ht_data_summary");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top" id="temp_summary" style="display:none">
+        <td>Temporal Summary: </td>
+        <td>
+            <select id="temporal_summary" name="temporal_summary">
+            <option value="max" {{checkbox_vals.temporal_summary_max_selected}}>Maximum</option>
+            <option value="min" {{checkbox_vals.temporal_summary_min_selected}}>Minimum</option>
+            <option value="mean" {{checkbox_vals.temporal_summary_mean_selected}}>Mean</option>
+            <option value="sum" {{checkbox_vals.temporal_summary_mean_selected}}>Sum</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_temporal_summary"></div>
+            <script type="text/javascript">                        
+            $("#ht_temporal_summary").load("{{MEDIA_URL}}html/commons.html #ht_temporal_summary");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top" id="spat_summary" style="display:none">
+        <td>Spatial Summary: </td>
+        <td>
+            <select id="spatial_summary" name="spatial_summary">
+            <option value="max" {{checkbox_vals.spatial_summary_max_selected}}>Maximum</option>
+            <option value="min" {{checkbox_vals.spatial_summary_min_selected}}>Minimum</option>
+            <option value="mean" {{checkbox_vals.spatial_summary_mean_selected}}>Mean</option>
+            <option value="sum" {{checkbox_vals.spatial_summary_mean_selected}}>Sum</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_spatial_summary"></div>
+            <script type="text/javascript">                        
+            $("#ht_spatial_summary").load("{{MEDIA_URL}}html/commons.html #ht_spatial_summary");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td>Data Format: </td>
+        <td>
+        <select id="data_format" name="data_format" onchange="set_delimiter_and_output_file(this, 'delim','out_file');">
+        <option value="html" selected>Html (display on page)</option>
+        <option value="clm">Columnar, .txt</option>
+        <option value="dlm">Delimited, .dat</option>
+        <option value="xl" >Excel, .xls</option>
+        </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_data_format"></div>
+        <script type="text/javascript">                        
+            $("#ht_data_format").load("{{MEDIA_URL}}html/commons.html #ht_data_format");
+        </script>
+        </div>
+        </td>
+        </tr>
+        <!--Only show when format is clm or dlm, don't show if xl-->
+        <tr valign="top" id="delim" style="display:table-row">
+        <td>Delimiter:</td>
+        <td>
+        <select id="delimiter" name="delimiter">
+        <option value="comma" selected>Comma (,)</option>
+        <option value="tab">Tab (    )</option>
+        <option value="space">Space ( )</option>
+        <option value="colon">Colon (:)</option>
+        <option value="pipe">pipe(|)</option>
+        </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_delimiter"></div>
+        <script type="text/javascript">                        
+            $("#ht_delimiter").load("{{MEDIA_URL}}html/commons.html #ht_delimiter");
+        </script>
+        </div>
+        </td>
+        </tr>
+        <!--Only show when data_format is clm,xl or dlm, don't show if html-->
+        <tr valign="top" id="out_file" style="display:none;">
+        <td>Outputfile Name: </td>
+        <td><input type="text" id="output_file_name" name="output_file_name" value="Output"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_output_file_name"></div>
+        <script type="text/javascript">                        
+            $("#ht_output_file_name").load("{{MEDIA_URL}}html/commons.html #ht_output_file_name");
+        </script>
+        </div>
+        </td>
+        </tr>
         </table>
-        <script type="text/javascript">                        
-            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
-        </script>
-        <div class="docu" id="tool_info" style="display:none;"></div>
-        <script type="text/javascript">                        
-            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #About_gridded_data");
-        </script>
-        <script type="text/javascript">            
-            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
-        </script>
-        <div id="how_to" style="display:none;"></div>
-        <script type="text/javascript">            
-            $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_gridded_data");
-        </script>
-        <br />    
-        {%if error%}
-            <p class="error">Error: {{error}} </p>
-        {%endif%}
+        <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
+        <input type="submit" value="Submit" name="formData"/>
+        </form>
+    </div>
+    <br /><br />
+<!--RIGHT-->
+</td>
+<td valign="top" width="70%">
+    <table>
+    <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
+    </table>
+    <script type="text/javascript">                        
+        $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+    </script>
+    <div class="docu" id="tool_info" style="display:none;"></div>
+    <script type="text/javascript">                        
+        $("#tool_info").load("{{MEDIA_URL}}html/commons.html #About_gridded_data");
+    </script>
+    <script type="text/javascript">            
+        $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+    </script>
+    <div id="how_to" style="display:none;"></div>
+    <script type="text/javascript">            
+        $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_gridded_data");
+    </script> 
+    <div id="docu_long"></div>
 
+    <div id="Docu_select_grid_by" style="display:none;"></div>
+    <script type="text/javascript">                        
+        $("#Docu_select_grid_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_grid_by");
+    </script>    
 
-       {%if large_request%}
-            <p class="error">{{large_request}}</p>
-        {%endif%}
-
-       {%if user_info%}
-            <p class="error">{{user_info}}</p>
-        {%endif%}
-        
-        {% if form2_ready%} 
-            <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}gridded/'"/>
-            {% if not hide_form2%}
-            <div id='form2'>
-                <form method="post" action="">{% csrf_token %}
-                <table class="form">
-                {%for field in form2%}
-                {%if field.is_hidden%}
-                    {{field}}
-                {%else%}
-                        <tr>
-                        <td>{{field.label}}:</td>
-                        <td>{{field}}</td>
-                        <td><p class="trigger"><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="icon_small"></p>
-                        <div class="pop-up"><p>{{field.help_text}}</p></div>
-                        </td>
-                    </tr>
-                    {%if field.errors %}
-                        <tr><td></td><td>{{field.errors}}</td><td></td></tr>
-                    {%endif%}
-                {%endif%}
-                {%endfor%}
-                </table>
-                <input type="submit" value="Submit" name="form2"/>
-                </form>
-            </div>
-            {%endif%}
-        {%endif%}
-
-
-        {%if display_params_list%}
-            <p><b>SEARCH PARAMETERS</b>:<br />
-            {%for param in display_params_list%}
-                {%if not forloop.first and param.0 and param.1%}, {%endif%}
-                    {%if forloop.counter|divisibleby:"3" %}<br />
-                {%endif %}
-                {%if param.0 == "Elements"%}<br />{%endif%}
-                {%if param.0 and param.1%}
-                    <b>{{param.0}}</b>:
-                    {%if param.0 == "shape"%}
-                        <p class="error" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
-                        <div id="coords" style="display:none;">{{param.1}}</div>
-                    {%else%}
-                        {{param.1}}
-                    {%endif%}
-                {%endif%}
-            {%endfor%}
-            </p>
-        {%endif%}
-  
-        {%if grid_data %}
-            <!--Link to relevant applications-->
-            {%if params_dict.element and not figure_files%}
-                {%if params_dict.state %}
-                    <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&element={{params_dict.element}}&grid={{params_dict.grid}}&state={{params_dict.state}}">Generate a climate summary map  for this data set here!</a>
-                    <br />
-                {%endif%}
-                {%if params_dict.bbox%}                    
-                    <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&element={{params_dict.element}}&grid={{params_dict.grid}}&bounding_box={{params_dict.bbox}}&">Generate a climate summary map  for this data set here!</a>
-                    <br />
-                {%endif%}
-                {%if params_dict.lat%}
-                    <a target="_blank" href="{{TOOLS_URL}}gridded/grid_point_time_series/?lat={{params_dict.lat}}&lon={{params_dict.lon}}&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&element={{params_dict.element}}&grid={{params_dict.grid}}">Generate a time series for this data set here!</a>
-                {%endif%}
-            {%endif%}
-            
-            {%if figure_files%}
-                <p class="error" onClick="ShowHide('data')"><u>Click here to see/hide the raw data</u></p>
-                <div id="data" style="display:none;">
-            {%endif%}
-
-            <p><b>DATA</b>:</p>
-            {{req}}
-            <p>date range{{params_dict.delimiter}}lat{{params_dict.delimiter}}lon{{params_dict.delimiter}}elev{{params_dict.delimiter}}{%for el in elements%}{{el}}{{params_dict.delimiter}}{%endfor%}</p>
-            {%for row in grid_data%}
-                {%for val  in row%}
-                    {{val}}{{params_dict.delimiter}}
-                {%endfor%}<br />
-            {%endfor%}
-        {%endif%}<!--End if grid_data-->
-
-        {%if figure_files%}
-            </div><!--End div data-->
-            {%for figure_file in figure_files%}
-                <p><b>Element: </b>{{params_dict.elems_long|lookup:forloop.counter0}}</p>
-                <img alt="FigureFile" title="FigureFile" width="400px" height="400px" src="{{MEDIA_URL}}tmp/{{figure_file}}"><br /><br />
-            {%endfor%}
-        {%endif%}
-
-
-
-    {%if need_map and not grid_data%}
-        <p class="error">Drag map marker to change location</p>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-        <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
-        <input type="hidden" id="DATA_URL" name="DATA_URL" value="{{DATA_URL}}">
-        <input type="hidden" id="TOOLS_URL" name="TOOLS_URL" value="{{TOOLS_URL}}">
-        <input type="hidden" id="lat" name="lat" value={{lat}}>
-        <input type="hidden" id="lon" name="lon" value={{lon}}>
-        <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
-        <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
-        <input type="hidden" id="zoom_level" name="zoom_level" value="5">
-        <input type="hidden" id="app" name="app" value="grid_data">
-        <div id="map" style="width: 100%; height:400px;"></div>
-        <script type="text/javascript">
-            initialize_grid_point_map()
-        </script>
+    {%if form_error%}
+        {%for key, val in form_error.items%}
+            <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
+        {%endfor%}
     {%endif%}
 
-    {%if need_map_bbox  and  not grid_data %}
-        <p class="error">Click and drag to define your Bounding Box!</p>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
-        <div id="map" style="width: 100%; height:400px;"></div>
-        <script type="text/javascript">
-            initialize_bbox_map()
-        </script>
-    {%endif%}
-
-    {%if need_polymap and not grid_data%}
+    <div id="PolyMap" style="display:none;">
         <div id="panel">
-            <div id="color-palette"></div>
+        <div id="color-palette"></div>
             <div>
                 <button id="delete-button">Delete Selected Shape</button>
             </div>
         </div>
-        <div id="polymap" style="width: 100%; height:400px;"></div>
         {%if lat and lon %}
-            <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
-            <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+        <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+        <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
         {%else%}
-            <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
-            <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+        <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
+        <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
         {%endif%}
-        <script type="text/javascript">
-            initialize_polygon_map()
-        </script>
-    {%endif%}
+    </div>
 
-    {%if need_overlay_map and not grid_data%}
-        <div id="form3">
+    <div id="GridpointMap" style="display:none;">
+        {%if lat and lon %}
+        <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+        <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+        {%else%}
+        <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
+        <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+        {%endif%}
+        <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
+        <input type="hidden" id="DATA_URL" name="DATA_URL" value="{{DATA_URL}}">
+        <input type="hidden" id="TOOLS_URL" name="DATA_URL" value="{{TOOLS_URL}}">
+    </div>
+
+    {%if need_overlay_map%}
+    <div id="OverlayMap" style="display:block;">
+    {%else%}
+    <div id="OverlayMap" style="display:none;">
+    {%endif%}
+         <div id="formOverlay" style="display:inherit;">
             <form method="post" action="">{% csrf_token %}
             <table class="form">
-                {%for field in form3 %}
-                    <tr>
-                    {%if not field.is_hidden %}
-                       <td>{{field.label}}:</td><td>{{field}}</td>
-                    {%else%}
-                       <td style="display:none;">{{field.label}}</td><td style="display:none;">{{field}}</td>
-                    {%endif%}
-                    </tr>
-                {%endfor%}
+            <tr valign="top">
+            <td>Select stations by:</td>
+            <td>
+                <select id="select_overlay_by" name="select_overlay_by" onchange="set_station_grid_select('area',this);">
+                <option value="county" {{checkbox_vals.county_selected}}>County</option>
+                <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
+                <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
+                <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
+                </select>
+            </td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
+            <div id="ht_select_overlay_by"></div>
+            <script type="text/javascript">                        
+                $("#ht_select_overlay_by").load("{{MEDIA_URL}}html/commons.html #ht_select_grid_by");
+            </script>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td>State: </td>
+            <td>
+                <select name="overlay_state" id="overlay_state">
+                <option value="al" {{al_selected}}>Alabama</option>
+                <option value="ak" {{ak_selected}}>Alaska</option>
+                <option value="az" {{az_selected}}>Arizona</option>
+                <option value="ar" {{ar_selected}}>Arkansas</option>
+                <option value="ca" {{ca_selected}}>California</option>
+                <option value="co" {{co_selected}}>Colorado</option>
+                <option value="ct" {{ct_selected}}>Connecticut</option>
+                <option value="de" {{de_selected}}>Delaware</option>
+                <option value="dc" {{dc_selected}}>District of Columbia</option>
+                <option value="fl" {{fl_selected}}>Florida</option>
+                <option value="ga" {{ga_selected}}>Georgia</option>
+                <option value="hi" {{hi_selected}}>Hawaii</option>
+                <option value="id" {{id_selected}}>Idaho</option>
+                <option value="il" {{il_selected}}>Illinois</option>
+                <option value="in" {{in_selected}}>Indiana</option>
+                <option value="ia" {{ia_selected}}>Iowa</option>
+                <option value="ks" {{ks_selected}}>Kansas</option>
+                <option value="ky" {{ky_selected}}>Kentucky</option>
+                <option value="la" {{la_selected}}>Louisiana</option>
+                <option value="me" {{me_selected}}>Maine</option>
+                <option value="md" {{md_selected}}>Maryland</option>
+                <option value="ma" {{ma_selected}}>Massachusetts</option>
+                <option value="mi" {{mi_selected}}>Michigan</option>
+                <option value="mn" {{mn_selected}}>Minnesota</option>
+                <option value="ms" {{ms_selected}}>Mississippi</option>
+                <option value="mo" {{mo_selected}}>Missouri</option>
+                <option value="mt" {{mt_selected}}>Montana</option>
+                <option value="ne" {{ne_selected}} >Nebraska</option>
+                <option value="nv" {{nv_selected}}>Nevada</option>
+                <option value="nh" {{nh_selected}}>New Hampshire</option>
+                <option value="nj" {{nj_selected}}>New Jersey</option>
+                <option value="nm" {{nm_selected}}>New Mexico</option>
+                <option value="ny" {{ny_selected}}>New York</option>
+                <option value="nc" {{nc_selected}}>North Carolina</option>
+                <option value="nd" {{nd_selected}}>North Dakota</option>
+                <option value="oh" {{oh_selected}}>Ohio</option>
+                <option value="ok" {{ok_selected}}>Oklahoma</option>
+                <option value="or" {{or_selected}}>Oregon</option>
+                <option value="pa" {{pa_selected}}>Pennsylvania</option>
+                <option value="ri" {{ri_selected}}>Rhode Island</option>
+                <option value="sc" {{sc_selected}}>South Carolina</option>
+                <option value="sd" {{sd_selected}}>South Dakota</option>
+                <option value="tn" {{tn_selected}}>Tennessee</option>
+                <option value="tx" {{tx_selected}}>Texas</option>
+                <option value="ut" {{ut_selected}}>Utah</option>
+                <option value="vt" {{vt_selected}}>Vermont</option>
+                <option value="va" {{va_selected}}>Virginia</option>
+                <option value="wa" {{wa_selected}}>Washington</option>
+                <option value="wv" {{wv_selected}}>West Virginia</option>
+                <option value="wi" {{wi_selected}}>Wisconsin</option>
+                <option value="wy" {{wy_selected}}>Wyoming</option>
+            </select>
+            </td>
+            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
+                <div id="ht_select_overlay_by">Specify US State</div>
+            </div>
+            </td>
+            </tr>
             </table>
-            <input type="submit" value="Submit" name="form3"/>
+            <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
+            <input type="hidden" value="{{initial.elements}}" name="elements">
+            <input type="hidden" value="{{initial.start_date}}" name="start_date">
+            <input type="hidden" value="{{initial.end_date}}" name="end_date">
+            <input type="hidden" value="{{initial.show_flags}}" name="show_flags">
+            <input type="hidden" value="{{initial.show_observation_time}}" name="show_observation_time">
+            <input type="hidden" value="{{initial.data_format}}" name="data_format">
+            <input type="submit" value="Submit" name="formOverlay"/>
             </form>
         </div>
-        <p class="error">{{overlay_error}}</p>
-        <div id="map-overlay" style="width:100%; height:400px;"></div>
-        <div id="content-window" style="width:100px; height:100px;"></div>
-        <script type="text/javascript">initialize_map_overlays("{{type}}","{{host}}", "{{kml_file_path}}")</script>
-    {%endif%}
-    </td>
-    </table>
-  <!-- Footer -->
-<!--
-  <div id="footer" align="center"></div>
-    <script type="text/javascript">                        
-    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-sw-ckn");
-    </script>
-  </div>
--->
+    </div>
 
+
+    {%if need_overlay_map%}
+    {%if overlay_error%}
+    <p class="error">{{overlay_error}}</p>
+    {%else%}
+    <div id="map-overlay" style="width:100%; height:400px;"></div>
+    <div id="content-window" style="width:100px; height:100px;"></div>
+    <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
+    {%endif%} 
+    {%endif%}
+    <br /><br />
+    <!--Results section-->
+    {%if large_request %}
+    <p class="error">{{large_request}}</p>
+    {%endif%}
+
+    {%if results.error%}
+    <p class="error">{{results.error}}</p>
+    {%endif%}
+
+    {%if display_params_list%}
+    <p><b>SEARCH PARAMETERS</b>:<br />
+    {%for param in display_params_list%}
+    {%if not forloop.first and param.0 and param.1%}, {%endif%}
+    {%if forloop.counter|divisibleby:"3" %}<br />
+    {%endif %}
+    {%if param.0 == "Elements"%}<br />{%endif%}
+    {%if param.0 and param.1%}
+    <b>{{param.0}}</b>:
+    {%if param.0 == "shape"%}
+    <p class="error" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
+    <div id="coords" style="display:none;">{{params.1}}</div>
+    {%else%}
+    {{param.1}}
+    {%endif%}
+    {%endif%}
+    {%endfor%}
+    </p>
+    {%endif%}
+
+    {%if results %}
+    <!--Link to relevant applications-->
+    {%if params_dict.element%}
+    {%if params_dict.state %}
+    <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&element={{params_dict.element}}&grid={{params_dict.grid}}&state={{params_dict.state}}">Generate a climate summary map  for this data set here!</a>
+    <br />
+    {%endif%}
+    {%if params_dict.lat%}
+    <a target="_blank" href="{{TOOLS_URL}}gridded/grid_point_time_series/?lat={{params_dict.lat}}&lon={{params_dict.lon}}&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&element={{params_dict.element}}&grid={{params_dict.grid}}">Generate a time series for this data set here!</a>
+    {%endif%}
+    {%endif%}<!--end if params_dict.element and not figure_files-->
+
+
+    <p><b>DATA</b>:</p>
+    <p>date range{{params_dict.delimiter}}lat{{params_dict.delimiter}}lon{{params_dict.delimiter}}elev{{params_dict.delimiter}}{%for el in elements%}{{el}}{{params_dict.delimiter}}{%endfor%}</p>
+    {%for row in results%}
+    {%for val  in row%}
+    {{val}}{{params_dict.delimiter}}
+    {%endfor%}<br />
+    {%endfor%}
+    {%endif%}<!--End if results-->
+
+</td></table>
 {%endblock%}

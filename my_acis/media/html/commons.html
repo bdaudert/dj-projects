@@ -67,11 +67,17 @@
     <p>Defines the type of search area. Click on the link below to show/hide a more detailed explaination.</p>
 </div>
 
+<div id="ht_grid_selections_explained">
+    <p> Click on this link to show/hide a more detailed explaination of the search area options.</p>
+</div>
 
 <div id="ht_select_grid_by">
     <p>Defines the type of serach area. Click on the link below to show/hide a more detailed explaination.</p>
 </div>
 
+<div id="ht_grid_selections_explained">
+    <p> Click on this link to show/hide a more detailed explaination of the search area options.</p>
+</div>
 
 <div id="ht_station_id">
     <p>Station Identifier or Name. You can type the name or id of a station or use the station finder tool to find your station ID.</p>
@@ -130,18 +136,47 @@
 </div>
 
 <div id="ht_temporal_resolution">
-    <p>Defines the time step of data values. Currently we offer one monthly/yearly data set (PRISM). The rest of the datasets are of daily resolution.</p>
+    <p>Defines the time step of data values. The monthly/yearly datasets are PRISM data. The rest of the datasets have daily resolution.</p>
 </div>
+
 
 <div id="ht_grid">
     <p>Choose your dataset. Click on the link below to show/hide a more detailed explaination.</p>
 </div>
 
-
-<div id="ht_grid_temporal_summary">
-    <p></p>
+<div id="ht_grid_choices_explained">
+    <p>Click on this link to show/hide a more detailed explaination of available grids.</p>
 </div>
 
+<div id="ht_data_summary">
+    <p>Chose a data summary type. 
+        <ul>
+        <li><b>None</b>: No data summary will be performed. Raw data are returned.</li>
+        <li><b>Temporal</b>: Data is summarized over time at each grid point. The result is a geospatial layer.</li>
+        <li><b>Spatial</b>: Data is summarized over the seach area (select grid by choice). The result is a time series.</li>
+        </ul>
+    </p>
+</div>
+
+<div id="ht_grid_temporal_summary">
+    <p>Choose the type of temporal summary to perform.
+       <ul>
+        <li><b>Maximum</b>: Returns the maximum data value over the time period at each grid point.</li>
+        <li><b>Minimum</b>: Returns the minimum data value over the time period at each grid point.</li>
+        <li><b>Mean</b>: Returns the average of the data values over the time period at each grid point.</li>
+        </ul>
+    </p>
+</div>
+
+<div id="ht_grid_spatial_summary">
+    <p>Choose the type of spatial summary to perform.
+       <ul>
+        <li><b>Maximum</b>: Returns the maximum data value over all grid points at each time step.</li>        
+        <li><b>Minimum</b>: Returns the minimum data value over the grid points at each time step.</li>        
+        <li><b>Mean</b>: Returns the average of the data values over all grid points at each time step.</li>
+        </ul>
+    </p>
+</div>
 <div id="ht_show_flags">
     <p>Show data flags. M = Missing, A= Accumulated, S =? , T=Trace</p>
 </div>

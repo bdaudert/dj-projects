@@ -3,14 +3,14 @@
 //return Math.round(num*Math.pow(10,decimals))/Math.pow(10,decimals);
 //}
 
-function initialize_grid_point_map() {
+function initialize_grid_point_map(app) {
     var map;
     // Since this map is used in multiple locations in slightly
-    //different ways, we need to specify the app. possible values: gp_ts,grid_data 
-    var app = document.getElementById("app").value; // Since this map is used in multiple locations
+    //different ways, we need to specify the app. possible values: gridpoint_time_series,data_gridded 
+    //var app = document.getElementById("app").value; // Since this map is used in multiple locations
     var lat = document.getElementById("initial_lat").value;
     var lon = document.getElementById("initial_lon").value;
-    var zoom_level = document.getElementById("zoom_level").value;
+    var zoom_level = '5';
     var DATA_URL = document.getElementById("DATA_URL").value;
     var TOOLS_URL = document.getElementById("TOOLS_URL").value;
     var myLatlng = new google.maps.LatLng(lat,lon);
@@ -20,7 +20,7 @@ function initialize_grid_point_map() {
     zoom: 4,
     mapTypeId: google.maps.MapTypeId.HYBRID
     };
-    map = new google.maps.Map(document.getElementById("map"),mapOptions);
+    map = new google.maps.Map(document.getElementById("map-gridpoint"),mapOptions);
     infowindow = new google.maps.InfoWindow({
         content: 'oi'
     });
@@ -37,13 +37,13 @@ function initialize_grid_point_map() {
         var lat = precise_round(event.latLng.lat(),2);
         var lon = precise_round(event.latLng.lng(),2);
         var loc = lon + ',' + lat
-        if (app == 'gp_ts'){
+        if (app == 'gridpoint_time_series'){
             document.getElementById("lat").value = lat;
             document.getElementById("lon").value = lon;
             var href = TOOLS_URL +'gridded/grid_point_time_series/?lat=' +
                    lat + '&lon=' + lon;
         }
-        else if (app == 'grid_data'){
+        else if (app == 'data_gridded'){
             document.getElementById("location").value = loc;
             var href = DATA_URL +'gridded/?loc=' +
                    lon + ',' + lat;
@@ -167,7 +167,7 @@ function initialize_station_finder() {
                 '">Access Climate Summaries for this Station (by WRCC)</a>'
             }
 
-            var data_portal_link = '<a target="_blank" href="' + DATA_URL + 'station/?stn_id=' + c.sids[0];
+            var data_portal_link = '<a target="_blank" href="' + DATA_URL + 'station/?station_id=' + c.sids[0];
             var app_portal_link = '<a target="_blank" href="' + TOOLS_URL + 'station/?stn_id=' + c.sids[0]; 
             if (start_date != null){ 
                 data_portal_link = data_portal_link + '&start_date=' + start_date;
@@ -564,7 +564,7 @@ function initialize_polygon_map() {
         var lat = document.getElementById("initial_lat").value;
         var lon = document.getElementById("initial_lon").value;
         var myLatlng = new google.maps.LatLng(lat,lon);
-        var map = new google.maps.Map(document.getElementById('polymap'), {
+        var map = new google.maps.Map(document.getElementById('map-polygon'), {
           zoom: 4,
           center: myLatlng,
           mapTypeId: google.maps.MapTypeId.HYBRID,
@@ -736,7 +736,7 @@ function initialize_polygon_map_new() {
     var lat = document.getElementById("initial_lat").value;
     var lon = document.getElementById("initial_lon").value;
     var myLatlng = new google.maps.LatLng(lat,lon);
-    var map = new google.maps.Map(document.getElementById('polymap'), {
+    var map = new google.maps.Map(document.getElementById('map-polygon'), {
       zoom: 4,
       center: myLatlng,
       mapTypeId: google.maps.MapTypeId.HYBRID,

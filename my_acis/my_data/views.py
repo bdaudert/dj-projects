@@ -250,7 +250,6 @@ def data_station(request):
         if form_error:
             context['form_error'] = form_error
             return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
-        context['req'] = form
         if form['select_stations_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
             context['host'] = 'wrcc.dri.edu'
             kml_file_name = form['overlay_state'] + '_' + form['select_stations_by'] + '.kml'
@@ -315,13 +314,108 @@ def data_station(request):
     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
 
 
-def gridded_data(request):
+def data_gridded(request):
     context = {
         'title': 'Gridded/Modeled Data',
     }
+    initial, checkbox_vals = set_gridded_data_initial(request)
+    context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+    #Set up maps if needed
+    context['host'] = 'wrcc.dri.edu'
+    context['area_type'] = initial['select_grid_by']
+    context[initial['select_grid_by']] = WRCCData.AREA_DEFAULTS[initial['select_grid_by']]
+    kml_file = initial['overlay_state'] + '_' + initial['select_grid_by'] + '.kml'
+    context[initial['overlay_state'] + '_selected'] = 'selected'
+    context['kml_file_path'] = WEB_SERVER_DIR +  kml_file
+    #Check if kml file exists, if not generate it
+    try:
+        with open(TEMP_FILE_DIR + kml_file):
+            if os.stat(TEMP_FILE_DIR + kml_file).st_size==0:
+                status = WRCCUtils.generate_kml_file(initial['select_grid_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
+    except IOError:
+        status = WRCCUtils.generate_kml_file(initial['select_grid_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
 
+    context[initial['select_grid_by']] = WRCCData.AREA_DEFAULTS[initial['select_grid_by']]
 
-def data_gridded(request):
+    if 'formData' in request.POST:
+        #Turn request object into python dict
+        form = set_form(request)
+        fields_to_check = ['start_date', 'end_date','elements']
+        form_error = check_form(form, fields_to_check)
+        if form_error:
+            context['form_error'] = form_error
+            return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
+        if form['select_gridded_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
+            context['host'] = 'wrcc.dri.edu'
+            kml_file_name = form['overlay_state'] + '_' + form['select_grid_by'] + '.kml'
+            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
+            context['area_type'] = form['select_grid_by']
+
+        initial,checkbox_vals = set_gridded_data_initial(form)
+        context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
+        display_params_list, params_dict = set_gridded_data_params(pms)
+        context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
+        #Check if data request is large,
+        #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
+        if form['start_date'].lower() == 'por':
+            s_date = datetime.date(1900,01,01)
+        else:
+            s_date = datetime.date(int(form['start_date'][0:4]), int(form['start_date'][4:6]),int(form['start_date'][6:8]))
+        if form['end_date'].lower() == 'por':
+                e_date = datetime.date.today()
+        else:
+            e_date = datetime.date(int(form['end_date'][0:4]), int(form['end_date'][4:6]),int(form['end_date'][6:8]))
+        days = (e_date - s_date).days
+        #if time range > 1 month or user requests data for more than 1 gridpoint, large request via ftp
+        if days > 31 and 'point' not in form.keys():
+            context['large_request'] = \
+            'At the moment we do not support data requests that exceed 1 month.\
+             Please limit your request to one gridpoint at a time or a date range of one month or less.\
+             We will support larger requests in the near future. Thank you for your patience!'
+            return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
+
+        #Data request
+        if str(form['grid']) == '21':
+            #PRISM data need to convert elements!!
+            prism_elements = []
+            for el in form['elements'].replace(' ','').split(','):
+                prism_elements.append('%s_%s' %(str(form['temporal_resolution']), str(el)))
+            form['elements'] = prism_elements
+        req = AcisWS.get_grid_data(form1.cleaned_data, 'griddata_web')
+        if 'error' in req.keys():
+            context['error'] = req['error']
+            context['grid_data'] = {}
+            return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
+        #format data
+        results = WRCCUtils.format_grid_data(req, form)
+        context['results'] = results
+
+    if 'formOverlay' in request.POST:
+        context['need_overlay_map'] = True
+        form = set_form(request)
+        initial, checkbox_vals = set_grid_data_initial(request)
+        #Override initial where needed
+        initial['select_grid_by'] = form['select_overlay_by']
+        checkbox_vals[form['select_overlay_by'] + '_selected'] = 'selected'
+        initial['area_type_value'] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
+        initial[form['select_overlay_by']] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
+        initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[form['select_overlay_by']]
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        at = form['select_overlay_by']
+        st = form['overlay_state']
+        context[st + '_selected'] = 'selected'
+        kml_file_name = st + '_' + at + '.kml'
+        dir_location = TEMP_FILE_DIR
+        status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
+        if not status == 'Success':
+            context['overlay_error'] = status
+        else:
+            context['host'] = 'wrcc.dri.edu'
+            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
+            context['area_type'] = form['select_overlay_by']
+    return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
+
+def data_gridded_old(request):
     context = {
         'title': 'Gridded/Modeled Data',
         'icon':'ToolProduct.png'
@@ -1750,8 +1844,8 @@ def find_stn_id(form_input_stn):
     '''
     stn_id = str(form_input_stn)
     name_id_list = str(form_input_stn).replace(' ','').split(',')
-    if len(name_id_list) ==2:
-        stn_id= str(name_id_list[1])
+    if len(name_id_list) >=2:
+        stn_id= str(name_id_list[-1])
     return stn_id
 
 def set_form(request):
@@ -2417,6 +2511,7 @@ def set_station_data_initial(request):
     initial['show_observation_time'] = Get('show_observation_time', 'F')
     initial['data_format'] = Get('data_format', 'html')
     initial['delimiter'] = Get('delimiter', ',')
+    initial['output_file_name'] = Get('output_file_name', 'Output')
     #set the check box values
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
         checkbox_vals[area_type + '_selected'] =''
@@ -2437,3 +2532,60 @@ def set_station_data_initial(request):
                 checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
     return initial, checkbox_vals
 
+def set_gridded_data_initial(request):
+    initial = {}
+    checkbox_vals = {}
+    if type(request) == dict:
+        def Get(key, default):
+            if key in request.keys():
+                return request[key]
+            else:
+                return default
+    elif request.method == 'GET':
+        Get = getattr(request.GET, 'get')
+    elif request.method == 'POST':
+        Get = getattr(request.POST, 'get')
+    initial['select_grid_by'] = Get('select_grid_by', 'point')
+    initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
+    initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
+    if initial['select_grid_by'] in ['basin', 'county', 'county_warning_area', 'climate_division']:
+        initial['area_type_label']+='/Name'
+    initial['area_type_value'] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
+    initial['overlay_state'] = Get('overlay_state', 'nv')
+    initial['autofill_list'] = 'US_' + initial['select_grid_by']
+    initial['temporal_resolution'] = Get('temporal_resolution', 'dly')
+    initial['elements'] = Get('elements', 'maxt,mint,pcpn')
+    initial['start_date']  = Get('start_date', fourtnight)
+    initial['end_date']  = Get('end_date', yesterday)
+    initial['grid'] = Get('grid', '1')
+    initial['data_summary'] = Get('data_summary', 'none')
+    initial['temporal_summary'] = Get('temporal_summary', None)
+    initial['spatial_summary'] = Get('spatial_summary', None)
+    initial['data_format'] = Get('data_format', 'html')
+    initial['delimiter'] = Get('delimiter', ',')
+    initial['output_file_name'] = Get('output_file_name', 'Output')
+    #set the check box values
+    for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
+        checkbox_vals[area_type + '_selected'] =''
+        if area_type == initial['select_grid_by']:
+            checkbox_vals[area_type + '_selected'] ='selected'
+    for df in ['clm', 'dlm','xl', 'html']:
+        checkbox_vals[df + '_selected'] =''
+        if df == initial['data_format']:
+            checkbox_vals[df + '_selected'] ='selected'
+    for dl in ['comma', 'tab', 'space', 'colon', 'pipe']:
+        checkbox_vals[dl + '_selected'] =''
+        if dl == initial['delimiter']:
+            checkbox_vals[dl + '_selected'] ='selected'
+    for ds in ['none','temporal', 'spatial']:
+        checkbox_vals['data_summary' + ds + '_selected'] =''
+        if ds == initial['data_summary']:
+            checkbox_vals['data_summary' + ds + '_selected'] ='selected'
+    for st in ['max','min','mean','sum']:
+        checkbox_vals['temporal_summary' + st + '_selected'] =''
+        checkbox_vals['spatial_summary' + st + '_selected'] =''
+        if st == initial['temporal_summary']:
+            checkbox_vals['temporal_summary' + st + '_selected'] ='selected'
+        if st == initial['spatial_summary']:
+            checkbox_vals['spatial_summary' + st + '_selected'] ='selected'
+    return initial, checkbox_vals

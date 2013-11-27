@@ -6,7 +6,7 @@ function set_autofill(datalist){
         for (idx=0;idx<metadata.length;idx++){
             var name = metadata[idx].name;
             var id = metadata[idx].id;
-            if (id == '' || !id){
+            if (id == '' || !id ){
                 continue
             }
             var opt = document.createElement('option');
@@ -263,8 +263,88 @@ function show_formGraph(TF, rowClass) {
     }
 }
 
-//Station Data
-function set_area_and_map(area_type){
+function hide_gridpoint_map(){
+    //Hide gridpoint maip
+    document.getElementById('GridpointMap').style.display = "none";
+    if ($('#map-gridpoint').length){
+        m = document.getElementById('map-gridpoint');
+        m.parentNode.removeChild(m);
+    }
+}
+
+function show_gridpoint_map(){
+    //Show gridpoint map
+    var gp_map_div = document.getElementById('GridpointMap');
+    gp_map_div.style.display = "block";
+    if (!$('#map-gridpoint').length){
+        var m = document.createElement('div');
+        m.setAttribute('id', 'map-gridpoint');
+        m.setAttribute('style', 'width:500px;height:400px;');
+        gp_map_div.appendChild(m);
+    }
+    //Generate Map
+    initialize_grid_point_map('data_gridded');
+}
+
+function hide_overlay_map(){
+    //Hide overlay map
+    document.getElementById('OverlayMap').style.display = "none";
+    if ($('#map-overlay').length){
+        var m = document.getElementById('map-overlay');
+        m.parentNode.removeChild(m);
+    }
+    if ($('#content-window').length){
+        var w = document.getElementById('content-window');
+        w.parentNode.removeChild(w);
+    }
+}
+
+function show_overlay_map(){
+    //Show overlay map 
+    var ol_map_div = document.getElementById('OverlayMap');
+    ol_map_div.style.display = "block";
+    var area_type = document.getElementById('area_type').value;
+    var host = document.getElementById('host').value;
+    if (!$('#map-overlay').length){
+        var m = document.createElement('div');
+        m.setAttribute('id', 'map-overlay');
+        m.setAttribute('style', 'width:500px;height:400px;')
+        ol_map_div.appendChild(m);
+    }
+    if (!$('#content-window').length){
+        var w = document.createElement('div');
+        w.setAttribute('id', 'content-window');
+        w.setAttribute('style', 'width:100px;height:100px;')
+        ol_map_div.appendChild(w);
+    }
+    //Generate Map
+    initialize_map_overlays(area_type,host,kml_file_path);
+}
+
+function hide_polygon_map(){
+    //Hide poly_map
+    document.getElementById('PolyMap').style.display = "none";
+    if ($('#map-polygon').length){
+        m = document.getElementById('map-polygon');
+        m.parentNode.removeChild(m);
+    }
+}
+
+function show_polygon_map(){
+    //Show polygon map
+    var p_map_div = document.getElementById('PolyMap');
+    p_map_div.style.display = "block";
+    if (!$('#map-polygon').length){
+        var m = document.createElement('div');
+        m.setAttribute('id', 'map-polygon');
+        m.setAttribute('style', 'width:500px;height:400px;');
+        p_map_div.appendChild(m);
+    }
+    //Generate Map
+    initialize_polygon_map_new();
+}
+
+function set_area_defaults(area_type){
     var lv = {
         'label':'Station ID',
         'value':'266779',
@@ -273,6 +353,10 @@ function set_area_and_map(area_type){
     if (area_type == 'station_ids'){
         lv.label = 'Station IDs';
         lv.value ='266779,050848';
+    }
+    if (area_type == 'point'){
+        lv.label = 'Location (lon/lat)';
+        lv.value = '-119,39';
     }
     if (area_type == 'county'){
         lv.label ='County';
@@ -301,8 +385,13 @@ function set_area_and_map(area_type){
     if (area_type == 'shape'){
         lv.label ='Custom Shape';
         lv.value ='-115,34, -115, 35,-114,35, -114, 34';
-    }
+    }    
+    return lv;
+}
 
+//Station Data
+function set_area_and_map(area_type){
+    var lv = set_area_defaults(area_type);
     //Change value of hidden var area_type
     document.getElementById('area_type').value = area_type;
     var state = document.getElementById('overlay_state').value;
@@ -310,82 +399,38 @@ function set_area_and_map(area_type){
     document.getElementById('kml_file_path').value=kml_file_path;
     if (area_type == 'basin' || area_type == 'county' || area_type == 'county_warning_area' || area_type =='climate_division'){
         document.getElementById('select_overlay_by').value= area_type;
-        document.getElementById('select_stations_by').value=area_type;
-
+        if ($('#select_stations_by').length){
+            document.getElementById('select_stations_by').value=area_type;
+        }
+        if ($('#select_grid_by').length){
+            document.getElementById('select_grid_by').value=area_type;
+        }
     }
     //Set up maps for display
     if (area_type =='county' || area_type =='climate_division' || area_type == 'basin' || area_type == 'county_warning_area'){
-        //Make overlay map visible
-        var ol_map_div = document.getElementById('OverlayMap');
-        ol_map_div.style.display = "block";
-        var area_type = document.getElementById('area_type').value;
-        var host = document.getElementById('host').value;
-        if (!$('#map-overlay').length){ 
-            var m = document.createElement('div');
-            m.setAttribute('id', 'map-overlay');
-            m.setAttribute('style', 'width:500px;height:400px;')
-            ol_map_div.appendChild(m);
-        }
-        if (!$('#content-window').length){
-            var w = document.createElement('div');
-            w.setAttribute('id', 'content-window');
-            w.setAttribute('style', 'width:100px;height:100px;')
-            ol_map_div.appendChild(w);
-        }
-        //Generate Map
-        initialize_map_overlays(area_type,host,kml_file_path);
-        //Hide poly_map
-        document.getElementById('PolyMap').style.display = "none";
-        if ($('#polymap').length){
-            m = document.getElementById('polymap');
-            m.parentNode.removeChild(m);
-        }
+        show_overlay_map();
+        hide_polygon_map();
+        hide_gridpoint_map(); 
     } 
     else if (area_type == 'shape') {
-        //Hide overlay map
-        document.getElementById('OverlayMap').style.display = "none";
-        if ($('#map-overlay').length){
-            var m = document.getElementById('map-overlay');
-            m.parentNode.removeChild(m);
-        }
-        if ($('#content-window').length){
-            var w = document.getElementById('content-window');
-            w.parentNode.removeChild(w);
-        }
-        //Show polygon map
-        var p_map_div = document.getElementById('PolyMap');
-        p_map_div.style.display = "block";
-        if (!$('#polymap').length){
-            var m = document.createElement('div');
-            m.setAttribute('id', 'polymap');
-            m.setAttribute('style', 'width:500px;height:400px;');
-            p_map_div.appendChild(m);
-        }
-        //Generate Map
-        initialize_polygon_map_new();
+        hide_overlay_map();
+        show_polygon_map();
+        hide_gridpoint_map();
+    }
+    else if (area_type == 'point'){
+        hide_overlay_map();
+        hide_polygon_map();
+        show_gridpoint_map();
     }
     else {
-        //Hide overlay map
-        document.getElementById('OverlayMap').style.display = "none";
-        if ($('#map-overlay').length){
-            var m = document.getElementById('map-overlay');
-            m.parentNode.removeChild(m);
-        }
-        if ($('#content-window').length){
-            var w = document.getElementById('content-window');
-            w.parentNode.removeChild(w);
-        }
-        //Hide poly_map
-        document.getElementById('PolyMap').style.display = "none";
-        if ($('#polymap').length){
-            m = document.getElementById('polymap');
-            m.parentNode.removeChild(m);
-        }
+        hide_overlay_map();
+        hide_polygon_map();
+        hide_gridpoint_map();
     }
     return lv;
 }
 
-function set_station_select(row_id,node){
+function set_station_grid_select(row_id,node){
     /*
     //Delete existing table row
     if ($('#' + row_id).length){
@@ -411,4 +456,5 @@ function set_station_select(row_id,node){
     '$("#ht_' + node.value + '").load("/csc/media/html/commons.html #ht_'+ node.value + '");' + 
     '</script></div>';
 }
+
 
