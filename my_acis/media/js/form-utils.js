@@ -457,4 +457,47 @@ function set_station_grid_select(row_id,node){
     '</script></div>';
 }
 
+function set_grid(node, gridRowId){
+    var tbl_row_grid = document.getElementById(gridRowId);
+    var cell1_grid = tbl_row_grid.firstChild.nextSibling.nextSibling.nextSibling;
+    if (node.value == "mly" || node.value == "yly"){
+        cell1_grid.innerHTML='<select id="grid" name="grid">' +
+            '<option value="21" selected>PRISM(1895-Present)</option>'+ 
+            '</select>';
+    }
+    else{
+        cell1_grid.innerHTML='<select id="grid" name="grid">' +
+            '<option value="1" {{checkbox_vals.1_selected}}>NRCC Interpolated(1950-Present)</option>' +
+            '<option value="3" {{checkbox_vals.2_selected}}>NRCC Int. Hi-Res(2007-Present)</option>' +
+            '<option value="4" {{checkbox_vals.4_selected}}>CRCM+NCEP(1970-2000,2040-2070)</option>' +
+            '<option value="5" {{checkbox_vals.5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>' +
+            '<option value="6" {{checkbox_vals.6_selected}}>CRCM+CCSM3(1970-2000,2040-2070)</option>' +
+            '<option value="7" {{checkbox_vals.7_selected}}>HRM3+NCEP(1970-2000,2040-2070)</option>' +
+            '<option value="8" {{checkbox_vals.8_selected}}>HRM3+HadCM3(1970-2000,2040-2070)</option>' +
+            '<option value="9" {{checkbox_vals.8_selected}}>MM5I+NCEP(1970-2000,2040-2070)</option>' +
+            '<option value="10" {{checkbox_vals.10_selected}}>MM5I+CCSM(1970-2000,2040-2070)</option>' +
+            '<option value="11" {{checkbox_vals.11_selected}}>RCM3+NCEP(1970-2000,2040-2070)</option>' +
+            '<option value="12" {{checkbox_vals.12_selected}}>RCM3+CGCM3(1970-2000,2040-2070)</option>' +
+            '<option value="13" {{checkbox_vals.13_selected}}>RCM3+GFDL(1970-2000,2040-2070)</option>' +
+            '<option value="14" {{checkbox_vals.14_selected}}>WRFG+NCEP(1970-2000,2040-2070)</option>' +
+            '<option value="15" {{checkbox_vals.15_selected}}>WRFG+CCSM(1970-2000,2040-2070)</option>' +
+            '<option value="16" {{checkbox_vals.16_selected}}>WRFG+CGCM3(1970-2000,2040-2070)</option>' +
+            '</select>';
+    }
+}
+
+function set_data_summary(node, rowId_t, rowId_s){
+    if (node.value == 'spatial'){
+        document.getElementById(rowId_s).style.display = 'table-row';
+        document.getElementById(rowId_t).style.display = 'none';
+    }
+    else if (node.value =='temporal'){
+        document.getElementById(rowId_s).style.display = 'none';
+        document.getElementById(rowId_t).style.display = 'table-row';
+    }
+    else{
+        document.getElementById(rowId_s).style.display = 'none';
+        document.getElementById(rowId_t).style.display = 'none';
+    }
+}
 

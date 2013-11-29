@@ -366,11 +366,11 @@ def data_gridded(request):
         else:
             e_date = datetime.date(int(form['end_date'][0:4]), int(form['end_date'][4:6]),int(form['end_date'][6:8]))
         days = (e_date - s_date).days
-        #if time range > 1 month or user requests data for more than 1 gridpoint, large request via ftp
-        if days > 31 and 'point' not in form.keys():
+        #if time range > 1 month or user requests data for more than 1 grid point, large request via ftp
+        if days > 31 and 'location' not in form.keys():
             context['large_request'] = \
             'At the moment we do not support data requests that exceed 1 month.\
-             Please limit your request to one gridpoint at a time or a date range of one month or less.\
+             Please limit your request to one grid point at a time or a date range of one month or less.\
              We will support larger requests in the near future. Thank you for your patience!'
             return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
@@ -2545,7 +2545,7 @@ def set_gridded_data_initial(request):
         Get = getattr(request.GET, 'get')
     elif request.method == 'POST':
         Get = getattr(request.POST, 'get')
-    initial['select_grid_by'] = Get('select_grid_by', 'point')
+    initial['select_grid_by'] = Get('select_grid_by', 'location')
     initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
     if initial['select_grid_by'] in ['basin', 'county', 'county_warning_area', 'climate_division']:

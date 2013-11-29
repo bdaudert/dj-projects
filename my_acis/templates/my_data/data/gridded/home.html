@@ -30,7 +30,7 @@
         <td>Select grid by:</td>
         <td>
             <select id="select_grid_by" name="select_grid_by" onchange="set_station_grid_select('area',this);">
-            <option value="point" {{checkbox_vals.point_selected}}>Individual grid point</option>
+            <option value="location" {{checkbox_vals.location_selected}}>Individual grid point</option>
             <option value="county" {{checkbox_vals.county_selected}}>County</option>
             <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
             <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
@@ -75,7 +75,7 @@
         <tr>
         <td>Temporal Resolution: </td>
         <td>
-            <select id="temporal_resolution" name="temporal_resolution" onchange="set_grid_and els(this, 'grid', 'els')">
+            <select id="temporal_resolution" name="temporal_resolution" onchange="set_grid(this, 'grid_type')">
             <option value="dly" {{checkbox_vals.temporal_resolution_dly_selected}}>Daily</option>
             <option value="mly" {{checkbox_vals.temporal_resolution_mly_selected}}>Monthly (PRISM)</option>
             <option value="yly" {{checkbox_vals.temporal_resolution_yly_selected}}>Yearly (PRISM)</option>
@@ -134,7 +134,8 @@
         <td>
             <select id="grid" name="grid">
             <option value="1" {{checkbox_vals.1_selected}}>NRCC Interpolated(1950-Present)</option>
-            <option value="3" {{checkbox_vals.2_selected}}>NRCC Int. Hi-Res(East of Rockies/2007-Present)</option>
+            <option value="3" {{checkbox_vals.2_selected}}>NRCC Int. Hi-Res(2007-Present)</option>
+            <option value="21" {{checkbox_vals.21_selected}}>PRISM(1895-Present)</option>
             <option value="4" {{checkbox_vals.4_selected}}>CRCM+NCEP(1970-2000,2040-2070)</option>
             <option value="5" {{checkbox_vals.5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>
             <option value="6" {{checkbox_vals.6_selected}}>CRCM+CCSM3(1970-2000,2040-2070)</option>
@@ -171,13 +172,13 @@
         </div>
         </td>
         </tr>
-        <tr valign="top" id="summary_type" onchange="set_data_summary(this, 'temp_summary','spat_summary')">
+        <tr valign="top" id="summary_type">
         <td>Data Summary: </td>
         <td>
-            <select id="data_summary" name="data_summary">
+            <select id="data_summary" name="data_summary" onchange="set_data_summary(this, 'temp_summary','spat_summary')">
             <option value="none" {{checkbox_vals.data_summary_none_selected}}>None, just get raw data</option>
             <option value="temporal" {{checkbox_vals.data_summary_temporal_selected}}>Temporal</option>
-            <option value="temporal" {{checkbox_vals.data_summary_temporal_selected}}>Spatial</option>
+            <option value="spatial" {{checkbox_vals.data_summary_temporal_selected}}>Spatial</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -313,6 +314,11 @@
         $("#Docu_select_grid_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_grid_by");
     </script>    
 
+    <div id="Docu_grids" style="display:none;"></div>
+    <script type="text/javascript">                        
+        $("#Docu_grids").load("{{MEDIA_URL}}html/commons.html #Docu_grids");
+    </script>
+
     {%if form_error%}
         {%for key, val in form_error.items%}
             <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
@@ -330,22 +336,26 @@
         <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
         <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
         {%else%}
-        <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
-        <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+        <input type="hidden" id="initial_lat" name="initial_lat" value='40'>
+        <input type="hidden" id="initial_lon" name="initial_lon" value='-111'>
         {%endif%}
     </div>
 
-    <div id="GridpointMap" style="display:none;">
+    <div id="GridpointMap" style="display:block;">
         {%if lat and lon %}
         <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
         <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
         {%else%}
-        <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
-        <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+        <input type="hidden" id="initial_lat" name="initial_lat" value='40'>
+        <input type="hidden" id="initial_lon" name="initial_lon" value='-111'>
         {%endif%}
         <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
         <input type="hidden" id="DATA_URL" name="DATA_URL" value="{{DATA_URL}}">
         <input type="hidden" id="TOOLS_URL" name="DATA_URL" value="{{TOOLS_URL}}">
+        <div id="map-gridpoint" style="width:500px;height:400px;"></div>
+        <script type="text/javascript">
+        initialize_grid_point_map('data_gridded');
+        </script>
     </div>
 
     {%if need_overlay_map%}
