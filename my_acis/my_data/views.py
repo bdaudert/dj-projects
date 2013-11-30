@@ -345,7 +345,7 @@ def data_gridded(request):
         if form_error:
             context['form_error'] = form_error
             return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
-        if form['select_gridded_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
+        if form['select_grid_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
             context['host'] = 'wrcc.dri.edu'
             kml_file_name = form['overlay_state'] + '_' + form['select_grid_by'] + '.kml'
             context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
@@ -353,7 +353,7 @@ def data_gridded(request):
 
         initial,checkbox_vals = set_gridded_data_initial(form)
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
-        display_params_list, params_dict = set_gridded_data_params(pms)
+        display_params_list, params_dict = set_gridded_data_params(form)
         context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
         #Check if data request is large,
         #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
@@ -381,15 +381,16 @@ def data_gridded(request):
             for el in form['elements'].replace(' ','').split(','):
                 prism_elements.append('%s_%s' %(str(form['temporal_resolution']), str(el)))
             form['elements'] = prism_elements
-        req = AcisWS.get_grid_data(form1.cleaned_data, 'griddata_web')
+        req = AcisWS.get_grid_data(form, 'griddata_web')
+        context['req'] = req
         if 'error' in req.keys():
             context['error'] = req['error']
-            context['grid_data'] = {}
+            context['results'] = []
             return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
         #format data
         results = WRCCUtils.format_grid_data(req, form)
         context['results'] = results
-
+        context['req'] = form
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
         form = set_form(request)
@@ -2356,7 +2357,7 @@ def set_gridded_data_params(form):
     if not form:
         return {}
 
-    key_order = ['select_grid_by', 'elements', 'grid', 'start_date', 'end_date', 'data_summary', 'temporal_resolution']
+    key_order = ['select_grid_by', 'elements', 'grid', 'start_date', 'end_date','temporal_resolution', 'data_summary']
     display_params_list = [[] for k in range(len(key_order))]
     params_dict = {}
     for key, val in form.iteritems():
@@ -2374,9 +2375,10 @@ def set_gridded_data_params(form):
             if isinstance(val, list):
                 el_list = val
             elif isinstance(val, str):
-                el_list = val.split(',')
+                el_list = val.replace(' ','').split(',')
             else:
                 el_list = val
+            params_dict['element_list'] = el_list
             elems_long = []
             display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key], '']
             params_dict[key] = ''
@@ -2410,14 +2412,10 @@ def set_gridded_data_params(form):
                         params_dict['lon'] = str(form['location'].split(',')[0])
                     elif 'state' in form.keys():
                         params_dict['state'] = form['state']
-                    elif 'bounding_box' in form.keys():
-                        params_dict['bbox'] = form['bounding_box']
+                    elif 'shape' in form.keys():
+                        params_dict['shape'] = form['shape']
         if key == 'delimiter':
             params_dict['delimiter'] = WRCCData.DELIMITERS[val]
-        elif key == 'show_flags':
-            params_dict['show_flags'] = True
-        elif key == 'show_observation_time' in form1.cleaned_data.keys() and form1.cleaned_data['show_observation_time'] == 'T':
-            params_dict['show_observation_time'] = True
         else:
             try:
                 idx = key_order.index(key)
@@ -2428,6 +2426,12 @@ def set_gridded_data_params(form):
                     display_params_list.insert(1, [WRCCData.DISPLAY_PARAMS[key], str(val)])
     if 'delimiter' not in params_dict.keys():
         params_dict['delimiter'] = ' '
+    if form['data_summary'] == 'temporal':
+        display_params_list.append(['Temporal Summary', form['temporal_summary']])
+        params_dict['temporal_summary'] = form['temporal_summary']
+    if form['data_summary'] == 'spatial':
+        display_params_list.append(['Spatial Summary', form['temporal_summary']])
+        params_dict['spatial_summary'] = form['spatial_summary']
     return display_params_list, params_dict
 
 
@@ -2559,10 +2563,10 @@ def set_gridded_data_initial(request):
     initial['end_date']  = Get('end_date', yesterday)
     initial['grid'] = Get('grid', '1')
     initial['data_summary'] = Get('data_summary', 'none')
-    initial['temporal_summary'] = Get('temporal_summary', None)
-    initial['spatial_summary'] = Get('spatial_summary', None)
+    initial['temporal_summary'] = Get('temporal_summary', 'mean')
+    initial['spatial_summary'] = Get('spatial_summary', 'mean')
     initial['data_format'] = Get('data_format', 'html')
-    initial['delimiter'] = Get('delimiter', ',')
+    initial['delimiter'] = Get('delimiter', 'comma')
     initial['output_file_name'] = Get('output_file_name', 'Output')
     #set the check box values
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
@@ -2570,22 +2574,26 @@ def set_gridded_data_initial(request):
         if area_type == initial['select_grid_by']:
             checkbox_vals[area_type + '_selected'] ='selected'
     for df in ['clm', 'dlm','xl', 'html']:
-        checkbox_vals[df + '_selected'] =''
+        checkbox_vals['data_format_' + df + '_selected'] =''
         if df == initial['data_format']:
-            checkbox_vals[df + '_selected'] ='selected'
+            checkbox_vals['data_format_' + df + '_selected'] ='selected'
     for dl in ['comma', 'tab', 'space', 'colon', 'pipe']:
-        checkbox_vals[dl + '_selected'] =''
+        checkbox_vals['delimiter_' + dl + '_selected'] =''
         if dl == initial['delimiter']:
-            checkbox_vals[dl + '_selected'] ='selected'
+            checkbox_vals['delimiter_' + dl + '_selected'] ='selected'
+    for tr in ['dly','mly','yly']:
+        checkbox_vals['temporal_resolution_' + tr + '_selected'] = ''
+        if tr == initial['temporal_resolution']:
+            checkbox_vals['temporal_resolution_' + tr + '_selected'] = 'selected'
     for ds in ['none','temporal', 'spatial']:
-        checkbox_vals['data_summary' + ds + '_selected'] =''
+        checkbox_vals['data_summary_' + ds + '_selected'] =''
         if ds == initial['data_summary']:
-            checkbox_vals['data_summary' + ds + '_selected'] ='selected'
+            checkbox_vals['data_summary_' + ds + '_selected'] ='selected'
     for st in ['max','min','mean','sum']:
-        checkbox_vals['temporal_summary' + st + '_selected'] =''
-        checkbox_vals['spatial_summary' + st + '_selected'] =''
+        checkbox_vals['temporal_summary_' + st + '_selected'] =''
+        checkbox_vals['spatial_summary_' + st + '_selected'] =''
         if st == initial['temporal_summary']:
-            checkbox_vals['temporal_summary' + st + '_selected'] ='selected'
+            checkbox_vals['temporal_summary_' + st + '_selected'] ='selected'
         if st == initial['spatial_summary']:
-            checkbox_vals['spatial_summary' + st + '_selected'] ='selected'
+            checkbox_vals['spatial_summary_' + st + '_selected'] ='selected'
     return initial, checkbox_vals

@@ -134,7 +134,7 @@
         <td>
             <select id="grid" name="grid">
             <option value="1" {{checkbox_vals.1_selected}}>NRCC Interpolated(1950-Present)</option>
-            <option value="3" {{checkbox_vals.2_selected}}>NRCC Int. Hi-Res(2007-Present)</option>
+            <option value="3" {{checkbox_vals.3_selected}}>NRCC Int. Hi-Res(2007-Present)</option>
             <option value="21" {{checkbox_vals.21_selected}}>PRISM(1895-Present)</option>
             <option value="4" {{checkbox_vals.4_selected}}>CRCM+NCEP(1970-2000,2040-2070)</option>
             <option value="5" {{checkbox_vals.5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>
@@ -178,7 +178,7 @@
             <select id="data_summary" name="data_summary" onchange="set_data_summary(this, 'temp_summary','spat_summary')">
             <option value="none" {{checkbox_vals.data_summary_none_selected}}>None, just get raw data</option>
             <option value="temporal" {{checkbox_vals.data_summary_temporal_selected}}>Temporal</option>
-            <option value="spatial" {{checkbox_vals.data_summary_temporal_selected}}>Spatial</option>
+            <option value="spatial" {{checkbox_vals.data_summary_spatial_selected}}>Spatial</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -190,14 +190,18 @@
         </div>
         </td>
         </tr>
+        {%if initial.data_summary == "temporal"%}
+        <tr valign="top" id="temp_summary" style="display:table-row">
+        {%else%}
         <tr valign="top" id="temp_summary" style="display:none">
+        {%endif%}
         <td>Temporal Summary: </td>
         <td>
             <select id="temporal_summary" name="temporal_summary">
             <option value="max" {{checkbox_vals.temporal_summary_max_selected}}>Maximum</option>
             <option value="min" {{checkbox_vals.temporal_summary_min_selected}}>Minimum</option>
             <option value="mean" {{checkbox_vals.temporal_summary_mean_selected}}>Mean</option>
-            <option value="sum" {{checkbox_vals.temporal_summary_mean_selected}}>Sum</option>
+            <option value="sum" {{checkbox_vals.temporal_summary_sum_selected}}>Sum</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -209,14 +213,18 @@
         </div>
         </td>
         </tr>
+        {%if initial.data_summary == "spatial"%}
+        <tr valign="top" id="spat_summary" style="display:table-row">
+        {%else%}
         <tr valign="top" id="spat_summary" style="display:none">
+        {%endif%}
         <td>Spatial Summary: </td>
         <td>
             <select id="spatial_summary" name="spatial_summary">
             <option value="max" {{checkbox_vals.spatial_summary_max_selected}}>Maximum</option>
             <option value="min" {{checkbox_vals.spatial_summary_min_selected}}>Minimum</option>
             <option value="mean" {{checkbox_vals.spatial_summary_mean_selected}}>Mean</option>
-            <option value="sum" {{checkbox_vals.spatial_summary_mean_selected}}>Sum</option>
+            <option value="sum" {{checkbox_vals.spatial_summary_sum_selected}}>Sum</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -232,10 +240,10 @@
         <td>Data Format: </td>
         <td>
         <select id="data_format" name="data_format" onchange="set_delimiter_and_output_file(this, 'delim','out_file');">
-        <option value="html" selected>Html (display on page)</option>
-        <option value="clm">Columnar, .txt</option>
-        <option value="dlm">Delimited, .dat</option>
-        <option value="xl" >Excel, .xls</option>
+        <option value="html" {{checkbox_vals.data_format_html_selected}}>Html (display on page)</option>
+        <option value="clm" {{checkbox_vals.data_format_clm_selected}}>Columnar, .txt</option>
+        <option value="dlm" {{checkbox_vals.data_format_dlm_selected}}>Delimited, .dat</option>
+        <option value="xl" {{checkbox_vals.data_format_xl_selected}}>Excel, .xls</option>
         </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -252,11 +260,11 @@
         <td>Delimiter:</td>
         <td>
         <select id="delimiter" name="delimiter">
-        <option value="comma" selected>Comma (,)</option>
-        <option value="tab">Tab (    )</option>
-        <option value="space">Space ( )</option>
-        <option value="colon">Colon (:)</option>
-        <option value="pipe">pipe(|)</option>
+        <option value="comma" {{checkbox_vals.delimiter_comma_selected}}>Comma (,)</option>
+        <option value="tab" {{checkbox_vals.delimiter_tab_selected}}>Tab (    )</option>
+        <option value="space" {{checkbox_vals.delimiter_space_selected}}>Space ( )</option>
+        <option value="colon" {{checkbox_vals.delimiter_colon_selected}}>Colon (:)</option>
+        <option value="pipe" {{checkbox_vals.delimiter_pipe_selected}}>pipe(|)</option>
         </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -341,7 +349,11 @@
         {%endif%}
     </div>
 
+    {%if initial.select_grid_by == "location"%}
     <div id="GridpointMap" style="display:block;">
+    {%else%}
+    <div id="GridpointMap" style="display:none;">
+    {%endif%}
         {%if lat and lon %}
         <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
         <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
@@ -515,7 +527,11 @@
 
 
     <p><b>DATA</b>:</p>
-    <p>date range{{params_dict.delimiter}}lat{{params_dict.delimiter}}lon{{params_dict.delimiter}}elev{{params_dict.delimiter}}{%for el in elements%}{{el}}{{params_dict.delimiter}}{%endfor%}</p>
+    {%if initial.data_summary != "none"%}
+    <p>date range{{params_dict.delimiter}}lat{{params_dict.delimiter}}lon{{params_dict.delimiter}}elev{{params_dict.delimiter}}{%for el in params_dict.element_list%}{{el}}{{params_dict.delimiter}}{%endfor%}</p>
+    {%else%}
+    <p>date {{params_dict.delimiter}}lat{{params_dict.delimiter}}lon{{params_dict.delimiter}}elev{{params_dict.delimiter}}{%for el in params_dict.element_list%}{{el}}{{params_dict.delimiter}}{%endfor%}</p>
+    {%endif%}
     {%for row in results%}
     {%for val  in row%}
     {{val}}{{params_dict.delimiter}}

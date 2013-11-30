@@ -354,7 +354,7 @@ function set_area_defaults(area_type){
         lv.label = 'Station IDs';
         lv.value ='266779,050848';
     }
-    if (area_type == 'point'){
+    if (area_type == 'location'){
         lv.label = 'Location (lon/lat)';
         lv.value = '-119,39';
     }
@@ -417,7 +417,7 @@ function set_area_and_map(area_type){
         show_polygon_map();
         hide_gridpoint_map();
     }
-    else if (area_type == 'point'){
+    else if (area_type == 'location'){
         hide_overlay_map();
         hide_polygon_map();
         show_gridpoint_map();
