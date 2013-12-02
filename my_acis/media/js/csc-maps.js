@@ -38,8 +38,13 @@ function initialize_grid_point_map(app) {
         var lon = precise_round(event.latLng.lng(),2);
         var loc = lon + ',' + lat
         if (app == 'gridpoint_time_series'){
-            document.getElementById("lat").value = lat;
-            document.getElementById("lon").value = lon;
+            try{
+                document.getElementById("lat").value = lat;
+                document.getElementById("lon").value = lon;
+            }
+            catch(e){
+                document.getElementById("location").value = lon + ',' + lat;
+            }
             var href = TOOLS_URL +'gridded/grid_point_time_series/?lat=' +
                    lat + '&lon=' + lon;
         }

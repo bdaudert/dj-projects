@@ -5,8 +5,9 @@ $(function () {
         var JSON_URL = document.getElementById("JSON_URL").value;
         var element_long = document.getElementById("element_long").value;
         var element = document.getElementById("element").value;
-        var lat = document.getElementById("lat").value;
-        var lon = document.getElementById("lon").value;
+        var lon_lat = document.getElementById("location").value;
+        var lon = lon_lat.split(",")[0];
+        var lat = lon_lat.split(",")[1];
         var start_date = document.getElementById("start_date").value;
         var end_date = document.getElementById("end_date").value;
         var json_file = document.getElementById("json_file").value;

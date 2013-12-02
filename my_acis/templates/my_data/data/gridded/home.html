@@ -136,17 +136,17 @@
             <option value="1" {{checkbox_vals.1_selected}}>NRCC Interpolated(1950-Present)</option>
             <option value="3" {{checkbox_vals.3_selected}}>NRCC Int. Hi-Res(2007-Present)</option>
             <option value="21" {{checkbox_vals.21_selected}}>PRISM(1895-Present)</option>
-            <option value="4" {{checkbox_vals.4_selected}}>CRCM+NCEP(1970-2000,2040-2070)</option>
+            <option value="4" {{checkbox_vals.4_selected}}>CRCM+NCEP(1970-2000)</option>
             <option value="5" {{checkbox_vals.5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>
             <option value="6" {{checkbox_vals.6_selected}}>CRCM+CCSM3(1970-2000,2040-2070)</option>
-            <option value="7" {{checkbox_vals.7_selected}}>HRM3+NCEP(1970-2000,2040-2070)</option>
+            <option value="7" {{checkbox_vals.7_selected}}>HRM3+NCEP(1970-2000)</option>
             <option value="8" {{checkbox_vals.8_selected}}>HRM3+HadCM3(1970-2000,2040-2070)</option>
-            <option value="9" {{checkbox_vals.8_selected}}>MM5I+NCEP(1970-2000,2040-2070)</option>
+            <option value="9" {{checkbox_vals.8_selected}}>MM5I+NCEP(1970-2000)</option>
             <option value="10" {{checkbox_vals.10_selected}}>MM5I+CCSM(1970-2000,2040-2070)</option>
-            <option value="11" {{checkbox_vals.11_selected}}>RCM3+NCEP(1970-2000,2040-2070)</option>
+            <option value="11" {{checkbox_vals.11_selected}}>RCM3+NCEP(1970-2000)</option>
             <option value="12" {{checkbox_vals.12_selected}}>RCM3+CGCM3(1970-2000,2040-2070)</option>
             <option value="13" {{checkbox_vals.13_selected}}>RCM3+GFDL(1970-2000,2040-2070)</option>
-            <option value="14" {{checkbox_vals.14_selected}}>WRFG+NCEP(1970-2000,2040-2070)</option>
+            <option value="14" {{checkbox_vals.14_selected}}>WRFG+NCEP(1970-2000)</option>
             <option value="15" {{checkbox_vals.15_selected}}>WRFG+CCSM(1970-2000,2040-2070)</option>
             <option value="16" {{checkbox_vals.16_selected}}>WRFG+CGCM3(1970-2000,2040-2070)</option>
             </select>
@@ -255,8 +255,13 @@
         </div>
         </td>
         </tr>
+
         <!--Only show when format is clm or dlm, don't show if xl-->
+        {%if initial.data_format == "html" or initial.data_format == "clm" or initial.data_format == "dlm"%}
         <tr valign="top" id="delim" style="display:table-row">
+        {%else%}
+        <tr valign="top" id="delim" style="display:none">
+        {%endif%}
         <td>Delimiter:</td>
         <td>
         <select id="delimiter" name="delimiter">
@@ -277,7 +282,11 @@
         </td>
         </tr>
         <!--Only show when data_format is clm,xl or dlm, don't show if html-->
+        {%if initial.data_format == "html"%}
         <tr valign="top" id="out_file" style="display:none;">
+        {%else%}
+        <tr valign="top" id="out_file" style="display:table-row;">
+        {%endif%}
         <td>Outputfile Name: </td>
         <td><input type="text" id="output_file_name" name="output_file_name" value="Output"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -530,7 +539,7 @@
     {%if initial.data_summary != "none"%}
     <p>date range{{params_dict.delimiter}}lat{{params_dict.delimiter}}lon{{params_dict.delimiter}}elev{{params_dict.delimiter}}{%for el in params_dict.element_list%}{{el}}{{params_dict.delimiter}}{%endfor%}</p>
     {%else%}
-    <p>date {{params_dict.delimiter}}lat{{params_dict.delimiter}}lon{{params_dict.delimiter}}elev{{params_dict.delimiter}}{%for el in params_dict.element_list%}{{el}}{{params_dict.delimiter}}{%endfor%}</p>
+    <p>date {{params_dict.delimiter}}{%for el in params_dict.element_list%}{{el}}{{params_dict.delimiter}}{%endfor%}</p>
     {%endif%}
     {%for row in results%}
     {%for val  in row%}

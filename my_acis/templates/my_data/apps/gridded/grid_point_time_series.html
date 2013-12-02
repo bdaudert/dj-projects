@@ -15,38 +15,30 @@
 <table cellpadding="10">
 <td valign="top" width="30%">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+    <!--Hidden input for gridpoint map generation-->
     <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
     <input type="hidden" id="DATA_URL" name="DATA_URL" value="{{DATA_URL}}">
     <input type="hidden" id="TOOLS_URL" name="TOOLS_URL" value="{{TOOLS_URL}}">
-    {%if lat and lon %}
-    <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
-    <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+    {%if search_params.lat and search_params.lon %}
+    <input type="hidden" id="initial_lat" name="initial_lat" value={{search_params.lat}}>
+    <input type="hidden" id="initial_lon" name="initial_lon" value={{search_params.lon}}>
     {%else%}
-    <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
-     <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+    <input type="hidden" id="initial_lat" name="initial_lat" value='40.0'>
+     <input type="hidden" id="initial_lon" name="initial_lon" value='-111.0'>
     {%endif%}
     <input type="hidden" id="zoom_level" name="zoom_level" value="5">
     <input type="hidden" id="app" name="app" value="gp_ts">
     <br /><br /><br /><br /><br /><br /><br />
+
     <div id='form0' align="center">
         <form method="post" action="">{% csrf_token %}
         <table class="form">
         {%for field in form0 %}
         <tr>
         <td>{{field.label}}:</td>
-        {%if field.label == "Lat" %}
+        {%if field.label == "Location" %}
         <p class="error">Drag map marker to change location</p>
-        {%if not lat %}
-        <td><input type="text" name="lat" id="lat" value='39.82'></td>
-        {%else%}
-        <td><input type="text" name="lat" id="lat" value={{lat}}></td>
-        {%endif%}
-        {%elif field.label == "Lon" %}
-        {%if not lon %}
-        <td><input type="text" name="lon"  id="lon" value='-98.57'></td>
-        {%else%}
-        <td><input type="text" name="lon" id="lon" value={{lon}}></td>
-        {%endif%}
+        <td><input type="text" id="location" name="location" value="{{search_params.location}}"></td>
         {%else%}
         <td>{{field}}</td>
         {%endif%}
@@ -64,11 +56,27 @@
         <tr><td></td><td>{{field.errors}}</td><td></td></tr>
         {%endif%}
         {%endfor%}
+        <tr>
+        <td></td>
+        <td><div class="pop_link" onClick="ShowHide('Docu_grids')"><b><u>Gridded datasets</u></b> explained</div></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_grid_choices_explained"></div>
+            <script type="text/javascript">                        
+                $("#ht_grid_choices_explained").load("{{MEDIA_URL}}html/commons.html #ht_grid_choices_explained");
+            </script>
+        </div>
+        </td>
+        </tr>
         <tr><td><input type="submit" value="Submit" name="form0"/></td><td></td><td></td></tr>
         </table>
         </form>
     </div>
-    
+
+    <div id="Docu_grids" style="display:none;"></div>
+    <script type="text/javascript">                        
+        $("#Docu_grids").load("{{MEDIA_URL}}html/commons.html #Docu_grids");
+    </script> 
 </td>
 <td valign="top" width="60%">
     <table>
@@ -92,30 +100,30 @@
         $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
     </script>
 
+    <div align="center" id="map-gridpoint" style="width:90%; height:300px;margin: 10px 10px"></div>
+    <script type="text/javascript">
+        initialize_grid_point_map('gridpoint_time_series')
+    </script>
+
+
     {%if error%}
     <p class="error">{{error}}</p>
     {%else%}
     {%if datadict%}
-    <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{s_date}}&end_date={{e_date}}&elements={{elems}}&grid={{grid}}&loc={{lon}},{{lat}}&data_summary=none&temporal_resolution=dly">Get raw data  behind this graphic here!</a>
+    <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{search_params.start_date}}&end_date={{search_params.end_date}}&elements={{search_params.elements}}&grid={{search_params.grid}}&location={{search_params.location}}&data_summary=none&temporal_resolution=dly">Get raw data  behind this graphic here!</a>
     <br />
     <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{MEDIA_URL}}tmp/">
     <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-    <input type="hidden" id="element_long" name="element_long" value="{{element_long}}">
-    <input type="hidden" id="element" name="element" value="{{element}}">
-    <input type="hidden" id="lat" name="lat" value="{{lat}}">
-    <input type="hidden" id="lon" name="lon" value="{{lon}}">
-    <input type="hidden" id="start_date" name="start_date" value="{{start_date}}">
-    <input type="hidden" id="end_date" name="end_date" value="{{end_date}}">
+    <input type="hidden" id="elements_long" name="elements_long" value="{{search_params.elements_long}}">
+    <input type="hidden" id="elements" name="elements" value="{{search_params.elements}}">
+    <input type="hidden" id="location" name="location" value="{{search_params.location}}">
+    <input type="hidden" id="start_date" name="start_date" value="{{search_params.start_date}}">
+    <input type="hidden" id="end_date" name="end_date" value="{{search_params.end_date}}">
     <div id="hc-graph" style="width: 400px%; height: 400px; margin: 10px 10px"></div>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-gp-time-series.js"></script>
     <br />
     {%endif%}
     {%endif%}
-    <div align="center" id="map-gridpoint" style="width:100%; height:380px;margin: 10px 10px"></div>
-    <script type="text/javascript">
-        initialize_grid_point_map('gridpoint_time_series')
-    </script>
-    
 </td>
 </table>
 

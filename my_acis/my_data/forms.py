@@ -115,21 +115,21 @@ SEARCH_AREA_CHOICES = (
 )
 
 GRID_CHOICES = (
-    ('1', 'NRCC Interpolated (US)'),
-    ('3', 'NRCC Hi-Res (East of Rockies)'),
-    ('4', 'CRCM + NCEP (Historical only)'),
-    ('5', 'CRCM + CCSM'),
-    ('6', 'CRCM + CCSM3'),
-    ('7', 'HRM3 + NCEP  (Historical only)'),
-    ('8', 'HRM3 HadCM3'),
-    ('9', 'MM5I + NCEP (Historical only)'),
-    ('10', 'MM5I + CCSM'),
-    ('11', 'RCM3 + NCEP (Historical only)'),
-    ('12', 'RCM3 + CGCM3'),
-    ('13', 'RCM3 + GFDL'),
-    ('14', 'WRFG + NCEP (Historical only)'),
-    ('15', 'WRFG + CCSM'),
-    ('16', 'WRFG + CGCM3'),
+    ('1', 'NRCC Interpolated (1950-Present)'),
+    ('3', 'NRCC Hi-Res(2007-Present)'),
+    ('4', 'CRCM + NCEP(1970-2000)'),
+    ('5', 'CRCM + CCSM(1970-2000,2040-2070)'),
+    ('6', 'CRCM + CCSM3(1970-2000,2040-2070)'),
+    ('7', 'HRM3 + NCEP(1970-2000)'),
+    ('8', 'HRM3 HadCM3(1970-2000,2040-2070)'),
+    ('9', 'MM5I + NCEP(1970-2000)'),
+    ('10', 'MM5I + CCSM(1970-2000,2040-2070)'),
+    ('11', 'RCM3 + NCEP(1970-2000)'),
+    ('12', 'RCM3 + CGCM3(1970-2000,2040-2070)'),
+    ('13', 'RCM3 + GFDL(1970-2000,2040-2070)'),
+    ('14', 'WRFG + NCEP(1970-2000)'),
+    ('15', 'WRFG + CCSM(1970-2000,2040-2070)'),
+    ('16', 'WRFG + CGCM3(1970-2000,2040-2070)'),
 )
 
 #StnData
@@ -1121,33 +1121,27 @@ class ClimateMapForm1(forms.Form):
             self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, initial=grid, help_text=HELP_TEXTS['grids'])
 class GPTimeSeriesForm(forms.Form):
         def __init__(self, *args, **kwargs):
-            lat = kwargs.get('initial', {}).get('lat', None)
-            lon = kwargs.get('initial', {}).get('lon', None)
+            location = kwargs.get('initial', {}).get('location', None)
             start_date = kwargs.get('initial', {}).get('start_date', None)
             end_date = kwargs.get('initial', {}).get('end_date', None)
-            element = kwargs.get('initial', {}).get('element', None)
+            elements = kwargs.get('initial', {}).get('elements', None)
             grid = kwargs.get('initial', {}).get('end_date', None)
             super(GPTimeSeriesForm, self).__init__(*args, **kwargs)
 
-            if lat is None:lat = self.data.get('lat')
-            if lon is None:lon = self.data.get('lon')
+            if location is None:location = self.data.get('location')
             if start_date is None:start_date = self.data.get('start_date')
             if end_date is None:end_date = self.data.get('end_date')
-            if element is None:element = self.data.get('element')
+            if elements is None:elements = self.data.get('elements')
             if grid is None:grid=self.data.get('grid')
 
-            if lat is None:
-                 self.fields['lat'] = forms.FloatField(initial='38.86', required=True, help_text='Valid latitude.')
+            if location is None:
+                 self.fields['location'] = forms.CharField(initial='-111.0,40.0', required=True, help_text='Longitude, Latitude.')
             else:
-                self.fields['lat'] = forms.FloatField(initial=lat, required=True, help_text='Valid latitude.')
-            if lon is None:
-                 self.fields['lon'] = forms.FloatField(initial='-119.76', required=True, help_text='Valid longitude.')
+                self.fields['location'] = forms.CharField(initial=location, required=True, help_text='Longitude, Latitude.')
+            if elements is None:
+                self.fields['elements'] = MultiElementField(required=True, initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
             else:
-                self.fields['lon'] = forms.FloatField(initial=lon, required=True, help_text='Valid longitude.')
-            if element is None:
-                self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, required=False, initial='maxt', help_text=HELP_TEXTS['acis_elements'])
-            else:
-                self.fields['element'] = forms.ChoiceField(choices=ACIS_ELEMENT_CHOICES_SHORT, required=False, initial=element, help_text=HELP_TEXTS['acis_elements'])
+                self.fields['elements'] = MultiElementField(required=True, initial=elements, help_text=HELP_TEXTS['comma_elements'])
             if start_date is None:
                 self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial='20130101', help_text=HELP_TEXTS['date'])
             else:
