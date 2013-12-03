@@ -1029,57 +1029,49 @@ def grid_point_time_series(request):
 
         if form0.is_valid():
             search_params = {}
-            for key, val in form0.cleaned_data:
+            for key, val in form0.cleaned_data.iteritems():
                 search_params[key]=str(val)
-            el_list = form0.cleaned_data['elements'].replace(' ','').split(',')
             #check for base temperature if gdd, hdd, cdd
-            elements = [el for el in el_list]
-            elements_long = ['' for el in el_list]
-            base_temps = ['' for el in el_list]
-            for el_idx, el in enumerate(el_list):
+            elements = ','.join(form0.cleaned_data['elements'])
+            search_params['elements'] = elements
+            search_params['element_list'] = form0.cleaned_data['elements']
+            elements_long = ['' for el in form0.cleaned_data['elements']]
+            base_temps = ['' for el in form0.cleaned_data['elements']]
+            for el_idx, el in enumerate(form0.cleaned_data['elements']):
                 element, base_temp = WRCCUtils.get_el_and_base_temp(el)
                 if base_temp is not None:
                     base_temps[el_idx] = base_temp
-                    elements_long[el_idx] = WRCCData.ACIS_ELEMENTS_DICT[el]['name_long']
+                elements_long[el_idx] = WRCCData.ACIS_ELEMENTS_DICT[element]['name_long']
+                if base_temp:
+                    elements_long[el_idx]+=' ' + str(base_temp)
             search_params['elements_long'] = elements_long
-            search_params['elements'] = elements
             location = form0.cleaned_data['location']
             search_params['lat'] = location.replace(' ','').split(',')[1]
             search_params['lon'] = location.replace(' ','').split(',')[0]
             context['search_params'] = search_params
             #Note: acis takes lon, lat in that order
-            '''
-            form_input = {'location':location, 'elements': form0.cleaned_data['elements'], \
-            'start_date':form0.cleaned_data['start_date'], \
-            'end_date':form0.cleaned_data['end_date'], 'grid':form0.cleaned_data['grid']}
-            '''
             req = AcisWS.get_grid_data(form0.cleaned_data, 'GPTimeSeries')
-            try:
-                data = []
-                dates = []
-                for date_idx, dat in enumerate(req['data']):
-                    if abs(req['data'][date_idx][1] - 999.0) < 0.0001 or abs(req['data'][date_idx][1] + 999.0) < 0.0001:
-                        data.append(None)
+            if not 'data' in req.keys():
+                context['error'] = 'No data found for this set of parameters. Check that your grid has data for the time period you are interested in.'
+                return render_to_response('my_data/apps/gridded/grid_point_time_series.html', context, context_instance=RequestContext(request))
+            data = [[] for el in search_params['element_list']]
+            dates = []
+            for date_idx, dat in enumerate(req['data']):
+                for el_idx in range(1,len(search_params['element_list']) + 1):
+                    if abs(req['data'][date_idx][el_idx] - 999.0) < 0.0001 or abs(req['data'][date_idx][el_idx] + 999.0) < 0.0001:
+                        data[el_idx - 1].append(None)
                     else:
-                        data.append(req['data'][date_idx][1])
-                    #dates.append(str(req['data'][date_idx][0]))
-                    dates.append('%s%s%s' %(str(req['data'][date_idx][0][0:4]), str(req['data'][date_idx][0][5:7]), str(req['data'][date_idx][0][8:10])))
-                context['start_date'] = dates[0]
-                context['end_date'] = dates[-1]
-                datadict = {'data':data, 'dates':dates}
-                context['datadict'] = datadict
-            except:
-                datadict = {}
-                context['datadict'] = datadict
-                if 'error' in req.keys():
-                    context['error'] = str(req['error'])
-                else:
-                    context['error'] = 'Unknown error ocurred when getting data'
+                        data[el_idx - 1].append(req['data'][date_idx][el_idx])
+                dates.append('%s%s%s' %(str(req['data'][date_idx][0][0:4]), str(req['data'][date_idx][0][5:7]), str(req['data'][date_idx][0][8:10])))
+            context['start_date'] = dates[0]
+            context['end_date'] = dates[-1]
+            datadict = {'data':data, 'dates':dates, 'search_params':search_params}
+            context['datadict'] = datadict
             #results_json = str(datadict).replace("\'", "\"")
             results_json = json.dumps(datadict)
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
-            json_file = '%s_gp_ts_%s_%s_%s_%s.json' %(time_stamp, str(form0.cleaned_data['lat']), \
-                str(form0.cleaned_data['lon']), form0.cleaned_data['start_date'], \
+            json_file = '%s_gp_ts_%s_%s_%s_%s.json' %(time_stamp, search_params['lat'], \
+                search_params['lon'], form0.cleaned_data['start_date'], \
                 form0.cleaned_data['end_date'])
             context['json_file'] = json_file
             JSON_URL = TEMP_FILE_DIR

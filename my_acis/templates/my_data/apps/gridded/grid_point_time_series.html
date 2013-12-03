@@ -43,9 +43,9 @@
         <td>{{field}}</td>
         {%endif%}
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        {%if field.label == "Grid"%}
+        {%if field.label == "Elements"%}
         <div class="pop-up">
-            <img alt="GriddedDateDocu" title="GriddedDataDocu" src="{{MEDIA_URL}}img/ACIS_Grids.png" id="ACIS_Grids" width="350" height="300" border="0">
+            <img alt=ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Grid.png" id="ACISElementChoices" width="450" height="450" border="0">
         </div>
         {%else%}
             <div class="pop-up"><p>{{field.help_text}}</p></div>
@@ -114,12 +114,10 @@
     <br />
     <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{MEDIA_URL}}tmp/">
     <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-    <input type="hidden" id="elements_long" name="elements_long" value="{{search_params.elements_long}}">
-    <input type="hidden" id="elements" name="elements" value="{{search_params.elements}}">
-    <input type="hidden" id="location" name="location" value="{{search_params.location}}">
-    <input type="hidden" id="start_date" name="start_date" value="{{search_params.start_date}}">
-    <input type="hidden" id="end_date" name="end_date" value="{{search_params.end_date}}">
-    <div id="hc-graph" style="width: 400px%; height: 400px; margin: 10px 10px"></div>
+    {%for el in search_params.element_list%}
+    <div id="gp_time_series_{{forloop.counter0}}" style="width: 400px%; height: 400px; margin: 10px 10px"></div>
+    <br />
+    {%endfor%}
     <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-gp-time-series.js"></script>
     <br />
     {%endif%}
