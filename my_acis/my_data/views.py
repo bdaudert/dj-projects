@@ -288,7 +288,7 @@ def data_station(request):
         if form['data_format'] != 'html':
             return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],params_dict['delimiter'], WRCCData.FILE_EXTENSIONS[str(form['data_format'])], request=request, output_file_name=str(form['output_file_name']), show_flags=params_dict['show_flags'], show_observation_time=params_dict['show_observation_time'])
 
-   #overlay map generation
+    #overlay map generation
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
         form = set_form(request)
@@ -752,6 +752,141 @@ def clim_prob_maps(request):
     return render_to_response('my_data/apps/gridded/clim_prob_maps.html', context, context_instance=RequestContext(request))
 
 def area_time_series(request):
+    context = {
+        'title': 'Area Time Series',
+    }
+    json_file = request.GET.get('json_file', None)
+    initial,checkbox_vals = set_area_time_series_initial(request)
+    initial_plot, checkbox_vals_plot = set_plot_options(request)
+    join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
+    context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+    #Set up maps if needed
+    context['host'] = 'wrcc.dri.edu'
+    context['area_type'] = initial['select_grid_by']
+    context[initial['select_grid_by']] = WRCCData.AREA_DEFAULTS[initial['select_grid_by']]
+    kml_file = initial['overlay_state'] + '_' + initial['select_grid_by'] + '.kml'
+    context[initial['overlay_state'] + '_selected'] = 'selected'
+    context['kml_file_path'] = WEB_SERVER_DIR +  kml_file
+    #Check if kml file exists, if not generate it
+    try:
+        with open(TEMP_FILE_DIR + kml_file):
+            if os.stat(TEMP_FILE_DIR + kml_file).st_size==0:
+                status = WRCCUtils.generate_kml_file(initial['select_grid_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
+    except IOError:
+        status = WRCCUtils.generate_kml_file(initial['select_grid_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
+
+    if 'formTS' in request.POST:
+        form = set_form(request)
+        #Form Check
+        fields_to_check = ['start_date', 'end_date','elements','connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
+        form_error = check_form(form, fields_to_check)
+        if form_error:
+            context['form_error'] = form_error
+            return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
+        #Set initials
+        initial,checkbox_vals = set_area_time_series_initial(form)
+        initial_plot, checkbox_vals_plot = set_plot_options(form)
+        join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        #Display liust and serach params
+        search_params, display_params_list =  set_area_time_series_params(form)
+        #Set overlay map if neded
+        if form['select_grid_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
+            context['host'] = 'wrcc.dri.edu'
+            kml_file_name = form['overlay_state'] + '_' + form['select_grid_by'] + '.kml'
+            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
+            context['area_type'] = form['select_grid_by']
+        #Data Request
+        #Skip data generation of it has already been performed
+        json_file = request.GET.get('json_file', None)
+        if json_file is not None:
+            context['json_file'] =json_file
+            context['JSON_URL'] = TEMP_FILE_DIR
+            with open(TEMP_FILE_DIR + json_file, 'r') as f:
+                try:
+                    req = WRCCUtils.u_convert(json.loads(f.read()))
+                    if not 'data' in results.keys():
+                        context['error'] = 'No data found in file %s' %json_file
+                        return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
+                except Exception, e:
+                    context['error'] = 'Error when reading %s: %s' (json_file, str(e))
+                    return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
+        else:
+            #set up bbox query for area_type
+            data_request_params,shape_type,shape_coords,PointIn, poly  = set_params_for_shape_queries(search_params)
+            #Find data
+            try:
+                req = AcisWS.GridData(data_request_params)
+                #Find unique lats,lons
+                if 'location' in form.keys():
+                    lats_bbox_unique = [req['meta']['lat']]
+                    lons_bbox_unique = [req['meta']['lon']]
+                else:
+                    lats_bbox_unique = [lat_grid[0] for lat_grid in req['meta']['lat']]
+                    lons_bbox_unique = req['meta']['lon'][0]
+            except Exception, e:
+                context['error'] = 'Error in data request: ' + str(e)
+                return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
+            if not 'data' in req.keys():
+                context['error'] = 'No data found for this set of parameters.'
+                return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
+        context['req'] = req
+
+        #Generate time series from data request
+        summary_time_series = compute_area_time_series_summary(req,search_params,poly,PointIn)
+        #Set context variables and save results
+        context['results']= summary_time_series
+        context['width'] = WRCCData.IMAGE_SIZES[search_params['image_size']][0]
+        context['height'] = WRCCData.IMAGE_SIZES[search_params['image_size']][1]
+        #context['graph_title'] = graph_title
+        #context['graph_subtitle'] = smry + element_name
+        #context['display_params_list'] = display_params_list
+        #Write results to json file
+        json_dict = {
+            'search_params':search_params,
+            #'element_name':element_name,
+            #yAxisText':yAxisText,
+            'data':summary_time_series
+            #'graph_title':graph_title,
+            #'summary':smry
+        }
+        results_json = json.dumps(json_dict)
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+        json_file = '%s_area_time_series.json' %(time_stamp)
+        f = open(TEMP_FILE_DIR + '%s' %(json_file),'w+')
+        f.write(results_json)
+        f.close()
+        context['JSON_URL'] = TEMP_FILE_DIR
+        context['json_file'] = json_file
+
+    #overlay map generation
+    if 'formOverlay' in request.POST:
+        form = set_form(request)
+        context['need_overlay_map'] = True
+        initial, checkbox_vals = set_station_data_initial(request)
+        #Override initial where needed
+        initial['select_grid_by'] = form['select_overlay_by']
+        checkbox_vals[form['select_overlay_by'] + '_selected'] = 'selected'
+        initial['area_type_value'] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
+        initial[form['select_overlay_by']] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
+        initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[form['select_overlay_by']]
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        at = form['select_overlay_by']
+        st = form['overlay_state']
+        context[st + '_selected'] = 'selected'
+        kml_file_name = st + '_' + at + '.kml'
+        dir_location = TEMP_FILE_DIR
+        status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
+        if not status == 'Success':
+            context['overlay_error'] = status
+        else:
+            context['host'] = 'wrcc.dri.edu'
+            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
+            context['area_type'] = form['select_overlay_by']
+
+    return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
+
+def old_area_time_series(request):
     context = {
         'title': 'Area Time Series',
     }
@@ -1236,7 +1371,7 @@ def sodxtrmts(request):
     initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(request)
     initial_pl_opts, checkbox_vals_pl_opts = set_plot_options(request)
     #combine the graph options with the plot options
-    join_graph_plot_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
+    join_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
     context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
 
     #Time Serie Table Generation and graph if desired
@@ -1248,7 +1383,7 @@ def sodxtrmts(request):
         initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(request)
         initial_pl_opts, checkbox_vals_pl_opts = set_plot_options(request)
         #combine the graph options with the plot options
-        join_graph_plot_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
+        join_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
         context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
         #Turn request object into python dict
         form = set_form(request)
@@ -1305,7 +1440,7 @@ def sodxtrmts(request):
                 initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial({'start_year':initial['start_year'], 'end_year':initial['end_year']})
                 initial_pl_opts, checkbox_vals_pl_opts = set_plot_options({})
                 #combine the graph options with the plot options
-                join_graph_plot_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
+                join_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
                 context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
 
         #Data Table generation
@@ -1537,6 +1672,28 @@ def sodsumm(request):
 ##############################
 #Utlities
 ##############################
+
+###########
+#General
+###########
+
+#FORM SANITY CHECKS
+def check_form(form, fields_to_check):
+    '''
+    Sanity check for Sodxtrmst form
+    form is given as dict
+    Note that WRCCformCcheck function names are
+    corresponding to field names
+    '''
+    form_error = {}
+    for field in fields_to_check:
+        checker = getattr(WRCCFormCheck, 'check_' + field)
+        err = checker(form)
+        if err:
+            form_error[WRCCData.DISPLAY_PARAMS[field]] = err
+
+    return form_error
+
 def find_stn_id(form_input_stn):
     '''
     Deals with autofill by station name.
@@ -1583,160 +1740,9 @@ def run_external_script(cmd):
     out, err = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
     return out, err
 
-def set_plot_options(request):
-    initial = {}
-    checkbox_vals = {}
-    if type(request) == dict:
-        def Get(key, default):
-            if key in request.keys():
-                return request[key]
-            else:
-                return default
-    elif request.method == 'GET':
-        Get = getattr(request.GET, 'get')
-    elif request.method == 'POST':
-        Get = getattr(request.POST, 'get')
-    initial['graph_title'] = Get('graph_title','Use default')
-    initial['image_size'] = Get('image_size', 'medium')
-    initial['major_grid']  = Get('major_grid', 'T')
-    initial['minor_grid'] = Get('minor_grid', 'F')
-    initial['connector_line'] = str(Get('connector_line', 'T'))
-    initial['connector_line_width'] = Get('connector_line_width', '1')
-    initial['markers'] = Get('markers', 'T')
-    initial['marker_type'] = Get('marker_type', 'diamond')
-    initial['vertical_axis_min']= Get('vertical_axis_min', 'Use default')
-    initial['vertical_axis_max']= Get('vertical_axis_max', 'Use default')
-    #set the check box values
-    for bl in ['T','F']:
-        for cbv in ['major_grid', 'minor_grid','connector_line', 'markers']:
-            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
-            if initial[cbv] == bl:
-                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
-    for image_size in ['small', 'medium', 'large', 'larger', 'extra_large', 'wide', 'wider', 'widest']:
-        checkbox_vals['image_size' + '_' + image_size + '_selected'] = ''
-        if initial['image_size'] == image_size:
-            checkbox_vals['image_size' + '_' + image_size + '_selected'] = 'selected'
-    for marker_type in ['diamond', 'circle', 'square', 'triangle', 'triangle_down']:
-        checkbox_vals['marker_type' + '_' + marker_type + '_selected'] = ''
-        if initial['marker_type'] == marker_type:
-            checkbox_vals['marker_type' + '_' + marker_type + '_selected'] = 'selected'
-    return initial, checkbox_vals
-
-def set_sodxtrmts_initial(request):
-    initial = {}
-    checkbox_vals = {}
-    if type(request) == dict:
-        def Get(key, default):
-            if key in request.keys():
-                return request[key]
-            else:
-                return default
-    elif request.method == 'GET':
-        Get = getattr(request.GET, 'get')
-    elif request.method == 'POST':
-        Get = getattr(request.POST, 'get')
-    stn_id = Get('stn_id', None)
-    if stn_id is not None:
-        initial['station_id'] = stn_id
-    else:
-        initial['station_id'] = Get('station_id','266779')
-    initial['start_year'] = Get('start_year', 'POR')
-    initial['end_year']  = Get('end_year', yesterday[0:4])
-    initial['monthly_statistic'] = Get('monthly_statistic', 'msum')
-    initial['max_missing_days'] = Get('max_missing_days', '5')
-    initial['start_month'] = Get('start_month', '01')
-    initial['departures_from_averages'] = Get('departures_from_averages', 'F')
-    initial['frequency_analysis'] = Get('frequency_analysis', 'F')
-    initial['less_greater_or_between']= Get('less_greater_or_between', None)
-    initial['threshold_for_less_or_greater']= Get('threshold_for_less_or_greater', None)
-    initial['threshold_low_for_between']= Get('threshold_low_for_between', None)
-    initial['threshold_high_for_between']= Get('threshold_high_for_between', None)
-    initial['generate_graph'] = Get('generate_graph', 'F')
-    #initial['generate_graph']= str(Get('generate_graph', 'F'))
-    element = Get('elements', None)
-    if element is None:element = Get('element', 'pcpn')
-    initial['element'] = element
-    initial['base_temperature'] = Get('base_temperature',None)
-    #FIX ME request.POST.get does not return base_temperature and thresholds
-    if request.POST:
-        ks = ['base_temperature','less_greater_or_between','threshold_for_less_or_greater','threshold_low_for_between','threshold_high_for_between']
-        req_dict = dict(request.POST.items())
-        for k in ks:
-            if k in req_dict.keys():
-                initial[k] = str(req_dict[k])
-
-    #set the check box values
-    for el in WRCCData.SXTR_ELEMENT_LIST:
-        checkbox_vals[el + '_selected'] =''
-        if el == initial['element']:
-            checkbox_vals[el + '_selected'] ='selected'
-    for start_month in ['01','02','03','04','05','06','07','08','09','10','11','12']:
-        for mon_type in ['start_month']:
-            checkbox_vals[mon_type + '_' + start_month + '_selected']=''
-        if initial[mon_type] == start_month:
-            checkbox_vals[mon_type + '_' + start_month + '_selected']='selected'
-    for bl in ['T','F']:
-        for cbv in ['departures_from_averages', 'frequency_analysis', 'generate_graph']:
-            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
-            if initial[cbv] == bl:
-                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
-    for stat in ['mmax','mmin','mave','sd','ndays','rmon','msum']:
-        checkbox_vals[stat + '_selected'] =''
-        if initial['monthly_statistic'] == stat:
-            checkbox_vals[stat + '_selected'] ='selected'
-    for lgb in ['l', 'g', 'b']:
-        checkbox_vals[lgb + '_selected'] =''
-        if initial['less_greater_or_between'] == lgb:
-            checkbox_vals[lgb + '_selected'] ='selected'
-    return initial, checkbox_vals
-
-def set_sodxtrmts_graph_initial(request):
-    initial = {}
-    checkbox_vals = {}
-    if type(request) == dict:
-        def Get(key, default):
-            if key in request.keys():
-                return request[key]
-            else:
-                return default
-    elif request.method == 'GET':
-        Get = getattr(request.GET, 'get')
-    elif request.method == 'POST':
-        Get = getattr(request.POST, 'get')
-    initial['graph_generate_graph']= str(Get('graph_generate_graph', 'F'))
-    initial['graph_start_month'] = Get('graph_start_month', '01')
-    initial['graph_end_month'] = Get('graph_end_month', '02')
-    initial['graph_start_year'] = Get('graph_start_year', Get('start_year', 'POR'))
-    initial['graph_end_year'] = Get('graph_end_year', Get('end_year', '2013'))
-    initial['graph_summary'] = Get('graph_summary', 'mean')
-    initial['graph_show_running_mean'] = Get('graph_show_running_mean', 'T')
-    initial['graph_running_mean_years'] = Get('graph_running_mean_years', '9')
-    initial['graph_plot_incomplete_years'] = Get('graph_plot_incomplete_years', 'F')
-    #initial['json_file'] = Get('json_file', None)
-    #initial['JSON_URL'] = Get('JSON_URL', '/tmp/')
-    for graph_month in ['01','02','03','04','05','06','07','08','09','10','11','12']:
-        for mon_type in ['graph_start_month', 'graph_end_month']:
-            checkbox_vals[mon_type + '_' + graph_month + '_selected']=''
-        if initial[mon_type] == graph_month:
-            checkbox_vals[mon_type + '_' + graph_month + '_selected']='selected'
-    for bl in ['T','F']:
-        for cbv in ['graph_show_running_mean', 'graph_plot_incomplete_years', 'graph_generate_graph']:
-            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
-            if initial[cbv] == bl:
-                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
-    for graph_summary in ['max','min','mean','sum','individual']:
-        checkbox_vals[ 'graph_summary_' + graph_summary + '_selected'] = ''
-        if initial['graph_summary'] == graph_summary:
-            checkbox_vals['graph_summary_' + graph_summary + '_selected'] = 'selected'
-    return initial, checkbox_vals
-
-def join_graph_plot_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts):
-    #combine the graph options with the plot options
-    for key, val in initial_pl_opts.iteritems():
-        initial_graph[key] = val
-    for key, val in checkbox_vals_pl_opts.iteritems():
-        checkbox_vals_graph[key] = val
-
+###################
+#Headers
+####################
 def set_sodxtrmts_head(form):
     #Define Header Order:
     header_order =['station_id','start_year', 'end_year', '','element']
@@ -1772,44 +1778,6 @@ def set_sodxtrmts_head(form):
             header.append([WRCCData.DISPLAY_PARAMS[key], str(form[key])])
     return header
 
-#FORM SANITY CHECKS
-def check_form(form, fields_to_check):
-    '''
-    Sanity check for Sodxtrmst form
-    form is given as dict
-    '''
-    form_error = {}
-    for field in fields_to_check:
-        checker = getattr(WRCCFormCheck, 'check_' + field)
-        err = checker(form)
-        if err:
-            form_error[WRCCData.DISPLAY_PARAMS[field]] = err
-
-    return form_error
-
-def set_sod_initial(request, app_name):
-    stn_id = request.GET.get('stn_id', None)
-    start_date = request.GET.get('start_date', None)
-    end_date  = request.GET.get('end_date', None)
-    start_year = request.GET.get('start_year', None)
-    end_year  = request.GET.get('end_year', None)
-    element = request.GET.get('elements', None)
-    if element is None:element = request.GET.get('element', None)
-    initial ={}
-    if element is not None:initial['element'] = element
-    if stn_id is not None:initial['stn_id'] = stn_id
-    if app_name in ['Sodsumm', 'Sodxtrmts']:
-        initial['date_type'] = 'y'
-        if start_year is not None:initial['start_year'] = start_year
-        if end_year is not None:initial['end_year'] = end_year
-        if start_date is not None and not start_year:initial['start_year'] = start_date[0:4]
-        if end_date is not None and not end_year:initial['end_year'] = end_date[0:4]
-    else:
-        initial['date_type'] = 'd'
-        if start_date is not None:initial['start_date'] = start_date
-        if end_date is not None:initial['end_date'] = end_date
-    return initial
-
 def set_sodsumm_headers(table_list):
     headers = {}
     def set_header(table):
@@ -1841,6 +1809,67 @@ def set_sodsumm_headers(table_list):
          headers[table] = set_header(table)
     return headers
 
+######################
+#Data
+#####################
+def set_params_for_shape_queries(search_params):
+    shape_type = None
+    shape_coords = None
+    PointIn = None
+    poly = None
+    #Set up data request params
+    bbox=''
+    params = {
+        'sdate':search_params['start_date'],
+        'edate':search_params['end_date'],
+        'grid':search_params['grid'],
+        'meta':'ll,elev',
+    }
+    #find element parameter
+    if 'element' in search_params.keys():
+        params['elems'] = search_params['element']
+    elif 'elements' in search_params.keys():
+         params['elems'] = search_params['elements']
+    #Find search area parameters, shape and bounding box if needed
+    key, val, acis_param, name_long, search_type = WRCCUtils.get_search_area_values(search_params, 'gridded')
+    if search_type == 'default':
+        params[acis_param] = val
+    else:
+        #search area county/climdiv/basin/cwa or custom shape
+        # need to find coordinates of shape and enclosing bbox
+        if key == 'shape':
+            shape_coords = val.split(',')
+            shape_coords = [float(s) for s in shape_coords]
+            shape_type, bbox = WRCCUtils.get_bbox(val)
+            if shape_type == 'circle':
+                PointIn = getattr(WRCCUtils,'point_in_circle')
+                poly = shape_coords
+            elif shape_type in ['polygon']:
+                if shape_type == 'bbox':
+                    shape_coords = [shape_coords[0], shape_coords[1], shape_coords[2], \
+                    shape_coords[1], shape_coords[0],shape_coords[3], shape_coords[2],shape_coords[3]]
+                    PointIn = getattr(WRCCUtils,'point_in_poly')
+                    poly = [(shape_coords[2*idx],shape_coords[2*idx+1]) for idx in range(len(shape_coords)/2)]
+        else:
+            #climate_division, county, basin, county_warning_area
+            #Need to find shape coordinates and enclosing bbox
+            #via ACIS general call
+            gen_params={'id':str(val),'meta':'geojson,bbox,name,id'}
+            try:
+                gen_req = AcisWS.General(acis_param, gen_params)
+                bbox = gen_req['meta'][0]['bbox']
+                shape_coords = gen_req['meta'][0]['geojson']['coordinates'][0][0]
+                shape_type = search_params['select_grid_by']
+                PointIn = getattr(WRCCUtils,'point_in_poly')
+                poly = [(shape_coords[2*idx],shape_coords[2*idx+1]) for idx in range(len(shape_coords)/2)]
+            except:
+                pass
+        params['bbox'] = bbox
+    return params, shape_type, shape_coords,PointIn,poly
+
+######################
+#Graphics generation
+######################
 def generate_sodsumm_graphics(results, tab, table):
     cats = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
     if tab =='temp':
@@ -1940,6 +1969,76 @@ def generate_sodsumm_graphics(results, tab, table):
         }
     return table_dict
 
+#####################
+#Results formatting
+#####################
+def compute_area_time_series_summary(req, search_params, poly, PointIn):
+    #Sanity check
+    element_list = search_params['elements'].replace(' ','').split(',')
+    if not 'meta' in req.keys():
+        return []
+    if not 'lat' in req['meta'].keys():
+        return []
+    if not 'data' in req.keys():
+        return []
+    if 'location' in search_params.keys():
+        lats_bbox_unique = [req['meta']['lat']]
+        lons_bbox_unique = [req['meta']['lon']]
+    else:
+        lats_bbox_unique = [lat_grid[0] for lat_grid in req['meta']['lat']]
+        lons_bbox_unique = req['meta']['lon'][0]
+    #Generate time series from data request
+    summary_time_series = [[[str(dat[0])] for dat in req['data']] for el in element_list]
+    #list of list holding just the data values for each day at each gridpoint
+    values_poly = [[[] for dat in req['data']] for el in element_list]
+    #Check each bbox unique lat, lon combintation for containment in the polygon
+    for lat_idx,lat in enumerate(lats_bbox_unique):
+        for lon_idx, lon in enumerate(lons_bbox_unique):
+            #see if lat/lon inside poly
+            if not poly:
+                point_in = True
+            else:
+                point_in = PointIn(lon, lat, poly)
+            if point_in:
+                #point lies witin shape, add data to data_poly
+                for date_idx, date_data in enumerate(req['data']):
+                    for el_idx, el in enumerate(element_list):
+                        if 'location' in search_params.keys():
+                            try:
+                                val = float(date_data[el_idx+1])
+                            except:
+                                val = None
+                        else:
+                            try:
+                                val = float(date_data[el_idx+1][lat_idx][lon_idx])
+                            except:
+                                val = None
+
+                        if val:
+                            if abs(val + 999.0) > 0.001 and abs(val - 999.0)>0.001:
+                                values_poly[el_idx][date_idx].append(val)
+    #Summarize data
+    for el_idx, el in enumerate(element_list):
+        if not values_poly[el_idx]:
+            summary_time_series[el_idx][date_idx].append('-----')
+        else:
+            for date_idx, val_list in enumerate(values_poly[el_idx]):
+                if not val_list:
+                    summary_time_series[el_idx][date_idx].append('-----')
+                    continue
+                if search_params['spatial_summary'] == 'sum':
+                    summary_time_series[el_idx][date_idx].append(round(sum(val_list),2))
+                elif search_params['spatial_summary'] == 'max':
+                    summary_time_series[el_idx][date_idx].append(round(max(val_list),2))
+                elif search_params['spatial_summary'] == 'min':
+                    summary_time_series[el_idx][date_idx].append(round(min(val_list),2))
+                elif search_params['spatial_summary'] == 'mean':
+                    if val_list:
+                        summary_time_series[el_idx][date_idx].append(round(sum(val_list) / len(val_list),2))
+                    else:
+                        summary_time_series[el_idx][date_idx].append('-----')
+    return summary_time_series
+
 def write_monthly_aves_results(req, form_data, monthly_aves):
     results = [{} for k in form_data['elements']]
     for el_idx, el in enumerate(form_data['elements']):
@@ -2029,11 +2128,15 @@ def write_monthly_aves_meta(req, form_data):
     '''
     return meta
 
+#############################
+#Display and search params
+##############################
+
 def set_area_time_series_params(form):
     key_order = ['element', 'start_date', 'end_date', 'summary', 'grid', 'show_running_mean', 'running_mean_days', 'graph_title']
     display_params_list = [[] for k in range(len(key_order))]
     search_params = {}
-    for key, val in form.cleaned_data.iteritems():
+    for key, val in form.iteritems():
         #Convert to string to avoid unicode issues
         search_params[key] = str(val)
         if key == 'grid':
@@ -2055,24 +2158,22 @@ def set_area_time_series_params(form):
 
 def set_gridded_data_params(form):
     #display_params_list used to dispaly search params to user
-    #params_dict iused to link to relevant apps in html doc
+    #params_dict used to link to relevant apps in html doc
     if not form:
         return {}
 
     key_order = ['select_grid_by', 'elements', 'grid', 'start_date', 'end_date','temporal_resolution', 'data_summary']
     display_params_list = [[] for k in range(len(key_order))]
-    params_dict = {}
+    params_dict = {'area_type_value':form[form['select_grid_by']]}
     for key, val in form.iteritems():
         #Convert to string to avoid unicode issues
-        if key != 'elements':
-            form[key] = str(val)
+        params_dict[key] = str(val)
 
         if key == 'grid':
             display_params_list[2] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.GRID_CHOICES[val]]
-            params_dict['grid'] = val
         elif key in ['data_summary','temporal_resolution']:
             display_params_list[3] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[val]]
-            params_dict[WRCCData.DISPLAY_PARAMS[key]] = WRCCData.DISPLAY_PARAMS[val]
+            #params_dict[WRCCData.DISPLAY_PARAMS[key]] = WRCCData.DISPLAY_PARAMS[val]
         elif key == 'elements':
             if isinstance(val, list):
                 el_list = val
@@ -2085,12 +2186,8 @@ def set_gridded_data_params(form):
                 params_dict['element'] =  el_list[0]
             elems_long = []
             display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key], '']
-            params_dict[key] = ''
+            #params_dict[key] = ''
             for el_idx, el in enumerate(el_list):
-                if el_idx < len(el_list):
-                    params_dict[key]+=el + ','
-                else:
-                    params_dict[key]+=el
                 try:
                     int(el[3:5])
                     display_params_list[1][1]+=WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5]
@@ -2111,20 +2208,12 @@ def set_gridded_data_params(form):
                     el = val[0];base_temp=''
                 if str(el) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
                     params_dict['element'] = el + base_temp
-                    if 'location' in form.keys():
-                        params_dict['lat'] = str(form['location'].split(',')[1])
-                        params_dict['lon'] = str(form['location'].split(',')[0])
-                    elif 'state' in form.keys():
-                        params_dict['state'] = form['state']
-                    elif 'shape' in form.keys():
-                        params_dict['shape'] = form['shape']
         if key == 'delimiter':
             params_dict['delimiter'] = WRCCData.DELIMITERS[val]
         else:
             try:
                 idx = key_order.index(key)
                 display_params_list[idx] = [WRCCData.DISPLAY_PARAMS[key], str(val)]
-                params_dict[key] = str(val)
             except ValueError:
                 if key in ['basin', 'county_warning_area', 'climate_division', 'state', 'bounding_box', 'shape']:
                     display_params_list.insert(1, [WRCCData.DISPLAY_PARAMS[key], str(val)])
@@ -2132,10 +2221,8 @@ def set_gridded_data_params(form):
         params_dict['delimiter'] = ' '
     if form['data_summary'] == 'temporal':
         display_params_list.append(['Temporal Summary', form['temporal_summary']])
-        params_dict['temporal_summary'] = form['temporal_summary']
     if form['data_summary'] == 'spatial':
         display_params_list.append(['Spatial Summary', form['temporal_summary']])
-        params_dict['spatial_summary'] = form['spatial_summary']
     return display_params_list, params_dict
 
 
@@ -2192,6 +2279,186 @@ def set_station_data_params(form):
     if 'delimiter' not in params_dict.keys():
         params_dict['delimiter'] = ' '
     return display_params_list, params_dict
+
+##################
+#Initialization
+###################
+def join_initials(initial,initial_2, checkbox_vals,checkbox_vals_2):
+    #combine the graph options with the plot options
+    for key, val in initial_2.iteritems():
+        initial[key] = val
+    for key, val in checkbox_vals_2.iteritems():
+        checkbox_vals[key] = val
+
+def set_plot_options(request):
+    initial = {}
+    checkbox_vals = {}
+    if type(request) == dict:
+        def Get(key, default):
+            if key in request.keys():
+                return request[key]
+            else:
+                return default
+    elif request.method == 'GET':
+        Get = getattr(request.GET, 'get')
+    elif request.method == 'POST':
+        Get = getattr(request.POST, 'get')
+    initial['graph_title'] = Get('graph_title','Use default')
+    initial['image_size'] = Get('image_size', 'medium')
+    initial['major_grid']  = Get('major_grid', 'T')
+    initial['minor_grid'] = Get('minor_grid', 'F')
+    initial['connector_line'] = str(Get('connector_line', 'T'))
+    initial['connector_line_width'] = Get('connector_line_width', '1')
+    initial['markers'] = Get('markers', 'T')
+    initial['marker_type'] = Get('marker_type', 'diamond')
+    initial['vertical_axis_min']= Get('vertical_axis_min', 'Use default')
+    initial['vertical_axis_max']= Get('vertical_axis_max', 'Use default')
+    #set the check box values
+    for bl in ['T','F']:
+        for cbv in ['major_grid', 'minor_grid','connector_line', 'markers']:
+            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
+            if initial[cbv] == bl:
+                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
+    for image_size in ['small', 'medium', 'large', 'larger', 'extra_large', 'wide', 'wider', 'widest']:
+        checkbox_vals['image_size' + '_' + image_size + '_selected'] = ''
+        if initial['image_size'] == image_size:
+            checkbox_vals['image_size' + '_' + image_size + '_selected'] = 'selected'
+    for marker_type in ['diamond', 'circle', 'square', 'triangle', 'triangle_down']:
+        checkbox_vals['marker_type' + '_' + marker_type + '_selected'] = ''
+        if initial['marker_type'] == marker_type:
+            checkbox_vals['marker_type' + '_' + marker_type + '_selected'] = 'selected'
+    return initial, checkbox_vals
+
+def set_sod_initial(request, app_name):
+    stn_id = request.GET.get('stn_id', None)
+    start_date = request.GET.get('start_date', None)
+    end_date  = request.GET.get('end_date', None)
+    start_year = request.GET.get('start_year', None)
+    end_year  = request.GET.get('end_year', None)
+    element = request.GET.get('elements', None)
+    if element is None:element = request.GET.get('element', None)
+    initial ={}
+    if element is not None:initial['element'] = element
+    if stn_id is not None:initial['stn_id'] = stn_id
+    if app_name in ['Sodsumm', 'Sodxtrmts']:
+        initial['date_type'] = 'y'
+        if start_year is not None:initial['start_year'] = start_year
+        if end_year is not None:initial['end_year'] = end_year
+        if start_date is not None and not start_year:initial['start_year'] = start_date[0:4]
+        if end_date is not None and not end_year:initial['end_year'] = end_date[0:4]
+    else:
+        initial['date_type'] = 'd'
+        if start_date is not None:initial['start_date'] = start_date
+        if end_date is not None:initial['end_date'] = end_date
+    return initial
+
+def set_sodxtrmts_initial(request):
+    initial = {}
+    checkbox_vals = {}
+    if type(request) == dict:
+        def Get(key, default):
+            if key in request.keys():
+                return request[key]
+            else:
+                return default
+    elif request.method == 'GET':
+        Get = getattr(request.GET, 'get')
+    elif request.method == 'POST':
+        Get = getattr(request.POST, 'get')
+    stn_id = Get('stn_id', None)
+    if stn_id is not None:
+        initial['station_id'] = stn_id
+    else:
+        initial['station_id'] = Get('station_id','266779')
+    initial['start_year'] = Get('start_year', 'POR')
+    initial['end_year']  = Get('end_year', yesterday[0:4])
+    initial['monthly_statistic'] = Get('monthly_statistic', 'msum')
+    initial['max_missing_days'] = Get('max_missing_days', '5')
+    initial['start_month'] = Get('start_month', '01')
+    initial['departures_from_averages'] = Get('departures_from_averages', 'F')
+    initial['frequency_analysis'] = Get('frequency_analysis', 'F')
+    initial['less_greater_or_between']= Get('less_greater_or_between', None)
+    initial['threshold_for_less_or_greater']= Get('threshold_for_less_or_greater', None)
+    initial['threshold_low_for_between']= Get('threshold_low_for_between', None)
+    initial['threshold_high_for_between']= Get('threshold_high_for_between', None)
+    initial['generate_graph'] = Get('generate_graph', 'F')
+    #initial['generate_graph']= str(Get('generate_graph', 'F'))
+    element = Get('elements', None)
+    if element is None:element = Get('element', 'pcpn')
+    initial['element'] = element
+    initial['base_temperature'] = Get('base_temperature',None)
+    #FIX ME request.POST.get does not return base_temperature and thresholds
+    if request.POST:
+        ks = ['base_temperature','less_greater_or_between','threshold_for_less_or_greater','threshold_low_for_between','threshold_high_for_between']
+        req_dict = dict(request.POST.items())
+        for k in ks:
+            if k in req_dict.keys():
+                initial[k] = str(req_dict[k])
+
+    #set the check box values
+    for el in WRCCData.SXTR_ELEMENT_LIST:
+        checkbox_vals[el + '_selected'] =''
+        if el == initial['element']:
+            checkbox_vals[el + '_selected'] ='selected'
+    for start_month in ['01','02','03','04','05','06','07','08','09','10','11','12']:
+        for mon_type in ['start_month']:
+            checkbox_vals[mon_type + '_' + start_month + '_selected']=''
+        if initial[mon_type] == start_month:
+            checkbox_vals[mon_type + '_' + start_month + '_selected']='selected'
+    for bl in ['T','F']:
+        for cbv in ['departures_from_averages', 'frequency_analysis', 'generate_graph']:
+            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
+            if initial[cbv] == bl:
+               checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
+    for stat in ['mmax','mmin','mave','sd','ndays','rmon','msum']:
+        checkbox_vals[stat + '_selected'] =''
+        if initial['monthly_statistic'] == stat:
+            checkbox_vals[stat + '_selected'] ='selected'
+    for lgb in ['l', 'g', 'b']:
+        checkbox_vals[lgb + '_selected'] =''
+        if initial['less_greater_or_between'] == lgb:
+            checkbox_vals[lgb + '_selected'] ='selected'
+    return initial, checkbox_vals
+
+def set_sodxtrmts_graph_initial(request):
+    initial = {}
+    checkbox_vals = {}
+    if type(request) == dict:
+        def Get(key, default):
+            if key in request.keys():
+                return request[key]
+            else:
+                return default
+    elif request.method == 'GET':
+        Get = getattr(request.GET, 'get')
+    elif request.method == 'POST':
+        Get = getattr(request.POST, 'get')
+    initial['graph_generate_graph']= str(Get('graph_generate_graph', 'F'))
+    initial['graph_start_month'] = Get('graph_start_month', '01')
+    initial['graph_end_month'] = Get('graph_end_month', '02')
+    initial['graph_start_year'] = Get('graph_start_year', Get('start_year', 'POR'))
+    initial['graph_end_year'] = Get('graph_end_year', Get('end_year', '2013'))
+    initial['graph_summary'] = Get('graph_summary', 'mean')
+    initial['graph_show_running_mean'] = Get('graph_show_running_mean', 'T')
+    initial['graph_running_mean_years'] = Get('graph_running_mean_years', '9')
+    initial['graph_plot_incomplete_years'] = Get('graph_plot_incomplete_years', 'F')
+    #initial['json_file'] = Get('json_file', None)
+    #initial['JSON_URL'] = Get('JSON_URL', '/tmp/')
+    for graph_month in ['01','02','03','04','05','06','07','08','09','10','11','12']:
+        for mon_type in ['graph_start_month', 'graph_end_month']:
+            checkbox_vals[mon_type + '_' + graph_month + '_selected']=''
+        if initial[mon_type] == graph_month:
+            checkbox_vals[mon_type + '_' + graph_month + '_selected']='selected'
+    for bl in ['T','F']:
+        for cbv in ['graph_show_running_mean', 'graph_plot_incomplete_years', 'graph_generate_graph']:
+            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
+            if initial[cbv] == bl:
+                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
+    for graph_summary in ['max','min','mean','sum','individual']:
+        checkbox_vals[ 'graph_summary_' + graph_summary + '_selected'] = ''
+        if initial['graph_summary'] == graph_summary:
+            checkbox_vals['graph_summary_' + graph_summary + '_selected'] = 'selected'
+    return initial, checkbox_vals
 
 def set_station_data_initial(request):
     initial = {}
@@ -2302,4 +2569,48 @@ def set_gridded_data_initial(request):
             checkbox_vals['temporal_summary_' + st + '_selected'] ='selected'
         if st == initial['spatial_summary']:
             checkbox_vals['spatial_summary_' + st + '_selected'] ='selected'
+    return initial, checkbox_vals
+
+def set_area_time_series_initial(request):
+    initial = {}
+    checkbox_vals = {}
+    if type(request) == dict:
+        def Get(key, default):
+            if key in request.keys():
+                return request[key]
+            else:
+                return default
+    elif request.method == 'GET':
+        Get = getattr(request.GET, 'get')
+    elif request.method == 'POST':
+        Get = getattr(request.POST, 'get')
+    initial['select_grid_by'] = Get('select_grid_by', 'location')
+    initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
+    initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
+    if initial['select_grid_by'] in ['basin', 'county', 'county_warning_area', 'climate_division']:
+        initial['area_type_label']+='/Name'
+    initial['area_type_value'] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
+    initial['overlay_state'] = Get('overlay_state', 'nv')
+    initial['autofill_list'] = 'US_' + initial['select_grid_by']
+    initial['elements'] = Get('elements', 'maxt,mint,pcpn')
+    initial['start_date']  = Get('start_date', fourtnight)
+    initial['end_date']  = Get('end_date', yesterday)
+    initial['grid'] = Get('grid', '1')
+    initial['spatial_summary'] = Get('spatial_summary', 'mean')
+    initial['show_running_mean'] = Get('show_running_mean', 'T')
+    initial['running_mean_days'] = Get('running_mean_days', '9')
+    #set the check box values
+    for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
+        checkbox_vals[area_type + '_selected'] =''
+        if area_type == initial['select_grid_by']:
+            checkbox_vals[area_type + '_selected'] ='selected'
+    for st in ['max','min','mean','sum']:
+        checkbox_vals['spatial_summary_' + st + '_selected'] =''
+        if st == initial['spatial_summary']:
+            checkbox_vals['spatial_summary_' + st + '_selected'] ='selected'
+    for bl in ['T','F']:
+        for cbv in ['show_running_mean']:
+            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
+            if initial[cbv] == bl:
+                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
     return initial, checkbox_vals

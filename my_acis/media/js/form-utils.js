@@ -1,3 +1,17 @@
+function show_plot_opts(rowClass){
+    var trs = document.getElementsByClassName(rowClass);
+    //Show all or none
+    if (trs[0].style.display == 'none'){
+        var disp = "table-row";
+    }
+    else{
+        var disp = "none";
+    }
+    for (idx=0;idx<trs.length;idx++){
+        trs[idx].style.display = disp;
+    }
+}
+
 function set_autofill(datalist){
     dl = document.createElement('datalist');
     dl.setAttribute('id',datalist);

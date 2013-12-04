@@ -473,6 +473,34 @@ class MultiElementField(forms.CharField):
                 mark_safe(" or cddxx, hddxx, gddxx where xx is the base temperature in Fahrenheit, e.g. 68<br/>") + \
                 mark_safe("You entered: %s" %str(el)))
 
+class MultiGridElementField(forms.CharField):
+    def to_python(self, el_tuple):
+        "Normalize data to a list of strings."
+        # Return an empty list if no input was given.
+        if not el_tuple:
+            raise forms.ValidationError("Need at least one element.")
+            #return []
+        else:
+            if isinstance(el_tuple, list):
+                el_list = [str(el).strip(' ') for el in el_list]
+            else:
+                el_list =  el_tuple.split(',')
+                el_list = [str(el).strip(' ') for el in el_list]
+            return el_list
+
+    def validate(self, el_tuple):
+        "Check if value consists only of valid coop_station_ids."
+        for el in el_tuple:
+            el_strip= re.sub(r'(\d+)(\d+)', '', el) #strip digits from gddxx, hddxx, cddxx
+            if str(el_strip) not in ['pcpn','maxt', 'mint', 'avgt', 'cdd', 'hdd', 'gdd']:
+                raise forms.ValidationError(\
+                mark_safe("elements should be a comma separated list of valid element choices:<br/>") + \
+                mark_safe("pcpn, maxt, mint, avgt <br/>") + \
+                mark_safe("cdd, hdd, gdd <br/>") + \
+                mark_safe(" or cddxx, hddxx, gddxx where xx is the base temperature in Fahrenheit, e.g. 68<br/>") + \
+                mark_safe("You entered: %s" %str(el)))
+
+
 class MultiPRISMElementField(forms.CharField):
     def to_python(self, el_tuple):
         "Normalize data to a list of strings."
@@ -818,7 +846,7 @@ class GridDataForm1(forms.Form):
             self.fields['elements'] = MultiPRISMElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
             self.fields['grid'] = forms.ChoiceField(choices=([('21', 'PRISM')]), help_text=HELP_TEXTS['grids'])
         elif temporal_resolution == 'dly':
-            self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
+            self.fields['elements'] = MultiGridElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
             self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
         if select_grid_by == 'point':
             if temporal_resolution in ['mly', 'yly']:
@@ -904,7 +932,7 @@ class GridDataForm3(forms.Form):
             self.fields['elements'] = MultiPRISMElementField(initial='maxt,pcpn', help_text=HELP_TEXTS['comma_elements'])
             self.fields['grid'] = forms.ChoiceField(choices=([('21', 'PRISM')]), help_text=HELP_TEXTS['grids'])
         else:
-            self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
+            self.fields['elements'] = MultiGridElementField(initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
             self.fields['grid'] = forms.ChoiceField(choices=GRID_CHOICES, help_text=HELP_TEXTS['grids'])
         self.fields['start_date'] = MyDateField(max_length=10, min_length=8, initial=kwargs.get('initial', {}).get('start_date', None), help_text=HELP_TEXTS['date'])
         self.fields['end_date'] = MyDateField(max_length=10, min_length=8, initial=kwargs.get('initial', {}).get('end_date', None), help_text=HELP_TEXTS['date'])
@@ -1139,9 +1167,9 @@ class GPTimeSeriesForm(forms.Form):
             else:
                 self.fields['location'] = forms.CharField(initial=location, required=True, help_text='Longitude, Latitude.')
             if elements is None:
-                self.fields['elements'] = MultiElementField(required=True, initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
+                self.fields['elements'] = MultiGridElementField(required=True, initial='maxt,mint,pcpn', help_text=HELP_TEXTS['comma_elements'])
             else:
-                self.fields['elements'] = MultiElementField(required=True, initial=elements, help_text=HELP_TEXTS['comma_elements'])
+                self.fields['elements'] = MultiGridElementField(required=True, initial=elements, help_text=HELP_TEXTS['comma_elements'])
             if start_date is None:
                 self.fields['start_date'] = MyDateField(max_length=10, min_length=8, required = False, initial='20130101', help_text=HELP_TEXTS['date'])
             else:

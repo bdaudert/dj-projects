@@ -50,7 +50,7 @@
         </tr>
         <tr>
         <td></td>
-        <td><div class="pop_link" onClick="ShowHide('Docu_select_grid_by')"><b><u>Grid Selection Choices</u></b> explained</div></td>
+        <td><div class="pop_link" onClick="ShowHide('Docu_select_grid_by')"><b><u>Area Selection Choices</u></b> explained</div></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_gridselections_explained"></div>
@@ -524,19 +524,22 @@
 
     {%if results %}
     <!--Link to relevant applications-->
-    {%if params_dict.element%}
-    {%if params_dict.state %}
-    <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&element={{params_dict.element}}&grid={{params_dict.grid}}&state={{params_dict.state}}">Generate a climate summary map  for this data set here!</a>
+
+    <!--Linke to Gridpoint Time Series-->
+    {%if params_dict.location%}
+    <a target="_blank" href="{{TOOLS_URL}}gridded/grid_point_time_series/?location={{params_dict.location}}&&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&grid={{params_dict.grid}}">Generate a time series graph!</a>
+    {%else%}
+    {%if params_dict.data_summary == "temporal"%} 
+    <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&grid={{params_dict.grid}}&{{params_dict.select_grid_by}}={{params_dict.area_type_value}}">Generate a climate summary map  for this data set here!</a>
     <br />
+    {%elif params_dict.data_summary == "spatial"%}
+    <a target="_blank" href="{{TOOLS_URL}}gridded/area_time_series/?start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&grid={{params_dict.grid}}&{{params_dict.select_grid_by}}={{params_dict.area_type_value}}">Generate a time series graph!</a>
     {%endif%}
-    {%if params_dict.lat%}
-    <a target="_blank" href="{{TOOLS_URL}}gridded/grid_point_time_series/?lat={{params_dict.lat}}&lon={{params_dict.lon}}&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&element={{params_dict.element}}&grid={{params_dict.grid}}">Generate a time series for this data set here!</a>
     {%endif%}
-    {%endif%}<!--end if params_dict.element and not figure_files-->
 
 
     <p><b>DATA</b>:</p>
-    {%if initial.data_summary != "none"%}
+    {%if initial.data_summary != "spatial"%}
     <p>date range{{params_dict.delimiter}}lat{{params_dict.delimiter}}lon{{params_dict.delimiter}}elev{{params_dict.delimiter}}{%for el in params_dict.element_list%}{{el}}{{params_dict.delimiter}}{%endfor%}</p>
     {%else%}
     <p>date {{params_dict.delimiter}}{%for el in params_dict.element_list%}{{el}}{{params_dict.delimiter}}{%endfor%}</p>
