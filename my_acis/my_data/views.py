@@ -813,25 +813,16 @@ def area_time_series(request):
                     return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
         else:
             #set up bbox query for area_type
-            data_request_params,shape_type,shape_coords,PointIn, poly  = set_params_for_shape_queries(search_params)
+            data_request_params,shape_type,shape_coords,PointIn,poly  = set_params_for_shape_queries(search_params)
             #Find data
             try:
                 req = AcisWS.GridData(data_request_params)
-                #Find unique lats,lons
-                if 'location' in form.keys():
-                    lats_bbox_unique = [req['meta']['lat']]
-                    lons_bbox_unique = [req['meta']['lon']]
-                else:
-                    lats_bbox_unique = [lat_grid[0] for lat_grid in req['meta']['lat']]
-                    lons_bbox_unique = req['meta']['lon'][0]
             except Exception, e:
                 context['error'] = 'Error in data request: ' + str(e)
                 return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
             if not 'data' in req.keys():
                 context['error'] = 'No data found for this set of parameters.'
                 return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
-        context['req'] = req
-
         #Generate time series from data request
         summary_time_series = compute_area_time_series_summary(req,search_params,poly,PointIn)
         #Set context variables and save results
@@ -1816,7 +1807,7 @@ def set_params_for_shape_queries(search_params):
     shape_type = None
     shape_coords = None
     PointIn = None
-    poly = None
+    poly = None #set of  of lat,lon coords, needed to check if point in poly
     #Set up data request params
     bbox=''
     params = {
@@ -1831,41 +1822,49 @@ def set_params_for_shape_queries(search_params):
     elif 'elements' in search_params.keys():
          params['elems'] = search_params['elements']
     #Find search area parameters, shape and bounding box if needed
-    key, val, acis_param, name_long, search_type = WRCCUtils.get_search_area_values(search_params, 'gridded')
-    if search_type == 'default':
-        params[acis_param] = val
-    else:
-        #search area county/climdiv/basin/cwa or custom shape
-        # need to find coordinates of shape and enclosing bbox
-        if key == 'shape':
-            shape_coords = val.split(',')
-            shape_coords = [float(s) for s in shape_coords]
-            shape_type, bbox = WRCCUtils.get_bbox(val)
+
+    #key, val, acis_param, name_long, search_type = WRCCUtils.get_search_area_values(search_params, 'gridded')
+    if 'location' in search_params.keys():
+        params['loc'] = search_params['location']
+        shape_type = 'location'
+        shape_coords = [float(s) for s in search_params['location'].replace(' ','').split(',')]
+    elif 'state' in search_params.keys():
+        params['state'] = search_params['state']
+        shape_type = 'state'
+    elif 'shape' in search_params.keys():
+        shape_coords = [float(s) for s in search_params['shape'].replace(' ','').split(',')]
+        #Find out what shape it is (circle, bbox, location, polygon)
+        #and find enclosing bbox
+        shape_type, bbox = WRCCUtils.get_bbox(search_params['shape'])
+        #check if we have circle or polygon
+        if shape_type == 'location':
+            params['loc'] = search_params['shape']
+        else:
+            params['bbox'] = bbox
+            if shape_type == 'polygon':
+                PointIn = getattr(WRCCUtils,'point_in_poly')
+                poly = [(shape_coords[2*idx],shape_coords[2*idx+1]) for idx in range(len(shape_coords)/2)]
             if shape_type == 'circle':
                 PointIn = getattr(WRCCUtils,'point_in_circle')
                 poly = shape_coords
-            elif shape_type in ['polygon']:
-                if shape_type == 'bbox':
-                    shape_coords = [shape_coords[0], shape_coords[1], shape_coords[2], \
-                    shape_coords[1], shape_coords[0],shape_coords[3], shape_coords[2],shape_coords[3]]
-                    PointIn = getattr(WRCCUtils,'point_in_poly')
-                    poly = [(shape_coords[2*idx],shape_coords[2*idx+1]) for idx in range(len(shape_coords)/2)]
-        else:
-            #climate_division, county, basin, county_warning_area
-            #Need to find shape coordinates and enclosing bbox
-            #via ACIS general call
-            gen_params={'id':str(val),'meta':'geojson,bbox,name,id'}
-            try:
-                gen_req = AcisWS.General(acis_param, gen_params)
-                bbox = gen_req['meta'][0]['bbox']
-                shape_coords = gen_req['meta'][0]['geojson']['coordinates'][0][0]
-                shape_type = search_params['select_grid_by']
-                PointIn = getattr(WRCCUtils,'point_in_poly')
-                poly = [(shape_coords[2*idx],shape_coords[2*idx+1]) for idx in range(len(shape_coords)/2)]
-            except:
-                pass
-        params['bbox'] = bbox
-    return params, shape_type, shape_coords,PointIn,poly
+    else:
+        #county_warning_area,county, basin,climate_division
+        #Need to make ACIS general call to dinf shape_coords and enclosing bbox
+        shape_type = search_params['select_grid_by']
+        at_acis = WRCCData.SEARCH_AREA_FORM_TO_ACIS[shape_type]
+        val = search_params[search_params['select_grid_by']]
+        gen_params={'id':val,'meta':'geojson,bbox,name,id'}
+        #Make General Call
+        try:
+            gen_req = AcisWS.General(at_acis, gen_params)
+            bbox = gen_req['meta'][0]['bbox']
+            shape_coords = gen_req['meta'][0]['geojson']['coordinates'][0][0]
+            PointIn = getattr(WRCCUtils,'point_in_poly')
+            poly = [(shape_coords[2*idx][0],shape_coords[2*idx+1][1]) for idx in range(len(shape_coords)/2)]
+            params['bbox'] = bbox
+        except:
+            pass
+    return params, shape_type,shape_coords,PointIn,poly
 
 ######################
 #Graphics generation
@@ -2007,16 +2006,15 @@ def compute_area_time_series_summary(req, search_params, poly, PointIn):
                             try:
                                 val = float(date_data[el_idx+1])
                             except:
-                                val = None
+                                continue
                         else:
                             try:
                                 val = float(date_data[el_idx+1][lat_idx][lon_idx])
                             except:
-                                val = None
+                                continue
 
-                        if val:
-                            if abs(val + 999.0) > 0.001 and abs(val - 999.0)>0.001:
-                                values_poly[el_idx][date_idx].append(val)
+                        if abs(val + 999.0) > 0.001 and abs(val - 999.0)>0.001:
+                            values_poly[el_idx][date_idx].append(val)
     #Summarize data
     for el_idx, el in enumerate(element_list):
         if not values_poly[el_idx]:

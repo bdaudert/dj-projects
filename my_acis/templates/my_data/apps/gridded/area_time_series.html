@@ -222,22 +222,6 @@
         {%else%}
         <tr valign="top" class="formGraph" style="display:none;">
         {%endif%}
-        <td>Graph Title:</td>
-        <td><input type="text" id="graph_title" name="graph_title" value="{{initial.graph_title}}"></td>
-        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_graph_title"></div>
-            <script type="text/javascript">                        
-            $("#ht_graph_title").load("{{MEDIA_URL}}html/commons.html #ht_graph_title");
-            </script>
-        </div>
-        </td>
-        </tr>
-        {%if initial.show_plot_opts == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
-        {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
-        {%endif%}
         <td>Image Size: </td>
         <td>
             <select id="image_size" name="image_size">
@@ -640,11 +624,11 @@
     <div id="printable_table" style="display:none;">
         <!--time series table-->
         <!--Header-->
-        <p>{{graph_title}}</p>
-        {%if shape_coords%}
+        <p>{{search_prams.graph_title}}</p>
+        {%if search_params.shape_coords%}
             <p class="pop_link" onClick="ShowHide('shape_coords')"><u>Show/hide polygon boundary coordiates in table data (lon, lat pairs)</u></p>
         {%endif%}
-        <div id="shape_coords" style="display:none;"><b>Boundary coordinates</b>: {{shape_coords}}</div>
+        <div id="shape_coords" style="display:none;"><b>Boundary coordinates</b>: {{search_params.shape_coords}}</div>
         <p class="pop_link" onClick="ShowHide('parameters')"><u>Show/hide other analysis parameters</u></p>
         <div id="parameters" style="display:none;">
         <p>
@@ -657,7 +641,7 @@
         </p>
         </div>
         <b>Data</b>:
-        <p>{{graph_subtitle}}</p>
+        <p>{{search_params.graph_subtitle}}</p>
         <table border=1>
         <th>DATE</th><th>DATA</th>
         {%for date_data in results%}
