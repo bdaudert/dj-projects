@@ -610,9 +610,12 @@
 
     <!--Results section-->
     {%if results%}
-    <div align="center" id="container" style="height:{{height}}px;width:{{width}}px;"></div>
+    {%for el in search_params.element_list%}
+    <div align="center" id="area_time_series_{{forloop.counter0}}" style="height:{{height}}px;width:{{width}}px;"></div>
+    <br />
+    {%endfor%}
     <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-area-ts.js"></script>
-
+    
     <p class="pop_link" onClick="ShowHide('printable_table')"><u>Show/hide table data</u></p>
 
     <img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png" onClick="printNode('printable_table')">
@@ -624,7 +627,7 @@
     <div id="printable_table" style="display:none;">
         <!--time series table-->
         <!--Header-->
-        <p>{{search_prams.graph_title}}</p>
+        <p>{{search_prams.area_description}}</p>
         {%if search_params.shape_coords%}
             <p class="pop_link" onClick="ShowHide('shape_coords')"><u>Show/hide polygon boundary coordiates in table data (lon, lat pairs)</u></p>
         {%endif%}
@@ -637,17 +640,30 @@
             {%if not forloop.first%}, {%endif%}
             {%if forloop.counter|divisibleby:"3" %}<br />{%endif %}
             {{param.0}}: {{param.1}}
-        {% endfor %}
+        {%endfor%}
         </p>
         </div>
+
         <b>Data</b>:
-        <p>{{search_params.graph_subtitle}}</p>
-        <table border=1>
-        <th>DATE</th><th>DATA</th>
-        {%for date_data in results%}
-            <tr>
-                <td>{{date_data.0}}</td><td>{{date_data.1}}</td>
-            </tr>
+        <table>
+        {%for el_data in results %}
+        <td>
+        <table>
+        {%if forloop.first%}
+        <tr><td>Date</td><td>{{search_params.element_list|lookup:0}}</td></tr>
+        {%else%}
+        <td>{{search_params.element_list|lookup:forloop.counter0}}</td></tr>
+        {%endif%}
+        {%for data in el_data%}
+        <tr>
+        {%if forloop.parentloop.first%}
+        <td>{{data.0}}</td>
+        {%endif%}
+        <td>{{data.1}}</td>
+        </tr>
+        {%endfor%}
+        </table>
+        </td>
         {%endfor%}
         </table>
     </div><!--printable table-->

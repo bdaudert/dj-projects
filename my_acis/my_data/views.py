@@ -790,6 +790,8 @@ def area_time_series(request):
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         #Display liust and serach params
         search_params, display_params_list =  set_area_time_series_params(form)
+        #joins plot opts to search_params
+        join_dicts(search_params,initial_plot)
         #Set overlay map if neded
         if form['select_grid_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
             context['host'] = 'wrcc.dri.edu'
@@ -814,6 +816,11 @@ def area_time_series(request):
         else:
             #set up bbox query for area_type
             data_request_params,shape_type,shape_coords,PointIn,poly  = set_params_for_shape_queries(search_params)
+            area_description = WRCCData.DISPLAY_PARAMS[shape_type]
+            if shape_type !='polygon':
+                area_description+= ': ' + form[form['select_grid_by']]
+            search_params['area_description'] = area_description
+
             #Find data
             try:
                 req = AcisWS.GridData(data_request_params)
@@ -825,13 +832,14 @@ def area_time_series(request):
                 return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
         #Generate time series from data request
         summary_time_series = compute_area_time_series_summary(req,search_params,poly,PointIn)
-        #Set context variables and save results
+        context['req'] = summary_time_series
+        #Set rest of search_params,context variables and save results
+        search_params['spatial_summary'] = WRCCData.DISPLAY_PARAMS[form['spatial_summary']]
+        context['search_params'] = search_params
         context['results']= summary_time_series
         context['width'] = WRCCData.IMAGE_SIZES[search_params['image_size']][0]
         context['height'] = WRCCData.IMAGE_SIZES[search_params['image_size']][1]
-        #context['graph_title'] = graph_title
-        #context['graph_subtitle'] = smry + element_name
-        #context['display_params_list'] = display_params_list
+
         #Write results to json file
         json_dict = {
             'search_params':search_params,
@@ -847,7 +855,7 @@ def area_time_series(request):
         f = open(TEMP_FILE_DIR + '%s' %(json_file),'w+')
         f.write(results_json)
         f.close()
-        context['JSON_URL'] = TEMP_FILE_DIR
+        context['JSON_URL'] = WEB_SERVER_DIR
         context['json_file'] = json_file
 
     #overlay map generation
@@ -2131,18 +2139,29 @@ def write_monthly_aves_meta(req, form_data):
 ##############################
 
 def set_area_time_series_params(form):
-    key_order = ['element', 'start_date', 'end_date', 'summary', 'grid', 'show_running_mean', 'running_mean_days', 'graph_title']
+    key_order = ['elements', 'start_date', 'end_date', 'summary', 'grid', 'show_running_mean', 'running_mean_days', 'graph_title']
     display_params_list = [[] for k in range(len(key_order))]
     search_params = {}
+    el_list = form['elements'].replace(' ','').split(',')
+    search_params['element_list'] = el_list
     for key, val in form.iteritems():
         #Convert to string to avoid unicode issues
         search_params[key] = str(val)
         if key == 'grid':
             display_params_list[4] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.GRID_CHOICES[val]]
-        elif key == 'summary':
+        elif key == 'spatial_summary':
             display_params_list[3] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[val]]
-        elif key == 'element':
-            display_params_list[0] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[val]]
+            search_params['spatial_summary_long'] = WRCCData.DISPLAY_PARAMS[key]
+        elif key == 'elements':
+            el_list_long =[]
+            for el in el_list:
+                el_short, base_temp = WRCCUtils.get_el_and_base_temp(el)
+                if base_temp:
+                    el_list_long.append(WRCCData.ACIS_ELEMENTS_DICT[el_short]['name_long'] + ' Base Temp.: ' + base_temp)
+                else:
+                    el_list_long.append(WRCCData.ACIS_ELEMENTS_DICT[el]['name_long'])
+            display_params_list[0] = [WRCCData.DISPLAY_PARAMS[key], ','.join(el_list_long)]
+            search_params['element_list_long'] = el_list_long
         else:
             value = str(val)
             if val =='T':value='Yes'
@@ -2281,6 +2300,11 @@ def set_station_data_params(form):
 ##################
 #Initialization
 ###################
+def join_dicts(d, d_1):
+    for key, val in d_1.iteritems():
+        d[key]=val
+
+
 def join_initials(initial,initial_2, checkbox_vals,checkbox_vals_2):
     #combine the graph options with the plot options
     for key, val in initial_2.iteritems():
