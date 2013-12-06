@@ -119,12 +119,12 @@ $(function () {
                 data = []; 
                 data_max = -9999.0;
                 data_min = 9999.0;
-                for (var date_idx=0;date_idx<datadict.data[el_idx].length;date_idx++) {
-                    year = parseInt(datadict.data[el_idx][date_idx][0].slice(0,4));
-                    month = parseInt(datadict.data[el_idx][date_idx][0].slice(5,7)) - 1;
-                    day = parseInt(datadict.data[el_idx][date_idx][0].slice(8,10));
+                for (var date_idx=0;date_idx<datadict.graph_data[el_idx].length;date_idx++) {
+                    year = parseInt(datadict.graph_data[el_idx][date_idx][0].slice(0,4));
+                    month = parseInt(datadict.graph_data[el_idx][date_idx][0].slice(5,7)) - 1;
+                    day = parseInt(datadict.graph_data[el_idx][date_idx][0].slice(8,10));
                     date = Date.UTC(year, month, day);
-                    val = datadict.data[el_idx][date_idx][1];
+                    val = datadict.graph_data[el_idx][date_idx][1];
                     if (val != '-----') {
                         try {
                             data.push([date, parseFloat(val)]);
@@ -168,11 +168,11 @@ $(function () {
                 var x_plotlines = [];
                 if (datadict.search_params.minor_grid =='T'){
                     plotline_no = 10.0;
-                    var x_step = Math.round(datadict.data[el_idx].length/plotline_no);
+                    var x_step = Math.round(datadict.graph_data[el_idx].length/plotline_no);
                 }
                 else if (datadict.search_params.major_grid =='T' && datadict.search_params.minor_grid == 'F'){
                     plotline_no = 5.0;
-                    var x_step  = Math.round(datadict.data[el_idx].length/plotline_no);
+                    var x_step  = Math.round(datadict.graph_data[el_idx].length/plotline_no);
                 }
                 x_plotlines = set_plotlines(data,x_step,'x');
                 x_tickPositions = align_ticks(x_plotlines);

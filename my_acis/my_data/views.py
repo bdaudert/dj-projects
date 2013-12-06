@@ -757,6 +757,8 @@ def area_time_series(request):
     }
     json_file = request.GET.get('json_file', None)
     initial,checkbox_vals = set_area_time_series_initial(request)
+    if 'location' in initial.keys():
+        context['need_gridpoint_map'] = True
     initial_plot, checkbox_vals_plot = set_plot_options(request)
     join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
@@ -776,6 +778,7 @@ def area_time_series(request):
         status = WRCCUtils.generate_kml_file(initial['select_grid_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
 
     if 'formTS' in request.POST:
+        context['need_gridpoint_map'] = False
         form = set_form(request)
         #Form Check
         fields_to_check = ['start_date', 'end_date','elements','connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
@@ -790,6 +793,7 @@ def area_time_series(request):
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         #Display liust and serach params
         search_params, display_params_list =  set_area_time_series_params(form)
+        context['display_params_list'] = display_params_list
         #joins plot opts to search_params
         join_dicts(search_params,initial_plot)
         #Set overlay map if neded
@@ -831,8 +835,9 @@ def area_time_series(request):
                 context['error'] = 'No data found for this set of parameters.'
                 return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
         #Generate time series from data request
-        summary_time_series = compute_area_time_series_summary(req,search_params,poly,PointIn)
-        context['req'] = form
+        summary_time_series, download_data = compute_area_time_series_summary(req,search_params,poly,PointIn)
+        context['req'] = download_data
+        #Write data in download format
         #Set rest of search_params,context variables and save results
         search_params['spatial_summary'] = WRCCData.DISPLAY_PARAMS[form['spatial_summary']]
         context['search_params'] = search_params
@@ -843,11 +848,9 @@ def area_time_series(request):
         #Write results to json file
         json_dict = {
             'search_params':search_params,
-            #'element_name':element_name,
-            #yAxisText':yAxisText,
-            'data':summary_time_series
-            #'graph_title':graph_title,
-            #'summary':smry
+            'search_params_list':search_params_list,
+            'download_data':download_data,
+            'graph_data':summary_time_series
         }
         results_json = json.dumps(json_dict)
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
@@ -862,6 +865,7 @@ def area_time_series(request):
     if 'formOverlay' in request.POST:
         form = set_form(request)
         context['need_overlay_map'] = True
+        context['need_gridpoint_map'] = False
         initial, checkbox_vals = set_station_data_initial(request)
         #Override initial where needed
         initial['select_grid_by'] = form['select_overlay_by']
@@ -882,6 +886,19 @@ def area_time_series(request):
             context['host'] = 'wrcc.dri.edu'
             context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
             context['area_type'] = form['select_overlay_by']
+
+    #Downlaod Table Data
+    if 'formDownload' in request.POST:
+        context['need_gridpoint_map'] = False
+        data_format = request.POST.get('data_format', 'clm')
+        delimiter = request.POST.get('delimiter', 'comma')
+        output_file_name = request.POST.get('output_file_name', 'output')
+        json_file = request.POST.get('json_file', None)
+        with open(TEMP_FILE_DIR + json_file, 'r') as f:
+            json_dict =  json.load(f)
+        context['json_dict'] = json_dict
+        DDJ = WRCCClasses.DownloadDataJob('area_time_series',data_format,delimiter, output_file_name, request=request, json_in_file=TEMP_FILE_DIR + json_file)
+        return DDJ.write_to_file()
 
     return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
 
@@ -1996,6 +2013,7 @@ def compute_area_time_series_summary(req, search_params, poly, PointIn):
         lons_bbox_unique = req['meta']['lon'][0]
     #Generate time series from data request
     summary_time_series = [[[str(dat[0])] for dat in req['data']] for el in element_list]
+    download_data = [[str(dat[0])] for dat in req['data']]
     #list of list holding just the data values for each day at each gridpoint
     values_poly = [[[] for dat in req['data']] for el in element_list]
     #Check each bbox unique lat, lon combintation for containment in the polygon
@@ -2026,11 +2044,14 @@ def compute_area_time_series_summary(req, search_params, poly, PointIn):
     #Summarize data
     for el_idx, el in enumerate(element_list):
         if not values_poly[el_idx]:
-            summary_time_series[el_idx][date_idx].append('-----')
+            for date_idx, val_list in enumerate(values_poly[el_idx]):
+                summary_time_series[el_idx][date_idx].append('-----')
+                download_data[date_idx].append('-----')
         else:
             for date_idx, val_list in enumerate(values_poly[el_idx]):
                 if not val_list:
                     summary_time_series[el_idx][date_idx].append('-----')
+                    download_data[date_idx].append('-----')
                     continue
                 if search_params['spatial_summary'] == 'sum':
                     summary_time_series[el_idx][date_idx].append(round(sum(val_list),2))
@@ -2041,9 +2062,11 @@ def compute_area_time_series_summary(req, search_params, poly, PointIn):
                 elif search_params['spatial_summary'] == 'mean':
                     if val_list:
                         summary_time_series[el_idx][date_idx].append(round(sum(val_list) / len(val_list),2))
+                        download_data[date_idx].append(round(sum(val_list) / len(val_list),2))
                     else:
                         summary_time_series[el_idx][date_idx].append('-----')
-    return summary_time_series
+                        download_data[date_idx].append('-----')
+    return summary_time_series, download_data
 
 def write_monthly_aves_results(req, form_data, monthly_aves):
     results = [{} for k in form_data['elements']]
@@ -2139,7 +2162,7 @@ def write_monthly_aves_meta(req, form_data):
 ##############################
 
 def set_area_time_series_params(form):
-    key_order = ['elements', 'start_date', 'end_date', 'summary', 'grid', 'show_running_mean', 'running_mean_days', 'graph_title']
+    key_order = ['elements', 'start_date', 'end_date', 'summary', 'grid', 'show_running_mean', 'running_mean_days']
     display_params_list = [[] for k in range(len(key_order))]
     search_params = {}
     el_list = form['elements'].replace(' ','').split(',')

@@ -177,17 +177,23 @@ function popup_window(mylink, windowname)
 }
 
 // [client side code for showing/hiding content]
-function ShowHide(divId)
-{
-        obj = document.getElementById(divId);
-        if (obj.style.display == 'none')
-        {
-                obj.style.display = 'block';
-        } 
-        else 
-        {
-                obj.style.display = 'none';
+function ShowHide(divId){
+    obj = document.getElementById(divId);
+    if (obj.style.display == 'none')
+    {
+        obj.style.display = 'block';
+        //Show print button if divId is printable table
+        if (divId == 'printable_table' && $('#print_button').length){
+            document.getElementById('print_button').style.display = 'block';
         }
+    } 
+    else 
+    {
+        obj.style.display = 'none';
+        if (divId == 'printable_table' && $('#print_button').length){
+            document.getElementById('print_button').style.display = 'none';
+        }
+    }
 }
 
 //Shows documentation in pop up box upon hover

@@ -411,6 +411,133 @@
         </form>
     </div>
     <br /><br />
+
+    {%if results%}
+    <p class="pop_link" onClick="ShowHide('printable_table')"><u>Show/hide table data</u></p>
+
+    <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
+        <!--Download form-->
+    <div id="formDownload" class="form" style="display:none;">
+        {%if json_dict%}
+        <form method="post" action="?json_file={{json_dict.json_file}}">
+        {%elif json_file%}
+        <form method="post" action="?json_file={{json_file}}">
+        {%else%}
+        <form method="post" action="">
+        {%endif%}
+        {% csrf_token %}
+        <table id="tableDownload">
+        <tr valign="top">
+        <td>Data Format: </td>
+        <td>
+        <select id="data_format" name="data_format" onchange="set_delimiter(this, 'delim');">
+        <option value="clm">Columnar, .txt</option>
+        <option value="dlm">Delimited, .dat</option>
+        <option value="xl" selected>Excel, .xls</option>
+        </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_data_format"></div>
+        <script type="text/javascript">                        
+            $("#ht_data_format").load("{{MEDIA_URL}}html/commons.html #ht_data_format");
+        </script>
+        </div>
+        </td>
+        </tr>
+        <!--Only show when format is clm or dlm, don't show if xl-->
+        <tr valign="top" id="delim" style="display:none;">
+        <td>Delimiter:</td>
+        <td>
+        <select id="delimiter" name="delimiter">
+        <option value="comma" selected>Comma (,)</option>
+        <option value="tab">Tab (    )</option>
+        <option value="space">Space ( )</option>
+        <option value="colon">Colon (:)</option>
+        <option value="pipe">pipe(|)</option>
+        </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_delimiter"></div>
+        <script type="text/javascript">                        
+            $("#ht_delimiter").load("{{MEDIA_URL}}html/commons.html #ht_delimiter");
+        </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td>Outputfile Name: </td>
+        <td><input type="text" id="output_file_name" name="output_file_name" value="Output"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_output_file_name"></div>
+        <script type="text/javascript">                        
+            $("#ht_output_file_name").load("{{MEDIA_URL}}html/commons.html #ht_output_file_name");
+        </script>
+        </div>
+        </td>
+        </tr>
+        </table>
+        <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+        <input type="submit" value="Submit" name="formDownload">
+        </form>
+    </div><!--end formDownload-->
+
+    <!--<a target="_blank" href="{{SW_CKN_URL}}/download/?app_name=area_time_series&json_file={{json_file}}"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></a>-->
+     <br />
+
+    <img alt="Print" id="print_button" style="display:none;" title="Print" src="{{MEDIA_URL}}img/print_button.png" onClick="printNode('printable_table')">
+
+    <!--Table Data with download and print option-->
+    <div id="printable_table" style="display:none;">
+        <!--time series table-->
+        <!--Header-->
+        <p>{{search_prams.area_description}}</p>
+        {%if search_params.shape_coords%}
+            <p class="pop_link" onClick="ShowHide('shape_coords')"><u>Show/hide polygon boundary coordiates in table data (lon, lat pairs)</u></p>
+        {%endif%}
+        <div id="shape_coords" style="display:none;"><b>Boundary coordinates</b>: {{search_params.shape_coords}}</div>
+        <!--<p class="pop_link" onClick="ShowHide('parameters')"><u>Show/hide other analysis parameters</u></p>-->
+        <div id="parameters">
+        <p>
+        <b>Parameters</b>:<br />
+        {% for param in display_params_list%}
+            {%if forloop.first%}
+            {{param.0}}: {{param.1}},
+            {%else%}
+            {%if forloop.counter|divisibleby:"2" %}<br />{%endif %}
+            {{param.0}}: {{param.1}}
+            {%if not forloop.last%}, {%endif%}
+            {%endif%}
+        {%endfor%}
+        </p>
+        </div>
+
+        <b>Data</b>:
+        <table>
+        {%for el_data in results %}
+        <td>
+        <table>
+        {%if forloop.first%}
+        <tr><td>Date</td><td>{{search_params.element_list|lookup:0}}</td></tr>
+        {%else%}
+        <td>{{search_params.element_list|lookup:forloop.counter0}}</td></tr>
+        {%endif%}
+        {%for data in el_data%}
+        <tr>
+        {%if forloop.parentloop.first%}
+        <td>{{data.0}}</td>
+        {%endif%}
+        <td>{{data.1}}</td>
+        </tr>
+        {%endfor%}
+        </table>
+        </td>
+        {%endfor%}
+        </table>
+    </div><!--printable table-->
+    {%endif%}<!--if results-->
 <!--RIGHT-->
 </td>
 <td valign="top" width="70%">
@@ -466,7 +593,7 @@
         {%endif%}
     </div>
 
-    {%if initial.select_grid_by == "location"%}
+    {%if need_gridpoint_map%}
     <div id="GridpointMap" style="display:block;">
     {%else%}
     <div id="GridpointMap" style="display:none;">
@@ -616,57 +743,6 @@
     {%endfor%}
     <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-area-ts.js"></script>
     
-    <p class="pop_link" onClick="ShowHide('printable_table')"><u>Show/hide table data</u></p>
-
-    <img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png" onClick="printNode('printable_table')">
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a target="_blank" href="{{SW_CKN_URL}}/download/?app_name=area_time_series&json_file={{json_file}}"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></a>
-    <br />
-
-    <!--Table Data with download and print option-->
-    <div id="printable_table" style="display:none;">
-        <!--time series table-->
-        <!--Header-->
-        <p>{{search_prams.area_description}}</p>
-        {%if search_params.shape_coords%}
-            <p class="pop_link" onClick="ShowHide('shape_coords')"><u>Show/hide polygon boundary coordiates in table data (lon, lat pairs)</u></p>
-        {%endif%}
-        <div id="shape_coords" style="display:none;"><b>Boundary coordinates</b>: {{search_params.shape_coords}}</div>
-        <p class="pop_link" onClick="ShowHide('parameters')"><u>Show/hide other analysis parameters</u></p>
-        <div id="parameters" style="display:none;">
-        <p>
-        <b>Parameters</b>:<br />
-        {% for param in display_params_list%}
-            {%if not forloop.first%}, {%endif%}
-            {%if forloop.counter|divisibleby:"3" %}<br />{%endif %}
-            {{param.0}}: {{param.1}}
-        {%endfor%}
-        </p>
-        </div>
-
-        <b>Data</b>:
-        <table>
-        {%for el_data in results %}
-        <td>
-        <table>
-        {%if forloop.first%}
-        <tr><td>Date</td><td>{{search_params.element_list|lookup:0}}</td></tr>
-        {%else%}
-        <td>{{search_params.element_list|lookup:forloop.counter0}}</td></tr>
-        {%endif%}
-        {%for data in el_data%}
-        <tr>
-        {%if forloop.parentloop.first%}
-        <td>{{data.0}}</td>
-        {%endif%}
-        <td>{{data.1}}</td>
-        </tr>
-        {%endfor%}
-        </table>
-        </td>
-        {%endfor%}
-        </table>
-    </div><!--printable table-->
     {%endif%}<!--if results-->
 
 </td></table>
