@@ -251,6 +251,7 @@ function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis
     }
     var diff = Math.abs(props.axisMax - props.axisMin);
     //Deal with small differences
+
     steps = [0,plotline_no / 100, plotline_no / 50, plotline_no / 25,plotline_no / 10, plotline_no / 5, plotline_no / 2];
     for (idx=0;idx<=steps.length - 2 ;idx+=1){
         if (steps[idx] <= diff  && diff < steps[idx+1]){
@@ -295,7 +296,7 @@ function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis
         props.axisMax+=props.tickInterval;
     }
     //Override max/min custom requested by user
-    var add_top = 2;
+    var add_top = 0;
     if (vertical_axis_max != "Use default") {
         try{
             props.axisMax = parseFloat(vertical_axis_max);
@@ -325,6 +326,16 @@ function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis
         }
         //rounding
         var intRegex = /^\d+$/;
+        if (0 <= props.tickInterval && props.tickInterval < 0.1 ){
+            var v = precise_round(val,2);
+        }
+        else if (0.1 <= props.tickInterval && !intRegex.test(val)){
+            var v = precise_round(val,1);
+        }
+        else{
+            var v = val;
+        }
+        /*
         if (0 <= val && val < 0.1 ){
             var v = precise_round(val,2);
         }
@@ -334,6 +345,7 @@ function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis
         else{
             var v = val;
         }
+        */
         if (v > props.axisMax && vertical_axis_max != "Use default"){
             try{
                 v = parseFloat(vertical_axis_max);

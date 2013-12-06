@@ -832,7 +832,7 @@ def area_time_series(request):
                 return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
         #Generate time series from data request
         summary_time_series = compute_area_time_series_summary(req,search_params,poly,PointIn)
-        context['req'] = summary_time_series
+        context['req'] = form
         #Set rest of search_params,context variables and save results
         search_params['spatial_summary'] = WRCCData.DISPLAY_PARAMS[form['spatial_summary']]
         context['search_params'] = search_params
@@ -2151,13 +2151,13 @@ def set_area_time_series_params(form):
             display_params_list[4] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.GRID_CHOICES[val]]
         elif key == 'spatial_summary':
             display_params_list[3] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[val]]
-            search_params['spatial_summary_long'] = WRCCData.DISPLAY_PARAMS[key]
+            search_params['spatial_summary_long'] = WRCCData.DISPLAY_PARAMS[form[key]]
         elif key == 'elements':
             el_list_long =[]
             for el in el_list:
                 el_short, base_temp = WRCCUtils.get_el_and_base_temp(el)
                 if base_temp:
-                    el_list_long.append(WRCCData.ACIS_ELEMENTS_DICT[el_short]['name_long'] + ' Base Temp.: ' + base_temp)
+                    el_list_long.append(WRCCData.ACIS_ELEMENTS_DICT[el_short]['name_long'] + ' Base Temp.: ' + str(base_temp))
                 else:
                     el_list_long.append(WRCCData.ACIS_ELEMENTS_DICT[el]['name_long'])
             display_params_list[0] = [WRCCData.DISPLAY_PARAMS[key], ','.join(el_list_long)]

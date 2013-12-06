@@ -28,10 +28,12 @@ $(function () {
             },
             xAxis: {
                 labels: {
+                    /*
                     formatter: function () {
                         return Highcharts.dateFormat('%b%d\'%y', this.value);
                     },
-                    style: style_axes,
+                    */
+                    style: style_axes
                 },
                 title : {
                     style: style_text,
@@ -59,9 +61,9 @@ $(function () {
                     style: style_axes
                 },
                 startOnTick: false,
-                showFirstLabel: true,
-                gridLineWidth: gridLineWidth,
-                gridLineColor: gridLineColor
+                showFirstLabel: true
+                //gridLineWidth: gridLineWidth,
+                //gridLineColor: gridLineColor
             }],
             tooltip: {
                 shared: true,
@@ -143,7 +145,6 @@ $(function () {
                 }//end for
                 series['data'] = data;
                 series_data.push(series);
-                /*
                 //Running mean
                 if (datadict.search_params.show_running_mean == 'T'){
                     series = {'lineWidth':0.5,'name':datadict.search_params.running_mean_days + '-Day Running Mean','color':'red', 'marker':{enabled:false}};
@@ -152,7 +153,6 @@ $(function () {
                     series['data'] = rm_data;
                     series_data.push(series);
                 }
-                */
                 //Tick marks and plotlines
                 //Set up divider for plotlines
                 var plotline_no = null;
@@ -166,12 +166,11 @@ $(function () {
                 var y_tickPositions = [];
                 var x_tickPositions = [];
                 var x_plotlines = [];
-                /*
-                if (datadict.search_params.show_minor_grid =='T'){
+                if (datadict.search_params.minor_grid =='T'){
                     plotline_no = 10.0;
                     var x_step = Math.round(datadict.data[el_idx].length/plotline_no);
                 }
-                else if (datadict.search_params.show_major_grid =='T' && datadict.search_params.show_minor_grid == 'F'){
+                else if (datadict.search_params.major_grid =='T' && datadict.search_params.minor_grid == 'F'){
                     plotline_no = 5.0;
                     var x_step  = Math.round(datadict.data[el_idx].length/plotline_no);
                 }
@@ -182,7 +181,6 @@ $(function () {
                 }
                 y_props = set_axis_properties(data_max,datadict.search_params.vertical_axis_max, data_min, datadict.search_params.vertical_axis_min, element_list[el_idx],'none',plotline_no)
                 y_tickPositions = align_ticks(y_props.plotLines);
-                */
                 //Define Chart
                 var Chart;
                 Chart = {
@@ -196,12 +194,17 @@ $(function () {
                         },
                         xAxis: {
                             title:'Start Date: ' + datadict.search_params.start_date+  ' End Date: ' + datadict.search_params.end_date,
+                            type: 'datetime',
+                            maxZoom: 1 * 24 * 3600000, 
                             labels: {
+                                formatter: function () {
+                                    return Highcharts.dateFormat('%b%d\'%y', this.value);
+                                },
                                 step:x_tickStep
                             },
                             //lineColor:lineColor,
                             plotLines:x_plotlines,
-                            tickPositions:x_tickPositions,
+                            tickPositions:x_tickPositions
                         },
                         yAxis: [{
                             title: {
@@ -210,8 +213,8 @@ $(function () {
                             max:y_props.axisMax,
                             min:y_props.axisMin,
                             plotLines:y_props.plotLines,
-                            tickPositions:y_tickPositions,
-                            minorGridLineColor:minorGridLineColor
+                            tickPositions:y_tickPositions
+                            //minorGridLineColor:minorGridLineColor
                         },
                         {
                             opposite: true,
@@ -219,8 +222,8 @@ $(function () {
                             max:y_props.axisMax,
                             min:y_props.axisMin,
                             plotLines:y_props.plotLines,
-                            tickPositions:y_tickPositions,
-                            minorGridLineColor:minorGridLineColor
+                            tickPositions:y_tickPositions
+                            //minorGridLineColor:minorGridLineColor
                         }],
                         series:series_data 
                     }//end options
