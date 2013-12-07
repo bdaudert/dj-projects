@@ -225,14 +225,14 @@
         <td>Image Size: </td>
         <td>
             <select id="image_size" name="image_size">
-            <option value="small" {{checkbox_vals_graph.image_size_small_selected}}>Small(510px, 290px)</option>
-            <option value="medium" {{checkbox_vals_graph.image_size_medium_selected}}>Medium(650px,370px)</option>
-            <option value="large" {{checkbox_vals_graph.image_size_large_selected}}>Large(850px, 480px)</option>
-            <option value="larger" {{checkbox_vals_graph.image_size_larger_selected}}>Larger(1150px,610x)</option>
-            <option value="extra_large" {{checkbox_vals_graph.image_size_extra_large_selected}}>Extra Large(1450px, 820px)</option>
-            <option value="wide" {{checkbox_vals_graph.image_size_wide_selected}}>Wide(1850px,610px)</option>
-            <option value="wider" {{checkbox_vals_graph.image_size_wider_selected}}>Wider(2450px, 610px)</option>
-            <option value="widest" {{checkbox_vals_graph.image_size_widest_selected}}>Widest(3450px,610px)</option>
+            <option value="small" {{checkbox_vals.image_size_small_selected}}>Small(510px, 290px)</option>
+            <option value="medium" {{checkbox_vals.image_size_medium_selected}}>Medium(650px,370px)</option>
+            <option value="large" {{checkbox_vals.image_size_large_selected}}>Large(850px, 480px)</option>
+            <option value="larger" {{checkbox_vals.image_size_larger_selected}}>Larger(1150px,610x)</option>
+            <option value="extra_large" {{checkbox_vals.image_size_extra_large_selected}}>Extra Large(1450px, 820px)</option>
+            <option value="wide" {{checkbox_vals.image_size_wide_selected}}>Wide(1850px,610px)</option>
+            <option value="wider" {{checkbox_vals.image_size_wider_selected}}>Wider(2450px, 610px)</option>
+            <option value="widest" {{checkbox_vals.image_size_widest_selected}}>Widest(3450px,610px)</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -252,8 +252,8 @@
         <td>Show Major Grid?</td>
         <td>
             <select id="major_grid" name="major_grid">
-            <option value="T" {{checkbox_vals_graph.major_grid_T_selected}}>Yes</option>
-            <option value="F" {{checkbox_vals_graph.major_grid_F_selected}}>No</option>
+            <option value="T" {{checkbox_vals.major_grid_T_selected}}>Yes</option>
+            <option value="F" {{checkbox_vals.major_grid_F_selected}}>No</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -273,8 +273,8 @@
         <td>Show Minor Grid?</td>
         <td>
             <select id="minor_grid" name="minor_grid">
-            <option value="F" {{checkbox_vals_graph.minor_grid_F_selected}}>No</option>
-            <option value="T" {{checkbox_vals_graph.minor_grid_T_selected}}>Yes</option>
+            <option value="F" {{checkbox_vals.minor_grid_F_selected}}>No</option>
+            <option value="T" {{checkbox_vals.minor_grid_T_selected}}>Yes</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -294,8 +294,8 @@
         <td>Show Connector Line?</td>
         <td>
             <select id="connector_line" name="connector_line" onchange="show_div_if_true(this, 'cl_width');">
-            <option value="T" {{checkbox_vals_graph.connector_line_T_selected}}>Yes</option>
-            <option value="F" {{checkbox_vals_graph.connector_line_F_selected}}>No</option>
+            <option value="T" {{checkbox_vals.connector_line_T_selected}}>Yes</option>
+            <option value="F" {{checkbox_vals.connector_line_F_selected}}>No</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -331,8 +331,8 @@
         <td>Show Markers?</td>
         <td>
             <select name="markers" id="markers" onchange="show_div_if_true(this, 'mk_type');">
-            <option value="T" {{checkbox_vals_graph.markers_T_selected}}>Yes</option>
-            <option value="F" {{checkbox_vals_graph.markers_F_selected}}>No</option>
+            <option value="T" {{checkbox_vals.markers_T_selected}}>Yes</option>
+            <option value="F" {{checkbox_vals.markers_F_selected}}>No</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -352,11 +352,11 @@
         <td>Marker type:</td>
         <td>
             <select id="marker_type" name="marker_type">
-            <option value="diamond" {{checkbox_vals_graph.marker_type_diamond_selected}}>Diamond</option>
-            <option value="circle" {{checkbox_vals_graph.marker_type_circle_selected}}>Circle</option>
-            <option value="square" {{checkbox_vals_graph.marker_type_square_selected}}>Square</option>
-            <option value="triangle" {{checkbox_vals_graph.marker_type_triangle_selected}}>Triangle</option>
-            <option value="triangle_down" {{checkbox_vals_graph.marker_type_triangle_down_selected}}>Downward Triangle</option>
+            <option value="diamond" {{checkbox_vals.marker_type_diamond_selected}}>Diamond</option>
+            <option value="circle" {{checkbox_vals.marker_type_circle_selected}}>Circle</option>
+            <option value="square" {{checkbox_vals.marker_type_square_selected}}>Square</option>
+            <option value="triangle" {{checkbox_vals.marker_type_triangle_selected}}>Triangle</option>
+            <option value="triangle_down" {{checkbox_vals.marker_type_triangle_down_selected}}>Downward Triangle</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -418,14 +418,7 @@
     <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
         <!--Download form-->
     <div id="formDownload" class="form" style="display:none;">
-        {%if json_dict%}
-        <form method="post" action="?json_file={{json_dict.json_file}}">
-        {%elif json_file%}
-        <form method="post" action="?json_file={{json_file}}">
-        {%else%}
-        <form method="post" action="">
-        {%endif%}
-        {% csrf_token %}
+        <form method="post" action="">{% csrf_token %}
         <table id="tableDownload">
         <tr valign="top">
         <td>Data Format: </td>
@@ -484,7 +477,6 @@
         </form>
     </div><!--end formDownload-->
 
-    <!--<a target="_blank" href="{{SW_CKN_URL}}/download/?app_name=area_time_series&json_file={{json_file}}"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></a>-->
      <br />
 
     <img alt="Print" id="print_button" style="display:none;" title="Print" src="{{MEDIA_URL}}img/print_button.png" onClick="printNode('printable_table')">
@@ -498,15 +490,14 @@
             <p class="pop_link" onClick="ShowHide('shape_coords')"><u>Show/hide polygon boundary coordiates in table data (lon, lat pairs)</u></p>
         {%endif%}
         <div id="shape_coords" style="display:none;"><b>Boundary coordinates</b>: {{search_params.shape_coords}}</div>
-        <!--<p class="pop_link" onClick="ShowHide('parameters')"><u>Show/hide other analysis parameters</u></p>-->
         <div id="parameters">
         <p>
         <b>Parameters</b>:<br />
         {% for param in display_params_list%}
             {%if forloop.first%}
-            {{param.0}}: {{param.1}},
+            {{param.0}}: {{param.1}},<br />
             {%else%}
-            {%if forloop.counter|divisibleby:"2" %}<br />{%endif %}
+            {%if forloop.counter0|divisibleby:"2" %}<br />{%endif %}
             {{param.0}}: {{param.1}}
             {%if not forloop.last%}, {%endif%}
             {%endif%}
@@ -733,7 +724,7 @@
     <p class="error">{{error}}</p>
     {%endif%}
 
-    {{req}}
+   <p>REQ {{json_file}}, {{req}}</p>
 
     <!--Results section-->
     {%if results%}

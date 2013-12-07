@@ -120,9 +120,10 @@ $(function () {
                 data_max = -9999.0;
                 data_min = 9999.0;
                 for (var date_idx=0;date_idx<datadict.graph_data[el_idx].length;date_idx++) {
-                    year = parseInt(datadict.graph_data[el_idx][date_idx][0].slice(0,4));
-                    month = parseInt(datadict.graph_data[el_idx][date_idx][0].slice(5,7)) - 1;
-                    day = parseInt(datadict.graph_data[el_idx][date_idx][0].slice(8,10));
+                    var date = datadict.graph_data[el_idx][date_idx][0].replace('-','').replace('-','');
+                    year = parseInt(date.slice(0,4));
+                    month = parseInt(date.slice(4,6)) - 1;
+                    day = parseInt(date.slice(6,8));
                     date = Date.UTC(year, month, day);
                     val = datadict.graph_data[el_idx][date_idx][1];
                     if (val != '-----') {

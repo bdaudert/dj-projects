@@ -522,6 +522,8 @@
     </p>
     {%endif%}
 
+    {{json_file}}
+
     {%if results %}
     <!--Link to relevant applications-->
 
@@ -533,7 +535,7 @@
     <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&grid={{params_dict.grid}}&{{params_dict.select_grid_by}}={{params_dict.area_type_value}}">Generate a climate summary map  for this data set here!</a>
     <br />
     {%elif params_dict.data_summary == "spatial"%}
-    <a target="_blank" href="{{TOOLS_URL}}gridded/area_time_series/?start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&grid={{params_dict.grid}}&{{params_dict.select_grid_by}}={{params_dict.area_type_value}}">Generate a time series graph!</a>
+    <a target="_blank" href="{{TOOLS_URL}}gridded/area_time_series/?json_file={{json_file}}">Generate a time series graph!</a>
     {%endif%}
     {%endif%}
 
