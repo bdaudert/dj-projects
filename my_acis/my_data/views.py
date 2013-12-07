@@ -773,7 +773,7 @@ def clim_prob_maps(request):
 
 def area_time_series(request):
     context = {
-        'title': 'Area Time Series',
+        'title': 'Spatial Summary Time Series',
     }
     json_file = request.GET.get('json_file', None)
     #Check if we are coming in from other page, e.g. Gridded Data

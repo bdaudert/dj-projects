@@ -41,6 +41,10 @@
         <script type="text/javascript">                        
         $("#Docu_CLIM_PROB_MAP").load("{{MEDIA_URL}}html/commons.html #Docu_CLIM_PROB_MAP");
         </script>
+   <div class="docu" id="Docu_AREA_TIME_SERIES" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_AREA_TIME_SERIES").load("{{MEDIA_URL}}html/commons.html #Docu_AREA_TIME_SERIES");
+        </script>
    <div class="docu" id="Docu_NONE" style="display:none;"></div>
         <script type="text/javascript">                        
         $("#Docu_NONE").load("{{MEDIA_URL}}html/commons.html #Docu_NONE");
@@ -51,30 +55,31 @@
             <p class="error" align ="center">(* Beta version)</p>
             <table cellspacing="10">
             <tr>
+                <!--
                 <td valign="top">
-                    <p class="trigger">Gridpoint &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_GP_TS')"><br />Time Series</p>
+                    <p class="trigger_hover">Gridpoint &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_GP_TS')"><br />Time Series</p>
                     <div class="pop-up">
                         <p>Generates time series data and graph for a chosen grid point. <br/>Click on the question mark for more information!</p>
                     </div>
                     <a  href="{{TOOLS_URL}}gridded/grid_point_time_series/"><img class="app_img" alt="GPTimeSeries" title="GPTimeSeries" src="{{MEDIA_URL}}img/GPTimeSeries.png"></a>
                 </td>
+                -->
                 <td valign="top">
-                    <p class="trigger">* Area Time Series &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_AREA_TIME_SERIES')"></font></p>
+                    <p class="trigger_hover">* Spatial Summary&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_AREA_TIME_SERIES')"><br />Time Series</p>
                     <div class="pop-up" id="area_time_series">
                     <p>Generates climate summary time series over custom search areas. <br/>Click on the question mark for more information!</p>
                     </div>
-                    <br />
                     <a  href="{{TOOLS_URL}}gridded/area_time_series/"><img class="app_img" alt="RiskMaps" title="RiskMaps" src="{{MEDIA_URL}}img/Area_TS.png"></a>
                 </td>
                 <td valign="top">
-                    <p class="trigger">* Climate &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_CLIM_SUM_MAP')"><br/>Summary Map</p>
+                    <p class="trigger_hover">* Climate &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_CLIM_SUM_MAP')"><br/>Summary Map</p>
                     <div class="pop-up">                        
                     <p>Generates climate summary maps for different elements, time ranges and region using NRCC interpolated data. <br/>Click on the question mark for more information!</p>
                     </div>
                     <a  href="{{TOOLS_URL}}gridded/clim_sum_maps/"><img class="app_img" alt="SummaryMaps" title="SummaryMaps" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
                 </td>
                 <td valign="top">
-                    <p class="trigger">* Probability Maps &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_CLIM_PROB_MAP')"><br /> <font color="red">Coming Soon!</font></p>
+                    <p class="trigger_hover">* Probability Maps &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_CLIM_PROB_MAP')"><br /> <font color="red">Coming Soon!</font></p>
                     <div class="pop-up" id="sodxtrmts">
                     <p>Generates climate probability maps for different temperature and precipitation with user chosen parameters. <br/>Click on the question mark for more information!</p>
                     </div>
