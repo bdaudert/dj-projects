@@ -192,9 +192,9 @@
         </td>
         </tr>
         {%if initial.show_running_mean == "T"%}
-            <tr valign="top" class="formGraph" id="rm_days">
+            <tr valign="top" id="rm_days">
         {%else%}
-            <tr valign="top" class="formGraph" id="rm_days" style="display:none;">
+            <tr valign="top" id="rm_days" style="display:none;">
         {%endif%}
         <td>Running Mean Days: </td>
         <td><input type="text" id="running_mean_days" name="running_mean_days" value="{{initial.running_mean_days}}"></td>
@@ -212,15 +212,15 @@
         <td colspan="3"><hr style="border-color:#006666;"></td>
         </tr>
         <tr>
-        <td colspan="3" onClick="show_plot_opts('formGraph')"><b><u>Plot Options</u></b></td>
+        <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Plot Options</u></b></td>
         </tr>
         <tr>   
         <td colspan="3"><hr style="border-color:#006666;"></td>
         </tr>
         {%if initial.show_plot_opts == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
+        <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
+        <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td>Image Size: </td>
         <td>
@@ -245,9 +245,9 @@
         </td>
         </tr>
         {%if initial.show_plot_opts == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
+        <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
+        <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td>Show Major Grid?</td>
         <td>
@@ -266,9 +266,9 @@
         </td>
         </tr>
         {%if initial.show_plot_opts == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
+        <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
+        <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td>Show Minor Grid?</td>
         <td>
@@ -287,9 +287,9 @@
         </td>
         </tr>
         {%if initial.show_plot_opts == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
+        <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
+        <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td>Show Connector Line?</td>
         <td>
@@ -308,9 +308,9 @@
         </td>
         </tr>
         {%if initial.connector_line == "T" and initial.show_plot_opts == "T"%}
-            <tr valign="top" class="formGraph" id="cl_width">
+            <tr valign="top" class="plOpts" id="cl_width">
         {%else%}
-            <tr valign="top" class="formGraph" id="cl_width" style="display:none;">
+            <tr valign="top" class="plOpts" id="cl_width" style="display:none;">
         {%endif%}
         <td id="Connector Line Width">Connector Line width:</td>
         <td><input type="text" id="connector_line_width" name="connector_line_width" value="{{initial.connector_line_width}}"></td>
@@ -324,9 +324,9 @@
         </td>
         </tr>
         {%if initial.show_plot_opts == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
+        <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
+        <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td>Show Markers?</td>
         <td>
@@ -345,9 +345,9 @@
         </td>
         </tr>
         {%if initial.markers == "T" and initial.show_plot_opts == "T"%}
-            <tr valign="top" class="formGraph" id="mk_type">
+            <tr valign="top" class="plOpts" id="mk_type">
         {%else%}
-            <tr valign="top" class="formGraph" id="mk_type" style="display:none;">
+            <tr valign="top" class="plOpts" id="mk_type" style="display:none;">
         {%endif%}
         <td>Marker type:</td>
         <td>
@@ -369,9 +369,9 @@
         </td>
         </tr>
         {%if initial.show_plot_opts == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
+        <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
+        <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td id="Vertical Axis Minimum">Vertical axis min:</td>
         <td><input type="text" id="vertical_axis_min" name="vertical_axis_min" value="{{initial.vertical_axis_min}}"></td>
@@ -385,9 +385,9 @@
         </td>
         </tr>
         {%if initial.show_plot_opts == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
+        <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
+        <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td id="Vertical Axis Maximum">Vertical axis max:</td>
         <td><input type="text" id="vertical_axis_max" name="vertical_axis_max" value="{{initial.vertical_axis_max}}"></td>
@@ -401,9 +401,9 @@
         </td>
         </tr>
         {%if initial.show_plot_opts == "T"%}
-        <tr class="formGraph" style="display:table-row;">
+        <tr class="plOpts" style="display:table-row;">
         {%else%}
-        <tr class="formGraph" style="display:none;">
+        <tr class="plOpts" style="display:none;">
         {%endif%}
         <td><input type="submit" value="Submit" name="formTS"/></td><td></td><td></td>
         </table>
@@ -724,7 +724,6 @@
     <p class="error">{{error}}</p>
     {%endif%}
 
-   <p>REQ {{json_file}}, {{req}}</p>
 
     <!--Results section-->
     {%if results%}

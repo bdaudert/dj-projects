@@ -271,7 +271,7 @@
         {%if json_file %}
         <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
         <tr valign="top">
-        <td>Generate a time series graph?</td>
+        <td><font color="magenta"><b>Generate a time series graph?</b></font></td>
         <td>
             <select id="generate_graph" name="generate_graph" onchange="show_if_true(this, 'formGraph');">
             <option value="F" {{checkbox_vals.generate_graph_F_selected}}>No</option>
@@ -464,9 +464,9 @@
         </td>
         </tr>
         {%if initial.generate_graph == "T"%}
-        <tr style="display:table-row;" class="formGraph"><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
+        <tr style="display:table-row;" class="plOpt"><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
         {%else%}
-        <tr style="display:none;" class="formGraph"><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
+        <tr style="display:none;" class="plOpt"><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
         {%endif%}
         {%if initial.generate_graph == "T"%}
         <tr valign="top" class="formGraph" style="display:table-row;">
@@ -480,19 +480,20 @@
         {%else%}
         <tr valign="top" class="formGraph" style="display:none;">
         {%endif%}
-        <td colspan="3"><b>Plot Options</b>
+        <!--<td colspan="3"><b>Plot Options</b>-->
+        <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Plot Options</u></b></td>
         </tr>
         {%if initial.generate_graph == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
+        <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
+        <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td colspan="3"><hr style="border-color:#006666;">
         </tr>
         {%if initial.generate_graph == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
+        <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
+        <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td>Graph Title:</td>
         <td><input type="text" id="graph_title" name="graph_title" value="{{initial_graph.graph_title}}"></td>
@@ -506,9 +507,9 @@
         </td>
         </tr>
         {%if initial.generate_graph == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
+        <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
+        <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td>Image Size: </td>
         <td>
@@ -533,9 +534,9 @@
         </td>
         </tr>
         {%if initial.generate_graph == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
+        <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
+        <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td>Show Major Grid?</td>
         <td>
@@ -554,9 +555,9 @@
         </td>
         </tr>
         {%if initial.generate_graph == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
+        <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
+        <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td>Show Minor Grid?</td>
         <td>
@@ -575,9 +576,9 @@
         </td>
         </tr>
         {%if initial.generate_graph == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
+        <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
+        <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td>Show Connector Line?</td>
         <td>
@@ -596,9 +597,9 @@
         </td>
         </tr>
         {%if initial_graph.connector_line == "T" and initial.generate_graph == "T"%}
-            <tr valign="top" class="formGraph" id="cl_width">
+            <tr valign="top" class="plOpts" id="cl_width">
         {%else%}
-            <tr valign="top" class="formGraph" id="cl_width" style="display:none;">
+            <tr valign="top" class="plOpts" id="cl_width" style="display:none;">
         {%endif%}
         <td id="Connector Line Width">Connector Line width:</td>
         <td><input type="text" id="connector_line_width" name="connector_line_width" value="{{initial_graph.connector_line_width}}"></td>
@@ -612,9 +613,9 @@
         </td>
         </tr>
         {%if initial.generate_graph == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
+        <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
+        <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td>Show Markers?</td>
         <td>
@@ -633,9 +634,9 @@
         </td>
         </tr>
         {%if initial_graph.markers == "T" and initial.generate_graph == "T"%}
-            <tr valign="top" class="formGraph" id="mk_type">
+            <tr valign="top" class="plOpts" id="mk_type">
         {%else%}
-            <tr valign="top" class="formGraph" id="mk_type" style="display:none;">
+            <tr valign="top" class="plOpts" id="mk_type" style="display:none;">
         {%endif%}
         <td>Marker type:</td>
         <td>
@@ -657,9 +658,9 @@
         </td>
         </tr>
         {%if initial.generate_graph == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
+        <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
+        <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td id="Vertical Axis Minimum">Vertical axis min:</td>
         <td><input type="text" id="vertical_axis_min" name="vertical_axis_min" value="{{initial_graph.vertical_axis_min}}"></td>
@@ -673,9 +674,9 @@
         </td>
         </tr>
         {%if initial.generate_graph == "T"%}
-        <tr valign="top" class="formGraph" style="display:table-row;">
+        <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
-        <tr valign="top" class="formGraph" style="display:none;">
+        <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td id="Vertical Axis Maximum">Vertical axis max:</td>
         <td><input type="text" id="vertical_axis_max" name="vertical_axis_max" value="{{initial_graph.vertical_axis_max}}"></td>
@@ -688,7 +689,7 @@
         </div>
         </td>
         </tr>
-        <tr><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
+        <tr class="plOpt"><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
         </table>
        {%if json_dict%}
         <input type="hidden" value="{{json_dict.json_file}}" id="j_file" name="j_file">
