@@ -646,6 +646,90 @@ def monthly_aves(request):
 def clim_sum_maps(request):
     context = {
         'title': 'Climate Summary Maps',
+    }
+    json_file = request.GET.get('json_file', None)
+    #Check if we are coming in from other page, e.g. Gridded Data
+    #Set initial accordingly
+    if json_file is not None:
+        with open(TEMP_FILE_DIR + json_file, 'r') as f:
+            try:
+                json_data = WRCCUtils.u_convert(json.loads(f.read()))
+                initial,checkbox_vals = set_clim_sum_maps_initial(json_data['search_params'])
+            except:
+                initial,checkbox_vals = set_clim_sum_maps_initial(request)
+    else:
+        initial,checkbox_vals = set_clim_sum_maps_initial(request)
+    #Plot Options
+    initial_plot, checkbox_vals_plot = set_map_plot_options(request)
+    join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
+    context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+    #Set up maps if needed
+    context['host'] = 'wrcc.dri.edu'
+    context['area_type'] = initial['select_grid_by']
+    context[initial['select_grid_by']] = WRCCData.AREA_DEFAULTS[initial['select_grid_by']]
+    kml_file = initial['overlay_state'] + '_' + initial['select_grid_by'] + '.kml'
+    context[initial['overlay_state'] + '_selected'] = 'selected'
+    context['kml_file_path'] = WEB_SERVER_DIR +  kml_file
+    #Check if kml file exists, if not generate it
+    try:
+        with open(TEMP_FILE_DIR + kml_file):
+            if os.stat(TEMP_FILE_DIR + kml_file).st_size==0:
+                status = WRCCUtils.generate_kml_file(initial['select_grid_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
+    except IOError:
+        status = WRCCUtils.generate_kml_file(initial['select_grid_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
+
+    if 'formMap' in request.POST:
+        form = set_form(request)
+        #Form Check
+        fields_to_check = ['start_date', 'end_date','elements','level_number', 'cmap']
+        form_error = check_form(form, fields_to_check)
+        if form_error:
+            context['form_error'] = form_error
+            return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
+        #Set initials
+        initial,checkbox_vals = set_clim_sum_maps_initial(form)
+        initial_plot, checkbox_vals_plot = set_map_plot_options(form)
+        join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        #Set overlay map if needed
+        if form['select_grid_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
+            context['host'] = 'wrcc.dri.edu'
+            kml_file_name = form['overlay_state'] + '_' + form['select_grid_by'] + '.kml'
+            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
+            context['area_type'] = form['select_grid_by']
+        #Generate Maps
+
+    #overlay map generation
+    if 'formOverlay' in request.POST:
+        form = set_form(request)
+        context['need_overlay_map'] = True
+        initial, checkbox_vals = set_clim_sum_maps_initial(request)
+        initial_plot, checkbox_vals_plot = set_map_plot_options(form)
+        join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
+        #Override initial where needed
+        initial['select_grid_by'] = form['select_overlay_by']
+        checkbox_vals[form['select_overlay_by'] + '_selected'] = 'selected'
+        initial['area_type_value'] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
+        initial[form['select_overlay_by']] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
+        initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[form['select_overlay_by']]
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        at = form['select_overlay_by']
+        st = form['overlay_state']
+        context[st + '_selected'] = 'selected'
+        kml_file_name = st + '_' + at + '.kml'
+        dir_location = TEMP_FILE_DIR
+        status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
+        if not status == 'Success':
+            context['overlay_error'] = status
+        else:
+            context['host'] = 'wrcc.dri.edu'
+            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
+            context['area_type'] = form['select_overlay_by']
+    return render_to_response('my_data/apps/gridded/clim_sum_maps.html', context, context_instance=RequestContext(request))
+
+def old_clim_sum_maps(request):
+    context = {
+        'title': 'Climate Summary Maps',
         'icon':'ToolProduct.png'
     }
     lat = request.GET.get('lat', None)
@@ -900,6 +984,8 @@ def area_time_series(request):
         context['need_overlay_map'] = True
         context['need_gridpoint_map'] = False
         initial, checkbox_vals = set_area_time_series_initial(request)
+        initial_plot, checkbox_vals_plot = set_plot_options(form)
+        join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
         #Override initial where needed
         initial['select_grid_by'] = form['select_overlay_by']
         checkbox_vals[form['select_overlay_by'] + '_selected'] = 'selected'
@@ -929,249 +1015,6 @@ def area_time_series(request):
             json_dict =  json.load(f)
         DDJ = WRCCClasses.DownloadDataJob('area_time_series',data_format,delimiter, output_file_name, request=request, json_in_file=TEMP_FILE_DIR + json_file)
         return DDJ.write_to_file()
-
-    return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
-
-def old_area_time_series(request):
-    context = {
-        'title': 'Area Time Series',
-    }
-    element = request.GET.get('element', None)
-    start_date = request.GET.get('start_date', None)
-    end_date = request.GET.get('end_date', None)
-    grid= request.GET.get('grid', None)
-    state = request.GET.get('state', None)
-    bounding_box = request.GET.get('bounding_box', None)
-    initial = {}
-    if element is not None:initial['element'] = str(element)
-    if start_date is not None:initial['start_date'] = str(start_date)
-    if end_date is not None:initial['end_date'] = str(end_date)
-    if grid is not None:initial['grid'] = str(grid)
-    if state is not None:initial['state'] = state
-    if bounding_box is not None:
-        initial['bbox'] = bounding_box
-    if initial:
-        if element and start_date and end_date:
-            form1 = forms.AreaTimeSeriesForm1(initial=initial)
-            context['form1'] = form1
-            context['hide_form0'] = True
-            context['form1_ready'] = True
-        else:
-            form0 = set_as_form(request,'AreaTimeSeriesForm0', init=initial)
-            context['form0'] = form0
-    else:
-        form0 = set_as_form(request,'AreaTimeSeriesForm0')
-        context['form0'] = form0
-
-    if 'form0' in request.POST:
-        form0 = set_as_form(request,'AreaTimeSeriesForm0')
-        context['form0']  = form0
-        context['hide_form0'] = True
-        if form0.is_valid():
-            initial = form0.cleaned_data
-            context['form1'] = forms.AreaTimeSeriesForm1(initial=initial)
-            context['form1_ready'] = True
-
-            if form0.cleaned_data['select_grid_by'] == 'shape':
-                context['need_polymap'] = True
-            if form0.cleaned_data['select_grid_by'] == 'bbox':
-                context['need_bbox_map'] = True
-            if form0.cleaned_data['select_grid_by'] in ['basin', 'cwa', 'climdiv', 'county']:
-                context['need_overlay_map'] = True
-                form2 = forms.StateForm(initial = initial)
-                context['form2'] = form2
-                context['host'] = 'wrcc.dri.edu'
-                context['type'] = form0.cleaned_data['select_grid_by']
-                context['kml_file_path'] = STATIC_KML + 'nv_' + form0.cleaned_data['select_grid_by'] + '.kml'
-            context[form0.cleaned_data['select_grid_by']] = WRCCData.AREA_DEFAULTS[form0.cleaned_data['select_grid_by']]
-
-    if 'form1' in request.POST:
-        context[request.POST['select_grid_by']] = str(request.POST[WRCCData.ACIS_TO_SEARCH_AREA[str(request.POST['select_grid_by'])]])
-        #if 'shape' in request.POST.keys():context['shape'] = str(request.POST['shape'])
-        #if 'bounding_box' in request.POST.keys():context['bbox'] = str(request.POST['bounding_box'])
-        form1 = set_as_form(request,'AreaTimeSeriesForm1')
-        context['form1']  = form1
-        context['hide_form0'] = True
-        context['form1_ready'] = True
-        if form1.is_valid():
-            search_params, display_params_list =  set_area_time_series_params(form1)
-            smry = WRCCData.DISPLAY_PARAMS[form1.cleaned_data['summary']]
-            #Set up data request params
-            params = {
-                'sdate':search_params['start_date'],
-                'edate':search_params['end_date'],
-                'grid':search_params['grid'],
-                'meta':"ll,elev"
-            }
-            #find element parameter
-            if search_params['element'] in ['hddxx','gddxx', 'cddxx']:
-                element_name = WRCCData.ACIS_ELEMENTS_DICT[str(search_params['element'])[0:3]]['name_long'] + 'Base temperature ' + str(search_params['base_temperature'])
-                yAxisText = smry + ' ' + search_params['element'][0:3] + search_params['base_temperature']
-                params['elems'] = search_params['element'][0:3] + search_params['base_temperature']
-
-            else:
-                element_name = WRCCData.ACIS_ELEMENTS_DICT[search_params['element']]['name_long']
-                yAxisText = smry + ' ' + WRCCData.ACIS_ELEMENTS_DICT[search_params['element']]['name_long']
-                params['elems'] = search_params['element']
-
-            #Find search area parameters, shape and bounding box if needed
-            key, val, acis_param, name_long, search_type = WRCCUtils.get_search_area_values(search_params, 'gridded')
-            if search_type == 'default':
-                params[acis_param] = val
-                poly = 'Not Needed'
-                shape = None;shape_name = ''
-            else:
-                #search area county/climdiv/basin/cwa or custom shape
-                # need to find coordinates of shape and enclosing bbox
-                if key == 'shape':
-                    shape = val.split(',')
-                    shape = [float(s) for s in shape]
-                    shape_name = ''
-                    #find enclosing bounding box
-                    shape_type, bbox = WRCCUtils.get_bbox(val)
-                    if bbox is None:
-                        context['results'] = 'No bounding box could be found!'
-                        return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
-                    if shape_type == 'circle':
-                        PointIn = getattr(WRCCUtils,'point_in_circle')
-                        poly = shape
-                    elif shape_type in ['polygon', 'bbox', 'point']:
-                        if shape_type == 'bbox':
-                            shape = [shape[0], shape[1], shape[2], shape[1], shape[0],shape[3], shape[2],shape[3]]
-                        PointIn = getattr(WRCCUtils,'point_in_poly')
-                        poly = [(shape[2*idx],shape[2*idx+1]) for idx in range(len(shape)/2)]
-                        context['shape_coords'] = [[shape[2*idx],shape[2*idx+1]] for idx in range(len(shape)/2)]
-
-                else:
-                    #Need to find shape coordinates and enclosing bbox
-                    #via ACIS general call
-                    gen_params={'id':str(val),'meta':'geojson,bbox,name,id'}
-                    try:
-                        gen_req = AcisWS.General(acis_param, gen_params)
-                        shape = gen_req['meta'][0]['geojson']['coordinates'][0][0]
-                        context['shape_coords'] = shape
-                        bbox = gen_req['meta'][0]['bbox']
-                        shape_name = gen_req['meta'][0]['name']
-                    except:
-                        context['results'] = 'Shape or bounding box could not be found!'
-                        return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
-                    poly = [(s[0],s[1]) for s in shape]
-                    PointIn = getattr(WRCCUtils,'point_in_poly')
-
-                params['bbox'] = bbox
-
-            #Set graph title
-            if search_params['graph_title'] != 'Use default':
-                graph_title = search_params['graph_title']
-            else:
-                if 'shape' in search_params.keys():
-                    graph_title = name_long + ': Polygon'
-                else:
-                    graph_title = name_long + ': ' + shape_name + ' (' + search_params[key] + ')'
-            #Find data
-            try:
-                req = AcisWS.GridData(params)
-                #Find unique lats,lons
-                lats_bbox_unique = [lat_grid[0] for lat_grid in req['meta']['lat']]
-                lons_bbox_unique = req['meta']['lon'][0]
-            except Exception, e:
-                context['results'] = 'Error in data request: ' + str(e)
-                return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
-
-            if not lats_bbox_unique or not lons_bbox_unique:
-                context['results'] = 'No data found!'
-                return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
-
-            #Find data lying within shape
-            data_poly = [[str(dat[0])] for dat in req['data']]
-            values_poly = [[] for dat in req['data']] #list of list holding just the data values for each day at each gridpoint
-            summary_time_series = [[str(dat[0])] for dat in req['data']]
-            #Check each bbox unique lat, lon combintation for containment in the polygon
-            for lat_idx,lat in enumerate(lats_bbox_unique):
-                for lon_idx, lon in enumerate(lons_bbox_unique):
-                    if poly == 'Not Needed':
-                        point_in = True
-                    else:
-                        point_in = PointIn(lon, lat, poly)
-                    if point_in:
-                        #point lies witin shape, add data to data_poly
-                        for date_idx, date_data in enumerate(req['data']):
-                            if abs(date_data[1][lat_idx][lon_idx]+999.0) > 0.001 and abs(date_data[1][lat_idx][lon_idx]-999.0)>0.001:
-                                data_poly[date_idx].append([round(lon,2), round(lat,2), date_data[1][lat_idx][lon_idx]])
-                                values_poly[date_idx].append(date_data[1][lat_idx][lon_idx])
-            #Perform Summary Analysis
-            if not values_poly:
-                summary_time_series[date_idx].append('-----')
-            else:
-                for date_idx, val_list in enumerate(values_poly):
-                    if not val_list:
-                        summary_time_series[date_idx].append('-----')
-                        continue
-                    if search_params['summary'] == 'sum':
-                        summary_time_series[date_idx].append(round(sum(val_list),2))
-                    elif search_params['summary'] == 'max':
-                        summary_time_series[date_idx].append(round(max(val_list),2))
-                    elif search_params['summary'] == 'min':
-                        summary_time_series[date_idx].append(round(min(val_list),2))
-                    elif search_params['summary'] == 'mean':
-                        if val_list:
-                            summary_time_series[date_idx].append(round(sum(val_list) / len(val_list),2))
-                        else:
-                            summary_time_series[date_idx].append('-----')
-            #Set context variables
-            context['results']= summary_time_series
-            context['width'] = WRCCData.IMAGE_SIZES[search_params['image_size']][0]
-            context['height'] = WRCCData.IMAGE_SIZES[search_params['image_size']][1]
-            #context['bbox'] = bbox
-            context['graph_title'] = graph_title
-            context['graph_subtitle'] = smry + element_name
-            context['display_params_list'] = display_params_list
-            #Write results to json file
-            if 'base_temperature' in search_params.keys():
-                base_temperature = search_params['base_temperature']
-            else:
-                base_temperature = ''
-            json_dict = {
-                'search_params':search_params,
-                'element_name':element_name,
-                'yAxisText':yAxisText,
-                'data':summary_time_series,
-                'graph_title':graph_title,
-                'summary':smry
-            }
-            results_json = json.dumps(json_dict)
-            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
-            json_file = '%s_climrisk.json' %(time_stamp)
-            f = open(TEMP_FILE_DIR + '%s' %(json_file),'w+')
-            f.write(results_json)
-            f.close()
-            context['JSON_URL'] = TEMP_FILE_DIR
-            context['json_file'] = json_file
-
-    #overlay map generation
-    if 'form2' in request.POST:
-        #context['req'] = request.POST
-        form2 = set_as_form(request,'StateForm')
-        context['form2'] = form2
-        context['need_overlay_map'] = True
-        if form2.is_valid():
-            initial = {'select_grid_by':str(form2.cleaned_data['select_grid_by']), 'element':str(form2.cleaned_data['element'])}
-            context[form2.cleaned_data['select_grid_by']] = WRCCData.AREA_DEFAULTS[form2.cleaned_data['select_grid_by']]
-            context['type'] = form2.cleaned_data['select_grid_by']
-            form1 = forms.AreaTimeSeriesForm1(initial=initial)
-            context['form1']  = form1
-            context['hide_form0'] = True
-            context['form1_ready'] = True
-            at = str(form2.cleaned_data['select_grid_by'])
-            st = str(form2.cleaned_data['state']).lower()
-            kml_file_name = st + '_' + at + '.kml'
-            dir_location = TEMP_FILE_DIR
-            status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
-            if not status == 'Success':
-                context['overlay_error'] = status
-            else:
-                context['host'] = 'wrcc.dri.edu'
-                context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
 
     return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
 
@@ -2370,6 +2213,44 @@ def join_initials(initial,initial_2, checkbox_vals,checkbox_vals_2):
     for key, val in checkbox_vals_2.iteritems():
         checkbox_vals[key] = val
 
+def set_map_plot_options(request):
+    initial = {}
+    checkbox_vals = {}
+    if type(request) == dict:
+        def Get(key, default):
+            if key in request.keys():
+                return request[key]
+            else:
+                return default
+    elif request.method == 'GET':
+        Get = getattr(request.GET, 'get')
+    elif request.method == 'POST':
+        Get = getattr(request.POST, 'get')
+    initial['image_size'] = Get('image_size', 'medium')
+    initial['level_number'] = Get('level_number', '5')
+    initial['cmap'] = Get('cmap', 'rainbow')
+    initial['map_ol'] = Get('map_ol', 'state')
+    initial['interpolation'] = Get('interpolation', 'cspline')
+    initial['projection'] = Get('projection', 'lcc')
+    #set the check box values
+    for image_size in ['small', 'medium', 'large', 'larger', 'extra_large', 'wide', 'wider', 'widest']:
+        checkbox_vals['image_size' + '_' + image_size + '_selected'] = ''
+        if initial['image_size'] == image_size:
+            checkbox_vals['image_size' + '_' + image_size + '_selected'] = 'selected'
+    for mo in ['county', 'state']:
+        checkbox_vals['map_ol' + mo + '_selected'] = ''
+        if initial['map_ol'] == mo:
+            checkbox_vals['map_ol' + mo + '_selected'] = 'selected'
+    for ip in ['cspline', 'none']:
+        checkbox_vals['interpolation' + ip + '_selected'] = ''
+        if initial['interpolation'] == ip:
+            checkbox_vals['interpolation' + ip + '_selected'] = 'selected'
+    for p in ['lcc']:
+        checkbox_vals['projection' + p + '_selected'] = ''
+        if initial['projection'] == p:
+            checkbox_vals['projection' + p + '_selected'] = 'selected'
+    return initial, checkbox_vals
+
 def set_plot_options(request):
     initial = {}
     checkbox_vals = {}
@@ -2699,3 +2580,41 @@ def set_area_time_series_initial(request):
             if initial[cbv] == bl:
                 checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
     return initial, checkbox_vals
+
+def set_clim_sum_maps_initial(request):
+    initial = {}
+    checkbox_vals = {}
+    if type(request) == dict:
+        def Get(key, default):
+            if key in request.keys():
+                return request[key]
+            else:
+                return default
+    elif request.method == 'GET':
+        Get = getattr(request.GET, 'get')
+    elif request.method == 'POST':
+        Get = getattr(request.POST, 'get')
+    initial['select_grid_by'] = Get('select_grid_by', 'state')
+    initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
+    initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
+    if initial['select_grid_by'] in ['basin', 'county', 'county_warning_area', 'climate_division']:
+        initial['area_type_label']+='/Name'
+    initial['area_type_value'] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
+    initial['overlay_state'] = Get('overlay_state', 'nv')
+    initial['autofill_list'] = 'US_' + initial['select_grid_by']
+    initial['elements'] = Get('elements', 'maxt,mint,pcpn')
+    initial['start_date']  = Get('start_date', fourtnight)
+    initial['end_date']  = Get('end_date', yesterday)
+    initial['grid'] = Get('grid', '1')
+    initial['temporal_summary'] = Get('temporal_summary', 'mean')
+    #set the check box values
+    for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
+        checkbox_vals[area_type + '_selected'] =''
+        if area_type == initial['select_grid_by']:
+            checkbox_vals[area_type + '_selected'] ='selected'
+    for st in ['max','min','mean','sum']:
+        checkbox_vals['temporal_summary_' + st + '_selected'] =''
+        if st == initial['temporal_summary']:
+            checkbox_vals['temporal_summary_' + st + '_selected'] ='selected'
+    return initial, checkbox_vals
+
