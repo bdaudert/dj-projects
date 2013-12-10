@@ -825,7 +825,6 @@ def area_time_series(request):
         #Display liust and serach params
         search_params, display_params_list =  set_area_time_series_params(form)
         context['display_params_list'] = display_params_list
-        context['req'] =display_params_list[1]
         #joins plot opts to search_params
         join_dicts(search_params,initial_plot)
         #Set overlay map if neded
@@ -870,6 +869,7 @@ def area_time_series(request):
                 return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
             #Generate time series from data request
             summary_time_series, download_data = compute_area_time_series_summary(req,search_params,poly,PointIn)
+            context['req']=req
         #Write data in download format
         #Set rest of search_params,context variables and save results
         search_params['spatial_summary'] = WRCCData.DISPLAY_PARAMS[form['spatial_summary']]
@@ -899,7 +899,7 @@ def area_time_series(request):
         form = set_form(request)
         context['need_overlay_map'] = True
         context['need_gridpoint_map'] = False
-        initial, checkbox_vals = set_station_data_initial(request)
+        initial, checkbox_vals = set_area_time_series_initial(request)
         #Override initial where needed
         initial['select_grid_by'] = form['select_overlay_by']
         checkbox_vals[form['select_overlay_by'] + '_selected'] = 'selected'
@@ -2035,11 +2035,11 @@ def compute_area_time_series_summary(req, search_params, poly, PointIn):
         return []
     if not 'data' in req.keys():
         return []
-    if 'location' in search_params.keys():
+    if 'location' in search_params.keys() or isinstance(req['meta']['lat'],float):
         lats_bbox_unique = [req['meta']['lat']]
         lons_bbox_unique = [req['meta']['lon']]
     else:
-        lats_bbox_unique = [lat_grid[0] for lat_grid in req['meta']['lat']]
+        lats_bbox_unique=[lat_grid[0] for lat_grid in req['meta']['lat']]
         lons_bbox_unique = req['meta']['lon'][0]
     #Generate time series from data request
     summary_time_series = [[[str(dat[0])] for dat in req['data']] for el in element_list]
@@ -2058,7 +2058,7 @@ def compute_area_time_series_summary(req, search_params, poly, PointIn):
                 #point lies witin shape, add data to data_poly
                 for date_idx, date_data in enumerate(req['data']):
                     for el_idx, el in enumerate(element_list):
-                        if 'location' in search_params.keys():
+                        if 'location' in search_params.keys() or isinstance(req['meta']['lat'],float):
                             try:
                                 val = float(date_data[el_idx+1])
                             except:
@@ -2068,7 +2068,6 @@ def compute_area_time_series_summary(req, search_params, poly, PointIn):
                                 val = float(date_data[el_idx+1][lat_idx][lon_idx])
                             except:
                                 continue
-
                         if abs(val + 999.0) > 0.001 and abs(val - 999.0)>0.001:
                             values_poly[el_idx][date_idx].append(val)
     #Summarize data
@@ -2410,6 +2409,7 @@ def set_plot_options(request):
             checkbox_vals['marker_type' + '_' + marker_type + '_selected'] = 'selected'
     return initial, checkbox_vals
 
+
 def set_sod_initial(request, app_name):
     stn_id = request.GET.get('stn_id', None)
     start_date = request.GET.get('start_date', None)
@@ -2650,6 +2650,10 @@ def set_gridded_data_initial(request):
             checkbox_vals['temporal_summary_' + st + '_selected'] ='selected'
         if st == initial['spatial_summary']:
             checkbox_vals['spatial_summary_' + st + '_selected'] ='selected'
+    for g in ['1','21','3','4','5','6','7','8','9','10','11','12','13','14','15','16']:
+        checkbox_vals[g + '_selected'] =''
+        if initial['grid'] == g:
+            checkbox_vals[g + '_selected'] ='selected'
     return initial, checkbox_vals
 
 def set_area_time_series_initial(request):

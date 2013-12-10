@@ -319,6 +319,7 @@ function show_overlay_map(){
     ol_map_div.style.display = "block";
     var area_type = document.getElementById('area_type').value;
     var host = document.getElementById('host').value;
+    var kml_file_path = document.getElementById('kml_file_path').value;
     if (!$('#map-overlay').length){
         var m = document.createElement('div');
         m.setAttribute('id', 'map-overlay');
