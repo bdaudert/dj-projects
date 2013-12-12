@@ -698,7 +698,42 @@ def clim_sum_maps(request):
             context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
             context['area_type'] = form['select_grid_by']
         #Generate Maps
-
+        figure_files = []
+        image = {
+            'type':'png',
+            'proj':form['projection'],
+            'interp':form['interpolation'],
+            'overlays':[form['map_ol'], 'county:0.5:black'],
+            'cmap':form['cmap'],
+            'levels':[],
+            'width':WRCCData.IMAGE_SIZES[form['image_size']][0],
+            'height':WRCCData.IMAGE_SIZES[form['image_size']][1]
+        }
+        for el_idx,element in enumerate(form['elements'].replace(' ','').split(',')):
+            img = image
+            params = {
+                'image':img,
+                'output':'json',
+                'select_grid_by':form['select_grid_by'],
+                form['select_grid_by']:form[form['select_grid_by']],
+                'grid': form['grid'],
+                'sdate':form['start_date'],
+                'edate':form['end_date'],
+                'elems':[{'name':element,'smry':form['temporal_summary'],'smry_only':1}],
+                'level_number':form['level_number'],
+                'temporal_summary':form['temporal_summary']
+            }
+            fig = WRCCClasses.GridFigure(params)
+            result = fig.get_grid()
+            if el_idx ==1:
+                context['req'] = result
+            time_stamp = datetime.datetime.now().strftime('%Y%m_%d_%H_%M_%S')
+            figure_file = 'clim_sum_map_' + time_stamp + '.png'
+            file_path_big =TEMP_FILE_DIR + figure_file
+            fig.build_figure(result, file_path_big)
+            figure_files.append(figure_file)
+        context['JSON_URL'] = WEB_SERVER_DIR
+        context['figure_files'] = figure_files
     #overlay map generation
     if 'formOverlay' in request.POST:
         form = set_form(request)

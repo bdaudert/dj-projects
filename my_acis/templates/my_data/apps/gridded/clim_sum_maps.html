@@ -240,7 +240,12 @@
         </div>
         </td>
         </tr>
-        <tr><td></td><td><a target="_blank" href="http://matplotlib.org/mpl_examples/pylab_examples/show_colormaps.pdf">List of available color maps</a></td><td></td></tr>
+        {%if initial.show_plot_opts == "T"%}
+        <tr valign="top" class="plOpts">
+        {%else%}
+        <tr valign="top" class="plOpts" style="display:none;">
+         {%endif%}
+        <td></td><td><a target="_blank" href="http://matplotlib.org/mpl_examples/pylab_examples/show_colormaps.pdf">List of available color maps</a></td><td></td></tr>
         {%if initial.show_plot_opts == "T"%}
         <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
@@ -490,12 +495,16 @@
     {%if error%}
     <p class="error">{{error}}</p>
     {%endif%}
-
+    
+    <p> REQ: {{req}}</p>
 
     <!--Results section-->
-    {%if figure_file%}
-    <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}&data_summary=sum&temporal_resolution=dly"><font size=4>Get raw data behind this graphic here!</font></a>
-    <img alt="FigureFile" width="500px" height="600px" title="FigureFile" src="{{MEDIA_URL}}tmp/{{figure_file}}">
+    {%if figure_files%}
+    <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}&data_summary=sum&temporal_resolution=dly"><font size=3>Get raw data behind this graphic here!</font></a>
+    <br />
+    {%for fig in figure_files%}
+        <img alt="FigureFile" width="400px" height="400px" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br />
+    {%endfor%}
     {%endif%}
 </td></table>
 {%endblock%}
