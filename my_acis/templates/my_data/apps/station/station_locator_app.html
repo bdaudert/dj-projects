@@ -88,16 +88,16 @@
         <tr valign="top">
         <td>Element Constraints:</td>
         <td>
-            <select id="elements_any_all" name="elements_any_all">
-            <option value="any" {{checkbox_vals.elements_any_selected}}>Any</option>
-            <option value="station_ids" {{checkbox_vals.elements_all_selected}}>All</option>
+            <select id="elements_constraints" name="elements_constraints">
+            <option value="any" {{checkbox_vals.elements_any_selected}}>Any elements</option>
+            <option value="all" {{checkbox_vals.elements_all_selected}}>All elements</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
-            <div id="ht_elements_any_all"></div>
+            <div id="ht_elements_constraints"></div>
             <script type="text/javascript">                        
-                $("#ht_elements_any_all").load("{{MEDIA_URL}}html/commons.html #ht_elements_any_all");
+                $("#ht_elements_constraints").load("{{MEDIA_URL}}html/commons.html #ht_elements_constraints");
             </script>
         </div>
         </td>
@@ -129,16 +129,16 @@
         <tr valign="top">
         <td>Date Constraints:</td>
         <td>
-            <select id="dates_any_all" name="dates_any_all">
-            <option value="any" {{checkbox_vals.dates_any_selected}}>Any</option>
-            <option value="all" {{checkbox_vals.dates_all_selected}}>All</option>
+            <select id="dates_constraints" name="dates_constraints">
+            <option value="any" {{checkbox_vals.dates_any_selected}}>Any dates</option>
+            <option value="all" {{checkbox_vals.dates_all_selected}}>All dates</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
-            <div id="ht_dates_any_all"></div>
+            <div id="ht_dates_constraints"></div>
             <script type="text/javascript">                        
-                $("#ht_dates_any_all").load("{{MEDIA_URL}}html/commons.html #ht_dates_any_all");
+                $("#ht_dates_constraints").load("{{MEDIA_URL}}html/commons.html #ht_dates_constraints");
             </script>
         </div>
         </td>
@@ -148,7 +148,12 @@
         <input type="submit" value="Submit" name="formData"/>
         </form>
     </div>
-    <br /><br />
+    <br />
+    <div id="Docu_select_stations_by" style="display:none;"></div>
+    <script type="text/javascript">                        
+        $("#Docu_select_stations_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_stations_by");
+    </script>
+    <br />
 <!--Second Column: How Tos and maps-->
 <td valign="top" width="80%">
         <table>
@@ -173,7 +178,6 @@
         <p>{{map_title}}</p>
         <table>
         <td valign="top" width="85%">
-
         <div id="PolyMap" style="display:none;">
             <div id="panel">
             <div id="color-palette"></div>
@@ -286,10 +290,10 @@
             </table>
             <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
             <input type="hidden" value="{{initial.elements}}" name="elements">
-            <input type="hidden" value="{{initial.elements_any_all}}" name="elements_any_all">
+            <input type="hidden" value="{{initial.elements_constraints}}" name="elements_constraints">
             <input type="hidden" value="{{initial.start_date}}" name="start_date">
             <input type="hidden" value="{{initial.end_date}}" name="end_date">
-            <input type="hidden" value="{{initial.dates_any_all}}" name="dates_any_all">
+            <input type="hidden" value="{{initial.dates_constraints}}" name="dates_constraints">
             <input type="submit" value="Submit" name="formOverlay"/>
             </form>
         </div>
@@ -315,18 +319,18 @@
     <input type="hidden" id="DATA_URL" name="DATA_URL" value="{{DATA_URL}}">
     <input type="hidden" id="TOOLS_URL" name="TOOLS_URL" value="{{TOOLS_URL}}">
 
-    {%if start_date%}
-    <input type="hidden" id="start_date" name="variable" value="{{start_date}}">
+    {%if params_dict.start_date%}
+    <input type="hidden" id="start_date" name="variable" value="{{params_dict.start_date}}">
     {%endif%}
-    {%if end_date%}
-    <input type="hidden" id="end_date" name="variable" value="{{end_date}}">
+    {%if params_dict.end_date%}
+    <input type="hidden" id="end_date" name="variable" value="{{params_dict.end_date}}">
     {%endif%}
-    {%if elements%}
-    <input type="hidden" id="elements" name="variable" value="{{elements}}">
+    {%if params_dict.elements%}
+    <input type="hidden" id="elements" name="variable" value="{{params_dict.elements}}">
     {%endif%}
     
     {%if station_json%}
-    <input type="hidden" id="station_json" name="variable" value="{{ station_json }}">
+    <input type="hidden" id="station_json" name="variable" value="{{station_json}}">
     <div id="map" style="width:100%;height:400px;"></div>
     <script type="text/javascript">
         initialize_station_finder()
@@ -351,8 +355,8 @@
     <td valign="top" width="15%">
     {%if station_json%}
     <div id="map_legend">
-    <h3>Legend of Station Networks</h3>
-    <p>Choose <a href="/csc/media/html/stn_id_system_docu.html" onClick="return popup_window(this, 'Networks')"><font color="#006666">Network ID</font></a>!</td>
+        <h3>Legend of Station Networks</h3>
+        <!--<p>Choose <a href="/csc/media/html/stn_id_system_docu.html" onClick="return popup_window(this, 'Networks')"><font color="#006666">Network ID</font></a>!</td>-->
     </div>
     {%endif%}
     </td>

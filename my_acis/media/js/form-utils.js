@@ -356,7 +356,7 @@ function show_polygon_map(){
         p_map_div.appendChild(m);
     }
     //Generate Map
-    initialize_polygon_map_new();
+    initialize_polygon_map();
 }
 
 function set_area_defaults(area_type){

@@ -478,7 +478,7 @@ function initialize_bbox_map() {
         }
     });
 }   
-
+/*
 function initialize_polygon_map() {
       var drawingManager;
       var selectedShape;
@@ -653,8 +653,9 @@ function initialize_polygon_map() {
       }
       google.maps.event.addDomListener(window, 'load', initialize);
 }
+*/
 
-function initialize_polygon_map_new() {
+function initialize_polygon_map() {
       var drawingManager;
       var selectedShape;
       var colors = ['#1E90FF', '#FF1493', '#32CD32', '#FF8C00', '#4B0082'];

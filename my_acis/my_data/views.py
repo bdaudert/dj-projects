@@ -1029,8 +1029,10 @@ def station_locator_app(request):
         'title': 'Station Finder',
     }
     #Set up initial map (NV stations)
+    '''
     context['station_json'] = 'NV_stn.json'
-    context['map_title'] = 'Map of Nevada US COOP stations!'
+    context['map_title'] = 'Map of Nevada COOP stations!'
+    '''
     initial,checkbox_vals = set_station_locator_initial(request)
     context['initial'] = initial;context['checkbox_vals']=checkbox_vals
     #Set up maps if needed
@@ -1048,8 +1050,6 @@ def station_locator_app(request):
     except IOError:
         status = WRCCUtils.generate_kml_file(initial['select_stations_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
 
-    context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
-
     if 'formData' in request.POST:
         #Turn request object into python dict
         form = set_form(request)
@@ -1061,12 +1061,38 @@ def station_locator_app(request):
         #Set up Maps
         if form['select_stations_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
             context['host'] = 'wrcc.dri.edu'
-            kml_file_name = form['overlay_state'] + '_' + form['select_grid_by'] + '.kml'
+            kml_file_name = form['overlay_state'] + '_' + form['select_stations_by'] + '.kml'
             context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-            context['area_type'] = form['select_grid_by']
+            context['area_type'] = form['select_stations_by']
 
         initial,checkbox_vals = set_station_locator_initial(form)
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
+        #Define map title
+        display_params_list, params_dict = set_station_locator_params(form)
+        context['display_params_list']= display_params_list;context['params_dict']= params_dict
+        element_list = form['elements'].replace(' ','').split(',')
+        #Convert element list to var majors
+        el_vX_list = []
+        for el_idx, element in enumerate(element_list):
+            el,base_temp = WRCCUtils.get_el_and_base_temp(element)
+            if el in ['hdd','gdd']:
+                el_vX_list.append('45')
+            elif el == 'cdd':
+                 el_vX_list.append('45') #should be 44
+            else:
+                el_vX_list.append(str(WRCCData.ACIS_ELEMENTS_DICT[el]['vX']))
+        #Set up params for station_json generation
+        by_type = WRCCData.ACIS_TO_SEARCH_AREA[form['select_stations_by']]
+        val = form[WRCCData.ACIS_TO_SEARCH_AREA[form['select_stations_by']]]
+        context['map_title'] = by_type.upper() + ': ' + val
+        date_range = [form['start_date'],form['end_date']]
+        el_date_constraints = form['elements_constraints'] + '_' + form['dates_constraints']
+        station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=el_date_constraints)
+        if 'error' in station_json.keys():
+            context['error'] = stn_json['error']
+        if station_json['stations'] == []:
+            context['error'] = "No stations found for %s : %s, elements: %s."  %(by_type, val, element_list)
+        context['station_json'] = f_name
 
     #overlay map generation
     if 'formOverlay' in request.POST:
@@ -2201,6 +2227,46 @@ def set_station_data_params(form):
         params_dict['delimiter'] = ' '
     return display_params_list, params_dict
 
+def set_station_locator_params(form):
+    #display_params_list used to dispaly search params to user
+    #params_dict iused to link to relevant apps in html doc
+    if not form:
+        return {}
+
+    key_order = ['select_stations_by', 'elements', 'elements_constraints','start_date', 'end_date', 'dates_constraints']
+    display_params_list = [[] for k in range(len(key_order))]
+    params_dict = {}
+    for key, val in form.iteritems():
+        if key == 'elements':
+            if isinstance(val, str):
+                el_list = val.replace(' ', '').split(',')
+            else:
+                el_list = val
+            elems_long = []
+            display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key], '']
+            params_dict[key] = ','.join(el_list)
+            params_dict[key].rstrip(',')
+            for el_idx, el in enumerate(el_list):
+                try:
+                    int(el[3:5])
+                    display_params_list[1][1]+=WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5]
+                    elems_long.append(WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5])
+                except:
+                    display_params_list[1][1]+=WRCCData.DISPLAY_PARAMS[el]
+                    elems_long.append(WRCCData.DISPLAY_PARAMS[el])
+                if el_idx != 0 and el_idx != len(form['elements']) - 1:
+                    display_params_list[1][1]+=', '
+                    params_dict[key]+=', '
+            params_dict['elems_long'] = elems_long
+        else:
+            try:
+                idx = key_order.index(key)
+                display_params_list[idx] = [WRCCData.DISPLAY_PARAMS[key], str(val)]
+                params_dict[key] = str(val)
+            except ValueError:
+                if key in ['station_id','station_ids', 'stnid', 'stn_id','basin', 'county_warning_area', 'climate_division', 'state', 'bounding_box', 'shape']:
+                    display_params_list.insert(1, [WRCCData.DISPLAY_PARAMS[key], str(val)])
+    return display_params_list, params_dict
 ##################
 #Initialization
 ###################
@@ -2625,7 +2691,7 @@ def set_station_locator_initial(request):
     initial = {}
     checkbox_vals = {}
     Get = set_GET(request)
-    initial['select_stations_by'] = Get('select_stations_by', 'station_id')
+    initial['select_stations_by'] = Get('select_stations_by', 'state')
     initial[str(initial['select_stations_by'])] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
     if initial['select_stations_by'] in ['station_id', 'station_ids', 'basin', 'county', 'county_warning_area', 'climate_division']:
@@ -2634,10 +2700,10 @@ def set_station_locator_initial(request):
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_stations_by']
     initial['elements'] = Get('elements', 'maxt,mint,pcpn')
-    initial['elements_any_all'] = Get('elements_any_all', 'Any')
+    initial['elements_constraints'] = Get('elements_constraints', 'Any')
     initial['start_date']  = Get('start_date', '18900101')
     initial['end_date']  = Get('end_date', yesterday)
-    initial['dates_any_all']  = Get('dates_any_all', 'Any')
+    initial['dates_constraints']  = Get('dates_constraints', 'Any')
     #set the check box values
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
         checkbox_vals[area_type + '_selected'] =''
@@ -2646,8 +2712,8 @@ def set_station_locator_initial(request):
     for b in ['Any', 'All']:
         checkbox_vals['elements_' + b  + '_selected'] =''
         checkbox_vals['dates_' + b  + '_selected'] =''
-        if initial['elements_any_all'] == b:
+        if initial['elements_constraints'] == b:
             checkbox_vals['elements_' + b  + '_selected'] ='selected'
-        if initial['dates_any_all'] == b:
+        if initial['dates_constraints'] == b:
             checkbox_vals['dates_' + b  + '_selected'] ='selected'
     return initial, checkbox_vals
