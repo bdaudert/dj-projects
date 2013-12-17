@@ -709,24 +709,28 @@ def clim_sum_maps(request):
             'width':WRCCData.IMAGE_SIZES[form['image_size']][0],
             'height':WRCCData.IMAGE_SIZES[form['image_size']][1]
         }
-        for el_idx,element in enumerate(form['elements'].replace(' ','').split(',')):
-            img = image
-            params = {
-                'image':img,
-                'output':'json',
-                'select_grid_by':form['select_grid_by'],
-                form['select_grid_by']:form[form['select_grid_by']],
-                'grid': form['grid'],
-                'sdate':form['start_date'],
-                'edate':form['end_date'],
-                'elems':[{'name':element,'smry':form['temporal_summary'],'smry_only':1}],
-                'level_number':form['level_number'],
-                'temporal_summary':form['temporal_summary']
+        params = {
+            'image':image,
+            'output':'json',
+            'select_grid_by':form['select_grid_by'],
+            form['select_grid_by']:form[form['select_grid_by']],
+            'grid': form['grid'],
+            'sdate':form['start_date'],
+            'edate':form['end_date'],
+            'level_number':form['level_number'],
+            'temporal_summary':form['temporal_summary']
             }
-            fig = WRCCClasses.GridFigure(params)
+        for el_idx,element in enumerate(form['elements'].replace(' ','').split(',')):
+            pms={}
+            for key, val in params.iteritems():
+                pms[key] = params[key]
+                if key == 'image':
+                    pms[key]['levels'] = []
+            pms['elems'] = [{'name':element,'smry':form['temporal_summary'],'smry_only':1}]
+            if el_idx ==2:
+                context['req'] = pms
+            fig = WRCCClasses.GridFigure(pms)
             result = fig.get_grid()
-            if el_idx ==1:
-                context['req'] = result
             time_stamp = datetime.datetime.now().strftime('%Y%m_%d_%H_%M_%S')
             figure_file = 'clim_sum_map_' + time_stamp + '.png'
             file_path_big =TEMP_FILE_DIR + figure_file
@@ -1144,13 +1148,12 @@ def station_locator_app(request):
     call(["touch", TEMP_FILE_DIR + "Empty.json"])
     context = {
         'title': 'Station Finder',
-        'icon':'Magnify.png'
     }
     form0 = set_as_form(request,'StationLocatorForm0')
     context['form0'] = form0
     context['empty_json'] = False
     context['show_legend'] = True
-    context['map_title'] = 'Map of Southwest US COOP stations!'
+    context['map_title'] = 'Map of Nevada US COOP stations!'
 
     if 'form0' in request.POST:
         context['map_title'] = ''
@@ -1191,7 +1194,7 @@ def station_locator_app(request):
         context['form1'] = form1
         context['form1_ready'] = True
         if form1.is_valid():
-            context[form1.cleaned_data['select_stations_by']] = form1.cleaned_data[form1.cleaned_data['select_stations_by']]
+            #context[form1.cleaned_data['select_stations_by']] = form1.cleaned_data[form1.cleaned_data['select_stations_by']]
             if 'elements' in form1.cleaned_data.keys():
                 element_list = ','.join(form1.cleaned_data['elements'])
             else:

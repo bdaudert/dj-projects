@@ -52,12 +52,12 @@
         </tr>
         <tr>
         <td></td>
-        <td><div class="pop_link" onClick="ShowHide('Docu_select_grid_by')"><b><u>Area Selection Choices</u></b> explained</div></td>
+        <td><div class="pop_link" onClick="ShowHide('Docu_select_grid_by_ts')"><b><u>Area Selection Choices</u></b> explained</div></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_gridselections_explained"></div>
             <script type="text/javascript">                        
-                $("#ht_grid_selections_explained").load("{{MEDIA_URL}}html/commons.html #ht_grid_selections_explained");
+                $("#ht_grid_selections_explained").load("{{MEDIA_URL}}html/commons.html #ht_grid_selections_ts_explained");
             </script>
         </div>
         </td>
@@ -322,7 +322,7 @@
 <!--RIGHT-->
 </td>
 <td valign="top" width="70%">
-    <h2 class="error">This page is under development!</h2> <img alt=Construction" title="Construction" src="{{MEDIA_URL}}img/Construction.png">
+    <h2 class="error">This page is under development! <img alt=Construction" title="Construction" src="{{MEDIA_URL}}img/Construction.png"></h2>
 
     <table>
     <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
@@ -342,9 +342,9 @@
         $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_CLIM_SUM_MAP");
     </script> 
 
-    <div id="Docu_select_grid_by" style="display:none;"></div>
+    <div id="Docu_select_grid_by_ts" style="display:none;"></div>
     <script type="text/javascript">                        
-        $("#Docu_select_grid_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_grid_by");
+        $("#Docu_select_grid_by_ts").load("{{MEDIA_URL}}html/commons.html #Docu_select_grid_by_ts");
     </script>
 
     <div id="Docu_grids" style="display:none;"></div>
@@ -496,14 +496,13 @@
     <p class="error">{{error}}</p>
     {%endif%}
     
-    <p> REQ: {{req}}</p>
 
     <!--Results section-->
     {%if figure_files%}
-    <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{start_date}}&end_date={{end_date}}&elements={{elems}}&grid={{grid}}&state={{state}}&data_summary=sum&temporal_resolution=dly"><font size=3>Get raw data behind this graphic here!</font></a>
-    <br />
+    <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{initial.start_date}}&end_date={{initial.end_date}}&elements={{initial.elements}}&grid={{initial.grid}}&select_grid_by={{initial.select_grid_by}}&{{initial.select_grid_by}}={{initial.area_type_value}}&data_summary=temporal&temporal_resolution=dly&temporal_summary={{initial.temporal_summary}}"><font size=3>Get raw data behind this graphic here!</font></a>
+    <br /></br /></br>
     {%for fig in figure_files%}
-        <img alt="FigureFile" width="400px" height="400px" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br />
+        <img alt="FigureFile" width="400px" height="400px" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br /><br />
     {%endfor%}
     {%endif%}
 </td></table>

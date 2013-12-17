@@ -169,7 +169,17 @@ def sods(request, app_name):
         #import pdb; pdb.set_trace()
         if  form2.is_valid():
             context['cleaned'] = form2.cleaned_data
-            (data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
+            if app_name == 'Sodsumm':
+                sp = {}
+                for key,val in form2.cleaned_data.iteritems():
+                    if key == 'end_date':
+                        yr = str(int(val[0:4]) + 1)
+                        sp[key] = yr + val[4:]
+                    else:
+                        sp[key] = val
+                (data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(sp, app_name)
+            else:
+                (data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
             #get contexts for the different apps and run data application
             if app_name in ['Sodrun', 'Sodrunr']:
                 if elements == ['maxt', 'mint']:
@@ -444,7 +454,7 @@ def sods(request, app_name):
                 context['end_year'] = dates[-1]
             elif app_name == 'Soddd':
                 context['start_year'] = dates[0][0:4]
-                context['end_year'] = str(int(dates[-1][0:4]) - 1)
+                context['end_year'] = str(int(dates[-1][0:4]))
             else:
                 context['start_year'] = dates[0][0:4]
                 if app_name == 'Sodxtrmts':
