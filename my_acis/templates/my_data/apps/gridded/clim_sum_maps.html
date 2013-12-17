@@ -33,12 +33,14 @@
         <td>Select grid by:</td>
         <td>
             <select id="select_grid_by" name="select_grid_by" onchange="set_station_grid_select('area',this);">
+            <!--
             <option value="county" {{checkbox_vals.county_selected}}>County</option>
             <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
             <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
-            <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
+            <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>-->
             <option value="state" {{checkbox_vals.state_selected}}>State</option>
-            <option value="shape" {{checkbox_vals.shape_selected}}>Custom Shape</option>
+            <!--
+            <option value="shape" {{checkbox_vals.shape_selected}}>Custom Shape</option>-->
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -472,9 +474,14 @@
             <input type="hidden" value="{{initial.elements}}" name="elements">
             <input type="hidden" value="{{initial.start_date}}" name="start_date">
             <input type="hidden" value="{{initial.end_date}}" name="end_date">
-            <input type="hidden" value="{{initial.show_flags}}" name="show_flags">
-            <input type="hidden" value="{{initial.show_observation_time}}" name="show_observation_time">
-            <input type="hidden" value="{{initial.data_format}}" name="data_format">
+            <input type="hidden" value="{{initial.grid}}" name="grid">
+            <input type="hidden" value="{{initial.temporal_summary}}" name="temporal_summary">
+            <input type="hidden" value="{{initial.image_size}}" name="image_size">
+            <input type="hidden" value="{{initial.level_number}}" name="level_number">
+            <input type="hidden" value="{{initial.cmap}}" name="cmap">
+            <input type="hidden" value="{{initial.map_ol}}" name="map_ol">
+            <input type="hidden" value="{{initial.interpolation}}" name="interpolation">
+            <input type="hidden" value="{{initial.projection}}" name="projection">
             <input type="submit" value="Submit" name="formOverlay"/>
             </form>
         </div>

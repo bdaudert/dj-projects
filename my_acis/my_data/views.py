@@ -766,127 +766,6 @@ def clim_sum_maps(request):
             context['area_type'] = form['select_overlay_by']
     return render_to_response('my_data/apps/gridded/clim_sum_maps.html', context, context_instance=RequestContext(request))
 
-def old_clim_sum_maps(request):
-    context = {
-        'title': 'Climate Summary Maps',
-        'icon':'ToolProduct.png'
-    }
-    lat = request.GET.get('lat', None)
-    lon = request.GET.get('lon', None)
-    element = request.GET.get('element', None)
-    start_date = request.GET.get('start_date', None)
-    end_date = request.GET.get('end_date', None)
-    grid= request.GET.get('grid', None)
-    state = request.GET.get('state', None)
-    bounding_box = request.GET.get('bounding_box', None)
-    initial = {}
-    if element is not None:initial['element'] = str(element)
-    if start_date is not None:initial['start_date'] = str(start_date)
-    if end_date is not None:initial['end_date'] = str(end_date)
-    if lat is not None and lon is not None:
-        initial['lat']=str(lat);initial['lon']=str(lon)
-        context['lat'] = lat;context['lon'] = lon
-    if grid is not None:initial['grid'] = str(grid)
-    if state is not None:initial['state'] = state
-    if bounding_box is not None:initial['bounding_box'] = bounding_box
-
-    if initial:
-        if element and start_date and end_date:
-            form1 = forms.ClimateMapForm1(initial=initial)
-            context['form1'] = form1
-            context['hide_form0'] = True
-            context['form1_ready'] = True
-        else:
-            form0 = set_as_form(request,'ClimateMapForm0', init=initial)
-            context['form0'] = form0
-    else:
-        form0 = set_as_form(request,'ClimateMapForm0')
-        context['form0'] = form0
-
-    if 'form0' in request.POST:
-        form0 = set_as_form(request,'ClimateMapForm0')
-        context['form0']  = form0
-        context['hide_form0'] = True
-        if form0.is_valid():
-            context['form1_ready'] = True
-            context['select_grid_by'] = form0.cleaned_data['select_grid_by']
-            if form0.cleaned_data['select_grid_by'] == 'bbox':
-                bounding_box = request.GET.get('bounding_box', None)
-                if bounding_box is not None:
-                    context['bbox'] = bounding_box
-                else:
-                    context['bbox'] = '-115,34,-114,35'
-                context['need_map'] = True
-            initial = {'select_grid_by':form0.cleaned_data['select_grid_by'], \
-                      'element':form0.cleaned_data['element'], \
-                      'time_period':form0.cleaned_data['time_period'], \
-                      'x': form0.cleaned_data['x']}
-            form1 = forms.ClimateMapForm1(initial=initial)
-            context['form1'] = form1
-
-    if 'form1' in request.POST:
-        form1 = set_as_form(request,'ClimateMapForm1')
-        context['form1'] = form1
-        context['hide_form0'] = True
-        if form1.is_valid():
-            image = dict(type='png',proj='lcc',interp='cspline',cmap='jet',
-                    overlays=['state','county:0.5:black'],width=500, height=400)
-            params = {'image':image , 'output':'json', 'grid': form1.cleaned_data['grid'], \
-                    'sdate': form1.cleaned_data['start_date'], \
-                    'edate': form1.cleaned_data['end_date']}
-            if form1.cleaned_data['element'] == 'gddxx':
-                elem = 'gdd%s' %str(form1.cleaned_data['base_temperature_gddxx'])
-                context['elems_long'] = WRCCData.ACIS_ELEMENTS_DICT['gdd']['name_long']
-                context['base_temp'] = str(form1.cleaned_data['base_temperature_gddxx'])
-            elif form1.cleaned_data['element'] == 'hddxx':
-                elem = 'hdd%s' %str(form1.cleaned_data['base_temperature_hddxx'])
-                context['elems_long'] = WRCCData.ACIS_ELEMENTS_DICT['hdd']['name_long']
-                context['base_temp'] = str(form1.cleaned_data['base_temperature_hddxx'])
-            elif form1.cleaned_data['element'] == 'cddxx':
-                elem = 'cdd%s' %str(form1.cleaned_data['base_temperature_cddxx'])
-                context['elems_long'] = WRCCData.ACIS_ELEMENTS_DICT['cdd']['name_long']
-                context['base_temp'] = str(form1.cleaned_data['base_temperature_cddxx'])
-            else:
-                elem = str(form1.cleaned_data['element'])
-                context['elems_long'] = WRCCData.ACIS_ELEMENTS_DICT[elem]['name_long']
-            params['elems'] = [{'name':elem}]
-            if 'state' in form1.cleaned_data.keys():
-                params['state'] = form1.cleaned_data['state']
-                region = 'state_%s' %form1.cleaned_data['state']
-                context['state'] = form1.cleaned_data['state']
-            elif 'bounding_box' in form1.cleaned_data.keys():
-                context['need_map'] = True
-                context['bbox'] = form1.cleaned_data['bounding_box']
-                params['bbox'] = form1.cleaned_data['bounding_box']
-                region = 'bbox_' + re.sub(',','_',form1.cleaned_data['bounding_box'])
-                context['bbox'] = form1.cleaned_data['bounding_box']
-
-            context['elems'] = elem
-            context['start_date']= form1.cleaned_data['start_date']
-            context['end_date'] = form1.cleaned_data['end_date']
-            context['grid']= form1.cleaned_data['grid']
-            context['select_grid_by'] = form1.cleaned_data['select_grid_by']
-            context['params'] = params
-            fig = WRCCClasses.GridFigure(params)
-            results = fig.get_grid()
-            time_stamp = datetime.datetime.now().strftime('%Y%m_%d_%H_%M_%S_')
-            figure_file = time_stamp + 'acis_map_' + region + '.png'
-            context['time_stamp'] = time_stamp
-            context['region']= region
-            file_path_big = MEDIA_URL + TEMP_FILE_DIR + figure_file
-            #file_path_small = MEDIA_URL +'tmp/' + time_stamp + 'acis_map_small_' + region + '.png'
-            #context['file_path_thumbnail'] = file_path_small
-            fig.build_figure(results, file_path_big)
-            context['figure_file'] = figure_file
-            #fig.draw_thumbnail(results,file_path_small)
-        #form1 not valid or we are done with computations
-        form0 = forms.ClimateMapForm0()
-        context['form0'] = form0
-        form1 = set_as_form(request, 'ClimateMapForm1')
-        context['form1_ready'] = True
-        context['form1'] = form1
-    return render_to_response('my_data/apps/gridded/clim_sum_maps.html', context, context_instance=RequestContext(request))
-
 def clim_prob_maps(request):
     context = {
         'title': 'Climate Probability Maps',
@@ -1149,11 +1028,85 @@ def station_locator_app(request):
     context = {
         'title': 'Station Finder',
     }
+    #Set up initial map (NV stations)
+    context['station_json'] = 'NV_stn.json'
+    context['map_title'] = 'Map of Nevada US COOP stations!'
+    initial,checkbox_vals = set_station_locator_initial(request)
+    context['initial'] = initial;context['checkbox_vals']=checkbox_vals
+    #Set up maps if needed
+    context['host'] = 'wrcc.dri.edu'
+    context['area_type'] = initial['select_stations_by']
+    context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
+    kml_file = initial['overlay_state'] + '_' + initial['select_stations_by'] + '.kml'
+    context[initial['overlay_state'] + '_selected'] = 'selected'
+    context['kml_file_path'] = WEB_SERVER_DIR +  kml_file
+    #Check if kml file exists, if not generate it
+    try:
+        with open(TEMP_FILE_DIR + kml_file):
+            if os.stat(TEMP_FILE_DIR + kml_file).st_size==0:
+                status = WRCCUtils.generate_kml_file(initial['select_stations_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
+    except IOError:
+        status = WRCCUtils.generate_kml_file(initial['select_stations_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
+
+    context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
+
+    if 'formData' in request.POST:
+        #Turn request object into python dict
+        form = set_form(request)
+        fields_to_check = ['start_date', 'end_date','elements']
+        form_error = check_form(form, fields_to_check)
+        if form_error:
+            context['form_error'] = form_error
+            return render_to_response('my_data/apps/station/station_locator.html', context, context_instance=RequestContext(request))
+        #Set up Maps
+        if form['select_stations_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
+            context['host'] = 'wrcc.dri.edu'
+            kml_file_name = form['overlay_state'] + '_' + form['select_grid_by'] + '.kml'
+            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
+            context['area_type'] = form['select_grid_by']
+
+        initial,checkbox_vals = set_station_locator_initial(form)
+        context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
+
+    #overlay map generation
+    if 'formOverlay' in request.POST:
+        context['need_overlay_map'] = True
+        context['station_json'] = False
+        form = set_form(request)
+        initial, checkbox_vals = set_station_locator_initial(request)
+        #Override initial where needed
+        initial['select_stations_by'] = form['select_overlay_by']
+        checkbox_vals[form['select_overlay_by'] + '_selected'] = 'selected'
+        initial['area_type_value'] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
+        initial[form['select_overlay_by']] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
+        initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[form['select_overlay_by']]
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        at = form['select_overlay_by']
+        st = form['overlay_state']
+        context[st + '_selected'] = 'selected'
+        kml_file_name = st + '_' + at + '.kml'
+        dir_location = TEMP_FILE_DIR
+        status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
+        if not status == 'Success':
+            context['overlay_error'] = status
+        else:
+            context['host'] = 'wrcc.dri.edu'
+            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
+            context['area_type'] = form['select_overlay_by']
+
+    return render_to_response('my_data/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
+
+def old_station_locator_app(request):
+    from subprocess import call
+    call(["touch", TEMP_FILE_DIR + "Empty.json"])
+    context = {
+        'title': 'Station Finder',
+    }
     form0 = set_as_form(request,'StationLocatorForm0')
     context['form0'] = form0
     context['empty_json'] = False
     context['show_legend'] = True
-    context['map_title'] = 'Map of Nevada US COOP stations!'
+    context['map_title'] = 'Map of Southwest US COOP stations!'
 
     if 'form0' in request.POST:
         context['map_title'] = ''
@@ -1603,6 +1556,18 @@ def sodsumm(request):
 ###########
 #General
 ###########
+def set_GET(request):
+    if type(request) == dict:
+        def Get(key, default):
+            if key in request.keys():
+                return request[key]
+            else:
+                return default
+    elif request.method == 'GET':
+        Get = getattr(request.GET, 'get')
+    elif request.method == 'POST':
+        Get = getattr(request.POST, 'get')
+    return Get
 
 #FORM SANITY CHECKS
 def check_form(form, fields_to_check):
@@ -2487,7 +2452,7 @@ def set_station_data_initial(request):
     initial['show_flags'] = Get('show_flags', 'F')
     initial['show_observation_time'] = Get('show_observation_time', 'F')
     initial['data_format'] = Get('data_format', 'html')
-    initial['delimiter'] = Get('delimiter', ',')
+    initial['delimiter'] = Get('delimiter', 'comma')
     initial['output_file_name'] = Get('output_file_name', 'Output')
     #set the check box values
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
@@ -2656,3 +2621,33 @@ def set_clim_sum_maps_initial(request):
             checkbox_vals['temporal_summary_' + st + '_selected'] ='selected'
     return initial, checkbox_vals
 
+def set_station_locator_initial(request):
+    initial = {}
+    checkbox_vals = {}
+    Get = set_GET(request)
+    initial['select_stations_by'] = Get('select_stations_by', 'station_id')
+    initial[str(initial['select_stations_by'])] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
+    initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
+    if initial['select_stations_by'] in ['station_id', 'station_ids', 'basin', 'county', 'county_warning_area', 'climate_division']:
+        initial['area_type_label']+='/Name'
+    initial['area_type_value'] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
+    initial['overlay_state'] = Get('overlay_state', 'nv')
+    initial['autofill_list'] = 'US_' + initial['select_stations_by']
+    initial['elements'] = Get('elements', 'maxt,mint,pcpn')
+    initial['elements_any_all'] = Get('elements_any_all', 'Any')
+    initial['start_date']  = Get('start_date', '18900101')
+    initial['end_date']  = Get('end_date', yesterday)
+    initial['dates_any_all']  = Get('dates_any_all', 'Any')
+    #set the check box values
+    for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
+        checkbox_vals[area_type + '_selected'] =''
+        if area_type == initial['select_stations_by']:
+            checkbox_vals[area_type + '_selected'] ='selected'
+    for b in ['Any', 'All']:
+        checkbox_vals['elements_' + b  + '_selected'] =''
+        checkbox_vals['dates_' + b  + '_selected'] =''
+        if initial['elements_any_all'] == b:
+            checkbox_vals['elements_' + b  + '_selected'] ='selected'
+        if initial['dates_any_all'] == b:
+            checkbox_vals['dates_' + b  + '_selected'] ='selected'
+    return initial, checkbox_vals

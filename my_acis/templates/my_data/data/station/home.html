@@ -182,11 +182,11 @@
         <td>Delimiter:</td>
         <td>
         <select id="delimiter" name="delimiter">
-        <option value="comma" selected>Comma (,)</option>
-        <option value="tab">Tab (    )</option>
-        <option value="space">Space ( )</option>
-        <option value="colon">Colon (:)</option>
-        <option value="pipe">pipe(|)</option>
+        <option value="comma" {{checkbox_vals.comma_selected}}>Comma (,)</option>
+        <option value="tab" {{checkbox_vals.tab_selected}}>Tab (    )</option>
+        <option value="space" {{checkbox_vals.space_selected}}>Space ( )</option>
+        <option value="colon" {{checkbox_vals.colon_selected}}>Colon (:)</option>
+        <option value="pipe" {{checkbox_vals.pipe_selected}}>pipe(|)</option>
         </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -363,6 +363,8 @@
             <input type="hidden" value="{{initial.show_flags}}" name="show_flags">
             <input type="hidden" value="{{initial.show_observation_time}}" name="show_observation_time">
             <input type="hidden" value="{{initial.data_format}}" name="data_format">
+            <input type="hidden" value="{{initial.delimiter}}" name="delimiter">
+            <input type="hidden" value="{{initial.output_file_name}}" name="output_file_name">
             <input type="submit" value="Submit" name="formOverlay"/>
             </form>
         </div>

@@ -74,7 +74,7 @@ function initialize_station_finder() {
     var MEDIA_URL = document.getElementById("MEDIA_URL").value;
     var DATA_URL = document.getElementById("DATA_URL").value;
     var TOOLS_URL = document.getElementById("TOOLS_URL").value;
-    var json_file = document.getElementById("json_file").value;
+    var json_file = document.getElementById("station_json").value;
     if (document.getElementById("start_date")) {
         var start_date = document.getElementById("start_date").value;
     } 
@@ -88,7 +88,7 @@ function initialize_station_finder() {
     }
     else { var elements = null } 
     //Read in stn data json file
-    $.getJSON(MEDIA_URL + 'tmp/' + json_file, function(data) {
+    $.getJSON('/csc/media/tmp/' + json_file, function(data) {
 
         //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
         var ll = new google.maps.LatLng(data.stations[0].lat, data.stations[0].lon);
