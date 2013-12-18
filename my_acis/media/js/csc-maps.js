@@ -117,10 +117,10 @@ function initialize_station_finder() {
             legend.appendChild(div);
         }
         //Create 'show all networks' button first
-        var name = 'All Networks';
+        var name = 'All';
         var icon = 'http://thydzik.com/thydzikGoogleMap/markerlink.php?text=A&color=FC6355';
         var div = document.createElement('div');
-        div.innerHTML = '<input type="checkbox" id="all" onclick="my_boxclick(this,\'all\')"/>' + ' <img alt="Icon" title="Icon" src="' + icon + '"><b> ' + name + '</b><br /><p class="error">Please be patient while map is loading!</p>';
+        div.innerHTML = '<input type="checkbox" id="all" onclick="my_boxclick(this,\'all\')"/>' + ' <img alt="Icon" title="Icon" src="' + icon + '"><b> ' + name + '</b><br />';
         legend.appendChild(div);
         var bounds=new google.maps.LatLngBounds();
 

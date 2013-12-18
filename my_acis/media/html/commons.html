@@ -522,64 +522,80 @@ or here:<a class="docu_long"target="_blank" href="/csc/media/html/stn_id_system_
 
 <div id="About_station_finder">
     <p class="error">What is the <b>Station Finder</b> Tool?</p>   
-    <p>Tool to locate weather stations that record daily climate data across the US. </p>
+    <p>Tool to locate weather stations that record daily climate data across the US. <br />
+    <p class="error">What type of stations/data can be found?</p>
+    <p>Currently stations belonging to following networks can be found. These stations offer standard climate variables such as Maximum/Minimum/Averager Temperature, Snow, Snowdepth and Degree Days. Temporal resolution is daily.<br />
+    <b>Networks</b>
+    <ul>
+    <li><a href="http://www.ncdc.noaa.gov/homr/">WBAN</a></li>
+    <li><a href="http://www.nws.noaa.gov/om/coop/">COOP</a></li>
+    <li><a href="http://www.ncdc.noaa.gov/oa/climate/ghcn-daily/">GHCN</a></li>
+    <li><a href="http://www.icao.int/Pages/default.aspx">ICAO</a></li>
+    <li><a href="http://www.weather.gov/">NWSLI</a></li>
+    <li><a href="http://www.faa.gov/">FAA</a></li>
+    <li><a href="http://www.wmo.int/pages/index_en.html">WMO</a></li>
+    <li><a href="http://www.cocorahs.org/">CoCoRaHS</a></li>
+    <li><a href="http://threadex.rcc-acis.org/">ThreadEx</a></li>
+    </ul>
+    </p>
     <p class="error">What can you do with this tool?</p>
-    <p>Search for stations by element choice and time range.</p>
-    <p>Search for stations in a variety of area, e.g. country warning area, county, basin, state, climate division.</p>
-    <p>Download data from a station.</p>
-    <p>Obtain climate summaries for a station (COOP only).</p>
-    <p>Choose from a list of data analysis that can be preformed on the available data sets of that station.</p>
+    <p>
+    Search for stations by climate element(s) and time range.<br />
+    Search for stations in a variety of area, e.g. country warning area, county, basin, state, climate division and custom shapes.<br />
+    Obtain climate summaries for a station (COOP only).<br />
+    Find available data analysis tools for a station.<br />
+    </p>
 </div>
 
 <div id="Howto_station_finder">
-    <p><b>FORM 1</b><br />
-        <b>Select station by </b>Several area options are available. Most require you to know the appropriate identifiers, e.g. station ID(s), County Warning Area codes, etc.. However, links or map interfaces that help you find the identifiers will be provided when filling out FORM 2. Use the custom shape option if you wish to define your own shape.<br />
-        <b>Element Selection</b>
+    <p>
+    <b>Select station by </b>Defines the type of search area. Several area options are available. Map Interfaces will help you find the identifiers or enable you to draw a custom polygon.
+    <ul>
+    <li><b>Individual station </b>Enter the name or identifier of a station of interest.</li>
+    <li><b>List of stations </b>Enter the names or identifiers of a multiple stations.</li>
+    <li><b>State </b>Enter a US state abbreviation (not case sensitive).</li>
+    <li><b>County</b>Enter a county US FIPScode. Use the map interface to find FIPS codes by US state.
+    <li><b>County Warning Area </b>Enter a county waring area code. Use the map interface to find County Warning Area codes by US state.</li>
+    <li><b>Basin </b>Enter a US Basin code.  Use the map interface to find Basin codes by US state.</li>
+    <li><b>Shape </b> Enter the lon, lat coordinates or use the map interface to draw a custom polygon. You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend.
         <ul>
-            <li><b>Any climate element </b> This search will look for stations that have data for any of the 8 standard climate elements:</li>
-                <ul>
-                    <li>Maximum Temperature</li>
-                    <li>Minimum Temperature</li>
-                    <li>Precipitation</li>
-                    <li>Snowfall</li>
-                    <li>Snowdepth</li>
-                    <li>Degree Days (Heating/Cooling/Growing)</li>
-                </ul>
-            <li><b>Choose climate elements</b> Only look for stations that carry data for specific elements. Multiple elements can be searched for.</li>
+        <li><b>Marker </b>Point and click on the map.</li>
+        <li><b>Connected line segments </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
+        <li><b>Rectangle </b> Point at a corner of your rectangle, click, hold and drag.</li>
+        <li><b>Circle </b>Point at the center of your circle,  click, hold and drag.</li>
+        <li><b>Polygon </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
         </ul>
-        Click the <b>Select</b> button. A second form will appear.
-    </p>
-    <p><b>FORM 2</b><br /> 
-        Depending on your <b>Select station by </b>choice from FORM 1, you will see:
-        <ul>
-            <li><b>State </b>Enter a US state abbreviation (not case sensitive).</li>
-            <li><b>States </b>Enter a comma separarted list of US state abbreviations (not case sensitive).</li>
-            <li><b>County Warning Area </b>Enter a county waring area code. If you don't know your county warning area code, please use the link below the form field to find it.</li>
-            <li><b>Basin </b>Enter a US basin code. If you don't know your basin code, please use the link below the form field to find it.</li>
-            <li><b>Bounding Box </b>A bounding box has four coordinates:West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</li>
-            <li><b>Shape </b> Enter the lon, lat coordinates of your custom shape or use the map interface to define it. You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend.
-                    <ul>
-                        <li><b>Marker </b>Point and click on the map.</li>
-                        <li><b>Connected line segments </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
-                        <li><b>Rectangle </b> Point at a corner of your rectangle, click, hold and drag.</li>
-                        <li><b>Circle </b>Point at the center of your circle,  click, hold and drag.</li>
-                        <li><b>Polygon </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
-                    </ul>
-                </li>
-        </ul>
-        <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd.<br />
-        <b>Elements </b>This option will appear only if you chose <b>Choose climate elements</b>
-            <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
-           <div id="element_choices" style="display:none"><img alt="ElementChoices" title="ElementChoices" width="400px" height="400px" src=/csc/media/img/ACIS_Element_Choices_Stn_Finder.png></div><br />
-        <b>Constraints  </b>
-        <img alt="StnFinderLogic" title="StnFinderLogic" src="/csc/media/img/Stn_Finder_Logic.png" id="StnFinderLogic" width="400" height="200" border="0"><br />
-        Example 1: <b>Start date</b>: 20010101, <b>End Date</b>: 20091231,<b>Elements</b>: maxt,pcpn, <b>Constraints</b>: Any Element, All Date<br>
-        This search will find stations that have </b>Maximum Temperature data <b>OR</b>Precipitation data recorded for <b>ALL</b> days in the decade 2000 - 2010<br />
-        Example 2: <b>Start date</b>: 20010101, <b>End Date</b>: 20091231,<b>Elements</b>: maxt,pcpn, <b>Constraints</b>: All Element, Any Date<br>
-        This search will find stations that have </b>Maximum Temperature data <b>AND</b>Precipitation data recorded for <b>AT LEAST</b> on day in
+    </li></ul>
+    </p><p>
+    <b>Elements </b>Choose the climate elements that you are interested in.Input should be a comma separarted list. Following climate elements area available. 
+    <ul>
+    <li>Maximum Temperature</li>
+    <li>Minimum Temperature</li>
+    <li>Precipitation</li>
+    <li>Snowfall</li>
+    <li>Snowdepth</li>
+    <li>Degree Days (Heating/Cooling/Growing)</li>
+    </ul>
+    </p><p>
+    <b>Element Constraints </b> 
+    <ul>
+    <li><b>Any</b>Choose this option if you want to find stations that have at least one of the climate elements listed in the <b>Elements</b> section.</li>
+    <li><b>All</b>Choose this option if you want to find stations that have all of the climate elements listed in the <b>Elements</b> section.</li>
+    </ul>
+    </p><p>
+    <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd.<br />
+    <b>Date Constraints </b> 
+    <ul>
+    <li><b>Any</b>Choose this option if you want to find stations that have at least one data record between start and end date.</li>
+    <li><b>All</b>Choose this option if you want to find stations that have data records for all dates between start and end date.</li>
+    </ul>
+    </p><p>
+    Example 1: <b>Start date</b>: 20010101, <b>End Date</b>: 20091231,<b>Elements</b>: maxt,pcpn, <b>Constraints</b>: Any Element, All Dates<br>
+    This search will find stations that have </b>Maximum Temperature data <b>OR</b>Precipitation data recorded for <b>ALL</b> days in the decade 2000 - 2010<br />
+    Example 2: <b>Start date</b>: 20010101, <b>End Date</b>: 20091231,<b>Elements</b>: maxt,pcpn, <b>Constraints</b>: All Element, Any Date<br>
+    This search will find stations that have </b>Maximum Temperature data <b>AND</b>Precipitation data recorded for <b>AT LEAST</b> on day in
 the decade 2000 - 2010<br />
     </p>        
-
 </div>
 
 <div id="Docu_MON_AVES" title="Monthly Averages">

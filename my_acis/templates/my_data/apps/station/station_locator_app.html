@@ -21,7 +21,7 @@
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 
 <!--First Table: Form, HowTos, Links-->    
-<table cellpadding="2">
+<table cellpadding="none">
 <td valign="top" width="15%">
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/station_finder'"/>
     <!--First Column:forms and Links-->
@@ -155,7 +155,7 @@
     </script>
     <br />
 <!--Second Column: How Tos and maps-->
-<td valign="top" width="80%">
+<td valign="top" width="70%">
         <table>
         <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
         </table> 
@@ -175,9 +175,9 @@
         </script>
 
         <!--Maps-->
-        <p>{{map_title}}</p>
+        <!--<font size="2" color="#006666" align="center">{{map_title}}</font>-->
         <table>
-        <td valign="top" width="85%">
+        <td valign="top" width="70%">
         <div id="PolyMap" style="display:none;">
             <div id="panel">
             <div id="color-palette"></div>
@@ -318,7 +318,6 @@
     <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
     <input type="hidden" id="DATA_URL" name="DATA_URL" value="{{DATA_URL}}">
     <input type="hidden" id="TOOLS_URL" name="TOOLS_URL" value="{{TOOLS_URL}}">
-
     {%if params_dict.start_date%}
     <input type="hidden" id="start_date" name="variable" value="{{params_dict.start_date}}">
     {%endif%}

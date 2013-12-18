@@ -1029,16 +1029,14 @@ def station_locator_app(request):
         'title': 'Station Finder',
     }
     #Set up initial map (NV stations)
-    '''
     context['station_json'] = 'NV_stn.json'
     context['map_title'] = 'Map of Nevada COOP stations!'
-    '''
     initial,checkbox_vals = set_station_locator_initial(request)
     context['initial'] = initial;context['checkbox_vals']=checkbox_vals
     #Set up maps if needed
     context['host'] = 'wrcc.dri.edu'
-    context['area_type'] = initial['select_stations_by']
-    context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
+    #context['area_type'] = initial['select_stations_by']
+    #context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
     kml_file = initial['overlay_state'] + '_' + initial['select_stations_by'] + '.kml'
     context[initial['overlay_state'] + '_selected'] = 'selected'
     context['kml_file_path'] = WEB_SERVER_DIR +  kml_file
@@ -1084,7 +1082,7 @@ def station_locator_app(request):
         #Set up params for station_json generation
         by_type = WRCCData.ACIS_TO_SEARCH_AREA[form['select_stations_by']]
         val = form[WRCCData.ACIS_TO_SEARCH_AREA[form['select_stations_by']]]
-        context['map_title'] = by_type.upper() + ': ' + val
+        context['map_title'] = WRCCData.DISPLAY_PARAMS[by_type].upper() + ': ' + val
         date_range = [form['start_date'],form['end_date']]
         el_date_constraints = form['elements_constraints'] + '_' + form['dates_constraints']
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=el_date_constraints)
@@ -1099,10 +1097,12 @@ def station_locator_app(request):
         context['need_overlay_map'] = True
         context['station_json'] = False
         form = set_form(request)
-        initial, checkbox_vals = set_station_locator_initial(request)
+        #initial, checkbox_vals = set_station_locator_initial(request)
         #Override initial where needed
         initial['select_stations_by'] = form['select_overlay_by']
         checkbox_vals[form['select_overlay_by'] + '_selected'] = 'selected'
+        #FIX ME: not sure why state is selected as well as correct area choice
+        checkbox_vals['state_selected'] = ''
         initial['area_type_value'] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
         initial[form['select_overlay_by']] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
         initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[form['select_overlay_by']]
