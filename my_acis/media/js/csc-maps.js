@@ -74,7 +74,14 @@ function initialize_station_finder() {
     var MEDIA_URL = document.getElementById("MEDIA_URL").value;
     var DATA_URL = document.getElementById("DATA_URL").value;
     var TOOLS_URL = document.getElementById("TOOLS_URL").value;
-    var json_file = document.getElementById("station_json").value;
+    var j_f = document.getElementById("station_json").value;
+    if (j_f == "NV_stn.json"){
+        var station_json = '/csc/media/json/' + j_f 
+    }
+    else {
+        var station_json = '/csc/media/tmp/' + j_f
+    }
+
     if (document.getElementById("start_date")) {
         var start_date = document.getElementById("start_date").value;
     } 
@@ -88,7 +95,7 @@ function initialize_station_finder() {
     }
     else { var elements = null } 
     //Read in stn data json file
-    $.getJSON('/csc/media/tmp/' + json_file, function(data) {
+    $.getJSON(station_json, function(data) {
 
         //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
         var ll = new google.maps.LatLng(data.stations[0].lat, data.stations[0].lon);

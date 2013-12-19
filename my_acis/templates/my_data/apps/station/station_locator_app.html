@@ -177,7 +177,7 @@
         <!--Maps-->
         <!--<font size="2" color="#006666" align="center">{{map_title}}</font>-->
         <table>
-        <td valign="top" width="70%">
+        <td valign="top">
         <div id="PolyMap" style="display:none;">
             <div id="panel">
             <div id="color-palette"></div>
@@ -205,7 +205,7 @@
             <div id="formOverlay" style="display:inherit;">
             <form method="post" action="">{% csrf_token %}
             <table class="form">
-            <tr valign="top">
+            <!--<tr valign="top">
             <td>Select stations by:</td>
             <td>
                 <select id="select_overlay_by" name="select_overlay_by" onchange="set_station_grid_select('area',this);">
@@ -223,8 +223,8 @@
             </script>
             </div>
             </td>
-            </tr>
-            <tr>
+            </tr>-->
+            <tr valign="top">
             <td>State: </td>
             <td>
                 <select name="overlay_state" id="overlay_state">
@@ -281,20 +281,16 @@
                 <option value="wy" {{wy_selected}}>Wyoming</option>
             </select>
             </td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-            <div class="pop-up">
-                <div id="ht_select_overlay_by">Specify US State</div>
-            </div>
-            </td>
+            <td><input type="submit" value="Search Map" name="formOverlay"/></td>
             </tr>
             </table>
+            <input type="hidden" value="{{initial.select_stations_by}}" name="select_overlay_by" id="select_overlay_by">
             <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
             <input type="hidden" value="{{initial.elements}}" name="elements">
             <input type="hidden" value="{{initial.elements_constraints}}" name="elements_constraints">
             <input type="hidden" value="{{initial.start_date}}" name="start_date">
             <input type="hidden" value="{{initial.end_date}}" name="end_date">
             <input type="hidden" value="{{initial.dates_constraints}}" name="dates_constraints">
-            <input type="submit" value="Submit" name="formOverlay"/>
             </form>
         </div>
     </div>
@@ -351,7 +347,7 @@
     </div>
     {%endif%}
     </td>
-    <td valign="top" width="15%">
+    <td valign="top">
     {%if station_json%}
     <div id="map_legend">
         <h3>Legend of Station Networks</h3>
