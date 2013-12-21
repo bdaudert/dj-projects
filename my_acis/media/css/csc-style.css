@@ -220,13 +220,13 @@ input[value=Submit] {
     color:#FFEFD5;
 }
 
-input[value=Select] {
-    background-color:#8FBC8F; 
+input[value="Start Over"] {
+    background-color:#8FBC8F;
     color:#FFEFD5;
 }
 
-input[value=StartOver] {
-    background-color:#8FBC8F;
+input[value=Select] {
+    background-color:#8FBC8F; 
     color:#FFEFD5;
 }
 
@@ -475,8 +475,8 @@ img.center {
     position:relative;
     top:20px;
     left:10px;
-    width:30%;
-    height:5%;
+    width:250px;
+    height:50px;
     background-color:#FFEFD5;
     color:#006666;
 }

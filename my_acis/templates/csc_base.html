@@ -114,8 +114,8 @@
     
     </div><!--End menue -->
  
-
     <div class="searchbox">
+        <!--
         <script>
         (function() {
         var cx = '002351053505226291153:di0tbfvoogy';
@@ -129,35 +129,34 @@
         })();
         </script>
         <gcse:search></gcse:search>
+        -->
         <!-- Search Box -->
-        <!--
         <form target="_blank"  method="get" action="http://www.google.com/search">
-            <div style="width:20em;">
+        <!--<div style="width:20em;">-->
+        <div id="searchbox">
             <table border="0">
             <tr>
-                <td><input type="text"   name="q" size="20" maxlength="255" value="" /></td>
-                <td><input type="submit" value="Search" /></td>
+            <td><input type="text"   name="q" size="20" maxlength="255" value="" /></td>
+            <td><input type="submit" value="Search" /></td>
             </tr>
             <tr>
-                <td>
-                    <input type="radio"  name="sitesearch" value="http://wrcc.dri.edu/csc/swcke/home/" checked />This Site
-                    <input type="radio"  name="sitesearch"value="" />The Web
-                </td>
-                <td></td>
+            <td>
+            <input type="radio"  name="sitesearch" value="http://wrcc.dri.edu/csc/swcke/home/" checked />This Site
+            <input type="radio"  name="sitesearch"value="" />The Web
+            </td>
+            <td></td>
             </tr>
             </table>
-            </div>
+        </div>
         </form>
-        -->
-    </div>
-    
+ 
+    {% block feedback%}
+    <p align="left" style="font-size:large;"><a href="{{SW_CKN_URL}}/feedback/">Give us feedback!</a>
+    {%endblock feedback%}
+    </DIV>
+
     <div class="content">
-        <br /><br />
-        {% block feedback%}
-        <p align="center"><font size="6"><b>{{title}}</b></font></p>
-        <p align="center" style="font-size:large;"><a href="{{SW_CKN_URL}}/feedback/">Give us feedback!</a>
-        {%endblock feedback%}
-    </form>
+        <p align="center"><font size="5"><b>{{title}}</b></font></p>
         {% block content %}
         {% endblock content%}
     </div><!-- END content --> 

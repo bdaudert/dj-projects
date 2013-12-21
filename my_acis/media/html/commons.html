@@ -422,34 +422,57 @@ CRCM Model</a><br />
 
 <!--STATION-->
 <div id="Docu_select_stations_by">
-&nbsp;&nbsp;&nbsp;<p><b>Individual Station</b>:<br /> Use this option if you looking for an individual station. You will need to know your station identification number. If you don't know your station id, find it here: <a target="_blank" href="/csc/swcke/apps/station/station_finder/">Station Finder</a><br />
-or here:<a class="docu_long"target="_blank" href="/csc/media/html/stn_id_system_docu.html">More on station Ids</a><br /><br />
-<b>Comma separated list of stations</b>:<br /> Enter multiple station identifiers, separated by a comma. Again, you will need to know your station ids.<br /><br />
-<b>County FIPS code</b>:<br /> Use this option if you are looking for all stations in a particular US county.<br />
-<a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a><br /><br />
-<b>Climate Division</b>:<br /> Use this option if you are looking for all stations in a particular US climate division.<br />
-<a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a><br /><br />
-<b>County Warning Area</b>:<br /> Use this option if you are looking for all stations in a US county warning area."<br />
-<a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a><br /><br />
-<b>Basin</b>:<br /> Use this option if you are looking for all stations in a US drainage basin.<br />
-<a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a><br /><br />
-<b>State</b>:<br /> Use this option if you are lookingfor all stations in a US state.<br /><br />
-<!--<b>Bounding Box</b>:<br />Use this option if you are looking for all stations in a bounding box. A bounding box has four coordinates: <br />West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the mapinterface to define your bounding box.<br /><br />-->
-<b>Custom Shape</b>:<br />Define your own shape using the map interface provided. You can place a marker on the map, draw connected line segments, rectangles (bounding boxes), circles or polygons.
-</p>
+    <p>
+    <b>Select stations by </b><br />
+    Defines the type of search area. Map Interfaces will help you find the identifiers or enable you to draw a custom polygon (circles and bounding boxes included). Several search area options are available.
+    <ul>
+    <li><b>Individual station: </b>Search by name or identifier of a single station.</li>
+    <li><b>List of stations: </b>Search by names or identifiers of multiple stations.</li>
+    <li><b>State: </b>Search by US state abbreviation (not case sensitive).</li>
+    <li><b>County: </b>Search by US County FIPS code or name.</li>
+    <li><b>County Warning Area: </b>Search by US County Warning Area code or name.</li>
+    <li><b>Climate Division: </b>Search US Climate Division code or name. </li>
+    <li><b>Basin: </b>Search US Basin code or name.</li>
+    <ul>
+    <li><b>Using the map interface to find County/County Warning Area/Climate Division/Basin codes</b></li>
+    <ul>
+    <li>Chose the US state of interest.</li>
+    <li>Click the <b>Update Map</b> button.</li>
+    <li>Once the map overlays are visible, click on an area on the map to see the name and id of that area.</li>
+    <li>Note that clicking on an area on the map will also populate the main form with the coresponding identifier.</li>
+    </ul>
+    </ul>
+    <li><b>Shape: </b> Search by lon, lat coordinates or use the map interface to draw a custom polygon.</li>
+    <ul>
+    <li><b>Using the map interface to draw a custom shape</b></li>
+    <ul>
+    <li>You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend on the top of the map first.</li>
+    <ul>
+    <li><b>Marker: </b>Point and click on the map.</li>
+    <li><b>Connected line segments: </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
+    <li><b>Rectangle: </b> Point at a corner of your rectangle, click, hold and drag in the desired direction.</li>
+    <li><b>Circle: </b>Point at the center of your circle, click, hold and drag outwards.</li>
+    <li><b>Polygon: </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
+    </ul>
+    </ul>
+    </ul>
+    </ul>
+    </p>
 </div>
 
 <div id="About_station_data">
     <p class="error">What is this tool?</p>
-    <p>Access point to<b>Historic Station Data.</b></p>
+    <p>Access point to <b>Historic Station Data.</b></p>
     <p class="error">What datasets are available?</p>
-    <b>Temporal Resolution</b> Daily. We are planning to make sub-daily datasets available in the future.<br />
+    <p><b>Temporal Resolution</b><br />
+    Daily. We are planning to make sub-daily datasets available in the future.<br />
     <b>Observed Quantities </b><br />
     Maximum Temperature(F), Minimum Temperature(F), Observation Time Temperature<br />
     Snowfall, Snowdepth<br />
     <b>Derived Quantities </b><br />
     Average Temperature(F), Heating/Cooling/Growing Degree Days(F)<br />
     <b>Station Networks </b><br />
+    Stations in the system belong to one or more of these networks.
     <ul>
     <li><a target="_blank" href="http://www.ncdc.noaa.gov/homr/">WBAN</a></li>
     <li><a target="_blank" href="http://www.nws.noaa.gov/om/coop/">COOP</a></li>
@@ -472,40 +495,67 @@ or here:<a class="docu_long"target="_blank" href="/csc/media/html/stn_id_system_
 </div>
 
 <div id="Howto_station_data">
-    <p><b>FORM 1</b><br />
-           <b>Select station by </b>Several area options are available. Most require you to know the appropriate identifiers, e.g. station ID(s), county warning area codes, etc.. However, links or map interfaces that help you find the identifiers will be provided when filling out FORM 2. Use the custom shape option if you wish to define your own shape.<br />
-           <b>Data format </b>Data can be downloaded as .dat, .txt or .xls file. Choosing .html will display the data request results on your screen.<br />
-           Click the <b>Select</b> button. A second form will appear.
-    </p>
-    <p><b>FORM 2</b><br />
-           Depending on your <b>Select station by </b>choice from FORM 1, you will see: <br >
-           <ul>
-                <li><b>Station ID </b>Enter the station ID. If you don't know your ID, please use the link to the station finder tool to find it.</li>
-                <li><b>Station IDs </b>Enter a comma separated list of station IDs. If you don't know your IDs, please use the link to the station finder tool to find them.</li>
-                <li><b>County </b>Enter a county FIPS code. If you don't know your FIPS code, please use the link below the form field to find it.</li>
-                <li><b>Climate division </b>Enter a climate division code. If you don't know your climate division code, please use the link below the form field to find it.</li>
-                <li><b>County Warning Area </b>Enter a county waring area code. If you don't know your county warning area code, please use the link below the form field to find it.</li>
-                <li><b>Basin </b>Enter a US basin code. If you don't know your basin code, please use the link below the form field to find it.</li>
-                <li><b>State </b>Choose a US state from the drop down menue</li>
-                <li><b>Bounding Box </b>A bounding box has four coordinates: <br />West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</li>
-                <li><b>Shape </b> Enter the lon, lat coordinates of your custom shape or use the map interface to define it. You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend.
-                    <ul>
-                        <li><b>Marker </b>Point and click on the map.</li>
-                        <li><b>Connected line segments </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
-                        <li><b>Rectangle </b> Point at a corner of your rectangle, click, hold and drag.</li>
-                        <li><b>Circle </b>Point at the center of your circle,  click, hold and drag.</li>
-                        <li><b>Polygon </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
-                    </ul>
-                </li>
-           </ul>
-           <b>Elements </b>Please enter a comma separated list of element abreviations.
-            <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
-           <div id="element_choices" style="display:none"><img alt="ElementChoices" title="ElementChoices" width="400px" height="400px" src=/csc/media/img/ACIS_Element_Choices_Stn.png></div><br />
-           <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd. Enter "POR" if you are interested in the period of record.<br />
-           <b>Show flags </b>Choose 'Yes' if you want the data flags to be appended to your data values. <br />
-           <b>Show observation time </b>Choose 'Yes' if you want the time the observation was made  to be appended to your data values.<br />
-           <b>Delimiter</b> Unless you have chosen the excel <b>Data format</b> this option will appear. It defines the delimiter that will separate the data values, flags and observation time of your request.<br /> 
-           Click the <b>Submit</b> button.
+    <p>
+    <b>Select stations by </b><br />
+    Defines the type of search area. Map Interfaces will help you find the identifiers or enable you to draw a custom polygon (circles and bounding boxes included). Several search area options are available.
+    <ul>
+    <li><b>Individual station: </b>Search by name or identifier of a single station.</li>
+    <li><b>List of stations: </b>Search by names or identifiers of multiple stations.</li>
+    <li><b>State: </b>Search by US state abbreviation (not case sensitive).</li>
+    <li><b>County: </b>Search by US County FIPS code or name.</li>
+    <li><b>County Warning Area: </b>Search by US County Warning Area code or name.</li>
+    <li><b>Climate Division: </b>Search US Climate Division code or name. </li>
+    <li><b>Basin: </b>Search US Basin code or name.</li>
+    <ul>
+    <li><b>Using the map interface to find County/County Warning Area/Climate Division/Basin codes</b></li>
+    <ul>
+    <li>Chose the US state of interest.</li>
+    <li>Click the <b>Update Map</b> button.</li>
+    <li>Once the map overlays are visible, click on an area on the map to see the name and id of that area.</li>
+    <li>Note that clicking on an area on the map will also populate the main form with the coresponding identifier.</li>
+    </ul>
+    </ul>
+    <li><b>Shape: </b> Search by lon, lat coordinates or use the map interface to draw a custom polygon.</li>
+    <ul>
+    <li><b>Using the map interface to draw a custom shape</b></li>
+    <ul>
+    <li>You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend on the top of the map first.</li>
+    <ul>
+    <li><b>Marker: </b>Point and click on the map.</li>
+    <li><b>Connected line segments: </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
+    <li><b>Rectangle: </b> Point at a corner of your rectangle, click, hold and drag in the desired direction.</li>
+    <li><b>Circle: </b>Point at the center of your circle, click, hold and drag outwards.</li>
+    <li><b>Polygon: </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
+    </ul>
+    </ul>
+    </ul>
+    </ul>
+    </p><p>
+    <b>Elements </b><br />
+    Choose the climate elements. Input should be a comma separarted list. Following climate elements area available.
+    <ul>
+    <li>Maximum Temperature</li>
+    <li>Minimum Temperature</li>
+    <li>Average Temperature</li>
+    <li>Observation Time Temperature</li>
+    <li>Precipitation</li>
+    <li>Snowfall</li>
+    <li>Snowdepth</li>
+    <li>Degree Days (Heating/Cooling/Growing)</li>
+    </ul>
+    </p><p>
+    <b>Start date/End date </b><br />
+    Defines the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd.<br />
+    <b>Show flags </b><br />
+    Choose 'Yes' if you want the data flags to be appended to your data values. <br />
+    <b>Show observation time </b><br />
+    The time of observation will be appended to your data values.<br />
+    <b>Data format</b><br >
+    Defines the output format of your data request. Html displays to page. Other options are various file formats.<br />
+    <b>Delimiter</b><br />
+    Unless you have chosen the excel <b>Data format</b>, this option will appear. It defines the delimiter that will separate the data values, flags and observation time of your request.<br /> 
+    <b>Outputfile name </b><br />
+    If your  <b>Data format</b> is a file output, you can name your output file here.
     </p>
 </div>
 
@@ -538,42 +588,43 @@ or here:<a class="docu_long"target="_blank" href="/csc/media/html/stn_id_system_
 
 <div id="Howto_station_finder">
     <p>
-    <b>Select station by </b><br />
+    <b>Select stations by </b><br />
     Defines the type of search area. Map Interfaces will help you find the identifiers or enable you to draw a custom polygon (circles and bounding boxes included). Several search area options are available.
     <ul>
-    <li><b>Individual station </b>Search by name or identifier of a station of interest.</li>
-    <li><b>List of stations </b>Search by names or identifiers of a multiple stations.</li>
-    <li><b>State </b>Search by US state abbreviation (not case sensitive).</li>
-    <li><b>County</b>Search by US County FIPS code. Use the map interface to find FIPS codes by US state.
-    <li><b>County Warning Area </b>Search by US County Warning Area code. Use the map interface to find County Warning Area codes by US state.</li>
-    <li><b>Climate Division </b>Search US Climate Division code. Use the map interface to find Climate Division codes 
-by US state.</li>
-    <li><b>Basin </b>Search US Basin code.  Use the map interface to find Basin codes by US state.</li>
+    <li><b>Individual station: </b>Search by name or identifier of a single station.</li>
+    <li><b>List of stations: </b>Search by names or identifiers of multiple stations.</li>
+    <li><b>State: </b>Search by US state abbreviation (not case sensitive).</li>
+    <li><b>County: </b>Search by US County FIPS code or name.</li>
+    <li><b>County Warning Area: </b>Search by US County Warning Area code or name.</li>
+    <li><b>Climate Division: </b>Search US Climate Division code or name. </li>
+    <li><b>Basin: </b>Search US Basin code or name.</li>
     <ul>
-    <li><b>Using the map interface to find County/County Warning Area/Climate Division/Basin codes</b>
+    <li><b>Using the map interface to find County/County Warning Area/Climate Division/Basin codes</b></li>
     <ul>
     <li>Chose the US state of interest.</li>
-    <li>Click the <b>Search Map</b> button.</li>
+    <li>Click the <b>Update Map</b> button.</li>
     <li>Once the map overlays are visible, click on an area on the map to see the name and id of that area.</li>
     <li>Note that clicking on an area on the map will also populate the main form with the coresponding identifier.</li>
-    </ul></li>
     </ul>
-    <li><b>Shape </b> Search by lon, lat coordinates or use the map interface to draw a custom polygon.</li>
+    </ul>
+    <li><b>Shape: </b> Search by lon, lat coordinates or use the map interface to draw a custom polygon.</li>
+    <ul>
     <li><b>Using the map interface to draw a custom shape</b></li>
-        <ul>
-        <li>You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend on the top of the map first. Then</li>
-        <ul>
-        <li><b>Marker </b>Point and click on the map.</li>
-        <li><b>Connected line segments </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
-        <li><b>Rectangle </b> Point at a corner of your rectangle, click, hold and drag in the desired direction.</li>
-        <li><b>Circle </b>Point at the center of your circle, click, hold and drag outwards.</li>
-        <li><b>Polygon </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
-        </ul>
-        </ul></li>
-    </li></ul>
+    <ul>
+    <li>You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend on the top of the map first.</li>
+    <ul>
+    <li><b>Marker: </b>Point and click on the map.</li>
+    <li><b>Connected line segments: </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
+    <li><b>Rectangle: </b> Point at a corner of your rectangle, click, hold and drag in the desired direction.</li>
+    <li><b>Circle: </b>Point at the center of your circle, click, hold and drag outwards.</li>
+    <li><b>Polygon: </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
+    </ul>
+    </ul>
+    </ul>
+    </ul>
     </p><p>
     <b>Elements </b><br />
-    Choose the climate elements that you are interested in.Input should be a comma separarted list. Following climate elements area available. 
+    Choose the climate elements. Input should be a comma separarted list. Following climate elements area available. 
     <ul>
     <li>Maximum Temperature</li>
     <li>Minimum Temperature</li>
@@ -586,16 +637,17 @@ by US state.</li>
     <b>Element Constraints</b><br />
     This option defines the restrictions you want to place on the availabilty of the elements from the <b>Elements</b> section. 
     <ul>
-    <li><b>Any </b>Choose this option if you want to find stations that have at least one of the climate elements listed in the <b>Elements</b> section.</li>
-    <li><b>All </b>Choose this option if you want to find stations that have all of the climate elements listed in the <b>Elements</b> section.</li>
+    <li><b>Any: </b>Data for least one of the selected climate element are in the station record.</li>
+    <li><b>All: </b>Data for all of the selected climate element are in the station record..</li>
     </ul>
     </p><p>
-    <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd.<br />
+    <b>Start date/End date </b><br />
+    Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd.<br />
     <b>Date Constraints </b><br />
     This option defines the restrictions you want to place on the availabilty of the elements from the <b>Elements</b> section. 
     <ul>
-    <li><b>Any </b>Choose this option if you want to find stations that have at least one data record between start and end date.</li>
-    <li><b>All </b>Choose this option if you want to find stations that have data records for all dates between start and end date.</li>
+    <li><b>Any: </b>Data are available for at least one day between start and end date.</li>
+    <li><b>All: </b>Data are available for all days between start and end date..</li>
     </ul>
     </p><p>
     Example 1: <b>Start date</b>: 20010101, <b>End Date</b>: 20091231,<b>Elements</b>: maxt,pcpn, <b>Constraints</b>: Any Element, All Dates<br>
@@ -620,12 +672,24 @@ the decade 2000 - 2010<br />
 </div>
 
 <div id="Howto_MON_AVES" title="Monthly Averages">
-    <b>Station ID </b>Enter the station ID. If you don't know your ID, please use the link to the station finder tool to find it.<br />
-    <p><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a></p>
-    <b>Elements </b>Please enter a comma separated list of element abreviations.
-    <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
-    <div id="element_choices" style="display:none"><img alt="ElementChoices" title="ElementChoices" width="400px" height="400px" src=/csc/media/img/ACIS_Element_Choices_Stn.png></div><br />
-    <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd. Enter "POR" if you are interested in the period of record.<br />
+    <p>
+    <b>Station id/name </b><br />
+    Enter the station id or name. If you don't know your id or name, please use the link to the station finder tool to find it.<br />
+    <a target="_blank" href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a><br />
+    <b>Elements</b><br />
+    Choose the climate elements. Input should be a comma separarted list. Following climate elements area available.
+    <ul>
+    <li>Maximum Temperature</li>
+    <li>Minimum Temperature</li>
+    <li>Precipitation</li>
+    <li>Snowfall</li>
+    <li>Snowdepth</li>
+    <li>Degree Days (Heating/Cooling/Growing)</li>
+    </ul>
+    </p><p>
+    <b>Start date/End date </b><br />
+    Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd. Enter "POR" if you are interested in the period of record.<br />
+    </p>
 </div>
 
 
@@ -633,50 +697,99 @@ the decade 2000 - 2010<br />
     <p class="error">What is the <b>Metadata Graphics</b> Tool?</p>
     <p>An interactive web-based interface that can be used to investigate availability of daily data for the period of record of a station in the COOP network for the 5 most common climate elements: Maximum Temperature, Minimum Temperature, Total Precipitation, Total Snowfall, Total Snowdepth.</p>
     <p class="error">What dataset is being used?</p>
-    <p>This tool works with COOP station data found in the ACIS system.</p>
-    <p><a  target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a></p>
-    <p><a  target="_blank" href="http://www.nws.noaa.gov/om/coop/">More on COOP data</a></a>
+    <p>This tool works with COOP station data found in the ACIS system.<br />
+    <a  target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a><br />
+    <a  target="_blank" href="http://www.nws.noaa.gov/om/coop/">More on COOP data</a></a></p>
     <p class="error">What can you do with this tool?</p>
     <h3>Get a graphic summary of the availablity of data over the period of record of a COOP station</h3>
     <img alt="MetaGraph" title="MetaGraph" class="dash_img" src="/csc/media/img/MetaGraph.png">
+    </p>
 </div>
 
 <div id="Howto_META_GRAPH" title="Metadata Graphics">
-    <b>"Station ID" </b>Enter the station ID. If you don't know your ID, please use the link to the station finder tool to find it.<br />
-    <p><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a></p>
-    <p>A colored pixel means a valid data entry was found for the particular day of the year.</p>
-    <p>A white space indicates that data was not recorded at that date.</p>
+    <p>
+    <b>Station id/name </b><br />
+    Enter the station id or name. If you don't know your id or, please use the link to the station finder tool to find it.<br />
+    <a target="_blank" href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a><br />
+    A colored pixel means a valid data entry was found for the particular day of the year.<br />
+    A white space indicates that data was not recorded at that date.</p>
 </div>
 
 <!--GRIDDED-->
 <div id="Docu_select_grid_by">
-<p><b>Grid selection</b></p>
-<p><b>Point Location </b><br /> Use this option if you are looking a particular grid point. A grid point has two coordinates: longitude and latitude. Please enter them in this order or use the map interface to define your grid point.<br />
-<b>County</b><br /> Use this option if you are looking for all grid points in a particular US county.<br />
-<a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a><br />
-<p><b>Climate Division </b><br /> Use this option if you are looking for all grid points in a particular US climate division.<br />
-<a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a><br />
-<b>County Warning Area </b><br /> Use this option if you are looking for all grid points in a US county warning area."<br />
-<a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a><br />
-<b>Basin" </b><br /> Use this option if you are looking for all grid points in a US drainage basin.<br />
-<a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a><br />
-<b>State" </b><br /> Use this option if you are looking for all grid points in a US state.<br />
-<b>Custom Shape </b><br /> Use this option if you are looking for all grid points in a custom shape or circle. A map interface to help you define your search area will be provided.<br />
-</p>
+    <p>
+    <b>Select grid by </b><br />
+    Defines the type of search area. Map Interfaces will help you find the identifiers or enable you to draw a custom polygon (circles and bounding boxes included). Several search area options are available.
+    <ul>
+    <li><b>Individual grid point: </b>Search for a single longitude,latitude cordinate.</li>
+    <li><b>State: </b>Search by US state abbreviation (not case sensitive).</li>
+    <li><b>County: </b>Search by US County FIPS code or name.</li>
+    <li><b>County Warning Area: </b>Search by US County Warning Area code or name.</li>
+    <li><b>Climate Division: </b>Search US Climate Division code or name. </li>
+    <li><b>Basin: </b>Search US Basin code or name.</li>
+    <ul>
+    <li><b>Using the map interface to find County/County Warning Area/Climate Division/Basin codes</b></li>
+    <ul>
+    <li>Chose the US state of interest.</li>
+    <li>Click the <b>Update Map</b> button.</li>
+    <li>Once the map overlays are visible, click on an area on the map to see the name and id of that area.</li>
+    <li>Note that clicking on an area on the map will also populate the main form with the coresponding identifier.</li>
+    </ul>
+    </ul>
+    <li><b>Shape: </b> Search by lon, lat coordinates or use the map interface to draw a custom polygon.</li>
+    <ul>
+    <li><b>Using the map interface to draw a custom shape</b></li>
+    <ul>
+    <li>You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend on the top of the map first.</li>
+    <ul>
+    <li><b>Marker: </b>Point and click on the map.</li>
+    <li><b>Connected line segments: </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
+    <li><b>Rectangle: </b> Point at a corner of your rectangle, click, hold and drag in the desired direction.</li>
+    <li><b>Circle: </b>Point at the center of your circle, click, hold and drag outwards.</li>
+    <li><b>Polygon: </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
+    </ul>
+    </ul>
+    </ul>
+    </ul>
+    </p>
+</div>
 
 <div id="Docu_select_grid_by_ts">
-<p><b>Grid selection</b></p>
-<b>County</b><br /> Use this option if you are looking for all grid points in a particular US county.<br />
-<a target="_blank" href="http://www.nws.noaa.gov/mirs/public/prods/maps/cnty_fips_list.htm">List of US FIPS County Codes</a><br />
-<p><b>Climate Division </b><br /> Use this option if you are looking for all grid points in a particular US climate division.<br />
-<a target="_blank" href="http://www.ncdc.noaa.gov/temp-and-precip/us-climate-divisions.php">Map and list of US climate divisions</a><br />
-<b>County Warning Area </b><br /> Use this option if you are looking for all grid points in a US county warning area."<br />
-<a target="_blank" href="http://www.aprs-is.net/WX/NWSCodes.aspx">List of US County Warning Areas</a><br />
-<b>Basin" </b><br /> Use this option if you are looking for all grid points in a US drainage basin.<br />
-<a target="_blank" href="http://water.usgs.gov/nawqa/sparrow/wrr97/geograp/huc_name.txt">List of US basin ids</a><br />
-<b>State" </b><br /> Use this option if you are looking for all grid points in a US state.<br />
-<b>Custom Shape </b><br /> Use this option if you are looking for all grid points in a custom shape or circle. A map interface to help you define your search area will be provided.<br />
-</p>
+    <p>
+    <b>Select grid by </b><br />
+    Defines the type of search area. Map Interfaces will help you find the identifiers or enable you to draw a custom polygon (circles and bounding boxes included). Several search area options are available.
+    <ul>
+    <li><b>State: </b>Search by US state abbreviation (not case sensitive).</li>
+    <li><b>County: </b>Search by US County FIPS code or name.</li>
+    <li><b>County Warning Area: </b>Search by US County Warning Area code or name.</li>
+    <li><b>Climate Division: </b>Search US Climate Division code or name. </li>
+    <li><b>Basin: </b>Search US Basin code or name.</li>
+    <ul>
+    <li><b>Using the map interface to find County/County Warning Area/Climate Division/Basin codes</b></li>
+    <ul>
+    <li>Chose the US state of interest.</li>
+    <li>Click the <b>Update Map</b> button.</li>
+    <li>Once the map overlays are visible, click on an area on the map to see the name and id of that area.</li>
+    <li>Note that clicking on an area on the map will also populate the main form with the coresponding identifier.</li>
+    </ul>
+    </ul>
+    <li><b>Shape: </b> Search by lon, lat coordinates or use the map interface to draw a custom polygon.</li>
+    <ul>
+    <li><b>Using the map interface to draw a custom shape</b></li>
+    <ul>
+    <li>You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend on the top of the map first.</li>
+    <ul>
+    <li><b>Marker: </b>Point and click on the map.</li>
+    <li><b>Connected line segments: </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
+    <li><b>Rectangle: </b> Point at a corner of your rectangle, click, hold and drag in the desired direction.</li>
+    <li><b>Circle: </b>Point at the center of your circle, click, hold and drag outwards.</li>
+    <li><b>Polygon: </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
+    </ul>
+    </ul>
+    </ul>
+    </ul>
+    </p>
+</div>
 
 <div id="About_gridded_data">
     <p class="error">What is this tool?</p>
@@ -702,43 +815,76 @@ the decade 2000 - 2010<br />
 </div>
 
 <div id="Howto_gridded_data">
-    <p><b>FORM 1</b><br />
-           <b>Select grid by </b>Several area options are available. Most require you to know the appropriate identifiers, e.g. county codes, county warning area codes, etc.. However, links or map interfaces that help you find the identifiers will be provided when filling out FORM 2. Use the custom shape option if you wish to define your own shape.<br />
-           <b>Temporal resolution </b>Choose daily, monthly or yearly data. Note that monthy and yearly data are only available from the PRISM dataset. Daily gridded data from multiple sources are available.<br />
-           <b>Data summary </b>Data summaries are performed over time at each grid point. If you choose to get raw data without perfoming any data summary, be aware that data request are limited to 7 day periods for state and bounding box requests. We plan to accommodate larger requests in the future. Please contact us at csc-wrcc@dri.edu if your data needs are not met.<br />
-           <b>Data format </b>Data can be downloaded as .dat, .txt or .xls file. Choosing .html will display the data request results on your screen.<br />
-           Click the <b>Select</b> button. A second form will appear.
-    </p>
-
-    <p><b>FORM 2</b><br />
-           Depending on your <b>Select grid by </b>choice from FORM 1, you will see: <br >
-           <ul>
-                <li><b>Location </b>A grid point has two coordinates: longitude and latitude. Please enter them in this order or use the map interface to define your grid point.</li>
-                <li><b>State </b>Choose a state from the drop down menue.</li>
-                <li><b>Bounding Box </b>A bounding box has four coordinates: <br />West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</li>
-                <li><b>Shape </b> Enter the lon, lat coordinates of your custom shape or use the map interface to define it. You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend.
-                    <ul>
-                        <li><b>Marker </b>Point and click on the map.</li>
-                        <li><b>Connected line segments </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
-                        <li><b>Rectangle </b> Point at a corner of your rectangle, click, hold and drag.</li>
-                        <li><b>Circle </b>Point at the center of your circle,  click, hold and drag.</li>
-                        <li><b>Polygon </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
-                    </ul>
-                </li>
-           </ul>
-           <b>Elements </b>Please enter a comma separated list of element abreviations.
-            <p class="pop_link" onClick="ShowHide('element_choices')"><u>See the list of element choices</u></p>
-           <b>Grid </b>This option defines the gridded dataset to be used. The first two options are the NRCC interpolated and the NRCC Hi-Res datasets developed at the Northeast Regional Climate Center (NRCC).Several NARRCAPP datasets are available.
-            <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
-            <a target="_blank" href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
-            <p>For more information and direct access to NARCCAP
-            (North American Regional Climate Change Assessment Program) gridded data sets:</p>
-            <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
-
-           <div id="element_choices" style="display:none"><img alt="ElementChoices" title="ElementChoices" width="400px" height="400px" src=/csc/media/img/ACIS_Element_Choices_Grid.png></div><br />
-           <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd.<br />
-           <b>Delimiter</b> Unless you have chosen the excel <b>Data format</b> this option will appear. It defines the delimiter that will separate the data values of your request.<br />
-           Click the <b>Submit</b> button.
+    <p>
+    <b>Select grid by </b><br />
+    Defines the type of search area. Map Interfaces will help you find the identifiers or enable you to draw a custom polygon (circles and bounding boxes included). Several search area options are available.
+    <ul>
+    <li><b>Individual grid point: </b>Search for a single longitude,latitude cordinate.</li>
+    <li><b>State: </b>Search by US state abbreviation (not case sensitive).</li>
+    <li><b>County: </b>Search by US County FIPS code or name.</li>
+    <li><b>County Warning Area: </b>Search by US County Warning Area code or name.</li>
+    <li><b>Climate Division: </b>Search US Climate Division code or name. </li>
+    <li><b>Basin: </b>Search US Basin code or name.</li>
+    <ul>
+    <li><b>Using the map interface to find County/County Warning Area/Climate Division/Basin codes</b></li>
+    <ul>
+    <li>Chose the US state of interest.</li>
+    <li>Click the <b>Update Map</b> button.</li>
+    <li>Once the map overlays are visible, click on an area on the map to see the name and id of that area.</li>
+    <li>Note that clicking on an area on the map will also populate the main form with the coresponding identifier.</li>
+    </ul>
+    </ul>
+    <li><b>Shape: </b> Search by lon, lat coordinates or use the map interface to draw a custom polygon.</li>
+    <ul>
+    <li><b>Using the map interface to draw a custom shape</b>
+    <ul>
+    <li>You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend on the top of the map first.</li>
+    <ul>
+    <li><b>Marker: </b>Point and click on the map.</li>
+    <li><b>Connected line segments: </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
+    <li><b>Rectangle: </b> Point at a corner of your rectangle, click, hold and drag in the desired direction.</li>
+    <li><b>Circle: </b>Point at the center of your circle, click, hold and drag outwards.</li>
+    <li><b>Polygon: </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
+    </ul>
+    </ul>
+    </ul>
+    </ul>
+    </p><p>
+    <b>Temporal Resolution </b><br />
+    PRISM data are offered in monthly and yearly resolution, all others are daily datasets.<br />
+    <b>Elements </b><br />
+    Choose the climate elements. Input should be a comma separarted list. Following climate elements area available.
+    <ul>
+    <li>Maximum Temperature</li>
+    <li>Minimum Temperature</li>
+    <li>Precipitation</li>
+    <li>Degree Days (Heating/Cooling/Growing)</li>
+    </ul>
+    </p><p>
+    <b>Start date/End date </b><br />
+    Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd.<br />
+    <b>Grid </b><br />
+    This option defines the gridded dataset. The first two options are the NRCC interpolated and the NRCC Hi-Res datasets developed at the Northeast Regional Climate Center (NRCC). Several NARRCAPP datasets are available.<br />
+    For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</br />
+    <a target="_blank" href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a><br />
+    For more information and direct access to NARCCAP
+    (North American Regional Climate Change Assessment Program) gridded data sets:<br />
+    <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a><br />
+    <b>Data Summary </b><br />
+    You can get raw data or summarize your request over time or over space. A summary over space results in time series, a summary over a time range results in one value at each grid point. Summary options are
+    <ul>
+    <li><b>Maximum: </b>Finds the maximum value over an area or time range.</li>
+    <li><b>Minimum: </b>Finds the mimimum value over an area or time range.</li>
+    <li><b>Mean: </b>Finds the average value over an area or time range.</li>
+    <li><b>Sum: </b>Finds the sum of the values over an area or time range.</li>
+    </ul>
+    </p><p>
+    <b>Data format</b><br >
+    Defines the output format of your data request. Html displays to page. Other options are various file formats.<br />
+    <b>Delimiter</b><br />
+    Unless you have chosen the excel <b>Data format</b>, this option will appear. It defines the delimiter that will separate the data values, flags and observation time of your request.<br />
+    <b>Outputfile name </b><br />
+    If your  <b>Data format</b> is a file output, you can name your output file here.
     </p>
 </div>
 
@@ -839,43 +985,6 @@ CRCM Model</a><br />
 </div>
 
 
-
-<div id="Docu_GP_TS" title="Gridpoint Time Series">
-    <p class="error">What is the <b>Gridpoint Time Series</b> Tool?</p>
-    <p>An interactive web-based interface that can be used to look at time series plots of various climate elements at individual grid points.</p>
-    <p class="error">What dataset is being used?</p>
-    <p>This tool works with  the NRCC interpolated, NRCC Hi-Res daily gridded datasets developed at NRCC (Northern regional Climate Center)
-    as well as with a variety of NARCCAP modeled datasets.
-    <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
-    <a  target="_blank" href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
-    <p>For more information and direct access to NARCCAP
-    (North American Regional Climate Change Assessment Program) gridded data sets:</p>
-    <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
-    </ul>
-    <p class="error">What can you do with this tool?</p>
-    <h3>Create Time Series Plots</h3>
-    <img alt="GPTS" title="GPTS" class="dash_img" src="/csc/media/img/GPTimeSeries.png">
-    <h3>Download Data, Plots</h3>
-</div>
-
-<div id="Howto_GP_TS" title="Gridpoint Time Series">
-    <p>
-        <b>FORM </b><br />
-        <b>Lat </b>Latitude of gridpoint.<br />
-        <b>Lon </b>Longitude of gridpoint.<br />
-        You can enter  Lat/Lon coordinates manually or you can use the map interface. Click and drag the marker on the mapto set the Lat/Lon coordinates.<br />
-        <b>Element</b><br />
-        Element coices comprise the 8 standard climate elements.<br />
-        <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd<br />
-        <b>Grid </b>This option defines the gridded dataset to be used. The first two options are the NRCC interpolated and the NRCC Hi-Res datasets developed at the Northeast Regional Climate Center (NRCC).Several NARRCAPP datasets are available.
-            <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
-            <a target="_blank" href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
-            <p>For more information and direct access to NARCCAP
-            (North American Regional Climate Change Assessment Program) gridded data sets:</p>
-            <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
-    </p>    
-</div>
-
 <div id="Docu_CLIM_PROB_MAP" title="Climate Probability Map">
     <p class="error">What is the <b>Climate Probability Map</b> Tool?</p>
     <p>An interactive web-based tool that can be used to generate climate probability maps for temperature and precipitation. Maps can be generated for individula US states or user defined bounding boxes, different temperature and precipitation threshholds and time windows.</p>
@@ -896,15 +1005,14 @@ CRCM Model</a><br />
 
 <div id="Docu_AREA_TIME_SERIES" title="Area Time Series">
     <p class="error">What is the <b>Spatial Summary Time Series</b> Tool?</p>
-    <p>An interactive web-based tool that can be used to generate time series of summaries (max, min,sum,mean)<br /> over custom search areas. Summaries can be generated for the 8 major climate elements.</p>
+    <p>An interactive web-based tool that can be used to generate time series of summaries (max, min, sum, mean)<br /> over custom search areas. Summaries can be generated for the 8 major climate elements.</p>
     <p class="error">What dataset is being used?</p>
     <p>This tool works with  the NRCC interpolated, NRCC Hi-Res daily gridded datasets developed at NRCC (Northern regional Climate Center)
-    as well as with a variety of NARCCAP modeled datasets.
-
-    <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
-    <a target="_blank" href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
-    <p>For more information and direct access to NARCCAP
-    (North American Regional Climate Change Assessment Program) gridded data sets:</p>
+    as well as with a variety of NARCCAP modeled datasets.<br />
+    For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:<br />
+    <a target="_blank" href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a><br />
+    For more information and direct access to NARCCAP<br />
+    (North American Regional Climate Change Assessment Program) gridded data sets:<br />
     <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
     <p class="error">What can you do with this tool?</p>
     <h3>Generate Time Series</h3>
@@ -914,68 +1022,95 @@ CRCM Model</a><br />
 
 <div id="Howto_AREA_TIME_SERIES" title="Area Time Series">
     <p>
-        <b>FORM 1: </b><br />
-        <b>Select grid by </b>Several area options are available. Most require you to know the appropriate identifiers, e.g. climate division IDs, county warning area codes, etc.. However, links or map interfaces that help you find the identifiers will be provided when filling out FORM 2.<br />
-        <b>Element</b><br />
-        Element coices comprise the 8 standard climate elements as well as degree days with custom base temperatures.
-    </p>
-    <p>
-        <b>FORM2 2 </b><br />
-        Depending on your <b>Select grid by </b>choice from FORM 1, you will see: <br >
-           <ul>
-                <li><b>County </b>Enter a county FIPS code. If you don't know your FIPS code, please use the link below the form field to find it.</li>
-                <li><b>Climate division </b>Enter a climate division code. If you don't know your climate division code, please use the link below the form field to find it.</li>
-                <li><b>County Warning Area </b>Enter a county waring area code. If you don't know your county warning area code, please use the link below the form field to find it.</li>
-                <li><b>Basin </b>Enter a US basin code. If you don't know your basin code, please use the link below the form field to find it.</li>
-                <li><b>State </b>Choose a US state from the drop down menue</li>
-                <li><b>"Bounding Box" </b>A bounding box has four coordinates: <br />West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</li>
-                <li><b>Shape </b> Enter the lon, lat coordinates of your custom shape or use the map interface to define it. You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend.
-                    <ul>
-                        <li><b>Marker </b>Point and click on the map.</li>
-                        <li><b>Connected line segments </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
-                        <li><b>Rectangle </b> Point at a corner of your rectangle, click, hold and drag.</li>
-                        <li><b>Circle </b>Point at the center of your circle,  click, hold and drag.</li>
-                        <li><b>Polygon </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
-                    </ul>
-                </li>
-                
-           </ul>
-        <b>Element </b>Please choose an element from the dropdown menue.<br />
-        <b>Start date/End date </b>Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd<br />
-        <b>Summary </b>This option defines how the data will be summarized over the grid points of your shape at each point in time.<br />
-        <b>Grid </b>This option defines the gridded dataset to be used. The first two options are the NRCC interpolated and the NRCC Hi-Res datasets developed at the Northeast Regional Climate Center (NRCC).Several NARRCAPP datasets are available.
-            <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
-            <a target="_blank" href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
-            <p>For more information and direct access to NARCCAP
-            (North American Regional Climate Change Assessment Program) gridded data sets:</p>
-            <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
-        <b>Show running mean </b> Choose "Yes" if you want a running mean to be computed and shown on the final graph<br />
-        <b>Running mean days </b> Defines the number of days used to compute the running mean.
-        <b>Graph title </b> If you choose "Use default" information about your shape, the climate element and the summary type will be displayed. Enter your own title if you want different information in your title.<br />
-        <b>Plot options</b> Several plot options are available.
-        <ul>
-            <li><b>Image size </b>Choose your image size from the drop down menue.</li>
-            <li><b>Show major grid </b>Dashed grid lines will be places at a step size of 1/5(data_max - data_min) </li>
-            <li><b>Show minor grid </b>Dashed gridlines will be placed at a step size of 1/10(data_max - data_min). </li>
-            <li><b>Connector line </b>Choose "Yes" if you would like your data points connected by a line.</li>
-            <li><b>Connector line width </b>Defines the width of the line connecting that data points. 10 is the maximum line width allowed. Choosing 0 is the same as choosing no connector line.</li>
-            <li><b>Markers </b>Choose yes if you would like to see a marker at each data point.</li>
-            <li><b>Marker type </b>Choose a marker type from the drop down menue.</li>
-        </ul> 
+    <b>Select grid by </b><br />
+    Defines the type of search area. Map Interfaces will help you find the identifiers or enable you to draw a custom polygon (circles and bounding boxes included). Several search area options are available.
+    <ul>
+    <li><b>Individual grid point: </b>Search for a single longitude,latitude cordinate.</li>
+    <li><b>State: </b>Search by US state abbreviation (not case sensitive).</li>
+    <li><b>County: </b>Search by US County FIPS code or name.</li>
+    <li><b>County Warning Area: </b>Search by US County Warning Area code or name.</li>
+    <li><b>Climate Division: </b>Search US Climate Division code or name. </li>
+    <li><b>Basin: </b>Search US Basin code or name.</li>
+    <ul>
+    <li><b>Using the map interface to find County/County Warning Area/Climate Division/Basin codes</b></li>
+    <ul>
+    <li>Chose the US state of interest.</li>
+    <li>Click the <b>Update Map</b> button.</li>
+    <li>Once the map overlays are visible, click on an area on the map to see the name and id of that area.</li>
+    <li>Note that clicking on an area on the map will also populate the main form with the coresponding identifier.</li>
+    </ul>
+    </ul>
+    <li><b>Shape: </b> Search by lon, lat coordinates or use the map interface to draw a custom polygon.</li>
+    <ul>
+    <li><b>Using the map interface to draw a custom shape</b>
+    <ul>
+    <li>You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend on the top of the map first.</li>
+    <ul>
+    <li><b>Marker: </b>Point and click on the map.</li>
+    <li><b>Connected line segments: </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
+    <li><b>Rectangle: </b> Point at a corner of your rectangle, click, hold and drag in the desired direction.</li>
+    <li><b>Circle: </b>Point at the center of your circle, click, hold and drag outwards.</li>
+    <li><b>Polygon: </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
+    </ul>
+    </ul>
+    </ul>
+    </ul>
+    </p><p>
+    <b>Elements </b><br />
+    Choose the climate elements. Input should be a comma separarted list. Following climate elements area available.
+    <ul>
+    <li>Maximum Temperature</li>
+    <li>Minimum Temperature</li>
+    <li>Precipitation</li>
+    <li>Degree Days (Heating/Cooling/Growing)</li>
+    </ul>
+    </p><p>
+    <b>Start date/End date </b><br />
+    Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd.<br />
+    <b>Grid </b><br />
+    This option defines the gridded dataset. The first two options are the NRCC interpolated and the NRCC Hi-Res datasets developed at the Northeast Regional Climate Center (NRCC). Several NARRCAPP datasets are available.<br />
+    For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</br />
+    <a target="_blank" href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a><br />
+    For more information and direct access to NARCCAP
+    (North American Regional Climate Change Assessment Program) gridded data sets:<br />
+    <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a><br />
+    <b>Spatial Summary </b><br />
+    Defines the data summary over the search area defined by <b>Select grid by</b>. Options are
+    <ul>
+    <li><b>Maximum: </b>Finds the maximum value over the area.</li>
+    <li><b>Minimum: </b>Finds the mimimum value over the area.</li>
+    <li><b>Mean: </b>Finds the average value over the area.</li>
+    <li><b>Sum: </b>Finds the sum of the values over the area.</li>
+    </ul>
+    </p><p>
+    <b>Show Running Mean </b> Choose "Yes" if you want the running mean to be computed and shown on the final graph.<br />
+    <b>Running Mean Days</b> Defines the number of days used to compute the running mean.<br />
+    <b>PLOT OPTIONS</b> Several plot options are available.
+    <ul>
+    <li><b>Image size: </b>Choose your image size from the drop down menue.</li>
+    <li><b>Show major grid: </b>Dashed grid lines will be places at a step size of 1/5(data_max - data_min) </li>
+    <li><b>Show minor grid: </b>Dashed gridlines will be placed at a step size of 1/10(data_max - data_min). </li>
+    <li><b>Connector line: </b>Choose "Yes" if you would like your data points connected by a line.</li>
+    <li><b>Connector line width: </b>Defines the width of the line connecting that data points. 10 is the maximum line width allowed. Choosing 0 is the same as choosing no connector line.</li>
+    <li><b>Markers: </b>Choose yes if you would like to see a marker at each data point.</li>
+    <li><b>Marker type: </b>Choose a marker type from the drop down menue.</li>
+    <li><b>Vertical axis min: </b>Set the y-axis minimum manually.</li>
+    <li><b>Vertical axis max: </b>Set the y-axis maximum manually.</li>
+    </ul>
     </p>
 </div>
 
 <div id="Docu_CLIM_SUM_MAP" title="Climate Summary Map">
     <p class="error">What is the <b>Climate Summary Map</b> Tool?</p>
-    <p>An interactive web-based interface that can be used to generate temporal composite maps for a variety of climate elements. Maps can be generated for individula US states or user defined bounding boxes.</p>
+    <p>An interactive web-based interface that can be used to generate temporal composite maps for a variety of climate elements. Maps can be generated for states, US Counties, County Warning Areas, Climate Divisions and Basins as well as custom shapes like polygons and circles..</p>
     <p class="error">What dataset is being used?</p>
     <p>This tool works with  the NRCC interpolated, NRCC Hi-Res daily gridded datasets developed at NRCC (Northern regional Climate Center)
-    as well as with a variety of NARCCAP modeled datasets.
+    as well as with a variety of NARCCAP modeled datasets.<br />
 
-    <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
-    <a target="_blank" href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
-    <p>For more information and direct access to NARCCAP
-    (North American Regional Climate Change Assessment Program) gridded data sets:</p>
+    For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:<br />
+    <a target="_blank" href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a><br />
+    For more information and direct access to NARCCAP<br />
+    (North American Regional Climate Change Assessment Program) gridded data sets:<br />
     <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
     <p class="error">What can you do with this tool?</p>
     <h3>Generate Comosite Maps</h3>
@@ -985,37 +1120,85 @@ CRCM Model</a><br />
 
 
 <div id="Howto_CLIM_SUM_MAP" title="Climate Summary Map">
-    <p>
-        <b>FORM 1</b><br />
-        <b>Select grid by </b>You can generate a map for a US state or a bounding box of your choice. A map interface helping you to define your bounding box will appear once you click "Select"<br />
-        <b>Element</b><br />
-        Element coices comprise the 8 standard climate elements as well as degree days with custom base temperatures.
-        <b>Time Period</b> This is the time period that your data will be summarized over. Precipitation and snowfall data will be summed over the time period. All other climate elements will be averaged over the time period.<br />
-        <ul>
-            <li><b>Custom Date Range </b>Allows you to enter specific start/end dates.</li>
-            <li><b>Last x years </b>Summarize over the last x years.</li>
-            <li><b>Last x months </b>Summarize over the last x months.</li>
-            <li><b>Last x years </b>Summarize over the last x years.</li>
-        </ul>
+   <p>
+    <b>Select grid by </b><br />
+    Defines the type of search area. Map Interfaces will help you find the identifiers or enable you to draw a custom polygon (circles and bounding boxes included). Several search area options are available.
+    <ul>
+    <li><b>State: </b>Search by US state abbreviation (not case sensitive).</li>
+    <li><b>County: </b>Search by US County FIPS code or name.</li>
+    <li><b>County Warning Area: </b>Search by US County Warning Area code or name.</li>
+    <li><b>Climate Division: </b>Search US Climate Division code or name. </li>
+    <li><b>Basin: </b>Search US Basin code or name.</li>
+    <ul>
+    <li><b>Using the map interface to find County/County Warning Area/Climate Division/Basin codes</b></li>
+    <ul>
+    <li>Chose the US state of interest.</li>
+    <li>Click the <b>Update Map</b> button.</li>
+    <li>Once the map overlays are visible, click on an area on the map to see the name and id of that area.</li>
+    <li>Note that clicking on an area on the map will also populate the main form with the coresponding identifier.</li>
+    </ul>
+    </ul>
+    <li><b>Shape: </b> Search by lon, lat coordinates or use the map interface to draw a custom polygon.</li>
+    <ul>
+    <li><b>Using the map interface to draw a custom shape</b>
+    <ul>
+    <li>You can place a marker on the map, draw connected line segments, rectangle, circles or polygons. Click on the appropriate icon in the legend on the top of the map first.</li>
+    <ul>
+    <li><b>Marker: </b>Point and click on the map.</li>
+    <li><b>Connected line segments: </b>Point and click at each junction point of your line. Finish by double clicking at the final point.</li>
+    <li><b>Rectangle: </b> Point at a corner of your rectangle, click, hold and drag in the desired direction.</li>
+    <li><b>Circle: </b>Point at the center of your circle, click, hold and drag outwards.</li>
+    <li><b>Polygon: </b>Point and click at each corner of your polygon. Finish by double clicking at the final point or by clicking on the first point of your ploygon.</li>
+    </ul>
+    </ul>
+    </ul>
+    </ul>
     </p><p>
-        <b>X</b> Number of years/month/days. 
-    </p>
-    <p>
-        <b>FORM2 2 </b><br />
-        Depending on your <b>Select grid by </b>choice from FORM 1, you will see: <br >
-           <ul>
-                <li><b>State </b>Choose a US state from the drop down menue</li>
-                <li><b>"Bounding Box" </b>A bounding box has four coordinates: <br />West longitude, South latitude, East longitude, North latitude. Please enter them in this order or use the map interface to find your bounding box.</li>
-           </ul>
+    <b>Elements </b><br />
+    Choose the climate elements. Input should be a comma separarted list. Following climate elements area available.
+    <ul>
+    <li>Maximum Temperature</li>
+    <li>Minimum Temperature</li>
+    <li>Precipitation</li>
+    <li>Degree Days (Heating/Cooling/Growing)</li>
+    </ul>
     </p><p>
-        <b>Element/Start Date/End Date</b>These fields are populated from your completed form 1. They should not be changed at this point.<br />
-        <b>Grid </b>This option defines the gridded dataset to be used. The first two options are the NRCC interpolated and the NRCC Hi-Res datasets developed at the Northeast Regional Climate Center (NRCC).Several NARRCAPP datasets are available.
-            <p>For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</p>
-            <a href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a>
-            <p>For more information and direct access to NARCCAP
-            (North American Regional Climate Change Assessment Program) gridded data sets:</p>
-            <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+    <b>Start date/End date </b><br />
+    Define the time period of the request. Several formats are supported: yyyymmdd, yyyy-mm-dd, yyyy/mm/dd.<br />
+    <b>Grid </b><br />
+    This option defines the gridded dataset. The first two options are the NRCC interpolated and the NRCC Hi-Res datasets developed at the Northeast Regional Climate Center (NRCC). Several NARRCAPP datasets are available.<br />
+    For more information on ACIS gridded data sets NRCC interpolated, NRCC Hi-Res:</br />
+    <a target="_blank" href="https://gist.github.com/4197956">GridACIS grids 1 and 3</a><br />
+    For more information and direct access to NARCCAP
+    (North American Regional Climate Change Assessment Program) gridded data sets:<br />
+    <a  target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a><br />
+    <b>Temporal Summary </b><br />
+    Defines the data summary over the time range defined by <b>Start/End Date</b>. Options are
+    <ul>
+    <li><b>Maximum: </b>Finds the maximum value over the area.</li>
+    <li><b>Minimum: </b>Finds the mimimum value over the area.</li> 
+    <li><b>Mean: </b>Finds the average value over the area.</li>
+    <li><b>Sum: </b>Finds the sum of the values over the area.</li>
+    </ul>
+    </p><p>
+    <b>PLOT OPTIONS</b> Several plot options are available.
+    <ul>
+    <li><b>Image size: </b>Choose your image size from the drop down menue.</li>
+    <li><b>Number of Levels: </b>Defines the number of levels of the contour map. Please select a number between 1 and 20</li>
+    <li><b>Color Map: </b>The complete set of matplotlip color maps is available. Please consult the link below the <b>Color Map</b> field for a complete list.</li>
+    <li><b>Interpolation: </b> Defines the interpolation method. Options are</li>
+    <ul>
+    <li><b>None: </b>No interpolation is performed</li>
+    <li><b>Cspline: </b><a target="_blank" href="http://www.arcetri.astro.it/irlab/library/recipes/bookcpdf/c3-3.pdf">Cspline algorithm</a></li>
+    </ul>
+    </p><p>
+    <li><b>Projection: </b>Projection method. Options are</li>
+    <ul>
+    <li><b>Lambert Conformal Conic (LCC): </b> </b><a target="_blank" href="http://webhelp.esri.com/arcgisdesktop/9.2/index.cfm?id=139&pid=103&topicname=Lambert_Conformal_Conic">LCC explained</li>
+    </ul>
+    </ul>
     </p>
+
 </div>
 
 <!--SOD PROGRAMS-->
@@ -1079,18 +1262,18 @@ CRCM Model</a><br />
 
 <div id="Docu_SODSUMM" title="Monthly/Seasonal Climate Summaries">
     <p class="error">What is the <b>Monthly/Seasonal Climate Summaries</b> Tool?</p>
-    <p>This  tool calculates a general climatology for a station based on DAILY input data. Tables and graphs of monthly and seasonal summaries can be created for the following climate elements. </p>
+    <p>This  tool calculates a general climatology for a station based on DAILY input data. Tables and graphs of monthly and seasonal summaries can be created for the following climate elements.
     <ul>
-    <p>Maximum/Minimum Temperature</p>
-    <p>Precipitation/Snow</p>
-    <p>Heating/Cooling/Growing/Corn Degree Days</p>
+    <li>Maximum/Minimum Temperature</li>
+    <li>Precipitation/Snow</li>
+    <li>Heating/Cooling/Growing/Corn Degree Days</li>
     </ul>
+    </p>
     <p class="error">What dataset is being used?</p>
-    <p>This tool works with station data found in the ACIS system. A variety of data sets from different networks can be found in the ACIS system.</p>
-    <p><a  target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a></p>
-    <p><a  target="_blank" href="http://cyclone1.dri.edu/csc/media/html/station_id_system_docu.html">More on Station Networks found in ACIS</a></p>
+    <p>This tool works with station data found in the ACIS system. A variety of data sets from different networks can be found in the ACIS system.<br />
+    <a  target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a><br />
+    <a  target="_blank" href="http://cyclone1.dri.edu/csc/media/html/station_id_system_docu.html">More on Station Networks found in ACIS</a></p>
     <p class="error">What can you do with this tool?</p>
-    <br /><br /><br /><br />
     <h3>Generate summary tables</h3>
     <img alt="SodsummTable" title="SodsummTable" width="100%" height="200px" src="/csc/media/img/SodsummTable.png">
     <h3>Generate summary graphs</h3>
@@ -1122,6 +1305,7 @@ CRCM Model</a><br />
             </ul>
         </li>
     </ul>
+    </p><p>
     <b>Max dissing days </b>The number of maximum missing days allowed in a month. Months with more than max_missing_days missing will be omitted from the analysis.<br />
     <b>Generate Graphics </b> Choose "Yes" if you would like graphics as well table results. 
     </p>
@@ -1210,60 +1394,22 @@ CRCM Model</a><br />
                 <li><b>Plot months separately </b>Generates a plot of time series for each of the chosen months.</li>
             </ul>
     </p><p>
-    <b>Show running mean </b> Choose "Yes" if you want a running mean to be computed and shown on the final graph<br />
-    <b>Running mean years</b> Defines the number of years used to compute the running mean.<br />
+    <b>Show Running Mean </b> Choose "Yes" if you want the running mean to be computed and shown on the final graph.<br />
+    <b>Running Mean Years</b> Defines the number of years used to compute the running mean.<br />
     <b>Plot incomplete years </b> Choose "yes" if you want to compute the summary for a year exceeding the maximum number of missing days allowed.<br />
     <b>PLOT OPTIONS</b> Several plot options are available.
         <ul>
-            <li><b>Image size </b>Choose your image size from the drop down menue.</li>
-            <li><b>Show major grid </b>Dashed grid lines will be places at a step size of 1/5(data_max - data_min) </li>
-            <li><b>Show minor grid </b>Dashed gridlines will be placed at a step size of 1/10(data_max - data_min). </li>
-            <li><b>Connector line </b>Choose "Yes" if you would like your data points connected by a line.</li>
-            <li><b>Connector line width </b>Defines the width of the line connecting that data points. 10 is the maximum line width allowed. Choosing 0 is the same as choosing no connector line.</li>
-            <li><b>Markers </b>Choose yes if you would like to see a marker at each data point.</li>
-            <li><b>Marker type </b>Choose a marker type from the drop down menue.</li>
+            <li><b>Image size: </b>Choose your image size from the drop down menue.</li>
+            <li><b>Show major grid: </b>Dashed grid lines will be places at a step size of 1/5(data_max - data_min) </li>
+            <li><b>Show minor grid: </b>Dashed gridlines will be placed at a step size of 1/10(data_max - data_min). </li>
+            <li><b>Connector line: </b>Choose "Yes" if you would like your data points connected by a line.</li>
+            <li><b>Connector line width: </b>Defines the width of the line connecting that data points. 10 is the maximum line width allowed. Choosing 0 is the same as choosing no connector line.</li>
+            <li><b>Markers: </b>Choose yes if you would like to see a marker at each data point.</li>
+            <li><b>Marker type: </b>Choose a marker type from the drop down menue.</li>
+            <li><b>Vertical axis min: </b>Set the y-axis minimum manually.</li>
+            <li><b>Vertical axis max: </b>Set the y-axis maximum manually.</li>
         </ul>
     </p>
-</div>
-
-<div id="Docu_SODXTRMTS_VIS" title="Visualization">
-    <p class="error">What is the <b>Visualization</b> Tool?</p>
-    <p>After running the  <b>Monthly Time Series </b> application, you can use this tool to generate customized time series plots<br />
-    <p class="error">What dataset is being used?</p>
-    <p>This tool works with station data found in the ACIS system. <br />
-    A variety of data sets from different networks are available.</p>
-    <p><a  target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a></p>
-    <p><a  target="_blank" href="http://cyclone1.dri.edu/csc/media/html/station_id_system_docu.html">More on Station Networks found in ACIS</a></p>
-    <p class="error">What can you do with this tool?</p>
-    <h3>Generate Time Series</h3>
-    <img alt="SodxtrmtsTS" title="SodxtrmtsTS" width="500px" height="300px" src="/csc/media/img/SodxtrmtsTS.png">
-    <h3>Print plots</h3>
-</div>
-
-<div id="Howto_SODXTRMTS_VIS" title="Visualization">
-    <p>
-    <b>Start/End month </b>Start/end the visualization on these months.<br />
-    <b>Summary </b>Choose how you want to summarize the data over the months spanning <b>Start/end month</b>
-            <ul>
-                <li><b>Maximum over months </b>Plots the maximum value of the months for each year in the time period .</li>
-                <li><b>Minimum over months </b>Plots the minimum value of the chosen months for each year in the time period.</li>
-                <li><b>Sum over months </b>Plots the sum of the values of the chosen months for each year in the time period.</li>
-                <li><b>Average over months </b>Plots the averages of the values of the chosen months for each year in the time period.</li>
-                <li><b>Plot months separately </b>Generates a plot of time series for each of the chosen months.</li>
-            </ul>
-    <b>Show running mean </b> Choose "Yes" if you want a running mean to be computed and shown on the final graph<br />
-    <b>Running mean years</b> Defines the number of years used to compute the running mean.<br />
-    <b>Plot incomplete years </b> Choose "yes" if you want to compute the summary for a year exceeding the maximum number of missing days allowed.<br />
-    <b>Plot options</b> Several plot options are available.
-        <ul>
-            <li><b>Image size </b>Choose your image size from the drop down menue.</li>
-            <li><b>Show major grid </b>Dashed grid lines will be places at a step size of 1/5(data_max - data_min) </li>
-            <li><b>Show minor grid </b>Dashed gridlines will be placed at a step size of 1/10(data_max - data_min). </li>
-            <li><b>Connector line </b>Choose "Yes" if you would like your data points connected by a line.</li>
-            <li><b>Connector line width </b>Defines the width of the line connecting that data points. 10 is the maximum line width allowed. Choosing 0 is the same as choosing no connector line.</li>
-            <li><b>Markers </b>Choose yes if you would like to see a marker at each data point.</li>
-            <li><b>Marker type </b>Choose a marker type from the drop down menue.</li>
-        </ul>
 </div>
 
 

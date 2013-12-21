@@ -8,16 +8,16 @@
 {% block content %}
 
 <p align="center">You are here
-    <a href="{{HOME_URL}}">HOME></a>
-    <a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
-    <a href="{{TOOLS_URL}}">TOOLS></a>
-    <a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
+    <a href="{{HOME_URL}}">Home></a>
+    <a href="{{TOOLS_URL}}">Tools></a>
+    <a href="{{TOOLS_URL}}station/">Station Data Tools></a> 
     <a href="{{TOOLS_URL}}station/sodsumm/">Monthly/Seasonal Climate Summaries</a></p>
 
 <script type="text/javascript">set_autofill("US_station_id");</script>
 
 <table cellpadding="10">
 <td valign="top" width="20%">
+    <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/sodsumm/'"/>
     <div id='form1'>
         <form method="post" action="">{% csrf_token %}
         <table class="form">

@@ -6,10 +6,9 @@
 
 {% block content %} 
 <p align="center">You are here
-<a href="{{HOME_URL}}swcke/home/">HOME></a>
-<a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
-<a href="{{TOOLS_URL}}">TOOLS></a>
-<a href="{{TOOLS_URL}}gridded/">GRID TOOLS></a>
+<a href="{{HOME_URL}}swcke/home/">Home></a>
+<a href="{{TOOLS_URL}}">Tools></a>
+<a href="{{TOOLS_URL}}gridded/">Gridded Data Tools></a>
 <a href="{{TOOLS_URL}}gridded/area_time_series/">Spatial Summary Time Series</a>
 </p>
 
@@ -35,11 +34,11 @@
         <td>
             <select id="select_grid_by" name="select_grid_by" onchange="set_station_grid_select('area',this);">
             <option value="location" {{checkbox_vals.location_selected}}>Individual grid point</option>
-            <option value="county" {{checkbox_vals.county_selected}}>County</option>
-            <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
-            <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
-            <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
             <option value="state" {{checkbox_vals.state_selected}}>State</option>
+            <option value="county" {{checkbox_vals.county_selected}}>County</option>
+            <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
+            <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
+            <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
             <option value="shape" {{checkbox_vals.shape_selected}}>Custom Shape</option>
             </select>
         </td>
@@ -206,7 +205,7 @@
         </div>
         </td>
         </tr>
-        <tr><td><input type="submit" value="Submit" name="formTS"></td><td></td><td></td></tr>
+        <tr><td><input type="submit" value="Submit" name="formTS"></td><td></td></tr>
         <tr>
         <td colspan="3"><hr style="border-color:#006666;"></td>
         </tr>
@@ -612,6 +611,7 @@
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="">{% csrf_token %}
             <table class="form">
+            <!--
             <tr valign="top">
             <td>Select stations by:</td>
             <td>
@@ -631,6 +631,7 @@
             </div>
             </td>
             </tr>
+            -->
             <tr>
             <td>State: </td>
             <td>
@@ -688,13 +689,17 @@
                 <option value="wy" {{wy_selected}}>Wyoming</option>
             </select>
             </td>
+            <!--
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
             <div class="pop-up">
                 <div id="ht_select_overlay_by">Specify US State</div>
             </div>
             </td>
             </tr>
+            -->
+            <td><input type="submit" value="Update Map" name="formOverlay"/></td>
             </table>
+            <input type="hidden" value="{{initial.select_grid_by}}" name="select_overlay_by" id="select_overlay_by">
             <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
             <input type="hidden" value="{{initial.elements}}" name="elements">
             <input type="hidden" value="{{initial.start_date}}" name="start_date">
@@ -712,7 +717,6 @@
             <input type="hidden" value="{{initial.marker_type}}" name="marker_type">
             <input type="hidden" value="{{initial.vertical_axis_min}}" name="vertical_axis_min">
                         <input type="hidden" value="{{initial.vertical_axis_max}}" name="vertical_axis_max">
-            <input type="submit" value="Submit" name="formOverlay"/>
             </form>
         </div>
     </div>

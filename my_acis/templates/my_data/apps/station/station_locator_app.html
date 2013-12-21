@@ -6,11 +6,10 @@
 {% block content %}
 
 <p align="center">You are here
-<a href="{{HOME_URL}}">HOME></a>
-<a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
-<a href="{{TOOLS_URL}}">TOOLS></a>
-<a href="{{TOOLS_URL}}station/">STATION TOOLS></a> 
-<a href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a>
+<a href="{{HOME_URL}}">Home></a>
+<a href="{{TOOLS_URL}}">Tools></a>
+<a href="{{TOOLS_URL}}station/">Station Data Tools></a> 
+<a href="{{TOOLS_URL}}station/station_finder/">Station Finder</a>
 
 <!--Overlay map parameters-->
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
@@ -23,8 +22,18 @@
 <!--First Table: Form, HowTos, Links-->    
 <table cellpadding="none">
 <td valign="top" width="15%">
-    <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/station_finder'"/>
     <!--First Column:forms and Links-->
+    <table>
+    <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
+    </table>
+    <script type="text/javascript">                        
+    $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+    </script>
+    <script type="text/javascript">            
+    $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+    </script>
+
+    <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/station_finder/'"/>
     <div id='formData'>
         <form method="post" action="">{% csrf_token %}
         <table class="form" id="tableData">
@@ -154,30 +163,117 @@
         $("#Docu_select_stations_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_stations_by");
     </script>
     <br />
+    <br />
+    <ul class="navbar">
+    <h2>Links to other Networks</h2>
+    <table>
+    <tr><td>
+    <a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank">USA RAWS Climate Archive (WRCC)</a>
+    <div class="pop-up">
+        <p><font size="4">Summaries, Graphs, and other products for RAWS
+        (Remote Automatic Weather Stations).</font></p>
+    </div>
+    </td></tr>
+   <tr><td>
+    <a id="us_wide" href="http://www.wcc.nrcs.usda.gov/snow/" class="trigger" target="_blank">SNOTEL (<font color="red">W-US/Alaska</font>)</a>
+    <div class="pop-up">
+        <p><font size="4">Snowpack and related climatic data in the Western United States and Alaska.</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://www.cemp.dri.edu/" class="trigger" target="_blank">CEMP(<font color="red">NV</font>)</a>
+    <div class="pop-up">
+        <p><font size="4"></font>Community Environmental Monitoring Porgram. Monitoring air quality and climate near and downwind of the Nevada National Security Site.</p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://nicenet.dri.edu/" class="trigger" target="_blank">NICE Net(<font color="red">NV</font>)</a>
+    <div class="pop-up">
+        <p><font size="4"></font>Nevada Integrated Climate and Evaporation Network.</p>
+    </div>
+    </td></tr>
+  <tr><td>
+    <a id="us_wide" href="http://www.wrcc.dri.edu/vallescaldera/" class="trigger" target="_blank">Valles Caldera(<font color="red">NM</font>)</a>
+    <div class="pop-up">
+        <p><font size="4">Valles Caldera Climate Network</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://mesowest.utah.edu/" class="trigger" target="_blank">MesoWest (<font color="red">US</font>)</a>
+    <div class="pop-up">
+        <p><font size="4">Access to current and archived weather observations across the United States.</font></p>
+    </div>
+    </td></tr>
+   <tr><td>
+        <a id="us_wide" href="http://www.cocorahs.org/" class="trigger" target="_blank">CoCoRaHS (<font color="red">US</font>)</a>
+    <div class="pop-up">
+        <p><font size="4">Community Collaborative Rain, Hail and Snow Network</font></p>
+    </div>
+    </td></tr>
+   <tr><td>
+    <a id="us_wide" href="http://www.ymp.dri.edu/index.html" class="trigger" target="_blank">Yucca Mountain Project(<font color="red">NV</font>)</a>
+    <div class="pop-up">
+        <p><font size="4">Climate Data from Yucca Mountain, Nevada.</font></p>
+    </div>
+    </td></tr>
+   <tr><td>
+    <a id="us_wide" href="http://www.wrcc.dri.edu/catalina/" class="trigger" target="_blank">Santa Catalina Island Climate Network(<font color="red">CA</font>)</a>
+    <div class="pop-up">
+        <p><font size="4">Climate Data from Santa Catalina Island.</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://www.wrcc.dri.edu/crn/" class="trigger" target="_blank">USCRN (<font color="red">US</font>)</a>
+    <div class="pop-up">
+        <p><font size="4">NOAA U.S. Climate Reference Network</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://www.wrcc.dri.edu/nrel/" class="trigger" target="_blank">Wind Energy Assessment(<font color="red">NV</font>)</a>
+    <div class="pop-up">
+        <p><font size="4"></font>Climate and Wind data for Nevada.</p>
+    </div>
+    </td></tr>
+    <tr><td>                                        
+    <a id="us_wide" href="http://www.tahoeclim.dri.edu/" class="trigger" target="_blank">TahoeClim(<font color="red">CA/NV</font>)</a>
+    <div class="pop-up">
+        <p><font size="4">Lake Tahoe Climate Information and Data.</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://www.calclim.dri.edu/" class="trigger" target="_blank">CalClim(<font color="red">CA</font>)</a>
+    <div class="pop-up">
+        <p><font size="4">California Climate Data Archive.</font></p>
+    </div>
+    </td></tr>
+    </table>
+    </ul>
+
 <!--Second Column: How Tos and maps-->
 <td valign="top" width="70%">
-        <table>
-        <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
-        </table> 
-        <script type="text/javascript">                        
-        $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
-        </script>
         <div align="left" id="tool_info" style="display:none;"></div>
         <script type="text/javascript">                        
         $("#tool_info").load("{{MEDIA_URL}}html/commons.html #About_station_finder");
-        </script>
-        <script type="text/javascript">            
-        $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
         </script>
         <div align="left" id="how_to" style="display:none"></div>
         <script type="text/javascript">            
         $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_station_finder");
         </script>
 
+        {%if form_error%}
+        {%for key, val in form_error.items%}
+        <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
+        {%endfor%}
+        {%endif%}
         <!--Maps-->
         <!--<font size="2" color="#006666" align="center">{{map_title}}</font>-->
+        
+        <!--Link to data portal-->
         <table>
         <td valign="top">
+        {%if station_json%}
+        <a target="_blank" href="{{DATA_URL}}station/?select_stations_by={{initial.select_stations_by}}&area_type_value={{initial.area_type_value}}">Obtain data for all stations displayed</a>
+        {%endif%}
         <div id="PolyMap" style="display:none;">
             <div id="panel">
             <div id="color-palette"></div>
@@ -281,7 +377,7 @@
                 <option value="wy" {{wy_selected}}>Wyoming</option>
             </select>
             </td>
-            <td><input type="submit" value="Search Map" name="formOverlay"/></td>
+            <td><input type="submit" value="Update Map" name="formOverlay"/></td>
             </tr>
             </table>
             <input type="hidden" value="{{initial.select_stations_by}}" name="select_overlay_by" id="select_overlay_by">
@@ -307,7 +403,7 @@
     <br /><br />
     <!--Station finder Map-->
     {%if error%}
-    <p class="error">{{error}}</p>
+    <p class="error" align="center">{{error}}</p>
     {%endif%}
 
     <input type="hidden" id="URL_PREFIX" name="variable" value="{{ URL_PREFIX }}">
@@ -324,7 +420,7 @@
     <input type="hidden" id="elements" name="variable" value="{{params_dict.elements}}">
     {%endif%}
     
-    {%if station_json%}
+    {%if station_json and not error %}
     <input type="hidden" id="station_json" name="variable" value="{{station_json}}">
     <div id="map" style="width:100%;height:400px;"></div>
     <script type="text/javascript">
@@ -348,7 +444,7 @@
     {%endif%}
     </td>
     <td valign="top">
-    {%if station_json%}
+    {%if station_json and not error %}
     <div id="map_legend">
         <h3>Legend of Station Networks</h3>
         <!--<p>Choose <a href="/csc/media/html/stn_id_system_docu.html" onClick="return popup_window(this, 'Networks')"><font color="#006666">Network ID</font></a>!</td>-->

@@ -223,7 +223,6 @@ def data_station(request):
     context = {
         'title': 'Historic Station Data',
     }
-    #status = WRCCUtils.generate_kml_file('county_warning_area', 'nv' , 'nv_county_warning_area.kml', TEMP_FILE_DIR)
     initial, checkbox_vals = set_station_data_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set up maps if needed
@@ -1055,7 +1054,7 @@ def station_locator_app(request):
         form_error = check_form(form, fields_to_check)
         if form_error:
             context['form_error'] = form_error
-            return render_to_response('my_data/apps/station/station_locator.html', context, context_instance=RequestContext(request))
+            return render_to_response('my_data/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
         #Set up Maps
         if form['select_stations_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
             context['host'] = 'wrcc.dri.edu'
@@ -1069,6 +1068,7 @@ def station_locator_app(request):
         display_params_list, params_dict = set_station_locator_params(form)
         context['display_params_list']= display_params_list;context['params_dict']= params_dict
         element_list = form['elements'].replace(' ','').split(',')
+        context['req'] = form['elements']
         #Convert element list to var majors
         el_vX_list = []
         for el_idx, element in enumerate(element_list):
@@ -1079,6 +1079,7 @@ def station_locator_app(request):
                  el_vX_list.append('45') #should be 44
             else:
                 el_vX_list.append(str(WRCCData.ACIS_ELEMENTS_DICT[el]['vX']))
+        #context['req']= el_vX_list
         #Set up params for station_json generation
         by_type = WRCCData.ACIS_TO_SEARCH_AREA[form['select_stations_by']]
         val = form[WRCCData.ACIS_TO_SEARCH_AREA[form['select_stations_by']]]
@@ -1089,7 +1090,7 @@ def station_locator_app(request):
         if 'error' in station_json.keys():
             context['error'] = stn_json['error']
         if station_json['stations'] == []:
-            context['error'] = "No stations found for %s : %s, elements: %s."  %(by_type, val, element_list)
+            context['error'] = "No stations found for %s : %s, elements: %s."  %(by_type, val, form['elements'])
         context['station_json'] = f_name
 
     #overlay map generation
@@ -1990,7 +1991,7 @@ def write_monthly_aves_results(req, form_data, monthly_aves):
         else:
             results[el_idx] = {'element_long': WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long']}
         results[el_idx]['element'] = str(el)
-        results[el_idx]['stn_id']= str(form_data['station_id'])
+        results[el_idx]['stn_id']= find_stn_id(str(form_data['station_id']))
 
         if form_data['start_date'].lower() == 'por':
             if len(req['meta']['valid_daterange'][el_idx]) == 2:
@@ -2285,16 +2286,7 @@ def join_initials(initial,initial_2, checkbox_vals,checkbox_vals_2):
 def set_map_plot_options(request):
     initial = {}
     checkbox_vals = {}
-    if type(request) == dict:
-        def Get(key, default):
-            if key in request.keys():
-                return request[key]
-            else:
-                return default
-    elif request.method == 'GET':
-        Get = getattr(request.GET, 'get')
-    elif request.method == 'POST':
-        Get = getattr(request.POST, 'get')
+    Get = set_GET(request)
     initial['image_size'] = Get('image_size', 'medium')
     initial['level_number'] = Get('level_number', '5')
     initial['cmap'] = Get('cmap', 'rainbow')
@@ -2323,16 +2315,7 @@ def set_map_plot_options(request):
 def set_plot_options(request):
     initial = {}
     checkbox_vals = {}
-    if type(request) == dict:
-        def Get(key, default):
-            if key in request.keys():
-                return request[key]
-            else:
-                return default
-    elif request.method == 'GET':
-        Get = getattr(request.GET, 'get')
-    elif request.method == 'POST':
-        Get = getattr(request.POST, 'get')
+    Get = set_GET(request)
     initial['graph_title'] = Get('graph_title','Use default')
     initial['image_size'] = Get('image_size', 'medium')
     initial['major_grid']  = Get('major_grid', 'T')
@@ -2386,16 +2369,7 @@ def set_sod_initial(request, app_name):
 def set_sodxtrmts_initial(request):
     initial = {}
     checkbox_vals = {}
-    if type(request) == dict:
-        def Get(key, default):
-            if key in request.keys():
-                return request[key]
-            else:
-                return default
-    elif request.method == 'GET':
-        Get = getattr(request.GET, 'get')
-    elif request.method == 'POST':
-        Get = getattr(request.POST, 'get')
+    Get = set_GET(request)
     stn_id = Get('stn_id', None)
     if stn_id is not None:
         initial['station_id'] = stn_id
@@ -2454,16 +2428,7 @@ def set_sodxtrmts_initial(request):
 def set_sodxtrmts_graph_initial(request):
     initial = {}
     checkbox_vals = {}
-    if type(request) == dict:
-        def Get(key, default):
-            if key in request.keys():
-                return request[key]
-            else:
-                return default
-    elif request.method == 'GET':
-        Get = getattr(request.GET, 'get')
-    elif request.method == 'POST':
-        Get = getattr(request.POST, 'get')
+    Get = set_GET(request)
     initial['graph_generate_graph']= str(Get('graph_generate_graph', 'F'))
     initial['graph_start_month'] = Get('graph_start_month', '01')
     initial['graph_end_month'] = Get('graph_end_month', '02')
@@ -2494,16 +2459,7 @@ def set_sodxtrmts_graph_initial(request):
 def set_station_data_initial(request):
     initial = {}
     checkbox_vals = {}
-    if type(request) == dict:
-        def Get(key, default):
-            if key in request.keys():
-                return request[key]
-            else:
-                return default
-    elif request.method == 'GET':
-        Get = getattr(request.GET, 'get')
-    elif request.method == 'POST':
-        Get = getattr(request.POST, 'get')
+    Get = set_GET(request)
     initial['select_stations_by'] = Get('select_stations_by', 'station_id')
     initial[str(initial['select_stations_by'])] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
@@ -2543,16 +2499,7 @@ def set_station_data_initial(request):
 def set_gridded_data_initial(request):
     initial = {}
     checkbox_vals = {}
-    if type(request) == dict:
-        def Get(key, default):
-            if key in request.keys():
-                return request[key]
-            else:
-                return default
-    elif request.method == 'GET':
-        Get = getattr(request.GET, 'get')
-    elif request.method == 'POST':
-        Get = getattr(request.POST, 'get')
+    Get = set_GET(request)
     initial['select_grid_by'] = Get('select_grid_by', 'location')
     initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
@@ -2609,16 +2556,7 @@ def set_gridded_data_initial(request):
 def set_area_time_series_initial(request):
     initial = {}
     checkbox_vals = {}
-    if type(request) == dict:
-        def Get(key, default):
-            if key in request.keys():
-                return request[key]
-            else:
-                return default
-    elif request.method == 'GET':
-        Get = getattr(request.GET, 'get')
-    elif request.method == 'POST':
-        Get = getattr(request.POST, 'get')
+    Get = set_GET(request)
     initial['select_grid_by'] = Get('select_grid_by', 'location')
     initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
@@ -2653,16 +2591,7 @@ def set_area_time_series_initial(request):
 def set_clim_sum_maps_initial(request):
     initial = {}
     checkbox_vals = {}
-    if type(request) == dict:
-        def Get(key, default):
-            if key in request.keys():
-                return request[key]
-            else:
-                return default
-    elif request.method == 'GET':
-        Get = getattr(request.GET, 'get')
-    elif request.method == 'POST':
-        Get = getattr(request.POST, 'get')
+    Get = set_GET(request)
     initial['select_grid_by'] = Get('select_grid_by', 'state')
     initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
@@ -2709,7 +2638,7 @@ def set_station_locator_initial(request):
         checkbox_vals[area_type + '_selected'] =''
         if area_type == initial['select_stations_by']:
             checkbox_vals[area_type + '_selected'] ='selected'
-    for b in ['Any', 'All']:
+    for b in ['any', 'all']:
         checkbox_vals['elements_' + b  + '_selected'] =''
         checkbox_vals['dates_' + b  + '_selected'] =''
         if initial['elements_constraints'] == b:

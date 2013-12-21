@@ -7,9 +7,8 @@
 {% block content %} 
 
 <p align="center">You are here
-<a href="{{HOME_URL}}">HOME></a>
-<a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
-<a href="{{DATA_URL}}">DATA></a>
+<a href="{{HOME_URL}}">Home></a>
+<a href="{{DATA_URL}}">Data></a>
 <a href="{{DATA_URL}}station/">Historic Station Data</a></p>
 
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
@@ -31,10 +30,10 @@
         <td>
             <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this);">
             <option value="station_id" {{checkbox_vals.station_id_selected}}>Individual station</option>
-            <option value="station_ids" {{checkbox_vals.station_ids_selected}}>Comma separated list of stations</option>
+            <option value="station_ids" {{checkbox_vals.station_ids_selected}}>List of stations</option>
             <option value="county" {{checkbox_vals.county_selected}}>County</option>
-            <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
             <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
+            <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
             <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
             <option value="state" {{checkbox_vals.state_selected}}>State</option>
             <!--<option value="bounding_box" {{checkbox_vals.bounding_box_selected}}>Bounding Box</option>-->
@@ -273,6 +272,7 @@
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="">{% csrf_token %}
             <table class="form">
+            <!--
             <tr valign="top">
             <td>Select stations by:</td>
             <td>
@@ -293,6 +293,7 @@
             </td>
             </tr>
             <tr>
+            -->
             <td>State: </td>
             <td>
                 <select name="overlay_state" id="overlay_state">
@@ -349,14 +350,19 @@
                 <option value="wy" {{wy_selected}}>Wyoming</option>
             </select>
             </td>
+            <td><input type="submit" value="Update Map" name="formOverlay"/></td>
+            <!--
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
             <div class="pop-up">
                 <div id="ht_select_overlay_by">Specify US State</div>
             </div>
             </td>
+            -->
             </tr>
             </table>
+            <input type="hidden" value="{{initial.select_stations_by}}" name="select_overlay_by" id="select_overlay_by">
             <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
+            <!--
             <input type="hidden" value="{{initial.elements}}" name="elements">
             <input type="hidden" value="{{initial.start_date}}" name="start_date">
             <input type="hidden" value="{{initial.end_date}}" name="end_date">
@@ -365,7 +371,7 @@
             <input type="hidden" value="{{initial.data_format}}" name="data_format">
             <input type="hidden" value="{{initial.delimiter}}" name="delimiter">
             <input type="hidden" value="{{initial.output_file_name}}" name="output_file_name">
-            <input type="submit" value="Submit" name="formOverlay"/>
+            -->
             </form>
         </div>
     </div>
@@ -390,6 +396,7 @@
     {%if results.error%}
     <p class="error">{{results.error}}</p>
     {%endif%}
+
 
     {%if display_params_list%}
     <p><b>SEARCH PARAMETERS</b>:<br />

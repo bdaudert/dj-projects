@@ -7,9 +7,8 @@
 {% block content %} 
 
 <p align="center">You are here
-<a href="{{HOME_URL}}">HOME></a>
-<a href="{{SW_CKN_URL}}main_map/">RESOURCES></a>
-<a href="{{DATA_URL}}">DATA></a>
+<a href="{{HOME_URL}}">Home></a>
+<a href="{{DATA_URL}}">Data></a>
 <a href="{{DATA_URL}}gridded/">Modeled/Gridded Data</a></p>
 
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
@@ -31,11 +30,11 @@
         <td>
             <select id="select_grid_by" name="select_grid_by" onchange="set_station_grid_select('area',this);">
             <option value="location" {{checkbox_vals.location_selected}}>Individual grid point</option>
-            <option value="county" {{checkbox_vals.county_selected}}>County</option>
-            <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
-            <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
-            <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
             <option value="state" {{checkbox_vals.state_selected}}>State</option>
+            <option value="county" {{checkbox_vals.county_selected}}>County</option>
+            <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
+            <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
+            <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
             <option value="shape" {{checkbox_vals.shape_selected}}>Custom Shape</option>
             </select>
         </td>
@@ -387,6 +386,7 @@
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="">{% csrf_token %}
             <table class="form">
+            <!--
             <tr valign="top">
             <td>Select stations by:</td>
             <td>
@@ -406,6 +406,7 @@
             </div>
             </td>
             </tr>
+            -->
             <tr>
             <td>State: </td>
             <td>
@@ -463,13 +464,17 @@
                 <option value="wy" {{wy_selected}}>Wyoming</option>
             </select>
             </td>
+            <!--
             <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
             <div class="pop-up">
                 <div id="ht_select_overlay_by">Specify US State</div>
             </div>
             </td>
             </tr>
+            -->
+            <td><input type="submit" value="Update Map" name="formOverlay"/></td>
             </table>
+            <input type="hidden" value="{{initial.select_grid_by}}" name="select_overlay_by" id="select_overlay_by">
             <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
             <input type="hidden" value="{{initial.elements}}" name="elements">
             <input type="hidden" value="{{initial.start_date}}" name="start_date">
@@ -481,7 +486,6 @@
             <input type="hidden" value="{{initial.data_format}}" name="data_format">
             <input type="hidden" value="{{initial.delimiter}}" name="delimiter">
             <input type="hidden" value="{{initial.output_file_name}}" name="output_file_name">
-            <input type="submit" value="Submit" name="formOverlay"/>
             </form>
         </div>
     </div>
