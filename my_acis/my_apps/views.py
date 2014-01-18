@@ -412,7 +412,7 @@ def sods(request, app_name):
                 context['el_type'] = form2.cleaned_data['element']
                 context['units'] = units[form2.cleaned_data['element']]
                 context['start_year'] = form2.cleaned_data['start_date'][0:4]
-                context['end_year'] = form2.cleaned_data['end_date'][0:4]
+                context['end_year'] = str(int(form2.cleaned_data['end_date'][0:4]) - 1)
                 context['start_month'] = form2.cleaned_data['start_date'][4:6]
                 context['end_month'] = form2.cleaned_data['end_date'][4:6]
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
@@ -452,7 +452,7 @@ def sods(request, app_name):
             if app_name in ['Sodrun', 'Sodrunr', 'Soddyrec', 'Sodcnv', 'Sodlist']:
                 context['start_year'] = dates[0]
                 context['end_year'] = dates[-1]
-            elif app_name == 'Soddd':
+            elif app_name in ['Soddd', 'Sodpiii']:
                 context['start_year'] = dates[0][0:4]
                 context['end_year'] = str(int(dates[-1][0:4]))
             else:
@@ -498,10 +498,13 @@ def set_as_form2(init=None):
 
 def run_data_app(app_name,*args, **kwargs):
     data_app = getattr(WRCCDataApps, app_name)
+    '''
     try:
         results = data_app(*args, **kwargs)
     except:
-        results = 'Error: Could not run data app %s. Check arguments:'  % data_app
+        results = 'Error: Could not run data app %s. Check arguments:'  % app_name
+    '''
+    results = data_app(*args, **kwargs)
     return results
 
 def set_sodthr_headers(tbl_idx, el, int_start, midpoint,  int_end, start_year, end_year, days_miss_1, days_miss_2, ab, le_1, le_2):

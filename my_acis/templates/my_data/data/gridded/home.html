@@ -547,7 +547,7 @@
 
 
     <p><b>DATA</b>:</p>
-    {%if initial.data_summary != "spatial"%}
+    {%if initial.data_summary != "spatial" and initial.data_summary != "none"%}
     <p>date range{{params_dict.delimiter}}lat{{params_dict.delimiter}}lon{{params_dict.delimiter}}elev{{params_dict.delimiter}}{%for el in params_dict.element_list%}{{el}}{{params_dict.delimiter}}{%endfor%}</p>
     {%else%}
     <p>date {{params_dict.delimiter}}{%for el in params_dict.element_list%}{{el}}{{params_dict.delimiter}}{%endfor%}</p>

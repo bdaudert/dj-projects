@@ -69,13 +69,18 @@
 
         });
     </script>
-
+    <script language="javascript" type="text/javascript">
+        $(window).load(function() {
+        $('#loading').hide();
+        });
+    </script>
     {% block extrahead %}{% endblock %}
     {% block extrastyle %}{% endblock %}
 
 </head>
 
 <body>
+
 <div class="container">
     <!-- Header -->
     <img src="{{ MEDIA_URL }}img/SWBanner.png">
@@ -157,6 +162,11 @@
 
     <div class="content">
         <p align="center"><font size="5"><b>{{title}}</b></font></p>
+
+    <!--Loading image-->
+    <div id="loading">
+    <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />
+    </div>
         {% block content %}
         {% endblock content%}
     </div><!-- END content --> 

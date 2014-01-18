@@ -112,6 +112,7 @@ function initialize_station_finder() {
         for (var key in data.network_codes) {
             var name = data.network_codes[key];
             var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
+            //var icon = 'http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_' + data.network_icons[key] + '.png';
             var div = document.createElement('div');
             if (data.network_codes[key] == "COOP"){
                 div.innerHTML = '<input type="checkbox" id="'+ name +
@@ -145,7 +146,12 @@ function initialize_station_finder() {
                 position: latlon,
                 title:'Name:'+c.name,
                 icon: new google.maps.MarkerImage(
-                'http://maps.google.com/mapfiles/ms/icons/' + c.marker_icon + '.png'
+                //'http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_' + c.marker_icon + '.png'
+                'http://maps.google.com/mapfiles/ms/icons/' + c.marker_icon + '.png',
+                null,
+                null, 
+                null,
+                new google.maps.Size(20,20)
                 )
             });
             marker.category = c.marker_category;
@@ -213,7 +219,24 @@ function initialize_station_finder() {
                 infowindow.setContent(contentString);
                 infowindow.open(map, marker);
                 });
-
+            /*
+            //Re-size markers on zoom
+            google.maps.event.addListener(map, 'zoom_changed', function() {
+                var largeur = 20 + (5 *(map.getZoom() - 9));
+                var ratio = largeur / 40;
+                var hauteur = 26.6 * ratio;
+                for(i=0; i< markers.length; i++ ) {
+                    var icon = markers[i].getIcon();
+                    markers[i].setIcon(new google.maps.MarkerImage(
+                        icon.url,
+                        new google.maps.Size(largeur, hauteur),
+                        new google.maps.Point(0, 0),
+                        new google.maps.Point(0, 0),
+                        new google.maps.Size(largeur, hauteur))
+                    );
+                }
+            });
+            */
             //Define table row
             var tbl_row = document.createElement('tr');
             tbl_row.cString = contentString;

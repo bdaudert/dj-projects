@@ -561,17 +561,18 @@ class SodForm(forms.Form):
             if mean is None:mean = self.data.get('mean')
             if pct_average is None:pct_average = self.data.get('pct_average')
             if days is None:days = self.data.get('days')
-            self.fields['skew'] = forms.CharField(initial=skew)
-            self.fields['skew'].widget.attrs['readonly'] = 'readonly'
-            self.fields['cv'] = forms.CharField(initial=cv)
-            self.fields['cv'].widget.attrs['readonly'] = 'readonly'
-            self.fields['mean'] = forms.CharField(initial=mean)
-            self.fields['mean'].widget.attrs['readonly'] = 'readonly'
-            self.fields['pct_average'] = forms.CharField(initial=pct_average)
-            self.fields['pct_average'].widget.attrs['readonly'] = 'readonly'
+            self.fields['skew'] = forms.CharField(initial=skew,widget=forms.HiddenInput())
+            #self.fields['skew'].widget.attrs['readonly'] = 'readonly'
+            self.fields['cv'] = forms.CharField(initial=cv,widget=forms.HiddenInput())
+            #self.fields['cv'].widget.attrs['readonly'] = 'readonly'
+            self.fields['mean'] = forms.CharField(initial=mean,widget=forms.HiddenInput())
+            #self.fields['mean'].widget.attrs['readonly'] = 'readonly'
+            self.fields['pct_average'] = forms.CharField(initial=pct_average,widget=forms.HiddenInput())
+            #self.fields['pct_average'].widget.attrs['readonly'] = 'readonly'
             if skew == 'as' or cv == 'acv' or mean == 'am' or pct_average == 'apct':
-                self.fields['element'] = forms.CharField(initial='pcpn')
-                self.fields['element'].widget.attrs['readonly'] = 'readonly'
+                #self.fields['element'] = forms.CharField(initial='pcpn')
+                #self.fields['element'].widget.attrs['readonly'] = 'readonly'
+                self.fields['element'] = forms.ChoiceField(choices=PIII_ELEMENT_CHOICES, initial='maxt')
             else:
                 self.fields['element'] = forms.ChoiceField(choices=PIII_ELEMENT_CHOICES, initial='maxt')
             if skew == 'ss' or cv == 'scv' or mean == 'sm' or pct_average == 'spct':

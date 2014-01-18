@@ -131,7 +131,7 @@ def dashboard(request):
         month = '0%s' %month
     context['month'] = month
     if month == '01':
-        context['month_nadm'] == '12'
+        context['month_nadm'] = '12'
     else:
         context['month_nadm'] = str(int(month.lstrip('0')) - 1)
     context['year'] = year
@@ -285,7 +285,8 @@ def data_station(request):
         # If request successful, get params for link to apps page
         context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
         if form['data_format'] != 'html':
-            return WRCCUtils.write_point_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],params_dict['delimiter'], WRCCData.FILE_EXTENSIONS[str(form['data_format'])], request=request, output_file_name=str(form['output_file_name']), show_flags=params_dict['show_flags'], show_observation_time=params_dict['show_observation_time'])
+            return WRCCUtils.write_station_data_to_file(resultsdict,params_dict['delimiter'], WRCCData.FILE_EXTENSIONS[str(form['data_format'])], request=request, output_file_name=str(form['output_file_name']), show_flags=params_dict['show_flags'], show_observation_time=params_dict['show_observation_time'])
+            #return WRCCUtils.write_station_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],params_dict['delimiter'], WRCCData.FILE_EXTENSIONS[str(form['data_format'])], request=request, output_file_name=str(form['output_file_name']), show_flags=params_dict['show_flags'], show_observation_time=params_dict['show_observation_time'])
 
     #overlay map generation
     if 'formOverlay' in request.POST:
@@ -1636,7 +1637,7 @@ def set_form(request):
     for key,val in q_dict.iteritems():
         form[str(key)] = str(val)
         #Check if user autofilled name, if so, change to id
-        if key in ['station_id','county', 'basin', 'county_warning_area', 'climate_divison']:
+        if key in ['station_id','county', 'basin', 'county_warning_area', 'climate_division']:
             form[str(key)] = find_stn_id(str(val))
     return form
 

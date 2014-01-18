@@ -436,9 +436,9 @@
 
     {%for stn in stn_idx%}
     {%if results.stn_data|lookup:stn%}
-    <h3>STATION NAME:</h3>
-    <b>{{results.stn_names|lookup:stn|safe}}</b>
-    <h3>STATION ID,STATION NETWORK PAIRS:</h3>
+    <p>STATION NAME, STATE, LATITUDE, LONGITUDE, ELEVATION:</p>
+    <b>{{results.stn_names|lookup:stn|safe}}, {{results.stn_state|lookup:stn|safe}}, {{results.stn_lat|lookup:stn|safe}}, {{results.stn_lon|lookup:stn|safe}}, {{results.stn_elev|lookup:stn|safe}}</b>
+    <p>STATION ID,STATION NETWORK PAIRS:</p>
     {%for id_network in results.stn_ids|lookup:stn %}
     <b>{{id_network}},</b>
     {%endfor%}

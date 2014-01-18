@@ -35,7 +35,7 @@
 
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/station_finder/'"/>
     <div id='formData'>
-        <form method="post" action="">{% csrf_token %}
+        <form id="tableDataForm" method="post" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData">
         <tr valign="top">
         <td>Select stations by:</td>
