@@ -19,7 +19,7 @@
 <table cellpadding="20">
 <td valign="top" width="30%">
     <div id='form1'>
-        <form method="post" action="">{% csrf_token %}
+        <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form">
         {%for field in form_meta %}
         <tr>

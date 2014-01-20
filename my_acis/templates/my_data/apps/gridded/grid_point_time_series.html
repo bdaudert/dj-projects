@@ -30,7 +30,7 @@
     <br /><br /><br /><br /><br /><br /><br />
 
     <div id='form0' align="center">
-        <form method="post" action="">{% csrf_token %}
+        <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form">
         {%for field in form0 %}
         <tr>

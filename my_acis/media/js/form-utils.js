@@ -1,18 +1,7 @@
 //Show "Loading image"
 function show_loading(){
     $("#loading-image").attr("src", "/csc/media/img/LoadingGreen.gif");
-    /*
-    setTimeout(function(){document.getElementById('loading-image').src = '/csc/media/img/LoadingGreen.gif'}, 100);
-    setTimeout(function(){
-    document.getElementById('loading').style.display = 'block';
-    setTimeout(function() {
-        document.getElementById('loading').style.display = 'none';
-    }, 1000);
-    },1000);
-    */
-    $("#loading-image").attr("src", "/csc/media/img/LoadingGreen.gif");
     $("#loading").show("fast");
-    document.getElementById('loading').focus();
     //this.preventDefault();
     var $form = $(this).unbind('submit');
     setTimeout(function(){

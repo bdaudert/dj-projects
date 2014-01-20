@@ -23,7 +23,7 @@
 <td valign="top" width="30%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}station/'"/>
     <div id='formData'>
-        <form method="post" action="">{% csrf_token %}
+        <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData">
         <tr valign="top">
         <td>Select stations by:</td>
@@ -270,7 +270,7 @@
     <div id="OverlayMap" style="display:none;">
     {%endif%}
          <div id="formOverlay" style="display:inherit;">
-            <form method="post" action="">{% csrf_token %}
+            <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
             <table class="form">
             <!--
             <tr valign="top">

@@ -22,9 +22,9 @@
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/sodxtrmts/'"/>
     <div id="formSodxtrmts" class="form">
         {%if json_dict%}
-            <form method="post" action="?json_file={{json_dict.json_file}}">
+            <form method="post" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading()">
         {%else%}
-            <form method="post" action="">
+            <form method="post" action="" onsubmit="show_loading()">
         {%endif%}
         {% csrf_token %}
         <table id="tableSodxtrmts">
@@ -730,11 +730,11 @@
         <!--Download form-->
         <div id="formDownload" class="form" style="display:none;">
             {%if json_dict%}
-            <form method="post" action="?json_file={{json_dict.json_file}}">
+            <form method="post" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading()">
             {%elif json_file%}
-            <form method="post" action="?json_file={{json_file}}">
+            <form method="post" action="?json_file={{json_file}}" onsubmit="show_loading()">
             {%else%}
-            <form method="post" action="">
+            <form method="post" action="" onsubmit="show_loading()">
             {%endif%}
             {% csrf_token %}
             <table id="tableDownload">

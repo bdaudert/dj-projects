@@ -15,7 +15,7 @@
     <td valign="top" width="30%">
     {%if not hide_form0%}
         <div id='form0'>
-            <form method="post" action="">{% csrf_token %}
+            <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
             <table class="form">
             {%for field in form0 %}
                 <tr>
@@ -37,7 +37,7 @@
     {%if form1_ready%}
         <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}gridded/clim_prob_maps/'"/>
         <div id='form1'>
-            <form method="post" action="">{% csrf_token %}
+            <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
             <table class="form">
             {%for field in form1 %}
                 {%if field.label == "Image size"%}

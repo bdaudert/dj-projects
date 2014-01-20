@@ -26,7 +26,7 @@
 <td valign="top" width="30%">
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}gridded/clim_sum_maps/'"/>
     <div id='formMap'>
-        <form method="post" action="">{% csrf_token %}
+        <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableMap">
         <tr valign="top">
         <td>Select grid by:</td>
@@ -383,7 +383,7 @@
     <div id="OverlayMap" style="display:none;">
     {%endif%}
          <div id="formOverlay" style="display:inherit;">
-            <form method="post" action="">{% csrf_token %}
+            <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
             <table class="form">
             <!--
             <tr valign="top">

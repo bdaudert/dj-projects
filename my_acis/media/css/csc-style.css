@@ -603,7 +603,7 @@ width:100px;
 height:20px;
 }
 /*Loading*/
-#loading {
+#loading, #load {
   width: 100%;
   height: 100%;
   top: 100px;
@@ -616,7 +616,7 @@ height:20px;
   text-align: center;
 }
 
-#loading-image {
+#loading-image, #load-image {
   position: absolute;
   top: 200px;
   left: 400px;

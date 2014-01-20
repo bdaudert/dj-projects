@@ -27,7 +27,7 @@
 <td valign="top" width="30%">
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}gridded/area_time_series/'"/>
     <div id='formTS'>
-        <form method="post" action="">{% csrf_token %}
+        <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableTS">
         <tr valign="top">
         <td>Select grid by:</td>
@@ -416,7 +416,7 @@
     <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
         <!--Download form-->
     <div id="formDownload" class="form" style="display:none;">
-        <form method="post" action="">{% csrf_token %}
+        <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
         <table id="tableDownload">
         <tr valign="top">
         <td>Data Format: </td>
@@ -609,7 +609,7 @@
     <div id="OverlayMap" style="display:none;">
     {%endif%}
          <div id="formOverlay" style="display:inherit;">
-            <form method="post" action="">{% csrf_token %}
+            <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
             <table class="form">
             <!--
             <tr valign="top">
