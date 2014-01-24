@@ -97,6 +97,34 @@ def sodlist(request, app_name):
 
     return render_to_response('my_apps/application.html', context, context_instance=RequestContext(request))
 
+def sodlist_new(request):
+    context = {
+    'title': 'Sodlist'
+    }
+    form = set_as_form(request, 'Sodlist')
+    context['form'] = form
+    if form.is_valid():
+        kwargs = {}
+        for key, val in form.cleaned_data.iteritems():
+            if key == 'coop_station_id':
+                kwargs['station_id'] = str(val)
+            else:
+                kwargs[key] = val
+        results = WRCCDataApps.Sodlist_new(kwargs)
+        context['results'] = results[0]
+        context['params'] = form.cleaned_data
+        '''
+        context['include_tobs_evap'] = form.cleaned_data['include_tobs_evap']
+        context['start_date'] = form.cleaned_data['start_date']
+        context['end_date'] = form.cleaned_data['end_date']
+        context['start_window'] = form.cleaned_data['start_window']
+        context['end_window'] = form.cleaned_data['end_window']
+        context['output_format'] = form.cleaned_data['output_format']
+        context['station_id'] = form_cleaned_data['coop_station_id']
+        '''
+        context['station_name'] = results[0]['meta']['name']
+    return render_to_response('my_apps/Sodlist.html', context, context_instance=RequestContext(request))
+
 def sodsum(request, app_name):
     context = {
     'title': '%s' % app_name,

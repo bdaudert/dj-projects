@@ -20,6 +20,10 @@ def lookup(dict, index):
     return ''
 '''
 
+@register.filter(name='greater_than')
+def greater_than(a, b):
+    return a > b
+
 @register.filter(name='get_id')
 @stringfilter
 def get_id(tbl_instance):
