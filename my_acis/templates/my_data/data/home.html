@@ -31,7 +31,7 @@
     </tr>
     <tr valign="top">
         <td>
-            <p class="pop_link" onClick="ShowHide('Docu_Networks')">Network<br />ID Sytems</p>
+            <p class="pop_link" onClick="ShowHide('Docu_Networks')">Available Network<br />ID Sytems</p>
                 <div id="Docu_Networks" style="display:none;"></div>
                 <script type="text/javascript">                        
                 $("#Docu_Networks").load("{{MEDIA_URL}}html/commons.html #Docu_Networks");
@@ -90,7 +90,9 @@
                 </script> 
         </td>
         <td>
-           <p>Dataset<br />Information</p>
+           <br />
+           <a target="_blank" href="https://rcc-acis.atlassian.net/wiki/display/AD/Gridded+Data">In depth documentation</a>
+           <h4>Short descriptions of datasets</h4>
            <p class="pop_link" onClick="ShowHide('Docu_NRCC_INT')">NRCC Interpolated</p>
                 <div id="Docu_NRCC_INT" style="display:none;"></div>
                 <script type="text/javascript">                        
@@ -140,55 +142,58 @@
 <ul class="navbar">
     <table>
         <tr><td>
-        <a href="http://www.ncdc.noaa.gov/" class="trigger" target="_blank"><img alt="NOAA" title="NOAA" class="icon" src="{{MEDIA_URL}}img/NOAALogo.png"><u>NCDC</u></a>&nbsp;&nbsp;
+        <a href="http://www.ncdc.noaa.gov/" class="trigger_hover" target="_blank"><img alt="NOAA" title="NOAA" class="icon" src="{{MEDIA_URL}}img/NOAALogo.png"><u>NCDC</u></a>&nbsp;&nbsp;
         <div class="pop-up">
-            <p>National Climatic Data Center. Access to <br >Satellite Data<br />Radar<br />Modeled Data<br /> Marine/Ocean<br />Weather Balloons<br /> Paleoclimate<br />Severe Weather data<br />
+            <p>National Climatic Data Center. Access to: <br >Satellite Data<br />Radar<br />Modeled Data<br /> Marine/Ocean<br />Weather Balloons<br /> Paleoclimate<br />Severe Weather data<br />
             </p>
         </div>
         </td></tr>
         <tr><td>
-        <a href="http://wrcc.dri.edu/" class="trigger" target="_blank"><img alt="WRCC" title="WRCC" class="logo" src="{{MEDIA_URL}}img/WRCCLogo.png">&nbsp;&nbsp;<u>WRCC</u></a>&nbsp;&nbsp;
+        <a href="http://wrcc.dri.edu/" class="trigger_hover" target="_blank"><img alt="WRCC" title="WRCC" class="logo" src="{{MEDIA_URL}}img/WRCCLogo.png">&nbsp;&nbsp;<u>WRCC</u></a>&nbsp;&nbsp;
         <div class="pop-up">
             <p>Western Regional Climate Center</p>
         </div>
         </td></tr>
         <tr><td>
         <tr><td>
-        <a href="{{DATA_URL}}sw_networks/" class="trigger" target="_blank"><img alt="HappyFace" title="HappyFace" class="icon" src="{{MEDIA_URL}}img/HappyFace.png">&nbsp;&nbsp;<u>Links to SW networks</u></a>&nbsp;&nbsp;
+        <a href="{{DATA_URL}}sw_networks/" class="trigger_hover" target="_blank"><img alt="HappyFace" title="HappyFace" class="icon" src="{{MEDIA_URL}}img/HappyFace.png">&nbsp;&nbsp;<u>Links to SW networks</u></a>&nbsp;&nbsp;
         <div class="pop-up">
             <p> Southwest Data Networks</p>
         </div>
         </td></tr>
         <tr><td>
-        <a href="http://www.esrl.noaa.gov/psd/cgi-bin/data/getpage.pl" class="trigger" target="_blank"><img alt="NOAA" title="NOAA" class="icon" src="{{MEDIA_URL}}img/NOAALogo.png">&nbsp;&nbsp;<u>ESRL Interactive Plotting-Analysis</u></a>&nbsp;&nbsp;
+        <a href="http://www.esrl.noaa.gov/psd/cgi-bin/data/getpage.pl" class="trigger_hover" target="_blank"><img alt="NOAA" title="NOAA" class="icon" src="{{MEDIA_URL}}img/NOAALogo.png">&nbsp;&nbsp;<u>ESRL Interactive Plotting-Analysis</u></a>&nbsp;&nbsp;
         <div class="pop-up">
             <p>NOAA Earth System Research Laboratory</p>
         </div>
         </td></tr>
         <tr><td>
-        <a href="http://www.cpc.ncep.noaa.gov/products/monitoring_and_data/" class="trigger" target="_blank"><img alt="NOAA" title="NOAA" class="icon" src="{{MEDIA_URL}}img/NOAALogo.png">&nbsp;&nbsp;<u>CPC Monitoring and Data</u></a>&nbsp;&nbsp;
+        <a href="http://www.cpc.ncep.noaa.gov/products/monitoring_and_data/" class="trigger_hover" target="_blank"><img alt="NOAA" title="NOAA" class="icon" src="{{MEDIA_URL}}img/NOAALogo.png">&nbsp;&nbsp;<u>CPC Monitoring and Data</u></a>&nbsp;&nbsp;
         <div class="pop-up">
             <p>NOAA Climate Prediction Center</p>
         </div>
         </td></tr>
         <tr><td>
-        <a href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank"><img alt="RAWS" title="RAWS" class="icon" src="{{MEDIA_URL}}img/RAWSLogo.gif">&nbsp;&nbsp;<u>Access to sub-daily RAWS data via the USA Climate Archive by WRCC</u></a>&nbsp;&nbsp;
+        <a href="http://www.raws.dri.edu/index.html" class="trigger_hover" target="_blank"><img alt="RAWS" title="RAWS" class="icon" src="{{MEDIA_URL}}img/RAWSLogo.gif">&nbsp;&nbsp;<u>Access to sub-daily RAWS data via the USA Climate Archive by WRCC</u></a>&nbsp;&nbsp;
         <div class="pop-up">
             <p>Summaries, Graphs, and other products for RAWS
             (Remote Automatic Weather Stations).</p>
         </div>
         </td></tr>
         <tr><td>
-        <a href="http://water.usgs.gov/data/" class="trigger" target="_blank"><img alt="USGS" title="USGS" class="logo" src="{{MEDIA_URL}}img/USGSLogo.png">&nbsp;&nbsp;<u>USGS Water Data Discovery</u></a>&nbsp;&nbsp;
-                       </td></tr>
+        <a href="http://water.usgs.gov/data/" class="trigger_hover" target="_blank"><img alt="USGS" title="USGS" class="logo" src="{{MEDIA_URL}}img/USGSLogo.png">&nbsp;&nbsp;<u>USGS Water Data Discovery</u></a>&nbsp;&nbsp;
+        <div class="pop-up">
+            <p>Access to past and present water and drought data as well as various anomly maps.</p>
+        </div>
+        </td></tr>
         <!--<tr><td>
-        <a href="http://his.cuahsi.org/" class="trigger" target="_blank"><img alt="CUAHSI" title="CUAHSI" class="logo" src="{{MEDIA_URL}}img/CUAHSILogo.gif">&nbsp;&nbsp;<u>CUAHSI Hydrologic Information System (HIS)</u></a>&nbsp;&nbsp;
+        <a href="http://his.cuahsi.org/" class="trigger_hover" target="_blank"><img alt="CUAHSI" title="CUAHSI" class="logo" src="{{MEDIA_URL}}img/CUAHSILogo.gif">&nbsp;&nbsp;<u>CUAHSI Hydrologic Information System (HIS)</u></a>&nbsp;&nbsp;
         <div class="pop-up">
             <p>An internet-based system for sharing hydrologic data. It is comprised of databases and servers, connected through web services, to client applications, allowing for the publication, discovery and access of data.</p>
         </div>
         </td></tr>-->
         <tr><td>
-        <a href="http://cida.usgs.gov/climate/gdp/" class="trigger" target="_blank"><img alt="USGS" title="USGS" class="logo" src="{{MEDIA_URL}}img/USGSLogo.png">&nbsp;&nbsp;<u>USGS Geo Data Portal</u></a>&nbsp;&nbsp;
+        <a href="http://cida.usgs.gov/climate/gdp/" class="trigger_hover" target="_blank"><img alt="USGS" title="USGS" class="logo" src="{{MEDIA_URL}}img/USGSLogo.png">&nbsp;&nbsp;<u>USGS Geo Data Portal</u></a>&nbsp;&nbsp;
         <div class="pop-up">
             <p>Access to downscaled climate projections developed in cooperation with the U.S. Geological Survey National Climate Change Wildlife Science Center.</p>
         </div>

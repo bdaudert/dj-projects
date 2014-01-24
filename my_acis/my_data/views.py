@@ -1091,7 +1091,7 @@ def station_locator_app(request):
         if 'error' in station_json.keys():
             context['error'] = stn_json['error']
         if station_json['stations'] == []:
-            context['error'] = "No stations found for %s : %s, elements: %s."  %(by_type, val, form['elements'])
+            context['error'] = "No stations found for %s : %s, elements: %s, element constraints: %s elements, dates: %s - %s, date constraints: %s dates."  %(by_type, val, form['elements'], form['elements_constraints'], form['start_date'], form['end_date'], form['dates_constraints'])
         context['station_json'] = f_name
 
     #overlay map generation

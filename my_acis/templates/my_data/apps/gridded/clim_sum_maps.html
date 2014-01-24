@@ -41,25 +41,11 @@
             <option value="shape" {{checkbox_vals.shape_selected}}>Custom Shape</option>-->
             </select>
         </td>
-        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_select_grid_by"></div>
-            <script type="text/javascript">                        
-                $("#ht_select_grid_by").load("{{MEDIA_URL}}html/commons.html #ht_select_grid_by");
-            </script>
-        </div>
-        </td>
-        </tr>
-        <tr>
-        <td></td>
-        <td><div class="pop_link" onClick="ShowHide('Docu_select_grid_by_ts')"><b><u>Area Selection Choices</u></b> explained</div></td>
-        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_gridselections_explained"></div>
-            <script type="text/javascript">                        
-                $("#ht_grid_selections_explained").load("{{MEDIA_URL}}html/commons.html #ht_grid_selections_ts_explained");
-            </script>
-        </div>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" onclick="ShowPopupDocu('Docu_select_grid_by')">
+        <div id="Docu_select_grid_by" style="display:none;"></div>
+        <script type="text/javascript">                        
+            $("#Docu_select_grid_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_grid_by");
+        </script>
         </td>
         </tr>
         <tr id="area" valign="top">

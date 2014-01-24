@@ -51,27 +51,12 @@
             <option value="shape" {{checkbox_vals.shape_selected}}>Custom Shape</option>
             </select>
         </td>
-        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_select_stations_by"></div>
-            <script type="text/javascript">                        
-                $("#ht_select_stations_by").load("{{MEDIA_URL}}html/commons.html #ht_select_stations_by");
-            </script>
-        </div>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" onclick="ShowPopupDocu('Docu_select_stations_by')">
+        <div id="Docu_select_stations_by" style="display:none;"></div>
+        <script type="text/javascript">                        
+            $("#Docu_select_stations_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_stations_by");
+        </script>
         </td>
-        </tr>
-        <tr>
-        <td></td>
-        <td><div class="pop_link" onClick="ShowHide('Docu_select_stations_by')"><b><u>Area Selection Choices</u></b> explained</div></td>
-        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-               <div class="pop-up">
-            <div id="ht_station_selections_explained"></div>
-            <script type="text/javascript">                        
-                $("#ht_station_selections_explained").load("{{MEDIA_URL}}html/commons.html #ht_station_selection_explained");
-            </script>
-        </div>
-        </td>
-        </tr>
         <tr id="area" valign="top">
         <td>{{initial.area_type_label}}: </td>
         <td><input type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
@@ -157,93 +142,85 @@
         <input type="submit" value="Submit" name="formData"/>
         </form>
     </div>
-    <br />
-    <div id="Docu_select_stations_by" style="display:none;"></div>
-    <script type="text/javascript">                        
-        $("#Docu_select_stations_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_stations_by");
-    </script>
-    <br />
-    <br />
     <ul class="navbar">
     <h2>Links to other Networks</h2>
     <table>
     <tr><td>
-    <a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger" target="_blank">USA RAWS Climate Archive (WRCC)</a>
+    <a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger_hover" target="_blank">USA RAWS Climate Archive (WRCC)</a>
     <div class="pop-up">
-        <p><font size="4">Summaries, Graphs, and other products for RAWS
-        (Remote Automatic Weather Stations).</font></p>
+        <p><font size="2">Summaries, Graphs, and other products for RAWS (Remote Automatic Weather Stations).</font></p>
     </div>
     </td></tr>
    <tr><td>
-    <a id="us_wide" href="http://www.wcc.nrcs.usda.gov/snow/" class="trigger" target="_blank">SNOTEL (<font color="red">W-US/Alaska</font>)</a>
+    <a id="us_wide" href="http://www.wcc.nrcs.usda.gov/snow/" class="trigger_hover" target="_blank">SNOTEL (<font color="red">W-US/Alaska</font>)</a>
     <div class="pop-up">
-        <p><font size="4">Snowpack and related climatic data in the Western United States and Alaska.</font></p>
+        <p><font size="2">Snowpack and related climatic data in the Western United States and Alaska.</font></p>
     </div>
     </td></tr>
     <tr><td>
-    <a id="us_wide" href="http://www.cemp.dri.edu/" class="trigger" target="_blank">CEMP(<font color="red">NV</font>)</a>
+    <a id="us_wide" href="http://www.cemp.dri.edu/" class="trigger_hover" target="_blank">CEMP (<font color="red">NV</font>)</a>
     <div class="pop-up">
-        <p><font size="4"></font>Community Environmental Monitoring Porgram. Monitoring air quality and climate near and downwind of the Nevada National Security Site.</p>
+        <p><font size="2">Community Environmental Monitoring Porgram. Monitoring air quality and climate near and downwind of the Nevada National Security Site.</font></p>
     </div>
     </td></tr>
     <tr><td>
-    <a id="us_wide" href="http://nicenet.dri.edu/" class="trigger" target="_blank">NICE Net(<font color="red">NV</font>)</a>
+    <a id="us_wide" href="http://nicenet.dri.edu/" class="trigger_hover" target="_blank">NICE Net (<font color="red">NV</font>)</a>
     <div class="pop-up">
-        <p><font size="4"></font>Nevada Integrated Climate and Evaporation Network.</p>
+        <p><font size="2">Nevada Integrated Climate and Evaporation Network.</font</p>
     </div>
     </td></tr>
   <tr><td>
-    <a id="us_wide" href="http://www.wrcc.dri.edu/vallescaldera/" class="trigger" target="_blank">Valles Caldera(<font color="red">NM</font>)</a>
+    <a id="us_wide" href="http://www.wrcc.dri.edu/vallescaldera/" class="trigger_hover" target="_blank">Valles Caldera (<font color="red">NM</font>)</a>
     <div class="pop-up">
-        <p><font size="4">Valles Caldera Climate Network</font></p>
+        <p><font size="2">Valles Caldera Climate Network</font></p>
     </div>
     </td></tr>
     <tr><td>
-    <a id="us_wide" href="http://mesowest.utah.edu/" class="trigger" target="_blank">MesoWest (<font color="red">US</font>)</a>
+    <a id="us_wide" href="http://mesowest.utah.edu/" class="trigger_hover" target="_blank">MesoWest (<font color="red">US</font>)</a>
     <div class="pop-up">
-        <p><font size="4">Access to current and archived weather observations across the United States.</font></p>
+        <p><font size="2">Access to current and archived weather observations across the United States.</font></p>
     </div>
     </td></tr>
    <tr><td>
-        <a id="us_wide" href="http://www.cocorahs.org/" class="trigger" target="_blank">CoCoRaHS (<font color="red">US</font>)</a>
+        <a id="us_wide" href="http://www.cocorahs.org/" class="trigger_hover" target="_blank">CoCoRaHS (<font color="red">US</font>)</a>
     <div class="pop-up">
-        <p><font size="4">Community Collaborative Rain, Hail and Snow Network</font></p>
+        <p><font size="2">Community Collaborative Rain, Hail and Snow Network</font></p>
     </div>
     </td></tr>
    <tr><td>
-    <a id="us_wide" href="http://www.ymp.dri.edu/index.html" class="trigger" target="_blank">Yucca Mountain Project(<font color="red">NV</font>)</a>
+    <a id="us_wide" href="http://www.ymp.dri.edu/index.html" class="trigger_hover" target="_blank">Yucca Mountain Project (<font color="red">NV</font>)</a>
     <div class="pop-up">
-        <p><font size="4">Climate Data from Yucca Mountain, Nevada.</font></p>
+        <p><font size="2">Climate Data from Yucca Mountain, Nevada.</font></p>
     </div>
     </td></tr>
    <tr><td>
-    <a id="us_wide" href="http://www.wrcc.dri.edu/catalina/" class="trigger" target="_blank">Santa Catalina Island Climate Network(<font color="red">CA</font>)</a>
+    <a id="us_wide" href="http://www.wrcc.dri.edu/catalina/" class="trigger_hover" target="_blank">Santa Catalina Island Climate Network (<font color="red">CA</font>)</a>
     <div class="pop-up">
-        <p><font size="4">Climate Data from Santa Catalina Island.</font></p>
+        <p><font size="2">Climate Data from Santa Catalina Island.</font></p>
     </div>
     </td></tr>
     <tr><td>
-    <a id="us_wide" href="http://www.wrcc.dri.edu/crn/" class="trigger" target="_blank">USCRN (<font color="red">US</font>)</a>
+    <a id="us_wide" href="http://www.wrcc.dri.edu/crn/" class="trigger_hover" target="_blank">USCRN (<font color="red">US</font>)</a>
     <div class="pop-up">
-        <p><font size="4">NOAA U.S. Climate Reference Network</font></p>
+        <p><font size="2">NOAA U.S. Climate Reference Network</font></p>
     </div>
     </td></tr>
     <tr><td>
-    <a id="us_wide" href="http://www.wrcc.dri.edu/nrel/" class="trigger" target="_blank">Wind Energy Assessment(<font color="red">NV</font>)</a>
+    <a id="us_wide" href="http://www.wrcc.dri.edu/nrel/" class="trigger_hover" target="_blank">Wind Energy Assessment(<font color="red">NV</font>)</a>
     <div class="pop-up">
-        <p><font size="4"></font>Climate and Wind data for Nevada.</p>
+        <p><font size="2"></font>Climate and Wind data for Nevada.</font</p>
     </div>
     </td></tr>
     <tr><td>                                        
-    <a id="us_wide" href="http://www.tahoeclim.dri.edu/" class="trigger" target="_blank">TahoeClim(<font color="red">CA/NV</font>)</a>
+    <a id="us_wide" href="http://www.tahoeclim.dri.edu/" class="trigger_hover" target="_blank">TahoeClim(<font color="red">CA/NV</font>)</a>
     <div class="pop-up">
-        <p><font size="4">Lake Tahoe Climate Information and Data.</font></p>
+        <p><font size="2">Lake Tahoe Climate Information and Data.</font></p>
     </div>
     </td></tr>
     <tr><td>
-    <a id="us_wide" href="http://www.calclim.dri.edu/" class="trigger" target="_blank">CalClim(<font color="red">CA</font>)</a>
+    <a id="us_wide" href="http://www.calclim.dri.edu/" class="trigger_hover" target="_blank">CalClim(<font color="red">CA</font>)</a>
     <div class="pop-up">
-        <p><font size="4">California Climate Data Archive.</font></p>
+        <p><font size="2">California Climate Data Archive.</font></p>
     </div>
     </td></tr>
     </table>
@@ -272,7 +249,7 @@
         <table>
         <td valign="top">
         {%if station_json%}
-        <a target="_blank" href="{{DATA_URL}}station/?select_stations_by={{initial.select_stations_by}}&area_type_value={{initial.area_type_value}}">Obtain data for all stations displayed</a>
+        <a target="_blank" href="{{DATA_URL}}station/?select_stations_by={{initial.select_stations_by}}&area_type_value={{initial.area_type_value}}&elements={{initial.elements}}&start_date={{initial.start_date}}&end_date={{initial.end_date}}">Obtain data for all stations displayed</a>
         {%endif%}
         <div id="PolyMap" style="display:none;">
             <div id="panel">
@@ -403,7 +380,7 @@
     <br /><br />
     <!--Station finder Map-->
     {%if error%}
-    <p class="error" align="center">{{error}}</p>
+    <p align="center"><font size="3"><font color="red">Result</font>: {{error}}</font></p>
     {%endif%}
 
     <input type="hidden" id="URL_PREFIX" name="variable" value="{{ URL_PREFIX }}">
