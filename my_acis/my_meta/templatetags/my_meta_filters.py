@@ -25,6 +25,18 @@ def lookup(dict, index):
 def greater_than(a, b):
     return a > b
 
+@register.filter(name='g_e')
+def greater_than(a, b):
+    return a >= b
+
+@register.filter(name='less_than')
+def less_than(a, b):
+    return a < b
+
+@register.filter(name='l_e')
+def less_than(a, b):
+    return a <= b
+
 @register.filter(name='get_id')
 @stringfilter
 def get_id(tbl_instance):

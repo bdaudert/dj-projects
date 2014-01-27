@@ -5,8 +5,13 @@
 
 <h1>{{title}}</h1>
 
-<a href="/csc/wrcc_meta/station_tables/?{%for id in ucan_id_list%}ucan_id={{id}}{%if not forloop.last%}&{%endif%}{%endfor%}">Back to Station Tables</a>
+{%if tbl_done%}
+<a href="/csc/wrcc_meta/station_tables/?{%for id in ucan_id_list%}&ucan_id={{id}}{%endfor%}{%for tbl in tbl_done_list%}&tbl_done={{tbl}}{%endfor%}">Back to Station Tables</a>
+{%else%}
+<a href="/csc/wrcc_meta/station_tables/?{%for id in ucan_id_list%}&ucan_id={{id}}{%endfor%}{%for tbl in tbl_done_list%}&tbl_done={{tbl}}{%endfor%}">Back to Station Tables (I am NOT done!)</a>
+{%endif%}
 <br />
+<h3><font color="red"><b>!!!Please remember to merge tables in order from top to bottom!!!</b></font></h3>
 {%if results%}
 <table>
     {%for stn_id in ucan_id_list%}<th>{{stn_id}}</th>{%endfor%}<th>Form</th>
@@ -17,7 +22,9 @@
             {%if forloop.last%}
                 <div id='form'>
                 <form method="post" action="">{% csrf_token %}
-                {%if merge_successful and form_id == forloop.parentloop.counter%}
+                {%if merge_successful and forloop.parentloop.counter|l_e:form_id%}
+                    <table class="merge_table" id={{forloop.parentloop.counter}} border="1" style="background-color:Grey">
+                {%elif tbl_done%}
                     <table class="merge_table" id={{forloop.parentloop.counter}} border="1" style="background-color:Grey">
                 {%else%}
                     <table class="merge_table" id={{forloop.parentloop.counter}} border="1" style="background-color:MediumPurple">
@@ -31,8 +38,15 @@
                         <input type="hidden" value={{forloop.parentloop.counter}} name="form_id"/>
                     </tr>
                 </table>
-                {%if merge_successful and form_id == forloop.parentloop.counter %}
+                {%if merge_successful and forloop.parentloop.counter|l_e:form_id %}
                     <p><b>Table merge/add was successful!</b></p>
+                    {%if forloop.parentloop.last%}
+                    <a href="/csc/wrcc_meta/station_tables/?{%for id in ucan_id_list%}&ucan_id={{id}}{%endfor%}{%for tbl in tbl_done_list%}&tbl_done={{tbl}}{%endfor%}&tbl_done={{tbl_name}}">Back to Station Tables (I AM DONE with {{tbl_name}}!)</a>
+                    {%endif%}
+                {%elif tbl_done%}
+                    {%if forloop.parentloop.last%}
+                    <p><b>All tables already merged!</b></p>
+                    {%endif%}
                 {%else%}
                     <input type="submit" value="MERGE" name="form_merge"/>
                 {%endif%}

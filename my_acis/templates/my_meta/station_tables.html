@@ -14,7 +14,7 @@
 <th></th>{%for stn_id in ucan_id_list%}<th>{{stn_id}}</th>{%endfor%}
 {%for table_name, instances in results_dict.items%}
     <tr>
-        <td><a href="{{URL_PREFIX}}wrcc_meta/merge/?tbl_name={{table_name}}{%for stn_id in ucan_id_list%}&ucan_id={{stn_id}}{%endfor%}">{{table_name}}</a></td>
+        <td><a href="{{URL_PREFIX}}wrcc_meta/merge/?tbl_name={{table_name}}{%for stn_id in ucan_id_list%}&ucan_id={{stn_id}}{%endfor%}{%for tbl in tbl_done_list%}&tbl_done={{tbl}}{%endfor%}">{{table_name}}{%for tbl in tbl_done_list%}{%if tbl == table_name%}(*DONE){%endif%}{%endfor%}</a></td>
         {%for inst in instances%}
         <td>{{inst}}</td>
         {%endfor%}

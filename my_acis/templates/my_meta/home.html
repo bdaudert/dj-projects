@@ -32,6 +32,17 @@
     <input type="submit" value="Submit"/>
 </form>
 
+<p>List stations by name AND state</p>
+<form method="get" action="by_name_and_state/">
+    <select name="state_key">
+    {% for state in state_choices %}
+        <option value="{{state.0}}">{{state.1}}</option>
+    {% endfor %}
+    </select>
+    <input type="text" name="q" />
+    <input type="submit" value="Submit"/>
+</form>
+
 <p>Location</p>
 <form method="get" action="by_location/">
     Lat: <input type="text" name="lat" size="8" />

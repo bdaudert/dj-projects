@@ -116,6 +116,8 @@ def by_state(request):
         'title': "Stations by State",
     }
     return render_to_response('my_meta/results.html', context, context_instance=RequestContext(request))
+
+
 def by_name(request):
     q = request.GET.get('q', '')
     if not q:
@@ -129,6 +131,18 @@ def by_name(request):
     }
     return render_to_response('my_meta/results.html', context, context_instance=RequestContext(request))
 
+def by_name_and_state(request):
+    state_key = request.GET.get('state_key', None)
+    q = request.GET.get('q', '')
+    if state_key is None and state_key is None:
+        stations = []
+    else:
+        stations = models.Station.objects.filter(state=int(state_key), station_best_name__icontains=q).order_by('station_best_name')
+    context = {
+        'stations': stations,
+        'title': "Station Name and State Search Results",
+    }
+    return render_to_response('my_meta/results.html', context, context_instance=RequestContext(request))
 def by_id(request):
     q = request.GET.get('q', '')
     if not q:
@@ -195,8 +209,10 @@ def station_detail(request):
 
 def station_tables(request):
     ucan_id_list = request.GET.getlist('ucan_id', [])
+    tbl_done_list = request.GET.getlist('tbl_done', [])
     context = {
-        'title': "Primary tables for this Station"
+        'title': "Primary tables for this Station",
+        'tbl_done_list':tbl_done_list
     }
     context['ucan_id_list'] = ucan_id_list
     if ucan_id_list:
@@ -215,9 +231,13 @@ def station_tables_merge(request):
     tbl_name = request.GET.get('tbl_name', None)
     ucan_id_list = request.GET.getlist('ucan_id', [])
     ucan_id_list = [str(uid) for uid in ucan_id_list]
+    tbl_done_list = request.GET.getlist('tbl_done', [])
     context = {
-        'title': tbl_name + ' Table Merge Tool'
+        'title': tbl_name + ' Table Merge Tool',
+        'tbl_done_list':tbl_done_list
     }
+    tbl_done = False
+    if tbl_name in tbl_done_list:tbl_done=True;context['tbl_done']=True
     if not tbl_name or not ucan_id_list:
         return render_to_response('my_meta/station_tables_merge.html', context, context_instance=RequestContext(request))
     context['ucan_id_list'] = ucan_id_list
@@ -303,20 +323,30 @@ def station_tables_merge(request):
                     results[inst][-1].append([key_val[0], key_val[1]])
             #Overwrite editable form with wrcc values if they exist
             #and replace updated_by, last _updated and ucan_id
-            for idx, key_val in enumerate(results[inst][-1]):
-                if str(key_val[0]) == 'ucan_station_id': results[inst][-1][idx][1]= ucan_station_id_form
-                if str(key_val[0]) == 'begin_date_flag': results[inst][-1][idx][1]= station['begin_date_flag']
-                if str(key_val[0]) == 'begin_date': results[inst][-1][idx][1]= WRCCUtils.convert_db_dates(station['begin_date'])
-                if str(key_val[0]) == 'end_date_flag': results[inst][-1][idx][1]= station['end_date_flag']
-                if str(key_val[0]) == 'end_date': results[inst][-1][idx][1]= WRCCUtils.convert_db_dates(station['end_date'])
-                if str(key_val[0]) == 'history_flag': results[inst][-1][idx][1]= station['history_flag']
-                if str(key_val[0]) == 'src_quality_code': results[inst][-1][idx][1]= station['src_quality_code']
-                if str(key_val[0]) == 'last_updated':today_yr + '-' + today_month + '-' + today_day
-                if str(key_val[0]) == 'updated_by':results[inst][-1][idx][1]= 'WRCCSync'
+            if tbl_done:
+                for idx, key_val in enumerate(results[inst][-1]):
+                    results[inst][-1][idx][1] = ''
+            else:
+                for idx, key_val in enumerate(results[inst][-1]):
+                    if str(key_val[0]) == 'ucan_station_id': results[inst][-1][idx][1]= ucan_station_id_form
+                    if str(key_val[0]) == 'begin_date_flag': results[inst][-1][idx][1]= station['begin_date_flag']
+                    if str(key_val[0]) == 'begin_date': results[inst][-1][idx][1]= WRCCUtils.convert_db_dates(station['begin_date'])
+                    if str(key_val[0]) == 'end_date_flag': results[inst][-1][idx][1]= station['end_date_flag']
+                    if str(key_val[0]) == 'end_date': results[inst][-1][idx][1]= WRCCUtils.convert_db_dates(station['end_date'])
+                    if str(key_val[0]) == 'history_flag': results[inst][-1][idx][1]= station['history_flag']
+                    if str(key_val[0]) == 'src_quality_code': results[inst][-1][idx][1]= station['src_quality_code']
+                    if str(key_val[0]) == 'last_updated':today_yr + '-' + today_month + '-' + today_day
+                    if str(key_val[0]) == 'updated_by':results[inst][-1][idx][1]= 'WRCCSync'
     context['results'] = results
 
     #Write merge information to metadata.load file
     if 'form_merge' in request.POST:
+        form_idx = int(request.POST['form_id']) - 1
+        #Override merge table with new entries
+        for key in request.POST:
+            for idx,key_val in enumerate(results[form_idx][-1]):
+                if str(key) == key_val[0]:
+                    results[form_idx][-1][idx][1] = str(request.POST[key])
         meta_str = ''
         with open(load_tables_dir + load_tables[tbl_name],'a+') as f:
             for idx,key in enumerate(key_list[tbl_name]):
@@ -373,7 +403,7 @@ def sub_tables(request):
                         results[0][idx].append([key, init[key]])
                     else:
                         results[0][idx].append([key, val])
-        results[0][-1] = results[0][-2]
+        #results[0][-1] = results[0][-2]
         for idx in range(len(results[0]) - 1):
             results[0][idx] = []
     else:
