@@ -5,6 +5,10 @@
 
 <h1>{{title}}</h1>
 
+NETWORK_IDS{{network_station_ids_dict}}
+<br />
+RESULTS first: {{network_station_ids_dict|lookup:results.0.0.0.1}}
+
 {%if tbl_done%}
 <a href="/csc/wrcc_meta/station_tables/?{%for id in ucan_id_list%}&ucan_id={{id}}{%endfor%}{%for tbl in tbl_done_list%}&tbl_done={{tbl}}{%endfor%}">Back to Station Tables</a>
 {%else%}
@@ -40,9 +44,7 @@
                 </table>
                 {%if merge_successful and forloop.parentloop.counter|l_e:form_id %}
                     <p><b>Table merge/add was successful!</b></p>
-                    {%if forloop.parentloop.last%}
                     <a href="/csc/wrcc_meta/station_tables/?{%for id in ucan_id_list%}&ucan_id={{id}}{%endfor%}{%for tbl in tbl_done_list%}&tbl_done={{tbl}}{%endfor%}&tbl_done={{tbl_name}}">Back to Station Tables (I AM DONE with {{tbl_name}}!)</a>
-                    {%endif%}
                 {%elif tbl_done%}
                     {%if forloop.parentloop.last%}
                     <p><b>All tables already merged!</b></p>

@@ -11,7 +11,10 @@ def lookup(list_or_dict, index):
     try:
         return list_or_dict[index]
     except:
-        return ''
+        try:
+            return list_or_dict[str(index)]
+        except:
+            return ''
 
 '''
 @register.filter(name='lookup')

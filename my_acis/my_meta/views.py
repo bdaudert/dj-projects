@@ -335,7 +335,7 @@ def station_tables_merge(request):
                     if str(key_val[0]) == 'end_date': results[inst][-1][idx][1]= WRCCUtils.convert_db_dates(station['end_date'])
                     if str(key_val[0]) == 'history_flag': results[inst][-1][idx][1]= station['history_flag']
                     if str(key_val[0]) == 'src_quality_code': results[inst][-1][idx][1]= station['src_quality_code']
-                    if str(key_val[0]) == 'last_updated':today_yr + '-' + today_month + '-' + today_day
+                    if str(key_val[0]) == 'last_updated':results[inst][-1][idx][1] = today_yr + '-' + today_month + '-' + today_day
                     if str(key_val[0]) == 'updated_by':results[inst][-1][idx][1]= 'WRCCSync'
     context['results'] = results
 
@@ -429,6 +429,11 @@ def sub_tables(request):
 
     #Write to metadata load file
     if 'form_add' in request.POST or 'form_edit' in request.POST:
+        form_idx = int(request.POST['form_id']) - 1
+        for key in request.POST:
+            for idx,key_val in enumerate(results[form_idx][-1]):
+                if str(key) == key_val[0]:
+                    results[form_idx][-1][idx][1] = str(request.POST[key])
         meta_str = ''
         with open(load_tables_dir + load_tables[tbl_name],'a+') as f:
             for idx,key in enumerate(key_list[tbl_name]):
@@ -449,7 +454,7 @@ def sub_tables(request):
             else:
                 f.write(meta_str)
         #Double check
-        os.chmod(load_tables_dir + load_tables[tbl_name], 0777)
+        #os.chmod(load_tables_dir + load_tables[tbl_name], 0777)
         with open(load_tables_dir + load_tables[tbl_name], 'r') as f:
             if f.readlines()[-1] == meta_str:
                 context['merge_successful'] = True
