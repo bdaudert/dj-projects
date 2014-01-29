@@ -109,9 +109,9 @@ function find_max(vals,element,statistic){
     return max;
 }
 
-function find_min(vals, element,statistic){
+function find_min(vals, element,statistic, dep_from_ave){
     var min = null;
-    if ((element == 'snow' || element == 'snwd' || element == 'pcpn' || element == 'evap' || element == 'wdmv') && (statistic !='ndays' && statistic !='sd')) {
+    if ((element == 'snow' || element == 'snwd' || element == 'pcpn' || element == 'evap' || element == 'wdmv') && (statistic !='ndays' && statistic !='sd' && dep_from_ave=='F')) {
         min = 0.0;
     }
     else{
@@ -226,7 +226,7 @@ function set_yr_plotlines(data, plotline_opts){
 }
 
 
-function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis_min, element,statistic,plotline_no){
+function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis_min, element,statistic, dep_from_ave,plotline_no){
     var props = {
         'axisMin':data_min,
         'axisMax':data_max,
@@ -243,9 +243,10 @@ function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis
         return props; 
     }
     //Override data_min if necessary
-    if ((element == 'snow' || element == 'snwd' || element == 'pcpn') && (statistic !='ndays' && statistic !='sd')) {
+    if ((element == 'snow' || element == 'snwd' || element == 'pcpn') && (statistic !='ndays' && statistic !='sd' && dep_from_ave=='F')) {
         props.axisMin = 0.0;
     }
+
     if (statistic == 'ndays'){
         props.axisMax = 32;
     }

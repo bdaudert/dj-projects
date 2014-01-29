@@ -356,7 +356,7 @@ def station_tables_merge(request):
                     meta_str+=str(request.POST[key]) + '\n'
             f.write(meta_str)
         #Double check
-        os.chmod(load_tables_dir + load_tables[tbl_name], 0777)
+        #os.chmod(load_tables_dir + load_tables[tbl_name], 0777)
         with open(load_tables_dir + load_tables[tbl_name], 'r') as f:
             if f.readlines()[-1] == meta_str:
                 context['merge_successful'] = True

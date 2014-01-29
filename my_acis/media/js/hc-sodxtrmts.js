@@ -14,7 +14,7 @@ $(function () {
             min_vals.push(parseFloat(datadict.ranges[mon_idx][1]));
         }
         var max = find_max(max_vals, datadict.element,datadict.initial.monthly_statistic);
-        var min = find_min(min_vals, datadict.element,datadict.initial.monthly_statistic);
+        var min = find_min(min_vals, datadict.element,datadict.initial.monthly_statistic, datadict.initial.departures_from_averages);
         var x_plotLines = set_plotLines(11, 0, 1);
         //Align x ticks with plotlines
         var x_tickPositions = align_ticks(x_plotLines); 

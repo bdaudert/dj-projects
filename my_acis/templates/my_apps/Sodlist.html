@@ -37,26 +37,30 @@
 {%endif%}
 </p>
 
-<table style="text-align:right;cell-padding:none;">
-<!--<table cellspacing="0" cellpadding="0" style="border-collaps:collapse;text-align:right;">-->
+<!--<table style="text-align:right;cell-padding:none;">-->
+<table cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
 {%for date_data in results.data %}
-<tr text-align="right">
+<tr>
 {%for val in date_data%}
+
 {%if params.output_format == "kr"%}
+
 {%if forloop.counter == 0 or forloop.counter0 == 1 or forloop.counter0 == 4 or forloop.counter0 == 7 or forloop.counter0 == 10 or forloop.counter0 == 13%}
-<td align="right">{{val}}</td>
+<td align="right" width="char">{{val}}</td>
 {%else%}
-<td align="left">{{val}}</td>
+<td align="left" width="6em">{{val}}</td>
 {%endif%}
+
 {%else%}<!--output_format == kr_csv-->
+
 {%if forloop.counter0|divisibleby:3 and forloop.counter0|greater_than:5 %}
-<td align="right" width="char">{{val}}
+<td align="right" width="char">{{val}}{%if not forloop.last%},{%endif%}</td>
 {%else%}
-<td align="left">{{val}}
+<td align="left" width="6em">{{val}}{%if not forloop.last%},{%endif%}</td>
 {%endif%}
-{%if not forloop.last%},{%endif%}
-</td>
-{%endif%}
+
+{%endif%}<!--end if output_format == kr_csv-->
+
 {%endfor%}
 </tr>
 {%endfor%}

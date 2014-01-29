@@ -39,20 +39,21 @@ $(function () {
             var subtitleStyle = set_SubtitleStyle();
             //Define Summary Text
             if (summary == 'max'){
-                var SummaryText = 'Maximum';
+                var SummaryText = 'Maximum of ';
             }
             if (summary == 'min'){
-                var SummaryText = 'Minimum';
+                var SummaryText = 'Minimum of ';
             }
             if (summary == 'sum'){
-                var SummaryText = 'Sum';
+                var SummaryText = 'Sum of ';
             }
             if (summary == 'mean'){
-                var SummaryText = 'Average';
+                var SummaryText = 'Average of ';
             }
             if (summary == 'individual'){
                 var SummaryText = ' ';
             }
+            SummaryText+=datadict.monthly_statistic;
 
             var max_missing_days = parseInt(datadict.initial.max_missing_days);
             //Depending on summary, define series to be plotted
@@ -161,7 +162,7 @@ $(function () {
                 data_min = 0;
                 if (values.length > 0){
                     var data_max = find_max(values,datadict.element,datadict.initial.monthly_statistic);
-                    var data_min = find_min(values,datadict.element,datadict.initial.monthly_statistic);
+                    var data_min = find_min(values,datadict.element,datadict.initial.monthly_statistic, datadict.initial.departures_from_averages);
                     if (vertical_axis_max != "Use default") { 
                         try{
                             var data_max = parseFloat(vertical_axis_max);
@@ -341,7 +342,7 @@ $(function () {
                     var plotline_no = 5.0;
                 }
             }
-            var y_axis_props = set_axis_properties(data_max, vertical_axis_max,data_min, vertical_axis_min,datadict.element,datadict.initial.monthly_statistic,plotline_no);
+            var y_axis_props = set_axis_properties(data_max, vertical_axis_max,data_min, vertical_axis_min,datadict.element,datadict.initial.monthly_statistic,datadict.initial.departures_from_averages,plotline_no);
             var y_tickPositions = align_ticks(y_axis_props.plotLines);
             if (graph_title == "Use default"){
                 graph_title = datadict.stn_name + ', ' + datadict.stn_state + '<br />';
@@ -359,7 +360,10 @@ $(function () {
                 var gridLineColor = '#C0C0C0';
             }
             var xAxisText = SummaryText + '  ' +  datadict.element_name + ', Months: ' + 
-                month_names[month_list[0] - 1] + ' - '+ month_names[month_list[month_list.length - 1] - 1]; 
+                month_names[month_list[0] - 1] + ' - '+ month_names[month_list[month_list.length - 1] - 1];
+            if (datadict.initial.departures_from_averages == "T"){
+                xAxisText+=' (Departures from Average)'
+            }
             if (month_list[0]> month_list[month_list.length -1]){
                 var apdx = 'Ending Year ' //+ datadict.data[datadict.data.length -8][0]
             }

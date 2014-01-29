@@ -1421,6 +1421,7 @@ def sodxtrmts(request):
                 'stn_name':station_names[0],
                 'stn_network':station_networks[0],
                 'stn_state':station_states[0],
+                'monthly_statistic':WRCCData.DISPLAY_PARAMS[initial['monthly_statistic']],
                 'month_list':month_list + ['ANN'],
                 'data':results,
                 'header':header,
