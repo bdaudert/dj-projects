@@ -114,21 +114,15 @@ function initialize_station_finder() {
             var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
             //var icon = 'http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_' + data.network_icons[key] + '.png';
             var div = document.createElement('div');
-            if (data.network_codes[key] == "COOP"){
-                div.innerHTML = '<input type="checkbox" id="'+ name +
-                                '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' + ' <img alt="Icon" title="Icon" src="' + icon + '"> ' + name;
-            }
-            else {
-                div.innerHTML = '<input type="checkbox" id="'+ name +
-                '" onclick="my_boxclick(this,\''+ name +'\')"/>' + '<img alt="Icon" title="Icon" src="' + icon + '"> ' + name;
-            }
+            div.innerHTML = '<input type="checkbox" id="'+ name +
+            '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' + ' <img alt="Icon" title="Icon" src="' + icon + '"> ' + name;
             legend.appendChild(div);
         }
         //Create 'show all networks' button first
         var name = 'All';
         var icon = 'http://thydzik.com/thydzikGoogleMap/markerlink.php?text=A&color=FC6355';
         var div = document.createElement('div');
-        div.innerHTML = '<input type="checkbox" id="all" onclick="my_boxclick(this,\'all\')"/>' + ' <img alt="Icon" title="Icon" src="' + icon + '"><b> ' + name + '</b><br />';
+        div.innerHTML = '<input type="checkbox" id="all" onclick="my_boxclick(this,\'all\')" checked />' + ' <img alt="Icon" title="Icon" src="' + icon + '"><b> ' + name + '</b><br />';
         legend.appendChild(div);
         var bounds=new google.maps.LatLngBounds();
 
@@ -199,7 +193,7 @@ function initialize_station_finder() {
                 data_portal_link = data_portal_link + '&elements=' + elements;
                 app_portal_link = app_portal_link + '&elements=' + elements;
             }
-            data_portal_link = data_portal_link + '">Obtain Raw Data for this Station </a>'
+            data_portal_link = data_portal_link + '">Obtain Data for this Station </a>'
             app_portal_link = app_portal_link + '">Find Tools/Applications for this Station</a>'
             var contentString = '<div id="MarkerWindow">'+
                 wrcc_info_link + '<br />' +
@@ -253,15 +247,10 @@ function initialize_station_finder() {
                 c.stn_networks +'</td>';
 
             //Set Initial markers and station list
-            if (c.marker_category == "COOP"){
-                marker.setVisible(true);
-                document.getElementById(c.marker_category).checked = true;
-                var station_list = document.getElementById('station_list');
-                station_list.appendChild(tbl_row);
-            }
-            else {
-                marker.setVisible(false);
-            }
+            marker.setVisible(true);
+            document.getElementById(c.marker_category).checked = true;
+            var station_list = document.getElementById('station_list');
+            station_list.appendChild(tbl_row);
             //Push markesr and table rows into list
             tbl_rows.push(tbl_row);
             markers.push(marker);

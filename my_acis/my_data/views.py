@@ -15,7 +15,7 @@ from django.core.mail import send_mail
 import datetime
 from collections import defaultdict
 import json
-
+from shutil import copy2 as scopy2
 import sys, os, stat, re
 
 #My modules
@@ -24,6 +24,7 @@ import my_data.forms as forms
 
 STATIC_URL = '/www/apps/csc/dj-projects/my_acis/static/'
 MEDIA_URL = '/www/apps/csc/dj-projects/my_acis/media/'
+KML_URL = '/www/apps/csc/dj-projects/my_acis/media/kml/'
 STATIC_KML = '/csc/media/kml/'
 WEB_SERVER_DIR = '/csc/media/tmp/'
 TEMP_FILE_DIR = '/tmp/'
@@ -229,16 +230,22 @@ def data_station(request):
     context['host'] = 'wrcc.dri.edu'
     context['area_type'] = initial['select_stations_by']
     context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
-    kml_file = initial['overlay_state'] + '_' + initial['select_stations_by'] + '.kml'
+    kml_file_name = initial['overlay_state'] + '_' + initial['select_stations_by'] + '.kml'
     context[initial['overlay_state'] + '_selected'] = 'selected'
-    context['kml_file_path'] = WEB_SERVER_DIR +  kml_file
+    #context['kml_file_path'] = STATIC_KML +  kml_file_name
+    context['kml_file_path'] = WEB_SERVER_DIR +  kml_file_name
+
     #Check if kml file exists, if not generate it
+    '''
     try:
-        with open(TEMP_FILE_DIR + kml_file):
-            if os.stat(TEMP_FILE_DIR + kml_file).st_size==0:
-                status = WRCCUtils.generate_kml_file(initial['select_stations_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
+        with open(TEMP_FILE_DIR + kml_file_name):
+            if os.stat(TEMP_FILE_DIR + kml_file_name).st_size==0:
+                status = WRCCUtils.generate_kml_file(initial['select_stations_by'], initial['overlay_state'] , kml_file_name, TEMP_FILE_DIR)
     except IOError:
-        status = WRCCUtils.generate_kml_file(initial['select_stations_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
+        status = WRCCUtils.generate_kml_file(initial['select_stations_by'], initial['overlay_state'] , kml_file_name, TEMP_FILE_DIR)
+    '''
+
+    create_kml_file(KML_URL,TEMP_FILE_DIR, kml_file_name,initial['select_stations_by'],initial['overlay_state'])
 
     context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
 
@@ -304,6 +311,13 @@ def data_station(request):
         st = form['overlay_state']
         context[st + '_selected'] = 'selected'
         kml_file_name = st + '_' + at + '.kml'
+        context['host'] = 'wrcc.dri.edu'
+        #context['kml_file_path'] = STATIC_KML + kml_file_name
+        context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
+        context['area_type'] = form['select_overlay_by']
+        create_kml_file(KML_URL,TEMP_FILE_DIR, kml_file_name,form['select_overlay_by'], form['overlay_state'])
+
+        '''
         dir_location = TEMP_FILE_DIR
         status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
         if not status == 'Success':
@@ -312,6 +326,7 @@ def data_station(request):
             context['host'] = 'wrcc.dri.edu'
             context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
             context['area_type'] = form['select_overlay_by']
+        '''
     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
 
 
@@ -1585,6 +1600,27 @@ def sodsumm(request):
 ###########
 #General
 ###########
+def create_kml_file(kml_url, kml_tmp_url, kml_file_name, select_stations_by,overlay_state):
+    '''
+    Checks if kml file already exits in kml_url,
+    if not, creates it in kml_tmp_url
+    (since wrcc-data user does not have permisson to write in kml_url)
+    copys kml file to kml_url
+    '''
+    #Check if kml file exists, if not generate it
+    kml_file_path = kml_url + kml_file_name
+    kml_tmp_file_path = kml_tmp_url + kml_file_name
+    try:
+        with open(kml_file_path, 'r') as kml_f:
+            if os.stat(kml_file_path).st_size==0:
+                status = WRCCUtils.generate_kml_file(select_stations_by, overlay_state , kml_file_name, kml_tmp_url)
+                #scopy2(kml_tmp_file_path,kml_file_path)
+    except IOError:
+        status = WRCCUtils.generate_kml_file(select_stations_by,overlay_state , kml_file_name, kml_tmp_url)
+        if status == 'Success':
+            pass
+            #scopy2(kml_tmp_file_path,kml_file_path)
+
 def set_GET(request):
     if type(request) == dict:
         def Get(key, default):
