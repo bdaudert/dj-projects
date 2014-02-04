@@ -506,7 +506,15 @@
     <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{initial.start_date}}&end_date={{initial.end_date}}&elements={{initial.elements}}&grid={{initial.grid}}&select_grid_by={{initial.select_grid_by}}&{{initial.select_grid_by}}={{initial.area_type_value}}&data_summary=temporal&temporal_resolution=dly&temporal_summary={{initial.temporal_summary}}"><font size=3>Get raw data behind this graphic here!</font></a>
     <br /></br /></br>
     {%for fig in figure_files%}
-        <img alt="FigureFile" width="400px" height="400px" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br /><br />
+        <p onClick="printNode('printable_table{{forloop.counter0}}')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
+        <div id="printable_table{{forloop.counter0}}">
+        <p>
+        {%for key_val in display_params|lookup:forloop.counter0%}
+        <b>{{key_val.0}}</b>: {{key_val.1}}<br /> 
+        {%endfor%}
+        </p>
+        <img alt="FigureFile" width="{{width}}px" height="{{height}}px" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br /><br />
+        </div>
     {%endfor%}
     {%endif%}
 </td></table>

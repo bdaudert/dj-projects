@@ -714,6 +714,8 @@ def clim_sum_maps(request):
             context['area_type'] = form['select_grid_by']
         #Generate Maps
         figure_files = []
+        context['width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
+        context['height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
         image = {
             'type':'png',
             'proj':form['projection'],
@@ -735,6 +737,7 @@ def clim_sum_maps(request):
             'level_number':form['level_number'],
             'temporal_summary':form['temporal_summary']
             }
+        display_params = []
         for el_idx,element in enumerate(form['elements'].replace(' ','').split(',')):
             pms={}
             for key, val in params.iteritems():
@@ -749,6 +752,14 @@ def clim_sum_maps(request):
             file_path_big =TEMP_FILE_DIR + figure_file
             fig.build_figure(result, file_path_big)
             figure_files.append(figure_file)
+            d_p = []
+            for key in ['start_date', 'end_date']:
+                d_p.append([WRCCData.DISPLAY_PARAMS[key],form[key]])
+            d_p.insert(0,['Element', WRCCData.DISPLAY_PARAMS[element]])
+            d_p.insert(1,['Temporal Summary', WRCCData.DISPLAY_PARAMS[form['temporal_summary']]])
+            d_p.insert(2, [WRCCData.DISPLAY_PARAMS[form['select_grid_by']], form[form['select_grid_by']].upper()])
+            display_params.append(d_p)
+        context['display_params'] = display_params
         context['JSON_URL'] = WEB_SERVER_DIR
         context['figure_files'] = figure_files
     #overlay map generation
@@ -2324,7 +2335,7 @@ def set_map_plot_options(request):
     initial = {}
     checkbox_vals = {}
     Get = set_GET(request)
-    initial['image_size'] = Get('image_size', 'medium')
+    initial['image_size'] = Get('image_size', 'small')
     initial['level_number'] = Get('level_number', '5')
     initial['cmap'] = Get('cmap', 'rainbow')
     initial['map_ol'] = Get('map_ol', 'state')
