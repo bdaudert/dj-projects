@@ -180,7 +180,7 @@ $(function () {
                 if (x_plotlines.length > 10){
                     x_tickStep = Math.round(x_plotlines.length/5.0);
                 }
-                y_props = set_axis_properties(data_max,datadict.search_params.vertical_axis_max, data_min, datadict.search_params.vertical_axis_min, element_list[el_idx],'none',plotline_no)
+                y_props = set_axis_properties(data_max,datadict.search_params.vertical_axis_max, data_min, datadict.search_params.vertical_axis_min, element_list[el_idx],'none','F',plotline_no)
                 y_tickPositions = align_ticks(y_props.plotLines);
                 //Define Chart
                 var Chart;

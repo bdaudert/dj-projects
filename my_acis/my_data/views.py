@@ -720,7 +720,7 @@ def clim_sum_maps(request):
             'interp':form['interpolation'],
             'overlays':[form['map_ol'], 'county:0.5:black'],
             'cmap':form['cmap'],
-            'levels':[],
+            #'levels':[40,50,60],
             'width':WRCCData.IMAGE_SIZES[form['image_size']][0],
             'height':WRCCData.IMAGE_SIZES[form['image_size']][1]
         }
@@ -739,8 +739,6 @@ def clim_sum_maps(request):
             pms={}
             for key, val in params.iteritems():
                 pms[key] = params[key]
-                if key == 'image':
-                    pms[key]['levels'] = []
             pms['elems'] = [{'name':element,'smry':form['temporal_summary'],'smry_only':1}]
             if el_idx ==2:
                 context['req'] = pms
@@ -2309,6 +2307,7 @@ def set_station_locator_params(form):
 ##################
 #Initialization
 ###################
+
 def join_dicts(d, d_1):
     for key, val in d_1.iteritems():
         d[key]=val

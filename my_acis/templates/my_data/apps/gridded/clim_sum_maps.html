@@ -189,7 +189,7 @@
         <div class="pop-up">
             <div id="ht_image_size"></div>
             <script type="text/javascript">                        
-            $("#ht_image_size").load("{{MEDIA_URL}}html/commons.html #ht_plot_image_size");
+            $("#ht_image_size").load("{{MEDIA_URL}}html/commons.html #ht_image_size");
             </script>
         </div>
         </td>
@@ -199,8 +199,15 @@
         {%else%}
             <tr valign="top" class="plOpts" id="levels" style="display:none;">
         {%endif%}
+
         <td>Number of Levels:</td>
-        <td><input type="text" id="level_number" name="level_number" value="{{initial.level_number}}"></td>
+        <td>
+            <select id="level_number" name="level_number">
+            <option value="5">5</option>
+            </select>
+        </td>
+        <!--
+        <td><input type="text" id="level_number" name="level_number" value="{{initial.level_number}}"></td>-->
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_level_number"></div>
@@ -240,8 +247,8 @@
         <td>Overlays:</td>
         <td>
             <select id="map_ol" name="map_ol">
-            <option value="state" {{checkbox_vals.map_ol_state_selected}}>Blues</option>
-            <option value="county" {{checkbox_vals.map_ol_county_selected}}>Reds</option>
+            <option value="state" {{checkbox_vals.map_ol_state_selected}}>State</option>
+            <option value="county" {{checkbox_vals.map_ol_county_selected}}>County</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -495,6 +502,7 @@
 
     <!--Results section-->
     {%if figure_files%}
+
     <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{initial.start_date}}&end_date={{initial.end_date}}&elements={{initial.elements}}&grid={{initial.grid}}&select_grid_by={{initial.select_grid_by}}&{{initial.select_grid_by}}={{initial.area_type_value}}&data_summary=temporal&temporal_resolution=dly&temporal_summary={{initial.temporal_summary}}"><font size=3>Get raw data behind this graphic here!</font></a>
     <br /></br /></br>
     {%for fig in figure_files%}
