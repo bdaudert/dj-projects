@@ -49,7 +49,7 @@
         </td>
         </tr>
         <tr id="area" valign="top">
-        <td>{{initial.area_type_label}}: </td>
+        <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
         <td><input type="text" size="35" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
@@ -175,14 +175,9 @@
         <td>Image Size: </td>
         <td>
             <select id="image_size" name="image_size">
-            <option value="small" {{checkbox_vals.image_size_small_selected}}>Small(510px, 290px)</option>
-            <option value="medium" {{checkbox_vals.image_size_medium_selected}}>Medium(650px,370px)</option>
-            <option value="large" {{checkbox_vals.image_size_large_selected}}>Large(850px, 480px)</option>
-            <option value="larger" {{checkbox_vals.image_size_larger_selected}}>Larger(1150px,610x)</option>
-            <option value="extra_large" {{checkbox_vals.image_size_extra_large_selected}}>Extra Large(1450px, 820px)</option>
-            <option value="wide" {{checkbox_vals.image_size_wide_selected}}>Wide(1850px,610px)</option>
-            <option value="wider" {{checkbox_vals.image_size_wider_selected}}>Wider(2450px, 610px)</option>
-            <option value="widest" {{checkbox_vals.image_size_widest_selected}}>Widest(3450px,610px)</option>
+            <option value="small" {{checkbox_vals.image_size_small_selected}}>Small</option>
+            <option value="medium" {{checkbox_vals.image_size_medium_selected}}>Medium</option>
+            <option value="large" {{checkbox_vals.image_size_large_selected}}>Large</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -499,22 +494,18 @@
     <p class="error">{{error}}</p>
     {%endif%}
     
-
     <!--Results section-->
     {%if figure_files%}
 
     <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{initial.start_date}}&end_date={{initial.end_date}}&elements={{initial.elements}}&grid={{initial.grid}}&select_grid_by={{initial.select_grid_by}}&{{initial.select_grid_by}}={{initial.area_type_value}}&data_summary=temporal&temporal_resolution=dly&temporal_summary={{initial.temporal_summary}}"><font size=3>Get raw data behind this graphic here!</font></a>
     <br /></br /></br>
     {%for fig in figure_files%}
-        <p onClick="printNode('printable_table{{forloop.counter0}}')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
-        <div id="printable_table{{forloop.counter0}}">
         <p>
         {%for key_val in display_params|lookup:forloop.counter0%}
         <b>{{key_val.0}}</b>: {{key_val.1}}<br /> 
         {%endfor%}
         </p>
-        <img alt="FigureFile" width="{{width}}px" height="{{height}}px" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br /><br />
-        </div>
+        <img alt="FigureFile" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br /><br />
     {%endfor%}
     {%endif%}
 </td></table>

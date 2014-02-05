@@ -696,11 +696,11 @@ def clim_sum_maps(request):
     if 'formMap' in request.POST:
         form = set_form(request)
         #Form Check
-        fields_to_check = ['start_date', 'end_date','elements','level_number', 'cmap']
+        fields_to_check = ['start_date', 'end_date','elements','level_number', 'cmap', form['select_grid_by']]
         form_error = check_form(form, fields_to_check)
         if form_error:
             context['form_error'] = form_error
-            return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
+            return render_to_response('my_data/apps/gridded/clim_sum_maps.html', context, context_instance=RequestContext(request))
         #Set initials
         initial,checkbox_vals = set_clim_sum_maps_initial(form)
         initial_plot, checkbox_vals_plot = set_map_plot_options(form)
@@ -714,17 +714,15 @@ def clim_sum_maps(request):
             context['area_type'] = form['select_grid_by']
         #Generate Maps
         figure_files = []
-        context['width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
-        context['height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
+        #context['width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
+        #context['height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
         image = {
             'type':'png',
             'proj':form['projection'],
             'interp':form['interpolation'],
             'overlays':[form['map_ol'], 'county:0.5:black'],
             'cmap':form['cmap'],
-            #'levels':[40,50,60],
-            'width':WRCCData.IMAGE_SIZES[form['image_size']][0],
-            'height':WRCCData.IMAGE_SIZES[form['image_size']][1]
+            'width':WRCCData.IMAGE_SIZES_MAP[form['image_size']]
         }
         params = {
             'image':image,
@@ -743,8 +741,6 @@ def clim_sum_maps(request):
             for key, val in params.iteritems():
                 pms[key] = params[key]
             pms['elems'] = [{'name':element,'smry':form['temporal_summary'],'smry_only':1}]
-            if el_idx ==2:
-                context['req'] = pms
             fig = WRCCClasses.GridFigure(pms)
             result = fig.get_grid()
             time_stamp = datetime.datetime.now().strftime('%Y%m_%d_%H_%M_%S')
