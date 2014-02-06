@@ -252,7 +252,7 @@ def data_station(request):
     if 'formData' in request.POST:
         #Turn request object into python dict
         form = set_form(request)
-        fields_to_check = ['start_date', 'end_date','elements']
+        fields_to_check = [form['select_station_by'],'start_date', 'end_date','elements']
         form_error = check_form(form, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -356,7 +356,7 @@ def data_gridded(request):
     if 'formData' in request.POST:
         #Turn request object into python dict
         form = set_form(request)
-        fields_to_check = ['start_date', 'end_date','elements']
+        fields_to_check = [form['select_grid_by'],'start_date', 'end_date','elements']
         form_error = check_form(form, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -419,7 +419,7 @@ def data_gridded(request):
             'graph_data':graph_data
             }
             results_json = json.dumps(json_dict)
-            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
             json_file = '%s_area_time_series.json' %(time_stamp)
             f = open(TEMP_FILE_DIR + '%s' %(json_file),'w+')
             f.write(results_json)
@@ -556,7 +556,7 @@ def metagraph(request):
             #Call perl script that generates gif graphs
             #FIX ME! Should be able to call it from html:
             #<img alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}">
-            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_')
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f_')
             context['time_stamp'] = time_stamp
             perl_out, perl_err = run_external_script("perl %sperl-scripts/csc_cliMETAgraph.pl %s %s" %(MEDIA_URL, find_stn_id(form_meta.cleaned_data['station_id']), time_stamp))
             context['perl_err'] = perl_err
@@ -619,10 +619,10 @@ def monthly_aves(request):
                     context['error']= req['error']
                 return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
             if 'data' not in req.keys() or 'meta' not in req.keys():
-                context['error']= 'No data found for parameters.Please check your station ID, start and end dates.'
+                context['error']= 'No data found for parameters. Please check your station ID, start and end dates.'
                 return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
             if 'meta' not in req.keys():
-                context['error']= 'No metadata found for parameters.Please check your station ID.'
+                context['error']= 'No metadata found for parameters. Please check your station ID.'
                 return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
             #Find averages and write results dict
             monthly_aves = {}
@@ -638,7 +638,7 @@ def monthly_aves(request):
             try:
                 results = write_monthly_aves_results(req, form.cleaned_data, monthly_aves)
             except:
-                context['error'] = 'No data found for parameters.Please check your station ID, start and end dates.'
+                context['error'] = 'No data found for parameters. Please check your station ID, start and end dates.'
             context['results'] = results
             context['req'] = results
             '''
@@ -650,7 +650,7 @@ def monthly_aves(request):
             #double quotes needed for jquery json.load
             results_json = json.dumps(results)
             #results_json = str(results).replace("\'", "\"")
-            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
             json_file = '%s_monthly_aves_%s_%s_%s.json' \
             %(time_stamp, str(form.cleaned_data['station_id']), s_date, e_date)
             context['json_file'] = json_file
@@ -660,7 +660,7 @@ def monthly_aves(request):
 
 def clim_sum_maps(request):
     context = {
-        'title': 'Climate Summary Maps',
+        'title': 'Temporal Summary Maps',
     }
     json_file = request.GET.get('json_file', None)
     #Check if we are coming in from other page, e.g. Gridded Data
@@ -733,7 +733,8 @@ def clim_sum_maps(request):
             'sdate':form['start_date'],
             'edate':form['end_date'],
             'level_number':form['level_number'],
-            'temporal_summary':form['temporal_summary']
+            'temporal_summary':form['temporal_summary'],
+            'elems':[]
             }
         display_params = []
         for el_idx,element in enumerate(form['elements'].replace(' ','').split(',')):
@@ -743,7 +744,7 @@ def clim_sum_maps(request):
             pms['elems'] = [{'name':element,'smry':form['temporal_summary'],'smry_only':1}]
             fig = WRCCClasses.GridFigure(pms)
             result = fig.get_grid()
-            time_stamp = datetime.datetime.now().strftime('%Y%m_%d_%H_%M_%S')
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
             figure_file = 'clim_sum_map_' + time_stamp + '.png'
             file_path_big =TEMP_FILE_DIR + figure_file
             fig.build_figure(result, file_path_big)
@@ -751,7 +752,15 @@ def clim_sum_maps(request):
             d_p = []
             for key in ['start_date', 'end_date']:
                 d_p.append([WRCCData.DISPLAY_PARAMS[key],form[key]])
-            d_p.insert(0,['Element', WRCCData.DISPLAY_PARAMS[element]])
+            el_strip = re.sub(r'(\d+)(\d+)', '', element)
+            try:
+                base_temp = int(element[-2:])
+            except:
+                base_temp = None
+            if base_temp:
+                d_p.insert(0,['Element', WRCCData.DISPLAY_PARAMS[el_strip] + ' Base Temperature: ' + str(base_temp)])
+            else:
+                d_p.insert(0,['Element', WRCCData.DISPLAY_PARAMS[el_strip]])
             d_p.insert(1,['Temporal Summary', WRCCData.DISPLAY_PARAMS[form['temporal_summary']]])
             d_p.insert(2, [WRCCData.DISPLAY_PARAMS[form['select_grid_by']], form[form['select_grid_by']].upper()])
             display_params.append(d_p)
@@ -834,7 +843,8 @@ def area_time_series(request):
         context['need_gridpoint_map'] = False
         form = set_form(request)
         #Form Check
-        fields_to_check = ['start_date', 'end_date','elements','connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
+        fields_to_check = [form['select_grid_by'],'start_date', 'end_date','elements']
+        #,'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
         form_error = check_form(form, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -908,7 +918,7 @@ def area_time_series(request):
             'graph_data':summary_time_series
         }
         results_json = json.dumps(json_dict)
-        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         json_file = '%s_area_time_series.json' %(time_stamp)
         f = open(TEMP_FILE_DIR + '%s' %(json_file),'w+')
         f.write(results_json)
@@ -1031,7 +1041,7 @@ def grid_point_time_series(request):
             context['datadict'] = datadict
             #results_json = str(datadict).replace("\'", "\"")
             results_json = json.dumps(datadict)
-            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
             json_file = '%s_gp_ts_%s_%s_%s_%s.json' %(time_stamp, search_params['lat'], \
                 search_params['lon'], form0.cleaned_data['start_date'], \
                 form0.cleaned_data['end_date'])
@@ -1456,7 +1466,7 @@ def sodxtrmts(request):
             else:
                 json_dict['start_date'] = '----'
                 json_dict['end_date'] = '----'
-            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
             json_file = '%s_sodxtrmts_%s_%s_%s.json' \
             %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
             json_dict['json_file'] = json_file
@@ -1519,6 +1529,8 @@ def sodsumm(request):
             #format results to single station output
             if not results:
                 results = {}
+                context['run_done']= True
+                return render_to_response('my_data/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
             else:
                 results = dict(results[0])
             context['results'] = results
@@ -1565,7 +1577,7 @@ def sodsumm(request):
                 table_dict['stn_id'] = str(data_params['sid'])
                 json_list.append(table_dict)
             results_json = json.dumps(json_list)
-            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
             json_file = '%s_sodsumm_%s_%s_%s.json' \
             %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
             f = open(TEMP_FILE_DIR + '%s' %(json_file),'w+')
@@ -1841,6 +1853,8 @@ def set_params_for_shape_queries(search_params):
 #Graphics generation
 ######################
 def generate_sodsumm_graphics(results, tab, table):
+    if not results:
+        return {}
     cats = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
     if tab =='temp':
         legend = ['Extr Low','Ave Low','Mean', 'Ave High', 'Extr High']
@@ -2507,8 +2521,6 @@ def set_station_data_initial(request):
     initial['select_stations_by'] = Get('select_stations_by', 'station_id')
     initial[str(initial['select_stations_by'])] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
-    if initial['select_stations_by'] in ['station_id', 'station_ids', 'basin', 'county', 'county_warning_area', 'climate_division']:
-        initial['area_type_label']+='/Name'
     initial['area_type_value'] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_stations_by']
@@ -2547,8 +2559,6 @@ def set_gridded_data_initial(request):
     initial['select_grid_by'] = Get('select_grid_by', 'location')
     initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
-    if initial['select_grid_by'] in ['basin', 'county', 'county_warning_area', 'climate_division']:
-        initial['area_type_label']+='/Name'
     initial['area_type_value'] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_grid_by']
@@ -2604,8 +2614,6 @@ def set_area_time_series_initial(request):
     initial['select_grid_by'] = Get('select_grid_by', 'location')
     initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
-    if initial['select_grid_by'] in ['basin', 'county', 'county_warning_area', 'climate_division']:
-        initial['area_type_label']+='/Name'
     initial['area_type_value'] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_grid_by']
@@ -2639,8 +2647,6 @@ def set_clim_sum_maps_initial(request):
     initial['select_grid_by'] = Get('select_grid_by', 'state')
     initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
-    if initial['select_grid_by'] in ['basin', 'county', 'county_warning_area', 'climate_division']:
-        initial['area_type_label']+='/Name'
     initial['area_type_value'] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_grid_by']
@@ -2649,6 +2655,7 @@ def set_clim_sum_maps_initial(request):
     initial['end_date']  = Get('end_date', yesterday)
     initial['grid'] = Get('grid', '1')
     initial['temporal_summary'] = Get('temporal_summary', 'mean')
+    initial['show_plot_opts'] = 'T'
     #set the check box values
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
         checkbox_vals[area_type + '_selected'] =''
@@ -2667,8 +2674,6 @@ def set_station_locator_initial(request):
     initial['select_stations_by'] = Get('select_stations_by', 'state')
     initial[str(initial['select_stations_by'])] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
-    if initial['select_stations_by'] in ['station_id', 'station_ids', 'basin', 'county', 'county_warning_area', 'climate_division']:
-        initial['area_type_label']+='/Name'
     initial['area_type_value'] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_stations_by']

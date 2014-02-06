@@ -218,7 +218,7 @@
             <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td>Color Map:</td>
-        <td><input type="text" id="cmap" name="cmap" value="{{initial.cmap}}"></td>
+        <td><input type="text" id="cmap" name="cmap" value="{{initial.cmap}}" list="{{MEDIA_URL}}json/CMAP.json"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_cmap"></div>
