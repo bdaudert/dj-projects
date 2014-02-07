@@ -41,7 +41,7 @@
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" onclick="ShowPopupDocu('Docu_select_grid_by')">
         <div id="Docu_select_grid_by" style="display:none;"></div>
         <script type="text/javascript">                        
-            $("#Docu_select_grid_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_grid_by");
+            $("#Docu_select_grid_by").load("{{MEDIA_URL}}html/Docu_select_grid_by.html");
         </script>
         </td>
         </tr>
@@ -52,7 +52,7 @@
         <div class="pop-up">
             <div id="ht_{{initial.select_grid_by}}"></div>
             <script type="text/javascript">                        
-            $("#ht_{{initial.select_grid_by}}").load("{{MEDIA_URL}}html/commons.html #ht_{{initial.select_grid_by}}");
+            $("#ht_{{initial.select_grid_by}}").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_{{initial.select_grid_by}}");
             </script>
         </div>
         </td>
@@ -70,7 +70,7 @@
         <div class="pop-up">
         <div id="ht_temporal_resolution"></div>
         <script type="text/javascript">                        
-            $("#ht_temporal_resolution").load("{{MEDIA_URL}}html/commons.html #ht_temporal_resolution");
+            $("#ht_temporal_resolution").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_temporal_resolution");
         </script>
         </div>
         </td>
@@ -85,7 +85,7 @@
             </div>
             <!--
             <script type="text/javascript">                        
-            $("#ht_elements").load("{{MEDIA_URL}}html/commons.html #ht_elements");
+            $("#ht_elements").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_elements");
             </script>-->
         </div>
         </td>
@@ -97,7 +97,7 @@
         <div class="pop-up">
             <div id="ht_start_date"></div>
             <script type="text/javascript">                        
-            $("#ht_start_date").load("{{MEDIA_URL}}html/commons.html #ht_date");
+            $("#ht_start_date").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_date");
             </script>
         </div>
         </td>
@@ -109,7 +109,7 @@
         <div class="pop-up">
             <div id="ht_end_date"></div>
             <script type="text/javascript">                        
-            $("#ht_end_date").load("{{MEDIA_URL}}html/commons.html #ht_date");
+            $("#ht_end_date").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_date");
             </script>
         </div>
         </td>
@@ -140,7 +140,7 @@
         <div class="pop-up">
             <div id="ht_grid"></div>
             <script type="text/javascript">                        
-            $("#ht_grid").load("{{MEDIA_URL}}html/commons.html #ht_grid");
+            $("#ht_grid").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_grid");
             </script>
         </div>
         </td>
@@ -152,7 +152,7 @@
                <div class="pop-up">
             <div id="ht_grid_choices_explained"></div>
             <script type="text/javascript">                        
-                $("#ht_grid_choices_explained").load("{{MEDIA_URL}}html/commons.html #ht_grid_choices_explained");
+                $("#ht_grid_choices_explained").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_grid_choices_explained");
             </script>
         </div>
         </td>
@@ -170,7 +170,7 @@
         <div class="pop-up">
             <div id="ht_data_summary"></div>
             <script type="text/javascript">                        
-            $("#ht_data_smmary").load("{{MEDIA_URL}}html/commons.html #ht_data_summary");
+            $("#ht_data_smmary").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_data_summary");
             </script>
         </div>
         </td>
@@ -193,7 +193,7 @@
         <div class="pop-up">
             <div id="ht_temporal_summary"></div>
             <script type="text/javascript">                        
-            $("#ht_temporal_summary").load("{{MEDIA_URL}}html/commons.html #ht_temporal_summary");
+            $("#ht_temporal_summary").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_temporal_summary");
             </script>
         </div>
         </td>
@@ -216,7 +216,7 @@
         <div class="pop-up">
             <div id="ht_spatial_summary"></div>
             <script type="text/javascript">                        
-            $("#ht_spatial_summary").load("{{MEDIA_URL}}html/commons.html #ht_spatial_summary");
+            $("#ht_spatial_summary").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_spatial_summary");
             </script>
         </div>
         </td>
@@ -235,14 +235,14 @@
         <div class="pop-up">
         <div id="ht_data_format"></div>
         <script type="text/javascript">                        
-            $("#ht_data_format").load("{{MEDIA_URL}}html/commons.html #ht_data_format");
+            $("#ht_data_format").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_data_format");
         </script>
         </div>
         </td>
         </tr>
 
         <!--Only show when format is clm or dlm, don't show if xl-->
-        {%if initial.data_format == "html" or initial.data_format == "clm" or initial.data_format == "dlm"%}
+        {%if initial.data_format == "clm" or initial.data_format == "dlm"%}
         <tr valign="top" id="delim" style="display:table-row">
         {%else%}
         <tr valign="top" id="delim" style="display:none">
@@ -261,7 +261,7 @@
         <div class="pop-up">
         <div id="ht_delimiter"></div>
         <script type="text/javascript">                        
-            $("#ht_delimiter").load("{{MEDIA_URL}}html/commons.html #ht_delimiter");
+            $("#ht_delimiter").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_delimiter");
         </script>
         </div>
         </td>
@@ -278,7 +278,7 @@
         <div class="pop-up">
         <div id="ht_output_file_name"></div>
         <script type="text/javascript">                        
-            $("#ht_output_file_name").load("{{MEDIA_URL}}html/commons.html #ht_output_file_name");
+            $("#ht_output_file_name").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_output_file_name");
         </script>
         </div>
         </td>
@@ -300,27 +300,51 @@
     </script>
     <div class="docu" id="tool_info" style="display:none;"></div>
     <script type="text/javascript">                        
-        $("#tool_info").load("{{MEDIA_URL}}html/commons.html #About_gridded_data");
+        $("#tool_info").load("{{MEDIA_URL}}html/Docu_About_gridded_data.html");
     </script>
     <script type="text/javascript">            
         $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
     </script>
+    <!--
     <div id="how_to" style="display:none;"></div>
     <script type="text/javascript">            
         $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_gridded_data");
-    </script> 
-    <div id="docu_long"></div>
-
-    <div id="Docu_select_grid_by" style="display:none;"></div>
-    <script type="text/javascript">                        
-        $("#Docu_select_grid_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_grid_by");
-    </script>    
-
-    <div id="Docu_grids" style="display:none;"></div>
-    <script type="text/javascript">                        
-        $("#Docu_grids").load("{{MEDIA_URL}}html/commons.html #Docu_grids");
     </script>
-
+    -->  
+    <div id="how_to" style="display:none;">
+    <div id="Doc_select_grid_by"></div>
+    <script type="text/javascript">            
+        $("#Doc_select_grid_by").load("{{MEDIA_URL}}html/Docu_select_grid_by.html");
+    </script>
+    <div id="Docu_temporal_resolution"></div>
+    <script type="text/javascript">            
+        $("#Docu_temporal_resolution").load("{{MEDIA_URL}}html/Docu_temporal_resolution.html");
+    </script>
+    <div id="Docu_elements"></div>
+     <script type="text/javascript">            
+        $("#Docu_elements").load("{{MEDIA_URL}}html/Docu_elements_grid.html");
+    </script>
+    <div id="Docu_start_end_date"></div>
+     <script type="text/javascript">            
+        $("#Docu_start_end_date").load("{{MEDIA_URL}}html/Docu_start_end_date.html");
+    </script>
+    <div id="Docu_grid"></div>
+    <script type="text/javascript">            
+        $("#Docu_grid").load("{{MEDIA_URL}}html/Docu_grid.html");
+    </script>
+    <div id="Docu_data_summary"></div>
+    <script type="text/javascript">            
+        $("#Docu_data_summary").load("{{MEDIA_URL}}html/Docu_data_summary_grid.html");
+    </script>
+    <div id="Docu_data_format"></div>
+    <script type="text/javascript">            
+        $("#Docu_data_format").load("{{MEDIA_URL}}html/Docu_data_format.html");
+    </script>
+    <div id="Docu_delimiter"></div>
+    <script type="text/javascript">
+        $("#Docu_delimiter").load("{{MEDIA_URL}}html/Docu_delimiter.html");         
+    </script>
+    </div>
     {%if form_error%}
         {%for key, val in form_error.items%}
             <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
@@ -533,16 +557,21 @@
 
 
     <p><b>DATA</b>:</p>
-    {%if initial.data_summary != "spatial" and initial.data_summary != "none"%}
-    <p>date range{{params_dict.delimiter}}lat{{params_dict.delimiter}}lon{{params_dict.delimiter}}elev{{params_dict.delimiter}}{%for el in params_dict.element_list%}{{el}}{{params_dict.delimiter}}{%endfor%}</p>
+    <table border="1">
+    {%if initial.data_summary != "spatial" and initial.data_summary != "none"%}    
+    <th>date range{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev{{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}}{{params_dict.delimiter}}</th>{%endfor%}
     {%else%}
-    <p>date {{params_dict.delimiter}}{%for el in params_dict.element_list%}{{el}}{{params_dict.delimiter}}{%endfor%}</p>
+    <th>date{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev{{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}}{{params_dict.delimiter}}</th>{%endfor%}
     {%endif%}
     {%for row in results%}
+    <tr>
     {%for val  in row%}
-    {{val}}{{params_dict.delimiter}}
-    {%endfor%}<br />
+    <td align="right">{{val}}{{params_dict.delimiter}}</td>
     {%endfor%}
+    </tr>
+    {%endfor%}
+    </table>
+
     {%endif%}<!--End if results-->
 
 </td></table>

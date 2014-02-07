@@ -252,7 +252,7 @@ def data_station(request):
     if 'formData' in request.POST:
         #Turn request object into python dict
         form = set_form(request)
-        fields_to_check = [form['select_station_by'],'start_date', 'end_date','elements']
+        fields_to_check = [form['select_stations_by'],'start_date', 'end_date','elements']
         form_error = check_form(form, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -2237,52 +2237,18 @@ def set_station_data_params(form):
     if not form:
         return {}
 
-    key_order = ['select_stations_by', 'elements', 'start_date', 'end_date']
+    key_order = [form['select_stations_by'], 'elements', 'start_date', 'end_date']
     display_params_list = [[] for k in range(len(key_order))]
     params_dict = {}
+    for key_idx, key in enumerate(key_order):
+        display_params_list[key_idx] = [WRCCData.DISPLAY_PARAMS[key],form[key]]
     for key, val in form.iteritems():
-        #Convert to string to avoid unicode issues
-        if key != 'elements':
-            form[key] = str(val)
-
-        if key == 'elements':
-            if isinstance(val, str):
-                el_list = val.replace(' ', '').split(',')
-            else:
-                el_list = val
-            elems_long = []
-            display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key], '']
-            params_dict[key] = ','.join(el_list)
-            params_dict[key].rstrip(',')
-            for el_idx, el in enumerate(el_list):
-                try:
-                    int(el[3:5])
-                    display_params_list[1][1]+=WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5]
-                    elems_long.append(WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5])
-                except:
-                    display_params_list[1][1]+=WRCCData.DISPLAY_PARAMS[el]
-                    elems_long.append(WRCCData.DISPLAY_PARAMS[el])
-                if el_idx != 0 and el_idx != len(form['elements']) - 1:
-                    display_params_list[1][1]+=', '
-                    params_dict[key]+=', '
-            params_dict['elems_long'] = elems_long
-            #determine which apps to link to
-            if 'station_id' in form.keys():
-                params_dict['stn_id'] = form['station_id']
-        elif key == 'delimiter':
+        if key == 'delimiter':
            params_dict['delimiter'] = WRCCData.DELIMITERS[val]
         elif key in ['show_flags', 'show_observation_time']:
             params_dict[key] = val
         else:
-            try:
-                idx = key_order.index(key)
-                display_params_list[idx] = [WRCCData.DISPLAY_PARAMS[key], str(val)]
-                params_dict[key] = str(val)
-            except ValueError:
-                if key in ['station_id','station_ids', 'stnid', 'stn_id','basin', 'county_warning_area', 'climate_division', 'state', 'bounding_box', 'shape']:
-                    display_params_list.insert(1, [WRCCData.DISPLAY_PARAMS[key], str(val)])
-    if 'delimiter' not in params_dict.keys():
-        params_dict['delimiter'] = ' '
+            params_dict[key] = val
     return display_params_list, params_dict
 
 def set_station_locator_params(form):
@@ -2530,7 +2496,7 @@ def set_station_data_initial(request):
     initial['show_flags'] = Get('show_flags', 'F')
     initial['show_observation_time'] = Get('show_observation_time', 'F')
     initial['data_format'] = Get('data_format', 'html')
-    initial['delimiter'] = Get('delimiter', 'comma')
+    initial['delimiter'] = Get('delimiter', 'space')
     initial['output_file_name'] = Get('output_file_name', 'Output')
     #set the check box values
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
@@ -2571,7 +2537,7 @@ def set_gridded_data_initial(request):
     initial['temporal_summary'] = Get('temporal_summary', 'mean')
     initial['spatial_summary'] = Get('spatial_summary', 'mean')
     initial['data_format'] = Get('data_format', 'html')
-    initial['delimiter'] = Get('delimiter', 'comma')
+    initial['delimiter'] = Get('delimiter', 'space')
     initial['output_file_name'] = Get('output_file_name', 'Output')
     #set the check box values
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():

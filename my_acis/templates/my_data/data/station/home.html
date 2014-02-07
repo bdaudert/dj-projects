@@ -43,7 +43,7 @@
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" onclick="ShowPopupDocu('Docu_select_stations_by')">
         <div id="Docu_select_stations_by" style="display:none;"></div>
         <script type="text/javascript">                        
-            $("#Docu_select_stations_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_stations_by");
+            $("#Docu_select_stations_by").load("{{MEDIA_URL}}html/Docu_select_stations_by.html");
         </script>
         </td>
         <tr id="area" valign="top">
@@ -53,7 +53,7 @@
         <div class="pop-up">
             <div id="ht_{{initial.select_stations_by}}"></div>
             <script type="text/javascript">                        
-            $("#ht_{{initial.select_stations_by}}").load("{{MEDIA_URL}}html/commons.html #ht_{{initial.select_stations_by}}");
+            $("#ht_{{initial.select_stations_by}}").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_{{initial.select_stations_by}}");
             </script>
         </div>
         </td>
@@ -73,10 +73,6 @@
             <div id="ht_elements">
                 <img alt=ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn.png" id="ACISElementChoices" width="450" height="450" border="0">
             </div>
-            <!--
-            <script type="text/javascript">                        
-            $("#ht_elements").load("{{MEDIA_URL}}html/commons.html #ht_elements");
-            </script>-->
         </div>
         </td>
         </tr>
@@ -87,7 +83,7 @@
         <div class="pop-up">
             <div id="ht_start_date"></div>
             <script type="text/javascript">                        
-            $("#ht_start_date").load("{{MEDIA_URL}}html/commons.html #ht_date");
+            $("#ht_start_date").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_date");
             </script>
         </div>
         </td>
@@ -99,7 +95,7 @@
         <div class="pop-up">
             <div id="ht_end_date"></div>
             <script type="text/javascript">                        
-            $("#ht_end_date").load("{{MEDIA_URL}}html/commons.html #ht_date");
+            $("#ht_end_date").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_date");
             </script>
         </div>
         </td>
@@ -116,7 +112,7 @@
         <div class="pop-up">
             <div id="ht_show_flags"></div>
             <script type="text/javascript">                        
-            $("#ht_show_flags").load("{{MEDIA_URL}}html/commons.html #ht_show_flags");
+            $("#ht_show_flags").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_show_flags");
             </script>
         </div>
         </td>
@@ -133,7 +129,7 @@
         <div class="pop-up">
             <div id="ht_show_observation_time"></div>
             <script type="text/javascript">                        
-            $("#ht_show_observation_time").load("{{MEDIA_URL}}html/commons.html #ht_show_observation_time");
+            $("#ht_show_observation_time").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_show_observation_time");
             </script>
         </div>
         </td>
@@ -152,13 +148,13 @@
         <div class="pop-up">
         <div id="ht_data_format"></div>
         <script type="text/javascript">                        
-            $("#ht_data_format").load("{{MEDIA_URL}}html/commons.html #ht_data_format");
+            $("#ht_data_format").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_data_format");
         </script>
         </div>
         </td>
         </tr>
         <!--Only show when format is clm or dlm, don't show if xl-->
-        <tr valign="top" id="delim" style="display:table-row">
+        <tr valign="top" id="delim" style="display:none">
         <td>Delimiter:</td>
         <td>
         <select id="delimiter" name="delimiter">
@@ -173,7 +169,7 @@
         <div class="pop-up">
         <div id="ht_delimiter"></div>
         <script type="text/javascript">                        
-            $("#ht_delimiter").load("{{MEDIA_URL}}html/commons.html #ht_delimiter");
+            $("#ht_delimiter").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_delimiter");
         </script>
         </div>
         </td>
@@ -186,7 +182,7 @@
         <div class="pop-up">
         <div id="ht_output_file_name"></div>
         <script type="text/javascript">                        
-            $("#ht_output_file_name").load("{{MEDIA_URL}}html/commons.html #ht_output_file_name");
+            $("#ht_output_file_name").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_output_file_name");
         </script>
         </div>
         </td>
@@ -204,25 +200,51 @@
     <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
     </table>
     <script type="text/javascript">                        
-        $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+        $("#tool_info_head").load("{{MEDIA_URL}}html/Buttons.html .tool_info");
     </script>
     <div class="docu" id="tool_info" style="display:none;"></div>
     <script type="text/javascript">                        
-        $("#tool_info").load("{{MEDIA_URL}}html/commons.html #About_station_data");
+        $("#tool_info").load("{{MEDIA_URL}}html/Docu_About_station_data.html");
     </script>
     <script type="text/javascript">            
-        $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+        $("#how_to_head").load("{{MEDIA_URL}}html/Buttons.html .tool_how_to");
     </script>
+    <!--
     <div id="how_to" style="display:none;"></div>
     <script type="text/javascript">            
         $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_station_data");
     </script> 
-    <div id="docu_long"></div>
-
-    <div id="Docu_select_stations_by" style="display:none;"></div>
-    <script type="text/javascript">                        
-        $("#Docu_select_stations_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_stations_by");
-    </script>    
+    -->
+    <div id="how_to" style="display:none;">
+    <div id="Doc_select_stations_by"></div>
+    <script type="text/javascript">            
+        $("#Doc_select_stations_by").load("{{MEDIA_URL}}html/Docu_select_stations_by.html");
+    </script>
+    <div id="Docu_elements"></div>
+     <script type="text/javascript">            
+        $("#Docu_elements").load("{{MEDIA_URL}}html/Docu_elements_station.html");
+    </script>
+    <div id="Docu_start_end_date"></div>
+     <script type="text/javascript">            
+        $("#Docu_start_end_date").load("{{MEDIA_URL}}html/Docu_start_end_date.html");
+    </script>
+    <div id="Docu_show_flags"></div>
+    <script type="text/javascript">            
+        $("#Docu_show_flags").load("{{MEDIA_URL}}html/Docu_show_flags.html");
+    </script>
+    <div id="Docu_show_observation_time"></div>
+    <script type="text/javascript">            
+        $("#Docu_show_observation_time").load("{{MEDIA_URL}}html/Docu_show_observation_time.html");
+    </script>
+    <div id="Docu_data_format"></div>
+    <script type="text/javascript">            
+        $("#Docu_data_format").load("{{MEDIA_URL}}html/Docu_data_format.html");
+    </script>
+    <div id="Docu_delimiter"></div>
+    <script type="text/javascript">
+        $("#Docu_delimiter").load("{{MEDIA_URL}}html/Docu_delimiter.html");         
+    </script>
+    </div>
 
     {%if form_error%}
         {%for key, val in form_error.items%}
@@ -378,11 +400,9 @@
     <p class="error">{{results.error}}</p>
     {%endif%}
 
-
     {%if display_params_list%}
     <p><b>SEARCH PARAMETERS</b>:<br />
     {%for param in display_params_list%}
-    {%if not forloop.first and param.0 and param.1%}, {%endif%}
     {%if forloop.counter|divisibleby:"3" %}<br />
     {%endif %}
     {%if param.0 == "Elements"%}<br />{%endif%}
@@ -417,53 +437,57 @@
 
     {%for stn in stn_idx%}
     {%if results.stn_data|lookup:stn%}
-    <p>STATION NAME, STATE, LATITUDE, LONGITUDE, ELEVATION:</p>
-    <b>{{results.stn_names|lookup:stn|safe}}, {{results.stn_state|lookup:stn|safe}}, {{results.stn_lat|lookup:stn|safe}}, {{results.stn_lon|lookup:stn|safe}}, {{results.stn_elev|lookup:stn|safe}}</b>
-    <p>STATION ID,STATION NETWORK PAIRS:</p>
+    <p>
+    <b>Station Name</b>: {{results.stn_names|lookup:stn|safe}},<br />
+    <b>Station ID and Network Pairs</b>: 
     {%for id_network in results.stn_ids|lookup:stn %}
-    <b>{{id_network}},</b>
-    {%endfor%}
+    {{id_network}},
+    {%endfor%}<br />
+    <b>State</b>: {{results.stn_state|lookup:stn|safe}},<br />
+    <b>Latidude, Longitude</b>: {{results.stn_lat|lookup:stn|safe}}, {{results.stn_lon|lookup:stn|safe}},<br />
+    <b>Elevation</b>: {{results.stn_elev|lookup:stn|safe}}ft<br />
+    </p>
     <h3>Data:</h3>
     <p class="error"> {{results.stn_errors|lookup:stn}}</p>
     {%if not json%}
-    <table>
-    <th>date{{params_dict.delimiter}}
+    <table border="1">
+    <th>date{{params_dict.delimiter}}</th>
     {%if params_dict.show_flags == "T"%}
     {%if params_dict.show_observation_time == "T"%}
-    {%for el in results.elements%}{{el}}{{params_dict.delimiter}}flag{{params_dict.delimiter}}obs time{{params_dict.delimiter}}{%endfor%}
+    {%for el in results.elements%}<th>{{el}}{{params_dict.delimiter}}</th><th>flag{{params_dict.delimiter}}</th><th>obs time{{params_dict.delimiter}}</th>{%endfor%}
     {%else%}
-    {%for el in results.elements%}{{el}}{{params_dict.delimiter}}flag{{params_dict.delimiter}}{%endfor%}
+    {%for el in results.elements%}<th>{{el}}{{params_dict.delimiter}}</th><th>flag{{params_dict.delimiter}}</th>{%endfor%}
     {%endif%}
     {%else%}
     {%if params_dict.show_observation_time == "T"%}
-    {%for el in results.elements%}{{el}}{{params_dict.delimiter}}obs time{{params_dict.delimiter}}{%endfor%}
+    {%for el in results.elements%}<th>{{el}}{{params_dict.delimiter}}</th><th>obs time{{params_dict.delimiter}}</th>{%endfor%}
     {%else%}
-    {%for el in results.elements%}{{el}}{{params_dict.delimiter}}{%endfor%}
+    {%for el in results.elements%}<th>{{el}}{{params_dict.delimiter}}</th>{%endfor%}
     {%endif%}
     {%endif%}
     </th>
     {%for date_vals in results.stn_data|lookup:stn%}
-    <tr><td>
+    <tr>
     {%for el_val in date_vals%}
     {%if forloop.first %}
-    {{el_val}}{{params_dict.delimiter}}
+    <td align="right">{{el_val}}{{params_dict.delimiter}}</td>
     {%else%}
     {%if params_dict.show_flags == "T"%}
     {%if params_dict.show_observation_time == "T"%}
-    {{el_val|lookup:0}}{{params_dict.delimiter}}{{el_val|lookup:1}}{{params_dict.delimiter}}{{el_val|lookup:2}}{{params_dict.delimiter}}
+    <td align="right">{{el_val|lookup:0}}{{params_dict.delimiter}}</td><td align="left">{{el_val|lookup:1}}{{params_dict.delimiter}}</td><td align="left">{{el_val|lookup:2}}{{params_dict.delimiter}}</td>
     {%else%}
-    {{el_val|lookup:0}}{{params_dict.delimiter}}{{el_val|lookup:1}}{{params_dict.delimiter}}
+    <td align="right">{{el_val|lookup:0}}{{params_dict.delimiter}}</td><td align="left">{{el_val|lookup:1}}{{params_dict.delimiter}}</td>
     {%endif%}
     {%else%}
     {%if params_dict.show_observation_time == "T"%}
-    {{el_val|lookup:0}}{{params_dict.delimiter}}{{el_val|lookup:2}}{{params_dict.delimiter}}
+    <td align="right">{{el_val|lookup:0}}{{params_dict.delimiter}}</td><td align="left">{{el_val|lookup:2}}{{params_dict.delimiter}}</td>
     {%else%}
-    {{el_val|lookup:0}}{{params_dict.delimiter}}
+    <td align="right">{{el_val|lookup:0}}{{params_dict.delimiter}}</td>
     {%endif%}
     {%endif%}
     {%endif%}
     {%endfor%}
-    </td></tr>
+    </tr>
     {%endfor%}
     </table>
     {%else%}

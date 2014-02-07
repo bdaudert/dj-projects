@@ -237,10 +237,10 @@ function set_delimiter(data_format_node, divId){
 }
 
 function set_delimiter_and_output_file(data_format_node, delim_divId, out_file_divId){
-    if (data_format_node.value == 'clm' ||  data_format_node.value == 'dlm' || data_format_node.value == 'html'){
+    if (data_format_node.value == 'clm' ||  data_format_node.value == 'dlm'){
         document.getElementById(delim_divId).style.display = "table-row";
     }
-    else if (data_format_node.value == 'xl'){
+    else if (data_format_node.value == 'xl' || data_format_node.value == 'html'){
         document.getElementById(delim_divId).style.display = "none";
     }
     if (data_format_node.value == 'clm' ||  data_format_node.value == 'dlm' || data_format_node.value == 'xl'){
