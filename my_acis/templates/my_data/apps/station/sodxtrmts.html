@@ -18,7 +18,7 @@
 <script type="text/javascript">set_autofill("US_station_id");</script>
 
 <table border="0" cellpadding="10">
-<td valign="top" width="30%">
+<td valign="top" width="25%">
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/sodxtrmts/'"/>
     <div id="formSodxtrmts" class="form">
         {%if json_dict%}
@@ -30,7 +30,7 @@
         <table id="tableSodxtrmts">
         <tr valign="top">
         <td>Station ID/Name: </td>
-        <td><input type="text" size="35" id="station_id" name="station_id" value="{{initial.station_id}}" list="US_station_id"></td>
+        <td><input type="text" size="20" id="station_id" name="station_id" value="{{initial.station_id}}" list="US_station_id"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_station_id"></div>
@@ -76,10 +76,10 @@
                 <option value="pcpn" {{checkbox_vals.pcpn_selected}}>Daily Precipitation</option>
                 <option value="snow" {{checkbox_vals.snow_selected}}>Daily Snowfall</option>
                 <option value="snwd" {{checkbox_vals.snwd_selected}}>Daily Snowdepth</option>
-                <option value="maxt" {{checkbox_vals.maxt_selected}}>Daily Maximum Temperature</option>
-                <option value="mint" {{checkbox_vals.mint_selected}}>Daily Minimum Temperature</option>
+                <option value="maxt" {{checkbox_vals.maxt_selected}}>Daily Max Temperature</option>
+                <option value="mint" {{checkbox_vals.mint_selected}}>Daily Min Temperature</option>
                 <option value="avgt" {{checkbox_vals.avgt_selected}}>Daily Mean Temperature</option>
-                <option value="dtr" {{checkbox_vals.dtr_selected}}>Daily Temperature Range</option>
+                <option value="dtr" {{checkbox_vals.dtr_selected}}>Daily Temp Range</option>
                 <option value="hdd" {{checkbox_vals.hdd_selected}}>Heating Degree Days</option>
                 <option value="cdd" {{checkbox_vals.cdd_selected}}>Cooling Degree Days</option>
                 <option value="gdd" {{checkbox_vals.gdd_selected}}>Growing Degree Days</option>
@@ -385,14 +385,14 @@
         {%else%}
         <tr valign="top" class="formGraph" style="display:none;">
         {%endif%}
-        <td>Summary: </td>
+        <td>Summary over months: </td>
         <td>
             <select id="graph_summary" name="graph_summary">
-            <option value="max" {{checkbox_vals_graph.graph_summary_max_selected}}>Maximum over months</option>
-            <option value="min" {{checkbox_vals_graph.graph_summary_min_selected}}>Minimum over months</option>
-            <option value="sum" {{checkbox_vals_graph.graph_summary_sum_selected}}>Sum over months</option>
-            <option value="mean" {{checkbox_vals_graph.graph_summary_mean_selected}}>Average over months</option>
-            <option value="individual" {{checkbox_vals_graph.graph_summary_individual_selected}}>Plot months separately</option>
+            <option value="max" {{checkbox_vals_graph.graph_summary_max_selected}}>Maximum</option>
+            <option value="min" {{checkbox_vals_graph.graph_summary_min_selected}}>Minimum</option>
+            <option value="sum" {{checkbox_vals_graph.graph_summary_sum_selected}}>Sum over</option>
+            <option value="mean" {{checkbox_vals_graph.graph_summary_mean_selected}}>Average</option>
+            <option value="individual" {{checkbox_vals_graph.graph_summary_individual_selected}}>Plot months</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -699,7 +699,7 @@
     </div>
 
 </td><!--end left form partition of page-->
-<td valign="top" width="70%">
+<td valign="top" width="75%">
     <table>
         <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
     </table>
@@ -813,36 +813,50 @@
         <!--json_dict.header-->
         <p class="black">
         {%for key_val in json_dict.header%}
-            {%if key_val%}
-                <b>{{key_val.0}}</b>: {{key_val.1}}
-            {%else%}
-                <br />
-            {%endif%}
+        {%if key_val%}
+        <b>{{key_val.0}}</b>: {{key_val.1}}
+        {%if forloop.counter|divisibleby:2%}
+        <br />        
+        {%endif%}
+        {%else%}
+        <br />
+        {%endif%}
         {%endfor%}
         </p>
         
         <p class="black"><b>Missing values</b><br />
         Monthly information for months with more than this number of missing values will be displayed, but not used. <br />
-        The letter indicates the number of missing days
-        Letters after months show number of missing days; after annual
-        values show missing months.  Value is displayed but not used if user-specified
-        missing day criterion exceeded.<br />
+        The letter indicates the number of missing days.<br />
+        Letters after months show number of missing days;after annual values show missing months.<br />  
+        Value is displayed but not used if user-specified missing day criterion exceeded.<br />
         (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
-        <br /><br/>
 
-        <table class="right_aligned" cellpadding="none">
+        <table class="right_aligned" cellpadding="none" style="color:black">
         <tr>
-        <td><font size="+0"> YEAR</font></td>
+        <td text-align="left"><font size="+0">YEAR </font></td>
         {%for mon in json_dict.month_list%}
+            <!--
             {%if forloop.last %}
                 <td colspan="2"><font size="+0"></td>
                 <td colspan="2"><font size="+0"></td>
                 <td colspan="2"><font size="+0"></td>
             {%endif%}
-            <td colspan="2"><font size="+0">{{mon}}</font></td>
+            -->
+            <td colspan="2" text-align="left"><font size="+0">{{mon}}</font></td>
         {%endfor%}
         </tr>
-        {%for yr_data in json_dict.data %}
+        {%for yr_data in json_dict.data reversed%}
+            <tr>
+            {%for dat in yr_data%}
+                <!--
+                {%if forloop.revcounter0 == 1%}
+                    <td></td><td></td>
+                    <td></td><td></td>
+                    <td></td><td></td>
+                {%endif%}
+                -->
+                <td>{{dat}}</td>
+            {%endfor%}
             {%if yr_data.0 == "MEAN"%}
                 <tr><td></td><td></td></tr>
                 <tr><td></td><td></td></tr>
@@ -851,15 +865,6 @@
                 <tr><td></td><td></td></tr>
                 <tr><td></td><td></td></tr>
             {%endif%}
-            <tr>
-            {%for dat in yr_data%}
-                {%if forloop.revcounter0 == 1%}
-                    <td></td><td></td>
-                    <td></td><td></td>
-                    <td></td><td></td>
-                {%endif%}
-                <td>{{dat}}</td>
-            {%endfor%}
             </tr>
         {%endfor%}
         </table>

@@ -23,7 +23,7 @@
 <td valign="top" width="30%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}station/'"/>
     <div id='formData'>
-        <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
+        <form method="post" action="" >{% csrf_token %}
         <table class="form" id="tableData">
         <tr valign="top">
         <td>Select stations by:</td>
@@ -48,7 +48,7 @@
         </td>
         <tr id="area" valign="top">
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
-        <td><input type="text" size="35" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
+        <td><input type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_{{initial.select_stations_by}}"></div>
@@ -434,7 +434,6 @@
     <a target="_blank" href="{{TOOLS_URL}}station/?stn_id={{params_dict.stn_id}}&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}">Run an application on this data set</a>
     {%endif%}
     <br />
-
     {%for stn in stn_idx%}
     {%if results.stn_data|lookup:stn%}
     <p>

@@ -1,12 +1,21 @@
 //Show "Loading image"
 function show_loading(){
+    /*
+    $("#loading-image").attr("src", "/csc/media/img/LoadingGreen.gif");
+    $("#loading").bind("ajaxSend", function(){
+        $(this).show();
+    }).bind("ajaxComplete", function(){
+    $(this).hide();
+ });
+    */
     $("#loading-image").attr("src", "/csc/media/img/LoadingGreen.gif");
     $("#loading").show("fast");
     //this.preventDefault();
-    var $form = $(this).unbind('submit');
+    var form = $(this).unbind('submit');
     setTimeout(function(){
-        $form.submit();
-    }, 3000);
+        form.submit();
+        $("#loading").hide();
+    }, 9000);
 }
 
 function show_plot_opts(rowClass){
