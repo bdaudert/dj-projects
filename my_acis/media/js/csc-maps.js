@@ -335,13 +335,13 @@ function initialize_network_map() {
         var ll = new google.maps.LatLng(39.5, -98.35);
         var mapOptions = {
         center: ll,
-        zoom: 3,
+        zoom: 5,
         mapTypeId: google.maps.MapTypeId.HYBRID
         };
 
         map = new google.maps.Map(document.getElementById("map"),mapOptions);
 
-        var legend = document.getElementById('map_legend');
+        var legend = document.getElementById('resource_legend');
         for (var i=0; i<data.Types.length; i++) {
             var type = data.Types[i].type;
             var icon = MEDIA_URL + 'img/' + data.Types[i].icon;
@@ -389,7 +389,7 @@ function initialize_network_map() {
                 infowindow.setContent(contentString);
                 infowindow.open(map, marker);
                 //Load longer documentation on right of page
-                $("#network_docu").load(MEDIA_URL + "html/commons.html #" + c.docu_long);
+                $("#network_docu").load(MEDIA_URL + "html/Docu_External_Resources.html #" + c.docu_long);
             });
         });//close each
 

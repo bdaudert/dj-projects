@@ -24,9 +24,9 @@
         {%for field in form1 %}
         {%if not field.is_hidden%}
         <tr>
-        <td>{{field.label}}/name:</td>
+        <td>{{field.label}}: </td>
         {%if field.label == "Station id"%}
-            <td><input type="text" size="35" id="station_id" name="station_id" value="{{field.value}}" list="US_station_id"></td>
+            <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{field.value}}" list="US_station_id"></td>
         {%else%}
             <td>{{field}}</td>
         {%endif%}
@@ -55,19 +55,37 @@
         <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
         </table> 
         <script type="text/javascript">                        
-            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+            $("#tool_info_head").load("{{MEDIA_URL}}html/Buttons.html .tool_info");
         </script>
         <div id="tool_info" style="display:none;"></div>
         <script type="text/javascript">            
-            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_SODSUMM");
+            $("#tool_info").load("{{MEDIA_URL}}html/Docu_SODSUMM.html");
         </script>
         <script type="text/javascript">            
-            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+            $("#how_to_head").load("{{MEDIA_URL}}html/Buttons.html .tool_how_to");
         </script>
-        <div align="left" id="how_to" style="display:none;"></div>
+        <div align="left" id="how_to" style="display:none;">
+        <div id="Docu_station_id"></div>
+        <script type="text/javascript">                        
+        $("#Docu_station_id").load("{{MEDIA_URL}}html/Docu_station_id.html");
+        </script>
+        <div id="Docu_start_end_year"></div>
         <script type="text/javascript">            
-            $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_SODSUMM");
+        $("#Docu_start_end_year").load("{{MEDIA_URL}}html/Docu_start_end_year.html");
         </script>
+        <div id="Docu_summary_sodsumm"></div>
+        <script type="text/javascript">            
+        $("#Docu_summary_sodsumm").load("{{MEDIA_URL}}html/Docu_summary_sodsumm.html");
+        </script>
+        <div id="Docu_max_missing_days"></div>
+        <script type="text/javascript">            
+        $("#Docu_max_missing_days").load("{{MEDIA_URL}}html/Docu_max_missing_days.html");
+        </script>
+        <div id="Docu_plot_opts"></div>
+        <script type="text/javascript">            
+        $("#Docu_plot_opts").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODSUMM.html");
+        </script>
+        </div>
 
         {%if results or graphics%}
         <p>
@@ -124,7 +142,7 @@
                     <div class="pop-up">
                     <div id="ht_data_format"></div>
                     <script type="text/javascript">                        
-                        $("#ht_data_format").load("{{MEDIA_URL}}html/commons.html #ht_data_format");
+                        $("#ht_data_format").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_data_format");
                     </script>
                     </div>
                     </td>
@@ -145,7 +163,7 @@
                     <div class="pop-up">
                     <div id="ht_delimiter"></div>
                     <script type="text/javascript">                        
-                        $("#ht_delimiter").load("{{MEDIA_URL}}html/commons.html #ht_delimiter");
+                        $("#ht_delimiter").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_delimiter");
                     </script>
                     </div>
                     </td>
@@ -157,7 +175,7 @@
                     <div class="pop-up">
                     <div id="ht_output_file_name"></div>
                     <script type="text/javascript">                        
-                        $("#ht_output_file_name").load("{{MEDIA_URL}}html/commons.html #ht_output_file_name");
+                        $("#ht_output_file_name").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_output_file_name");
                     </script>
                     </div>
                     </td>

@@ -75,7 +75,7 @@ function ShowPopupDocu(DivId){
 function ShowHelpText(divId){
     var pop_up_id = divId;
     var pop_up = document.getElementById(pop_up_id);
-    pop_up.innerHTML = $('#' + pop_up_id).load('/csc/media/html/commons.html #' + pop_up_id);
+    pop_up.innerHTML = $('#' + pop_up_id).load('/csc/media/html/Docu_help_texts.html #' + pop_up_id);
     var divs_to_hide = document.getElementsByClassName('pop-up');
     for (i=0;i<divs_to_hide.length;i++){
         if (divs_to_hide[i] != pop_up){
@@ -109,7 +109,7 @@ function ShowHelpText(divId){
         document.body.appendChild(pop_up);
          
         //pop_up.innerHTML ="blah";
-        //var text = $('#' + pop_up_id).load('/csc/media/html/commons.html #' + pop_up_id);
+        //var text = $('#' + pop_up_id).load('/csc/media/html/Docu_help_texts.html #' + pop_up_id);
         var text = $('#help_ht_start_year').load('/csc/media/html/commons.html #ht_start_year';
         pop_up.innerHTML = text;
         //$( "#"+ pop_up_id ).show();

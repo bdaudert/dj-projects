@@ -132,25 +132,23 @@
             <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
         </table>
         <script type="text/javascript">            
-            $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+            $("#tool_info_head").load("{{MEDIA_URL}}html/Buttons.html .tool_info");
         </script>
         <script type="text/javascript">            
-            $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_CLIM_PROB_MAPS");
+            $("#tool_info").load("{{MEDIA_URL}}html/Docu_CLIM_PROB_MAPS.html");
         </script>
         
         <div id="how_to_head"></div>
             <script type="text/javascript">
-            $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+            $("#how_to_head").load("{{MEDIA_URL}}html/Buttons.html .tool_how_to");
             </script>
 
         <div id="how_to" style="display:none;">
-            <p><b>Grid selection</b> is made either by US state or by a user defined bounding box.</p>
-                    <p><b>Select grid by</b> = "State". Enter a US state of choice.</p>                    
-                    <p><b>Select grid by</b> = "Bounding Box". Find data for all stations in a bounding box of your choice.                         <p>A bounding box has four coordinates: West longitude, South latitude, East longitude, North latitude. 
-                    Please enter them in this order OR better, use the map interface to define your bounding box.</p>
-                    <p><b>Select grid by</b> = "Shape". Draw a custom shape via the map interface.</p>
-                More to come soon ...
-            </p>
+        <div id="soon"></div>
+        <script type="text/javascript">            
+        $("#soon").load("{{MEDIA_URL}}html/Docu_NONE.html");
+        </script>
+        </div>
         </div>
         <!--
         <p>BBOX: {{bbox}}</p>
@@ -197,7 +195,7 @@
 <!--
     <div id="footer" align="center"></div>
     <script type="text/javascript">                        
-    $("#footer").load("{{MEDIA_URL}}html/commons.html .footer-partners");
+    $("#footer").load("{{MEDIA_URL}}html/Footers.html .footer-partners");
     </script>
 -->
 

@@ -21,16 +21,16 @@
 
 <!--First Table: Form, HowTos, Links-->    
 <table cellpadding="none">
-<td valign="top" width="15%">
+<td valign="top" width="150px">
     <!--First Column:forms and Links-->
     <table>
     <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
     </table>
     <script type="text/javascript">                        
-    $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+    $("#tool_info_head").load("{{MEDIA_URL}}html/Buttons.html .tool_info");
     </script>
     <script type="text/javascript">            
-    $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+    $("#how_to_head").load("{{MEDIA_URL}}html/Buttons.html .tool_how_to");
     </script>
 
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/station_finder/'"/>
@@ -54,17 +54,17 @@
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" onclick="ShowPopupDocu('Docu_select_stations_by')">
         <div id="Docu_select_stations_by" style="display:none;"></div>
         <script type="text/javascript">                        
-            $("#Docu_select_stations_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_stations_by");
+            $("#Docu_select_stations_by").load("{{MEDIA_URL}}html/Docu_select_stations_by.html");
         </script>
         </td>
         <tr id="area" valign="top">
-        <td>{{initial.area_type_label}}: </td>
-        <td><input type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
+        <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
+        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_{{initial.select_stations_by}}"></div>
             <script type="text/javascript">                        
-            $("#ht_{{initial.select_stations_by}}").load("{{MEDIA_URL}}html/commons.html #ht_{{initial.select_stations_by}}");
+            $("#ht_{{initial.select_stations_by}}").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_{{initial.select_stations_by}}");
             </script>
         </div>
         </td>
@@ -91,7 +91,7 @@
         <div class="pop-up">
             <div id="ht_elements_constraints"></div>
             <script type="text/javascript">                        
-                $("#ht_elements_constraints").load("{{MEDIA_URL}}html/commons.html #ht_elements_constraints");
+                $("#ht_elements_constraints").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_elements_constraints");
             </script>
         </div>
         </td>
@@ -103,7 +103,7 @@
         <div class="pop-up">
         <div id="ht_start_date"></div>
         <script type="text/javascript">                        
-        $("#ht_start_date").load("{{MEDIA_URL}}html/commons.html #ht_date");
+        $("#ht_start_date").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_date");
         </script>
         </div>
         </td>
@@ -115,7 +115,7 @@
         <div class="pop-up">
         <div id="ht_end_date"></div>
         <script type="text/javascript">                        
-        $("#ht_end_date").load("{{MEDIA_URL}}html/commons.html #ht_date");
+        $("#ht_end_date").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_date");
         </script>
         </div>
         </td>
@@ -132,7 +132,7 @@
         <div class="pop-up">
             <div id="ht_dates_constraints"></div>
             <script type="text/javascript">                        
-                $("#ht_dates_constraints").load("{{MEDIA_URL}}html/commons.html #ht_dates_constraints");
+                $("#ht_dates_constraints").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_dates_constraints");
             </script>
         </div>
         </td>
@@ -151,7 +151,7 @@
         <p><font size="2">Summaries, Graphs, and other products for RAWS (Remote Automatic Weather Stations).</font></p>
     </div>
     </td></tr>
-   <tr><td>
+    <tr><td>
     <a id="us_wide" href="http://www.wcc.nrcs.usda.gov/snow/" class="trigger_hover" target="_blank">SNOTEL (<font color="red">W-US/Alaska</font>)</a>
     <div class="pop-up">
         <p><font size="2">Snowpack and related climatic data in the Western United States and Alaska.</font></p>
@@ -169,7 +169,7 @@
         <p><font size="2">Nevada Integrated Climate and Evaporation Network.</font</p>
     </div>
     </td></tr>
-  <tr><td>
+    <tr><td>
     <a id="us_wide" href="http://www.wrcc.dri.edu/vallescaldera/" class="trigger_hover" target="_blank">Valles Caldera (<font color="red">NM</font>)</a>
     <div class="pop-up">
         <p><font size="2">Valles Caldera Climate Network</font></p>
@@ -181,19 +181,19 @@
         <p><font size="2">Access to current and archived weather observations across the United States.</font></p>
     </div>
     </td></tr>
-   <tr><td>
-        <a id="us_wide" href="http://www.cocorahs.org/" class="trigger_hover" target="_blank">CoCoRaHS (<font color="red">US</font>)</a>
+    <tr><td>
+    <a id="us_wide" href="http://www.cocorahs.org/" class="trigger_hover" target="_blank">CoCoRaHS (<font color="red">US</font>)</a>
     <div class="pop-up">
         <p><font size="2">Community Collaborative Rain, Hail and Snow Network</font></p>
     </div>
     </td></tr>
-   <tr><td>
+    <tr><td>
     <a id="us_wide" href="http://www.ymp.dri.edu/index.html" class="trigger_hover" target="_blank">Yucca Mountain Project (<font color="red">NV</font>)</a>
     <div class="pop-up">
         <p><font size="2">Climate Data from Yucca Mountain, Nevada.</font></p>
     </div>
     </td></tr>
-   <tr><td>
+    <tr><td>
     <a id="us_wide" href="http://www.wrcc.dri.edu/catalina/" class="trigger_hover" target="_blank">Santa Catalina Island Climate Network (<font color="red">CA</font>)</a>
     <div class="pop-up">
         <p><font size="2">Climate Data from Santa Catalina Island.</font></p>
@@ -227,16 +227,37 @@
     </ul>
 
 <!--Second Column: How Tos and maps-->
-<td valign="top" width="70%" align="right">
+<td valign="top" width="550px">
         <div align="left" id="tool_info" style="display:none;"></div>
         <script type="text/javascript">                        
-        $("#tool_info").load("{{MEDIA_URL}}html/commons.html #About_station_finder");
+        $("#tool_info").load("{{MEDIA_URL}}html/Docu_About_station_finder.html");
         </script>
-        <div align="left" id="how_to" style="display:none"></div>
+        <div id="how_to" style="display:none;">
+        <div id="Doc_select_stations_by"></div>
         <script type="text/javascript">            
-        $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_station_finder");
+        $("#Doc_select_stations_by").load("{{MEDIA_URL}}html/Docu_select_stations_by.html");
         </script>
-
+        <div id="Docu_elements"></div>
+        <script type="text/javascript">            
+        $("#Docu_elements").load("{{MEDIA_URL}}html/Docu_elements_station.html");
+        </script>
+        <div id="Docu_element_constraints"></div>    <script type="text/javascript">            
+        $("#Docu_show_flags").load("{{MEDIA_URL}}html/Docu_element_constraints.html");
+        </script>
+        <div id="Docu_start_end_date"></div>
+        <script type="text/javascript">            
+        $("#Docu_start_end_date").load("{{MEDIA_URL}}html/Docu_start_end_date.html");
+        </script>
+        <div id="Docu_date_constraints"></div>
+        <script type="text/javascript">            
+        $("#Docu_date_constraints").load("{{MEDIA_URL}}html/Docu_date_constraints.html");
+        </script>
+        <div id="Docu_el_date_constraints_examples"></div>
+        <script type="text/javascript">            
+        $("#Docu_el_date_constraints_examples").load("{{MEDIA_URL}}html/Docu_el_date_constraints_examples.html");
+        </script>
+        </div>
+        
         {%if form_error%}
         {%for key, val in form_error.items%}
         <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
@@ -245,11 +266,9 @@
         <!--Maps-->
         <!--<font size="2" color="#006666" align="center">{{map_title}}</font>-->
         
+        {%if station_json and not need_overlay_map%}
         <!--Link to data portal-->
-        <table>
-        <td valign="top">
-        {%if station_json%}
-        <a target="_blank" href="{{DATA_URL}}station/?select_stations_by={{initial.select_stations_by}}&area_type_value={{initial.area_type_value}}&elements={{initial.elements}}&start_date={{initial.start_date}}&end_date={{initial.end_date}}">Obtain data for all stations displayed</a>
+        <a align="left" target="_blank" href="{{DATA_URL}}station/?select_stations_by={{initial.select_stations_by}}&area_type_value={{initial.area_type_value}}&elements={{initial.elements}}&start_date={{initial.start_date}}&end_date={{initial.end_date}}">Obtain data for all stations displayed</a>
         {%endif%}
         <div id="PolyMap" style="display:none;">
             <div id="panel">
@@ -292,7 +311,7 @@
             <div class="pop-up">
             <div id="ht_select_overlay_by"></div>
             <script type="text/javascript">                        
-                $("#ht_select_overlay_by").load("{{MEDIA_URL}}html/commons.html #ht_select_stations_by");
+                $("#ht_select_overlay_by").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_select_stations_by");
             </script>
             </div>
             </td>
@@ -372,7 +391,7 @@
     {%if overlay_error%}
     <p class="error">{{overlay_error}}</p>
     {%else%}
-    <div id="map-overlay" style="width:500px; height:400px;"></div>
+    <div id="map-overlay" style="width:550px; height:400px;"></div>
     <div id="content-window" style="width:100px; height:100px;"></div>
     <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
     {%endif%} 
@@ -397,14 +416,14 @@
     <input type="hidden" id="elements" name="variable" value="{{params_dict.elements}}">
     {%endif%}
     
-    {%if station_json and not error %}
+    {%if station_json and not error and not form_error and not need_overlay_map%}
     <input type="hidden" id="station_json" name="variable" value="{{station_json}}">
-    <div id="map" style="width:580px;height:400px;"></div>
+    <div id="map" style="width:550px;height:400px;"></div>
     <script type="text/javascript">
         initialize_station_finder()
     </script>
     <!--Station List-->
-    <div style="height:200px;overflow:auto;" >
+    <div style="height:200px;width:550px;overflow:auto;">
         <table cellspacing="1" id="station_list" border=1>
         <thead>
         <tr>
@@ -420,15 +439,13 @@
     </div>
     {%endif%}
 </td>
-<td valign="top" align="left">
-    {%if station_json and not error %}
+<td valign="top" align="left" width="150px">
+    {%if station_json and not error and not form_error and not need_overlay_map%}
     <div id="map_legend">
         <h3>Legend of Station Networks</h3>
         <!--<p>Choose <a href="/csc/media/html/stn_id_system_docu.html" onClick="return popup_window(this, 'Networks')"><font color="#006666">Network ID</font></a>!</td>-->
     </div>
     {%endif%}
-    </td>
-    </table>
 </td>
 </table>
 

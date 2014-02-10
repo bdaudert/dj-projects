@@ -47,7 +47,7 @@
         </tr>
         <tr id="area" valign="top">
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
-        <td><input type="text" size="35" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
+        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_{{initial.select_grid_by}}"></div>
@@ -147,7 +147,7 @@
         </tr>
         <tr>
         <td></td>
-        <td><div class="pop_link" onClick="ShowHide('Docu_grids')"><b><u>Gridded datasets</u></b> explained</div></td>
+        <td><div class="pop_link" onClick="ShowHide('Docu_grids')"><b><u>Gridded datasets</u></b> explained</div>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
                <div class="pop-up">
             <div id="ht_grid_choices_explained"></div>
@@ -296,21 +296,15 @@
     <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
     </table>
     <script type="text/javascript">                        
-        $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+        $("#tool_info_head").load("{{MEDIA_URL}}html/Buttons.html .tool_info");
     </script>
     <div class="docu" id="tool_info" style="display:none;"></div>
     <script type="text/javascript">                        
         $("#tool_info").load("{{MEDIA_URL}}html/Docu_About_gridded_data.html");
     </script>
     <script type="text/javascript">            
-        $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+        $("#how_to_head").load("{{MEDIA_URL}}html/Buttons.html .tool_how_to");
     </script>
-    <!--
-    <div id="how_to" style="display:none;"></div>
-    <script type="text/javascript">            
-        $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_gridded_data");
-    </script>
-    -->  
     <div id="how_to" style="display:none;">
     <div id="Doc_select_grid_by"></div>
     <script type="text/javascript">            
@@ -345,6 +339,12 @@
         $("#Docu_delimiter").load("{{MEDIA_URL}}html/Docu_delimiter.html");         
     </script>
     </div>
+
+    <div class="pop-link" id="Docu_grids" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_grids").load("{{MEDIA_URL}}html/Docu_grids.html");
+    </script> 
+
     {%if form_error%}
         {%for key, val in form_error.items%}
             <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
@@ -396,27 +396,6 @@
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
             <table class="form">
-            <!--
-            <tr valign="top">
-            <td>Select stations by:</td>
-            <td>
-                <select id="select_overlay_by" name="select_overlay_by" onchange="set_station_grid_select('area',this);">
-                <option value="county" {{checkbox_vals.county_selected}}>County</option>
-                <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
-                <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
-                <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
-                </select>
-            </td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-            <div class="pop-up">
-            <div id="ht_select_overlay_by"></div>
-            <script type="text/javascript">                        
-                $("#ht_select_overlay_by").load("{{MEDIA_URL}}html/commons.html #ht_select_grid_by");
-            </script>
-            </div>
-            </td>
-            </tr>
-            -->
             <tr>
             <td>State: </td>
             <td>
@@ -523,7 +502,6 @@
     {%if display_params_list%}
     <p><b>SEARCH PARAMETERS</b>:<br />
     {%for param in display_params_list%}
-    {%if not forloop.first and param.0 and param.1%}, {%endif%}
     {%if forloop.counter|divisibleby:"3" %}<br />
     {%endif %}
     {%if param.0 == "Elements"%}<br />{%endif%}

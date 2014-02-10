@@ -45,18 +45,18 @@
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" onclick="ShowPopupDocu('Docu_select_grid_by')">
         <div id="Docu_select_grid_by" style="display:none;"></div>
         <script type="text/javascript">                        
-            $("#Docu_select_grid_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_grid_by");
+            $("#Docu_select_grid_by").load("{{MEDIA_URL}}html/Docu_select_grid_by.html");
         </script>
         </td>
         </tr>
         <tr id="area" valign="top">
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
-        <td><input type="text" size="35" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
+        <td><input autocomplete="off" type="text" size="35" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_{{initial.select_grid_by}}"></div>
             <script type="text/javascript">                        
-            $("#ht_{{initial.select_grid_by}}").load("{{MEDIA_URL}}html/commons.html #ht_{{initial.select_grid_by}}");
+            $("#ht_{{initial.select_grid_by}}").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_{{initial.select_grid_by}}");
             </script>
         </div>
         </td>
@@ -80,7 +80,7 @@
         <div class="pop-up">
             <div id="ht_start_date"></div>
             <script type="text/javascript">                        
-            $("#ht_start_date").load("{{MEDIA_URL}}html/commons.html #ht_date");
+            $("#ht_start_date").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_date");
             </script>
         </div>
         </td>
@@ -92,7 +92,7 @@
         <div class="pop-up">
             <div id="ht_end_date"></div>
             <script type="text/javascript">                        
-            $("#ht_end_date").load("{{MEDIA_URL}}html/commons.html #ht_date");
+            $("#ht_end_date").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_date");
             </script>
         </div>
         </td>
@@ -122,19 +122,24 @@
         <div class="pop-up">
             <div id="ht_grid"></div>
             <script type="text/javascript">                        
-            $("#ht_grid").load("{{MEDIA_URL}}html/commons.html #ht_grid");
+            $("#ht_grid").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_grid");
             </script>
         </div>
         </td>
         </tr>
         <tr>
         <td></td>
-        <td><div class="pop_link" onClick="ShowHide('Docu_grids')"><b><u>Gridded datasets</u></b> explained</div></td>
+        <td><div class="pop_link" onClick="ShowHide('Docu_grids')"><b><u>Gridded datasets</u></b> explained</div>
+        <div id="Docu_grids" style="display:none;"></div>
+        <script type="text/javascript">                        
+            $("#Docu_grids").load("{{MEDIA_URL}}html/Docu_grids.html");
+        </script>
+        </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
                <div class="pop-up">
             <div id="ht_grid_choices_explained"></div>
             <script type="text/javascript">                        
-                $("#ht_grid_choices_explained").load("{{MEDIA_URL}}html/commons.html #ht_grid_choices_explained");
+                $("#ht_grid_choices_explained").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_grid_choices_explained");
             </script>
         </div>
         </td>
@@ -153,7 +158,7 @@
         <div class="pop-up">
             <div id="ht_spatial_summary"></div>
             <script type="text/javascript">                        
-            $("#ht_spatial_summary").load("{{MEDIA_URL}}html/commons.html #ht_spatial_summary");
+            $("#ht_spatial_summary").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_spatial_summary");
             </script>
         </div>
         </td>
@@ -170,7 +175,7 @@
         <div class="pop-up">
             <div id="ht_show_running_mean"></div>
             <script type="text/javascript">                        
-            $("#ht_show_running_mean").load("{{MEDIA_URL}}html/commons.html #ht_show_running_mean");
+            $("#ht_show_running_mean").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_show_running_mean");
             </script>
         </div>
         </td>
@@ -186,7 +191,7 @@
         <div class="pop-up">
             <div id="ht_running_mean_days"></div>
             <script type="text/javascript">                        
-            $("#ht_running_mean_days").load("{{MEDIA_URL}}html/commons.html #ht_running_mean_days");
+            $("#ht_running_mean_days").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_running_mean_days");
             </script>
         </div>
         </td>
@@ -223,7 +228,7 @@
         <div class="pop-up">
             <div id="ht_image_size"></div>
             <script type="text/javascript">                        
-            $("#ht_image_size").load("{{MEDIA_URL}}html/commons.html #ht_plot_image_size");
+            $("#ht_image_size").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_plot_image_size");
             </script>
         </div>
         </td>
@@ -244,7 +249,7 @@
         <div class="pop-up">
             <div id="ht_major_grid"></div>
             <script type="text/javascript">                        
-            $("#ht_major_grid").load("{{MEDIA_URL}}html/commons.html #ht_major_grid");
+            $("#ht_major_grid").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_major_grid");
             </script>
         </div>
         </td>
@@ -265,7 +270,7 @@
         <div class="pop-up">
             <div id="ht_minor_grid"></div>
             <script type="text/javascript">                        
-            $("#ht_minor_grid").load("{{MEDIA_URL}}html/commons.html #ht_major_minor");
+            $("#ht_minor_grid").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_major_minor");
             </script>
         </div>
         </td>
@@ -286,7 +291,7 @@
         <div class="pop-up">
             <div id="ht_connector_line"></div>
             <script type="text/javascript">                        
-            $("#ht_connector_line").load("{{MEDIA_URL}}html/commons.html #ht_connector_line");
+            $("#ht_connector_line").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_connector_line");
             </script>
         </div>
         </td>
@@ -302,7 +307,7 @@
         <div class="pop-up">
             <div id="ht_connector_line_width"></div>
             <script type="text/javascript">                        
-            $("#ht_connector_line_width").load("{{MEDIA_URL}}html/commons.html #ht_connector_line_width");
+            $("#ht_connector_line_width").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_connector_line_width");
             </script>
         </div>
         </td>
@@ -323,7 +328,7 @@
         <div class="pop-up">
             <div id="ht_markers"></div>
             <script type="text/javascript">                        
-            $("#ht_markers").load("{{MEDIA_URL}}html/commons.html #ht_markers");
+            $("#ht_markers").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_markers");
             </script>
         </div>
         </td>
@@ -347,7 +352,7 @@
         <div class="pop-up">
             <div id="ht_marker_type"></div>
             <script type="text/javascript">                        
-            $("#ht_marker_type").load("{{MEDIA_URL}}html/commons.html #ht_marker_type");
+            $("#ht_marker_type").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_marker_type");
             </script>
         </div>
         </td>
@@ -363,7 +368,7 @@
         <div class="pop-up">
             <div id="ht_vertical_axis_min"></div>
             <script type="text/javascript">                        
-            $("#ht_vertical_axis_min").load("{{MEDIA_URL}}html/commons.html #ht_vertical_axis_min");
+            $("#ht_vertical_axis_min").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_vertical_axis_min");
             </script>
         </div>
         </td>
@@ -379,7 +384,7 @@
         <div class="pop-up">
             <div id="ht_vertical_axis_max"></div>
             <script type="text/javascript">                        
-            $("#ht_vertical_axis_max").load("{{MEDIA_URL}}html/commons.html #ht_vertical_axis_max");
+            $("#ht_vertical_axis_max").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_vertical_axis_max");
             </script>
         </div>
         </td>
@@ -417,7 +422,7 @@
         <div class="pop-up">
         <div id="ht_data_format"></div>
         <script type="text/javascript">                        
-            $("#ht_data_format").load("{{MEDIA_URL}}html/commons.html #ht_data_format");
+            $("#ht_data_format").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_data_format");
         </script>
         </div>
         </td>
@@ -438,7 +443,7 @@
         <div class="pop-up">
         <div id="ht_delimiter"></div>
         <script type="text/javascript">                        
-            $("#ht_delimiter").load("{{MEDIA_URL}}html/commons.html #ht_delimiter");
+            $("#ht_delimiter").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_delimiter");
         </script>
         </div>
         </td>
@@ -450,7 +455,7 @@
         <div class="pop-up">
         <div id="ht_output_file_name"></div>
         <script type="text/javascript">                        
-            $("#ht_output_file_name").load("{{MEDIA_URL}}html/commons.html #ht_output_file_name");
+            $("#ht_output_file_name").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_output_file_name");
         </script>
         </div>
         </td>
@@ -521,30 +526,49 @@
         <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
     </table>
     <script type="text/javascript">            
-        $("#tool_info_head").load("{{MEDIA_URL}}html/commons.html .tool_info");
+        $("#tool_info_head").load("{{MEDIA_URL}}html/Buttons.html .tool_info");
     </script>
     <div id="tool_info" style="display:none;"></div>
     <script type="text/javascript">            
-        $("#tool_info").load("{{MEDIA_URL}}html/commons.html #Docu_AREA_TIME_SERIES");
+        $("#tool_info").load("{{MEDIA_URL}}html/Docu_AREA_TIME_SERIES.html");
     </script>
     <script type="text/javascript">
-        $("#how_to_head").load("{{MEDIA_URL}}html/commons.html .tool_how_to");
+        $("#how_to_head").load("{{MEDIA_URL}}html/Buttons.html .tool_how_to");
     </script>
-    <div id="how_to" style="display:none;"></div>
-    <script type="text/javascript">
-        $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_AREA_TIME_SERIES");
+    <div id="how_to" style="display:none;">
+        <div id="Doc_select_grid_by"></div>
+    <script type="text/javascript">            
+        $("#Doc_select_grid_by").load("{{MEDIA_URL}}html/Docu_select_grid_by.html");
     </script>
-    </div> 
-
-    <div id="Docu_select_grid_by" style="display:none;"></div>
+    <div id="Docu_elements"></div>
+     <script type="text/javascript">            
+        $("#Docu_elements").load("{{MEDIA_URL}}html/Docu_elements_grid.html");
+    </script>
+    <div id="Docu_start_end_date"></div>
+     <script type="text/javascript">            
+        $("#Docu_start_end_date").load("{{MEDIA_URL}}html/Docu_start_end_date.html");
+    </script>
+    <div id="Docu_grid"></div>
+    <script type="text/javascript">            
+        $("#Docu_grid").load("{{MEDIA_URL}}html/Docu_grid.html");
+    </script>
+    <div id="Docu_spatial_summary"></div>
+    <script type="text/javascript">            
+        $("#Docu_spatial_summary").load("{{MEDIA_URL}}html/Docu_spatial_summary_grid.html");
+    </script>
+    <div id="Docu_show_running_mean"></div>
+    <script type="text/javascript">            
+        $("#Docu_show_running_mean").load("{{MEDIA_URL}}html/Docu_show_running_mean.html");
+    </script>
+   <div id="Docu_running_mean_days"></div>
+    <script type="text/javascript">            
+        $("#Docu_running_mean_days").load("{{MEDIA_URL}}html/Docu_running_mean_days.html");
+    </script>
+    <div id="Docu_plot_opts" style="display:none;"></div>
     <script type="text/javascript">                        
-        $("#Docu_select_grid_by").load("{{MEDIA_URL}}html/commons.html #Docu_select_grid_by");
+        $("#Docu_plot_opts").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_AREA_TS.html");
     </script>
-
-    <div id="Docu_grids" style="display:none;"></div>
-    <script type="text/javascript">                        
-        $("#Docu_grids").load("{{MEDIA_URL}}html/commons.html #Docu_grids");
-    </script>
+    </div>
 
     {%if form_error%}
         {%for key, val in form_error.items%}
@@ -597,27 +621,6 @@
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
             <table class="form">
-            <!--
-            <tr valign="top">
-            <td>Select stations by:</td>
-            <td>
-                <select id="select_overlay_by" name="select_overlay_by" onchange="set_station_grid_select('area',this);">
-                <option value="county" {{checkbox_vals.county_selected}}>County</option>
-                <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
-                <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
-                <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
-                </select>
-            </td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-            <div class="pop-up">
-            <div id="ht_select_overlay_by"></div>
-            <script type="text/javascript">                        
-                $("#ht_select_overlay_by").load("{{MEDIA_URL}}html/commons.html #ht_select_grid_by");
-            </script>
-            </div>
-            </td>
-            </tr>
-            -->
             <tr>
             <td>State: </td>
             <td>

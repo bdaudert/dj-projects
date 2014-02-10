@@ -48,7 +48,7 @@
         </td>
         <tr id="area" valign="top">
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
-        <td><input type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
+        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_{{initial.select_stations_by}}"></div>
@@ -209,12 +209,6 @@
     <script type="text/javascript">            
         $("#how_to_head").load("{{MEDIA_URL}}html/Buttons.html .tool_how_to");
     </script>
-    <!--
-    <div id="how_to" style="display:none;"></div>
-    <script type="text/javascript">            
-        $("#how_to").load("{{MEDIA_URL}}html/commons.html #Howto_station_data");
-    </script> 
-    -->
     <div id="how_to" style="display:none;">
     <div id="Doc_select_stations_by"></div>
     <script type="text/javascript">            
@@ -275,28 +269,6 @@
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
             <table class="form">
-            <!--
-            <tr valign="top">
-            <td>Select stations by:</td>
-            <td>
-                <select id="select_overlay_by" name="select_overlay_by" onchange="set_station_grid_select('area',this);">
-                <option value="county" {{checkbox_vals.county_selected}}>County</option>
-                <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
-                <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
-                <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
-                </select>
-            </td>
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-            <div class="pop-up">
-            <div id="ht_select_overlay_by"></div>
-            <script type="text/javascript">                        
-                $("#ht_select_overlay_by").load("{{MEDIA_URL}}html/commons.html #ht_select_stations_by");
-            </script>
-            </div>
-            </td>
-            </tr>
-            <tr>
-            -->
             <td>State: </td>
             <td>
                 <select name="overlay_state" id="overlay_state">
@@ -418,25 +390,26 @@
     {%endfor%}
     </p>
     {%endif%}
-
-
+    
     {%if results%}
+    <b>RESULTS:</b>:<br />
     {%if params_dict.show_flags == "T"%}
-    <h3>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</h3>
+    ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated<br />
     {%endif%}
-    <br />
     {%if results.errors%}
     <p class="error">{{results.errors}}</p>
     {%endif%}
 
     <!--Link to relevant apps-->
-    {%if params_dict.stn_id %}
-    <a target="_blank" href="{{TOOLS_URL}}station/?stn_id={{params_dict.stn_id}}&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}">Run an application on this data set</a>
+    {%if params_dict.station_id %}
+    <a target="_blank" href="{{TOOLS_URL}}station/?stn_id={{params_dict.station_id}}&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}">Run an application on this data set</a><br />
     {%endif%}
-    <br />
     {%for stn in stn_idx%}
+    {%if station_ids_error %}
+    <div class="error">{{station_ids_error}}</div><br />
+    {%endif%}
     {%if results.stn_data|lookup:stn%}
-    <p>
+
     <b>Station Name</b>: {{results.stn_names|lookup:stn|safe}},<br />
     <b>Station ID and Network Pairs</b>: 
     {%for id_network in results.stn_ids|lookup:stn %}
@@ -445,9 +418,8 @@
     <b>State</b>: {{results.stn_state|lookup:stn|safe}},<br />
     <b>Latidude, Longitude</b>: {{results.stn_lat|lookup:stn|safe}}, {{results.stn_lon|lookup:stn|safe}},<br />
     <b>Elevation</b>: {{results.stn_elev|lookup:stn|safe}}ft<br />
-    </p>
     <h3>Data:</h3>
-    <p class="error"> {{results.stn_errors|lookup:stn}}</p>
+    <div class="error"> {{results.stn_errors|lookup:stn}}</div><br />
     {%if not json%}
     <table border="1">
     <th>date{{params_dict.delimiter}}</th>
@@ -489,12 +461,12 @@
     </tr>
     {%endfor%}
     </table>
+    <br />
     {%else%}
     {{results.stn_data|lookup:stn}}
     {%endif%}
     {%endif%}<!--End if results.stn_data|lookup:stn-->
     {%endfor%}<!--End station loop-->
     {%endif%}<!--End if results-->
-
 </td></table>
 {%endblock%}

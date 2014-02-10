@@ -194,7 +194,7 @@ function set_NDays_thresholds(table_id,node){
         cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">' +
         ' <div class="pop-up"><div id="ht_element"></div>' +
         ' <script type="text/javascript">' +
-        '$("#ht_element").load("{{MEDIA_URL}}html/commons.html #ht_element");' + 
+        '$("#ht_element").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_element");' + 
         '</script></div>';
         //cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText(\'ht_element\')">';
 
@@ -210,7 +210,7 @@ function set_NDays_thresholds(table_id,node){
         cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">' +
         ' <div class="pop-up"><div id="ht_element"></div>' +
         ' <script type="text/javascript">' +
-        '$("#ht_element").load("{{MEDIA_URL}}html/commons.html #ht_element");' +
+        '$("#ht_element").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_element");' +
         '</script></div>';
         //cell2.innerHTML= '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText(\'ht_element\')">'
 
@@ -343,7 +343,7 @@ function show_overlay_map(){
     if (!$('#map-overlay').length){
         var m = document.createElement('div');
         m.setAttribute('id', 'map-overlay');
-        m.setAttribute('style', 'width:500px;height:400px;')
+        m.setAttribute('style', 'width:550px;height:400px;')
         ol_map_div.appendChild(m);
     }
     if (!$('#content-window').length){
@@ -488,7 +488,7 @@ function set_station_grid_select(row_id,node){
     cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">' + 
     ' <div class="pop-up"><div id="ht_' + node.value  + '"></div>' + 
     ' <script type="text/javascript">' +                         
-    '$("#ht_' + node.value + '").load("/csc/media/html/commons.html #ht_'+ node.value + '");' + 
+    '$("#ht_' + node.value + '").load("/csc/media/html/Docu_help_texts.html #ht_'+ node.value + '");' + 
     '</script></div>';
 }
 

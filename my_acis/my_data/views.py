@@ -251,9 +251,10 @@ def data_station(request):
 
     if 'formData' in request.POST:
         #Turn request object into python dict
-        form = set_form(request)
-        fields_to_check = [form['select_stations_by'],'start_date', 'end_date','elements']
-        form_error = check_form(form, fields_to_check)
+        form = set_form(request,clean=False)
+        form_cleaned = set_form(request)
+        fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date','elements']
+        form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
             return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
@@ -269,14 +270,16 @@ def data_station(request):
         context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
         #Check if data request is large,
         #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
-        if form['start_date'].lower() == 'por':
+        sdate = form['start_date'].replace('/','').replace('-','').replace(':','')
+        edate = form['end_date'].replace('/','').replace('-','').replace(':','')
+        if sdate.lower() == 'por':
             s_date = datetime.date(1900,01,01)
         else:
-            s_date = datetime.date(int(form['start_date'][0:4]), int(form['start_date'][4:6]),int(form['start_date'][6:8]))
-        if form['end_date'].lower() == 'por':
+            s_date = datetime.date(int(sdate[0:4]), int(sdate[4:6]),int(sdate[6:8]))
+        if edate.lower() == 'por':
                 e_date = datetime.date.today()
         else:
-            e_date = datetime.date(int(form['end_date'][0:4]), int(form['end_date'][4:6]),int(form['end_date'][6:8]))
+            e_date = datetime.date(int(edate[0:4]), int(edate[4:6]),int(edate[6:8]))
         days = (e_date - s_date).days
         #if time range > 1 year or user requests data for more than 1 station, large request via ftp
         if days > 366 and 'station_id' not in form.keys():
@@ -287,10 +290,13 @@ def data_station(request):
             return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
 
         #Data request
-        resultsdict = AcisWS.get_station_data(form, 'sodlist_web')
+        resultsdict = AcisWS.get_station_data(form_cleaned, 'sodlist_web')
         context['results'] = resultsdict
         # If request successful, get params for link to apps page
         context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
+        if 'station_ids' in form_cleaned.keys():
+            if len(form_cleaned['station_ids'].split(',')) != len(resultsdict['stn_ids']):
+                context['station_ids_error'] = 'Data could not be found for some stations in the list.'
         if form['data_format'] != 'html':
             return WRCCUtils.write_station_data_to_file(resultsdict,params_dict['delimiter'], WRCCData.FILE_EXTENSIONS[str(form['data_format'])], request=request, output_file_name=str(form['output_file_name']), show_flags=params_dict['show_flags'], show_observation_time=params_dict['show_observation_time'])
             #return WRCCUtils.write_station_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],params_dict['delimiter'], WRCCData.FILE_EXTENSIONS[str(form['data_format'])], request=request, output_file_name=str(form['output_file_name']), show_flags=params_dict['show_flags'], show_observation_time=params_dict['show_observation_time'])
@@ -355,17 +361,18 @@ def data_gridded(request):
 
     if 'formData' in request.POST:
         #Turn request object into python dict
-        form = set_form(request)
-        fields_to_check = [form['select_grid_by'],'start_date', 'end_date','elements']
-        form_error = check_form(form, fields_to_check)
+        form = set_form(request,clean=False)
+        form_cleaned = set_form(request)
+        fields_to_check = [form_cleaned['select_grid_by'],'start_date', 'end_date','elements']
+        form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
             return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
-        if form['select_grid_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
+        if form_cleaned['select_grid_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
             context['host'] = 'wrcc.dri.edu'
-            kml_file_name = form['overlay_state'] + '_' + form['select_grid_by'] + '.kml'
+            kml_file_name = form_cleaned['overlay_state'] + '_' + form_cleaned['select_grid_by'] + '.kml'
             context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-            context['area_type'] = form['select_grid_by']
+            context['area_type'] = form_cleaned['select_grid_by']
 
         initial,checkbox_vals = set_gridded_data_initial(form)
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
@@ -373,14 +380,14 @@ def data_gridded(request):
         context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
         #Check if data request is large,
         #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
-        if form['start_date'].lower() == 'por':
+        if form_cleaned['start_date'].lower() == 'por':
             s_date = datetime.date(1900,01,01)
         else:
-            s_date = datetime.date(int(form['start_date'][0:4]), int(form['start_date'][4:6]),int(form['start_date'][6:8]))
-        if form['end_date'].lower() == 'por':
+            s_date = datetime.date(int(form_cleaned['start_date'][0:4]), int(form_cleaned['start_date'][4:6]),int(form_cleaned['start_date'][6:8]))
+        if form_cleaned['end_date'].lower() == 'por':
                 e_date = datetime.date.today()
         else:
-            e_date = datetime.date(int(form['end_date'][0:4]), int(form['end_date'][4:6]),int(form['end_date'][6:8]))
+            e_date = datetime.date(int(form_cleaned['end_date'][0:4]), int(form_cleaned['end_date'][4:6]),int(form_cleaned['end_date'][6:8]))
         days = (e_date - s_date).days
         #if time range > 1 month or user requests data for more than 1 grid point, large request via ftp
         if days > 31 and 'location' not in form.keys():
@@ -391,24 +398,24 @@ def data_gridded(request):
             return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
         #Data request
-        if str(form['grid']) == '21':
+        if str(form_cleaned['grid']) == '21':
             #PRISM data need to convert elements!!
             prism_elements = []
-            for el in form['elements'].replace(' ','').split(','):
+            for el in form_cleaned['elements'].replace(' ','').split(','):
                 prism_elements.append('%s_%s' %(str(form['temporal_resolution']), str(el)))
-            form['elements'] = prism_elements
-        req = AcisWS.get_grid_data(form, 'griddata_web')
+            form_cleaned['elements'] = prism_elements
+        req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')
         context['req'] = req
         if 'error' in req.keys():
             context['error'] = req['error']
             context['results'] = []
             return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
         #format data
-        results = WRCCUtils.format_grid_data(req, form)
+        results = WRCCUtils.format_grid_data(req, form_cleaned)
         context['results'] = results
         #If Spatial Summary, write json file forarea_time_series graph
-        if form['data_summary'] == 'spatial':
-            graph_data = [[[dat[0]] for dat in results]for el in form['elements'].replace(' ','').split(',')]
+        if form_cleaned['data_summary'] == 'spatial':
+            graph_data = [[[dat[0]] for dat in results]for el in form_cleaned['elements'].replace(' ','').split(',')]
             for date_idx,date_data in enumerate(results):
                 for el_idx,el_data in enumerate(date_data[1:]):
                     graph_data[el_idx][date_idx].append(el_data)
@@ -427,7 +434,7 @@ def data_gridded(request):
             context['JSON_URL'] = WEB_SERVER_DIR
             context['json_file'] = json_file
         #Render to page if html format was chosen, else save to file
-        if form['data_format'] == 'html':
+        if form_cleaned['data_format'] == 'html':
             return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
         else:
             return WRCCUtils.write_griddata_to_file(results,form,request=request)
@@ -1080,9 +1087,10 @@ def station_locator_app(request):
 
     if 'formData' in request.POST:
         #Turn request object into python dict
-        form = set_form(request)
-        fields_to_check = ['start_date', 'end_date','elements']
-        form_error = check_form(form, fields_to_check)
+        form_cleaned = set_form(request)
+        form = set_form(request, clean=False)
+        fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date','elements']
+        form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
             return render_to_response('my_data/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
@@ -1098,25 +1106,19 @@ def station_locator_app(request):
         #Define map title
         display_params_list, params_dict = set_station_locator_params(form)
         context['display_params_list']= display_params_list;context['params_dict']= params_dict
-        element_list = form['elements'].replace(' ','').split(',')
-        context['req'] = form['elements']
+        element_list = form_cleaned['elements'].replace(' ','').split(',')
         #Convert element list to var majors
         el_vX_list = []
         for el_idx, element in enumerate(element_list):
             el,base_temp = WRCCUtils.get_el_and_base_temp(element)
-            if el in ['hdd','gdd']:
-                el_vX_list.append('45')
-            elif el == 'cdd':
-                 el_vX_list.append('45') #should be 44
-            else:
-                el_vX_list.append(str(WRCCData.ACIS_ELEMENTS_DICT[el]['vX']))
+            el_vX_list.append(str(WRCCData.ACIS_ELEMENTS_DICT[el]['vX']))
         #context['req']= el_vX_list
         #Set up params for station_json generation
-        by_type = WRCCData.ACIS_TO_SEARCH_AREA[form['select_stations_by']]
-        val = form[WRCCData.ACIS_TO_SEARCH_AREA[form['select_stations_by']]]
+        by_type = WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['select_stations_by']]
+        val = form_cleaned[WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['select_stations_by']]]
         context['map_title'] = WRCCData.DISPLAY_PARAMS[by_type].upper() + ': ' + val
-        date_range = [form['start_date'],form['end_date']]
-        el_date_constraints = form['elements_constraints'] + '_' + form['dates_constraints']
+        date_range = [form_cleaned['start_date'],form_cleaned['end_date']]
+        el_date_constraints = form_cleaned['elements_constraints'] + '_' + form_cleaned['dates_constraints']
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=el_date_constraints)
         if 'error' in station_json.keys():
             context['error'] = stn_json['error']
@@ -1680,7 +1682,11 @@ def find_stn_id(form_input_stn):
         stn_id= str(name_id_list[-1])
     return stn_id
 
-def set_form(request):
+def set_form(request,clean=True):
+    '''
+    Deals with unicode issues
+    and autofill options for identifiers
+    '''
     form = {}
     q_dict = {}
     if request.method == 'POST':
@@ -1690,9 +1696,15 @@ def set_form(request):
 
     for key,val in q_dict.iteritems():
         form[str(key)] = str(val)
-        #Check if user autofilled name, if so, change to id
-        if key in ['station_id','county', 'basin', 'county_warning_area', 'climate_division']:
-            form[str(key)] = find_stn_id(str(val))
+        if clean:
+            #Check if user autofilled name, if so, change to id
+            if str(key) in ['station_id','county', 'basin', 'county_warning_area', 'climate_division']:
+                form[str(key)] = find_stn_id(str(val))
+            #format start and end data
+            if str(key) in ['start_date', 'end_date']:
+                form[str(key)] = str(val).replace('-','').replace(':','').replace('/','').replace(' ','')
+            if str(key) == 'elements':
+                form[str(key)] = str(val).replace(' ','')
     return form
 
 
@@ -2167,7 +2179,7 @@ def set_gridded_data_params(form):
     if not form:
         return {}
 
-    key_order = ['select_grid_by', 'elements', 'grid', 'start_date', 'end_date','temporal_resolution', 'data_summary']
+    key_order = [form['select_grid_by'], 'elements', 'grid', 'start_date', 'end_date','temporal_resolution', 'data_summary']
     display_params_list = [[] for k in range(len(key_order))]
     params_dict = {'area_type_value':form[form['select_grid_by']]}
     for key, val in form.iteritems():
@@ -2243,7 +2255,13 @@ def set_station_data_params(form):
     for key_idx, key in enumerate(key_order):
         display_params_list[key_idx] = [WRCCData.DISPLAY_PARAMS[key],form[key]]
     for key, val in form.iteritems():
-        if key == 'delimiter':
+        #Need station list for missing data
+        if key == 'station_ids':
+            params_dict['station_list'] = form['station_ids'].replace(' ','').split(',')
+
+        if key == form['select_stations_by'] and key!= 'station_ids':
+            params_dict[key] = find_stn_id(val)
+        elif key == 'delimiter':
            params_dict['delimiter'] = WRCCData.DELIMITERS[val]
         elif key in ['show_flags', 'show_observation_time']:
             params_dict[key] = val
