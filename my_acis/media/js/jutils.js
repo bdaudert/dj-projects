@@ -16,7 +16,7 @@ function precise_round(num,decimals){
 
 function printNode(ID){
   var NodeToPrint=document.getElementById(ID);
-  newWin= window.open("");
+  newWin= window.open("Print_Table_Date");
   newWin.document.write(NodeToPrint.outerHTML);
   newWin.print();
   newWin.close();

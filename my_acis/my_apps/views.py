@@ -243,6 +243,7 @@ def sods(request, app_name):
                     context['a_b'] = 'BELOW'
                 max_miss = form2.cleaned_data['max_missing_days']
                 ncdc_round = form2.cleaned_data['ncdc_roundoff']
+                context['ncdc_round'] = ncdc_round
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
                 'coop_station_ids':coop_station_ids,'station_names':station_names,\
                 'base_temp':base_temp, 'a_b':a_b,'output_type':output_type, \

@@ -1456,6 +1456,7 @@ def sodxtrmts(request):
                 'monthly_statistic':WRCCData.DISPLAY_PARAMS[initial['monthly_statistic']],
                 'month_list':month_list + ['ANN'],
                 'data':results,
+                'data_summary':results[-6:],
                 'header':header,
                 'initial':initial,
                 'initial_graph':initial_graph,
@@ -2359,7 +2360,7 @@ def set_plot_options(request):
     checkbox_vals = {}
     Get = set_GET(request)
     initial['graph_title'] = Get('graph_title','Use default')
-    initial['image_size'] = Get('image_size', 'medium')
+    initial['image_size'] = Get('image_size', 'small')
     initial['major_grid']  = Get('major_grid', 'T')
     initial['minor_grid'] = Get('minor_grid', 'F')
     initial['connector_line'] = str(Get('connector_line', 'T'))

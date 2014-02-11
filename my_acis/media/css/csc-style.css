@@ -19,7 +19,8 @@ body {
     margin: 0 auto;
     width: 960px;
     min-height:1000px;
-    color:#006666;
+    /*color:#006666;*/
+    color:#000000;
     background-color: #FFEFD5;
 }
 
@@ -83,12 +84,12 @@ body {
 }
 
 p, ul, ol, li {
-    color:#006666;
+    color:#000000;
     font-size:4;
 }
 
-p.black {
-    color:#000000;
+p.green {
+    color:#006666;
     font-size:4;
 }
 
@@ -141,7 +142,7 @@ ul#nav li a {
   /*color: #fff;*/
   color:#FFEFD5;
   text-decoration: none;
-  text-shadow: 1px 1px 1px #000000;
+  text-shadow: 1px 1px 1px #006666;
   margin: 0;
   padding: 0 30px;
   /*background: #006666 url(../img/menu-parent.png) repeat-x;*/
@@ -156,7 +157,7 @@ ul#nav li a {
 ul#nav .current a, ul#nav li:hover > a  {
   color:#FFEFD5;
   text-decoration: none;
-  text-shadow: 1px 1px 1px #000000;
+  text-shadow: 1px 1px 1px #006666;
   background: #00906E;
   -moz-border-radius-topright: 10px;
   -webkit-border-top-right-radius: 10px;
@@ -194,7 +195,7 @@ ul#nav li:hover > ul li a {
   line-height: 45px;
   color:#FFEFD5;
   text-decoration: none;
-  text-shadow: 1px 1px 1px #000000;
+  text-shadow: 1px 1px 1px #006666;
   margin: 0;
   padding: 0 30px 0 0;
   /*background: #00906E url(../img/menu-child.png) repeat-x;*/
@@ -258,7 +259,7 @@ table.page {
 }
 
 table.page td, th {
-    border:1px solid #006666;
+    border:1px solid #000000;
 }
 
 
@@ -266,12 +267,12 @@ table.dash {
 padding: 10px 10px 10px 10px;
 border: none;
 text-align:center;
-color: #006666;
+color: #000000;
 }
 
 table.form {
-border: 1px solid #006666;
-color:#006666;
+border: 1px solid #000000;
+color:#000000;
 text-align:left;
 }
 
@@ -280,8 +281,8 @@ table.form td {
 }
 
 .form {
-    border: 1px solid #006666;
-    color:#006666;
+    border: 1px solid #000000;
+    color:#000000;
     text-align:left;
 }
 
@@ -291,7 +292,7 @@ ul.navbar {
   margin: 0;
   top: 1em;
   left: 5em;
-  border: 1px solid #006666;
+  border: 1px solid #000000;
 }
 
 ul.navbar li {
@@ -312,7 +313,7 @@ ul.navbar a {
   /*width: 300px;*/
   padding: 0px;
   background: #FFEFD5;
-  border: 1px solid #006666;
+  border: 1px solid #000000;
   font-size: 3;
   z-index:10;
 }
@@ -412,7 +413,7 @@ img.map_2 {
 }
 
 img.front_dash_img {
-    border: 2px solid #006666;
+    border: 2px solid #000000;
     width: 200px;
     height:200px;
 }
@@ -476,7 +477,7 @@ img.center {
     width:250px;
     height:50px;
     background-color:#FFEFD5;
-    color:#006666;
+    color:#000000;
 }
 
 /*Map related stuff*/
@@ -487,7 +488,7 @@ img.center {
     width: 100%;
     background: #FFEFD5;
     padding: 0px;
-    border:2px solid #006666; 
+    border:2px solid #000000; 
 }
 
 #station_list   {
@@ -495,8 +496,8 @@ img.center {
     left:0px;
     /*width:95%;*/
     background: #FFEFD5;
-    color:#006666;
-    border:1px solid #006666;
+    color:#000000;
+    border:1px solid #000000;
 }
 
 
