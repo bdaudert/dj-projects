@@ -964,16 +964,16 @@ class GridDataForm3(forms.Form):
 #Data Application Forms
 class MetaGraphForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        stn_id = kwargs.get('initial', {}).get('stn_id', None)
+        station_id = kwargs.get('initial', {}).get('station_id', None)
         super(MetaGraphForm, self).__init__(*args, **kwargs)
 
-        if stn_id is None:
-            stn_id = self.data.get('stn_id')
+        if station_id is None:
+            station_id = self.data.get('station_id')
 
-        if stn_id is None:
+        if station_id is None:
             self.fields['station_id'] = forms.CharField(required=True, initial='266779', help_text='COOP station identification number. Please use the Station Finder to find your station id.')
         else:
-            self.fields['station_id'] = forms.CharField(required=True, initial=stn_id, help_text='COOP station identification number. Please use the Station Finder to find your station id.')
+            self.fields['station_id'] = forms.CharField(required=True, initial=station_id, help_text='COOP station identification number. Please use the Station Finder to find your station id.')
 
 class MonthlyAveragesForm(forms.Form):
     def __init__(self, *args, **kwargs):

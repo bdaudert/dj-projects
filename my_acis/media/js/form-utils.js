@@ -465,6 +465,37 @@ function set_area_and_map(area_type){
     return lv;
 }
 
+function set_station_select(row_id,node,start_date,end_date){
+    var lv = set_area_and_map(node.value);
+    //Set up autofill if needed
+    set_autofill(lv.autofill_list);
+    var tbl_row = document.getElementById(row_id);
+    //Override table row
+    //cell1 = Label
+    var cell0 = tbl_row.firstChild.nextSibling;
+    cell0.innerHTML= lv.label + ': ';
+    //cell2 input
+    var cell1 = cell0.nextSibling.nextSibling;
+    cell1.innerHTML= '<input type="text" id="' + node.value + '" name="'+ node.value +'" value="' +  lv.value + '" list="' + lv.autofill_list +'">'
+    //cell3 = helptext
+    cell2 = cell1.nextSibling.nextSibling;
+    cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">' +
+    ' <div class="pop-up"><div id="ht_' + node.value  + '"></div>' +
+    ' <script type="text/javascript">' +
+    '$("#ht_' + node.value + '").load("/csc/media/html/Docu_help_texts.html #ht_'+ node.value + '");' +
+    '</script></div>';
+    /*set start/end date according to node.value
+    if node.value == station_id, set start/end date to POR*/
+    if (node.value == 'station_id'){
+        document.getElementById('start_date').value="POR";
+        document.getElementById('end_date').value="POR";
+    }
+    else {
+        document.getElementById('start_date').value=start_date;
+        document.getElementById('end_date').value=end_date;
+    }
+}
+
 function set_station_grid_select(row_id,node){
     /*
     //Delete existing table row

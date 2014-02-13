@@ -6,7 +6,7 @@
 <!--End Template-->
 <!--General-->
 <div id="ht_select_stations_by">
-    <p>Type of search area. Click on the link below to show/hide a more detailed explaination.</p>
+    <p>Type of search area.<br />Click on the link below to show/hide a more detailed explaination.</p>
 </div>
 
 <div id="ht_grid_selections_explained">
@@ -14,7 +14,7 @@
 </div>
 
 <div id="ht_select_grid_by">
-    <p>Type of serach area. Click on the link below to show/hide a more detailed explaination.</p>
+    <p>Type of serach area.<br />Click on the link below to show/hide a more detailed explaination.</p>
 </div>
 
 <div id="ht_grid_selections_explained">
@@ -26,36 +26,40 @@
 </div>
 
 <div id="ht_temporal_summary">
-    <p>Temporal data summary. At each gridpoint values are summarized over time using this statistic.</p>
+    <p>Temporal data summary.<br />At each gridpoint values are summarized over time using this statistic.</p>
 </div>
 
 <div id="ht_spatial_summary">
-    <p>Spatial data summary. At each point in time values are summarized over the area using this statistic.</p>
+    <p>Spatial data summary.<br />At each point in time values are summarized over the area using this statistic.</p>
 </div>
 
 
 <div id="ht_station_id">
-    <p>Station Identifier or Name. You can type the name or id of a station or use the station finder tool to find your station ID.</p>
+    <p>Station Identifier or Name.<br />You can type the name or id of a station or use the station finder tool to find your station ID.</p>
 </div>
 
 <div id="ht_station_ids">
-    <p>Comma separated list of station IDs. Please use the station finder to find your IDs</p>
+    <p>Comma separated list of station IDs.<br />Please use the station finder to find your IDs</p>
+</div>
+
+<div id="ht_location">
+    <p>Enter Longitude, Latitude pair of a location or<br /> use the map interface to place the marker on a desired location.</p>
 </div>
 
 <div id="ht_county">
-    <p>US County code. You can type the name or ID of a county or use the map interface to find your county ID.</p>
+    <p>US County code.<br />You can type the name or ID of a county or use the map interface to find your county ID.</p>
 </div>
 
 <div id="ht_climate_division">
-    <p>US Climate Division. You can type the name or ID of a climate division or use the map interface to find your Climate Division ID.</p>
+    <p>US Climate Division.<br />You can type the name or ID of a climate division or use the map interface to find your Climate Division ID.</p>
 </div>
 
 <div id="ht_county_warning_area">
-    <p>US County Warning Area. You can type the name or ID of a county warninmg area or use the map interface to find your county Warning Area ID.</p>
+    <p>US County Warning Area.<br />You can type the name or ID of a county warninmg area or use the map interface to find your county Warning Area ID.</p>
 </div>
 
 <div id="ht_basin">
-    <p>US Drainage Basin Code. You can type the name or ID of a basin or use the map interface to find your Drainage Basin ID.</p>
+    <p>US Drainage Basin Code.<br />You can type the name or ID of a basin or use the map interface to find your Drainage Basin ID.</p>
 </div>
 
 <div id="ht_state">
@@ -63,15 +67,19 @@
 </div>
 
 <div id="ht_bounding_box">
-    <p>Bounding Box. Please use the map interface to find your bounding box.</p>
+    <p>Bounding Box.<br />Please use the map interface to find your bounding box.</p>
 </div>
 
 <div id="ht_shape">
-    <p>Custom Shape. Please use the map interface to define a custom shape.</p>
+    <p>Custom Shape.<br />Please use the map interface to define a custom shape.</p>
 </div>
 
 <div id="ht_date">
     <p>yyyymmdd, yyyy-mm-dd or yyyy/mm/dd</p>
+</div>
+
+<div id="ht_date_station">
+    <p>yyyymmdd, yyyy-mm-dd or yyyy/mm/dd.<br />For single station requests use "POR" for period of record.</p>
 </div>
 
 <div id="ht_start_year">
@@ -83,7 +91,7 @@
 </div>
 
 <div id="ht_dates_constraints">
-    <p>Choose Any if you are looking for stations that have at least one data record between Start and End Date. Choose All if you are looking for stations that have data records for all dates between Start and End Date.</p>
+    <p>Choose Any if you are looking for stations that have at least one data record between Start and End Date.<br />Choose All if you are looking for stations that have data records for all dates between Start and End Date.</p>
 </div>
 
 <div id="ht_elements">
@@ -95,16 +103,16 @@
 </div>
 
 <div id="ht_elements_constraints">
-    <p>Choose Any if you are looking for stations that have one or more of the listed elements. Choose All if you are looking for stations that have all of the elements listed.</p>
+    <p>Choose Any if you are looking for stations that have one or more of the listed elements.<br />Choose All if you are looking for stations that have all of the elements listed.</p>
 </div>
 
 <div id="ht_temporal_resolution">
-    <p>Time step of data values. The monthly/yearly datasets are PRISM data. The rest of the datasets have daily resolution.</p>
+    <p>Time step of data values.<br />The monthly/yearly datasets are PRISM data.<br />The rest of the datasets have daily resolution.</p>
 </div>
 
 
 <div id="ht_grid">
-    <p>Choose your dataset. Click on the link below to show/hide a more detailed explaination.</p>
+    <p>Choose your dataset.<br />Click on the link below to show/hide a more detailed explaination.</p>
 </div>
 
 <div id="ht_grid_choices_explained">
@@ -114,9 +122,9 @@
 <div id="ht_data_summary">
     <p>Chose a data summary type. 
         <ul>
-        <li><b>None</b>: No data summary will be performed. Raw data are returned.</li>
-        <li><b>Temporal</b>: Data is summarized over time at each grid point. The result is a geospatial layer.</li>
-        <li><b>Spatial</b>: Data is summarized over the seach area (select grid by choice). The result is a time series.</li>
+        <li><b>None</b>:<br />No data summary will be performed.<br />Raw data are returned.</li>
+        <li><b>Temporal</b>:<br />Data is summarized over time at each grid point.<br />The result is a geospatial layer.</li>
+        <li><b>Spatial</b>:<br />Data is summarized over the seach area (select grid by choice).<br />The result is a time series.</li>
         </ul>
     </p>
 </div>
@@ -124,9 +132,9 @@
 <div id="ht_grid_temporal_summary">
     <p>Choose the type of temporal summary to perform.
        <ul>
-        <li><b>Maximum</b>: Returns the maximum data value over the time period at each grid point.</li>
-        <li><b>Minimum</b>: Returns the minimum data value over the time period at each grid point.</li>
-        <li><b>Mean</b>: Returns the average of the data values over the time period at each grid point.</li>
+        <li><b>Maximum</b>:<br />Returns the maximum data value over the time period at each grid point.</li>
+        <li><b>Minimum</b>:<br />Returns the minimum data value over the time period at each grid point.</li>
+        <li><b>Mean</b>:<br />Returns the average of the data values over the time period at each grid point.</li>
         </ul>
     </p>
 </div>
@@ -141,7 +149,7 @@
     </p>
 </div>
 <div id="ht_show_flags">
-    <p>Show data flags. M = Missing, A= Accumulated, S = Subsequent, T = Trace</p>
+    <p>Show data flags.<br />M = Missing, A= Accumulated, S = Subsequent, T = Trace</p>
 </div>
 
 <div id="ht_show_observation_time">
@@ -166,19 +174,24 @@
 </div>
 
 <div id="ht_data_format">
-    <p>File format in which data will be returned. Html displays to screen.</p>
+    <p>File format in which data will be returned.<br />Html displays to screen.</p>
 </div>
 
+<div id="ht_date_format">
+    <p>Date output format.</p>
+</div>
+
+
 <div id="ht_delimiter">
-    <p>Delimiter used to seperate data values. Not applicable for excel output.</p>
+    <p>Delimiter used to seperate data values.<br />Not applicable for excel or html output.</p>
 </div>
 
 <div id="ht_output_file_name">
-    <p>Enter a name for your output file. Please do not use special characters (e.g. @,#,*).</p>
+    <p>Enter a name for your output file.<br />Please do not use special characters (e.g. @,#,*).</p>
 </div>
 
 <div id="ht_generate_graph">
-    <p>Data visualization. Generate a graph from the data analysis.</p>
+    <p>Data visualization.<br />Generate a graph from the data analysis.</p>
 </div>
 
 <!--Sodxtrmts-->
@@ -207,12 +220,12 @@
 </div>
 
 <div id="ht_frequency_analysis">
-    <p>Perform a frequency analysis. Coming soon to a screen near you! :-)</p>
+    <p>Perform a frequency analysis.<br />Coming soon to a screen near you! :-)</p>
 </div>
 
 <!--Graphing-->
 <div id="ht_graph_summary">
-    <p>For each analysis year, the data ranging over Start and End Month will be summarized according to this choice.</p>
+    <p>For each analysis year,<br />the data ranging over Start and End Month will be summarized according to this choice.</p>
 </div>
 
 <div id="ht_graph_start_month">
@@ -247,7 +260,7 @@
 </div>
 
 <div id="ht_graph_plot_incomplete_years">
-    <p>Calculate and plot values even if the "maximum number of days missing" threhsold is not met.</p>
+    <p>Calculate and plot values <br />even if the "maximum number of days missing" threhsold is not met.</p>
 </div>
 
 <div id="ht_graph_start_year">
@@ -259,7 +272,7 @@
 </div>
 
 <div id="ht_graph_title">
-    <p>Enter a title to appear at the top of your graph. Default is station name/ID, climate element, summary and months.</p>
+    <p>Enter a title to appear at the top of your graph.<br />Default is station name/ID, climate element, summary and months.</p>
 </div>
 
 <div id="ht_image_size">
@@ -279,7 +292,7 @@
 </div>
 
 <div id="ht_connector_line_width">
-    <p>Choose the width of the connector line. Choose 0 if you only want to see markers. 10 is the maximum line widh allowed.</p>
+    <p>Choose the width of the connector line.<br />Choose 0 if you only want to see markers.<br />10 is the maximum line widh allowed.</p>
 </div>
 
 <div id="ht_markers">
@@ -316,5 +329,5 @@
 </div>
 
 <div id="ht_networks">
-    <p>All weather and climate stations have an ID. Many stations serve as part of multiple networks, and have a different ID in each network system. Click on the linkc below for more information on the individual network IDs.</p>
+    <p>All weather and climate stations have an ID.<br />Many stations serve as part of multiple networks, and have a different ID in each network system.<br />Click on the linkc below for more information on the individual network IDs.</p>
 </div>

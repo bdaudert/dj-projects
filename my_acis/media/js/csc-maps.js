@@ -155,7 +155,9 @@ function initialize_station_finder() {
             marker.lon = c.lon;
             marker.elevation = c.elevation;
             marker.networks = c.stn_networks;
+            marker.network = c.stn_network;
             marker.sids = c.sids;
+            marker.sid = c.sid;
             //Fit map to encompass all markers
             bounds.extend(latlon);
 
@@ -179,8 +181,8 @@ function initialize_station_finder() {
                 '">Access Climate Summaries for this Station (by WRCC)</a>'
             }
 
-            var data_portal_link = '<a target="_blank" href="' + DATA_URL + 'station/?station_id=' + c.sids[0];
-            var app_portal_link = '<a target="_blank" href="' + TOOLS_URL + 'station/?stn_id=' + c.sids[0]; 
+            var data_portal_link = '<a target="_blank" href="' + DATA_URL + 'station/?station_id=' + c.sid;
+            var app_portal_link = '<a target="_blank" href="' + TOOLS_URL + 'station/?station_id=' + c.sid; 
             if (start_date != null){ 
                 data_portal_link = data_portal_link + '&start_date=' + start_date;
                 app_portal_link = app_portal_link + '&start_date=' + start_date; 
@@ -200,8 +202,10 @@ function initialize_station_finder() {
                 data_portal_link + '<br />' +
                 app_portal_link + '<br />' +
                 '<b>Name: </b><font color="#FF007F">' + c.name + '</font><br/>'+
-                '<b>Station IDs: </b>' + c.sids + '<br/>' +
-                '<b>NETWORKS: </b>' + c.stn_networks + '<br/>' +
+                '<b>Station ID: </b>' + c.sid + '<br/>' +
+                //'<b>Other Station IDs: </b>' + c.sids + '<br/>' +
+                '<b>Network: </b>' + c.stn_network + '<br/>' +
+                //'<b>Other Networks: </b>' + c.stn_networks + '<br/>' +
                 '<b>State, Elev ft, Lat, Lon: </b>' + c.state + ', ' + c.elevation + ', ' + c.lat + ', ' +c.lon +'<br/>' +
                 '<b>Available elements with date range: </b>' + avbl_elements + '<br />' +
                 '</div>';
@@ -242,9 +246,10 @@ function initialize_station_finder() {
             };
             var t_data = '<td>';
             tbl_row.innerHTML = t_data + c.name + '</td>' + t_data +
+                c.sid + '</td>' + t_data +
                 c.state + '</td>' + t_data + c.lat + '</td>' + t_data +
                 c.lon + '</td>' + t_data + c.elevation + '</td>' + t_data +
-                c.stn_networks +'</td>';
+                c.stn_network +'</td>';
 
             //Set Initial markers and station list
             marker.setVisible(true);

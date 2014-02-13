@@ -92,8 +92,8 @@
     </div>
 
     {%if not results%}
-    {%if search_params.stn_id%}
-    <p>Station ID: {{search_params.stn_id}}</p>
+    {%if search_params.station_id%}
+    <p>Station ID: {{search_params.station_id}}</p>
     {%endif%}
     {%if search_params.start_date%}
     <p>Start Date: {{search_params.start_date}}</p>
@@ -113,7 +113,7 @@
     <img onClick="ShowHide('metadata')" alt="metadata" title="metadata" src="{{MEDIA_URL}}img/metadata_button.png">
     </td>
     <td>
-    <a target="_blank" href="{{DATA_URL}}station/?station_id={{search_params.stn_id}}&start_date={{search_params.start_date}}&end_date={{search_params.end_date}}&elements={{search_params.elems}}">Get raw data behind this graphic here!</a>
+    <a target="_blank" href="{{DATA_URL}}station/?station_id={{search_params.station_id}}&start_date={{search_params.start_date}}&end_date={{search_params.end_date}}&elements={{search_params.elems}}">Get raw data behind this graphic here!</a>
     </td>
     </table>
 

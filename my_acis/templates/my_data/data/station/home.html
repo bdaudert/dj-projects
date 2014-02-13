@@ -28,7 +28,7 @@
         <tr valign="top">
         <td>Select stations by:</td>
         <td>
-            <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this);">
+            <select id="select_stations_by" name="select_stations_by" onchange="set_station_select('area',this,'{{initial.s_date}}', '{{initial.e_date}}');">
             <option value="station_id" {{checkbox_vals.station_id_selected}}>Individual station</option>
             <option value="station_ids" {{checkbox_vals.station_ids_selected}}>List of stations</option>
             <option value="county" {{checkbox_vals.county_selected}}>County</option>
@@ -83,7 +83,7 @@
         <div class="pop-up">
             <div id="ht_start_date"></div>
             <script type="text/javascript">                        
-            $("#ht_start_date").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_date");
+            $("#ht_start_date").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_date_station");
             </script>
         </div>
         </td>
@@ -95,7 +95,7 @@
         <div class="pop-up">
             <div id="ht_end_date"></div>
             <script type="text/javascript">                        
-            $("#ht_end_date").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_date");
+            $("#ht_end_date").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_date_station");
             </script>
         </div>
         </td>
@@ -135,13 +135,32 @@
         </td>
         </tr>
         <tr valign="top">
+        <td>Date Format: </td>
+        <td>
+        <select id="date_format" name="date_format">
+        <option value="none" {{checkbox_vals.date_format_none_selected}}>yyyymmdd</option>
+        <option value="dash" {{checkbox_vals.date_format_dash_selected}}>yyyy-mm-dd</option>
+        <option value="colon" {{checkbox_vals.date_format_colon_selected}}>yyyy:mm:dd</option>
+        <option value="slash" {{checkbox_vals.date_format_slash_selected}}>yyyy/mm/dd</option>
+        </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_date_format"></div>
+        <script type="text/javascript">                        
+            $("#ht_date_format").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_date_format");
+        </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
         <td>Data Format: </td>
         <td>
         <select id="data_format" name="data_format" onchange="set_delimiter_and_output_file(this, 'delim','out_file');">
-        <option value="html" selected>Html (display on page)</option>
-        <option value="clm">Columnar, .txt</option>
-        <option value="dlm">Delimited, .dat</option>
-        <option value="xl" >Excel, .xls</option>
+        <option value="html" {{checkbox_vals.data_format_htnl_selected}}>Html (display on page)</option>
+        <option value="clm" {{checkbox_vals.data_format_clm_selected}}>Columnar, .txt</option>
+        <option value="dlm" {{checkbox_vals.data_format_dlm_selected}}>Delimited, .dat</option>
+        <option value="xl" {{checkbox_vals.data_format_xl_selected}} >Excel, .xls</option>
         </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -401,8 +420,8 @@
     {%endif%}
 
     <!--Link to relevant apps-->
-    {%if params_dict.station_id %}
-    <a target="_blank" href="{{TOOLS_URL}}station/?stn_id={{params_dict.station_id}}&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}">Run an application on this data set</a><br />
+    {%if results.stn_data|lookup:stn %}
+    <a target="_blank" href="{{TOOLS_URL}}station/?station_id={{params_dict.station_id}}&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}">Run an application on this data set</a><br />
     {%endif%}
     {%for stn in stn_idx%}
     {%if station_ids_error %}

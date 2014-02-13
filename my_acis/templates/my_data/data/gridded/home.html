@@ -170,7 +170,7 @@
         <div class="pop-up">
             <div id="ht_data_summary"></div>
             <script type="text/javascript">                        
-            $("#ht_data_smmary").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_data_summary");
+            $("#ht_data_summary").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_data_summary");
             </script>
         </div>
         </td>
@@ -218,6 +218,25 @@
             <script type="text/javascript">                        
             $("#ht_spatial_summary").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_spatial_summary");
             </script>
+        </div>
+        </td>
+        </tr>
+       <tr valign="top">
+        <td>Date Format: </td>
+        <td>
+        <select id="date_format" name="date_format">
+        <option value="none" {{checkbox_vals.date_format_none_selected}}>yyyymmdd</option>
+        <option value="dash" {{checkbox_vals.date_format_dash_selected}}>yyyy-mm-dd</option>
+        <option value="colon" {{checkbox_vals.date_format_colon_selected}}>yyyy:mm:dd</option>
+        <option value="slash" {{checkbox_vals.date_format_slash_selected}}>yyyy/mm/dd</option>
+        </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_date_format"></div>
+        <script type="text/javascript">                        
+            $("#ht_date_format").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_date_format");
+        </script>
         </div>
         </td>
         </tr>
@@ -367,7 +386,7 @@
         {%endif%}
     </div>
 
-    {%if initial.select_grid_by == "location"%}
+    {%if initial.select_grid_by == "location" and not results%}
     <div id="GridpointMap" style="display:block;">
     {%else%}
     <div id="GridpointMap" style="display:none;">
@@ -536,8 +555,10 @@
 
     <p><b>DATA</b>:</p>
     <table border="1">
-    {%if initial.data_summary != "spatial" and initial.data_summary != "none"%}    
+    {%if initial.data_summary == "temporal"%}    
     <th>date range{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev{{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}}{{params_dict.delimiter}}</th>{%endfor%}
+    {%elif initial.data_summary == "spatial"%}
+    <th>date {{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}}{{params_dict.delimiter}}</th>{%endfor%}
     {%else%}
     <th>date{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev{{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}}{{params_dict.delimiter}}</th>{%endfor%}
     {%endif%}

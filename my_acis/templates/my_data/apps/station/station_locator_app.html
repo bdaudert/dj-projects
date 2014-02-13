@@ -268,7 +268,7 @@
         
         {%if station_json and not need_overlay_map%}
         <!--Link to data portal-->
-        <a align="left" target="_blank" href="{{DATA_URL}}station/?select_stations_by={{initial.select_stations_by}}&area_type_value={{initial.area_type_value}}&elements={{initial.elements}}&start_date={{initial.start_date}}&end_date={{initial.end_date}}">Obtain data for all stations displayed</a>
+        <a align="left" target="_blank" href="{{DATA_URL}}station/?select_stations_by={{initial.select_stations_by}}&{{initial.select_stations_by}}={{initial.area_type_value}}&elements={{initial.elements}}&start_date={{initial.start_date}}&end_date={{initial.end_date}}">Obtain data for all stations displayed</a>
         {%endif%}
         <div id="PolyMap" style="display:none;">
             <div id="panel">
@@ -428,11 +428,12 @@
         <thead>
         <tr>
         <th>Name</th>
+        <th>ID</th>
         <th>State</th>
         <th>Lat</th>
         <th>Lon</th>
         <th>Elev</th>
-        <th>Networks</th>
+        <th>Network</th>
         </tr>
         </thead>
         </table>

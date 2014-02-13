@@ -84,7 +84,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
         <form method="post" action="" onsubmit="show_loading()">
     {%endif%}
     {% csrf_token %}
-    <table id="tableSodxtrmts">
+    <table id="tableSodxtrmts" style="border-collapse:collapse;">
     <td valign="top">
     <table id="tableData" frame="box" cell-padding="20">
     <tr valign="top">
@@ -348,7 +348,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     {%endif%}
     </table>
     </td><td valign="top">
-    <table frame="box" cell-padding="20">
+    <table frame="box" class="formGraph" style="display:none">
     {%if initial.generate_graph == "T"%}
     <tr valign="top" class="formGraph" style="display:table-row;">
     {%else%}
@@ -543,7 +543,6 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     {%else%}
     <tr valign="top" class="formGraph" style="display:none;">
     {%endif%}
-    <!--<td colspan="3"><b>Plot Options</b>-->
     <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Plot Options</u></b></td>
     </tr>
     {%if initial.generate_graph == "T"%}
@@ -551,11 +550,10 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     {%else%}
     <tr valign="top" class="plOpts" style="display:none;">
     {%endif%}
-    <td colspan="3"><hr style="border-color:#006666;">
     </tr>
     </table>
     </td><td valign="top">
-    <table frame="box" cell-padding="20">
+    <table class="formGraph" frame="box" style="display:none">
     {%if initial.generate_graph == "T"%}
     <tr valign="top" class="plOpts" style="display:table-row;">
     {%else%}
@@ -902,7 +900,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
 
 {%if generate_graph%} 
 <div align="center">
-<p onClick="ShowHide('user_graph')"><font color="blue" size="4"><u>Show/Hide Time Series Graph</u></font></p>
+<p class="blue" onClick="ShowHide('user_graph')"><b><u>Show/Hide Time Series Graph</u></b></p>
 <div id="user_graph">
     <div align="center" id="container" style="height:{{height}}px;width:{{width}}px;"></div>
     <input type="hidden" id="json_file" name="json_file" value="{{json_dict.json_file}}">
@@ -913,7 +911,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
 {%endif%}
 
 {%if json_dict.data_summary%}
-<p class="green" align="center" onclick="ShowPopupDocu('Data_Summary')"><b><u>Show Summary</u></b></p>
+<p class="blue" align="center" onclick="ShowPopupDocu('Data_Summary')"><b><u>Show Summary Table</u></b></p>
 <div id="Data_Summary" style="display:none;">
 <table class="right_aligned">
 <td><font size="+0">YEAR </font></td>
@@ -929,6 +927,16 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
 </tr>
 {%endfor%}
 </table>
+</div>
+<!--Graphics-->
+<div align="center">
+<p class="blue" onClick="ShowHide('range_plot')"><u><b>Show Summary Graph</b></u></p>
+<div id="range_plot" style="display:none;">
+    <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+    <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
+    <div id="graph_container" style="height:{{height}}px;width:{{width}}px;"></div>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts.js"></script>
+</div>
 </div>
 {%endif%}
 
@@ -990,18 +998,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     {%endfor%}
     </table>
 </div><!--End div="printable_table"-->
-    
 <br />
-<!--Graphics-->
-<div align="center">
-<p class="pop_link" onClick="ShowHide('range_plot')"><u><font size=4>Show/hide table summary</font></u></p>
-<div id="range_plot" style="display:none;">
-    <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-    <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
-    <div id="graph_container" style="height:400px;width:620px;"></div>
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts.js"></script>
-</div>
-</div>
 {%else%} <!--No results-->
     {%if run_done%}
         <p align="center" style="color:red">No data found for these parameters!</p></br>

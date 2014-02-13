@@ -224,7 +224,7 @@ def data_station(request):
     context = {
         'title': 'Historic Station Data',
     }
-    initial, checkbox_vals = set_station_data_initial(request)
+    initial, checkbox_vals = set_data_station_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set up maps if needed
     context['host'] = 'wrcc.dri.edu'
@@ -264,9 +264,9 @@ def data_station(request):
             context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
             context['area_type'] = form['select_stations_by']
 
-        initial,checkbox_vals = set_station_data_initial(form)
+        initial,checkbox_vals = set_data_station_initial(form)
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
-        display_params_list, params_dict = set_station_data_params(form)
+        display_params_list, params_dict = set_data_station_params(form)
         context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
         #Check if data request is large,
         #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
@@ -305,7 +305,7 @@ def data_station(request):
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
         form = set_form(request)
-        initial, checkbox_vals = set_station_data_initial(request)
+        initial, checkbox_vals = set_data_station_initial(request)
         #Override initial where needed
         initial['select_stations_by'] = form['select_overlay_by']
         checkbox_vals[form['select_overlay_by'] + '_selected'] = 'selected'
@@ -340,7 +340,7 @@ def data_gridded(request):
     context = {
         'title': 'Gridded/Modeled Data',
     }
-    initial, checkbox_vals = set_gridded_data_initial(request)
+    initial, checkbox_vals = set_data_gridded_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set up maps if needed
     context['host'] = 'wrcc.dri.edu'
@@ -374,9 +374,9 @@ def data_gridded(request):
             context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
             context['area_type'] = form_cleaned['select_grid_by']
 
-        initial,checkbox_vals = set_gridded_data_initial(form)
+        initial,checkbox_vals = set_data_gridded_initial(form)
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
-        display_params_list, params_dict = set_gridded_data_params(form)
+        display_params_list, params_dict = set_data_gridded_params(form)
         context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
         #Check if data request is large,
         #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
@@ -444,7 +444,7 @@ def data_gridded(request):
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
         form = set_form(request)
-        initial, checkbox_vals = set_gridded_data_initial(request)
+        initial, checkbox_vals = set_data_gridded_initial(request)
         #Override initial where needed
         initial['select_grid_by'] = form['select_overlay_by']
         checkbox_vals[form['select_overlay_by'] + '_selected'] = 'selected'
@@ -498,12 +498,12 @@ def apps_station(request):
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
         'icon':'ToolProduct.png'
         }
-    stn_id = request.GET.get('stn_id', None)
+    station_id = request.GET.get('station_id', None)
     start_date = request.GET.get('start_date', None)
     end_date = request.GET.get('end_date', None)
     elements = request.GET.get('elements', None)
     initial = {}
-    if stn_id is not None:context['stn_id'] = stn_id;initial['stn_id'] = stn_id
+    if station_id is not None:context['station_id'] = station_id;initial['station_id'] = station_id
     if start_date is not None:context['start_date'] = start_date;initial['start_date'] = start_date
     if end_date is not None:context['end_date'] = end_date;initial['end_date'] = end_date
     if elements is not None:context['elements'] = elements;initial['elements'] = elements
@@ -529,12 +529,12 @@ def metagraph(request):
         'title': 'Station Metadata Graphics',
         'icon':'ToolProduct.png'
     }
-    stn_id = request.GET.get('stn_id', None)
-    if stn_id is None:
+    station_id = request.GET.get('station_id', None)
+    if station_id is None:
         form_meta = set_as_form(request,'MetaGraphForm')
     else:
-        form_meta = set_as_form(request,'MetaGraphForm', init={'stn_id':str(stn_id)})
-        context['stn_id'] = stn_id
+        form_meta = set_as_form(request,'MetaGraphForm', init={'station_id':str(station_id)})
+        context['station_id'] = station_id
     context['form_meta'] = form_meta
 
     if 'form_meta' in request.POST:
@@ -549,15 +549,14 @@ def metagraph(request):
             #station_meta = [[WRCCData.DISPLAY_PARAMS[key]] for key in key_order]
             if 'meta' in meta_request.keys():
                 if len(meta_request['meta']) == 0:
-                    #station_meta['error'] = 'No metadata found for station: %s.' %stn_id
-                    station_meta = {'error': 'No metadata found for station: %s.' %stn_id}
+                    station_meta = {'error': 'No metadata found for station: %s.' %station_id}
                 else:
                     station_meta = WRCCUtils.metadict_to_display(meta_request['meta'][0], key_order)
             else:
                 if 'error' in meta_request.keys():
                     station_meta = {'error': meta_request['error']}
                 else:
-                    station_meta = {'error':'No meta data found for station: %s.' %stn_id}
+                    station_meta = {'error':'No meta data found for station: %s.' %station_id}
 
             context['station_meta'] = station_meta
             #Call perl script that generates gif graphs
@@ -569,7 +568,7 @@ def metagraph(request):
             context['perl_err'] = perl_err
             context['perl_out'] = perl_out
         else:
-            stn_id = None
+            station_id = None
 
     return render_to_response('my_data/apps/station/metagraph.html', context, context_instance=RequestContext(request))
 
@@ -579,13 +578,14 @@ def monthly_aves(request):
         'icon':'ToolProduct.png',
         'acis_elements':dict(WRCCData.ACIS_ELEMENTS_DICT)
     }
-    stn_id = request.GET.get('stn_id', None)
-    start_date = request.GET.get('start_date', None)
-    end_date = request.GET.get('end_date', None)
-    elements = request.GET.get('elements', None)
+    Get = set_GET(request)
+    station_id = Get('station_id', None)
+    start_date = Get('start_date', None)
+    end_date = Get('end_date', None)
+    elements = Get('elements', None)
     initial = {}
     search_params = {}
-    if stn_id is not None:initial['stn_id']= str(stn_id);search_params['stn_id'] = stn_id
+    if station_id is not None:initial['station_id']= str(station_id);search_params['station_id'] = station_id
     if start_date is not None:initial['start_date']= str(start_date);search_params['start_date'] = start_date
     if end_date is not None:initial['end_date']= str(end_date);search_params['end_date'] = end_date
     if elements is not None:initial['elements']= elements;search_params['elements'] = elements
@@ -602,14 +602,14 @@ def monthly_aves(request):
         if form.is_valid():
             s_date = str(form.cleaned_data['start_date'])
             e_date = str(form.cleaned_data['end_date'])
-            stn_id = find_stn_id(form.cleaned_data['station_id'])
+            station_id = find_stn_id(form.cleaned_data['station_id'])
             context['search_params'] ={
-                'stn_id':stn_id,
+                'station_id':station_id,
                 'start_date':s_date,
                 'end_date':e_date,
                 'elems': ','.join(form.cleaned_data['elements'])
             }
-            params = dict(sid=stn_id, sdate=s_date, edate=e_date, \
+            params = dict(sid=station_id, sdate=s_date, edate=e_date, \
             meta='valid_daterange,name,state,sids,ll,elev,uid,county,climdiv', \
             elems=[dict(vX=WRCCData.ACIS_ELEMENTS_DICT[el]['vX'], groupby="year")for el in form.cleaned_data['elements']])
             #Data request
@@ -2174,7 +2174,7 @@ def set_area_time_series_params(form):
         del display_params_list[-1]
     return search_params, display_params_list
 
-def set_gridded_data_params(form):
+def set_data_gridded_params(form):
     #display_params_list used to dispaly search params to user
     #params_dict used to link to relevant apps in html doc
     if not form:
@@ -2244,7 +2244,7 @@ def set_gridded_data_params(form):
     return display_params_list, params_dict
 
 
-def set_station_data_params(form):
+def set_data_station_params(form):
     #display_params_list used to dispaly search params to user
     #params_dict iused to link to relevant apps in html doc
     if not form:
@@ -2387,39 +2387,47 @@ def set_plot_options(request):
 
 
 def set_sod_initial(request, app_name):
-    stn_id = request.GET.get('stn_id', None)
-    start_date = request.GET.get('start_date', None)
-    end_date  = request.GET.get('end_date', None)
-    start_year = request.GET.get('start_year', None)
-    end_year  = request.GET.get('end_year', None)
-    element = request.GET.get('elements', None)
-    if element is None:element = request.GET.get('element', None)
-    initial ={}
-    if element is not None:initial['element'] = element
-    if stn_id is not None:initial['stn_id'] = stn_id
+    initial = {}
+    Get = set_GET(request)
+    initial['station_id'] = Get('station_id','266779')
+    initial['start_year'] = Get('start_year', Get('start_date','POR'))
+    initial['end_year'] = Get('end_year', Get('end_date','POR'))
+    if len(initial['start_year'])>4:initial['start_year'] = initial['start_year'][0:4]
+    if len(initial['end_year'])>4:initial['end_year'] = initial['end_year'][0:4]
+    initial['element'] = Get('element',Get('elements','pcpn').replace(' ','').split(',')[0])
     if app_name in ['Sodsumm', 'Sodxtrmts']:
         initial['date_type'] = 'y'
-        if start_year is not None:initial['start_year'] = start_year
-        if end_year is not None:initial['end_year'] = end_year
-        if start_date is not None and not start_year:initial['start_year'] = start_date[0:4]
-        if end_date is not None and not end_year:initial['end_year'] = end_date[0:4]
     else:
         initial['date_type'] = 'd'
-        if start_date is not None:initial['start_date'] = start_date
-        if end_date is not None:initial['end_date'] = end_date
     return initial
 
 def set_sodxtrmts_initial(request):
     initial = {}
     checkbox_vals = {}
     Get = set_GET(request)
+    initial['station_id'] = Get('station_id','266779')
+    initial['start_year'] = Get('start_year', Get('start_date','POR'))
+    initial['end_year'] = Get('end_year', Get('end_date','POR'))
+    if len(initial['start_year'])>4:initial['start_year'] = initial['start_year'][0:4]
+    if len(initial['end_year'])>4:initial['end_year'] = initial['end_year'][0:4]
+    initial['element'] = Get('element',Get('elements','pcpn').replace(' ','').split(',')[0])
+    '''
     stn_id = Get('stn_id', None)
+    start_date = Get('start_date',None)
+    end_date = Get('end_date',None)
     if stn_id is not None:
         initial['station_id'] = stn_id
     else:
         initial['station_id'] = Get('station_id','266779')
-    initial['start_year'] = Get('start_year', 'POR')
-    initial['end_year']  = Get('end_year', yesterday[0:4])
+    if start_date is not None:
+        initial['start_year'] =start_date[0:4]
+    else:
+        initial['start_year'] = Get('start_year', 'POR')
+    if end_date is not None:
+        initial['end_year']  = end_date[0:4]
+    else:
+        initial['end_year']  = Get('end_year', yesterday[0:4])
+    '''
     initial['monthly_statistic'] = Get('monthly_statistic', 'msum')
     initial['max_missing_days'] = Get('max_missing_days', '5')
     initial['start_month'] = Get('start_month', '01')
@@ -2430,10 +2438,15 @@ def set_sodxtrmts_initial(request):
     initial['threshold_low_for_between']= Get('threshold_low_for_between', None)
     initial['threshold_high_for_between']= Get('threshold_high_for_between', None)
     initial['generate_graph'] = Get('generate_graph', 'F')
+    '''
     #initial['generate_graph']= str(Get('generate_graph', 'F'))
-    element = Get('elements', None)
-    if element is None:element = Get('element', 'pcpn')
+    elements = Get('elements', None)
+    if elements is not None:
+        element = elements.replace(' ','').split(',')[0]
+    else:
+        element = Get('element', 'pcpn')
     initial['element'] = element
+    '''
     initial['base_temperature'] = Get('base_temperature',None)
     #FIX ME request.POST.get does not return base_temperature and thresholds
     if request.POST:
@@ -2499,10 +2512,12 @@ def set_sodxtrmts_graph_initial(request):
             checkbox_vals['graph_summary_' + graph_summary + '_selected'] = 'selected'
     return initial, checkbox_vals
 
-def set_station_data_initial(request):
+def set_data_station_initial(request):
     initial = {}
     checkbox_vals = {}
     Get = set_GET(request)
+    initial['s_date'] = fourtnight
+    initial['e_date'] = yesterday
     initial['select_stations_by'] = Get('select_stations_by', 'station_id')
     initial[str(initial['select_stations_by'])] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
@@ -2510,11 +2525,16 @@ def set_station_data_initial(request):
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_stations_by']
     initial['elements'] = Get('elements', 'maxt,mint,pcpn')
-    initial['start_date']  = Get('start_date', fourtnight)
-    initial['end_date']  = Get('end_date', yesterday)
+    if initial['select_stations_by'] == 'station_id':
+        initial['start_date'] = Get('start_date','POR')
+        initial['end_date']  = Get('end_date','POR')
+    else:
+        initial['start_date']  = Get('start_date', fourtnight)
+        initial['end_date']  = Get('end_date', yesterday)
     initial['show_flags'] = Get('show_flags', 'F')
     initial['show_observation_time'] = Get('show_observation_time', 'F')
-    initial['data_format'] = Get('data_format', 'html')
+    initial['data_format'] = Get('date_format', 'html')
+    initial['date_format'] = Get('date_format', 'dash')
     initial['delimiter'] = Get('delimiter', 'space')
     initial['output_file_name'] = Get('output_file_name', 'Output')
     #set the check box values
@@ -2523,9 +2543,13 @@ def set_station_data_initial(request):
         if area_type == initial['select_stations_by']:
             checkbox_vals[area_type + '_selected'] ='selected'
     for df in ['clm', 'dlm','xl', 'html']:
-        checkbox_vals[df + '_selected'] =''
+        checkbox_vals['data_format_' + df + '_selected'] =''
         if df == initial['data_format']:
-            checkbox_vals[df + '_selected'] ='selected'
+            checkbox_vals['data_format_' + df + '_selected'] ='selected'
+    for df in ['none', 'dash','colon', 'slash']:
+        checkbox_vals['date_format_' + df + '_selected'] =''
+        if df == initial['date_format']:
+            checkbox_vals['date_format_' + df + '_selected'] ='selected'
     for dl in ['comma', 'tab', 'space', 'colon', 'pipe']:
         checkbox_vals[dl + '_selected'] =''
         if dl == initial['delimiter']:
@@ -2537,7 +2561,7 @@ def set_station_data_initial(request):
                 checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
     return initial, checkbox_vals
 
-def set_gridded_data_initial(request):
+def set_data_gridded_initial(request):
     initial = {}
     checkbox_vals = {}
     Get = set_GET(request)
@@ -2556,6 +2580,7 @@ def set_gridded_data_initial(request):
     initial['temporal_summary'] = Get('temporal_summary', 'mean')
     initial['spatial_summary'] = Get('spatial_summary', 'mean')
     initial['data_format'] = Get('data_format', 'html')
+    initial['date_format'] = Get('date_format', 'dash')
     initial['delimiter'] = Get('delimiter', 'space')
     initial['output_file_name'] = Get('output_file_name', 'Output')
     #set the check box values
@@ -2567,6 +2592,10 @@ def set_gridded_data_initial(request):
         checkbox_vals['data_format_' + df + '_selected'] =''
         if df == initial['data_format']:
             checkbox_vals['data_format_' + df + '_selected'] ='selected'
+    for df in ['none', 'dash','colon', 'slash']:
+        checkbox_vals['date_format_' + df + '_selected'] =''
+        if df == initial['date_format']:
+            checkbox_vals['date_format_' +df + '_selected'] ='selected'
     for dl in ['comma', 'tab', 'space', 'colon', 'pipe']:
         checkbox_vals['delimiter_' + dl + '_selected'] =''
         if dl == initial['delimiter']:

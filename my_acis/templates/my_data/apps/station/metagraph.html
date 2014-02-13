@@ -73,8 +73,8 @@
     {%elif station_meta.error%}
     <p class="error">{{station_meta.error}}</p>
     {%else%}
-    {%if station_id%}
-    <p>STATION ID: {{station_id}}&nbsp;&nbsp; 
+    {%if station_meta%}
+    <p>Station ID: {{station_id}}&nbsp;&nbsp; 
     <img onClick="ShowHide('metadata')" alt="metadata" title="metadata" src="{{MEDIA_URL}}img/metadata_button.png">
     <div id="metadata" style="display:none;">
         {% for key_val in station_meta %}
