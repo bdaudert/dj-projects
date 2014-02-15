@@ -1,19 +1,63 @@
 <p class="error">What is this tool?</p>
 <p><b>Modeled/Gridded Data access point.</b></p>
 <p class="error">What datasets are available?</p>
+
+<p class="pop_link" onClick="ShowHide('Docu_NRCC_INT')">NRCC Interpolated</p>
+    <div id="Docu_NRCC_INT" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_NRCC_INT").load("/csc/media/html/Docu_grids.html #NRCC_INT");
+    </script>
+<p class="pop_link" onClick="ShowHide('Docu_NRCC_INT_HI')">NRCC Interpolated Hi-Res</p>
+    <div id="Docu_NRCC_INT_HI" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_NRCC_INT_HI").load("/csc/media/html/Docu_grids.html #NRCC_INT_HI");
+    </script>
+<p class="pop_link" onClick="ShowHide('Docu_PRISM')">PRISM</p>
+    <div id="Docu_PRISM" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_PRISM").load("/csc/media/html/Docu_grids.html #PRISM");
+    </script>
+<p class="pop_link" onClick="ShowHide('Docu_CRCM')">NARCCAP - CRCM</p>
+    <div id="Docu_CRCM" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_CRCM").load("/csc/media/html/Docu_grids.html #CRCM");
+    </script>
+<p class="pop_link" onClick="ShowHide('Docu_HRM3')">NARCCAP - HRM3</p>
+    <div id="Docu_HRM3" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_HRM3").load("/csc/media/html/Docu_grids.html #HRM3");
+    </script>
+<p class="pop_link" onClick="ShowHide('Docu_MM5I')">NARCCAP - MM5I</p>
+    <div id="Docu_MM5I" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_MM5I").load("/csc/media/html/Docu_grids.html #MM5I");
+    </script>
+<p class="pop_link" onClick="ShowHide('Docu_RCM3')">NARCCAP - RCM3</p>
+    <div id="Docu_RCM3" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_RCM3").load("/csc/media/html/Docu_grids.html #RCM3");
+    </script>
+<p class="pop_link" onClick="ShowHide('Docu_WRFG')">NARCCAP - WRFG</p>
+    <div id="Docu_WRFG" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_WRFG").load("/csc/media/html/Docu_grids.html #WRFG");
+    </script>
+
+<!--
 <a target="_blank" href="https://gist.github.com/bnoon/4197956">NRCC Interpolated/Hi-Resolution</a><br />
-<a class="popup_map" href="http://www.prism.oregonstate.edu/">PRISM</a><br />
+<a target="_blank" class="popup_map" href="http://www.prism.oregonstate.edu/">PRISM</a><br />
 
 <p>NARCCAP(North American Regional Climate Change Assessment Program) Datasets:</p>
-<a class="popup_map" target="_blank" href="http://www.earthsystemgrid.org/dataset/narccap.crcm.output.html">CRCM</a><br />
-<a class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.hrm3.output.html">HRM3</a><br />
-<a class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.mm5i.output.html">MM5I</a><br />
-<a class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.rcm3.output.html">RCM3</a><br />
-<a class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.wrfg.output.html">WRFG</a>
+<a target="_blank" class="popup_map" target="_blank" href="http://www.earthsystemgrid.org/dataset/narccap.crcm.output.html">CRCM</a><br />
+<a target="_blank" class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.hrm3.output.html">HRM3</a><br />
+<a target="_blank" class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.mm5i.output.html">MM5I</a><br />
+<a target="_blank" class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.rcm3.output.html">RCM3</a><br />
+<a target="_blank" class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.wrfg.output.html">WRFG</a>-->
 <p>All data sets are made available through the ACIS system.</p>
 <a target="_blank" href="http://rcc-acis.unl.edu/index.php">ACIS Home Page</a>
+<!--
 <p>For more information and direct access to NARCCAP gridded data sets:</p>
-<a target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>
+<a target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html">NARCCAP data page</a>-->
 <p class="error">What can you do with this tool?</p>
 <p><b>Access and download data</b></p>
 <p>Available Data Formats: .xls, .dat, .txt, html(prints to screen)</p>

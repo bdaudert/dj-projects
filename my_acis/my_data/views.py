@@ -174,9 +174,10 @@ def feedback(request):
                 request.POST.get('email', 'noreply@example.com'),
                 ['csc-wrcc@dri.edu'],
             )
-            context['errors'] = 'Thank you for your input!'
+            context['message'] = 'Thank you for your input!'
         else:
-            context['errors'] = errors
+            context['message'] = errors
+            context['error'] = errors
     return render_to_response('my_data/feedback.html', context, context_instance=RequestContext(request))
 
 def download(request):
@@ -253,6 +254,7 @@ def data_station(request):
         #Turn request object into python dict
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
+        context['element_list'] = form['elements'].replace(' ','').split(',')
         fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date','elements']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
@@ -380,30 +382,27 @@ def data_gridded(request):
         context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
         #Check if data request is large,
         #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
-        if form_cleaned['start_date'].lower() == 'por':
-            s_date = datetime.date(1900,01,01)
-        else:
-            s_date = datetime.date(int(form_cleaned['start_date'][0:4]), int(form_cleaned['start_date'][4:6]),int(form_cleaned['start_date'][6:8]))
-        if form_cleaned['end_date'].lower() == 'por':
-                e_date = datetime.date.today()
-        else:
-            e_date = datetime.date(int(form_cleaned['end_date'][0:4]), int(form_cleaned['end_date'][4:6]),int(form_cleaned['end_date'][6:8]))
+        s_date = datetime.date(int(form_cleaned['start_date'][0:4]), int(form_cleaned['start_date'][4:6]),int(form_cleaned['start_date'][6:8]))
+        e_date = datetime.date(int(form_cleaned['end_date'][0:4]), int(form_cleaned['end_date'][4:6]),int(form_cleaned['end_date'][6:8]))
         days = (e_date - s_date).days
         #if time range > 1 month or user requests data for more than 1 grid point, large request via ftp
-        if days > 31 and 'location' not in form.keys():
+        if days > 31 and 'location' not in form.keys() and form['temporal_resolution'] not in ['yly','mly']:
             context['large_request'] = \
             'At the moment we do not support data requests that exceed 1 month.\
              Please limit your request to one grid point at a time or a date range of one month or less.\
              We will support larger requests in the near future. Thank you for your patience!'
             return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
+        if form['temporal_resolution'] in ['mly'] and 'location' not in form.keys():
+            if days > 366*5:
+                context['large_request'] = \
+            'At the moment we do not support data requests that exceed 5 years for monthly data.\
+            Please limit your request to one grid point at a time or a date range of 10 years or less.\
+            We will support larger requests in the near future. Thank you for your patience!'
+            return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
+
 
         #Data request
-        if str(form_cleaned['grid']) == '21':
-            #PRISM data need to convert elements!!
-            prism_elements = []
-            for el in form_cleaned['elements'].replace(' ','').split(','):
-                prism_elements.append('%s_%s' %(str(form['temporal_resolution']), str(el)))
-            form_cleaned['elements'] = prism_elements
+        context['form'] = form_cleaned
         req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')
         context['req'] = req
         if 'error' in req.keys():
@@ -1705,7 +1704,22 @@ def set_form(request,clean=True):
             if str(key) in ['start_date', 'end_date']:
                 form[str(key)] = str(val).replace('-','').replace(':','').replace('/','').replace(' ','')
             if str(key) == 'elements':
-                form[str(key)] = str(val).replace(' ','')
+                el_list = val
+                if isinstance(val,basestring):el_list = val.replace(' ','').split(',')
+                el_list_new = el_list
+                #form[str(key)] = str(val).replace(' ','')
+                #if PRISM data, change element names if monthly/yearly data
+                if 'grid' in q_dict.keys() and q_dict['grid'] == '21' and q_dict['temporal_resolution'] in ['yly','mly']:
+                    for el_idx,el in enumerate(el_list):
+                        el_list_new[el_idx] = '%s_%s' %(q_dict['temporal_resolution'], el)
+                #Convert degree days temp to Fahreheit if units are metric
+                if 'units' in q_dict.keys() and q_dict['units'] == 'metric':
+                    el_list_new = el_list
+                    for el_idx, el in enumerate(el_list):
+                        el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
+                        if el_strip in ['hdd','gdd','cdd'] and base_temp is not None and el not in ['hdd','gdd','cdd']:
+                            el_list_new[el_idx] = el_strip + str(WRCCUtils.convert_to_english('maxt',base_temp))
+                form[str(key)] = ','.join(el_list_new)
     return form
 
 
@@ -2180,7 +2194,7 @@ def set_data_gridded_params(form):
     if not form:
         return {}
 
-    key_order = [form['select_grid_by'], 'elements', 'grid', 'start_date', 'end_date','temporal_resolution', 'data_summary']
+    key_order = [form['select_grid_by'], 'elements', 'grid', 'start_date', 'end_date','temporal_resolution', 'data_summary', 'units']
     display_params_list = [[] for k in range(len(key_order))]
     params_dict = {'area_type_value':form[form['select_grid_by']]}
     for key, val in form.iteritems():
@@ -2193,6 +2207,10 @@ def set_data_gridded_params(form):
             display_params_list[3] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[val]]
             #params_dict[WRCCData.DISPLAY_PARAMS[key]] = WRCCData.DISPLAY_PARAMS[val]
         elif key == 'elements':
+            tr = form['temporal_resolution']
+            pre_el =''
+            if tr in ['yly','mly']:
+                pre_el = tr + '_'
             if isinstance(val, list):
                 el_list = val
             elif isinstance(val, str):
@@ -2208,12 +2226,12 @@ def set_data_gridded_params(form):
             for el_idx, el in enumerate(el_list):
                 try:
                     int(el[3:5])
-                    display_params_list[1][1]+=WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5]
-                    elems_long.append(WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5])
+                    display_params_list[1][1]+= WRCCData.DISPLAY_PARAMS[pre_el+el[0:3]] + ' Base Temperature '+ el[3:5]
+                    elems_long.append(WRCCData.DISPLAY_PARAMS[pre_el+el[0:3]] + ' Base Temperature '+ el[3:5])
                 except:
-                    display_params_list[1][1]+=WRCCData.DISPLAY_PARAMS[el]
-                    elems_long.append(WRCCData.DISPLAY_PARAMS[el])
-                if el_idx != 0 and el_idx != len(form['elements']) - 1:
+                    display_params_list[1][1]+=WRCCData.DISPLAY_PARAMS[pre_el+el]
+                    elems_long.append(WRCCData.DISPLAY_PARAMS[pre_el+el])
+                if el_idx != len(el_list) -1:
                     display_params_list[1][1]+=', '
             params_dict['elems_long'] = elems_long
             #determine which apps to link to
@@ -2226,7 +2244,7 @@ def set_data_gridded_params(form):
                     el = val[0];base_temp=''
                 if str(el) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:
                     params_dict['element'] = el + base_temp
-        if key == 'delimiter':
+        elif key == 'delimiter':
             params_dict['delimiter'] = WRCCData.DELIMITERS[val]
         else:
             try:
@@ -2250,7 +2268,7 @@ def set_data_station_params(form):
     if not form:
         return {}
 
-    key_order = [form['select_stations_by'], 'elements', 'start_date', 'end_date']
+    key_order = [form['select_stations_by'], 'elements', 'start_date', 'end_date', 'units']
     display_params_list = [[] for k in range(len(key_order))]
     params_dict = {}
     for key_idx, key in enumerate(key_order):
@@ -2522,15 +2540,19 @@ def set_data_station_initial(request):
     initial[str(initial['select_stations_by'])] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
     initial['area_type_value'] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
+    #initial['area_type_value'] = Get('area_type_value', WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_stations_by']
     initial['elements'] = Get('elements', 'maxt,mint,pcpn')
+    initial['units'] = Get('units','english')
+    '''
     if initial['select_stations_by'] == 'station_id':
         initial['start_date'] = Get('start_date','POR')
         initial['end_date']  = Get('end_date','POR')
     else:
-        initial['start_date']  = Get('start_date', fourtnight)
-        initial['end_date']  = Get('end_date', yesterday)
+    '''
+    initial['start_date']  = Get('start_date', fourtnight)
+    initial['end_date']  = Get('end_date', yesterday)
     initial['show_flags'] = Get('show_flags', 'F')
     initial['show_observation_time'] = Get('show_observation_time', 'F')
     initial['data_format'] = Get('date_format', 'html')
@@ -2546,6 +2568,10 @@ def set_data_station_initial(request):
         checkbox_vals['data_format_' + df + '_selected'] =''
         if df == initial['data_format']:
             checkbox_vals['data_format_' + df + '_selected'] ='selected'
+    for u in ['english', 'metric']:
+        checkbox_vals['units_' + u + '_selected'] =''
+        if u == initial['units']:
+            checkbox_vals['units_' +u + '_selected'] ='selected'
     for df in ['none', 'dash','colon', 'slash']:
         checkbox_vals['date_format_' + df + '_selected'] =''
         if df == initial['date_format']:
@@ -2569,10 +2595,12 @@ def set_data_gridded_initial(request):
     initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
     initial['area_type_value'] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
+    #initial['area_type_value'] = Get('area_type_value', WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_grid_by']
     initial['temporal_resolution'] = Get('temporal_resolution', 'dly')
     initial['elements'] = Get('elements', 'maxt,mint,pcpn')
+    initial['units'] = Get('units','english')
     initial['start_date']  = Get('start_date', fourtnight)
     initial['end_date']  = Get('end_date', yesterday)
     initial['grid'] = Get('grid', '1')
@@ -2600,6 +2628,10 @@ def set_data_gridded_initial(request):
         checkbox_vals['delimiter_' + dl + '_selected'] =''
         if dl == initial['delimiter']:
             checkbox_vals['delimiter_' + dl + '_selected'] ='selected'
+    for u in ['english', 'metric']:
+        checkbox_vals['units_' + u + '_selected'] =''
+        if u == initial['units']:
+            checkbox_vals['units_' +u + '_selected'] ='selected'
     for tr in ['dly','mly','yly']:
         checkbox_vals['temporal_resolution_' + tr + '_selected'] = ''
         if tr == initial['temporal_resolution']:
@@ -2629,6 +2661,7 @@ def set_area_time_series_initial(request):
     initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
     initial['area_type_value'] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
+    #initial['area_type_value'] = Get('area_type_value', WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_grid_by']
     initial['elements'] = Get('elements', 'maxt,mint,pcpn')
@@ -2662,6 +2695,7 @@ def set_clim_sum_maps_initial(request):
     initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
     initial['area_type_value'] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
+    #initial['area_type_value'] = Get('area_type_value', WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_grid_by']
     initial['elements'] = Get('elements', 'maxt,mint,pcpn')
@@ -2689,6 +2723,7 @@ def set_station_locator_initial(request):
     initial[str(initial['select_stations_by'])] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
     initial['area_type_value'] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
+    #initial['area_type_value'] = Get('area_type_value', WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_stations_by']
     initial['elements'] = Get('elements', 'maxt,mint,pcpn')

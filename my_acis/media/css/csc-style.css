@@ -97,7 +97,8 @@ p.blue {
 }
 
 h1, h2, h3, h4, h5 {
-    color:#006666;
+    /*color:#006666;*/
+    color:#000000;
 }
 
 h1.error, h2.error, h3.error, h4.error, h5.error {

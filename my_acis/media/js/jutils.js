@@ -110,7 +110,7 @@ function ShowHelpText(divId){
          
         //pop_up.innerHTML ="blah";
         //var text = $('#' + pop_up_id).load('/csc/media/html/Docu_help_texts.html #' + pop_up_id);
-        var text = $('#help_ht_start_year').load('/csc/media/html/commons.html #ht_start_year';
+        var text = $('#help_ht_start_year').load('/csc/media/html/Docu_help_texts.html #ht_start_year';
         pop_up.innerHTML = text;
         //$( "#"+ pop_up_id ).show();
     }

@@ -57,7 +57,7 @@
         </div>
         </td>
         </tr>
-        <tr>
+        <tr valign="top">
         <td>Temporal Resolution: </td>
         <td>
             <select id="temporal_resolution" name="temporal_resolution" onchange="set_grid(this, 'grid_type')">
@@ -75,7 +75,7 @@
         </div>
         </td>
         </tr>
-        <tr id="els" valign="top">
+        <tr valign="top">
         <td id="Elements">Elements: </td>
         <td><input type="text" id="elements" name="elements" value="{{initial.elements}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -83,10 +83,23 @@
             <div id="ht_elements">
                 <img alt=ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Grid.png" id="ACISElementChoices" width="450" height="450" border="0">
             </div>
-            <!--
-            <script type="text/javascript">                        
-            $("#ht_elements").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_elements");
-            </script>-->
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td>Units: </td>
+        <td>
+        <select id="units" name="units">
+            <option value="metric" {{checkbox_vals.units_metric_selected}}>Metric</option>
+            <option value="english" {{checkbox_vals.units_english_selected}}>English</option>
+        </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_units"></div>
+        <script type="text/javascript">                        
+            $("#ht_units").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_units");
+        </script>    
         </div>
         </td>
         </tr>
@@ -120,7 +133,7 @@
             <select id="grid" name="grid">
             <option value="1" {{checkbox_vals.1_selected}}>NRCC Interpolated(1950-Present)</option>
             <option value="3" {{checkbox_vals.3_selected}}>NRCC Int. Hi-Res(2007-Present)</option>
-            <option value="21" {{checkbox_vals.21_selected}}>PRISM(1895-Present)</option>
+            <option value="21" {{checkbox_vals.21_selected}}>PRISM(1981-Present,1895-Present)</option>
             <option value="4" {{checkbox_vals.4_selected}}>CRCM+NCEP(1970-2000)</option>
             <option value="5" {{checkbox_vals.5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>
             <option value="6" {{checkbox_vals.6_selected}}>CRCM+CCSM3(1970-2000,2040-2070)</option>
@@ -337,6 +350,10 @@
      <script type="text/javascript">            
         $("#Docu_elements").load("{{MEDIA_URL}}html/Docu_elements_grid.html");
     </script>
+    <div id="Docu_units"></div>
+    <script type="text/javascript">            
+        $("#Docu_units").load("{{MEDIA_URL}}html/Docu_units.html");
+    </script>
     <div id="Docu_start_end_date"></div>
      <script type="text/javascript">            
         $("#Docu_start_end_date").load("{{MEDIA_URL}}html/Docu_start_end_date.html");
@@ -348,6 +365,10 @@
     <div id="Docu_data_summary"></div>
     <script type="text/javascript">            
         $("#Docu_data_summary").load("{{MEDIA_URL}}html/Docu_data_summary_grid.html");
+    </script>
+    <div id="Docu_date_format"></div>
+    <script type="text/javascript">            
+        $("#Docu_date_format").load("{{MEDIA_URL}}html/Docu_date_format.html");
     </script>
     <div id="Docu_data_format"></div>
     <script type="text/javascript">            
@@ -472,25 +493,19 @@
                 <option value="wy" {{wy_selected}}>Wyoming</option>
             </select>
             </td>
-            <!--
-            <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-            <div class="pop-up">
-                <div id="ht_select_overlay_by">Specify US State</div>
-            </div>
-            </td>
-            </tr>
-            -->
             <td><input type="submit" value="Update Map" name="formOverlay"/></td>
             </table>
             <input type="hidden" value="{{initial.select_grid_by}}" name="select_overlay_by" id="select_overlay_by">
             <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
             <input type="hidden" value="{{initial.elements}}" name="elements">
+            <input type="hidden" value="{{initial.units}}" name="units">
             <input type="hidden" value="{{initial.start_date}}" name="start_date">
             <input type="hidden" value="{{initial.end_date}}" name="end_date">
             <input type="hidden" value="{{initial.grid}}" name="grid">
             <input type="hidden" value="{{initial.data_summary}}" name="data_summary">
             <input type="hidden" value="{{initial.temporal_summary}}" name="temporal_summary">
             <input type="hidden" value="{{initial.spatial_summary}}" name="spatial_summary">
+            <input type="hidden" value="{{initial.date_format}}" name="date_format">
             <input type="hidden" value="{{initial.data_format}}" name="data_format">
             <input type="hidden" value="{{initial.delimiter}}" name="delimiter">
             <input type="hidden" value="{{initial.output_file_name}}" name="output_file_name">

@@ -14,19 +14,19 @@
     <!-- Application documentation -->
     <div class="docu" id="Docu_CalTracker" style="display:none;"></div>
         <script type="text/javascript">                        
-        $("#Docu_CalTracker").load("{{MEDIA_URL}}html/Docu_CalTracker.html");
+        $("#Docu_CalTracker").load("{{MEDIA_URL}}html/Docu_External_Resources.html #Docu_CalTracker.html");
         </script>
     <div class="docu" id="Docu_NevTracker" style="display:none;"></div>
         <script type="text/javascript">                        
-        $("#Docu_NevTracker").load("{{MEDIA_URL}}html/Docu_NevTracker.html");
+        $("#Docu_NevTracker").load("{{MEDIA_URL}}html/Docu_External_Resources.html #Docu_NevTracker.html");
         </script>
     <div class="docu" id="Docu_WESTMAP" style="display:none;"></div>
         <script type="text/javascript">                        
-        $("#Docu_WESTMAP").load("{{MEDIA_URL}}html/Docu_WESTMAP.html");
+        $("#Docu_WESTMAP").load("{{MEDIA_URL}}html/Docu_External_Resources.html #Docu_WESTMAP.html");
         </script>
    <div class="docu" id="Docu_FreezTracker" style="display:none;"></div>
         <script type="text/javascript">                        
-        $("#Docu_FreezTracker").load("{{MEDIA_URL}}html/Docu_FreezTracker.html");
+        $("#Docu_FreezTracker").load("{{MEDIA_URL}}html/Docu_External_Resources.html #Docu_FreezTracker.html");
         </script>
    <div class="docu" id="Docu_CLIM_SUM_MAP" style="display:none;"></div>
         <script type="text/javascript">                        
@@ -52,15 +52,6 @@
             <p class="error" align ="center">(* Beta version)</p>
             <table cellspacing="10">
             <tr>
-                <!--
-                <td valign="top">
-                    <p>Gridpoint &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_GP_TS')"><br />Time Series</p>
-                    <div class="pop-up">
-                        <p>Generates time series data and graph for a chosen grid point. <br/>Click on the question mark for more information!</p>
-                    </div>
-                    <a  href="{{TOOLS_URL}}gridded/grid_point_time_series/"><img class="app_img" alt="GPTimeSeries" title="GPTimeSeries" src="{{MEDIA_URL}}img/GPTimeSeries.png"></a>
-                </td>
-                -->
                 <td valign="top">
                     <p>* Spatial Summary&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img class="qmark" alt="QMark" title="QMark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_AREA_TIME_SERIES')"><br />Time Series</p>
                     <div class="pop-up" id="area_time_series">
