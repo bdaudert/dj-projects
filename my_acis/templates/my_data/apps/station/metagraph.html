@@ -16,8 +16,9 @@
 <!--Autofill-->
 <script type="text/javascript">set_autofill("US_coop_station_ids");</script>
 
-<table cellpadding="20">
+<table cellpadding="0">
 <td valign="top" width="30%">
+    <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/metagraph/'"/>
     <div id='form1'>
         <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form">
@@ -25,7 +26,7 @@
         <tr>
         <td>{{field.label}}/name:</td>
         {%if field.label == "Station id"%}
-            <td><input autocomplete="off" type="text" size="35" id="station_id" name="station_id" value="{{field.value}}" list="US_coop_station_ids"></td>
+            <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{field.value}}" list="US_coop_station_ids"></td>
         {%else%}
             <td>{{field}}</td>
         {%endif%}
@@ -61,20 +62,22 @@
         $("#how_to_head").load("{{MEDIA_URL}}html/Buttons.html .tool_how_to");
     </script>
     <div id="how_to" style="display:none;">
-    <b>Station id/name </b><br />
-    Enter the station id or name. If you don't know your id or, please use the link to the station finder tool to find it.<br />
+    <b>Station ID/name </b><br />
+    Enter the station name or ID.<br />If you don't know the station ID,<br />please use the link to the station finder tool to find it.<br />
     <a target="_blank" href="{{TOOLS_URL}}station/station_finder/">STATION FINDER</a><br />
     A colored pixel means a valid data entry was found for the particular day of the year.<br />
     A white space indicates that data was not recorded at that date.<br /><br />
     </div>
 
     {%if perl_err%}
-    <p class="error">{{perl_err}}</p>
-    {%elif station_meta.error%}
+    <!--<p class="error">{{perl_err}}</p>-->
+    <p></p>
+    {%endif%}
+    {%if station_meta.error%}
     <p class="error">{{station_meta.error}}</p>
     {%else%}
     {%if station_meta%}
-    <p>Station ID: {{station_id}}&nbsp;&nbsp; 
+    <p><b>Station ID</b>: {{station_id}}&nbsp;&nbsp; 
     <img onClick="ShowHide('metadata')" alt="metadata" title="metadata" src="{{MEDIA_URL}}img/metadata_button.png">
     <div id="metadata" style="display:none;">
         {% for key_val in station_meta %}
@@ -84,11 +87,11 @@
     <br />
     <a href="{{DATA_URL}}station/?station_id={{station_meta.coop_id}}&start_date=por&end_date=por&elements=maxt,mint,pcpn,snow,snwd">Get raw data behind these plots here!</a>
     </p>
-    <img alt="MetaTMAX" title="MetaTMAX" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmax.gif">
-    <img alt="MetaTMIN" title="MetaTMIN" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmin.gif">
-    <img alt="MetaPCPN" title="MetaPCPN" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_pcpn.gif">
-    <img alt="MetaSNOW" title="MetaSNOW" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_snow.gif">
-    <img alt="MetaSNWD" title="MetaSNWD" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_snwd.gif">
+    <img width="100%" alt="MetaTMAX" title="MetaTMAX" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmax.gif">
+    <img width="100%" alt="MetaTMIN" title="MetaTMIN" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_tmin.gif">
+    <img width="100%" alt="MetaPCPN" title="MetaPCPN" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_pcpn.gif">
+    <img width="100%" alt="MetaSNOW" title="MetaSNOW" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_snow.gif">
+    <img width="100%" alt="MetaSNWD" title="MetaSNWD" src="{{MEDIA_URL}}tmp/{{time_stamp}}metagraph_snwd.gif">
     {%endif%}
     {%endif%} 
 </td>

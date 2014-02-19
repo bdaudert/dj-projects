@@ -379,6 +379,10 @@ def data_gridded(request):
         initial,checkbox_vals = set_data_gridded_initial(form)
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
         display_params_list, params_dict = set_data_gridded_params(form)
+        #Add id in display params and change params_dict to id if needed
+        if form[form['select_grid_by']].upper()!= form_cleaned[form_cleaned['select_grid_by']].upper():
+            display_params_list[0][1]+= ', ' + str(form_cleaned[form_cleaned['select_grid_by']])
+            params_dict[form['select_grid_by']] = str(form_cleaned[form_cleaned['select_grid_by']])
         context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
         #Check if data request is large,
         #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
@@ -540,34 +544,39 @@ def metagraph(request):
         form_meta = set_as_form(request,'MetaGraphForm')
         context['form_meta']  = form_meta
         if form_meta.is_valid():
-            context['station_id'] = form_meta.cleaned_data['station_id']
-            params = {'sids':find_stn_id(form_meta.cleaned_data['station_id'])}
+            identifier = find_id(form_meta.cleaned_data['station_id'],MEDIA_URL + 'json/US_coop_station_ids.json')
+            context['station_id'] = identifier
+            params = {'sids':identifier}
             meta_request = AcisWS.StnMeta(params)
             #meta_request = WRCCClasses.DataJob('StnMeta', params).make_data_call()
             key_order = ['name','state','ll','elev','uid','sids']
             #station_meta = [[WRCCData.DISPLAY_PARAMS[key]] for key in key_order]
             if 'meta' in meta_request.keys():
                 if len(meta_request['meta']) == 0:
-                    station_meta = {'error': 'No metadata found for station: %s.' %station_id}
+                    station_meta = {'error': 'No metadata found for station: %s.' %str(form_meta.cleaned_data['station_id'])}
                 else:
                     station_meta = WRCCUtils.metadict_to_display(meta_request['meta'][0], key_order)
             else:
+                station_meta = {'error':'No meta data found for station: %s.' %station_id}
+                '''
                 if 'error' in meta_request.keys():
                     station_meta = {'error': meta_request['error']}
                 else:
                     station_meta = {'error':'No meta data found for station: %s.' %station_id}
-
+                '''
             context['station_meta'] = station_meta
             #Call perl script that generates gif graphs
             #FIX ME! Should be able to call it from html:
             #<img alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}">
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f_')
             context['time_stamp'] = time_stamp
-            perl_out, perl_err = run_external_script("perl %sperl-scripts/csc_cliMETAgraph.pl %s %s" %(MEDIA_URL, find_stn_id(form_meta.cleaned_data['station_id']), time_stamp))
+            perl_out, perl_err = run_external_script("perl %sperl-scripts/csc_cliMETAgraph.pl %s %s" %(MEDIA_URL, identifier, time_stamp))
             context['perl_err'] = perl_err
             context['perl_out'] = perl_out
         else:
             station_id = None
+            context['station_id'] = form_meta['station_id']
+            station_meta = {'error':'No meta data found for station: %s.' %station_id}
 
     return render_to_response('my_data/apps/station/metagraph.html', context, context_instance=RequestContext(request))
 
@@ -601,7 +610,7 @@ def monthly_aves(request):
         if form.is_valid():
             s_date = str(form.cleaned_data['start_date'])
             e_date = str(form.cleaned_data['end_date'])
-            station_id = find_stn_id(form.cleaned_data['station_id'])
+            station_id = find_id(form.cleaned_data['station_id'], MEDIA_URL + '/json/US_station_id.json')
             context['search_params'] ={
                 'station_id':station_id,
                 'start_date':s_date,
@@ -1509,7 +1518,7 @@ def sodsumm(request):
         context['form1'] = form1
         if form1.is_valid():
             data_params = {
-                    'sid':find_stn_id(form1.cleaned_data['station_id']),
+                    'sid':find_id(form1.cleaned_data['station_id'], MEDIA_URL + '/json/US_station_id.json'),
                     'start_date':form1.cleaned_data['start_year'],
                     'end_date':form1.cleaned_data['end_year'],
                     'element':'all'
@@ -1670,17 +1679,33 @@ def check_form(form, fields_to_check):
 
     return form_error
 
-def find_stn_id(form_input_stn):
+def find_id(form_name_field, json_file_path):
     '''
     Deals with autofill by station name.
     Note: Autofill sis set up to return name, id
     so we just pick up the id for data analysis
     '''
-    stn_id = str(form_input_stn)
-    name_id_list = str(form_input_stn).replace(' ','').split(',')
+    i = str(form_name_field)
+    name_id_list = i.replace(' ','').split(',')
     if len(name_id_list) >=2:
-        stn_id= str(name_id_list[-1])
-    return stn_id
+        i= str(name_id_list[-1])
+    elif len(name_id_list) == 1:
+        name_list= i.split(' ')
+        #check for digits
+        if bool(re.compile('\d').search(i)) and len(name_list) == 1:
+            #User entered a station id
+            return i
+        else:
+            #User entered a name, we need to check the according json file
+            #to find the id
+            with open(json_file_path, 'r') as json_f:
+                json_data = WRCCUtils.u_convert(json.loads(json_f.read()))
+                for entry in json_data:
+                    if entry['id'] == i:
+                        return i
+                    if entry['name'].upper() == i.upper():
+                        return entry['id']
+    return i
 
 def set_form(request,clean=True):
     '''
@@ -1699,7 +1724,7 @@ def set_form(request,clean=True):
         if clean:
             #Check if user autofilled name, if so, change to id
             if str(key) in ['station_id','county', 'basin', 'county_warning_area', 'climate_division']:
-                form[str(key)] = find_stn_id(str(val))
+                form[str(key)] = find_id(str(val),MEDIA_URL +'json/US_' + str(key) + '.json')
             #format start and end data
             if str(key) in ['start_date', 'end_date']:
                 form[str(key)] = str(val).replace('-','').replace(':','').replace('/','').replace(' ','')
@@ -2075,7 +2100,7 @@ def write_monthly_aves_results(req, form_data, monthly_aves):
         else:
             results[el_idx] = {'element_long': WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long']}
         results[el_idx]['element'] = str(el)
-        results[el_idx]['stn_id']= find_stn_id(str(form_data['station_id']))
+        results[el_idx]['stn_id']= find_id(str(form_data['station_id']), MEDIA_URL +'json/US_station_id.json')
 
         if form_data['start_date'].lower() == 'por':
             if len(req['meta']['valid_daterange'][el_idx]) == 2:
@@ -2279,7 +2304,10 @@ def set_data_station_params(form):
             params_dict['station_list'] = form['station_ids'].replace(' ','').split(',')
 
         if key == form['select_stations_by'] and key!= 'station_ids':
-            params_dict[key] = find_stn_id(val)
+            params_dict[key] = find_id(val, MEDIA_URL + '/json/US_' + key +'.json')
+            #override display_params_list
+            if display_params_list[0][1].upper() != params_dict[key].upper():
+                display_params_list[0][1]+= ', ' + params_dict[key]
         elif key == 'delimiter':
            params_dict['delimiter'] = WRCCData.DELIMITERS[val]
         elif key in ['show_flags', 'show_observation_time']:

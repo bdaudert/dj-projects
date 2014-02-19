@@ -971,9 +971,9 @@ class MetaGraphForm(forms.Form):
             station_id = self.data.get('station_id')
 
         if station_id is None:
-            self.fields['station_id'] = forms.CharField(required=True, initial='266779', help_text='COOP station identification number. Please use the Station Finder to find your station id.')
+            self.fields['station_id'] = forms.CharField(required=True, initial='266779', help_text='Enter a COOP station name aor use the station finder to find a station ID.')
         else:
-            self.fields['station_id'] = forms.CharField(required=True, initial=station_id, help_text='COOP station identification number. Please use the Station Finder to find your station id.')
+            self.fields['station_id'] = forms.CharField(required=True, initial=station_id, help_text='Enter a COOP station name aor use the station finder to find a station ID.')
 
 class MonthlyAveragesForm(forms.Form):
     def __init__(self, *args, **kwargs):

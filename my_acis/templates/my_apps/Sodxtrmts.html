@@ -49,6 +49,10 @@
         <td><font size="+2">YEARS</font></td>{%for mon in month_list%}<td colspan="2"><font size="+2">{{mon}}<font size="+2"></td>{%endfor%}
         </tr>
          {%for cat in stn_data %}
+         {%if cat.0 == "MEAN" %}
+         <tr>{%for dat in cat%}<td></td>{%endfor%}</tr>
+         <tr>{%for dat in cat%}<td></td>{%endfor%}</tr>
+         {%endif%}
          <tr>
          {%for dat in cat%}
          <td>{{dat}}</td>
