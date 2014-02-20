@@ -44,7 +44,12 @@ function set_autofill(datalist){
                 continue
             }
             var opt = document.createElement('option');
-            opt.value = name + ', ' + id;
+            if (datalist == "US_CMAP"){
+                opt.value = name;
+            }
+            else {
+                opt.value = name + ', ' + id;
+            }
             opt.setAttribute('class','name')
             //opt.innerHTML = id;
             dl.appendChild(opt);
