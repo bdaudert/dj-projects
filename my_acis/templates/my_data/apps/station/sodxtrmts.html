@@ -911,8 +911,8 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
 {%endif%}
 
 {%if json_dict.data_summary%}
-<p class="blue" align="center" onclick="ShowPopupDocu('Data_Summary')"><b><u>Show Summary Table</u></b></p>
-<div id="Data_Summary" style="display:none;">
+<p class="blue" align="center" onclick="ShowHide('Data_Summary')"><b><u>Show Summary Table</u></b></p>
+<div align="center" id="Data_Summary" style="display:none;">
 <table class="right_aligned">
 <td><font size="+0">YEAR </font></td>
 {%for mon in json_dict.month_list%}
@@ -922,7 +922,11 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
 {%for s_data in json_dict.data_summary%}
 <tr>
 {%for s in s_data%}
+{%if forloop.first%}
+<td align="left">{{s}}</td>
+{%else%}
 <td>{{s}}</td>
+{%endif%}
 {%endfor%}
 </tr>
 {%endfor%}
