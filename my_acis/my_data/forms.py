@@ -267,9 +267,10 @@ help_acis_elements = 'Available climate elements.'
 help_grids = 'Gridded/modeled datasets available in ACIS.'
 help_stn_selection = 'Defines the type of search area.'
 help_grid_selection = 'Defines the type of search area.'
-help_comma_stns = 'Delimiter separated list of station identifiers. Supported delimiters: comma, space, colon, semi-colon. Please use the station finder to find station ids.'
-help_stn_id = 'Station identification number. Please use the Station Finder to find a station id.'
-help_date_por = 'yyyymmdd, yyyy-mm-dd, yyyy/mm/dd or "por" (period of record) if single station.'
+help_comma_stns = 'Delimiter separated list of station identifiers. Supported delimiters: comma, space, colon, semi-colon. Please use the station finder to find station IDs.'
+help_stn_id = 'Station identification number or name. If you do not know either, please use the Station Finder to find a station.'
+help_date_por = 'yyyymmdd, yyyy-mm-dd, yyyy/mm/dd or "POR" for period of record if single station request.'
+help_date_por_single = 'yyyymmdd, yyyy-mm-dd, yyyy/mm/dd or "POR" for period of record.'
 help_lon_lat = 'Grid point coordinate pair: Longitude, Latitude. Use the map interface by dragging the marker to change location.'
 help_data_format = 'Defines format in which data will be returned. Note: html format prints to your screen.'
 help_bbox = 'Bounding box latitudes and longitudes: West,South,East,North.'
@@ -285,6 +286,7 @@ HELP_TEXTS = {
     'comma_elements':help_comma_elements,
     'date':help_date,
     'date_por':help_date_por,
+    'date_por_single':help_date_por_single,
     'grid_lon_lat':help_lon_lat,
     'data_format':help_data_format,
     'comma_stns':help_comma_stns,
@@ -303,15 +305,16 @@ class MyDateField(forms.CharField):
             return ' '
         formatted_date = ''.join(date.split('-'))
         formatted_date = ''.join(formatted_date.split('/'))
+        formatted_date = ''.join(formatted_date.split(':'))
         return formatted_date.lower()
 
     def validate(self, formatted_date):
         if formatted_date.lower() == 'por':
             if self.min_length == 8:
-                raise forms.ValidationError("Date should be of form yyyymmdd or yyyy-mm-dd or yyyy/mm/dd.")
+                raise forms.ValidationError("Date should be of form yyyymmdd, yyyy-mm-dd, yyyy:mm:dd or yyyy/mm/dd.")
         else:
             if len(formatted_date)!=8:
-                raise forms.ValidationError("Date should be of form yyyymmdd or yyyy-mm-dd or yyyy/mm/dd.")
+                raise forms.ValidationError("Date should be of form yyyymmdd, yyyy-mm-dd, yyyy:mm:dd or yyyy/mm/dd.")
             try:
                 int(formatted_date)
             except:
@@ -409,7 +412,7 @@ class MultiStnField(forms.CharField):
         "Check if value consists only of valid station_ids."
         for stn in stn_list:
             if not str(stn).isalnum:
-                raise forms.ValidationError("Not a valid station_id! Station ID are alphanumeric %s!" % str(stn))
+                raise forms.ValidationError("Not a valid station ID! Station ID are alphanumeric %s!" % str(stn))
 
 class BBoxField(forms.CharField):
     def to_python(self, bbox_str):
@@ -607,13 +610,13 @@ class SodForm(forms.Form):
                 self.fields['end_date'] = MyDateField(max_length=10, min_length=3, initial=yesterday, help_text=HELP_TEXTS['date_por'])
         elif date_type == 'y':
             if start_year is not None:
-                self.fields['start_year'] = MyYearField(required=False,initial=start_year, help_text='yyyy or "POR" for period of record')
+                self.fields['start_year'] = MyYearField(required=False,initial=start_year, help_text='yyyy or "POR" for period of record.')
             else:
-                self.fields['start_year'] = MyYearField(required=False, initial='POR', help_text='yyyy or "POR" for period of record')
+                self.fields['start_year'] = MyYearField(required=False, initial='POR', help_text='yyyy or "POR" for period of record.')
             if end_year is not None:
-                self.fields['end_year'] = MyYearField(required=False,initial=end_year, help_text='yyyy or "POR" for period of record')
+                self.fields['end_year'] = MyYearField(required=False,initial=end_year, help_text='yyyy or "POR" for period of record.')
             else:
-                self.fields['end_year'] = MyYearField(required=False, initial=begin_14[0:4], help_text='yyyy or "POR" for period of record')
+                self.fields['end_year'] = MyYearField(required=False, initial=begin_14[0:4], help_text='yyyy or "POR" for period of record.')
 
 class SodsummForm(SodForm):
     def __init__(self, *args, **kwargs):
@@ -988,8 +991,8 @@ class MonthlyAveragesForm(forms.Form):
         else:
             self.fields['station_id'] = forms.CharField(required=False, initial=stn_id, help_text=HELP_TEXTS['stn_id'])
         self.fields['elements'] = MultiElementField(initial='maxt,mint,pcpn,snow,snwd', help_text=HELP_TEXTS['comma_elements'])
-        self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='POR', help_text=HELP_TEXTS['date_por'])
-        self.fields['end_date'] = MyDateField(max_length=10, required = False, initial='POR', help_text=HELP_TEXTS['date_por'])
+        self.fields['start_date'] = MyDateField(max_length=10, required = False, initial='POR', help_text=HELP_TEXTS['date_por_single'])
+        self.fields['end_date'] = MyDateField(max_length=10, required = False, initial='POR', help_text=HELP_TEXTS['date_por_single'])
 
 class AreaTimeSeriesForm0(forms.Form):
         select_grid_by = forms.ChoiceField(choices=GRID_FIND_CHOICES, required=False, initial='shape', help_text=HELP_TEXTS['select_stations_by'])

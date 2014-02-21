@@ -16,7 +16,7 @@
 <script type="text/javascript">set_autofill("US_station_id");</script>
 
 <table cellpadding="10">
-<td valign="top" width="20%">
+<td valign="top" width="25%">
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/sodsumm/'"/>
     <div id='form1'>
         <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
@@ -24,10 +24,11 @@
         {%for field in form1 %}
         {%if not field.is_hidden%}
         <tr>
-        <td>{{field.label}}: </td>
         {%if field.label == "Station id"%}
+            <td>Station ID/Name</td>
             <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{field.value}}" list="US_station_id"></td>
         {%else%}
+            <td>{{field.label}}: </td>
             <td>{{field}}</td>
         {%endif%}
         <td>
@@ -49,8 +50,8 @@
         </form>
     </div>
 </td>
-<td valign="top" width="80%">
-    <div class="center" style="border:none;background-color:X^H#947e6e;">
+<td valign="top" width="75%">
+    <div style="border:none;background-color:X^H#947e6e;">
         <table>
         <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
         </table> 
@@ -71,7 +72,7 @@
         </script>
         <div id="Docu_start_end_year"></div>
         <script type="text/javascript">            
-        $("#Docu_start_end_year").load("{{MEDIA_URL}}html/Docu_start_end_year.html");
+        $("#Docu_start_end_year").load("{{MEDIA_URL}}html/Docu_start_end_year_por.html");
         </script>
         <div id="Docu_summary_sodsumm"></div>
         <script type="text/javascript">            

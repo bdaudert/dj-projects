@@ -156,8 +156,12 @@
         </form>
     </div> 
     {% block feedback%}
-    <p align="left" style="font-size:large;"><a href="{{SW_CKN_URL}}/feedback/">Give us feedback!</a>
+    <br /><p align="left" style="position:relative;left:15px;font-size:large;"><a href="{{SW_CKN_URL}}/feedback/">Give us feedback!</a>
     {%endblock feedback%}
+
+    {% block logo%}
+    <p style="position:absolute;top:220px;right:120px;" class="green">Powered by <a target="_blank" href="http://rcc-acis.unl.edu/"><img src="{{MEDIA_URL}}img/ACISLogo.png"></a></p>
+    {%endblock logo%}
 
     <div class="content">
         <h2 align="center">{{title}}</h2>

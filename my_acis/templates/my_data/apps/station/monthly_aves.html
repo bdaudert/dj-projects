@@ -87,7 +87,7 @@
     </script>
         <div id="Docu_start_end_date"></div>
      <script type="text/javascript">            
-        $("#Docu_start_end_date").load("{{MEDIA_URL}}html/Docu_start_end_date.html");
+        $("#Docu_start_end_date").load("{{MEDIA_URL}}html/Docu_start_end_date_por.html");
     </script>
     </div>
 
@@ -118,9 +118,11 @@
     </table>
 
     <div id="metadata" style="display:none;">
+        <p>
         {% for val in meta %}
-        <p><b>{{val.0}}</b>: {{val.1}}</p>
+        <b>{{val.0}}</b>: {{val.1}}<br />
         {%endfor%}
+        </p>
     </div>
     <h2>Plots of Monthly Averages</h2>
     <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ MEDIA_URL }}tmp/">

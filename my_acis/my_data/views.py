@@ -669,11 +669,9 @@ def monthly_aves(request):
                 context['error'] = 'No data found for parameters. Please check your station ID, start and end dates.'
             context['results'] = results
             context['req'] = results
-            '''
             if 'meta' in req.keys():
                 meta = write_monthly_aves_meta(req, form.cleaned_data)
                 context['meta'] = meta
-            '''
             #save to json file (necessary since we can't pass list, dicts to js via hidden vars)
             #double quotes needed for jquery json.load
             results_json = json.dumps(results)
@@ -1594,7 +1592,14 @@ def sodsumm(request):
             json_list = []
             for tab_idx, tab in enumerate(tab_list):
                 table = table_list[tab_idx]
-                table_dict = generate_sodsumm_graphics(results,tab,table)
+                table_dict = {}
+                if form1.cleaned_data['generate_graphics'] == 'T':
+                    table_dict = generate_sodsumm_graphics(results,tab,table)
+                else:
+                    table_dict = {
+                        'table_name':tab,
+                        'table_data':results[table]
+                    }
                 #Add other params to table_dict
                 table_dict['record_start'] = dates_list[0][0:4]
                 table_dict['record_end'] = dates_list[-1][0:4]
@@ -1924,6 +1929,7 @@ def generate_sodsumm_graphics(results, tab, table):
     if not results:
         return {}
     cats = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+    units = ''
     if tab =='temp':
         legend = ['Extr Low','Ave Low','Mean', 'Ave High', 'Extr High']
         colors  = ['#FF0000', '#690000', '#00FF00', '#ADD8E6', '#0000FF']
@@ -2149,6 +2155,7 @@ def write_monthly_aves_results(req, form_data, monthly_aves):
     return results
 
 def write_monthly_aves_meta(req, form_data):
+    #get rid of unicode and special chars in station name
     Meta = WRCCUtils.format_stn_meta(req['meta'])
     #format meta data
     elements = ', '.join(form_data['elements'])
@@ -2159,7 +2166,7 @@ def write_monthly_aves_meta(req, form_data):
         except:
             valid_dr.append(str(el))
 
-    key_order = ['name', 'valid_daterange', 'll', 'elev', 'state', 'county', 'climdiv', 'uid']
+    key_order = ['name', 'sids','valid_daterange', 'll', 'elev', 'state', 'county', 'climdiv', 'uid']
     meta = WRCCUtils.metadict_to_display(Meta, key_order)
     #Override valid daterange
     meta_vd = ['Valid Daterange']
@@ -2169,10 +2176,10 @@ def write_monthly_aves_meta(req, form_data):
             v_el = str(Meta['valid_daterange'][idx])
         except:
             v_el = '[]'
-        vd+= el + ': ' + v_el
+        vd+= el + ': ' + v_el + ', '
     meta_vd.append(vd)
-    meta[1] = meta_vd
-    meta.insert(1, ['Elements', elements])
+    meta[2] = meta_vd
+    meta.insert(2, ['Elements', elements])
     '''
     meta = ['Station Name: ' +  Meta['name'],
             'Elements :' + elements,
