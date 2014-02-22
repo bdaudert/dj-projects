@@ -329,7 +329,6 @@ $(function () {
             var x_min = Date.UTC(dmm.new_data[0][0],0,1);
             var x_max = Date.UTC(dmm.new_data[dmm.new_data.length -1][0],0,1);
             //Define y_plotlines and tickInterval
-            var y_plotlines = [];
             var plotline_no = x_plotlines.length;
             if (plotline_no > 20){
                 if (major_grid =='F' && minor_grid == 'F'){

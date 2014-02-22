@@ -24,7 +24,7 @@
 <script type="text/javascript">                        
     $("#tool_info_head").load("{{MEDIA_URL}}html/Buttons.html .tool_info");
 </script>
-<div id="tool_info" style="display:none;"></div>
+<div id="tool_info" style="display:none;position:relative;left:300px"></div>
 <script type="text/javascript">            
     $("#tool_info").load("{{MEDIA_URL}}html/Docu_SODXTRMTS.html");
 </script>
@@ -32,7 +32,7 @@
 <script type="text/javascript">            
     $("#how_to_head").load("{{MEDIA_URL}}html/Buttons.html .tool_how_to");
 </script>
-<div id="how_to" style="display:none;">
+<div id="how_to" style="display:none;position:relative;left:200px" >
 <div id="Docu_station_id"></div>
 <script type="text/javascript">                        
 $("#Docu_station_id").load("{{MEDIA_URL}}html/Docu_station_id.html");
@@ -77,14 +77,14 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
 
 
 <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/sodxtrmts/'"/>
-<div id="formSodxtrmts" class="form">
+<div id="formSodxtrmts" class="form" style="border:none;">
     {%if json_dict%}
         <form method="post" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading()">
     {%else%}
         <form method="post" action="" onsubmit="show_loading()">
     {%endif%}
     {% csrf_token %}
-    <table id="tableSodxtrmts" style="border-collapse:collapse;">
+    <table id="tableSodxtrmts" frame="void" style="border-collapse:collapse;">
     <td valign="top">
     <table id="tableData" frame="box" cell-padding="20">
     <tr valign="top">

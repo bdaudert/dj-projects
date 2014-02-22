@@ -20,8 +20,6 @@
 
 <table cellpadding="20">
 <!--LEFT-->
-Path: {{kml_file_path}}<br />
-Status: {{status}}
 <td valign="top" width="40%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}station/'"/>
     <div id='formData'>
@@ -375,7 +373,6 @@ Status: {{status}}
             </tr>
             </table>
             <input type="hidden" value="{{initial.select_stations_by}}" name="select_overlay_by" id="select_overlay_by">
-            <input type="hidden" value="{{initial.select_stations_by}}" name="select_stations_by" id="select_stations_by">
             <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
             <input type="hidden" value="{{initial.elements}}" name="elements">
             <input type="hidden" value="{{initial.units}}" name="units">

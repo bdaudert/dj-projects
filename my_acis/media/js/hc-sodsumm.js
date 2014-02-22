@@ -147,7 +147,6 @@ $(function () {
             var series = [];
             var max = -9999.0;
             var min = 9999.0;
-            var y_plotlines = [];
             //Find max, min of data
             for (var k=0;k<table_dict[i].graph_data.length;k++){
                 var max_test = Math.max.apply(Math, table_dict[i].graph_data[k]);
@@ -181,15 +180,14 @@ $(function () {
                     series.push(s);
                 }
             }
-            for (var val=min + (max - min)/5;val<=max + 4*(max - min)/5;val+=(max - min)/5) {
-                var plotline = {
-                    color: '#787878',
-                    dashStyle:'dash',
-                    width: 1,
-                    value: val,
-                };
-                y_plotlines.push(plotline);
+            var element = 'pcpn';
+            if (table_dict[i].table_name == 'temp'){
+                element = 'maxt';
             }
+            else if (table_dict[i].table_name == 'hdd' || table_dict[i].table_name == 'cdd' || table_dict[i].table_name == 'gdd' ){
+                element = 'maxt';
+            } 
+            var y_axis_props = set_axis_properties(max,'Use default', min, 'Use default',element,'mave','F',10.0);
             var len = series.length
             Chart = {
                 chartContent: cntr,
@@ -210,8 +208,9 @@ $(function () {
                             style: style
                         },
                         gridLineWidth:0,
-                        plotLines:y_plotlines,
-                        tickInterval:precise_round((max - min)/5, 0)
+                        plotLines:y_axis_props.plotLines,
+                        //tickInterval:y_axis_props.tickInterval
+                        //tickInterval:precise_round((max - min)/5, 0)
                     },
                     series: series
                 } 

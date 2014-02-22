@@ -22,12 +22,14 @@ import sys, os, stat, re
 import WRCCUtils, AcisWS, WRCCDataApps, WRCCClasses, WRCCData, WRCCFormCheck
 import my_data.forms as forms
 
+HOST = 'wrcc.dri.edu'
 STATIC_URL = '/www/apps/csc/dj-projects/my_acis/static/'
 MEDIA_URL = '/www/apps/csc/dj-projects/my_acis/media/'
 KML_URL = '/www/apps/csc/dj-projects/my_acis/media/kml/'
-STATIC_KML = '/csc/media/kml/'
-WEB_SERVER_DIR = '/csc/media/tmp/'
-TEMP_FILE_DIR = '/tmp/'
+TMP_URL = '/www/apps/csc/dj-projects/my_acis/media/tmp'
+WEB_KML = '/csc/media/kml/'
+WEB_TEMP = '/csc/media/tmp/'
+TEMP = '/tmp/'
 
 #Set dates
 today = WRCCUtils.set_back_date(0)
@@ -187,7 +189,7 @@ def download(request):
     }
     app_name = request.GET.get('app_name', None)
     json_file_name = request.GET.get('json_file', None)
-    json_file = TEMP_FILE_DIR + json_file_name
+    json_file = TEMP + json_file_name
     json_in_file_name = json_file_name
     tab = request.GET.get('tab', None)
     form0 = forms.DownloadForm()
@@ -210,10 +212,10 @@ def download(request):
                         #context['data_dict'] = data_dict
                         #Overwrite json_in_file
                         json_in_file_name = json_file_name + '_in'
-                        with open(TEMP_FILE_DIR + json_in_file_name, 'w+') as json_f:
+                        with open(TEMP + json_in_file_name, 'w+') as json_f:
                             json.dump(data_dict,json_f)
                         break
-            DDJ = WRCCClasses.DownloadDataJob(app_name,data_format,delimiter, output_file_name, request=request, json_in_file=TEMP_FILE_DIR + json_in_file_name)
+            DDJ = WRCCClasses.DownloadDataJob(app_name,data_format,delimiter, output_file_name, request=request, json_in_file=TEMP + json_in_file_name)
             if data_format in ['clm', 'dlm','xl']:
                 return DDJ.write_to_file()
             else:
@@ -228,25 +230,11 @@ def data_station(request):
     initial, checkbox_vals = set_data_station_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set up maps if needed
-    context['host'] = 'wrcc.dri.edu'
+    context['host'] = HOST
     context['area_type'] = initial['select_stations_by']
     context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
     kml_file_name = initial['overlay_state'] + '_' + initial['select_stations_by'] + '.kml'
     context[initial['overlay_state'] + '_selected'] = 'selected'
-    #context['kml_file_path'] = STATIC_KML +  kml_file_name
-    context['kml_file_path'] = WEB_SERVER_DIR +  kml_file_name
-
-    #Check if kml file exists, if not generate it
-    '''
-    status = create_kml_file(KML_URL,TEMP_FILE_DIR, kml_file_name,form['select_overlay_by'], form['overlay_state'])
-    context['status']=status
-    context['area_type'] = form['select_overlay_by']
-    context['host'] = 'wrcc.dri.edu'
-    if status == 'Exists':
-        context['kml_file_path'] = STATIC_KML + kml_file_name
-    else:
-        context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-    '''
     context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
 
     if 'formData' in request.POST:
@@ -259,12 +247,6 @@ def data_station(request):
         if form_error:
             context['form_error'] = form_error
             return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
-        if form['select_stations_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
-            context['host'] = 'wrcc.dri.edu'
-            kml_file_name = form['overlay_state'] + '_' + form['select_stations_by'] + '.kml'
-            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-            context['area_type'] = form['select_stations_by']
-
         initial,checkbox_vals = set_data_station_initial(form)
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
         display_params_list, params_dict = set_data_station_params(form)
@@ -310,6 +292,7 @@ def data_station(request):
         #Override initial where needed
         initial['select_stations_by'] = form['select_overlay_by']
         checkbox_vals[form['select_overlay_by'] + '_selected'] = 'selected'
+        context['checked'] = form['select_overlay_by'] + '_selected'
         initial['area_type_value'] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
         initial[form['select_overlay_by']] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
         initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[form['select_overlay_by']]
@@ -318,25 +301,10 @@ def data_station(request):
         at = form['select_overlay_by']
         st = form['overlay_state']
         context[st + '_selected'] = 'selected'
-        kml_file_name = st + '_' + at + '.kml'
-        '''
-        status = create_kml_file(KML_URL,TEMP_FILE_DIR, kml_file_name,form['select_overlay_by'], form['overlay_state'])
-        context['status']=status
+        kml_file_path = create_kml_file(form['select_overlay_by'], form['overlay_state'])
+        context['kml_file_path'] = kml_file_path
         context['area_type'] = form['select_overlay_by']
-        context['host'] = 'wrcc.dri.edu'
-        if status == 'Exists':
-            context['kml_file_path'] = STATIC_KML + kml_file_name
-        else:
-            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-        '''
-        dir_location = TEMP_FILE_DIR
-        status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
-        if not status == 'Success':
-            context['overlay_error'] = status
-        else:
-            context['host'] = 'wrcc.dri.edu'
-            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-            context['area_type'] = form['select_overlay_by']
+        context['host'] = HOST
     return render_to_response('my_data/data/station/home.html', context, context_instance=RequestContext(request))
 
 
@@ -347,20 +315,11 @@ def data_gridded(request):
     initial, checkbox_vals = set_data_gridded_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set up maps if needed
-    context['host'] = 'wrcc.dri.edu'
+    context['host'] = HOST
     context['area_type'] = initial['select_grid_by']
     context[initial['select_grid_by']] = WRCCData.AREA_DEFAULTS[initial['select_grid_by']]
     kml_file = initial['overlay_state'] + '_' + initial['select_grid_by'] + '.kml'
     context[initial['overlay_state'] + '_selected'] = 'selected'
-    context['kml_file_path'] = WEB_SERVER_DIR +  kml_file
-    #Check if kml file exists, if not generate it
-    try:
-        with open(TEMP_FILE_DIR + kml_file):
-            if os.stat(TEMP_FILE_DIR + kml_file).st_size==0:
-                status = WRCCUtils.generate_kml_file(initial['select_grid_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
-    except IOError:
-        status = WRCCUtils.generate_kml_file(initial['select_grid_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
-
     context[initial['select_grid_by']] = WRCCData.AREA_DEFAULTS[initial['select_grid_by']]
 
     if 'formData' in request.POST:
@@ -372,12 +331,6 @@ def data_gridded(request):
         if form_error:
             context['form_error'] = form_error
             return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
-        if form_cleaned['select_grid_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
-            context['host'] = 'wrcc.dri.edu'
-            kml_file_name = form_cleaned['overlay_state'] + '_' + form_cleaned['select_grid_by'] + '.kml'
-            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-            context['area_type'] = form_cleaned['select_grid_by']
-
         initial,checkbox_vals = set_data_gridded_initial(form)
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
         display_params_list, params_dict = set_data_gridded_params(form)
@@ -433,10 +386,10 @@ def data_gridded(request):
             results_json = json.dumps(json_dict)
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
             json_file = '%s_area_time_series.json' %(time_stamp)
-            f = open(TEMP_FILE_DIR + '%s' %(json_file),'w+')
+            f = open(TEMP + '%s' %(json_file),'w+')
             f.write(results_json)
             f.close()
-            context['JSON_URL'] = WEB_SERVER_DIR
+            context['JSON_URL'] = WEB_TEMP
             context['json_file'] = json_file
         #Render to page if html format was chosen, else save to file
         if form_cleaned['data_format'] == 'html':
@@ -458,29 +411,11 @@ def data_gridded(request):
         initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[form['select_overlay_by']]
         initial['autofill_list'] = 'US_' + form['select_overlay_by']
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-        at = form['select_overlay_by']
-        st = form['overlay_state']
-        context[st + '_selected'] = 'selected'
-        kml_file_name = st + '_' + at + '.kml'
-        '''
-        status = create_kml_file(KML_URL,TEMP_FILE_DIR, kml_file_name,form['select_overlay_by'], form['overlay_state'])
-        context['status']=status
+        context[form['overlay_state'] + '_selected'] = 'selected'
+        kml_file_path = create_kml_file(form['select_overlay_by'], form['overlay_state'])
+        context['kml_file_path'] = kml_file_path
         context['area_type'] = form['select_overlay_by']
-        context['host'] = 'wrcc.dri.edu'
-        if status == 'Exists':
-            context['kml_file_path'] = STATIC_KML + kml_file_name
-        else:
-            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-        '''
-        dir_location = TEMP_FILE_DIR
-        status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
-        if not status == 'Success':
-            context['overlay_error'] = status
-        else:
-            context['host'] = 'wrcc.dri.edu'
-            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-            context['area_type'] = form['select_overlay_by']
-
+        context['host'] = HOST
     return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
 
 
@@ -571,12 +506,6 @@ def metagraph(request):
                     station_meta = WRCCUtils.metadict_to_display(meta_request['meta'][0], key_order)
             else:
                 station_meta = {'error':'No meta data found for station: %s.' %station_id}
-                '''
-                if 'error' in meta_request.keys():
-                    station_meta = {'error': meta_request['error']}
-                else:
-                    station_meta = {'error':'No meta data found for station: %s.' %station_id}
-                '''
             context['station_meta'] = station_meta
             #Call perl script that generates gif graphs
             #FIX ME! Should be able to call it from html:
@@ -680,7 +609,7 @@ def monthly_aves(request):
             json_file = '%s_monthly_aves_%s_%s_%s.json' \
             %(time_stamp, str(form.cleaned_data['station_id']), s_date, e_date)
             context['json_file'] = json_file
-            with  open(TEMP_FILE_DIR + '%s' %(json_file),'w+') as f:
+            with  open(TEMP + '%s' %(json_file),'w+') as f:
                 f.write(results_json)
     return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
 
@@ -692,7 +621,7 @@ def clim_sum_maps(request):
     #Check if we are coming in from other page, e.g. Gridded Data
     #Set initial accordingly
     if json_file is not None:
-        with open(TEMP_FILE_DIR + json_file, 'r') as f:
+        with open(TEMP + json_file, 'r') as f:
             try:
                 json_data = WRCCUtils.u_convert(json.loads(f.read()))
                 initial,checkbox_vals = set_clim_sum_maps_initial(json_data['search_params'])
@@ -705,19 +634,10 @@ def clim_sum_maps(request):
     join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set up maps if needed
-    context['host'] = 'wrcc.dri.edu'
-    context['area_type'] = initial['select_grid_by']
+    #context['host'] = HOST
+    #context['area_type'] = initial['select_grid_by']
     context[initial['select_grid_by']] = WRCCData.AREA_DEFAULTS[initial['select_grid_by']]
-    kml_file = initial['overlay_state'] + '_' + initial['select_grid_by'] + '.kml'
     context[initial['overlay_state'] + '_selected'] = 'selected'
-    context['kml_file_path'] = WEB_SERVER_DIR +  kml_file
-    #Check if kml file exists, if not generate it
-    try:
-        with open(TEMP_FILE_DIR + kml_file):
-            if os.stat(TEMP_FILE_DIR + kml_file).st_size==0:
-                status = WRCCUtils.generate_kml_file(initial['select_grid_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
-    except IOError:
-        status = WRCCUtils.generate_kml_file(initial['select_grid_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
 
     if 'formMap' in request.POST:
         form = set_form(request)
@@ -732,16 +652,8 @@ def clim_sum_maps(request):
         initial_plot, checkbox_vals_plot = set_map_plot_options(form)
         join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-        #Set overlay map if needed
-        if form['select_grid_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
-            context['host'] = 'wrcc.dri.edu'
-            kml_file_name = form['overlay_state'] + '_' + form['select_grid_by'] + '.kml'
-            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-            context['area_type'] = form['select_grid_by']
         #Generate Maps
         figure_files = []
-        #context['width'] = WRCCData.IMAGE_SIZES[form['image_size']][0]
-        #context['height'] = WRCCData.IMAGE_SIZES[form['image_size']][1]
         image = {
             'type':'png',
             'proj':form['projection'],
@@ -772,7 +684,7 @@ def clim_sum_maps(request):
             result = fig.get_grid()
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
             figure_file = 'clim_sum_map_' + time_stamp + '.png'
-            file_path_big =TEMP_FILE_DIR + figure_file
+            file_path_big =TEMP + figure_file
             fig.build_figure(result, file_path_big)
             figure_files.append(figure_file)
             d_p = []
@@ -791,8 +703,9 @@ def clim_sum_maps(request):
             d_p.insert(2, [WRCCData.DISPLAY_PARAMS[form['select_grid_by']], form[form['select_grid_by']].upper()])
             display_params.append(d_p)
         context['display_params'] = display_params
-        context['JSON_URL'] = WEB_SERVER_DIR
+        context['JSON_URL'] = WEB_TEMP
         context['figure_files'] = figure_files
+
     #overlay map generation
     if 'formOverlay' in request.POST:
         form = set_form(request)
@@ -808,18 +721,12 @@ def clim_sum_maps(request):
         initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[form['select_overlay_by']]
         initial['autofill_list'] = 'US_' + form['select_overlay_by']
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-        at = form['select_overlay_by']
-        st = form['overlay_state']
-        context[st + '_selected'] = 'selected'
-        kml_file_name = st + '_' + at + '.kml'
-        dir_location = TEMP_FILE_DIR
-        status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
-        if not status == 'Success':
-            context['overlay_error'] = status
-        else:
-            context['host'] = 'wrcc.dri.edu'
-            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-            context['area_type'] = form['select_overlay_by']
+        context[form['overlay_state'] + '_selected'] = 'selected'
+        kml_file_path = create_kml_file(form['select_overlay_by'], form['overlay_state'])
+        context['kml_file_path'] = kml_file_path
+        context['area_type'] = form['select_overlay_by']
+        context['host'] = HOST
+
     return render_to_response('my_data/apps/gridded/clim_sum_maps.html', context, context_instance=RequestContext(request))
 
 def clim_prob_maps(request):
@@ -837,7 +744,7 @@ def area_time_series(request):
     #Check if we are coming in from other page, e.g. Gridded Data
     #Set initial accordingly
     if json_file is not None:
-        with open(TEMP_FILE_DIR + json_file, 'r') as f:
+        with open(TEMP + json_file, 'r') as f:
             try:
                 json_data = WRCCUtils.u_convert(json.loads(f.read()))
                 initial,checkbox_vals = set_area_time_series_initial(json_data['search_params'])
@@ -852,19 +759,10 @@ def area_time_series(request):
     join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set up maps if needed
-    context['host'] = 'wrcc.dri.edu'
+    context['host'] = HOST
     context['area_type'] = initial['select_grid_by']
     context[initial['select_grid_by']] = WRCCData.AREA_DEFAULTS[initial['select_grid_by']]
-    kml_file = initial['overlay_state'] + '_' + initial['select_grid_by'] + '.kml'
     context[initial['overlay_state'] + '_selected'] = 'selected'
-    context['kml_file_path'] = WEB_SERVER_DIR +  kml_file
-    #Check if kml file exists, if not generate it
-    try:
-        with open(TEMP_FILE_DIR + kml_file):
-            if os.stat(TEMP_FILE_DIR + kml_file).st_size==0:
-                status = WRCCUtils.generate_kml_file(initial['select_grid_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
-    except IOError:
-        status = WRCCUtils.generate_kml_file(initial['select_grid_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
 
     if 'formTS' in request.POST:
         context['need_gridpoint_map'] = False
@@ -886,19 +784,13 @@ def area_time_series(request):
         context['display_params_list'] = display_params_list
         #joins plot opts to search_params
         join_dicts(search_params,initial_plot)
-        #Set overlay map if neded
-        if form['select_grid_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
-            context['host'] = 'wrcc.dri.edu'
-            kml_file_name = form['overlay_state'] + '_' + form['select_grid_by'] + '.kml'
-            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-            context['area_type'] = form['select_grid_by']
         #Data Request
         #Skip data generation of it has already been performed
         json_file = request.GET.get('json_file', None)
         if json_file is not None:
             context['json_file'] =json_file
-            context['JSON_URL'] = TEMP_FILE_DIR
-            with open(TEMP_FILE_DIR + json_file, 'r') as f:
+            context['JSON_URL'] = TEMP
+            with open(TEMP + json_file, 'r') as f:
                 try:
                     json_data = WRCCUtils.u_convert(json.loads(f.read()))
                     if not 'graph_data' in json_data.keys() or not 'download_data' in json_data.keys():
@@ -947,15 +839,16 @@ def area_time_series(request):
         results_json = json.dumps(json_dict)
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         json_file = '%s_area_time_series.json' %(time_stamp)
-        f = open(TEMP_FILE_DIR + '%s' %(json_file),'w+')
+        f = open(TEMP + '%s' %(json_file),'w+')
         f.write(results_json)
         f.close()
-        context['JSON_URL'] = WEB_SERVER_DIR
+        context['JSON_URL'] = WEB_TEMP
         context['json_file'] = json_file
 
     #overlay map generation
     if 'formOverlay' in request.POST:
         form = set_form(request)
+        context['form'] = form
         context['need_overlay_map'] = True
         context['need_gridpoint_map'] = False
         initial, checkbox_vals = set_area_time_series_initial(request)
@@ -969,27 +862,21 @@ def area_time_series(request):
         initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[form['select_overlay_by']]
         initial['autofill_list'] = 'US_' + form['select_overlay_by']
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-        at = form['select_overlay_by']
-        st = form['overlay_state']
-        context[st + '_selected'] = 'selected'
-        kml_file_name = st + '_' + at + '.kml'
-        dir_location = TEMP_FILE_DIR
-        status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
-        if not status == 'Success':
-            context['overlay_error'] = status
-        else:
-            context['host'] = 'wrcc.dri.edu'
-            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-            context['area_type'] = form['select_overlay_by']
+        context[form['overlay_state'] + '_selected'] = 'selected'
+        kml_file_path = create_kml_file(form['select_overlay_by'], form['overlay_state'])
+        context['kml_file_path'] = kml_file_path
+        context['area_type'] = form['select_overlay_by']
+        context['host'] = HOST
+
     #Downlaod Table Data
     if 'formDownload' in request.POST:
         data_format = request.POST.get('data_format', 'clm')
         delimiter = request.POST.get('delimiter', 'comma')
         output_file_name = request.POST.get('output_file_name', 'output')
         json_file = request.POST.get('json_file', None)
-        with open(TEMP_FILE_DIR + json_file, 'r') as f:
+        with open(TEMP + json_file, 'r') as f:
             json_dict =  json.load(f)
-        DDJ = WRCCClasses.DownloadDataJob('area_time_series',data_format,delimiter, output_file_name, request=request, json_in_file=TEMP_FILE_DIR + json_file)
+        DDJ = WRCCClasses.DownloadDataJob('area_time_series',data_format,delimiter, output_file_name, request=request, json_in_file=TEMP + json_file)
         return DDJ.write_to_file()
 
     return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
@@ -1074,7 +961,7 @@ def grid_point_time_series(request):
                 search_params['lon'], form0.cleaned_data['start_date'], \
                 form0.cleaned_data['end_date'])
             context['json_file'] = json_file
-            JSON_URL = TEMP_FILE_DIR
+            JSON_URL = TEMP
             f = open('%s%s' %(JSON_URL,json_file),'w+')
             f.write(results_json)
             f.close()
@@ -1082,7 +969,7 @@ def grid_point_time_series(request):
 
 def station_locator_app(request):
     from subprocess import call
-    call(["touch", TEMP_FILE_DIR + "Empty.json"])
+    call(["touch", TEMP + "Empty.json"])
     context = {
         'title': 'Station Finder',
     }
@@ -1092,19 +979,10 @@ def station_locator_app(request):
     initial,checkbox_vals = set_station_locator_initial(request)
     context['initial'] = initial;context['checkbox_vals']=checkbox_vals
     #Set up maps if needed
-    context['host'] = 'wrcc.dri.edu'
-    #context['area_type'] = initial['select_stations_by']
-    #context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
-    kml_file = initial['overlay_state'] + '_' + initial['select_stations_by'] + '.kml'
+    context['host'] = HOST
+    context['area_type'] = initial['select_stations_by']
+    context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
     context[initial['overlay_state'] + '_selected'] = 'selected'
-    context['kml_file_path'] = WEB_SERVER_DIR +  kml_file
-    #Check if kml file exists, if not generate it
-    try:
-        with open(TEMP_FILE_DIR + kml_file):
-            if os.stat(TEMP_FILE_DIR + kml_file).st_size==0:
-                status = WRCCUtils.generate_kml_file(initial['select_stations_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
-    except IOError:
-        status = WRCCUtils.generate_kml_file(initial['select_stations_by'], initial['overlay_state'] , kml_file, TEMP_FILE_DIR)
 
     if 'formData' in request.POST:
         #Turn request object into python dict
@@ -1115,13 +993,6 @@ def station_locator_app(request):
         if form_error:
             context['form_error'] = form_error
             return render_to_response('my_data/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
-        #Set up Maps
-        if form['select_stations_by'] in ['basin', 'county_warning_area', 'climate_division', 'county']:
-            context['host'] = 'wrcc.dri.edu'
-            kml_file_name = form['overlay_state'] + '_' + form['select_stations_by'] + '.kml'
-            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-            context['area_type'] = form['select_stations_by']
-
         initial,checkbox_vals = set_station_locator_initial(form)
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
         #Define map title
@@ -1163,24 +1034,16 @@ def station_locator_app(request):
         initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[form['select_overlay_by']]
         initial['autofill_list'] = 'US_' + form['select_overlay_by']
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-        at = form['select_overlay_by']
-        st = form['overlay_state']
-        context[st + '_selected'] = 'selected'
-        kml_file_name = st + '_' + at + '.kml'
-        dir_location = TEMP_FILE_DIR
-        status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
-        if not status == 'Success':
-            context['overlay_error'] = status
-        else:
-            context['host'] = 'wrcc.dri.edu'
-            context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
-            context['area_type'] = form['select_overlay_by']
-
+        context[form['overlay_state'] + '_selected'] = 'selected'
+        kml_file_path = create_kml_file(form['select_overlay_by'], form['overlay_state'])
+        context['kml_file_path'] = kml_file_path
+        context['area_type'] = form['select_overlay_by']
+        context['host'] = HOST
     return render_to_response('my_data/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
 
 def old_station_locator_app(request):
     from subprocess import call
-    call(["touch", TEMP_FILE_DIR + "Empty.json"])
+    call(["touch", TEMP + "Empty.json"])
     context = {
         'title': 'Station Finder',
     }
@@ -1217,9 +1080,9 @@ def old_station_locator_app(request):
                 }
                 form2 =forms.StateForm(initial=initial)
                 context['form2'] = form2
-                context['host'] = 'wrcc.dri.edu'
+                context['host'] = HOST
                 context['type'] = form0.cleaned_data['select_stations_by']
-                context['kml_file_path'] = STATIC_KML + 'nv_' + form0.cleaned_data['select_stations_by'] + '.kml'
+                context['kml_file_path'] = WEB_KML + 'nv_' + form0.cleaned_data['select_stations_by'] + '.kml'
             context[form0.cleaned_data['select_stations_by']] = WRCCData.AREA_DEFAULTS[form0.cleaned_data['select_stations_by']]
 
     if 'form1' in request.POST:
@@ -1302,13 +1165,13 @@ def old_station_locator_app(request):
             at = str(form2.cleaned_data['select_stations_by'])
             st = str(form2.cleaned_data['state']).lower()
             kml_file_name = st + '_' + at + '.kml'
-            dir_location = TEMP_FILE_DIR
+            dir_location = TEMP
             status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
             if not status == 'Success':
                 context['overlay_error'] = status
             else:
-                context['host'] = 'wrcc.dri.edu'
-                context['kml_file_path'] = WEB_SERVER_DIR + kml_file_name
+                context['host'] = HOST
+                context['kml_file_path'] = WEB_TEMP + kml_file_name
 
 
     return render_to_response('my_data/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
@@ -1326,7 +1189,7 @@ def sodxtrmts(request):
     json_file = request.GET.get('json_file', None)
     if json_file is not None:
         context['json_file'] =json_file
-        context['JSON_URL'] = TEMP_FILE_DIR
+        context['JSON_URL'] = TEMP
     initial,checkbox_vals = set_sodxtrmts_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set graph and plot options
@@ -1338,6 +1201,8 @@ def sodxtrmts(request):
 
     #Time Serie Table Generation and graph if desired
     if 'formSodxtrmts' in request.POST:
+        #Turn request object into python dict
+        form = set_form(request)
         #Set initial form parameters for html
         initial,checkbox_vals = set_sodxtrmts_initial(request)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
@@ -1347,9 +1212,6 @@ def sodxtrmts(request):
         #combine the graph options with the plot options
         join_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
         context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
-        #Turn request object into python dict
-        form = set_form(request)
-
         #Form sanity check
         #form_error = check_sodxtrmts_form(form)
         fields_to_check = ['start_year', 'end_year','max_missing_days', 'graph_start_year', 'graph_end_year', \
@@ -1366,7 +1228,7 @@ def sodxtrmts(request):
         if json_file is None:
             json_file = request.POST.get('j_file', None)
         if json_file:
-            with open(TEMP_FILE_DIR + json_file, 'r') as f:
+            with open(TEMP + json_file, 'r') as f:
                 json_dict = WRCCUtils.u_convert(json.loads(f.read()))
                 context['json_dict'] = json_dict
             initial_old = json_dict['initial'];checkbox_vals_old = json_dict['checkbox_vals']
@@ -1388,13 +1250,14 @@ def sodxtrmts(request):
                     context['json_dict'] = json_dict
                     #context['req'] =checkbox_vals_graph
                     results_json = json.dumps(json_dict)
-                    with open(TEMP_FILE_DIR + '%s' %(json_file),'w+') as f:
+                    with open(TEMP + '%s' %(json_file),'w+') as f:
                         f.write(results_json)
                     context['json_file'] =json_file
-                    context['JSON_URL'] = TEMP_FILE_DIR
+                    context['JSON_URL'] = TEMP
                     return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
             else:
                 #New data analysis
+                context['json_dict'] = {}
                 initial['generate_graph']='F'
                 checkbox_vals['generate_graph_T_selected'] = ''
                 checkbox_vals['generate_graph_F_selected'] = 'selected'
@@ -1495,13 +1358,13 @@ def sodxtrmts(request):
             json_file = '%s_sodxtrmts_%s_%s_%s.json' \
             %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
             json_dict['json_file'] = json_file
-            json_dict['JSON_URL'] = TEMP_FILE_DIR
+            json_dict['JSON_URL'] = TEMP
             results_json = json.dumps(json_dict)
-            with open(TEMP_FILE_DIR + '%s' %(json_file),'w+') as f:
+            with open(TEMP + '%s' %(json_file),'w+') as f:
                 f.write(results_json)
             context['json_dict'] = json_dict
             context['json_file'] = json_file
-            context['JSON_URL'] = TEMP_FILE_DIR
+            context['JSON_URL'] = TEMP
 
     #Downlaod Table Data
     if 'formDownload' in request.POST:
@@ -1509,10 +1372,10 @@ def sodxtrmts(request):
         delimiter = request.POST.get('delimiter', 'comma')
         output_file_name = request.POST.get('output_file_name', 'output')
         json_file = request.POST.get('json_file', None)
-        with open(TEMP_FILE_DIR + json_file, 'r') as f:
+        with open(TEMP + json_file, 'r') as f:
             json_dict =  json.load(f)
         context['json_dict'] = json_dict
-        DDJ = WRCCClasses.DownloadDataJob('Sodxtrmts',data_format,delimiter, output_file_name, request=request, json_in_file=TEMP_FILE_DIR + json_file)
+        DDJ = WRCCClasses.DownloadDataJob('Sodxtrmts',data_format,delimiter, output_file_name, request=request, json_in_file=TEMP + json_file)
         return DDJ.write_to_file()
 
     return render_to_response('my_data/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
@@ -1546,8 +1409,16 @@ def sodsumm(request):
             #WARNING: station_ids, names need to be called before dates_list
             #station_ids, station_names = DJ.get_station_ids_names()
             station_names, station_states, station_ids, station_networks, station_lls, station_elevs, station_uids, station_climdivs, station_counties  = DJ.get_station_meta()
+            if not station_names or not station_ids:
+                results = {}
+                context['run_done']= True
+                return render_to_response('my_data/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
             dates_list = DJ.get_dates_list()
             data = DJ.get_data()
+            if not data or not dates_list:
+                results = {}
+                context['run_done']= True
+                return render_to_response('my_data/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
             #Run application
             App = WRCCClasses.SODApplication('Sodsumm', data, app_specific_params=app_params)
             results = App.run_app()
@@ -1575,12 +1446,14 @@ def sodsumm(request):
             context['tab_list'] = tab_list
             #Define html content
             context['run_done'] = True
-            if dates_list:
+            #Check if dates_list is
+            if dates_list and len(dates_list) >=2 and len(dates_list[0])>=4 and len(dates_list[1])>=4:
                 context['start_year'] = dates_list[0][0:4]
                 context['end_year'] = dates_list[-1][0:4]
             else:
                 context['start_year'] = '0000'
                 context['end_year'] = '0000'
+                dates_list = ['0000','0000']
             context['station_name'] = station_names
             headers = set_sodsumm_headers(table_list)
             context['headers'] = headers
@@ -1612,10 +1485,10 @@ def sodsumm(request):
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
             json_file = '%s_sodsumm_%s_%s_%s.json' \
             %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
-            f = open(TEMP_FILE_DIR + '%s' %(json_file),'w+')
+            f = open(TEMP + '%s' %(json_file),'w+')
             f.write(results_json)
             f.close()
-            context['JSON_URL'] = TEMP_FILE_DIR
+            context['JSON_URL'] = TEMP
             context['json_file'] = json_file
 
     #Downlaod Table Data
@@ -1626,18 +1499,18 @@ def sodsumm(request):
             output_file_name = request.POST.get('output_file_name', 'output')
             json_file = request.POST.get('json_file', None)
             tab = request.POST.get('tab', None)
-            with open(TEMP_FILE_DIR + json_file, 'r') as json_f:
+            with open(TEMP + json_file, 'r') as json_f:
                 json_data = WRCCUtils.u_convert(json.loads(json_f.read()))
                 #find the correct data set corresponding to the tab name
                 for idx, data_dict in enumerate(json_data):
                     if data_dict['table_name'] == tab:
                         #Overwrite json_in_file
                         json_in_file_name = json_file + '_in'
-                        with open(TEMP_FILE_DIR + json_in_file_name, 'w+') as json_f:
+                        with open(TEMP + json_in_file_name, 'w+') as json_f:
                             json.dump(data_dict,json_f)
                         break
 
-            DDJ = WRCCClasses.DownloadDataJob('Sodsumm',data_format,delimiter, output_file_name, request=request, json_in_file=TEMP_FILE_DIR + json_in_file_name)
+            DDJ = WRCCClasses.DownloadDataJob('Sodsumm',data_format,delimiter, output_file_name, request=request, json_in_file=TEMP + json_in_file_name)
             return DDJ.write_to_file()
 
     return render_to_response('my_data/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
@@ -1649,26 +1522,13 @@ def sodsumm(request):
 ###########
 #General
 ###########
-def create_kml_file(kml_url, kml_tmp_url, kml_file_name, select_overlay_by,overlay_state):
-    '''
-    Checks if kml file already exits in kml_url,
-    if not, creates it in kml_tmp_url
-    (since wrcc-data user does not have permisson to write in kml_url)
-    copys kml file to kml_url
-    '''
-    #Check if kml file exists, if not generate it
-    kml_file_path = kml_url + kml_file_name
-    file_status = 'Exists'
-    try:
-        with open(kml_file_path, 'r') as kml_f:
-            pass
-    except:
-        file_status = 'Generate'
-    if file_status == 'Generate':
-        kml_tmp_file_path = kml_tmp_url + kml_file_name
-        status = WRCCUtils.generate_kml_file(select_overlay_by, overlay_state , kml_file_name, kml_tmp_url)
-        #scopy2(kml_tmp_file_path,kml_file_path)
-    return file_status
+def create_kml_file(area_type, overlay_state):
+    kml_file_name = overlay_state + '_' + area_type + '.kml'
+    kml_file_path = WEB_TEMP +  kml_file_name
+    if not WRCCUtils.check_for_file(TMP_URL,kml_file_name):
+        status = WRCCUtils.generate_kml_file(area_type, overlay_state, kml_file_name, TEMP)
+    return kml_file_path
+
 
 def set_GET(request):
     if type(request) == dict:
@@ -2399,7 +2259,7 @@ def set_map_plot_options(request):
     initial = {}
     checkbox_vals = {}
     Get = set_GET(request)
-    initial['image_size'] = Get('image_size', 'small')
+    initial['image_size'] = Get('image_size', 'medium')
     initial['level_number'] = Get('level_number', '5')
     initial['cmap'] = Get('cmap', 'rainbow')
     initial['map_ol'] = Get('map_ol', 'state')
@@ -2429,7 +2289,7 @@ def set_plot_options(request):
     checkbox_vals = {}
     Get = set_GET(request)
     initial['graph_title'] = Get('graph_title','Use default')
-    initial['image_size'] = Get('image_size', 'small')
+    initial['image_size'] = Get('image_size', 'medium')
     initial['major_grid']  = Get('major_grid', 'T')
     initial['minor_grid'] = Get('minor_grid', 'F')
     initial['connector_line'] = str(Get('connector_line', 'T'))
@@ -2558,7 +2418,7 @@ def set_sodxtrmts_graph_initial(request):
     initial['graph_start_month'] = Get('graph_start_month', '01')
     initial['graph_end_month'] = Get('graph_end_month', '02')
     initial['graph_start_year'] = Get('graph_start_year', Get('start_year', 'POR'))
-    initial['graph_end_year'] = Get('graph_end_year', Get('end_year', '2013'))
+    initial['graph_end_year'] = Get('graph_end_year', Get('end_year', 'POR'))
     initial['graph_summary'] = Get('graph_summary', 'mean')
     initial['graph_show_running_mean'] = Get('graph_show_running_mean', 'T')
     initial['graph_running_mean_years'] = Get('graph_running_mean_years', '9')

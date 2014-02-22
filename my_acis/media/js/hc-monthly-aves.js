@@ -100,20 +100,6 @@ $(function () {
                 }
                 //Horizontal Plotlines
                 var y_axis_props = set_axis_properties(max,'Use default', min, 'Use default',datadict[i].element,'mave','F',10.0);
-                /*
-                var y_plotlines = [];
-                if (max && min && Math.abs(max - min) > 0.00001){
-                    for (var val=min + (max - min)/5;val<=max + 4*(max - min)/5;val+=(max - min)/5) {
-                        var plotline = {
-                            color: '#787878',
-                            dashStyle:'dash',
-                            width: 1,
-                            value: val,
-                        };
-                        y_plotlines.push(plotline);
-                    }
-                }
-                */
                 //Define element dependent vars like y-axis max, min, plot-color
                 if (datadict[i].element == 'maxt'){
                     var p_color = '#FF0000';
@@ -152,7 +138,6 @@ $(function () {
                         max:y_axis_props.axisMax,
                         min:y_axis_props.axisMin,
                         plotLines:y_axis_props.plotLines,
-                        //plotLines:y_plotlines,
                         //tickInterval:precise_round((max - min)/5, 0),
                         title: {
                             style:style_text,
