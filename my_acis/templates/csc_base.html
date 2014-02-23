@@ -21,8 +21,8 @@
         ga('create', 'UA-44724757-1', 'dri.edu');
         ga('send', 'pageview');
     </script>
-    <meta name="keywords" content="climate,climate change,Southwest US,Soutwest CSC,Climate Science Center, Climate Knowledge Exchange">
-    <meta name="description" content="Southwest Climate Knowledge Exchange">
+    <meta name="keywords" content="climate,climate change,Southwest US,Soutwest CSC,Climate Science Center, Climate Knowledge">
+    <meta name="description" content="Southwest Climate and ENvironmental Information Collaborative">
     <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
     <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
     <!-- jquery -->
@@ -34,6 +34,8 @@
     <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/graphics-utils.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/form-utils.js"></script>
+    <!--Custom modinizer to deal with backbutton issue-->
+    <!--<script src="{{ MEDIA_URL }}js/modernizr.js"></script>-->
     <!-- Map API scripts and properties-->
     <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
     <script type="text/javascript"
@@ -79,7 +81,9 @@
 
 </head>
 
-<body>
+<!--deals with back button issue-->
+<body onbeforeunload="reset_options()">
+<!--<body>-->
 
 <div class="container">
     <!-- Header -->
@@ -150,7 +154,7 @@
             </tr>
             <tr>
             <td>
-            <input type="radio"  name="sitesearch" value="http://wrcc.dri.edu/csc/swcke/home/" checked />This Site
+            <input type="radio"  name="sitesearch" value="http://wrcc.dri.edu/csc/scenic/home/" checked />This Site
             <input type="radio"  name="sitesearch"value="" />The Web
             </td>
             <td></td>

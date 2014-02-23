@@ -39,15 +39,21 @@ fourtnight = WRCCUtils.set_back_date(14)
 
 def test(request):
     context = {
-        'title': 'Southwest Climate Knowledge Exchange',
+        'title': 'Southwest Climate and ENvironmental Information Collaborative',
     }
     return render_to_response('my_data/index.html', context, context_instance=RequestContext(request))
 
 def home(request):
     context = {
-        'title': 'Southwest Climate Knowledge Exchange',
+        'title': 'Southwest Climate and ENvironmental Information Collaboration',
     }
     return render_to_response('my_data/home.html', context, context_instance=RequestContext(request))
+
+def swcke_home(request):
+    context = {
+        'title': 'Page Redirect',
+    }
+    return render_to_response('my_data/swcke_home.html', context, context_instance=RequestContext(request))
 
 def help(request):
     context = {
@@ -282,7 +288,6 @@ def data_station(request):
                 context['station_ids_error'] = 'Data could not be found for some stations in the list.'
         if form['data_format'] != 'html':
             return WRCCUtils.write_station_data_to_file(resultsdict,params_dict['delimiter'], WRCCData.FILE_EXTENSIONS[str(form['data_format'])], request=request, output_file_name=str(form['output_file_name']), show_flags=params_dict['show_flags'], show_observation_time=params_dict['show_observation_time'])
-            #return WRCCUtils.write_station_data_to_file(resultsdict['stn_data'], resultsdict['dates'], resultsdict['stn_names'], resultsdict['stn_ids'], resultsdict['elements'],params_dict['delimiter'], WRCCData.FILE_EXTENSIONS[str(form['data_format'])], request=request, output_file_name=str(form['output_file_name']), show_flags=params_dict['show_flags'], show_observation_time=params_dict['show_observation_time'])
 
     #overlay map generation
     if 'formOverlay' in request.POST:
@@ -298,9 +303,7 @@ def data_station(request):
         initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[form['select_overlay_by']]
         initial['autofill_list'] = 'US_' + form['select_overlay_by']
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-        at = form['select_overlay_by']
-        st = form['overlay_state']
-        context[st + '_selected'] = 'selected'
+        context[form['overlay_state'] + '_selected'] = 'selected'
         kml_file_path = create_kml_file(form['select_overlay_by'], form['overlay_state'])
         context['kml_file_path'] = kml_file_path
         context['area_type'] = form['select_overlay_by']
@@ -2186,7 +2189,7 @@ def set_data_station_params(form):
         if key == 'station_ids':
             params_dict['station_list'] = form['station_ids'].replace(' ','').split(',')
 
-        if key == form['select_stations_by'] and key!= 'station_ids':
+        if key == form['select_stations_by'] and key not in  ['station_ids', 'state', 'shape']:
             params_dict[key] = find_id(val, MEDIA_URL + '/json/US_' + key +'.json')
             #override display_params_list
             if display_params_list[0][1].upper() != params_dict[key].upper():
@@ -2448,9 +2451,10 @@ def set_data_station_initial(request):
     initial['s_date'] = fourtnight
     initial['e_date'] = yesterday
     initial['select_stations_by'] = Get('select_stations_by', 'station_id')
-    initial[str(initial['select_stations_by'])] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
-    initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
-    initial['area_type_value'] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
+    initial[initial['select_stations_by']] = Get(initial['select_stations_by'], WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
+    #initial['area_type_label'] = Get('area_type_label', WRCCData.DISPLAY_PARAMS[initial['select_stations_by']])
+    initial['area_type_label'] =  WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
+    initial['area_type_value'] = initial[initial['select_stations_by']]
     #initial['area_type_value'] = Get('area_type_value', WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_stations_by']

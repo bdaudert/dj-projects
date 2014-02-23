@@ -398,6 +398,7 @@
     {%endif%}
     <br /><br />
     <!--Station finder Map-->
+    <div id="results">
     {%if error%}
     <p align="center"><font size="3"><font color="red">Result</font>: {{error}}</font></p>
     {%endif%}
@@ -439,6 +440,7 @@
         </table>
     </div>
     {%endif%}
+    </div> <!--end results div-->
 </td>
 <td valign="top" align="left" width="150px">
     {%if station_json and not error and not form_error and not need_overlay_map%}

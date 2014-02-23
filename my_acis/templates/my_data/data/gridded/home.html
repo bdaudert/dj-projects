@@ -1,6 +1,6 @@
 {% extends "csc_base.html" %}
 <meta name="keywords" content="data, station data, historic data, acis">
-<meta name="description" content="SWCKE Historic Station Data">
+<meta name="description" content="SCENIC Historic Station Data">
 
 {%load my_data_filters%}
 
@@ -23,7 +23,7 @@
 <td valign="top" width="30%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}gridded/'"/>
     <div id='formData'>
-        <form method="post" action="">{% csrf_token %}
+        <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData">
         <tr valign="top">
         <td>Select grid by:</td>
@@ -525,6 +525,7 @@
     {%endif%}
     <br /><br />
     <!--Results section-->
+    <div id="results">
     {%if large_request %}
     <p class="error">{{large_request}}</p>
     {%endif%}
@@ -587,6 +588,6 @@
     </table>
 
     {%endif%}<!--End if results-->
-
+    </div><!--End results div-->
 </td></table>
 {%endblock%}

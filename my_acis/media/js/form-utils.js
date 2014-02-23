@@ -1,3 +1,16 @@
+//Reset all options on back buttono press
+//was issue in chrome
+//implemented in templates/csc_base.html 
+//<body onbeforeunload="reset_options()">
+function reset_options(){
+    var selects = document.getElementsByTagName('select');
+    for (idx=0;idx<selects.length;idx++){
+        if (selects[idx].id == "select_stations_by" || selects[idx].id == "select_grid_by" ){
+            selects[idx].selectedIndex = -1;
+        }
+    }
+}
+
 //Show "Loading image"
 function show_loading(){
     /*
@@ -435,7 +448,7 @@ function set_area_and_map(area_type){
     //Change value of hidden var area_type
     document.getElementById('area_type').value = area_type;
     var state = document.getElementById('overlay_state').value;
-    var kml_file_path = '/csc/media/kml/' + state + '_' + area_type + '.kml';
+    var kml_file_path = '/csc/media/tmp/' + state + '_' + area_type + '.kml';
     document.getElementById('kml_file_path').value=kml_file_path;
     if (area_type == 'basin' || area_type == 'county' || area_type == 'county_warning_area' || area_type =='climate_division'){
         document.getElementById('select_overlay_by').value= area_type;
@@ -471,6 +484,13 @@ function set_area_and_map(area_type){
 }
 
 function set_station_select(row_id,node,start_date,end_date){
+    //hide previous results
+    if ($('#' + 'results').length){
+        document.getElementById('results').style.display = "none";
+    }
+    if ($('#' + 'map_legend').length){
+        document.getElementById('map_legend').style.display = "none";
+    }
     var lv = set_area_and_map(node.value);
     //Set up autofill if needed
     set_autofill(lv.autofill_list);
@@ -502,6 +522,13 @@ function set_station_select(row_id,node,start_date,end_date){
 }
 
 function set_station_grid_select(row_id,node){
+    //hide previous results
+    if ($('#' + 'results').length){
+        document.getElementById('results').style.display = "none";
+    }
+    if ($('#' + 'map_legend').length){
+        document.getElementById('map_legend').style.display = "none";
+    }
     /*
     //Delete existing table row
     if ($('#' + row_id).length){

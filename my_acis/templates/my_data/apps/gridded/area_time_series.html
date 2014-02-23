@@ -1,12 +1,12 @@
 {% extends "csc_base.html" %}
 <meta name="keywords" content="tools, application, gridded data, time series, graph">
-<meta name="description" content="SWCKE Historic Station Data">
+<meta name="description" content="SCENIC Historic Station Data">
 
 {%load my_data_filters%}
 
 {% block content %} 
 <p align="center">You are here
-<a href="{{HOME_URL}}swcke/home/">Home></a>
+<a href="{{HOME_URL}}scenic/home/">Home></a>
 <a href="{{TOOLS_URL}}">Tools></a>
 <a href="{{TOOLS_URL}}gridded/">Gridded Data Tools></a>
 <a href="{{TOOLS_URL}}gridded/area_time_series/">Spatial Summary Time Series</a>
@@ -728,6 +728,7 @@
 
 
     <!--Results section-->
+    <div id="results">
     {%if results%}
     {%for el in search_params.element_list%}
     <div align="center" id="area_time_series_{{forloop.counter0}}" style="height:{{height}}px;width:{{width}}px;"></div>
@@ -736,6 +737,6 @@
     <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-area-ts.js"></script>
     
     {%endif%}<!--if results-->
-
+    </div><!--end results div-->
 </td></table>
 {%endblock%}
