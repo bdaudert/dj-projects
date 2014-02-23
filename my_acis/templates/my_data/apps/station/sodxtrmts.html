@@ -348,12 +348,18 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     {%endif%}
     </table>
     </td><td valign="top">
-    <table frame="box" class="formGraph" style="display:none">
     {%if initial.generate_graph == "T"%}
-    <tr valign="top" class="formGraph" style="display:table-row;">
+    <table frame="box" class="formGraph">
     {%else%}
-    <tr valign="top" class="formGraph" style="display:none;">
+    <table frame="box" class="formGraph" style="display:none">
     {%endif%}
+    <tr valign="top" class="formGraph" style="display:table-row;">
+    <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Graph Options</u></b></td>
+    </tr>
+    <tr valign="top" class="formGraph" style="display:table-row;">
+    <td colspan="3"><hr style="border-color:#006666;"></td>
+    </tr>
+    <tr valign="top" class="formGraph" style="display:table-row;">
     <td>Start Month: </td>
     <td>
         <select id="graph_start_month" name="graph_start_month">
@@ -380,11 +386,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial.generate_graph == "T"%}
     <tr valign="top" class="formGraph" style="display:table-row;">
-    {%else%}
-    <tr valign="top" class="formGraph" style="display:none;">
-    {%endif%}
     <td>End Month: </td>
     <td>
         <select id="graph_end_month" name="graph_end_month">
@@ -411,11 +413,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial.generate_graph == "T"%}
     <tr valign="top" class="formGraph" style="display:table-row;">
-    {%else%}
-    <tr valign="top" class="formGraph" style="display:none;">
-    {%endif%}
     <td id="Graph Start Year">Graph Start Year: </td>
     <td><input type="text" id="graph_start_year" name="graph_start_year" value="{{initial_graph.graph_start_year}}"></td>
     <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -427,11 +425,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial.generate_graph == "T"%}
     <tr valign="top" class="formGraph" style="display:table-row;">
-    {%else%}
-    <tr valign="top" class="formGraph" style="display:none;">
-    {%endif%}
     <td id="Graph End Year">End Year: </td>
     <td><input type="text" id="graph_end_year" name="graph_end_year" value="{{initial_graph.graph_end_year}}"></td>
     <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -443,11 +437,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial.generate_graph == "T"%}
     <tr valign="top" class="formGraph" style="display:table-row;">
-    {%else%}
-    <tr valign="top" class="formGraph" style="display:none;">
-    {%endif%}
     <td>Summary over months: </td>
     <td>
         <select id="graph_summary" name="graph_summary">
@@ -467,11 +457,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial.generate_graph == "T"%}
     <tr valign="top" class="formGraph" style="display:table-row;">
-    {%else%}
-    <tr valign="top" class="formGraph" style="display:none;">
-    {%endif%}
     <td>Show Running Mean?</td>
     <td>
         <select id="graph_show_running_mean" name="graph_show_running_mean" onchange="show_div_if_true(this,'rm_years');">
@@ -488,11 +474,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial.show_running_mean == "T" and initial.generate_graph == "T"%}
-        <tr valign="top" class="formGraph" id="rm_years">
-    {%else%}
-        <tr valign="top" class="formGraph" id="rm_years" style="display:none;">
-    {%endif%}
+    <tr valign="top" class="formGraph" id="rm_years">
     <td>Running Mean Years: </td>
     <td><input type="text" id="graph_running_mean_years" name="graph_running_mean_years" value="{{initial_graph.graph_running_mean_years}}"></td>
     <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -504,11 +486,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial.generate_graph == "T"%}
     <tr valign="top" class="formGraph" style="display:table-row;">
-    {%else%}
-    <tr valign="top" class="formGraph" style="display:none;">
-    {%endif%}
     <td>Plot incomplete years? </td>
     <td>
         <select id="graph_plot_incomplete_years" name="graph_plot_incomplete_years">
@@ -525,40 +503,23 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial.generate_graph == "T"%}
     <tr style="display:table-row;" class="formGraph"><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
-    {%else%}
-    <tr style="display:none;" class="formGraph"><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
-    {%endif%}
-    {%if initial.generate_graph == "T"%}
-    <tr valign="top" class="formGraph" style="display:table-row;">
-    {%else%}
-    <tr valign="top" class="formGraph" style="display:none;">
-    {%endif%}
-    <td colspan="3"><hr style="border-color:#006666;"></td>
-    </tr>
-    </td><td>
-    {%if initial.generate_graph == "T"%}
-    <tr valign="top" class="formGraph" style="display:table-row;">
-    {%else%}
-    <tr valign="top" class="formGraph" style="display:none;">
-    {%endif%}
-    <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Plot Options</u></b></td>
-    </tr>
-    {%if initial.generate_graph == "T"%}
     <tr valign="top" class="plOpts" style="display:table-row;">
-    {%else%}
-    <tr valign="top" class="plOpts" style="display:none;">
-    {%endif%}
     </tr>
     </table>
     </td><td valign="top">
-    <table class="formGraph" frame="box" style="display:none">
     {%if initial.generate_graph == "T"%}
-    <tr valign="top" class="plOpts" style="display:table-row;">
+    <table class="formGraph" frame="box">
     {%else%}
-    <tr valign="top" class="plOpts" style="display:none;">
+    <table class="formGraph" frame="box" style="display:none">
     {%endif%}
+    <tr valign="top" class="formGraph" style="display:table-row;">
+    <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Plot Options</u></b></td>
+    </tr>
+    <tr valign="top" class="formGraph" style="display:table-row;">
+    <td colspan="3"><hr style="border-color:#006666;"></td>
+    </tr>
+    <tr valign="top" class="plOpts" style="display:table-row;">
     <td>Graph Title:</td>
     <td><input type="text" id="graph_title" name="graph_title" value="{{initial_graph.graph_title}}"></td>
     <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -570,11 +531,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial.generate_graph == "T"%}
     <tr valign="top" class="plOpts" style="display:table-row;">
-    {%else%}
-    <tr valign="top" class="plOpts" style="display:none;">
-    {%endif%}
     <td>Image Size: </td>
     <td>
         <select id="image_size" name="image_size">
@@ -597,11 +554,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial.generate_graph == "T"%}
     <tr valign="top" class="plOpts" style="display:table-row;">
-    {%else%}
-    <tr valign="top" class="plOpts" style="display:none;">
-    {%endif%}
     <td>Show Major Grid?</td>
     <td>
         <select id="major_grid" name="major_grid">
@@ -618,11 +571,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial.generate_graph == "T"%}
     <tr valign="top" class="plOpts" style="display:table-row;">
-    {%else%}
-    <tr valign="top" class="plOpts" style="display:none;">
-    {%endif%}
     <td>Show Minor Grid?</td>
     <td>
         <select id="minor_grid" name="minor_grid">
@@ -639,11 +588,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial.generate_graph == "T"%}
     <tr valign="top" class="plOpts" style="display:table-row;">
-    {%else%}
-    <tr valign="top" class="plOpts" style="display:none;">
-    {%endif%}
     <td>Show Connector Line?</td>
     <td>
         <select id="connector_line" name="connector_line" onchange="show_div_if_true(this, 'cl_width');">
@@ -660,11 +605,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial_graph.connector_line == "T" and initial.generate_graph == "T"%}
-        <tr valign="top" class="plOpts" id="cl_width">
-    {%else%}
-        <tr valign="top" class="plOpts" id="cl_width" style="display:none;">
-    {%endif%}
+    <tr valign="top" class="plOpts" id="cl_width">
     <td id="Connector Line Width">Connector Line width:</td>
     <td><input type="text" id="connector_line_width" name="connector_line_width" value="{{initial_graph.connector_line_width}}"></td>
     <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -676,11 +617,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial.generate_graph == "T"%}
     <tr valign="top" class="plOpts" style="display:table-row;">
-    {%else%}
-    <tr valign="top" class="plOpts" style="display:none;">
-    {%endif%}
     <td>Show Markers?</td>
     <td>
         <select name="markers" id="markers" onchange="show_div_if_true(this, 'mk_type');">
@@ -697,11 +634,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial_graph.markers == "T" and initial.generate_graph == "T"%}
-        <tr valign="top" class="plOpts" id="mk_type">
-    {%else%}
-        <tr valign="top" class="plOpts" id="mk_type" style="display:none;">
-    {%endif%}
+    <tr valign="top" class="plOpts" id="mk_type">
     <td>Marker type:</td>
     <td>
         <select id="marker_type" name="marker_type">
@@ -721,11 +654,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial.generate_graph == "T"%}
     <tr valign="top" class="plOpts" style="display:table-row;">
-    {%else%}
-    <tr valign="top" class="plOpts" style="display:none;">
-    {%endif%}
     <td id="Vertical Axis Minimum">Vertical axis min:</td>
     <td><input type="text" id="vertical_axis_min" name="vertical_axis_min" value="{{initial_graph.vertical_axis_min}}"></td>
     <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -737,11 +666,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial.generate_graph == "T"%}
     <tr valign="top" class="plOpts" style="display:table-row;">
-    {%else%}
-    <tr valign="top" class="plOpts" style="display:none;">
-    {%endif%}
     <td id="Vertical Axis Maximum">Vertical axis max:</td>
     <td><input type="text" id="vertical_axis_max" name="vertical_axis_max" value="{{initial_graph.vertical_axis_max}}"></td>
     <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -753,7 +678,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    <tr class="plOpt" style="display:none;"><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
+    <tr class="plOpt" ><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
     </table><!--End inside table-->
     </td></table>
    {%if json_dict%}

@@ -1215,6 +1215,9 @@ def sodxtrmts(request):
         #combine the graph options with the plot options
         join_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
         context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
+        #show all plot options to user in case there are form errors
+        if checkbox_vals['generate_graph_T_selected'] =='selected':
+            initial['generate_graph'] = 'T'
         #Form sanity check
         #form_error = check_sodxtrmts_form(form)
         fields_to_check = ['start_year', 'end_year','max_missing_days', 'graph_start_year', 'graph_end_year', \
@@ -1261,7 +1264,7 @@ def sodxtrmts(request):
             else:
                 #New data analysis
                 context['json_dict'] = {}
-                initial['generate_graph']='F'
+                #initial['generate_graph']='F'
                 checkbox_vals['generate_graph_T_selected'] = ''
                 checkbox_vals['generate_graph_F_selected'] = 'selected'
                 #Reset initial_graph
