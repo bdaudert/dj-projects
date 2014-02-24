@@ -247,6 +247,14 @@ def data_station(request):
         #Turn request object into python dict
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
+        #Back Button/download files issue fix:
+        #if select_stations_by none, find it
+        if not 'select_stations_by' in form_cleaned.keys():
+            for key in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
+                if key in form.keys():
+                    form['select_stations_by'] = key
+                    form_cleaned['select_stations_by'] = key
+                    break
         context['element_list'] = form['elements'].replace(' ','').split(',')
         fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date','elements']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -287,6 +295,7 @@ def data_station(request):
             if len(form_cleaned['station_ids'].split(',')) != len(resultsdict['stn_ids']):
                 context['station_ids_error'] = 'Data could not be found for some stations in the list.'
         if form['data_format'] != 'html':
+            context['hide_form'] = True
             return WRCCUtils.write_station_data_to_file(resultsdict,params_dict['delimiter'], WRCCData.FILE_EXTENSIONS[str(form['data_format'])], request=request, output_file_name=str(form['output_file_name']), show_flags=params_dict['show_flags'], show_observation_time=params_dict['show_observation_time'])
 
     #overlay map generation
@@ -329,6 +338,14 @@ def data_gridded(request):
         #Turn request object into python dict
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
+        #Back Button/download files issue fix:
+        #if select_grid_by none, find it
+        if not 'select_grid_by' in form_cleaned.keys():
+            for key in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
+                if key in form.keys():
+                    form['select_grid_by'] = key
+                    form_cleaned['select_grid_by'] = key
+                    break
         fields_to_check = [form_cleaned['select_grid_by'],'start_date', 'end_date','elements']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
@@ -644,6 +661,14 @@ def clim_sum_maps(request):
 
     if 'formMap' in request.POST:
         form = set_form(request)
+        #Back Button/download files issue fix:
+        #if select_grid_by none, find it
+        if not 'select_grid_by' in form.keys():
+            for key in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
+                if key in form.keys():
+                    form['select_grid_by'] = key
+                    break
+
         #Form Check
         fields_to_check = ['start_date', 'end_date','elements','level_number', 'cmap', form['select_grid_by']]
         form_error = check_form(form, fields_to_check)
@@ -770,6 +795,13 @@ def area_time_series(request):
     if 'formTS' in request.POST:
         context['need_gridpoint_map'] = False
         form = set_form(request)
+        #Back Button/download files issue fix:
+        #if select_grid_by none, find it
+        if not 'select_grid_by' in form.keys():
+            for key in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
+                if key in form.keys():
+                    form['select_grid_by'] = key
+                    break
         #Form Check
         fields_to_check = [form['select_grid_by'],'start_date', 'end_date','elements']
         #,'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
@@ -1267,13 +1299,14 @@ def sodxtrmts(request):
                 #initial['generate_graph']='F'
                 checkbox_vals['generate_graph_T_selected'] = ''
                 checkbox_vals['generate_graph_F_selected'] = 'selected'
+                initial['generate_graph'] ='F'
                 #Reset initial_graph
-                initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial({'start_year':initial['start_year'], 'end_year':initial['end_year']})
+                #initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial({'start_year':initial['start_year'], 'end_year':initial['end_year']})
+                initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial({})
                 initial_pl_opts, checkbox_vals_pl_opts = set_plot_options({})
                 #combine the graph options with the plot options
                 join_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
                 context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
-
         #Data Table generation
         data_params = {
             'sid':form['station_id'],
@@ -2265,7 +2298,7 @@ def set_map_plot_options(request):
     initial = {}
     checkbox_vals = {}
     Get = set_GET(request)
-    initial['image_size'] = Get('image_size', 'medium')
+    initial['image_size'] = Get('image_size', 'small')
     initial['level_number'] = Get('level_number', '5')
     initial['cmap'] = Get('cmap', 'rainbow')
     initial['map_ol'] = Get('map_ol', 'state')
@@ -2295,7 +2328,7 @@ def set_plot_options(request):
     checkbox_vals = {}
     Get = set_GET(request)
     initial['graph_title'] = Get('graph_title','Use default')
-    initial['image_size'] = Get('image_size', 'medium')
+    initial['image_size'] = Get('image_size', 'small')
     initial['major_grid']  = Get('major_grid', 'T')
     initial['minor_grid'] = Get('minor_grid', 'F')
     initial['connector_line'] = str(Get('connector_line', 'T'))

@@ -25,8 +25,18 @@ $(function () {
             var vertical_axis_max = initial_graph.vertical_axis_max;
             var image_height = initial_graph.image_height;
             var month_list = [];
+            //Deals with case of analysis start month  not January
+            var data_idx_list =[];
             for (mon = parseInt(initial_graph.graph_start_month);mon<=parseInt(initial_graph.graph_end_month);mon++)
                 month_list.push(mon);
+                if (parseInt(initial.start_month) != "01"){
+                    var idx = 12 - parseInt(initial.start_month) + mon;
+                    if (idx > 12){idx - 12;}
+                    data_idx_list.push(idx);
+                }
+                else{
+                    data_idx_list.push(mon);
+                }
 
             if (connector_line == 'F'){
                 connector_line_width = 0;
@@ -65,6 +75,7 @@ $(function () {
             }
             if (initial_graph.graph_end_year.toLowerCase() !='por'){
                 yr_end_idx = yr_end_idx - (datadict.end_date - parseInt(initial_graph.graph_end_year));
+                //if (initial.start_month != "01"){yr_end_idx+=1;}
             }
 
             var series_data = [];
@@ -94,6 +105,8 @@ $(function () {
                 }
                 */
                 //Define plot data
+                //If start month of data table not Jan, 
+                //fix the index to grab correct data
                 for (var yr_idx=yr_start_idx;yr_idx<yr_end_idx;yr_idx++) {
                     var vals = [];
                     var skip_year = 'F';                    
@@ -106,9 +119,9 @@ $(function () {
                         var acis_date = parseInt(datadict.data[yr_idx][0]);
                     }
                     //Month Loop
-                    for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
-                        var val = datadict.data[yr_idx][2*month_list[mon_idx] - 1];
-                        var flag = datadict.data[yr_idx][2*month_list[mon_idx]].toString();
+                    for (var mon_idx=0;mon_idx<data_idx_list.length;mon_idx++) {
+                        var val = datadict.data[yr_idx][2*data_idx_list[mon_idx] - 1];
+                        var flag = datadict.data[yr_idx][2*data_idx_list[mon_idx]].toString();
                         //Check if we need to skip this year
                         if ((mischr.indexOf(flag) > max_missing_days || val == '-----') && plot_incomplete_years == 'F') {
                             skip_year = 'T';
@@ -359,7 +372,7 @@ $(function () {
                 var gridLineColor = '#C0C0C0';
             }
             var xAxisText = SummaryText + '  ' +  datadict.element_name + ', Months: ' + 
-                month_names[month_list[0] - 1] + ' - '+ month_names[month_list[month_list.length - 1] - 1];
+                month_names[month_list[0] - 1] + ' to '+ month_names[month_list[month_list.length - 1] - 1];
             if (datadict.initial.departures_from_averages == "T"){
                 xAxisText+=' (Departures from Average)'
             }
