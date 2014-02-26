@@ -70,12 +70,26 @@
         </td>
         </tr>
         <td id="Elements">Elements: </td>
-        <td><input type="text" id="elements" name="elements" value="{{initial.elements}}"></td>
-        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_elements">
-                <img alt=ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn_Finder_English.png" id="ACISElementChoices" width="450" height="450" border="0">
-            </div>
+        <td>
+            <select id="elements" name="elements" multiple>
+            <option value="maxt" {{checkbox_vals.elements_maxt_selected}}>Maximum Temperature</option>
+            <option value="mint" {{checkbox_vals.elements_mint_selected}}>Minimum Temperature</option>
+            <option value="avgt" {{checkbox_vals.elements_avgt_selected}}>Average Temperature</option>
+            <option value="obst" {{checkbox_vals.elements_obst_selected}}>Observation Time Temperature</option>
+            <option value="pcpn" {{checkbox_vals.elements_pcpn_selected}}>Precipitation</option>
+            <option value="snow" {{checkbox_vals.elements_snow_selected}}>Snowfall</option>
+            <option value="snwd" {{checkbox_vals.elements_snwd_selected}}>Snow Depth</option>
+            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Degree Days</option>
+            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Degree Days</option>
+            <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Degree Days</option>
+            </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" onClick="ShowHide('ht_elements')">
+        <div id="ht_elements" style="display:none;">
+        <script type="text/javascript">                        
+        $("#ht_elements").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_elements");
+        </script>
+        </div>
         </div>
         </td>
         </tr>

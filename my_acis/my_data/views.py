@@ -1023,7 +1023,7 @@ def station_locator_app(request):
         #Turn request object into python dict
         form_cleaned = set_form(request)
         form = set_form(request, clean=False)
-        fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date','elements']
+        fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -1582,6 +1582,19 @@ def set_GET(request):
         Get = getattr(request.POST, 'get')
     return Get
 
+def set_GET_list(request):
+    if type(request) == dict:
+        def Getlist(key, default):
+            if key in request.keys():
+                return request[key]
+            else:
+                return default
+    elif request.method == 'GET':
+        Getlist = getattr(request.GET, 'getlist')
+    elif request.method == 'POST':
+        Getlist = getattr(request.POST, 'getlist')
+    return Getlist
+
 #FORM SANITY CHECKS
 def check_form(form, fields_to_check):
     '''
@@ -1634,13 +1647,25 @@ def set_form(request,clean=True):
     '''
     form = {}
     q_dict = {}
+    el_list = None
     if request.method == 'POST':
         q_dict = dict(request.POST.items())
+        try:
+            el_list = request.POST.getlist('elements',None)
+        except:
+            pass
     elif request.method == 'GET':
         q_dict = dict(request.GET.items())
-
+        try:
+            el_list = request.GET.getlist('elements',None)
+        except:
+            pass
+    if el_list:q_dict['elements'] = el_list
     for key,val in q_dict.iteritems():
         form[str(key)] = str(val)
+        #elements should be a list
+        if key == 'elements':
+            form[str(key)] = val
         if clean:
             #Check if user autofilled name, if so, change to id
             if str(key) in ['station_id','county', 'basin', 'county_warning_area', 'climate_division']:
@@ -1649,22 +1674,27 @@ def set_form(request,clean=True):
             if str(key) in ['start_date', 'end_date']:
                 form[str(key)] = str(val).replace('-','').replace(':','').replace('/','').replace(' ','')
             if str(key) == 'elements':
-                el_list = val
-                if isinstance(val,basestring):el_list = val.replace(' ','').split(',')
-                el_list_new = el_list
-                #form[str(key)] = str(val).replace(' ','')
-                #if PRISM data, change element names if monthly/yearly data
-                if 'grid' in q_dict.keys() and q_dict['grid'] == '21' and q_dict['temporal_resolution'] in ['yly','mly']:
-                    for el_idx,el in enumerate(el_list):
-                        el_list_new[el_idx] = '%s_%s' %(q_dict['temporal_resolution'], el)
-                #Convert degree days temp to Fahreheit if units are metric
-                if 'units' in q_dict.keys() and q_dict['units'] == 'metric':
+                elements = None
+                #try and read select multiple
+                try:
+                    form[str(key)] = ','.join(request.POST.getlist('elements', None))
+                except:
+                    el_list = val
+                    if isinstance(val,basestring):el_list = val.replace(' ','').split(',')
                     el_list_new = el_list
-                    for el_idx, el in enumerate(el_list):
-                        el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
-                        if el_strip in ['hdd','gdd','cdd'] and base_temp is not None and el not in ['hdd','gdd','cdd']:
-                            el_list_new[el_idx] = el_strip + str(WRCCUtils.convert_to_english('maxt',base_temp))
-                form[str(key)] = ','.join(el_list_new)
+                    #form[str(key)] = str(val).replace(' ','')
+                    #if PRISM data, change element names if monthly/yearly data
+                    if 'grid' in q_dict.keys() and q_dict['grid'] == '21' and q_dict['temporal_resolution'] in ['yly','mly']:
+                        for el_idx,el in enumerate(el_list):
+                            el_list_new[el_idx] = '%s_%s' %(q_dict['temporal_resolution'], el)
+                    #Convert degree days temp to Fahreheit if units are metric
+                    if 'units' in q_dict.keys() and q_dict['units'] == 'metric':
+                        el_list_new = el_list
+                        for el_idx, el in enumerate(el_list):
+                            el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
+                            if el_strip in ['hdd','gdd','cdd'] and base_temp is not None and el not in ['hdd','gdd','cdd']:
+                                el_list_new[el_idx] = el_strip + str(WRCCUtils.convert_to_english('maxt',base_temp))
+                    form[str(key)] = ','.join(el_list_new)
     return form
 
 
@@ -2670,6 +2700,7 @@ def set_station_locator_initial(request):
     initial = {}
     checkbox_vals = {}
     Get = set_GET(request)
+    Getlist = set_GET_list(request)
     initial['select_stations_by'] = Get('select_stations_by', 'state')
     initial[str(initial['select_stations_by'])] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
@@ -2677,7 +2708,7 @@ def set_station_locator_initial(request):
     #initial['area_type_value'] = Get('area_type_value', WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_stations_by']
-    initial['elements'] = Get('elements', 'maxt,mint,pcpn')
+    initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
     initial['elements_constraints'] = Get('elements_constraints', 'Any')
     initial['start_date']  = Get('start_date', '18900101')
     initial['end_date']  = Get('end_date', yesterday)
@@ -2687,6 +2718,11 @@ def set_station_locator_initial(request):
         checkbox_vals[area_type + '_selected'] =''
         if area_type == initial['select_stations_by']:
             checkbox_vals[area_type + '_selected'] ='selected'
+    for e in ['maxt','mint','avgt', 'obst', 'pcpn', 'snow', 'snwd', 'gdd','hdd','cdd']:
+        checkbox_vals['elements_' + e + '_selected'] =''
+        for el in initial['elements']:
+            if el == e:
+                checkbox_vals['elements_' + e + '_selected'] ='selected'
     for b in ['any', 'all']:
         checkbox_vals['elements_' + b  + '_selected'] =''
         checkbox_vals['dates_' + b  + '_selected'] =''

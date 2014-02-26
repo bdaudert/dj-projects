@@ -476,7 +476,7 @@ img.center {
 
 .searchbox {
     position:relative;
-    top:20px;
+    top:0px;
     left:10px;
     width:250px;
     height:50px;

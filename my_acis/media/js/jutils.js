@@ -69,7 +69,16 @@ function HighLight(node,DivClass,DivId) {
 }
 
 function ShowPopupDocu(DivId){
-    $( '#' + DivId ).dialog();
+    $( '#' + DivId ).dialog({
+        title:'You can move and resize me!',
+
+        resizable: true,
+        modal: false,
+        width:'auto',
+        open: function () {
+            $(this).scrollTop(0);
+        }
+    });
 }
 
 function ShowHelpText(divId){

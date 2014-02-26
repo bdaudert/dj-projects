@@ -87,7 +87,7 @@
 
 <div class="container">
     <!-- Header -->
-    <img src="{{ MEDIA_URL }}img/SWBanner.png">
+    <img src="{{ MEDIA_URL }}img/SCENIC.png">
     <!-- Nav bar at top of page-->
     <div id="menu">
     <ul id="nav">
@@ -120,7 +120,6 @@
         <li><a href="{{SW_CKN_URL}}monitoring"><font size="3">MONITORING</font></a></li>
         <li><a href="{{SW_CKN_URL}}main_map"><font size="3">RESOURCES</font></a></li>
      </ul>
-    
     </div><!--End menue -->
 
     {% block logo%}
@@ -128,24 +127,8 @@
     {%endblock logo%}
 
     <div class="searchbox">
-        <!--
-        <script>
-        (function() {
-        var cx = '002351053505226291153:di0tbfvoogy';
-        var gcse = document.createElement('script');
-        gcse.type = 'text/javascript';
-        gcse.async = true;
-        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
-        '//www.google.com/cse/cse.js?cx=' + cx;
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(gcse, s);
-        })();
-        </script>
-        <gcse:search></gcse:search>
-        -->
         <!-- Search Box -->
         <form target="_blank"  method="get" action="http://www.google.com/search">
-        <!--<div style="width:20em;">-->
         <div id="searchbox">
             <table border="0">
             <tr>
@@ -164,7 +147,7 @@
         </form>
     </div> 
     {% block feedback%}
-    <br /><p align="left" style="position:relative;left:15px;font-size:large;"><a href="{{SW_CKN_URL}}/feedback/">Give us feedback!</a>
+    <br /><p align="left" style="position:relative;top0px;left:15px;font-size:large;"><a href="{{SW_CKN_URL}}/feedback/">Give us feedback!</a>
     {%endblock feedback%}
 
     <div class="content">
