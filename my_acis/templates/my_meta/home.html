@@ -26,7 +26,11 @@
 <form method="get" action="by_state/">
     <select name="state_key">
 	{% for state in state_choices %}
+        {%if state.1 == "Nevada"%}
+        <option value="{{state.0}}" selected="selected">{{state.1}}</option>
+        {%else%}
 	    <option value="{{state.0}}">{{state.1}}</option>
+        {%endif%}
 	{% endfor %}
     </select>
     <input type="submit" value="Submit"/>
@@ -36,7 +40,11 @@
 <form method="get" action="by_name_and_state/">
     <select name="state_key">
     {% for state in state_choices %}
-        <option value="{{state.0}}">{{state.1}}</option>
+    {%if state.1 == "Nevada"%}
+    <option value="{{state.0}}" selected="selected">{{state.1}}</option>
+    {%else%}
+    <option value="{{state.0}}">{{state.1}}</option>
+    {%endif%}
     {% endfor %}
     </select>
     <input type="text" name="q" />

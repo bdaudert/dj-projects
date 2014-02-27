@@ -119,40 +119,44 @@
         </li>
         <li><a href="{{SW_CKN_URL}}monitoring"><font size="3">MONITORING</font></a></li>
         <li><a href="{{SW_CKN_URL}}main_map"><font size="3">RESOURCES</font></a></li>
-     </ul>
+        </ul>
     </div><!--End menue -->
-
-    {% block logo%}
-    <p style="position:relative;top:0px;left:730px;" class="green">Powered by <a target="_blank" href="http://rcc-acis.unl.edu/"><img src="{{MEDIA_URL}}img/ACISLogo.png"></a></p>
-    {%endblock logo%}
-
-    <div class="searchbox">
-        <!-- Search Box -->
-        <form target="_blank"  method="get" action="http://www.google.com/search">
-        <div id="searchbox">
-            <table border="0">
-            <tr>
-            <td><input type="text"   name="q" size="20" maxlength="255" value="" /></td>
-            <td><input type="submit" value="Search" /></td>
-            </tr>
-            <tr>
-            <td>
-            <input type="radio"  name="sitesearch" value="http://wrcc.dri.edu/csc/scenic/home/" checked />This Site
-            <input type="radio"  name="sitesearch"value="" />The Web
-            </td>
-            <td></td>
-            </tr>
-            </table>
-        </div>
-        </form>
-    </div> 
-    {% block feedback%}
-    <br /><p align="left" style="position:relative;top0px;left:15px;font-size:large;"><a href="{{SW_CKN_URL}}/feedback/">Give us feedback!</a>
-    {%endblock feedback%}
-
     <div class="content">
+        <table>
+        <td width=25%>
+        <div class="searchbox">
+            <!-- Search Box -->
+            <form target="_blank"  method="get" action="http://www.google.com/search">
+            <div id="searchbox">
+                <table border="0">
+                <tr>
+                <td><input type="text"   name="q" size="20" maxlength="255" value="" /></td>
+                <td><input type="submit" value="Search" /></td>
+                </tr>
+                <tr>
+                <td>
+                <input type="radio"  name="sitesearch" value="http://wrcc.dri.edu/csc/scenic/home/" checked />This Site
+                <input type="radio"  name="sitesearch"value="" />The Web
+                </td>
+                <td></td>
+                </tr>
+                </table>
+            </div>
+            </form>
+        </div>
+        {% block feedback%}
+        <p align="left" style="position:relative;top0px;left:15px;font-size:large;"><a href="{{SW_CKN_URL}}/feedback/">Give us feedback!</a>
+        {%endblock feedback%}
+        </td>
+        <td width="50%" align="ccenter" valign="top">
         <h2 align="center">{{title}}</h2>
-
+        </td>
+        <td width="25%" valign="top" align="right">
+        {% block logo%}
+        <p style="position:relative;top:0px;" class="green">Powered by <a target="_blank" href="http://rcc-acis.unl.edu/"><img src="{{MEDIA_URL}}img/ACISLogo.png"></a></p>
+        {%endblock logo%}
+        </td>
+        </table>
     <!--Loading image-->
     <div id="loading">
     <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />

@@ -5,9 +5,8 @@
 
 <h1>{{title}}</h1>
 
-NETWORK_IDS{{network_station_ids_dict}}
+DATE: {{x}}
 <br />
-RESULTS first: {{network_station_ids_dict|lookup:results.0.0.0.1}}
 
 {%if tbl_done%}
 <a href="/csc/wrcc_meta/station_tables/?{%for id in ucan_id_list%}&ucan_id={{id}}{%endfor%}{%for tbl in tbl_done_list%}&tbl_done={{tbl}}{%endfor%}">Back to Station Tables</a>

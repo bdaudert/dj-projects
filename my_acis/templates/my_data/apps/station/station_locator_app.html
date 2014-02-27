@@ -4,7 +4,6 @@
 <meta name="description" content="SW-CKN Generates graphs of monthly averages">
 
 {% block content %}
-
 <p align="center">You are here
 <a href="{{HOME_URL}}">Home></a>
 <a href="{{TOOLS_URL}}">Tools></a>
@@ -21,7 +20,7 @@
 
 <!--First Table: Form, HowTos, Links-->    
 <table cellpadding="none">
-<td valign="top" width="150px">
+<td valign="top" width="130px">
     <!--First Column:forms and Links-->
     <table>
     <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
@@ -75,7 +74,7 @@
             <option value="maxt" {{checkbox_vals.elements_maxt_selected}}>Maximum Temperature</option>
             <option value="mint" {{checkbox_vals.elements_mint_selected}}>Minimum Temperature</option>
             <option value="avgt" {{checkbox_vals.elements_avgt_selected}}>Average Temperature</option>
-            <option value="obst" {{checkbox_vals.elements_obst_selected}}>Observation Time Temperature</option>
+            <option value="obst" {{checkbox_vals.elements_obst_selected}}>Observation Time Temp.</option>
             <option value="pcpn" {{checkbox_vals.elements_pcpn_selected}}>Precipitation</option>
             <option value="snow" {{checkbox_vals.elements_snow_selected}}>Snowfall</option>
             <option value="snwd" {{checkbox_vals.elements_snwd_selected}}>Snow Depth</option>
@@ -84,12 +83,12 @@
             <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Degree Days</option>
             </select>
         </td>
-        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" onClick="ShowHide('ht_elements')">
-        <div id="ht_elements" style="display:none;">
+        <td><img class="trigger" alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png">
+        <div class="pop-up">
+        <div id="ht_elements"></div>
         <script type="text/javascript">                        
         $("#ht_elements").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_elements");
         </script>
-        </div>
         </div>
         </td>
         </tr>
@@ -156,6 +155,7 @@
         <input type="submit" value="Submit" name="formData"/>
         </form>
     </div>
+    <br /><br /><br />
     <ul class="navbar">
     <h2>Links to other Networks</h2>
     <table>
@@ -456,11 +456,10 @@
     {%endif%}
     </div> <!--end results div-->
 </td>
-<td valign="top" align="left" width="150px">
+<td valign="top" align="left" width="170px">
     {%if station_json and not error and not form_error and not need_overlay_map%}
     <div id="map_legend">
         <h3>Legend of Station Networks</h3>
-        <!--<p>Choose <a href="/csc/media/html/stn_id_system_docu.html" onClick="return popup_window(this, 'Networks')"><font color="#006666">Network ID</font></a>!</td>-->
     </div>
     {%endif%}
 </td>

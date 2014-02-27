@@ -323,6 +323,7 @@ def station_tables_merge(request):
                     results[inst][-1].append([key_val[0], key_val[1]])
             #Overwrite editable form with wrcc values if they exist
             #and replace updated_by, last _updated and ucan_id
+            context['x'] =  WRCCUtils.convert_db_dates(station['begin_date'])
             if tbl_done:
                 for idx, key_val in enumerate(results[inst][-1]):
                     results[inst][-1][idx][1] = ''
@@ -581,9 +582,12 @@ def convert_query_set(qs, obj):
         rows.append("<tr>")
         for f in qs._meta.fields:
             headers.append("<th>%s</th>" % f.name)
-            rows.append("<td>%s</td>" % break_text(getattr(qs, f.name)))
-            out_dict[f.name] = getattr(qs, f.name)
-            out_list.append([f.name, getattr(qs, f.name)])
+            try:
+                rows.append("<td>%s</td>" % break_text(getattr(qs, f.name)))
+                out_dict[f.name] = getattr(qs, f.name)
+                out_list.append([f.name, getattr(qs, f.name)])
+            except:
+                pass
         headers.append("</tr>")
         rows.append("</tr>")
     else:

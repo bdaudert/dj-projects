@@ -11,6 +11,57 @@ function reset_options(){
     }
 }
 
+function addHidden(theForm, key, value) {
+    // Create a hidden input element, and append it to the form:
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = value;
+    theForm.appendChild(input);
+}
+
+function update_value(val){
+    this.value = val;
+}
+
+function set_hidden_fields(theForm) {
+    // Add data:
+    if ($('#add_degree_days').length){
+        addHidden(theForm, 'add_degree_days', document.getElementById('add_degree_days').value);
+    }
+    if ($('#degree_days').length){
+        addHidden(theForm, 'degree_days', document.getElementById('degree_days').value);
+    }
+    if ($('#units').length){
+        addHidden(theForm, 'units', document.getElementById('units').value);
+    }
+    if ($('#start_date').length){
+        addHidden(theForm, 'start_date', document.getElementById('start_date').value);
+    }
+    if ($('#end_date').length){
+        addHidden(theForm, 'end_date', document.getElementById('end_date').value);
+    }
+    if ($('#show_flags').length){
+        addHidden(theForm, 'show_flags', document.getElementById('show_flags').value);
+    }
+    if ($('#show_observation_time').length){
+        addHidden(theForm, 'show_observation_time', document.getElementById('show_observation_time').value);
+    }    
+    if ($('#date_format').length){
+        addHidden(theForm, 'date_format', document.getElementById('date_format').value);
+    }
+    if ($('#data_format').length){
+        addHidden(theForm, 'data_format', document.getElementById('data_format').value);
+    }
+    if ($('#delimiter').length){
+        addHidden(theForm, 'delimiter', document.getElementById('delimiter').value);
+    }
+    if ($('#output_file_name').length){
+        addHidden(theForm, 'output_file_name', document.getElementById('output_file_name').value);
+    }
+    theForm.submit(); 
+}
+
 //Show "Loading image"
 function show_loading(){
     /*
@@ -30,6 +81,7 @@ function show_loading(){
         $("#loading").hide();
     }, 9000);
 }
+
 
 function show_plot_opts(rowClass){
     var trs = document.getElementsByClassName(rowClass);
