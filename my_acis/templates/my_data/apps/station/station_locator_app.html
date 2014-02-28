@@ -34,12 +34,13 @@
 
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/station_finder/'"/>
     <div id='formData'>
+        Form {{x}} <br>
         <form id="tableDataForm" method="post" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData">
         <tr valign="top">
         <td>Select stations by:</td>
         <td>
-            <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this);">
+            <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this);" onclick="set_station_grid_select('area',this);">
             <option value="station_id" {{checkbox_vals.station_id_selected}}>Individual station</option>
             <option value="station_ids" {{checkbox_vals.station_ids_selected}}>List of stations</option>
             <option value="county" {{checkbox_vals.county_selected}}>County</option>
@@ -70,7 +71,7 @@
         </tr>
         <td id="Elements">Elements: </td>
         <td>
-            <select id="elements" name="elements" multiple>
+            <select id="elements" name="elements" multiple onchange="update_elements(this)">
             <option value="maxt" {{checkbox_vals.elements_maxt_selected}}>Maximum Temperature</option>
             <option value="mint" {{checkbox_vals.elements_mint_selected}}>Minimum Temperature</option>
             <option value="avgt" {{checkbox_vals.elements_avgt_selected}}>Average Temperature</option>
@@ -95,7 +96,7 @@
         <tr valign="top">
         <td>Element Constraints:</td>
         <td>
-            <select id="elements_constraints" name="elements_constraints">
+            <select id="elements_constraints" name="elements_constraints" onchange="update_value(this.value)">
             <option value="any" {{checkbox_vals.elements_any_selected}}>Any elements</option>
             <option value="all" {{checkbox_vals.elements_all_selected}}>All elements</option>
             </select>
@@ -111,7 +112,7 @@
         </tr> 
         <tr valign="top">
         <td id="Start Date">Start Date: </td>
-        <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}"></td>
+        <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value)"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
         <div id="ht_start_date"></div>
@@ -123,7 +124,7 @@
         </tr>
         <tr valign="top">
         <td id="End Date">End Date: </td>
-        <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}"></td>
+        <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value)"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
         <div id="ht_end_date"></div>
@@ -136,7 +137,7 @@
         <tr valign="top">
         <td>Date Constraints:</td>
         <td>
-            <select id="dates_constraints" name="dates_constraints">
+            <select id="dates_constraints" name="dates_constraints" onchange="update_value(this.value)">
             <option value="any" {{checkbox_vals.dates_any_selected}}>Any dates</option>
             <option value="all" {{checkbox_vals.dates_all_selected}}>All dates</option>
             </select>
@@ -309,7 +310,7 @@
         <div id="OverlayMap" style="display:none;">
         {%endif%}
             <div id="formOverlay" style="display:inherit;">
-            <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
+            <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableDataForm')">{% csrf_token %}
             <table class="form">
             <!--<tr valign="top">
             <td>Select stations by:</td>
@@ -392,11 +393,7 @@
             </table>
             <input type="hidden" value="{{initial.select_stations_by}}" name="select_overlay_by" id="select_overlay_by">
             <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
-            <input type="hidden" value="{{initial.elements}}" name="elements">
-            <input type="hidden" value="{{initial.elements_constraints}}" name="elements_constraints">
-            <input type="hidden" value="{{initial.start_date}}" name="start_date">
-            <input type="hidden" value="{{initial.end_date}}" name="end_date">
-            <input type="hidden" value="{{initial.dates_constraints}}" name="dates_constraints">
+            <input type="hidden" value="{{initial.elements_string}}" name="elements" class="elements_string">
             </form>
         </div>
     </div>

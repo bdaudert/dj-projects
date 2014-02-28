@@ -11,20 +11,56 @@ function reset_options(){
     }
 }
 
-function addHidden(theForm, key, value) {
-    // Create a hidden input element, and append it to the form:
-    var input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = key;
-    input.value = value;
-    theForm.appendChild(input);
-}
-
 function update_value(val){
     this.value = val;
 }
 
-function set_hidden_fields(theForm) {
+function update_elements(node){
+    var els = []
+    var options = node.options;
+    for (var idx=0;idx<options.length;idx++) {
+        if (options[idx].selected) {
+            els.push(options[idx].value);
+            //document.getElementById('elements').options[idx].selected = true;
+        }
+    }
+    var elements_string = els.join();
+    var el_strings = document.getElementsByClassName('elements_string');
+    for (idx=0;idx<el_strings.length;idx++){
+        el_strings[idx].value = elements_string;
+    }
+}
+
+function addHidden(theForm, name, value) {
+    // Create a hidden input element, and append it to the form:
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    input.value = value;
+    theForm.appendChild(input);
+}
+
+
+function set_hidden_fields(theForm, mainForm) {
+    /*
+    Adds the fields of mainForm to 
+    theForm as hidden input
+    So that user input of mainForm is preserved upon
+    theForm submit  
+    */
+    $('#' + mainForm + ' input, #' + mainForm + ' select').each(
+    function(index){  
+        var input = $(this);
+        var name = input.attr('name');
+        if (name != "csrfmiddlewaretoken" && name != 'select_stations_by' && name!= 'elements' && name!="overlay_state" && input.attr('type')!="submit"){
+            addHidden(theForm, input.attr('name'), input.val());
+        }
+    });
+    theForm.submit()
+}
+
+
+function set_hidden_fields_data_station(theForm) {
     // Add data:
     if ($('#add_degree_days').length){
         addHidden(theForm, 'add_degree_days', document.getElementById('add_degree_days').value);

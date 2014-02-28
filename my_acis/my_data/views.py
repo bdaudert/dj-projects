@@ -301,7 +301,6 @@ def data_station(request):
     #overlay map generation
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
-        form_cleaned = set_form(request)
         form = set_form(request,clean=False)
         initial, checkbox_vals = set_data_station_initial(request)
         #Override initial where needed
@@ -1024,6 +1023,7 @@ def station_locator_app(request):
         #Turn request object into python dict
         form_cleaned = set_form(request)
         form = set_form(request, clean=False)
+        context['x'] = form
         fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
@@ -1058,7 +1058,8 @@ def station_locator_app(request):
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
         context['station_json'] = False
-        form = set_form(request)
+        form = set_form(request,clean=False)
+        context['x'] = form
         initial, checkbox_vals = set_station_locator_initial(form)
         #Override initial where needed
         initial['select_stations_by'] = form['select_overlay_by']
@@ -1650,34 +1651,29 @@ def set_form(request,clean=True):
     form = {}
     el_list = None
     if request.method == 'POST':
-        #q_dict = dict(request.POST.items())
-        for key,val in request.POST.items():
-            form[str(key)] =str(val)
-            #Override element if needed, elements may be a list
-            if str(key) == 'elements':
-                el_list = request.POST.getlist('elements',[])
-                if el_list:
-                    el_list = [str(el) for el in el_list]
-                    form[str(key)] = el_list
-                else:
-                    form[str(key)] =str(val)
-
-        #q_dict = dict(request.POST.items())
+        form_tuple = request.POST.items()
     elif request.method == 'GET':
-        for key,val in request.POST.items():
-            form[str(key)] =str(val)
-            if str(key) == 'elements':
-                el_list = request.POST.getlist('elements',[])
-                if el_list:
-                    el_list = [str(el) for el in el_list]
-                    form[str(key)] = el_list
+        form_tuple = request.GET.items()
+    else:
+        form_tuple = dict(request)
+    for key,val in form_tuple:
+        form[str(key)] =str(val)
+        #Override element if needed, elements should be a list
+        if str(key) == 'elements':
+            el_list = request.POST.getlist('elements',[])
+            if el_list:
+                #FIX ME!! deal with weird formatting of select multiple
+                if len(el_list) == 1 and isinstance(el_list[0], basestring) and len(el_list[0].split(',')) >1:
+                    el_list = [str(el) for el in el_list[0].replace(' ','').split(',')]
                 else:
-                    form[str(key)] =str(val)
-
+                    el_list = [str(el) for el in el_list]
+                form[str(key)] = el_list
+            else:
+                form[str(key)] = val.replace(' ','').split(',')
     if not clean:
         #Add degree days as user inputs them
-        if 'add_degree_days' in form.keys() and form['add_degree_days']=='T':
-            form['elements']= form['elements'] + form['degree_days'] .replace(' ','').split(',')
+        if 'elements' in form.keys()  and 'add_degree_days' in form.keys() and form['add_degree_days']=='T':
+            form['elements']= form['elements'] + form['degree_days'].replace(' ','').split(',')
         return form
 
     #Clean up form input
@@ -2732,7 +2728,12 @@ def set_station_locator_initial(request):
     #initial['area_type_value'] = Get('area_type_value', WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_stations_by']
-    initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
+    el_str = Get('elements',None)
+    if isinstance(el_str,basestring) and el_str:
+        initial['elements']= el_str.replace(' ','').split(',')
+    else:
+        initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
+    initial['elements_string'] = ','.join(initial['elements'])
     initial['elements_constraints'] = Get('elements_constraints', 'Any')
     initial['start_date']  = Get('start_date', '18900101')
     initial['end_date']  = Get('end_date', yesterday)

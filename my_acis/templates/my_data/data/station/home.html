@@ -371,7 +371,7 @@
     <div id="OverlayMap" style="display:none;">
     {%endif%}
          <div id="formOverlay" style="display:inherit;">
-            <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this)">{% csrf_token %}
+            <form method="post" action="" onsubmit="show_loading() & set_hidden_fields_data_station(this)">{% csrf_token %}
             <table class="form">
             <td>State: </td>
             <td>
@@ -434,20 +434,7 @@
             </table>
             <input type="hidden" value="{{initial.select_stations_by}}" name="select_overlay_by" id="select_overlay_by">
             <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
-            <input type="hidden" value="{{initial.elements_string}}" name="elements">
-            <!--
-            <input type="hidden" value="{{initial.add_degree_days}}" name="add_degree_days">
-            <input type="hidden" value="{{initial.degree_days}}" name="degree_days">
-            <input type="hidden" value="{{initial.units}}" name="units">
-            <input type="hidden" value="{{initial.start_date}}" name="start_date">
-            <input type="hidden" value="{{initial.end_date}}" name="end_date">
-            <input type="hidden" value="{{initial.show_flags}}" name="show_flags">
-            <input type="hidden" value="{{initial.show_observation_time}}" name="show_observation_time">
-            <input type="hidden" value="{{initial.date_format}}" name="date_format">
-            <input type="hidden" value="{{initial.data_format}}" name="data_format">
-            <input type="hidden" value="{{initial.delimiter}}" name="delimiter">
-            <input type="hidden" value="{{initial.output_file_name}}" name="output_file_name">
-            -->
+            <input type="hidden" value="{{initial.elements_string}}" name="elements" class="elements_string">
             </form>
         </div>
     </div>
