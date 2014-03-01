@@ -671,7 +671,7 @@ def clim_sum_maps(request):
 
         #Form Check
         fields_to_check = ['start_date', 'end_date','degree_days','level_number', 'cmap', form['select_grid_by']]
-        form_error = check_form(form, fields_to_check)
+        form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
             return render_to_response('my_data/apps/gridded/clim_sum_maps.html', context, context_instance=RequestContext(request))
@@ -806,7 +806,7 @@ def area_time_series(request):
         #Form Check
         fields_to_check = [form['select_grid_by'],'start_date', 'end_date','degree_days']
         #,'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
-        form_error = check_form(form, fields_to_check)
+        form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
             return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
