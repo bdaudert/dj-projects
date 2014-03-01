@@ -40,10 +40,12 @@
     <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}
         {%for type_idx, table_type in stn_data.items %}
+        {% if table_type.0 %}
         <table>
         {{headers|lookup:type_idx|safe}}
         </table>
         </br>
+        {%endif%}
         <table>
         <tr text-align="right">
         {%for row in table_type %}

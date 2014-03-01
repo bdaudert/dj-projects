@@ -282,7 +282,7 @@
         
         {%if station_json and not need_overlay_map%}
         <!--Link to data portal-->
-        <a align="left" target="_blank" href="{{DATA_URL}}station/?select_stations_by={{initial.select_stations_by}}&{{initial.select_stations_by}}={{initial.area_type_value}}&elements={{initial.elements}}&start_date={{initial.start_date}}&end_date={{initial.end_date}}">Obtain data for all stations displayed</a>
+        <a align="left" target="_blank" href="{{DATA_URL}}station/?select_stations_by={{initial.select_stations_by}}&{{initial.select_stations_by}}={{initial.area_type_value}}&elements={{initial.elements_string}}&start_date={{initial.start_date}}&end_date={{initial.end_date}}">Obtain data for all stations displayed</a>
         {%endif%}
         <div id="PolyMap" style="display:none;">
             <div id="panel">
@@ -392,7 +392,7 @@
             </table>
             <input type="hidden" value="{{initial.select_stations_by}}" name="select_overlay_by" id="select_overlay_by">
             <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
-            <input type="hidden" value="{{initial.elements_string}}" name="elements" class="elements_string">
+            <input type="hidden" id="elements_string" value="{{initial.elements_string}}" name="elements" class="elements_string">
             </form>
         </div>
     </div>

@@ -553,7 +553,7 @@
             </table>
             <input type="hidden" value="{{initial.select_grid_by}}" name="select_overlay_by" id="select_overlay_by">
             <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
-            <input type="hidden" value="{{initial.elements_string}}" name="elements" class="elements_string">
+            <input type="hidden" id="elements_string" value="{{initial.elements_string}}" name="elements" class="elements_string">
             </form>
         </div>
     </div>
@@ -603,10 +603,10 @@
 
     <!--Linke to Gridpoint Time Series-->
     {%if params_dict.location%}
-    <a target="_blank" href="{{TOOLS_URL}}gridded/grid_point_time_series/?location={{params_dict.location}}&&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&grid={{params_dict.grid}}">Generate a time series graph!</a>
+    <a target="_blank" href="{{TOOLS_URL}}gridded/grid_point_time_series/?location={{params_dict.location}}&&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements_string}}&grid={{params_dict.grid}}">Generate a time series graph!</a>
     {%else%}
     {%if params_dict.data_summary == "temporal"%} 
-    <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&grid={{params_dict.grid}}&{{params_dict.select_grid_by}}={{params_dict.area_type_value}}">Generate a climate summary map  for this data set here!</a>
+    <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements_string}}&grid={{params_dict.grid}}&{{params_dict.select_grid_by}}={{params_dict.area_type_value}}">Generate a climate summary map  for this data set here!</a>
     <br />
     {%elif params_dict.data_summary == "spatial"%}
     <a target="_blank" href="{{TOOLS_URL}}gridded/area_time_series/?json_file={{json_file}}">Generate a time series graph!</a>

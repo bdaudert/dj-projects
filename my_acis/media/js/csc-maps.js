@@ -90,8 +90,8 @@ function initialize_station_finder() {
         var end_date = document.getElementById("end_date").value;
     }
     else { var end_date = null }
-    if (document.getElementById("elements")) {
-        var elements = document.getElementById("elements").value;
+    if (document.getElementById("elements_string")) {
+        var elements = document.getElementById("elements_string").value;
     }
     else { var elements = null } 
     //Read in stn data json file

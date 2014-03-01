@@ -2137,7 +2137,15 @@ def set_area_time_series_params(form):
     key_order = ['Area Type','elements','start_date', 'end_date', 'summary', 'grid','running_mean_days']
     display_params_list = [[] for k in range(len(key_order))]
     search_params = {}
-    el_list = form['elements'].replace(' ','').split(',')
+    if isinstance(form['elements'],list):
+        el_list = [str(el) for el in form['elements']]
+    elif isinstance(form['elements'],basestring):
+        el_list = form['elements'].replace(' ','').split(',')
+    else:
+        try:
+            el_list = form['elements_string'].replace('  ','').split(',')
+        except:
+            el_list = []
     search_params['element_list'] = el_list
     display_params_list[0]=[WRCCData.DISPLAY_PARAMS[form['select_grid_by']],form[form['select_grid_by']]]
     for key, val in form.iteritems():
@@ -2177,7 +2185,7 @@ def set_data_gridded_params(form):
     if not form:
         return {}
 
-    key_order = [form['select_grid_by'], 'elements', 'grid', 'start_date', 'end_date','temporal_resolution', 'data_summary', 'units']
+    key_order = [form['select_grid_by'], 'elements','degree_days', 'grid', 'start_date', 'end_date','temporal_resolution', 'data_summary', 'units']
     display_params_list = [[] for k in range(len(key_order))]
     params_dict = {'area_type_value':form[form['select_grid_by']]}
     for key, val in form.iteritems():
@@ -2196,11 +2204,17 @@ def set_data_gridded_params(form):
                 pre_el = tr + '_'
             if isinstance(val, list):
                 el_list = val
-            elif isinstance(val, str):
+            elif isinstance(val, basestring):
                 el_list = val.replace(' ','').split(',')
             else:
                 el_list = val
+            '''
+            if 'add_degree_days' in form.keys() and form['add_degree_days'] == 'T':
+                el_list += form['degree_days'].replace(' ','').split(',')
+            '''
+            params_dict['elements'] = ','.join(el_list)
             params_dict['element_list'] = el_list
+            params_dict['elements_string'] = ','.join(el_list)
             if len(el_list) == 1:
                 params_dict['element'] =  el_list[0]
             elems_long = []
@@ -2222,7 +2236,10 @@ def set_data_gridded_params(form):
                 try:
                     int(val[3:5])
                     el = val[0:3]
-                    base_temp = val[3:5]
+                    if 'units' in form.keys() and form['units'] == 'metric':
+                        base_temp = WRCCUtils.convert_to_english(val[3:5])
+                    else:
+                        base_temp = val[3:5]
                 except:
                     el = val[0];base_temp=''
                 if str(el) in ['maxt', 'mint', 'avgt', 'gdd', 'hdd', 'cdd', 'pcpn']:

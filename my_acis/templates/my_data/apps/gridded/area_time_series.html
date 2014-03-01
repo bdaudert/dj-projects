@@ -27,6 +27,7 @@
 <td valign="top" width="30%">
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}gridded/area_time_series/'"/>
     <div id='formTS'>
+    {{params_dict}}<br />
         <form method="post" id="tableTSForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableTS">
         <tr valign="top">
@@ -745,7 +746,7 @@
             </table>
             <input type="hidden" value="{{initial.select_grid_by}}" name="select_overlay_by" id="select_overlay_by">
             <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
-            <input type="hidden" value="{{initial.elements_string}}" name="elements" class="elements_string">
+            <input type="hidden" id="elements_string" value="{{initial.elements_string}}" name="elements" class="elements_string">
             </form>
         </div>
     </div>
