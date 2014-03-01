@@ -1,8 +1,10 @@
-//Reset all options on back buttono press
-//was issue in chrome
-//implemented in templates/csc_base.html 
-//<body onbeforeunload="reset_options()">
 function reset_options(){
+    /*
+    Reset all options on back buttono press
+    was issue in chrome
+    implemented in templates/csc_base.html 
+    <body onbeforeunload="reset_options()">
+    */
     var selects = document.getElementsByTagName('select');
     for (idx=0;idx<selects.length;idx++){
         if (selects[idx].id == "select_stations_by" || selects[idx].id == "select_grid_by" ){
@@ -11,11 +13,44 @@ function reset_options(){
     }
 }
 
+function reset_area(){
+    /*
+    select onchange does not fire when user selects same option twice
+    Fix for setting area types: add onclick="reset_area()" to each option tag
+    NOTE: onclick event for select tag doesn't seem to work in Chrome
+    FIX ME!! 
+    */
+    var timesClicked = $(this).attr('times-clicked') || 0;
+    $(this).attr('times-clicked', ++timesClicked);
+    alert(timesClicked);
+    if (timesClicked == 1) {
+        set_station_grid_select('area',this.parent);
+    }
+}
+
 function update_value(val){
+    /*
+    Dynamic forms are not updated in browser cache
+    This function updates the values upon user change
+    Needed when two different forms are present in page
+    and form fields of one form should be 
+    preserved upon submit of the other
+    */
     this.value = val;
 }
 
 function update_elements(node){
+    /*
+    Dynamic forms are not updated in browser cache
+    This function updates the elements field
+    which is a multiple select fieldi list that
+    behaves in ways that can't be caught by the udate_value function above, 
+    which only deals with string variables
+    The passing of variables from/to html, django views and javascript
+    is done via strings. 
+    To deal with element lists, we need to use an element_strings object
+    and convert accordingly.
+    */
     var els = []
     var options = node.options;
     for (var idx=0;idx<options.length;idx++) {
@@ -32,7 +67,9 @@ function update_elements(node){
 }
 
 function addHidden(theForm, name, value) {
-    // Create a hidden input element, and append it to the form:
+    /*
+    Create a hidden input element with name and value and append it to theForm
+    */
     var input = document.createElement('input');
     input.type = 'hidden';
     input.name = name;
@@ -45,8 +82,9 @@ function set_hidden_fields(theForm, mainForm) {
     /*
     Adds the fields of mainForm to 
     theForm as hidden input
-    So that user input of mainForm is preserved upon
-    theForm submit  
+    so that user input of mainForm is preserved upon
+    theForm submit 
+    Used when user updates the overlay map 
     */
     $('#' + mainForm + ' input, #' + mainForm + ' select').each(
     function(index){  
@@ -60,53 +98,10 @@ function set_hidden_fields(theForm, mainForm) {
 }
 
 
-function set_hidden_fields_data_station(theForm) {
-    // Add data:
-    if ($('#add_degree_days').length){
-        addHidden(theForm, 'add_degree_days', document.getElementById('add_degree_days').value);
-    }
-    if ($('#degree_days').length){
-        addHidden(theForm, 'degree_days', document.getElementById('degree_days').value);
-    }
-    if ($('#units').length){
-        addHidden(theForm, 'units', document.getElementById('units').value);
-    }
-    if ($('#start_date').length){
-        addHidden(theForm, 'start_date', document.getElementById('start_date').value);
-    }
-    if ($('#end_date').length){
-        addHidden(theForm, 'end_date', document.getElementById('end_date').value);
-    }
-    if ($('#show_flags').length){
-        addHidden(theForm, 'show_flags', document.getElementById('show_flags').value);
-    }
-    if ($('#show_observation_time').length){
-        addHidden(theForm, 'show_observation_time', document.getElementById('show_observation_time').value);
-    }    
-    if ($('#date_format').length){
-        addHidden(theForm, 'date_format', document.getElementById('date_format').value);
-    }
-    if ($('#data_format').length){
-        addHidden(theForm, 'data_format', document.getElementById('data_format').value);
-    }
-    if ($('#delimiter').length){
-        addHidden(theForm, 'delimiter', document.getElementById('delimiter').value);
-    }
-    if ($('#output_file_name').length){
-        addHidden(theForm, 'output_file_name', document.getElementById('output_file_name').value);
-    }
-    theForm.submit(); 
-}
-
 //Show "Loading image"
 function show_loading(){
     /*
-    $("#loading-image").attr("src", "/csc/media/img/LoadingGreen.gif");
-    $("#loading").bind("ajaxSend", function(){
-        $(this).show();
-    }).bind("ajaxComplete", function(){
-    $(this).hide();
- });
+    Shows moving loading gif after form submit
     */
     $("#loading-image").attr("src", "/csc/media/img/LoadingGreen.gif");
     $("#loading").show("fast");
@@ -119,21 +114,64 @@ function show_loading(){
 }
 
 
-function show_plot_opts(rowClass){
+function show_hide_opts(rowClass){
+    /*
+    displays all rowClass table rows
+    */
     var trs = document.getElementsByClassName(rowClass);
     //Show all or none
     if (trs[0].style.display == 'none'){
         var disp = "table-row";
+        if ($('#show_plot_opts').length){
+            document.getElementById('show_plot_opts').value = 'T';
+        }
     }
     else{
         var disp = "none";
+        if ($('#show_plot_opts').length){
+            document.getElementById('show_plot_opts').value = 'F';
+        }
     }
     for (idx=0;idx<trs.length;idx++){
         trs[idx].style.display = disp;
     }
 }
 
+function show_opts(rowClass){
+    /*
+    displays all rowClass table rows
+    */
+    var trs = document.getElementsByClassName(rowClass);
+    if ($('#show_plot_opts').length){
+        document.getElementById('show_plot_opts').value = 'T';
+    }
+    //Show all or none
+    for (idx=0;idx<trs.length;idx++){
+        trs[idx].style.display = 'table-row';
+    }
+}
+
+function hide_opts(rowClass){
+    /*
+    hide all rowClass table rows
+    */
+    var trs = document.getElementsByClassName(rowClass);
+    if ($('#show_plot_opts').length){
+        document.getElementById('show_plot_opts').value = 'T';
+    }
+    //Show all or none
+    for (idx=0;idx<trs.length;idx++){
+        trs[idx].style.display = 'none';
+        if ($('#show_plot_opts').length){
+            document.getElementById('show_plot_opts').value = 'T';
+        }
+    }
+}
+
 function set_autofill(datalist){
+    /*
+    Sets autofill lists
+    */
     dl = document.createElement('datalist');
     dl.setAttribute('id',datalist);
     dl.setAttribute('class', datalist.replace('US_',''));
@@ -152,25 +190,18 @@ function set_autofill(datalist){
                 opt.value = name + ', ' + id;
             }
             opt.setAttribute('class','name')
-            //opt.innerHTML = id;
             dl.appendChild(opt);
-            /*
-            opt = document.createElement('option');
-            opt.value = id;
-            opt.setAttribute('class','id')
-            opt.innerHTML = name;
-            dl.appendChild(opt);
-            */
         }
     });
     document.body.appendChild(dl);
 }
 
-//Dynamic form functions
 function highlight_form_field(td_id, err){
-    //var td = $('table#tableSodxtrmts td#' + td_id);
+    /*
+    Highlights form field and displays error message err
+    if user fills out form incorrectly
+    */
     var td = document.getElementById(td_id);
-    //td.setAttribute("style","color:red");
     //Grab form field and add error message
     ff = td.nextSibling.nextSibling;
     ff.innerHTML+='<br /><font color="red">' + err + '</font>';
@@ -179,6 +210,9 @@ function highlight_form_field(td_id, err){
 
 
 function set_threshes(element){
+    /*
+    Sets sodxtrmts thresholds
+    */
     var threshes = '0.1,0.01,0.01,0.1';
     if (element == 'avgt' || element == 'dtr'){
         threshes = '65,65,40,65';
@@ -199,7 +233,9 @@ function set_threshes(element){
 }
 
 function set_BaseTemp(table_id,node){
-    //Delete old base temp
+    /*
+    sets sodxtrmts base temperatures for degree day calculations.
+    */
     if ($('#base_temp').length){
         $('table#tableSodxtrmts tr#base_temp').remove();
     }
@@ -221,6 +257,9 @@ function set_BaseTemp(table_id,node){
 }
 
 function set_NDay_threshes(){
+    /*
+    Sets sodxtrmts thersholds for number of days statistics.
+    */
     var element = document.getElementById("element").value;
     var threshes = set_threshes(element);
     //Delete old threshes and make new hidded element hidden input
@@ -251,6 +290,9 @@ function set_NDay_threshes(){
 }
 
 function set_BaseTemp_and_Threshes(table_id,node){
+    /*
+    Sets sodxtrmts thresholds and base temperatures
+    */
     set_BaseTemp(table_id, node)
     set_NDay_threshes()
 }
@@ -276,6 +318,9 @@ function set_NDays_threshold_cells(lgb, threshes,cell0, cell1){
 }
 
 function set_NDays_thresholds(table_id,node){
+    /*
+    sets sodxtrmts thresholds for number of days statisrtics
+    */
     var table = document.getElementById(table_id);
     //Delete old NDays entries
     if ($('#threshold_type').length){
@@ -332,6 +377,9 @@ function set_NDays_thresholds(table_id,node){
 }
 
 function change_lgb(){
+    /*
+    Sets sodxtrmts less than greate or between for number of days statistics
+    */
     var lgb = document.getElementById("less_greater_or_between").value;
     var tbl_row = document.getElementById('threshold');
     var cell0 = tbl_row.firstChild;
@@ -367,8 +415,10 @@ function set_delimiter_and_output_file(data_format_node, delim_divId, out_file_d
 }
 
 function show_if_true(node, rowClass){
-    //if node.value=true, shows all table rows of class name rowClass
-    //if node.value=fals, hides all table rows of class name rowClass
+    /*
+    if node.value=true, shows all table rows of class name rowClass
+    if node.value=fals, hides all table rows of class name rowClass
+    */
     var trs = document.getElementsByClassName(rowClass);
     if (node.value == 'T'){
         var disp = "table-row";
@@ -530,8 +580,10 @@ function set_area_defaults(area_type){
     return lv;
 }
 
-//Station Data
 function set_area_and_map(area_type){
+    /*
+    Sets area and map interfaces for data and applications
+    */
     var lv = set_area_defaults(area_type);
     //Change value of hidden var area_type
     document.getElementById('area_type').value = area_type;
@@ -571,45 +623,10 @@ function set_area_and_map(area_type){
     return lv;
 }
 
-function set_station_select(row_id,node,start_date,end_date){
-    //hide previous results
-    if ($('#' + 'results').length){
-        document.getElementById('results').style.display = "none";
-    }
-    if ($('#' + 'map_legend').length){
-        document.getElementById('map_legend').style.display = "none";
-    }
-    var lv = set_area_and_map(node.value);
-    //Set up autofill if needed
-    set_autofill(lv.autofill_list);
-    var tbl_row = document.getElementById(row_id);
-    //Override table row
-    //cell1 = Label
-    var cell0 = tbl_row.firstChild.nextSibling;
-    cell0.innerHTML= lv.label + ': ';
-    //cell2 input
-    var cell1 = cell0.nextSibling.nextSibling;
-    cell1.innerHTML= '<input type="text" id="' + node.value + '" name="'+ node.value +'" value="' +  lv.value + '" list="' + lv.autofill_list +'">'
-    //cell3 = helptext
-    cell2 = cell1.nextSibling.nextSibling;
-    cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">' +
-    ' <div class="pop-up"><div id="ht_' + node.value  + '"></div>' +
-    ' <script type="text/javascript">' +
-    '$("#ht_' + node.value + '").load("/csc/media/html/Docu_help_texts.html #ht_'+ node.value + '");' +
-    '</script></div>';
-    /*set start/end date according to node.value
-    if node.value == station_id, set start/end date to POR*/
-    if (node.value == 'station_id'){
-        document.getElementById('start_date').value="POR";
-        document.getElementById('end_date').value="POR";
-    }
-    else {
-        document.getElementById('start_date').value=start_date;
-        document.getElementById('end_date').value=end_date;
-    }
-}
-
 function set_station_grid_select(row_id,node){
+    /*
+    Sets area types an maps for data requests and applications
+    */
     //hide previous results
     if ($('#' + 'results').length){
         document.getElementById('results').style.display = "none";
@@ -643,32 +660,76 @@ function set_station_grid_select(row_id,node){
     '</script></div>';
 }
 
-function set_grid(node, gridRowId){
+function set_grid_and_els(node, gridRowId){
+    /*
+    sets grid type and elements.
+    If temporal resolution is monthly or yearly, only allow PRISM data grid and PRISM elements
+    else allow all
+    */
     var tbl_row_grid = document.getElementById(gridRowId);
+    var tbl_row_els = document.getElementById('Els');
     var cell1_grid = tbl_row_grid.firstChild.nextSibling.nextSibling.nextSibling;
+    var cell1_els = tbl_row_els.firstChild.nextSibling.nextSibling.nextSibling;
+    var maxt_selected = '';
+    var mint_selected = '';
+    var pcpn_selected = '';
+    var els_select = document.getElementById('elements');
+    for (i=0;i<els_select.options.length;i++) {
+        if (els_select.options[i].selected) {
+            el_name = els_select.options[i].value;
+            if (el_name == "maxt"){maxt_selected ='selected';}
+            if (el_name == "mint"){mint_selected ='selected';}
+            if (el_name == "pcpn"){pcpn_selected ='selected';}
+        }
+    }
     if (node.value == "mly" || node.value == "yly"){
         cell1_grid.innerHTML='<select id="grid" name="grid">' +
-            '<option value="21" selected>PRISM(1895-Present)</option>'+ 
-            '</select>';
+        '<option value="21" selected>PRISM(1895-Present)</option>'+ 
+        '</select>';
+        cell1_els.innerHTML = '<select id="elements" name="elements"' + 
+        ' multiple onchange="update_elements(this)">' +
+        '<option value="maxt" ' + maxt_selected +'>Maximum Temperature</option>' + 
+        '<option value="mint" ' + mint_selected + '>Minimum Temperature</option>' +
+        '<option value="pcpn" ' + pcpn_selected +'>Precipitation</option>' +
+        '</select>';
+        //hide degree day rows and setadd_degree_days to 'F'
+        document.getElementById('add_degree_days').value='F'
+        //document.getElementById('add_degree_days').options[1].selected = true;
+        document.getElementById('add').style.display = "none";
+        document.getElementById('dd').style.display = "none"; 
     }
     else{
         cell1_grid.innerHTML='<select id="grid" name="grid">' +
-            '<option value="1" {{checkbox_vals.1_selected}}>NRCC Interpolated(1950-Present)</option>' +
-            '<option value="3" {{checkbox_vals.2_selected}}>NRCC Int. Hi-Res(2007-Present)</option>' +
-            '<option value="4" {{checkbox_vals.4_selected}}>CRCM+NCEP(1970-2000,2040-2070)</option>' +
-            '<option value="5" {{checkbox_vals.5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>' +
-            '<option value="6" {{checkbox_vals.6_selected}}>CRCM+CCSM3(1970-2000,2040-2070)</option>' +
-            '<option value="7" {{checkbox_vals.7_selected}}>HRM3+NCEP(1970-2000,2040-2070)</option>' +
-            '<option value="8" {{checkbox_vals.8_selected}}>HRM3+HadCM3(1970-2000,2040-2070)</option>' +
-            '<option value="9" {{checkbox_vals.8_selected}}>MM5I+NCEP(1970-2000,2040-2070)</option>' +
-            '<option value="10" {{checkbox_vals.10_selected}}>MM5I+CCSM(1970-2000,2040-2070)</option>' +
-            '<option value="11" {{checkbox_vals.11_selected}}>RCM3+NCEP(1970-2000,2040-2070)</option>' +
-            '<option value="12" {{checkbox_vals.12_selected}}>RCM3+CGCM3(1970-2000,2040-2070)</option>' +
-            '<option value="13" {{checkbox_vals.13_selected}}>RCM3+GFDL(1970-2000,2040-2070)</option>' +
-            '<option value="14" {{checkbox_vals.14_selected}}>WRFG+NCEP(1970-2000,2040-2070)</option>' +
-            '<option value="15" {{checkbox_vals.15_selected}}>WRFG+CCSM(1970-2000,2040-2070)</option>' +
-            '<option value="16" {{checkbox_vals.16_selected}}>WRFG+CGCM3(1970-2000,2040-2070)</option>' +
-            '</select>';
+        '<option value="1" selected>NRCC Interpolated(1950-Present)</option>' +
+        '<option value="3">NRCC Int. Hi-Res(2007-Present)</option>' +
+        '<option value="21">PRISM(1981-Present)</option>' +
+        '<option value="4">CRCM+NCEP(1970-2000,2040-2070)</option>' +
+        '<option value="5">CRCM+CCSM(1970-2000,2040-2070)</option>' +
+        '<option value="6">CRCM+CCSM3(1970-2000,2040-2070)</option>' +
+        '<option value="7">HRM3+NCEP(1970-2000,2040-2070)</option>' +
+        '<option value="8">HRM3+HadCM3(1970-2000,2040-2070)</option>' +
+        '<option value="9">MM5I+NCEP(1970-2000,2040-2070)</option>' +
+        '<option value="10">MM5I+CCSM(1970-2000,2040-2070)</option>' +
+        '<option value="11">RCM3+NCEP(1970-2000,2040-2070)</option>' +
+        '<option value="12">RCM3+CGCM3(1970-2000,2040-2070)</option>' +
+        '<option value="13">RCM3+GFDL(1970-2000,2040-2070)</option>' +
+        '<option value="14">WRFG+NCEP(1970-2000,2040-2070)</option>' +
+        '<option value="15">WRFG+CCSM(1970-2000,2040-2070)</option>' +
+        '<option value="16">WRFG+CGCM3(1970-2000,2040-2070)</option>' +
+        '</select>';
+        cell1_els.innerHTML = '<select id="elements" name="elements"' +  
+        ' multiple onchange="update_elements(this)">' +
+        '<option value="maxt" ' + maxt_selected +'>Maximum Temperature</option>' +
+        '<option value="mint" ' + mint_selected +'>Minimum Temperature</option>' +
+        '<option value="avgt">Average Temperature</option>' +
+        '<option value="pcpn" ' + maxt_selected +'>Precipitation</option>' +
+        '<option value="avgt">Average Temperature</option>' +
+        '<option value="hdd">Heating Degree Days(65F/18.3C)</option>' +
+        '<option value="cdd">Cooling Degree Days(65F/18.3C)</option>' +
+        '<option value="gdd">Growing Degree Days(50F/10C)</option>' +
+        '</select>';
+        //Show degree day row
+        document.getElementById('add').style.display = "table-row";
     }
 }
 

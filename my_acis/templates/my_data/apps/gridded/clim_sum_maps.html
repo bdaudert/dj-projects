@@ -27,7 +27,7 @@
 <td valign="top" width="30%">
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}gridded/clim_sum_maps/'"/>
     <div id='formMap'>
-        <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
+        <form method="post" id="tableMapForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableMap">
         <tr valign="top">
         <td>Select grid by:</td>
@@ -61,21 +61,63 @@
         </div>
         </td>
         </tr>
-        </tr>
-        <tr id="els" valign="top">
+        <tr id="Els"  valign="top">
         <td id="Elements">Elements: </td>
-        <td><input type="text" id="elements" name="elements" value="{{initial.elements}}"></td>
-        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <td>
+            <select id="elements" name="elements" multiple onchange="update_elements(this)">
+            <option value="maxt" {{checkbox_vals.elements_maxt_selected}}>Maximum Temperature</option>
+            <option value="mint" {{checkbox_vals.elements_mint_selected}}>Minimum Temperature</option>
+            <option value="avgt" {{checkbox_vals.elements_avgt_selected}}>Average Temperature</option>
+            <option value="pcpn" {{checkbox_vals.elements_pcpn_selected}}>Precipitation</option>
+            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Degree Days(65F)</option>
+            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Degree Days(65F)</option>
+            <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Degree Days(50F)</option>
+            </select>
+        </td>
+        <td><img class="trigger" alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png">
         <div class="pop-up">
-            <div id="ht_elements">
-                <img alt=ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_TS_English.png" id="ACISElementChoices" width="450" height="450" border="0">
-            </div>
+        <div id="ht_elements"></div>
+        <script type="text/javascript">                        
+        $("#ht_elements").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_elements");
+        </script>
         </div>
         </td>
         </tr>
-        <tr valign="top">
+        <tr id="add" valign="top">
+        <td>Add special degree days: </td>
+        <td>
+        <select id="add_degree_days" name="add_degree_days" onchange="show_div_if_true(this,'dd') & update_value(this.value)">
+            <option value="T" {{checkbox_vals.add_degree_days_T_selected}}>Yes</option>
+            <option value="F" {{checkbox_vals.add_degree_days_F_selected}}>No</option>
+        </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_add_degree_days"></div>
+        <script type="text/javascript">                        
+            $("#ht_add_degree_days").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_add_degree_days");
+        </script>
+        </div>
+        </td>
+        </tr>
+        {%if initial.add_degree_days == "T"%}
+        <tr id="dd" valign="top">
+        {%else%}
+        <tr id="dd" valign="top" style="display:none;">
+        {%endif%}
+        <td id="Degree Days">Degree Days: </td>
+        <td><input type="text" id="degree_days" name="degree_days" value="{{initial.degree_days}}" onchange="update_value(this.value)"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_degree_days"></div>
+        <script type="text/javascript">                        
+            $("#ht_degree_days").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_degree_days");
+            </script>
+        </div>
+        </td>
+        </tr> 
         <td id="Start Date">Start Date: </td>
-        <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}"></td>
+        <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value)"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_start_date"></div>
@@ -87,7 +129,7 @@
         </tr>
         <tr valign="top">
         <td id="End Date">End Date: </td>
-        <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}"></td>
+        <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value)"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_end_date"></div>
@@ -100,22 +142,23 @@
         <tr id="grid_type" valign="top">
         <td>Grid: </td>
         <td>
-            <select id="grid" name="grid">
-            <option value="1" {{checkbox_vals.1_selected}}>NRCC Interpolated(1950-Present)</option>
-            <option value="3" {{checkbox_vals.3_selected}}>NRCC Int. Hi-Res(2007-Present)</option>
-            <option value="4" {{checkbox_vals.4_selected}}>CRCM+NCEP(1970-2000)</option>
-            <option value="5" {{checkbox_vals.5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>
-            <option value="6" {{checkbox_vals.6_selected}}>CRCM+CCSM3(1970-2000,2040-2070)</option>
-            <option value="7" {{checkbox_vals.7_selected}}>HRM3+NCEP(1970-2000)</option>
-            <option value="8" {{checkbox_vals.8_selected}}>HRM3+HadCM3(1970-2000,2040-2070)</option>
-            <option value="9" {{checkbox_vals.8_selected}}>MM5I+NCEP(1970-2000)</option>
-            <option value="10" {{checkbox_vals.10_selected}}>MM5I+CCSM(1970-2000,2040-2070)</option>
-            <option value="11" {{checkbox_vals.11_selected}}>RCM3+NCEP(1970-2000)</option>
-            <option value="12" {{checkbox_vals.12_selected}}>RCM3+CGCM3(1970-2000,2040-2070)</option>
-            <option value="13" {{checkbox_vals.13_selected}}>RCM3+GFDL(1970-2000,2040-2070)</option>
-            <option value="14" {{checkbox_vals.14_selected}}>WRFG+NCEP(1970-2000)</option>
-            <option value="15" {{checkbox_vals.15_selected}}>WRFG+CCSM(1970-2000,2040-2070)</option>
-            <option value="16" {{checkbox_vals.16_selected}}>WRFG+CGCM3(1970-2000,2040-2070)</option>
+            <select id="grid" name="grid" onchange="update_value(this.value)">
+            <option value="1" {{checkbox_vals.grid_1_selected}}>NRCC Interpolated(1950-Present)</option>
+            <option value="3" {{checkbox_vals.grid_3_selected}}>NRCC Int. Hi-Res(2007-Present)</option>
+            <option value="21" {{checkbox_vals.grid_21_selected}}>PRISM(1981-Present)</option>
+            <option value="4" {{checkbox_vals.grid_4_selected}}>CRCM+NCEP(1970-2000)</option>
+            <option value="5" {{checkbox_vals.grid_5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>
+            <option value="6" {{checkbox_vals.grid_6_selected}}>CRCM+CCSM3(1970-2000,2040-2070)</option>
+            <option value="7" {{checkbox_vals.grid_7_selected}}>HRM3+NCEP(1970-2000)</option>
+            <option value="8" {{checkbox_vals.grid_8_selected}}>HRM3+HadCM3(1970-2000,2040-2070)</option>
+            <option value="9" {{checkbox_vals.grid_9_selected}}>MM5I+NCEP(1970-2000)</option>
+            <option value="10" {{checkbox_vals.grid_10_selected}}>MM5I+CCSM(1970-2000,2040-2070)</option>
+            <option value="11" {{checkbox_vals.grid_11_selected}}>RCM3+NCEP(1970-2000)</option>
+            <option value="12" {{checkbox_vals.grid_12_selected}}>RCM3+CGCM3(1970-2000,2040-2070)</option>
+            <option value="13" {{checkbox_vals.grid_13_selected}}>RCM3+GFDL(1970-2000,2040-2070)</option>
+            <option value="14" {{checkbox_vals.grid_14_selected}}>WRFG+NCEP(1970-2000)</option>
+            <option value="15" {{checkbox_vals.grid_15_selected}}>WRFG+CCSM(1970-2000,2040-2070)</option>
+            <option value="16" {{checkbox_vals.grid_16_selected}}>WRFG+CGCM3(1970-2000,2040-2070)</option>
             </select>
         </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -142,7 +185,7 @@
         <tr valign="top">
         <td>Temporal Summary: </td>
         <td>
-            <select id="temporal_summary" name="temporal_summary">
+            <select id="temporal_summary" name="temporal_summary" onchange="update_value(this.value)">
             <option value="max" {{checkbox_vals.temporal_summary_max_selected}}>Maximum</option>
             <option value="min" {{checkbox_vals.temporal_summary_min_selected}}>Minimum</option>
             <option value="mean" {{checkbox_vals.temporal_summary_mean_selected}}>Mean</option>
@@ -163,7 +206,9 @@
         <td colspan="3"><hr style="border-color:#006666;"></td>
         </tr>
         <tr>
-        <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Plot Options</u></b></td>
+        <td colspan="3" onClick="show_hide_opts('plOpts')"><b><u>Plot Options</u></b>
+        <input type="hidden" id="show_plot_opts" name="show_plot_opts" value="{{initial.show_plot_opts}}">
+        </td>
         </tr>
         <tr>   
         <td colspan="3"><hr style="border-color:#006666;"></td>
@@ -175,7 +220,7 @@
         {%endif%}
         <td>Image Size: </td>
         <td>
-            <select id="image_size" name="image_size">
+            <select id="image_size" name="image_size" onchange="update_value(this.value)">
             <option value="small" {{checkbox_vals.image_size_small_selected}}>Small</option>
             <option value="medium" {{checkbox_vals.image_size_medium_selected}}>Medium</option>
             <option value="large" {{checkbox_vals.image_size_large_selected}}>Large</option>
@@ -198,12 +243,12 @@
 
         <td>Number of Levels:</td>
         <td>
-            <select id="level_number" name="level_number">
+            <select id="level_number" name="level_number" onchange="update_value(this.value)">
             <option value="5">5</option>
             </select>
         </td>
         <!--
-        <td><input type="text" id="level_number" name="level_number" value="{{initial.level_number}}"></td>-->
+        <td><input type="text" id="level_number" name="level_number" value="{{initial.level_number}}" onchange="update_value(this.value)"></td>-->
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_level_number"></div>
@@ -219,7 +264,7 @@
             <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
         <td id="Color Map">Color Map:</td>
-        <td><input type="text" id="cmap" name="cmap" value="{{initial.cmap}}" list="US_CMAP"></td>
+        <td><input type="text" id="cmap" name="cmap" value="{{initial.cmap}}" list="US_CMAP" onchange="update_value(this.value)"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_cmap"></div>
@@ -242,7 +287,7 @@
         {%endif%}
         <td>Overlays:</td>
         <td>
-            <select id="map_ol" name="map_ol">
+            <select id="map_ol" name="map_ol" onchange="update_value(this.value)">
             <option value="state" {{checkbox_vals.map_ol_state_selected}}>State</option>
             <option value="county" {{checkbox_vals.map_ol_county_selected}}>County</option>
             </select>
@@ -263,7 +308,7 @@
         {%endif%}
         <td>Interpolation:</td>
         <td>
-            <select id="interpolation" name="interpolation">
+            <select id="interpolation" name="interpolation" onchange="update_value(this.value)">
             <option value="cspline" {{checkbox_vals.interpolation_cspline_selected}}>Cspline</option>
             <option value="none" {{checkbox_vals.interpolation_none_selected}}>None</option>
             </select>
@@ -284,7 +329,7 @@
         {%endif%}
         <td>Projection:</td>
         <td>
-            <select id="projection" name="projection">
+            <select id="projection" name="projection" onchange="update_value(this.value)">
             <option value="lcc" {{checkbox_vals.projection_lcc_selected}}>Lambert Conformal Conic</option>
             </select>
         </td>
@@ -334,7 +379,15 @@
     </script>
     <div id="Docu_elements"></div>
      <script type="text/javascript">            
-        $("#Docu_elements").load("{{MEDIA_URL}}html/Docu_elements_grid.html");
+        $("#Docu_elements").load("{{MEDIA_URL}}html/Docu_elements_grid_apps.html");
+    </script>
+    <div id="Docu_add_degree_days"></div>
+    <script type="text/javascript">            
+        $("#Docu_add_degree_days").load("{{MEDIA_URL}}html/Docu_add_degree_days.html");
+    </script>
+    <div id="Docu_degree_days"></div>
+    <script type="text/javascript">            
+        $("#Docu_degree_days").load("{{MEDIA_URL}}html/Docu_degree_days.html");
     </script>
     <div id="Docu_start_end_date"></div>
      <script type="text/javascript">            
@@ -396,7 +449,7 @@
     <div id="OverlayMap" style="display:none;">
     {%endif%}
          <div id="formOverlay" style="display:inherit;">
-            <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
+            <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableMapForm')">">{% csrf_token %}
             <table class="form">
             <tr>
             <td>State: </td>
@@ -467,17 +520,7 @@
             </table>
             <input type="hidden" value="{{initial.select_grid_by}}" name="select_overlay_by" id="select_overlay_by">
             <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
-            <input type="hidden" value="{{initial.elements}}" name="elements">
-            <input type="hidden" value="{{initial.start_date}}" name="start_date">
-            <input type="hidden" value="{{initial.end_date}}" name="end_date">
-            <input type="hidden" value="{{initial.grid}}" name="grid">
-            <input type="hidden" value="{{initial.temporal_summary}}" name="temporal_summary">
-            <input type="hidden" value="{{initial.image_size}}" name="image_size">
-            <input type="hidden" value="{{initial.level_number}}" name="level_number">
-            <input type="hidden" value="{{initial.cmap}}" name="cmap">
-            <input type="hidden" value="{{initial.map_ol}}" name="map_ol">
-            <input type="hidden" value="{{initial.interpolation}}" name="interpolation">
-            <input type="hidden" value="{{initial.projection}}" name="projection">
+            <input type="hidden" value="{{initial.elements_string}}" name="elements" class="elements_string">
             </form>
         </div>
     </div>

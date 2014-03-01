@@ -144,11 +144,11 @@
             </div>
             </form>
         </div>
-        {% block feedback%}
-        <p align="left" style="position:relative;top0px;left:15px;font-size:large;"><a href="{{SW_CKN_URL}}/feedback/">Give us feedback!</a>
-        {%endblock feedback%}
         </td>
         <td width="50%" align="ccenter" valign="top">
+        {% block feedback%}        
+        <div align="center"><a href="{{SW_CKN_URL}}/feedback/">Give us feedback!</a>
+        {%endblock feedback%}
         <h2 align="center">{{title}}</h2>
         </td>
         <td width="25%" valign="top" align="right">

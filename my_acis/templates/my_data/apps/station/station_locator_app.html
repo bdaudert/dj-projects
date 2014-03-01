@@ -34,13 +34,12 @@
 
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/station_finder/'"/>
     <div id='formData'>
-        Form {{x}} <br>
         <form id="tableDataForm" method="post" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData">
         <tr valign="top">
         <td>Select stations by:</td>
         <td>
-            <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this);" onclick="set_station_grid_select('area',this);">
+            <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this);">
             <option value="station_id" {{checkbox_vals.station_id_selected}}>Individual station</option>
             <option value="station_ids" {{checkbox_vals.station_ids_selected}}>List of stations</option>
             <option value="county" {{checkbox_vals.county_selected}}>County</option>

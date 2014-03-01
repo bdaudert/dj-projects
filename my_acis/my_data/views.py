@@ -338,6 +338,7 @@ def data_gridded(request):
         #Turn request object into python dict
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
+        context['x'] = form_cleaned
         #Back Button/download files issue fix:
         #if select_grid_by none, find it
         if not 'select_grid_by' in form_cleaned.keys():
@@ -346,7 +347,7 @@ def data_gridded(request):
                     form['select_grid_by'] = key
                     form_cleaned['select_grid_by'] = key
                     break
-        fields_to_check = [form_cleaned['select_grid_by'],'start_date', 'end_date','elements']
+        fields_to_check = [form_cleaned['select_grid_by'],'start_date', 'end_date','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -381,9 +382,7 @@ def data_gridded(request):
 
 
         #Data request
-        context['form'] = form_cleaned
         req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')
-        context['req'] = req
         if 'error' in req.keys():
             context['error'] = req['error']
             context['results'] = []
@@ -391,7 +390,7 @@ def data_gridded(request):
         #format data
         results = WRCCUtils.format_grid_data(req, form_cleaned)
         context['results'] = results
-        #If Spatial Summary, write json file forarea_time_series graph
+        #If Spatial Summary, write json file for area_time_series graph
         if form_cleaned['data_summary'] == 'spatial':
             graph_data = [[[dat[0]] for dat in results]for el in form_cleaned['elements'].replace(' ','').split(',')]
             for date_idx,date_data in enumerate(results):
@@ -660,7 +659,8 @@ def clim_sum_maps(request):
     context[initial['overlay_state'] + '_selected'] = 'selected'
 
     if 'formMap' in request.POST:
-        form = set_form(request)
+        form = set_form(request, clean=False)
+        form_cleaned = set_form(request)
         #Back Button/download files issue fix:
         #if select_grid_by none, find it
         if not 'select_grid_by' in form.keys():
@@ -670,7 +670,7 @@ def clim_sum_maps(request):
                     break
 
         #Form Check
-        fields_to_check = ['start_date', 'end_date','elements','level_number', 'cmap', form['select_grid_by']]
+        fields_to_check = ['start_date', 'end_date','degree_days','level_number', 'cmap', form['select_grid_by']]
         form_error = check_form(form, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -703,11 +703,11 @@ def clim_sum_maps(request):
             'elems':[]
             }
         display_params = []
-        for el_idx,element in enumerate(form['elements'].replace(' ','').split(',')):
+        for el_idx,element in enumerate(form_cleaned['elements'].replace(' ','').split(',')):
             pms={}
             for key, val in params.iteritems():
                 pms[key] = params[key]
-            pms['elems'] = [{'name':element,'smry':form['temporal_summary'],'smry_only':1}]
+            pms['elems'] = [{'name':element,'smry':form_cleaned['temporal_summary'],'smry_only':1}]
             fig = WRCCClasses.GridFigure(pms)
             result = fig.get_grid()
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
@@ -736,7 +736,7 @@ def clim_sum_maps(request):
 
     #overlay map generation
     if 'formOverlay' in request.POST:
-        form = set_form(request)
+        form = set_form(request, clean=False)
         context['need_overlay_map'] = True
         initial, checkbox_vals = set_clim_sum_maps_initial(request)
         initial_plot, checkbox_vals_plot = set_map_plot_options(form)
@@ -794,7 +794,8 @@ def area_time_series(request):
 
     if 'formTS' in request.POST:
         context['need_gridpoint_map'] = False
-        form = set_form(request)
+        form = set_form(request, clean=False)
+        form_cleaned = set_form(request)
         #Back Button/download files issue fix:
         #if select_grid_by none, find it
         if not 'select_grid_by' in form.keys():
@@ -803,7 +804,7 @@ def area_time_series(request):
                     form['select_grid_by'] = key
                     break
         #Form Check
-        fields_to_check = [form['select_grid_by'],'start_date', 'end_date','elements']
+        fields_to_check = [form['select_grid_by'],'start_date', 'end_date','degree_days']
         #,'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
         form_error = check_form(form, fields_to_check)
         if form_error:
@@ -815,7 +816,7 @@ def area_time_series(request):
         join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         #Display liust and serach params
-        search_params, display_params_list =  set_area_time_series_params(form)
+        search_params, display_params_list =  set_area_time_series_params(form_cleaned)
         context['display_params_list'] = display_params_list
         #joins plot opts to search_params
         join_dicts(search_params,initial_plot)
@@ -882,7 +883,7 @@ def area_time_series(request):
 
     #overlay map generation
     if 'formOverlay' in request.POST:
-        form = set_form(request)
+        form = set_form(request, clean=False)
         context['form'] = form
         context['need_overlay_map'] = True
         context['need_gridpoint_map'] = False
@@ -1023,7 +1024,6 @@ def station_locator_app(request):
         #Turn request object into python dict
         form_cleaned = set_form(request)
         form = set_form(request, clean=False)
-        context['x'] = form
         fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
@@ -1059,7 +1059,6 @@ def station_locator_app(request):
         context['need_overlay_map'] = True
         context['station_json'] = False
         form = set_form(request,clean=False)
-        context['x'] = form
         initial, checkbox_vals = set_station_locator_initial(form)
         #Override initial where needed
         initial['select_stations_by'] = form['select_overlay_by']
@@ -1690,7 +1689,7 @@ def set_form(request,clean=True):
             #form[str(key)] = str(val).replace(' ','')
             #if PRISM data, change element names if monthly/yearly data
             if 'grid' in form.keys() and form['grid'] == '21' and form['temporal_resolution'] in ['yly','mly']:
-                for el_idx,el in enumerate(el_list):
+                for el_idx,el in enumerate(el_list_new):
                     el_list_new[el_idx] = '%s_%s' %(form['temporal_resolution'], el)
             #Add special degree days
             if 'add_degree_days' in form.keys() and form['add_degree_days'] == 'T':
@@ -2154,9 +2153,9 @@ def set_area_time_series_params(form):
             for el in el_list:
                 el_short, base_temp = WRCCUtils.get_el_and_base_temp(el)
                 if base_temp:
-                    el_list_long.append(WRCCData.ACIS_ELEMENTS_DICT[el_short]['name_long'] + ' Base Temp.: ' + str(base_temp))
+                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el_short] + ' Base Temp.: ' + str(base_temp))
                 else:
-                    el_list_long.append(WRCCData.ACIS_ELEMENTS_DICT[el]['name_long'])
+                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el])
             display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key], ','.join(el_list_long)]
             search_params['element_list_long'] = el_list_long
         else:
@@ -2592,6 +2591,7 @@ def set_data_gridded_initial(request):
     initial = {}
     checkbox_vals = {}
     Get = set_GET(request)
+    Getlist = set_GET_list(request)
     initial['select_grid_by'] = Get('select_grid_by', 'location')
     initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
@@ -2600,7 +2600,14 @@ def set_data_gridded_initial(request):
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_grid_by']
     initial['temporal_resolution'] = Get('temporal_resolution', 'dly')
-    initial['elements'] = Get('elements', 'maxt,mint,pcpn')
+    el_str = Get('elements',None)
+    if isinstance(el_str,basestring) and el_str:
+        initial['elements']= el_str.replace(' ','').split(',')
+    else:
+        initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
+    initial['elements_string'] = ','.join(initial['elements'])
+    initial['add_degree_days'] = Get('add_degree_days', 'F')
+    initial['degree_days'] = Get('degree_days', 'gdd56,cdd70')
     initial['units'] = Get('units','english')
     initial['start_date']  = Get('start_date', fourtnight)
     initial['end_date']  = Get('end_date', yesterday)
@@ -2617,6 +2624,16 @@ def set_data_gridded_initial(request):
         checkbox_vals[area_type + '_selected'] =''
         if area_type == initial['select_grid_by']:
             checkbox_vals[area_type + '_selected'] ='selected'
+    for e in ['maxt','mint','avgt', 'pcpn','gdd','hdd','cdd']:
+        checkbox_vals['elements_' + e + '_selected'] =''
+        for el in initial['elements']:
+            if el == e:
+                checkbox_vals['elements_' + e + '_selected'] ='selected'
+    for bl in ['T','F']:
+        for cbv in ['add_degree_days']:
+            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
+            if initial[cbv] == bl:
+                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
     for df in ['clm', 'dlm','xl', 'html']:
         checkbox_vals['data_format_' + df + '_selected'] =''
         if df == initial['data_format']:
@@ -2649,15 +2666,16 @@ def set_data_gridded_initial(request):
         if st == initial['spatial_summary']:
             checkbox_vals['spatial_summary_' + st + '_selected'] ='selected'
     for g in ['1','21','3','4','5','6','7','8','9','10','11','12','13','14','15','16']:
-        checkbox_vals[g + '_selected'] =''
+        checkbox_vals['grid_' + g + '_selected'] =''
         if initial['grid'] == g:
-            checkbox_vals[g + '_selected'] ='selected'
+            checkbox_vals['grid_' + g + '_selected'] ='selected'
     return initial, checkbox_vals
 
 def set_area_time_series_initial(request):
     initial = {}
     checkbox_vals = {}
     Get = set_GET(request)
+    Getlist = set_GET_list(request)
     initial['select_grid_by'] = Get('select_grid_by', 'location')
     initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
@@ -2665,24 +2683,41 @@ def set_area_time_series_initial(request):
     #initial['area_type_value'] = Get('area_type_value', WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_grid_by']
-    initial['elements'] = Get('elements', 'maxt,mint,pcpn')
+    el_str = Get('elements',None)
+    if isinstance(el_str,basestring) and el_str:
+        initial['elements']= el_str.replace(' ','').split(',')
+    else:
+        initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
+    initial['elements_string'] = ','.join(initial['elements'])
+    initial['add_degree_days'] = Get('add_degree_days', 'F')
+    initial['degree_days'] = Get('degree_days', 'gdd56,cdd70')
     initial['start_date']  = Get('start_date', fourtnight)
     initial['end_date']  = Get('end_date', yesterday)
     initial['grid'] = Get('grid', '1')
     initial['spatial_summary'] = Get('spatial_summary', 'mean')
     initial['show_running_mean'] = Get('show_running_mean', 'T')
     initial['running_mean_days'] = Get('running_mean_days', '9')
+    initial['show_plot_opts'] = Get('show_plot_opts','F')
     #set the check box values
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
         checkbox_vals[area_type + '_selected'] =''
         if area_type == initial['select_grid_by']:
             checkbox_vals[area_type + '_selected'] ='selected'
+    for e in ['maxt','mint','avgt', 'pcpn','gdd','hdd','cdd']:
+        checkbox_vals['elements_' + e + '_selected'] =''
+        for el in initial['elements']:
+            if el == e:
+                checkbox_vals['elements_' + e + '_selected'] ='selected'
+    for g in ['1','21','3','4','5','6','7','8','9','10','11','12','13','14','15','16']:
+        checkbox_vals['grid_' + g + '_selected'] =''
+        if initial['grid'] == g:
+            checkbox_vals['grid_' + g + '_selected'] ='selected'
     for st in ['max','min','mean','sum']:
         checkbox_vals['spatial_summary_' + st + '_selected'] =''
         if st == initial['spatial_summary']:
             checkbox_vals['spatial_summary_' + st + '_selected'] ='selected'
     for bl in ['T','F']:
-        for cbv in ['show_running_mean']:
+        for cbv in ['show_running_mean', 'add_degree_days']:
             checkbox_vals[cbv + '_' + bl + '_selected'] = ''
             if initial[cbv] == bl:
                 checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
@@ -2692,6 +2727,7 @@ def set_clim_sum_maps_initial(request):
     initial = {}
     checkbox_vals = {}
     Get = set_GET(request)
+    Getlist = set_GET_list(request)
     initial['select_grid_by'] = Get('select_grid_by', 'state')
     initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
@@ -2699,17 +2735,38 @@ def set_clim_sum_maps_initial(request):
     #initial['area_type_value'] = Get('area_type_value', WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
     initial['autofill_list'] = 'US_' + initial['select_grid_by']
-    initial['elements'] = Get('elements', 'maxt,mint,pcpn')
+    el_str = Get('elements',None)
+    if isinstance(el_str,basestring) and el_str:
+        initial['elements']= el_str.replace(' ','').split(',')
+    else:
+        initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
+    initial['elements_string'] = ','.join(initial['elements'])
+    initial['add_degree_days'] = Get('add_degree_days', 'F')
+    initial['degree_days'] = Get('degree_days', 'gdd56,cdd70')
     initial['start_date']  = Get('start_date', fourtnight)
     initial['end_date']  = Get('end_date', yesterday)
     initial['grid'] = Get('grid', '1')
     initial['temporal_summary'] = Get('temporal_summary', 'mean')
-    initial['show_plot_opts'] = 'T'
+    initial['show_plot_opts'] = Get('show_plot_opts','F')
     #set the check box values
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
         checkbox_vals[area_type + '_selected'] =''
         if area_type == initial['select_grid_by']:
             checkbox_vals[area_type + '_selected'] ='selected'
+    for e in ['maxt','mint','avgt', 'pcpn','gdd','hdd','cdd']:
+        checkbox_vals['elements_' + e + '_selected'] =''
+        for el in initial['elements']:
+            if el == e:
+                checkbox_vals['elements_' + e + '_selected'] ='selected'
+    for bl in ['T','F']:
+        for cbv in ['add_degree_days']:
+            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
+            if initial[cbv] == bl:
+                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
+    for g in ['1','21','3','4','5','6','7','8','9','10','11','12','13','14','15','16']:
+        checkbox_vals['grid_' + g + '_selected'] =''
+        if initial['grid'] == g:
+            checkbox_vals['grid_' + g + '_selected'] ='selected'
     for st in ['max','min','mean','sum']:
         checkbox_vals['temporal_summary_' + st + '_selected'] =''
         if st == initial['temporal_summary']:
