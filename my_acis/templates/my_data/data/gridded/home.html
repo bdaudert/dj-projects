@@ -83,8 +83,8 @@
             <option value="mint" {{checkbox_vals.elements_mint_selected}}>Minimum Temperature</option>
             <option value="avgt" {{checkbox_vals.elements_avgt_selected}}>Average Temperature</option>
             <option value="pcpn" {{checkbox_vals.elements_pcpn_selected}}>Precipitation</option>
-            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Degree Days(65F/18.3C)</option>
-            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Degree Days(65F/18.3C)</option>
+            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Degree Days(65F/18C)</option>
+            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Degree Days(65F/18C)</option>
             <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Degree Days(50F/10C)</option>
             </select>
         </td>        <td><img class="trigger" alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png">
@@ -137,7 +137,7 @@
         <tr valign="top">
         <td>Units: </td>
         <td>
-        <select id="units" name="units" onchange="update_value(this.value)">
+        <select id="units" name="units" onchange="update_value(this.value) & set_degree_days(this.value)">
             <option value="metric" {{checkbox_vals.units_metric_selected}}>Metric</option>
             <option value="english" {{checkbox_vals.units_english_selected}}>English</option>
         </select>
@@ -463,7 +463,7 @@
         {%endif%}
     </div>
 
-    {%if initial.select_grid_by == "location" and not results%}
+    {%if initial.select_grid_by == "location" and not hide_gp_map%}
     <div id="GridpointMap" style="display:block;">
     {%else%}
     <div id="GridpointMap" style="display:none;">
@@ -602,15 +602,11 @@
     <!--Link to relevant applications-->
 
     <!--Linke to Gridpoint Time Series-->
-    {%if params_dict.location%}
-    <a target="_blank" href="{{TOOLS_URL}}gridded/grid_point_time_series/?location={{params_dict.location}}&&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements_string}}&grid={{params_dict.grid}}">Generate a time series graph!</a>
-    {%else%}
     {%if params_dict.data_summary == "temporal"%} 
     <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements_string}}&grid={{params_dict.grid}}&{{params_dict.select_grid_by}}={{params_dict.area_type_value}}">Generate a climate summary map  for this data set here!</a>
     <br />
-    {%elif params_dict.data_summary == "spatial"%}
+    {%elif params_dict.data_summary == "spatial" or params_dict.select_grid_by == 'location'%}
     <a target="_blank" href="{{TOOLS_URL}}gridded/area_time_series/?json_file={{json_file}}">Generate a time series graph!</a>
-    {%endif%}
     {%endif%}
 
 
@@ -631,7 +627,8 @@
     </tr>
     {%endfor%}
     </table>
-
+    {%else%}
+    <p class="error">No data for these paramters!</p>
     {%endif%}<!--End if results-->
     </div><!--End results div-->
 </td></table>

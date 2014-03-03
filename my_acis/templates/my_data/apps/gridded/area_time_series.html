@@ -27,7 +27,6 @@
 <td valign="top" width="30%">
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}gridded/area_time_series/'"/>
     <div id='formTS'>
-    {{params_dict}}<br />
         <form method="post" id="tableTSForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableTS">
         <tr valign="top">
@@ -71,8 +70,8 @@
             <option value="mint" {{checkbox_vals.elements_mint_selected}}>Minimum Temperature</option>
             <option value="avgt" {{checkbox_vals.elements_avgt_selected}}>Average Temperature</option>
             <option value="pcpn" {{checkbox_vals.elements_pcpn_selected}}>Precipitation</option>
-            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Degree Days(65F/18.3C)</option>
-            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Degree Days(65F/18.3C)</option>
+            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Degree Days(65F/18C)</option>
+            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Degree Days(65F/18C)</option>
             <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Degree Days(50F/10C)</option>
             </select>
         </td>
@@ -115,6 +114,23 @@
         <script type="text/javascript">                        
             $("#ht_degree_days").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_degree_days");
             </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td>Units: </td>
+        <td>
+        <select id="units" name="units" onchange="update_value(this.value) & set_degree_days(this.value)">
+            <option value="metric" {{checkbox_vals.units_metric_selected}}>Metric</option>
+            <option value="english" {{checkbox_vals.units_english_selected}}>English</option>
+        </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_units"></div>
+        <script type="text/javascript">                        
+            $("#ht_units").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_units");
+        </script>
         </div>
         </td>
         </tr>

@@ -47,7 +47,11 @@
         </script>
         </td>
         <tr id="area" valign="top">
+        {%if initial.select_stations_by == "station_id" %}
+        <td id="{{initial.area_type_label}}">{{initial.area_type_label}}/Name: </td>
+        {%else%}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
+        {%endif%}
         <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
@@ -76,8 +80,8 @@
             <option value="pcpn" {{checkbox_vals.elements_pcpn_selected}}>Precipitation</option>
             <option value="snow" {{checkbox_vals.elements_snow_selected}}>Snowfall</option>
             <option value="snwd" {{checkbox_vals.elements_snwd_selected}}>Snow Depth</option>
-            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Degree Days(65F/18.3C)</option>
-            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Degree Days(65F/18.3C)</option>
+            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Degree Days(65F/18C)</option>
+            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Degree Days(65F/18C)</option>
             <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Degree Days(50F/10C)</option>
             <option value="evap" {{checkbox_vals.elements_evap_selected}}>Pan Evaporation</option>
             <option value="wdmv" {{checkbox_vals.elements_wdmv_selected}}>Wind Movement</option>
@@ -127,7 +131,7 @@
         <tr valign="top">
         <td>Units: </td>
         <td>
-        <select id="units" name="units" onchange="update_value(this.value)">
+        <select id="units" name="units" onchange="update_value(this.value) & set_degree_days(this.value)">
             <option value="metric" {{checkbox_vals.units_metric_selected}}>Metric</option>
             <option value="english" {{checkbox_vals.units_english_selected}}>English</option>
         </select>

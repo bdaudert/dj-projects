@@ -28,6 +28,19 @@ function reset_area(){
     }
 }
 
+function set_degree_days(unit_value){
+    if (unit_value == 'metric'){
+        if ($('#degree_days').length){
+            document.getElementById('degree_days').value = 'gdd13,hdd21';
+        }
+    }
+    else{
+       if ($('#degree_days').length){
+            document.getElementById('degree_days').value = 'gdd55,hdd70';
+        }
+    } 
+}
+
 function update_value(val){
     /*
     Dynamic forms are not updated in browser cache

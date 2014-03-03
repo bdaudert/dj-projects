@@ -299,7 +299,8 @@ def data_station(request):
             if len(form_cleaned['station_ids'].split(',')) != len(resultsdict['stn_ids']):
                 context['station_ids_error'] = 'Data could not be found for some stations in the list.'
         if form_cleaned['data_format'] != 'html':
-            return WRCCUtils.write_station_data_to_file(resultsdict,params_dict['delimiter'], WRCCData.FILE_EXTENSIONS[str(form['data_format'])], request=request, output_file_name=str(form['output_file_name']), show_flags=params_dict['show_flags'], show_observation_time=params_dict['show_observation_time'])
+            return WRCCUtils.write_station_data_to_file(resultsdict,params_dict,request=request)
+            #return WRCCUtils.write_station_data_to_file(resultsdict,params_dict['delimiter'], WRCCData.FILE_EXTENSIONS[str(form['data_format'])], request=request, output_file_name=str(form['output_file_name']), show_flags=params_dict['show_flags'], show_observation_time=params_dict['show_observation_time'])
 
     #overlay map generation
     if 'formOverlay' in request.POST:
@@ -386,6 +387,7 @@ def data_gridded(request):
 
         #Data request
         req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')
+        context['hide_gp_map'] = True
         if 'error' in req.keys():
             context['error'] = req['error']
             context['results'] = []
@@ -394,10 +396,14 @@ def data_gridded(request):
         results = WRCCUtils.format_grid_data(req, form_cleaned)
         context['results'] = results
         #If Spatial Summary, write json file for area_time_series graph
-        if form_cleaned['data_summary'] == 'spatial':
+        if form_cleaned['data_summary'] == 'spatial' or 'location' in form_cleaned.keys():
+            if 'location' in form_cleaned.keys():
+                start_idx = 4
+            else:
+                start_idx = 1
             graph_data = [[[dat[0]] for dat in results]for el in form_cleaned['elements'].replace(' ','').split(',')]
             for date_idx,date_data in enumerate(results):
-                for el_idx,el_data in enumerate(date_data[1:]):
+                for el_idx,el_data in enumerate(date_data[start_idx:]):
                     graph_data[el_idx][date_idx].append(el_data)
             json_dict = {
             'search_params':params_dict,
@@ -774,7 +780,7 @@ def area_time_series(request):
     json_file = request.GET.get('json_file', None)
     #Check if we are coming in from other page, e.g. Gridded Data
     #Set initial accordingly
-    if json_file is not None:
+    if json_file is not None and json_file !='':
         with open(TEMP + json_file, 'r') as f:
             try:
                 json_data = WRCCUtils.u_convert(json.loads(f.read()))
@@ -2004,12 +2010,18 @@ def compute_area_time_series_summary(req, search_params, poly, PointIn):
                     for el_idx, el in enumerate(element_list):
                         if 'location' in search_params.keys() or isinstance(req['meta']['lat'],float):
                             try:
-                                val = float(date_data[el_idx+1])
+                                if 'units' in search_params.keys() and search_params['units'] == 'metric':
+                                    val = WRCCUtils.convert_to_metric(el, float(date_data[el_idx+1]))
+                                else:
+                                    val = float(date_data[el_idx+1])
                             except:
                                 continue
                         else:
                             try:
-                                val = float(date_data[el_idx+1][lat_idx][lon_idx])
+                                if 'units' in search_params.keys() and search_params['units'] == 'metric':
+                                    val = WRCCUtils.convert_to_metric(el,float(date_data[el_idx+1][lat_idx][lon_idx]))
+                                else:
+                                    val = float(date_data[el_idx+1][lat_idx][lon_idx])
                             except:
                                 continue
                         if abs(val + 999.0) > 0.001 and abs(val - 999.0)>0.001:
@@ -2163,9 +2175,19 @@ def set_area_time_series_params(form):
             search_params['spatial_summary_long'] = WRCCData.DISPLAY_PARAMS[form[key]]
         elif key == 'elements':
             el_list_long =[]
-            for el in el_list:
+            dd_list =[]
+            if 'degree_days' in form.keys():
+                dd_list = form['degree_days'].replace(' ','').split(',')
+            for el_idx, el in enumerate(el_list):
                 el_short, base_temp = WRCCUtils.get_el_and_base_temp(el)
                 if base_temp:
+                    #if metric pick original user input base temp
+                    if 'units' in form.keys() and form['units'] == 'metric':
+                        if el in dd_list:
+                            idx = dd_list.index(el)
+                            base_temp = dd_list[dx][3:]
+                        else:
+                            base_temp = int(round(WRCCUtils.convert_to_metric('maxt', base_temp)))
                     el_list_long.append(WRCCData.DISPLAY_PARAMS[el_short] + ' Base Temp.: ' + str(base_temp))
                 else:
                     el_list_long.append(WRCCData.DISPLAY_PARAMS[el])
@@ -2560,8 +2582,12 @@ def set_data_station_initial(request):
         initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
     initial['elements_string'] = ','.join(initial['elements'])
     initial['add_degree_days'] = Get('add_degree_days', 'F')
-    initial['degree_days'] = Get('degree_days', 'gdd56,cdd70')
     initial['units'] = Get('units','english')
+    if initial['units'] == 'metric':
+        initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
+    else:
+        initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
+
     '''
     if initial['select_stations_by'] == 'station_id':
         initial['start_date'] = Get('start_date','POR')
@@ -2629,8 +2655,11 @@ def set_data_gridded_initial(request):
         initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
     initial['elements_string'] = ','.join(initial['elements'])
     initial['add_degree_days'] = Get('add_degree_days', 'F')
-    initial['degree_days'] = Get('degree_days', 'gdd56,cdd70')
     initial['units'] = Get('units','english')
+    if initial['units'] == 'metric':
+        initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
+    else:
+        initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
     initial['start_date']  = Get('start_date', fourtnight)
     initial['end_date']  = Get('end_date', yesterday)
     initial['grid'] = Get('grid', '1')
@@ -2712,7 +2741,8 @@ def set_area_time_series_initial(request):
         initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
     initial['elements_string'] = ','.join(initial['elements'])
     initial['add_degree_days'] = Get('add_degree_days', 'F')
-    initial['degree_days'] = Get('degree_days', 'gdd56,cdd70')
+    initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
+    initial['units'] = Get('units','english')
     initial['start_date']  = Get('start_date', fourtnight)
     initial['end_date']  = Get('end_date', yesterday)
     initial['grid'] = Get('grid', '1')
@@ -2730,6 +2760,10 @@ def set_area_time_series_initial(request):
         for el in initial['elements']:
             if el == e:
                 checkbox_vals['elements_' + e + '_selected'] ='selected'
+    for u in ['english', 'metric']:
+        checkbox_vals['units_' + u + '_selected'] =''
+        if u == initial['units']:
+            checkbox_vals['units_' +u + '_selected'] ='selected'
     for g in ['1','21','3','4','5','6','7','8','9','10','11','12','13','14','15','16']:
         checkbox_vals['grid_' + g + '_selected'] =''
         if initial['grid'] == g:
@@ -2764,7 +2798,7 @@ def set_clim_sum_maps_initial(request):
         initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
     initial['elements_string'] = ','.join(initial['elements'])
     initial['add_degree_days'] = Get('add_degree_days', 'F')
-    initial['degree_days'] = Get('degree_days', 'gdd56,cdd70')
+    initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
     initial['start_date']  = Get('start_date', fourtnight)
     initial['end_date']  = Get('end_date', yesterday)
     initial['grid'] = Get('grid', '1')
