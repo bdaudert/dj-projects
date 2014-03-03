@@ -25,8 +25,10 @@
     <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />
     </div>
     <img src="{{ MEDIA_URL }}img/SCENIC.png">
+    <table>
+    <td valign="top" width="35%">
+    <!--
     <div class="searchbox">
-        <!-- Search Box -->
         <script>
         (function() {
         var cx = '002351053505226291153:di0tbfvoogy';
@@ -39,24 +41,32 @@
         })();
         </script>
         <gcse:search></gcse:search>
-        <!--
-        <form target="_blank"  method="get" action="http://www.google.com/search">
-            <div style="width:20em;">
-            <table border="0" align="center" cellpadding="0">
-            <tr><td>
-            <input type="text"   name="q" size="25"
-            maxlength="255" value="" />
-            <input type="submit" value="Search" /></td></tr>
-            <tr><td align="center" style="font-size:75%">
-            <input type="radio"  name="sitesearch" value="http://wrcc.dri.edu{{SW_CKN_URL}}home/" checked/>Only this site
-            <input type="radio"  name="sitesearch"value="" /> The Web<br />
-            </td></tr></table>
+    </div>-->
+    <div class="searchbox">
+            <!-- Search Box -->
+            <form target="_blank"  method="get" action="http://www.google.com/search">
+            <div id="searchbox">
+                <table border="0">
+                <tr>
+                <td><input type="text"   name="q" size="25" maxlength="255" value=""></td>
+                <td><input type="submit" value="Search"></td>
+                </tr>
+                <tr>
+                <td>
+                <input type="radio"  name="sitesearch" value="http://wrcc.dri.edu/csc/scenic/home/" checked />This Site
+                <input type="radio"  name="sitesearch"value="" />The Web
+                </td>
+                <td></td>
+                </tr>
+                </table>
             </div>
-        </form>
-        -->
-    </div>
-    <br /><br /><br /><br />
-    <p align="center" style="font-size:x-large;" class="green">Start by choosing one of the following:</p>
+            </form>
+        </div>
+    </td>
+    <td valign="top" width="65%">
+    <p align="center" style="font-size:x-large;" class="green"><b>Start by choosing one of the following:</b></p>
+    </td>
+    </table>
     <table class="dash" cellspacing="10px" align="center">
         <tr>
         <td><a href="{{DATA_URL}}"><b><font size="3">DATA</font></b></a</td>

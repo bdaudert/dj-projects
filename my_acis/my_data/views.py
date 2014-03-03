@@ -256,8 +256,11 @@ def data_station(request):
                     form['select_stations_by'] = key
                     form_cleaned['select_stations_by'] = key
                     break
-        context['element_list'] = form['elements']
-        fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date','degree_days']
+        if not 'elements' in form.keys():
+            context['element_list'] = []
+        else:
+            context['element_list'] = form['elements']
+        fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date','degree_days', 'elements']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -347,7 +350,7 @@ def data_gridded(request):
                     form['select_grid_by'] = key
                     form_cleaned['select_grid_by'] = key
                     break
-        fields_to_check = [form_cleaned['select_grid_by'],'start_date', 'end_date','degree_days']
+        fields_to_check = [form_cleaned['select_grid_by'],'start_date', 'end_date','degree_days','elements']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -670,7 +673,7 @@ def clim_sum_maps(request):
                     break
 
         #Form Check
-        fields_to_check = ['start_date', 'end_date','degree_days','level_number', 'cmap', form['select_grid_by']]
+        fields_to_check = ['start_date', 'end_date','degree_days','level_number', 'cmap', form['select_grid_by'], 'elements']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -804,7 +807,7 @@ def area_time_series(request):
                     form['select_grid_by'] = key
                     break
         #Form Check
-        fields_to_check = [form['select_grid_by'],'start_date', 'end_date','degree_days']
+        fields_to_check = [form['select_grid_by'],'start_date', 'end_date','degree_days', 'elements']
         #,'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
@@ -1024,7 +1027,7 @@ def station_locator_app(request):
         #Turn request object into python dict
         form_cleaned = set_form(request)
         form = set_form(request, clean=False)
-        fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date']
+        fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date', 'elements']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -1632,6 +1635,8 @@ def find_id(form_name_field, json_file_path):
         else:
             #User entered a name, we need to check the according json file
             #to find the id
+            if not os.path.isfile(json_file_path) or os.path.getsize(json_file_path) == 0:
+                return i
             with open(json_file_path, 'r') as json_f:
                 json_data = WRCCUtils.u_convert(json.loads(json_f.read()))
                 for entry in json_data:

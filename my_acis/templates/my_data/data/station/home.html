@@ -524,6 +524,7 @@
     {%for date_vals in results.stn_data|lookup:stn%}
     <tr>
     {%for el_val in date_vals%}
+
     {%if forloop.first %}
     <td align="right">{{el_val}}{{params_dict.delimiter}}</td>
     {%else%}
