@@ -63,133 +63,137 @@
     <table cellpadding="20">
     <td valign="top" width=15%>
     </td>
-    <td valign="top" width=60%>    
-            {%if station_id%}
-                <p class="error">Station ID: {{station_id}}</p>
-            {%endif%}
-            {%if start_date%}
-                <p class="error">Start Date: {{start_date}}</p>
-            {%endif%}
-            {%if end_date%}
-                <p class="error">End Date: {{end_date}}</p>
-            {%endif%}
-            {%if elements%}
-                <p class="error">Climate Elements: {{elements}}</p>
-            {%endif%}
+    <td valign="top" width=60%>
+        <!-- link from station data-->
+        <p class="error">
+        {%if station_id%}
+        Your parameters:<br />
+        Station ID: {{station_id}}<br /> 
+        {%endif%}
+        {%if start_date%}
+        Start Date: {{start_date}}, 
+        {%endif%}
+        {%if end_date%}
+        End Date: {{end_date}}<br />
+        {%endif%}
+        {%if elements%} 
+        Climate Elements: {{elements}}<br />
+        {%endif%}
+        <br />
+        Choose an application from the list below!
+        </p>
 
-            <br />
-
-            <p class="error" align ="center">(* Beta version)</p>
-            <table cellpadding="5">
-            <tr>
-                <td valign="top">
-                    <p>* Monthly/Annual &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SODXTRMTS')">  <br/>Summary/Time Series </p>
-                    <div class="pop-up" id="sodxtrmts">
-                        <p>Monthly and annual time series of a large number of properties derived from the SOD daily data set. <br/>Click on the question mark for more information!</p>
-                    </div>
-                    {%if initial %}
-                        <a  href="{{TOOLS_URL}}station/sodxtrmts/?{%for key, val in initial.items %}{{key}}={{val}}&{%endfor%}"><img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
-                    {%else%}
-                        <a  href="{{TOOLS_URL}}station/sodxtrmts/"><img  class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
-                    {%endif%}
-                </td>
-                <td valign="top">
-                    <p>* Monthly/Seasonal &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SODSUMM')"> <br /> Climate Summaries</p>
-                    <div class="pop-up" id="sodsumm">
-                        <p>Generates general climatology in table and graph form. <br/>Click on the question mark for more information!</p>
-                    </div>
-                    {%if initial%}
-                        <a  href="{{TOOLS_URL}}station/sodsumm/?{%for key, val in initial.items %}{{key}}={{val}}&{%endfor%}"><img class="app_img" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
-                    {%else%}
-                        <a  href="{{TOOLS_URL}}station/sodsumm/"><img class="app_img" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
-                    {%endif%}
-                </td>
-                <td valign="top">
-                    <p>Monthly Averages &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_MON_AVES')"><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                    <div class="pop-up">
-                        <p>Generates bar chart of monthly averages. <br/>Click on the question mark for more information!</p>
-                    </div>
-                     {%if initial%}
-                        <a  href="{{TOOLS_URL}}station/monthly_aves/?{%for key, val in initial.items %}{{key}}={{val}}&{%endfor%}"><img class="app_img" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
-                    {%else%}
-                        <a  href="{{TOOLS_URL}}station/monthly_aves/"><img class="app_img" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
-                    {%endif%}
-                </td>
-            </tr>
-                <td valign="top"> 
-                    <p>Station Finder &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_NONE')"></p>
-                    <div class="pop-up">
-                        <p>Find stations with data for specific elements and a chosen time range. <br/>Click on the question mark for more information!</p>
-                    </div>
-                    {%if station_id%}                                                
-                        <a  href="{{TOOLS_URL}}station/station_finder/?station_id={{station_id}}"><img class="app_img" alt="StationFinder" title="StationFinder" src="{{MEDIA_URL}}img/StationFinder.png"></a>
-                    {%else%}
-                        <a  href="{{TOOLS_URL}}station/station_finder/"><img class="app_img" alt="StationFinder" title="StationFinder" src="{{MEDIA_URL}}img/StationFinder.png"></a>
-                    {%endif%}
-                </td>
-                <td valign="top">
-                    <p>Metadata Graphics &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_META_GRAPH')"></p>
-                    <div class="pop-up">
-                        <p>See how much data is missing over the period of record. <br/>Click on the question mark for more information!</p>
-                    </div>
-                    {%if station_id%}                        
-                        <a  href="{{TOOLS_URL}}station/metagraph/?station_id={{station_id}}"><img class="app_img" alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}img/MetaGraph.png"></a>
-                    {%else%}
-                        <a  href="{{TOOLS_URL}}station/metagraph/"><img class="app_img" alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}img/MetaGraph.png"></a>
-                    {%endif%}    
-                </td>
-                <td valign="top"></td>
-            </tr>
-            </table>
+        <!--<p class="error" align ="center">(* Beta version)</p>-->
+        <table cellpadding="5">
+        <tr>
+            <td valign="top">
+                <p>Monthly/Annual &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SODXTRMTS')">  <br/>Summary/Time Series </p>
+                <div class="pop-up" id="sodxtrmts">
+                    <p>Monthly and annual time series of a large number of properties derived from the SOD daily data set. <br/>Click on the question mark for more information!</p>
+                </div>
+                {%if initial %}
+                    <a  href="{{TOOLS_URL}}station/sodxtrmts/?{%for key, val in initial.items %}{{key}}={{val}}&{%endfor%}"><img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
+                {%else%}
+                    <a  href="{{TOOLS_URL}}station/sodxtrmts/"><img  class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
+                {%endif%}
+            </td>
+            <td valign="top">
+                <p>Monthly/Seasonal &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SODSUMM')"> <br /> Summary/Bar Charts</p>
+                <div class="pop-up" id="sodsumm">
+                    <p>Generates general climatology in table and graph form. <br/>Click on the question mark for more information!</p>
+                </div>
+                {%if initial%}
+                    <a  href="{{TOOLS_URL}}station/sodsumm/?{%for key, val in initial.items %}{{key}}={{val}}&{%endfor%}"><img class="app_img" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
+                {%else%}
+                    <a  href="{{TOOLS_URL}}station/sodsumm/"><img class="app_img" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
+                {%endif%}
+            </td>
+            <td valign="top">
+                <p>Monthly Averages &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_MON_AVES')"><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <div class="pop-up">
+                    <p>Generates bar chart of monthly averages. <br/>Click on the question mark for more information!</p>
+                </div>
+                 {%if initial%}
+                    <a  href="{{TOOLS_URL}}station/monthly_aves/?{%for key, val in initial.items %}{{key}}={{val}}&{%endfor%}"><img class="app_img" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
+                {%else%}
+                    <a  href="{{TOOLS_URL}}station/monthly_aves/"><img class="app_img" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
+                {%endif%}
+            </td>
+        </tr>
+            <td valign="top"> 
+                <p>Station Finder &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_NONE')"></p>
+                <div class="pop-up">
+                    <p>Find stations with data for specific elements and a chosen time range. <br/>Click on the question mark for more information!</p>
+                </div>
+                {%if station_id%}                                                
+                    <a  href="{{TOOLS_URL}}station/station_finder/?station_id={{station_id}}"><img class="app_img" alt="StationFinder" title="StationFinder" src="{{MEDIA_URL}}img/StationFinder.png"></a>
+                {%else%}
+                    <a  href="{{TOOLS_URL}}station/station_finder/"><img class="app_img" alt="StationFinder" title="StationFinder" src="{{MEDIA_URL}}img/StationFinder.png"></a>
+                {%endif%}
+            </td>
+            <td valign="top">
+                <p>Metadata Graphics &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_META_GRAPH')"></p>
+                <div class="pop-up">
+                    <p>See how much data is missing over the period of record. <br/>Click on the question mark for more information!</p>
+                </div>
+                {%if station_id%}                        
+                    <a  href="{{TOOLS_URL}}station/metagraph/?station_id={{station_id}}"><img class="app_img" alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}img/MetaGraph.png"></a>
+                {%else%}
+                    <a  href="{{TOOLS_URL}}station/metagraph/"><img class="app_img" alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}img/MetaGraph.png"></a>
+                {%endif%}    
+            </td>
+            <td valign="top"></td>
+        </tr>
+        </table>
     </td>
     <td valign="top" width="30%">    
-            {%if not station_id%}
-            <h3 align ="center">Links to other Applications</h3>
-            <ul class="navbar">    
-                <!--<h4 align="center">US-Wide Applications</h4>-->
-                <table>
-                    <tr><td>
-                    <a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger_hover" target="_blank">WRCC-USA Climate Archive</a>
-                    <div class="pop-up">
-                        <p>Summaries, Graphs, and other products for RAWS 
-                        (Remote Automatic Weather Stations) and COOP stations (Cooperative Observer).</p>
-                    </div>
-                    </td><td>
-                    <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="ShowPopupDocu('Docu_ClimArch')">
-                    </td></tr>
-                    <tr><td>
-                    <a id="us_wide" href="http://wrcc.dri.edu/sod-products/" class="trigger_hover" target="_blank">WRCC-Summary of the Day (SOD) products(COOP stations only)</a>
-                    <div class="pop-up" id="sods">
-                        <p>Data Lister, Graphs, Monthly Data Summaries.</p>
-                    </div>
-                    </td></tr>
-                    <tr><td>
-                    <a id="us_wide" href="http://wrcc.dri.edu/sod/sodusa.html" class="trigger_hover" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;Daily Lister</a>
-                    <div class="pop-up">
-                        <p>Graphs Temperature/Precipitation elements and extremes for chosen COOP station.</p>
-                    </div>
-                    </td><td>
-                    <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SOD_DLG')">
-                    </td></tr>
-                    <tr><td>
-                    <a id="us_wide" href="http://wrcc.dri.edu/cgi-bin/coopdata0.pl" class="trigger_hover" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;Monthly Data Lister</a>
-                    <div class="pop-up">
-                        <p>Temparture/Precipitation/Evaporation listings of chosen COOP station and month.</p>                       
-                    </div>
-                    </td><td>
-                    <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SOD_MDL')">
-                    </td></tr>
-                    <tr><td>
-                    <a id="us_wide" href="http://wrcc.dri.edu/sod/sodusaxtrm.html" class="trigger_hover" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;Monthly Summaries</a>
-                    <div class="pop-up">
-                        <p>Monthly Summaries of chosen COOP station and element for Period of Record.</p>
-                    </div>
-                    </td><td>
-                    <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SOD_MSUM')">
-                    </td></tr>
-                </table>
-           </ul>
-            {%endif%}
+        {%if not station_id%}
+        <h3 align ="center">Links to other Applications</h3>
+        <ul class="navbar">    
+            <!--<h4 align="center">US-Wide Applications</h4>-->
+            <table>
+                <tr><td>
+                <a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger_hover" target="_blank">WRCC-USA Climate Archive</a>
+                <div class="pop-up">
+                    <p>Summaries, Graphs, and other products for RAWS 
+                    (Remote Automatic Weather Stations) and COOP stations (Cooperative Observer).</p>
+                </div>
+                </td><td>
+                <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="ShowPopupDocu('Docu_ClimArch')">
+                </td></tr>
+                <tr><td>
+                <a id="us_wide" href="http://wrcc.dri.edu/sod-products/" class="trigger_hover" target="_blank">WRCC-Summary of the Day (SOD) products(COOP stations only)</a>
+                <div class="pop-up" id="sods">
+                    <p>Data Lister, Graphs, Monthly Data Summaries.</p>
+                </div>
+                </td></tr>
+                <tr><td>
+                <a id="us_wide" href="http://wrcc.dri.edu/sod/sodusa.html" class="trigger_hover" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;Daily Lister</a>
+                <div class="pop-up">
+                    <p>Graphs Temperature/Precipitation elements and extremes for chosen COOP station.</p>
+                </div>
+                </td><td>
+                <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SOD_DLG')">
+                </td></tr>
+                <tr><td>
+                <a id="us_wide" href="http://wrcc.dri.edu/cgi-bin/coopdata0.pl" class="trigger_hover" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;Monthly Data Lister</a>
+                <div class="pop-up">
+                    <p>Temparture/Precipitation/Evaporation listings of chosen COOP station and month.</p>                       
+                </div>
+                </td><td>
+                <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SOD_MDL')">
+                </td></tr>
+                <tr><td>
+                <a id="us_wide" href="http://wrcc.dri.edu/sod/sodusaxtrm.html" class="trigger_hover" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;Monthly Summaries</a>
+                <div class="pop-up">
+                    <p>Monthly Summaries of chosen COOP station and element for Period of Record.</p>
+                </div>
+                </td><td>
+                <img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SOD_MSUM')">
+                </td></tr>
+            </table>
+       </ul>
+        {%endif%}
     </td>
     </table>
 

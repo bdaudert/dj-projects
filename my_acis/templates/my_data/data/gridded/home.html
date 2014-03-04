@@ -563,7 +563,7 @@
     {%if overlay_error%}
     <p class="error">{{overlay_error}}</p>
     {%else%}
-    <div id="map-overlay" style="width:100%; height:400px;"></div>
+    <div id="map-overlay" style="width:95%; height:400px;"></div>
     <div id="content-window" style="width:100px; height:100px;"></div>
     <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
     {%endif%} 
@@ -602,22 +602,22 @@
     <!--Link to relevant applications-->
 
     <!--Linke to Gridpoint Time Series-->
-    {%if params_dict.data_summary == "temporal"%} 
-    <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements_string}}&grid={{params_dict.grid}}&{{params_dict.select_grid_by}}={{params_dict.area_type_value}}">Generate a climate summary map  for this data set here!</a>
+    {%if params_dict.data_summary == "temporal" and params_dict.select_grid_by == "state" and params_dict.units == "english"%} 
+    <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements_string}}&grid={{params_dict.grid}}&{{params_dict.select_grid_by}}={{params_dict.area_type_value}}"><font size="3">Generate a climate summary map  for this data set here!</font></a>
     <br />
     {%elif params_dict.data_summary == "spatial" or params_dict.select_grid_by == 'location'%}
-    <a target="_blank" href="{{TOOLS_URL}}gridded/area_time_series/?json_file={{json_file}}">Generate a time series graph!</a>
+    <a target="_blank" href="{{TOOLS_URL}}gridded/area_time_series/?json_file={{json_file}}"><font size="3">Generate a time series graph!</font></a>
     {%endif%}
 
 
     <p><b>DATA</b>:</p>
     <table border="1">
     {%if initial.data_summary == "temporal"%}    
-    <th>date range{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev{{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}}{{params_dict.delimiter}}</th>{%endfor%}
+    <th>date range{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev({{elev_unit}}){{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}}({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
     {%elif initial.data_summary == "spatial"%}
-    <th>date {{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}}{{params_dict.delimiter}}</th>{%endfor%}
+    <th>date {{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}}({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
     {%else%}
-    <th>date{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev{{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}}{{params_dict.delimiter}}</th>{%endfor%}
+    <th>date{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev({{elev_unit}}){{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}}({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
     {%endif%}
     {%for row in results%}
     <tr>
@@ -627,8 +627,6 @@
     </tr>
     {%endfor%}
     </table>
-    {%else%}
-    <p class="error">No data for these paramters!</p>
     {%endif%}<!--End if results-->
     </div><!--End results div-->
 </td></table>

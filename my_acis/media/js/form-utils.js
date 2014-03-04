@@ -435,14 +435,23 @@ function show_if_true(node, rowClass){
     var trs = document.getElementsByClassName(rowClass);
     if (node.value == 'T'){
         var disp = "table-row";
+        if ($('#Arrow').length){ 
+            //Hide Sodxtrmts downarrow
+            document.getElementById('Arrow').style.display="none"; 
+        }      
     }
     else{
         var disp = "none";
+        //Show Sodxtrmts downarrow
+        if ($('#Arrow').length){       
+            document.getElementById('Arrow').style.display="block";
+        }
     }
     for (idx=0;idx<trs.length;idx++){
         trs[idx].style.display = disp;
     }
 }
+
 
 function show_div_if_true(node, divID){
     if (node.value == 'T'){

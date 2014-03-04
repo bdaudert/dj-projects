@@ -91,22 +91,6 @@
     </script>
     </div>
 
-    {%if not results%}
-    {%if search_params.station_id%}
-    <p>Station ID: {{search_params.station_id}}</p>
-    {%endif%}
-    {%if search_params.start_date%}
-    <p>Start Date: {{search_params.start_date}}</p>
-    {%endif%}
-    {%if search_params.end_date%}
-    <p>End Date: {{search_params.end_date}}</p>
-    {%endif%}
-    {%if search_params.elements%}
-    <p>ACIS Elements: {{search_params.elements}}</p>
-    {%endif%}       
-    {%endif%}
-        
-
     {%if results%}
     <table>
     <td>

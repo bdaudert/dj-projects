@@ -354,6 +354,14 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     {%if initial.generate_graph == "T"%}
     <table frame="box" class="formGraph">
     {%else%}
+    {%if json_dict.data%}
+    <div id="Arrow">
+    <table style="display:block;">
+    <td valign="top"><b>RESULTS:</b></td>
+    <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="300px"></td>
+    </table>
+    </div>
+    {%endif%}
     <table frame="box" class="formGraph" style="display:none">
     {%endif%}
     <tr valign="top" class="formGraph" style="display:table-row;">

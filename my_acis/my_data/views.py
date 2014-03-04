@@ -247,7 +247,11 @@ def data_station(request):
         #Turn request object into python dict
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
-        context['cleaned'] = form.keys()
+        #set wich apps to link to:
+        if len(form_cleaned['elements'].replace(' ','').split(',')) == 1 and 'station_id' in form.keys() and form['units'] == 'english':
+            context['link_to_all'] = True
+        elif len(form_cleaned['elements'].replace(' ','').split(',')) > 1 and 'station_id' in form.keys() and form['units'] == 'english':
+            context['link_to_mon_aves'] = True
         #Back Button/download files issue fix:
         #if select_stations_by none, find it
         if not 'select_stations_by' in form_cleaned.keys():
@@ -258,8 +262,18 @@ def data_station(request):
                     break
         if not 'elements' in form.keys():
             context['element_list'] = []
+            context['unit_dict'] = {}
         else:
+            unit_dict = {}
             context['element_list'] = form['elements']
+            for el in form['elements']:
+                if form['units'] == 'metric':
+                    unit_dict[el] = WRCCData.UNITS_METRIC[el]
+                else:
+                    unit_dict[el] = WRCCData.UNITS_ENGLISH[el]
+            if form['units'] == 'metric':unit_dict['elev']= WRCCData.UNITS_METRIC['elev']
+            if form['units'] == 'english':unit_dict['elev']= WRCCData.UNITS_ENGLISH['elev']
+            context['unit_dict'] = unit_dict
         fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date','degree_days', 'elements']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
@@ -342,7 +356,6 @@ def data_gridded(request):
         #Turn request object into python dict
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
-        context['x'] = form_cleaned
         #Back Button/download files issue fix:
         #if select_grid_by none, find it
         if not 'select_grid_by' in form_cleaned.keys():
@@ -359,6 +372,8 @@ def data_gridded(request):
         initial,checkbox_vals = set_data_gridded_initial(form)
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
         display_params_list, params_dict = set_data_gridded_params(form)
+        context['elev_unit'] = 'ft'
+        if 'units' in form.keys() and form['units'] == 'metric':context['elev_unit'] = 'm'
         #Add id in display params and change params_dict to id if needed
         if form[form['select_grid_by']].upper()!= form_cleaned[form_cleaned['select_grid_by']].upper():
             display_params_list[0][1]+= ', ' + str(form_cleaned[form_cleaned['select_grid_by']])
@@ -1227,7 +1242,7 @@ def old_station_locator_app(request):
 
 def sodxtrmts(request):
     context = {
-        'title': 'Monthly Summary Time Series',
+        'title': 'Monthly/Annual Summary/Time Series',
         'icon':'ToolProduct.png'
     }
     json_dict =  None
@@ -1432,7 +1447,7 @@ def sodxtrmts(request):
 
 def sodsumm(request):
     context = {
-        'title': 'Sodsumm - Monthly and Seasonal Summaries of Daily Data',
+        'title': 'Monthly and Seasonal Summary/Bar Chart',
         'icon':'ToolProduct.png'
         }
     initial = set_sod_initial(request, 'Sodsumm')
@@ -2214,7 +2229,7 @@ def set_data_gridded_params(form):
 
     key_order = [form['select_grid_by'], 'elements','degree_days', 'grid', 'start_date', 'end_date','temporal_resolution', 'data_summary', 'units']
     display_params_list = [[] for k in range(len(key_order))]
-    params_dict = {'area_type_value':form[form['select_grid_by']]}
+    params_dict = {'area_type_value':form[form['select_grid_by']],'user_id': form[form['select_grid_by']]}
     for key, val in form.iteritems():
         #Convert to string to avoid unicode issues
         params_dict[key] = str(val)
@@ -2235,10 +2250,14 @@ def set_data_gridded_params(form):
                 el_list = val.replace(' ','').split(',')
             else:
                 el_list = val
-            '''
-            if 'add_degree_days' in form.keys() and form['add_degree_days'] == 'T':
-                el_list += form['degree_days'].replace(' ','').split(',')
-            '''
+            unit_dict ={}
+            if isinstance(el_list, list):
+                for el in el_list:
+                    if form['units'] == 'metric':
+                        unit_dict[el] = WRCCData.UNITS_METRIC[el]
+                    else:
+                        unit_dict[el] = WRCCData.UNITS_ENGLISH[el]
+            params_dict['unit_dict'] = unit_dict
             params_dict['elements'] = ','.join(el_list)
             params_dict['element_list'] = el_list
             params_dict['elements_string'] = ','.join(el_list)
@@ -2307,6 +2326,7 @@ def set_data_station_params(form):
 
         if key == form['select_stations_by'] and key not in  ['station_ids', 'state', 'shape']:
             params_dict[key] = find_id(val, MEDIA_URL + '/json/US_' + key +'.json')
+            params_dict['user_id']= val
             #override display_params_list
             if display_params_list[0][1].upper() != params_dict[key].upper():
                 display_params_list[0][1]+= ', ' + params_dict[key]
@@ -2314,6 +2334,14 @@ def set_data_station_params(form):
            params_dict['delimiter'] = WRCCData.DELIMITERS[val]
         elif key in ['show_flags', 'show_observation_time']:
             params_dict[key] = val
+        elif key == 'elements':
+            params_dict[key] = val
+            idx = key_order.index('elements')
+            if isinstance(val, list):
+                el_str_long = ''
+                for v in val:
+                    el_str_long+=WRCCData.ACIS_ELEMENTS_DICT[v]['name_long'] + ', '
+                display_params_list[idx]=['Elements',el_str_long]
         else:
             params_dict[key] = val
     return display_params_list, params_dict
