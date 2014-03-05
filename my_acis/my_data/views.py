@@ -854,6 +854,13 @@ def area_time_series(request):
                     context['error'] = 'Error when reading %s: %s' (json_file, str(e))
                     return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
             summary_time_series = json_data['graph_data']
+            #Check that we have enough data to generate plot (enough > 2)
+            if not summary_time_series:
+                context['error'] = 'No data found to generate graph. Please check your input variables.'
+                return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
+            elif len(summary_time_series[0])<=2:
+                context['error'] = 'Not enough data to generate graph. Please make sure to have a time range  larger than 2 days.'
+                return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
             download_data = json_data['download_data']
         else:
             #set up bbox query for area_type
@@ -875,6 +882,13 @@ def area_time_series(request):
             #Generate time series from data request
             summary_time_series, download_data = compute_area_time_series_summary(req,search_params,poly,PointIn)
             context['req']=req
+            #Check that we have enough data to generate plot (enough > 2)
+            if not summary_time_series:
+                context['error'] = 'No data found to generate graph. Please check your input variables.'
+                return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
+            elif len(summary_time_series[0])<=2:
+                context['error'] = 'Not enough data to generate graph. Please make sure to have a time range  larger than 2 days.'
+                return render_to_response('my_data/apps/gridded/area_time_series.html', context, context_instance=RequestContext(request))
         #Write data in download format
         #Set rest of search_params,context variables and save results
         search_params['spatial_summary'] = WRCCData.DISPLAY_PARAMS[form['spatial_summary']]
