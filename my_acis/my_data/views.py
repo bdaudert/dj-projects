@@ -407,12 +407,15 @@ def data_gridded(request):
         req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')
         context['hide_gp_map'] = True
         if 'error' in req.keys():
-            context['error'] = req['error']
-            context['results'] = []
+            context['results'] = {'error':req['error']}
             return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
         #format data
         results = WRCCUtils.format_grid_data(req, form_cleaned)
-        context['results'] = results
+        context['x'] = form_cleaned
+        if not results:
+            context['results']  = {'error': 'No data found for these parameters!'}
+        else:
+            context['results'] = results
         #If Spatial Summary, write json file for area_time_series graph
         if form_cleaned['data_summary'] == 'spatial' or 'location' in form_cleaned.keys():
             if 'location' in form_cleaned.keys():

@@ -224,7 +224,8 @@ input[value=Submit] {
 }
 
 input[value="Start Over"] {
-    background-color:#8FBC8F;
+    /*background-color:#8FBC8F;*/
+    background-color:#006666;
     color:#FFEFD5;
 }
 
