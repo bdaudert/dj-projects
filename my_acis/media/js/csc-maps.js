@@ -337,9 +337,10 @@ function initialize_network_map() {
     var marker_type='all';
     $.getJSON(MEDIA_URL + 'json/' + json_file, function(data) {
         //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
-        var ll = new google.maps.LatLng(39.5, -98.35);
+        //var Center = new google.maps.LatLng(39.5, -98.35);
+        var Center =new google.maps.LatLng(37.0, -114.05);
         var mapOptions = {
-        center: ll,
+        center: Center,
         zoom: 5,
         mapTypeId: google.maps.MapTypeId.HYBRID
         };

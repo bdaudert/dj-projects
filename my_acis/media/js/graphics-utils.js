@@ -159,6 +159,19 @@ function set_plotlines(data,step,axis,plotline_opts){
     if axis == 'x', set x_plotlines
     if axis == 'y', set y_potlines
     */
+    //Sanity Check: step needs to be integer 
+    //greater than zero
+    var x_step = step;
+    if (x_step === parseInt(x_step)){
+        if (parseInt(x_step) < 1){
+            x_step = 1;
+        }
+    }
+    else{
+        if (parseInt(x_step) < 1){
+            x_step = 1;
+        }
+    }
     if (axis == 'x'){idx = 0;}
     if (axis == 'y'){idx = 1;}
     var plotLines = [];
@@ -261,12 +274,20 @@ function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis
             props.tickInterval = upper / plotline_no;
             //Make sure upper is close to max value
             while (upper - props.axisMax > props.tickInterval){
+                if (upper < props.axisMax){
+                    break
+                }
                 upper = precise_round(upper - props.tickInterval,2);
             }
             props.axisMax = props.axisMin + upper;
             break
         }
     }
+    //Sanity check
+    if (props.axisMax < data_max){
+        props.axisMax = data_max;
+    }
+
     //Larger  differences are treated differently
     if (plotline_no / 2 < diff && diff <=plotline_no){
         props.axisMin = Math.floor(props.axisMin);
