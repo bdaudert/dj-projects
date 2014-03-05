@@ -610,13 +610,10 @@
 
     {%if results and not results.error%}
     <!--Link to relevant applications-->
-
-    <!--Linke to Gridpoint Time Series-->
-    {%if params_dict.data_summary == "temporal" and params_dict.select_grid_by == "state" and params_dict.units == "english"%} 
-    <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements_string}}&grid={{params_dict.grid}}&{{params_dict.select_grid_by}}={{params_dict.area_type_value}}"><font size="3">Generate a climate summary map  for this data set here!</font></a>
-    <br />
+    {%if params_dict.data_summary == "temporal" and params_dict.select_grid_by == "state" and params_dict.units == "english"%}
+    <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?{%for key,val in form_cleaned.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate a climate summary map  for this data set here!</font></a><br />
     {%elif params_dict.data_summary == "spatial" or params_dict.select_grid_by == 'location'%}
-    <a target="_blank" href="{{TOOLS_URL}}gridded/area_time_series/?json_file={{json_file}}"><font size="3">Generate a time series graph!</font></a>
+     <a target="_blank" href="{{TOOLS_URL}}gridded/area_time_series/?json_file={{json_file}}"><font size="3">Generate a time series graph!</font></a><br />
     {%endif%}
 
     <p><b>DATA</b>:</p>
