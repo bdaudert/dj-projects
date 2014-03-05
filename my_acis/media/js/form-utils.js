@@ -72,10 +72,12 @@ function update_elements(node){
             //document.getElementById('elements').options[idx].selected = true;
         }
     }
-    var elements_string = els.join();
-    var el_strings = document.getElementsByClassName('elements_string');
-    for (idx=0;idx<el_strings.length;idx++){
-        el_strings[idx].value = elements_string;
+    if ($('#elements_string').length){
+        var elements_string = els.join();
+        var el_strings = document.getElementsByClassName('elements_string');
+        for (idx=0;idx<el_strings.length;idx++){
+            el_strings[idx].value = elements_string;
+        }
     }
 }
 

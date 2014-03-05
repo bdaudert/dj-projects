@@ -18,8 +18,7 @@
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 
-<table cellpadding="20">
-<!--LEFT-->
+<table cellpadding="10">
 <td valign="top" width="40%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}station/'"/>
     <div id='formData'>
@@ -281,9 +280,8 @@
         </form>
     </div>
     <br /><br />
-<!--RIGHT-->
 </td>
-<td valign="top" width="60%">
+<td valign="top"  align="left" width="60%">
     <table>
     <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
     </table>
@@ -451,6 +449,7 @@
     {%endif%}
     <br /><br /> 
     {%endif%}
+    
     <!--Results section-->
     <div id="results">
     {%if large_request %}
@@ -481,7 +480,29 @@
     {%if results.error%}
     <p class="error">{{results.error}}</p>
     {%else%}
+    <div id="Arrow">
+    <table style="display:block;">
+    <td valign="top"><b>RESULTS:</b></td><td>
+    <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td>
+    </table>
+    </div>
+    {%endif%}
+
+</td></table>
+<table cellpadding="10" align="center">
+<td valign="top" width="100%">
+    {%if results%}
     <!--Link to relevant apps-->
+    {%if link_to_all and not results.error%}
+    <a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/?{%for key,val in form_cleaned.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Monthly/Annual Summary and Time Series!</font></a><br />
+    <a target="_blank" href="{{TOOLS_URL}}station/sodsumm/?{%for key,val in form_cleaned.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Monthly/Seasonal Summary and Bar Charts!</font></a><br />
+    <a target="_blank" href="{{TOOLS_URL}}station/monthly_aves/?{%for key,val in form_cleaned.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Barcharts of Monthly Averages</font></a><br />
+    {%endif%}
+    {%if link_to_mon_aves and not results.error%}
+    <a target="_blank" href="{{TOOLS_URL}}station/monthly_aves/?{%for key,val in form_cleaned.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Barcharts of Monthly Averages</font></a><br />
+    {%endif%}
+
+    <!--
     {%if link_to_all and not results.error%}
     <a target="_blank" href="{{TOOLS_URL}}station/sodxtrmts/?station_id={{params_dict.user_id}}&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{initial.elements_string}}"><font size="3">Generate Monthly/Annual Summary and Time Series!</font></a><br /><br />
     <a target="_blank" href="{{TOOLS_URL}}station/sodsumm/?station_id={{params_dict.user_id}}&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{initial.elements_string}}"><font size="3">Generate Monthly/Seasonal Summary and Bar Charts!</font></a><br /><br />
@@ -489,8 +510,10 @@
     {%endif%}
     {%if link_to_mon_aves and not results.error%}
     <a target="_blank" href="{{TOOLS_URL}}station/monthly_aves/?station_id={{params_dict.station_id}}&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{initial.elements_string}}"><font size="3">Generate Barcharts of Monthly Averages</font></a><br /><br />
+    {%endif%}-->
+
     {%endif%}
-    {%endif%}
+
     <b>RESULTS:</b>:<br />
     {%for stn in stn_idx%}
     {%if station_ids_error %}
@@ -499,8 +522,9 @@
     {%if results.stn_data|lookup:stn%}
 
     <b>Station Name</b>: {{results.stn_names|lookup:stn|safe}},<br />
-    <b>Station ID and Network Pairs</b>: 
+    <b>Station ID and Network Pairs</b>:<br /> 
     {%for id_network in results.stn_ids|lookup:stn %}
+    {%if forloop.counter|divisibleby:2%}<br />{%endif%}
     {{id_network}},
     {%endfor%}<br />
     <b>State</b>: {{results.stn_state|lookup:stn|safe}},<br />

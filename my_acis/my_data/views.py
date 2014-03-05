@@ -247,10 +247,11 @@ def data_station(request):
         #Turn request object into python dict
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
+        context['form_cleaned'] = form_cleaned
         #set wich apps to link to:
         if len(form_cleaned['elements'].replace(' ','').split(',')) == 1 and 'station_id' in form.keys() and form['units'] == 'english':
             context['link_to_all'] = True
-        elif len(form_cleaned['elements'].replace(' ','').split(',')) > 1 and 'station_id' in form.keys() and form['units'] == 'english':
+        elif len(form_cleaned['elements'].replace(' ','').split(',')) >= 1 and 'station_id' in form.keys():
             context['link_to_mon_aves'] = True
         #Back Button/download files issue fix:
         #if select_stations_by none, find it
@@ -267,10 +268,11 @@ def data_station(request):
             unit_dict = {}
             context['element_list'] = form['elements']
             for el in form['elements']:
+                el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
                 if form['units'] == 'metric':
-                    unit_dict[el] = WRCCData.UNITS_METRIC[el]
+                    unit_dict[el] = WRCCData.UNITS_METRIC[el_strip]
                 else:
-                    unit_dict[el] = WRCCData.UNITS_ENGLISH[el]
+                    unit_dict[el] = WRCCData.UNITS_ENGLISH[el_strip]
             if form['units'] == 'metric':unit_dict['elev']= WRCCData.UNITS_METRIC['elev']
             if form['units'] == 'english':unit_dict['elev']= WRCCData.UNITS_ENGLISH['elev']
             context['unit_dict'] = unit_dict
@@ -568,92 +570,83 @@ def metagraph(request):
 def monthly_aves(request):
     context = {
         'title': 'Monthly Averages',
-        'icon':'ToolProduct.png',
-        'acis_elements':dict(WRCCData.ACIS_ELEMENTS_DICT)
+        'icon':'ToolProduct.png'
     }
-    Get = set_GET(request)
-    station_id = Get('station_id', None)
-    start_date = Get('start_date', None)
-    end_date = Get('end_date', None)
-    elements = Get('elements', None)
-    initial = {}
-    search_params = {}
-    if station_id is not None:initial['station_id']= str(station_id);search_params['station_id'] = station_id
-    if start_date is not None:initial['start_date']= str(start_date);search_params['start_date'] = start_date
-    if end_date is not None:initial['end_date']= str(end_date);search_params['end_date'] = end_date
-    if elements is not None:initial['elements']= elements;search_params['elements'] = elements
-    context['search_params'] = search_params
-    if initial:
-        form = set_as_form(request,'MonthlyAveragesForm', init=initial)
-    else:
-        form = set_as_form(request,'MonthlyAveragesForm')
-    context['form'] = form
+    initial, checkbox_vals = set_monthly_aves_initial(request)
+    context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+    #context['search_params'] = initial
 
-    if 'form' in request.POST:
-        form = set_as_form(request,'MonthlyAveragesForm')
-        context['form']  = form
-        if form.is_valid():
-            s_date = str(form.cleaned_data['start_date'])
-            e_date = str(form.cleaned_data['end_date'])
-            station_id = find_id(form.cleaned_data['station_id'], MEDIA_URL + '/json/US_station_id.json')
-            context['search_params'] ={
-                'station_id':station_id,
-                'start_date':s_date,
-                'end_date':e_date,
-                'elems': ','.join(form.cleaned_data['elements'])
-            }
-            params = dict(sid=station_id, sdate=s_date, edate=e_date, \
-            meta='valid_daterange,name,state,sids,ll,elev,uid,county,climdiv', \
-            elems=[dict(vX=WRCCData.ACIS_ELEMENTS_DICT[el]['vX'], groupby="year")for el in form.cleaned_data['elements']])
-            #Data request
-            #req = WRCCClasses.DataJob('StnData', params).make_data_call()
-            req = AcisWS.StnData(params)
-            #Sanity check
-            if not req:
-                context['error']= 'No data found for parameters. Please check your station ID.'
-                return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
-            if 'error' in req.keys():
-                if req['error'] == 'Unknown sId':
-                    context['error'] = '%s is not a valid station identifyier.' %form.cleaned_data['station_id']
-                else:
-                    context['error']= req['error']
-                return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
-            if 'data' not in req.keys() or 'meta' not in req.keys():
-                context['error']= 'No data found for parameters. Please check your station ID, start and end dates.'
-                return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
-            if 'meta' not in req.keys():
-                context['error']= 'No metadata found for parameters. Please check your station ID.'
-                return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
-            #Find averages and write results dict
-            monthly_aves = {}
-            for el in form.cleaned_data['elements']:
-                monthly_aves[el] = []
-            results = [{} for k in form.cleaned_data['elements']]
-            try:
-                monthly_aves = WRCCDataApps.monthly_aves(req, form.cleaned_data['elements'])
-            except:
-                pass
-            context['averaged_data'] = monthly_aves
-            #Write results dict
-            try:
-                results = write_monthly_aves_results(req, form.cleaned_data, monthly_aves)
-            except:
-                context['error'] = 'No data found for parameters. Please check your station ID, start and end dates.'
-            context['results'] = results
-            context['req'] = results
-            if 'meta' in req.keys():
-                meta = write_monthly_aves_meta(req, form.cleaned_data)
-                context['meta'] = meta
-            #save to json file (necessary since we can't pass list, dicts to js via hidden vars)
-            #double quotes needed for jquery json.load
-            results_json = json.dumps(results)
-            #results_json = str(results).replace("\'", "\"")
-            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-            json_file = '%s_monthly_aves_%s_%s_%s.json' \
-            %(time_stamp, str(form.cleaned_data['station_id']), s_date, e_date)
-            context['json_file'] = json_file
-            with  open(TEMP + '%s' %(json_file),'w+') as f:
-                f.write(results_json)
+    if 'formData' in request.POST:
+        form = set_form(request,clean=False)
+        form_cleaned = set_form(request)
+        context['search_params'] = form_cleaned
+        fields_to_check = ['start_date', 'end_date','degree_days', 'elements']
+        form_error = check_form(form_cleaned, fields_to_check)
+        initial, checkbox_vals = set_monthly_aves_initial(form)
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        if form_error:
+            context['form_error'] = form_error
+            return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
+        params = {
+            'sid':form_cleaned['station_id'],
+            'sdate':form_cleaned['start_date'].lower(),
+            'edate':form_cleaned['end_date'].lower(),
+            'meta':'valid_daterange,name,state,sids,ll,elev,uid,county,climdiv'
+        }
+        elems = []
+        for el in form['elements']:
+            el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
+            if base_temp:
+                if 'units' in form.keys() and form['units'] == 'metric':
+                    base_temp = round(WRCCUtils.convert_to_english('maxt',base_temp))
+                elems.append({'vX':WRCCData.ACIS_ELEMENTS_DICT[el_strip]['vX'], 'base':int(base_temp),'groupby':'year'})
+            else:
+                elems.append({'vX':WRCCData.ACIS_ELEMENTS_DICT[el]['vX'],'groupby':'year'})
+        params['elems'] = elems
+        #Data request
+        #req = WRCCClasses.DataJob('StnData', params).make_data_call()
+        req = AcisWS.StnData(params)
+        #Sanity check
+        if not req:
+            context['error']= 'No data found for parameters. Please check your station ID.'
+            return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
+        if 'error' in req.keys():
+            if req['error'] == 'Unknown sId':
+                context['error'] = '%s is not a valid station identifyier.' %form_cleaned['station_id']
+            else:
+                context['error']= req['error']
+            return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
+        if 'data' not in req.keys() or 'meta' not in req.keys():
+            context['error']= 'No data found for parameters. Please check your station ID, start and end dates.'
+            return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
+        #Find averages and write results dict
+        monthly_aves = {el:[] for el in form['elements']}
+        el_list = form['elements']
+        results = [{} for k in el_list]
+        try:
+            monthly_aves = WRCCDataApps.monthly_aves(req,form)
+        except:
+            pass
+        context['averaged_data'] = monthly_aves
+        #Write results dict
+        try:
+            results = write_monthly_aves_results(req, form, monthly_aves)
+        except:
+            context['error'] = 'No data found for parameters. Please check your station ID, start and end dates.'
+        context['results'] = results
+        if 'meta' in req.keys():
+            meta = write_monthly_aves_meta(req, form)
+            context['meta'] = meta
+        #save to json file (necessary since we can't pass list, dicts to js via hidden vars)
+        #double quotes needed for jquery json.load
+        results_json = json.dumps(results)
+        #results_json = str(results).replace("\'", "\"")
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        json_file = '%s_monthly_aves_%s_%s_%s.json' \
+        %(time_stamp, str(form_cleaned['station_id']), form_cleaned['start_date'], form_cleaned['end_date'])
+        context['json_file'] = json_file
+        with  open(TEMP + '%s' %(json_file),'w+') as f:
+            f.write(results_json)
     return render_to_response('my_data/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
 
 def clim_sum_maps(request):
@@ -1682,6 +1675,8 @@ def set_form(request,clean=True):
     else:
         form_tuple = dict(request)
     for key,val in form_tuple:
+        if key == 'csrfmiddlewaretoken':
+            continue
         form[str(key)] =str(val)
         #Override element if needed, elements should be a list
         if str(key) == 'elements':
@@ -2074,6 +2069,8 @@ def compute_area_time_series_summary(req, search_params, poly, PointIn):
 def write_monthly_aves_results(req, form_data, monthly_aves):
     results = [{} for k in form_data['elements']]
     for el_idx, el in enumerate(form_data['elements']):
+        el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
+        '''
         el_strip = re.sub(r'(\d+)(\d+)', '', el)   #strip digits from gddxx, hddxx, cddxx
         b = el[-2:len(el)]
         base_temp = ''
@@ -2084,11 +2081,16 @@ def write_monthly_aves_results(req, form_data, monthly_aves):
                 base_temp = '65'
             elif b == 'dd' and el == 'gdd':
                 base_temp = '50'
+        '''
         if base_temp:
-            results[el_idx] = {'element_long': WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + 'Base Temperature: ' + base_temp}
+            results[el_idx] = {'element_long': WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + 'Base Temperature: ' + str(base_temp)}
         else:
             results[el_idx] = {'element_long': WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long']}
         results[el_idx]['element'] = str(el)
+        if form_data['units'] == 'metric':
+            results[el_idx]['unit'] = WRCCData.UNITS_LONG[WRCCData.UNITS_METRIC[el_strip]]
+        else:
+            results[el_idx]['unit'] = WRCCData.UNITS_LONG[WRCCData.UNITS_ENGLISH[el_strip]]
         results[el_idx]['stn_id']= find_id(str(form_data['station_id']), MEDIA_URL +'json/US_station_id.json')
 
         if form_data['start_date'].lower() == 'por':
@@ -2125,9 +2127,9 @@ def write_monthly_aves_meta(req, form_data):
     #get rid of unicode and special chars in station name
     Meta = WRCCUtils.format_stn_meta(req['meta'])
     #format meta data
-    elements = ', '.join(form_data['elements'])
+    el_list = form_data['elements']
     valid_dr = []
-    for idx, el in enumerate(form_data['elements']):
+    for idx, el in enumerate(el_list):
         try:
             valid_dr.append('%s: %s - %s ' %(str(el),str(Meta['valid_daterange'][idx][0]),str(Meta['valid_daterange'][idx][1])))
         except:
@@ -2138,7 +2140,7 @@ def write_monthly_aves_meta(req, form_data):
     #Override valid daterange
     meta_vd = ['Valid Daterange']
     vd =''
-    for idx,el in enumerate(form_data['elements']):
+    for idx,el in enumerate(el_list):
         try:
             v_el = str(Meta['valid_daterange'][idx])
         except:
@@ -2146,19 +2148,20 @@ def write_monthly_aves_meta(req, form_data):
         vd+= el + ': ' + v_el + ', '
     meta_vd.append(vd)
     meta[2] = meta_vd
-    meta.insert(2, ['Elements', elements])
-    '''
-    meta = ['Station Name: ' +  Meta['name'],
-            'Elements :' + elements,
-            'Valid Daterange: ' + ', '.join(valid_dr),
-            'Lat, Lon: ' +  str(Meta['ll']),
-            'Elevation :' +  Meta['elev'],
-            'State: ' + Meta['state'],
-            'County: ' +  Meta['county'],
-            'Climate Division: ' + Meta['climdiv'],
-            'Unique Identifier: ' + Meta['uid']
-            ]
-    '''
+    el_string = ''
+    for el in el_list:
+        el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
+        if form_data['units'] == 'metric':
+
+            unit = WRCCData.UNITS_METRIC[el_strip]
+        else:
+            unit = WRCCData.UNITS_ENGLISH[el_strip]
+        if base_temp:
+            el_string+= WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + '('+ unit + ')' + ' Base Temp.: ' + str(base_temp) + ', '
+        else:
+            el_string+=WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + '('+ unit + ')' +  ', '
+    meta.insert(2, ['Elements', el_string])
+    meta.insert(3, ['Units', form_data['units']])
     return meta
 
 #############################
@@ -2253,10 +2256,11 @@ def set_data_gridded_params(form):
             unit_dict ={}
             if isinstance(el_list, list):
                 for el in el_list:
+                    el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
                     if form['units'] == 'metric':
-                        unit_dict[el] = WRCCData.UNITS_METRIC[el]
+                        unit_dict[el] = WRCCData.UNITS_METRIC[el_strip]
                     else:
-                        unit_dict[el] = WRCCData.UNITS_ENGLISH[el]
+                        unit_dict[el] = WRCCData.UNITS_ENGLISH[el_strip]
             params_dict['unit_dict'] = unit_dict
             params_dict['elements'] = ','.join(el_list)
             params_dict['element_list'] = el_list
@@ -2340,7 +2344,8 @@ def set_data_station_params(form):
             if isinstance(val, list):
                 el_str_long = ''
                 for v in val:
-                    el_str_long+=WRCCData.ACIS_ELEMENTS_DICT[v]['name_long'] + ', '
+                    el_strip, base_temp = WRCCUtils.get_el_and_base_temp(v)
+                    el_str_long+=WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + ', '
                 display_params_list[idx]=['Elements',el_str_long]
         else:
             params_dict[key] = val
@@ -2587,6 +2592,8 @@ def set_sodxtrmts_graph_initial(request):
         if initial['graph_summary'] == graph_summary:
             checkbox_vals['graph_summary_' + graph_summary + '_selected'] = 'selected'
     return initial, checkbox_vals
+
+
 
 def set_data_station_initial(request):
     initial = {}
@@ -2896,4 +2903,41 @@ def set_station_locator_initial(request):
             checkbox_vals['elements_' + b  + '_selected'] ='selected'
         if initial['dates_constraints'] == b:
             checkbox_vals['dates_' + b  + '_selected'] ='selected'
+    return initial, checkbox_vals
+
+def set_monthly_aves_initial(request):
+    initial = {}
+    checkbox_vals = {}
+    Get = set_GET(request)
+    Getlist = set_GET_list(request)
+    initial['station_id'] = Get('station_id', '266779')
+    initial['autofill_list'] = 'US_' + 'station_id'
+    el_str = Get('elements',None)
+    if isinstance(el_str,basestring) and el_str:
+        initial['elements']= el_str.replace(' ','').split(',')
+    else:
+        initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
+    initial['add_degree_days'] = Get('add_degree_days', 'F')
+    initial['units'] = Get('units','english')
+    if initial['units'] == 'metric':
+        initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
+    else:
+        initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
+    initial['start_date']  = Get('start_date', 'POR')
+    initial['end_date']  = Get('end_date', 'POR')
+    #Checkbox vals
+    for e in ['maxt','mint','avgt', 'obst', 'pcpn', 'snow', 'snwd', 'gdd','hdd','cdd', 'evap', 'wdmv']:
+        checkbox_vals['elements_' + e + '_selected'] =''
+        for el in initial['elements']:
+            if el == e:
+                checkbox_vals['elements_' + e + '_selected'] ='selected'
+    for bl in ['T','F']:
+        for cbv in ['add_degree_days']:
+            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
+            if initial[cbv] == bl:
+                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
+    for u in ['english', 'metric']:
+        checkbox_vals['units_' + u + '_selected'] =''
+        if u == initial['units']:
+            checkbox_vals['units_' +u + '_selected'] ='selected'
     return initial, checkbox_vals

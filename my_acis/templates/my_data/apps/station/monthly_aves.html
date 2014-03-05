@@ -17,40 +17,132 @@
 <table cellpadding="20">
 <td valign="top" width="30%">
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/monthly_aves/'"/>
-    <div id='form'>
-        <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form">
-        {%for field in form %}
-        <tr>
-        {%if field.label == "Station id"%}
-            <td>{{field.label}}/name:</td>
-            <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{field.value}}" list="US_station_id"></td>
-        {%else%}
-            <td>{{field.label}}:</td>
-            <td>{{field}}</td>                                                                                
-        {%endif%}
-        <td><img alt="QMark" title="QMark" class="trigger" src="{{MEDIA_URL}}img/QMark.png"> 
-        {%ifequal field.label "Elements" %}
+    <div id='formData'>
+        <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
+        <table class="form" id="tableData">
+        <tr valign="top">
+        <tr valign="top">
+        <td>Station ID/Name: </td>
+        <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{initial.station_id}}" list="{{initial.autofill_list}}"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
-                <img alt="ElementChoices" title="ElementChoices" src="{{MEDIA_URL}}img/ACIS_Element_Choices_Stn_English.png" id="ACISElementChoices" width="450" height="450" border="0">                           </div>
-        {%else%}
-        <div class="pop-up"><p>{{field.help_text}}</p></div>
-        {%endifequal%}
+            <div id="ht_station_id"></div>
+            <script type="text/javascript">                        
+            $("#ht_station_id").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_{{initial.station_id}}");
+            </script>
+        </div>
         </td>
         </tr>
-        {%ifequal field.label "Station id"%}
-        <tr><td></td><td><a target="_blank" href="/csc/scenic/apps/station/station_locator/">Station Finder</a></td><td></td></tr>
-        {%endifequal%}
-        {%if field.errors%}
-        <tr><td></td><td>{{field.errors}}</td><td></td></tr>
+        <tr>
+        <td></td>
+        <td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td>
+        <td></td>
+        </td>
+        <tr valign="top">
+        <td id="Elements">Elements: </td>
+        <td>
+            <select id="elements" name="elements" multiple onchange="update_elements(this)">
+            <option value="maxt" {{checkbox_vals.elements_maxt_selected}}>Maximum Temperature</option>
+            <option value="mint" {{checkbox_vals.elements_mint_selected}}>Minimum Temperature</option>
+            <option value="avgt" {{checkbox_vals.elements_avgt_selected}}>Average Temperature</option>
+            <option value="obst" {{checkbox_vals.elements_obst_selected}}>Observation Time Temp.</option>
+            <option value="pcpn" {{checkbox_vals.elements_pcpn_selected}}>Precipitation</option>
+            <option value="snow" {{checkbox_vals.elements_snow_selected}}>Snowfall</option>
+            <option value="snwd" {{checkbox_vals.elements_snwd_selected}}>Snow Depth</option>
+            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Degree Days(65F/18C)</option>
+            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Degree Days(65F/18C)</option>
+            <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Degree Days(50F/10C)</option>
+            <option value="evap" {{checkbox_vals.elements_evap_selected}}>Pan Evaporation</option>
+            <option value="wdmv" {{checkbox_vals.elements_wdmv_selected}}>Wind Movement</option>
+            </select>
+        </td>        <td><img class="trigger" alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png">
+        <div class="pop-up">
+        <div id="ht_elements"></div>
+        <script type="text/javascript">                        
+        $("#ht_elements").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_elements");
+        </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td>Add special degree days: </td>
+        <td>
+        <select id="add_degree_days" name="add_degree_days" onchange="show_div_if_true(this,'dd') & update_value(this.value)">
+            <option value="T" {{checkbox_vals.add_degree_days_T_selected}}>Yes</option>
+            <option value="F" {{checkbox_vals.add_degree_days_F_selected}}>No</option>
+        </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_add_degree_days"></div>
+        <script type="text/javascript">                        
+            $("#ht_add_degree_days").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_add_degree_days");
+        </script>
+        </div>
+        </td>
+        </tr>
+        {%if initial.add_degree_days == "T"%}
+        <tr id="dd" valign="top">
+        {%else%}
+        <tr id="dd" valign="top" style="display:none;">
         {%endif%}
-        {%endfor%}
+        <td id="Degree Days">Degree Days: </td>
+        <td><input type="text" id="degree_days" name="degree_days" value="{{initial.degree_days}}" onchange="update_value(this.value)"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_degree_days"></div>
+        <script type="text/javascript">                        
+            $("#ht_degree_days").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_degree_days");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td>Units: </td>
+        <td>
+        <select id="units" name="units" onchange="update_value(this.value) & set_degree_days(this.value)">
+            <option value="metric" {{checkbox_vals.units_metric_selected}}>Metric</option>
+            <option value="english" {{checkbox_vals.units_english_selected}}>English</option>
+        </select>
+        </td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_units"></div>
+        <script type="text/javascript">                        
+            $("#ht_units").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_units");
+        </script>    
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td id="Start Date">Start Date: </td>
+        <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value)"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_start_date"></div>
+            <script type="text/javascript">                        
+            $("#ht_start_date").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_date_station");
+            </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td id="End Date">End Date: </td>
+        <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value)"></td>
+        <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_end_date"></div>
+            <script type="text/javascript">                        
+            $("#ht_end_date").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_date_station");
+            </script>
+        </div>
+        </td>
+        </tr>
         </table>
-        <input type="submit" value="Submit" name="form"/>
+        <input type="submit" value="Submit" name="formData"/>
         </form>
     </div>
     <br />
-
     {%if results%}
     <img onClick="ShowHide('averaged_data')" alt="averaged_data" title="averaged_data" src="{{MEDIA_URL}}img/show_hide_button.png">
     <div id="averaged_data" width="450" height="450" border="0" style="display:none;">
@@ -91,13 +183,20 @@
     </script>
     </div>
 
+    {%if form_error%}
+        {%for key, val in form_error.items%}
+            <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
+        {%endfor%}
+    {%endif%} 
+
     {%if results%}
     <table>
     <td>
     <img onClick="ShowHide('metadata')" alt="metadata" title="metadata" src="{{MEDIA_URL}}img/metadata_button.png">
     </td>
     <td>
-    <a target="_blank" href="{{DATA_URL}}station/?station_id={{search_params.station_id}}&start_date={{search_params.start_date}}&end_date={{search_params.end_date}}&elements={{search_params.elems}}">Get raw data behind this graphic here!</a>
+    <a target="_blank" href="{{DATA_URL}}station/?{%for key,val in search_params.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Get raw data behind this graphic here!</font></a>
+
     </td>
     </table>
 

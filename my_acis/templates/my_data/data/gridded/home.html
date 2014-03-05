@@ -18,9 +18,8 @@
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 
-<table cellpadding="20">
-<!--LEFT-->
-<td valign="top" width="30%">
+<table cellpadding="10">
+<td valign="top" width="40%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}gridded/'"/>
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
@@ -371,7 +370,7 @@
     <br /><br />
 <!--RIGHT-->
 </td>
-<td valign="top" width="70%">
+<td valign="top" width="60%">
     <table>
     <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
     </table>
@@ -478,7 +477,7 @@
         <input type="hidden" id="MEDIA_URL" name="MEDIA_URL" value="{{MEDIA_URL}}">
         <input type="hidden" id="DATA_URL" name="DATA_URL" value="{{DATA_URL}}">
         <input type="hidden" id="TOOLS_URL" name="DATA_URL" value="{{TOOLS_URL}}">
-        <div id="map-gridpoint" style="width:500px;height:400px;"></div>
+        <div id="map-gridpoint" style="width:500px;height:360px;"></div>
         <script type="text/javascript">
         initialize_grid_point_map('data_gridded');
         </script>
@@ -563,7 +562,7 @@
     {%if overlay_error%}
     <p class="error">{{overlay_error}}</p>
     {%else%}
-    <div id="map-overlay" style="width:95%; height:400px;"></div>
+    <div id="map-overlay" style="width:400px;height:360px;"></div>
     <div id="content-window" style="width:100px; height:100px;"></div>
     <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
     {%endif%} 
@@ -597,8 +596,19 @@
     {%endfor%}
     </p>
     {%endif%}
+    {%if results and not results.error%}
+    <div id="Arrow">
+    <table style="display:block;">
+    <td valign="top"><b>RESULTS:</b></td><td>
+    <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td>
+    </table>
+    </div>
+    {%endif%}
+</td></table>
+<table cellpadding="10" align="center">
+<td valign="top" width="100%">
 
-    {%if results %}
+    {%if results and not results.error%}
     <!--Link to relevant applications-->
 
     <!--Linke to Gridpoint Time Series-->
@@ -608,7 +618,6 @@
     {%elif params_dict.data_summary == "spatial" or params_dict.select_grid_by == 'location'%}
     <a target="_blank" href="{{TOOLS_URL}}gridded/area_time_series/?json_file={{json_file}}"><font size="3">Generate a time series graph!</font></a>
     {%endif%}
-
 
     <p><b>DATA</b>:</p>
     <table border="1">

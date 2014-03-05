@@ -141,7 +141,7 @@ $(function () {
                         //tickInterval:precise_round((max - min)/5, 0),
                         title: {
                             style:style_text,
-                            text: datadict[i].element_long
+                            text: datadict[i].unit
                             }
                     },
                     series: [{
