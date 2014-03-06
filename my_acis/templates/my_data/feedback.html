@@ -12,8 +12,8 @@
         {%block feedback%}{%endblock%}
 
        <h1 align="center">{%if icon%} <img class="icon" src="{{MEDIA_URL}}img/{{icon}}">{%endif%} {{title}}</h1>
-       <p class="error" ><font size="large">{{message}}</font></p>
-        {%if not error%}
+       <p class="error" ><font size="4">{{message}}</font></p>
+       {%if not error and not message%}
         <form action="" method="post">{% csrf_token %}
         <p>Subject: <input type="text" name="subject"></p>
         <p>Your e-mail (optional): <input type="text" name="email"></p>
