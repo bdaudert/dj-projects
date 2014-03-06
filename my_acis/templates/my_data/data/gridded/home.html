@@ -207,9 +207,15 @@
         </tr>
         <tr>
         <td></td>
-        <td><div class="pop_link" onClick="ShowHide('Docu_grids')"><b><u>Gridded datasets</u></b> explained</div>
+        <td><div class="pop_link" onclick="ShowPopupDocu('Docu_grids')"><b><u>Gridded datasets</u></b> explained</div>
+        <div id="Docu_grids" style="display:none;">
+            <script type="text/javascript">                        
+                $("#Docu_grids").load("{{MEDIA_URL}}html/Docu_grids.html");
+            </script>
+        </div>
+        </td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-               <div class="pop-up">
+        <div class="pop-up">
             <div id="ht_grid_choices_explained"></div>
             <script type="text/javascript">                        
                 $("#ht_grid_choices_explained").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_grid_choices_explained");

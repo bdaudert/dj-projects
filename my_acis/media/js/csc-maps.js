@@ -506,7 +506,7 @@ function initialize_bbox_map() {
         drawingModes: [
             google.maps.drawing.OverlayType.RECTANGLE
             ]
-        }, 
+        },
         rectangleOptions: {
             editable: true,
             fillColor: "black",
@@ -540,7 +540,7 @@ function initialize_bbox_map() {
 function initialize_polygon_map() {
       var drawingManager;
       var selectedShape;
-      var colors = ['#1E90FF', '#FF1493', '#32CD32', '#FF8C00', '#4B0082'];
+      var colors = ['#1E90FF', '#FF1493'];
       var selectedColor;
       var colorButtons = {};
 
@@ -573,10 +573,11 @@ function initialize_polygon_map() {
 
         // Retrieves the current options from the drawing manager and replaces the
         // stroke or fill color as appropriate.
+        /*
         var polylineOptions = drawingManager.get('polylineOptions');
         polylineOptions.strokeColor = color;
         drawingManager.set('polylineOptions', polylineOptions);
-        
+        */
         var rectangleOptions = drawingManager.get('rectangleOptions');
         rectangleOptions.fillColor = color;
         drawingManager.set('rectangleOptions', rectangleOptions);
@@ -640,18 +641,35 @@ function initialize_polygon_map() {
     // Creates a drawing manager attached to the map that allows the user to draw
     // markers, lines, and shapes.
     drawingManager = new google.maps.drawing.DrawingManager({
-      drawingMode: google.maps.drawing.OverlayType.POLYGON,
-      markerOptions: {
-        draggable: true
+      drawingModes: [
+        google.maps.drawing.OverlayType.POLYGON,
+        google.maps.drawing.OverlayType.MARKER,
+        google.maps.drawing.OverlayType.CIRCLE,
+        google.maps.drawing.OverlayType.RECTANGLE
+      ],
+      drawingControlOptions: {
+        position: google.maps.ControlPosition.TOP_LEFT,
+        drawingModes: [
+        google.maps.drawing.OverlayType.POLYGON,
+        google.maps.drawing.OverlayType.MARKER,
+        google.maps.drawing.OverlayType.CIRCLE,
+        google.maps.drawing.OverlayType.RECTANGLE        
+        ]
       },
+    markerOptions: {
+    draggable: true
+    },
+      /*
       polylineOptions: {
         editable: true
       },
+      */
       rectangleOptions: polyOptions,
       circleOptions: polyOptions,
-      polygonOptions: polyOptions,
-      map: map
+      polygonOptions: polyOptions
+      //map: map
     });
+    drawingManager.setMap(map);
 
     google.maps.event.addListener(drawingManager, 'overlaycomplete', function(e) {
         var newShape = e.overlay;
