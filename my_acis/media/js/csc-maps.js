@@ -247,10 +247,10 @@ function initialize_station_finder() {
                 infowindow.open(map, this.marker);
             };
             tbl_row.onmouseover = function(){
-                tbl_row.style.backgroundColor = "#6495ED";
-                infowindow.close();
-                infowindow.setContent(this.cString);
-                infowindow.open(map, this.marker);
+                tbl_row.style.backgroundColor = "#8FBC8F";
+                //infowindow.close();
+                //infowindow.setContent(this.cString);
+                //infowindow.open(map, this.marker);
             };
             tbl_row.onmouseout = function(){
                 tbl_row.style.backgroundColor = "#FFEFD5";
@@ -260,7 +260,7 @@ function initialize_station_finder() {
             c.sid + '</td>' + t_data +
             c.state + '</td>' + t_data + c.lat + '</td>' + t_data +
             c.lon + '</td>' + t_data + c.elevation + '</td>' + t_data +
-            c.stn_network +'</td>';
+            c.stn_networks +'</td>';
             if (c.name != name_previous){
                 tbl_rows_unique.push(tbl_row);
                 name_previous = c.name;
@@ -401,6 +401,7 @@ function initialize_network_map() {
             content: 'oi'
         });
         var markers = [];
+        //var checked_categories = document.getElementById('checked_categories').split(',');
         $.each(data.OverLays, function(index, c) {
             if (c.type == marker_type || marker_type == 'all') {
                 var image = new google.maps.MarkerImage(MEDIA_URL + 'img/' + c.icon,
@@ -490,13 +491,23 @@ function initialize_network_map() {
 
         networkclick = function(box, category){
             if (box.checked){
+                //checked_categories.push(category);
+                //document.getElementById('checked_categories').value = checked_categories.join();
                 show(category);
             }
             else {
+                //remove category form cheked list
+                /*
+                for(var i =0;i<checked_categories.length;i++) {
+                    if (checked_categories[i] == category){
+                        checked_categories.splice(i,1);
+                    }
+                }
+                document.getElementById('checked_categories').value = checked_categories.join();
+                */
                 hide(category);
             }
         };
-
     });//close getjson
 }//close initialize_info_map
 

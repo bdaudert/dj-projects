@@ -207,8 +207,6 @@ function ShowHide(divId){
 
 //Shows documentation in pop up box upon hover
 $(function() {
-  var moveLeft = 0.1;
-  var moveDown = 0.1;
 
   $('.trigger_hover').hover(function(e) {
     $(this).next('div.pop-up').show();
@@ -220,13 +218,37 @@ $(function() {
   //});
 
   $('.trigger').click(function(e) {
+    var pop_up = $(this).next('div.pop-up');
     var display = $(this).next('div.pop-up').css('display');
+    /*
     if (display != 'none') {
         $(this).next('div.pop-up').css('display','none');
     }
     else {
         $(this).next('div.pop-up').css('display','block');
     }
+    */
+    //Close all other pop-ups 
+    $('.pop-up').each(function(i, pop) {
+        if ($(pop).is(pop_up)){
+             if (display == 'none') {      
+                pop.style.display = 'block';
+             }
+            else{
+                pop.style.display = 'none';
+            }
+        }
+        else{
+            pop.style.display = 'none';
+        }
+    });
+    /*
+    for (i=0;i<pops.length;i++){
+        if (pops[i]!= $(this).next('div.pop-up')){
+            pops[i].style.display="none";
+        }
+    }
+    */
   });
     /*
     $(this).next('div.pop-up').css("display","block");

@@ -151,6 +151,7 @@
         </td>
         </tr> 
         </table>
+        <input type="hidden" name="checked_categories" id="checked_categories" value="all">
         <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
         <input type="submit" value="Submit" name="formData"/>
         </form>
@@ -434,7 +435,7 @@
         initialize_station_finder()
     </script>
     <!--Station List-->
-    <div style="height:200px;width:550px;overflow:auto;">
+    <div style="height:200px;width:550px;overflow:scroll;">
         <table cellspacing="1" id="station_list" border=1>
         <thead>
         <tr>
