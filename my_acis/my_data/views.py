@@ -36,7 +36,7 @@ today = WRCCUtils.set_back_date(0)
 begin_10yr = WRCCUtils.set_back_date(3660)
 yesterday = WRCCUtils.set_back_date(1)
 fourtnight = WRCCUtils.set_back_date(14)
-
+week = WRCCUtils.set_back_date(7)
 def test(request):
     context = {
         'title': 'Southwest Climate and ENvironmental Information Collaborative',
@@ -392,6 +392,12 @@ def data_gridded(request):
             context['large_request'] = \
             'At the moment we do not support data requests that exceed 1 month.\
              Please limit your request to one grid point at a time or a date range of one month or less.\
+             We will support larger requests in the near future. Thank you for your patience!'
+            return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
+        if days > 7 and 'state' in form.keys():
+            context['large_request'] = \
+            'At the moment we do not support data requests that exceed 7 days for US states.\
+             Please limit your request to one week.\
              We will support larger requests in the near future. Thank you for your patience!'
             return render_to_response('my_data/data/gridded/home.html', context, context_instance=RequestContext(request))
         if form['temporal_resolution'] in ['mly'] and 'location' not in form.keys():

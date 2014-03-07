@@ -131,7 +131,9 @@ function initialize_station_finder() {
         });
         var markers = [];
         var tbl_rows = [];
+        var tbl_rows_unique = []
         //Define markers and table rows
+        var name_previous = '';
         $.each(data.stations, function(index, c) {
             //Define markers
             var latlon = new google.maps.LatLng(c.lat,c.lon);
@@ -216,7 +218,7 @@ function initialize_station_finder() {
                 infowindow.close();
                 infowindow.setContent(contentString);
                 infowindow.open(map, marker);
-                });
+            });
             /*
             //Re-size markers on zoom
             google.maps.event.addListener(map, 'zoom_changed', function() {
@@ -235,7 +237,7 @@ function initialize_station_finder() {
                 }
             });
             */
-            //Define table row
+            //Define table row, one entry per station
             var tbl_row = document.createElement('tr');
             tbl_row.cString = contentString;
             tbl_row.marker = marker;
@@ -244,20 +246,35 @@ function initialize_station_finder() {
                 infowindow.setContent(this.cString);
                 infowindow.open(map, this.marker);
             };
+            tbl_row.onmouseover = function(){
+                tbl_row.style.backgroundColor = "#6495ED";
+                infowindow.close();
+                infowindow.setContent(this.cString);
+                infowindow.open(map, this.marker);
+            };
+            tbl_row.onmouseout = function(){
+                tbl_row.style.backgroundColor = "#FFEFD5";
+            };
             var t_data = '<td>';
             tbl_row.innerHTML = t_data + c.name + '</td>' + t_data +
-                c.sid + '</td>' + t_data +
-                c.state + '</td>' + t_data + c.lat + '</td>' + t_data +
-                c.lon + '</td>' + t_data + c.elevation + '</td>' + t_data +
-                c.stn_network +'</td>';
-
-            //Set Initial markers and station list
+            c.sid + '</td>' + t_data +
+            c.state + '</td>' + t_data + c.lat + '</td>' + t_data +
+            c.lon + '</td>' + t_data + c.elevation + '</td>' + t_data +
+            c.stn_network +'</td>';
+            if (c.name != name_previous){
+                tbl_rows_unique.push(tbl_row);
+                name_previous = c.name;
+                var station_list = document.getElementById('station_list');
+                station_list.appendChild(tbl_row);
+            }
+            //Complete table row list for on and off switch
+            tbl_rows.push(tbl_row);
+            //var station_list = document.getElementById('station_list');
+            //station_list.appendChild(tbl_row);
+            //Set Initial markers
             marker.setVisible(true);
             document.getElementById(c.marker_category).checked = true;
-            var station_list = document.getElementById('station_list');
-            station_list.appendChild(tbl_row);
-            //Push markesr and table rows into list
-            tbl_rows.push(tbl_row);
+            //Push markers
             markers.push(marker);
 
         }); //end each
@@ -266,10 +283,14 @@ function initialize_station_finder() {
         // == shows all markers of a particular category, and ensures the checkbox is checked and write station_list==
         show = function(category) {
             var station_list = document.getElementById('station_list');
+            var name_unique = ''
             for (var i=0; i<markers.length; i++) {
                 if (category == 'all') {
                     markers[i].setVisible(true);
-                    station_list.appendChild(tbl_rows[i]);
+                    if (markers[i].name != name_unique){
+                        station_list.appendChild(tbl_rows[i]);
+                        name_unique = markers[i].name;
+                    }
                     for (var key in data.network_codes) {
                         // == check all the checkboxes ==
                         document.getElementById(data.network_codes[key]).checked = true;
@@ -278,7 +299,10 @@ function initialize_station_finder() {
                 }
                 else if (markers[i].category == category) {
                     markers[i].setVisible(true);
-                    station_list.appendChild(tbl_rows[i]);
+                    if (markers[i].name != name_unique){
+                        station_list.appendChild(tbl_rows[i]);
+                        name_unique = markers[i].name;
+                    }
                     document.getElementById(category).checked = true;
                 }
             }
@@ -288,10 +312,14 @@ function initialize_station_finder() {
         hide = function(category) {
             //remove all rows that belong to category
             var station_list = document.getElementById('station_list');
+            var name_u = ''
             for (var i=0; i<markers.length; i++) {
                 if (category == 'all') {
                     markers[i].setVisible(false);
-                    station_list.removeChild(tbl_rows[i]);
+                    if (markers[i].name != name_u){
+                        station_list.removeChild(tbl_rows[i]);
+                        name_u = markers[i].name
+                    }
                     for (var key in data.network_codes) {
                         // == clear all the checkboxes ==
                         document.getElementById(data.network_codes[key]).checked = false;
@@ -300,7 +328,10 @@ function initialize_station_finder() {
                 }
                 else if (markers[i].category == category) {
                     markers[i].setVisible(false);
-                    station_list.removeChild(tbl_rows[i]);
+                    if (markers[i].name != name_u){
+                        station_list.removeChild(tbl_rows[i]);
+                        name_u = markers[i].name;
+                    }
                     // == clear the checkbox ==
                     document.getElementById(category).checked = false;
                     //Clear 'show all networks' button
@@ -750,6 +781,22 @@ function initialize_map_overlays(type, host, kml_file_path) {
     });
     Layer.setMap(map);
     google.maps.event.addListener(Layer, 'click', function(kmlEvent) {
+        var text = kmlEvent.featureData.description;
+        document.getElementById(type).value = kmlEvent.featureData.name;
+        //showInDiv(text);
+        var contentString = '<div id="LayerWindow">'+
+            kmlEvent.featureData.description +
+            '</div>';
+        infowindow.close();
+        //infowindow.setContent(contentString);
+        infowindow.setOptions({
+                content: kmlEvent.featureData.description,
+                position: kmlEvent.position
+        });
+        //infowindow.open(map, Layer);
+        infowindow.open(map);
+    });
+    google.maps.event.addListener(Layer, 'mouseover', function(kmlEvent) {
         var text = kmlEvent.featureData.description;
         document.getElementById(type).value = kmlEvent.featureData.name;
         //showInDiv(text);
