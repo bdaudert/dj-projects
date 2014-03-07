@@ -205,6 +205,13 @@ function ShowHide(divId){
     }
 }
 
+//Hide all pop-ups if user clicks anywhere but a trigger
+$('body').click(function(e){
+    if( e.target.title != 'QMark' ){
+        $('.pop-up').css('display','none');
+    }
+ });
+
 //Shows documentation in pop up box upon hover
 $(function() {
 
