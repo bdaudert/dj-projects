@@ -452,6 +452,19 @@
         {%endfor%}
     {%endif%}
 
+    {%if user_params_list%}
+    <div id="user_params_list">
+    <p class="error">
+    Please use the form to complete your data request.<br />
+    Your Parameters:<br />
+    {%for key_val in user_params_list%}
+    <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+    {%endfor%}
+    </p>
+    </div>
+    {%endif%}
+ 
+
     <div id="PolyMap" style="display:none;">
         <div id="panel">
         <div id="color-palette"></div>
@@ -616,10 +629,20 @@
 
     {%if results and not results.error%}
     <!--Link to relevant applications-->
+    <!--
     {%if params_dict.data_summary == "temporal" and params_dict.select_grid_by == "state" and params_dict.units == "english"%}
-    <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?{%for key,val in form_cleaned.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate a climate summary map  for this data set here!</font></a><br />
-    {%elif params_dict.data_summary == "spatial" or params_dict.select_grid_by == 'location'%}
-     <a target="_blank" href="{{TOOLS_URL}}gridded/area_time_series/?json_file={{json_file}}"><font size="3">Generate a time series graph!</font></a><br />
+    <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?{%for key,val in form_cleaned.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate climate summary maps!</font></a><br />
+    {%elif params_dict.data_summary == "spatial" %}
+     <a target="_blank" href="{{TOOLS_URL}}gridded/area_time_series/?json_file={{json_file}}"><font size="3">Generate time series graphs!</font></a><br />
+    {%endif%}
+    -->
+    {%if params_dict.data_summary == "temporal" and params_dict.select_grid_by == "state" and params_dict.units == "english"%}
+    <a target="_blank" href="{{TOOLS_URL}}gridded/clim_sum_maps/?{%for key,val in clim_sum_maps_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3"><b>Generate climate summary maps!</b></font></a><br />
+    {%elif params_dict.data_summary == "spatial" and params_dict.select_grid_by != 'location'%}
+     <a target="_blank" href="{{TOOLS_URL}}gridded/area_time_series/?json_file={{json_file}}"><font size="3"><b>Generate time series graphs!</b></font></a><br />
+    {%endif%}
+    {%if params_dict.select_grid_by == 'location' and params_dict.data_summary != "temporal"%}
+    <a target="_blank" href="{{TOOLS_URL}}gridded/area_time_series/?json_file={{json_file}}"><font size="3"><b>Generate time series graphs!</b></font></a><br />
     {%endif%}
 
     <p><b>DATA</b>:</p>

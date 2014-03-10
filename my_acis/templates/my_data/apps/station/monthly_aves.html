@@ -182,6 +182,17 @@
         $("#Docu_start_end_date").load("{{MEDIA_URL}}html/Docu_start_end_date_por.html");
     </script>
     </div>
+    
+    {%if user_params_list and not results%}
+    <div id="user_params_list">
+    <p class="error">
+    Please use the form to complete your data request.<br />
+    Your Parameters:<br />
+    {%for key_val in user_params_list%}
+    <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+    {%endfor%}
+    </p>
+    {%endif%}
 
     {%if form_error%}
         {%for key, val in form_error.items%}
@@ -195,7 +206,7 @@
     <img onClick="ShowHide('metadata')" alt="metadata" title="metadata" src="{{MEDIA_URL}}img/metadata_button.png">
     </td>
     <td>
-    <a target="_blank" href="{{DATA_URL}}station/?{%for key,val in search_params.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Get raw data behind this graphic here!</font></a>
+    <a target="_blank" href="{{DATA_URL}}station/?{%for key,val in user_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Get data behind this graphic here!</font></a>
 
     </td>
     </table>

@@ -429,6 +429,18 @@
             <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
         {%endfor%}
     {%endif%}
+        
+    {%if user_params_list%}
+    <div id="user_params_list">
+    <p class="error">
+    Please use the form to complete your map generation.<br />
+    Your Parameters:<br />
+    {%for key_val in user_params_list%}
+    <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+    {%endfor%}
+    </p>
+    </div>
+    {%endif%}
 
     <div id="PolyMap" style="display:none;">
         <div id="panel">
@@ -551,7 +563,7 @@
     <div id="results">
     {%if figure_files%}
 
-    <a target="_blank" href="{{DATA_URL}}gridded/?start_date={{initial.start_date}}&end_date={{initial.end_date}}&elements={{initial.elements}}&grid={{initial.grid}}&select_grid_by={{initial.select_grid_by}}&{{initial.select_grid_by}}={{initial.area_type_value}}&data_summary=temporal&temporal_resolution=dly&temporal_summary={{initial.temporal_summary}}"><font size=3>Get raw data behind this graphic here!</font></a>
+    <a target="_blank" href="{{DATA_URL}}gridded/?{%for key,val in user_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size=3><b>Get data behind this graphic</b></font></a>
     <br /></br /></br>
     {%for fig in figure_files%}
         <p>

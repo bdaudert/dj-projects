@@ -55,6 +55,14 @@
         <script type="text/javascript">                        
         $("#Docu_ClimArch").load("{{MEDIA_URL}}html/Docu_External_Resources.html #Docu_ClimArch.html");
         </script>
+    <div class="docu" id="Docu_STATION_FINDER" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_STATION_FINDER").load("{{MEDIA_URL}}html/Docu_About_station_finder.html");
+        </script>
+    <div class="docu" id="Docu_DATA_STATION" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_DATA_STATION").load("{{MEDIA_URL}}html/Docu_About_station_data.html");
+        </script>
     <div class="docu" id="Docu_NONE" style="display:none;"></div>
         <script type="text/javascript">                        
         $("#Docu_NONE").load("{{MEDIA_URL}}html/Docu_NONE.html");
@@ -64,25 +72,19 @@
     <td valign="top" width=15%>
     </td>
     <td valign="top" width=60%>
-        <!-- link from station data-->
-        <p class="error">
-        {%if station_id%}
-        Your parameters:<br />
-        Station ID: {{station_id}}<br /> 
-        {%endif%}
-        {%if start_date%}
-        Start Date: {{start_date}}, 
-        {%endif%}
-        {%if end_date%}
-        End Date: {{end_date}}<br />
-        {%endif%}
-        {%if elements%} 
-        Climate Elements: {{elements}}<br />
-        {%endif%}
-        <br />
-        Choose an application from the list below!
-        </p>
-
+    <!-- link from station data-->
+    {%if user_params_list%}
+    <div id="user_params_list">
+    <p class="error">
+    Your Parameters:<br />
+    {%for key_val in user_params_list%}
+    <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+    {%endfor%}<br />
+    Choose an application from the list below!
+    </p>
+    </div>
+    {%endif%}
+        
         <!--<p class="error" align ="center">(* Beta version)</p>-->
         <table cellpadding="5">
         <tr>
@@ -91,8 +93,8 @@
                 <div class="pop-up" id="sodxtrmts">
                     <p>Monthly and annual time series of a large number of properties derived from the SOD daily data set. <br/>Click on the question mark for more information!</p>
                 </div>
-                {%if initial %}
-                    <a  href="{{TOOLS_URL}}station/sodxtrmts/?{%for key, val in initial.items %}{{key}}={{val}}&{%endfor%}"><img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
+                {%if user_params_dict %}
+                    <a  href="{{TOOLS_URL}}station/sodxtrmts/?{%for key, val in user_params_dict.items %}{{key}}={{val}}&{%endfor%}"><img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
                 {%else%}
                     <a  href="{{TOOLS_URL}}station/sodxtrmts/"><img  class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
                 {%endif%}
@@ -102,8 +104,8 @@
                 <div class="pop-up" id="sodsumm">
                     <p>Generates general climatology in table and graph form. <br/>Click on the question mark for more information!</p>
                 </div>
-                {%if initial%}
-                    <a  href="{{TOOLS_URL}}station/sodsumm/?{%for key, val in initial.items %}{{key}}={{val}}&{%endfor%}"><img class="app_img" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
+                {%if user_params_dict%}
+                    <a  href="{{TOOLS_URL}}station/sodsumm/?{%for key, val in user_params_dict.items %}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><img class="app_img" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
                 {%else%}
                     <a  href="{{TOOLS_URL}}station/sodsumm/"><img class="app_img" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
                 {%endif%}
@@ -113,15 +115,15 @@
                 <div class="pop-up">
                     <p>Generates bar chart of monthly averages. <br/>Click on the question mark for more information!</p>
                 </div>
-                 {%if initial%}
-                    <a  href="{{TOOLS_URL}}station/monthly_aves/?{%for key, val in initial.items %}{{key}}={{val}}&{%endfor%}"><img class="app_img" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
+                 {%if user_params_dict%}
+                    <a  href="{{TOOLS_URL}}station/monthly_aves/?{%for key, val in user_params_dict.items %}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><img class="app_img" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
                 {%else%}
                     <a  href="{{TOOLS_URL}}station/monthly_aves/"><img class="app_img" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
                 {%endif%}
             </td>
         </tr>
             <td valign="top"> 
-                <p>Station Finder &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_NONE')"></p>
+                <p>Station Finder &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_STATION_FINDER')"></p>
                 <div class="pop-up">
                     <p>Find stations with data for specific elements and a chosen time range. <br/>Click on the question mark for more information!</p>
                 </div>
@@ -130,6 +132,17 @@
                 {%else%}
                     <a  href="{{TOOLS_URL}}station/station_finder/"><img class="app_img" alt="StationFinder" title="StationFinder" src="{{MEDIA_URL}}img/StationFinder.png"></a>
                 {%endif%}
+            </td>
+            <td valign="top">
+                <p>Station Data Lister &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_DATA_STATION')"></p>
+                <div class="pop-up">
+                    <p>Get a listing of station data<br/>Click on the question mark for more information!</p>
+                </div>
+                {%if user_params_dict%}
+                <a href="{{DATA_URL}}station/?{%for key, val in user_params_dict.items %}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><img alt="Station" title="Station" class="app_img" src="{{MEDIA_URL}}img/Stn.png"></a></font></td>                        
+                {%else%}
+                <a href="{{DATA_URL}}station/"><img alt="Station" title="Station" class="app_img" src="{{MEDIA_URL}}img/Stn.png"></a></font></td>
+                {%endif%}  
             </td>
             <td valign="top">
                 <p>Metadata Graphics &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="QMark" title="QMark" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_META_GRAPH')"></p>
@@ -142,7 +155,6 @@
                     <a  href="{{TOOLS_URL}}station/metagraph/"><img class="app_img" alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}img/MetaGraph.png"></a>
                 {%endif%}    
             </td>
-            <td valign="top"></td>
         </tr>
         </table>
     </td>

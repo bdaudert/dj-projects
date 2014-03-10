@@ -189,6 +189,7 @@ function set_autofill(datalist){
     */
     dl = document.createElement('datalist');
     dl.setAttribute('id',datalist);
+    dl.setAttribute('style','height:500px;width=100%;overflow:auto;');
     dl.setAttribute('class', datalist.replace('US_',''));
     $.getJSON('/csc/media/json/' + datalist + '.json', function(metadata) {
         for (idx=0;idx<metadata.length;idx++){
@@ -562,7 +563,7 @@ function show_polygon_map(){
 function set_area_defaults(area_type){
     var lv = {
         'label':'Station ID',
-        'value':'266779',
+        'value':'RENO TAHOE INTL AP, 266779',
         'autofill_list':'US_' + area_type
     }
     if (area_type == 'station_ids'){
@@ -575,19 +576,19 @@ function set_area_defaults(area_type){
     }
     if (area_type == 'county'){
         lv.label ='County';
-        lv.value ='08051';
+        lv.value ='Churchill, 32001';
     }
     if (area_type == 'climate_division'){
         lv.label ='Climate Division';
-        lv.value ='NV01';
+        lv.value ='Northwestern, NV01';
     }
     if (area_type == 'county_warning_area'){
         lv.label ='County Warning Area';
-        lv.value ='PUB';
+        lv.value ='Las Vegas, VEF';
     }
     if (area_type == 'basin'){
         lv.label ='Basin';
-        lv.value ='10180002';
+        lv.value ='Hot Creek-Railroad Valleys,16060012';
     }
     if (area_type == 'state'){
         lv.label ='State';
@@ -657,6 +658,9 @@ function set_station_grid_select(row_id,node){
     }
     if ($('#' + 'map_legend').length){
         document.getElementById('map_legend').style.display = "none";
+    }
+    if ($('#' + 'user_params_list').length){
+        document.getElementById('user_params_list').style.display = "none";
     }
     /*
     //Delete existing table row

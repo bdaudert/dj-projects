@@ -361,6 +361,17 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="300px"></td>
     </table>
     </div>
+    {%else%}
+    {%if user_params_list%}
+    <div id="user_params_list">
+    <p class="error">
+    Your Parameters:<br />
+    {%for key_val in user_params_list%}
+    <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+    {%endfor%}
+    </p>
+    </div>
+    {%endif%}
     {%endif%}
     <table frame="box" class="formGraph" style="display:none">
     {%endif%}
@@ -757,6 +768,8 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
 </script>
 </div>
 <br />
+
+
 {%if json_dict.data%}
 <table align="center">
     <td>

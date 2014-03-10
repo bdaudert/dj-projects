@@ -183,8 +183,8 @@ function initialize_station_finder() {
                 '">Access Climate Summaries for this Station (by WRCC)</a>'
             }
 
-            var data_portal_link = '<a target="_blank" href="' + DATA_URL + 'station/?station_id=' + c.sid;
-            var app_portal_link = '<a target="_blank" href="' + TOOLS_URL + 'station/?station_id=' + c.sid; 
+            var data_portal_link = '<a target="_blank" href="' + DATA_URL + 'station/?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid;
+            var app_portal_link = '<a target="_blank" href="' + TOOLS_URL + 'station/?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid; 
             if (start_date != null){ 
                 data_portal_link = data_portal_link + '&start_date=' + start_date;
                 app_portal_link = app_portal_link + '&start_date=' + start_date; 
@@ -793,7 +793,7 @@ function initialize_map_overlays(type, host, kml_file_path) {
     Layer.setMap(map);
     google.maps.event.addListener(Layer, 'click', function(kmlEvent) {
         var text = kmlEvent.featureData.description;
-        document.getElementById(type).value = kmlEvent.featureData.name;
+        document.getElementById(type).value = kmlEvent.featureData.description;
         //showInDiv(text);
         var contentString = '<div id="LayerWindow">'+
             kmlEvent.featureData.description +
@@ -802,14 +802,15 @@ function initialize_map_overlays(type, host, kml_file_path) {
         //infowindow.setContent(contentString);
         infowindow.setOptions({
                 content: kmlEvent.featureData.description,
-                position: kmlEvent.position
+                //position: kmlEvent.position
+                position:kmlEvent.latLng
         });
         //infowindow.open(map, Layer);
         infowindow.open(map);
     });
     google.maps.event.addListener(Layer, 'mouseover', function(kmlEvent) {
         var text = kmlEvent.featureData.description;
-        document.getElementById(type).value = kmlEvent.featureData.name;
+        document.getElementById(type).value = kmlEvent.featureData.description;
         //showInDiv(text);
         var contentString = '<div id="LayerWindow">'+
             kmlEvent.featureData.description +
@@ -818,7 +819,8 @@ function initialize_map_overlays(type, host, kml_file_path) {
         //infowindow.setContent(contentString);
         infowindow.setOptions({
                 content: kmlEvent.featureData.description,
-                position: kmlEvent.position
+                //position: kmlEvent.position
+                position:kmlEvent.latLng
         });
         //infowindow.open(map, Layer);
         infowindow.open(map);
