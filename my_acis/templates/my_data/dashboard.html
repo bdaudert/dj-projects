@@ -6,13 +6,13 @@
 
 <p align="center">You are here 
 <a href="{{HOME_URL}}">Home></a>
-<a href="{{SW_CKN_URL}}monitoring/">Monitoring</a></p>
+<a href="{{SW_CKN_URL}}dashbord/">Climate Dashboard</a></p>
 
 <table class="dashboard" align="center">
     <th><h1>The Southwest</h1></th><th><h1>The Rest</h1></th>
    <!--Weather-->
     <tr><td>
-        <h2 style="color:#FF007F;">Current Weather</h2>
+        <h2 style="color:#FF007F;" id="weather" name="weather">Current Weather</h2>
         <table>
             <th>National Weather Service</th><th>Infrared Satellite Image</th><th>Radar Mosaic</th>
             <tr>
@@ -46,7 +46,7 @@
     <!--Temps-->
     <tr><td>
         <!-- The Southwest -->
-        <h2 style="color:#FF007F;">Temperature Anomaly Maps</h2>
+        <h2 style="color:#FF007F;" id="anomaly" name="anomaly">Temperature Anomaly Maps</h2>
         <table>
             <th>Water Year</th><th>30-day</th><th>7-day</th>
             <tr>
@@ -115,7 +115,7 @@
     </td></tr>
     <!-- Drought-->
     <tr><td>
-        <h2 style="color:#FF007F;">Drought Information</h2>
+        <h2 style="color:#FF007F;" id="drought" name="drought">Drought Information</h2>
         <table>
             <th>Water Year SPI</th><th>30-day SPI</th><th>60-day SPI</th>
             <tr>
@@ -156,7 +156,7 @@
     </td></tr>
     <!--WATER-->
     <tr><td>
-            <h2 style="color:#FF007F;">West US Water Conditions</h2>
+            <h2 style="color:#FF007F;" id="water" name="water">West US Water Conditions</h2>
         <table>
             <th>CA/NV River <br /> Forecast</th><th>CO Basin River <br />Forecast</th><th>West Gulf River<br /> Forecast</th><th>Northwest Pacific<br /> Forecast</th>
             <tr>
@@ -195,7 +195,7 @@
     </td></tr>
     <!--Snow-->
     <tr><td>
-        <h2 style="color:#FF007F;">SNOTEL Snow Data</h2>
+        <h2 style="color:#FF007F;" id="snow" name="snow">SNOTEL Snow Data</h2>
         <table>
         <th>Water Year<br />Precipitation % of Normal</th><th>Current Snow<br /> Water Equivalent %</th><th>Water Year<br />Snowpack</th>
             <tr>
@@ -247,7 +247,7 @@
         <a target="_blank" href="http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/mjo.shtml">CPC MJO</a> |
         <a target="_blank" href="http://www.cpc.ncep.noaa.gov/products/precip/CWlink/daily_ao_index/teleconnections.shtml">Patterns</a></p><br />
    <!--New table: Predictions US only-->
-        <h2 align="center" style="color:#FF007F;">Projections</h2>
+        <h2 align="center" style="color:#FF007F;" id="projections" name="projections">Projections</h2>
         <h2  align="center">NWS 1-2 Week, Monthly, Seasonal Outlooks</h2>
         <table align="center">
         <th>Week 1 Precipitation</th><th>Week 2 Precipitation</th><th>Week 1 Temperature</th><th>Week 2 Temperature</th>

@@ -128,8 +128,8 @@ def contact_us(request):
 
 def dashboard(request):
     context = {
-        'title': 'Monitoring: Climate Dashboard',
-        'icon':'Monitoring.png'
+        'title': 'Climate Dashboard',
+        'icon':'Dashboard.png'
     }
     #Find mon, year to locate snotel map
     year = str(datetime.datetime.today().year)
