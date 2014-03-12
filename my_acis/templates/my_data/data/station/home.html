@@ -342,7 +342,7 @@
     </script>
     </div>
 
-    {%if user_params_list%}
+    {%if user_params_list and not results.stn_data%}
     <div id="user_params_list">
     <p class="error">
     Please use the form to complete your data request.<br />

@@ -218,7 +218,7 @@ ul#nav li:hover > ul li a:hover {
 .tool_info:active {color:red;}
 
 /*Submit and Select buttons*/
-input[value=Submit] {
+input[value="Submit"] {
     background-color:#006666;
     color:#FFEFD5;
 }
@@ -229,9 +229,13 @@ input[value="Start Over"] {
     color:#FFEFD5;
 }
 
-input[value=Select] {
+input[value="Select"] {
     background-color:#8FBC8F; 
     color:#FFEFD5;
+}
+/*Trun off down arrow in chrome autofill field*/
+input[type="text"]::-webkit-calendar-picker-indicator {
+  display: none;
 }
 
 a.warning {
@@ -337,7 +341,7 @@ ul.navbar a {
 
 .pop_link {
     color:#0000FF;
-    text-decoration:underline;
+    /*text-decoration:underline;*/
 }
 
 .pop_link:hover {

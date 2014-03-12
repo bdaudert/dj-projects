@@ -430,7 +430,7 @@
         {%endfor%}
     {%endif%}
         
-    {%if user_params_list%}
+    {%if user_params_list and not figure_files%}
     <div id="user_params_list">
     <p class="error">
     Please use the form to complete your map generation.<br />

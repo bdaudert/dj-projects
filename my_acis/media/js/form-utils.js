@@ -189,7 +189,7 @@ function set_autofill(datalist){
     */
     dl = document.createElement('datalist');
     dl.setAttribute('id',datalist);
-    dl.setAttribute('style','height:500px;width=100%;overflow:auto;');
+    dl.setAttribute('style','height:500px;width=100%;overflow:hidden;');
     dl.setAttribute('class', datalist.replace('US_',''));
     $.getJSON('/csc/media/json/' + datalist + '.json', function(metadata) {
         for (idx=0;idx<metadata.length;idx++){

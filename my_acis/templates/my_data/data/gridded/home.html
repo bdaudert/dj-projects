@@ -452,7 +452,7 @@
         {%endfor%}
     {%endif%}
 
-    {%if user_params_list%}
+    {%if user_params_list and not results%}
     <div id="user_params_list">
     <p class="error">
     Please use the form to complete your data request.<br />
@@ -575,7 +575,7 @@
             </form>
         </div>
     </div>
-
+    
 
     {%if need_overlay_map%}
     {%if overlay_error%}

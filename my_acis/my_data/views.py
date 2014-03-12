@@ -752,15 +752,8 @@ def clim_sum_maps(request):
         form_cleaned = set_form(request)
         initial, checkbox_vals = set_clim_sum_maps_initial(request)
         params_cleaned = set_form(initial)
-        data_lister_params = {
-            'units':'english',
-            'data_format':'html',
-            'date_format':'dash',
-            'data_summary':'temporal',
-            'show_observation_time':'F'
-        }
-        data_lister_params.update(params_cleaned)
-        context['data_lister_params'] = data_lister_params
+        user_params_list, user_params_dict =set_user_params(form, 'clim_sum_maps')
+        context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
         #Back Button/download files issue fix:
         #if select_grid_by none, find it
         if not 'select_grid_by' in form.keys():
@@ -818,11 +811,7 @@ def clim_sum_maps(request):
             d_p = []
             for key in ['start_date', 'end_date']:
                 d_p.append([WRCCData.DISPLAY_PARAMS[key],form[key]])
-            el_strip = re.sub(r'(\d+)(\d+)', '', element)
-            try:
-                base_temp = int(element[-2:])
-            except:
-                base_temp = None
+            el_strip, base_temp = WRCCUtils.get_el_and_base_temp(element)
             if base_temp:
                 d_p.insert(0,['Element', WRCCData.DISPLAY_PARAMS[el_strip] + ' Base Temperature: ' + str(base_temp)])
             else:
@@ -957,10 +946,6 @@ def area_time_series(request):
         else:
             #set up bbox query for area_type
             data_request_params,shape_type,shape_coords,PointIn,poly  = set_params_for_shape_queries(search_params)
-            area_description = WRCCData.DISPLAY_PARAMS[shape_type]
-            if shape_type !='polygon':
-                area_description+= ': ' + form[form['select_grid_by']]
-            search_params['area_description'] = area_description
 
             #Find data
             try:
@@ -1252,7 +1237,7 @@ def old_station_locator_app(request):
                 context['form2'] = form2
                 context['host'] = HOST
                 context['type'] = form0.cleaned_data['select_stations_by']
-                context['kml_file_path'] = WEB_KML + 'nv_' + form0.cleaned_data['select_stations_by'] + '.kml'
+                context['kml_file_path'] = WEB_TEMP + 'nv_' + form0.cleaned_data['select_stations_by'] + '.kml'
             context[form0.cleaned_data['select_stations_by']] = WRCCData.AREA_DEFAULTS[form0.cleaned_data['select_stations_by']]
 
     if 'form1' in request.POST:
@@ -2326,8 +2311,20 @@ def set_area_time_series_params(form):
             el_list = form['elements_string'].replace('  ','').split(',')
         except:
             el_list = []
-    search_params['element_list'] = el_list
-    display_params_list[0]=[WRCCData.DISPLAY_PARAMS[form['select_grid_by']],form[form['select_grid_by']]]
+    el_list_display = []
+    for el_idx, el in enumerate(el_list):
+        el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
+        if 'units' in form.keys() and form['units'] == 'metric':
+            el_list_display.append(el + ' (' + WRCCData.UNITS_METRIC[el_strip]+ ')')
+        if 'units' in form.keys() and form['units'] == 'english':
+            el_list_display.append(el + ' (' + WRCCData.UNITS_ENGLISH[el_strip]+ ')')
+    search_params['element_list'] = el_list_display
+    if form['select_grid_by'] == 'shape' and len(form['shape'].split(',')) > 8:
+        display_params_list[0]=['Area','Custom Shape']
+        search_params['area_description'] = 'Custom Shape'
+        search_params['shape_coords'] = form['shape'].split(',')
+    else:
+        display_params_list[0]=[WRCCData.DISPLAY_PARAMS[form['select_grid_by']],form[form['select_grid_by']]]
     for key, val in form.iteritems():
         #Convert to string to avoid unicode issues
         search_params[key] = str(val)
@@ -3046,7 +3043,7 @@ def set_clim_sum_maps_initial(request):
     initial['elements_string'] = ','.join(initial['elements'])
     initial['add_degree_days'] = Get('add_degree_days', 'F')
     initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
-    initial['start_date']  = Get('start_date', fourtnight)
+    initial['start_date']  = Get('start_date', week)
     initial['end_date']  = Get('end_date', yesterday)
     initial['grid'] = Get('grid', '1')
     initial['temporal_summary'] = Get('temporal_summary', 'mean')

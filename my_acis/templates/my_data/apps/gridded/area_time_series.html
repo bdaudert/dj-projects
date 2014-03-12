@@ -22,7 +22,7 @@
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 
-<table cellpadding="20">
+<table cellpadding="5">
 <!--LEFT-->
 <td valign="top" width="30%">
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}gridded/area_time_series/'"/>
@@ -467,10 +467,15 @@
     <br /><br />
 
     {%if results%}
-    <p class="pop_link" onClick="ShowHide('printable_table')"><u>Show/hide table data</u></p>
-
+    <table cellpadding="0px">
+    <td>
+    <p class="pop_link" onClick="ShowHide('printable_table')"><img alt="ShowHide" src ="{{MEDIA_URL}}img/show_hide_button.png"></p>
+    </td>
+    <td>
     <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
-        <!--Download form-->
+    </td>
+    </table>
+    <!--Download form-->
     <div id="formDownload" class="form" style="display:none;">
         <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
         <table id="tableDownload">
@@ -534,27 +539,41 @@
      <br />
 
     <img alt="Print" id="print_button" style="display:none;" title="Print" src="{{MEDIA_URL}}img/print_button.png" onClick="printNode('printable_table')">
-
+    <br />
     <!--Table Data with download and print option-->
     <div id="printable_table" style="display:none;">
         <!--time series table-->
         <!--Header-->
-        <p>{{search_prams.area_description}}</p>
-        {%if search_params.shape_coords%}
-            <p class="pop_link" onClick="ShowHide('shape_coords')"><u>Show/hide polygon boundary coordiates in table data (lon, lat pairs)</u></p>
-        {%endif%}
-        <div id="shape_coords" style="display:none;"><b>Boundary coordinates</b>: {{search_params.shape_coords}}</div>
-        <div id="parameters">
-        <p>
         <b>Parameters</b>:<br />
+        <div id="parameters">
         {% for param in display_params_list%}
-            {%if forloop.first%}
-            {{param.0}}: {{param.1}},<br />
-            {%else%}
-            {%if forloop.counter0|divisibleby:"2" %}<br />{%endif %}
-            {{param.0}}: {{param.1}}
-            {%if not forloop.last%}, {%endif%}
-            {%endif%}
+        {%if forloop.first%}
+
+        <b>{{param.0}}</b>: {{param.1}},<br />        
+
+        {%if search_params.shape_coords%}
+        <p class="pop_link" onClick="ShowHide('shape_coords')"><u>Show/hide shape coordinates (lon, lat)i</u></p>
+        <div id="shape_coords" style="display:none;"><b>Shape coordinates</b>:<br />
+            {%for s in search_params.shape_coords%}
+            {{s}},
+            {%if forloop.counter|divisibleby:2%}<br />{%endif%}
+            {%endfor%}
+        </div>
+        {%endif%}
+
+        {%else%}
+
+        {%if param.0 == "Elements"%}
+        <b>{{param.0}}</b>:<br />
+        {%for el in search_params.element_list_long%}
+        {{el}}, <br />
+        {%endfor%}
+        {%else%}
+        {%if forloop.counter|divisibleby:"2" %}<br />{%endif %}
+        <b>{{param.0}}</b>: {{param.1}}{%if not forloop.last%}, {%endif%}
+        {%endif%}
+        
+        {%endif%}
         {%endfor%}
         </p>
         </div>
@@ -572,9 +591,9 @@
         {%for data in el_data%}
         <tr>
         {%if forloop.parentloop.first%}
-        <td>{{data.0}}</td>
+        <td align="right">{{data.0}}</td>
         {%endif%}
-        <td>{{data.1}}</td>
+        <td align="right">{{data.1}}</td>
         </tr>
         {%endfor%}
         </table>
@@ -649,7 +668,7 @@
         {%endfor%}
     {%endif%}
 
-    {%if user_params_list%}
+    {%if user_params_list and not results%}
     <div id="user_params_list">
     <p class="error">
     Please use the form to complete your analysis.<br />
