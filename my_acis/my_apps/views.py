@@ -13,7 +13,7 @@ from django.db.models.query import QuerySet
 from django.conf import settings
 #My imports
 import AcisWS
-import WRCCUtils, WRCCDataApps, WRCCData
+import WRCCUtils, WRCCDataApps, WRCCData, WRCCWrappers, WRCCClasses
 import my_apps.forms as forms
 
 #Prefix to location of executables
@@ -138,9 +138,17 @@ def sodsum(request, app_name):
     results = {}
     if form.is_valid():
         context['cleaned'] = form.cleaned_data
-        (data, elements, coop_station_id, station_name) = AcisWS.get_sodsum_data(form.cleaned_data)
-        results = WRCCDataApps.Sodsum(data, elements, coop_station_id, station_name)
-        context['elements'] = elements
+        data_params = {
+                'sids':form.cleaned_data['coop_station_ids'],
+                'start_date':form.cleaned_data['start_date'],
+                'end_date':form.cleaned_data['end_date'],
+                'element':form.cleaned_data['element']
+                }
+        app_params ={}
+        SS_wrapper = WRCCWrappers.Wrapper('Sodsum', data_params, app_specific_params=app_params)
+        data = SS_wrapper.get_data()
+        results = SS_wrapper.run_app(data)
+        context['elements'] = data['elements']
     context['results']= dict(results)
     return render_to_response('my_apps/Sodsum.html', context, context_instance=RequestContext(request))
 
