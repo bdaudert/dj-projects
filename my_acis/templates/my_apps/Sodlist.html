@@ -46,7 +46,7 @@
 {%if params.output_format == "kr"%}
 
 {%if forloop.counter == 0 or forloop.counter0 == 1 or forloop.counter0 == 4 or forloop.counter0 == 7 or forloop.counter0 == 10 or forloop.counter0 == 13%}
-<td align="right" width="char">{{val}}</td>
+<td align="right" width="char">&nbsp;&nbsp;{{val}}</td>
 {%else%}
 <td align="left" width="6em">{{val}}</td>
 {%endif%}

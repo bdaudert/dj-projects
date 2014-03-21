@@ -618,7 +618,7 @@ def metagraph(request):
 
 def monthly_aves(request):
     context = {
-        'title': 'Monthly Averages',
+        'title': 'Monthly Averages as Bar Charts',
         'icon':'ToolProduct.png'
     }
     initial, checkbox_vals = set_monthly_aves_initial(request)
@@ -1337,7 +1337,7 @@ def old_station_locator_app(request):
 
 def sodxtrmts(request):
     context = {
-        'title': 'Monthly/Annual Summary/Time Series',
+        'title': 'Monthly/Annual Averages/Extremes and Time Series',
         'icon':'ToolProduct.png'
     }
     json_dict =  None
@@ -1549,7 +1549,7 @@ def sodxtrmts(request):
 
 def sodsumm(request):
     context = {
-        'title': 'Monthly and Seasonal Summary/Bar Chart',
+        'title': 'Monthly/Seasonal Averages/Extremes and Bar Charts',
         'icon':'ToolProduct.png'
         }
     initial = set_sod_initial(request, 'Sodsumm')
