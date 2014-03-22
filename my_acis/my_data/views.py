@@ -328,8 +328,19 @@ def data_station(request):
         # If request successful, get params for link to apps page
         context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
         if 'station_ids' in form_cleaned.keys():
+            context['x'] = form_cleaned['station_ids'].split(',')
             if len(form_cleaned['station_ids'].split(',')) != len(resultsdict['stn_ids']):
-                context['station_ids_error'] = 'Data could not be found for some stations in the list.'
+                stn_error = 'Data could not be found for these station ids: '
+                missing_stations =''
+                results_ids = []
+                for idx in range(len(resultsdict['stn_ids'])):
+                    for id_net in resultsdict['stn_ids'][idx]:
+                        results_ids.append(id_net.split(' ')[0])
+                for stn_id in form_cleaned['station_ids'].split(','):
+                    if stn_id not in results_ids:
+                        missing_stations+= stn_id + ','
+                stn_error+= missing_stations
+                context['station_ids_error'] = stn_error
         if form_cleaned['data_format'] != 'html':
             return WRCCUtils.write_station_data_to_file(resultsdict,params_dict,request=request)
             #return WRCCUtils.write_station_data_to_file(resultsdict,params_dict['delimiter'], WRCCData.FILE_EXTENSIONS[str(form['data_format'])], request=request, output_file_name=str(form['output_file_name']), show_flags=params_dict['show_flags'], show_observation_time=params_dict['show_observation_time'])
@@ -1120,6 +1131,7 @@ def station_locator_app(request):
     }
     #Set up initial map (NV stations)
     context['station_json'] = 'NV_stn.json'
+    context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/NV_stn.json')
     context['map_title'] = 'Map of Nevada COOP stations!'
     initial,checkbox_vals = set_station_locator_initial(request)
     context['initial'] = initial;context['checkbox_vals']=checkbox_vals
@@ -1831,6 +1843,20 @@ def set_form(request,clean=True):
     for key,val in form.iteritems():
         if str(key) in ['station_id','county', 'basin', 'county_warning_area', 'climate_division']:
             form[str(key)] = find_id(str(val),MEDIA_URL +'json/US_' + str(key) + '.json')
+        if str(key) == 'station_ids':
+            stn_ids = ''
+            stn_list = form[str(key)].rstrip(',').split(',')
+            #Make sure that no station is enetered twice
+            id_previous = ''
+            for idx, stn_name in enumerate(stn_list):
+                stn_id = find_id(str(stn_name),MEDIA_URL +'json/US_' + 'station_id' + '.json')
+                if stn_id == id_previous:
+                    continue
+                id_previous = stn_id
+                stn_ids+=stn_id + ','
+            #Strip last comma
+            stn_ids.rstrip(', ')
+            form[str(key)] = stn_ids
         #format start and end data
         if str(key) in ['start_date', 'end_date']:
             form[str(key)] = str(val).replace('-','').replace(':','').replace('/','').replace(' ','')

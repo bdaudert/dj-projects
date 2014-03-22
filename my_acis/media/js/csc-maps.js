@@ -283,13 +283,16 @@ function initialize_station_finder() {
         // == shows all markers of a particular category, and ensures the checkbox is checked and write station_list==
         show = function(category) {
             var station_list = document.getElementById('station_list');
-            var name_unique = ''
+            var station_ids_str = '';
+            var name_unique = '';
             for (var i=0; i<markers.length; i++) {
                 if (category == 'all') {
                     markers[i].setVisible(true);
                     if (markers[i].name != name_unique){
                         station_list.appendChild(tbl_rows[i]);
                         name_unique = markers[i].name;
+                        station_ids_str+=markers[i].sid + ',';
+                        
                     }
                     for (var key in data.network_codes) {
                         // == check all the checkboxes ==
@@ -302,10 +305,14 @@ function initialize_station_finder() {
                     if (markers[i].name != name_unique){
                         station_list.appendChild(tbl_rows[i]);
                         name_unique = markers[i].name;
+                        station_ids_str+=markers[i].sid + ',';
                     }
                     document.getElementById(category).checked = true;
                 }
             }
+            //Remove trailig comma
+            station_ids_str = station_ids_str.substring(0,station_ids_str.length - 1);
+            document.getElementById('station_ids_str').value = station_ids_str;
         };
 
         // == hides all markers of a particular category, and ensures the checkbox is cleared and delete station_list ==

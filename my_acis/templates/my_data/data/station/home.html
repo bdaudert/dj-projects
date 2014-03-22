@@ -502,6 +502,7 @@
     </div>
     {%endif%}
 
+    {{x}}
 </td></table>
 <table cellpadding="10" align="center">
 <td valign="top" width="100%">
@@ -521,10 +522,10 @@
     {%endif%}
 
     <b>RESULTS:</b>:<br />
-    {%for stn in stn_idx%}
     {%if station_ids_error %}
-    <div class="error">{{station_ids_error}}</div><br />
+        <div class="error">{{station_ids_error}}</div><br />
     {%endif%}
+    {%for stn in stn_idx%}
     {%if results.stn_data|lookup:stn%}
 
     <b>Station Name</b>: {{results.stn_names|lookup:stn|safe}},<br />
