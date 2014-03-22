@@ -305,7 +305,7 @@ function initialize_station_finder() {
                     if (markers[i].name != name_unique){
                         station_list.appendChild(tbl_rows[i]);
                         name_unique = markers[i].name;
-                        station_ids_str+=markers[i].sid + ',';
+                        station_ids_str+=markers[i].name + ',';
                     }
                     document.getElementById(category).checked = true;
                 }

@@ -328,7 +328,6 @@ def data_station(request):
         # If request successful, get params for link to apps page
         context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
         if 'station_ids' in form_cleaned.keys():
-            context['x'] = form_cleaned['station_ids'].split(',')
             if len(form_cleaned['station_ids'].split(',')) != len(resultsdict['stn_ids']):
                 stn_error = 'Data could not be found for these station ids: '
                 missing_stations =''
@@ -339,6 +338,7 @@ def data_station(request):
                 for stn_id in form_cleaned['station_ids'].split(','):
                     if stn_id not in results_ids:
                         missing_stations+= stn_id + ','
+                missing_stations = missing_stations.rstrip(',')
                 stn_error+= missing_stations
                 context['station_ids_error'] = stn_error
         if form_cleaned['data_format'] != 'html':
@@ -1797,7 +1797,6 @@ def set_form(request,clean=True):
     and autofill options for identifiers
     '''
     form = {}
-    form = {}
     el_list = None
     if isinstance(request,dict):
         form_dict = dict(request)
@@ -1807,7 +1806,7 @@ def set_form(request,clean=True):
         form_dict = dict((x,y) for x,y in request.GET.items())
     else:
         try:
-            form_dict = dict(request)
+            form_dict = dict((x,y) for x,y in request.items())
         except:
             form_dict = {}
     for key,val in form_dict.iteritems():
@@ -1845,17 +1844,19 @@ def set_form(request,clean=True):
             form[str(key)] = find_id(str(val),MEDIA_URL +'json/US_' + str(key) + '.json')
         if str(key) == 'station_ids':
             stn_ids = ''
-            stn_list = form[str(key)].rstrip(',').split(',')
-            #Make sure that no station is enetered twice
+            stn_list = val.rstrip(',').split(',')
+            #Remove leading spaces from list items
+            stn_list = [v.lstrip(' ').rstrip(' ') for v in stn_list]
+            #Make sure that no station is entered twice
             id_previous = ''
             for idx, stn_name in enumerate(stn_list):
-                stn_id = find_id(str(stn_name),MEDIA_URL +'json/US_' + 'station_id' + '.json')
+                stn_id = str(find_id(str(stn_name),MEDIA_URL +'json/US_' + 'station_id' + '.json'))
                 if stn_id == id_previous:
                     continue
                 id_previous = stn_id
                 stn_ids+=stn_id + ','
             #Strip last comma
-            stn_ids.rstrip(', ')
+            stn_ids = stn_ids.rstrip(',')
             form[str(key)] = stn_ids
         #format start and end data
         if str(key) in ['start_date', 'end_date']:
@@ -2591,6 +2592,8 @@ def set_user_params(form, app_name):
         f[area_select]:f[f[area_select]],
         'elements':','.join(el_list)
     }
+    if f['select_stations_by'] == 'station_ids':
+        user_params_dict['station_list'] = f['station_ids'].split(',')
     key_list = []
     if 'start_date' in f.keys():
         key_list = ['start_date','end_date']

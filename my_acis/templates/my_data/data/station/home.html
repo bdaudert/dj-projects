@@ -348,7 +348,17 @@
     Please use the form to complete your data request.<br />
     Your Parameters:<br />
     {%for key_val in user_params_list%}
-    <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+    <b>{{key_val.0}}</b>: 
+    {%if key_val.0 == "Station IDs"%}
+    {%for ID in user_params_dict.station_list%}
+    {{ID}},
+    {%if forloop.counter0|divisibleby:4 and forloop.counter != 0%}
+    <br />
+    {%endif%}
+    {%endfor%} 
+    {%else%}
+    {{key_val.1}}<br />
+    {%endif%}
     {%endfor%}
     </p>
     </div>
@@ -481,6 +491,13 @@
     {%if param.0 == "shape"%}
     <p class="error" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
     <div id="coords" style="display:none;">{{params.1}}</div>
+    {%elif param.0 == "Station IDs"%}
+    {%for ID in params_dict.station_list%}
+    {{ID}}, 
+    {%if forloop.counter0|divisibleby:4 and forloop.counter != 0%}
+    <br />
+    {%endif%}
+    {%endfor%}
     {%else%}
     {{param.1}}
     {%endif%}
@@ -502,7 +519,6 @@
     </div>
     {%endif%}
 
-    {{x}}
 </td></table>
 <table cellpadding="10" align="center">
 <td valign="top" width="100%">
