@@ -248,6 +248,7 @@ def data_station(request):
     if request.method == 'GET' and 'elements' in request.GET:
         form_cleaned = set_form(request,clean=True)
         form = set_form(request,clean=False)
+        context['x'] = form
         user_params_list, user_params_dict =set_user_params(form, 'data_station')
         context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
 
@@ -1140,6 +1141,7 @@ def station_locator_app(request):
     context['area_type'] = initial['select_stations_by']
     context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
     context[initial['overlay_state'] + '_selected'] = 'selected'
+    context['kml_file_path'] = create_kml_file(initial['select_stations_by'], 'nv')
     #Add params for link to station data
     form = set_form(initial, clean=False)
     user_params_list, user_params_dict = set_user_params(form, 'station_locator_app')
@@ -1179,6 +1181,7 @@ def station_locator_app(request):
         date_range = [form_cleaned['start_date'],form_cleaned['end_date']]
         el_date_constraints = form_cleaned['elements_constraints'] + '_' + form_cleaned['dates_constraints']
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=el_date_constraints)
+        context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
         if 'error' in station_json.keys():
             context['error'] = stn_json['error']
         if station_json['stations'] == []:
@@ -2592,8 +2595,6 @@ def set_user_params(form, app_name):
         f[area_select]:f[f[area_select]],
         'elements':','.join(el_list)
     }
-    if f['select_stations_by'] == 'station_ids':
-        user_params_dict['station_list'] = f['station_ids'].split(',')
     key_list = []
     if 'start_date' in f.keys():
         key_list = ['start_date','end_date']
@@ -2627,7 +2628,12 @@ def set_user_params(form, app_name):
     if 'add_degree_days' in f.keys() and 'degree_days' in f.keys() and f['add_degree_days'] =='T':
         user_params_dict['add_degree_days'] = f['add_degree_days']
         user_params_dict['degree_days'] = f['degree_days']
-
+    #If link from station_locator, check for area type and value and add to params
+    if f['select_stations_by'] == 'station_ids':
+        user_params_dict['station_list'] = f['station_ids'].split(',')
+        for k in ['basin', 'climate_division','county', 'county_warning_area', 'state', 'shape']:
+            if k in f.keys():
+                user_params_list.insert(0,[WRCCData.DISPLAY_PARAMS[k],f[k]])
     return user_params_list, user_params_dict
 ##################
 #Initialization
@@ -3130,7 +3136,7 @@ def set_station_locator_initial(request):
     initial['elements_constraints'] = Get('elements_constraints', 'any')
     initial['start_date']  = Get('start_date', '20140101')
     initial['end_date']  = Get('end_date', yesterday)
-    initial['dates_constraints']  = Get('dates_constraints', 'all')
+    initial['dates_constraints']  = Get('dates_constraints', 'any')
     #set the check box values
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
         checkbox_vals[area_type + '_selected'] =''

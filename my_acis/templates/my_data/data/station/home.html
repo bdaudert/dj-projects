@@ -355,6 +355,9 @@
     {%if forloop.counter0|divisibleby:4 and forloop.counter != 0%}
     <br />
     {%endif%}
+    {%if forloop.last%}
+    <br />
+    {%endif%}
     {%endfor%} 
     {%else%}
     {{key_val.1}}<br />
@@ -473,7 +476,6 @@
     <br /><br /> 
     {%endif%}
    
-
     <!--Results section-->
     <div id="results">
     {%if large_request %}

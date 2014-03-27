@@ -465,6 +465,7 @@ function show_div_if_true(node, divID){
     }
 }
 
+//Sodxtrmts util hide or show formGraph
 function show_formGraph(TF, rowClass) {
     var trs = document.getElementsByClassName(rowClass);
     if (TF == 'T'){
@@ -476,6 +477,15 @@ function show_formGraph(TF, rowClass) {
     for (idx=0;idx<trs.length;idx++){
         trs[idx].style.display = disp;
     }
+}
+
+//Sodxtrmts util hide or show formGraph
+function hide_formGraph(rowClass) {
+    var trs = document.getElementsByClassName(rowClass);
+    for (idx=0;idx<trs.length;idx++){
+        trs[idx].style.display = "none";
+    }
+    document.getElementById('generate_graph_row').style.display = "none";
 }
 
 function hide_gridpoint_map(){

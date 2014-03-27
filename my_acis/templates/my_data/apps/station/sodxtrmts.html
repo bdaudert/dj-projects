@@ -82,9 +82,9 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
 <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}station/sodxtrmts/'"/>
 <div id="formSodxtrmts" class="form" style="border:none;">
     {%if json_dict%}
-        <form method="post" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading()">
+        <form method="post" id="fSodxtrmts" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading()">
     {%else%}
-        <form method="post" action="" onsubmit="show_loading()">
+        <form method="post" id="fSodxtrmts" action="" onsubmit="show_loading()">
     {%endif%}
     {% csrf_token %}
     <table id="tableSodxtrmts" frame="void" style="border-collapse:collapse;">
@@ -92,7 +92,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     <table id="tableData" frame="box" cell-padding="20">
     <tr valign="top">
     <td>Station ID/Name: </td>
-    <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{initial.station_id}}" list="US_station_id"></td>
+    <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{initial.station_id}}" list="US_station_id" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_station_id"></div>
@@ -109,7 +109,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </tr>
     <tr valign="top">
     <td id="Start Year">Start Year: </td>
-    <td><input type="text" id="start_year" name="start_year" value="{{initial.start_year}}"></td>
+    <td><input type="text" id="start_year" name="start_year" value="{{initial.start_year}}" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_start_year"></div>
@@ -121,7 +121,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </tr>
     <tr valign="top">
     <td id="End Year">End Year: </td>
-    <td><input type="text" id="end_year" name="end_year" value="{{initial.end_year}}"></td>
+    <td><input type="text" id="end_year" name="end_year" value="{{initial.end_year}}" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_end_year"></div>
@@ -134,7 +134,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     <tr valign="top">
     <td>Element: </td>
     <td>
-        <select id="element" name="element" onchange="set_BaseTemp_and_Threshes('tableData',this);">
+        <select id="element" name="element" onchange="set_BaseTemp_and_Threshes('tableData',this);hide_formGraph('formGraph');">
             <option value="pcpn" {{checkbox_vals.pcpn_selected}}>Daily Precipitation</option>
             <option value="snow" {{checkbox_vals.snow_selected}}>Daily Snowfall</option>
             <option value="snwd" {{checkbox_vals.snwd_selected}}>Daily Snowdepth</option>
@@ -161,7 +161,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     {%if initial.base_temperature%}
     <tr id="base_temp" valign="top">
     <td>Base Temperature: </td>
-    <td><input type="text" id="base_temperature" name="base_temperature" value="{{initial.base_temperature}}"></td>
+    <td><input type="text" id="base_temperature" name="base_temperature" value="{{initial.base_temperature}}" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_base_temperature"></div>
@@ -175,7 +175,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     <tr valign="top">
     <td>Monthly Statistic: </td>
     <td>
-        <select id="monthly_statistic" name="monthly_statistic" onchange="set_NDays_thresholds('tableData',this);">
+        <select id="monthly_statistic" name="monthly_statistic" onchange="set_NDays_thresholds('tableData',this);hide_formGraph('formGraph');">
         <option value="mmax" {{checkbox_vals.mmax_selected}}>Monthly Maximum</option>
         <option value="mmin" {{checkbox_vals.mmin_selected}}>Monthly Minimum</option>
         <option value="mave" {{checkbox_vals.mave_selected}}>Monthly Average</option>
@@ -198,7 +198,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     <tr id="threshold_type" valign="top">
     <td>Number of Days: </td>
     <td>
-        <select id="less_greater_or_between" name="less_greater_or_between" onchange="change_lgb();">
+        <select id="less_greater_or_between" name="less_greater_or_between" onchange="change_lgb();hide_formGraph('formGraph');">
         <option value="l" {{checkbox_vals.l_selected}}>Less Than</option>
         <option value="g" {{checkbox_vals.g_selected}}>Greater Than</option>
         <option value="b" {{checkbox_vals.b_selected}}>Between</option>
@@ -217,8 +217,8 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     {%if initial.less_greater_or_between == "b"%}
     <tr id="threshold" valign="top">
     <td>Between <br/> And</td>
-    <td><input type="text" id="threshold_low_for_between" name="threshold_low_for_between" value={{initial.threshold_low_for_between}}><br />
-        <input type="text" id="threshold_low_for_between" name="threshold_high_for_between" value={{initial.threshold_high_for_between}}>
+    <td><input type="text" id="threshold_low_for_between" name="threshold_low_for_between" value={{initial.threshold_low_for_between}} onchange="hide_formGraph('formGraph');"><br />
+        <input type="text" id="threshold_low_for_between" name="threshold_high_for_between" value={{initial.threshold_high_for_between}} onchange="hide_formGraph('formGraph');">
     </td>
     <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">
     <div class="pop-up">
@@ -232,7 +232,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     {%elif initial.less_greater_or_between == "l"%}
     <tr id="threshold">
     <td>Less Than</td>
-    <td><input type="text" id="threshold_for_less_or_greater" name="threshold_for_less_or_greater" value={{initial.threshold_for_less_or_greater}}></td>
+    <td><input type="text" id="threshold_for_less_or_greater" name="threshold_for_less_or_greater" value={{initial.threshold_for_less_or_greater}} onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_l"></div>
@@ -245,7 +245,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     {%elif initial.less_greater_or_between == "g"%}
     <tr id="threshold" valign="top">
     <td>Greater Than</td>
-    <td><input type="text" id="threshold_for_less_or_greater" name="threshold_for_less_or_greater" value={{initial.threshold_for_less_or_greater}}></td>
+    <td><input type="text" id="threshold_for_less_or_greater" name="threshold_for_less_or_greater" value={{initial.threshold_for_less_or_greater}} onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_g"></div>
@@ -258,7 +258,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     {%endif%}
     <tr valign="top">
     <td id="Maximum Number of Missing Days">Max Missing Days: </td>
-    <td><input type="text" name="max_missing_days" value="{{initial.max_missing_days}}"></td>
+    <td><input type="text" name="max_missing_days" value="{{initial.max_missing_days}}" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_max_missing_days"></div>
@@ -271,7 +271,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     <tr valign="top">
     <td>Start Month: </td>
     <td>
-        <select id="start_month" name="start_month">
+        <select id="start_month" name="start_month" onchange="hide_formGraph('formGraph');">
         <option value="01" {{checkbox_vals.start_month_01_selected}}>January</option>
         <option value="02" {{checkbox_vals.start_month_02_selected}}>February</option>
         <option value="03" {{checkbox_vals.start_month_03_selected}}>March</option>
@@ -298,7 +298,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     <tr valign="top">
     <td>Departures from Averages: </td>
     <td>
-        <select id="departures_from_averages" name="departures_from_averages">
+        <select id="departures_from_averages" name="departures_from_averages" onchange="hide_formGraph('formGraph');">
         <option value="F" {{checkbox_vals.departures_from_averages_F_selected}}>No</option>
         <option value="T" {{checkbox_vals.departures_from_averages_T_selected}}>Yes</option>
         </select>
@@ -315,7 +315,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     <tr valign="top">
     <td>Frequency Analysis: </td>
     <td>
-        <select id="frequency_analysis" name="frequency_analysis">
+        <select id="frequency_analysis" name="frequency_analysis" onchange="hide_formGraph('formGraph');">
         <!--<option value="T" {{checkbox_vals.frequency_analysis_T_selected}}>Yes</option>-->
         <option value="F" {{checkbox_vals.frequency_analysis_F_selected}}>No</option>
         </select>
@@ -332,7 +332,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     <tr><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
     {%if json_file %}
     <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
-    <tr valign="top">
+    <tr valign="top" id="generate_graph_row">
     <td><font color="magenta"><b>Generate a time series graph?</b></font></td>
     <td>
         <select id="generate_graph" name="generate_graph" onchange="show_if_true(this, 'formGraph');">

@@ -1,8 +1,22 @@
+/*
 function set_href_to_datafind(anchor){
-    var href_pre = anchor.name;
+    var href_pre = anchor.href;
     stn_ids = document.getElementById('station_ids_str').value;
     anchor.href = href_pre + '&station_ids=' + stn_ids;
 }
+*/
+
+$(function() {
+    $('#link_to_datafind').click(function(event){
+        event.preventDefault();
+        //var href_pre = $(this).attr('href');
+        var href_pre = this.href;
+        stn_ids = document.getElementById('station_ids_str').value;
+        href_pre+='&station_ids=' + stn_ids;
+        //$(this).attr('href',href_pre);
+        window.open(href_pre,'_blank');
+    });
+});
 
 function populateFormField(form_name, form_id, label, value){
     //var formFields = document.getElementById(form_name).getElementsByTagName('input');

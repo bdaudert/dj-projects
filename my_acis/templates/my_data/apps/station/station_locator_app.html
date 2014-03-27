@@ -3,6 +3,7 @@
 <meta name="keywords" content="station finder, map, by date range, by element, station data, historic data,application, product, tool">
 <meta name="description" content="SW-CKN Generates graphs of monthly averages">
 
+{%load my_data_filters%}
 {% block content %}
 <p align="center">You are here
 <a href="{{HOME_URL}}">Home></a>
@@ -290,14 +291,11 @@
         {%if station_json and not need_overlay_map%}
         <!--Link to data portal-->
         <input type="hidden" id="station_ids_str" name="station_ids_str" value="{{station_ids_for_datafind}}">
-        <a align="left" target="_blank" href= "#" onclick="set_href_to_datafind(this)" name="{{DATA_URL}}station/?select_stations_by=station_ids&start_date={{user_params_dict.start_date}}&end_date={{user_params_dict.end_date}}&elements={{user_params_dict.elements}}"><font size="4"><b>Obtain data for all stations</b></font></a>
-        <!--
-        {%if station_ids_for_datafind%}
-        <a align="left" target="_blank" href="{{DATA_URL}}station/?select_stations_by=station_ids&station_ids={{station_ids_for_datafind}}&start_date={{user_params_dict.start_date}}&end_date={{user_params_dict.end_date}}&elements={{user_params_dict.elements}}"><font size="4"><b>Obtain data for all stations</b></font></a>
+        {%if user_params_dict.select_stations_by == "station_ids"%}:
+        <a align="left" target="_blank" href="{{DATA_URL}}station/?&select_stations_by=station_ids&start_date={{user_params_dict.start_date}}&end_date={{user_params_dict.end_date}}&elements={{user_params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
         {%else%}
-        <a align="left" target="_blank" href="{{DATA_URL}}station/?{%for key,val in user_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="4"><b>Obtain data for all stations</b></font></a>
+        <a align="left" target="_blank" href="{{DATA_URL}}station/?{{user_params_dict.select_stations_by}}={{user_params_dict|lookup:user_params_dict.select_stations_by}}&select_stations_by=station_ids&start_date={{user_params_dict.start_date}}&end_date={{user_params_dict.end_date}}&elements={{user_params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
         {%endif%}
-        -->
 
         {%endif%}
         
