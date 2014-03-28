@@ -123,21 +123,32 @@ $(function () {
                     var date = datadict.graph_data[el_idx][date_idx][0].replace('-','').replace('-','');
                     year = parseInt(date.slice(0,4));
                     month = parseInt(date.slice(4,6)) - 1;
-                    day = parseInt(date.slice(6,8));
+                    try {
+                        day = parseInt(date.slice(6,8));
+                    }
+                    catch (e) {
+                        day = 1;
+                    }
+                    if (!day){day=1;}
                     date = Date.UTC(year, month, day);
                     val = datadict.graph_data[el_idx][date_idx][1];
                     if (val != '-----') {
                         try {
-                            data.push([date, parseFloat(val)]);
+                            if (Math.abs(parseFloat(val) + 999.0) > 0.0001){
+                                data.push([date, parseFloat(val)]);
+                                if (val > data_max){
+                                    data_max = val;
+                                }
+                                if (val < data_min){
+                                    data_min = val;
+                                }
+                            }
+                            else{
+                                data.push([date, null]);
+                            }
                         }
                         catch (e) {
                             data.push([date, null]);
-                        }
-                        if (val > data_max){
-                            data_max = val;
-                        }
-                        if (val < data_min){
-                            data_min = val;
                         }
                     }
                     else{

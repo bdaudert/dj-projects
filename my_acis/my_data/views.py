@@ -764,8 +764,8 @@ def clim_sum_maps(request):
         form_cleaned = set_form(request)
         initial, checkbox_vals = set_clim_sum_maps_initial(request)
         params_cleaned = set_form(initial)
-        user_params_list, user_params_dict =set_user_params(form, 'clim_sum_maps')
-        context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
+        params_list, params_dict =set_user_params(form, 'clim_sum_maps')
+        context['params_list'] = params_list;context['params_dict']=params_dict
         #Back Button/download files issue fix:
         #if select_grid_by none, find it
         if not 'select_grid_by' in form.keys():
@@ -1869,9 +1869,10 @@ def set_form(request,clean=True):
             el_list_new = val
             #form[str(key)] = str(val).replace(' ','')
             #if PRISM data, change element names if monthly/yearly data
-            if 'grid' in form.keys() and form['grid'] == '21' and form['temporal_resolution'] in ['yly','mly']:
-                for el_idx,el in enumerate(el_list_new):
-                    el_list_new[el_idx] = '%s_%s' %(form['temporal_resolution'], el)
+            if 'grid' in form.keys() and form['grid'] == '21':
+                if 'temporal_resolution' in form.keys() and form['temporal_resolution'] in ['yly','mly']:
+                    for el_idx,el in enumerate(el_list_new):
+                        el_list_new[el_idx] = '%s_%s' %(form['temporal_resolution'], el)
             #Add special degree days
             if 'add_degree_days' in form.keys() and form['add_degree_days'] == 'T':
                 dd_list = form['degree_days'].replace(' ','').split(',')
@@ -2577,6 +2578,9 @@ def set_user_params(form, app_name):
         f[key] = val
     if app_name in ['data_gridded', 'area_time_series', 'clim_sum_maps']:
         area_select = 'select_grid_by'
+        if app_name == 'clim_sum_maps' and not 'select_grid_by' in f.keys():
+            f['select_grid_by'] = 'state'
+            f['temporal_resolution'] = 'dly'
     elif app_name in ['monthly_aves','sodxtrmts','sodsumm']:
         area_select = 'select_stations_by'
         if not 'select_stations_by' in f.keys():
@@ -2613,12 +2617,16 @@ def set_user_params(form, app_name):
             els_long+=WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + ', '
     user_params_list.insert(0,['Elements',els_long])
     user_params_list.insert(0,[WRCCData.DISPLAY_PARAMS[f[area_select]],f[f[area_select]]])
+    if 'temporal_resolution' in f.keys():
+        user_params_dict['temporal_resolution'] = f['temporal_resolution']
     if 'temporal_summary' in f.keys():
         user_params_list.append(['Temporal Summary', WRCCData.DISPLAY_PARAMS[f['temporal_summary']]])
         user_params_dict['temporal_summary'] = f['temporal_summary']
+        user_params_dict['data_summary'] = 'temporal'
     if 'spatial_summary' in f.keys():
         user_params_list.append(['Spatial Summary', WRCCData.DISPLAY_PARAMS[f['spatial_summary']]])
         user_params_dict['spatial_summary'] = f['spatial_summary']
+        user_params_dict['data_summary'] = 'spatial'
     if 'grid' in f.keys():
         user_params_list.append(['Grid', WRCCData.GRID_CHOICES[f['grid']]])
         user_params_dict['grid'] = f['grid']
@@ -2629,7 +2637,7 @@ def set_user_params(form, app_name):
         user_params_dict['add_degree_days'] = f['add_degree_days']
         user_params_dict['degree_days'] = f['degree_days']
     #If link from station_locator, check for area type and value and add to params
-    if f['select_stations_by'] == 'station_ids':
+    if f[area_select] == 'station_ids':
         user_params_dict['station_list'] = f['station_ids'].split(',')
         for k in ['basin', 'climate_division','county', 'county_warning_area', 'state', 'shape']:
             if k in f.keys():

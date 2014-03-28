@@ -18,13 +18,18 @@
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 
+
 <table cellpadding="10">
 <td valign="top" width="40%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}station/'"/>
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData">
+        {%if user_params_dict.select_stations_by%}
+        <tr valign="top" style="display:none">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td>Select stations by:</td>
         <td>
             <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this);" onfocus="set_station_grid_select('area',this);">
@@ -45,7 +50,11 @@
             $("#Docu_select_stations_by").load("{{MEDIA_URL}}html/Docu_select_stations_by.html");
         </script>
         </td>
+        {%if user_params_dict.select_stations_by%}
+        <tr id="area" valign="top" style="display:none">
+        {%else%}
         <tr id="area" valign="top">
+        {%endif%}
         {%if initial.select_stations_by == "station_id" %}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}/Name: </td>
         {%else%}
@@ -62,13 +71,21 @@
         </td>
         </tr>
         {%if initial.station_id or initial.station_ids%}
+        {%if user_params_dict.select_stations_by%}
+        <tr style="display:none">
+        {%else%}
         <tr>
+        {%endif%}
         <td></td>
         <td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td>
         <td></td>
         </td>
         {%endif%}
+        {%if user_params_dict.elements%}
+        <tr valign="top" style="display:none">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td id="Elements">Elements: </td>
         <td>
             <select id="elements" name="elements" multiple onchange="update_elements(this)">
@@ -94,7 +111,11 @@
         </div>
         </td>
         </tr>
+        {%if user_params_dict.add_degree_days%}
+        <tr valign="top" style="display:none;">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td>Add special degree days: </td>
         <td>
         <select id="add_degree_days" name="add_degree_days" onchange="show_div_if_true(this,'dd') & update_value(this.value)">
@@ -111,7 +132,7 @@
         </div>
         </td>
         </tr>
-        {%if initial.add_degree_days == "T"%}
+        {%if initial.add_degree_days == "T" and not user_params_dict.degree_days%}
         <tr id="dd" valign="top">
         {%else%}
         <tr id="dd" valign="top" style="display:none;">
@@ -144,7 +165,11 @@
         </div>
         </td>
         </tr>
+        {%if user_params_dict.start_date%}
+        <tr valign="top" style="display:none">
+        {%else%}
         <tr valign="top">
+        {%endif%} 
         <td id="Start Date">Start Date: </td>
         <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value)"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -156,7 +181,11 @@
         </div>
         </td>
         </tr>
+        {%if user_params_dict.end_date%}
+        <tr valign="top" style="display:none">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td id="End Date">End Date: </td>
         <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value)"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

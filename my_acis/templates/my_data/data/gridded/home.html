@@ -24,7 +24,11 @@
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData">
+        {%if user_params_dict.select_grid_by%}
+        <tr valign="top" style="display:none">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td>Select grid by:</td>
         <td>
             <select id="select_grid_by" name="select_grid_by" onchange="set_station_grid_select('area',this);" onfocus="set_station_grid_select('area',this);">
@@ -44,7 +48,11 @@
         </script>
         </td>
         </tr>
-        <tr id="area" valign="top">
+        {%if user_params_dict.select_grid_by%}
+        <tr valign="top" style="display:none">
+        {%else%}
+        <tr valign="top">
+        {%endif%}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
         <td><input autocomplete="off" type="text" size="20" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -56,7 +64,11 @@
         </div>
         </td>
         </tr>
+        {%if user_params_dict.temporal_resolution%}
+        <tr valign="top" style="display:none">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td>Temporal Resolution: </td>
         <td>
             <select id="temporal_resolution" name="temporal_resolution" onchange="set_grid_and_els(this, 'grid_type')">
@@ -74,7 +86,11 @@
         </div>
         </td>
         </tr>
-        <tr id="Els"  valign="top">
+        {%if user_params_dict.elements%}
+        <tr id="Els" valign="top" style="display:none">
+        {%else%}
+        <tr id="Els" valign="top">
+        {%endif%}
         <td id="Elements">Elements: </td>
         <td>
             <select id="elements" name="elements" multiple onchange="update_elements(this)">
@@ -95,7 +111,7 @@
         </div>
         </td>
         </tr>
-        {%if initial.temporal_resolution == 'dly'%}
+        {%if initial.temporal_resolution == 'dly' and not user_params_dict.add_degree_days%}
         <tr id="add" valign="top">
         {%else%}
         <tr id="add" valign="top" style="display:none;">
@@ -117,7 +133,7 @@
         </div>
         </td>
         </tr>
-        {%if initial.add_degree_days == "T"%}
+        {%if initial.add_degree_days == "T" and not user_params_dict.degree_days%}
         <tr id="dd" valign="top">
         {%else%}
         <tr id="dd" valign="top" style="display:none;">
@@ -150,7 +166,11 @@
         </div>
         </td>
         </tr>
+        {%if user_params_dict.start_date%}
+        <tr valign="top" style="display:none">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td id="Start Date">Start Date: </td>
         <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value)"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -162,7 +182,11 @@
         </div>
         </td>
         </tr>
+        {%if user_params_dict.end_date%}
+        <tr valign="top" style="display:none">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td id="End Date">End Date: </td>
         <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value)"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -174,7 +198,11 @@
         </div>
         </td>
         </tr>
+        {%if user_params_dict.grid%}
+        <tr id="grid_type" valign="top" style="display:none">
+        {%else%}
         <tr id="grid_type" valign="top">
+        {%endif%}
         <td>Grid: </td>
         <td>
             <select id="grid" name="grid" onchange="update_value(this.value)">
@@ -223,7 +251,11 @@
         </div>
         </td>
         </tr>
-        <tr valign="top" id="summary_type">
+        {%if user_params_dict.data_summary%}
+        <tr id="summary_type" valign="top" style="display:none">
+        {%else%}
+        <tr id="summary_type" valign="top">
+        {%endif%}
         <td>Data Summary: </td>
         <td>
             <select id="data_summary" name="data_summary" onchange="set_data_summary(this, 'temp_summary','spat_summary') & update_value(this.value)">
@@ -241,7 +273,7 @@
         </div>
         </td>
         </tr>
-        {%if initial.data_summary == "temporal"%}
+        {%if initial.data_summary == "temporal" and not user_params_dict.temporal_summary%}
         <tr valign="top" id="temp_summary" style="display:table-row">
         {%else%}
         <tr valign="top" id="temp_summary" style="display:none">
@@ -264,7 +296,7 @@
         </div>
         </td>
         </tr>
-        {%if initial.data_summary == "spatial"%}
+        {%if initial.data_summary == "spatial" and not user_params_dict.spatial_summary%}
         <tr valign="top" id="spat_summary" style="display:table-row">
         {%else%}
         <tr valign="top" id="spat_summary" style="display:none">

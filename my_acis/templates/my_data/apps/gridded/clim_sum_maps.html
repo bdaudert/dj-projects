@@ -562,8 +562,7 @@
     <!--Results section-->
     <div id="results">
     {%if figure_files%}
-
-    <a target="_blank" href="{{DATA_URL}}gridded/?{%for key,val in user_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size=3><b>Get data behind this graphic</b></font></a>
+    <a target="_blank" href="{{DATA_URL}}gridded/?{%for key,val in params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size=3><b>Get data behind this graphic</b></font></a>
     <br /></br /></br>
     {%for fig in figure_files%}
         <p>
