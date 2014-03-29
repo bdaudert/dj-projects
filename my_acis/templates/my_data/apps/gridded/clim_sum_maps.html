@@ -116,10 +116,14 @@
         </div>
         </td>
         </tr>
-        {%if initial.add_degree_days == "T" and not user_params_dict.degree_days%}
+        {%if initial.add_degree_days == "T" and not user_params_dict.add_degree_days %}
         <tr id="dd" valign="top">
         {%else%}
-        <tr id="dd" valign="top" style="display:none;">
+        {%if user_params_dict.add_degree_days == "T"%}
+        <tr id="dd" valign="top" bgcolor="#006666">
+        {%else%}        
+        <tr id="dd" valign="top" style="display:none">
+        {%endif%}
         {%endif%}
         <td id="Degree Days">Degree Days: </td>
         <td><input type="text" id="degree_days" name="degree_days" value="{{initial.degree_days}}" onchange="update_value(this.value)"></td>

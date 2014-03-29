@@ -263,7 +263,7 @@ def data_station(request):
             context['link_to_all'] = True
         elif len(form_cleaned['elements'].replace(' ','').split(',')) >= 1 and 'station_id' in form.keys():
             context['link_to_mon_aves'] = True
-        #Set parasm for external links
+        #Set params for external links
         monthly_aves_params_list, monthly_aves_params_dict = set_user_params(form, 'monthly_aves')
         sodsumm_params_list, sodsumm_params_dict = set_user_params(form, 'sodsumm')
         sodxtrmts_params_list, sodxtrmts_params_dict = set_user_params(form, 'sodxtrmts')
@@ -652,8 +652,8 @@ def monthly_aves(request):
             if key != 'formData':
                 search_params[key] = val
         #Links
-        user_params_list, user_params_dict =set_user_params(form, 'monthly_aves')
-        context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
+        params_list, params_dict =set_user_params(form, 'monthly_aves')
+        context['params_list'] = params_list;context['params_dict']=params_dict
         search_params['select_stations_by'] = 'station_id'
         search_params['station_id'] = form['station_id']
         context['search_params'] = search_params
@@ -1380,9 +1380,6 @@ def sodxtrmts(request):
     if 'formSodxtrmts' in request.POST:
         #Turn request object into python dict
         form = set_form(request, clean=True)
-        x={}
-        for key, val in dict((x,y) for x,y in request.POST.items()).iteritems():
-            x[str(key)] = str(val)
         context['x'] = form
         #Set initial form parameters for html
         initial,checkbox_vals = set_sodxtrmts_initial(request)
@@ -1500,7 +1497,10 @@ def sodxtrmts(request):
             else:
                 element_name = WRCCData.ACIS_ELEMENTS_DICT[data_params['element']]['name_long']
             if 'base_temperature' in form.keys():
-                base_temperature = int(form['base_temperature'])
+                try:
+                    base_temperature = int(form['base_temperature'])
+                except:
+                    base_temperature = ''
             else:
                 base_temperature = ''
             for i in range(12):
@@ -2580,7 +2580,11 @@ def set_user_params(form, app_name):
     '''
     f = {}
     for key,val in form.iteritems():
-        f[key] = val
+        #Remove hash tags and extra quotes from strings, they give issue in reqeust.GET
+        if isinstance(val, basestring):
+            f[key] =val.replace('#','').replace('\'','')
+        else:
+            f[key] = val
     if app_name in ['data_gridded', 'area_time_series', 'clim_sum_maps']:
         area_select = 'select_grid_by'
         if app_name == 'clim_sum_maps':
@@ -2621,7 +2625,7 @@ def set_user_params(form, app_name):
         el_strip,base_temp = WRCCUtils.get_el_and_base_temp(el)
         if base_temp:
             els_long+=WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + ' Base Temp.: ' + str(base_temp) + ', '
-            if app_name == 'sodxtrmts':
+            if app_name == 'sodxtrmts' and el_strip in ['hdd','cdd','gdd']:
                 user_params_dict['base_temperature'] = base_temp
         else:
             els_long+=WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + ', '
@@ -2790,10 +2794,10 @@ def set_sodxtrmts_initial(request):
         element = Get('element', 'pcpn')
     initial['element'] = element
     '''
-    initial['base_temperature'] = Get('base_temperature',None)
-    if initial['base_temperature'] is None and initial['element'] in ['hdd','cdd']:
+    initial['base_temperature'] = Get('base_temperature','')
+    if not initial['base_temperature'] and initial['element'] in ['hdd','cdd']:
         initial['base_temperature'] = '65'
-    if initial['base_temperature'] is None and initial['element'] in ['gdd']:
+    if not initial['base_temperature'] and initial['element'] in ['gdd']:
         initial['base_temperature'] = '50'
     #FIX ME request.POST.get does not return base_temperature and thresholds
     if request.POST:

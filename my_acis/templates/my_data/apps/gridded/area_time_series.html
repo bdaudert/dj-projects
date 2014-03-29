@@ -30,7 +30,7 @@
         <form method="post" id="tableTSForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableTS">
         {%if user_params_dict.select_grid_by%}
-        <tr valign="top" style="display:none">
+        <tr valign="top" bgcolor="#006666">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -54,7 +54,7 @@
         </td>
         </tr>
         {%if user_params_dict.select_grid_by%}
-        <tr id="area" valign="top" style="display:none">
+        <tr id="area" valign="top" bgcolor="#006666">
         {%else%}
         <tr id="area" valign="top">
         {%endif%}
@@ -71,7 +71,7 @@
         </tr>
         </tr>
         {%if user_params_dict.elements%}
-        <tr id="Els" valign="top" style="display:none">
+        <tr id="Els" valign="top" bgcolor="#006666">
         {%else%}
         <tr id="Els" valign="top">
         {%endif%}
@@ -97,7 +97,7 @@
         </td>
         </tr>
         {%if user_params_dict.start_date%}
-        <tr id="add" valign="top" style="display:none">
+        <tr id="add" valign="top" bgcolor="#006666">
         {%else%}
         <tr id="add" valign="top">
         {%endif%}
@@ -117,10 +117,16 @@
         </div>
         </td>
         </tr>
-        {%if initial.add_degree_days == "T" and not user_params_dict.degree_days%}
+        {%if initial.add_degree_days == "T" and not user_params_dict.add_degree_days %}
         <tr id="dd" valign="top">
         {%else%}
-        <tr id="dd" valign="top" style="display:none;">
+        {%if user_params_dict.add_degree_days == "T"%}
+        <tr id="dd" valign="top" bgcolor="#006666">
+        {%else%}
+        <tr id="dd" valign="top" style="display:none">
+        {%endif%}
+        {%endif%}
+        <tr id="dd" valign="top" bgcolor="#006666">
         {%endif%}
         <td id="Degree Days">Degree Days: </td>
         <td><input type="text" id="degree_days" name="degree_days" value="{{initial.degree_days}}" onchange="update_value(this.value)"></td>
@@ -133,7 +139,11 @@
         </div>
         </td>
         </tr>
+        {%if user_params_dict.units%}
+        <tr valign="top" bgcolor="#006666">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td>Units: </td>
         <td>
         <select id="units" name="units" onchange="update_value(this.value) & set_degree_days(this.value)">
@@ -151,7 +161,7 @@
         </td>
         </tr>
         {%if user_params_dict.start_date%}
-        <tr valign="top" style="display:none">
+        <tr valign="top" bgcolor="#006666">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -167,7 +177,7 @@
         </td>
         </tr>
         {%if user_params_dict.end_date%}
-        <tr valign="top" style="display:none">
+        <tr valign="top" bgcolor="#006666">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -183,7 +193,7 @@
         </td>
         </tr>
         {%if user_params_dict.grid%}
-        <tr id="grid_type" valign="top" style="display:none">
+        <tr id="grid_type" valign="top" bgcolor="#006666">
         {%else%}
         <tr id="grid_type" valign="top">
         {%endif%}
@@ -218,7 +228,7 @@
         </td>
         </tr>
         {%if user_params_dict.grid%}
-        <tr style="display:none">
+        <tr bgcolor="#006666">
         {%else%}
         <tr>
         {%endif%}
@@ -240,7 +250,7 @@
         </td>
         </tr>
         {%if user_params_dict.spatial_summary%}
-        <tr valign="top" style="display:none">
+        <tr valign="top" bgcolor="#006666">
         {%else%}
         <tr valign="top">
         {%endif%}

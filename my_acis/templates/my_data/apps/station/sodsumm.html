@@ -23,8 +23,16 @@
         <table class="form">
         {%for field in form1 %}
         {%if not field.is_hidden%}
+        {%if user_params_dict.station_id and field.label == "Station id"%}
+        <tr bgcolor="#006666">
+        {%elif user_params_dict.start_year and field.label == "Start year"%}
+        <tr bgcolor="#006666">
+        {%elif user_params_dict.end_year and field.label == "End year"%}
+        <tr bgcolor="#006666">
+        {%else%}
         <tr>
-        {%if field.label == "Station id"%}
+        {%endif%}
+        {%if field.label == "Station id" and not user_params_dict.station_id%}
             <td>Station ID/Name</td>
             <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{field.value}}" list="US_station_id"></td>
         {%else%}
@@ -36,9 +44,9 @@
         <div class="pop-up">{{field.help_text}}</div>
         </td>
         </tr>
-        {%ifequal field.label "Station id"%}
+        {%if field.label == "Station id" and not user_params_dict.station_id%}
         <tr><td></td><td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td><td></td></tr>
-        {%endifequal%}
+        {%endif%}
         {%endif%}
 
         {%if field.errors%}

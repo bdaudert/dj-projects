@@ -91,7 +91,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     <td valign="top">
     <table id="tableData" frame="box" cell-padding="20">
     {%if user_params_dict.station_id%}
-    <tr valign="top" style="display:none">
+    <tr valign="top" bgcolor="#006666">
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -107,7 +107,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </td>
     </tr>
     {%if user_params_dict.station_id%}
-    <tr valign="top" style="display:none">
+    <tr valign="top" bgcolor="#006666">
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -116,7 +116,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     <td></td>
     </tr>
     {%if user_params_dict.start_date or user_params_dict.start_year%}
-    <tr valign="top" style="display:none">
+    <tr valign="top" bgcolor="#006666">
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -132,7 +132,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </td>
     </tr>
     {%if user_params_dict.end_date or user_params_dict.end_year%}
-    <tr valign="top" style="display:none">
+    <tr valign="top" bgcolor="#006666">
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -148,7 +148,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </td>
     </tr>
     {%if user_params_dict.elements%}
-    <tr valign="top" style="display:none">
+    <tr valign="top" bgcolor="#006666">
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -180,6 +180,11 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </tr>
     {%if initial.base_temperature and not user_params_dict.base_temperature%}
     <tr id="base_temp" valign="top">
+    {%elif initial.base_temperature and user_params_dict.base_temperature%}
+    <tr id="base_temp" valign="top" bgcolor="#006666">
+    {%else%}
+    <tr id="base_temp" valign="top" style="display:none">
+    {%endif%}
     <td>Base Temperature: </td>
     <td><input type="text" id="base_temperature" name="base_temperature" value="{{initial.base_temperature}}" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -191,7 +196,6 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr> 
-    {%endif%}
     <tr valign="top">
     <td>Monthly Statistic: </td>
     <td>
@@ -789,8 +793,6 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
 </script>
 </div>
 <br />
-
-{{x}}
 
 {%if json_dict.data%}
 <table align="center">
