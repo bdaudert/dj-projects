@@ -29,7 +29,11 @@
     <div id='formMap'>
         <form method="post" id="tableMapForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableMap">
+        {%if user_params_dict.select_grid_by%}
+        <tr valign="top" style="display:none">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td>Select grid by:</td>
         <td>
             <select id="select_grid_by" name="select_grid_by" onchange="set_station_grid_select('area',this);" onfocus="set_station_grid_select('area',this);">
@@ -49,7 +53,11 @@
         </script>
         </td>
         </tr>
+        {%if user_params_dict.select_grid_by%}
+        <tr id="area" valign="top" style="display:none">
+        {%else%}
         <tr id="area" valign="top">
+        {%endif%}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
         <td><input autocomplete="off" type="text" size="20" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -61,7 +69,11 @@
         </div>
         </td>
         </tr>
-        <tr id="Els"  valign="top">
+        {%if user_params_dict.elements%}
+        <tr id="Els" valign="top" style="display:none">
+        {%else%}
+        <tr id="Els" valign="top">
+        {%endif%}
         <td id="Elements">Elements: </td>
         <td>
             <select id="elements" name="elements" multiple onchange="update_elements(this)">
@@ -83,7 +95,11 @@
         </div>
         </td>
         </tr>
+        {%if user_params_dict.add_degree_days%}
+        <tr id="add" valign="top" style="display:none">
+        {%else%}
         <tr id="add" valign="top">
+        {%endif%}
         <td>Add special degree days: </td>
         <td>
         <select id="add_degree_days" name="add_degree_days" onchange="show_div_if_true(this,'dd') & update_value(this.value)">
@@ -100,7 +116,7 @@
         </div>
         </td>
         </tr>
-        {%if initial.add_degree_days == "T"%}
+        {%if initial.add_degree_days == "T" and not user_params_dict.degree_days%}
         <tr id="dd" valign="top">
         {%else%}
         <tr id="dd" valign="top" style="display:none;">
@@ -115,7 +131,12 @@
             </script>
         </div>
         </td>
-        </tr> 
+        </tr>
+        {%if user_params_dict.start_date%}
+        <tr valign="top" style="display:none">
+        {%else%}
+        <tr valign="top">
+        {%endif%} 
         <td id="Start Date">Start Date: </td>
         <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value)"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -127,7 +148,11 @@
         </div>
         </td>
         </tr>
+        {%if user_params_dict.end_date%}
+        <tr valign="top" style="display:none">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td id="End Date">End Date: </td>
         <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value)"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -139,7 +164,11 @@
         </div>
         </td>
         </tr>
+        {%if user_params_dict.select_grid_by%}
+        <tr id="grid_type" valign="top" style="display:none">
+        {%else%}
         <tr id="grid_type" valign="top">
+        {%endif%}
         <td>Grid: </td>
         <td>
             <select id="grid" name="grid" onchange="update_value(this.value)">
@@ -170,9 +199,13 @@
         </div>
         </td>
         </tr>
-        <tr>
+        {%if user_params_dict.grid%}
+        <tr valign="top" style="display:none">
+        {%else%}
+        <tr valign="top">
+        {%endif%}
         <td></td>
-        <td><div class="pop_link" onclick="ShowPopupDocu('Docu_grids')"><b><u>Gridded datasets</u></b> explained</div>
+        <td><div class="pop_link" onclick="ShowPopupDocu('Docu_grids')"><b><u>Dataset Descriptions</u></b></div>
         <div id="Docu_grids" style="display:none;">
             <script type="text/javascript">                        
                 $("#Docu_grids").load("{{MEDIA_URL}}html/Docu_grids.html");
@@ -188,7 +221,11 @@
         </div>
         </td>
         </tr>
+        {%if user_params_dict.temporal_summary%}
+        <tr valign="top" style="display:none">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td>Temporal Summary: </td>
         <td>
             <select id="temporal_summary" name="temporal_summary" onchange="update_value(this.value)">
@@ -362,7 +399,6 @@
 <!--RIGHT-->
 </td>
 <td valign="top" width="70%">
-    <h2 class="error">This page is under development! <img alt=Construction" title="Construction" src="{{MEDIA_URL}}img/Construction.png"></h2>
 
     <table>
     <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
@@ -558,7 +594,8 @@
     {%if error%}
     <p class="error">{{error}}</p>
     {%endif%}
-    
+   
+
     <!--Results section-->
     <div id="results">
     {%if figure_files%}

@@ -1379,7 +1379,11 @@ def sodxtrmts(request):
     #Time Serie Table Generation and graph if desired
     if 'formSodxtrmts' in request.POST:
         #Turn request object into python dict
-        form = set_form(request)
+        form = set_form(request, clean=True)
+        x={}
+        for key, val in dict((x,y) for x,y in request.POST.items()).iteritems():
+            x[str(key)] = str(val)
+        context['x'] = form
         #Set initial form parameters for html
         initial,checkbox_vals = set_sodxtrmts_initial(request)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
@@ -1939,7 +1943,8 @@ def set_sodxtrmts_head(form):
             #header.append([])
             pass
         else:
-            header.append([WRCCData.DISPLAY_PARAMS[key], str(form[key])])
+            if key in form.keys():
+                header.append([WRCCData.DISPLAY_PARAMS[key], str(form[key])])
     return header
 
 def set_sodsumm_headers(table_list):
@@ -2578,8 +2583,7 @@ def set_user_params(form, app_name):
         f[key] = val
     if app_name in ['data_gridded', 'area_time_series', 'clim_sum_maps']:
         area_select = 'select_grid_by'
-        if app_name == 'clim_sum_maps' and not 'select_grid_by' in f.keys():
-            f['select_grid_by'] = 'state'
+        if app_name == 'clim_sum_maps':
             f['temporal_resolution'] = 'dly'
     elif app_name in ['monthly_aves','sodxtrmts','sodsumm']:
         area_select = 'select_stations_by'
@@ -2593,6 +2597,8 @@ def set_user_params(form, app_name):
             el_list = f['elements']
         elif isinstance(f['elements'], basestring):
             el_list = f['elements'].replace(' ','').split(',')
+    elif 'element' in f.keys():
+        el_list = [str(f['element'])]
     user_params_list = []
     user_params_dict ={
         area_select:f[area_select],
@@ -2605,14 +2611,18 @@ def set_user_params(form, app_name):
     elif 'start_year' in f.keys():
         key_list = ['start_year','end_year']
     for key in key_list:
-        user_params_dict[key] = f[key]
-        if key in f.keys():
+            user_params_dict[key] = f[key]
             user_params_list.append([WRCCData.DISPLAY_PARAMS[key],f[key]])
+    if app_name in ['sodxtrmts','sodsumm'] and key_list == ['start_date','end_date']:
+        user_params_dict['start_year'] = user_params_dict['start_date'][0:4]
+        user_params_dict['end_year'] = user_params_dict['end_date'][0:4]
     els_long = ''
     for idx,el in enumerate(el_list):
         el_strip,base_temp = WRCCUtils.get_el_and_base_temp(el)
         if base_temp:
             els_long+=WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + ' Base Temp.: ' + str(base_temp) + ', '
+            if app_name == 'sodxtrmts':
+                user_params_dict['base_temperature'] = base_temp
         else:
             els_long+=WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + ', '
     user_params_list.insert(0,['Elements',els_long])
@@ -2781,6 +2791,10 @@ def set_sodxtrmts_initial(request):
     initial['element'] = element
     '''
     initial['base_temperature'] = Get('base_temperature',None)
+    if initial['base_temperature'] is None and initial['element'] in ['hdd','cdd']:
+        initial['base_temperature'] = '65'
+    if initial['base_temperature'] is None and initial['element'] in ['gdd']:
+        initial['base_temperature'] = '50'
     #FIX ME request.POST.get does not return base_temperature and thresholds
     if request.POST:
         ks = ['base_temperature','less_greater_or_between','threshold_for_less_or_greater','threshold_low_for_between','threshold_high_for_between']
@@ -3090,7 +3104,7 @@ def set_clim_sum_maps_initial(request):
     initial['end_date']  = Get('end_date', yesterday)
     initial['grid'] = Get('grid', '1')
     initial['temporal_summary'] = Get('temporal_summary', 'mean')
-    initial['show_plot_opts'] = Get('show_plot_opts','F')
+    initial['show_plot_opts'] = Get('show_plot_opts','T')
     #set the check box values
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
         checkbox_vals[area_type + '_selected'] =''

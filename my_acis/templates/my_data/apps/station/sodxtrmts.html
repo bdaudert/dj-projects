@@ -90,7 +90,11 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     <table id="tableSodxtrmts" frame="void" style="border-collapse:collapse;">
     <td valign="top">
     <table id="tableData" frame="box" cell-padding="20">
+    {%if user_params_dict.station_id%}
+    <tr valign="top" style="display:none">
+    {%else%}
     <tr valign="top">
+    {%endif%}
     <td>Station ID/Name: </td>
     <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{initial.station_id}}" list="US_station_id" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -102,12 +106,20 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    <tr>
+    {%if user_params_dict.station_id%}
+    <tr valign="top" style="display:none">
+    {%else%}
+    <tr valign="top">
+    {%endif%}
     <td></td>
     <td><a target="_blank" href="{{TOOLS_URL}}station/station_finder/">Station Finder</a></td>
     <td></td>
     </tr>
+    {%if user_params_dict.start_date or user_params_dict.start_year%}
+    <tr valign="top" style="display:none">
+    {%else%}
     <tr valign="top">
+    {%endif%}
     <td id="Start Year">Start Year: </td>
     <td><input type="text" id="start_year" name="start_year" value="{{initial.start_year}}" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -119,7 +131,11 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
+    {%if user_params_dict.end_date or user_params_dict.end_year%}
+    <tr valign="top" style="display:none">
+    {%else%}
     <tr valign="top">
+    {%endif%}
     <td id="End Year">End Year: </td>
     <td><input type="text" id="end_year" name="end_year" value="{{initial.end_year}}" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -131,7 +147,11 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
+    {%if user_params_dict.elements%}
+    <tr valign="top" style="display:none">
+    {%else%}
     <tr valign="top">
+    {%endif%}
     <td>Element: </td>
     <td>
         <select id="element" name="element" onchange="set_BaseTemp_and_Threshes('tableData',this);hide_formGraph('formGraph');">
@@ -158,7 +178,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     </div>
     </td>
     </tr>
-    {%if initial.base_temperature%}
+    {%if initial.base_temperature and not user_params_dict.base_temperature%}
     <tr id="base_temp" valign="top">
     <td>Base Temperature: </td>
     <td><input type="text" id="base_temperature" name="base_temperature" value="{{initial.base_temperature}}" onchange="hide_formGraph('formGraph');"></td>
@@ -365,6 +385,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
     {%if user_params_list%}
     <div id="user_params_list">
     <p class="error">
+    Please use the form to complete your data request.<br />
     Your Parameters:<br />
     {%for key_val in user_params_list%}
     <b>{{key_val.0}}</b>: {{key_val.1}}<br />
@@ -769,6 +790,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{MEDIA_URL}}html/Docu_PLOT_OPTS_SODXTRMTS.
 </div>
 <br />
 
+{{x}}
 
 {%if json_dict.data%}
 <table align="center">

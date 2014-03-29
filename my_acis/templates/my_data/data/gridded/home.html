@@ -49,9 +49,9 @@
         </td>
         </tr>
         {%if user_params_dict.select_grid_by%}
-        <tr valign="top" style="display:none">
+        <tr id="area" valign="top" style="display:none">
         {%else%}
-        <tr valign="top">
+        <tr id="area" valign="top">
         {%endif%}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
         <td><input autocomplete="off" type="text" size="20" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
@@ -233,9 +233,13 @@
         </div>
         </td>
         </tr>
-        <tr>
+        {%if user_params_dict.grid%}
+        <tr valign="top" style="display:none">
+        {%else%}
+        <tr valign="top">
+        {%endif%}
         <td></td>
-        <td><div class="pop_link" onclick="ShowPopupDocu('Docu_grids')"><b><u>Gridded datasets</u></b> explained</div>
+        <td><div class="pop_link" onclick="ShowPopupDocu('Docu_grids')"><b><u>Dataset Description</u></b></div>
         <div id="Docu_grids" style="display:none;">
             <script type="text/javascript">                        
                 $("#Docu_grids").load("{{MEDIA_URL}}html/Docu_grids.html");
