@@ -2848,10 +2848,12 @@ def set_sodxtrmts_graph_initial(request):
     #initial['json_file'] = Get('json_file', None)
     #initial['JSON_URL'] = Get('JSON_URL', '/tmp/')
     for graph_month in ['01','02','03','04','05','06','07','08','09','10','11','12']:
-        for mon_type in ['graph_start_month', 'graph_end_month']:
-            checkbox_vals[mon_type + '_' + graph_month + '_selected']=''
-        if initial[mon_type] == graph_month:
-            checkbox_vals[mon_type + '_' + graph_month + '_selected']='selected'
+        checkbox_vals['graph_start_month' + '_' + graph_month + '_selected']=''
+        checkbox_vals['graph_end_month' + '_' + graph_month + '_selected']=''
+        if initial['graph_start_month'] == graph_month:
+            checkbox_vals['graph_start_month' + '_' + graph_month + '_selected']='selected'
+        if initial['graph_end_month'] == graph_month:
+            checkbox_vals['graph_end_month' + '_' + graph_month + '_selected']='selected'
     for bl in ['T','F']:
         for cbv in ['graph_show_running_mean', 'graph_plot_incomplete_years', 'graph_generate_graph']:
             checkbox_vals[cbv + '_' + bl + '_selected'] = ''
