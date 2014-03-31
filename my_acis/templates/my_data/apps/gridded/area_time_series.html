@@ -27,7 +27,7 @@
 <td valign="top" width="30%">
     <input type="submit" value="Start Over" onclick="window.location='{{TOOLS_URL}}gridded/area_time_series/'"/>
     <div id='formTS'>
-        <form method="post" id="tableTSForm" action="" onsubmit="show_loading()">{% csrf_token %}
+        <form method="post" id="tableTSForm" action="{{TOOLS_URL}}gridded/area_time_series/" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableTS">
         {%if user_params_dict.select_grid_by%}
         <tr valign="top" bgcolor="#006666">
@@ -126,8 +126,7 @@
         <tr id="dd" valign="top" style="display:none">
         {%endif%}
         {%endif%}
-        <tr id="dd" valign="top" bgcolor="#006666">
-        {%endif%}
+
         <td id="Degree Days">Degree Days: </td>
         <td><input type="text" id="degree_days" name="degree_days" value="{{initial.degree_days}}" onchange="update_value(this.value)"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
