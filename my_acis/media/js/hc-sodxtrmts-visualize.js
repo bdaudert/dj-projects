@@ -27,17 +27,44 @@ $(function () {
             var month_list = [];
             //Deals with case of analysis start month  not January
             var data_idx_list =[];
-            for (mon = parseInt(initial_graph.graph_start_month);mon<=parseInt(initial_graph.graph_end_month);mon++)
-                month_list.push(mon);
-                if (parseInt(initial.start_month) != "01"){
-                    var idx = 12 - parseInt(initial.start_month) + mon;
-                    if (idx > 12){idx - 12;}
-                    data_idx_list.push(idx);
+            if (parseInt(initial_graph.graph_start_month)>parseInt(initial_graph.graph_end_month)){
+                for (var m = parseInt(initial_graph.graph_start_month);m<=12;m++){
+                    month_list.push(m);
+                    if (initial.start_month != "01"){
+                        var idx = 12 - parseInt(initial.start_month) + 1 + m;
+                        if (idx > 12){idx-=12;}
+                        data_idx_list.push(idx);
+                    }
+                    else{
+                        data_idx_list.push(m);
+                    }
                 }
-                else{
-                    data_idx_list.push(mon);
+                for (var m = 1;m <= parseInt(initial_graph.graph_end_month);m++){
+                    month_list.push(m);
+                    if (initial.start_month != "01"){
+                        var idx = 12 - parseInt(initial.start_month) + 1 + m;
+                        if (idx > 12){idx-=12;}
+                        data_idx_list.push(idx);
+                    }
+                    else{
+                        data_idx_list.push(m);
+                    }
                 }
-
+            }
+            else {
+                for (var m = parseInt(initial_graph.graph_start_month);m<=parseInt(initial_graph.graph_end_month);m++){
+                    month_list.push(m);
+                    if (initial.start_month != "01"){
+                        var idx = 12 - parseInt(initial.start_month)+ 1 + m;
+                        if (idx > 12){idx-=12;}
+                        data_idx_list.push(idx);
+                    }
+                    else{
+                        data_idx_list.push(m);
+                    }
+                }
+                
+            }
             if (connector_line == 'F'){
                 connector_line_width = 0;
             }
@@ -110,12 +137,12 @@ $(function () {
                 for (var yr_idx=yr_start_idx;yr_idx<yr_end_idx;yr_idx++) {
                     var vals = [];
                     var skip_year = 'F';                    
-                    if (month_list[0]> month_list[month_list.length -1]){
-                        var date = Date.UTC(parseInt(datadict.data[yr_idx][0]) + 1, 0, 1)
+                    if (month_list[0]> month_list[month_list.length -1] && initial.start_month != "01"){
+                        var date = Date.UTC(parseInt(datadict.data[yr_idx][0]) + 1, 0, 1);
                         var acis_date = parseInt(datadict.data[yr_idx][0]);
                     }
                     else {
-                        var date = Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1)
+                        var date = Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1);
                         var acis_date = parseInt(datadict.data[yr_idx][0]);
                     }
                     //Month Loop
