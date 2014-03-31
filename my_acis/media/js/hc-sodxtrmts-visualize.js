@@ -65,6 +65,7 @@ $(function () {
                 }
                 
             }
+            alert(data_idx_list);
             if (connector_line == 'F'){
                 connector_line_width = 0;
             }
@@ -269,6 +270,9 @@ $(function () {
             }
             else { //Case2: Plot indiviual months
                 var acis_data = [];
+                var yr_change_idx = 12 - parseInt(initial.start_month) + 2;
+                alert(yr_change_idx);
+                alert(data_idx_list);
                 for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
                     var series = {'name':month_names[month_list[mon_idx]-1],'pointStart':Start,'pointInterval':Interval,marker:{symbol:marker_type}};
                     if (markers == 'F'){
@@ -277,17 +281,24 @@ $(function () {
                     var data =  [];
                     var values = [];
                     for (var yr_idx=yr_start_idx;yr_idx<yr_end_idx;yr_idx++) {
-                        var val = datadict.data[yr_idx][2*month_list[mon_idx] - 1]
+                        var date;
+                        if (data_idx_list[mon_idx] == yr_change_idx && initial.start_month !="01"){
+                            date = Date.UTC(parseInt(datadict.data[yr_idx][0]) + 1 , 0, 1)
+                        }
+                        else {
+                            date = Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1)
+                        }
+                        var val = datadict.data[yr_idx][2*data_idx_list[mon_idx] - 1]
                         if (val != '-----') {
                             values.push(precise_round(parseFloat(val),2));
-                            data.push([Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1), precise_round(parseFloat(val),2)]);
+                            data.push([date, precise_round(parseFloat(val),2)]);
                             if (mon_idx ==0){
                                 acis_data.push([parseInt(datadict.data[yr_idx][0]), precise_round(parseFloat(val),2)]);
                             }
                         }
                         else {
                             values.push(null);
-                            data.push([Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1),null]);
+                            data.push([date,null]);
                             if (mon_idx == 0){ 
                                 acis_data.push([parseInt(datadict.data[yr_idx][0]),null]);
                             }

@@ -37,7 +37,11 @@
     <div id='formData'>
         <form id="tableDataForm" method="post" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData">
+        {%if user_params_dict.select_stations_by%}
+        <tr valign="top" bgcolor="#006666">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td>Select stations by:</td>
         <td>
             <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this);" onfocus="set_station_grid_select('area',this);">
@@ -57,7 +61,11 @@
             $("#Docu_select_stations_by").load("{{MEDIA_URL}}html/Docu_select_stations_by.html");
         </script>
         </td>
+        {%if user_params_dict.select_stations_by%}
+        <tr id="area" valign="top" bgcolor="#006666">
+        {%else%}
         <tr id="area" valign="top">
+        {%endif%}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
         <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -69,6 +77,11 @@
         </div>
         </td>
         </tr>
+        {%if user_params_dict.elements%}
+        <tr valign="top" bgcolor="#006666">
+        {%else%}
+        <tr valign="top">
+        {%endif%}
         <td id="Elements">Elements: </td>
         <td>
             <select id="elements" name="elements" multiple onchange="update_elements(this)">
@@ -110,7 +123,11 @@
         </div>
         </td>
         </tr> 
+        {%if user_params_dict.start_date%}
+        <tr valign="top" bgcolor="#006666">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td id="Start Date">Start Date: </td>
         <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value)"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -122,7 +139,11 @@
         </div>
         </td>
         </tr>
+        {%if user_params_dict.end_date%}
+        <tr valign="top" bgcolor="#006666">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td id="End Date">End Date: </td>
         <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value)"></td>
         <td><img alt="QMark" title="QMark" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -287,14 +308,14 @@
         {%endif%}
         <!--Maps-->
         <!--<font size="2" color="#006666" align="center">{{map_title}}</font>-->
-    
+   
         {%if station_json and not need_overlay_map%}
         <!--Link to data portal-->
         <input type="hidden" id="station_ids_str" name="station_ids_str" value="{{station_ids_for_datafind}}">
-        {%if user_params_dict.select_stations_by == "station_ids"%}:
-        <a align="left" target="_blank" href="{{DATA_URL}}station/?&select_stations_by=station_ids&start_date={{user_params_dict.start_date}}&end_date={{user_params_dict.end_date}}&elements={{user_params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
+        {%if params_dict.select_stations_by == "station_ids"%}:
+        <a align="left" target="_blank" href="{{DATA_URL}}station/?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
         {%else%}
-        <a align="left" target="_blank" href="{{DATA_URL}}station/?{{user_params_dict.select_stations_by}}={{user_params_dict|lookup:user_params_dict.select_stations_by}}&select_stations_by=station_ids&start_date={{user_params_dict.start_date}}&end_date={{user_params_dict.end_date}}&elements={{user_params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
+        <a align="left" target="_blank" href="{{DATA_URL}}station/?{{params_dict.select_stations_by}}={{params_dict|lookup:params_dict.select_stations_by}}&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
         {%endif%}
 
         {%endif%}

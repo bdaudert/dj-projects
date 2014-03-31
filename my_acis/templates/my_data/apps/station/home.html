@@ -127,8 +127,8 @@
                 <div class="pop-up">
                     <p>Find stations with data for specific elements and a chosen time range. <br/>Click on the question mark for more information!</p>
                 </div>
-                {%if station_id%}                                                
-                    <a  href="{{TOOLS_URL}}station/station_finder/?station_id={{station_id}}"><img class="app_img" alt="StationFinder" title="StationFinder" src="{{MEDIA_URL}}img/StationFinder.png"></a>
+                {%if user_params_dict%}                                                
+                    <a  href="{{TOOLS_URL}}station/station_finder/?{%for key, val in user_params_dict.items %}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><img class="app_img" alt="StationFinder" title="StationFinder" src="{{MEDIA_URL}}img/StationFinder.png"></a>
                 {%else%}
                     <a  href="{{TOOLS_URL}}station/station_finder/"><img class="app_img" alt="StationFinder" title="StationFinder" src="{{MEDIA_URL}}img/StationFinder.png"></a>
                 {%endif%}
@@ -149,8 +149,8 @@
                 <div class="pop-up">
                     <p>See how much data is missing over the period of record. <br/>Click on the question mark for more information!</p>
                 </div>
-                {%if station_id%}                        
-                    <a  href="{{TOOLS_URL}}station/metagraph/?station_id={{station_id}}"><img class="app_img" alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}img/MetaGraph.png"></a>
+                {%if user_params_dict.station_id%}                        
+                    <a  href="{{TOOLS_URL}}station/metagraph/?station_id={{user_params_dict.station_id}}"><img class="app_img" alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}img/MetaGraph.png"></a>
                 {%else%}
                     <a  href="{{TOOLS_URL}}station/metagraph/"><img class="app_img" alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}img/MetaGraph.png"></a>
                 {%endif%}    
@@ -159,7 +159,7 @@
         </table>
     </td>
     <td valign="top" width="30%">    
-        {%if not station_id%}
+        {%if not user_params_dict.station_id%}
         <h3 align ="center">Links to external Applications</h3>
         <ul class="navbar">    
             <!--<h4 align="center">US-Wide Applications</h4>-->

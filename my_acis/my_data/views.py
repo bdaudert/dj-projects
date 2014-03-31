@@ -1144,8 +1144,16 @@ def station_locator_app(request):
     context['kml_file_path'] = create_kml_file(initial['select_stations_by'], 'nv')
     #Add params for link to station data
     form = set_form(initial, clean=False)
-    user_params_list, user_params_dict = set_user_params(form, 'station_locator_app')
-    context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
+    params_list, params_dict = set_user_params(form, 'station_locator_app')
+    context['params_list'] = params_list;context['params_dict'] = params_dict
+
+    context['x'] = initial
+    #Link from other page
+    if request.method == 'GET' and 'select_stations_by' in request.GET:
+        form_cleaned = set_form(request,clean=True)
+        form = set_form(request,clean=False)
+        user_params_list, user_params_dict =set_user_params(form, 'station_locator_app')
+        context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
 
 
     if 'formData' in request.POST:
@@ -1153,8 +1161,8 @@ def station_locator_app(request):
         form = set_form(request, clean=False)
         form_cleaned = set_form(request)
         #Add params for link to station data
-        user_params_list, user_params_dict = set_user_params(form, 'station_locator_app')
-        context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
+        params_list, params_dict = set_user_params(form, 'station_locator_app')
+        context['params_list'] = params_list;context['params_dict'] = params_dict
 
         form = set_form(request, clean=False)
         fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date', 'elements']
@@ -2589,7 +2597,7 @@ def set_user_params(form, app_name):
         area_select = 'select_grid_by'
         if app_name == 'clim_sum_maps':
             f['temporal_resolution'] = 'dly'
-    elif app_name in ['monthly_aves','sodxtrmts','sodsumm']:
+    elif app_name in ['monthly_aves','sodxtrmts','sodsumm', 'station_locator_app']:
         area_select = 'select_stations_by'
         if not 'select_stations_by' in f.keys():
             f['select_stations_by'] = 'station_id'
