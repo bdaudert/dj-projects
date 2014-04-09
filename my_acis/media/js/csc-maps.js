@@ -869,13 +869,13 @@ function initialize_map_overlays(type, host, kml_file_path) {
         var text = kmlEvent.featureData.description;
         document.getElementById(type).value = kmlEvent.featureData.description;
         //showInDiv(text);
-        var contentString = '<div id="LayerWindow">'+
+        var contentString = '<div id="LayerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;>'+
             kmlEvent.featureData.description +
             '</div>';
         infowindow.close();
         //infowindow.setContent(contentString);
         infowindow.setOptions({
-                content: kmlEvent.featureData.description,
+                content:contentString,
                 //position: kmlEvent.position
                 position:kmlEvent.latLng
         });
