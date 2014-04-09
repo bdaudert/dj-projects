@@ -6,7 +6,7 @@
 
 {% block content %} 
 <p align="center">You are here
-<a href="{{HOME_URL}}scenic/home/">Home></a>
+<a href="{{HOME_URL}}scenic/">Home></a>
 <a href="{{TOOLS_URL}}">Tools></a>
 <a href="{{TOOLS_URL}}gridded/">Gridded Data Tools></a>
 <a href="{{TOOLS_URL}}gridded/clim_sum_maps/">Temporal Summary Maps</a></p>
@@ -30,7 +30,7 @@
         <form method="post" id="tableMapForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableMap">
         {%if user_params_dict.select_grid_by%}
-        <tr valign="top" style="display:none">
+        <tr valign="top" bgcolor="#006666">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -54,7 +54,7 @@
         </td>
         </tr>
         {%if user_params_dict.select_grid_by%}
-        <tr id="area" valign="top" style="display:none">
+        <tr id="area" valign="top" bgcolor="#006666">
         {%else%}
         <tr id="area" valign="top">
         {%endif%}
@@ -70,7 +70,7 @@
         </td>
         </tr>
         {%if user_params_dict.elements%}
-        <tr id="Els" valign="top" style="display:none">
+        <tr id="Els" valign="top" bgcolor="#006666">
         {%else%}
         <tr id="Els" valign="top">
         {%endif%}
@@ -96,7 +96,7 @@
         </td>
         </tr>
         {%if user_params_dict.add_degree_days%}
-        <tr id="add" valign="top" style="display:none">
+        <tr id="add" valign="top" bgcolor="#006666">
         {%else%}
         <tr id="add" valign="top">
         {%endif%}
@@ -137,7 +137,7 @@
         </td>
         </tr>
         {%if user_params_dict.start_date%}
-        <tr valign="top" style="display:none">
+        <tr valign="top" bgcolor="#006666">
         {%else%}
         <tr valign="top">
         {%endif%} 
@@ -153,7 +153,7 @@
         </td>
         </tr>
         {%if user_params_dict.end_date%}
-        <tr valign="top" style="display:none">
+        <tr valign="top" bgcolor="#006666">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -169,7 +169,7 @@
         </td>
         </tr>
         {%if user_params_dict.select_grid_by%}
-        <tr id="grid_type" valign="top" style="display:none">
+        <tr id="grid_type" valign="top" bgcolor="#006666">
         {%else%}
         <tr id="grid_type" valign="top">
         {%endif%}
@@ -204,7 +204,7 @@
         </td>
         </tr>
         {%if user_params_dict.grid%}
-        <tr valign="top" style="display:none">
+        <tr valign="top" bgcolor="#006666">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -226,7 +226,7 @@
         </td>
         </tr>
         {%if user_params_dict.temporal_summary%}
-        <tr valign="top" style="display:none">
+        <tr valign="top" bgcolor="#006666">
         {%else%}
         <tr valign="top">
         {%endif%}

@@ -130,6 +130,7 @@ function initialize_station_finder() {
             content: 'oi'
         });
         var markers = [];
+        var markers_showing = [];
         var tbl_rows = [];
         var tbl_rows_unique = []
         //Define markers and table rows
@@ -221,24 +222,6 @@ function initialize_station_finder() {
                 infowindow.setContent(contentString);
                 infowindow.open(map, marker);
             });
-            /*
-            //Re-size markers on zoom
-            google.maps.event.addListener(map, 'zoom_changed', function() {
-                var largeur = 20 + (5 *(map.getZoom() - 9));
-                var ratio = largeur / 40;
-                var hauteur = 26.6 * ratio;
-                for(i=0; i< markers.length; i++ ) {
-                    var icon = markers[i].getIcon();
-                    markers[i].setIcon(new google.maps.MarkerImage(
-                        icon.url,
-                        new google.maps.Size(largeur, hauteur),
-                        new google.maps.Point(0, 0),
-                        new google.maps.Point(0, 0),
-                        new google.maps.Size(largeur, hauteur))
-                    );
-                }
-            });
-            */
             //Define table row, one entry per station
             var tbl_row = document.createElement('tr');
             tbl_row.cString = contentString;
@@ -265,6 +248,7 @@ function initialize_station_finder() {
             c.lon + '</td>' + t_data + c.elevation + '</td>' + t_data +
             c.stn_networks +'</td>';
             if (c.name != name_previous){
+                markers_showing.push(marker);
                 tbl_rows_unique.push(tbl_row);
                 name_previous = c.name;
                 var station_list = document.getElementById('station_list');
@@ -279,10 +263,41 @@ function initialize_station_finder() {
             document.getElementById(c.marker_category).checked = true;
             //Push markers
             markers.push(marker);
-
         }); //end each
-
-        
+       
+        /*
+        On zoom change reset the markers
+        Note: zoom_changed event fires before the bounds have been recalculated. 
+        To bind bounds_changed and work with markers/map stuff we need to work with both, 
+        zoom_changed and bounds_changed  
+        */
+        google.maps.event.addListener(map,"zoom_changed",function() {
+            this.zoomChanged = true;
+        });
+        google.maps.event.addListener(map,"bounds_changed",function() {
+            if (this.zoomChanged) {
+                this.zoomChanged = false;
+                /*
+                Reset station_ids_str for link to data finder:
+                Look through currently showing markers and see if they lie within bounds
+                of zoomed map
+                */
+            
+                station_ids_str='';
+                var mapBounds = map.getBounds();
+                for (var i=0; i<markers_showing.length; i++) {
+                    if (mapBounds.contains(new google.maps.LatLng(markers_showing[i].lat, markers_showing[i].lon))) {
+                        // marker is within new bounds
+                        station_ids_str+=markers_showing[i].name + ',';
+                    }
+                }
+                //Remove trailing comma and set html element
+                if (station_ids_str){
+                    station_ids_str = station_ids_str.substring(0,station_ids_str.length - 1);
+                }
+                document.getElementById('station_ids_str').value = station_ids_str;
+            }
+        });  
         // == shows all markers of a particular category, and ensures the checkbox is checked and write station_list==
         show = function(category) {
             //Delete old station_list table rows
@@ -295,6 +310,7 @@ function initialize_station_finder() {
             */
             station_list.innerHTML = "";
             var station_ids_str = '';
+            var markers_showing = [];
             var name_unique = '';
             for (var i=0; i<markers.length; i++) {
                 if (category == 'all') {
@@ -303,7 +319,7 @@ function initialize_station_finder() {
                         station_list.appendChild(tbl_rows[i]);
                         name_unique = markers[i].name;
                         station_ids_str+=markers[i].name + ',';
-                        
+                        markers_showing.push(markers[i]);
                     }
                     for (var key in data.network_codes) {
                         // == check all the checkboxes ==
@@ -317,6 +333,7 @@ function initialize_station_finder() {
                         station_list.appendChild(tbl_rows[i]);
                         name_unique = markers[i].name;
                         station_ids_str+=markers[i].name + ',';
+                        markers_showing.push(markers[i]);
                     }
                     document.getElementById(category).checked = true;
                 }
@@ -332,14 +349,17 @@ function initialize_station_finder() {
             var station_list = document.getElementById('station_list');
             var table_rows = station_list.getElementsByTagName('tr');
             //var station_ids_str = document.getElementById('station_ids_str').value 
-            var station_ids_str = ''
+            var station_ids_str = '';
+            var markers_showing =[];
             for (var i=0; i<markers.length; i++){
                 var name = markers[i].name;
                 var cat =markers[i].category;
                 station_ids_str+=name + ',';
                 var l = (name + ',').length;
+                markers_showing.push(markers[i]);
                 if (category == 'all') {
                     station_ids_str = ''
+                    markers_showing = [];
                     markers[i].setVisible(false);
                     for (var t=0;t<table_rows.length;t++){
                         if (parseInt(table_rows[t].name) == name){
@@ -354,7 +374,9 @@ function initialize_station_finder() {
                 }
                 else if (cat == category) {
                     markers[i].setVisible(false);
-                    station_ids_str = station_ids_str.substring(0,station_ids_str.length - l)
+                    station_ids_str = station_ids_str.substring(0,station_ids_str.length - l);
+                    markers_showing.pop();
+                    
                     for (var t=0;t<table_rows.length;t++){
                         if (parseInt(table_rows[t].name) == name){
                             table_rows[t].parentNode.removeChild(table_rows[t]);
@@ -367,7 +389,9 @@ function initialize_station_finder() {
                 }
             }
             //Remove trailing comma and set html element
-            station_ids_str = station_ids_str.substring(0,station_ids_str.length - 1);
+            if (station_ids_str){
+                station_ids_str = station_ids_str.substring(0,station_ids_str.length - 1);
+            }
             document.getElementById('station_ids_str').value = station_ids_str;
 
         };
@@ -827,13 +851,14 @@ function initialize_map_overlays(type, host, kml_file_path) {
         var text = kmlEvent.featureData.description;
         document.getElementById(type).value = kmlEvent.featureData.description;
         //showInDiv(text);
-        var contentString = '<div id="LayerWindow">'+
+        var contentString = '<div id="LayerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
             kmlEvent.featureData.description +
             '</div>';
         infowindow.close();
         //infowindow.setContent(contentString);
         infowindow.setOptions({
-                content: kmlEvent.featureData.description,
+                //content: kmlEvent.featureData.description,
+                content:contentString,
                 //position: kmlEvent.position
                 position:kmlEvent.latLng
         });

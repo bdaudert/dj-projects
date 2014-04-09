@@ -1147,7 +1147,6 @@ def station_locator_app(request):
     params_list, params_dict = set_user_params(form, 'station_locator_app')
     context['params_list'] = params_list;context['params_dict'] = params_dict
 
-    context['x'] = initial
     #Link from other page
     if request.method == 'GET' and 'select_stations_by' in request.GET:
         form_cleaned = set_form(request,clean=True)
@@ -1173,8 +1172,9 @@ def station_locator_app(request):
         initial,checkbox_vals = set_station_locator_initial(form)
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
         #Define map title
-        display_params_list, params_dict = set_station_locator_params(form)
-        context['display_params_list']= display_params_list;context['params_dict']= params_dict
+        display_params_list, pd = set_station_locator_params(form)
+        context['display_params_list']= display_params_list
+        #context['params_dict']= params_dict
         element_list = form_cleaned['elements'].replace(' ','').split(',')
         #Convert element list to var majors
         el_vX_list = []
@@ -1473,7 +1473,17 @@ def sodxtrmts(request):
         #Run data retrieval job
         DJ = WRCCClasses.SODDataJob('Sodxtrmts', data_params)
         #WARNING: station_ids, names need to be called before dates_list
-        station_names, station_states, station_ids, station_networks, station_lls, station_elevs, station_uids, station_climdivs, station_counties  = DJ.get_station_meta()
+        meta_dict = DJ.get_station_meta()
+        station_names = meta_dict['names']
+        station_states = meta_dict['states']
+        station_ids = meta_dict['ids']
+        station_networks = meta_dict['networks']
+        station_lls = meta_dict['lls']
+        station_elevs = meta_dict['elevs']
+        station_uids = meta_dict['uids']
+        station_climdivs = meta_dict['climdivs']
+        station_counties = meta_dict['countys']
+        #station_names, station_states, station_ids, station_networks, station_lls, station_elevs, station_uids, station_climdivs, station_counties  = DJ.get_station_meta()
         try:
             header.insert(0, ['Station Name', station_names[0]])
         except:
@@ -1608,7 +1618,17 @@ def sodsumm(request):
             DJ = WRCCClasses.SODDataJob('Sodsumm', data_params)
             #WARNING: station_ids, names need to be called before dates_list
             #station_ids, station_names = DJ.get_station_ids_names()
-            station_names, station_states, station_ids, station_networks, station_lls, station_elevs, station_uids, station_climdivs, station_counties  = DJ.get_station_meta()
+            meta_dict = DJ.get_station_meta()
+            station_names = meta_dict['names']
+            station_states = meta_dict['states']
+            station_ids = meta_dict['ids']
+            station_networks = meta_dict['networks']
+            station_lls = meta_dict['lls']
+            station_elevs = meta_dict['elevs']
+            station_uids = meta_dict['uids']
+            station_climdivs = meta_dict['climdivs']
+            station_counties = meta_dict['countys']
+            #station_names, station_states, station_ids, station_networks, station_lls, station_elevs, station_uids, station_climdivs, station_counties  = DJ.get_station_meta()
             if not station_names or not station_ids:
                 results = {}
                 context['run_done']= True
@@ -2550,8 +2570,10 @@ def set_station_locator_params(form):
     params_dict = {'units':'english'}
     for key, val in form.iteritems():
         if key == 'elements':
-            if isinstance(val, str):
+            if isinstance(val, basestring):
                 el_list = val.replace(' ', '').split(',')
+            elif isinstance(val,list):
+                el_list = val
             else:
                 el_list = val
             elems_long = []
@@ -2568,7 +2590,8 @@ def set_station_locator_params(form):
                     elems_long.append(WRCCData.DISPLAY_PARAMS[el])
                 if el_idx != 0 and el_idx != len(form['elements']) - 1:
                     display_params_list[1][1]+=', '
-                    params_dict[key]+=', '
+                    params_dict['elements']+=','
+            params_dict['elements'].rstrip(',')
             params_dict['elems_long'] = elems_long
         else:
             try:
@@ -2615,7 +2638,7 @@ def set_user_params(form, app_name):
     user_params_dict ={
         area_select:f[area_select],
         f[area_select]:f[f[area_select]],
-        'elements':','.join(el_list)
+        'elements':','.join(el_list).rstrip(',')
     }
     key_list = []
     if 'start_date' in f.keys():

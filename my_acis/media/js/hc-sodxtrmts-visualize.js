@@ -65,7 +65,6 @@ $(function () {
                 }
                 
             }
-            alert(data_idx_list);
             if (connector_line == 'F'){
                 connector_line_width = 0;
             }
@@ -271,8 +270,6 @@ $(function () {
             else { //Case2: Plot indiviual months
                 var acis_data = [];
                 var yr_change_idx = 12 - parseInt(initial.start_month) + 2;
-                alert(yr_change_idx);
-                alert(data_idx_list);
                 for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
                     var series = {'name':month_names[month_list[mon_idx]-1],'pointStart':Start,'pointInterval':Interval,marker:{symbol:marker_type}};
                     if (markers == 'F'){
