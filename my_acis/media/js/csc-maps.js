@@ -277,26 +277,26 @@ function initialize_station_finder() {
         google.maps.event.addListener(map,"bounds_changed",function() {
             if (this.zoomChanged) {
                 this.zoomChanged = false;
-                /*
-                Reset station_ids_str for link to data finder:
-                Look through currently showing markers and see if they lie within bounds
-                of zoomed map
-                */
-            
-                station_ids_str='';
-                var mapBounds = map.getBounds();
-                for (var i=0; i<markers_showing.length; i++) {
-                    if (mapBounds.contains(new google.maps.LatLng(markers_showing[i].lat, markers_showing[i].lon))) {
-                        // marker is within new bounds
-                        station_ids_str+=markers_showing[i].name + ',';
-                    }
-                }
-                //Remove trailing comma and set html element
-                if (station_ids_str){
-                    station_ids_str = station_ids_str.substring(0,station_ids_str.length - 1);
-                }
-                document.getElementById('station_ids_str').value = station_ids_str;
             }
+            /*
+            Reset station_ids_str for link to data finder:
+            Look through currently showing markers and see if they lie within bounds
+            of zoomed map
+            */
+        
+            station_ids_str='';
+            var mapBounds = map.getBounds();
+            for (var i=0; i<markers_showing.length; i++) {
+                if (mapBounds.contains(new google.maps.LatLng(markers_showing[i].lat, markers_showing[i].lon))) {
+                    // marker is within new bounds
+                    station_ids_str+=markers_showing[i].name + ',';
+                }
+            }
+            //Remove trailing comma and set html element
+            if (station_ids_str){
+                station_ids_str = station_ids_str.substring(0,station_ids_str.length - 1);
+            }
+            document.getElementById('station_ids_str').value = station_ids_str;
         });  
         // == shows all markers of a particular category, and ensures the checkbox is checked and write station_list==
         show = function(category) {
