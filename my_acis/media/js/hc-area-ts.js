@@ -90,9 +90,9 @@ $(function () {
     }; // end var defaultChart
  
     $(document).ready(function() {
-        var JSON_URL = document.getElementById("JSON_URL").value;
+        var TMP_URL = document.getElementById("TMP_URL").value;
         var json_file_name = document.getElementById("json_file").value;
-        var json_file = JSON_URL + json_file_name;
+        var json_file = TMP_URL + json_file_name;
         $.getJSON(json_file, function(datadict) {
             var graph_title = datadict.search_params.graph_title;
             var element_list = datadict.search_params.element_list;
@@ -196,7 +196,7 @@ $(function () {
                 //Define Chart
                 var Chart;
                 Chart = {
-                    chartContent:'area_time_series_' + el_idx,
+                    chartContent:'spatial_summary_' + el_idx,
                     options: {
                         title: {
                             text: datadict.search_params.spatial_summary_long + '  ' +  datadict.search_params.element_list_long[el_idx]

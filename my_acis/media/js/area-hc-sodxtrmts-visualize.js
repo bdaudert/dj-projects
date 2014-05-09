@@ -2,9 +2,9 @@ $(function () {
     var chart;
 
     $(document).ready(function() {
-        var JSON_URL = document.getElementById("JSON_URL").value;
+        var JSON_DIR = document.getElementById("JSON_DIR").value;
         var json_file = document.getElementById("json_file").value;
-        var file = JSON_URL + json_file;
+        var file = JSON_DIR + json_file;
         var month_list_str = document.getElementById("months").value;
         //convert into javascript array
         var month_list = month_list_str.substring(1,month_list_str.length -1).split(",")

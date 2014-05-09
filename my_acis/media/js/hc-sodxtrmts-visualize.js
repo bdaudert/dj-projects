@@ -3,9 +3,9 @@ $(function () {
     $(document).ready(function() {
         var mischr = ["fake","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
         var month_names =  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        var JSON_URL = document.getElementById("JSON_URL").value;
+        var TMP_URL = document.getElementById("TMP_URL").value;
         var json_file = document.getElementById("json_file").value;
-        $.getJSON('/csc/media/tmp/' + json_file, function(datadict) {
+        $.getJSON(TMP_URL + json_file, function(datadict) {
             var initial = datadict.initial;
             var initial_graph = datadict.initial_graph;
             //Graph Options

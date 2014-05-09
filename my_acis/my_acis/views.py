@@ -8,18 +8,15 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.db.models.query import QuerySet
 
-from my_meta.models import *
-#from my_meta.forms import *
+from wrcc_meta.models import *
+#from wrcc_meta.forms import *
 
 
 def home_view(request):
-#    return HttpResponse("Hello, you. You're at the my_acis/my_meta home page.")
     context = {
         'state_choices': STATE_CHOICES,
-        'title': "Metadata Home",
+        'title': "WRCC Metadata Home",
     }
     return render_to_response('base.html', context, context_instance=RequestContext(request))
 
 
-#def home_view(request):
-#    return HttpResponse("Hello, you. You're at the my_acis home page.")

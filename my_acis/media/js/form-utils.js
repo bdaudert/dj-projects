@@ -361,7 +361,7 @@ function set_NDays_thresholds(table_id,node){
         cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">' +
         ' <div class="pop-up"><div id="ht_element"></div>' +
         ' <script type="text/javascript">' +
-        '$("#ht_element").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_element");' + 
+        '$("#ht_element").load("{{HTML_URL}}/Docu_help_texts.html #ht_element");' + 
         '</script></div>';
         //cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText(\'ht_element\')">';
 
@@ -377,7 +377,7 @@ function set_NDays_thresholds(table_id,node){
         cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">' +
         ' <div class="pop-up"><div id="ht_element"></div>' +
         ' <script type="text/javascript">' +
-        '$("#ht_element").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_element");' +
+        '$("#ht_element").load("{{HTML_URL}}/Docu_help_texts.html #ht_element");' +
         '</script></div>';
         //cell2.innerHTML= '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText(\'ht_element\')">'
 

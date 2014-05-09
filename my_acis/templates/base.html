@@ -7,11 +7,17 @@
 {{ title|escape }}
 {% if title %} ] {% endif %}
 </title>
-{%load my_apps_filters%}
+{%load my_wrcc_apps_filters%}
 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/base.css"></link>
 <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-<script src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
+<!-- jquery -->
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<!--<script src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>-->
+<!--My js-->
 <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>
+
 {% block extrahead %}{% endblock %}
 {% block extrastyle %}{% endblock %}
 <script type="text/javascript">
@@ -35,10 +41,11 @@ $(document).ready(function() {
 
     <div id="breadcrumbs">
     {% block breadcrumbs %}
-        <a href="/csc">HOME </a>&nbsp;&nbsp;
+    <a href="/csc">HOME </a>&nbsp;&nbsp;
 	<a href="/csc/wrcc_meta/">WRCC-METADATA</a>&nbsp;&nbsp;
-        <a href="/csc/scenic/">SCENIC</a>&nbsp;&nbsp;
+    <a href="/csc/scenic/">SCENIC</a>&nbsp;&nbsp;
 	<a href="/csc/wrcc_apps/">WRCC-APPLICATIONS</a>&nbsp;&nbsp;
+    <a href="/csc/documentation/">DOCUMENTATION</a>&nbsp;&nbsp;
     {% endblock %}
     </div>
 

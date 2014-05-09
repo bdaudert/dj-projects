@@ -40,7 +40,6 @@ body {
     background-color:#FFEFD5;
 }
 
-/*2 page divide e.g. my_data/data/home.html*/
 .center-left {
     position:relative;
     float: left;
@@ -358,8 +357,8 @@ ul.navbar a {
 
 .qmark {
  text-align="center"
- width:20px;
- height:20px;
+ width:25px;
+ height:25px;
 }
 #docu_long {
     display:none;

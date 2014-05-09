@@ -90,7 +90,6 @@ function HighLight(node,DivClass,DivId) {
 function ShowPopupDocu(DivId){
     $( '#' + DivId ).dialog({
         title:'You can move and resize me!',
-
         resizable: true,
         modal: false,
         width:'auto',

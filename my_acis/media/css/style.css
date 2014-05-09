@@ -67,8 +67,19 @@ ul.navbar li {
 ul.navbar a {
   display:block;
   width:150px;
+  color:#0000FF;
   background-color: #ccffff;
   text-decoration: none ; }
+
+
+.pop_link {
+    color:#0000FF;
+    /*text-decoration:underline;*/
+}
+
+.pop_link:hover {
+    color: #33CCFF;
+}
 
 
 h1,h2,h3,h4,h5,h6 {
@@ -154,7 +165,7 @@ br.clearboth {
 
 
 /* HOVER STYLES */
-/*Used in templates/my_apps/home.html*/
+/*Used in templates/wrcc_apps/home.html*/
 div.pop-up {
   display: none;
   position: absolute;

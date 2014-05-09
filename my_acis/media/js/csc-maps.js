@@ -851,7 +851,7 @@ function initialize_map_overlays(type, host, kml_file_path) {
         var text = kmlEvent.featureData.description;
         document.getElementById(type).value = kmlEvent.featureData.description;
         //showInDiv(text);
-        var contentString = '<div id="LayerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
+        var contentString = '<div id="LayerWindow" style="line-height:1.35;width:200px;overflow:hidden;white-space:nowrap;">'+
             kmlEvent.featureData.description +
             '</div>';
         infowindow.close();
@@ -860,11 +860,12 @@ function initialize_map_overlays(type, host, kml_file_path) {
                 //content: kmlEvent.featureData.description,
                 content:contentString,
                 //position: kmlEvent.position
-                position:kmlEvent.latLng
+                position:kmlEvent.latLng 
         });
         //infowindow.open(map, Layer);
         infowindow.open(map);
     });
+    //KML layer has no mouseover event!! This is not working 
     google.maps.event.addListener(Layer, 'mouseover', function(kmlEvent) {
         var text = kmlEvent.featureData.description;
         document.getElementById(type).value = kmlEvent.featureData.description;

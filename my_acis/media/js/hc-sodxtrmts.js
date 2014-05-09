@@ -1,7 +1,7 @@
 $(function () {
     var json_file = document.getElementById("json_file").value;
-    var JSON_URL = document.getElementById("JSON_URL").value;
-    var json_file_path = '/csc/media/tmp/' + json_file;
+    var TMP_URL = document.getElementById("TMP_URL").value;
+    var json_file_path = TMP_URL + json_file;
     var axesStyle = set_AxesStyle();
     var titleStyle = set_TitleStyle();
     var subtitleStyle = set_SubtitleStyle();

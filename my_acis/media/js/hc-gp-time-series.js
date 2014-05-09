@@ -85,9 +85,9 @@ $(function () {
     }; // end var defaultChart     
 
     $(document).ready(function() {        
-        var JSON_URL = document.getElementById("JSON_URL").value;
+        var TMP_URL = document.getElementById("TMP_URL").value;
         var json_file = document.getElementById("json_file").value;
-        var json_file_name = JSON_URL + json_file;
+        var json_file_name = TMP_URL + json_file;
         $.getJSON(json_file_name, function(datadict) {
             var start_date = datadict.search_params.start_date;
             var end_date = datadict.search_params.end_date;

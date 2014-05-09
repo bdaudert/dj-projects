@@ -86,8 +86,8 @@ $(function () {
 
     $(document).ready(function() {
         var json_file = document.getElementById("json_file").value;
-        var JSON_URL = document.getElementById("JSON_URL").value;
-        var json_file_path = JSON_URL + json_file;
+        var TMP_URL = document.getElementById("TMP_URL").value;
+        var json_file_path = TMP_URL + json_file;
         var p_color = '#0000FF';
         $.getJSON(json_file_path, function(datadict) {
             for (var i=0;i<datadict.length;i++){

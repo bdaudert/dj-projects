@@ -265,7 +265,6 @@ function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis
     }
     var diff = Math.abs(props.axisMax - props.axisMin);
     //Deal with small differences
-
     steps = [0,plotline_no / 100, plotline_no / 50, plotline_no / 25,plotline_no / 10, plotline_no / 5, plotline_no / 2];
     for (idx=0;idx<=steps.length - 2 ;idx+=1){
         if (steps[idx] <= diff  && diff < steps[idx+1]){
@@ -341,7 +340,8 @@ function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis
         dashStyle:'dash',
         width: 0.5
     }
-    for (val=props.axisMin;val<=props.axisMax + add_top*props.tickInterval;val+=props.tickInterval) {
+    //if (add_top == 0 && props.axisMax < 1){add_top = 1;}
+    for (val=props.axisMin;parseInt(100*val)<=parseInt(100*(props.axisMax + add_top*props.tickInterval));val+=props.tickInterval) {
         var pL = {};
         for (var key in plotLine){
             pL[key] = plotLine[key];
