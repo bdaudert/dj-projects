@@ -1,0 +1,41 @@
+{% extends "csc_base.html" %}
+
+{% block content %}
+
+<p align="center">You are here 
+<a href="{{HOME_URL}}">Home></a>
+<a href="{{ABOUT_URL}}">About Us</a></p>
+
+<table cellpadding="20">
+<td valign="top" width="30%">
+   <h2>Links</h2>
+   <a target="_blank" href="http://www.swcsc.arizona.edu/">Southwest CSC pages at the University of Arizona</a>
+    <br />
+    <a target="_blank" href="http://www.doi.gov/csc/southwest/index.cfm">Southwest CSC pages at the DOI</a>
+    <br />
+    <a target="_blank" href="http://wrcc.dri.edu/">Western Regional Climate Center (WRCC)</a>
+    <br />
+    <a target="_blank" href="http://www.doi.gov/csc/lcc/index.cfm">Landscape Conservation Cooperatives</a>
+</td>
+<td valign="top" width="40%">
+    <p align="left"><font color="red">PROVIDING ACCESS TO CLIMATE DATA,<br />PRODUCTS AND INFORMATION</font><br />
+    to support the research and decision making efforts of the Southwest Climate Science Center (SW CSC) and the Landscape Conservation Cooperatives(LCC).</p>
+    <br />
+    <p align="left">
+        In 2009 the US Department of Interior initiated a national system of <b>Climate Science Centers (CSCs)</b>. The Southwest CSC (SW CSC) consists of six partner institutions, one of which (Desert Research Institute) is the host of the Western Regional Climate center (WRCC). As part of its contribution to the SW CSC, WRCC is developing an access point to historic and real-time climate data, tools and applications for decision support as well as meaningful access to other links and resources pertaining to climate and climate change in the Southwest US.  
+    </p>
+    <p align="center"><img alt="LInKS" title="LInKS" class="dash_img" src={{MEDIA_URL}}img/LInKS.png></p>
+    <br >
+    <p align="center">To learn more, read <a href="{{URL_PREFIX}}scenic/what_we_do/">What we do</a></li></p>
+</td>
+<td valign="top" width="30%">
+</td>
+</table>
+
+  <!-- Footer
+  <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{HTML_URL}}/Footers.html .footer-partners");
+    </script>-->
+
+{% endblock %}

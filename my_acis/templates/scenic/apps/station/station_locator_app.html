@@ -1,0 +1,502 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="station finder, map, by date range, by element, station data, historic data,application, product, tool">
+<meta name="description" content="SW-CKN Generates graphs of monthly averages">
+
+{%load my_scenic_filters%}
+{% block content %}
+<p align="center">You are here
+<a href="{{HOME_URL}}">Home></a>
+<a href="{{TOOLS_URL}}">Tools></a>
+<a href="{{TOOLS_STATION_URL}}">Station Data Tools></a> 
+<a href="{{STATION_FINDER_URL}}">Station Finder</a>
+
+<!--Overlay map parameters-->
+<input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
+<input type="hidden" id="host" name="host" value="{{host}}">
+<input type="hidden" id="kml_file_path" name="kml_file_path" value="{{kml_file_path}}">
+
+<!--Set up autofill-->
+<script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
+
+<!--First Table: Form, HowTos, Links-->    
+<table cellpadding="none">
+<td valign="top" width="130px">
+    <!--First Column:forms and Links-->
+    <table>
+    <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
+    </table>
+    <script type="text/javascript">                        
+    $("#tool_info_head").load("{{HTML_URL}}/Buttons.html .tool_info");
+    </script>
+    <script type="text/javascript">            
+    $("#how_to_head").load("{{HTML_URL}}/Buttons.html .tool_how_to");
+    </script>
+
+    <input type="submit" value="Start Over" onclick="window.location='{{STATION_FINDER_URL}}'"/>
+    <div id='formData'>
+        <form id="tableDataForm" method="post" action="" onsubmit="show_loading()">{% csrf_token %}
+        <table class="form" id="tableData">
+        {%if user_params_dict.select_stations_by%}
+        <tr valign="top" bgcolor="#006666">
+        {%else%}
+        <tr valign="top">
+        {%endif%}
+        <td>Select stations by:</td>
+        <td>
+            <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this);" onfocus="set_station_grid_select('area',this);">
+            <option value="station_id" {{checkbox_vals.station_id_selected}}>Individual station</option>
+            <option value="station_ids" {{checkbox_vals.station_ids_selected}}>List of stations</option>
+            <option value="county" {{checkbox_vals.county_selected}}>County</option>
+            <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
+            <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
+            <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
+            <option value="state" {{checkbox_vals.state_selected}}>State</option>
+            <option value="shape" {{checkbox_vals.shape_selected}}>Custom Shape</option>
+            </select>
+        </td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" onclick="ShowPopupDocu('Docu_select_stations_by')">
+        <div id="Docu_select_stations_by" style="display:none;"></div>
+        <script type="text/javascript">                        
+            $("#Docu_select_stations_by").load("{{HTML_URL}}/Docu_select_stations_by.html");
+        </script>
+        </td>
+        {%if user_params_dict.select_stations_by%}
+        <tr id="area" valign="top" bgcolor="#006666">
+        {%else%}
+        <tr id="area" valign="top">
+        {%endif%}
+        <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
+        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_{{initial.select_stations_by}}"></div>
+            <script type="text/javascript">                        
+            $("#ht_{{initial.select_stations_by}}").load("{{HTML_URL}}/Docu_help_texts.html #ht_{{initial.select_stations_by}}");
+            </script>
+        </div>
+        </td>
+        </tr>
+        {%if user_params_dict.elements%}
+        <tr valign="top" bgcolor="#006666">
+        {%else%}
+        <tr valign="top">
+        {%endif%}
+        <td id="Elements">Elements: </td>
+        <td>
+            <select id="elements" name="elements" multiple onchange="update_elements(this)">
+            <option value="maxt" {{checkbox_vals.elements_maxt_selected}}>Maximum Temperature</option>
+            <option value="mint" {{checkbox_vals.elements_mint_selected}}>Minimum Temperature</option>
+            <option value="avgt" {{checkbox_vals.elements_avgt_selected}}>Average Temperature</option>
+            <option value="obst" {{checkbox_vals.elements_obst_selected}}>Observation Time Temp.</option>
+            <option value="pcpn" {{checkbox_vals.elements_pcpn_selected}}>Precipitation</option>
+            <option value="snow" {{checkbox_vals.elements_snow_selected}}>Snowfall</option>
+            <option value="snwd" {{checkbox_vals.elements_snwd_selected}}>Snow Depth</option>
+            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Degree Days</option>
+            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Degree Days</option>
+            <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Degree Days</option>
+            <option value="evap" {{checkbox_vals.elements_evap_selected}}>Pan Evaporation</option>
+            <option value="wdmv" {{checkbox_vals.elements_wdmv_selected}}>Wind Movement</option>
+            </select>
+        </td>
+        <td><img class="trigger" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+        <div class="pop-up">
+        <div id="ht_elements"></div>
+        <script type="text/javascript">                        
+        $("#ht_elements").load("{{HTML_URL}}/Docu_help_texts.html #ht_elements");
+        </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td>Element Constraints:</td>
+        <td>
+            <select id="elements_constraints" name="elements_constraints" onchange="update_value(this.value)">
+            <option value="any" {{checkbox_vals.elements_any_selected}}>Any elements</option>
+            <option value="all" {{checkbox_vals.elements_all_selected}}>All elements</option>
+            </select>
+        </td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_elements_constraints"></div>
+            <script type="text/javascript">                        
+                $("#ht_elements_constraints").load("{{HTML_URL}}/Docu_help_texts.html #ht_elements_constraints");
+            </script>
+        </div>
+        </td>
+        </tr> 
+        {%if user_params_dict.start_date%}
+        <tr valign="top" bgcolor="#006666">
+        {%else%}
+        <tr valign="top">
+        {%endif%}
+        <td id="Start Date">Start Date: </td>
+        <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value)"></td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_start_date"></div>
+        <script type="text/javascript">                        
+        $("#ht_start_date").load("{{HTML_URL}}/Docu_help_texts.html #ht_date");
+        </script>
+        </div>
+        </td>
+        </tr>
+        {%if user_params_dict.end_date%}
+        <tr valign="top" bgcolor="#006666">
+        {%else%}
+        <tr valign="top">
+        {%endif%}
+        <td id="End Date">End Date: </td>
+        <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value)"></td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_end_date"></div>
+        <script type="text/javascript">                        
+        $("#ht_end_date").load("{{HTML_URL}}/Docu_help_texts.html #ht_date");
+        </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td>Date Constraints:</td>
+        <td>
+            <select id="dates_constraints" name="dates_constraints" onchange="update_value(this.value)">
+            <option value="any" {{checkbox_vals.dates_any_selected}}>Any dates</option>
+            <option value="all" {{checkbox_vals.dates_all_selected}}>All dates</option>
+            </select>
+        </td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_dates_constraints"></div>
+            <script type="text/javascript">                        
+                $("#ht_dates_constraints").load("{{HTML_URL}}/Docu_help_texts.html #ht_dates_constraints");
+            </script>
+        </div>
+        </td>
+        </tr> 
+        </table>
+        <input type="hidden" name="checked_categories" id="checked_categories" value="all">
+        <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
+        <input type="submit" value="Submit" name="formData"/>
+        </form>
+    </div>
+    <br /><br /><br />
+    <ul class="navbar">
+    <h2>Links to external Networks</h2>
+    <table>
+    <tr><td>
+    <a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger_hover" target="_blank">USA RAWS Climate Archive (WRCC)</a>
+    <div class="pop-up">
+        <p><font size="2">Summaries, Graphs, and other products for RAWS (Remote Automatic Weather Stations).</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://www.wcc.nrcs.usda.gov/snow/" class="trigger_hover" target="_blank">SNOTEL (<font color="red">W-US/Alaska</font>)</a>
+    <div class="pop-up">
+        <p><font size="2">Snowpack and related climatic data in the Western United States and Alaska.</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://www.cemp.dri.edu/" class="trigger_hover" target="_blank">CEMP (<font color="red">NV</font>)</a>
+    <div class="pop-up">
+        <p><font size="2">Community Environmental Monitoring Porgram. Monitoring air quality and climate near and downwind of the Nevada National Security Site.</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://nevcan.dri.edu/" class="trigger_hover" target="_blank">NevCAN (<font color="red">NV</font>)</a>
+    <div class="pop-up">
+        <p><font size="2">The Nevada Climate-ecohydrological Assessment Network. Sheep Range and Snake Range elevational transects of monitoring stations.</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://nicenet.dri.edu/" class="trigger_hover" target="_blank">NICE Net (<font color="red">NV</font>)</a>
+    <div class="pop-up">
+        <p><font size="2">Nevada Integrated Climate and Evaporation Network.</font</p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://www.wrcc.dri.edu/vallescaldera/" class="trigger_hover" target="_blank">Valles Caldera (<font color="red">NM</font>)</a>
+    <div class="pop-up">
+        <p><font size="2">Valles Caldera Climate Network</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://mesowest.utah.edu/" class="trigger_hover" target="_blank">MesoWest (<font color="red">US</font>)</a>
+    <div class="pop-up">
+        <p><font size="2">Access to current and archived weather observations across the United States.</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://www.cocorahs.org/" class="trigger_hover" target="_blank">CoCoRaHS (<font color="red">US</font>)</a>
+    <div class="pop-up">
+        <p><font size="2">Community Collaborative Rain, Hail and Snow Network</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://www.ymp.dri.edu/index.html" class="trigger_hover" target="_blank">Yucca Mountain Project (<font color="red">NV</font>)</a>
+    <div class="pop-up">
+        <p><font size="2">Climate Data from Yucca Mountain, Nevada.</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://www.wrcc.dri.edu/catalina/" class="trigger_hover" target="_blank">Santa Catalina Island Climate Network (<font color="red">CA</font>)</a>
+    <div class="pop-up">
+        <p><font size="2">Climate Data from Santa Catalina Island.</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://www.wrcc.dri.edu/crn/" class="trigger_hover" target="_blank">USCRN (<font color="red">US</font>)</a>
+    <div class="pop-up">
+        <p><font size="2">NOAA U.S. Climate Reference Network</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://www.wrcc.dri.edu/nrel/" class="trigger_hover" target="_blank">Wind Energy Assessment(<font color="red">NV</font>)</a>
+    <div class="pop-up">
+        <p><font size="2"></font>Climate and Wind data for Nevada.</font</p>
+    </div>
+    </td></tr>
+    <tr><td>                                        
+    <a id="us_wide" href="http://www.tahoeclim.dri.edu/" class="trigger_hover" target="_blank">TahoeClim(<font color="red">CA/NV</font>)</a>
+    <div class="pop-up">
+        <p><font size="2">Lake Tahoe Climate Information and Data.</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a id="us_wide" href="http://www.calclim.dri.edu/" class="trigger_hover" target="_blank">CalClim(<font color="red">CA</font>)</a>
+    <div class="pop-up">
+        <p><font size="2">California Climate Data Archive.</font></p>
+    </div>
+    </td></tr>
+    </table>
+    </ul>
+
+<!--Second Column: How Tos and maps-->
+<td valign="top" width="550px">
+        <div align="left" id="tool_info" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#tool_info").load("{{HTML_URL}}/Docu_About_station_finder.html");
+        </script>
+        <div id="how_to" style="display:none;">
+        <div id="Doc_select_stations_by"></div>
+        <script type="text/javascript">            
+        $("#Doc_select_stations_by").load("{{HTML_URL}}/Docu_select_stations_by.html");
+        </script>
+        <div id="Docu_elements"></div>
+        <script type="text/javascript">            
+        $("#Docu_elements").load("{{HTML_URL}}/Docu_elements_station.html");
+        </script>
+        <div id="Docu_element_constraints"></div>    <script type="text/javascript">            
+        $("#Docu_show_flags").load("{{HTML_URL}}/Docu_element_constraints.html");
+        </script>
+        <div id="Docu_start_end_date"></div>
+        <script type="text/javascript">            
+        $("#Docu_start_end_date").load("{{HTML_URL}}/Docu_start_end_date.html");
+        </script>
+        <div id="Docu_date_constraints"></div>
+        <script type="text/javascript">            
+        $("#Docu_date_constraints").load("{{HTML_URL}}/Docu_date_constraints.html");
+        </script>
+        <div id="Docu_el_date_constraints_examples"></div>
+        <script type="text/javascript">            
+        $("#Docu_el_date_constraints_examples").load("{{HTML_URL}}/Docu_el_date_constraints_examples.html");
+        </script>
+        </div>
+        
+        {%if form_error%}
+        {%for key, val in form_error.items%}
+        <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
+        {%endfor%}
+        {%endif%}
+        <!--Maps-->
+        <!--<font size="2" color="#006666" align="center">{{map_title}}</font>-->
+   
+        {%if station_json and not need_overlay_map%}
+        <!--Link to data portal-->
+        <input type="hidden" id="station_ids_str" name="station_ids_str" value="{{station_ids_for_datafind}}">
+        {%if params_dict.select_stations_by == "station_ids"%}:
+        <a align="left" target="_blank" href="{{DATA_STATION_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
+        {%else%}
+        <a align="left" target="_blank" href="{{DATA_STATION_URL}}?{{params_dict.select_stations_by}}={{params_dict|lookup:params_dict.select_stations_by}}&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
+        {%endif%}
+
+        {%endif%}
+        
+        <div id="PolyMap" style="display:none;">
+            <div id="panel">
+            <div id="color-palette"></div>
+                <div>
+                    <button id="delete-button">Delete Selected Shape</button>
+                </div>
+            </div>
+            {%if lat and lon %}
+            <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+            <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+            {%else%}
+            <input type="hidden" id="initial_lat" name="initial_lat" value='40'>
+            <input type="hidden" id="initial_lon" name="initial_lon" value='-111'>
+            {%endif%}
+        </div>        
+
+        <div id='GridpointMap' style="display:none;"></div>
+
+        <!--Overlay Map-->
+        {%if need_overlay_map%}
+        <div id="OverlayMap" style="display:block;">
+        {%else%}
+        <div id="OverlayMap" style="display:none;">
+        {%endif%}
+            <div id="formOverlay" style="display:inherit;">
+            <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableDataForm')">{% csrf_token %}
+            <table class="form">
+            <!--<tr valign="top">
+            <td>Select stations by:</td>
+            <td>
+                <select id="select_overlay_by" name="select_overlay_by" onchange="set_station_grid_select('area',this);">
+                <option value="county" {{checkbox_vals.county_selected}}>County</option>
+                <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
+                <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
+                <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
+                </select>
+            </td>
+            <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <div class="pop-up">
+            <div id="ht_select_overlay_by"></div>
+            <script type="text/javascript">                        
+                $("#ht_select_overlay_by").load("{{HTML_URL}}/Docu_help_texts.html #ht_select_stations_by");
+            </script>
+            </div>
+            </td>
+            </tr>-->
+            <tr valign="top">
+            <td>State: </td>
+            <td>
+                <select name="overlay_state" id="overlay_state">
+                <option value="al" {{al_selected}}>Alabama</option>
+                <option value="ak" {{ak_selected}}>Alaska</option>
+                <option value="az" {{az_selected}}>Arizona</option>
+                <option value="ar" {{ar_selected}}>Arkansas</option>
+                <option value="ca" {{ca_selected}}>California</option>
+                <option value="co" {{co_selected}}>Colorado</option>
+                <option value="ct" {{ct_selected}}>Connecticut</option>
+                <option value="de" {{de_selected}}>Delaware</option>
+                <option value="dc" {{dc_selected}}>District of Columbia</option>
+                <option value="fl" {{fl_selected}}>Florida</option>
+                <option value="ga" {{ga_selected}}>Georgia</option>
+                <option value="hi" {{hi_selected}}>Hawaii</option>
+                <option value="id" {{id_selected}}>Idaho</option>
+                <option value="il" {{il_selected}}>Illinois</option>
+                <option value="in" {{in_selected}}>Indiana</option>
+                <option value="ia" {{ia_selected}}>Iowa</option>
+                <option value="ks" {{ks_selected}}>Kansas</option>
+                <option value="ky" {{ky_selected}}>Kentucky</option>
+                <option value="la" {{la_selected}}>Louisiana</option>
+                <option value="me" {{me_selected}}>Maine</option>
+                <option value="md" {{md_selected}}>Maryland</option>
+                <option value="ma" {{ma_selected}}>Massachusetts</option>
+                <option value="mi" {{mi_selected}}>Michigan</option>
+                <option value="mn" {{mn_selected}}>Minnesota</option>
+                <option value="ms" {{ms_selected}}>Mississippi</option>
+                <option value="mo" {{mo_selected}}>Missouri</option>
+                <option value="mt" {{mt_selected}}>Montana</option>
+                <option value="ne" {{ne_selected}} >Nebraska</option>
+                <option value="nv" {{nv_selected}}>Nevada</option>
+                <option value="nh" {{nh_selected}}>New Hampshire</option>
+                <option value="nj" {{nj_selected}}>New Jersey</option>
+                <option value="nm" {{nm_selected}}>New Mexico</option>
+                <option value="ny" {{ny_selected}}>New York</option>
+                <option value="nc" {{nc_selected}}>North Carolina</option>
+                <option value="nd" {{nd_selected}}>North Dakota</option>
+                <option value="oh" {{oh_selected}}>Ohio</option>
+                <option value="ok" {{ok_selected}}>Oklahoma</option>
+                <option value="or" {{or_selected}}>Oregon</option>
+                <option value="pa" {{pa_selected}}>Pennsylvania</option>
+                <option value="ri" {{ri_selected}}>Rhode Island</option>
+                <option value="sc" {{sc_selected}}>South Carolina</option>
+                <option value="sd" {{sd_selected}}>South Dakota</option>
+                <option value="tn" {{tn_selected}}>Tennessee</option>
+                <option value="tx" {{tx_selected}}>Texas</option>
+                <option value="ut" {{ut_selected}}>Utah</option>
+                <option value="vt" {{vt_selected}}>Vermont</option>
+                <option value="va" {{va_selected}}>Virginia</option>
+                <option value="wa" {{wa_selected}}>Washington</option>
+                <option value="wv" {{wv_selected}}>West Virginia</option>
+                <option value="wi" {{wi_selected}}>Wisconsin</option>
+                <option value="wy" {{wy_selected}}>Wyoming</option>
+            </select>
+            </td>
+            <td><input type="submit" value="Update Map" name="formOverlay"/></td>
+            </tr>
+            </table>
+            <input type="hidden" value="{{initial.select_stations_by}}" name="select_overlay_by" id="select_overlay_by">
+            <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
+            <input type="hidden" id="elements_string" value="{{initial.elements_string}}" name="elements" class="elements_string">
+            </form>
+        </div>
+    </div>
+
+    {%if need_overlay_map%}
+    {%if overlay_error%}
+    <p class="error">{{overlay_error}}</p>
+    {%else%}
+    <div id="map-overlay" style="width:550px; height:400px;"></div>
+    <div id="content-window" style="width:100px; height:100px;"></div>
+    <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
+    {%endif%} 
+    {%endif%}
+    <br /><br />
+    <!--Station finder Map-->
+    <div id="results">
+    {%if error%}
+    <p align="center"><font size="3"><font color="red">Result</font>: {{error}}</font></p>
+    {%endif%}
+
+    <input type="hidden" id="URL_PREFIX" name="variable" value="{{ URL_PREFIX }}">
+    <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+    <input type="hidden" id="DATA_URL" name="DATA_URL" value="{{DATA_URL}}">
+    <input type="hidden" id="TOOLS_URL" name="TOOLS_URL" value="{{TOOLS_URL}}">
+    {%if params_dict.start_date%}
+    <input type="hidden" id="start_date" name="variable" value="{{params_dict.start_date}}">
+    {%endif%}
+    {%if params_dict.end_date%}
+    <input type="hidden" id="end_date" name="variable" value="{{params_dict.end_date}}">
+    {%endif%}
+    {%if params_dict.elements%}
+    <input type="hidden" id="elements" name="variable" value="{{params_dict.elements}}">
+    {%endif%}
+    
+    {%if station_json and not error and not form_error and not need_overlay_map%}
+    <input type="hidden" id="station_json" name="variable" value="{{station_json}}">
+    <div id="map" style="width:550px;height:400px;"></div>
+    <script type="text/javascript">
+        initialize_station_finder()
+    </script>
+    <!--Station List-->
+    <div style="height:200px;width:550px;overflow:scroll;">
+        <table cellspacing="1" id="station_list" border=1>
+        <thead>
+        <tr>
+        <th>Name</th>
+        <th>ID</th>
+        <th>State</th>
+        <th>Lat</th>
+        <th>Lon</th>
+        <th>Elev</th>
+        <th>Networks</th>
+        </tr>
+        </thead>
+        </table>
+    </div>
+    {%endif%}
+    </div> <!--end results div-->
+</td>
+<td valign="top" align="left" width="170px">
+    {%if station_json and not error and not form_error and not need_overlay_map%}
+    <div id="map_legend">
+        <h3>Legend of Station Networks</h3>
+    </div>
+    {%endif%}
+</td>
+</table>
+
+{%endblock%}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block breadcrumbs %}
+{{ block.super }}
+| Results
+{% endblock %}
+
+
+{% block content %}
+
+<h1>{{title}}</h1>
+
+<form method="get" action=".">
+<select name="state_key">
+{% for state in state_choices %}
+    <option value="{{state.0}}">{{state.1}}</option>
+{% endfor %}
+</select>
+<input type="submit" value="Submit"/>
+</form>
+
+{% if stations %}
+    <h2>{{stations.count}} results</h2>
+    <ul>
+    {% for s in stations %}
+	<li><a href="{{URL_PREFIX}}wrcc_meta/station_detail/?ucan_id={{s.ucan_station_id}}">{{s}}</a></li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+{% endblock %}
+

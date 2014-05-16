@@ -1,0 +1,103 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="data, station data, historic data, gridded data, modeled data, data portal, acis">
+<meta name="description" content="SW-CKN TOOLS Home">
+
+{% block content %} 
+
+
+<div class="container">
+
+<p align="center">You are here
+<a href="{{HOME_URL}}">Home></a>
+<a href="{{TOOLS_URL}}">Tools</a></p>
+
+
+        <table class="dash" cellspacing="80px">
+            <tr>
+            <td><font size="3"><a class="trigger_hover" href="{{TOOLS_URL}}station"><b>STATION<br /> DATA TOOLS</b></a>
+            <div class="pop-up" style="display:none;" align="left">
+            <b>Data Analysis/Visualization of <br />histroric station data</b>
+            <ul>
+            <li>Generate Climate Sumary Tables <br />(Averages/Extremes/...)</li>
+            <li>Create customized Time Series</li>
+            </ul>
+            </div>
+            <br />
+            <br />
+            <a class="trigger_hover"href="{{TOOLS_STATION_URL}}"><img alt="MonAves" title="MonAves" class="dash_img" src="{{MEDIA_URL}}img/MonAves.png"></a>
+            <div class="pop-up" style="display:none;" align="left">
+            <b>Data Analysis/Visualization of <br />histroric station data</b>
+            <ul>
+            <li>Generate Climate Sumary Tables <br />(Averages/Extremes/...)</li>
+            <li>Create customized Time Series</li>
+            </ul>
+            </div>
+            </td>
+            </td>
+            <td><font size="3"><a class="trigger_hover" href="{{TOOLS_URL}}gridded"><b>GRIDDED<br /> DATA TOOLS</b></a>
+            <div class="pop-up" style="display:none;" align="left">
+            <b>Data Analysis/Visualization of <br />gridded/modeled data</b>
+            <ul>
+            <li>Temporal Summaries: Generate Climate Summary Maps for a US State</li>
+            <li>Spatial Summaries: Create customized Time Series for:
+            <ul>
+            <li>Individual grid points, US states</li>
+            <li>County, County Warning Area</li>
+            <li>Climate Division, Drainage Basin</li>
+            <li>Custom polygon, Circle, Bounding Box</li>
+            </ul>
+            </li>
+            </ul>
+            </div>
+            <br />
+            <br />
+            <a class="trigger_hover" href="{{TOOLS_GRIDDED_URL}}"><img alt="ClimSumMap" title="ClimSumMap" class="dash_img" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
+            <div class="pop-up" style="display:none;" align="left">
+            <b>Data Analysis/Visualization of <br />gridded/modeled data</b>
+            <ul>
+            <li>Temporal Summaries: Generate Climate Summary Maps for a US State</li>
+            <li>Spatial Summaries: Create customized Time Series for:
+            <ul>
+            <li>Individual grid points, US states</li>
+            <li>County, County Warning Area</li>
+            <li>Climate Division, Drainage Basin</li>
+            <li>Custom polygon, Circle, Bounding Box</li>
+            </ul>
+            </li>
+            </ul>
+            </td>
+            </td>
+            <td><font size="3"><a class="trigger_hover" href="{{TOOLS_URL}}gis"><b>GEOSPATIAL<br /> DATA TOOLS</b></a>
+            <div class="pop-up" style="display:none;" align="left">
+            <b>Data Analysis/Visualization of <br />geospatial data</b>
+            <ul>
+            <li>Generate Vulnerability Maps</li>
+            </ul>
+            </div>
+            <br />
+            <br />
+            <a class="trigger_hover" href="{{TOOLS_GIS_URL}}"><img alt="GISMap" title="GISMap" class="dash_img" src="{{MEDIA_URL}}img/GISMap.png"></a>
+            <div class="pop-up" style="display:none;" align="left">
+            <b>Data Analysis/Visualization of <br />geospatial data</b>
+            <ul>
+            <li>Generate Vulnerability Maps</li>
+            </ul>
+            </div>
+            </td>
+            </td>
+            </tr>
+         </table>
+
+
+  <!-- Footer -->
+    <!--
+    <div id="footer" align="center"></div>
+    <script type="text/javascript">                        
+    $("#footer").load("{{HTML_URL}}/Footers.html .footer-partners");
+    </script>
+    -->
+
+</div>    
+
+{%endblock%}

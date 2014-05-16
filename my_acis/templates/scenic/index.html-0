@@ -1,0 +1,215 @@
+<html>
+<head>
+<title>Test page</title>
+    <!-- jquery -->
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
+    <!-- Britta's Javascript utilities -->
+    <!-- Map API scripts and properties-->
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+    <script type="text/javascript"
+        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true">
+    </script>
+    <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markermanager/src/markermanager.js"></script>
+    <script type="text/javascript" src="http://www.wrcc.dri.edu/media/js/stationmap.js"></script>
+<script type="text/javascript">
+var stnclick;
+var boxclick;
+var show;
+var hide;
+function initialize_station_finder() {
+    var geocoder = new google.maps.Geocoder();
+    var json_file = '../../media/json/SW_stn.json';
+    if (document.getElementById("start_date")) {
+        var start_date = document.getElementById("start_date").value;
+    }
+    else { var start_date = null }
+    if (document.getElementById("end_date")) {
+        var end_date = document.getElementById("end_date").value;
+    }
+    else { var end_date = null }
+    if (document.getElementById("elements")) {
+        var elements = document.getElementById("elements").value;
+    }
+    else { var elements = null }
+
+    $.getJSON(json_file, function(data) {
+
+        //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
+        var ll = new google.maps.LatLng(data.stations[0].lat, data.stations[0].lon);
+        var mapOptions = {
+        center:ll,
+        zoom:7,
+        mapTypeId:google.maps.MapTypeId.HYBRID
+        };
+
+        var map = new google.maps.Map(document.getElementById("map"),mapOptions);
+        
+        var legend = document.getElementById('map_legend');
+        for (var key in data.network_codes) {
+          var name = data.network_codes[key];
+          var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
+          var div = document.createElement('div');
+          div.innerHTML = '<img alt="Icon" title="Icon" src="' + icon + '"> ' + name +': <input type="checkbox" id="'+ name +
+          '" onclick="my_boxclick(this,\''+ name +'\')" checked />';
+          legend.appendChild(div);
+        }
+
+       // map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+       //map.controls.push(legend);
+        
+        var bounds=new google.maps.LatLngBounds();
+        infowindow = new google.maps.InfoWindow({
+            content: 'oi'
+        });
+        var markers = [];
+        //Define markers
+        $.each(data.stations, function(index, c) {
+            var latlon = new google.maps.LatLng(c.lat,c.lon);
+            var marker = new google.maps.Marker({
+                map: map,
+                position: latlon,
+                title:'Name:'+c.name,
+                icon: 'http://maps.google.com/mapfiles/ms/icons/' + c.marker_icon + '.png'
+                // === Store the category and name info as a marker properties ===
+            });
+            // === Store the category and name info as a marker properties ===
+            marker.category = c.marker_category;
+            markers.push(marker);
+
+            //Fit map to encompass all markers
+            bounds.extend(latlon);
+
+            var wrcc_info_link = new String();
+            if ( c.sids[0] && c.sids[0].length == 6 && !isNaN(c.sids[0].replace(/^[0]/g,"") * 1)){
+                var wrcc_info_link = '<a  target="_blank" href="http://www.wrcc.dri.edu/cgi-bin/cliSW-CKN.pl?'
+                + c.state + c.sids[0].substring(2,6) +
+                '">Access Climate Information for this Station</a>'
+            }
+            var avbl_elements = '<br />';
+            for (var i=0;i<c.available_elements.length;i++){
+                avbl_elements = avbl_elements + c.available_elements[i] + '<br />';
+            }
+            var data_portal_link = '<a target="_blank" href="' +  'data/historic/?stn_id=' + c.sids[0];
+            var app_portal_link = '<a target="_blank" href="' +  'apps/station/?stn_id=' + c.sids[0];
+            if (start_date != null){
+                data_portal_link = data_portal_link + '&start_date=' + start_date;
+                app_portal_link = app_portal_link + '&start_date=' + start_date;
+            }
+            if (end_date != null){
+                data_portal_link = data_portal_link + '&end_date=' + end_date;
+                app_portal_link = app_portal_link + '&end_date=' + end_date;
+            }
+            if (elements != null){
+                data_portal_link = data_portal_link + '&elements=' + elements;
+                app_portal_link = app_portal_link + '&elements=' + elements;
+            }
+            data_portal_link = data_portal_link + '">Get Data for this Station</a>'
+            app_portal_link = app_portal_link + '">Run a climate application for this Station</a>'
+            var contentString = '<div id="MarkerWindow">'+
+                '<p><b>Name: </b>' + c.name + '<br/>'+
+                '<b>State: </b>' + c.state + '<br/>' +
+                '<b>UID: </b>' + c.uid + '<br/>' +
+                '<b>SIDS: </b>' + c.sids + '<br/>' +
+                '<b>NETWORKS: </b>' + c.stn_networks + '<br/>' +
+                '<b>Elevation: </b>' + c.elevation + '<br/>' +
+                '<b>Available Elements: </b>' + avbl_elements +
+                '</p>' + wrcc_info_link + '<br />' +
+                data_portal_link + '<br />' +
+                app_portal_link +
+                '</div>';
+
+            //Open info window when user clicks on marker
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.close();
+                infowindow.setContent(contentString);
+                infowindow.open(map, marker);
+                });
+
+
+            var station_list = document.getElementById('station_list');
+
+            if (marker.getVisible()) {
+                //tbl_row.onclick = '"my_stnclick(' + infowindow + ',' + marker + ',' + contentString + ')"';
+                //t_data = '<td onclick = "my_stnclick(' + infowindow + ',' + marker + ',' + contentString + ')">';
+                var tbl_row = document.createElement('tr');
+                var t_data = '<td>';
+                tbl_row.addEventListener("click", function(){
+                    infowindow.close();
+                    infowindow.setContent(contentString);
+                    infowindow.open(map, marker);
+                });
+
+                tbl_row.innerHTML = t_data + c.name + '</td>' + t_data +
+                                  c.state + '</td>' + t_data + c.lat + '</td>' + t_data +
+                                  c.lon + '</td>' + t_data + c.elevation + '</td>' + t_data +
+                                  c.stn_networks +'</td>';
+                station_list.appendChild(tbl_row);
+            }
+
+        }); //end each
+        // == shows all markers of a particular category, and ensures the checkbox is checked ==
+        show = function(category) {
+            for (var i=0; i<markers.length; i++) {
+                if (markers[i].category == category) {
+                    markers[i].setVisible(true);
+                }
+            }
+            // == check the checkbox ==
+            document.getElementById(category).checked = true;
+        };
+
+        // == hides all markers of a particular category, and ensures the checkbox is cleared ==
+        hide = function(category) {
+            for (var i=0; i<markers.length; i++) {
+                if (markers[i].category == category) {
+                    markers[i].setVisible(false);
+                }
+            }
+            // == clear the checkbox ==
+            document.getElementById(category).checked = false;
+        };
+
+        boxclick = function(box, category){
+            if (box.checked){
+                show(category);
+            }
+            else {
+                hide(category);
+            }
+        };
+        //var markerCluster = new MarkerClusterer(map, markers);
+        map.fitBounds(bounds);
+    });//close getjson
+}//close initialize_station_finder
+
+function my_boxclick(box, category){
+    boxclick(box, category);
+}
+
+</script>
+</head>
+<body>
+<h1>Test page</h1>
+<p>Let's put the map here.</p>
+        <script type="text/javascript">
+            initialize_station_finder()
+        </script>
+        <div id="map" style="position:absolute;top:300px;left:200px;width:300px;height:300px;"></div>
+
+        <div style="height:200px; overflow:auto;" >
+            <table cellspacing="2" id="station_list">
+                <th>Name</th>
+                <th>State</th>
+                <th>Lat</th>
+                <th>Lon</th>
+                <th>Elev</th>
+                <th>Networks</th>
+            </table>
+        </div>
+
+        <div id="map_legend">
+            <h3>Legend of Station Networks.</h3>
+            <p class="error">Zoom in to see Networks show on the map.</p>
+        </div>
+</body>
+</html>

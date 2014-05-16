@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p align="center">You are here
+<a href="/csc/documentation/">DOCUMENTATION></a>
+<a href="/csc/documentation/acis/">ACIS></a>
+<a href="/csc/documentation/grid_acis">GridACIS</a>
+</p>
+
+<h1 align="center">{{title}}</h1>
+<h2 align="center">Documentation for gridded ACIS data</h2>
+<table>
+<td width="30%">
+
+<table align="left" bgcolor="#ccffff">
+<tr><td>
+    <a target="_blank" href="http://rcc-acis.org/docs_gridded.html" class="trigger_hover">Gridded Datasets</a>
+    <div class="pop-up" id="ACIS">
+    <p><font size="4">Gridded dataset descriptions. (External)</font></p>
+    </div>
+</td></tr>
+<tr><td>
+    <p class="trigger_hover pop_link" onclick="ShowPopupDocu('Docu_netCDF_HDF5_Conversion')"><font color=""><u>NetCDF --> HDF5 Converter</u></font></p>
+    <div class="pop-up" id="ACIS">
+    <p><font size="4">Describes methology for conversion of netCDF to HDF5 format. (Internal)</font></p>
+    </div>
+</td></tr>
+</table>
+
+</td>
+
+<td width="70%">
+
+<!--Documentation-->
+<div id="Docu_netCDF_HDF5_Conversion" style="display:none"></div>
+<script type="text/javascript">            
+    $("#Docu_netCDF_HDF5_Conversion").load("{{HTML_URL}}/Docu_netCDF_HDF5_Conversion.html");
+</script>
+</td>
+</table>
+{% endblock %}

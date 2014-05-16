@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p align="center">You are here
+<a href="/csc/documentation/">DOCUMENTATION></a>
+<a href="/csc/documentation/scenic/">SCENIC></a>
+<a href="/csc/documentation/scenic/large_data_requests/">Large Data Request Methodology</a>
+</p>
+
+<h1 align="center">{{title}}</h1>
+<table border="1">
+<td width="50%" valign="top" align="left">
+<h2>Introduction</h2>
+<p>
+Due to bandwidth and computer memory limitations, large data request implementations over the web are problematic. A common method to overcome these difficulties is to execute the data jobs in the background rather than on the fly. After completion of the background data job, the results will be posted on an ftp server to be picked up by the user at his/her convenience.
+</p>
+<h2>Main program components</h2>
+<!--<p onclick="ShowHide('LargeDataRequestGraphic')" title="Help"><u><font color="#0000FF">Show conceptual graphic of large data request</font></u></p>-->
+<p>
+<ol>
+<li> Scan content of the data directory at regular intervals (x minutes) to find new user input files containing the parameters of the data request. This is achieved via a background cron job running on the server. For each parameter file found:
+<ul>
+<li>Check if results file exists. If yes, notify user and continue to next parameter file.</li>
+<li>If no results file exists, check if parameter file was created less than x minutes ago.</li>
+<li>If file is older than x minutes, data request is in progress, continue to next file.</li>
+<li>If file was created within last x minutes, exwecute data request.</li>
+</ul>
+</li>
+<li>For each data request:
+<ol>
+<li>Determine suitable spatial and temporal sub divisions to be run in background batch mode.</li>
+<li>Execute the batch data request and amalagmate the results into one output file.</li>
+<li>Move the output file to the ftp server.</li>
+<li>Notify the user that his/her dataset is ready for pickup.</li>
+</ol>
+</ol>
+</p>
+</td>
+<td width="50%" valign="top" align="left">
+<div id="LargeDataRequestGraphic" title="Help">
+<script type="text/javascript">                        
+    $("#LargeDataRequestGraphic").load("{{HTML_URL}}/Docu_documentation.html #LargeDataRequestGraphic");
+</script>
+</div>
+</td>
+</table>
+{% endblock %}

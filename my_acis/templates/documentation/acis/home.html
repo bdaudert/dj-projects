@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p align="center">You are here
+<a href="/csc/documentation/">DOCUMENTATION></a>
+<a href="/csc/documentation/acis/">ACIS</a>
+</p>
+
+<h1 align="center">{{title}}</h1>
+<h2 align="center">Applied Climate Information system</h2>
+<table align="center" bgcolor="#ccffff">
+<tr><td>
+    <a target="_blank" href="http://hprcc0.unl.edu/rcc-acis/index.html" class="trigger_hover">ACIS Home Page</a>
+    <div class="pop-up" id="ACIS">
+    <p><font size="4">ACIS Home page with general information. (External Link)</font></p>
+    </div>
+</td></tr>
+<tr><td>
+    <a href="{{URL_PREFIX}}documentation/acis/grid_acis/" class="trigger_hover">GridACIS</a>
+    <div class="pop-up" id="GridACIS">
+    <p><font size="4">Gridded Data Documentation (Internal)</font></p>
+    </div>
+</td></tr>
+<tr><td>
+    <a href="{{URL_PREFIX}}documentation/acis/subdaily_acis/" class="trigger_hover">SubDailyACIS</a>
+    <div class="pop-up" id="SubDailyACIS">
+    <p><font size="4">Information on sub-daily Data in ACIS (Internal)</font></p>
+    </div>
+</td></tr>
+</table>
+{% endblock %}

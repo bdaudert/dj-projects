@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p align="center">You are here
+<a href="/csc/documentation/">DOCUMENTATION></a>
+<a href="/csc/documentation/scenic/">SCENIC</a>
+</p>
+
+<h1 align="center">{{title}}</h1>
+<h2 align="center">Southwest Climate and ENvironmental Information Collaborative</h2>
+<table align="center" bgcolor="#ccffff">
+<tr><td>
+    <a target="_blank" href="http://wrcc.dri.edu/csc/scenic/" class="trigger_hover">SCENIC Home Page</a>
+    <div class="pop-up" id="ACIS">
+    <p><font size="4">SCENIC Home page. (External Link)</font></p>
+    </div>
+</td></tr>
+<tr><td>
+    <a href="{{URL_PREFIX}}documentation/scenic/large_data_requests/" class="trigger_hover">Large Data Requests</a>
+    <div class="pop-up" id="LG">
+    <p><font size="4">Large Data Request Methodology (Internal)</font></p>
+    </div>
+</td></tr>
+</table>
+{% endblock %}

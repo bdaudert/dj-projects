@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block breadcrumbs %}
+{{ block.super }}
+| <a href="{{URL_PREFIX}}wrcc_meta/station_detail/?ucan_id={{ucan_id}}">Station detail</a> | Equipment
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript">
+
+    var FancyForm = {
+	    init : function() {
+		    var eq_description = new Ext.Resizable('id_eq_description', {
+					wrap:true,
+					pinned:true,
+					width:350,
+					height:100,
+					minWidth:200,
+					minHeight:50,
+				    });
+
+		    var install_date = new Ext.form.DateField({
+					name: 'install_date',
+					allowBlank: false,
+					format: 'Y-m-d',
+					applyTo: 'id_install_date'
+					});
+
+		    var remove_date = new Ext.form.DateField({
+					name: 'remove_date',
+					allowBlank: true,
+					format: 'Y-m-d',
+					applyTo: 'id_remove_date'
+					});
+
+		    var remark = new Ext.Resizable('id_remark', {
+					wrap:true,
+					pinned:true,
+					width:350,
+					height:120,
+					minWidth:200,
+					minHeight:50,
+				    });
+		    }
+    }
+
+    Ext.onReady(FancyForm.init, FancyForm);
+
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+<h1>{{title}}</h1>
+
+{% if saved %}
+<p>{{saved|safe}}</p>
+{% endif %}
+
+{% if station_equipment %}
+<table class="sortable"> {{station_equipment|safe}} </table>
+{% endif %}
+
+<h2>Add</h2>
+<form method="post" action=".">{% csrf_token %}
+<table>
+{{ form }}
+</table>
+<input type="submit" value="Submit" />
+</form>
+{% endblock %}

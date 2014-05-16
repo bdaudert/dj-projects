@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 align="center">{{title}}</h1>
+<table align="center" bgcolor="#ccffff">
+<tr><td>
+    <a href="{{URL_PREFIX}}documentation/acis/" class="trigger_hover">ACIS</a>
+    <div class="pop-up" id="ACIS">
+    <p><font size="4">Applied Climate Information System</font></p>
+    </div>
+</td></tr>
+<tr><td>
+    <a href="{{URL_PREFIX}}documentation/scenic/" class="trigger_hover">SCENIC</a>
+    <div class="pop-up" id="SCENIC">
+    <p><font size="4">Southwest Climate and ENvironmental Information Collaborative</font></p>
+    </div>
+</td></tr>
+</table>
+
+{% endblock %}

@@ -223,9 +223,9 @@ function ShowHide(divId){
     }
 }
 
-//Hide all pop-ups if user clicks anywhere but a trigger
-$('body').click(function(e){
-    if( e.target.title != 'QMark' ){
+//Hide all pop-ups if user clicks anywhere but a trigger/help title
+$(document).click(function(e){
+    if( e.target.title != 'Help'){
         $('.pop-up').css('display','none');
     }
  });

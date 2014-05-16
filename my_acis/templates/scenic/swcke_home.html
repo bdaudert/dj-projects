@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>{{title}}</title>
+    <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
+    <!-- ** Javascript ** -->
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
+    <!-- ** Britta'sJavascript ** -->
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script> 
+    <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+    <script language="javascript" type="text/javascript">
+        $(window).load(function() {
+        $('#loading').hide();
+        });
+    </script>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="5;url=/csc/scenic/">
+    <!--
+    <script type="text/javascript">
+        window.location.href = "/csc/scenic/"
+    </script>-->
+
+</head>
+
+<body>
+
+<div class="container">
+    <!--Loading image-->
+    <div id="loading">
+    <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />
+    </div>
+    <img src="{{ MEDIA_URL }}img/SWBanner.png">
+
+    <!-- Note: don't tell people to `click` the link, just tell them that it is a link. -->
+    <p class="green" style="position:relative;top:300px;left:100px;font-size:large;">
+    The SWCKE pages have move to<br />
+    Southwest Climate and ENvironmental Information Collaborative (SCENIC)<br />
+    If you are not redirected automatically in 5 seconds, follow this link <a href='/csc/scenic/'>SCENIC</a>
+    </p>
+</div> <!--end container-->
+</body>
+</html>
