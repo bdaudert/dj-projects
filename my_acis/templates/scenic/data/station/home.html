@@ -602,15 +602,15 @@
     <th>date{{params_dict.delimiter}}</th>
     {%if params_dict.show_flags == "T"%}
     {%if params_dict.show_observation_time == "T"%}
-    {%for el in element_list%}<th>{{el}}({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>flag{{params_dict.delimiter}}</th><th>obs time{{params_dict.delimiter}}</th>{%endfor%}
+    {%for el in element_list%}<th>{{el_name_dict|lookup:el}}({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>Flag{{params_dict.delimiter}}</th><th>obs time{{params_dict.delimiter}}</th>{%endfor%}
     {%else%}
-    {%for el in  element_list%}<th>{{el}}({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>flag{{params_dict.delimiter}}</th>{%endfor%}
+    {%for el in  element_list%}<th>{{el_name_dict|lookup:el}}({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>Flag{{params_dict.delimiter}}</th>{%endfor%}
     {%endif%}
     {%else%}
     {%if params_dict.show_observation_time == "T"%}
-    {%for el in element_list%}<th>{{el}}({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>obs time{{params_dict.delimiter}}</th>{%endfor%}
+    {%for el in element_list%}<th>{{el_name_dict|lookup:el}}({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>obs time{{params_dict.delimiter}}</th>{%endfor%}
     {%else%}
-    {%for el in element_list%}<th>{{el}}({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
+    {%for el in element_list%}<th>{{el_name_dict|lookup:el}}({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
     {%endif%}
     {%endif%}
     </th>
@@ -629,9 +629,17 @@
     {%endif%}
     {%else%}
     {%if params_dict.show_observation_time == "T"%}
+    {%if el_val|lookup:1 == "T"%}
+    <td align="right">T{{params_dict.delimiter}}</td><td align="left">{{el_val|lookup:2}}{{params_dict.delimiter}}</td>
+    {%else%}
     <td align="right">{{el_val|lookup:0}}{{params_dict.delimiter}}</td><td align="left">{{el_val|lookup:2}}{{params_dict.delimiter}}</td>
+    {%endif%}
+    {%else%}
+    {%if el_val|lookup:1 == "T"%}
+    <td align="right">T{{params_dict.delimiter}}</td>
     {%else%}
     <td align="right">{{el_val|lookup:0}}{{params_dict.delimiter}}</td>
+    {%endif%}
     {%endif%}
     {%endif%}
     {%endif%}

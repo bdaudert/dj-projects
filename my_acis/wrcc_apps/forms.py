@@ -192,6 +192,20 @@ SXTR_ELEMENT_CHOICES = (
         ('wdmv', 'Daily Wind Movement'),
 )
 
+PCT_ELEMENT_CHOICES = (
+        ('pcpn', 'Daily Precipitation'),
+        ('snow', 'Daily Snowfall'),
+        ('snwd', 'Daily Snowdepth'),
+        ('maxt', 'Daily Maximum Temperature '),
+        ('mint', 'Daily Minimum Temperature'),
+        ('avgt', 'Daily Mean Temperature'),
+        ('dtr', 'Daily Temperature Range'),
+        ('hdd', 'Heating Degree Days'),
+        ('cdd', 'Cooling Degree Days'),
+        ('gdd', 'Growing degree days')
+)
+
+
 PIII_ELEMENT_CHOICES = (
         ('pcpn', 'Precipitation'),
         ('snow', 'Snowfall'),
@@ -348,7 +362,7 @@ class Sod0Form(forms.Form):
             self.fields['skip_days'] = forms.BooleanField(initial=False, required=False)
             self.fields['truncate'] = forms.BooleanField(initial=False, required=False)
         if app_name == 'Sodpct':
-            self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='pcpn')
+            self.fields['element'] = forms.ChoiceField(choices=PCT_ELEMENT_CHOICES, initial='pcpn')
             self.fields['individual_averages'] = forms.ChoiceField(choices=([('I','Individual'), ('A','Day Sums or Averages'),]), required=False, initial='I')
             self.fields['threshold'] = forms.DecimalField(required=False, initial=-9999.0)
         if app_name == 'Sodthr':

@@ -275,15 +275,19 @@ def data_station(request):
             context['unit_dict'] = {}
         else:
             unit_dict = {}
+            el_name_dict = {}
             context['element_list'] = form['elements']
             for el in form['elements']:
                 el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
+                if not base_temp : base_temp=''
+                el_name_dict[el] = WRCCData.MICHELES_ELEMENT_NAMES[str(el_strip)] + str(base_temp)
                 if 'units' in form.keys() and  form['units'] == 'metric':
                     unit_dict[el] = WRCCData.UNITS_METRIC[el_strip]
                     unit_dict['elev']= WRCCData.UNITS_METRIC['elev']
                 else:
                     unit_dict[el] = WRCCData.UNITS_ENGLISH[el_strip]
                     unit_dict['elev']= WRCCData.UNITS_ENGLISH['elev']
+            context['el_name_dict'] = el_name_dict
             context['unit_dict'] = unit_dict
         fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date','degree_days', 'elements']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -336,7 +340,6 @@ def data_station(request):
                 context['station_ids_error'] = stn_error
         if form_cleaned['data_format'] != 'html':
             return WRCCUtils.write_station_data_to_file(resultsdict,params_dict,request=request)
-            #return WRCCUtils.write_station_data_to_file(resultsdict,params_dict['delimiter'], WRCCData.FILE_EXTENSIONS[str(form['data_format'])], request=request, output_file_name=str(form['output_file_name']), show_flags=params_dict['show_flags'], show_observation_time=params_dict['show_observation_time'])
 
     #overlay map generation
     if 'formOverlay' in request.POST:
@@ -485,7 +488,6 @@ def data_gridded(request):
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
         else:
             return WRCCUtils.write_griddata_to_file(results,form,request=request)
-            #return WRCCUtils.write_griddata_to_file(results, form['elements'].replace(' ','').split(','),params_dict['delimiter'],WRCCData.FILE_EXTENSIONS[form['data_format']], request=request,output_file_name =form['output_file_name'])
 
 
     if 'formOverlay' in request.POST:

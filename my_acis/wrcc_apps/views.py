@@ -113,15 +113,6 @@ def sodlist_new(request):
         results = WRCCDataApps.Sodlist_new(kwargs)
         context['results'] = results[0]
         context['params'] = form.cleaned_data
-        '''
-        context['include_tobs_evap'] = form.cleaned_data['include_tobs_evap']
-        context['start_date'] = form.cleaned_data['start_date']
-        context['end_date'] = form.cleaned_data['end_date']
-        context['start_window'] = form.cleaned_data['start_window']
-        context['end_window'] = form.cleaned_data['end_window']
-        context['output_format'] = form.cleaned_data['output_format']
-        context['station_id'] = form_cleaned_data['coop_station_id']
-        '''
         context['station_name'] = results[0]['meta']['name']
     return render_to_response('wrcc_apps/Sodlist.html', context, context_instance=RequestContext(request))
 
