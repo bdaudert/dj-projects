@@ -1187,7 +1187,7 @@ def station_locator_app(request):
         if 'error' in station_json.keys():
             context['error'] = stn_json['error']
         if station_json['stations'] == []:
-            context['error'] = "No stations found for %s : %s, elements: %s, element constraints: %s elements, dates: %s - %s, date constraints: %s dates."  %(by_type, val, form['elements'], form['elements_constraints'], form['start_date'], form['end_date'], form['dates_constraints'])
+            context['error'] = "No stations found for these search parameters."
         context['station_json'] = f_name
 
     #overlay map generation
@@ -2559,7 +2559,7 @@ def set_station_locator_params(form):
     if not form:
         return {}
 
-    key_order = ['select_stations_by', 'elements', 'elements_constraints','start_date', 'end_date', 'dates_constraints']
+    key_order = ['select_stations_by', form['select_stations_by'], 'elements', 'elements_constraints','start_date', 'end_date', 'dates_constraints']
     display_params_list = [[] for k in range(len(key_order))]
     params_dict = {'units':'english'}
     for key, val in form.iteritems():
@@ -2571,20 +2571,21 @@ def set_station_locator_params(form):
             else:
                 el_list = val
             elems_long = []
-            display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key], '']
+            #display_params_list.insert(1, [WRCCData.DISPLAY_PARAMS[key], ''])
             params_dict[key] = ','.join(el_list)
             params_dict[key].rstrip(',')
             for el_idx, el in enumerate(el_list):
                 try:
                     int(el[3:5])
-                    display_params_list[1][1]+=WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5]
+                    #display_params_list[2] = [WRCCData.DISPLAY_PARAMS[key],WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5]]
                     elems_long.append(WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5])
                 except:
-                    display_params_list[1][1]+=WRCCData.DISPLAY_PARAMS[el]
+                    #display_params_list[2] = [WRCCData.DISPLAY_PARAMS[key],WRCCData.DISPLAY_PARAMS[el]]
                     elems_long.append(WRCCData.DISPLAY_PARAMS[el])
                 if el_idx != 0 and el_idx != len(form['elements']) - 1:
-                    display_params_list[1][1]+=', '
+                    #display_params_list[2][1]+=', '
                     params_dict['elements']+=','
+            display_params_list[2] = [WRCCData.DISPLAY_PARAMS[key],','.join(elems_long)]
             params_dict['elements'].rstrip(',')
             params_dict['elems_long'] = elems_long
         else:
@@ -2593,8 +2594,11 @@ def set_station_locator_params(form):
                 display_params_list[idx] = [WRCCData.DISPLAY_PARAMS[key], str(val)]
                 params_dict[key] = str(val)
             except ValueError:
+                pass
+                '''
                 if key in ['station_id','station_ids', 'stnid', 'stn_id','basin', 'county_warning_area', 'climate_division', 'state', 'bounding_box', 'shape']:
                     display_params_list.insert(1, [WRCCData.DISPLAY_PARAMS[key], str(val)])
+                '''
     return display_params_list, params_dict
 
 
