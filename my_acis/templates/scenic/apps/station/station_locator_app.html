@@ -314,12 +314,12 @@
         {%if station_json and not need_overlay_map%}
         <!--Link to data portal-->
         <input type="hidden" id="station_ids_str" name="station_ids_str" value="{{station_ids_for_datafind}}">
-        {%if params_dict.select_stations_by == "station_ids"%}:
+        {%if params_dict.select_stations_by == "station_ids"%}
         {%if not error%}
         <a align="left" target="_blank" href="{{DATA_STATION_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
         {%endif%}
-        {%else%
-        {%if not error%}}
+        {%else%}
+        {%if not error%}
         <a align="left" target="_blank" href="{{DATA_STATION_URL}}?{{params_dict.select_stations_by}}={{params_dict|lookup:params_dict.select_stations_by}}&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
         {%endif%}
         {%endif%}

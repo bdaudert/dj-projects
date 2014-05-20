@@ -202,16 +202,14 @@ def download(request):
             output_file_name = form0.cleaned_data['output_file_name']
             #If Sodsumm, we need to fine the right data set
             if app_name == 'Sodsumm':
-                with open(json_file, 'r') as json_f:
-                    json_data = WRCCUtils.u_convert(json.loads(json_f.read()))
+                json_data = WRCCUtils.load_json_data_from_file(json_file)
                 #find the correct data set corresponding to the tab name
                 for idx, data_dict in enumerate(json_data):
                     if data_dict['table_name'] == tab:
                         #context['data_dict'] = data_dict
                         #Overwrite json_in_file
                         json_in_file_name = json_file_name + '_in'
-                        with open(settings.TEMP_DIR + json_in_file_name, 'w+') as json_f:
-                            json.dump(data_dict,json_f)
+                        WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_in_file_name, data_dict)
                         break
             DDJ = WRCCClasses.DownloadDataJob(app_name,data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_in_file_name)
             if data_format in ['clm', 'dlm','xl']:
@@ -322,20 +320,25 @@ def data_station(request):
         #Data request
         resultsdict = AcisWS.get_station_data(form_cleaned, 'sodlist_web')
         context['results'] = resultsdict
+        context['x'] = form
         # If request successful, get params for link to apps page
         context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
         if 'station_ids' in form_cleaned.keys():
             if len(form_cleaned['station_ids'].split(',')) != len(resultsdict['stn_ids']):
-                stn_error = 'Data could not be found for these station ids: '
+                stn_error = 'Data could not be found for these stations: '
                 missing_stations =''
                 results_ids = []
+                results_names = []
                 for idx in range(len(resultsdict['stn_ids'])):
                     for id_net in resultsdict['stn_ids'][idx]:
                         results_ids.append(id_net.split(' ')[0])
-                for stn_id in form_cleaned['station_ids'].split(','):
+                    results_names.append(resultsdict['stn_names'][idx])
+                stn_list = form_cleaned['station_ids'].split(',')
+                stn_names = form['station_ids'].replace(' ', '').split(',')
+                for stn_idx, stn_id in enumerate(stn_list):
                     if stn_id not in results_ids:
-                        missing_stations+= stn_id + ','
-                missing_stations = missing_stations.rstrip(',')
+                        missing_stations+=  stn_names[stn_idx] + ', '
+                missing_stations = missing_stations.rstrip(', ')
                 stn_error+= missing_stations
                 context['station_ids_error'] = stn_error
         if form_cleaned['data_format'] != 'html':
@@ -459,7 +462,6 @@ def data_gridded(request):
         else:
             context['results'] = results
         #If Spatial Summary, write json file for spatial_summary graph
-        context['x'] = form_cleaned
         if form_cleaned['data_summary'] == 'spatial' or 'location' in form_cleaned.keys():
             if 'location' in form_cleaned.keys() and form_cleaned['data_summary']!='spatial':
                 start_idx = 4
@@ -475,12 +477,9 @@ def data_gridded(request):
             'download_data':results,
             'graph_data':graph_data
             }
-            results_json = json.dumps(json_dict)
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
             json_file = '%s_spatial_summary.json' %(time_stamp)
-            f = open(settings.TEMP_DIR + '%s' %(json_file),'w+')
-            f.write(results_json)
-            f.close()
+            WRCCUtils.load_data_to_json_file(settings.TEMP_DIR +json_file, json_dict)
             context['JSON_URL'] = settings.TMP_URL
             context['json_file'] = json_file
         #Render to page if html format was chosen, else save to file
@@ -592,7 +591,7 @@ def metagraph(request):
         form_meta = set_as_form(request,'MetaGraphForm')
         context['form_meta']  = form_meta
         if form_meta.is_valid():
-            identifier = find_id(form_meta.cleaned_data['station_id'],settings.MEDIA_URL + 'json/US_coop_station_ids.json')
+            identifier = find_id(form_meta.cleaned_data['station_id'],settings.MEDIA_DIR + 'json/US_coop_station_ids.json')
             context['station_id'] = form_meta.cleaned_data['station_id']
             params = {'sids':identifier}
             meta_request = AcisWS.StnMeta(params)
@@ -710,14 +709,12 @@ def monthly_aves(request):
             context['meta'] = meta
         #save to json file (necessary since we can't pass list, dicts to js via hidden vars)
         #double quotes needed for jquery json.load
-        results_json = json.dumps(results)
-        #results_json = str(results).replace("\'", "\"")
+
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         json_file = '%s_monthly_aves_%s_%s_%s.json' \
         %(time_stamp, str(form_cleaned['station_id']), form_cleaned['start_date'], form_cleaned['end_date'])
         context['json_file'] = json_file
-        with  open(settings.TEMP_DIR + '%s' %(json_file),'w+') as f:
-            f.write(results_json)
+        WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_file, results)
     return render_to_response('scenic/apps/station/monthly_aves.html', context, context_instance=RequestContext(request))
 
 def temporal_summary(request):
@@ -728,12 +725,11 @@ def temporal_summary(request):
     #Check if we are coming in from other page, e.g. Gridded Data
     #Set initial accordingly
     if json_file is not None:
-        with open(settings.TEMP_DIR + json_file, 'r') as f:
-            try:
-                json_data = WRCCUtils.u_convert(json.loads(f.read()))
-                initial,checkbox_vals = set_temporal_summary_initial(json_data['search_params'])
-            except:
-                initial,checkbox_vals = set_temporal_summary_initial(request)
+        json_data = WRCCUtils.load_json_data_from_file(settings.TEMP_DIR + json_file)
+        if not json_data or not 'search_params' in json_data.keys():
+            initial,checkbox_vals = set_temporal_summary_initial(request)
+        else:
+            initial,checkbox_vals = set_temporal_summary_initial(json_data['search_params'])
     else:
         initial,checkbox_vals = set_temporal_summary_initial(request)
     #Plot Options
@@ -1599,7 +1595,7 @@ def sodsumm(request):
         context['form1'] = form1
         if form1.is_valid():
             data_params = {
-                    'sid':find_id(form1.cleaned_data['station_id'], settings.MEDIA_URL + '/json/US_station_id.json'),
+                    'sid':find_id(form1.cleaned_data['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json'),
                     'start_date':form1.cleaned_data['start_year'],
                     'end_date':form1.cleaned_data['end_year'],
                     'element':'all'
@@ -1695,13 +1691,10 @@ def sodsumm(request):
                 table_dict['stn_state'] = station_states[0]
                 table_dict['stn_id'] = str(data_params['sid'])
                 json_list.append(table_dict)
-            results_json = json.dumps(json_list)
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
             json_file = '%s_sodsumm_%s_%s_%s.json' \
             %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
-            f = open(settings.TEMP_DIR + '%s' %(json_file),'w+')
-            f.write(results_json)
-            f.close()
+            WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_file, json_list)
             context['JSON_URL'] = settings.TEMP_DIR
             context['json_file'] = json_file
 
@@ -1713,17 +1706,14 @@ def sodsumm(request):
             output_file_name = request.POST.get('output_file_name', 'output')
             json_file = request.POST.get('json_file', None)
             tab = request.POST.get('tab', None)
-            with open(settings.TEMP_DIR + json_file, 'r') as json_f:
-                json_data = WRCCUtils.u_convert(json.loads(json_f.read()))
-                #find the correct data set corresponding to the tab name
-                for idx, data_dict in enumerate(json_data):
-                    if data_dict['table_name'] == tab:
-                        #Overwrite json_in_file
-                        json_in_file_name = json_file + '_in'
-                        with open(settings.TEMP_DIR + json_in_file_name, 'w+') as json_f:
-                            json.dump(data_dict,json_f)
-                        break
-
+            json_data = WRCCUtils.load_json_data_from_file(settings.TEMP_DIR + json_file)
+            #find the correct data set corresponding to the tab name
+            for idx, data_dict in enumerate(json_data):
+                if data_dict['table_name'] == tab:
+                    #Overwrite json_in_file
+                    json_in_file_name = json_file + '_in'
+                    WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_in_file_name, data_dict)
+                    break
             DDJ = WRCCClasses.DownloadDataJob('Sodsumm',data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_in_file_name)
             return DDJ.write_to_file()
 
@@ -1811,13 +1801,12 @@ def find_id(form_name_field, json_file_path):
             #to find the id
             if not os.path.isfile(json_file_path) or os.path.getsize(json_file_path) == 0:
                 return i
-            with open(json_file_path, 'r') as json_f:
-                json_data = WRCCUtils.u_convert(json.loads(json_f.read()))
-                for entry in json_data:
-                    if entry['id'] == i:
-                        return i
-                    if entry['name'].upper() == i.upper():
-                        return entry['id']
+            json_data = WRCCUtils.load_json_data_from_file(json_file_path)
+            for entry in json_data:
+                if entry['id'] == i:
+                    return i
+                if entry['name'].upper() == i.upper():
+                    return entry['id']
     return i
 
 def set_form(request,clean=True):
@@ -1870,7 +1859,7 @@ def set_form(request,clean=True):
     #Check if user autofilled name, if so, change to id
     for key,val in form.iteritems():
         if str(key) in ['station_id','county', 'basin', 'county_warning_area', 'climate_division']:
-            form[str(key)] = find_id(str(val),settings.MEDIA_URL +'json/US_' + str(key) + '.json')
+            form[str(key)] = find_id(str(val),settings.MEDIA_DIR +'json/US_' + str(key) + '.json')
         if str(key) == 'station_ids':
             stn_ids = ''
             stn_list = val.rstrip(',').split(',')
@@ -1879,7 +1868,7 @@ def set_form(request,clean=True):
             #Make sure that no station is entered twice
             id_previous = ''
             for idx, stn_name in enumerate(stn_list):
-                stn_id = str(find_id(str(stn_name),settings.MEDIA_URL +'json/US_' + 'station_id' + '.json'))
+                stn_id = str(find_id(str(stn_name),settings.MEDIA_DIR +'json/US_' + 'station_id' + '.json'))
                 if stn_id == id_previous:
                     continue
                 id_previous = stn_id
@@ -2279,7 +2268,7 @@ def write_monthly_aves_results(req, form_data, monthly_aves):
             results[el_idx]['unit'] = WRCCData.UNITS_LONG[WRCCData.UNITS_METRIC[el_strip]]
         else:
             results[el_idx]['unit'] = WRCCData.UNITS_LONG[WRCCData.UNITS_ENGLISH[el_strip]]
-        results[el_idx]['stn_id']= find_id(str(form_data['station_id']), settings.MEDIA_URL +'json/US_station_id.json')
+        results[el_idx]['stn_id']= find_id(str(form_data['station_id']), settings.MEDIA_DIR +'json/US_station_id.json')
 
         if form_data['start_date'].lower() == 'por':
             if len(req['meta']['valid_daterange'][el_idx]) == 2:
@@ -2529,7 +2518,7 @@ def set_data_station_params(form):
             params_dict['station_list'] = form['station_ids'].replace(' ','').split(',')
 
         if key == form['select_stations_by'] and key not in  ['station_ids', 'state', 'shape']:
-            params_dict[key] = find_id(val, settings.MEDIA_URL + '/json/US_' + key +'.json')
+            params_dict[key] = find_id(val, settings.MEDIA_DIR + '/json/US_' + key +'.json')
             params_dict['user_id']= val
             #override display_params_list
             '''
