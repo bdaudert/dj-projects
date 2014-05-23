@@ -1,5 +1,7 @@
 $(function () {
 //$(document).ready(function() {
+    var HOST = document.getElementById('HOST').value;
+    var HOST_URL = 'http://' + HOST + '/';
     var json_file = document.getElementById("json_file").value;
     var TMP_URL = document.getElementById("TMP_URL").value;
     var json_file_path = TMP_URL + json_file;
@@ -103,8 +105,8 @@ $(function () {
                         type: plot_type
                     },
                     credits: {
-                        href: 'http://wrcc.dri.edu/',
-                        text: 'wrcc.dri.edu' 
+                        href: HOST_URL,
+                        text: HOST 
                     },
                     legend: {
                         enabled: enable_legend

@@ -4,6 +4,8 @@ $(function () {
     $(document).ready(function() {
         var JSON_DIR = document.getElementById("JSON_DIR").value;
         var json_file = document.getElementById("json_file").value;
+        var HOST = document.getElementById("HOST").value;
+        var HOST_URL = 'http://' + HOST + '/'
         var file = JSON_DIR + json_file;
         var month_list_str = document.getElementById("months").value;
         //convert into javascript array
@@ -123,8 +125,8 @@ $(function () {
                         'Drag your finger over the plot to zoom in'
                 },
                 credits: {
-                        href: 'http://wrcc.dri.edu/',
-                        text: 'wrcc.dri.edu'
+                        href: HOST_URL,
+                        text: HOST
                 },
                 xAxis: {
                     title : {

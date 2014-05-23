@@ -31,6 +31,49 @@ $(document).ready(function() {
   });
 });
 </script>
+    <!--Django env variables from settings -->
+    <!--  DIRS-->
+    <input type="hidden" id="HOST" name="variable" value="{{ HOST }}">
+    <input type="hidden" id="BASE_DIR" name="variable" value="{{ BASE_DIR }}">
+    <input type="hidden" id="SRC_BASE" name="variable" value="{{ SRC_BASE }}">
+    <input type="hidden" id="JSON_DIR" name="variable" value="{{ JSON_DIR }}">
+    <input type="hidden" id="HTML_DIR" name="variable" value="{{ HTML_DIR }}">
+    <input type="hidden" id="KML_DIR" name="variable" value="{{ KML_DIR }}">
+    <input type="hidden" id="TMP_DIR" name="variable" value="{{ TMP_DIR }}">
+    <input type="hidden" id="TMP_DIR" name="variable" value="{{ TMP_DIR }}">
+    <input type="hidden" id="TEMP" name="variable" value="{{ TEMP }}">
+    <input type="hidden" id="LIB_PREFIX" name="variable" value="{{ LIB_PREFIX }}">
+    <!--SERVER DIRS -->
+    <input type="hidden" id="STATIC_URL" name="variable" value="{{ STATIC_URL }}">
+    <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+    <input type="hidden" id="JSON_URL" name="variable" value="{{ JSON_URL }}">
+    <input type="hidden" id="HTML_URL" name="variable" value="{{ HTML_URL }}">
+    <input type="hidden" id="KML_URL" name="variable" value="{{ KML_URL }}">
+    <input type="hidden" id="TMP_URL" name="variable" value="{{ TMP_URL }}">
+    <input type="hidden" id="IMG_URL" name="variable" value="{{ IMG_URL }}">
+    <input type="hidden" id="URL_PREFIX" name="variable" value="{{ URL_PREFIX }}">
+    <input type="hidden" id="HOME_URL" name="variable" value="{{ HOME_URL }}">
+    <input type="hidden" id="SCENIC_URL" name="variable" value="{{ SCENIC_URL }}">
+    <input type="hidden" id="ABOUT_URL" name="variable" value="{{ ABOUT_URL }}">
+    <input type="hidden" id="WHAT_URL" name="variable" value="{{ WHAT_URL }}">
+    <input type="hidden" id="WHO_URL" name="variable" value="{{ WHO_URL }}">
+    <input type="hidden" id="CONTACT_URL" name="variable" value="{{ CONTACT_URL }}">
+    <input type="hidden" id="DASH_URL" name="variable" value="{{ DASH_URL }}">
+    <input type="hidden" id="DATA_URL" name="variable" value="{{ DATA_URL }}">
+    <input type="hidden" id="DATA_GRIDDED_URL" name="variable" value="{{ DATA_GRIDDED_URL }}">
+    <input type="hidden" id="DATA_STATION_URL" name="variable" value="{{ DATA_STATION_URL }}">
+    <input type="hidden" id="TOOLS_URL" name="variable" value="{{ TOOLS_URL }}">
+    <input type="hidden" id="TOOLS_GRIDDED_URL" name="variable" value="{{ TOOLS_GRIDDED_URL }}">
+    <input type="hidden" id="SPATIAL_GRID_SUMMARY" name="variable" value="{{ SPATIAL_GRID_SUMMARY }}">
+    <input type="hidden" id="TEMPORAL_GRID_SUMMARY" name="variable" value="{{ TEMPORAL_GRID_SUMMARY }}">
+    <input type="hidden" id="TOOLS_STATION_URL" name="variable" value="{{ TOOLS_STATION_URL }}">
+    <input type="hidden" id="STATION_FINDER_URL" name="variable" value="{{ STATION_FINDER_URL  }}">
+    <input type="hidden" id="SODXTRMTS_STATION_URL" name="variable" value="{{ SODXTRMTS_STATION_URL }}">
+    <input type="hidden" id="SODSUMM_STATION_URL" name="variable" value="{{ SODSUMM_STATION_URL }}">
+    <input type="hidden" id="MON_AVES_STATION_URL" name="variable" value="{{ MON_AVES_STATION_URL }}">
+    <input type="hidden" id="METAGRAPH_STATION_URL" name="variable" value="{{ METAGRAPH_STATION_URL }}">
+    <input type="hidden" id="TOOLS_GIS_URL" name="variable" value="{{ TOOLS_GIS_URL }}">
+
 </head>
 
 <body {% if bodyclass %}class="{% block bodyclass %}{% endblock %}" {% endif %} {% if bodyid %} id="{% block bodyid %}{% endblock %}"{% endif %}>

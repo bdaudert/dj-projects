@@ -1,3 +1,4 @@
+
 function reset_options(){
     /*
     Reset all options on back buttono press
@@ -118,7 +119,8 @@ function show_loading(){
     /*
     Shows moving loading gif after form submit
     */
-    $("#loading-image").attr("src", "/csc/media/img/LoadingGreen.gif");
+    var IMG_URL = document.getElementById('IMG_URL').value;
+    $("#loading-image").attr("src",IMG_URL +"LoadingGreen.gif");
     $("#loading").show("fast");
     //this.preventDefault();
     var form = $(this).unbind('submit');
@@ -187,11 +189,12 @@ function set_autofill(datalist){
     /*
     Sets autofill lists
     */
+    var JSON_URL = document.getElementById('JSON_URL').value;
     dl = document.createElement('datalist');
     dl.setAttribute('id',datalist);
     dl.setAttribute('style','height:500px;width=100%;overflow:hidden;');
     dl.setAttribute('class', datalist.replace('US_',''));
-    $.getJSON('/csc/media/json/' + datalist + '.json', function(metadata) {
+    $.getJSON(JSON_URL + datalist + '.json', function(metadata) {
         for (idx=0;idx<metadata.length;idx++){
             var name = metadata[idx].name;
             var id = metadata[idx].id;
@@ -252,6 +255,8 @@ function set_BaseTemp(table_id,node){
     /*
     sets sodxtrmts base temperatures for degree day calculations.
     */
+    var IMG_URL = document.getElementById('IMG_URL').value;
+    var HTML_URL = document.getElementById('HTML_URL').value;
     if ($('#base_temp').length){
         $('table#tableSodxtrmts tr#base_temp').remove();
     }
@@ -267,7 +272,11 @@ function set_BaseTemp(table_id,node){
             var cell2 = row.insertCell(2);
             cell0.innerHTML='Base Temperature';
             cell1.innerHTML='<input type="text" name="base_temperature" value="65">';
-            cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText(\'ht_element\')">';
+            cell2.innerHTML = '<img alt="Help" title="Help" src="' + IMG_URL + 'QMark.png" class="trigger">' +
+            ' <div class="pop-up"><div id="ht_base_temperature"></div>' +
+            ' <script type="text/javascript">' +
+            '$("#ht_base_temperature").load("' + HTML_URL + 'Docu_help_texts.html #ht_base_temperature");' +
+            '</script></div>';
         }
     }
 }
@@ -337,6 +346,8 @@ function set_NDays_thresholds(table_id,node){
     /*
     sets sodxtrmts thresholds for number of days statisrtics
     */
+    IMG_URL = document.getElementById('IMG_URL').value;
+    HTML_URL = document.getElementById('HTML_URL').value;
     var table = document.getElementById(table_id);
     //Delete old NDays entries
     if ($('#threshold_type').length){
@@ -345,7 +356,7 @@ function set_NDays_thresholds(table_id,node){
     if ($('#threshold').length){
         $('table#tableSodxtrmts tr#threshold').remove();
     }
-    var stat = document.getElementById("monthly_statistic").value;
+    var stat = document.getElementById('monthly_statistic').value;
     var idx = node.parentNode.parentNode.rowIndex + 1;
     if (stat =='ndays'){
         var row = table.insertRow(parseInt(idx));
@@ -358,12 +369,11 @@ function set_NDays_thresholds(table_id,node){
         '<option value="l">Less Than</option>' +
         '<option value="g">Greater Than</option>' +
         '<option value="b">Between</option></select>';
-        cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">' +
+        cell2.innerHTML = '<img alt="Help" title="Help" src="'+ IMG_URL +'QMark.png" class="trigger">' +
         ' <div class="pop-up"><div id="ht_element"></div>' +
         ' <script type="text/javascript">' +
-        '$("#ht_element").load("{{HTML_URL}}/Docu_help_texts.html #ht_element");' + 
+        '$("#ht_element").load("' + HTML_URL + 'Docu_help_texts.html #ht_element");' +
         '</script></div>';
-        //cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText(\'ht_element\')">';
 
         //Set up thresholds
         var row = table.insertRow(idx + 1);
@@ -374,12 +384,11 @@ function set_NDays_thresholds(table_id,node){
         var lgb = document.getElementById("less_greater_or_between").value;
         var threshes = set_threshes(document.getElementById("element").value).split(",");
         set_NDays_threshold_cells(lgb, threshes,cell0, cell1);
-        cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">' +
+        cell2.innerHTML = '<img alt="Help" title="Help" src="' + IMG_URL + 'QMark.png" class="trigger">' +
         ' <div class="pop-up"><div id="ht_element"></div>' +
         ' <script type="text/javascript">' +
-        '$("#ht_element").load("{{HTML_URL}}/Docu_help_texts.html #ht_element");' +
+        '$("#ht_element").load("' + HTML_URL + 'Docu_help_texts.html #ht_element");' +
         '</script></div>';
-        //cell2.innerHTML= '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="icon_small" onClick="ShowHelpText(\'ht_element\')">'
 
         //Set onchange function
         document.getElementById("less_greater_or_between").onchange = function(){
@@ -485,7 +494,9 @@ function hide_formGraph(rowClass) {
     for (idx=0;idx<trs.length;idx++){
         trs[idx].style.display = "none";
     }
-    document.getElementById('generate_graph_row').style.display = "none";
+    if ($('#generate_graph_row').length){
+        document.getElementById('generate_graph_row').style.display = "none";
+    }
 }
 
 function hide_gridpoint_map(){
@@ -619,11 +630,12 @@ function set_area_and_map(area_type){
     /*
     Sets area and map interfaces for data and applications
     */
+    var TMP_URL = document.getElementById('TMP_URL').value;
     var lv = set_area_defaults(area_type);
     //Change value of hidden var area_type
     document.getElementById('area_type').value = area_type;
     var state = document.getElementById('overlay_state').value;
-    var kml_file_path = '/csc/media/tmp/' + state + '_' + area_type + '.kml';
+    var kml_file_path = TMP_URL + state + '_' + area_type + '.kml';
     document.getElementById('kml_file_path').value=kml_file_path;
     if (area_type == 'basin' || area_type == 'county' || area_type == 'county_warning_area' || area_type =='climate_division'){
         document.getElementById('select_overlay_by').value= area_type;
@@ -659,6 +671,8 @@ function set_area_and_map(area_type){
 }
 
 function set_station_grid_select(row_id,node){
+    var IMG_URL = document.getElementById('IMG_URL').value;
+    var HTML_URL = document.getElementById('HTML_URL').value;
     /*
     Sets area types an maps for data requests and applications
     */
@@ -691,10 +705,10 @@ function set_station_grid_select(row_id,node){
     cell1.innerHTML= '<input type="text" id="' + node.value + '" name="'+ node.value +'" value="' +  lv.value + '" list="' + lv.autofill_list +'">'
     //cell3 = helptext
     cell2 = cell1.nextSibling.nextSibling;
-    cell2.innerHTML = '<img alt="QMark" title="QMark" src="/csc/media/img/QMark.png" class="trigger">' + 
+    cell2.innerHTML = '<img alt="Help" title="Help" src="' + IMG_URL + 'QMark.png" class="trigger">' + 
     ' <div class="pop-up"><div id="ht_' + node.value  + '"></div>' + 
     ' <script type="text/javascript">' +                         
-    '$("#ht_' + node.value + '").load("/csc/media/html/Docu_help_texts.html #ht_'+ node.value + '");' + 
+    '$("#ht_' + node.value + '").load("' + HTML_URL + 'Docu_help_texts.html #ht_'+ node.value + '");' + 
     '</script></div>';
 }
 

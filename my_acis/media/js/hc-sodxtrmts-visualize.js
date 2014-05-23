@@ -1,4 +1,6 @@
 $(function () {
+    var HOST = document.getElementById('HOST').value;
+    var HOST_URL = 'http://' + HOST + '/';
     var chart;
     $(document).ready(function() {
         var mischr = ["fake","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
@@ -454,8 +456,8 @@ $(function () {
                     style: {color: '#000000'}
                 },
                 credits: {
-                        href: 'http://wrcc.dri.edu/',
-                        text: 'wrcc.dri.edu'
+                        href: HOST_URL,
+                        text: HOST
                 },
                 xAxis: [
                     {

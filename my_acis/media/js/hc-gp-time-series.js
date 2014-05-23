@@ -1,4 +1,6 @@
 $(function () {
+    var HOST = document.getElementById('HOST').value;
+    var HOST_URL = 'http://' + HOST + '/';
     var style_axes = set_AxesStyle();
     var style_text = set_TitleStyle();
     var defaultChart = {
@@ -11,8 +13,8 @@ $(function () {
                 spacingRight: 20
             },
             credits: {
-                href: 'http://wrcc.dri.edu/',
-                text: 'wrcc.dri.edu'
+                href: HOST_URL,
+                text: HOST
             },
             subtitle: {
                 text: document.ontouchstart === undefined ?

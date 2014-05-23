@@ -1,4 +1,6 @@
 $(function () {
+    var HOST = document.getElementById('HOST').value;
+    var HOST_URL = 'http://' + HOST + '/';
     var style_axes = {
         color:'#000000',
         fontSize:'14px',
@@ -26,8 +28,8 @@ $(function () {
                 type: 'column'
             },
             credits: {
-                href: 'http://wrcc.dri.edu/',
-                text: 'wrcc.dri.edu'
+                href: HOST_URL,
+                text: HOST
             },
             xAxis: {
                 labels: {

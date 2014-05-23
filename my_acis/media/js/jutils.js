@@ -99,55 +99,9 @@ function ShowPopupDocu(DivId){
     });
 }
 
-function ShowHelpText(divId){
-    var pop_up_id = divId;
-    var pop_up = document.getElementById(pop_up_id);
-    pop_up.innerHTML = $('#' + pop_up_id).load('/csc/media/html/Docu_help_texts.html #' + pop_up_id);
-    var divs_to_hide = document.getElementsByClassName('pop-up');
-    for (i=0;i<divs_to_hide.length;i++){
-        if (divs_to_hide[i] != pop_up){
-            divs_to_hide[i].style.display ="none";
-        }
-        else{
-            if (pop_up.style.display == "none"){
-                divs_to_hide[i].style.display ="block";
-            }
-            else{
-                pop_up.style.display = "none";
-            }
-        }
-    }
-    /*
-    if ($('#'+ pop_up_id).length){
-        var pop_up = document.getElementById(pop_up_id);
-        //document.getElementById(pop_up_id).remove();
-        if (pop_up.style.display == "none"){
-            pop_up.style.display = "block";
-        }
-        else{
-            pop_up.style.display = "none";
-        }
-    }
-    else {
-        var pop_up = document.createElement('div');
-        //pop_up.setAttribute("class", "pop-up");
-        pop_up.setAttribute("id", pop_up_id);
-        pop_up.setAttribute("style", "display:block;");
-        document.body.appendChild(pop_up);
-         
-        //pop_up.innerHTML ="blah";
-        //var text = $('#' + pop_up_id).load('/csc/media/html/Docu_help_texts.html #' + pop_up_id);
-        var text = $('#help_ht_start_year').load('/csc/media/html/Docu_help_texts.html #ht_start_year';
-        pop_up.innerHTML = text;
-        //$( "#"+ pop_up_id ).show();
-    }
-    */
-}
 
-
-
-function Toggle(node)
-{
+function Toggle(node){
+    IMG_URL = document.getElementById('IMG_URL').value;
     // Unfold the branch if it isn't visible
     if (node.nextSibling.style.display == 'none')
     {
@@ -156,7 +110,7 @@ function Toggle(node)
         {
             if (node.children.item(0).tagName == "img")
             {
-                node.children.item(0).src = MEDIA_URL + "img/minus.gif";
+                node.children.item(0).src = IMG_URL + "minus.gif";
             }
         }
 
@@ -170,7 +124,7 @@ function Toggle(node)
         {
             if (node.children.item(0).tagName == "img")
             {
-                node.children.item(0).src = MEDIA_URL + "img/plus.gif"; 
+                node.children.item(0).src = IMG_URL + "plus.gif"; 
             }
         }
 

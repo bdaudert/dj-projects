@@ -1,4 +1,6 @@
 $(function () {
+    var HOST = document.getElementById('HOST').value;
+    var HOST_URL = 'http://' + HOST + '/';
     var masterChart,
         detailChart;
     
