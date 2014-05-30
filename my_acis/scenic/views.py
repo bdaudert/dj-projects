@@ -319,6 +319,8 @@ def data_station(request):
 
         #Data request
         resultsdict = AcisWS.get_station_data(form_cleaned, 'sodlist_web')
+        #Format data
+        resultsdict = WRCCUtils.format_station_data(resultsdict, form_cleaned,'sodlist-web')
         context['results'] = resultsdict
         context['x'] = form
         # If request successful, get params for link to apps page
