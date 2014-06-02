@@ -442,14 +442,13 @@ def data_gridded(request):
              We will support larger requests in the near future. Thank you for your patience!'
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
         if form['temporal_resolution'] in ['mly'] and 'location' not in form.keys():
-            if days > 366*5:
+            d = 366 * 5
+            if days > d:
                 context['large_request'] = \
             'At the moment we do not support data requests that exceed 5 years for monthly data.\
             Please limit your request to one grid point at a time or a date range of 10 years or less.\
             We will support larger requests in the near future. Thank you for your patience!'
-            return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
-
-
+                return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
         #Data request
         req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')
         context['hide_gp_map'] = True
@@ -458,7 +457,6 @@ def data_gridded(request):
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
         #format data
         results = WRCCUtils.format_grid_data(req, form_cleaned)
-        context['x'] = form_cleaned
         if not results:
             context['results']  = {'error': 'No data found for these parameters!'}
         else:
@@ -469,7 +467,10 @@ def data_gridded(request):
                 start_idx = 4
             else:
                 start_idx = 1
-            graph_data = [[[dat[0]] for dat in results]for el in form_cleaned['elements'].replace(' ','').split(',')]
+            if form_cleaned['data_summary'] == 'spatial':
+                graph_data =[[[dat] for dat in results] for el in form_cleaned['elements'].replace(' ','').split(',')]
+            else:
+                graph_data = [[[dat[0]] for dat in results]for el in form_cleaned['elements'].replace(' ','').split(',')]
             for date_idx,date_data in enumerate(results):
                 for el_idx,el_data in enumerate(date_data[start_idx:]):
                     graph_data[el_idx][date_idx].append(el_data)

@@ -113,6 +113,8 @@
         </tr>
         {%if initial.temporal_resolution == 'dly' and not user_params_dict.add_degree_days%}
         <tr id="add" valign="top">
+        {%elif  not user_params_dict.add_degree_days %}
+        <tr id="add" valign="top">
         {%else%}
         <tr id="add" valign="top" bgcolor="#006666">
         {%endif%}

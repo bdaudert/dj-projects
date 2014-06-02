@@ -583,12 +583,12 @@
     {%if results.stn_data|lookup:stn%}
 
     <b>Station Name</b>: {{results.stn_names|lookup:stn|safe}},<br />
+    <b>State</b>: {{results.stn_state|lookup:stn|safe}},<br />
     <b>Station ID and Network Pairs</b>:<br /> 
     {%for id_network in results.stn_ids|lookup:stn %}
     {%if forloop.counter|divisibleby:2%}<br />{%endif%}
     {{id_network}},
     {%endfor%}<br />
-    <b>State</b>: {{results.stn_state|lookup:stn|safe}},<br />
     <b>Latidude, Longitude</b>: {{results.stn_lat|lookup:stn|safe}}, {{results.stn_lon|lookup:stn|safe}},<br />
     <b>Elevation</b>: {{results.stn_elev|lookup:stn|safe}}ft<br /><br />
     <b>DATA:</b><br />
