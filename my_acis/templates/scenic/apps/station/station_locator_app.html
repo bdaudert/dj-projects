@@ -38,7 +38,7 @@
         <form id="tableDataForm" method="post" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData">
         {%if user_params_dict.select_stations_by%}
-        <tr valign="top" bgcolor="#006666">
+        <tr valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -62,7 +62,7 @@
         </script>
         </td>
         {%if user_params_dict.select_stations_by%}
-        <tr id="area" valign="top" bgcolor="#006666">
+        <tr id="area" valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr id="area" valign="top">
         {%endif%}
@@ -78,7 +78,7 @@
         </td>
         </tr>
         {%if user_params_dict.elements%}
-        <tr valign="top" bgcolor="#006666">
+        <tr valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -126,7 +126,7 @@
         </td>
         </tr> 
         {%if user_params_dict.start_date%}
-        <tr valign="top" bgcolor="#006666">
+        <tr valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -142,7 +142,7 @@
         </td>
         </tr>
         {%if user_params_dict.end_date%}
-        <tr valign="top" bgcolor="#006666">
+        <tr valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr valign="top">
         {%endif%}

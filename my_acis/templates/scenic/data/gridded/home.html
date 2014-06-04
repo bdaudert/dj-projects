@@ -25,7 +25,7 @@
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData">
         {%if user_params_dict.select_grid_by%}
-        <tr valign="top" bgcolor="#006666">
+        <tr valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -49,7 +49,7 @@
         </td>
         </tr>
         {%if user_params_dict.select_grid_by%}
-        <tr id="area" valign="top" bgcolor="#006666">
+        <tr id="area" valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr id="area" valign="top">
         {%endif%}
@@ -65,7 +65,7 @@
         </td>
         </tr>
         {%if user_params_dict.temporal_resolution%}
-        <tr valign="top" bgcolor="#006666">
+        <tr valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -87,7 +87,7 @@
         </td>
         </tr>
         {%if user_params_dict.elements%}
-        <tr id="Els" valign="top" bgcolor="#006666">
+        <tr id="Els" valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr id="Els" valign="top">
         {%endif%}
@@ -116,7 +116,7 @@
         {%elif  not user_params_dict.add_degree_days %}
         <tr id="add" valign="top">
         {%else%}
-        <tr id="add" valign="top" bgcolor="#006666">
+        <tr id="add" valign="top" bgcolor="#99C1C1">
         {%endif%}
         <td>Add special degree days: </td>
 
@@ -139,7 +139,7 @@
         <tr id="dd" valign="top">
         {%else%}
         {%if user_params_dict.add_degree_days == "T"%}
-        <tr id="dd" valign="top" bgcolor="#006666">
+        <tr id="dd" valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr id="dd" valign="top" style="display:none">
         {%endif%}
@@ -156,7 +156,7 @@
         </td>
         </tr>
         {%if user_params_dict.units%}
-        <tr valign="top" bgcolor="#006666">
+        <tr valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -177,7 +177,7 @@
         </td>
         </tr>
         {%if user_params_dict.start_date%}
-        <tr valign="top" bgcolor="#006666">
+        <tr valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -193,7 +193,7 @@
         </td>
         </tr>
         {%if user_params_dict.end_date%}
-        <tr valign="top" bgcolor="#006666">
+        <tr valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -209,7 +209,7 @@
         </td>
         </tr>
         {%if user_params_dict.grid%}
-        <tr id="grid_type" valign="top" bgcolor="#006666">
+        <tr id="grid_type" valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr id="grid_type" valign="top">
         {%endif%}
@@ -244,7 +244,7 @@
         </td>
         </tr>
         {%if user_params_dict.data_summary%}
-        <tr id="summary_type" valign="top" bgcolor="#006666">
+        <tr id="summary_type" valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr id="summary_type" valign="top">
         {%endif%}
@@ -270,7 +270,7 @@
         {%elif not initial.data_summary == "temporal" and not user_params_dict.temporal_summary%}
         <tr valign="top" id="temp_summary" style="display:none">
         {%else%}
-        <tr valign="top" id="temp_summary" bgcolor="#006666">
+        <tr valign="top" id="temp_summary" bgcolor="#99C1C1">
         {%endif%}
         <td>Temporal Summary: </td>
         <td>
@@ -295,7 +295,7 @@
         {%elif not initial.data_summary == "spatial" and not user_params_dict.spatial_summary%}
         <tr valign="top" id="spat_summary" style="display:none">
         {%else%}
-        <tr valign="top" id="spat_summary" bgcolor="#006666">
+        <tr valign="top" id="spat_summary" bgcolor="#99C1C1">
         {%endif%}
         <td>Spatial Summary: </td>
         <td>
@@ -315,7 +315,7 @@
         </div>
         </td>
         </tr>
-       <tr valign="top">
+        <tr valign="top">
         <td>Date Format: </td>
         <td>
         <select id="date_format" name="date_format" onchange="update_value(this.value)">
@@ -334,11 +334,17 @@
         </div>
         </td>
         </tr>
+        {%if large_request%}
+        <tr valign="top" bgcolor="#99C1C1">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td>Data Format: </td>
         <td>
         <select id="data_format" name="data_format" onchange="set_delimiter_and_output_file(this, 'delim','out_file') & update_value(this.value);">
+        {%if not large_request%}
         <option value="html" {{checkbox_vals.data_format_html_selected}}>Html (display on page)</option>
+        {%endif%}
         <option value="clm" {{checkbox_vals.data_format_clm_selected}}>Columnar, .txt</option>
         <option value="dlm" {{checkbox_vals.data_format_dlm_selected}}>Delimited, .dat</option>
         <option value="xl" {{checkbox_vals.data_format_xl_selected}}>Excel, .xls</option>
@@ -354,11 +360,15 @@
         </td>
         </tr>
 
-        <!--Only show when format is clm or dlm, don't show if xl-->
+        <!--Only show when format is clm or dlm or large data request but not if xl-->
         {%if initial.data_format == "clm" or initial.data_format == "dlm"%}
         <tr valign="top" id="delim" style="display:table-row">
         {%else%}
+        {%if large_request and initial.data_format != "xl"%}
+        <tr valign="top" id="delim" style="display:table-row" bgcolor="99C1C1">
+        {%else%}
         <tr valign="top" id="delim" style="display:none">
+        {%endif%}
         {%endif%}
         <td>Delimiter:</td>
         <td>
@@ -380,13 +390,17 @@
         </td>
         </tr>
         <!--Only show when data_format is clm,xl or dlm, don't show if html-->
-        {%if initial.data_format == "html"%}
+        {%if initial.data_format == "html" and not large_request%}
         <tr valign="top" id="out_file" style="display:none;">
+        {%else%}
+        {%if large_request%}
+        <tr valign="top" id="out_file" style="display:table-row;" bgcolor="#99C1C1">
         {%else%}
         <tr valign="top" id="out_file" style="display:table-row;">
         {%endif%}
+        {%endif%}
         <td>Outputfile Name: </td>
-        <td><input type="text" id="output_file_name" name="output_file_name" value="Output" onchange="update_value(this.value)"></td>
+        <td><input type="text" id="output_file_name" name="output_file_name" value="{{initial.output_file_name}}" onchange="update_value(this.value)"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
         <div id="ht_output_file_name"></div>
@@ -396,6 +410,32 @@
         </div>
         </td>
         </tr>
+        {%if large_request %}
+        <tr valign="top" bgcolor="#99C1C1">
+        <td>User Name: </td>
+        <td><input type="text" id="user_name" name="user_name" value="{{initial.user_name}}" onchange="update_value(this.value)"></td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_user_name"></div>
+        <script type="text/javascript">                        
+            $("#ht_user_name").load("{{HTML_URL}}/Docu_help_texts.html #ht_user_name");
+        </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top" bgcolor="#99C1C1">
+        <td id="User Email">User Email: </td>
+        <td><input type="text" id="user_email" name="user_email" value="{{initial.user_email}}" onchange="update_value(this.value)"></td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_user_email"></div>
+        <script type="text/javascript">                        
+            $("#ht_user_email").load("{{HTML_URL}}/Docu_help_texts.html #ht_user_email");
+        </script>
+        </div>
+        </td>
+        </tr>
+        {%endif%}
         </table>
         <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
         <input type="submit" value="Submit" name="formData"/>

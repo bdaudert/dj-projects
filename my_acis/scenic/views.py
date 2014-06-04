@@ -238,7 +238,6 @@ def data_station(request):
     if request.method == 'GET' and 'elements' in request.GET:
         form_cleaned = set_form(request,clean=True)
         form = set_form(request,clean=False)
-        context['x'] = form
         user_params_list, user_params_dict =set_user_params(form, 'data_station')
         context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
 
@@ -287,15 +286,18 @@ def data_station(request):
                     unit_dict['elev']= WRCCData.UNITS_ENGLISH['elev']
             context['el_name_dict'] = el_name_dict
             context['unit_dict'] = unit_dict
-        fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date','degree_days', 'elements']
-        form_error = check_form(form_cleaned, fields_to_check)
-        if form_error:
-            context['form_error'] = form_error
-            return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
         initial,checkbox_vals = set_data_station_initial(form)
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
         display_params_list, params_dict = set_data_station_params(form)
         context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
+        fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date','degree_days', 'elements']
+        if 'user_email' in form_cleaned.keys():
+            fields_to_check.append('user_email')
+            context['large_request'] = True
+        form_error = check_form(form_cleaned, fields_to_check)
+        if form_error:
+            context['form_error'] = form_error
+            return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
         #Check if data request is large,
         #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
         sdate = form_cleaned['start_date']
@@ -310,19 +312,32 @@ def data_station(request):
             e_date = datetime.date(int(edate[0:4]), int(edate[4:6]),int(edate[6:8]))
         days = (e_date - s_date).days
         #if time range > 1 year or user requests data for more than 1 station, large request via ftp
+        if 'user_name' in form_cleaned.keys():
+            ldr = \
+                'Data request submitted successfully. \
+                Notification will be send to %s when the request has been processed!' %form_cleaned['user_email']
+            #Process request offline
+            json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
+            WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, json_dict)
+        else:
+            ldr = \
+                'You requested a large amount of data. \
+                Please provide data format, output file name, your user name and email and resubmit the form.\
+                we will process your request off-line and \
+                notify you when your request has been processed. \
+                Thank you for your patience!'
         if days > 366 and 'station_id' not in form.keys():
-            context['large_request'] = \
-            'At the moment we do not support data requests that exceed 1 year for multiple station.\
-             Please limit your request to one station at a time or a date range of one year or less.\
-             We will support larger requests in the near future. Thank you for your patience!'
+            context['large_request'] = ldr
+            #Write data to file and deposit in data request dir
+            json_file = form_cleaned['output_file_name'] + '_params.json'
+            WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
             return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
 
         #Data request
         resultsdict = AcisWS.get_station_data(form_cleaned, 'sodlist_web')
         #Format data
-        resultsdict = WRCCUtils.format_station_data(resultsdict, form_cleaned,'sodlist-web')
+        resultsdict = WRCCUtils.format_station_data(resultsdict, form_cleaned)
         context['results'] = resultsdict
-        context['x'] = form
         # If request successful, get params for link to apps page
         context['stn_idx'] = [i for i in range(len(resultsdict['stn_ids']))] #for html looping
         if 'station_ids' in form_cleaned.keys():
@@ -408,46 +423,52 @@ def data_gridded(request):
                     form['select_grid_by'] = key
                     form_cleaned['select_grid_by'] = key
                     break
+        initial,checkbox_vals = set_data_gridded_initial(form)
+        context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
+        display_params_list, params_dict = set_data_gridded_params(form)
+        context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
         fields_to_check = [form_cleaned['select_grid_by'],'start_date', 'end_date','degree_days','elements']
+        if 'user_email' in form_cleaned.keys():
+            fields_to_check.append('user_email')
+            context['large_request'] = True
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
-        initial,checkbox_vals = set_data_gridded_initial(form)
-        context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
-        display_params_list, params_dict = set_data_gridded_params(form)
         context['elev_unit'] = 'ft'
         if 'units' in form.keys() and form['units'] == 'metric':context['elev_unit'] = 'm'
         #Add id in display params and change params_dict to id if needed
         if form[form['select_grid_by']].upper()!= form_cleaned[form_cleaned['select_grid_by']].upper():
             display_params_list[0][1]+= ', ' + str(form_cleaned[form_cleaned['select_grid_by']])
             params_dict[form['select_grid_by']] = str(form_cleaned[form_cleaned['select_grid_by']])
-        context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
         #Check if data request is large,
         #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
         s_date = datetime.date(int(form_cleaned['start_date'][0:4]), int(form_cleaned['start_date'][4:6]),int(form_cleaned['start_date'][6:8]))
         e_date = datetime.date(int(form_cleaned['end_date'][0:4]), int(form_cleaned['end_date'][4:6]),int(form_cleaned['end_date'][6:8]))
         days = (e_date - s_date).days
         #if time range > 1 month or user requests data for more than 1 grid point, large request via ftp
+        if 'user_name' in form_cleaned.keys():
+            ldr = \
+                'Data request submitted successfully. \
+                Notification will be send to %s when the request has been processed!' %form_cleaned['user_email']
+            json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
+            WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
+        else:
+            ldr = \
+                'You requested a large amount of data. \
+                Please provide data format, output file name, your user name and email and resubmit the form.\
+                we will process your request off-line and \
+                notify you when your request has been processed. \
+                Thank you for your patience!'
         if days > 31 and 'location' not in form.keys() and form['temporal_resolution'] not in ['yly','mly']:
-            context['large_request'] = \
-            'At the moment we do not support data requests that exceed 1 month.\
-             Please limit your request to one grid point at a time or a date range of one month or less.\
-             We will support larger requests in the near future. Thank you for your patience!'
+            context['large_request'] = ldr
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
         if days > 7 and 'state' in form.keys():
-            context['large_request'] = \
-            'At the moment we do not support data requests that exceed 7 days for US states.\
-             Please limit your request to one week.\
-             We will support larger requests in the near future. Thank you for your patience!'
+            context['large_request'] = ldr
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
         if form['temporal_resolution'] in ['mly'] and 'location' not in form.keys():
-            d = 366 * 5
-            if days > d:
-                context['large_request'] = \
-            'At the moment we do not support data requests that exceed 5 years for monthly data.\
-            Please limit your request to one grid point at a time or a date range of 10 years or less.\
-            We will support larger requests in the near future. Thank you for your patience!'
+            if days > 366 * 5:
+                context['large_request'] = ldr
                 return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
         #Data request
         req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')
@@ -2930,6 +2951,8 @@ def set_data_station_initial(request):
     initial['date_format'] = Get('date_format', 'dash')
     initial['delimiter'] = Get('delimiter', 'space')
     initial['output_file_name'] = Get('output_file_name', 'Output')
+    initial['user_name'] = Get('user_name', 'Your Name')
+    initial['user_email'] = Get('user_email', 'Your Email')
     #set the check box values
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
         checkbox_vals[area_type + '_selected'] =''
@@ -2998,6 +3021,8 @@ def set_data_gridded_initial(request):
     initial['date_format'] = Get('date_format', 'dash')
     initial['delimiter'] = Get('delimiter', 'space')
     initial['output_file_name'] = Get('output_file_name', 'Output')
+    initial['user_name'] = Get('user_name', 'Your Name')
+    initial['user_email'] = Get('user_email', 'Your Email')
     #set the check box values
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
         checkbox_vals[area_type + '_selected'] =''

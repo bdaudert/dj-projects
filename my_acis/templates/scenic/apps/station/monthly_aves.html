@@ -21,7 +21,7 @@
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData">
         {%if user_params_dict.station_id%}
-        <tr valign="top" bgcolor="#006666">
+        <tr valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -42,7 +42,7 @@
         <td></td>
         </td>
         {%if user_params_dict.elements%}
-        <tr valign="top" bgcolor="#006666">
+        <tr valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -72,7 +72,7 @@
         </td>
         </tr>
         {%if user_params_dict.add_degree_days == "T"%}
-        <tr valign="top" bgcolor="#006666">
+        <tr valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -96,7 +96,7 @@
         <tr id="dd" valign="top">
         {%else%}
         {%if user_params_dict.add_degree_days == "T"%}
-        <tr id="dd" valign="top" bgcolor="#006666">
+        <tr id="dd" valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr id="dd" valign="top" style="display:none">
         {%endif%}
@@ -113,7 +113,7 @@
         </td>
         </tr>
         {%if user_params_dict.units%}
-        <tr valign="top" bgcolor="#006666">
+        <tr valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -134,7 +134,7 @@
         </td>
         </tr>
         {%if user_params_dict.start_date%}
-        <tr valign="top" bgcolor="#006666">
+        <tr valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -150,7 +150,7 @@
         </td>
         </tr>
         {%if user_params_dict.elements%}
-        <tr valign="top" bgcolor="#006666">
+        <tr valign="top" bgcolor="#99C1C1">
         {%else%}
         <tr valign="top">
         {%endif%}

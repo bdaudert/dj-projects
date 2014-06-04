@@ -24,11 +24,11 @@
         {%for field in form1 %}
         {%if not field.is_hidden%}
         {%if user_params_dict.station_id and field.label == "Station id"%}
-        <tr bgcolor="#006666">
+        <tr bgcolor="#99C1C1">
         {%elif user_params_dict.start_year and field.label == "Start year"%}
-        <tr bgcolor="#006666">
+        <tr bgcolor="#99C1C1">
         {%elif user_params_dict.end_year and field.label == "End year"%}
-        <tr bgcolor="#006666">
+        <tr bgcolor="#99C1C1">
         {%else%}
         <tr>
         {%endif%}

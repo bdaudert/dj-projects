@@ -91,7 +91,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     <td valign="top">
     <table id="tableData" frame="box" cell-padding="20">
     {%if user_params_dict.station_id%}
-    <tr valign="top" bgcolor="#006666">
+    <tr valign="top" bgcolor="#99C1C1">
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -107,7 +107,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </td>
     </tr>
     {%if user_params_dict.station_id%}
-    <tr valign="top" bgcolor="#006666">
+    <tr valign="top" bgcolor="#99C1C1">
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -116,7 +116,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     <td></td>
     </tr>
     {%if user_params_dict.start_date or user_params_dict.start_year%}
-    <tr valign="top" bgcolor="#006666">
+    <tr valign="top" bgcolor="#99C1C1">
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -132,7 +132,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </td>
     </tr>
     {%if user_params_dict.end_date or user_params_dict.end_year%}
-    <tr valign="top" bgcolor="#006666">
+    <tr valign="top" bgcolor="#99C1C1">
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -148,7 +148,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </td>
     </tr>
     {%if user_params_dict.elements%}
-    <tr valign="top" bgcolor="#006666">
+    <tr valign="top" bgcolor="#99C1C1">
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -181,7 +181,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     {%if initial.base_temperature and not user_params_dict.base_temperature%}
     <tr id="base_temp" valign="top">
     {%elif initial.base_temperature and user_params_dict.base_temperature%}
-    <tr id="base_temp" valign="top" bgcolor="#006666">
+    <tr id="base_temp" valign="top" bgcolor="#99C1C1">
     {%else%}
     <tr id="base_temp" valign="top" style="display:none">
     {%endif%}
