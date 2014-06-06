@@ -229,7 +229,7 @@ function initialize_station_finder() {
             var tbl_row = document.createElement('tr');
             tbl_row.cString = contentString;
             //tbl_row.marker = marker;
-            tbl_row.name = c.name; 
+            tbl_row.name = c.name;
             tbl_row.onclick = function(){
                 infowindow.close();
                 infowindow.setContent(this.cString);
@@ -259,15 +259,13 @@ function initialize_station_finder() {
             }
             //Complete table row list for on and off switch
             tbl_rows.push(tbl_row);
-            //var station_list = document.getElementById('station_list');
-            //station_list.appendChild(tbl_row);
             //Set Initial markers
             marker.setVisible(true);
             document.getElementById(c.marker_category).checked = true;
             //Push markers
             markers.push(marker);
         }); //end each
-       
+        var table_rows_showing = tbl_rows_unique;  
         /*
         On zoom change reset the markers
         Note: zoom_changed event fires before the bounds have been recalculated. 
@@ -282,17 +280,19 @@ function initialize_station_finder() {
                 this.zoomChanged = false;
             }
             /*
-            Reset station_ids_str for link to data finder:
+            Reset station_ids_str for link to data finder and table rows:
             Look through currently showing markers and see if they lie within bounds
             of zoomed map
             */
-        
-            station_ids_str='';
+            var station_list = document.getElementById('station_list');
+            var table_rows = station_list.getElementsByTagName('tr'); 
+            station_list.innerHTML=''; 
             var mapBounds = map.getBounds();
             for (var i=0; i<markers_showing.length; i++) {
                 if (mapBounds.contains(new google.maps.LatLng(markers_showing[i].lat, markers_showing[i].lon))) {
                     // marker is within new bounds
                     station_ids_str+=markers_showing[i].name + ',';
+                    station_list.appendChild(table_rows_showing[i]);
                 }
             }
             //Remove trailing comma and set html element
@@ -306,23 +306,20 @@ function initialize_station_finder() {
             //Delete old station_list table rows
             var station_list = document.getElementById('station_list');
             var table_rows = station_list.getElementsByTagName('tr');
-            /*
-            for (var i=0; i<table_rows.length; i++) {
-                station_list.removeChild(tableRows[x]);
-            }
-            */
             station_list.innerHTML = "";
             var station_ids_str = '';
             var markers_showing = [];
+            var table_rows_showing =[];
             var name_unique = '';
             for (var i=0; i<markers.length; i++) {
                 if (category == 'all') {
                     markers[i].setVisible(true);
                     if (markers[i].name != name_unique){
-                        station_list.appendChild(tbl_rows[i]);
+                        station_list.appendChild(table_rows[i]);
                         name_unique = markers[i].name;
                         station_ids_str+=markers[i].name + ',';
                         markers_showing.push(markers[i]);
+                        table_rows_showing.push(tbl_rows[i]);
                     }
                     for (var key in data.network_codes) {
                         // == check all the checkboxes ==
@@ -337,6 +334,7 @@ function initialize_station_finder() {
                         name_unique = markers[i].name;
                         station_ids_str+=markers[i].name + ',';
                         markers_showing.push(markers[i]);
+                        table_rows_showing.push(tbl_rows[i]);
                     }
                     document.getElementById(category).checked = true;
                 }
@@ -354,12 +352,14 @@ function initialize_station_finder() {
             //var station_ids_str = document.getElementById('station_ids_str').value 
             var station_ids_str = '';
             var markers_showing =[];
+            var table_rows_showing = [];
             for (var i=0; i<markers.length; i++){
                 var name = markers[i].name;
                 var cat =markers[i].category;
                 station_ids_str+=name + ',';
                 var l = (name + ',').length;
                 markers_showing.push(markers[i]);
+                table_rows_showing.push(table_rows[i]);
                 if (category == 'all') {
                     station_ids_str = ''
                     markers_showing = [];
@@ -379,7 +379,7 @@ function initialize_station_finder() {
                     markers[i].setVisible(false);
                     station_ids_str = station_ids_str.substring(0,station_ids_str.length - l);
                     markers_showing.pop();
-                    
+                    table_rows_showing.pop();
                     for (var t=0;t<table_rows.length;t++){
                         if (parseInt(table_rows[t].name) == name){
                             table_rows[t].parentNode.removeChild(table_rows[t]);

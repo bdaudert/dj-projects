@@ -302,7 +302,7 @@
         $("#Docu_el_date_constraints_examples").load("{{HTML_URL}}/Docu_el_date_constraints_examples.html");
         </script>
         </div>
-        
+        <!--Deal with form errors-->  
         {%if form_error%}
         {%for key, val in form_error.items%}
         <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
