@@ -6,15 +6,19 @@ function set_href_to_datafind(anchor){
 }
 */
 
+
 $(function() {
     $('#link_to_datafind').click(function(event){
         event.preventDefault();
-        //var href_pre = $(this).attr('href');
         var href_pre = this.href;
         stn_ids = document.getElementById('station_ids_str').value;
-        href_pre+='&station_ids=' + stn_ids;
-        //$(this).attr('href',href_pre);
-        window.open(href_pre,'_blank');
+        //href_pre+='&station_ids=' + stn_ids;
+        href_pre+='&station_ids=Selected Stations';
+        dataWindow = window.open(href_pre,'_blank');
+        dataWindow.onload = function(){
+            dataWindow.document.getElementById('station_ids').value = stn_ids;
+        }
+        return dataWindow;
     });
 });
 

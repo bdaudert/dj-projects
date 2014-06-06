@@ -284,6 +284,7 @@ function initialize_station_finder() {
             Look through currently showing markers and see if they lie within bounds
             of zoomed map
             */
+            var station_ids_str = '';
             var station_list = document.getElementById('station_list');
             var table_rows = station_list.getElementsByTagName('tr'); 
             station_list.innerHTML=''; 
