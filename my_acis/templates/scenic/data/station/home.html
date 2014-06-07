@@ -594,6 +594,12 @@
     </p>
     {%endif%}
    
+    {%if too_large%}
+    <p class="error">{{too_large}}</p>
+    {%endif%}
+    
+    {{x}}<br />
+    {{xx}}
 
     {%if results%}
     {%if results.error%}

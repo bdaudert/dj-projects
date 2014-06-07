@@ -657,7 +657,10 @@
     {%if large_request %}
     <p class="error">{{large_request}}</p>
     {%endif%}
-
+    {%if too_large %}
+    <p class="error">{{too_large}}</p>
+    {%endif%}
+    
     {%if results.error%}
     <p class="error">{{results.error}}</p>
     {%endif%}
@@ -680,6 +683,7 @@
     {%endfor%}
     </p>
     {%endif%}
+
     {%if results and not results.error%}
     <div id="Arrow">
     <table style="display:block;">

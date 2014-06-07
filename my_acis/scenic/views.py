@@ -311,7 +311,21 @@ def data_station(request):
         else:
             e_date = datetime.date(int(edate[0:4]), int(edate[4:6]),int(edate[6:8]))
         days = (e_date - s_date).days
-        #if time range > 1 year or user requests data for more than 1 station, large request via ftp
+        #Find potential data size: we find enclosing bbox and assume
+        #stations are placed evenly on a 50km grid
+        bbox = []
+        if 'shape' in form.keys():
+            t,bbox = WRCCUtils.get_bbox(form['shape'])
+        elif form['select_stations_by'] in ['basin', 'state', 'climate_division', 'county', 'county_warning_area']:
+            sa = WRCCData.SEARCH_AREA_FORM_TO_ACIS[form['select_stations_by']]
+            bbox = AcisWS.get_acis_bbox_of_area(sa, form_cleaned[form_cleaned['select_stations_by']])
+        if 'station_ids' in form.keys():
+            num_lats, num_lons = 1, len(form['station_ids'].split(','))
+        else:
+            num_lats, num_lons = WRCCUtils.find_num_lls(bbox,'4')
+        num_data_points = days * num_lats *num_lons * len(form_cleaned['elements'])
+        num_giga_bytes = 8 * num_data_points /float(1024**3)
+        num_mega_bytes = round(8 * num_data_points /float(1024**2),2)
         if 'user_name' in form_cleaned.keys():
             ldr = \
                 'Data request submitted successfully. \
@@ -319,14 +333,20 @@ def data_station(request):
             #Process request offline
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, json_dict)
+        elif num_giga_bytes >1:
+            ldr = 'At the moment we do not accept data requests producing \
+                more than 1GB of data. Your request size is approximately %s GB' %str(num_giga_bytes)
+            context['too_large'] = ldr
+            return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
         else:
             ldr = \
                 'You requested a large amount of data. \
+                Your dataset is potentailly as large as %s MB \
                 Please provide data format, output file name, your user name and email and resubmit the form.\
                 we will process your request off-line and \
                 notify you when your request has been processed. \
-                Thank you for your patience!'
-        if days > 366 and 'station_id' not in form.keys():
+                Thank you for your patience!' %str(num_mega_bytes)
+        if 0.00098 < num_giga_bytes and  num_giga_bytes < 1:
             context['large_request'] = ldr
             #Write data to file and deposit in data request dir
             json_file = form_cleaned['output_file_name'] + '_params.json'
@@ -446,30 +466,49 @@ def data_gridded(request):
         s_date = datetime.date(int(form_cleaned['start_date'][0:4]), int(form_cleaned['start_date'][4:6]),int(form_cleaned['start_date'][6:8]))
         e_date = datetime.date(int(form_cleaned['end_date'][0:4]), int(form_cleaned['end_date'][4:6]),int(form_cleaned['end_date'][6:8]))
         days = (e_date - s_date).days
-        #if time range > 1 month or user requests data for more than 1 grid point, large request via ftp
+        bbox = []
+        if 'shape' in form.keys():
+            t,bbox = WRCCUtils.get_bbox(form['shape'])
+        elif form['select_grid_by'] in ['basin', 'state', 'climate_division', 'county', 'county_warning_area']:
+            sa = WRCCData.SEARCH_AREA_FORM_TO_ACIS[form['select_grid_by']]
+            bbox = AcisWS.get_acis_bbox_of_area(sa, form_cleaned[form_cleaned['select_grid_by']])
+        num_lats, num_lons = WRCCUtils.find_num_lls(bbox,form['grid'])
+        '''
+        num_lats, num_lons = 1, 1
+        if form['data_summary'] != 'spatial':
+            num_lats, num_lons = WRCCUtils.find_num_lls(bbox,form['grid'])
+        '''
+        time_interval = 1
+        if form['temporal_resolution'] == 'mly':time_interval =30.0
+        if form['temporal_resolution'] == 'yly':time_interval =365.0
+        if form['data_summary'] == 'temporal':time_interval=time_interval * float(days)
+        num_data_points = days * num_lats *num_lons * len(form_cleaned['elements']) / time_interval
+        num_giga_bytes = 8 * num_data_points /float(1024**3)
+        num_mega_bytes = round(8 * num_data_points /float(1024**2),2)
         if 'user_name' in form_cleaned.keys():
             ldr = \
                 'Data request submitted successfully. \
                 Notification will be send to %s when the request has been processed!' %form_cleaned['user_email']
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
+        elif num_giga_bytes > 1:
+            ldr = 'At the moment we do not accept data requests producing \
+                more than 1GB of data. Your request size is approximately %s GB' %str(num_giga_bytes)
+            context['too_large'] = ldr
+            return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
         else:
             ldr = \
                 'You requested a large amount of data. \
+                Your dataset is approximately %s MB.\
                 Please provide data format, output file name, your user name and email and resubmit the form.\
                 we will process your request off-line and \
                 notify you when your request has been processed. \
-                Thank you for your patience!'
-        if days > 31 and 'location' not in form.keys() and form['temporal_resolution'] not in ['yly','mly']:
+                Thank you for your patience!' %str(num_mega_bytes)
+        #Background data job for requests between 1MB and 1GB
+        if 0.00098 < num_giga_bytes and  num_giga_bytes < 1:
             context['large_request'] = ldr
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
-        if days > 7 and 'state' in form.keys():
-            context['large_request'] = ldr
-            return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
-        if form['temporal_resolution'] in ['mly'] and 'location' not in form.keys():
-            if days > 366 * 5:
-                context['large_request'] = ldr
-                return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
+
         #Data request
         req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')
         context['hide_gp_map'] = True
@@ -2400,7 +2439,7 @@ def set_spatial_summary_params(form):
         #Convert to string to avoid unicode issues
         search_params[key] = str(val)
         if key == 'grid':
-            display_params_list[5] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.GRID_CHOICES[val]]
+            display_params_list[5] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.GRID_CHOICES[val][0]]
         elif key == 'spatial_summary':
             display_params_list[4] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[val]]
             search_params['spatial_summary_long'] = WRCCData.DISPLAY_PARAMS[form[key]]
@@ -2451,7 +2490,7 @@ def set_data_gridded_params(form):
         params_dict[key] = str(val)
 
         if key == 'grid':
-            display_params_list[2] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.GRID_CHOICES[val]]
+            display_params_list[2] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.GRID_CHOICES[val][0]]
         elif key in ['data_summary','temporal_resolution']:
             display_params_list[3] = [WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[val]]
             #params_dict[WRCCData.DISPLAY_PARAMS[key]] = WRCCData.DISPLAY_PARAMS[val]
@@ -2684,7 +2723,7 @@ def set_user_params(form, app_name):
         user_params_dict['spatial_summary'] = f['spatial_summary']
         user_params_dict['data_summary'] = 'spatial'
     if 'grid' in f.keys():
-        user_params_list.append(['Grid', WRCCData.GRID_CHOICES[f['grid']]])
+        user_params_list.append(['Grid', WRCCData.GRID_CHOICES[f['grid'][0]]])
         user_params_dict['grid'] = f['grid']
     if 'units' in f.keys():
         user_params_list.append(['Units', WRCCData.DISPLAY_PARAMS[f['units']]])
