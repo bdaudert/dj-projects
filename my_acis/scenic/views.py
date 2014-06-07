@@ -332,7 +332,8 @@ def data_station(request):
                 Notification will be send to %s when the request has been processed!' %form_cleaned['user_email']
             #Process request offline
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
-            WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, json_dict)
+            WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
+            #WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, json_dict)
         elif num_giga_bytes >1:
             ldr = 'At the moment we do not accept data requests producing \
                 more than 1GB of data. Your request size is approximately %s GB' %str(num_giga_bytes)
