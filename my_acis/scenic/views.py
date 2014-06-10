@@ -328,7 +328,7 @@ def data_station(request):
         num_mega_bytes = round(8 * num_data_points /float(1024**2),2)
         if 'user_name' in form_cleaned.keys():
             ldr = \
-                'Data request submitted successfully. \
+                'Data request submitted successfully. \n \
                 Notification will be send to %s when the request has been processed!' %form_cleaned['user_email']
             #Process request offline
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
@@ -488,7 +488,7 @@ def data_gridded(request):
         num_mega_bytes = round(8 * num_data_points /float(1024**2),2)
         if 'user_name' in form_cleaned.keys():
             ldr = \
-                'Data request submitted successfully. \
+                'Data request submitted successfully. \n \
                 Notification will be send to %s when the request has been processed!' %form_cleaned['user_email']
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)

@@ -133,11 +133,13 @@ function initialize_station_finder() {
             content: 'oi'
         });
         var markers = [];
-        var markers_showing = [];
         var tbl_rows = [];
-        var tbl_rows_unique = []
+        //for bounds_changed function
+        //we need to keep track what markers/stations appear
+        var markers_showing = [];
+        var tbl_rows_showing = [];
         //Define markers and table rows
-        var name_previous = '';
+        var name_unique = '';
         var marker_count =0;
         $.each(data.stations, function(index, c) {
             //Define markers
@@ -250,22 +252,21 @@ function initialize_station_finder() {
             c.state + '</td>' + t_data + c.lat + '</td>' + t_data +
             c.lon + '</td>' + t_data + c.elevation + '</td>' + t_data +
             c.stn_networks +'</td>';
-            if (c.name != name_previous){
-                markers_showing.push(marker);
-                tbl_rows_unique.push(tbl_row);
-                name_previous = c.name;
+            if (c.name != name_unique){
+                name_unique = c.name;
                 var station_list = document.getElementById('station_list');
                 station_list.appendChild(tbl_row);
             }
             //Complete table row list for on and off switch
             tbl_rows.push(tbl_row);
+            tbl_rows_showing.push(tbl_row);
             //Set Initial markers
             marker.setVisible(true);
             document.getElementById(c.marker_category).checked = true;
             //Push markers
             markers.push(marker);
+            markers_showing.push(marker);
         }); //end each
-        var table_rows_showing = tbl_rows_unique;  
         /*
         On zoom change reset the markers
         Note: zoom_changed event fires before the bounds have been recalculated. 
@@ -286,14 +287,23 @@ function initialize_station_finder() {
             */
             var station_ids_str = '';
             var station_list = document.getElementById('station_list');
-            var table_rows = station_list.getElementsByTagName('tr'); 
+            //var table_rows = station_list.getElementsByTagName('tr'); 
             station_list.innerHTML=''; 
             var mapBounds = map.getBounds();
-            for (var i=0; i<markers_showing.length; i++) {
-                if (mapBounds.contains(new google.maps.LatLng(markers_showing[i].lat, markers_showing[i].lon))) {
+            var name_unique = ''
+            for (var i=0; i<markers.length; i++) {
+                markers[i].setVisible(false);
+                if (mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))) {
                     // marker is within new bounds
-                    station_ids_str+=markers_showing[i].name + ',';
-                    station_list.appendChild(table_rows_showing[i]);
+                    //Check if it is currently showing on map
+                    if (markers_showing.indexOf(markers[i]) >= 0){
+                        markers[i].setVisible(true);
+                        if (markers[i].name != name_unique){            
+                            station_ids_str+=markers[i].name + ',';
+                            station_list.appendChild(tbl_rows[i]);
+                            name_unique = markers[i].name;
+                        }
+                    }
                 }
             }
             //Remove trailing comma and set html element
@@ -306,21 +316,21 @@ function initialize_station_finder() {
         show = function(category) {
             //Delete old station_list table rows
             var station_list = document.getElementById('station_list');
-            var table_rows = station_list.getElementsByTagName('tr');
-            station_list.innerHTML = "";
+            station_list.innerHTML = '';
             var station_ids_str = '';
-            var markers_showing = [];
-            var table_rows_showing =[];
             var name_unique = '';
+            markers_showing = [];
+            tbl_rows_showing = [];
+            var mapBounds = map.getBounds();
             for (var i=0; i<markers.length; i++) {
-                if (category == 'all') {
+                if (category == 'all'  && mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))) {
                     markers[i].setVisible(true);
+                    markers_showing.push(markers[i]);
+                    tbl_rows_showing.push(tbl_rows[i]);
                     if (markers[i].name != name_unique){
-                        station_list.appendChild(table_rows[i]);
+                        station_list.appendChild(tbl_rows[i]);
                         name_unique = markers[i].name;
                         station_ids_str+=markers[i].name + ',';
-                        markers_showing.push(markers[i]);
-                        table_rows_showing.push(tbl_rows[i]);
                     }
                     for (var key in data.network_codes) {
                         // == check all the checkboxes ==
@@ -328,15 +338,12 @@ function initialize_station_finder() {
                     }
                     document.getElementById('all').checked = true;
                 }
-                else if (markers[i].category == category) {
+                else if (markers[i].category == category && mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))) {
                     markers[i].setVisible(true);
-                    if (markers[i].name != name_unique){
-                        station_list.appendChild(tbl_rows[i]);
-                        name_unique = markers[i].name;
-                        station_ids_str+=markers[i].name + ',';
-                        markers_showing.push(markers[i]);
-                        table_rows_showing.push(tbl_rows[i]);
-                    }
+                    markers_showing.push(markers[i]);
+                    tbl_rows_showing.push(tbl_rows[i]);
+                    station_list.appendChild(tbl_rows[i]);
+                    station_ids_str+=markers[i].name + ',';
                     document.getElementById(category).checked = true;
                 }
             }
@@ -349,27 +356,25 @@ function initialize_station_finder() {
         hide = function(category) {
             //remove all rows that belong to category
             var station_list = document.getElementById('station_list');
-            var table_rows = station_list.getElementsByTagName('tr');
-            //var station_ids_str = document.getElementById('station_ids_str').value 
+            station_list.innerHTML = '';
             var station_ids_str = '';
-            var markers_showing =[];
-            var table_rows_showing = [];
+            name_unique = '';
+            markers_showing = [];
+            tbl_rows_showing = [];
+            var mapBounds = map.getBounds();
             for (var i=0; i<markers.length; i++){
                 var name = markers[i].name;
                 var cat =markers[i].category;
                 station_ids_str+=name + ',';
                 var l = (name + ',').length;
-                markers_showing.push(markers[i]);
-                table_rows_showing.push(table_rows[i]);
                 if (category == 'all') {
                     station_ids_str = ''
-                    markers_showing = [];
                     markers[i].setVisible(false);
+                    /*
                     for (var t=0;t<table_rows.length;t++){
-                        if (parseInt(table_rows[t].name) == name){
-                            table_rows[t].parentNode.removeChild(table_rows[t]);
-                        }
+                        table_rows[t].parentNode.removeChild(table_rows[t]);
                     }
+                    */
                     for (var key in data.network_codes) {
                         // == clear all the checkboxes ==
                         document.getElementById(data.network_codes[key]).checked = false;
@@ -379,17 +384,18 @@ function initialize_station_finder() {
                 else if (cat == category) {
                     markers[i].setVisible(false);
                     station_ids_str = station_ids_str.substring(0,station_ids_str.length - l);
-                    markers_showing.pop();
-                    table_rows_showing.pop();
-                    for (var t=0;t<table_rows.length;t++){
-                        if (parseInt(table_rows[t].name) == name){
-                            table_rows[t].parentNode.removeChild(table_rows[t]);
-                        }
-                    }
                     // == clear the checkbox ==
                     document.getElementById(category).checked = false;
                     //Clear 'show all networks' button
                     document.getElementById('all').checked = false;
+                }
+                else if (cat != category && mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))) {
+                    if (document.getElementById(cat).checked){
+                        markers_showing.push(markers[i]);
+                        tbl_rows_showing.push(tbl_rows[i]);
+                        station_list.appendChild(tbl_rows[i]);
+                        name_unique = markers[i].name;
+                    }
                 }
             }
             //Remove trailing comma and set html element
