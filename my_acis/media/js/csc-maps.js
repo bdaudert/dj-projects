@@ -343,8 +343,20 @@ function initialize_station_finder() {
                     markers_showing.push(markers[i]);
                     tbl_rows_showing.push(tbl_rows[i]);
                     station_list.appendChild(tbl_rows[i]);
+                    name_unique = markers[i].name;
                     station_ids_str+=markers[i].name + ',';
                     document.getElementById(category).checked = true;
+                }
+                else if (markers[i].category != category && document.getElementById(markers[i].category).checked){
+                    if (mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))) {
+                        markers[i].setVisible(true);
+                        if (markers[i].name != name_unique){
+                            markers_showing.push(markers[i]);
+                            tbl_rows_showing.push(tbl_rows[i]);
+                            station_list.appendChild(tbl_rows[i]);
+                            station_ids_str+=markers[i].name + ',';
+                        }
+                    }
                 }
             }
             //Remove trailing comma and set html element
