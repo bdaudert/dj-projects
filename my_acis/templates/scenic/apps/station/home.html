@@ -69,7 +69,7 @@
         </script>
 
     <table cellpadding="20">
-    <td valign="top" width=15%>
+    <td valign="top" width=10%>
     </td>
     <td valign="top" width=60%>
     <!-- link from station data-->
@@ -158,12 +158,11 @@
         </tr>
         </table>
     </td>
-    <td valign="top" width="30%">    
+    <td valign="top" width="35%">    
         {%if not user_params_dict.station_id%}
         <h3 align ="center">Links to external Applications</h3>
-        <ul class="navbar">    
             <!--<h4 align="center">US-Wide Applications</h4>-->
-            <table>
+            <table frame="box" cellpadding="5px">
                 <tr><td>
                 <a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger_hover" target="_blank">WRCC-USA Climate Archive</a>
                 <div class="pop-up">
@@ -174,28 +173,27 @@
                 <img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="ShowPopupDocu('Docu_ClimArch')">
                 </td></tr>
                 <tr><td>
-                <a id="us_wide" href="http://wrcc.dri.edu/sod-products/" class="trigger_hover" target="_blank">WRCC-Summary of the Day (SOD) products(COOP stations only)</a>
+                <a id="us_wide" href="http://wrcc.dri.edu/sod-products/" class="trigger_hover" target="_blank">WRCC-Summary of the Day products</a>
                 <div class="pop-up" id="sods">
-                    <p>Data Lister, Graphs, Monthly Data Summaries.</p>
+                    <p>Data Lister, Graphs, Monthly Data Summaries for COOP stations.</p>
                 </div>
                 </td></tr>
-                <tr><td>
-                <a id="us_wide" href="http://wrcc.dri.edu/sod/sodusa.html" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;Daily Lister</a>
+                <tr><td align="right">
+                <a id="us_wide" href="http://wrcc.dri.edu/sod/sodusa.html" target="_blank">Daily Lister</a>
                 </td><td>
                 <img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SOD_DLG')">
                 </td></tr>
-                <tr><td>
-                <a id="us_wide" href="http://wrcc.dri.edu/cgi-bin/coopdata0.pl"target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;Monthly Data Lister</a>
+                <tr><td align="right">
+                <a id="us_wide" href="http://wrcc.dri.edu/cgi-bin/coopdata0.pl"target="_blank">Monthly Data Lister</a>
                 </td><td>
                 <img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SOD_MDL')">
                 </td></tr>
-                <tr><td>
-                <a id="us_wide" href="http://wrcc.dri.edu/sod/sodusaxtrm.html" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;Monthly Summaries</a>
+                <tr><td align="right">
+                <a id="us_wide" href="http://wrcc.dri.edu/sod/sodusaxtrm.html" target="_blank">Monthly Summaries</a>
                 </td><td>
                 <img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SOD_MSUM')">
                 </td></tr>
             </table>
-       </ul>
         {%endif%}
     </td>
     </table>

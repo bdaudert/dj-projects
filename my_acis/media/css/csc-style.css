@@ -8,7 +8,8 @@ html {
 }
 */
 body {
-    font:"Lucida Grande", Lucida, Verdana, sans-serif;
+    /*font:"Lucida Grande", Lucida, Verdana, sans-serif;*/
+    font:"Arial Black",Gadget,sans-serif;
     background-color: #006666;
     margin: 0;
     padding: 0;
@@ -321,7 +322,7 @@ ul.navbar a {
   display: none;
   position: absolute;
   /*width: 300px;*/
-  padding: 0px;
+  padding: 5px;
   background: #FFEFD5;
   border: 1px solid #000000;
   font-size: 3;

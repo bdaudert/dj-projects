@@ -136,7 +136,7 @@
         <div class="pop-up">
         <div id="ht_start_date"></div>
         <script type="text/javascript">                        
-        $("#ht_start_date").load("{{HTML_URL}}/Docu_help_texts.html #ht_date");
+        $("#ht_start_date").load("{{HTML_URL}}/Docu_help_texts.html #ht_date_station");
         </script>
         </div>
         </td>
@@ -152,7 +152,7 @@
         <div class="pop-up">
         <div id="ht_end_date"></div>
         <script type="text/javascript">                        
-        $("#ht_end_date").load("{{HTML_URL}}/Docu_help_texts.html #ht_date");
+        $("#ht_end_date").load("{{HTML_URL}}/Docu_help_texts.html #ht_date_station");
         </script>
         </div>
         </td>
@@ -181,9 +181,8 @@
         </form>
     </div>
     <br /><br /><br />
-    <ul class="navbar">
-    <h2>Links to external Networks</h2>
-    <table>
+    <table cellpadding="5px" frame="box">
+    <th>External Networks</th>
     <tr><td>
     <a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger_hover" target="_blank">USA RAWS Climate Archive (WRCC)</a>
     <div class="pop-up">
@@ -269,7 +268,6 @@
     </div>
     </td></tr>
     </table>
-    </ul>
 
 <!--Second Column: How Tos and maps-->
 <td valign="top" width="550px">
@@ -452,21 +450,29 @@
     <!--Station finder Map-->
     <div id="results">
     {%if error%}
-    <p align="center"><font size="4"><font color="red">{{error}}</font></p>
-    <p align="center">Your parameters:<br />
+    <div style="padding:5px;position:relative;width:400px;">
+    <p align="left"><font size="4"><font color="red">{{error}}</font></p>
+    <p align="left">Your parameters:</p>
+    {%for dp in display_params_list%}
+    <b>{{dp.0}}</b> : {{dp.1|linebreaksbr}}<br />
+    {%endfor%}
+    </div>
+    <!--
     <table>
     <td width="30%"></td>
     <td width="70%">
     <table align="right">
+    <div width="90%">
     {%for dp in display_params_list%}
     <tr><td>
     <b>{{dp.0}}</b> : {{dp.1}}
     </td></tr>
     {%endfor%}
+    </div>
     </table>
     </td>
     </table>
-    </p>
+    -->
     {%endif%}
 
     <input type="hidden" id="URL_PREFIX" name="variable" value="{{ URL_PREFIX }}">
@@ -510,8 +516,8 @@
 </td>
 <td valign="top" align="left" width="170px">
     {%if station_json and not error and not form_error and not need_overlay_map%}
-    <div id="map_legend">
-        <h3>Legend of Station Networks</h3>
+    <div id="map_legend" style="padding:5px;width:93%;">
+        <h3>Station Network Legend</h3>
     </div>
     {%endif%}
 </td>

@@ -968,6 +968,9 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     <td></td><td></td>
     <td></td><td></td>
     {%endif%}
+    {%if forloop.counter0 == 1%}
+    <td></td>
+    {%endif%}
     <td>{{dat}}</td>
     {%endfor%}
     </tr>

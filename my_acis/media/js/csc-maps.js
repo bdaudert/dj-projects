@@ -117,6 +117,10 @@ function initialize_station_finder() {
             var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
             //var icon = 'http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_' + data.network_icons[key] + '.png';
             var div = document.createElement('div');
+            //Omit RCC/Misc/Threadex
+            if (['RCC', 'Threadex', 'Misc'].indexOf(data.network_codes[key]) >= 0){
+                div.setAttribute("style", "display:none");
+            }
             div.innerHTML = '<input type="checkbox" id="'+ name +
             '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' + ' <img alt="Icon" title="Icon" src="' + icon + '"> ' + name;
             legend.appendChild(div);
@@ -230,18 +234,15 @@ function initialize_station_finder() {
             //Define table row, one entry per station
             var tbl_row = document.createElement('tr');
             tbl_row.cString = contentString;
-            //tbl_row.marker = marker;
             tbl_row.name = c.name;
             tbl_row.onclick = function(){
                 infowindow.close();
                 infowindow.setContent(this.cString);
-                infowindow.open(map, this.marker);
+                infowindow.open(map, marker);
+                bound.extend(new google.maps.LatLng(c.lat,c.lon));
             };
             tbl_row.onmouseover = function(){
                 tbl_row.style.backgroundColor = "#8FBC8F";
-                //infowindow.close();
-                //infowindow.setContent(this.cString);
-                //infowindow.open(map, this.marker);
             };
             tbl_row.onmouseout = function(){
                 tbl_row.style.backgroundColor = "#FFEFD5";

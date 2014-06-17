@@ -221,7 +221,7 @@ def download(request):
 
 def data_station(request):
     context = {
-        'title': 'Historic Station Data',
+        'title': 'Historic Station Data \n (Daily)',
     }
 
     initial, checkbox_vals = set_data_station_initial(request)
@@ -2638,9 +2638,22 @@ def set_station_locator_params(form):
                 if el_idx != 0 and el_idx != len(form['elements']) - 1:
                     #display_params_list[2][1]+=', '
                     params_dict['elements']+=','
-            display_params_list[2] = [WRCCData.DISPLAY_PARAMS[key],','.join(elems_long)]
+            display_params_list[2] = [WRCCData.DISPLAY_PARAMS[key],', \n'.join(elems_long)]
             params_dict['elements'].rstrip(',')
             params_dict['elems_long'] = elems_long
+        elif key == 'select_stations_by':
+            display_params_list[0] = [WRCCData.DISPLAY_PARAMS[key],WRCCData.DISPLAY_PARAMS[form[key]]]
+        elif key == 'station_ids':
+            #Deal with linebreaks
+            display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key],form[key]]
+            stn_list = str(val).replace(' ','').split(',')
+            num_stns = len(stn_list)
+            if num_stns > 5:
+                div = num_stns / 5
+                for i in range(1,div):
+                    stn_list[i*5]= '\n' + stn_list[i*5]
+                    #stn_list.insert(i*5,'\n')
+                display_params_list[1][1] = ','.join(stn_list)
         else:
             try:
                 idx = key_order.index(key)
@@ -2857,7 +2870,7 @@ def set_sodxtrmts_initial(request):
     else:
         initial['end_year']  = Get('end_year', yesterday[0:4])
     '''
-    initial['monthly_statistic'] = Get('monthly_statistic', 'mave')
+    initial['monthly_statistic'] = Get('monthly_statistic', 'msum')
     initial['max_missing_days'] = Get('max_missing_days', '5')
     initial['start_month'] = Get('start_month', '01')
     initial['departures_from_averages'] = Get('departures_from_averages', 'F')
