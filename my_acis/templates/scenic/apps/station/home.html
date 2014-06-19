@@ -75,7 +75,7 @@
     <!-- link from station data-->
     {%if user_params_list%}
     <div id="user_params_list">
-    <p class="error">
+    <p class="message">
     Your Parameters:<br />
     {%for key_val in user_params_list%}
     <b>{{key_val.0}}</b>: {{key_val.1}}<br />
@@ -85,7 +85,7 @@
     </div>
     {%endif%}
         
-        <!--<p class="error" align ="center">(* Beta version)</p>-->
+        <!--<p class="message" align ="center">(* Beta version)</p>-->
         <table cellpadding="5">
         <tr>
             <td valign="top">

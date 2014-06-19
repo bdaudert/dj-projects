@@ -234,7 +234,7 @@ def data_station(request):
     context[initial['overlay_state'] + '_selected'] = 'selected'
     context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
 
-    #Link from other page
+    #Check if we linked from other page and set user parameters
     if request.method == 'GET' and 'elements' in request.GET:
         form_cleaned = set_form(request,clean=True)
         form = set_form(request,clean=False)
@@ -246,19 +246,6 @@ def data_station(request):
         #Turn request object into python dict
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
-        context['form_cleaned'] = form_cleaned
-        #set wich apps to link to:
-        if len(form_cleaned['elements'].replace(' ','').split(',')) == 1 and 'station_id' in form.keys() and form['units'] == 'english':
-            context['link_to_all'] = True
-        elif len(form_cleaned['elements'].replace(' ','').split(',')) >= 1 and 'station_id' in form.keys():
-            context['link_to_mon_aves'] = True
-        #Set params for external links
-        monthly_aves_params_list, monthly_aves_params_dict = set_user_params(form, 'monthly_aves')
-        sodsumm_params_list, sodsumm_params_dict = set_user_params(form, 'sodsumm')
-        sodxtrmts_params_list, sodxtrmts_params_dict = set_user_params(form, 'sodxtrmts')
-        context['monthly_aves_params_list'] = monthly_aves_params_list;context['monthly_aves_params_dict']=monthly_aves_params_dict
-        context['sodxtrmts_params_list'] = sodxtrmts_params_list;context['sodxtrmts_params_dict']=sodxtrmts_params_dict
-        context['sodsumm_params_list'] = sodsumm_params_list;context['sodsumm_params_dict']=sodsumm_params_dict
         #Back Button/download files issue fix:
         #if select_stations_by none, find it
         if not 'select_stations_by' in form_cleaned.keys():
@@ -267,6 +254,24 @@ def data_station(request):
                     form['select_stations_by'] = key
                     form_cleaned['select_stations_by'] = key
                     break
+        context['form_cleaned'] = form_cleaned
+        #Set wich apps to link to:
+        if len(form_cleaned['elements'].replace(' ','').split(',')) == 1:
+            if 'station_id' in form.keys() and form['units'] == 'english':
+                context['link_to_all'] = True
+        elif len(form_cleaned['elements'].replace(' ','').split(',')) >= 1 and 'station_id' in form.keys():
+            context['link_to_mon_aves'] = True
+        #Set params for external links
+        monthly_aves_params_list, monthly_aves_params_dict = set_user_params(form, 'monthly_aves')
+        sodsumm_params_list, sodsumm_params_dict = set_user_params(form, 'sodsumm')
+        sodxtrmts_params_list, sodxtrmts_params_dict = set_user_params(form, 'sodxtrmts')
+        context['monthly_aves_params_list'] = monthly_aves_params_list
+        context['monthly_aves_params_dict']=monthly_aves_params_dict
+        context['sodxtrmts_params_list'] = sodxtrmts_params_list
+        context['sodxtrmts_params_dict']=sodxtrmts_params_dict
+        context['sodsumm_params_list'] = sodsumm_params_list
+        context['sodsumm_params_dict']=sodsumm_params_dict
+        #Set element_list and unit_dict context for htl loops
         if not 'elements' in form.keys():
             context['element_list'] = []
             context['unit_dict'] = {}
@@ -286,30 +291,38 @@ def data_station(request):
                     unit_dict['elev']= WRCCData.UNITS_ENGLISH['elev']
             context['el_name_dict'] = el_name_dict
             context['unit_dict'] = unit_dict
+        #Set form initials
         initial,checkbox_vals = set_data_station_initial(form)
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
         display_params_list, params_dict = set_data_station_params(form)
         context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
-        fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date','degree_days', 'elements']
+        fields_to_check = [form_cleaned['select_stations_by'],'start_date', \
+        'end_date','degree_days', 'elements']
+
+        #Check for form errors
         if 'user_email' in form_cleaned.keys():
             fields_to_check.append('user_email')
-            context['large_request'] = True
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
             return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
         #Check if data request is large,
-        #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
+        '''
+        We find enclosing bbox of the request and assume
+        that stations are placed evenly on a 50km grid
+        to crudely estimate the size of the data request
+        Large data requests are between 0.00098GB and 1GB
+        We gather params and ask user for name and e-mail and
+        notify user that request will be processed offline.
+        Data requests larger than 1GB will not be processed.
+        Data requests smaller than 0.00098GB will be processed on the fly.
+        '''
         sdate = form_cleaned['start_date']
         edate = form_cleaned['end_date']
-        if sdate.lower() == 'por':
-            s_date = datetime.date(1900,01,01)
-        else:
-            s_date = datetime.date(int(sdate[0:4]), int(sdate[4:6]),int(sdate[6:8]))
-        if edate.lower() == 'por':
-                e_date = datetime.date.today()
-        else:
-            e_date = datetime.date(int(edate[0:4]), int(edate[4:6]),int(edate[6:8]))
+        if sdate.lower() == 'por':s_date = datetime.date(1900,01,01)
+        else:s_date = WRCCUtils.date_to_datetime(sdate)
+        if edate.lower() == 'por':e_date = datetime.date.today()
+        else:e_date = WRCCUtils.date_to_datetime(edate)
         days = (e_date - s_date).days
         #Find potential data size: we find enclosing bbox and assume
         #stations are placed evenly on a 50km grid
@@ -326,7 +339,7 @@ def data_station(request):
         num_data_points = days * num_lats *num_lons * len(form_cleaned['elements'])
         num_giga_bytes = 8 * num_data_points /float(1024**3)
         num_mega_bytes = round(8 * num_data_points /float(1024**2),2)
-        if 'user_name' in form_cleaned.keys():
+        if 'user_name' and 'user_email' in form_cleaned.keys():
             ldr = \
                 'Data request submitted successfully. \n \
                 Notification will be send to %s when the request has been processed!' %form_cleaned['user_email']
@@ -334,26 +347,26 @@ def data_station(request):
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
             #WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, json_dict)
+            context['large_request'] = ldr
+            return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
         elif num_giga_bytes >1:
             ldr = 'At the moment we do not accept data requests producing \
                 more than 1GB of data. Your request size is approximately %s GB' %str(num_giga_bytes)
             context['too_large'] = ldr
             return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
-        else:
+        elif 0.00098 < num_giga_bytes and  num_giga_bytes < 1:
             ldr = \
                 'You requested a large amount of data. \
-                Your dataset is potentailly as large as %s MB \
+                We estimated %s MB. \
                 Please provide data format, output file name, your user name and email and resubmit the form.\
                 we will process your request off-line and \
                 notify you when your request has been processed. \
                 Thank you for your patience!' %str(num_mega_bytes)
-        if 0.00098 < num_giga_bytes and  num_giga_bytes < 1:
+
             context['large_request'] = ldr
-            #Write data to file and deposit in data request dir
-            json_file = form_cleaned['output_file_name'] + '_params.json'
-            WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
             return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
 
+        context['large_request'] = False
         #Data request
         resultsdict = AcisWS.get_station_data(form_cleaned, 'sodlist_web')
         #Format data
@@ -382,7 +395,7 @@ def data_station(request):
         if form_cleaned['data_format'] != 'html':
             return WRCCUtils.write_station_data_to_file(resultsdict,params_dict,request=request)
 
-    #overlay map generation
+    #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
         form = set_form(request,clean=False)
@@ -418,24 +431,18 @@ def data_gridded(request):
     context[initial['overlay_state'] + '_selected'] = 'selected'
     context[initial['select_grid_by']] = WRCCData.AREA_DEFAULTS[initial['select_grid_by']]
 
-    #Link from other page
+    #Check if we linked from another page and set up user parameters
     if request.method == 'GET' and 'elements' in request.GET:
         form_cleaned = set_form(request,clean=True)
         form = set_form(request,clean=False)
         user_params_list, user_params_dict =set_user_params(form, 'data_gridded')
-        context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
+        context['user_params_list'] = user_params_list
+        context['user_params_dict']=user_params_dict
 
     if 'formData' in request.POST:
         #Turn request object into python dict
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
-        context['form_cleaned'] = form_cleaned
-        #Link to other apps
-        spatial_summary_params_list, spatial_summary_params_dict = set_user_params(form, 'spatial_summary')
-        temporal_summary_params_list, temporal_summary_params_dict = set_user_params(form, 'temporal_summary')
-        context['temporal_summary_params_list'] = temporal_summary_params_list;context['temporal_summary_params_dict']=temporal_summary_params_dict
-        context['spatial_summary_params_list'] = spatial_summary_params_list;context['spatial_summary_params_dict']=spatial_summary_params_dict
-
         #Back Button/download files issue fix:
         #if select_grid_by none, find it
         if not 'select_grid_by' in form_cleaned.keys():
@@ -444,14 +451,24 @@ def data_gridded(request):
                     form['select_grid_by'] = key
                     form_cleaned['select_grid_by'] = key
                     break
+
+        context['form_cleaned'] = form_cleaned
+        #Link to other apps
+        spatial_summary_params_list, spatial_summary_params_dict = set_user_params(form, 'spatial_summary')
+        temporal_summary_params_list, temporal_summary_params_dict = set_user_params(form, 'temporal_summary')
+        context['temporal_summary_params_list'] = temporal_summary_params_list
+        context['temporal_summary_params_dict']=temporal_summary_params_dict
+        context['spatial_summary_params_list'] = spatial_summary_params_list
+        context['spatial_summary_params_dict']=spatial_summary_params_dict
+        #Set form initial
         initial,checkbox_vals = set_data_gridded_initial(form)
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
         display_params_list, params_dict = set_data_gridded_params(form)
         context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
         fields_to_check = [form_cleaned['select_grid_by'],'start_date', 'end_date','degree_days','elements']
+        #Check for form errors
         if 'user_email' in form_cleaned.keys():
             fields_to_check.append('user_email')
-            context['large_request'] = True
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -463,9 +480,17 @@ def data_gridded(request):
             display_params_list[0][1]+= ', ' + str(form_cleaned[form_cleaned['select_grid_by']])
             params_dict[form['select_grid_by']] = str(form_cleaned[form_cleaned['select_grid_by']])
         #Check if data request is large,
-        #if so, gather params and ask user for name and e-mail and notify user that request will be processed offline
-        s_date = datetime.date(int(form_cleaned['start_date'][0:4]), int(form_cleaned['start_date'][4:6]),int(form_cleaned['start_date'][6:8]))
-        e_date = datetime.date(int(form_cleaned['end_date'][0:4]), int(form_cleaned['end_date'][4:6]),int(form_cleaned['end_date'][6:8]))
+        '''
+        We estimate number or lats, lons and days in request
+        and calculate the approximate size of the data request.
+        Large data requests are between 0.00098GB and 1GB
+        We gather params and ask user for name and e-mail and
+        notify user that request will be processed offline.
+        Data requests larger than 1GB will not be processed.
+        Data requests smaller than 0.00098GB will be processed on the fly.
+        '''
+        s_date = WRCCUtils.date_to_datetime(form_cleaned['start_date'])
+        e_date = WRCCUtils.date_to_datetime(form_cleaned['end_date'])
         days = (e_date - s_date).days
         bbox = []
         if 'shape' in form.keys():
@@ -474,11 +499,6 @@ def data_gridded(request):
             sa = WRCCData.SEARCH_AREA_FORM_TO_ACIS[form['select_grid_by']]
             bbox = AcisWS.get_acis_bbox_of_area(sa, form_cleaned[form_cleaned['select_grid_by']])
         num_lats, num_lons = WRCCUtils.find_num_lls(bbox,form['grid'])
-        '''
-        num_lats, num_lons = 1, 1
-        if form['data_summary'] != 'spatial':
-            num_lats, num_lons = WRCCUtils.find_num_lls(bbox,form['grid'])
-        '''
         time_interval = 1
         if form['temporal_resolution'] == 'mly':time_interval =30.0
         if form['temporal_resolution'] == 'yly':time_interval =365.0
@@ -490,26 +510,29 @@ def data_gridded(request):
             ldr = \
                 'Data request submitted successfully. \n \
                 Notification will be send to %s when the request has been processed!' %form_cleaned['user_email']
+            context['large_request'] = ldr
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
+            return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext
+(request))
         elif num_giga_bytes > 1:
             ldr = 'At the moment we do not accept data requests producing \
                 more than 1GB of data. Your request size is approximately %s GB' %str(num_giga_bytes)
             context['too_large'] = ldr
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
-        else:
+        elif 0.00098 < num_giga_bytes and  num_giga_bytes < 1:
             ldr = \
                 'You requested a large amount of data. \
-                Your dataset is approximately %s MB.\
+                We estimated %s MB. \
                 Please provide data format, output file name, your user name and email and resubmit the form.\
                 we will process your request off-line and \
                 notify you when your request has been processed. \
                 Thank you for your patience!' %str(num_mega_bytes)
-        #Background data job for requests between 1MB and 1GB
-        if 0.00098 < num_giga_bytes and  num_giga_bytes < 1:
+
             context['large_request'] = ldr
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
 
+        context['large_request'] = False
         #Data request
         req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')
         context['hide_gp_map'] = True
@@ -552,7 +575,7 @@ def data_gridded(request):
         else:
             return WRCCUtils.write_griddata_to_file(results,form,request=request)
 
-
+    #Overlay Maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
         form = set_form(request)
@@ -1245,8 +1268,8 @@ def station_locator_app(request):
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=el_date_constraints)
         context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
         if 'error' in station_json.keys():
-            context['error'] = stn_json['error']
-        if station_json['stations'] == []:
+            context['error'] = station_json['error']
+        if 'stations' not in station_json.keys() or  station_json['stations'] == []:
             context['error'] = "No stations found for these search parameters."
         context['station_json'] = f_name
 
@@ -2675,7 +2698,7 @@ def set_user_params(form, app_name):
     '''
     f = {}
     for key,val in form.iteritems():
-        #Remove hash tags and extra quotes from strings, they give issue in reqeust.GET
+        #Remove hash tags and extra quotes from strings, they give issue in request.GET
         if isinstance(val, basestring):
             f[key] =val.replace('#','').replace('\'','')
         else:

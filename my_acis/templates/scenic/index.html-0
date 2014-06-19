@@ -209,7 +209,7 @@ function my_boxclick(box, category){
 
         <div id="map_legend">
             <h3>Legend of Station Networks.</h3>
-            <p class="error">Zoom in to see Networks show on the map.</p>
+            <p class="message">Zoom in to see Networks show on the map.</p>
         </div>
 </body>
 </html>

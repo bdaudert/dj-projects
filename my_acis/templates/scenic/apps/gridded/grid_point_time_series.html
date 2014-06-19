@@ -33,7 +33,7 @@
         <tr>
         <td>{{field.label}}:</td>
         {%if field.label == "Location" %}
-        <p class="error">Drag map marker to change location</p>
+        <p class="message">Drag map marker to change location</p>
         <td><input type="text" id="location" name="location" value="{{search_params.location}}"></td>
         {%else%}
         <td>{{field}}</td>

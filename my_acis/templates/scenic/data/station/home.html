@@ -32,7 +32,7 @@
         {%endif%}
         <td>Select stations by:</td>
         <td>
-            <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this);" onfocus="set_station_grid_select('area',this);">
+            <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this)  & update_value(this.value);" onfocus="set_station_grid_select('area',this);">
             <option value="station_id" {{checkbox_vals.station_id_selected}}>Individual station</option>
             <option value="station_ids" {{checkbox_vals.station_ids_selected}}>List of stations</option>
             <option value="county" {{checkbox_vals.county_selected}}>County</option>
@@ -60,9 +60,9 @@
         {%else%}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
         {%endif%}
-        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
+        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_value(this.value);"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
+        <div class="pop-up" id="area-pop-up">
             <div id="ht_{{initial.select_stations_by}}"></div>
             <script type="text/javascript">                        
             $("#ht_{{initial.select_stations_by}}").load("{{HTML_URL}}/Docu_help_texts.html #ht_{{initial.select_stations_by}}");
@@ -258,11 +258,7 @@
         </div>
         </td>
         </tr>
-        {%if large_request%}
-        <tr valign="top" bgcolor="#99C1C1">
-        {%else%}
         <tr valign="top">
-        {%endif%}
         <td>Data Format: </td>
         <td>
         <select id="data_format" name="data_format" onchange="set_delimiter_and_output_file(this, 'delim','out_file') & update_value(this.value);">
@@ -317,7 +313,7 @@
         <tr valign="top" id="out_file" style="display:none;">
         {%else%}
         {%if large_request%}
-        <tr valign="top" id="out_file" style="display:table-row;" bgcolor="#99C1C1">
+        <tr valign="top" id="out_file" style="display:table-row;" bgcolor="#99C1C1" class="large_request">
         {%else%}
         <tr valign="top" id="out_file" style="display:table-row;">
         {%endif%}
@@ -334,7 +330,7 @@
         </td>
         </tr>
         {%if large_request %}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#99C1C1" class="large_request" id="un">
         <td>User Name: </td>
         <td><input type="text" id="user_name" name="user_name" value="{{initial.user_name}}" onchange="update_value(this.value);"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -346,7 +342,7 @@
         </div>
         </td>
         </tr>
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#99C1C1" class="large_request">
         <td id="User Email">User Email: </td>
         <td><input type="text" id="user_email" name="user_email" value="{{initial.user_email}}" onchange="update_value(this.value);"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -429,7 +425,7 @@
 
     {%if user_params_list and not results.stn_data%}
     <div id="user_params_list">
-    <p class="error">
+    <p class="message">
     Please use the form to complete your data request.<br />
     Your Parameters:<br />
     {%for key_val in user_params_list%}
@@ -565,7 +561,7 @@
     <!--Results section-->
     <div id="results">
     {%if large_request %}
-    <p class="error">{{large_request}}</p>
+    <p class="message">{{large_request}}</p>
     {%endif%}
 
     {%if display_params_list%}
@@ -577,7 +573,7 @@
     {%if param.0 and param.1%}
     <b>{{param.0}}</b>:
     {%if param.0 == "shape"%}
-    <p class="error" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
+    <p class="message" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
     <div id="coords" style="display:none;">{{params.1}}</div>
     {%elif param.0 == "Station IDs"%}
     {%for ID in params_dict.station_list%}

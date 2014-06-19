@@ -69,7 +69,7 @@
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
         <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
+        <div class="pop-up" id="area-pop-up">
             <div id="ht_{{initial.select_stations_by}}"></div>
             <script type="text/javascript">                        
             $("#ht_{{initial.select_stations_by}}").load("{{HTML_URL}}/Docu_help_texts.html #ht_{{initial.select_stations_by}}");
@@ -308,10 +308,10 @@
         {%endif%}
         <!--Maps-->
         <!--<font size="2" color="#006666" align="center">{{map_title}}</font>-->
-   
+        <input type="hidden" id="station_ids_str" name="station_ids_str" value="{{station_ids_for_datafind}}"> 
         {%if station_json and not need_overlay_map%}
         <!--Link to data portal-->
-        <input type="hidden" id="station_ids_str" name="station_ids_str" value="{{station_ids_for_datafind}}">
+        ERROR: {{error}}
         {%if params_dict.select_stations_by == "station_ids"%}
         {%if not error%}
         <a align="left" target="_blank" href="{{DATA_STATION_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
@@ -452,7 +452,7 @@
     {%if error%}
     <div style="padding:5px;position:relative;width:400px;">
     <p align="left"><font size="4"><font color="red">{{error}}</font></p>
-    <p align="left">Your parameters:</p>
+    <p class="error" align="left">Your parameters:</p>
     {%for dp in display_params_list%}
     <b>{{dp.0}}</b> : {{dp.1|linebreaksbr}}<br />
     {%endfor%}

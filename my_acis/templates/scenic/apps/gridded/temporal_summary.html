@@ -60,7 +60,7 @@
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
         <td><input autocomplete="off" type="text" size="20" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
+        <div class="pop-up" id="area-pop-up">
             <div id="ht_{{initial.select_grid_by}}"></div>
             <script type="text/javascript">                        
             $("#ht_{{initial.select_grid_by}}").load("{{HTML_URL}}/Docu_help_texts.html #ht_{{initial.select_grid_by}}");
@@ -449,7 +449,7 @@
         
     {%if user_params_list and not figure_files%}
     <div id="user_params_list">
-    <p class="error">
+    <p class="message">
     Please use the form to complete your map generation.<br />
     Your Parameters:<br />
     {%for key_val in user_params_list%}

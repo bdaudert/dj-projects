@@ -107,6 +107,18 @@ h1.error, h2.error, h3.error, h4.error, h5.error {
     color:#FF007F;
 }
 
+.error {
+    color:#FF007F;
+    font-size:4;
+}
+
+
+.message{
+    color:#0000FF;
+    font-size:4;
+}
+
+
 
 a:link { color: #0000FF;}
 a:hover {
@@ -372,10 +384,6 @@ ul.navbar a {
 }
 
 
-.error {
-    color:#FF007F;
-    font-size:4;
-}
 
 img.info {
     width: 120px;

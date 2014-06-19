@@ -257,12 +257,16 @@ function set_BaseTemp(table_id,node){
     */
     var IMG_URL = document.getElementById('IMG_URL').value;
     var HTML_URL = document.getElementById('HTML_URL').value;
+    /*
     if ($('#base_temp').length){
         $('table#tableSodxtrmts tr#base_temp').remove();
     }
+    */
     var table = document.getElementById(table_id);
     var element = document.getElementById("element").value;
     if (element =='hdd' || element =='cdd' || element=='gdd'){
+        document.getElementById("base_temp").style.display="table-row";
+        /*
         if (!$('#base_temp').length){
             idx = node.parentNode.parentNode.rowIndex + 1;
             var row=table.insertRow(parseInt(idx));
@@ -278,7 +282,9 @@ function set_BaseTemp(table_id,node){
             '$("#ht_base_temperature").load("' + HTML_URL + 'Docu_help_texts.html #ht_base_temperature");' +
             '</script></div>';
         }
+        */
     }
+    else{document.getElementById("base_temp").style.display="none";}
 }
 
 function set_NDay_threshes(){
@@ -686,12 +692,18 @@ function set_station_grid_select(row_id,node){
     if ($('#' + 'user_params_list').length){
         document.getElementById('user_params_list').style.display = "none";
     }
-    /*
-    //Delete existing table row
-    if ($('#' + row_id).length){
-        $('table#' + table_id + ' tr#' + row_id).remove();
+
+    //Delete large data request entries
+    var large_requests_rows = document.getElementsByClassName('large_request');
+    for (i=0;i<large_requests_rows.length;i++) {
+        //large_requests_rows[i].style.display = "none";
+        large_requests_rows[i].parentNode.removeChild(large_requests_rows[i]);
     }
-    */
+    //FIX ME: onchange not working correctly when option is not changes
+    //Need to delete user name manually
+    if ($('#' + 'un').length){
+        document.getElementById('un').parentNode.removeChild(document.getElementById('un'));
+    }
     var lv = set_area_and_map(node.value);
     //Set up autofill if needed
     set_autofill(lv.autofill_list);
@@ -703,13 +715,12 @@ function set_station_grid_select(row_id,node){
     //cell2 input
     var cell1 = cell0.nextSibling.nextSibling;
     cell1.innerHTML= '<input type="text" id="' + node.value + '" name="'+ node.value +'" value="' +  lv.value + '" list="' + lv.autofill_list +'">'
-    //cell3 = helptext
-    cell2 = cell1.nextSibling.nextSibling;
-    cell2.innerHTML = '<img alt="Help" title="Help" src="' + IMG_URL + 'QMark.png" class="trigger">' + 
-    ' <div class="pop-up"><div id="ht_' + node.value  + '"></div>' + 
-    ' <script type="text/javascript">' +                         
-    '$("#ht_' + node.value + '").load("' + HTML_URL + 'Docu_help_texts.html #ht_'+ node.value + '");' + 
-    '</script></div>';
+    pop_id = document.getElementById('area-pop-up');
+    pop_id.innerHTML='';
+    var div = document.createElement('div');
+    div.setAttribute('id', 'ht_' + node.value);
+    pop_id.appendChild(div); 
+    $(div).load(HTML_URL + 'Docu_help_texts.html #ht_' + node.value);
 }
 
 function set_grid_and_els(node, gridRowId){
