@@ -698,7 +698,7 @@ def metagraph(request):
             #<img alt="MetaGraph" title="MetaGraph" src="{{settings.MEDIA_URL}}perl-scripts/csc_cliMETAgraph.pl?{{station_id}}">
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f_')
             context['time_stamp'] = time_stamp
-            perl_out, perl_err = run_external_script("perl %sperl-scripts/csc_cliMETAgraph.pl %s %s" %(settings.MEDIA_URL, identifier, time_stamp))
+            perl_out, perl_err = run_external_script("perl %sperl-scripts/csc_cliMETAgraph.pl %s %s" %(settings.MEDIA_DIR, identifier, time_stamp))
             context['perl_err'] = perl_err
             context['perl_out'] = perl_out
         else:
