@@ -19,9 +19,9 @@
     <input type="submit" value="Start Over" onclick="window.location='{{MON_AVES_URL}}'"/>
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" id="tableData">
+        <table class="form" id="tableData" bgcolor="#99C1C1">
         {%if user_params_dict.station_id%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -42,7 +42,7 @@
         <td></td>
         </td>
         {%if user_params_dict.elements%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -72,7 +72,7 @@
         </td>
         </tr>
         {%if user_params_dict.add_degree_days == "T"%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -96,7 +96,7 @@
         <tr id="dd" valign="top">
         {%else%}
         {%if user_params_dict.add_degree_days == "T"%}
-        <tr id="dd" valign="top" bgcolor="#99C1C1">
+        <tr id="dd" valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr id="dd" valign="top" style="display:none">
         {%endif%}
@@ -113,7 +113,7 @@
         </td>
         </tr>
         {%if user_params_dict.units%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -134,7 +134,7 @@
         </td>
         </tr>
         {%if user_params_dict.start_date%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -150,7 +150,7 @@
         </td>
         </tr>
         {%if user_params_dict.elements%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -213,8 +213,10 @@
     {%if user_params_list and not results%}
     <div id="user_params_list">
     <p class="message">
-    Please use the form to complete your data request.<br />
-    Your Parameters:<br />
+    Please use the form on the left to complete your data request.<br />
+    Double check your input parameters and fill out the highlighted form fields.<br />
+    Submit the form.<br />
+    Your Parameters were:<br />
     {%for key_val in user_params_list%}
     <b>{{key_val.0}}</b>: {{key_val.1}}<br />
     {%endfor%}

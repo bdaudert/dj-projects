@@ -114,7 +114,7 @@ h1.error, h2.error, h3.error, h4.error, h5.error {
 
 
 .message{
-    color:#0000FF;
+    color:#CC00FF;
     font-size:4;
 }
 
@@ -293,18 +293,14 @@ text-align:center;
 color: #000000;
 }
 
-table.form {
-border: 1px solid #000000;
-color:#000000;
-text-align:left;
-}
 
 table.form td {
     margin: 0px 0px;
 }
 
+
 .form {
-    border: 1px solid #000000;
+    border: 1px solid #99C1C1;
     color:#000000;
     text-align:left;
 }

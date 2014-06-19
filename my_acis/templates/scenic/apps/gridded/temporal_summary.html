@@ -27,9 +27,9 @@
     <input type="submit" value="Start Over" onclick="window.location='{{TEMPORAL_GRID_SUMMARY}}'"/>
     <div id='formMap'>
         <form method="post" id="tableMapForm" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" id="tableMap">
+        <table class="form" id="tableMap" bgcolor="#99C1C1">
         {%if user_params_dict.select_grid_by%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -53,7 +53,7 @@
         </td>
         </tr>
         {%if user_params_dict.select_grid_by%}
-        <tr id="area" valign="top" bgcolor="#99C1C1">
+        <tr id="area" valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr id="area" valign="top">
         {%endif%}
@@ -69,7 +69,7 @@
         </td>
         </tr>
         {%if user_params_dict.elements%}
-        <tr id="Els" valign="top" bgcolor="#99C1C1">
+        <tr id="Els" valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr id="Els" valign="top">
         {%endif%}
@@ -95,7 +95,7 @@
         </td>
         </tr>
         {%if user_params_dict.add_degree_days%}
-        <tr id="add" valign="top" bgcolor="#99C1C1">
+        <tr id="add" valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr id="add" valign="top">
         {%endif%}
@@ -119,7 +119,7 @@
         <tr id="dd" valign="top">
         {%else%}
         {%if user_params_dict.add_degree_days == "T"%}
-        <tr id="dd" valign="top" bgcolor="#99C1C1">
+        <tr id="dd" valign="top" bgcolor="#FFEFD5">
         {%else%}        
         <tr id="dd" valign="top" style="display:none">
         {%endif%}
@@ -136,7 +136,7 @@
         </td>
         </tr>
         {%if user_params_dict.start_date%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%} 
@@ -152,7 +152,7 @@
         </td>
         </tr>
         {%if user_params_dict.end_date%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -168,7 +168,7 @@
         </td>
         </tr>
         {%if user_params_dict.select_grid_by%}
-        <tr id="grid_type" valign="top" bgcolor="#99C1C1">
+        <tr id="grid_type" valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr id="grid_type" valign="top">
         {%endif%}
@@ -203,7 +203,7 @@
         </td>
         </tr>
         {%if user_params_dict.temporal_summary%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -450,8 +450,10 @@
     {%if user_params_list and not figure_files%}
     <div id="user_params_list">
     <p class="message">
-    Please use the form to complete your map generation.<br />
-    Your Parameters:<br />
+    Please use the form on the left to complete your data request.<br />
+    Double check your input parameters and fill out the highlighted form fields.<br />
+    Submit the form.<br />
+    Your Parameters were:<br />
     {%for key_val in user_params_list%}
     <b>{{key_val.0}}</b>: {{key_val.1}}<br />
     {%endfor%}
@@ -485,7 +487,7 @@
     {%endif%}
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableMapForm')">">{% csrf_token %}
-            <table class="form">
+            <table class="form" bgcolor="#99C1C1">
             <tr>
             <td>State: </td>
             <td>

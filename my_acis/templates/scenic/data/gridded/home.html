@@ -23,9 +23,9 @@
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_GRIDDED_URL}}'"/>
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" id="tableData">
+        <table class="form" id="tableData" bgcolor="#99C1C1">
         {%if user_params_dict.select_grid_by%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -49,7 +49,7 @@
         </td>
         </tr>
         {%if user_params_dict.select_grid_by%}
-        <tr id="area" valign="top" bgcolor="#99C1C1">
+        <tr id="area" valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr id="area" valign="top">
         {%endif%}
@@ -65,7 +65,7 @@
         </td>
         </tr>
         {%if user_params_dict.temporal_resolution%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -87,7 +87,7 @@
         </td>
         </tr>
         {%if user_params_dict.elements%}
-        <tr id="Els" valign="top" bgcolor="#99C1C1">
+        <tr id="Els" valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr id="Els" valign="top">
         {%endif%}
@@ -116,7 +116,7 @@
         {%elif  not user_params_dict.add_degree_days %}
         <tr id="add" valign="top">
         {%else%}
-        <tr id="add" valign="top" bgcolor="#99C1C1">
+        <tr id="add" valign="top" bgcolor="#FFEFD5">
         {%endif%}
         <td>Add special degree days: </td>
 
@@ -139,7 +139,7 @@
         <tr id="dd" valign="top">
         {%else%}
         {%if user_params_dict.add_degree_days == "T"%}
-        <tr id="dd" valign="top" bgcolor="#99C1C1">
+        <tr id="dd" valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr id="dd" valign="top" style="display:none">
         {%endif%}
@@ -156,7 +156,7 @@
         </td>
         </tr>
         {%if user_params_dict.units%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -177,7 +177,7 @@
         </td>
         </tr>
         {%if user_params_dict.start_date%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -193,7 +193,7 @@
         </td>
         </tr>
         {%if user_params_dict.end_date%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -209,7 +209,7 @@
         </td>
         </tr>
         {%if user_params_dict.grid%}
-        <tr id="grid_type" valign="top" bgcolor="#99C1C1">
+        <tr id="grid_type" valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr id="grid_type" valign="top">
         {%endif%}
@@ -244,7 +244,7 @@
         </td>
         </tr>
         {%if user_params_dict.data_summary%}
-        <tr id="summary_type" valign="top" bgcolor="#99C1C1">
+        <tr id="summary_type" valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr id="summary_type" valign="top">
         {%endif%}
@@ -270,7 +270,7 @@
         {%elif not initial.data_summary == "temporal" and not user_params_dict.temporal_summary%}
         <tr valign="top" id="temp_summary" style="display:none">
         {%else%}
-        <tr valign="top" id="temp_summary" bgcolor="#99C1C1">
+        <tr valign="top" id="temp_summary" bgcolor="#FFEFD5">
         {%endif%}
         <td>Temporal Summary: </td>
         <td>
@@ -295,7 +295,7 @@
         {%elif not initial.data_summary == "spatial" and not user_params_dict.spatial_summary%}
         <tr valign="top" id="spat_summary" style="display:none">
         {%else%}
-        <tr valign="top" id="spat_summary" bgcolor="#99C1C1">
+        <tr valign="top" id="spat_summary" bgcolor="#FFEFD5">
         {%endif%}
         <td>Spatial Summary: </td>
         <td>
@@ -390,7 +390,7 @@
         <tr valign="top" id="out_file" style="display:none;">
         {%else%}
         {%if large_request%}
-        <tr valign="top" id="out_file" style="display:table-row;" bgcolor="#99C1C1" class="large_request">
+        <tr valign="top" id="out_file" style="display:table-row;" bgcolor="#FFEFD5" class="large_request">
         {%else%}
         <tr valign="top" id="out_file" style="display:table-row;">
         {%endif%}
@@ -407,7 +407,7 @@
         </td>
         </tr>
         {%if large_request %}
-        <tr valign="top" bgcolor="#99C1C1" class="large_request" id="un">
+        <tr valign="top" bgcolor="#FFEFD5" class="large_request" id="un">
         <td>User Name: </td>
         <td><input type="text" id="user_name" name="user_name" value="{{initial.user_name}}" onchange="update_value(this.value)"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -419,7 +419,7 @@
         </div>
         </td>
         </tr>
-        <tr valign="top" bgcolor="#99C1C1" class="large_request">
+        <tr valign="top" bgcolor="#FFEFD5" class="large_request">
         <td id="User Email">User Email: </td>
         <td><input type="text" id="user_email" name="user_email" value="{{initial.user_email}}" onchange="update_value(this.value)"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -519,8 +519,10 @@
     {%if user_params_list and not results%}
     <div id="user_params_list">
     <p class="message">
-    Please use the form to complete your data request.<br />
-    Your Parameters:<br />
+    Please use the form on the left to complete your data request.<br />
+    Double check your input parameters and fill out the highlighted form fields.<br />
+    Submit the form.<br />
+    Your Parameters were:<br />
     {%for key_val in user_params_list%}
     <b>{{key_val.0}}</b>: {{key_val.1}}<br />
     {%endfor%}
@@ -570,7 +572,7 @@
     {%endif%}
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableDataForm')">{% csrf_token %}
-            <table class="form">
+            <table class="form" bgcolor="#99C1C1">
             <tr>
             <td>State: </td>
             <td>

@@ -20,15 +20,15 @@
     <input type="submit" value="Start Over" onclick="window.location='{{SODSUMM_URL}}'"/>
     <div id='form1'>
         <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form">
+        <table class="form" bgcolor="#99C1C1">
         {%for field in form1 %}
         {%if not field.is_hidden%}
         {%if user_params_dict.station_id and field.label == "Station id"%}
-        <tr bgcolor="#99C1C1">
+        <tr bgcolor="#FFEFD5">
         {%elif user_params_dict.start_year and field.label == "Start year"%}
-        <tr bgcolor="#99C1C1">
+        <tr bgcolor="#FFEFD5">
         {%elif user_params_dict.end_year and field.label == "End year"%}
-        <tr bgcolor="#99C1C1">
+        <tr bgcolor="#FFEFD5">
         {%else%}
         <tr>
         {%endif%}
@@ -99,8 +99,10 @@
         {%if user_params_list and not results%}
         <div id="user_params_list">
         <p class="message">
-        Please use the form to complete your analysis.<br />
-        Your Parameters:<br />
+        Please use the form on the left to complete your data request.<br />
+        Double check your input parameters and fill out the highlighted form fields.<br />
+        Submit the form.<br />
+        Your Parameters were:<br />
         {%for key_val in user_params_list%}
         <b>{{key_val.0}}</b>: {{key_val.1}}<br />
         {%endfor%}
@@ -149,7 +151,7 @@
                 <div id="formDownload{{forloop.counter0}}" class="form" style="display:none;">
                     <form method="post" action="" onsubmit="show_loading()">
                     {% csrf_token %}
-                    <table id="tableDownload">
+                    <table id="tableDownload" bgcolor="#99C1C1">
                     <tr valign="top">
                     <td>Data Format: </td>
                     <td>
@@ -231,14 +233,26 @@
                     {%if row.0 == "An"%}
                     <tr><td></td></tr>
                     {%endif%}<!--end if row.0 == "An"-->
-                    <tr>{%for val in row%}<td align="right">{{val}}</td>{%endfor%}</tr>
+                    <tr>{%for val in row%}
+                    {%if forloop.counter0 == 0%}
+                    <td align="left">{{val}}</td>
+                    {%else%}
+                    <td align="right">{{val}}</td>
+                    {%endif%}
+                    {%endfor%}</tr>
                     {%endfor%} <!--end for row in results|lookup:tab-->
                     {%else%}
                     {%for row in results.prsn%}
                     {%if row.0 == "An"%}
                     <tr><td></td></tr>
                     {%endif%}<!--end if row.0 == "An"-->
-                    <tr>{%for val in row%}<td align="right">{{val}}</td>{%endfor%}</tr>
+                    <tr>{%for val in row%}
+                    {%if forloop.counter0 == 0%}
+                    <td align="left">{{val}}</td>
+                    {%else%}
+                    <td align="right">{{val}}</td>
+                    {%endif%}
+                    {%endfor%}</tr>
                     {%endfor%}<!--end for row in results.prsn-->
                     {%endif%}<!--end if tab != 'snow'-->
                     {%else%}
@@ -246,7 +260,13 @@
                     {%if row.0 == "An"%}
                     <tr><td></td></tr>
                     {%endif%}
-                    <tr>{%for val in row%}<td align="right">{{val}}</td>{%endfor%}</tr>
+                    <tr>{%for val in row%}
+                    {%if forloop.counter0 == 0%}
+                    <td align="left">{{val}}</td>
+                    {%else%}
+                    <td align="right">{{val}}</td>
+                    {%endif%}
+                    {%endfor%}</tr>
                     {%endfor%}
                     {%endif%} <!--end if tab != 'pcpn'-->
                     </table>

@@ -19,7 +19,9 @@
 
 
 <table align="center">
+    <tr>
     <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
+    </tr>
 </table>
 <script type="text/javascript">                        
     $("#tool_info_head").load("{{HTML_URL}}Buttons.html .tool_info");
@@ -33,6 +35,16 @@
 <script type="text/javascript">            
     $("#how_to_head").load("{{HTML_URL}}Buttons.html .tool_how_to");
 </script>
+
+{%if json_dict.data and initial.generate_graph == "F"%}
+<div id="Arrow" style="position:absolute;top:250px;right:310px;">
+<table style="display:block;">
+<td valign="top"><b>RESULTS:</b></td>
+<td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="300px"></td>
+</table>
+</div>
+{%endif%}
+
 
 <!--<div id="how_to" style="display:none;position:relative;left:200px" >-->
 <div id="how_to" style="display:none;">
@@ -87,11 +99,11 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
         <form method="post" id="fSodxtrmts" action="" onsubmit="show_loading()">
     {%endif%}
     {% csrf_token %}
-    <table id="tableSodxtrmts" frame="void" style="border-collapse:collapse;">
+    <table id="tableSodxtrmts" frame="void" style="border-collapse:collapse;" bgcolor="#99C1C1">
     <td valign="top">
-    <table id="tableData" frame="box" cell-padding="20">
+    <table id="tableData" frame="box" cell-padding="20" bgcolor="#99C1C1">
     {%if user_params_dict.station_id%}
-    <tr valign="top" bgcolor="#99C1C1">
+    <tr valign="top" bgcolor="#FFEFD5">
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -107,7 +119,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </td>
     </tr>
     {%if user_params_dict.station_id%}
-    <tr valign="top" bgcolor="#99C1C1">
+    <tr valign="top" bgcolor="#FFEFD5">
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -116,7 +128,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     <td></td>
     </tr>
     {%if user_params_dict.start_date or user_params_dict.start_year%}
-    <tr valign="top" bgcolor="#99C1C1">
+    <tr valign="top" bgcolor="#FFEFD5">
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -132,7 +144,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </td>
     </tr>
     {%if user_params_dict.end_date or user_params_dict.end_year%}
-    <tr valign="top" bgcolor="#99C1C1">
+    <tr valign="top" bgcolor="#FFEFD5">
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -148,7 +160,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </td>
     </tr>
     {%if user_params_dict.elements%}
-    <tr valign="top" bgcolor="#99C1C1">
+    <tr valign="top" bgcolor="#FFEFD5">
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -181,7 +193,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     {%if initial.base_temperature and not user_params_dict.base_temperature%}
     <tr id="base_temp" valign="top">
     {%elif initial.base_temperature and user_params_dict.base_temperature%}
-    <tr id="base_temp" valign="top" bgcolor="#99C1C1">
+    <tr id="base_temp" valign="top" bgcolor="#FFEFD5">
     {%else%}
     <tr id="base_temp" valign="top" style="display:none">
     {%endif%}
@@ -357,7 +369,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     {%if json_file %}
     <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
     <tr valign="top" id="generate_graph_row">
-    <td><font color="magenta"><b>Generate a time series graph?</b></font></td>
+    <td><font color="#9900CC"><b>Generate a time series graph?</b></font></td>
     <td>
         <select id="generate_graph" name="generate_graph" onchange="show_if_true(this, 'formGraph');">
         <option value="F" {{checkbox_vals.generate_graph_F_selected}}>No</option>
@@ -376,29 +388,22 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </table>
     </td><td valign="top">
     {%if initial.generate_graph == "T"%}
-    <table frame="box" class="formGraph">
-    {%else%}
-    {%if json_dict.data%}
-    <div id="Arrow">
-    <table style="display:block;">
-    <td valign="top"><b>RESULTS:</b></td>
-    <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="300px"></td>
-    </table>
-    </div>
+    <table frame="box" class="formGraph" bgcolor="#99C1C1">
     {%else%}
     {%if user_params_list%}
     <div id="user_params_list">
     <p class="message">
-    Please use the form to complete your data request.<br />
-    Your Parameters:<br />
+    Please use the form on the left to complete your data request.<br />
+    Double check your input parameters and fill out the highlighted form fields.<br />
+    Submit the form.<br />
+    Your Parameters were:<br />
     {%for key_val in user_params_list%}
     <b>{{key_val.0}}</b>: {{key_val.1}}<br />
     {%endfor%}
     </p>
     </div>
     {%endif%}
-    {%endif%}
-    <table frame="box" class="formGraph" style="display:none">
+    <table frame="box" class="formGraph" style="display:none" bgcolor="#99C1C1">
     {%endif%}
     <tr valign="top" class="formGraph" style="display:table-row;">
     <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Graph Options</u></b></td>
@@ -556,9 +561,9 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </table>
     </td><td valign="top">
     {%if initial.generate_graph == "T"%}
-    <table class="formGraph" frame="box">
+    <table class="formGraph" frame="box" bgcolor="#99C1C1">
     {%else%}
-    <table class="formGraph" frame="box" style="display:none">
+    <table class="formGraph" frame="box" style="display:none" bgcolor="#99C1C1">
     {%endif%}
     <tr valign="top" class="formGraph" style="display:table-row;">
     <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Plot Options</u></b></td>
@@ -811,7 +816,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
         <form method="post" action="" onsubmit="show_loading()">
         {%endif%}
         {% csrf_token %}
-        <table id="tableDownload">
+        <table id="tableDownload" bgcolor="#99C1C1">
         <tr valign="top">
         <td>Data Format: </td>
         <td>

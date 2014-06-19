@@ -1875,8 +1875,10 @@ def find_id(form_name_field, json_file_path):
     '''
     i = str(form_name_field)
     name_id_list = i.replace(' ','').split(',')
+    name = None
     if len(name_id_list) >=2:
         i= str(name_id_list[-1])
+        name = str(name_id_list[0])
     elif len(name_id_list) == 1:
         name_list= i.split(' ')
         #check for digits
@@ -1892,6 +1894,13 @@ def find_id(form_name_field, json_file_path):
             for entry in json_data:
                 if entry['id'] == i:
                     return i
+                    '''
+                    #Check that names match
+                    if name and entry['name'].upper() == name.upper():
+                        return i
+                    elif name and entry['name'].upper() != name.upper():
+                        return str(form_name_field)
+                    '''
                 if entry['name'].upper() == i.upper():
                     return entry['id']
     return i
@@ -2051,10 +2060,10 @@ def set_sodsumm_headers(table_list):
         rows = []
         if table == 'temp':
             rows.append('<th colspan="16"> <b>Tempearture Statistics</b></th>')
-            rows.append('<tr><td colspan="5">-------</td><td colspan="5">Averages</td><td colspan="4">------Daily Extremes </td><td colspan="4">--------Mean Extremes </td><td colspan="4">----------Number of Days</td></tr>')
+            rows.append('<tr><td colspan="5">-------</td><td colspan="5">Averages</td><td colspan="4">-----------Daily Extremes </td><td colspan="4">----------------Mean Extremes </td><td colspan="4">-----------Number of Days</td></tr>')
         elif table == 'prsn':
             rows.append('<th colspan="15"><b>Precipitation/Snow Statistics</b></th>')
-            rows.append('<tr><td colspan="6">--------------Total Precipitation </td><td colspan="2">----------------------</td><td colspan="2">Number of Days</td><td colspan="3">-----------Total Snowfall</td></tr>')
+            rows.append('<tr><td colspan="6">----------------------Total Precipitation </td><td colspan="2">----------------------------</td><td colspan="2">Number of Days</td><td colspan="3">---------------Total Snowfall</td></tr>')
 
         elif table == 'hdd':
             rows.append('<th colspan="14"><b>Heating degree days</b></th>')
@@ -2795,7 +2804,7 @@ def set_map_plot_options(request):
     initial = {}
     checkbox_vals = {}
     Get = set_GET(request)
-    initial['image_size'] = Get('image_size', 'small')
+    initial['image_size'] = Get('image_size', 'medium')
     initial['level_number'] = Get('level_number', '5')
     initial['cmap'] = Get('cmap', 'rainbow')
     initial['map_ol'] = Get('map_ol', 'state')
@@ -2825,7 +2834,7 @@ def set_plot_options(request):
     checkbox_vals = {}
     Get = set_GET(request)
     initial['graph_title'] = Get('graph_title','Use default')
-    initial['image_size'] = Get('image_size', 'small')
+    initial['image_size'] = Get('image_size', 'medium')
     initial['major_grid']  = Get('major_grid', 'T')
     initial['minor_grid'] = Get('minor_grid', 'F')
     initial['connector_line'] = str(Get('connector_line', 'T'))

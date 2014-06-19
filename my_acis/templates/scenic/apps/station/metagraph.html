@@ -21,7 +21,7 @@
     <input type="submit" value="Start Over" onclick="window.location='{{METAGRAPH_URL}}'"/>
     <div id='form1'>
         <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form">
+        <table class="form" bgcolor="#99C1C1">
         {%for field in form_meta %}
         <tr>
         <td>{{field.label}}/name:</td>

@@ -36,9 +36,9 @@
     <input type="submit" value="Start Over" onclick="window.location='{{STATION_FINDER_URL}}'"/>
     <div id='formData'>
         <form id="tableDataForm" method="post" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" id="tableData">
+        <table class="form" id="tableData" bgcolor="#99C1C1">
         {%if user_params_dict.select_stations_by%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -62,7 +62,7 @@
         </script>
         </td>
         {%if user_params_dict.select_stations_by%}
-        <tr id="area" valign="top" bgcolor="#99C1C1">
+        <tr id="area" valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr id="area" valign="top">
         {%endif%}
@@ -78,7 +78,7 @@
         </td>
         </tr>
         {%if user_params_dict.elements%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -126,7 +126,7 @@
         </td>
         </tr> 
         {%if user_params_dict.start_date%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -142,7 +142,7 @@
         </td>
         </tr>
         {%if user_params_dict.end_date%}
-        <tr valign="top" bgcolor="#99C1C1">
+        <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -350,7 +350,7 @@
         {%endif%}
             <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableDataForm')">{% csrf_token %}
-            <table class="form">
+            <table class="form" bgcolor="#99C1C1">
             <!--<tr valign="top">
             <td>Select stations by:</td>
             <td>
