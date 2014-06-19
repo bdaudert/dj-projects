@@ -1262,6 +1262,7 @@ def station_locator_app(request):
         #Set up params for station_json generation
         by_type = WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['select_stations_by']]
         val = form_cleaned[WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['select_stations_by']]]
+        context['x'] = val
         context['map_title'] = WRCCData.DISPLAY_PARAMS[by_type].upper() + ': ' + val
         date_range = [form_cleaned['start_date'],form_cleaned['end_date']]
         el_date_constraints = form_cleaned['elements_constraints'] + '_' + form_cleaned['dates_constraints']
@@ -1878,31 +1879,28 @@ def find_id(form_name_field, json_file_path):
     name = None
     if len(name_id_list) >=2:
         i= str(name_id_list[-1])
-        name = str(name_id_list[0])
+        name = ','.join(name_id_list[0:-1])
     elif len(name_id_list) == 1:
         name_list= i.split(' ')
         #check for digits
         if bool(re.compile('\d').search(i)) and len(name_list) == 1:
             #User entered a station id
             return i
-        else:
-            #User entered a name, we need to check the according json file
-            #to find the id
-            if not os.path.isfile(json_file_path) or os.path.getsize(json_file_path) == 0:
+    if not os.path.isfile(json_file_path) or os.path.getsize(json_file_path) == 0:
+        return str(form_name_field)
+    #Find id in json file
+    json_data = WRCCUtils.load_json_data_from_file(json_file_path)
+    for entry in json_data:
+        #check if i is id
+        if entry['id'] == i:
+            #Check that names match
+            if name and entry['name'].upper() != name.upper():
+                return str(form_name_field)
+            else:
                 return i
-            json_data = WRCCUtils.load_json_data_from_file(json_file_path)
-            for entry in json_data:
-                if entry['id'] == i:
-                    return i
-                    '''
-                    #Check that names match
-                    if name and entry['name'].upper() == name.upper():
-                        return i
-                    elif name and entry['name'].upper() != name.upper():
-                        return str(form_name_field)
-                    '''
-                if entry['name'].upper() == i.upper():
-                    return entry['id']
+        #Check if i is name
+        if entry['name'].upper() == i.upper():
+            return entry['id']
     return i
 
 def set_form(request,clean=True):
