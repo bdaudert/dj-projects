@@ -511,6 +511,7 @@
     </script> 
 
     {%if form_error%}
+        <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
         {%for key, val in form_error.items%}
             <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
         {%endfor%}
@@ -530,6 +531,24 @@
     </div>
     {%endif%}
 
+    {%if display_params_list%}
+    <p class="message"><b>SEARCH PARAMETERS</b>:<br />
+    {%for param in display_params_list%}
+    {%if forloop.counter|divisibleby:"3" %}<br />
+    {%endif %}
+    {%if param.0 == "Elements"%}<br />{%endif%}
+    {%if param.0 and param.1%}
+    <b>{{param.0}}</b>:
+    {%if param.0 == "shape"%}
+    <p class="message" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
+    <div id="coords" style="display:none;">{{params.1}}</div>
+    {%else%}
+    {{param.1}}
+    {%endif%}
+    {%endif%}
+    {%endfor%}
+    </p>
+    {%endif%}
 
     <div id="PolyMap" style="display:none;">
         <div id="panel">
@@ -644,7 +663,7 @@
     {%if overlay_error%}
     <p class="error">{{overlay_error}}</p>
     {%else%}
-    <div id="map-overlay" style="width:400px;height:360px;"></div>
+    <div id="map-overlay" style="width:100%;height:360px;"></div>
     <div id="content-window" style="width:100px; height:100px;"></div>
     <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
     {%endif%} 
@@ -661,25 +680,6 @@
     
     {%if results.error%}
     <p class="error">{{results.error}}</p>
-    {%endif%}
-
-    {%if display_params_list%}
-    <p class="green"><b>SEARCH PARAMETERS</b>:<br />
-    {%for param in display_params_list%}
-    {%if forloop.counter|divisibleby:"3" %}<br />
-    {%endif %}
-    {%if param.0 == "Elements"%}<br />{%endif%}
-    {%if param.0 and param.1%}
-    <b>{{param.0}}</b>:
-    {%if param.0 == "shape"%}
-    <p class="message" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
-    <div id="coords" style="display:none;">{{params.1}}</div>
-    {%else%}
-    {{param.1}}
-    {%endif%}
-    {%endif%}
-    {%endfor%}
-    </p>
     {%endif%}
 
     {%if results and not results.error%}

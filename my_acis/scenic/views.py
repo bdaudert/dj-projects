@@ -305,6 +305,10 @@ def data_station(request):
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
+            if form_cleaned['select_stations_by'] in ['basin','county','county_warning_area', 'climate_division']:
+                context['need_overlay_map'] = True
+            kml_file_path = create_kml_file(form['select_stations_by'], form['overlay_state'])
+            context['kml_file_path'] = kml_file_path
             return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
         #Check if data request is large,
         '''
@@ -472,6 +476,10 @@ def data_gridded(request):
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
+            if form_cleaned['select_grid_by'] in ['basin','county','county_warning_area', 'climate_division']:
+                context['need_overlay_map'] = True
+            kml_file_path = create_kml_file(form['select_grid_by'], form['overlay_state'])
+            context['kml_file_path'] = kml_file_path
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
         context['elev_unit'] = 'ft'
         if 'units' in form.keys() and form['units'] == 'metric':context['elev_unit'] = 'm'
@@ -856,6 +864,10 @@ def temporal_summary(request):
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
+            if form_cleaned['select_grid_by'] in ['basin','county','county_warning_area', 'climate_division']:
+                context['need_overlay_map'] = True
+            kml_file_path = create_kml_file(form['select_grid_by'], form['overlay_state'])
+            context['kml_file_path'] = kml_file_path
             return render_to_response('scenic/apps/gridded/temporal_summary.html', context, context_instance=RequestContext(request))
         #Set initials
         initial,checkbox_vals = set_temporal_summary_initial(form)
@@ -997,6 +1009,10 @@ def spatial_summary(request):
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
+            if form_cleaned['select_grid_by'] in ['basin','county','county_warning_area', 'climate_division']:
+                context['need_overlay_map'] = True
+            kml_file_path = create_kml_file(form['select_grid_by'], form['overlay_state'])
+            context['kml_file_path'] = kml_file_path
             return render_to_response('scenic/apps/gridded/spatial_summary.html', context, context_instance=RequestContext(request))
         #Set initials
         initial,checkbox_vals = set_spatial_summary_initial(form)
@@ -1245,6 +1261,8 @@ def station_locator_app(request):
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
+            if form_cleaned['select_stations_by'] in ['basin','county','county_warning_area', 'climate_division']:
+                context['need_overlay_map'] = True
             return render_to_response('scenic/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
         initial,checkbox_vals = set_station_locator_initial(form)
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals

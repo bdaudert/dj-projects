@@ -175,16 +175,25 @@ function initialize_station_finder() {
             //Fit map to encompass all markers
             bounds.extend(latlon);
 
-            var avbl_elements = '<br />';
+            var avbl_elements = '<br /><b>' + c.available_elements[0][1] + '</b><br />';
+            //var avbl_elements = '<br />'
             var greg_flag = false;
+            var dr = c.available_elements[0][1];
             for (var i=0;i<c.available_elements.length;i++){
-                avbl_elements = avbl_elements + c.available_elements[i] + '<br />';
+                if (c.available_elements[i][1].toString() != dr.toString()){
+                    dr = c.available_elements[i][1];
+                    avbl_elements += '<b>' + c.available_elements[i][1] + '</b><br />';
+                }
+                avbl_elements += c.available_elements[i][0] + '<br />' 
+                
+                /*
                 //Check of we should have link to Greg's climate summary pages
                 if (c.available_elements[i][0] == 'Maximum Daily Temperature(F)' || c.available_elements[i][0] == 'Minimum Daily Temperature(F)' || c.available_elements[i][0] == 'Precipitation(In)'){
                     if (parseInt(c.available_elements[i][1][0].slice(0,4)) - parseInt(c.available_elements[i][1][1].slice(0,4)) > 5){
                         var greg_flag = true;
                     }
                 }
+                */
             }
 
             var wrcc_info_link = new String();
@@ -683,6 +692,9 @@ function initialize_polygon_map() {
         if (selectedShape) {
           selectedShape.setMap(null);
         }
+        drawingManager.setOptions({
+            drawingControl: true
+        });
       }
 
       function selectColor(color) {
@@ -835,6 +847,10 @@ function initialize_polygon_map() {
           setSelection(newShape);
         });
     setSelection(newShape);
+    //disable drawing manager so that only one shape can be drawn
+    drawingManager.setOptions({
+        drawingControl: false
+    });
     });
 
     // Clear the current selection when the drawing mode is changed, or when the

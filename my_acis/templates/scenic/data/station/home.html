@@ -451,9 +451,37 @@
     {%endif%}
 
     {%if form_error%}
+        <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
         {%for key, val in form_error.items%}
             <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
         {%endfor%}
+    {%endif%}
+
+
+    {%if display_params_list%}
+    <p class="message"><b>SEARCH PARAMETERS</b>:<br />
+    {%for param in display_params_list%}
+    {%if forloop.counter|divisibleby:"3" or forloop.last%}<br />
+    {%endif %}
+    {%if param.0 == "Elements"%}<br />{%endif%}
+    {%if param.0 and param.1%}
+    <b>{{param.0}}</b>:
+    {%if param.0 == "shape"%}
+    <p class="message" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
+    <div id="coords" style="display:none;">{{params.1}}</div>
+    {%elif param.0 == "Station IDs"%}
+    {%for ID in params_dict.station_list%}
+    {{ID}},     
+    {%if forloop.counter0|divisibleby:4 and forloop.counter != 0%}
+    <br />      
+    {%endif%}   
+    {%endfor%}  
+    {%else%}    
+    {{param.1}} 
+    {%endif%}   
+    {%endif%}   
+    {%endfor%}  
+    </p>        
     {%endif%}
 
     <div id="PolyMap" style="display:none;">
@@ -472,6 +500,8 @@
         <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
         {%endif%}
     </div>
+
+
     {%if need_overlay_map%}
     <div id="OverlayMap" style="display:block;">
     {%else%}
@@ -566,35 +596,11 @@
     <p class="message">{{large_request}}</p>
     {%endif%}
 
-    {%if display_params_list%}
-    <p class="green"><b>SEARCH PARAMETERS</b>:<br />
-    {%for param in display_params_list%}
-    {%if forloop.counter|divisibleby:"3" or forloop.last%}<br />
-    {%endif %}
-    {%if param.0 == "Elements"%}<br />{%endif%}
-    {%if param.0 and param.1%}
-    <b>{{param.0}}</b>:
-    {%if param.0 == "shape"%}
-    <p class="message" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
-    <div id="coords" style="display:none;">{{params.1}}</div>
-    {%elif param.0 == "Station IDs"%}
-    {%for ID in params_dict.station_list%}
-    {{ID}}, 
-    {%if forloop.counter0|divisibleby:4 and forloop.counter != 0%}
-    <br />
-    {%endif%}
-    {%endfor%}
-    {%else%}
-    {{param.1}}
-    {%endif%}
-    {%endif%}
-    {%endfor%}
-    </p>
-    {%endif%}
-   
+
     {%if too_large%}
     <p class="error">{{too_large}}</p>
     {%endif%}
+
     
     {%if results%}
     {%if results.error%}
