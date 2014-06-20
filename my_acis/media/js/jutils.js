@@ -12,11 +12,18 @@ $(function() {
         event.preventDefault();
         var href_pre = this.href;
         stn_ids = document.getElementById('station_ids_str').value;
+        stn_id_list = stn_ids.split(',');
+        stn_ids_html =''
+        for (i=5;i<stn_id_list.length;i+5){
+            stn_id_list.splice(i,0,'<br />');
+        }
+        stn_ids_html = stn_id_list.join();
         //href_pre+='&station_ids=' + stn_ids;
         href_pre+='&station_ids=Multiple Stations';
         dataWindow = window.open(href_pre,'_blank');
         dataWindow.onload = function(){
             dataWindow.document.getElementById('station_ids').value = stn_ids;
+            dataWindow.document.getElementById('stn_list').innerHTML = stn_ids_html;
         }
         return dataWindow;
     });

@@ -304,10 +304,12 @@ function initialize_station_finder() {
             for (var i=0; i<markers.length; i++) {
                 markers[i].setVisible(false);
                 if (mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))) {
+                    if (document.getElementById(markers[i].category).checked == true){
+                        markers[i].setVisible(true);
+                    }
                     // marker is within new bounds
                     //Check if it is currently showing on map
                     if (markers_showing.indexOf(markers[i]) >= 0){
-                        markers[i].setVisible(true);
                         if (markers[i].name != name_unique){            
                             station_ids_str+=markers[i].name + ',';
                             station_list.appendChild(tbl_rows[i]);
@@ -333,8 +335,9 @@ function initialize_station_finder() {
             tbl_rows_showing = [];
             var mapBounds = map.getBounds();
             for (var i=0; i<markers.length; i++) {
-                if (category == 'all'  && mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))) {
+                if (category == 'all') {
                     markers[i].setVisible(true);
+                    if (mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))){
                     markers_showing.push(markers[i]);
                     tbl_rows_showing.push(tbl_rows[i]);
                     if (markers[i].name != name_unique){
@@ -342,27 +345,31 @@ function initialize_station_finder() {
                         name_unique = markers[i].name;
                         station_ids_str+=markers[i].name + ',';
                     }
+                    }
                     for (var key in data.network_codes) {
                         // == check all the checkboxes ==
                         document.getElementById(data.network_codes[key]).checked = true;
                     }
                     document.getElementById('all').checked = true;
                 }
-                else if (markers[i].category == category && mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))) {
+                else if (markers[i].category == category) {
                     markers[i].setVisible(true);
                     markers_showing.push(markers[i]);
                     tbl_rows_showing.push(tbl_rows[i]);
                     station_list.appendChild(tbl_rows[i]);
                     name_unique = markers[i].name;
-                    station_ids_str+=markers[i].name + ',';
+                    if (mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))){
+                        station_list.appendChild(tbl_rows[i]);
+                        station_ids_str+=markers[i].name + ',';
+                    }
                     document.getElementById(category).checked = true;
                 }
                 else if (markers[i].category != category && document.getElementById(markers[i].category).checked){
-                    if (mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))) {
-                        markers[i].setVisible(true);
-                        if (markers[i].name != name_unique){
-                            markers_showing.push(markers[i]);
-                            tbl_rows_showing.push(tbl_rows[i]);
+                    markers[i].setVisible(true);
+                    if (markers[i].name != name_unique){
+                        markers_showing.push(markers[i]);
+                        tbl_rows_showing.push(tbl_rows[i]);
+                        if (mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))) {
                             station_list.appendChild(tbl_rows[i]);
                             station_ids_str+=markers[i].name + ',';
                         }
