@@ -429,13 +429,13 @@
     Please use the form on the left to complete your data request.<br />
     Double check your input parameters and fill out the highlighted form fields.<br />
     Submit the form.
-    Your Parameters were:<br />
+    Your Parameters were:<br /><br />
     {%for key_val in user_params_list%}
     <b>{{key_val.0}}</b>: 
     {%if key_val.0 == "Station IDs"%}
     {%for ID in user_params_dict.station_list%}
     {{ID}},
-    {%if forloop.counter0|divisibleby:4 and forloop.counter != 0%}
+    {%if forloop.counter0|divisibleby:4 and forloop.counter0 != 0%}
     <br />
     {%endif%}
     {%if forloop.last%}

@@ -611,11 +611,11 @@ function set_area_defaults(area_type){
     }
     if (area_type == 'county_warning_area'){
         lv.label ='County Warning Area';
-        lv.value ='Las Vegas, VEF';
+        lv.value ='Las Vegas  NV, VEF';
     }
     if (area_type == 'basin'){
         lv.label ='Basin';
-        lv.value ='Hot Creek-Railroad Valleys,16060012';
+        lv.value ='Hot Creek-Railroad Valleys, 16060012';
     }
     if (area_type == 'state'){
         lv.label ='State';

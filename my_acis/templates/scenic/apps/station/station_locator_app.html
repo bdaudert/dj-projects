@@ -311,7 +311,6 @@
         <input type="hidden" id="station_ids_str" name="station_ids_str" value="{{station_ids_for_datafind}}"> 
         {%if station_json and not need_overlay_map%}
         <!--Link to data portal-->
-        ERROR: {{x}}
         {%if params_dict.select_stations_by == "station_ids"%}
         {%if not error%}
         <a align="left" target="_blank" href="{{DATA_STATION_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
@@ -451,28 +450,12 @@
     <div id="results">
     {%if error%}
     <div style="padding:5px;position:relative;width:400px;">
-    <p align="left"><font size="4"><font color="red">{{error}}</font></p>
-    <p class="error" align="left">Your parameters:</p>
+    <p align="left"><font color="red">{{error}}</font></p>
+    <p class="message" align="left">Your parameters:<br />
     {%for dp in display_params_list%}
     <b>{{dp.0}}</b> : {{dp.1|linebreaksbr}}<br />
-    {%endfor%}
+    {%endfor%}</p>
     </div>
-    <!--
-    <table>
-    <td width="30%"></td>
-    <td width="70%">
-    <table align="right">
-    <div width="90%">
-    {%for dp in display_params_list%}
-    <tr><td>
-    <b>{{dp.0}}</b> : {{dp.1}}
-    </td></tr>
-    {%endfor%}
-    </div>
-    </table>
-    </td>
-    </table>
-    -->
     {%endif%}
 
     <input type="hidden" id="URL_PREFIX" name="variable" value="{{ URL_PREFIX }}">

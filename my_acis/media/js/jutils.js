@@ -13,7 +13,7 @@ $(function() {
         var href_pre = this.href;
         stn_ids = document.getElementById('station_ids_str').value;
         //href_pre+='&station_ids=' + stn_ids;
-        href_pre+='&station_ids=Selected Stations';
+        href_pre+='&station_ids=Multiple Stations';
         dataWindow = window.open(href_pre,'_blank');
         dataWindow.onload = function(){
             dataWindow.document.getElementById('station_ids').value = stn_ids;
