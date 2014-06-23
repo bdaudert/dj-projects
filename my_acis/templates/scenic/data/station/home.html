@@ -25,7 +25,7 @@
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData" bgcolor="#99C1C1">
-        {%if user_params_dict.select_stations_by%}
+        {%if user_params_dict.select_stations_by or large_request%}
         <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
@@ -50,7 +50,7 @@
             $("#Docu_select_stations_by").load("{{HTML_URL}}/Docu_select_stations_by.html");
         </script>
         </td>
-        {%if user_params_dict.select_stations_by%}
+        {%if user_params_dict.select_stations_by or large_request%}
         <tr id="area" valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr id="area" valign="top">
@@ -71,7 +71,7 @@
         </td>
         </tr>
         {%if initial.station_id or initial.station_ids%}
-        {%if user_params_dict.select_stations_by%}
+        {%if user_params_dict.select_stations_by or large_request %}
         <tr bgcolor="#FFEFD5">
         {%else%}
         <tr>
@@ -81,7 +81,7 @@
         <td></td>
         </td>
         {%endif%}
-        {%if user_params_dict.elements%}
+        {%if user_params_dict.elements or large_request %}
         <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
@@ -111,7 +111,7 @@
         </div>
         </td>
         </tr>
-        {%if user_params_dict.add_degree_days%}
+        {%if user_params_dict.add_degree_days or large_request%}
         <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
@@ -152,7 +152,7 @@
         </div>
         </td>
         </tr>
-        {%if user_params_dict.units%}
+        {%if user_params_dict.units or large_request%}
         <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
@@ -173,7 +173,7 @@
         </div>
         </td>
         </tr>
-        {%if user_params_dict.start_date%}
+        {%if user_params_dict.start_date or large_request %}
         <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
@@ -189,7 +189,7 @@
         </div>
         </td>
         </tr>
-        {%if user_params_dict.end_date%}
+        {%if user_params_dict.end_date or large_request %}
         <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
         <tr valign="top">
@@ -205,7 +205,11 @@
         </div>
         </td>
         </tr>
+        {%if large_request%}
+        <tr valign="top" bgcolor="#FFEFD5">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td>Show Flags: </td>
         <td>
             <select id="show_flags" name="show_flags" onchange="update_value(this.value)">
@@ -222,7 +226,11 @@
         </div>
         </td>
         </tr>
+        {%if large_request%}
+        <tr valign="top" bgcolor="#FFEFD5">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td>Show Observation Time: </td>
         <td>
             <select id="show_observation_time" name="show_observation_time" onchange="update_value(this.value)">
@@ -239,7 +247,11 @@
         </div>
         </td>
         </tr>
+        {%if large_request%}
+        <tr valign="top" bgcolor="#FFEFD5">
+        {%else%}
         <tr valign="top">
+        {%endif%}
         <td>Date Format: </td>
         <td>
         <select id="date_format" name="date_format" onchange="update_value(this.value)">
@@ -284,9 +296,9 @@
         <tr valign="top" id="delim" style="display:table-row">
         {%else%}
         {%if large_request and initial.data_format != "xl"%}
-        <tr valign="top" id="delim" style="display:table-row" bgcolor="#FFEFD5">
+        <tr valign="top" id="delim" style="display:table-row">
         {%else%}
-        <tr valign="top" id="delim" style="display:none">
+        <tr valign="top" id="delim" style="display:none" bgcolor="#FFEFD5">
         {%endif%}
         {%endif%}
         <td>Delimiter:</td>
@@ -313,9 +325,9 @@
         <tr valign="top" id="out_file" style="display:none;">
         {%else%}
         {%if large_request%}
-        <tr valign="top" id="out_file" style="display:table-row;" bgcolor="#FFEFD5" class="large_request">
+        <tr valign="top" id="out_file" style="display:table-row;" class="large_request">
         {%else%}
-        <tr valign="top" id="out_file" style="display:table-row;">
+        <tr valign="top" id="out_file" style="display:table-row;" bgcolor="#FFEFD5">
         {%endif%}
         {%endif%}
         <td>Outputfile Name: </td>

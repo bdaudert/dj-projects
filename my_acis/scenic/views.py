@@ -556,7 +556,6 @@ def data_gridded(request):
 
             context['large_request'] = ldr
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
-
         context['large_request'] = False
         #Data request
         req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')

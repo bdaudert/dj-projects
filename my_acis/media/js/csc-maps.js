@@ -118,7 +118,7 @@ function initialize_station_finder() {
             //var icon = 'http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_' + data.network_icons[key] + '.png';
             var div = document.createElement('div');
             //Omit RCC/Misc/Threadex
-            if (['RCC', 'Threadex', 'Misc'].indexOf(data.network_codes[key]) >= 0){
+            if (['RCC','Misc'].indexOf(data.network_codes[key]) >= 0){
                 div.setAttribute("style", "display:none");
             }
             div.innerHTML = '<input type="checkbox" id="'+ name +
