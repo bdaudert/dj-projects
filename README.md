@@ -8,7 +8,7 @@ CONTENT
 my_acis
 *******
 Applied Climate Information System (ACIS) project for the 
-Western Regional Climate Center (WRCC)
+Western Regional Climate Center (WRCC).
 Contains all django views, html templates, javascript functions and media files. 
 
 Django Applications:
