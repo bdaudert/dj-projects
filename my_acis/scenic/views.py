@@ -221,7 +221,7 @@ def download(request):
 
 def data_station(request):
     context = {
-        'title': 'Historic Station Data \n (Daily)',
+        'title': 'Historic Station Data Lister\n (Daily)',
     }
 
     initial, checkbox_vals = set_data_station_initial(request)
@@ -343,6 +343,15 @@ def data_station(request):
         num_data_points = days * num_lats *num_lons * len(form_cleaned['elements'])
         num_giga_bytes = 8 * num_data_points /float(1024**3)
         num_mega_bytes = round(8 * num_data_points /float(1024**2),2)
+        '''
+        if 0.00098 < num_giga_bytes:
+            ldr = 'At the moment we do not accept data requests producing \
+                more than 1MB of data. Your request size is approximately %s MB. \
+                We will support larger requests in the near future. \
+                Thank you for your patience!' %str(num_mega_bytes)
+            context['too_large'] = ldr
+            return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
+        '''
         if 'user_name' and 'user_email' in form_cleaned.keys():
             ldr = \
                 'Data request submitted successfully. \n \
@@ -369,7 +378,6 @@ def data_station(request):
 
             context['large_request'] = ldr
             return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
-
         context['large_request'] = False
         #Data request
         resultsdict = AcisWS.get_station_data(form_cleaned, 'sodlist_web')
@@ -423,7 +431,7 @@ def data_station(request):
 
 def data_gridded(request):
     context = {
-        'title': 'Gridded/Modeled Data',
+        'title': 'Gridded/Modeled Data Lister',
     }
     initial, checkbox_vals = set_data_gridded_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
@@ -514,6 +522,15 @@ def data_gridded(request):
         num_data_points = days * num_lats *num_lons * len(form_cleaned['elements']) / time_interval
         num_giga_bytes = 8 * num_data_points /float(1024**3)
         num_mega_bytes = round(8 * num_data_points /float(1024**2),2)
+        '''
+        if 0.00098 < num_giga_bytes:
+            ldr = 'At the moment we do not accept data requests producing \
+                more than 1MB of data. Your request size is approximately %s MB. \
+                We will support larger requests in the near future. \
+                Thank you for your patience!' %str(num_mega_bytes)
+            context['too_large'] = ldr
+            return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
+        '''
         if 'user_name' in form_cleaned.keys():
             ldr = \
                 'Data request submitted successfully. \n \
@@ -1314,140 +1331,6 @@ def station_locator_app(request):
         context['host'] = settings.HOST
     return render_to_response('scenic/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
 
-def old_station_locator_app(request):
-    from subprocess import call
-    call(["touch", settings.TEMP_DIR + "Empty.json"])
-    context = {
-        'title': 'Station Finder',
-    }
-    form0 = set_as_form(request,'StationLocatorForm0')
-    context['form0'] = form0
-    context['empty_json'] = False
-    context['show_legend'] = True
-    context['map_title'] = 'Map of Southwest US COOP stations!'
-
-    if 'form0' in request.POST:
-        context['map_title'] = ''
-        context['empty_json'] = True
-        form0 = set_as_form(request,'StationLocatorForm0')
-        context['form0']  = form0
-        context['show_legend'] = False
-        if form0.is_valid():
-            context['form1_ready'] = True
-            initial_params= {}
-            stn_id = request.GET.get('stn_id', None)
-            if stn_id is not None:initial_params['station_id'] = str(stn_id)
-            initial_params['select_stations_by'] = form0.cleaned_data['select_stations_by']
-            initial_params['element_selection'] = form0.cleaned_data['element_selection']
-            form1 = forms.StationLocatorForm1(initial=initial_params)
-            context['form1'] = form1
-            if form0.cleaned_data['select_stations_by'] == 'bbox':
-                context['need_map_bbox'] = True
-            if form0.cleaned_data['select_stations_by'] == 'shape':
-                context['need_polymap'] = True
-            if form0.cleaned_data['select_stations_by'] in ['basin', 'cwa', 'climdiv', 'county']:
-                context['need_overlay_map'] = True
-                initial = {
-                    'select_stations_by':form0.cleaned_data['select_stations_by'],
-                    'element_selection': form0.cleaned_data['element_selection']
-                }
-                form2 =forms.StateForm(initial=initial)
-                context['form2'] = form2
-                context['host'] = settings.HOST
-                context['type'] = form0.cleaned_data['select_stations_by']
-                context['kml_file_path'] = settings.TMP_URL + 'nv_' + form0.cleaned_data['select_stations_by'] + '.kml'
-            context[form0.cleaned_data['select_stations_by']] = WRCCData.AREA_DEFAULTS[form0.cleaned_data['select_stations_by']]
-
-    if 'form1' in request.POST:
-        context[request.POST['select_stations_by']] = str(request.POST[WRCCData.ACIS_TO_SEARCH_AREA[str(request.POST['select_stations_by'])]])
-        context['empty_json'] = True
-        form1 = set_as_form(request,'StationLocatorForm1')
-        context['form1'] = form1
-        context['form1_ready'] = True
-        if form1.is_valid():
-            #context[form1.cleaned_data['select_stations_by']] = form1.cleaned_data[form1.cleaned_data['select_stations_by']]
-            if 'elements' in form1.cleaned_data.keys():
-                element_list = ','.join(form1.cleaned_data['elements'])
-            else:
-                element_list = 'Any climate element'
-                context['elements']= 'Any climate element'
-
-            by_type = WRCCData.ACIS_TO_SEARCH_AREA[form1.cleaned_data['select_stations_by']]
-            val = form1.cleaned_data[WRCCData.ACIS_TO_SEARCH_AREA[form1.cleaned_data['select_stations_by']]]
-            context['by_type'] = WRCCData.DISPLAY_PARAMS[WRCCData.ACIS_TO_SEARCH_AREA[form1.cleaned_data['select_stations_by']]] + str(val)
-            context['map_title'] = by_type.upper() + ': ' + val
-
-            date_range = [str(form1.cleaned_data['start_date']), str(form1.cleaned_data['end_date'])]
-            context['start_date'] = form1.cleaned_data['start_date']
-            context['end_date'] = form1.cleaned_data['end_date']
-            constraints = WRCCData.DISPLAY_PARAMS[str(form1.cleaned_data['constraints'])]
-            context['constraints'] = constraints
-            if form1.cleaned_data['element_selection'] == 'T':
-                context['map_title'] = by_type.upper() + ': ' + val + ', ELEMENTS: ' + \
-                                ','.join(form1.cleaned_data['elements']) + \
-                                ', FROM: ' + form1.cleaned_data['start_date'] + ' TO: '+ form1.cleaned_data['start_date'] + \
-                                ', ' + constraints
-                context['elements'] = ','.join(form1.cleaned_data['elements']) #tuple of elements
-                #Convert element_list to list of var majors
-                el_vX_list = []
-                for el_idx, el in enumerate(form1.cleaned_data['elements']):
-                    #Check if user entered a gddxx,hddxx,cddxx
-                    el_strip = re.sub(r'(\d+)(\d+)', '', el)   #strip digits from gddxx, hddxx, cddxx
-                    b = el[-2:len(el)] #base_temp
-                    try:
-                        int(b)
-                        if el_strip in ['hdd', 'gdd']:
-                            el_vX_list.append('45')
-                        elif el_strip == 'cdd':
-                            el_vX_list.append('45') #should be 44
-                        else:
-                            pass
-                    except:
-                        el_vX_list.append(str(WRCCData.ACIS_ELEMENTS_DICT[el]['vX']))
-
-                stn_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=form1.cleaned_data['constraints'])
-            else:
-                context['map_title'] = by_type.upper() + ': ' + val + \
-                                ', FROM: ' + form1.cleaned_data['start_date'] + ' TO: '+ form1.cleaned_data['start_date'] + \
-                                ', ' + constraints
-                el_vX_list = ['1', '2', '4', '10', '11', '45']
-                context['elements'] = 'maxt, mint, pcpn, snow, snwd, hdd, cdd, gdd' #tuple of elements
-                stn_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=form1.cleaned_data['constraints'])
-
-            if 'error' in stn_json.keys():
-                context['error'] = stn_json['error']
-            if stn_json['stations'] == []:
-                context['error'] = "No stations found for %s : %s, elements: %s."  %(by_type, val, element_list)
-            context['json_file'] = f_name
-            context['empty_json'] = False
-            context['form1_ready'] = True
-            context['show_legend'] = True
-
-    #overlay map generation
-    if 'form2' in request.POST:
-        form2 = set_as_form(request,'StateForm')
-        context['form2'] = form2
-        context['need_overlay_map'] = True
-        if form2.is_valid():
-            initial = {'select_stations_by':str(form2.cleaned_data['select_stations_by']), 'element_selection':str(form2.cleaned_data['element_selection'])}
-            context[form2.cleaned_data['select_stations_by']] = WRCCData.AREA_DEFAULTS[form2.cleaned_data['select_stations_by']]
-            context['type'] = form2.cleaned_data['select_stations_by']
-            form1 = forms.StationLocatorForm1(initial=initial)
-            context['form1']  = form1
-            context['form1_ready'] = True
-            at = str(form2.cleaned_data['select_stations_by'])
-            st = str(form2.cleaned_data['state']).lower()
-            kml_file_name = st + '_' + at + '.kml'
-            dir_location = settings.TEMP_DIR
-            status = WRCCUtils.generate_kml_file(at, st, kml_file_name, dir_location)
-            if not status == 'Success':
-                context['overlay_error'] = status
-            else:
-                context['host'] = settings.HOST
-                context['kml_file_path'] = settings.TMP_URL + kml_file_name
-
-
-    return render_to_response('scenic/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
 
 #######################
 #SOD programs

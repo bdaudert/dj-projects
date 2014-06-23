@@ -89,6 +89,17 @@
         <table cellpadding="5">
         <tr>
             <td valign="top">
+                <p>Historic Station &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_DATA_STATION')"><br />Data Lister</p><br />
+                <div class="pop-up">
+                    <p>Get a listing of station data<br/>Click on the question mark for more information!</p>
+                </div>
+                {%if user_params_dict%}
+                <a href="{{DATA_STATION_URL}}?{%for key, val in user_params_dict.items %}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><img alt="Station" title="Station" class="app_img" src="{{MEDIA_URL}}img/Stn.png"></a></font></td>                        
+                {%else%}
+                <a href="{{DATA_STATION_URL}}"><img alt="Station" title="Station" class="app_img" src="{{MEDIA_URL}}img/Stn.png"></a></font></td>
+                {%endif%}  
+            </td>
+            <td valign="top">
                 <p>Monthly/Annual &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SODXTRMTS')">  <br/>Averages/Extremes<br /> and Time Series</p>
                 <div class="pop-up" id="sodxtrmts">
                     <p>Monthly and annual time series of a large number of properties derived from the SOD daily data set. <br/>Click on the question mark for more information!</p>
@@ -110,20 +121,9 @@
                     <a  href="{{SODSUMM_URL}}"><img class="app_img" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
                 {%endif%}
             </td>
-            <td valign="top">
-                <p>Monthly Averages &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_MON_AVES')"><br /><br/>as Bar Charts</p>
-                <div class="pop-up">
-                    <p>Generates bar chart of monthly averages. <br/>Click on the question mark for more information!</p>
-                </div>
-                 {%if user_params_dict%}
-                    <a  href="{{MON_AVES_URL}}?{%for key, val in user_params_dict.items %}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><img class="app_img" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
-                {%else%}
-                    <a  href="{{MON_AVES_URL}}"><img class="app_img" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
-                {%endif%}
-            </td>
         </tr>
             <td valign="top"> 
-                <p>Station Finder &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_STATION_FINDER')"></p>
+                <p>Station Finder &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_STATION_FINDER')"></p><br />
                 <div class="pop-up">
                     <p>Find stations with data for specific elements and a chosen time range. <br/>Click on the question mark for more information!</p>
                 </div>
@@ -134,18 +134,18 @@
                 {%endif%}
             </td>
             <td valign="top">
-                <p>Station Data Lister &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_DATA_STATION')"></p>
+                <p>Monthly Averages &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_MON_AVES')"><br />as Bar Charts</p>
                 <div class="pop-up">
-                    <p>Get a listing of station data<br/>Click on the question mark for more information!</p>
+                    <p>Generates bar chart of monthly averages. <br/>Click on the question mark for more information!</p>
                 </div>
-                {%if user_params_dict%}
-                <a href="{{DATA_STATION_URL}}?{%for key, val in user_params_dict.items %}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><img alt="Station" title="Station" class="app_img" src="{{MEDIA_URL}}img/Stn.png"></a></font></td>                        
+                 {%if user_params_dict%}
+                    <a  href="{{MON_AVES_URL}}?{%for key, val in user_params_dict.items %}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><img class="app_img" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
                 {%else%}
-                <a href="{{DATA_STATION_URL}}"><img alt="Station" title="Station" class="app_img" src="{{MEDIA_URL}}img/Stn.png"></a></font></td>
-                {%endif%}  
+                    <a  href="{{MON_AVES_URL}}"><img class="app_img" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
+                {%endif%}
             </td>
             <td valign="top">
-                <p>Metadata Graphics &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_META_GRAPH')"></p>
+                <p>Metadata Graphics &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_META_GRAPH')"></p><br />
                 <div class="pop-up">
                     <p>See how much data is missing over the period of record. <br/>Click on the question mark for more information!</p>
                 </div>
