@@ -1344,7 +1344,6 @@ def sodxtrmts(request):
     json_file = request.GET.get('json_file', None)
     if json_file is not None:
         context['json_file'] =json_file
-        context['JSON_URL'] = settings.TEMP_DIR
     initial,checkbox_vals = set_sodxtrmts_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set graph and plot options
@@ -1365,7 +1364,6 @@ def sodxtrmts(request):
     if 'formSodxtrmts' in request.POST:
         #Turn request object into python dict
         form = set_form(request, clean=True)
-        context['x'] = form
         #Set initial form parameters for html
         initial,checkbox_vals = set_sodxtrmts_initial(request)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
@@ -1419,7 +1417,6 @@ def sodxtrmts(request):
                     with open(settings.TEMP_DIR + '%s' %(json_file),'w+') as f:
                         f.write(results_json)
                     context['json_file'] =json_file
-                    context['JSON_URL'] = settings.TEMP_DIR
                     return render_to_response('scenic/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
             else:
                 #New data analysis
@@ -1544,7 +1541,6 @@ def sodxtrmts(request):
                 f.write(results_json)
             context['json_dict'] = json_dict
             context['json_file'] = json_file
-            context['JSON_URL'] = settings.TEMP_DIR
 
     #Downlaod Table Data
     if 'formDownload' in request.POST:
@@ -2812,6 +2808,7 @@ def set_sodxtrmts_initial(request):
     else:
         initial['end_year']  = Get('end_year', yesterday[0:4])
     '''
+    initial['autofill_list'] = 'US_station_id'
     initial['monthly_statistic'] = Get('monthly_statistic', 'msum')
     initial['max_missing_days'] = Get('max_missing_days', '5')
     initial['start_month'] = Get('start_month', '01')
