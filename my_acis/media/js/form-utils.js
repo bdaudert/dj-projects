@@ -676,6 +676,34 @@ function set_area_and_map(area_type){
     return lv;
 }
 
+function unset_large_request(){
+    //Delete large data request entries
+    var large_requests_rows = document.getElementsByClassName('large_request');
+    for (i=0;i<large_requests_rows.length;i++) {
+        //large_requests_rows[i].style.display = "none";
+        large_requests_rows[i].parentNode.removeChild(large_requests_rows[i]);
+    }
+    //FIX ME: onchange not working correctly when option is not changes
+    //Need to delete user name manually
+    if ($('#' + 'un').length){
+        document.getElementById('un').parentNode.removeChild(document.getElementById('un'));
+    }
+    //reset background color on all table rows
+    var form_tables = document.getElementsByClassName('form');
+    for (i=0;i<form_tables.length;i++) {
+        for (var j = 0;j < form_tables[i].rows.length; j++) {
+            form_tables[i].rows[j].style.background="#99C1C1";
+        } 
+    }
+    //Add html option to data format
+    var df = document.getElementById('data_format');
+    var opt = document.createElement('option');
+    opt.setAttribute('value','html');
+    opt.setAttribute('selected','selected'); 
+    opt.innerHTML = 'Html (display on page)';
+    df.insertBefore(opt,df.firstChild);
+}
+
 function set_station_grid_select(row_id,node){
     var IMG_URL = document.getElementById('IMG_URL').value;
     var HTML_URL = document.getElementById('HTML_URL').value;
@@ -693,6 +721,8 @@ function set_station_grid_select(row_id,node){
         document.getElementById('user_params_list').style.display = "none";
     }
 
+    unset_large_request()
+    /*
     //Delete large data request entries
     var large_requests_rows = document.getElementsByClassName('large_request');
     for (i=0;i<large_requests_rows.length;i++) {
@@ -704,6 +734,7 @@ function set_station_grid_select(row_id,node){
     if ($('#' + 'un').length){
         document.getElementById('un').parentNode.removeChild(document.getElementById('un'));
     }
+    */
     var lv = set_area_and_map(node.value);
     //Set up autofill if needed
     set_autofill(lv.autofill_list);

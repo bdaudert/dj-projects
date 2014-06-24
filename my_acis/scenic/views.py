@@ -1774,6 +1774,7 @@ def find_id(form_name_field, json_file_path):
     name = None
     if len(name_id_list) >=2:
         i= str(name_id_list[-1]).replace(' ','')
+        '''
         #Special case CWA --> json file list Las Vegas, NV as name
         #but form field is Las Vegas NV
         if len(i) ==3 and i.isalpha():
@@ -1782,12 +1783,16 @@ def find_id(form_name_field, json_file_path):
             name = ', '.join(sp)
         else:
             name = name_id_list[0]
+        '''
+        name = name_id_list[0]
     elif len(name_id_list) == 1:
         name_list= i.split(' ')
         #check for digits
         if bool(re.compile('\d').search(i)) and len(name_list) == 1:
             #User entered a station id
             return i
+        else:
+            name = str(form_name_field)
     if not os.path.isfile(json_file_path) or os.path.getsize(json_file_path) == 0:
         return str(form_name_field)
     #Find id in json file
@@ -1805,7 +1810,6 @@ def find_id(form_name_field, json_file_path):
                     return i
             else:
                 return i
-            #return i
         #Check if i is name
         if entry['name'].upper() == i.upper():
             return entry['id']

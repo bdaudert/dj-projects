@@ -179,7 +179,7 @@
         <tr valign="top">
         {%endif%} 
         <td id="Start Date">Start Date: </td>
-        <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value)"></td>
+        <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value) & unset_large_request();"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_start_date"></div>
@@ -195,7 +195,7 @@
         <tr valign="top">
         {%endif%}
         <td id="End Date">End Date: </td>
-        <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value)"></td>
+        <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value) & unset_large_request();"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_end_date"></div>
@@ -274,7 +274,7 @@
         <td>Data Format: </td>
         <td>
         <select id="data_format" name="data_format" onchange="set_delimiter_and_output_file(this, 'delim','out_file') & update_value(this.value);">
-        {%if not large_request%}
+        {%if  not large_request%}
         <option value="html" {{checkbox_vals.data_format_htnl_selected}}>Html (display on page)</option>
         {%endif%}
         <option value="clm" {{checkbox_vals.data_format_clm_selected}}>Columnar, .txt</option>

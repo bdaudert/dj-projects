@@ -198,7 +198,7 @@
         <tr valign="top">
         {%endif%}
         <td id="Start Date">Start Date: </td>
-        <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value)"></td>
+        <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value) & unset_large_request();"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_start_date"></div>
@@ -214,7 +214,7 @@
         <tr valign="top">
         {%endif%}
         <td id="End Date">End Date: </td>
-        <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value)"></td>
+        <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value) & unset_large_request();"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_end_date"></div>
