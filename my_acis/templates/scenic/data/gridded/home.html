@@ -580,7 +580,15 @@ $(function(){
     </p>
     </div>
     {%endif%}
-    
+
+    {%if large_request %}
+    <p class="message">{{large_request}}</p>
+    {%endif%}
+    {%if too_large %}
+    <p class="error">{{too_large}}</p>
+    {%endif%}
+
+ 
     {%if display_params_list%}
     <p><b>SEARCH PARAMETERS</b>:<br />
     {%for param in display_params_list%}
@@ -722,16 +730,12 @@ $(function(){
     <br /><br />
     <!--Results section-->
     <div class="results">
-    {%if large_request %}
-    <p class="message">{{large_request}}</p>
-    {%endif%}
-    {%if too_large %}
-    <p class="error">{{too_large}}</p>
-    {%endif%}
     
     {%if results.error%}
     <p class="error">{{results.error}}</p>
     {%endif%}
+    </div>
+
 
     {%if results and not results.error%}
     <div id="Arrow">
@@ -767,11 +771,11 @@ $(function(){
     <p><b>DATA</b>:</p>
     <table border="1">
     {%if initial.data_summary == "temporal"%}    
-    <th>date range{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev({{elev_unit}}){{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}}({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
+    <th>date range{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev ({{elev_unit}}){{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}} ({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
     {%elif initial.data_summary == "spatial"%}
-    <th>date {{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}}({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
+    <th>date {{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}} ({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
     {%else%}
-    <th>date{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev({{elev_unit}}){{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}}({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
+    <th>date{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev ({{elev_unit}}){{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}} ({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
     {%endif%}
     {%for row in results%}
     <tr>

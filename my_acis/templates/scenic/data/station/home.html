@@ -462,7 +462,7 @@ $(function(){
     <p class="message">
     Please use the form on the left to complete your data request.<br />
     Double check your input parameters and fill out the highlighted form fields.<br />
-    Submit the form.
+    Submit the form.<br />
     Your Parameters were:<br /><br />
     {%for key_val in user_params_list%}
     <b>{{key_val.0}}</b>:
@@ -475,6 +475,15 @@ $(function(){
     </p>
     </div>
     {%endif%}
+
+    {%if large_request %}
+    <p class="message">{{large_request}}</p>
+    {%endif%}
+
+    {%if too_large%}
+    <p class="error">{{too_large}}</p>
+    {%endif%}
+    
 
     {%if display_params_list%}
     <p><b>SEARCH PARAMETERS</b>:<br />
@@ -489,7 +498,8 @@ $(function(){
     <div id="coords" style="display:none;">{{params.1}}</div>
     {%elif param.0 == "Station IDs"%}
     {%for ID in params_dict.station_list%}
-    {{ID}},     
+    {{ID}}
+    {%if not forloop.last%},{%endif%}     
     {%if forloop.counter0|divisibleby:4 and forloop.counter != 0%}
     <br />      
     {%endif%}   
@@ -611,14 +621,6 @@ $(function(){
   
     <!--Results section--> 
     <div class="results">
-    {%if large_request %}
-    <p class="message">{{large_request}}</p>
-    {%endif%}
-
-    {%if too_large%}
-    <p class="error">{{too_large}}</p>
-    {%endif%}
-
     {%if results%}
     {%if results.error%}
     <p class="error">{{results.error}}</p>
@@ -645,8 +647,6 @@ $(function(){
     {%if link_to_mon_aves and not results.error%}
     <a target="_blank" href="{{MON_AVES_URL}}?{%for key,val in monthly_aves_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Barcharts of Monthly Averages</font></a><br />
     {%endif%}
-
-
     {%endif%}
 
     {%if station_ids_error %}
@@ -655,15 +655,16 @@ $(function(){
     {%for stn in stn_idx%}
     {%if results.stn_data|lookup:stn%}
 
-    <b>Station Name</b>: {{results.stn_names|lookup:stn|safe}},<br />
-    <b>State</b>: {{results.stn_state|lookup:stn|safe}},<br />
+    <b>Station Name</b>: {{results.stn_names|lookup:stn|safe}}<br />
+    <b>State</b>: {{results.stn_state|lookup:stn|safe}}<br />
     <b>Station ID and Network Pairs</b>:<br /> 
     {%for id_network in results.stn_ids|lookup:stn %}
     {%if forloop.counter|divisibleby:2%}<br />{%endif%}
-    {{id_network}},
+    {{id_network}}
+    {%if not forloop.last%},{%endif%}
     {%endfor%}<br />
-    <b>Latitude, Longitude</b>: {{results.stn_lat|lookup:stn|safe}}, {{results.stn_lon|lookup:stn|safe}},<br />
-    <b>Elevation</b>: {{results.stn_elev|lookup:stn|safe}}ft<br /><br />
+    <b>Latitude, Longitude</b>: {{results.stn_lat|lookup:stn|safe}}, {{results.stn_lon|lookup:stn|safe}}<br />
+    <b>Elevation</b>: {{results.stn_elev|lookup:stn|safe}} ft<br /><br />
     <b>DATA:</b><br />
     {%if not results.error%}
     ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated<br />
@@ -674,15 +675,15 @@ $(function(){
     <th>date{{params_dict.delimiter}}</th>
     {%if params_dict.show_flags == "T"%}
     {%if params_dict.show_observation_time == "T"%}
-    {%for el in element_list%}<th>{{el_name_dict|lookup:el}}({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>Flag{{params_dict.delimiter}}</th><th>obs time{{params_dict.delimiter}}</th>{%endfor%}
+    {%for el in element_list%}<th>{{el_name_dict|lookup:el}} ({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>Flag{{params_dict.delimiter}}</th><th>obs time{{params_dict.delimiter}}</th>{%endfor%}
     {%else%}
-    {%for el in  element_list%}<th>{{el_name_dict|lookup:el}}({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>Flag{{params_dict.delimiter}}</th>{%endfor%}
+    {%for el in  element_list%}<th>{{el_name_dict|lookup:el}} ({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>Flag{{params_dict.delimiter}}</th>{%endfor%}
     {%endif%}
     {%else%}
     {%if params_dict.show_observation_time == "T"%}
-    {%for el in element_list%}<th>{{el_name_dict|lookup:el}}({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>obs time{{params_dict.delimiter}}</th>{%endfor%}
+    {%for el in element_list%}<th>{{el_name_dict|lookup:el}} ({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>obs time{{params_dict.delimiter}}</th>{%endfor%}
     {%else%}
-    {%for el in element_list%}<th>{{el_name_dict|lookup:el}}({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
+    {%for el in element_list%}<th>{{el_name_dict|lookup:el}} ({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
     {%endif%}
     {%endif%}
     </th>
