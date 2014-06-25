@@ -324,8 +324,12 @@ def data_station(request):
         '''
         sdate = form_cleaned['start_date']
         edate = form_cleaned['end_date']
-        s_date = WRCCUtils.date_to_datetime(sdate)
-        e_date = WRCCUtils.date_to_datetime(edate)
+        if sdate.lower() == 'por':
+            s_date = WRCCUtils.find_valid_daterange(form_cleaned['station_id'], start_date='por', end_date='por', max_or_min='max')[0]
+            s_date = WRCCUtils.date_to_datetime(s_date)
+        else:s_date = WRCCUtils.date_to_datetime(sdate)
+        if edate.lower() == 'por':e_date = WRCCUtils.date_to_datetime(yesterday)
+        else:e_date = WRCCUtils.date_to_datetime(edate)
         days = (e_date - s_date).days
         #Find potential data size: we find enclosing bbox and assume
         #stations are placed evenly on a 50km grid
@@ -340,8 +344,8 @@ def data_station(request):
         else:
             num_lats, num_lons = WRCCUtils.find_num_lls(bbox,'4')
         num_data_points = days * num_lats *num_lons * len(form_cleaned['elements'])
-        num_giga_bytes = 2 * num_data_points /float(1024**3)
-        num_mega_bytes = round(2 * num_data_points /float(1024**2),2)
+        num_giga_bytes = 1 * num_data_points /float(1024**3)
+        num_mega_bytes = round(1 * num_data_points /float(1024**2),2)
 
         '''
         if 0.00098 < num_giga_bytes:
@@ -478,7 +482,7 @@ def data_gridded(request):
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
         display_params_list, params_dict = set_data_gridded_params(form)
         context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
-        fields_to_check = [form_cleaned['select_grid_by'],'start_date', 'end_date','degree_days','elements']
+        fields_to_check = [form_cleaned['select_grid_by'],'start_date', 'end_date','degree_days','elements','grid']
         #Check for form errors
         if 'user_email' in form_cleaned.keys():
             fields_to_check.append('user_email')
@@ -1888,6 +1892,7 @@ def set_form(request,clean=True):
             form[str(key)] = stn_ids
         #format start and end data
         if str(key) in ['start_date', 'end_date']:
+            '''
             if val == 'por':
                 if str(key) == 'start_date':idx = 0
                 if str(key) == 'end_date':idx = 1
@@ -1895,6 +1900,8 @@ def set_form(request,clean=True):
                 form[str(key)] = WRCCUtils.find_valid_daterange(stn_id, start_date='por', end_date='por', max_or_min='max')[idx]
             else:
                 form[str(key)] = str(val).replace('-','').replace(':','').replace('/','').replace(' ','')
+            '''
+            form[str(key)] = str(val).replace('-','').replace(':','').replace('/','').replace(' ','')
         #Deal with PRISM data and add degree day elements
         if str(key) == 'elements':
             el_list_new = val
