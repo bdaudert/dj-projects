@@ -696,12 +696,12 @@ function unset_large_request(){
         } 
     }
     //Add html option to data format
-    var df = document.getElementById('data_format');
-    var opt = document.createElement('option');
-    opt.setAttribute('value','html');
-    opt.setAttribute('selected','selected'); 
-    opt.innerHTML = 'Html (display on page)';
-    df.insertBefore(opt,df.firstChild);
+    if ($('#data_format').length){
+        var df = $('#data_format');
+        if (!df.find('option[value=html]').length > 0){
+            df.prepend('<option value="html" selected="selected">Html (display on page)</option>')
+        }
+    }
 }
 
 function set_station_grid_select(row_id,node){

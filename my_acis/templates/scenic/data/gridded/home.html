@@ -17,6 +17,19 @@
 
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
+<!--On form change, hide results-->
+<script type="text/javascript">
+$(function(){ 
+    $('#tableDataForm').find('input,select').change(function(){
+        var ff = ['select_grid_by', 'elements', 'start_date', 'end_date'];
+        if ($.inArray($(this).attr('id'),ff)>=0){
+            $('.results').each(function() {
+                $(this).css('display','none');
+            });
+        }
+    });
+})
+</script>
 
 <table cellpadding="10">
 <td valign="top" width="40%">
@@ -266,7 +279,7 @@
         {%endif%}
         <td>Data Summary: </td>
         <td>
-            <select id="data_summary" name="data_summary" onchange="set_data_summary(this, 'temp_summary','spat_summary') & update_value(this.value)">
+            <select id="data_summary" name="data_summary" onchange="set_data_summary(this, 'temp_summary','spat_summary') & update_value(this.value) & unset_large_request();">
             <option value="none" {{checkbox_vals.data_summary_none_selected}}>None, just get raw data</option>
             <option value="temporal" {{checkbox_vals.data_summary_temporal_selected}}>Temporal</option>
             <option value="spatial" {{checkbox_vals.data_summary_spatial_selected}}>Spatial</option>
@@ -553,6 +566,7 @@
         {%endfor%}
     {%endif%}
 
+    <div class="results">
     {%if user_params_list and not results%}
     <div id="user_params_list">
     <p class="message">
@@ -566,9 +580,9 @@
     </p>
     </div>
     {%endif%}
-
+    
     {%if display_params_list%}
-    <p class="message"><b>SEARCH PARAMETERS</b>:<br />
+    <p><b>SEARCH PARAMETERS</b>:<br />
     {%for param in display_params_list%}
     {%if forloop.counter|divisibleby:"3" %}<br />
     {%endif %}
@@ -585,6 +599,7 @@
     {%endfor%}
     </p>
     {%endif%}
+    </div>
 
     <div id="PolyMap" style="display:none;">
         <div id="panel">
@@ -706,7 +721,7 @@
     {%endif%}
     <br /><br />
     <!--Results section-->
-    <div id="results">
+    <div class="results">
     {%if large_request %}
     <p class="message">{{large_request}}</p>
     {%endif%}
@@ -726,10 +741,11 @@
     </table>
     </div>
     {%endif%}
+    </div>
 </td></table>
 <table cellpadding="10" align="center">
 <td valign="top" width="100%">
-
+    <div class="results">
     {%if results and not results.error%}
     <!--Link to relevant applications-->
     <!--

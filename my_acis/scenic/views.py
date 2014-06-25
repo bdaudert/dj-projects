@@ -302,6 +302,7 @@ def data_station(request):
         #Check for form errors
         if 'user_email' in form_cleaned.keys():
             fields_to_check.append('user_email')
+            context['large_request'] = True
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -343,6 +344,7 @@ def data_station(request):
         num_data_points = days * num_lats *num_lons * len(form_cleaned['elements'])
         num_giga_bytes = 8 * num_data_points /float(1024**3)
         num_mega_bytes = round(8 * num_data_points /float(1024**2),2)
+
         '''
         if 0.00098 < num_giga_bytes:
             ldr = 'At the moment we do not accept data requests producing \
@@ -371,13 +373,14 @@ def data_station(request):
             ldr = \
                 'You requested a large amount of data. \
                 We estimated %s MB. \
-                Please provide data format, output file name, your user name and email and resubmit the form.\
+                Please provide your user name and email and resubmit the form.\
                 we will process your request off-line and \
                 notify you when your request has been processed. \
                 Thank you for your patience!' %str(num_mega_bytes)
 
             context['large_request'] = ldr
             return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
+
         context['large_request'] = False
         #Data request
         resultsdict = AcisWS.get_station_data(form_cleaned, 'sodlist_web')
@@ -481,6 +484,7 @@ def data_gridded(request):
         #Check for form errors
         if 'user_email' in form_cleaned.keys():
             fields_to_check.append('user_email')
+            context['large_request'] = True
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -522,6 +526,7 @@ def data_gridded(request):
         num_data_points = days * num_lats *num_lons * len(form_cleaned['elements']) / time_interval
         num_giga_bytes = 8 * num_data_points /float(1024**3)
         num_mega_bytes = round(8 * num_data_points /float(1024**2),2)
+
         '''
         if 0.00098 < num_giga_bytes:
             ldr = 'At the moment we do not accept data requests producing \
@@ -531,6 +536,7 @@ def data_gridded(request):
             context['too_large'] = ldr
             return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
         '''
+
         if 'user_name' in form_cleaned.keys():
             ldr = \
                 'Data request submitted successfully. \n \
@@ -549,13 +555,13 @@ def data_gridded(request):
             ldr = \
                 'You requested a large amount of data. \
                 We estimated %s MB. \
-                Please provide data format, output file name, your user name and email and resubmit the form.\
+                Please provide your user name and email and resubmit the form.\
                 we will process your request off-line and \
                 notify you when your request has been processed. \
                 Thank you for your patience!' %str(num_mega_bytes)
-
             context['large_request'] = ldr
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
+
         context['large_request'] = False
         #Data request
         req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')
@@ -2943,7 +2949,7 @@ def set_data_station_initial(request):
     initial['end_date']  = Get('end_date', yesterday)
     initial['show_flags'] = Get('show_flags', 'F')
     initial['show_observation_time'] = Get('show_observation_time', 'F')
-    initial['data_format'] = Get('date_format', 'html')
+    initial['data_format'] = Get('data_format', 'html')
     initial['date_format'] = Get('date_format', 'dash')
     initial['delimiter'] = Get('delimiter', 'space')
     initial['output_file_name'] = Get('output_file_name', 'Output')

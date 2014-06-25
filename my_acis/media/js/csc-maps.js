@@ -197,13 +197,14 @@ function initialize_station_finder() {
             }
 
             var wrcc_info_link = new String();
+            /*
             //if ( c.sids[0] && c.sids[0].length == 6 && greg_flag && !isNaN(c.sids[0].replace(/^[0]/g,"") * 1)){
             if ( c.marker_category == "COOP"){
                 var wrcc_info_link = '<a  target="_blank" href="http://www.wrcc.dri.edu/cgi-bin/cliMAIN.pl?'
                 + c.state + c.sids[0].substring(2,6) +
                 '">Access Climate Summaries for this Station (by WRCC)</a>'
             }
-
+            */
             var data_portal_link = '<a target="_blank" href="' + DATA_STATION_URL + '?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid;
             var app_portal_link = '<a target="_blank" href="' + TOOLS_STATION_URL + '?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid; 
             if (start_date != null){ 
@@ -221,7 +222,7 @@ function initialize_station_finder() {
             data_portal_link = data_portal_link + '">Obtain Data for this Station </a>'
             app_portal_link = app_portal_link + '">Find Tools/Applications for this Station</a>'
             var contentString = '<div id="MarkerWindow">'+
-                wrcc_info_link + '<br />' +
+                //wrcc_info_link + '<br />' +
                 data_portal_link + '<br />' +
                 app_portal_link + '<br />' +
                 '<b>Name: </b><font color="#FF007F">' + c.name + '</font><br/>'+

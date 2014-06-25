@@ -18,6 +18,16 @@
 
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
+<script type="text/javascript">
+$(function(){ 
+    $('#tableDataForm').change(function(){
+        var results = document.getElementsByClassName('results');
+        for (i=0;i<results.length;i++){
+            results[i].style.display="none";
+        }
+    });
+})
+</script>
 
 <!--First Table: Form, HowTos, Links-->    
 <table cellpadding="none">
@@ -96,7 +106,7 @@
             <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Degree Days</option>
             <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Degree Days</option>
             <option value="evap" {{checkbox_vals.elements_evap_selected}}>Pan Evaporation</option>
-            <option value="wdmv" {{checkbox_vals.elements_wdmv_selected}}>Wind Movement</option>
+            <!--<option value="wdmv" {{checkbox_vals.elements_wdmv_selected}}>Wind Movement</option>-->
             </select>
         </td>
         <td><img class="trigger" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
@@ -429,7 +439,7 @@
     {%endif%}
     <br /><br />
     <!--Station finder Map-->
-    <div id="results">
+    <div class="results">
     {%if error%}
     <div style="padding:5px;position:relative;width:400px;">
     <p align="left"><font color="red">{{error}}</font></p>
@@ -480,11 +490,13 @@
     </div> <!--end results div-->
 </td>
 <td valign="top" align="left" width="170px">
+    <div class="results">
     {%if station_json and not error and not form_error and not need_overlay_map%}
     <div id="map_legend" style="padding:5px;width:93%;">
         <h3>Station Network Legend</h3>
     </div>
     {%endif%}
+    </div>
 </td>
 </table>
 

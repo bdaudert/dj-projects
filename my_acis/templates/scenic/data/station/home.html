@@ -17,8 +17,21 @@
 
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
+<!--On form change, hide results-->
+<script type="text/javascript">
+$(function(){ 
+    $('#tableDataForm').find('input,select').change(function(){
+        var ff = ['select_stations_by', 'elements', 'start_date', 'end_date'];
+        if ($.inArray($(this).attr('id'),ff)>=0){
+            $('.results').each(function() {
+                $(this).css('display','none');
+            });
+        }
+    });
+})
 
 
+</script>
 <table cellpadding="10">
 <td valign="top" width="40%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_STATION_URL}}'"/>
@@ -100,7 +113,7 @@
             <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Degree Days(65F/18C)</option>
             <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Degree Days(50F/10C)</option>
             <option value="evap" {{checkbox_vals.elements_evap_selected}}>Pan Evaporation</option>
-            <option value="wdmv" {{checkbox_vals.elements_wdmv_selected}}>Wind Movement</option>
+            <!--<option value="wdmv" {{checkbox_vals.elements_wdmv_selected}}>Wind Movement</option>-->
             </select>
         </td>        <td><img class="trigger" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
         <div class="pop-up">
@@ -330,7 +343,7 @@
         <tr valign="top" id="out_file" style="display:table-row;" bgcolor="#FFEFD5">
         {%endif%}
         {%endif%}
-        <td>Outputfile Name: </td>
+        <td>Outputfile Name:</td>
         <td><input type="text" id="output_file_name" name="output_file_name" value="{{initial.output_file_name}}" onchange="update_value(this.value)"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
@@ -433,9 +446,9 @@
     <script type="text/javascript">
         $("#Docu_delimiter").load("{{HTML_URL}}/Docu_delimiter.html");         
     </script>
-    </div>
+    </div><!--how_to-->
 
-
+    
     {%if form_error%}
         <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
         {%for key, val in form_error.items%}
@@ -443,9 +456,28 @@
         {%endfor%}
     {%endif%}
 
+    <div class="results">
+    {%if user_params_list and not results.stn_data%}
+    <div class="message" id="user_params_list">
+    <p class="message">
+    Please use the form on the left to complete your data request.<br />
+    Double check your input parameters and fill out the highlighted form fields.<br />
+    Submit the form.
+    Your Parameters were:<br /><br />
+    {%for key_val in user_params_list%}
+    <b>{{key_val.0}}</b>:
+    {%if key_val.0 == "Station IDs"%}
+    <div id="stn_list"></div>
+    {%else%}
+    {{key_val.1}}<br />
+    {%endif%}
+    {%endfor%}
+    </p>
+    </div>
+    {%endif%}
 
     {%if display_params_list%}
-    <p class="message"><b>SEARCH PARAMETERS</b>:<br />
+    <p><b>SEARCH PARAMETERS</b>:<br />
     {%for param in display_params_list%}
     {%if forloop.counter|divisibleby:"3" or forloop.last%}<br />
     {%endif %}
@@ -469,26 +501,7 @@
     {%endfor%}  
     </p>        
     {%endif%}
-
-
-    {%if user_params_list and not results.stn_data%}
-    <div class="message" id="user_params_list">
-    <p class="message">
-    Please use the form on the left to complete your data request.<br />
-    Double check your input parameters and fill out the highlighted form fields.<br />
-    Submit the form.
-    Your Parameters were:<br /><br />
-    {%for key_val in user_params_list%}
-    <b>{{key_val.0}}</b>:
-    {%if key_val.0 == "Station IDs"%}
-    <div id="stn_list"></div>
-    {%else%}
-    {{key_val.1}}<br />
-    {%endif%}
-    {%endfor%}
-    </p>
     </div>
-    {%endif%}
 
     <div id="PolyMap" style="display:none;">
         <div id="panel">
@@ -595,19 +608,17 @@
     {%endif%}
     <br /><br /> 
     {%endif%}
-   
-    <!--Results section-->
-    <div id="results">
+  
+    <!--Results section--> 
+    <div class="results">
     {%if large_request %}
     <p class="message">{{large_request}}</p>
     {%endif%}
-
 
     {%if too_large%}
     <p class="error">{{too_large}}</p>
     {%endif%}
 
-    
     {%if results%}
     {%if results.error%}
     <p class="error">{{results.error}}</p>
@@ -619,10 +630,11 @@
     </table>
     </div>
     {%endif%}
-
+    </div>
 </td></table>
 <table cellpadding="10" align="center">
 <td valign="top" width="100%">
+    <div class="results">
     {%if results%}
     <!--Link to relevant apps-->
     {%if link_to_all and not results.error%}
@@ -650,7 +662,7 @@
     {%if forloop.counter|divisibleby:2%}<br />{%endif%}
     {{id_network}},
     {%endfor%}<br />
-    <b>Latidude, Longitude</b>: {{results.stn_lat|lookup:stn|safe}}, {{results.stn_lon|lookup:stn|safe}},<br />
+    <b>Latitude, Longitude</b>: {{results.stn_lat|lookup:stn|safe}}, {{results.stn_lon|lookup:stn|safe}},<br />
     <b>Elevation</b>: {{results.stn_elev|lookup:stn|safe}}ft<br /><br />
     <b>DATA:</b><br />
     {%if not results.error%}
@@ -714,6 +726,6 @@
     {%endif%}<!--End if results.stn_data|lookup:stn-->
     {%endfor%}<!--End station loop-->
     {%endif%}<!--End if results-->
-    </div><!--end resulst div-->
+    </div><!--end results div-->
 </td></table>
 {%endblock%}
