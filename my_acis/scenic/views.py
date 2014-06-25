@@ -327,9 +327,12 @@ def data_station(request):
         if sdate.lower() == 'por':
             s_date = WRCCUtils.find_valid_daterange(form_cleaned['station_id'], start_date='por', end_date='por', max_or_min='max')[0]
             s_date = WRCCUtils.date_to_datetime(s_date)
-        else:s_date = WRCCUtils.date_to_datetime(sdate)
-        if edate.lower() == 'por':e_date = WRCCUtils.date_to_datetime(yesterday)
-        else:e_date = WRCCUtils.date_to_datetime(edate)
+        else:
+            s_date = WRCCUtils.date_to_datetime(sdate)
+        if edate.lower() == 'por':
+            e_date = WRCCUtils.date_to_datetime(yesterday)
+        else:
+            e_date = WRCCUtils.date_to_datetime(edate)
         days = (e_date - s_date).days
         #Find potential data size: we find enclosing bbox and assume
         #stations are placed evenly on a 50km grid
