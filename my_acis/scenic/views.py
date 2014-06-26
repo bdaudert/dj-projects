@@ -324,15 +324,24 @@ def data_station(request):
         '''
         sdate = form_cleaned['start_date']
         edate = form_cleaned['end_date']
+        if sdate.lower() == 'por' or edate.lower() == 'por':
+            s_date = WRCCUtils.date_to_datetime('19500101')
+            e_date = WRCCUtils.date_to_datetime('19991231')
+        else:
+            s_date = WRCCUtils.date_to_datetime(sdate)
+            e_date = WRCCUtils.date_to_datetime(edate)
+        '''
         if sdate.lower() == 'por':
-            s_date = WRCCUtils.find_valid_daterange(form_cleaned['station_id'], start_date='por', end_date='por', max_or_min='max')[0]
-            s_date = WRCCUtils.date_to_datetime(s_date)
+            #s_date = WRCCUtils.find_valid_daterange(form_cleaned['station_id'], start_date='por', end_date='por', max_or_min='max')[0]
+            #s_date = WRCCUtils.date_to_datetime(s_date)
+            s_date = WRCCUtils.date_to_datetime('1950','01','01')
         else:
             s_date = WRCCUtils.date_to_datetime(sdate)
         if edate.lower() == 'por':
             e_date = WRCCUtils.date_to_datetime(yesterday)
         else:
             e_date = WRCCUtils.date_to_datetime(edate)
+        '''
         #days = (e_date - s_date).days
         try:
             days = (e_date - s_date).days
@@ -489,7 +498,7 @@ def data_gridded(request):
         context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
         display_params_list, params_dict = set_data_gridded_params(form)
         context['display_params_list'] = display_params_list;context['params_dict'] = params_dict
-        fields_to_check = [form_cleaned['select_grid_by'],'start_date', 'end_date','degree_days','elements','grid']
+        fields_to_check = [form_cleaned['select_grid_by'],'start_date', 'end_date','degree_days','elements']
         #Check for form errors
         if 'user_email' in form_cleaned.keys():
             fields_to_check.append('user_email')
@@ -570,7 +579,6 @@ def data_gridded(request):
                 Thank you for your patience!' %str(num_mega_bytes)
             context['large_request'] = ldr
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
-
         context['large_request'] = False
         #Data request
         req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')
