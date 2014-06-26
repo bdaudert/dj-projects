@@ -333,7 +333,11 @@ def data_station(request):
             e_date = WRCCUtils.date_to_datetime(yesterday)
         else:
             e_date = WRCCUtils.date_to_datetime(edate)
-        days = (e_date - s_date).days
+        #days = (e_date - s_date).days
+        try:
+            days = (e_date - s_date).days
+        except:
+            days = 50*356
         #Find potential data size: we find enclosing bbox and assume
         #stations are placed evenly on a 50km grid
         bbox = []
