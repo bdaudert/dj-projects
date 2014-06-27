@@ -1,4 +1,3 @@
-
 function reset_options(){
     /*
     Reset all options on back buttono press
@@ -6,6 +5,24 @@ function reset_options(){
     implemented in templates/csc_base.html 
     <body onbeforeunload="reset_options()">
     */
+    /*
+    var opt_list = ['location','station_id', 'station_ids', 
+        'county', 'county_warning_area', 'basin',
+        'climate_division', 'state', 'shape'];
+    if ($('#select_stations_by').length){ 
+        var select = $('select#select_stations_by');
+    }   
+    if ($('#select_stations_by').length){ 
+        var select = $('select#select_stations_by');
+    }
+    if (select){
+        for (var i;i<opt_list.length;i++){
+            if ($('#' + opt_list[i]).length){
+                select.val(opt_list[i]);
+            }
+        }
+    }
+   */
     var selects = document.getElementsByTagName('select');
     for (idx=0;idx<selects.length;idx++){
         if (selects[idx].id == "select_stations_by" || selects[idx].id == "select_grid_by" ){
@@ -13,6 +30,7 @@ function reset_options(){
         }
     }
 }
+
 
 function reset_area(){
     /*
@@ -216,17 +234,16 @@ function set_autofill(datalist){
 }
 
 function highlight_form_field(td_id, err){
-    /*
-    Highlights form field and displays error message err
-    if user fills out form incorrectly
-    */
+
+    // Highlights form field and displays error message err
+    //if user fills out form incorrectly
     var td = document.getElementById(td_id);
-    //Grab form field and add error message
-    ff = td.nextSibling.nextSibling;
-    ff.innerHTML+='<br /><font color="red">' + err + '</font>';
-
+    var tr = td.parentNode;
+    var new_tr = document.createElement('tr');
+    new_tr.setAttribute('class','form_error');
+    new_tr.innerHTML = '<td></td><font color="red">' + err + '</font><td></td><td></td>';
+    tr.parentNode.insertBefore(new_tr, tr.nextSibling);
 }
-
 
 function set_threshes(element){
     /*

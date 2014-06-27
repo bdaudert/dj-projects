@@ -17,20 +17,30 @@
 
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
-<!--On form change, hide results-->
+<!--On form change, hide results and form errors-->
 <script type="text/javascript">
 $(function(){ 
     $('#tableDataForm').find('input,select').change(function(){
-        var ff = ['select_stations_by', 'elements', 'start_date', 'end_date'];
-        if ($.inArray($(this).attr('id'),ff)>=0){
-            $('.results').each(function() {
-                $(this).css('display','none');
-            });
+        //Hide results
+        $('.results').each(function() {
+            $(this).css('display','none');
+        });
+        //Hide appropriate form errors
+        if ($(this).parent().parent().next().attr('class') == 'form_error'){
+            $(this).parent().parent().next().css('display','none');
+        }
+        if ($(this).attr('id') == 'start_date'){
+            if ($('#end_date').parent().parent().next().attr('class') == 'form_error'){
+                $('#end_date').parent().parent().next().css('display','none');
+            }
+        }
+        if ($(this).attr('id') == 'end_date'){
+            if ($('#start_date').parent().parent().next().attr('class') == 'form_error'){
+                $('#start_date').parent().parent().next().css('display','none');
+            }
         }
     });
 })
-
-
 </script>
 <table cellpadding="10">
 <td valign="top" width="40%">
@@ -45,7 +55,7 @@ $(function(){
         {%endif%}
         <td>Select stations by:</td>
         <td>
-            <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this)  & update_value(this.value);" onfocus="set_station_grid_select('area',this);">
+            <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this)" onfocus="set_station_grid_select('area',this);">
             <option value="station_id" {{checkbox_vals.station_id_selected}}>Individual station</option>
             <option value="station_ids" {{checkbox_vals.station_ids_selected}}>List of stations</option>
             <option value="county" {{checkbox_vals.county_selected}}>County</option>
@@ -308,7 +318,7 @@ $(function(){
         {%if initial.data_format == "clm" or initial.data_format == "dlm"%}
         <tr valign="top" id="delim" style="display:table-row">
         {%else%}
-        {%if large_request and initial.data_format != "xl"%}
+        {%if large_request or initial.data_format != "xl"%}
         <tr valign="top" id="delim" style="display:table-row">
         {%else%}
         <tr valign="top" id="delim" style="display:none" bgcolor="#FFEFD5">
@@ -448,12 +458,13 @@ $(function(){
     </script>
     </div><!--how_to-->
 
-    
     {%if form_error%}
+    <div id="form_error">
         <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
         {%for key, val in form_error.items%}
             <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
         {%endfor%}
+    </div>
     {%endif%}
 
     <div class="results">
@@ -625,7 +636,7 @@ $(function(){
     {%if results.error%}
     <p class="error">{{results.error}}</p>
     {%else%}
-    <div id="Arrow">
+    <div id="Arrow" class="results">
     <table style="display:block;">
     <td valign="top"><b>RESULTS:</b></td><td>
     <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td>

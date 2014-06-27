@@ -425,6 +425,7 @@ def data_station(request):
                 missing_stations = missing_stations.rstrip(', ')
                 stn_error+= missing_stations
                 context['station_ids_error'] = stn_error
+                resultsdict['station_ids_error'] = stn_error
         if form_cleaned['data_format'] != 'html':
             return WRCCUtils.write_station_data_to_file(resultsdict,params_dict,request=request)
 
@@ -544,7 +545,6 @@ def data_gridded(request):
         num_data_points = days * num_lats *num_lons * len(form_cleaned['elements']) / time_interval
         num_giga_bytes = 2 * num_data_points /float(1024**3)
         num_mega_bytes = round(2 * num_data_points /float(1024**2),2)
-
         '''
         if 0.00098 < num_giga_bytes:
             ldr = 'At the moment we do not accept data requests producing \
@@ -584,12 +584,12 @@ def data_gridded(request):
         req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')
         context['hide_gp_map'] = True
         if 'error' in req.keys():
-            context['results'] = {'error':req['error']}
+            context['results'] = {'errors':req['error']}
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
         #format data
         results = WRCCUtils.format_grid_data(req, form_cleaned)
         if not results:
-            context['results']  = {'error': 'No data found for these parameters!'}
+            context['results']  = {'errors': 'No data found for these parameters!'}
         else:
             context['results'] = results
         #If Spatial Summary, write json file for spatial_summary graph

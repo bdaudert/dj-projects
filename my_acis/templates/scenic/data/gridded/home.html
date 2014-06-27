@@ -21,16 +21,27 @@
 <script type="text/javascript">
 $(function(){ 
     $('#tableDataForm').find('input,select').change(function(){
-        var ff = ['select_grid_by', 'elements', 'start_date', 'end_date'];
-        if ($.inArray($(this).attr('id'),ff)>=0){
-            $('.results').each(function() {
-                $(this).css('display','none');
-            });
+        //Hide results
+        $('.results').each(function() {
+            $(this).css('display','none');
+        });
+        //Hide appropriate form errors
+        if ($(this).parent().parent().next().attr('class') == 'form_error'){
+            $(this).parent().parent().next().css('display','none');
+        }
+        if ($(this).attr('id') == 'start_date'){
+            if ($('#end_date').parent().parent().next().attr('class') == 'form_error'){
+                $('#end_date').parent().parent().next().css('display','none');
+            }
+        }
+        if ($(this).attr('id') == 'end_date'){
+            if ($('#start_date').parent().parent().next().attr('class') == 'form_error'){
+                $('#start_date').parent().parent().next().css('display','none');
+            }
         }
     });
 })
 </script>
-
 <table cellpadding="10">
 <td valign="top" width="40%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_GRIDDED_URL}}'"/>
@@ -44,7 +55,7 @@ $(function(){
         {%endif%}
         <td>Select grid by:</td>
         <td>
-            <select id="select_grid_by" name="select_grid_by" onchange="set_station_grid_select('area',this) & update_value(this.value);" onfocus="set_station_grid_select('area',this);">
+            <select id="select_grid_by" name="select_grid_by" onchange="set_station_grid_select('area',this)" onfocus="set_station_grid_select('area',this);">
             <option value="location" {{checkbox_vals.location_selected}}>Individual grid point</option>
             <option value="state" {{checkbox_vals.state_selected}}>State</option>
             <option value="county" {{checkbox_vals.county_selected}}>County</option>
@@ -200,7 +211,7 @@ $(function(){
         <div class="pop-up">
         <div id="ht_units"></div>
         <script type="text/javascript">                        
-            $("#ht_units").load("{{HTML_URL}}/Docu_help_texts.html #ht_units");
+            $("#ht_units").load("{{HTML_URL}}/Docu_help_texts.html #ht_units_grid");
         </script>    
         </div>
         </td>
@@ -251,7 +262,7 @@ $(function(){
             <option value="4" {{checkbox_vals.grid_4_selected}}>CRCM+NCEP(1970-2000)</option>
             <option value="5" {{checkbox_vals.grid_5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>
             <option value="6" {{checkbox_vals.grid_6_selected}}>CRCM+CCSM3(1970-2000,2040-2070)</option>
-            <option value="7" {{checkbox_vals.grid_7_selected}}>HRM3+NCEP(1970-2000)</option>
+            <!--<option value="7" {{checkbox_vals.grid_7_selected}}>HRM3+NCEP(1970-2000)</option>-->
             <option value="8" {{checkbox_vals.grid_8_selected}}>HRM3+HadCM3(1970-2000,2040-2070)</option>
             <option value="9" {{checkbox_vals.grid_9_selected}}>MM5I+NCEP(1970-2000)</option>
             <option value="10" {{checkbox_vals.grid_10_selected}}>MM5I+CCSM(1970-2000,2040-2070)</option>
@@ -738,7 +749,7 @@ $(function(){
 
 
     {%if results and not results.error%}
-    <div id="Arrow">
+    <div id="Arrow" class="results">
     <table style="display:block;">
     <td valign="top"><b>RESULTS:</b></td><td>
     <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td>

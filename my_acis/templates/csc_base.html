@@ -21,6 +21,26 @@
     ga('create', 'UA-44724757-2', 'dri.edu');
     ga('send', 'pageview');
     </script>
+    <!--Back Button issue
+    <script type="text/javascript">
+    var myEvent = window.attachEvent || window.addEventListener;    var chkevent = window.attachEvent ? 'onbeforeunload' : 'beforeunload'; /// make IE7, IE8 compatible
+
+    myEvent(chkevent, function(e) { // For >=IE7, Chrome, Firefox
+        /*
+        Reset all options on back button press
+        was issue in chrome FF
+        implemented in templates/csc_base.html 
+        <body onbeforeunload="reset_options()">
+        */
+        var selects = document.getElementsByTagName('select');
+        for (idx=0;idx<selects.length;idx++){
+            if (selects[idx].id == "select_stations_by" || selects[idx].id == "select_grid_by" ){
+                selects[idx].selectedIndex = -1;
+            }
+        }
+    }); 
+    </script>-->
+
     <meta name="keywords" content="climate,climate change,Southwest US,Soutwest CSC,Climate Science Center, Climate Knowledge">
     <meta name="description" content="Southwest Climate and ENvironmental Information Collaborative">
     <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
