@@ -14,39 +14,45 @@
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
 <input type="hidden" id="host" name="host" value="{{host}}">
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{kml_file_path}}">
+<!--Remember all select form fields for back button issue-->
+<input type="hidden" id="rememberselects"/>
 
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 <!--On form change, hide results and form errors-->
 <script type="text/javascript">
-$(function(){ 
-    $('#tableDataForm').find('input,select').change(function(){
-        //Hide results
-        $('.results').each(function() {
-            $(this).css('display','none');
-        });
-        //Hide appropriate form errors
-        if ($(this).parent().parent().next().attr('class') == 'form_error'){
-            $(this).parent().parent().next().css('display','none');
+//Back Button issue
+$( document ).ready(function(){
+    //save_form_options('tableDataForm', 'rememberselects');
+    if (navigator.userAgent.search("Chrome")==-1 && navigator.userAgent.search("Safari")==-1){
+        if (window.history && window.history.pushState) {
+            window.history.pushState('forward', null, './#forward');
+            $(window).on('popstate', function() {
+                //set_form_options('tableDataForm', 'rememberselects');
+                var forms = $('form');
+                if (forms.length){
+                    alert('We discourage the use of the back/forward buttons. Please be aware that form fields may not be preserved correctly!')
+                }
+            });
         }
-        if ($(this).attr('id') == 'start_date'){
-            if ($('#end_date').parent().parent().next().attr('class') == 'form_error'){
-                $('#end_date').parent().parent().next().css('display','none');
-            }
-        }
-        if ($(this).attr('id') == 'end_date'){
-            if ($('#start_date').parent().parent().next().attr('class') == 'form_error'){
-                $('#start_date').parent().parent().next().css('display','none');
-            }
-        }
-    });
-})
+    }
+});
+$(function(){
+    //On form change, hide results and form errors
+    hide_errors_on_change('tableDataForm');
+});
 </script>
+
+
 <table cellpadding="10">
 <td valign="top" width="40%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_STATION_URL}}'"/>
+    {%if hide_data_form%}
+    <div id='formData' style="display:none">
+    {%else%}
     <div id='formData'>
-        <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
+    {%endif%}
+        <form method="post" id="tableDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
         <table class="form" id="tableData" bgcolor="#99C1C1">
         {%if user_params_dict.select_stations_by or large_request%}
         <tr valign="top" bgcolor="#FFEFD5">
@@ -55,7 +61,7 @@ $(function(){
         {%endif%}
         <td>Select stations by:</td>
         <td>
-            <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this)" onfocus="set_station_grid_select('area',this);">
+            <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this) & update_value(this.value);" onfocus="set_station_grid_select('area',this);">
             <option value="station_id" {{checkbox_vals.station_id_selected}}>Individual station</option>
             <option value="station_ids" {{checkbox_vals.station_ids_selected}}>List of stations</option>
             <option value="county" {{checkbox_vals.county_selected}}>County</option>
@@ -83,7 +89,7 @@ $(function(){
         {%else%}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
         {%endif%}
-        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_value(this.value);"></td>
+        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_value(this.value) & unset_large_request();"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up" id="area-pop-up">
             <div id="ht_{{initial.select_stations_by}}"></div>
@@ -318,7 +324,7 @@ $(function(){
         {%if initial.data_format == "clm" or initial.data_format == "dlm"%}
         <tr valign="top" id="delim" style="display:table-row">
         {%else%}
-        {%if large_request or initial.data_format != "xl"%}
+        {%if large_request and initial.data_format != "xl" %}
         <tr valign="top" id="delim" style="display:table-row">
         {%else%}
         <tr valign="top" id="delim" style="display:none" bgcolor="#FFEFD5">

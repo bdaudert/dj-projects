@@ -1,36 +1,122 @@
+function save_form_options(formID,hiddenID){
+    /* 
+    Saves all input and select field of form
+    in hiddenID
+    called on form submit in html code
+    This is part of solution for backbutton issue:
+    Dynamic javascript form fields are not cached
+    */
+    var vals = [];
+    if ($('#' + formID).length){
+        /*
+        $('#' + formID + ' input[type=text]').each(function(){
+            vals.push($(this).val());
+            $('#' + hiddenID).val(vals.join(';'));
+            //vals.push(encodeURIComponent($(this).val()));
+        });
+        */
+        $('#' + formID + ' select').each(function(){
+            vals.push($(this).val());
+            $('#' + hiddenID).val(vals.join(';'));
+        });
+    }
+}
+
+
+function set_form_options(formID, hiddenID){
+    /*
+    function called on load of page
+    to retrieve all cached form fields and repopulate
+    form fields
+    This is part of solution for backbutton issue:
+    Dynamic javascript form fields are not cached
+    */
+    var form_selects = $('#' + hiddenID).val().split(';');
+    if ($('#' + hiddenID).length){
+        idx = -1;
+        /*
+        $('#' + formID + ' input').each(function(){
+            idx+=1;
+            $(this).val(form_selects[idx]);
+        });
+        */
+        $('#' + formID + ' select').each(function(){
+            idx+=1;
+            if ($(this).attr('id') == 'elements'){
+                $(this).val(form_selects[idx].split(','));
+            }
+            else{
+                $(this).val(form_selects[idx]);
+            }
+        });
+    }
+}
+
 function reset_options(){
     /*
-    Reset all options on back buttono press
+    Reset all options on back button press
     was issue in chrome
     implemented in templates/csc_base.html 
     <body onbeforeunload="reset_options()">
     */
-    /*
-    var opt_list = ['location','station_id', 'station_ids', 
-        'county', 'county_warning_area', 'basin',
-        'climate_division', 'state', 'shape'];
-    if ($('#select_stations_by').length){ 
-        var select = $('select#select_stations_by');
-    }   
-    if ($('#select_stations_by').length){ 
-        var select = $('select#select_stations_by');
-    }
-    if (select){
-        for (var i;i<opt_list.length;i++){
-            if ($('#' + opt_list[i]).length){
-                select.val(opt_list[i]);
+    opt_list = ['location', 'station_id', 'station_ids',
+        'basin', 'county', 'climate_division',
+        'county_warning_area', 'shape'];
+    //Not Chrome
+    if (navigator.userAgent.search("Chrome")==-1) {
+        if ($('#select_stations_by').length){
+            var val = $('#select_stations_by').val();
+            var select_el = $('#select_stations_by');
+        }
+        if ($('#select_grid_by').length){
+            var val = $('#select_grid_by').val();
+            var select_el = $('#select_grid_by');
+        }
+        if (!$('#' + val).length){
+            for (i=0;i<opt_list.length;i++){
+                if ($('#' + opt_list[i]).length){
+                    select_el.val(opt_list[i]);
+                    break
+                }
             }
         }
     }
-   */
-    var selects = document.getElementsByTagName('select');
-    for (idx=0;idx<selects.length;idx++){
-        if (selects[idx].id == "select_stations_by" || selects[idx].id == "select_grid_by" ){
-            selects[idx].selectedIndex = -1;
-        }
-    }
+    //Chrome
+    else{
+        $('select').each(function(){
+            $(this).prop('selectedIndex', -1); 
+        });
+    }  
 }
 
+function hide_errors_on_change(formID){
+    $('#' + formID).find('input,select').change(function(){
+        //Hide results
+        $('.results').each(function() {
+            $(this).css('display','none');
+        });
+
+        //Hide appropriate form errors
+        //Start and end date may have correlated errors
+        $('#form_error').css('display','none');
+        if ($('#back_button_error').length){
+            $('#back_button_error').css('display','none');
+        }
+        if ($(this).parent().parent().next().attr('class') == 'form_error'){
+            $(this).parent().parent().next().css('display','none');
+        }
+        if ($(this).attr('id') == 'start_date'){
+            if ($('#end_date').parent().parent().next().attr('class') == 'form_error'){
+                $('#end_date').parent().parent().next().css('display','none');
+            }
+        }
+        if ($(this).attr('id') == 'end_date'){
+            if ($('#start_date').parent().parent().next().attr('class') == 'form_error'){
+                $('#start_date').parent().parent().next().css('display','none');
+            }
+        }
+    });
+}
 
 function reset_area(){
     /*
@@ -739,19 +825,6 @@ function set_station_grid_select(row_id,node){
     }
 
     unset_large_request()
-    /*
-    //Delete large data request entries
-    var large_requests_rows = document.getElementsByClassName('large_request');
-    for (i=0;i<large_requests_rows.length;i++) {
-        //large_requests_rows[i].style.display = "none";
-        large_requests_rows[i].parentNode.removeChild(large_requests_rows[i]);
-    }
-    //FIX ME: onchange not working correctly when option is not changes
-    //Need to delete user name manually
-    if ($('#' + 'un').length){
-        document.getElementById('un').parentNode.removeChild(document.getElementById('un'));
-    }
-    */
     var lv = set_area_and_map(node.value);
     //Set up autofill if needed
     set_autofill(lv.autofill_list);

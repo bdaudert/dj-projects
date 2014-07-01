@@ -299,7 +299,16 @@ function initialize_station_finder() {
             var station_ids_str = '';
             var station_list = document.getElementById('station_list');
             //var table_rows = station_list.getElementsByTagName('tr'); 
-            station_list.innerHTML=''; 
+            station_list.innerHTML = ' <thead>' + 
+            '<tr><th>Name</th>' +
+            '<th>ID</th>' +
+            '<th>State</th>' +
+            '<th>Lat</th>' +
+            '<th>Lon</th>' +
+            '<th>Elev</th>' +
+            '<th>Networks</th>' +
+            '</tr>' +
+            '</thead>'; 
             var mapBounds = map.getBounds();
             var name_unique = ''
             for (var i=0; i<markers.length; i++) {
@@ -329,7 +338,16 @@ function initialize_station_finder() {
         show = function(category) {
             //Delete old station_list table rows
             var station_list = document.getElementById('station_list');
-            station_list.innerHTML = '';
+            station_list.innerHTML = ' <thead>' + 
+            '<tr><th>Name</th>' +
+            '<th>ID</th>' +
+            '<th>State</th>' +
+            '<th>Lat</th>' +
+            '<th>Lon</th>' +
+            '<th>Elev</th>' +
+            '<th>Networks</th>' +
+            '</tr>' +
+            '</thead>';
             var station_ids_str = '';
             var name_unique = '';
             markers_showing = [];
@@ -386,7 +404,16 @@ function initialize_station_finder() {
         hide = function(category) {
             //remove all rows that belong to category
             var station_list = document.getElementById('station_list');
-            station_list.innerHTML = '';
+            station_list.innerHTML = ' <thead>' + 
+            '<tr><th>Name</th>' +
+            '<th>ID</th>' +
+            '<th>State</th>' +
+            '<th>Lat</th>' +
+            '<th>Lon</th>' +
+            '<th>Elev</th>' +
+            '<th>Networks</th>' +
+            '</tr>' +
+            '</thead>';;
             var station_ids_str = '';
             name_unique = '';
             markers_showing = [];

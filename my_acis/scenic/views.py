@@ -248,7 +248,7 @@ def data_station(request):
         form_cleaned = set_form(request)
         #Back Button/download files issue fix:
         #if select_stations_by none, find it
-        if not 'select_stations_by' in form_cleaned.keys():
+        if not 'select_stations_by' in form_cleaned.keys() or form_cleaned['select_stations_by'] not in form_cleaned.keys():
             for key in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
                 if key in form.keys():
                     form['select_stations_by'] = key
@@ -363,10 +363,9 @@ def data_station(request):
         num_giga_bytes = 1 * num_data_points /float(1024**3)
         num_mega_bytes = round(1 * num_data_points /float(1024**2),2)
 
-        '''
-        if 0.00098 < num_giga_bytes:
+        if 2 * 0.00098 < num_giga_bytes:
             ldr = 'At the moment we do not accept data requests producing \
-                more than 1MB of data. Your request size is approximately %s MB. \
+                more than 2MB of data. Your request size is approximately %s MB. \
                 We will support larger requests in the near future. \
                 Thank you for your patience!' %str(num_mega_bytes)
             context['too_large'] = ldr
@@ -382,12 +381,12 @@ def data_station(request):
             #WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, json_dict)
             context['large_request'] = ldr
             return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
-        elif num_giga_bytes >1:
+        elif num_giga_bytes > 2:
             ldr = 'At the moment we do not accept data requests producing \
-                more than 1GB of data. Your request size is approximately %s GB' %str(num_giga_bytes)
+                more than 2GB of data. Your request size is approximately %s GB' %str(num_giga_bytes)
             context['too_large'] = ldr
             return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
-        elif 0.00098 < num_giga_bytes and  num_giga_bytes < 1:
+        elif 0.00098 < num_giga_bytes and  num_giga_bytes < 2:
             ldr = \
                 'You requested a large amount of data. \
                 We estimated %s MB. \
@@ -398,6 +397,7 @@ def data_station(request):
 
             context['large_request'] = ldr
             return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
+        '''
 
         context['large_request'] = False
         #Data request
@@ -427,6 +427,7 @@ def data_station(request):
                 context['station_ids_error'] = stn_error
                 resultsdict['station_ids_error'] = stn_error
         if form_cleaned['data_format'] != 'html':
+            context['hide_data_form'] = True
             return WRCCUtils.write_station_data_to_file(resultsdict,params_dict,request=request)
 
     #Overlay maps
@@ -479,7 +480,7 @@ def data_gridded(request):
         form_cleaned = set_form(request)
         #Back Button/download files issue fix:
         #if select_grid_by none, find it
-        if not 'select_grid_by' in form_cleaned.keys():
+        if not 'select_grid_by' in form_cleaned.keys() or form_cleaned['select_grid_by'] not in form_cleaned.keys():
             for key in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
                 if key in form.keys():
                     form['select_grid_by'] = key
@@ -531,6 +532,7 @@ def data_gridded(request):
         s_date = WRCCUtils.date_to_datetime(form_cleaned['start_date'])
         e_date = WRCCUtils.date_to_datetime(form_cleaned['end_date'])
         days = (e_date - s_date).days
+        if days ==0:days= 1
         bbox = []
         if 'shape' in form.keys():
             t,bbox = WRCCUtils.get_bbox(form['shape'])
@@ -538,21 +540,21 @@ def data_gridded(request):
             sa = WRCCData.SEARCH_AREA_FORM_TO_ACIS[form['select_grid_by']]
             bbox = AcisWS.get_acis_bbox_of_area(sa, form_cleaned[form_cleaned['select_grid_by']])
         num_lats, num_lons = WRCCUtils.find_num_lls(bbox,form['grid'])
-        time_interval = 1
+        time_interval = 1.0
         if form['temporal_resolution'] == 'mly':time_interval =30.0
         if form['temporal_resolution'] == 'yly':time_interval =365.0
         if form['data_summary'] == 'temporal':time_interval=time_interval * float(days)
         num_data_points = days * num_lats *num_lons * len(form_cleaned['elements']) / time_interval
         num_giga_bytes = 2 * num_data_points /float(1024**3)
         num_mega_bytes = round(2 * num_data_points /float(1024**2),2)
-        '''
-        if 0.00098 < num_giga_bytes:
+
+        if 2 * 0.00098 < num_giga_bytes:
             ldr = 'At the moment we do not accept data requests producing \
-                more than 1MB of data. Your request size is approximately %s MB. \
+                more than 2MB of data. Your request size is approximately %s MB. \
                 We will support larger requests in the near future. \
                 Thank you for your patience!' %str(num_mega_bytes)
             context['too_large'] = ldr
-            return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
+            return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
         '''
 
         if 'user_name' in form_cleaned.keys():
@@ -564,12 +566,12 @@ def data_gridded(request):
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext
 (request))
-        elif num_giga_bytes > 1:
+        elif num_giga_bytes > 2:
             ldr = 'At the moment we do not accept data requests producing \
-                more than 1GB of data. Your request size is approximately %s GB' %str(num_giga_bytes)
+                more than 2GB of data. Your request size is approximately %s GB' %str(num_giga_bytes)
             context['too_large'] = ldr
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
-        elif 0.00098 < num_giga_bytes and  num_giga_bytes < 1:
+        elif 2 * 0.00098 < num_giga_bytes and  num_giga_bytes < 2:
             ldr = \
                 'You requested a large amount of data. \
                 We estimated %s MB. \
@@ -579,6 +581,8 @@ def data_gridded(request):
                 Thank you for your patience!' %str(num_mega_bytes)
             context['large_request'] = ldr
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
+        '''
+
         context['large_request'] = False
         #Data request
         req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')
@@ -618,6 +622,7 @@ def data_gridded(request):
             context['json_file'] = json_file
         #Render to page if html format was chosen, else save to file
         if form_cleaned['data_format'] == 'html':
+            context['hide_data_form'] = True
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
         else:
             return WRCCUtils.write_griddata_to_file(results,form,request=request)

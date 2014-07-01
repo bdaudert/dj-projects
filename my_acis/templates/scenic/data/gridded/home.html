@@ -19,33 +19,33 @@
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 <!--On form change, hide results-->
 <script type="text/javascript">
-$(function(){ 
-    $('#tableDataForm').find('input,select').change(function(){
-        //Hide results
-        $('.results').each(function() {
-            $(this).css('display','none');
-        });
-        //Hide appropriate form errors
-        if ($(this).parent().parent().next().attr('class') == 'form_error'){
-            $(this).parent().parent().next().css('display','none');
+$( document ).ready(function(){
+    //save_form_options('tableDataForm', 'rememberselects');
+    if (navigator.userAgent.search("Chrome")==-1 && navigator.userAgent.search("Safari")==-1){
+        if (window.history && window.history.pushState) {
+            window.history.pushState('forward', null, './#forward');
+            $(window).on('popstate', function() {
+                //set_form_options('tableDataForm', 'rememberselects');
+                var forms = $('form');
+                if (forms.length){
+                    alert('We discourage the use of the back/forward buttons. Please be aware that form fields may not be preserved correctly!')
+                }
+            });
         }
-        if ($(this).attr('id') == 'start_date'){
-            if ($('#end_date').parent().parent().next().attr('class') == 'form_error'){
-                $('#end_date').parent().parent().next().css('display','none');
-            }
-        }
-        if ($(this).attr('id') == 'end_date'){
-            if ($('#start_date').parent().parent().next().attr('class') == 'form_error'){
-                $('#start_date').parent().parent().next().css('display','none');
-            }
-        }
-    });
-})
+    }
+});
+$(function(){
+    hide_errors_on_change('tableDataForm');
+});
 </script>
 <table cellpadding="10">
 <td valign="top" width="40%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_GRIDDED_URL}}'"/>
+    {%if hide_data_form%}
+    <div id='formData' style="display:none">
+    {%else%}
     <div id='formData'>
+    {%endif%}
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData" bgcolor="#99C1C1">
         {%if user_params_dict.select_grid_by or large_request%}
@@ -78,7 +78,7 @@ $(function(){
         <tr id="area" valign="top">
         {%endif%}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
-        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
+        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_value(this.value) & unset_large_request();"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up" id="area-pop-up">
             <div id="ht_{{initial.select_grid_by}}"></div>
@@ -571,7 +571,7 @@ $(function(){
     </script> 
 
     {%if form_error%}
-        <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
+        <p class="error" id="form_error">ERROR: Please correct the form error(s) highlighted in red!</p>
         {%for key, val in form_error.items%}
             <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
         {%endfor%}

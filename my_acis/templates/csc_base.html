@@ -1,7 +1,6 @@
 <!DOCTYPE HTML>
 <!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">-->
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{% if LANGUAGE_CODE %}{{ LANGUAGE_CODE }}{% else %}en-US{% endif %}" xml:lang="{% if LANGUAGE_CODE %}{{ LANGUAGE_CODE }}{% else %}en-US{% endif %}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
-<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 
 <head>
     <title>Southwest CSC Climate Knowledge Exchange
@@ -21,25 +20,6 @@
     ga('create', 'UA-44724757-2', 'dri.edu');
     ga('send', 'pageview');
     </script>
-    <!--Back Button issue
-    <script type="text/javascript">
-    var myEvent = window.attachEvent || window.addEventListener;    var chkevent = window.attachEvent ? 'onbeforeunload' : 'beforeunload'; /// make IE7, IE8 compatible
-
-    myEvent(chkevent, function(e) { // For >=IE7, Chrome, Firefox
-        /*
-        Reset all options on back button press
-        was issue in chrome FF
-        implemented in templates/csc_base.html 
-        <body onbeforeunload="reset_options()">
-        */
-        var selects = document.getElementsByTagName('select');
-        for (idx=0;idx<selects.length;idx++){
-            if (selects[idx].id == "select_stations_by" || selects[idx].id == "select_grid_by" ){
-                selects[idx].selectedIndex = -1;
-            }
-        }
-    }); 
-    </script>-->
 
     <meta name="keywords" content="climate,climate change,Southwest US,Soutwest CSC,Climate Science Center, Climate Knowledge">
     <meta name="description" content="Southwest Climate and ENvironmental Information Collaborative">
@@ -53,7 +33,8 @@
     <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/graphics-utils.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/form-utils.js"></script>
-    <!--Custom modinizer to deal with backbutton issue-->
+    <!--To deal with backbutton issue-->
+    <!--<script type="text/javascript" src="http://balupton.github.com/history.js/scripts/bundled/html4+html5/jquery.history.js"></script>-->
     <!--<script src="{{ MEDIA_URL }}js/modernizr.js"></script>-->
     <!-- Map API scripts and properties-->
     <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
@@ -90,9 +71,10 @@
 
         });
     </script>
+    <!--Hide loading icon iupon page load-->
     <script language="javascript" type="text/javascript">
         $(window).load(function() {
-        $('#loading').hide();
+            $('#loading').hide(); 
         });
     </script>
     {% block extrahead %}{% endblock %}
