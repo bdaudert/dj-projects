@@ -41,11 +41,7 @@ $(function(){
 <table cellpadding="10">
 <td valign="top" width="40%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_GRIDDED_URL}}'"/>
-    {%if hide_data_form%}
-    <div id='formData' style="display:none">
-    {%else%}
     <div id='formData'>
-    {%endif%}
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData" bgcolor="#99C1C1">
         {%if user_params_dict.select_grid_by or large_request%}

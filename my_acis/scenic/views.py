@@ -362,7 +362,7 @@ def data_station(request):
         num_data_points = days * num_lats *num_lons * len(form_cleaned['elements'])
         num_giga_bytes = 1 * num_data_points /float(1024**3)
         num_mega_bytes = round(1 * num_data_points /float(1024**2),2)
-
+        '''
         if 2 * 0.00098 < num_giga_bytes:
             ldr = 'At the moment we do not accept data requests producing \
                 more than 2MB of data. Your request size is approximately %s MB. \
@@ -397,7 +397,6 @@ def data_station(request):
 
             context['large_request'] = ldr
             return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
-        '''
 
         context['large_request'] = False
         #Data request
@@ -427,7 +426,6 @@ def data_station(request):
                 context['station_ids_error'] = stn_error
                 resultsdict['station_ids_error'] = stn_error
         if form_cleaned['data_format'] != 'html':
-            context['hide_data_form'] = True
             return WRCCUtils.write_station_data_to_file(resultsdict,params_dict,request=request)
 
     #Overlay maps
@@ -547,7 +545,7 @@ def data_gridded(request):
         num_data_points = days * num_lats *num_lons * len(form_cleaned['elements']) / time_interval
         num_giga_bytes = 2 * num_data_points /float(1024**3)
         num_mega_bytes = round(2 * num_data_points /float(1024**2),2)
-
+        '''
         if 2 * 0.00098 < num_giga_bytes:
             ldr = 'At the moment we do not accept data requests producing \
                 more than 2MB of data. Your request size is approximately %s MB. \
@@ -581,7 +579,6 @@ def data_gridded(request):
                 Thank you for your patience!' %str(num_mega_bytes)
             context['large_request'] = ldr
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
-        '''
 
         context['large_request'] = False
         #Data request
@@ -622,7 +619,6 @@ def data_gridded(request):
             context['json_file'] = json_file
         #Render to page if html format was chosen, else save to file
         if form_cleaned['data_format'] == 'html':
-            context['hide_data_form'] = True
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
         else:
             return WRCCUtils.write_griddata_to_file(results,form,request=request)
@@ -651,7 +647,7 @@ def data_gridded(request):
 
 def apps_home(request):
     context = {
-        'title': 'Tools/Applications',
+        'title': 'Analysis Tools',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
         'icon':'ToolProduct.png'
     }
