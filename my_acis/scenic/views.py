@@ -362,7 +362,6 @@ def data_station(request):
         num_data_points = days * num_lats *num_lons * len(form_cleaned['elements'])
         num_giga_bytes = 1 * num_data_points /float(1024**3)
         num_mega_bytes = round(1 * num_data_points /float(1024**2),2)
-        '''
         if 2 * 0.00098 < num_giga_bytes:
             ldr = 'At the moment we do not accept data requests producing \
                 more than 2MB of data. Your request size is approximately %s MB. \
@@ -397,7 +396,7 @@ def data_station(request):
 
             context['large_request'] = ldr
             return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
-
+        '''
         context['large_request'] = False
         #Data request
         resultsdict = AcisWS.get_station_data(form_cleaned, 'sodlist_web')
@@ -545,7 +544,7 @@ def data_gridded(request):
         num_data_points = days * num_lats *num_lons * len(form_cleaned['elements']) / time_interval
         num_giga_bytes = 2 * num_data_points /float(1024**3)
         num_mega_bytes = round(2 * num_data_points /float(1024**2),2)
-        '''
+
         if 2 * 0.00098 < num_giga_bytes:
             ldr = 'At the moment we do not accept data requests producing \
                 more than 2MB of data. Your request size is approximately %s MB. \
@@ -579,6 +578,7 @@ def data_gridded(request):
                 Thank you for your patience!' %str(num_mega_bytes)
             context['large_request'] = ldr
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
+        '''
 
         context['large_request'] = False
         #Data request
@@ -953,10 +953,11 @@ def temporal_summary(request):
             for key in ['start_date', 'end_date']:
                 d_p.append([WRCCData.DISPLAY_PARAMS[key],form[key]])
             el_strip, base_temp = WRCCUtils.get_el_and_base_temp(element)
+            el_str = WRCCData.DISPLAY_PARAMS[el_strip] + ' (' + WRCCData.UNITS_ENGLISH[el_strip] + ')'
             if base_temp:
-                d_p.insert(0,['Element', WRCCData.DISPLAY_PARAMS[el_strip] + ' Base Temperature: ' + str(base_temp)])
+                d_p.insert(0,['Element', el_str + ' Base Temperature: ' + str(base_temp)])
             else:
-                d_p.insert(0,['Element', WRCCData.DISPLAY_PARAMS[el_strip]])
+                d_p.insert(0,['Element', el_str])
             d_p.insert(1,['Temporal Summary', WRCCData.DISPLAY_PARAMS[form['temporal_summary']]])
             d_p.insert(2, [WRCCData.DISPLAY_PARAMS[form['select_grid_by']], form[form['select_grid_by']].upper()])
             display_params.append(d_p)
@@ -2434,9 +2435,9 @@ def set_spatial_summary_params(form):
                             base_temp = dd_list[dx][3:]
                         else:
                             base_temp = int(round(WRCCUtils.convert_to_metric('maxt', base_temp)))
-                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el_short] + ' Base Temp.: ' + str(base_temp))
+                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el_short] + '( ' +  WRCCData.UNITS_METRIC[el_short]+ ' )' + ' Base Temp.: ' + str(base_temp))
                 else:
-                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el])
+                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el] + '( '+ WRCCData.UNITS_ENGLISH[el_short]+ ')')
             display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key], ','.join(el_list_long)]
             search_params['element_list_long'] = el_list_long
         else:
@@ -2713,7 +2714,7 @@ def set_user_params(form, app_name):
         user_params_dict['spatial_summary'] = f['spatial_summary']
         user_params_dict['data_summary'] = 'spatial'
     if 'grid' in f.keys():
-        user_params_list.append(['Grid', WRCCData.GRID_CHOICES[f['grid'][0]]])
+        user_params_list.append(['Grid', WRCCData.GRID_CHOICES[f['grid']][0]])
         user_params_dict['grid'] = f['grid']
     if 'units' in f.keys():
         user_params_list.append(['Units', WRCCData.DISPLAY_PARAMS[f['units']]])

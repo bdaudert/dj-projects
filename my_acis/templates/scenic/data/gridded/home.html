@@ -785,11 +785,13 @@ $(function(){
     <th>date{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev ({{elev_unit}}){{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}} ({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
     {%endif%}
     {%for row in results%}
+    {%if row.0%}
     <tr>
     {%for val  in row%}
     <td align="right">{{val}}{{params_dict.delimiter}}</td>
     {%endfor%}
     </tr>
+    {%endif%}
     {%endfor%}
     </table>
     {%endif%}<!--End if results-->

@@ -587,6 +587,7 @@
     <br /></br /></br>
     {%for fig in figure_files%}
         <p>
+        Parameters: <br />
         {%for key_val in display_params|lookup:forloop.counter0%}
         <b>{{key_val.0}}</b>: {{key_val.1}}<br /> 
         {%endfor%}
