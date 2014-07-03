@@ -21,25 +21,9 @@
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 <!--On form change, hide results and form errors-->
 <script type="text/javascript">
-//Back Button issue
-$( document ).ready(function(){
-    //save_form_options('tableDataForm', 'rememberselects');
-    if (navigator.userAgent.search("Chrome")==-1 && navigator.userAgent.search("Safari")==-1){
-        if (window.history && window.history.pushState) {
-            window.history.pushState('forward', null, './#forward');
-            $(window).on('popstate', function() {
-                //set_form_options('tableDataForm', 'rememberselects');
-                var forms = $('form');
-                if (forms.length){
-                    alert('We discourage the use of the back/forward buttons. Please be aware that form fields may not be preserved correctly!')
-                }
-            });
-        }
-    }
-});
 $(function(){
     //On form change, hide results and form errors
-    hide_errors_on_change('tableDataForm');
+    hide_errors_results_on_change('tableDataForm');
 });
 </script>
 
@@ -49,7 +33,7 @@ $(function(){
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_STATION_URL}}'"/>
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
-        <table class="form" id="tableData" bgcolor="#99C1C1">
+        <table class="form" id="tableData" bgcolor="#CCE0E0">
         {%if user_params_dict.select_stations_by or large_request%}
         <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
@@ -551,7 +535,7 @@ $(function(){
     {%endif%}
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableDataForm')">{% csrf_token %}
-            <table class="form" bgcolor="#99C1C1">
+            <table class="form" bgcolor="#CCE0E0">
             <td>State: </td>
             <td>
                 <select name="overlay_state" id="overlay_state">

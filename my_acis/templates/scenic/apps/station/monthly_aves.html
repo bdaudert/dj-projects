@@ -13,13 +13,19 @@
 
 <!--Autofill-->
 <script type="text/javascript">set_autofill("US_station_id");</script>
+<script type="text/javascript">
+$(function(){
+    //On form change, hide results and form errors
+    hide_errors_results_on_change('tableDataForm');
+});
+</script>
 
 <table cellpadding="20">
 <td valign="top" width="30%">
     <input type="submit" value="Start Over" onclick="window.location='{{MON_AVES_URL}}'"/>
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" id="tableData" bgcolor="#99C1C1">
+        <table class="form" id="tableData" bgcolor="#CCE0E0">
         {%if user_params_dict.station_id%}
         <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
@@ -171,11 +177,13 @@
     </div>
     <br />
     {%if results%}
+    <div id="results" class="results">
     <img onClick="ShowHide('averaged_data')" alt="averaged_data" title="averaged_data" src="{{MEDIA_URL}}img/show_hide_button.png">
     <div id="averaged_data" width="450" height="450" border="0" style="display:none;">
         {% for el, vals in averaged_data.items%}
         <p>{{el}} : {{vals}}
         {%endfor%}
+    </div>
     </div>
     {%endif%}
 </td>
@@ -224,13 +232,16 @@
     {%endif%}
 
     {%if form_error%}
+        <div class="results">
         <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
         {%for key, val in form_error.items%}
             <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
         {%endfor%}
+        </div>
     {%endif%} 
 
     {%if results%}
+    <div class="results">
     <table>
     <td>
     <img onClick="ShowHide('metadata')" alt="metadata" title="metadata" src="{{MEDIA_URL}}img/metadata_button.png">
@@ -241,6 +252,7 @@
     </td>
     </table>
 
+
     <div id="metadata" style="display:none;">
         <p>
         {% for val in meta %}
@@ -248,6 +260,7 @@
         {%endfor%}
         </p>
     </div>
+
     <h2>Plots of Monthly Averages</h2>
     <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ TMP_DIR }}">
     <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
@@ -265,10 +278,13 @@
     {%endif%}
     {%endfor%}         
     <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-monthly-aves.js"></script>
+    </div><!--end results div-->
     {%endif%}
 
     {%if error%}
+    <div class="results">
     <p class="error">{{error}}</p>
+    </div>
     {%endif%}
 </td>
 </table>

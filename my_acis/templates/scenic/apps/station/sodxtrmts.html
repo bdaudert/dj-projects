@@ -16,6 +16,13 @@
 
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("US_station_id");</script>
+<!--On form change, hide results and form errors-->
+<script type="text/javascript">
+$(function(){
+        //On form change, hide results and form errors
+            hide_errors_results_on_change('fSodxtrmts');
+});
+</script>
 
 
 <table align="center">
@@ -23,6 +30,7 @@
     <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
     </tr>
 </table>
+
 <script type="text/javascript">                        
     $("#tool_info_head").load("{{HTML_URL}}Buttons.html .tool_info");
 </script>
@@ -37,25 +45,12 @@
 </script>
 
 {%if json_dict.data and initial.generate_graph == "F"%}
-<div id="Arrow" style="position:absolute;top:250px;right:310px;">
+<div id="Arrow" class="results" style="position:absolute;top:250px;right:310px;">
 <table style="display:block;">
 <td valign="top"><b>RESULTS:</b></td>
 <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="300px"></td>
 </table>
 </div>
-{%endif%}
-
-{%if run_done and not json_dict.data%}
-<p align="center" class="error" style="position:absolute;top:250px;right:310px;">
-No data found for these parameters!</p></br>
-{%endif%}
-
-{%if form_error%}
-<p style="position:absolute;top:250px;right:200px;" class="error">
-ERROR: Please correct the form error(s) highlighted in red!</p>
-{%for key, val in form_error.items%}
-<script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
-{%endfor%}
 {%endif%}
 
 
@@ -112,16 +107,16 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
         <form method="post" id="fSodxtrmts" action="" onsubmit="show_loading()">
     {%endif%}
     {% csrf_token %}
-    <table id="tableSodxtrmts" frame="void" style="border-collapse:collapse;" bgcolor="#99C1C1">
+    <table id="tableSodxtrmts" frame="void" style="border-collapse:collapse;" bgcolor="#CCE0E0">
     <td valign="top">
-    <table id="tableData" frame="box" cell-padding="20" bgcolor="#99C1C1">
+    <table id="tableData" frame="box" cell-padding="20" bgcolor="#CCE0E0">
     {%if user_params_dict.station_id%}
     <tr valign="top" bgcolor="#FFEFD5">
     {%else%}
     <tr valign="top">
     {%endif%}
     <td>Station ID/Name: </td>
-    <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{initial.station_id}}" list="US_station_id" onchange="hide_formGraph('formGraph') & update_value(this.value);"></td>
+    <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{initial.station_id}}" list="US_station_id" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_station_id"></div>
@@ -191,7 +186,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
             <option value="cdd" {{checkbox_vals.cdd_selected}}>Cooling Degree Days</option>
             <option value="gdd" {{checkbox_vals.gdd_selected}}>Growing Degree Days</option>
             <option value="evap" {{checkbox_vals.evap_selected}}>Daily Pan Evaporation</option>
-            <!--<option value="wdmv" {{checkbox_vals.wdmv_selected}}>Daily Wind Movement</option>-->
+            <option value="wdmv" {{checkbox_vals.wdmv_selected}}>Daily Wind Movement</option>
             </select>
     </td>
     <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -400,7 +395,9 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     {%endif%}
     </table>
     </td><td valign="top">
-    {%if not initial.generate_graph == "T"%}
+    {%if initial.generate_graph == "T"%}
+    <table frame="box" class="formGraph" bgcolor="#CCE0E0">
+    {%else%}
     {%if user_params_list%}
     <div id="user_params_list">
     <p class="message">
@@ -414,12 +411,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </p>
     </div>
     {%endif%}
-    {%endif%}
-
-    {%if not initial.generate_graph == "T"%}
-    <table frame="box" class="formGraph" style="display:none">
-    {%else%}
-    <table frame="box" class="formGraph" bgcolor="#99C1C1">
+    <table frame="box" class="formGraph" style="display:none" bgcolor="#CCE0E0">
     {%endif%}
     <tr valign="top" class="formGraph" style="display:table-row;">
     <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Graph Options</u></b></td>
@@ -571,15 +563,14 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </div>
     </td>
     </tr>
-    <tr style="display:table-row;" class="formGraph"><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
     <tr valign="top" class="plOpts" style="display:table-row;">
     </tr>
     </table>
     </td><td valign="top">
     {%if initial.generate_graph == "T"%}
-    <table class="formGraph" frame="box" bgcolor="#99C1C1">
+    <table class="formGraph" frame="box" bgcolor="#CCE0E0">
     {%else%}
-    <table class="formGraph" frame="box" style="display:none" bgcolor="#99C1C1">
+    <table class="formGraph" frame="box" style="display:none" bgcolor="#CCE0E0">
     {%endif%}
     <tr valign="top" class="formGraph" style="display:table-row;">
     <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Plot Options</u></b></td>
@@ -816,6 +807,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
 <br />
 
 {%if json_dict.data%}
+<div class="results">
 <table align="center">
     <td>
     <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
@@ -832,7 +824,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
         <form method="post" action="" onsubmit="show_loading()">
         {%endif%}
         {% csrf_token %}
-        <table id="tableDownload" bgcolor="#99C1C1">
+        <table id="tableDownload" bgcolor="#CCE0E0">
         <tr valign="top">
         <td>Data Format: </td>
         <td>
@@ -892,13 +884,13 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
 </td>
 </table><!--End table about/howto/download form-->
 
-
 {%if generate_graph%} 
 <div align="center">
 <p class="blue" onClick="ShowHide('user_graph')"><b><u>Show/Hide Time Series Graph</u></b></p>
 <div id="user_graph">
     <div align="center" id="container" style="height:{{height}}px;width:{{width}}px;"></div>
     <input type="hidden" id="json_file" name="json_file" value="{{json_dict.json_file}}">
+    <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{json_dict.JSON_URL}}">
     <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts-visualize.js"></script>
 </div>
 </div>
@@ -925,7 +917,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
 </tr>
 {%endfor%}
 </table>
-</div>
+
 <!--Graphics-->
 <div align="center">
 <p class="blue" onClick="ShowHide('range_plot')"><u><b>Show Summary Graph</b></u></p>
@@ -933,6 +925,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
     <div id="graph_container" style="height:{{height}}px;width:{{width}}px;"></div>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts.js"></script>
+</div>
 </div>
 </div>
 {%endif%}
@@ -1002,7 +995,30 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     {%endfor%}
     </table>
 </div><!--End div="printable_table"-->
+</div><!--end div results-->
+<br />
+{%else%} <!--No results-->
+    {%if run_done%}
+        <p align="center" style="color:red">No data found for these parameters!</p></br>
+    {%endif%}
+    
+    {%if form_error%}
+    <script type="text/javascript">hide_formGraph('formGraph')</script>
+    <p class="error" id="form_error" style="position:absolute;top:210px;right:200px;">
+    ERROR: Please correct the form error(s) highlighted in red!</p>
+    {%for key, val in form_error.items%}
+    <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
+    {%endfor%}
+    {%endif%}
+
+    {%if form_graph_error%}
+    <p class="error" id="form_error" style="position:absolute;top:210px;right:310px;">
+    ERROR: Please correct the form error(s) highlighted in red!</p>
+    {%for key, val in form_graph_error.items%}
+    <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
+    {%endfor%}
+    {%endif%}
+
 {%endif%}
 
 {%endblock%}
-

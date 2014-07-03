@@ -18,15 +18,11 @@
 
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
+
 <script type="text/javascript">
-$(function(){ 
-    $('#tableDataForm').change(function(){
-        var results = document.getElementsByClassName('results');
-        for (i=0;i<results.length;i++){
-            results[i].style.display="none";
-        }
-    });
-})
+$(function(){
+    hide_errors_results_on_change('tableDataForm');
+});
 </script>
 
 <!--First Table: Form, HowTos, Links-->    
@@ -46,7 +42,7 @@ $(function(){
     <input type="submit" value="Start Over" onclick="window.location='{{STATION_FINDER_URL}}'"/>
     <div id='formData'>
         <form id="tableDataForm" method="post" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" id="tableData" bgcolor="#99C1C1">
+        <table class="form" id="tableData" bgcolor="#CCE0E0">
         {%if user_params_dict.select_stations_by%}
         <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
@@ -360,7 +356,7 @@ $(function(){
         {%endif%}
             <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableDataForm')">{% csrf_token %}
-            <table class="form" bgcolor="#99C1C1">
+            <table class="form" bgcolor="#CCE0E0">
             <tr valign="top">
             <td>State: </td>
             <td>

@@ -77,6 +77,22 @@
             $('#loading').hide(); 
         });
     </script>
+    <!--Back button warning -->
+    <script type="text/javascript">
+    $( document ).ready(function(){
+    //save_form_options('tableDataForm', 'rememberselects');
+    if (window.history && window.history.pushState) {
+        window.history.pushState('forward', null, './');
+        $(window).on('popstate', function() {
+            //set_form_options('tableDataForm', 'rememberselects');
+            var forms = $('form');
+            if (forms.length){
+                alert('We discourage the use of the back/forward buttons.\nPlease be aware that form fields may not be preserved correctly!')
+            }
+        });
+    }
+    });
+    </script>
     {% block extrahead %}{% endblock %}
     {% block extrastyle %}{% endblock %}
     <!--Django env variables from settings -->
@@ -123,9 +139,10 @@
     <input type="hidden" id="TOOLS_GIS_URL" name="variable" value="{{ TOOLS_GIS_URL }}">
 </head>
 
-<!--deals with back button issue-->
-<body onbeforeunload="reset_options()">
-<!--<body>-->
+<!--deals with back button issue... only works in Chrome and badly at that--> 
+<!--<body onbeforeunload="reset_options()">-->
+
+<body>
 
 <div class="container">
     <!-- Header -->

@@ -14,13 +14,19 @@
     <a href="{{SODSUMM_URL}}">Monthly/Seasonal Averages/Extremes and Bar Charts</a></p>
 
 <script type="text/javascript">set_autofill("US_station_id");</script>
+<script type="text/javascript">
+$(function(){
+        //On form change, hide results and form errors
+        hide_errors_results_on_change('form1');
+});
+</script>
 
 <table cellpadding="10">
 <td valign="top" width="25%">
     <input type="submit" value="Start Over" onclick="window.location='{{SODSUMM_URL}}'"/>
     <div id='form1'>
-        <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" bgcolor="#99C1C1">
+        <form method="post" id='form1' action="" onsubmit="show_loading()">{% csrf_token %}
+        <table class="form" bgcolor="#CCE0E0">
         {%for field in form1 %}
         {%if not field.is_hidden%}
         {%if user_params_dict.station_id and field.label == "Station id"%}
@@ -111,6 +117,7 @@
         {%endif%} 
 
         {%if results or graphics%}
+        <div class="results">
         <p>
         For monthly and annual mean, thresholds and sums:</br>
         Months with {{max_missing_days}} or more missing days are not considered.</br>
@@ -151,7 +158,7 @@
                 <div id="formDownload{{forloop.counter0}}" class="form" style="display:none;">
                     <form method="post" action="" onsubmit="show_loading()">
                     {% csrf_token %}
-                    <table id="tableDownload" bgcolor="#99C1C1">
+                    <table id="tableDownload" bgcolor="#CCE0E0">
                     <tr valign="top">
                     <td>Data Format: </td>
                     <td>
@@ -276,9 +283,12 @@
             </div><!--End Tab-->
             {%endfor%} <!--end for tab in tab_list-->
         </div><!--end tabs -->
+        </div>
         {%else%} <!--no results and no graphics-->
         {%if run_done%}
+        <div class="results">
         <p style="color:red">No data found for these parameters!</p></br>
+        </div>
         {%endif%}
         {%endif%}<!--if results or graphics-->
 </td><!-- end center-->

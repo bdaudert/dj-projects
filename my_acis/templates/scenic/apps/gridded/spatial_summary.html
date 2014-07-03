@@ -20,6 +20,12 @@
 
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
+<script type="text/javascript">
+$(function(){
+    //On form change, hide results and form errors
+    hide_errors_results_on_change('tableTSForm');
+});
+</script>
 
 <table cellpadding="5">
 <!--LEFT-->
@@ -27,7 +33,7 @@
     <input type="submit" value="Start Over" onclick="window.location='{{SPATIAL_GRID_SUMMARY}}'"/>
     <div id='formTS'>
         <form method="post" id="tableTSForm" action="{{SPATIAL_GRID_SUMMARY}}" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" id="tableTS" bgcolor="#99C1C1">
+        <table class="form" id="tableTS" bgcolor="#CCE0E0">
         {%if user_params_dict.select_grid_by%}
         <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
@@ -546,11 +552,51 @@
     </script>
     </div>
 
+    {%if results%}
+    <div class="results">
+        <b>Your Parameters</b>:<br />
+        <div id="parameters">
+        {% for param in display_params_list%}
+        {%if forloop.first%}
+
+        <b>{{param.0}}</b>: {{param.1}},<br />
+
+        {%if search_params.shape_coords%}
+        <p class="pop_link" onClick="ShowHide('shape_coords')"><u>Show/hide shape coordinates (lon, lat)i</u></p>
+        <div id="shape_coords" style="display:none;"><b>Shape coordinates</b>:<br />
+            {%for s in search_params.shape_coords%}
+            {{s}},
+            {%if forloop.counter|divisibleby:2%}<br />{%endif%}
+            {%endfor%}
+        </div>
+        {%endif%}
+
+        {%else%}
+
+        {%if param.0 == "Elements"%}
+        <b>{{param.0}}</b>:<br />
+        {%for el in search_params.element_list_long%}
+        {{el}}, <br />
+        {%endfor%}
+        {%else%}
+        {%if forloop.counter|divisibleby:"2" %}<br />{%endif %}
+        <b>{{param.0}}</b>: {{param.1}}{%if not forloop.last%}, {%endif%}
+        {%endif%}
+
+        {%endif%}
+        {%endfor%}
+        </p>
+        </div>
+    </div>
+    {%endif%}
+
     {%if form_error%}
+        <div class="results">
         <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
         {%for key, val in form_error.items%}
             <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
         {%endfor%}
+        </div>
     {%endif%}
 
     {%if user_params_list and not results%}
@@ -608,7 +654,7 @@
     {%endif%}
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableTSForm')">{% csrf_token %}
-            <table class="form" bgcolor="#99C1C1">
+            <table class="form" bgcolor="#CCE0E0">
             <tr>
             <td>State: </td>
             <td>
@@ -700,7 +746,7 @@
 
     {%if results%}
     <!--Results section-->
-    <div id="results">
+    <div id="results" class="results">
     <table cellpadding="0px">
     <td>
     <p class="pop_link" onClick="ShowHide('printable_table')"><img alt="ShowHide" src ="{{MEDIA_URL}}img/show_hide_button.png"></p>
@@ -712,7 +758,7 @@
     <!--Download form-->
     <div id="formDownload" class="form" style="display:none;">
         <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table id="tableDownload" width="40%" bgcolor="#99C1C1">
+        <table id="tableDownload" width="40%" bgcolor="#CCE0E0">
         <tr valign="top">
         <td>Data Format: </td>
         <td>

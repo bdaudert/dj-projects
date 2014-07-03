@@ -89,7 +89,7 @@ function reset_options(){
     }  
 }
 
-function hide_errors_on_change(formID){
+function hide_errors_results_on_change(formID){
     $('#' + formID).find('input,select').change(function(){
         //Hide results
         $('.results').each(function() {
@@ -113,6 +113,16 @@ function hide_errors_on_change(formID){
         if ($(this).attr('id') == 'end_date'){
             if ($('#start_date').parent().parent().next().attr('class') == 'form_error'){
                 $('#start_date').parent().parent().next().css('display','none');
+            }
+        }
+        if ($(this).attr('id') == 'start_year'){
+            if ($('#end_year').parent().parent().next().attr('class') == 'form_error'){
+                $('#end_year').parent().parent().next().css('display','none');
+            }
+        }
+        if ($(this).attr('id') == 'end_date'){
+            if ($('#start_year').parent().parent().next().attr('class') == 'form_error'){
+                $('#start_year').parent().parent().next().css('display','none');
             }
         }
     });

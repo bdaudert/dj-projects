@@ -20,6 +20,12 @@
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 <script type="text/javascript">set_autofill("US_CMAP");</script>
+<script type="text/javascript">
+$(function(){
+    //On form change, hide results and form errors
+    hide_errors_results_on_change('tableMapForm');
+});
+</script>
 
 <table cellpadding="20">
 <!--LEFT-->
@@ -27,7 +33,7 @@
     <input type="submit" value="Start Over" onclick="window.location='{{TEMPORAL_GRID_SUMMARY}}'"/>
     <div id='formMap'>
         <form method="post" id="tableMapForm" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" id="tableMap" bgcolor="#99C1C1">
+        <table class="form" id="tableMap" bgcolor="#CCE0E0">
         {%if user_params_dict.select_grid_by%}
         <tr valign="top" bgcolor="#FFEFD5">
         {%else%}
@@ -442,10 +448,12 @@
     </script>
 
     {%if form_error%}
+    <div class="results">
         <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
         {%for key, val in form_error.items%}
             <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
         {%endfor%}
+    </div>
     {%endif%}
         
     {%if user_params_list and not figure_files%}
@@ -488,7 +496,7 @@
     {%endif%}
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableMapForm')">">{% csrf_token %}
-            <table class="form" bgcolor="#99C1C1">
+            <table class="form" bgcolor="#CCE0E0">
             <tr>
             <td>State: </td>
             <td>
@@ -581,7 +589,7 @@
    
 
     <!--Results section-->
-    <div id="results">
+    <div id="results" class="results">
     {%if figure_files%}
     <a target="_blank" href="{{DATA_GRIDDED_URL}}?{%for key,val in params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size=3><b>Get data behind this graphic</b></font></a>
     <br /></br /></br>

@@ -362,6 +362,7 @@ def data_station(request):
         num_data_points = days * num_lats *num_lons * len(form_cleaned['elements'])
         num_giga_bytes = 1 * num_data_points /float(1024**3)
         num_mega_bytes = round(1 * num_data_points /float(1024**2),2)
+
         if 2 * 0.00098 < num_giga_bytes:
             ldr = 'At the moment we do not accept data requests producing \
                 more than 2MB of data. Your request size is approximately %s MB. \
@@ -579,7 +580,6 @@ def data_gridded(request):
             context['large_request'] = ldr
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
         '''
-
         context['large_request'] = False
         #Data request
         req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')
@@ -1039,10 +1039,11 @@ def spatial_summary(request):
         form_cleaned = set_form(request)
         #Back Button/download files issue fix:
         #if select_grid_by none, find it
-        if not 'select_grid_by' in form.keys():
+        if not 'select_grid_by' in form_cleaned.keys() or form_cleaned['select_grid_by'] not in form_cleaned.keys():
             for key in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
                 if key in form.keys():
                     form['select_grid_by'] = key
+                    form_cleaned['select_grid_by'] = key
                     break
         #Form Check
         fields_to_check = [form['select_grid_by'],'start_date', 'end_date','degree_days', 'elements']
@@ -1403,13 +1404,17 @@ def sodxtrmts(request):
             initial['generate_graph'] = 'T'
         #Form sanity check
         #form_error = check_sodxtrmts_form(form)
-        fields_to_check = ['start_year', 'end_year','max_missing_days', 'graph_start_year', 'graph_end_year', \
-        'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
+        fields_to_check = ['start_year', 'end_year','max_missing_days']
         form_error = check_form(form, fields_to_check)
+        fields_to_check = ['graph_start_year', 'graph_end_year', \
+        'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
+        form_graph_error = check_form(form, fields_to_check)
         if form_error:
             context['form_error'] = form_error
             return render_to_response('scenic/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
-
+        if form_graph_error:
+            context['form_graph_error'] = form_graph_error
+            return render_to_response('scenic/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
         #Define header for html display
         header = set_sodxtrmts_head(form)
 
