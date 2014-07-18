@@ -299,11 +299,13 @@ $(function(){
         <tr>   
         <td colspan="3"><hr style="border-color:#006666;"></td>
         </tr>
+        <!--
         {%if initial.show_plot_opts == "T"%}
         <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
         <tr valign="top" class="plOpts" style="display:none;">
-        {%endif%}
+        {%endif%}-->
+        <tr valign="top" style="display:none;">
         <td>Image Size: </td>
         <td>
             <select id="image_size" name="image_size" onchange="update_value(this.value)">
@@ -588,6 +590,13 @@ $(function(){
         </p>
         </div>
     </div>
+    <br />
+    <div id="Arrow" class="results">
+    <table style="display:block;">
+    <td valign="top"><b>RESULTS:</b></td>
+    <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="300px"></td>
+    </table>
+    </div>
     {%endif%}
 
     {%if form_error%}
@@ -744,6 +753,9 @@ $(function(){
     <p class="error">{{error}}</p>
     {%endif%}
 
+</td></table>
+<table align="center">
+<td>
     {%if results%}
     <!--Results section-->
     <div id="results" class="results">
@@ -756,7 +768,7 @@ $(function(){
     </td>
     </table>
     <!--Download form-->
-    <div id="formDownload" class="form" style="display:none;">
+    <div id="formDownload" class="form" style="display:none;" align="right">
         <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
         <table id="tableDownload" width="40%" bgcolor="#CCE0E0">
         <tr valign="top">
@@ -885,8 +897,7 @@ $(function(){
     <div align="center" id="spatial_summary_{{forloop.counter0}}" style="height:{{height}}px;width:{{width}}px;"></div>
     <br />
     {%endfor%}
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-area-ts.js"></script>
-    
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-spatial-summary-ts.js"></script> 
     {%endif%}<!--if results-->
     </div><!--end results div-->
 </td></table>

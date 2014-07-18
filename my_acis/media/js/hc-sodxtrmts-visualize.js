@@ -408,7 +408,7 @@ $(function () {
                 var gridLineWidth = 0;
                 var gridLineColor = '#C0C0C0';
             }
-            var xAxisText = SummaryText + '  ' +  datadict.element_name + ', Months: ' + 
+            var xAxisText = SummaryText + ' of ' +  datadict.element_name + ', Months: ' + 
                 month_names[month_list[0] - 1] + ' to '+ month_names[month_list[month_list.length - 1] - 1];
             if (datadict.initial.departures_from_averages == "T"){
                 xAxisText+=' (Departures from Average)'
@@ -423,31 +423,29 @@ $(function () {
             chart = new Highcharts.Chart({
                 chart: {
                     type:'line',
-                    borderColor:'#006666',
-                    borderWidth: 2,
-                    //plotBorderColor: '#787878',
-                    //plotBorderWidth: 0.5,
                     renderTo: 'container',
-                    //marginLeft: 60,
                     marginBottom: 100,
                     marginRigh:0 
                 },
                 title: {
-                    style:titleStyle,
-                    text: graph_title
+                    style: titleStyle,
+                    text: graph_title + '<br />' + 'Network: ' + datadict.stn_network + ', ID: ' + datadict.stn_id 
                 },
                 subtitle: {
                     text:xAxisText,
                     //text:'Network: ' + datadict.stn_network + ', ID: ' + datadict.stn_id,
                     style: subtitleStyle        
                 },
+                /*
                 labels: {
                     items:[{
                         html:'Network: ' + datadict.stn_network + ', ID: ' + datadict.stn_id,
                         style:{
                             position:'absolute',
                             margin:'0px',
-                            top:top_dist,
+                            //top:top_dist,
+                            top: '280px',
+                            //top:'0px',
                             left:'0px',
                             fontSize:'12px',
                             color:'#3E576F'
@@ -455,6 +453,7 @@ $(function () {
                     }],
                     style: {color: '#000000'}
                 },
+                */
                 credits: {
                         href: HOST_URL,
                         text: HOST
@@ -465,7 +464,6 @@ $(function () {
                             style:titleStyle,
                             text: apdx
                         },
-                        
                         labels: {
                             formatter: function () {
                                 return Highcharts.dateFormat('%Y', this.value);
@@ -538,8 +536,9 @@ $(function () {
                     shared: true
                 },
                 legend: {
-                    enabled: true
-                    //verticalAlign:'top'
+                    enabled: true,
+                    layout: 'vertical',
+                    floating: true,
                 },
                 series:series_data 
             });//end chart

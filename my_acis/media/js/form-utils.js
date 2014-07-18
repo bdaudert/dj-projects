@@ -805,7 +805,7 @@ function unset_large_request(){
     var form_tables = document.getElementsByClassName('form');
     for (i=0;i<form_tables.length;i++) {
         for (var j = 0;j < form_tables[i].rows.length; j++) {
-            form_tables[i].rows[j].style.background="#99C1C1";
+            form_tables[i].rows[j].style.background="#CCE0E0";
         } 
     }
     //Add html option to data format
@@ -833,8 +833,9 @@ function set_station_grid_select(row_id,node){
     if ($('#' + 'user_params_list').length){
         document.getElementById('user_params_list').style.display = "none";
     }
-
-    unset_large_request()
+    if ($('#' + 'datafind').length){
+        unset_large_request()
+    }
     var lv = set_area_and_map(node.value);
     //Set up autofill if needed
     set_autofill(lv.autofill_list);

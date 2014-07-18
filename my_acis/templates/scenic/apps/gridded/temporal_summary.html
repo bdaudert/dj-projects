@@ -243,11 +243,14 @@ $(function(){
         <tr>   
         <td colspan="3"><hr style="border-color:#006666;"></td>
         </tr>
+        <!--
         {%if initial.show_plot_opts == "T"%}
         <tr valign="top" class="plOpts" style="display:table-row;">
         {%else%}
         <tr valign="top" class="plOpts" style="display:none;">
         {%endif%}
+        -->
+        <tr valign="top" class="plOpts" style="display:none;">
         <td>Image Size: </td>
         <td>
             <select id="image_size" name="image_size" onchange="update_value(this.value)">

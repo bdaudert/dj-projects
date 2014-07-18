@@ -362,7 +362,7 @@ def data_station(request):
         num_data_points = days * num_lats *num_lons * len(form_cleaned['elements'])
         num_giga_bytes = 1 * num_data_points /float(1024**3)
         num_mega_bytes = round(1 * num_data_points /float(1024**2),2)
-
+        '''
         if 2 * 0.00098 < num_giga_bytes:
             ldr = 'At the moment we do not accept data requests producing \
                 more than 2MB of data. Your request size is approximately %s MB. \
@@ -397,7 +397,7 @@ def data_station(request):
 
             context['large_request'] = ldr
             return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
-        '''
+
         context['large_request'] = False
         #Data request
         resultsdict = AcisWS.get_station_data(form_cleaned, 'sodlist_web')
@@ -545,7 +545,7 @@ def data_gridded(request):
         num_data_points = days * num_lats *num_lons * len(form_cleaned['elements']) / time_interval
         num_giga_bytes = 2 * num_data_points /float(1024**3)
         num_mega_bytes = round(2 * num_data_points /float(1024**2),2)
-
+        '''
         if 2 * 0.00098 < num_giga_bytes:
             ldr = 'At the moment we do not accept data requests producing \
                 more than 2MB of data. Your request size is approximately %s MB. \
@@ -579,7 +579,7 @@ def data_gridded(request):
                 Thank you for your patience!' %str(num_mega_bytes)
             context['large_request'] = ldr
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
-        '''
+
         context['large_request'] = False
         #Data request
         req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')
@@ -1516,8 +1516,10 @@ def sodxtrmts(request):
             ranges = [[mon] for mon in month_list]
             if data_params['element'] == 'dtr':
                 element_name = 'Temperature Range (F)'
+            elif data_params['element'] == 'pet':
+                element_name = 'Potential ET (in/day)'
             else:
-                element_name = WRCCData.ACIS_ELEMENTS_DICT[data_params['element']]['name_long']
+                element_name = WRCCData.ACIS_ELEMENTS_DICT[data_params['element']]['name_long'] + ' (' + WRCCData.UNITS_ENGLISH[data_params['element']]+ ')'
             if 'base_temperature' in form.keys():
                 try:
                     base_temperature = int(form['base_temperature'])
@@ -1995,6 +1997,8 @@ def set_sodxtrmts_head(form):
     for key in header_order:
         if key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'monthly_statistic', 'elements','element']:
             header.append([WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[str(form[key])]])
+            if key == 'element':
+                header.append(['Units', WRCCData.UNITS_ENGLISH[str(form[key])]])
         elif key == '':
             #header.append([])
             pass
@@ -2416,6 +2420,7 @@ def set_spatial_summary_params(form):
         search_params['area_description'] = 'Custom Shape'
         search_params['shape_coords'] = form['shape'].split(',')
     else:
+        search_params['area_description'] = WRCCData.DISPLAY_PARAMS[form['select_grid_by']] + ': ' + form[form['select_grid_by']]
         display_params_list[0]=[WRCCData.DISPLAY_PARAMS[form['select_grid_by']],form[form['select_grid_by']]]
     for key, val in form.iteritems():
         #Convert to string to avoid unicode issues
@@ -2440,9 +2445,9 @@ def set_spatial_summary_params(form):
                             base_temp = dd_list[dx][3:]
                         else:
                             base_temp = int(round(WRCCUtils.convert_to_metric('maxt', base_temp)))
-                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el_short] + '( ' +  WRCCData.UNITS_METRIC[el_short]+ ' )' + ' Base Temp.: ' + str(base_temp))
+                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el_short] + ' (' +  WRCCData.UNITS_METRIC[el_short]+ ')' + ' Base Temp.: ' + str(base_temp))
                 else:
-                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el] + '( '+ WRCCData.UNITS_ENGLISH[el_short]+ ')')
+                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el] + ' ('+ WRCCData.UNITS_ENGLISH[el_short]+ ')')
             display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key], ','.join(el_list_long)]
             search_params['element_list_long'] = el_list_long
         else:
