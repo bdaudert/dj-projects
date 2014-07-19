@@ -374,7 +374,7 @@ def data_station(request):
         if 'user_name' and 'user_email' in form_cleaned.keys():
             ldr = \
                 'Data request submitted successfully. \n \
-                Notification will be send to %s when the request has been processed!' %form_cleaned['user_email']
+                Notification will be sent to %s when the request has been processed!' %form_cleaned['user_email']
             #Process request offline
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
@@ -397,7 +397,6 @@ def data_station(request):
 
             context['large_request'] = ldr
             return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
-
         context['large_request'] = False
         #Data request
         resultsdict = AcisWS.get_station_data(form_cleaned, 'sodlist_web')
@@ -558,7 +557,7 @@ def data_gridded(request):
         if 'user_name' in form_cleaned.keys():
             ldr = \
                 'Data request submitted successfully. \n \
-                Notification will be send to %s when the request has been processed!' %form_cleaned['user_email']
+                Notification will be sent to %s when the request has been processed!' %form_cleaned['user_email']
             context['large_request'] = ldr
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
@@ -579,7 +578,6 @@ def data_gridded(request):
                 Thank you for your patience!' %str(num_mega_bytes)
             context['large_request'] = ldr
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
-
         context['large_request'] = False
         #Data request
         req = AcisWS.get_grid_data(form_cleaned, 'griddata_web')
