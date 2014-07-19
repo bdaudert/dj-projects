@@ -32,6 +32,25 @@ function set_LabelStyle() {
     return style;
 }
 
+function set_plot_color(element){
+    if (element == 'maxt'){
+        var p_color = '#FF0000';
+    }
+    if (element == 'mint'){
+        var p_color = '#0000FF';
+    }
+    if (element == 'pcpn' || element == 'evap' || element == 'wdmv' || element == 'pet'){
+        var p_color = '#008000';
+    }
+    if (element == 'snow' || element == 'snwd'){
+        var p_color = '#800080';
+    }
+    if (element == 'hdd' || element == 'cdd' || element == 'gdd'){
+        var p_color = '#00FFFF';
+    }
+    return p_color
+}
+
 function set_label_position(image_height){
     var top_dist = (parseFloat(image_height)*4/5).toString() +'px';
     if (Math.abs(parseFloat(image_height) -  290) < 0.001){
