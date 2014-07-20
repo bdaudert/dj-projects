@@ -97,16 +97,14 @@ function set_plotlines(data,step,axis,plotline_opts){
     */
     //Sanity Check: step needs to be integer 
     //greater than zero
-    var x_step = step;
-    if (x_step === parseInt(x_step)){
-        if (parseInt(x_step) < 1){
-            x_step = 1;
+    var stp = step;
+    if (stp === parseInt(stp)){
+        if (parseInt(stp < 1)){
+        stp = 1;
         }
     }
     else{
-        if (parseInt(x_step) < 1){
-            x_step = 1;
-        }
+        stp = 1;
     }
     if (axis == 'x'){idx = 0;}
     if (axis == 'y'){idx = 1;}
@@ -186,14 +184,45 @@ function set_time_series_axis_properties(data,plotline_no,axis){
     else {
         var step = Math.round(data.length/plotline_no);
     }
-    results.plotlines = set_plotlines(data,step,axis);
-    results.tickPositions = align_ticks(results.plotlines);
-    if (results.plotlines.length > 10){
-        results.tickStep = Math.round(results.plotlines.length/5.0);
+    results.plotLines = set_plotlines(data,step,axis);
+    results.tickPositions = align_ticks(results.plotLines);
+    if (results.plotLines.length > 10){
+        results.tickStep = Math.round(results.plotLines.length/5.0);
     }
     return results;
 }
 
+function set_barchart_axis_properties(data,plotline_no,axis){
+    results ={
+        'tickStep':1,
+        'tickPositions':[],
+        'plotLines':[]
+    }
+    if (axis == 'x'){
+        //need to convert categories to plotline values
+        vals =[];
+        for (i=0;i < data.length;i++){
+            vals.push([i,null]);
+        }
+    }
+    else {
+        vals = data;
+    }
+    if (vals.length == 0){
+        var step = null;
+    }
+    else {
+        var step = Math.round(vals.length/plotline_no);
+    }
+    results.plotLines = set_plotlines(vals,step,axis)
+    results.tickPositions = align_ticks(results.plotLines);
+    if (results.plotLines.length > 10){
+        results.tickStep = Math.round(results.plotLines.length/5.0);
+    }
+    return results;
+}
+
+//axis property function for more complex graphs
 function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis_min, element,statistic, dep_from_ave,plotline_no){
     var props = {
         'axisMin':data_min,

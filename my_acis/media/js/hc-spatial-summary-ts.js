@@ -68,7 +68,13 @@ $(function () {
                 else if (datadict.search_params.major_grid =='T' && datadict.search_params.minor_grid == 'F'){
                     plotline_no = 5.0;
                 }
-                x_props = set_time_series_axis_properties(data, plotline_no,'x');
+                if (el_name == 'pcpn'){
+                    //if pcpn overwrite plotlines and tick pos
+                    x_props = set_barchart_axis_properties(data, plotline_no,'x');
+                }
+                else {
+                    x_props = set_time_series_axis_properties(data, plotline_no,'x');
+                }
                 y_props = set_axis_properties(data_max,datadict.search_params.vertical_axis_max, data_min, datadict.search_params.vertical_axis_min, element_list[el_idx],'none','F',plotline_no)
                 x_tickPositions = align_ticks(x_props.plotLines);
                 y_tickPositions = align_ticks(y_props.plotLines);
@@ -136,7 +142,7 @@ $(function () {
                                     step:x_props.tickStep, 
                                     rotation: -90
                                 },
-                                plotLines:x_props.plotlines,
+                                plotLines:x_props.plotLines,
                                 tickPositions:x_props.tickPositions
                             },
                             yAxis: [{

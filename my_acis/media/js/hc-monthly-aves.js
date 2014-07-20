@@ -17,11 +17,16 @@ $(function () {
             'Nov',
             'Dec'
         ];
+        /*
+        d=[];
         var x_plotLines = [];
         for (i=0;i<xCats.length;i++){
             d.push([i,null])
         }
         var x_plotLines = set_plotlines(d,1,'x',xCats.length);
+        */
+        x_props = set_barchart_axis_properties(xCats,12,'x');
+        alert(x_props.plotLines);
         $.getJSON(json_file_path, function(datadict) {
             for (var i=0;i<datadict.length;i++){
                 //Set up BarChart Template Class
@@ -53,7 +58,8 @@ $(function () {
                         },
                         xAxis: {
                             categories:xCats,
-                            plotLines:x_plotLines
+                            plotLines:x_props.plotLines,
+                            tickInterval:x_props.tickInterval
                         },
                         yAxis: {
                             min: data_min,
