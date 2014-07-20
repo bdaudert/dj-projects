@@ -1,40 +1,16 @@
-function set_TitleStyle() {
+function set_style(color, fontSize, fontWeight, align) {
     var style = {
-        color:'#000000',
-        fontSize:'14px'
-    };
-    return style;
-}
-
-function set_SubtitleStyle() {
-    var style = {
-        color:'#0000FF',
-        fontSize:'14px',
-        align:'center'
-    };
-    return style;
-}
-
-function set_AxesStyle() {
-    var style = {
-        color:'#000000',
-        fontSize:'12px',
-        fontWeight: 'bold'
-    };
-    return style;
-}
-
-function set_LabelStyle() {
-    var style = {
-        color:'#3E576F',
-        fontSize:'14px'
+        color: color,
+        fontSize:fontSize,
+        fontWeight:fontWeight,
+        align:align
     };
     return style;
 }
 
 function set_plot_color(element){
     if (element == 'maxt'){
-        var p_color = '#FF0000';
+        var p_color = '#660066';
     }
     if (element == 'mint'){
         var p_color = '#0000FF';
@@ -111,65 +87,6 @@ function set_yrdata_grids(num_yrs){
         'major_step':major, 
         'divisor':divisor
         };
-}
-
-
-
-//Algoritmhms
-function find_max(vals,element,statistic){
-    var max = null;
-    try{
-        max = Math.max.apply(Math,vals);
-    }
-    catch(e){}
-    if (statistic == 'ndays'){
-        max = 35;
-    }
-    return max;
-}
-
-function find_min(vals, element,statistic, dep_from_ave){
-    var min = null;
-    if ((element == 'snow' || element == 'snwd' || element == 'pcpn' || element == 'evap' || element == 'wdmv') && (statistic !='ndays' && statistic !='sd' && dep_from_ave=='F')) {
-        min = 0.0;
-    }
-    else{
-        try{
-            min = Math.min.apply(Math,vals);
-        }
-        catch(e){}
-    }
-    return min;
-}
-
-function find_closest_smaller(num, divisor){
-    //Given num, this routine finds the closets smaller integer divisible by divisor
-    var fl = Math.floor(num);
-    var closest = null;
-    while (closest == null ){
-        if (fl % divisor == 0){
-            closest =  fl;
-        }
-        else{
-            fl = fl - 1;
-        }
-    }
-    return closest;
-}
-
-function find_closest_larger(num, divisor){
-    //Given num, this routine finds the closets larger integer divisible by divisor
-    var cl = Math.ceil(num);
-    var closest = null;
-    while (closest == null ){
-        if (cl % divisor == 0){
-            closest =  cl;
-        }
-        else{
-            cl = cl + 1;
-        }
-    }
-    return closest;
 }
 
 function set_plotlines(data,step,axis,plotline_opts){
@@ -257,6 +174,25 @@ function set_yr_plotlines(data, plotline_opts){
     };
 }
 
+function set_time_series_axis_properties(data,plotline_no,axis){
+    results ={
+        'tickStep':1,
+        'tickPositions':[],
+        'plotLines':[]
+    }
+    if (data.length == 0){
+        var step = null;
+    }
+    else {
+        var step = Math.round(data.length/plotline_no);
+    }
+    results.plotlines = set_plotlines(data,step,axis);
+    results.tickPositions = align_ticks(results.plotlines);
+    if (results.plotlines.length > 10){
+        results.tickStep = Math.round(results.plotlines.length/5.0);
+    }
+    return results;
+}
 
 function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis_min, element,statistic, dep_from_ave,plotline_no){
     var props = {
@@ -472,38 +408,3 @@ function set_plotLines(data_max, data_min, tickInterval, options_dict){
     }
 }
 
-function compute_running_mean(data, running_mean_points){
-    var running_mean_data = [];
-    if (running_mean_points%2 == 0){
-        var num_nulls =running_mean_points/2 - 1;
-    }
-    else{
-        var num_nulls =(running_mean_points - 1)/2;
-    }
-    for (var idx=0;idx<data.length;idx++) {
-        var skip = 'F';
-        if (idx >= num_nulls &&  idx <= data.length - 1 - num_nulls) {
-            var cnt = 0;
-            for(var i=idx - num_nulls,sum=0;i<=idx + num_nulls;i++){
-                if (data[i][1] != null){
-                    sum+=data[i][1];
-                    cnt+=1;
-                }
-                else{
-                    skip = 'T';
-                    break;
-                }
-            }
-            if (cnt > 0 && skip =='F'){
-                running_mean_data.push([data[idx][0],precise_round(sum/cnt,2)]);
-            }
-            else{
-                running_mean_data.push([data[idx][0],null]);
-            }
-        }
-        else{
-            running_mean_data.push([data[idx][0],null]);
-        }
-    }
-    return running_mean_data
-}

@@ -1,8 +1,8 @@
 $(function () {
     var HOST = document.getElementById('HOST').value;
     var HOST_URL = 'http://' + HOST + '/';
-    var style_axes = set_AxesStyle();
-    var style_text = set_TitleStyle();
+    var style_axes = set_style('#000000','12px','bold',null);
+    var style_text = set_style('#000000','14px',null,null);
     var defaultChart = {
         chartContent: null,
         highchart: null,

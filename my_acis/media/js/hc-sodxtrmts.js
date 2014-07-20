@@ -4,9 +4,9 @@ $(function () {
     var json_file = document.getElementById("json_file").value;
     var TMP_URL = document.getElementById("TMP_URL").value;
     var json_file_path = TMP_URL + json_file;
-    var axesStyle = set_AxesStyle();
-    var titleStyle = set_TitleStyle();
-    var subtitleStyle = set_SubtitleStyle();
+    var axesStyle = set_style('#000000','12px','bold',null);
+    var titleStyle = set_style('#000000','14px',null,null);
+    var subtitleStyle = set_style('#0000FF','12px','bold','center');
     $.getJSON(json_file_path, function(datadict) {
         //Find max/min of ranges
         var max_vals = [];
@@ -45,13 +45,14 @@ $(function () {
             margin:[50,50,50,50],
             title: {
                 style:titleStyle,
-                text:datadict.stn_name + ', ' + datadict.stn_state 
+                text:datadict.stn_name + ', ' + datadict.stn_state + '<br />' + 'Network: ' + datadict.stn_network + ', ID: ' + datadict.stn_id 
             },
             subtitle: {
                 //text: 'Network: ' + datadict.stn_network + ', ID: ' + datadict.stn_id,
                 text: 'Mean and Range of '  + monthly_statistic + ' for ' + datadict.element_name,
                 style:subtitleStyle
             },
+            /*
             labels:{
                 items:[{
                     html:'Network: ' + datadict.stn_network + ', ID: ' + datadict.stn_id,
@@ -68,6 +69,7 @@ $(function () {
                 }],
                 style: {color: '#000000'}
             },
+            */
             legend:{
                 enabled:false
             },

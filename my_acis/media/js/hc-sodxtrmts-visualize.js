@@ -73,9 +73,9 @@ $(function () {
 
             //set postion of network info label
             var top_dist = set_label_position(image_height);
-            var axesStyle = set_AxesStyle();
-            var titleStyle = set_TitleStyle();
-            var subtitleStyle = set_SubtitleStyle();
+            var axesStyle = set_style('#000000','12px','bold',null);
+            var titleStyle = set_style('#000000','14px',null,null); 
+            var subtitleStyle = set_style('#0000FF','12px','bold','center');
             //Define Summary Text
             if (summary == 'max'){
                 var SummaryText = 'Maximum of ';
