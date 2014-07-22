@@ -10,112 +10,51 @@ $(function () {
         $.getJSON(TMP_URL + json_file, function(datadict) {
             var initial = datadict.initial;
             var initial_graph = datadict.initial_graph;
-            //Graph Options
-            var summary = initial_graph.graph_summary;
-            var show_running_mean = initial_graph.graph_show_running_mean;
+            var max_missing_days = parseInt(datadict.initial.max_missing_days);
             var running_mean_years = initial_graph.graph_running_mean_years;
             var plot_incomplete_years = initial_graph.graph_plot_incomplete_years;
             //Plot Options
             var graph_title = initial_graph.graph_title;
             var major_grid = initial_graph.major_grid;
-            var minor_grid = initial_graph.minor_grid
-            var connector_line = initial_graph.connector_line;
-            var connector_line_width = parseInt(initial_graph.connector_line_width);
-            var markers = initial_graph.markers;
+            var minor_grid = initial_graph.minor_grid;
             var marker_type = initial_graph.marker_type;
             var vertical_axis_min = initial_graph.vertical_axis_min;
             var vertical_axis_max = initial_graph.vertical_axis_max;
             var image_height = initial_graph.image_height;
-            var month_list = [];
-            //Deals with case of analysis start month  not January
-            var data_idx_list =[];
-            if (parseInt(initial_graph.graph_start_month)>parseInt(initial_graph.graph_end_month)){
-                for (var m = parseInt(initial_graph.graph_start_month);m<=12;m++){
-                    month_list.push(m);
-                    if (initial.start_month != "01"){
-                        var idx = 12 - parseInt(initial.start_month) + 1 + m;
-                        if (idx > 12){idx-=12;}
-                        data_idx_list.push(idx);
-                    }
-                    else{
-                        data_idx_list.push(m);
-                    }
-                }
-                for (var m = 1;m <= parseInt(initial_graph.graph_end_month);m++){
-                    month_list.push(m);
-                    if (initial.start_month != "01"){
-                        var idx = 12 - parseInt(initial.start_month) + 1 + m;
-                        if (idx > 12){idx-=12;}
-                        data_idx_list.push(idx);
-                    }
-                    else{
-                        data_idx_list.push(m);
-                    }
-                }
+            var connector_line_width = parseInt(initial_graph.connector_line_width);
+            if (initial_graph.connector_line == 'F'){
+                var connector_line_width = 0;
             }
-            else {
-                for (var m = parseInt(initial_graph.graph_start_month);m<=parseInt(initial_graph.graph_end_month);m++){
-                    month_list.push(m);
-                    if (initial.start_month != "01"){
-                        var idx = 12 - parseInt(initial.start_month)+ 1 + m;
-                        if (idx > 12){idx-=12;}
-                        data_idx_list.push(idx);
-                    }
-                    else{
-                        data_idx_list.push(m);
-                    }
-                }
-                
-            }
-            if (connector_line == 'F'){
-                connector_line_width = 0;
-            }
-
-            //set postion of network info label
+            SummaryText =  set_summary_text(initial_graph.graph_summary) + datadict.monthly_statistic;
+            //Set axes and text styles
             var top_dist = set_label_position(image_height);
             var axesStyle = set_style('#000000','12px','bold',null);
-            var titleStyle = set_style('#000000','14px',null,null); 
-            var subtitleStyle = set_style('#0000FF','12px','bold','center');
-            //Define Summary Text
-            if (summary == 'max'){
-                var SummaryText = 'Maximum of ';
-            }
-            if (summary == 'min'){
-                var SummaryText = 'Minimum of ';
-            }
-            if (summary == 'sum'){
-                var SummaryText = 'Sum of ';
-            }
-            if (summary == 'mean'){
-                var SummaryText = 'Average of ';
-            }
-            if (summary == 'individual'){
-                var SummaryText = ' ';
-            }
-            SummaryText+=datadict.monthly_statistic;
+            var titleStyle = set_style('#000000','14px',null,null);
+            var subtitleStyle = set_style('#0000FF','12px','bold',null);
+            //Find indices list for given analysis start_month, 
+            //graph_start_month and graph_end_month
+            var d_idx_ml = set_date_idx_and_mon_list(initial,initial_graph);
+            var month_list = d_idx_ml.month_list;
+            var data_idx_list = d_idx_ml.data_idx_list;
 
-            var max_missing_days = parseInt(datadict.initial.max_missing_days);
-            //Depending on summary, define series to be plotted
+            //Find start/end_year index
+            var yr_indices = set_start_end_yr_idx(datadict,initial,initial_graph);
+            
+            //Depending on graph summary, define series to be plotted
             //Find start end end index
-            var yr_start_idx = 0;
-            var yr_end_idx = datadict.data.length - 6;
-            if (initial_graph.graph_start_year.toLowerCase() !='por'){
-                yr_start_idx = parseInt(initial_graph.graph_start_year) - parseInt(datadict.start_date);
-            }
-            if (initial_graph.graph_end_year.toLowerCase() !='por'){
-                yr_end_idx = yr_end_idx - (datadict.end_date - parseInt(initial_graph.graph_end_year));
-                //if (initial.start_month != "01"){yr_end_idx+=1;}
-            }
-
             var series_data = [];
-            var Start = Date.UTC(parseInt(datadict.data[yr_start_idx][0]),0,01);
+            var Start = Date.UTC(parseInt(datadict.data[yr_indices.yr_start_idx][0]),0,01);
             var Interval = 365 * 24 * 3600000; // 1 year
             //Case 1 Plot: summary over Months
-            if (summary != 'individual'){
-                var series = {'pointStart':Start,'pointInterval':Interval, marker:{symbol:marker_type}, lineWidth:connector_line_width};
-                if (markers == 'F'){
-                    series['marker'] = {enabled:false}
-                }
+
+            if (initial_graph.graph_summary != 'individual'){
+                var series = {
+                    'pointStart':Start,
+                    'pointInterval':Interval, 
+                    'marker':{symbol:marker_type},
+                    'lineWidth':connector_line_width
+                };
+                if (initial_graph.markers == 'F'){series['marker'] = {enabled:false}}
                 //Define series name
                 series['name'] = SummaryText;
                 series['color'] = '#00008B';
@@ -123,20 +62,10 @@ $(function () {
                 var data = [];
                 var acis_data = [];
                 var values = [];
-                /*
-                //Find end year index --> omit table (mean, skew...) summaries at end of array 
-                if (month_list[0]> month_list[month_list.length -1]){
-                    //first month > last
-                    var end_idx = 7;
-                }
-                else {
-                    var end_idx = 6;
-                }
-                */
                 //Define plot data
                 //If start month of data table not Jan, 
                 //fix the index to grab correct data
-                for (var yr_idx=yr_start_idx;yr_idx<yr_end_idx;yr_idx++) {
+                for (var yr_idx=yr_indices.yr_start_idx;yr_idx<yr_indices.yr_end_idx;yr_idx++) {
                     var vals = [];
                     var skip_year = 'F';                    
                     if (month_list[0]> month_list[month_list.length -1] && initial.start_month != "01"){
@@ -168,23 +97,23 @@ $(function () {
                         continue;
                     }
                     if (vals.length > 0) {
-                        if (summary == 'max'){
+                        if (initial_graph.graph_summary == 'max'){
                             data.push([date, Math.max.apply(Math,vals)]);
                             acis_data.push([acis_date, Math.max.apply(Math,vals)]);
                             values.push(Math.max.apply(Math,vals));
                         }
-                        if (summary == 'min'){
+                        if (initial_graph.graph_summary == 'min'){
                             data.push([date, precise_round(Math.min.apply(Math,vals),2)]);
                             acis_data.push([acis_date, precise_round(Math.min.apply(Math,vals),2)]);
                             values.push(precise_round(Math.min.apply(Math,vals),2));
                         }
-                        if (summary == 'sum'){
+                        if (initial_graph.graph_summary == 'sum'){
                             for(var i=0,sum=0;i<vals.length;sum+=vals[i++]);
                             data.push([date, precise_round(sum,2)]);
                             acis_data.push([acis_date, precise_round(sum,2)]);
                             values.push(precise_round(sum,2));
                         }
-                        if (summary == 'mean'){
+                        if (initial_graph.graph_summary == 'mean'){
                             for(var i=0,sum=0;i<vals.length;sum+=vals[i++]);
                             data.push([date, precise_round(sum/vals.length,2)]);
                             acis_data.push([acis_date, precise_round(sum/vals.length,2)]);
@@ -219,7 +148,7 @@ $(function () {
                     }
                 }
                 //Running Mean
-                if (show_running_mean == 'T'){
+                if (initial_graph.graph_show_running_mean == 'T'){
                     var running_mean_data = [];
                     if (running_mean_years%2 == 0){
                         var num_nulls =running_mean_years/2 - 1;
@@ -232,13 +161,12 @@ $(function () {
                     for (var yr_idx=0;yr_idx<values.length;yr_idx++) {
                         skip_year = 'F';
                         if (month_list[0]> month_list[month_list.length -1]){
-                            var date = Date.UTC(parseInt(datadict.data[yr_idx + yr_start_idx][0]) + 1, mon_idx, 1)
+                            var date = Date.UTC(parseInt(datadict.data[yr_idx + yr_indices.yr_start_idx][0]) + 1, mon_idx, 1)
                         }
                         else {
-                            var date = Date.UTC(parseInt(datadict.data[yr_idx + yr_start_idx][0]), mon_idx, 1)
+                            var date = Date.UTC(parseInt(datadict.data[yr_idx + yr_indices.yr_start_idx][0]), mon_idx, 1)
                         }
                         if (yr_idx >= num_nulls &&  yr_idx <= values.length - 1 - num_nulls) {
-                            //for(var i=yr_idx - num_nulls,sum=0;i<=yr_idx + num_nulls;sum+=values[i++]);
                             var cnt = 0;
                             for(var i=yr_idx - num_nulls,sum=0;i<=yr_idx + num_nulls;i++){
                                 if (values[i] != null){
@@ -271,56 +199,18 @@ $(function () {
             }
             else { //Case2: Plot indiviual months
                 var acis_data = [];
-                var yr_change_idx = 12 - parseInt(initial.start_month) + 2;
-                for (var mon_idx=0;mon_idx<month_list.length;mon_idx++) {
-                    var series = {'name':month_names[month_list[mon_idx]-1],'pointStart':Start,'pointInterval':Interval,marker:{symbol:marker_type}};
-                    if (markers == 'F'){
-                        series['marker'] = {enabled:false}
-                    }
-                    var data =  [];
-                    var values = [];
-                    for (var yr_idx=yr_start_idx;yr_idx<yr_end_idx;yr_idx++) {
-                        var date;
-                        if (data_idx_list[mon_idx] == yr_change_idx && initial.start_month !="01"){
-                            date = Date.UTC(parseInt(datadict.data[yr_idx][0]) + 1 , 0, 1)
-                        }
-                        else {
-                            date = Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1)
-                        }
-                        var val = datadict.data[yr_idx][2*data_idx_list[mon_idx] - 1]
-                        if (val != '-----') {
-                            values.push(precise_round(parseFloat(val),2));
-                            data.push([date, precise_round(parseFloat(val),2)]);
-                            if (mon_idx ==0){
-                                acis_data.push([parseInt(datadict.data[yr_idx][0]), precise_round(parseFloat(val),2)]);
-                            }
-                        }
-                        else {
-                            values.push(null);
-                            data.push([date,null]);
-                            if (mon_idx == 0){ 
-                                acis_data.push([parseInt(datadict.data[yr_idx][0]),null]);
-                            }
-                        }
-                    }
-                    series['data'] =  data;
-                    series_data.push(series);
-                    //Find max/min of data (needed to set plot properties)
-                    if (mon_idx == 0){
-                        var data_max = Math.max.apply(Math,values);
-                        var data_min = Math.min.apply(Math,values);
-                    }
-                    else{
-                        var max = Math.max.apply(Math,values);
-                        var min = Math.min.apply(Math,values);
-                        if (max > data_max){
-                            data_max = max;
-                        }
-                        if (min < data_min){
-                            data_min = min;
-                        }
-                    }
-                }
+                var series = {
+                    'name':'',
+                    'pointStart':Start,
+                    'pointInterval':Interval,
+                    'marker':{symbol:marker_type}
+                };
+                if (initial_graph.markers == 'F'){series['marker'] = {enabled:false}}
+                var sad = set_sodxtrmts_series_data_individual(datadict,initial,initial_graph,series);
+                var series_data = sad.series_data;
+                var acis_data =sad.acis_data;
+                var data_max = sad.data_max;
+                var data_min = sad.data_min;
                 // Override max/min if needed
                 if (vertical_axis_max != "Use default") {
                     try{
@@ -334,7 +224,7 @@ $(function () {
                     }
                     catch(e){}
                 }
-            }
+            } //end plot individual months
 
             //Define plot characteristics
             //Define x_plotlines

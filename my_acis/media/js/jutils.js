@@ -284,3 +284,157 @@ function hideIt(Id)
 {
 document.getElementById(Id).style.display='none';
 }
+
+/*Sodxtrmts Utils*/
+function set_date_idx_and_mon_list(initial, initial_graph){
+    /*
+    Utility to find list of indices of months in
+    graph_start_month - graph_end month
+    as well as a list of months
+    if the analysis starts at start_month
+    graph_start/graph_end/start_month are of form '01' - '12'
+    Used in hc-sodxtrmts-visualize.js
+    */
+    results = {
+        'month_list':[],
+        'data_idx_list':[]
+    }
+    if (parseInt(initial_graph.graph_start_month)>parseInt(initial_graph.graph_end_month)){
+        for (var m = parseInt(initial_graph.graph_start_month);m<=12;m++){
+            results.month_list.push(m);
+            if (initial.start_month != "01"){
+                var idx = 12 - parseInt(initial.start_month) + 1 + m;
+                if (idx > 12){idx-=12;}
+                results.data_idx_list.push(idx);
+            }
+            else{
+                results.data_idx_list.push(m);
+            }
+        }
+        for (var m = 1;m <= parseInt(initial_graph.graph_end_month);m++){
+            results.month_list.push(m);
+            if (initial.start_month != "01"){
+                var idx = 12 - parseInt(initial.start_month) + 1 + m;
+                if (idx > 12){idx-=12;}
+                results.data_idx_list.push(idx);
+            }
+            else{
+                results.data_idx_list.push(m);
+            }
+        }
+    }
+    else {
+        for (var m = parseInt(initial_graph.graph_start_month);m<=parseInt(initial_graph.graph_end_month);m++){
+            results.month_list.push(m);
+            if (start_month != "01"){
+                var idx = 12 - parseInt(initial.start_month)+ 1 + m;
+                if (idx > 12){idx-=12;}
+                    results.data_idx_list.push(idx);
+                }
+                else{
+                    results.data_idx_list.push(m);
+                }
+            }
+
+    }
+    return results
+}
+
+function set_summary_text(summary){
+    /*
+    Sodxtrmts utility to set graph summary text
+    */
+    if (summary == 'max'){var SummaryText = 'Maximum of ';}
+    if (summary == 'min'){var SummaryText = 'Minimum of ';}
+    if (summary == 'sum'){var SummaryText = 'Sum of ';}
+    if (summary == 'mean'){var SummaryText = 'Average of ';}
+    if (summary == 'individual'){var SummaryText = ' ';}
+    return SummaryText;
+}
+
+function set_start_end_yr_idx(datadict,initial,initial_graph){
+    /*
+    sets start/emnd year inidices for visualization of sodxtrmts data analysis
+    */
+    var results = {
+        'yr_start_idx':null,
+        'yr_end_idx':null
+    };
+    results.yr_start_idx = 0;
+    results.yr_end_idx = datadict.data.length - 6;
+    if (initial_graph.graph_start_year.toLowerCase() !='por'){
+        results.yr_start_idx = parseInt(initial_graph.graph_start_year) - parseInt(datadict.start_date);
+    }
+    if (initial_graph.graph_end_year.toLowerCase() !='por'){
+        results.yr_end_idx = results.yr_end_idx - (datadict.end_date - parseInt(initial_graph.graph_end_year));
+    }
+    return results
+}
+
+function set_sodxtrmts_series_data_individual(datadict,initial,initial_graph,series){
+    /*
+    Sets series data to plot individual months
+    in sodxtrmts analysis
+    */ 
+    var results = {
+        'series_data':[],
+        'acis_data':[],
+        'data_max':null,
+        'data_min':null
+    }
+    var yr_indices = set_start_end_yr_idx(datadict, initial, initial_graph);
+    var md = set_date_idx_and_mon_list(initial,initial_graph);
+    var yr_change_idx = 12 - parseInt(initial.start_month) + 2;
+    var month_names =  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    for (var mon_idx=0;mon_idx<md.month_list.length;mon_idx++){
+        data = [];
+        values=[];
+        var s = {};
+        for (var key in series){
+            s[key] = series[key];
+        }
+        s['name'] = month_names[md.month_list[mon_idx]-1];
+        for (var yr_idx=yr_indices.yr_start_idx;yr_idx<yr_indices.yr_end_idx;yr_idx++) {
+            var date;
+            if (md.data_idx_list[mon_idx] == yr_change_idx && initial.start_month !="01"){
+                date = Date.UTC(parseInt(datadict.data[yr_idx][0]) + 1 , 0, 1)
+            }
+            else {
+                date = Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1)
+            }
+            var val = datadict.data[yr_idx][2*md.data_idx_list[mon_idx] - 1]
+            if (val != '-----') {
+                values.push(precise_round(parseFloat(val),2));
+                data.push([date, precise_round(parseFloat(val),2)]);
+                if (mon_idx == 0){
+                    results.acis_data.push([parseInt(datadict.data[yr_idx][0]), precise_round(parseFloat(val),2)]);
+                }
+            }
+            else {
+                values.push(null);
+                data.push([date,null]);
+                if (mon_idx == 0){
+                    results.acis_data.push([parseInt(datadict.data[yr_idx][0]),null]);
+                }
+            }
+        }
+        s['data'] =  data;
+        results.series_data.push(s);
+        //Find max/min of data (needed to set plot properties)
+        if (mon_idx == 0){
+            results.data_max = Math.max.apply(Math,values);
+            results.data_min = Math.min.apply(Math,values);
+        }
+        else{
+            var max = Math.max.apply(Math,values);
+            var min = Math.min.apply(Math,values);
+            if (max > results.data_max){
+                results.data_max = max;
+            }
+            if (min < results.data_min){
+                results.data_min = min;
+            }
+        }
+    }
+    return results
+}
