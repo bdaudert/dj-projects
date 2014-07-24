@@ -390,7 +390,7 @@ def data_station(request):
             ldr = \
                 'You requested a large amount of data. \
                 We estimated %s MB. \
-                Please provide your user name and email and resubmit the form.\
+                Please provide your name and email and resubmit the form.\
                 we will process your request off-line and \
                 notify you when your request has been processed. \
                 Thank you for your patience!' %str(num_mega_bytes)
