@@ -330,18 +330,6 @@ def data_station(request):
         else:
             s_date = WRCCUtils.date_to_datetime(sdate)
             e_date = WRCCUtils.date_to_datetime(edate)
-        '''
-        if sdate.lower() == 'por':
-            #s_date = WRCCUtils.find_valid_daterange(form_cleaned['station_id'], start_date='por', end_date='por', max_or_min='max')[0]
-            #s_date = WRCCUtils.date_to_datetime(s_date)
-            s_date = WRCCUtils.date_to_datetime('1950','01','01')
-        else:
-            s_date = WRCCUtils.date_to_datetime(sdate)
-        if edate.lower() == 'por':
-            e_date = WRCCUtils.date_to_datetime(yesterday)
-        else:
-            e_date = WRCCUtils.date_to_datetime(edate)
-        '''
         #days = (e_date - s_date).days
         try:
             days = (e_date - s_date).days
