@@ -20,7 +20,7 @@ $(function () {
         var x_plotLines = set_plotLines(11, 0, 1);
         //Align x ticks with plotlines
         var x_tickPositions = align_ticks(x_plotLines); 
-        var y_axis_props = set_axis_properties(max,'Use default', min, 'Use default',datadict.element,datadict.initial.monthly_statistic,'F',10.0);
+        var y_axis_props = set_y_axis_properties(max,'Use default', min, 'Use default',datadict.element,datadict.initial.monthly_statistic,'F',10.0);
         //Align y ticks with plotlines
         var y_tickPositions = align_ticks(y_axis_props.plotLines);
         var averages = datadict.averages;

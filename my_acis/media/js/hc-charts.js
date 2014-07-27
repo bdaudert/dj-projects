@@ -1,18 +1,6 @@
 function BarChart() {
     this.style_axes = set_style('#000000','14px','bold',null);
     this.style_text = set_style('#000000','18px',null,null);
-    /*
-    this.Plotlines = []
-    for (var val=0;val<this.xAxisCats.length;val++){
-        var Plotline = {
-            color: '#787878',
-            dashStyle:'dash',
-            width: 1,
-            value: val,
-        };
-        this.Plotlines.push(Plotline);
-    }
-    */
     this.defaultChart = {
         chartContent: null,
         highchart: null,
@@ -34,20 +22,41 @@ function BarChart() {
                 },
                 labels: {
                     style: this.style_axes,
-                    step:2 
+                    step:1,
+                    align:'left',
                 },
-                plotLines: this.Plotlines,
-                tickInterval:1,
-                categories: this.xAxisCats
+                categories:null,
+                minPadding: 0,
+                maxPadding: 0,
+                startOnTick: true,
+                showFirstLabel:true,
+                endOnTick:true
             },
-            yAxis: {
+            yAxis:[{
                 title: {
                     style: this.style_text
                 },
                 labels: {
                     style: this.style_axes
-                }
+                },
+                startOnTick:false,
+                showFirstLabel:true
             },
+            {
+                opposite: true,
+                linkedTo: 0,
+                title :{
+                    text:'',
+                    style:this.style_text
+                },
+                labels: {
+                    style: this.style_axes
+                }, 
+                startOnTick:false,
+                showFirstLabel:true
+
+            }
+            ],
             tooltip: {
                 shared: true,
                 formatter: function() {
@@ -67,8 +76,8 @@ function BarChart() {
         }, //end defaults
         //Functions
         set_yAxis_props: function(data_max,data_min, element) {
-            //uses set_axis_properties from graph_utils.js
-            return set_axis_properties(data_max,'Use default', data_min, 'Use default',element,'mave','F',10.0);
+            //uses set_y_axis_properties from graph_utils.js
+            return set_y_axis_properties(data_max,'Use default', data_min, 'Use default',element,'mave','F',10.0);
         },
         set_plotColor: function(element){
             //uses set_plot_color from graph_utils.js
@@ -124,7 +133,9 @@ function TimeSeries(){
                     text: 'Click and drag in the plot area to zoom in!'
                 },
                 gridLineWidth: this.gridLineWidth,
-                gridLineColor: this.gridLineColor
+                gridLineColor: this.gridLineColor,
+                showFirstLabel:true,
+                endOnTick: true
             },
             yAxis: [{
                 title: {
@@ -135,12 +146,14 @@ function TimeSeries(){
                 },
                 startOnTick: false,
                 showFirstLabel: true,
+                endOnTick: true,
                 gridLineWidth: this.gridLineWidth,
                 gridLineColor: this.gridLineColor
             },
             {
                 opposite: true,
                 linkedTo: 0,
+                title:'',
                 labels: {
                     style: this.style_axes
                 },

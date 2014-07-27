@@ -63,7 +63,7 @@ function set_plot_data(data, dates_true, miss_val,chart_type) {
     if dates_true = true, we convert xcats to Date objects
     */
     results = {
-        'xCats':[],
+        'x_cats':[],
         'data':[],
         'data_max':-9999.0,
         'data_min':9999.0
@@ -73,9 +73,14 @@ function set_plot_data(data, dates_true, miss_val,chart_type) {
             var y_val = parseFloat(data[date_idx][1]);
         }
         catch (e) {
-            var y_val = parseFloat(miss_val);
+            try {
+                var y_val = parseFloat(miss_val);
+            }
+            catch(e) {
+                var y_val = null
+            }
         }
-
+        //Convert dates if needed
         if (dates_true){
             var date = data[date_idx][0].replace('-','').replace('-','');
             try {
@@ -93,7 +98,17 @@ function set_plot_data(data, dates_true, miss_val,chart_type) {
         else {
             var x_val = data[date_idx][0];
         }
-        results.xCats.push(data[date_idx][0]);
+        results.x_cats.push(data[date_idx][0]);
+        if (y_val == null){
+            if (chart_type == 'column') {
+                results.data.push(null);
+            }
+            else {
+                results.data.push([x_val,null]);
+            }
+            continue;
+        }
+        
         if (Math.abs(y_val - parseFloat(miss_val)) < 0.0001){
             if (chart_type == 'column') {
                 results.data.push(null);
@@ -177,3 +192,52 @@ function find_closest_larger(num, divisor){
     return closest;
 }
 
+function compute_data_summary(vals, summary){
+    /*
+    Computes summary over vals
+    vals must be non-empty array
+    */
+    if (!vals.length){
+        return null;
+    }
+
+    if (summary == 'max'){
+        return Math.max.apply(Math,vals);
+    }
+    else if (summary == 'min'){
+        return precise_round(Math.min.apply(Math,vals),2);
+    }
+    else if (summary == 'sum'){
+        for(var i=0,sum=0;i<vals.length;sum+=vals[i++]);
+        return precise_round(sum,2);
+    }
+    else if (summary == 'mean'){
+        for(var i=0,sum=0;i<vals.length;sum+=vals[i++]);
+        return precise_round(sum/vals.length,2);
+    }
+    else {
+        return null;
+    }
+}
+
+function set_data_summary_series(date, vals, summary, chart_type){
+    results =[]; 
+    if (vals.length > 0) {
+        var value = compute_data_summary(vals, summary);
+        if (chart_type == 'column'){
+            results = value;
+        }
+        else {
+            results = [date, value];
+        } 
+    }
+    else {
+        if (chart_type == 'column'){
+            results = null;
+        }
+        else {
+            results = [date, null];
+        } 
+    } 
+    return results
+}

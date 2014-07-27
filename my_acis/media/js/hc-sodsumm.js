@@ -189,7 +189,7 @@ $(function () {
             else if (table_dict[i].table_name == 'hdd' || table_dict[i].table_name == 'cdd' || table_dict[i].table_name == 'gdd' ){
                 element = 'maxt';
             } 
-            var y_axis_props = set_axis_properties(max,'Use default', min, 'Use default',element,'mave','F',10.0);
+            var y_axis_props = set_y_axis_properties(max,'Use default', min, 'Use default',element,'mave','F',10.0);
             var len = series.length
             Chart = {
                 chartContent: cntr,

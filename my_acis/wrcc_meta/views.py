@@ -158,6 +158,18 @@ def by_id(request):
     }
     return render_to_response('wrcc_meta/results.html', context, context_instance=RequestContext(request))
 
+def by_ucan_id(request):
+    q = request.GET.get('q', '')
+    if not q:
+        stations = []
+    else:
+        stations = models.Station.objects.filter(ucan_station_id__in = [q])
+    context = {
+        'stations': stations,
+        'title': "Station UCAN ID Search Results",
+    }
+    return render_to_response('wrcc_meta/results.html', context, context_instance=RequestContext(request))
+
 def by_location(request):
     lat = request.GET.get('lat', None)
     lon = request.GET.get('lon', None)

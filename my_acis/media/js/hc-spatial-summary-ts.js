@@ -39,7 +39,7 @@ $(function () {
                     var dmm = set_plot_data(datadict.graph_data[el_idx],true, 999.0,'line');
                 }
                 var data = dmm.data;
-                var xcats = dmm.xCats;
+                var x_cats = dmm.x_cats;
                 var data_max = dmm.data_max;
                 var data_min = dmm.data_min;
                 series['data'] = data;
@@ -75,9 +75,9 @@ $(function () {
                 else {
                     x_props = set_time_series_axis_properties(data, plotline_no,'x');
                 }
-                y_props = set_axis_properties(data_max,datadict.search_params.vertical_axis_max, data_min, datadict.search_params.vertical_axis_min, element_list[el_idx],'none','F',plotline_no)
+                y_axis_props = set_y_axis_properties(data_max,datadict.search_params.vertical_axis_max, data_min, datadict.search_params.vertical_axis_min, element_list[el_idx],'none','F',plotline_no)
                 x_tickPositions = align_ticks(x_props.plotLines);
-                y_tickPositions = align_ticks(y_props.plotLines);
+                y_tickPositions = align_ticks(y_axis_props.plotLines);
                 var title = datadict.search_params.spatial_summary_long + '  ' +  datadict.search_params.element_list_long[el_idx];
                 var subtitle = datadict.search_params.area_description;
                 var x_axis_title = 'Start Date: ' + datadict.search_params.start_date+  ' End Date: ' + datadict.search_params.end_date; 
@@ -97,22 +97,33 @@ $(function () {
                                 text:subtitle
                             },
                             xAxis: {
-                                categories:xcats,
+                                categories:x_cats,
                                 plotLines:x_props.plotLines,
                                 tickPositions:x_tickPositions,
                                 labels: {
-                                    rotation: -90
+                                    rotation: -45
                                 }
                             },
-                            yAxis: {
-                                min: data_min,
-                                max: data_max,
-                                gridLineWidth:0,
-                                plotLines:y_props.plotLines,
-                                title: {
-                                    text:y_axis_title 
+                            yAxis: [
+                                {
+                                    min: data_min,
+                                    max: data_max,
+                                    gridLineWidth:0,
+                                    plotLines:y_axis_props.plotLines,
+                                    title: {
+                                        text:y_axis_title 
+                                    }
+                                },
+                                {
+                                    min: data_min,
+                                    max: data_max,
+                                    gridLineWidth:0,
+                                    plotLines:y_axis_props.plotLines,
+                                    title: {
+                                        text:''
+                                    }
                                 }
-                            },
+                            ],
                             series:series_data
                         }
                     };                    
@@ -149,9 +160,9 @@ $(function () {
                                 title: {
                                     text:y_axis_title
                                 },
-                                max:y_props.axisMax,
-                                min:y_props.axisMin,
-                                plotLines:y_props.plotLines,
+                                max:y_axis_props.axisMax,
+                                min:y_axis_props.axisMin,
+                                plotLines:y_axis_props.plotLines,
                                 tickPositions:y_tickPositions
                                 //minorGridLineColor:minorGridLineColor
                             },
@@ -159,9 +170,9 @@ $(function () {
                                 opposite: true,
                                 linkedTo: 0,
                                 title:'',
-                                max:y_props.axisMax,
-                                min:y_props.axisMin,
-                                plotLines:y_props.plotLines,
+                                max:y_axis_props.axisMax,
+                                min:y_axis_props.axisMin,
+                                plotLines:y_axis_props.plotLines,
                                 tickPositions:y_tickPositions
                                 //minorGridLineColor:minorGridLineColor
                             }],

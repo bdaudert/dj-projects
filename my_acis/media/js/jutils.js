@@ -371,12 +371,15 @@ function set_start_end_yr_idx(datadict,initial,initial_graph){
     return results
 }
 
-function set_sodxtrmts_series_data_individual(datadict,initial,initial_graph,series){
+function set_sodxtrmts_series_data_individual(datadict,initial,initial_graph,series,chart_type){
     /*
-    Sets series data to plot individual months
-    in sodxtrmts analysis
+    Sets sodxtrmts time series (chart_type = line) or barchart data (chart_type = column) 
+    for plotting of individual months in sodxtrmts analysis
+    acis_data are year_string, val pairs
+    acis_data are needed to set x_plotlines correctly 
     */ 
     var results = {
+        'x_cats':[],
         'series_data':[],
         'acis_data':[],
         'data_max':null,
@@ -402,6 +405,7 @@ function set_sodxtrmts_series_data_individual(datadict,initial,initial_graph,ser
             else {
                 date = Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1)
             }
+            results.x_cats.push(datadict.data[yr_idx][0]);
             var val = datadict.data[yr_idx][2*md.data_idx_list[mon_idx] - 1]
             if (val != '-----') {
                 values.push(precise_round(parseFloat(val),2));
@@ -418,7 +422,12 @@ function set_sodxtrmts_series_data_individual(datadict,initial,initial_graph,ser
                 }
             }
         }
-        s['data'] =  data;
+        if (chart_type == 'column'){
+            s['data'] = values;
+        }
+        else {
+            s['data'] =  data;
+        }
         results.series_data.push(s);
         //Find max/min of data (needed to set plot properties)
         if (mon_idx == 0){
@@ -436,5 +445,139 @@ function set_sodxtrmts_series_data_individual(datadict,initial,initial_graph,ser
             }
         }
     }
+    //Override data_max/min if needed
+    if (initial_graph.vertical_axis_max != "Use default") {
+        try{
+            results.data_max = parseFloat(initial_graph.vertical_axis_max);
+        }
+        catch(e){}
+        }
+    if (initial_graph.vertical_axis_min != "Use default") {                                                                     try{
+            results.data_min = parseFloat(initial_graph.vertical_axis_min);
+        }
+        catch(e){}
+    }
     return results
+}
+
+function set_sodxtrmts_series_data_summary(datadict,initial,initial_graph,series, chart_type){
+    /*
+    Sets sodxtrmts time series (chart_type = line) or barchart data (chart_type = column)
+    for summary over months 
+    acis_data are year_string, val pairs
+    acis_data are needed to set x_plotlines correctly 
+    */
+
+    var results = {
+        'x_cats':[],
+        'series_data':[],
+        'acis_data':[],
+        'data_max':null,
+        'data_min':null
+    }
+    //Complete series style
+    var s = {};
+    for (var key in series){
+        s[key] = series[key];
+    }
+    var SummaryText = set_summary_text(initial_graph.graph_summary);
+    s['name'] = SummaryText + datadict.monthly_statistic;
+    s['color'] = '#00008B'; 
+    if (initial_graph.markers == 'F'){
+        s['marker'] = {enabled:false};
+    }
+    //Set up data arrays and find indices
+    var data = [];
+    var values = [];
+    var yr_indices = set_start_end_yr_idx(datadict, initial, initial_graph);
+    var md = set_date_idx_and_mon_list(initial,initial_graph);
+    var yr_change_idx = 12 - parseInt(initial.start_month) + 2;
+    var month_names =  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var mischr = ["fake","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+    //Year Loop
+    for (var yr_idx=yr_indices.yr_start_idx;yr_idx<yr_indices.yr_end_idx;yr_idx++) {
+        var vals = [];
+        var skip_year = 'F';
+        //Depending on start month, pick the correct data
+        if (md.month_list[0]> md.month_list[md.month_list.length -1] && initial.start_month != "01"){
+            var date = Date.UTC(parseInt(datadict.data[yr_idx][0]) + 1, 0, 1);
+            var acis_date = parseInt(datadict.data[yr_idx][0]);
+        }
+        else {
+            var date = Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1);
+            var acis_date = parseInt(datadict.data[yr_idx][0]);
+        }
+        results.x_cats.push(datadict.data[yr_idx][0]);
+
+        for (var mon_idx=0;mon_idx<md.data_idx_list.length;mon_idx++) {
+            var val = datadict.data[yr_idx][2*md.data_idx_list[mon_idx] - 1];
+            var flag = datadict.data[yr_idx][2*md.data_idx_list[mon_idx]].toString();
+            //Check if we need to skip this year
+            if ((mischr.indexOf(flag) > datadict.initial.max_missing_days || val == '-----') && 
+            initial_graph.graph_plot_incomplete_years == 'F') {
+                skip_year = 'T';
+                break;
+            }
+            if (val != '-----') {
+                vals.push(parseFloat(val));
+            }
+        } //end month loop  
+
+        //Summarize data
+        if (skip_year == 'T'){
+            if (chart_type == 'column'){
+                data.push(null);
+            }
+            else {
+                data.push([date, null]);
+            }
+            results.acis_data.push([acis_date,null]);
+            continue;
+        }
+        var d = set_data_summary_series(date, vals,initial_graph.graph_summary,chart_type);
+        var acis_d = set_data_summary_series(acis_date,vals,initial_graph.graph_summary,'line');
+        var val = compute_data_summary(vals,initial_graph.graph_summary);
+        data.push(d); results.acis_data.push(acis_d);
+        if (!!val){values.push(val);}
+    } //End yr loop
+    //Push series data
+    s['data'] = data;
+    results.series_data.push(s); 
+
+    //Find data min/max
+    if (values.length > 0){
+        results.data_max = find_max(values,datadict.element,datadict.initial.monthly_statistic);
+        results.data_min = find_min(values,datadict.element,datadict.initial.monthly_statistic,datadict.initial.departures_from_averages);
+    }
+    //Override max/min if needed
+    if (initial_graph.vertical_axis_max != "Use default") { 
+        try{
+            results.data_max = parseFloat(initial_graph.vertical_axis_max);
+        }
+        catch(e){}
+    }
+    if (initial_graph.vertical_axis_min != "Use default") {
+        try{
+            results.data_min = parseFloat(initial_graph.vertical_axis_min);
+        }
+        catch(e){}
+    }
+
+    //Compute Running Mean if desired
+    if (initial_graph.graph_show_running_mean == 'F'){
+        return results;
+    }
+    var rm_yrs = parseInt(initial_graph.graph_running_mean_years); 
+    var running_mean_data = compute_running_mean(data,rm_yrs, chart_type);
+    s = {};
+    for (var key in series){
+        s[key] = series[key];
+    }
+    s['name']= initial_graph.graph_running_mean_years.toString() + '-Year Running Mean';
+    s['type'] = 'spline';
+    s['color'] = 'red';
+    s['marker'] = {enabled:false};
+    s['data'] = running_mean_data;
+    results.series_data.push(s);
+    return results;
 }

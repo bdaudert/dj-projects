@@ -61,9 +61,9 @@ function set_yrdata_grids(num_yrs){
     //Case 0: no years
     if (num_yrs == 0){
         return {
-            'minor_step':null, 
-            'major_step':null, 
-            'divisor':null
+            'minor_step':1, 
+            'major_step':1, 
+            'divisor':1
         };
     }
     //Case 1: less than 5 years
@@ -127,6 +127,13 @@ function set_plotlines(data,step,axis,plotline_opts){
         pl.value = data[dat_idx][idx];
         plotLines.push(pl);
     }
+    //Push last plotline at end of data
+    var pl ={};
+    for (var key in plotLine){
+        pl[key] = plotLine[key];
+    }
+    pl.value = data[data.length - 1][idx]
+    plotLines.push(pl);
     return plotLines;
 }
 
@@ -137,8 +144,18 @@ function set_yr_plotlines(data, plotline_opts){
     where new_data = [[Date.UCT1, dat1],[Date.UTC2,dat2]]
     */
     //Find new axis_min/axis_max
-    var yr_min = parseInt(data[0][0]);
-    var yr_max = parseInt(data[data.length - 1][0]);
+    var results = {
+        'new_data':data,
+        'plotlines_minor':[],
+        'plotlines_major':[]
+    }
+    if (data.length){
+        var yr_min = parseInt(data[0][0]);
+        var yr_max = parseInt(data[data.length - 1][0]);
+    }
+    else{
+        return results; 
+    }
     var new_data = data;
     //Set step sizes and divisor(depends on data and data_length)
     var mmd = set_yrdata_grids(data.length);
@@ -146,15 +163,6 @@ function set_yr_plotlines(data, plotline_opts){
     //than axis_min/axis_max  that are divisble by divisor
     var new_yr_min = find_closest_smaller(yr_min,mmd.divisor);
     var new_yr_max = find_closest_larger(yr_max,mmd.divisor);
-    //make sure axis starts/end before/after first/last data point
-    /*
-    if (yr_min % mmd.divisor == 0){
-        new_yr_min = find_closest_smaller(yr_min - 1,mmd.divisor);
-    }
-    if (yr_max % mmd.divisor == 0){
-        new_yr_max = find_closest_larger(yr_max + 1,mmd.divisor);
-    }
-    */
     //Insert new data points at start/end
     for (idx=1;idx<=yr_min - new_yr_min;idx++){
         new_data.splice(0,0,[yr_min - idx, null]);
@@ -162,14 +170,11 @@ function set_yr_plotlines(data, plotline_opts){
     for (idx=1;idx<=new_yr_max - yr_max ;idx++){
         new_data.splice(new_data.length,0,[yr_max + idx, null]);
     }
+    results.new_data = new_data;
     //Define plotlines
-    var plotlines_minor = set_plotlines(new_data,mmd.minor_step,'x',plotline_opts);
-    var plotlines_major = set_plotlines(new_data,mmd.major_step,'x',plotline_opts);
-    return {
-        'new_data':new_data,
-        'plotlines_minor':plotlines_minor,
-        'plotlines_major':plotlines_major
-    };
+    results.plotlines_minor = set_plotlines(new_data,mmd.minor_step,'x',plotline_opts);
+    results.plotlines_major = set_plotlines(new_data,mmd.major_step,'x',plotline_opts);
+    return results
 }
 
 function set_time_series_axis_properties(data,plotline_no,axis){
@@ -223,7 +228,7 @@ function set_barchart_axis_properties(data,plotline_no,axis){
 }
 
 //axis property function for more complex graphs
-function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis_min, element,statistic, dep_from_ave,plotline_no){
+function set_y_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis_min, element,statistic, dep_from_ave,plotline_no){
     var props = {
         'axisMin':data_min,
         'axisMax':data_max,
@@ -240,7 +245,8 @@ function set_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis
         return props; 
     }
     //Override data_min if necessary
-    if ((element == 'snow' || element == 'snwd' || element == 'pcpn') && (statistic !='ndays' && statistic !='sd' && dep_from_ave=='F')) {
+    if ((element == 'snow' || element == 'snwd' || element == 'pcpn') && 
+    (statistic !='ndays' && statistic !='sd' && dep_from_ave=='F')) {
         props.axisMin = 0.0;
     }
 
@@ -396,6 +402,21 @@ function set_tickInterval(data_max, data_min, divider){
     return tickInterval;
 }
 
+function set_plotline_no(pn_init,major_grid, minor_grid){
+    var pn = pn_init;
+    if (pn > 20){
+        if (major_grid =='F' && minor_grid == 'F'){
+            var pn  = 1.0;
+        }
+        else if (minor_grid =='T'){
+            var pn = 10.0;
+        }
+        else if (major_grid =='T' && minor_grid == 'F'){
+            var pn = 5.0;
+        }
+    }
+    return pn;
+}
 
 function set_plotLines(data_max, data_min, tickInterval, options_dict){
     var plotLines = []
@@ -435,5 +456,47 @@ function set_plotLines(data_max, data_min, tickInterval, options_dict){
     else{
         return plotLines;
     }
+}
+
+//Sodxtrmts Utils
+function adjust_x_plotlines(acis_data,dmm,major_grid, minor_grid){
+    var results = {
+        'x_plotLines':[],
+        'x_tickPositions':[],
+        'x_min':null,
+        'x_max':null,
+        'yr_step':1
+    };
+    if (minor_grid =='T'){
+        pls = dmm.plotlines_minor;
+        if (pls.length > 20){results.yr_step = 5;}
+        else{results.yr_step = 2;}
+    }
+    else if (major_grid =='T' && minor_grid == 'F'){
+        pls = dmm.plotlines_major;
+    }
+    else {
+        pls = dmm.plotlines_major;
+    }
+    //convert to Date
+    for (var pl_idx=0;pl_idx<pls.length;pl_idx++) {
+        var pl ={};
+        for (var key in pls[pl_idx]){
+            pl[key] = pls[pl_idx][key];
+        }
+        pl.value = Date.UTC(pls[pl_idx].value,0,1);
+        if (major_grid =='F' && minor_grid == 'F'){
+            if (pl_idx ==0 || pl_idx == pls.length -1){
+                    results.x_plotLines.push(pl);
+            }
+        }
+        else {
+            results.x_plotLines.push(pl);
+        }
+        results.x_tickPositions.push(pl.value);
+    }
+    results.x_min = Date.UTC(dmm.new_data[0][0],0,1);
+    results.x_max = Date.UTC(dmm.new_data[dmm.new_data.length -1][0],0,1);
+    return results;
 }
 
