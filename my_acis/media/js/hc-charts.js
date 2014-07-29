@@ -28,9 +28,10 @@ function BarChart() {
                 categories:null,
                 minPadding: 0,
                 maxPadding: 0,
-                startOnTick: true,
+                lineWidth:0,
+                tickWidth:0,
                 showFirstLabel:true,
-                endOnTick:true
+                endOnTick: true
             },
             yAxis:[{
                 title: {

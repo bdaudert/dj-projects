@@ -11,8 +11,8 @@ function initialize_grid_point_map(app) {
     var lat = document.getElementById("initial_lat").value;
     var lon = document.getElementById("initial_lon").value;
     var zoom_level = '5';
-    var DATA_GRIDDED_URL = document.getElementById("DATA_GRIDDED_URL").value;
-    var TOOLS_GRIDDED_URL = document.getElementById("TOOLS_GRIDDED_URL").value;
+    var GRID_DATA_URL = document.getElementById("GRID_DATA_URL").value;
+    var GRID_TOOLS_URL = document.getElementById("GRID_TOOLS_URL").value;
     var myLatlng = new google.maps.LatLng(lat,lon);
     var mapOptions = {
     //center: ll,
@@ -45,12 +45,12 @@ function initialize_grid_point_map(app) {
             catch(e){
                 document.getElementById("location").value = lon + ',' + lat;
             }
-            var href = TOOLS_GRIDDED_URL +'grid_point_time_series/?lat=' +
+            var href = GRID_TOOLS_URL +'grid_point_time_series/?lat=' +
                    lat + '&lon=' + lon;
         }
         else if (app == 'data_gridded'){
             document.getElementById("location").value = loc;
-            var href = DATA_GRIDDED_URL +'?loc=' +
+            var href = GRID_DATA_URL +'?loc=' +
                    lon + ',' + lat;
         }
         var contentString = '<div id="MarkerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
@@ -71,8 +71,8 @@ var show;
 var hide;
 function initialize_station_finder() {
     var geocoder = new google.maps.Geocoder();
-    var DATA_STATION_URL = document.getElementById("DATA_STATION_URL").value;
-    var TOOLS_STATION_URL = document.getElementById("TOOLS_STATION_URL").value;
+    var STATION_DATA_URL = document.getElementById("STATION_DATA_URL").value;
+    var STATION_TOOLS_URL = document.getElementById("STATION_TOOLS_URL").value;
     var JSON_URL = document.getElementById("JSON_URL").value;
     var TMP_URL = document.getElementById("TMP_URL").value;
     var j_f = document.getElementById("station_json").value;
@@ -205,8 +205,8 @@ function initialize_station_finder() {
                 '">Access Climate Summaries for this Station (by WRCC)</a>'
             }
             */
-            var data_portal_link = '<a target="_blank" href="' + DATA_STATION_URL + '?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid;
-            var app_portal_link = '<a target="_blank" href="' + TOOLS_STATION_URL + '?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid; 
+            var data_portal_link = '<a target="_blank" href="' + STATION_DATA_URL + '?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid;
+            var app_portal_link = '<a target="_blank" href="' + STATION_TOOLS_URL + '?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid; 
             if (start_date != null){ 
                 data_portal_link = data_portal_link + '&start_date=' + start_date;
                 app_portal_link = app_portal_link + '&start_date=' + start_date; 

@@ -1347,7 +1347,11 @@ def station_locator_app(request):
 #SOD programs
 ######################
 
-def sodxtrmts(request):
+def sodxtrmts(request, app_type):
+    '''
+    app_type = 'station' or 'grid'
+    Both are processed via this view
+    '''
     context = {
         'title': 'Monthly/Annual Averages/Extremes and Time Series',
         'icon':'ToolProduct.png'
@@ -1356,7 +1360,7 @@ def sodxtrmts(request):
     json_file = request.GET.get('json_file', None)
     if json_file is not None:
         context['json_file'] =json_file
-    initial,checkbox_vals = set_sodxtrmts_initial(request)
+    initial,checkbox_vals = set_sodxtrmts_initial(request,app_type)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set graph and plot options
     initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(request)
@@ -1377,7 +1381,7 @@ def sodxtrmts(request):
         #Turn request object into python dict
         form = set_form(request, clean=True)
         #Set initial form parameters for html
-        initial,checkbox_vals = set_sodxtrmts_initial(request)
+        initial,checkbox_vals = set_sodxtrmts_initial(request,app_type)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         #Set graph and plot options
         initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(request)
@@ -2816,34 +2820,25 @@ def set_sod_initial(request, app_name):
         initial['date_type'] = 'd'
     return initial
 
-def set_sodxtrmts_initial(request):
+def set_sodxtrmts_initial(request,app_type):
     initial = {}
     checkbox_vals = {}
     Get = set_GET(request)
-    initial['station_id'] = Get('station_id','266779')
-    initial['start_year'] = Get('start_year', Get('start_date','POR'))
-    initial['end_year'] = Get('end_year', Get('end_date','POR'))
+    if app_type == 'station':
+        initial['station_id'] = Get('station_id','266779')
+        initial['start_year'] = Get('start_year', Get('start_date','POR'))
+        initial['end_year'] = Get('end_year', Get('end_date','POR'))
+        initial['autofill_list'] = 'US_station_id'
+    else:
+        initial['location'] = Get('location','-111,40')
+        initial['grid'] = Get('grid','1')
+        start_year = WRCCData.GRID_CHOICES[initial['grid']][3][0][0]
+        end_year = WRCCData.GRID_CHOICES[initial['grid']][3][0][1]
+        initial['start_year'] = Get('start_year', Get('start_date',start_year))
+        initial['end_year'] = Get('end_year', Get('end_date',yrs_ago))
     if len(initial['start_year'])>4:initial['start_year'] = initial['start_year'][0:4]
     if len(initial['end_year'])>4:initial['end_year'] = initial['end_year'][0:4]
     initial['element'] = Get('element',Get('elements','pcpn').replace(' ','').split(',')[0])
-    '''
-    stn_id = Get('stn_id', None)
-    start_date = Get('start_date',None)
-    end_date = Get('end_date',None)
-    if stn_id is not None:
-        initial['station_id'] = stn_id
-    else:
-        initial['station_id'] = Get('station_id','266779')
-    if start_date is not None:
-        initial['start_year'] =start_date[0:4]
-    else:
-        initial['start_year'] = Get('start_year', 'POR')
-    if end_date is not None:
-        initial['end_year']  = end_date[0:4]
-    else:
-        initial['end_year']  = Get('end_year', yesterday[0:4])
-    '''
-    initial['autofill_list'] = 'US_station_id'
     initial['monthly_statistic'] = Get('monthly_statistic', 'msum')
     initial['max_missing_days'] = Get('max_missing_days', '5')
     initial['start_month'] = Get('start_month', '01')
@@ -2854,15 +2849,6 @@ def set_sodxtrmts_initial(request):
     initial['threshold_low_for_between']= Get('threshold_low_for_between', None)
     initial['threshold_high_for_between']= Get('threshold_high_for_between', None)
     initial['generate_graph'] = Get('generate_graph', 'F')
-    '''
-    #initial['generate_graph']= str(Get('generate_graph', 'F'))
-    elements = Get('elements', None)
-    if elements is not None:
-        element = elements.replace(' ','').split(',')[0]
-    else:
-        element = Get('element', 'pcpn')
-    initial['element'] = element
-    '''
     initial['base_temperature'] = Get('base_temperature','')
     if not initial['base_temperature'] and initial['element'] in ['hdd','cdd']:
         initial['base_temperature'] = '65'

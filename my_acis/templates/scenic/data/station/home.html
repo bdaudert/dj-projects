@@ -9,7 +9,7 @@
 <p align="center">You are here
 <a href="{{HOME_URL}}">Home></a>
 <a href="{{DATA_URL}}">Data></a>
-<a href="{{DATA_STATION_URL}}">Historic Station Data Lister</a></p>
+<a href="{{STATION_DATA_URL}}">Historic Station Data Lister</a></p>
 
 <input type="hidden" id="datafind" name="datafind" value="True">
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
@@ -31,7 +31,7 @@ $(function(){
 
 <table cellpadding="10">
 <td valign="top" width="40%">
-    <input type="submit" value="Start Over" onclick="window.location='{{DATA_STATION_URL}}'"/>
+    <input type="submit" value="Start Over" onclick="window.location='{{STATION_DATA_URL}}'"/>
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
         <table class="form" id="tableData" bgcolor="#CCE0E0">
@@ -638,12 +638,12 @@ $(function(){
     {%if results%}
     <!--Link to relevant apps-->
     {%if link_to_all and not results.error%}
-    <a target="_blank" href="{{SODXTRMTS_URL}}?{%for key,val in sodxtrmts_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Monthly/Annual Summary and Time Series!</font></a><br />
+    <a target="_blank" href="{{STATION_SODXTRMTS_URL}}?{%for key,val in sodxtrmts_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Monthly/Annual Summary and Time Series!</font></a><br />
     <a target="_blank" href="{{SODSUMM_URL}}?{%for key,val in sodsumm_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Monthly/Seasonal Summary and Bar Charts!</font></a><br />
-    <a target="_blank" href="{{MON_AVES_URL}}?{%for key,val in monthly_aves_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Barcharts of Monthly Averages</font></a><br />
+    <a target="_blank" href="{{STATION_MON_AVES_URL}}?{%for key,val in monthly_aves_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Barcharts of Monthly Averages</font></a><br />
     {%endif%}
     {%if link_to_mon_aves and not results.error%}
-    <a target="_blank" href="{{MON_AVES_URL}}?{%for key,val in monthly_aves_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Barcharts of Monthly Averages</font></a><br />
+    <a target="_blank" href="{{STATION_MON_AVES_URL}}?{%for key,val in monthly_aves_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Barcharts of Monthly Averages</font></a><br />
     {%endif%}
     {%endif%}
 

@@ -9,7 +9,7 @@
 <p align="center">You are here
 <a href="{{HOME_URL}}">Home></a>
 <a href="{{DATA_URL}}">Data></a>
-<a href="{{DATA_GRIDDED_URL}}">Modeled/Gridded Data Lister</a></p>
+<a href="{{GRID_DATA_URL}}">Modeled/Gridded Data Lister</a></p>
 
 <input type="hidden" id="datafind" name="datafind" value="True">
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
@@ -26,7 +26,7 @@ $(function(){
 </script>
 <table cellpadding="10">
 <td valign="top" width="40%">
-    <input type="submit" value="Start Over" onclick="window.location='{{DATA_GRIDDED_URL}}'"/>
+    <input type="submit" value="Start Over" onclick="window.location='{{GRID_DATA_URL}}'"/>
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData" bgcolor="#CCE0E0">
@@ -747,18 +747,18 @@ $(function(){
     <!--Link to relevant applications-->
     <!--
     {%if params_dict.data_summary == "temporal" and params_dict.select_grid_by == "state" and params_dict.units == "english"%}
-    <a target="_blank" href="{{TEMPORAL_GRID_SUMMARY}}?{%for key,val in form_cleaned.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate climate summary maps!</font></a><br />
+    <a target="_blank" href="{{GRID_TEMPORAL_SUMMARY_URL}}?{%for key,val in form_cleaned.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate climate summary maps!</font></a><br />
     {%elif params_dict.data_summary == "spatial" %}
-     <a target="_blank" href="{{SPATIAL_GRID_SUMMARY}}?json_file={{json_file}}"><font size="3">Generate time series graphs!</font></a><br />
+     <a target="_blank" href="{{GRID_SPATIAL_SUMMARY_URL}}?json_file={{json_file}}"><font size="3">Generate time series graphs!</font></a><br />
     {%endif%}
     -->
     {%if params_dict.data_summary == "temporal" and params_dict.select_grid_by == "state" and params_dict.units == "english"%}
-    <a target="_blank" href="{{TEMPORAL_GRID_SUMMARY}}?{%for key,val in temporal_summary_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3"><b>Generate climate summary maps!</b></font></a><br />
+    <a target="_blank" href="{{GRID_TEMPORAL_SUMMARY_URL}}?{%for key,val in temporal_summary_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3"><b>Generate climate summary maps!</b></font></a><br />
     {%elif params_dict.data_summary == "spatial" and params_dict.select_grid_by != 'location'%}
-     <a target="_blank" href="{{SPATIAL_GRID_SUMMARY}}?json_file={{json_file}}"><font size="3"><b>Generate time series graphs!</b></font></a><br />
+     <a target="_blank" href="{{GRID_SPATIAL_SUMMARY_URL}}?json_file={{json_file}}"><font size="3"><b>Generate time series graphs!</b></font></a><br />
     {%endif%}
     {%if params_dict.select_grid_by == 'location' and params_dict.data_summary != "temporal"%}
-    <a target="_blank" href="{{SPATIAL_GRID_SUMMARY}}?json_file={{json_file}}"><font size="3"><b>Generate time series graphs!</b></font></a><br />
+    <a target="_blank" href="{{GRID_SPATIAL_SUMMARY_URL}}?json_file={{json_file}}"><font size="3"><b>Generate time series graphs!</b></font></a><br />
     {%endif%}
 
     <p><b>DATA</b>:</p>

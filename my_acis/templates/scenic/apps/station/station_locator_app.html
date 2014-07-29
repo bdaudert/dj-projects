@@ -8,7 +8,7 @@
 <p align="center">You are here
 <a href="{{HOME_URL}}">Home></a>
 <a href="{{TOOLS_URL}}">Data Analysis></a>
-<a href="{{TOOLS_STATION_URL}}">Station Data Tools></a> 
+<a href="{{STATION_TOOLS_URL}}">Station Data Tools></a> 
 <a href="{{STATION_FINDER_URL}}">Station Finder</a>
 
 <!--Overlay map parameters-->
@@ -320,11 +320,11 @@ $(function(){
         <!--Link to data portal-->
         {%if params_dict.select_stations_by == "station_ids"%}
         {%if not error%}
-        <a align="left" target="_blank" href="{{DATA_STATION_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
+        <a align="left" target="_blank" href="{{STATION_DATA_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
         {%endif%}
         {%else%}
         {%if not error%}
-        <a align="left" target="_blank" href="{{DATA_STATION_URL}}?{{params_dict.select_stations_by}}={{params_dict|lookup:params_dict.select_stations_by}}&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
+        <a align="left" target="_blank" href="{{STATION_DATA_URL}}?{{params_dict.select_stations_by}}={{params_dict|lookup:params_dict.select_stations_by}}&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
         {%endif%}
         {%endif%}
 

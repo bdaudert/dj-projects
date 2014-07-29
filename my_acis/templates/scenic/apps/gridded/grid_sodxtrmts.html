@@ -10,8 +10,8 @@
 <p align="center">You are here
     <a href="{{HOME_URL}}">Home></a>
     <a href="{{TOOLS_URL}}">Data Analysis></a>
-    <a href="{{STATION_TOOLS_URL}}">Station Data Tools></a> 
-    <a href="{{SODXTRMTS_URL}}">Monthly/Annual Averages/Extremes and Time Series</a></p>
+    <a href="{{GRID_TOOLS_URL}}">Gridded Data Tools></a> 
+    <a href="{{GRID_SODXTRMTS_URL}}">Monthly/Annual Averages/Extremes and Time Series</a></p>
 </p>
 
 <!--Set up autofill-->
@@ -37,13 +37,12 @@ $(function(){
 <div id="tool_info" style="display:none;"></div>
 <!--<div id="tool_info" style="display:none;position:relative;left:300px"></div>-->
 <script type="text/javascript">            
-    $("#tool_info").load("{{HTML_URL}}Docu_SODXTRMTS.html");
+    $("#tool_info").load("{{HTML_URL}}Docu_GRID_SODXTRMTS.html");
 </script>
 
 <script type="text/javascript">            
     $("#how_to_head").load("{{HTML_URL}}Buttons.html .tool_how_to");
 </script>
-
 
 {%if json_dict.data and initial.generate_graph == "F"%}
 <div id="Arrow" class="results" style="position:absolute;top:250px;right:310px;">
@@ -54,12 +53,18 @@ $(function(){
 </div>
 {%endif%}
 
+{%if not json_dict.data and initial.generate_graph == "F"%}
+<div align="center" id="map-gridpoint" style="width:90%; height:300px;margin: 10px 10px"></div>
+<script type="text/javascript">
+    initialize_grid_point_map('data_gridded')
+</script>
+{%endif%}
 
 <!--<div id="how_to" style="display:none;position:relative;left:200px" >-->
 <div id="how_to" style="display:none;">
-<div id="Docu_station_id"></div>
+<div id="Docu_location"></div>
 <script type="text/javascript">                        
-$("#Docu_station_id").load("{{HTML_URL}}Docu_station_id.html");
+$("#Docu_location").load("{{HTML_URL}}Docu_location.html");
 </script> 
 <div id="Docu_start_end_year"></div>
 <script type="text/javascript">            
@@ -100,7 +105,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
 </div>
 
 
-<input type="submit" value="Start Over" onclick="window.location='{{STATION_SODXTRMTS_URL}}'"/>
+<input type="submit" value="Start Over" onclick="window.location='{{SODXTRMTS_URL}}'"/>
 <div id="formSodxtrmts" class="form" style="border:none;">
     {%if json_dict%}
         <form method="post" id="fSodxtrmts" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading()">
@@ -111,36 +116,62 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     <table id="tableSodxtrmts" frame="void" style="border-collapse:collapse;" bgcolor="#CCE0E0">
     <td valign="top">
     <table id="tableData" frame="box" cell-padding="20" bgcolor="#CCE0E0">
-    {%if user_params_dict.station_id%}
+    {%if user_params_dict.location%}
     <tr valign="top" bgcolor="#FFEFD5">
     {%else%}
     <tr valign="top">
     {%endif%}
-    <td>Station ID/Name: </td>
-    <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{initial.station_id}}" list="US_station_id" onchange="hide_formGraph('formGraph');"></td>
+    <td>Location: </td>
+    <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{initial.location}}" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
-        <div id="ht_station_id"></div>
+        <div id="ht_location"></div>
         <script type="text/javascript">                        
-        $("#ht_station_id").load("{{HTML_URL}}Docu_help_texts.html #ht_station_id");
+        $("#ht_location").load("{{HTML_URL}}Docu_help_texts.html #ht_location");
         </script>
     </div>
     </td>
-    </tr>
-    {%if user_params_dict.station_id%}
-    <tr valign="top" bgcolor="#FFEFD5">
-    {%else%}
-    <tr valign="top">
-    {%endif%}
-    <td></td>
-    <td><a target="_blank" href="{{STATION_FINDER_URL}}">Station Finder</a></td>
-    <td></td>
     </tr>
     {%if user_params_dict.start_date or user_params_dict.start_year%}
     <tr valign="top" bgcolor="#FFEFD5">
     {%else%}
     <tr valign="top">
     {%endif%}
+        {%if user_params_dict.grid or large_request%}
+        <tr id="grid_type" valign="top" bgcolor="#FFEFD5">
+        {%else%}
+        <tr id="grid_type" valign="top">
+        {%endif%}
+        <td>Grid: </td>
+        <td>
+            <select id="grid" name="grid" onchange="update_value(this.value)">
+            <option value="1" {{checkbox_vals.grid_1_selected}}>NRCC Interpolated(1950-Present)</option>
+            <option value="3" {{checkbox_vals.grid_3_selected}}>NRCC Int. Hi-Res(2007-Present)</option>
+            <option value="21" {{checkbox_vals.grid_21_selected}}>PRISM(1981-Present,1895-Present)</option>
+            <option value="4" {{checkbox_vals.grid_4_selected}}>CRCM+NCEP(1970-2000)</option>
+            <option value="5" {{checkbox_vals.grid_5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>
+            <option value="6" {{checkbox_vals.grid_6_selected}}>CRCM+CCSM3(1970-2000,2040-2070)</option>
+            <!--<option value="7" {{checkbox_vals.grid_7_selected}}>HRM3+NCEP(1970-2000)</option>-->
+            <!--<option value="8" {{checkbox_vals.grid_8_selected}}>HRM3+HadCM3(1970-2000,2040-2070)</option>-->
+            <option value="9" {{checkbox_vals.grid_9_selected}}>MM5I+NCEP(1970-2000)</option>
+            <option value="10" {{checkbox_vals.grid_10_selected}}>MM5I+CCSM(1970-2000,2040-2070)</option>
+            <option value="11" {{checkbox_vals.grid_11_selected}}>RCM3+NCEP(1970-2000)</option>
+            <option value="12" {{checkbox_vals.grid_12_selected}}>RCM3+CGCM3(1970-2000,2040-2070)</option>
+            <option value="13" {{checkbox_vals.grid_13_selected}}>RCM3+GFDL(1970-2000,2040-2070)</option>
+            <option value="14" {{checkbox_vals.grid_14_selected}}>WRFG+NCEP(1970-2000)</option>
+            <option value="15" {{checkbox_vals.grid_15_selected}}>WRFG+CCSM(1970-2000,2040-2070)</option>
+            <option value="16" {{checkbox_vals.grid_16_selected}}>WRFG+CGCM3(1970-2000,2040-2070)</option>
+            </select>
+        </td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_grid"></div>
+            <script type="text/javascript">                        
+            $("#ht_grid").load("{{HTML_URL}}/Docu_help_texts.html #ht_grid");
+            </script>
+        </div>
+        </td>
+        </tr>
     <td id="Start Year">Start Year: </td>
     <td><input type="text" id="start_year" name="start_year" value="{{initial.start_year}}" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

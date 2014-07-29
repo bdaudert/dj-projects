@@ -8,8 +8,8 @@
 <p align="center">You are here
     <a href="{{HOME_URL}}">Home></a>
     <a href="{{TOOLS_URL}}">Data Analysis></a>
-    <a href="{{TOOLS_STATION_URL}}">Station Data Tools></a> 
-    <a href="{{MON_AVES_URL}}">Monthly Averages as Bar Charts</a></p>
+    <a href="{{STATION_TOOLS_URL}}">Station Data Tools></a> 
+    <a href="{{STATION_MON_AVES_URL}}">Monthly Averages as Bar Charts</a></p>
 
 <!--Autofill-->
 <script type="text/javascript">set_autofill("US_station_id");</script>
@@ -247,7 +247,7 @@ $(function(){
     <img onClick="ShowHide('metadata')" alt="metadata" title="metadata" src="{{MEDIA_URL}}img/metadata_button.png">
     </td>
     <td>
-    <a target="_blank" href="{{DATA_STATION_URL}}?{%for key,val in params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Get data behind this graphic here!</font></a>
+    <a target="_blank" href="{{STATION_DATA_URL}}?{%for key,val in params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Get data behind this graphic here!</font></a>
 
     </td>
     </table>

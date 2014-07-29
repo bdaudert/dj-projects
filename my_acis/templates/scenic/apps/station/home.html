@@ -8,7 +8,7 @@
     <p align="center">You are here
     <a href="{{HOME_URL}}">Home></a>
     <a href="{{TOOLS_URL}}">Data Analysis></a>
-    <a href="{{TOOLS_STATION_URL}}">Station Data Tools</a>
+    <a href="{{STATION_TOOLS_URL}}">Station Data Tools</a>
 
    <!-- Application documentation -->
     <div class="docu" id="Docu_SODSUMM" style="display:none;"></div>
@@ -94,9 +94,9 @@
                     <p>Get a listing of station data<br/>Click on the question mark for more information!</p>
                 </div>
                 {%if user_params_dict%}
-                <a href="{{DATA_STATION_URL}}?{%for key, val in user_params_dict.items %}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><img alt="Station" title="Station" class="app_img" src="{{MEDIA_URL}}img/Stn.png"></a></font></td>                        
+                <a href="{{STATION_DATA_URL}}?{%for key, val in user_params_dict.items %}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><img alt="Station" title="Station" class="app_img" src="{{MEDIA_URL}}img/Stn.png"></a></font></td>                        
                 {%else%}
-                <a href="{{DATA_STATION_URL}}"><img alt="Station" title="Station" class="app_img" src="{{MEDIA_URL}}img/Stn.png"></a></font></td>
+                <a href="{{STATION_DATA_URL}}"><img alt="Station" title="Station" class="app_img" src="{{MEDIA_URL}}img/Stn.png"></a></font></td>
                 {%endif%}  
             </td>
             <td valign="top">
@@ -105,9 +105,9 @@
                     <p>Monthly and annual time series of a large number of properties derived from the SOD daily data set. <br/>Click on the question mark for more information!</p>
                 </div>
                 {%if user_params_dict %}
-                    <a  href="{{SODXTRMTS_URL}}?{%for key, val in user_params_dict.items %}{{key}}={{val}}&{%endfor%}"><img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
+                    <a  href="{{STATION_SODXTRMTS_URL}}?{%for key, val in user_params_dict.items %}{{key}}={{val}}&{%endfor%}"><img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
                 {%else%}
-                    <a  href="{{SODXTRMTS_URL}}"><img  class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
+                    <a  href="{{STATION_SODXTRMTS_URL}}"><img  class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
                 {%endif%}
             </td>
             <td valign="top">
@@ -116,9 +116,9 @@
                     <p>Generates general climatology in table and graph form. <br/>Click on the question mark for more information!</p>
                 </div>
                 {%if user_params_dict%}
-                    <a  href="{{SODSUMM_URL}}?{%for key, val in user_params_dict.items %}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><img class="app_img" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
+                    <a  href="{{STATION_SODSUMM_URL}}?{%for key, val in user_params_dict.items %}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><img class="app_img" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
                 {%else%}
-                    <a  href="{{SODSUMM_URL}}"><img class="app_img" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
+                    <a  href="{{STATION_SODSUMM_URL}}"><img class="app_img" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
                 {%endif%}
             </td>
         </tr>
@@ -139,9 +139,9 @@
                     <p>Generates bar chart of monthly averages. <br/>Click on the question mark for more information!</p>
                 </div>
                  {%if user_params_dict%}
-                    <a  href="{{MON_AVES_URL}}?{%for key, val in user_params_dict.items %}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><img class="app_img" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
+                    <a  href="{{STATION_MON_AVES_URL}}?{%for key, val in user_params_dict.items %}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><img class="app_img" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
                 {%else%}
-                    <a  href="{{MON_AVES_URL}}"><img class="app_img" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
+                    <a  href="{{STATION_MON_AVES_URL}}"><img class="app_img" alt="MonAves" title="MonAves" src="{{MEDIA_URL}}img/MonAves.png"></a>
                 {%endif%}
             </td>
             <td valign="top">
@@ -150,9 +150,9 @@
                     <p>See how much data is missing over the period of record. <br/>Click on the question mark for more information!</p>
                 </div>
                 {%if user_params_dict.station_id%}                        
-                    <a  href="{{METAGRAPH_URL}}?station_id={{user_params_dict.station_id}}"><img class="app_img" alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}img/MetaGraph.png"></a>
+                    <a  href="{{STATION_METAGRAPH_URL}}?station_id={{user_params_dict.station_id}}"><img class="app_img" alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}img/MetaGraph.png"></a>
                 {%else%}
-                    <a  href="{{METAGRAPH_URL}}"><img class="app_img" alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}img/MetaGraph.png"></a>
+                    <a  href="{{STATION_METAGRAPH_URL}}"><img class="app_img" alt="MetaGraph" title="MetaGraph" src="{{MEDIA_URL}}img/MetaGraph.png"></a>
                 {%endif%}    
             </td>
         </tr>

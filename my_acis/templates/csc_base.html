@@ -126,19 +126,20 @@
     <input type="hidden" id="CONTACT_URL" name="variable" value="{{ CONTACT_URL }}">
     <input type="hidden" id="DASH_URL" name="variable" value="{{ DASH_URL }}">
     <input type="hidden" id="DATA_URL" name="variable" value="{{ DATA_URL }}">
-    <input type="hidden" id="DATA_GRIDDED_URL" name="variable" value="{{ DATA_GRIDDED_URL }}">
-    <input type="hidden" id="DATA_STATION_URL" name="variable" value="{{ DATA_STATION_URL }}">
+    <input type="hidden" id="GRID_DATA_URL" name="variable" value="{{ GRID_DATA_URL }}">
     <input type="hidden" id="TOOLS_URL" name="variable" value="{{ TOOLS_URL }}">
-    <input type="hidden" id="TOOLS_GRIDDED_URL" name="variable" value="{{ TOOLS_GRIDDED_URL }}">
-    <input type="hidden" id="SPATIAL_GRID_SUMMARY" name="variable" value="{{ SPATIAL_GRID_SUMMARY }}">
-    <input type="hidden" id="TEMPORAL_GRID_SUMMARY" name="variable" value="{{ TEMPORAL_GRID_SUMMARY }}">
-    <input type="hidden" id="TOOLS_STATION_URL" name="variable" value="{{ TOOLS_STATION_URL }}">
+    <input type="hidden" id="GRID_TOOLS_URL" name="variable" value="{{ GRID_TOOLS_URL }}">
+    <input type="hidden" id="GRID_SPATIAL_SUMMARY_URL" name="variable" value="{{ GRID_SPATIAL_SUMMARY_URL }}">
+    <input type="hidden" id="GRID_TEMPORAL_SUMMARY_URL" name="variable" value="{{ GRID_TEMPORAL_SUMMARY_URL }}">
+    <input type="hidden" id="GRID_SODXTRMTS_URL" name="variable" value="{{ GRID_SODXTRMTS_URL }}">
+    <input type="hidden" id="STATION_DATA_URL" name="variable" value="{{ STATION_DATA_URL }}">
+    <input type="hidden" id="STATION_TOOLS_URL" name="variable" value="{{ STATION_TOOLS_URL }}">
     <input type="hidden" id="STATION_FINDER_URL" name="variable" value="{{ STATION_FINDER_URL  }}">
-    <input type="hidden" id="SODXTRMTS_STATION_URL" name="variable" value="{{ SODXTRMTS_STATION_URL }}">
-    <input type="hidden" id="SODSUMM_STATION_URL" name="variable" value="{{ SODSUMM_STATION_URL }}">
-    <input type="hidden" id="MON_AVES_STATION_URL" name="variable" value="{{ MON_AVES_STATION_URL }}">
-    <input type="hidden" id="METAGRAPH_STATION_URL" name="variable" value="{{ METAGRAPH_STATION_URL }}">
-    <input type="hidden" id="TOOLS_GIS_URL" name="variable" value="{{ TOOLS_GIS_URL }}">
+    <input type="hidden" id="STATION_SODXTRMTS_URL" name="variable" value="{{ STATION_SODXTRMTS_URL }}">
+    <input type="hidden" id="STATION_SODSUMM_URL" name="variable" value="{{ STATION_SODSUMM_URL }}">
+    <input type="hidden" id="STATION_MON_AVES_URL" name="variable" value="{{ STATION_MON_AVES__URL }}">
+    <input type="hidden" id="STATION_METAGRAPH_URL" name="variable" value="{{ STATION_METAGRAPH_URL }}">
+    <input type="hidden" id="GIS_TOOLS_URL" name="variable" value="{{ GIS_TOOLS_URL }}">
 </head>
 
 <!--deals with back button issue... only works in Chrome and badly at that--> 
@@ -165,15 +166,15 @@
             <ul>
             <li><a href="{{DATA_URL}}">All Data</a></li>
             <li><a href="{{STATION_FINDER_URL}}">Station Finder</a></li>
-            <li><a href="{{DATA_STATION_URL}}">Historic Station Data</a></li>
-            <li><a href="{{DATA_GRIDDED_URL}}">Gridded/Modeled Data</a></li>
+            <li><a href="{{STATION_DATA_URL}}">Historic Station Data</a></li>
+            <li><a href="{{GRID_DATA_URL}}">Gridded/Modeled Data</a></li>
             </ul>
         </li>
         <li><a href="{{TOOLS_URL}}"><font size="3">TOOLS</font></a>
             <ul>
             <li><a href="{{TOOLS_URL}}">Overview</a></li>
-            <li><a href="{{TOOLS_STATION_URL}}">Station Data Tools</a></li>
-            <li><a href="{{TOOLS_GRIDDED_URL}}">Gridded Data Tools</a></li>
+            <li><a href="{{STATION_TOOLS_URL}}">Station Data Tools</a></li>
+            <li><a href="{{GRID_TOOLS_URL}}">Gridded Data Tools</a></li>
             <li><a href="{{TOOLS_GIS_URL}}">Geospatial Data Tools</a></li>
             <li><a target="_blank" href="/csc/wrcc_apps/">WRCC-SOD</a></li>
             </ul>

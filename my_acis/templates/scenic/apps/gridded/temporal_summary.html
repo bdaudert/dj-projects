@@ -8,8 +8,8 @@
 <p align="center">You are here
 <a href="{{HOME_URL}}scenic/">Home></a>
 <a href="{{TOOLS_URL}}">Data Analysis></a>
-<a href="{{TOOLS_GRIDDED_URL}}">Gridded Data Tools></a>
-<a href="{{TEMPORAL_GRID_SUMMARY}}">Temporal Summary Maps</a></p>
+<a href="{{GRID_TOOLS_URL}}">Gridded Data Tools></a>
+<a href="{{GRID_TEMPORAL_SUMMARY_URL}}">Temporal Summary Maps</a></p>
 
 
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
@@ -30,7 +30,7 @@ $(function(){
 <table cellpadding="20">
 <!--LEFT-->
 <td valign="top" width="30%">
-    <input type="submit" value="Start Over" onclick="window.location='{{TEMPORAL_GRID_SUMMARY}}'"/>
+    <input type="submit" value="Start Over" onclick="window.location='{{GRID_TEMPORAL_SUMMARY_URL}}'"/>
     <div id='formMap'>
         <form method="post" id="tableMapForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableMap" bgcolor="#CCE0E0">
@@ -188,7 +188,7 @@ $(function(){
             <option value="5" {{checkbox_vals.grid_5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>
             <option value="6" {{checkbox_vals.grid_6_selected}}>CRCM+CCSM3(1970-2000,2040-2070)</option>
             <!--<option value="7" {{checkbox_vals.grid_7_selected}}>HRM3+NCEP(1970-2000)</option>-->
-            <option value="8" {{checkbox_vals.grid_8_selected}}>HRM3+HadCM3(1970-2000,2040-2070)</option>
+            <!--<option value="8" {{checkbox_vals.grid_8_selected}}>HRM3+HadCM3(1970-2000,2040-2070)</option>-->
             <option value="9" {{checkbox_vals.grid_9_selected}}>MM5I+NCEP(1970-2000)</option>
             <option value="10" {{checkbox_vals.grid_10_selected}}>MM5I+CCSM(1970-2000,2040-2070)</option>
             <option value="11" {{checkbox_vals.grid_11_selected}}>RCM3+NCEP(1970-2000)</option>
@@ -594,7 +594,7 @@ $(function(){
     <!--Results section-->
     <div id="results" class="results">
     {%if figure_files%}
-    <a target="_blank" href="{{DATA_GRIDDED_URL}}?{%for key,val in params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size=3><b>Get data behind this graphic</b></font></a>
+    <a target="_blank" href="{{GRID_DATA_URL}}?{%for key,val in params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size=3><b>Get data behind this graphic</b></font></a>
     <br /></br /></br>
     {%for fig in figure_files%}
         <p>

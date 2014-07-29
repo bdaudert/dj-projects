@@ -115,6 +115,8 @@ $(function () {
                                     }
                                 },
                                 {
+                                    opposite:true,
+                                    linkedTo:0,
                                     min: data_min,
                                     max: data_max,
                                     gridLineWidth:0,
