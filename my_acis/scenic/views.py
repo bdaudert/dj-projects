@@ -1466,26 +1466,21 @@ def sodxtrmts(request, app_type):
         del app_params['element']
         #Run data retrieval job
         DJ = WRCCClasses.SODDataJob('Sodxtrmts', data_params)
-        #WARNING: station_ids, names need to be called before dates_list
-        meta_dict = DJ.get_station_meta()
-        station_names = meta_dict['names']
-        station_states = meta_dict['states']
-        station_ids = meta_dict['ids']
-        station_networks = meta_dict['networks']
-        station_lls = meta_dict['lls']
-        station_elevs = meta_dict['elevs']
-        station_uids = meta_dict['uids']
-        station_climdivs = meta_dict['climdivs']
-        station_counties = meta_dict['countys']
-        #station_names, station_states, station_ids, station_networks, station_lls, station_elevs, station_uids, station_climdivs, station_counties  = DJ.get_station_meta()
-        try:
-            header.insert(0, ['Station Name', station_names[0]])
-        except:
-            header.insert(0, ['Station Name', ''])
+        #Obtain metadata and data
+        if app_type == 'station':
+            meta_dict = DJ.get_station_meta()
+            try:
+                header.insert(0, ['Station Name', meta_dict['names'][0]])
+            except:
+                header.insert(0, ['Station Name', ''])
+            data = DJ.get_data_station()
+        else:
+            meta_dict = DJ.get_grid_meta()
+            header.insert(0, ['Location (lon, lat)', meta_dict['location']])
+            data = DJ.get_data_grid()
+        #Set dates list
         dates_list = DJ.get_dates_list()
 
-        #Overwrite search params to reflect actuall start/end year
-        data = DJ.get_data()
         #Run application
         App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
         results = App.run_app()
@@ -1533,10 +1528,10 @@ def sodxtrmts(request, app_type):
                 'base_temperature':base_temperature,
                 'averages':averages,
                 'ranges':ranges,
-                'stn_id':station_ids[0],
-                'stn_name':station_names[0],
-                'stn_network':station_networks[0],
-                'stn_state':station_states[0],
+                'stn_id':meta_dict['ids'][0],
+                'stn_name':meta_dict['names'][0],
+                'stn_network':meta_dict['networks'][0],
+                'stn_state':meta_dict['states'][0],
                 'monthly_statistic':WRCCData.DISPLAY_PARAMS[initial['monthly_statistic']],
                 'month_list':month_list + ['ANN'],
                 'data':results,
@@ -1611,25 +1606,14 @@ def sodsumm(request):
                     }
             #Run data retrieval job
             DJ = WRCCClasses.SODDataJob('Sodsumm', data_params)
-            #WARNING: station_ids, names need to be called before dates_list
-            #station_ids, station_names = DJ.get_station_ids_names()
+            #Obtain metadata and perform sanity check
             meta_dict = DJ.get_station_meta()
-            station_names = meta_dict['names']
-            station_states = meta_dict['states']
-            station_ids = meta_dict['ids']
-            station_networks = meta_dict['networks']
-            station_lls = meta_dict['lls']
-            station_elevs = meta_dict['elevs']
-            station_uids = meta_dict['uids']
-            station_climdivs = meta_dict['climdivs']
-            station_counties = meta_dict['countys']
-            #station_names, station_states, station_ids, station_networks, station_lls, station_elevs, station_uids, station_climdivs, station_counties  = DJ.get_station_meta()
-            if not station_names or not station_ids:
+            if not meta_dict['names'] or not meta_dict['ids']:
                 results = {}
                 context['run_done']= True
                 return render_to_response('scenic/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
             dates_list = DJ.get_dates_list()
-            data = DJ.get_data()
+            data = DJ.get_data_station()
             if not data or not dates_list:
                 results = {}
                 context['run_done']= True
@@ -1669,7 +1653,7 @@ def sodsumm(request):
                 context['start_year'] = '0000'
                 context['end_year'] = '0000'
                 dates_list = ['0000','0000']
-            context['station_name'] = station_names
+            context['station_name'] = meta_dict['names']
             headers = set_sodsumm_headers(table_list)
             context['headers'] = headers
 
@@ -1691,9 +1675,9 @@ def sodsumm(request):
                 #Add other params to table_dict
                 table_dict['record_start'] = dates_list[0][0:4]
                 table_dict['record_end'] = dates_list[-1][0:4]
-                table_dict['stn_name'] = station_names[0]
-                table_dict['stn_network'] = station_networks[0]
-                table_dict['stn_state'] = station_states[0]
+                table_dict['stn_name'] = meta_dict['names'][0]
+                table_dict['stn_network'] = meta_dict['networks'][0]
+                table_dict['stn_state'] = meta_dict['states'][0]
                 table_dict['stn_id'] = str(data_params['sid'])
                 json_list.append(table_dict)
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
@@ -2661,10 +2645,19 @@ def set_user_params(form, app_name):
         area_select = 'select_grid_by'
         if app_name == 'temporal_summary':
             f['temporal_resolution'] = 'dly'
-    elif app_name in ['monthly_aves','sodxtrmts','sodsumm', 'station_locator_app']:
+    elif app_name in ['monthly_aves','sodsumm', 'station_locator_app']:
         area_select = 'select_stations_by'
         if not 'select_stations_by' in f.keys():
             f['select_stations_by'] = 'station_id'
+    elif app_name == 'sodxtrmts':
+        if 'station_id' in form.keys:
+            area_select = 'select_stations_by'
+            if not 'select_stations_by' in f.keys():
+                f['select_stations_by'] = 'station_id'
+        else:
+            area_select = 'select_grid_by'
+            if not 'select_grid_by' in f.keys():
+                f['select_grid_by'] = 'location'
     else:
         area_select = 'select_stations_by'
     el_list = []
