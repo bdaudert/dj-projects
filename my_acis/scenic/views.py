@@ -29,6 +29,7 @@ begin_10yr = WRCCUtils.set_back_date(3660)
 yesterday = WRCCUtils.set_back_date(1)
 fourtnight = WRCCUtils.set_back_date(14)
 week = WRCCUtils.set_back_date(7)
+yrs_ago = WRCCUtils.set_back_date(3660)[0:4]
 def test(request):
     context = {
         'title': 'Southwest Climate and ENvironmental Information Collaborative',
@@ -686,6 +687,12 @@ def apps_gridded(request):
         'title': 'Gridded Data Tools',
         'icon':'ToolProduct.png'
         }
+    #Link from other page
+    if request.method == 'GET' and 'elements' in request.GET:
+        form_cleaned = set_form(request,clean=True)
+        form = set_form(request,clean=False)
+        user_params_list, user_params_dict =set_user_params(form, 'apps_gridded')
+        context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
     return render_to_response('scenic/apps/gridded/home.html', context, context_instance=RequestContext(request))
 
 def apps_gis(request):
@@ -1356,6 +1363,10 @@ def sodxtrmts(request, app_type):
         'title': 'Monthly/Annual Averages/Extremes and Time Series',
         'icon':'ToolProduct.png'
     }
+    if app_type == 'grid':
+        url ='scenic/apps/gridded/grid_sodxtrmts.html'
+    else:
+        url = 'scenic/apps/station/sodxtrmts.html'
     json_dict =  None
     json_file = request.GET.get('json_file', None)
     if json_file is not None:
@@ -1401,10 +1412,10 @@ def sodxtrmts(request, app_type):
         form_graph_error = check_form(form, fields_to_check)
         if form_error:
             context['form_error'] = form_error
-            return render_to_response('scenic/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
+            return render_to_response(url, context, context_instance=RequestContext(request))
         if form_graph_error:
             context['form_graph_error'] = form_graph_error
-            return render_to_response('scenic/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
+            return render_to_response(url, context, context_instance=RequestContext(request))
         #Define header for html display
         header = set_sodxtrmts_head(form)
 
@@ -1437,7 +1448,7 @@ def sodxtrmts(request, app_type):
                     with open(settings.TEMP_DIR + '%s' %(json_file),'w+') as f:
                         f.write(results_json)
                     context['json_file'] =json_file
-                    return render_to_response('scenic/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
+                    return render_to_response(url, context, context_instance=RequestContext(request))
             else:
                 #New data analysis
                 context['json_dict'] = {}
@@ -1454,14 +1465,21 @@ def sodxtrmts(request, app_type):
                 context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
         #Data Table generation
         data_params = {
-            'sid':form['station_id'],
             'start_date':form['start_year'],
             'end_date':form['end_year'],
             'element':form['element']
         }
+        if app_type == 'grid':
+            data_params['location'] = form['location']
+            data_params['grid'] = form['grid']
+        else:
+            data_params['sid'] = form['station_id']
         app_params = form
-        for key in ['station_id', 'start_year', 'end_year']:
-            del app_params[key]
+        for key in ['location','station_id', 'start_year', 'end_year']:
+            try:
+                del app_params[key]
+            except:
+                pass
         app_params['el_type'] = form['element']
         del app_params['element']
         #Run data retrieval job
@@ -1476,11 +1494,11 @@ def sodxtrmts(request, app_type):
             data = DJ.get_data_station()
         else:
             meta_dict = DJ.get_grid_meta()
-            header.insert(0, ['Location (lon, lat)', meta_dict['location']])
+            header.insert(0, ['Location (lon, lat)', meta_dict['location_list']])
             data = DJ.get_data_grid()
         #Set dates list
         dates_list = DJ.get_dates_list()
-
+        context['x'] = len(data['data'][0][0])
         #Run application
         App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
         results = App.run_app()
@@ -1549,8 +1567,9 @@ def sodxtrmts(request, app_type):
                 json_dict['start_date'] = '----'
                 json_dict['end_date'] = '----'
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+            name = meta_dict['ids'][0]
             json_file = '%s_sodxtrmts_%s_%s_%s.json' \
-            %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
+            %(time_stamp, str(name), dates_list[0][0:4], dates_list[-1][0:4])
             json_dict['json_file'] = json_file
             json_dict['JSON_URL'] = settings.TEMP_DIR
             results_json = json.dumps(json_dict)
@@ -1571,7 +1590,7 @@ def sodxtrmts(request, app_type):
         DDJ = WRCCClasses.DownloadDataJob('Sodxtrmts',data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_file)
         return DDJ.write_to_file()
 
-    return render_to_response('scenic/apps/station/sodxtrmts.html', context, context_instance=RequestContext(request))
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 
 def sodsumm(request):
@@ -2828,7 +2847,7 @@ def set_sodxtrmts_initial(request,app_type):
         start_year = WRCCData.GRID_CHOICES[initial['grid']][3][0][0]
         end_year = WRCCData.GRID_CHOICES[initial['grid']][3][0][1]
         initial['start_year'] = Get('start_year', Get('start_date',start_year))
-        initial['end_year'] = Get('end_year', Get('end_date',yrs_ago))
+        initial['end_year'] = Get('end_year', Get('end_date',end_year))
     if len(initial['start_year'])>4:initial['start_year'] = initial['start_year'][0:4]
     if len(initial['end_year'])>4:initial['end_year'] = initial['end_year'][0:4]
     initial['element'] = Get('element',Get('elements','pcpn').replace(' ','').split(',')[0])

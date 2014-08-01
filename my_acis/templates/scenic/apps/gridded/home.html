@@ -39,7 +39,11 @@
    <div class="docu" id="Docu_DATA_GRIDDED" style="display:none;"></div>
         <script type="text/javascript">                        
         $("#Docu_DATA_GRIDDED").load("{{HTML_URL}}/Docu_About_gridded_data.html");
-        </script> 
+        </script>
+    <div class="docu" id="Docu_GRID_SODXTRMTS" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_GRID_SODXTRMTS").load("{{HTML_URL}}/Docu_GRID_SODXTRMTS.html");
+        </script>
    <div class="docu" id="Docu_NONE" style="display:none;"></div>
         <script type="text/javascript">                        
         $("#Docu_NONE").load("{{HTML_URL}}/Docu_NONE.html");
@@ -73,6 +77,21 @@
                     </div>
                     <a  href="{{GRID_TEMPORAL_SUMMARY_URL}}"><img class="app_img" alt="SummaryMaps" title="SummaryMaps" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
                 </td>
+            </tr>
+            <tr>
+            <td valign="top">
+                <p>Monthly/Annual &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SODXTRMTS')">  <br/>Averages/Extremes<br /> and Time Series</p>
+                <div class="pop-up" id="sodxtrmts">
+                    <p>Monthly and annual time series of a large number of properties derived from daily data set. <br/>Click on the question mark for more information!</p>
+                </div>
+                {%if user_params_dict %}
+                    <a  href="{{GRID_SODXTRMTS_URL}}?{%for key, val in user_params_dict.items %}{{key}}={{val}}&{%endfor%}"><img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
+                {%else%}
+                    <a  href="{{GRID_SODXTRMTS_URL}}"><img  class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
+                {%endif%}
+            </td>
+            <td></td>
+            <td></td>
             </tr>
             </table>
 

@@ -96,7 +96,7 @@ $("#Docu_frequency_analysis").load("{{HTML_URL}}Docu_frequency_analysis.html");
 </script>
 <div id="Docu_SODXTRMTS_conditional"></div>
 <script type="text/javascript">            
-$("#Docu_SODXTRMTS_conditional").load("{{HTML_URL}}Docu_SODXTRMTS_conditional.html");
+$("#Docu_GRID_SODXTRMTS_conditional").load("{{HTML_URL}}Docu_GRID_SODXTRMTS_conditional.html");
 </script>
 <div id="Docu_PLOT_OPTS_SODXTRMTS"></div>
 <script type="text/javascript">            
@@ -104,8 +104,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
 </script>
 </div>
 
-
-<input type="submit" value="Start Over" onclick="window.location='{{SODXTRMTS_URL}}'"/>
+<input type="submit" value="Start Over" onclick="window.location='{{GRID_SODXTRMTS_URL}}'"/>
 <div id="formSodxtrmts" class="form" style="border:none;">
     {%if json_dict%}
         <form method="post" id="fSodxtrmts" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading()">
@@ -122,7 +121,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     <tr valign="top">
     {%endif%}
     <td>Location: </td>
-    <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{initial.location}}" onchange="hide_formGraph('formGraph');"></td>
+    <td><input autocomplete="off" type="text" size="20" id="location" name="location" value="{{initial.location}}" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_location"></div>
@@ -790,7 +789,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
 </script>
 <div id="tool_info" style="display:none;"></div>
 <script type="text/javascript">            
-    $("#tool_info").load("{{HTML_URL}}Docu_SODXTRMTS.html");
+    $("#tool_info").load("{{HTML_URL}}Docu_GRID_SODXTRMTS.html");
 </script>
 
 <script type="text/javascript">            
@@ -829,9 +828,9 @@ $("#Docu_departure_from_averages").load("{{HTML_URL}}Docu_departure_from_average
 <script type="text/javascript">            
 $("#Docu_frequency_analysis").load("{{HTML_URL}}Docu_frequency_analysis.html");
 </script>
-<div id="Docu_SODXTRMTS_conditional"></div>
+<div id="Docu_GRID_SODXTRMTS_conditional"></div>
 <script type="text/javascript">            
-$("#Docu_SODXTRMTS_conditional").load("{{HTML_URL}}Docu_SODXTRMTS_conditional.html");
+$("#Docu_GRID_SODXTRMTS_conditional").load("{{HTML_URL}}Docu_GRID_SODXTRMTS_conditional.html");
 </script>
 <div id="Docu_PLOT_OPTS_SODXTRMTS"></div>
 <script type="text/javascript">            
