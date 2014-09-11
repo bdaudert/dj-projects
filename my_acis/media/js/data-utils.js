@@ -135,6 +135,22 @@ function set_plot_data(data, dates_true, miss_val,chart_type) {
     return results;
 }
 
+function isPrime (n){
+    if (n < 2) return false;
+    /**
+     * An integer is prime if it is not divisible 
+     by any prime less than or equal to its square root
+    **/
+    var q = parseInt(Math.sqrt (n));
+
+    for (var i = 2; i <= q; i++){
+        if (n % i == 0){
+            return false;
+        }
+    }
+    return true;
+}
+
 
 function find_max(vals,element,statistic){
     var max = null;
@@ -160,6 +176,43 @@ function find_min(vals, element,statistic, dep_from_ave){
         catch(e){}
     }
     return min;
+}
+function find_smallest_divisor(n){
+    //smallest divisor of n
+    var div;
+    if (isPrime(n)){
+         div = n;
+    }
+    else{
+        var flag = true,
+        div = 3;
+        while (flag){
+            if (n % div == 0){
+                flag = false;
+            }
+            div=div+1;
+        }
+    }
+    return div
+}
+
+function find_largest_divisor(n){
+    //Largest divisor of n
+    var div;
+    if (isPrime(n)){
+         div = n;
+    }
+    else{
+        var flag = true,
+        div = n - 1;
+        while (flag){
+            if (n % div == 0){
+                flag = false;
+            }
+            div=div - 1;
+        }
+    }
+    return div
 }
 
 function find_closest_smaller(num, divisor){

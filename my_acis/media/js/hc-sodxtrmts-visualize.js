@@ -34,7 +34,11 @@ $(function () {
 
             //Set chart type
             var chart_type = 'line';
-            if (datadict.element == 'pcpn') {chart_type = 'column';}
+            var barchart_els = 'pcpn snwd gdd hdd cdd';
+            if (barchart_els.match(datadict.element)){
+                chart_type = 'column';
+            }
+            //if (datadict.element == 'pcpn') {chart_type = 'column';}
             
             //Find indices list for given analysis start_month, 
             //graph_start_month and graph_end_month
@@ -49,11 +53,14 @@ $(function () {
             var Start = Date.UTC(parseInt(datadict.data[yr_indices.yr_start_idx][0]),0,01);
             var Interval = 365 * 24 * 3600000; // 1 year
             
+            p_color = set_plot_color(datadict.element);
+
             //Set up series template
             var series = {
                 'pointStart':Start,
                 'pointInterval':Interval,
                 'marker':{symbol:marker_type},
+                'color':p_color,
                 'lineWidth':connector_line_width
             };
             //Set series data
@@ -86,13 +93,14 @@ $(function () {
                 xAxisTitle = 'Ending Year ' //+ datadict.data[datadict.data.length -8][0]
             }
             //Define x_axis properties
-            //Sets new data for plotting,minor,major plotlines
-            var dmm = set_yr_plotlines(acis_data);
-            //Adjust plotlines
-            var admm = adjust_x_plotlines(acis_data,dmm,major_grid, minor_grid);
+            //Sets new data for plotting,minor,major plotlines 
+            admm = set_sodxtrmts_x_plotlines(acis_data,major_grid,minor_grid);
+            //var dmm = set_yr_plotlines(acis_data);
+            //Adjust plotlines in case there are too many data
+            //var admm = adjust_x_plotlines(acis_data,dmm,major_grid, minor_grid);
             
             //Define y_axis properties
-            var pn = admm.x_plotLines.length;
+            var pn = admm.plotLines.length;
             pn = set_plotline_no(pn,major_grid, minor_grid);
             var vmx = initial_graph.vertical_axis_max;
             var vmn = initial_graph.vertical_axis_min;
@@ -157,17 +165,18 @@ $(function () {
                         },
                         labels: {
                             rotation: -45,
-                            //step:admm.yr_step,
                             formatter:function () {
                                 return Highcharts.dateFormat('%Y', this.value);
                             }
                         },
                         //offset:2,
-                        min:admm.x_min,
-                        max:admm.x_max,
+                        min:admm.min,
+                        max:admm.max,
+                        startOnTick: true,
                         showLastLabel:true,
                         showFirstLabel:true,
-                        plotLines:admm.x_plotLines,
+                        maxPadding:0,
+                        plotLines:admm.plotLines,
                         tickPositions:admm.tickPositions
                     },
                     yAxis: [{
@@ -206,7 +215,7 @@ $(function () {
                 Chart.options.xAxis.type = 'datetime';
                 Chart.options.xAxis.dateTimeLabelFormats = {year: '%Y'};
                 Chart.options.xAxis.tickPositions = admm.tickPositions;
-                Chart.options.xAxis.plotLines = admm.x_plotLines;
+                Chart.options.xAxis.plotLines = admm.plotLines;
                 Chart.options.yAxis.plotLines = y_axis_props.plotLines;
                 Chart.options.yAxis.tickPositions = y_axis_props.tickPositions;
                 Chart.options.yAxis.tickInterval = y_axis_props.tickInterval;

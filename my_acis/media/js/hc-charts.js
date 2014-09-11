@@ -31,6 +31,7 @@ function BarChart() {
                 lineWidth:0,
                 tickWidth:0,
                 showFirstLabel:true,
+                startOnTick: true,
                 endOnTick: true
             },
             yAxis:[{

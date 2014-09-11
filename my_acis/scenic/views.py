@@ -38,7 +38,7 @@ def test(request):
 
 def home(request):
     context = {
-        'title': 'Southwest Climate and ENvironmental Information Collaboration',
+        'title': '',
     }
     return render_to_response('scenic/home.html', context, context_instance=RequestContext(request))
 
@@ -222,7 +222,7 @@ def download(request):
 
 def data_station(request):
     context = {
-        'title': 'Historic Station Data Lister\n (Daily)',
+        'title': 'Historic Station Data (Daily)',
     }
 
     initial, checkbox_vals = set_data_station_initial(request)
@@ -440,7 +440,7 @@ def data_station(request):
 
 def data_gridded(request):
     context = {
-        'title': 'Gridded/Modeled Data Lister',
+        'title': 'Gridded/Modeled Data',
     }
     initial, checkbox_vals = set_data_gridded_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
@@ -634,7 +634,7 @@ def data_gridded(request):
 
 def apps_home(request):
     context = {
-        'title': 'Analysis Tools',
+        'title': 'Data Analysis',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
         'icon':'ToolProduct.png'
     }
@@ -657,7 +657,7 @@ def apps_home(request):
 
 def apps_station(request):
     context = {
-        'title': 'Station Data Tools',
+        'title': 'Station Data Analysis',
         'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
         'icon':'ToolProduct.png'
         }
@@ -684,7 +684,7 @@ def apps_station(request):
 
 def apps_gridded(request):
     context = {
-        'title': 'Gridded Data Tools',
+        'title': 'Gridded Data Analysis',
         'icon':'ToolProduct.png'
         }
     #Link from other page
@@ -2165,7 +2165,7 @@ def generate_sodsumm_graphics(results, tab, table):
         units = 'Inches'
         colors = ['#00FFFF','#00009B', ' #0000FF']
         legend = ['Ave Precip Low', 'Precip Mean', 'Ave Precip High']
-        table_name_long = 'Precipitation(In)'
+        table_name_long = 'Precipitation (in)'
         graph_data = [[] for k in range(3)]
         for idx, row in enumerate(results[table][1:13]):
             for i in range(3):
@@ -2180,7 +2180,7 @@ def generate_sodsumm_graphics(results, tab, table):
         units = 'Inches'
         colors = ['#00FFFF','#00009B']
         legend = ['Snow Mean', 'Ave Snow High']
-        table_name_long = 'Snow Fall(In)'
+        table_name_long = 'Snow Falli (in)'
         graph_data = [[] for k in range(2)]
         for idx, row in enumerate(results[table][1:13]):
             for i in range(2):
@@ -2430,6 +2430,10 @@ def set_spatial_summary_params(form):
                 dd_list = form['degree_days'].replace(' ','').split(',')
             for el_idx, el in enumerate(el_list):
                 el_short, base_temp = WRCCUtils.get_el_and_base_temp(el)
+                if 'units' in form.keys() and form['units'] == 'metric':
+                    ut = WRCCData.UNITS_METRIC[el_short]
+                else:
+                    ut = WRCCData.UNITS_ENGLISH[el_short]
                 if base_temp:
                     #if metric pick original user input base temp
                     if 'units' in form.keys() and form['units'] == 'metric':
@@ -2438,9 +2442,14 @@ def set_spatial_summary_params(form):
                             base_temp = dd_list[dx][3:]
                         else:
                             base_temp = int(round(WRCCUtils.convert_to_metric('maxt', base_temp)))
-                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el_short] + ' (' +  WRCCData.UNITS_METRIC[el_short]+ ')' + ' Base Temp.: ' + str(base_temp))
+                    bt = ' Base Temp.: ' + str(base_temp) + ' (' +  ut + ')'
                 else:
-                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el] + ' ('+ WRCCData.UNITS_ENGLISH[el_short]+ ')')
+                    bt = ''
+                try:
+                    int(el[3:])
+                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el[0:3]] + ' ('+ ut + ')' + bt)
+                except:
+                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el] + ' ('+ ut + ')' + bt)
             display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key], ','.join(el_list_long)]
             search_params['element_list_long'] = el_list_long
         else:
@@ -2669,7 +2678,7 @@ def set_user_params(form, app_name):
         if not 'select_stations_by' in f.keys():
             f['select_stations_by'] = 'station_id'
     elif app_name == 'sodxtrmts':
-        if 'station_id' in form.keys:
+        if 'station_id' in form.keys():
             area_select = 'select_stations_by'
             if not 'select_stations_by' in f.keys():
                 f['select_stations_by'] = 'station_id'

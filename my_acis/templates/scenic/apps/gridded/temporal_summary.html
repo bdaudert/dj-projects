@@ -5,12 +5,13 @@
 {%load my_scenic_filters%}
 
 {% block content %} 
+<!--
 <p align="center">You are here
 <a href="{{HOME_URL}}scenic/">Home></a>
 <a href="{{TOOLS_URL}}">Data Analysis></a>
 <a href="{{GRID_TOOLS_URL}}">Gridded Data Tools></a>
 <a href="{{GRID_TEMPORAL_SUMMARY_URL}}">Temporal Summary Maps</a></p>
-
+-->
 
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
 <input type="hidden" id="host" name="host" value="{{host}}">
@@ -231,7 +232,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        <tr><td><input type="submit" value="Submit" name="formMap"></td><td></td><td></td></tr>
+        <tr><td><input type="submit" value="Generate maps" name="formMap"></td><td></td><td></td></tr>
         <tr>
         <td colspan="3"><hr style="border-color:#006666;"></td>
         </tr>
@@ -380,7 +381,7 @@ $(function(){
         {%else%}
         <tr class="plOpts" style="display:none;">
         {%endif%}
-        <td><input type="submit" value="Submit" name="formMap"/></td><td></td><td></td>
+        <td><input type="submit" value="Generate maps" name="formMap"/></td><td></td><td></td>
         </table>
         <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
         </form>

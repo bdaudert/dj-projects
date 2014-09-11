@@ -5,11 +5,14 @@
 
 {%load my_scenic_filters%}
 {% block content %}
+
+<!--
 <p align="center">You are here
 <a href="{{HOME_URL}}">Home></a>
 <a href="{{TOOLS_URL}}">Data Analysis></a>
-<a href="{{STATION_TOOLS_URL}}">Station Data Tools></a> 
+<a href="{{STATION_TOOLS_URL}}">Station Data Analysis></a> 
 <a href="{{STATION_FINDER_URL}}">Station Finder</a>
+-->
 
 <!--Overlay map parameters-->
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
@@ -183,7 +186,7 @@ $(function(){
         </table>
         <input type="hidden" name="checked_categories" id="checked_categories" value="all">
         <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
-        <input type="submit" value="Submit" name="formData"/>
+        <input type="submit" value="Show me stations" name="formData"/>
         </form>
     </div>
     <br /><br /><br />
@@ -275,8 +278,8 @@ $(function(){
     </td></tr>
     </table>
 
-<!--Second Column: How Tos and maps-->
-<td valign="top" width="550px">
+<!--Second Column: How Tos/Documentation and maps-->
+<td valign="top" width="520px">
         <div align="left" id="tool_info" style="display:none;"></div>
         <script type="text/javascript">                        
         $("#tool_info").load("{{HTML_URL}}/Docu_About_station_finder.html");
@@ -306,6 +309,53 @@ $(function(){
         $("#Docu_el_date_constraints_examples").load("{{HTML_URL}}/Docu_el_date_constraints_examples.html");
         </script>
         </div>
+
+        <!--Network Documentation-->
+        <div id="COOP" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#COOP").load("{{HTML_URL}}/Docu_networks_short.html #COOP");
+        </script> 
+        <div id="GHCN" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#GNCN").load("{{HTML_URL}}/Docu_networks_short.html #GHCN");
+        </script>
+        <div id="ICAO" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#ICAO").load("{{HTML_URL}}/Docu_networks_short.html #ICAO");
+        </script>
+        <div id="NWSLI" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#NWSLI").load("{{HTML_URL}}/Docu_networks_short.html #NWSLI");
+        </script>
+        <div id="FAA" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#FAA").load("{{HTML_URL}}/Docu_networks_short.html #FAA");
+        </script>
+        <div id="WBAN" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#WBAN").load("{{HTML_URL}}/Docu_networks_short.html #WBAN");
+        </script>
+        <div id="WMO" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#WMO").load("{{HTML_URL}}/Docu_networks_short.html #WMO");
+        </script>
+        <div id="CoCoRaHS" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#CoCoRaHS").load("{{HTML_URL}}/Docu_networks_short.html #CoCoRaHS");
+        </script>
+        <div id="ThreadEx" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#ThreadEx").load("{{HTML_URL}}/Docu_networks_short.html #ThreadEx");
+        </script>   
+        <div id="SNOTEL" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#SNOTEL").load("{{HTML_URL}}/Docu_networks_short.html #SNOTEL");
+        </script>
+        <div id="RAWS" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#RAWS").load("{{HTML_URL}}/Docu_networks_short.html #RAWS");
+        </script>
+
         <!--Deal with form errors-->  
         {%if form_error%}
         <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
@@ -428,7 +478,7 @@ $(function(){
     {%if overlay_error%}
     <p class="error">{{overlay_error}}</p>
     {%else%}
-    <div id="map-overlay" style="width:550px; height:400px;"></div>
+    <div id="map-overlay" style="width:520px; height:400px;"></div>
     <div id="content-window" style="width:100px; height:100px;"></div>
     <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
     {%endif%} 
@@ -462,12 +512,12 @@ $(function(){
     
     {%if station_json and not error and not form_error and not need_overlay_map%}
     <input type="hidden" id="station_json" name="variable" value="{{station_json}}">
-    <div id="map" style="width:550px;height:400px;"></div>
+    <div id="map" style="width:520px;height:400px;"></div>
     <script type="text/javascript">
         initialize_station_finder()
     </script>
     <!--Station List-->
-    <div style="height:200px;width:550px;overflow:scroll;">
+    <div style="height:200px;width:520px;overflow:scroll;">
         <table cellspacing="1" id="station_list" border=1>
         <thead>
         <tr>
@@ -485,7 +535,7 @@ $(function(){
     {%endif%}
     </div> <!--end results div-->
 </td>
-<td valign="top" align="left" width="170px">
+<td valign="top" align="left" width="200px">
     <div class="results">
     {%if station_json and not error and not form_error and not need_overlay_map%}
     <div id="map_legend" style="padding:5px;width:93%;">

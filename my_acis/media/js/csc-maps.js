@@ -122,7 +122,16 @@ function initialize_station_finder() {
                 div.setAttribute("style", "display:none");
             }
             div.innerHTML = '<input type="checkbox" id="'+ name +
-            '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' + ' <img alt="Icon" title="Icon" src="' + icon + '"> ' + name;
+            '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' + 
+            ' <img alt="Icon" title="Icon" src="' + icon + '">'  +name + '</div>';
+            '<div onmouseover="ShowNetworkDocu(\''+ name + '\')" onmouseout="HideNetworkDocu(\''+ name + '\')">' + name;
+            /*
+            div.innerHTML = '<div onmouseover="ShowNetworkDocu(\''+ name + '\')" onmouseout="HideNetworkDocu(\''+ name + '\')">'+ 
+            '<input type="checkbox" id="'+ name +
+            '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' + 
+            ' <img alt="Icon" title="Icon" src="' + icon + '">'  +name + '</div>';
+            '<div onmouseover="ShowNetworkDocu(\''+ name + '\')" onmouseout="HideNetworkDocu(\''+ name + '\')">' + name + '</div>';
+            */
             legend.appendChild(div);
         }
         //Create 'show all networks' button first

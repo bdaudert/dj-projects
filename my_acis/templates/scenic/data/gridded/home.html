@@ -5,11 +5,12 @@
 {%load my_scenic_filters%}
 
 {% block content %} 
-
+<!--
 <p align="center">You are here
 <a href="{{HOME_URL}}">Home></a>
 <a href="{{DATA_URL}}">Data></a>
 <a href="{{GRID_DATA_URL}}">Modeled/Gridded Data Lister</a></p>
+-->
 
 <input type="hidden" id="datafind" name="datafind" value="True">
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
@@ -476,7 +477,7 @@ $(function(){
         {%endif%}
         </table>
         <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
-        <input type="submit" value="Submit" name="formData"/>
+        <input type="submit" value="Get data" name="formData"/>
         </form>
     </div>
     <br /><br />

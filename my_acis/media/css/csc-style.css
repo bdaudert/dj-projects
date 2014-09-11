@@ -9,7 +9,8 @@ html {
 */
 body {
     /*font:"Lucida Grande", Lucida, Verdana, sans-serif;*/
-    font:"Arial Black",Gadget,sans-serif;
+    /*font:"Arial Black",Gadget,sans-serif;*/
+    font:"DejaVu Serif";
     background-color: #006666;
     margin: 0;
     padding: 0;
@@ -22,6 +23,7 @@ body {
     min-height:1000px;
     color:#000000;
     background-color: #FFEFD5;
+    padding: 5px;
     /*
     display:table-cell;
     height:auto;*/
@@ -85,9 +87,15 @@ body {
     width:600px;
 }
 
+
 p, ul, ol, li {
     color:#000000;
     font-size:4;
+}
+
+h1.title {
+    font-size:10;
+    font-weight: bold;
 }
 
 p.green {
@@ -237,6 +245,47 @@ input[value="Submit"] {
     color:#FFEFD5;
 }
 
+input[value="Generate graphics"] {
+    background-color:#006666;
+    color:#FFEFD5;
+}
+
+input[value="Get data"] {
+    background-color:#006666;
+    color:#FFEFD5;
+}
+
+input[value="Generate maps"] {
+    background-color:#006666;
+    color:#FFEFD5;
+}
+
+input[value="Generate time series"] {
+    background-color:#006666;
+    color:#FFEFD5;
+}
+
+input[value="Generate barcharts"] {
+    background-color:#006666;
+    color:#FFEFD5;
+}
+
+input[value="Show me stations"] {
+    background-color:#006666;
+    color:#FFEFD5;
+}
+
+input[value="Download"] {
+    background-color:#006666;
+    color:#FFEFD5;
+}
+
+input[value="Analyze"] {
+    background-color:#006666;
+    color:#FFEFD5;
+}
+
+
 input[value="Start Over"] {
     /*background-color:#8FBC8F;*/
     background-color:#006666;
@@ -296,6 +345,7 @@ color: #000000;
 
 table.form td {
     margin: 0px 0px;
+    font-weight: bold;
 }
 
 
@@ -303,6 +353,11 @@ table.form td {
     /*border: 1px solid #99C1C1;*/
     color:#000000;
     text-align:left;
+    padding:10px;
+}
+
+.form table td {
+    font-weight: bold;
 }
 
 ul.navbar {

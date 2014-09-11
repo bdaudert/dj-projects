@@ -25,7 +25,7 @@ $(function () {
         }
         var x_plotLines = set_plotlines(d,1,'x',xCats.length);
         */
-        x_props = set_barchart_axis_properties(xCats,12,'x');
+        x_props = set_barchart_axis_properties(xCats,xCats.length,'x');
         $.getJSON(json_file_path, function(datadict) {
             for (var i=0;i<datadict.length;i++){
                 //Set up BarChart Template Class

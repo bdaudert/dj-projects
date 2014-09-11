@@ -7,12 +7,14 @@
 
 {% block content %}
 
+<!--
 <p align="center">You are here
     <a href="{{HOME_URL}}">Home></a>
     <a href="{{TOOLS_URL}}">Data Analysis></a>
     <a href="{{STATION_TOOLS_URL}}">Station Data Tools></a> 
     <a href="{{SODXTRMTS_URL}}">Monthly/Annual Averages/Extremes and Time Series</a></p>
 </p>
+-->
 
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("US_station_id");</script>
@@ -375,7 +377,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </div>
     </td>
     </tr>
-    <tr><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
+    <tr><td><input type="submit" value="Analyze" name="formSodxtrmts"></td><td></td><td></td></tr>
     {%if json_file %}
     <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
     <tr valign="top" id="generate_graph_row">
@@ -740,7 +742,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </div>
     </td>
     </tr>
-    <tr class="plOpt" ><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
+    <tr class="plOpt" ><td><input type="submit" value="Generate time series" name="formSodxtrmts"></td><td></td><td></td></tr>
     </table><!--End inside table-->
     </td></table>
    {%if json_dict%}
@@ -881,7 +883,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
         </tr>
         </table>
         <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-        <input type="submit" value="Submit" name="formDownload">
+        <input type="submit" value="Download" name="formDownload">
         </form>
 </div><!--end formDownload-->
 </td>

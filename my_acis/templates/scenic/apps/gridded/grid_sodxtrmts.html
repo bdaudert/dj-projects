@@ -6,21 +6,21 @@
 {%load my_scenic_filters%}
 
 {% block content %}
-
+<!--
 <p align="center">You are here
     <a href="{{HOME_URL}}">Home></a>
     <a href="{{TOOLS_URL}}">Data Analysis></a>
     <a href="{{GRID_TOOLS_URL}}">Gridded Data Tools></a> 
-    <a href="{{GRID_SODXTRMTS_URL}}">Monthly/Annual Averages/Extremes and Time Series</a></p>
+    <a href="{{GRID_SODXTRMTS_URL}}">Monthly/Annual Averages/Extremes and Time Series</a>
 </p>
-
+-->
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("US_station_id");</script>
 <!--On form change, hide results and form errors-->
 <script type="text/javascript">
 $(function(){
-        //On form change, hide results and form errors
-            hide_errors_results_on_change('fSodxtrmts');
+//On form change, hide results and form errors
+hide_errors_results_on_change('fSodxtrmts');
 });
 </script>
 
@@ -44,28 +44,11 @@ $(function(){
     $("#how_to_head").load("{{HTML_URL}}Buttons.html .tool_how_to");
 </script>
 
-{%if json_dict.data and initial.generate_graph == "F"%}
-<div id="Arrow" class="results" style="position:absolute;top:250px;right:280px;">
-<table style="display:block;">
-<td valign="top"><b>RESULTS:</b></td>
-<td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="300px"></td>
-</table>
-</div>
-{%endif%}
-
-{%if not json_dict.data and initial.generate_graph == "F"%}
-<div align="center" id="map-gridpoint" style="width:90%; height:300px;margin: 10px 10px"></div>
-<script type="text/javascript">
-    initialize_grid_point_map('data_gridded')
-</script>
-{%endif%}
-
-<!--<div id="how_to" style="display:none;position:relative;left:200px" >-->
 <div id="how_to" style="display:none;">
 <div id="Docu_location"></div>
 <script type="text/javascript">                        
 $("#Docu_location").load("{{HTML_URL}}Docu_location.html");
-</script> 
+</script>
 <div id="Docu_start_end_year"></div>
 <script type="text/javascript">            
 $("#Docu_start_end_year").load("{{HTML_URL}}Docu_start_end_year_por.html");
@@ -95,7 +78,7 @@ $("#Docu_departure_from_averages").load("{{HTML_URL}}Docu_departure_from_average
 $("#Docu_frequency_analysis").load("{{HTML_URL}}Docu_frequency_analysis.html");
 </script>
 <div id="Docu_SODXTRMTS_conditional"></div>
-<script type="text/javascript">            
+<script type="text/javascript">       
 $("#Docu_GRID_SODXTRMTS_conditional").load("{{HTML_URL}}Docu_GRID_SODXTRMTS_conditional.html");
 </script>
 <div id="Docu_PLOT_OPTS_SODXTRMTS"></div>
@@ -103,6 +86,17 @@ $("#Docu_GRID_SODXTRMTS_conditional").load("{{HTML_URL}}Docu_GRID_SODXTRMTS_cond
 $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html");
 </script>
 </div>
+
+
+
+{%if json_dict.data and initial.generate_graph == "F"%}
+<div id="Arrow" class="results" style="position:absolute;top:250px;right:280px;">
+<table style="display:block;">
+<td valign="top"><b>RESULTS:</b></td>
+<td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="300px"></td>
+</table>
+</div>
+{%endif%}
 
 <input type="submit" value="Start Over" onclick="window.location='{{GRID_SODXTRMTS_URL}}'"/>
 <div id="formSodxtrmts" class="form" style="border:none;">
@@ -207,17 +201,12 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     <td>
         <select id="element" name="element" onchange="set_BaseTemp_and_Threshes('tableData',this);hide_formGraph('formGraph');">
             <option value="pcpn" {{checkbox_vals.pcpn_selected}}>Daily Precipitation</option>
-            <option value="snow" {{checkbox_vals.snow_selected}}>Daily Snowfall</option>
-            <option value="snwd" {{checkbox_vals.snwd_selected}}>Daily Snowdepth</option>
             <option value="maxt" {{checkbox_vals.maxt_selected}}>Daily Max Temperature</option>
             <option value="mint" {{checkbox_vals.mint_selected}}>Daily Min Temperature</option>
             <option value="avgt" {{checkbox_vals.avgt_selected}}>Daily Mean Temperature</option>
-            <option value="dtr" {{checkbox_vals.dtr_selected}}>Daily Temp Range</option>
             <option value="hdd" {{checkbox_vals.hdd_selected}}>Heating Degree Days</option>
             <option value="cdd" {{checkbox_vals.cdd_selected}}>Cooling Degree Days</option>
             <option value="gdd" {{checkbox_vals.gdd_selected}}>Growing Degree Days</option>
-            <option value="evap" {{checkbox_vals.evap_selected}}>Daily Pan Evaporation</option>
-            <!--<option value="wdmv" {{checkbox_vals.wdmv_selected}}>Daily Wind Movement</option>-->
             <option value="pet" {{checkbox_vals.pet_selected}}>Potential ET</option>
             </select>
     </td>
@@ -405,7 +394,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </div>
     </td>
     </tr>
-    <tr><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
+    <tr><td><input type="submit" value="Analyze" name="formSodxtrmts"></td><td></td><td></td></tr>
     {%if json_file %}
     <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
     <tr valign="top" id="generate_graph_row">
@@ -442,6 +431,20 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     {%endfor%}
     </p>
     </div>
+    {%else%}
+    {%if not json_dict.data%}
+    {%if lat and lon %}
+    <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+    <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+    {%else%}
+    <input type="hidden" id="initial_lat" name="initial_lat" value='40'>
+    <input type="hidden" id="initial_lon" name="initial_lon" value='-111'>
+    {%endif%}
+    <div align="center" id="map-gridpoint" style="width:500px; height:350px"></div>
+    <script type="text/javascript">
+        initialize_grid_point_map('data_gridded')
+    </script>
+    {%endif%}
     {%endif%}
     <table frame="box" class="formGraph" style="display:none" bgcolor="#CCE0E0">
     {%endif%}
@@ -770,7 +773,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </div>
     </td>
     </tr>
-    <tr class="plOpt" ><td><input type="submit" value="Submit" name="formSodxtrmts"></td><td></td><td></td></tr>
+    <tr class="plOpt" ><td><input type="submit" value="Generate time series" name="formSodxtrmts"></td><td></td><td></td></tr>
     </table><!--End inside table-->
     </td></table>
    {%if json_dict%}
@@ -911,7 +914,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
         </tr>
         </table>
         <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-        <input type="submit" value="Submit" name="formDownload">
+        <input type="submit" value="Download" name="formDownload">
         </form>
 </div><!--end formDownload-->
 </td>

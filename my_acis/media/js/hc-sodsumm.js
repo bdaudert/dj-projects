@@ -206,7 +206,7 @@ $(function () {
                             style:style
                         },
                         title: {
-                            text: table_dict[i].table_name_long + ' in ' + table_dict[i].units,
+                            text: table_dict[i].table_name_long,
                             style: style
                         },
                         gridLineWidth:0,

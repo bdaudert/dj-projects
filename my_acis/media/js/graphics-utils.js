@@ -127,6 +127,7 @@ function set_plotlines(data,step,axis,plotline_opts){
         pl.value = data[dat_idx][idx];
         plotLines.push(pl);
     }
+
     //Push last plotline at end of data
     var pl ={};
     for (var key in plotLine){
@@ -139,7 +140,8 @@ function set_plotlines(data,step,axis,plotline_opts){
 
 function set_yr_plotlines(data, plotline_opts){
     /*
-    Given an array of data of form [[yr1, dat1],[yr2,dat2]] (where yr in acis format yyyy),
+    Given an array of data of form 
+    [[yr1, dat1],[yr2,dat2]] (where yr in acis format yyyy),
     returns new_data, major/minor plotlines (as datetime objects)
     where new_data = [[Date.UCT1, dat1],[Date.UTC2,dat2]]
     */
@@ -156,7 +158,6 @@ function set_yr_plotlines(data, plotline_opts){
     else{
         return results; 
     }
-    var new_data = data;
     //Set step sizes and divisor(depends on data and data_length)
     var mmd = set_yrdata_grids(data.length);
     //Find closest axis points less/greater
@@ -199,30 +200,54 @@ function set_time_series_axis_properties(data,plotline_no,axis){
 
 function set_barchart_axis_properties(data,plotline_no,axis){
     results ={
-        'tickStep':1,
         'tickPositions':[],
-        'plotLines':[]
+        'plotLines':[],
+        'axisMin':null,
+        'axisMax':null
     }
+    if (data.length == 0){return results;}
+    var vals = data, step = 1,larger = 1, i;
     if (axis == 'x'){
         //need to convert categories to plotline values
         vals =[];
         for (i=0;i < data.length;i++){
             vals.push([i,null]);
         }
+        results.axisMin = 0;
+        larger = find_closest_larger(data.length, plotline_no + 1);
+        step = larger / (plotline_no + 1);
+        if (step == 0){step = 1;}
     }
     else {
-        vals = data;
+        var d = [];
+        for (var j;j<data.length;j++){
+            d.push(data[j][1])
+        }
+        try {
+            results.axisMax = Math.max(d);
+            results.axisMax = find_closest_larger(results.axisMax , plotline_no);
+            results.axisMin = Math.min(d);
+            step = results.axisMax / plotline_no;
+            if (step == 0){step = 1;} 
+        } 
+        catch (e) {}
+
     }
-    if (vals.length == 0){
-        var step = null;
+    results.plotLines = set_plotlines(vals,step,axis);
+    for (var pl_idx=0;pl_idx<results.plotLines.length;pl_idx++) {
+        var val = results.plotLines[pl_idx].value;
+        if (axis == 'x'){
+            //tickPositions for categories work by index
+            //results.tickPositions.push(step*(pl_idx));
+            results.tickPositions.push(val);
+        }
+        else{
+            var val = results.plotLines[pl_idx].value;
+            results.tickPositions.push(val);
+        }
     }
-    else {
-        var step = Math.round(vals.length/plotline_no);
-    }
-    results.plotLines = set_plotlines(vals,step,axis)
-    results.tickPositions = align_ticks(results.plotLines);
-    if (results.plotLines.length > 10){
-        results.tickStep = Math.round(results.plotLines.length/5.0);
+    if (axis == 'x' && larger != data.length){
+        results.plotLines.pop()
     }
     return results;
 }
@@ -459,25 +484,63 @@ function set_plotLines(data_max, data_min, tickInterval, options_dict){
 }
 
 //Sodxtrmts Utils
-function adjust_x_plotlines(acis_data,dmm,major_grid, minor_grid){
+function set_sodxtrmts_x_plotlines(data,major_grid, minor_grid){
+    /*
+    Data is of form
+    [[yr1, dat1],[yr2,dat2], ...] 
+    where yr in acis format yyyy
+    */
     var results = {
-        'x_plotLines':[],
-        'x_tickPositions':[],
-        'x_min':null,
-        'x_max':null,
-        'yr_step':1
+        'plotLines':[],
+        'tickPositions':[],
+        'axisMin':null,
+        'axisMax':null,
     };
-    if (minor_grid =='T'){
-        pls = dmm.plotlines_minor;
-        if (pls.length > 20){results.yr_step = 5;}
-        else{results.yr_step = 2;}
+    if (!data.length){return results;}
+    results.axisMin = parseInt(data[0][0]);
+    results.axisMax = parseInt(data[data.length - 1][0]);
+    //Start with step for minor grid
+    var step = 1, 
+    div = find_largest_divisor(data.length);
+    if (minor_grid == 'F' && major_grid == "T"){
+        if (data.length % 2 == 0){
+            //Even number of data points
+            step = 2;
+        }
+        else {
+            //Odd number of data points
+            if (div == data.length){
+                step = 1;
+            }
+            else {
+                step = data.length / div;
+            }
+        }
     }
-    else if (major_grid =='T' && minor_grid == 'F'){
-        pls = dmm.plotlines_major;
+    else if (major_grid == "F" && minor_grid == "F"){
+        step = data.length - 1;
     }
-    else {
-        pls = dmm.plotlines_major;
+    //Adjust step if dataset is large
+    if (data.length > 50 && data.length <= 100){
+        if (minor_grid == 'T'){
+            step = 5;
+        }
+        if (major_grid == 'T' && minor_grid == 'F'){
+            step = 10;
+        }
     }
+    else if (data.length > 100){
+        if (minor_grid == 'T'){
+            step = 10;
+        }
+        if (major_grid == 'T' && minor_grid == 'F'){
+            step = 20;
+        }
+    }
+    if (parseInt(data[data.length - 1][0]) % step != 0){
+        results.axisMax = find_closest_larger(parseInt(data[data.length - 1][0]),step);
+    }
+    var pls = set_plotlines(data,step,'x');
     //convert to Date
     for (var pl_idx=0;pl_idx<pls.length;pl_idx++) {
         var pl ={};
@@ -487,16 +550,14 @@ function adjust_x_plotlines(acis_data,dmm,major_grid, minor_grid){
         pl.value = Date.UTC(pls[pl_idx].value,0,1);
         if (major_grid =='F' && minor_grid == 'F'){
             if (pl_idx ==0 || pl_idx == pls.length -1){
-                    results.x_plotLines.push(pl);
+                    results.plotLines.push(pl);
             }
         }
         else {
-            results.x_plotLines.push(pl);
+            results.plotLines.push(pl);
         }
-        results.x_tickPositions.push(pl.value);
+        results.tickPositions.push(pl.value);
     }
-    results.x_min = Date.UTC(dmm.new_data[0][0],0,1);
-    results.x_max = Date.UTC(dmm.new_data[dmm.new_data.length -1][0],0,1);
-    return results;
+    return results; 
 }
 

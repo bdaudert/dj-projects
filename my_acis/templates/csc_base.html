@@ -26,8 +26,8 @@
     <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
     <!-- jquery -->
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
     <!--<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>-->
     <!-- Britta's Javascript utilities -->
     <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>
@@ -170,13 +170,13 @@
             <li><a href="{{GRID_DATA_URL}}">Gridded/Modeled Data</a></li>
             </ul>
         </li>
-        <li><a href="{{TOOLS_URL}}"><font size="3">TOOLS</font></a>
+        <li><a href="{{TOOLS_URL}}"><font size="3">DATA ANALYSIS</font></a>
             <ul>
             <li><a href="{{TOOLS_URL}}">Overview</a></li>
-            <li><a href="{{STATION_TOOLS_URL}}">Station Data Tools</a></li>
-            <li><a href="{{GRID_TOOLS_URL}}">Gridded Data Tools</a></li>
-            <li><a href="{{TOOLS_GIS_URL}}">Geospatial Data Tools</a></li>
-            <li><a target="_blank" href="/csc/wrcc_apps/">WRCC-SOD</a></li>
+            <li><a href="{{STATION_TOOLS_URL}}">Station Data Analysis</a></li>
+            <li><a href="{{GRID_TOOLS_URL}}">Gridded Data Analaysis</a></li>
+            <li><a href="{{TOOLS_GIS_URL}}">Geospatial Data Analysis</a></li>
+            <!--<li><a target="_blank" href="/csc/wrcc_apps/">WRCC-SOD</a></li>-->
             </ul>
         </li>
         <li><a href="{{SCENIC_URL}}dashboard"><font size="3">CLIMATE DASHBOARD</font></a>
@@ -188,12 +188,14 @@
             <li><a href="{{SCENIC_URL}}dashboard#projections">Projections</a></li>
             </ul>
         </li>
+        <!--
         <li><a href="{{SCENIC_URL}}main_map"><font size="3">RESOURCES</font></a></li>
+        -->
         </ul>
     </div><!--End menue -->
     <div class="content">
         <table>
-        <td width=25%>
+        <td width="50%">
         <div class="searchbox">
             <!-- Search Box -->
             <form target="_blank"  method="get" action="http://www.google.com/search">
@@ -215,26 +217,24 @@
             </form>
         </div>
         </td>
-        <td width="50%" align="ccenter" valign="top">
-        {% block feedback%}        
-        <div align="center"><a target="_blank" href="{{SCENIC_URL}}/feedback/"><font size="3">Give us feedback!</font></a>
-        {%endblock feedback%}
-        <h2 align="center">{{title}}</h2>
-        </td>
-        <td width="25%" valign="top" align="right">
-        {% block logo%}
-        <p style="position:relative;top:0px;" class="green">Powered by <a target="_blank" href="http://rcc-acis.unl.edu/"><img src="{{MEDIA_URL}}img/ACISLogo.png"></a></p>
-        {%endblock logo%}
+        <td width="50%">
+        <h1 align="center" class="tiltle">{{title}}</h1>
         </td>
         </table>
-    <!--Loading image-->
-    <div id="loading">
-    <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />
-    </div>
+        <!--Loading image-->
+        <div id="loading">
+        <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />
+        </div>
         {% block content %}
         {% endblock content%}
-    </div><!-- END content --> 
 
+        {% block footer %}
+        <div id="footer" align="center"></div>
+        <script type="text/javascript">    
+        $("#footer").load("{{HTML_URL}}/Footers.html .footer-scenic");
+        </script>
+        {% endblock footer %}
+    </div><!-- END content --> 
 </div><!-- END container -->
 </body>
 </html>

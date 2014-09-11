@@ -6,12 +6,13 @@
 {%load my_scenic_filters%}
 
 {% block content %}
-
+<!--
 <p align="center">You are here
     <a href="{{HOME_URL}}">Home></a>
     <a href="{{TOOLS_URL}}">Data Analysis></a>
     <a href="{{STATION_TOOLS_URL}}">Station Data Tools></a> 
     <a href="{{SODSUMM_URL}}">Monthly/Seasonal Averages/Extremes and Bar Charts</a></p>
+-->
 
 <script type="text/javascript">set_autofill("US_station_id");</script>
 <script type="text/javascript">
@@ -60,7 +61,7 @@ $(function(){
         {%endif%}
         {%endfor%}
         </table>
-        <input type="submit" value="Submit" name="form1"/>
+        <input type="submit" value="Analyze" name="form1"/>
         </form>
     </div>
 </td>
@@ -213,7 +214,7 @@ $(function(){
                     </table>
                     <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
                     <input type="hidden" id=tab" name="tab" value="{{tab}}">
-                    <input type="submit" value="Submit" name="formDownload{{forloop.counter0}}">
+                    <input type="submit" value="Download" name="formDownload{{forloop.counter0}}">
                     </form>
                 </div><!--end formDownload-->
                 </td>

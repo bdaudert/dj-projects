@@ -7,11 +7,13 @@
 
 {% block content %}
 
+<!--
 <p align="center">You are here
     <a href="{{HOME_URL}}">Home></a>
     <a href="{{TOOLS_URL}}">Data Analysis></a>
     <a href="{{STATION_TOOLS_URL}}">Station Data Tools></a> 
     <a href="{{STATION_METAGRAPH_URL}}">Station Metadata Graphs</a></p>
+-->
 
 <!--Autofill-->
 <script type="text/javascript">set_autofill("US_coop_station_ids");</script>
@@ -49,7 +51,7 @@ $(function(){
         {%endif%}
         {%endfor%}
         </table>
-        <input type="submit" value="Submit" name="form_meta"/>
+        <input type="submit" value="Generate graphics" name="form_meta"/>
         </form>
     </div>
 

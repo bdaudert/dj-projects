@@ -3,11 +3,11 @@
 <meta name="description" content="Climate Dashboard">
 
 {% block content %}
-
+<!--
 <p align="center">You are here 
 <a href="{{HOME_URL}}">Home></a>
 <a href="{{SCENIC_URL}}dashbord/">Climate Dashboard</a></p>
-
+-->
 <table class="dashboard" align="center">
     <th><h1>The Southwest</h1></th><th><h1>The Rest</h1></th>
    <!--Weather-->
@@ -308,12 +308,6 @@
     <a target="_blank" href="http://www.cpc.ncep.noaa.gov/products/Soilmst_Monitoring/index.shtml">MORE HERE: Land Surface Monitoring and Prediction(NOAA)</a><br />
     <a target="_blank" href="http://www.wcc.nrcs.usda.gov/scan/">Soil Climate Analysis Network (USDA)</a>
     </td></tr>
-
-  <!-- Footer-->
-  <div id="footer" align="center"></div>
-    <script type="text/javascript">                        
-    $("#footer").load("{{HTML_URL}}/Footers.html .footer-partners");
-    </script>
 {% endblock %}
 
 <!--BLANK TO USE

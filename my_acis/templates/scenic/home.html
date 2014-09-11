@@ -1,82 +1,9 @@
-<!DOCTYPE html>
+{% extends "csc_base.html" %}
 
-<html>
+<meta name="keywords" content="Climate data, Climate Change, Southwest CSC, ACIS, Western Regional Climate Center">
+<meta name="description" content="SCENIC Home">
 
-<head>
-    <title>{{title}}</title>
-    <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
-    <!-- ** Javascript ** -->
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
-    <!-- ** Britta'sJavascript ** -->
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script> 
-    <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-    <script language="javascript" type="text/javascript">
-        $(window).load(function() {
-        $('#loading').hide();
-        });
-    </script>
-    <!--Google analytics-->
-    <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-44724757-2', 'dri.edu');
-    ga('send', 'pageview');
-    </script>
-</head>
-
-<body>
-
-<div class="container">
-    <!--Loading image-->
-    <div id="loading">
-    <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />
-    </div>
-    <img src="{{ MEDIA_URL }}img/SCENIC.png">
-    <table>
-    <td valign="top" width="35%">
-    <!--
-    <div class="searchbox">
-    <script>
-   (function() {
-    var cx = '002351053505226291153:lz5zr5v9xag';
-    var gcse = document.createElement('script');
-    gcse.type = 'text/javascript';
-    gcse.async = true;
-    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
-        '//www.google.com/cse/cse.js?cx=' + cx;
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(gcse, s);
-  })();
-  </script>
-  <gcse:searchresults-only></gcse:searchresults-only>
-  </div>
-    -->
-    <div class="searchbox">
-            <!-- Search Box -->
-            <form target="_blank"  method="get" action="http://www.google.com/search">
-            <div id="searchbox">
-                <table border="0">
-                <tr>
-                <td><input type="text"   name="q" size="25" maxlength="255"></td>
-                <td><input type="submit" value="Search"></td>
-                </tr>
-                <tr>
-                <td>
-                <input type="radio"  name="sitesearch" value="http://wrcc.dri.edu/csc/scenic/" checked />This Site
-                <input type="radio"  name="sitesearch"value="" />The Web
-                </td>
-                <td></td>
-                </tr>
-                </table>
-            </div>
-            </form>
-        </div>
-    </td>
-    <td valign="top" width="65%">
-    <div align="center"><a target="_blank" href="{{SCENIC_URL}}/feedback/"><font size="3">Give us feedback!</font></a>
+{%block content %}
     <p align="center" style="font-size:x-large;" class="green"><b>Start by choosing one of the following:</b></p>
     </td>
     </table>
@@ -92,7 +19,7 @@
             </ul>
             </div>
         </td>
-        <td><a class="trigger_hover" href="{{TOOLS_URL}}"><b><font size="4">ANALYSIS TOOLS</font></b></a>
+        <td><a class="trigger_hover" href="{{TOOLS_URL}}"><b><font size="4">DATA ANALYSIS</font></b></a>
         <div class="pop-up" style="display:none;" align="left">
             <b><b>Interactive Data Applications</b></b>
             <ul>
@@ -113,6 +40,7 @@
             </ul>
             </div>
         </td>
+        <!--
         <td><a class="trigger_hover" href="{{SCENIC_URL}}main_map/"><b><font size="4">RESOURCES</font></b></a>
             <div class="pop-up" style="display:none;" align="left">
             <b>External Resources</b><br />
@@ -121,6 +49,7 @@
             projects and oganizations across the US<br />
             </div>
         </td>
+        -->
         </tr>
         <tr>
             <td><a href="{{DATA_URL}}" class="trigger_hover"><img alt="DataPortal" title="DataPortal" class="front_dash_img" src="{{MEDIA_URL}}img/DataPortal.png"></a>
@@ -154,6 +83,7 @@
             </ul>
             </div>
             </td>
+            <!--
             <td><a class="trigger_hover" href="{{SCENIC_URL}}main_map/"><img alt="Network" title="Network" class="front_dash_img" src="{{MEDIA_URL}}img/Network.png"></a>
             <div class="pop-up" style="display:none;" align="left">
             <b>External Resources</b><br />
@@ -162,16 +92,9 @@
             projects and oganizations across the US<br />
             </div>
             </td>
+            -->
         </tr>
     </table>
     <br />
 
-    <!-- Footer -->
-    <!--
-    <div id="footer" align="center" valign="bottom"></div>
-    <script type="text/javascript">                        
-    $("#footer").load("{{HTML_URL}}/Footers.html .footer-partners");
-    </script> -->
-</div> <!--end container-->
-</body>
-</html>
+{%endblock content%}

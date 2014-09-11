@@ -6,6 +6,7 @@ function set_href_to_datafind(anchor){
 }
 */
 
+
 function form_change(formID){ 
     $('#' + formID).find('input,select').change(function(){
         //Hide results
@@ -134,6 +135,17 @@ function ShowPopupDocu(DivId){
         }
     });
 }
+
+function ShowNetworkDocu(NetWork){
+    $( '#' + NetWork ).dialog({
+        title:NetWork
+    });
+}
+
+function HideNetworkDocu(NetWork){
+    $(".ui-dialog-content").dialog("close");
+}
+
 
 
 function Toggle(node){

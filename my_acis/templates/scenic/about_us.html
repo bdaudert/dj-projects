@@ -1,14 +1,16 @@
 {% extends "csc_base.html" %}
 
 {% block content %}
-
+<!--
 <p align="center">You are here 
 <a href="{{HOME_URL}}">Home></a>
 <a href="{{ABOUT_URL}}">About Us</a></p>
-
+-->
 <table cellpadding="20">
 <td valign="top" width="30%">
    <h2>Links</h2>
+   <table frame="box">
+   <td>
    <a target="_blank" href="http://www.swcsc.arizona.edu/">Southwest CSC pages at the University of Arizona</a>
     <br />
     <a target="_blank" href="http://www.doi.gov/csc/southwest/index.cfm">Southwest CSC pages at the DOI</a>
@@ -16,6 +18,8 @@
     <a target="_blank" href="http://wrcc.dri.edu/">Western Regional Climate Center (WRCC)</a>
     <br />
     <a target="_blank" href="http://www.doi.gov/csc/lcc/index.cfm">Landscape Conservation Cooperatives</a>
+    </td>
+    </table>
 </td>
 <td valign="top" width="40%">
     <p align="left"><font color="red">PROVIDING ACCESS TO CLIMATE DATA,<br />PRODUCTS AND INFORMATION</font><br />
@@ -31,11 +35,5 @@
 <td valign="top" width="30%">
 </td>
 </table>
-
-  <!-- Footer -->
-  <div id="footer" align="center"></div>
-  <script type="text/javascript">                        
-   $("#footer").load("{{HTML_URL}}/Footers.html .footer-partners");
-  </script>
 
 {% endblock %}
