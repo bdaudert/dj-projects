@@ -80,6 +80,7 @@
         });
     </script>
     <!--Back button warning -->
+    <!--
     <script type="text/javascript">
     $( document ).ready(function(){
     //save_form_options('tableDataForm', 'rememberselects');
@@ -95,6 +96,7 @@
     }
     });
     </script>
+    -->
     {% block extrahead %}{% endblock %}
     {% block extrastyle %}{% endblock %}
     <!--Django env variables from settings -->
@@ -164,7 +166,6 @@
         </li>
         <li><a href="{{DATA_URL}}"><font size="3">DATA</font></a>
             <ul>
-            <li><a href="{{DATA_URL}}">All Data</a></li>
             <li><a href="{{STATION_FINDER_URL}}">Station Finder</a></li>
             <li><a href="{{STATION_DATA_URL}}">Historic Station Data</a></li>
             <li><a href="{{GRID_DATA_URL}}">Gridded/Modeled Data</a></li>
@@ -172,7 +173,6 @@
         </li>
         <li><a href="{{TOOLS_URL}}"><font size="3">DATA ANALYSIS</font></a>
             <ul>
-            <li><a href="{{TOOLS_URL}}">Overview</a></li>
             <li><a href="{{STATION_TOOLS_URL}}">Station Data Analysis</a></li>
             <li><a href="{{GRID_TOOLS_URL}}">Gridded Data Analaysis</a></li>
             <li><a href="{{TOOLS_GIS_URL}}">Geospatial Data Analysis</a></li>
@@ -194,8 +194,6 @@
         </ul>
     </div><!--End menue -->
     <div class="content">
-        <table>
-        <td width="50%">
         <div class="searchbox">
             <!-- Search Box -->
             <form target="_blank"  method="get" action="http://www.google.com/search">
@@ -216,11 +214,7 @@
             </div>
             </form>
         </div>
-        </td>
-        <td width="50%">
         <h1 align="center" class="tiltle">{{title}}</h1>
-        </td>
-        </table>
         <!--Loading image-->
         <div id="loading">
         <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />

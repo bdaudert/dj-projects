@@ -38,7 +38,7 @@ def test(request):
 
 def home(request):
     context = {
-        'title': '',
+        'title': 'Start by choosing one of the following:',
     }
     return render_to_response('scenic/home.html', context, context_instance=RequestContext(request))
 
@@ -246,6 +246,7 @@ def data_station(request):
     if 'formData' in request.POST:
         #Turn request object into python dict
         form = set_form(request,clean=False)
+        context['x'] = form
         form_cleaned = set_form(request)
         #Back Button/download files issue fix:
         #if select_stations_by none, find it
@@ -265,11 +266,12 @@ def data_station(request):
         #Set params for external links
         monthly_aves_params_list, monthly_aves_params_dict = set_user_params(form, 'monthly_aves')
         sodsumm_params_list, sodsumm_params_dict = set_user_params(form, 'sodsumm')
-        sodxtrmts_params_list, sodxtrmts_params_dict = set_user_params(form, 'sodxtrmts')
+        if 'location' in form_cleaned.keys() or 'station_id' in form_cleaned.keys():
+            sodxtrmts_params_list, sodxtrmts_params_dict = set_user_params(form, 'sodxtrmts')
+            context['sodsumm_params_list'] = sodsumm_params_list
+            context['sodxtrmts_params_dict']=sodxtrmts_params_dict
         context['monthly_aves_params_list'] = monthly_aves_params_list
         context['monthly_aves_params_dict']=monthly_aves_params_dict
-        context['sodxtrmts_params_list'] = sodxtrmts_params_list
-        context['sodxtrmts_params_dict']=sodxtrmts_params_dict
         context['sodsumm_params_list'] = sodsumm_params_list
         context['sodsumm_params_dict']=sodsumm_params_dict
         #Set element_list and unit_dict context for htl loops
@@ -2673,16 +2675,15 @@ def set_user_params(form, app_name):
         area_select = 'select_grid_by'
         if app_name == 'temporal_summary':
             f['temporal_resolution'] = 'dly'
-    elif app_name in ['monthly_aves','sodsumm', 'station_locator_app']:
+    elif app_name in ['monthly_aves','sodsumm', 'station_locator_app','data_station']:
         area_select = 'select_stations_by'
         if not 'select_stations_by' in f.keys():
             f['select_stations_by'] = 'station_id'
     elif app_name == 'sodxtrmts':
-        if 'station_id' in form.keys():
-            area_select = 'select_stations_by'
-            if not 'select_stations_by' in f.keys():
-                f['select_stations_by'] = 'station_id'
-        else:
+        area_select = 'select_stations_by'
+        if not 'select_stations_by' in f.keys():
+            f['select_stations_by'] = 'station_id'
+        if 'location' in form.keys():
             area_select = 'select_grid_by'
             if not 'select_grid_by' in f.keys():
                 f['select_grid_by'] = 'location'
@@ -2698,7 +2699,7 @@ def set_user_params(form, app_name):
         el_list = [str(f['element'])]
     user_params_list = []
     user_params_dict ={
-        area_select:f[area_select],
+        'area_select':f[area_select],
         f[area_select]:f[f[area_select]],
         'elements':','.join(el_list).rstrip(',')
     }
@@ -2723,6 +2724,12 @@ def set_user_params(form, app_name):
         else:
             els_long+=WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + ', '
     user_params_list.insert(0,['Elements',els_long])
+    '''
+    try:
+        user_params_list.insert(0,[WRCCData.DISPLAY_PARAMS[f[area_select]],f[f[area_select]]])
+    except:
+        pass
+    '''
     user_params_list.insert(0,[WRCCData.DISPLAY_PARAMS[f[area_select]],f[f[area_select]]])
     if 'temporal_resolution' in f.keys():
         user_params_dict['temporal_resolution'] = f['temporal_resolution']
