@@ -4,144 +4,101 @@
 <meta name="description" content="SW-CKN Climate Applications">
 
 {% block content %}
-    <!--
-    <p align="center">You are here 
-    <a href="{{HOME_URL}}scenic/">Home></a>
-    <a href="{{TOOLS_URL}}">Data Analysis></a>
-    <a href="{{GRID_TOOLS_URL}}">Gridded Data Tools</a>
-    -->
+<!--
+<p align="center">You are here 
+<a href="{{HOME_URL}}scenic/">Home></a>
+<a href="{{TOOLS_URL}}">Data Analysis></a>
+<a href="{{GRID_TOOLS_URL}}">Gridded Data Tools</a>
+-->
+<!-- Documentation-->
+<div class="docu" id="Docu_CLIM_SUM_MAP" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_CLIM_SUM_MAP").load("{{HTML_URL}}/Docu_CLIM_SUM_MAP.html");
+    </script>
+<div class="docu" id="Docu_AREA_TIME_SERIES" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_AREA_TIME_SERIES").load("{{HTML_URL}}/Docu_AREA_TIME_SERIES.html");
+    </script>
+<div class="docu" id="Docu_DATA_GRIDDED" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_DATA_GRIDDED").load("{{HTML_URL}}/Docu_About_gridded_data.html");
+    </script>
+<div class="docu" id="Docu_GRID_SODXTRMTS" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_GRID_SODXTRMTS").load("{{HTML_URL}}/Docu_GRID_SODXTRMTS.html");
+    </script>
+<div class="docu" id="Docu_NONE" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_NONE").load("{{HTML_URL}}/Docu_NONE.html");
+    </script>
 
-    <!-- Application documentation -->
-    <div class="docu" id="Docu_CalTracker" style="display:none;"></div>
-        <script type="text/javascript">                        
-        $("#Docu_CalTracker").load("{{HTML_URL}}/Docu_External_Resources.html #Docu_CalTracker");
-        </script>
-    <div class="docu" id="Docu_NevTracker" style="display:none;"></div>
-        <script type="text/javascript">                        
-        $("#Docu_NevTracker").load("{{HTML_URL}}/Docu_External_Resources.html #Docu_NevTracker");
-        </script>
-    <div class="docu" id="Docu_WESTMAP" style="display:none;"></div>
-        <script type="text/javascript">                        
-        $("#Docu_WESTMAP").load("{{HTML_URL}}/Docu_External_Resources.html #Docu_WESTMAP");
-        </script>
-   <div class="docu" id="Docu_FreezTracker" style="display:none;"></div>
-        <script type="text/javascript">                        
-        $("#Docu_FreezTracker").load("{{HTML_URL}}/Docu_External_Resources.html #Docu_FreezTracker");
-        </script>
-   <div class="docu" id="Docu_CLIM_SUM_MAP" style="display:none;"></div>
-        <script type="text/javascript">                        
-        $("#Docu_CLIM_SUM_MAP").load("{{HTML_URL}}/Docu_CLIM_SUM_MAP.html");
-        </script>
-   <div class="docu" id="Docu_AREA_TIME_SERIES" style="display:none;"></div>
-        <script type="text/javascript">                        
-        $("#Docu_AREA_TIME_SERIES").load("{{HTML_URL}}/Docu_AREA_TIME_SERIES.html");
-        </script>
-   <div class="docu" id="Docu_DATA_GRIDDED" style="display:none;"></div>
-        <script type="text/javascript">                        
-        $("#Docu_DATA_GRIDDED").load("{{HTML_URL}}/Docu_About_gridded_data.html");
-        </script>
-    <div class="docu" id="Docu_GRID_SODXTRMTS" style="display:none;"></div>
-        <script type="text/javascript">                        
-        $("#Docu_GRID_SODXTRMTS").load("{{HTML_URL}}/Docu_GRID_SODXTRMTS.html");
-        </script>
-   <div class="docu" id="Docu_NONE" style="display:none;"></div>
-        <script type="text/javascript">                        
-        $("#Docu_NONE").load("{{HTML_URL}}/Docu_NONE.html");
-        </script>
-
-    <table cellpadding="20">
-    <td valign="top" width="25%">
-    </td>
-    <td valign="top" width="50%">
-            <table cellspacing="10">
-            <tr>
-                <td valign="top">
-                    <p>Gridded Data &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_DATA_GRIDDED')"><br />Lister</p>
-                    <div class="pop-up">
-                    <p>Get a listing of gridded data.<br/>Click on the question mark for more information!</p>
-                    </div>
-                    <a  href="{{DATA_URL}}/gridded/"><img class="app_img" alt="DataLister" title="DataLister" src="{{MEDIA_URL}}img/ClimateModel2.png"></a>
-                </td>
-                <td valign="top">
-                    <p>Spatial Summary&nbsp;&nbsp;&nbsp;<img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_AREA_TIME_SERIES')"><br />Time Series (Beta)</p>
-                    <div class="pop-up" id="spatial_summary">
-                    <p>Generates climate summary time series over custom search areas. <br/>Click on the question mark for more information!</p>
-                    </div>
-                    <a  href="{{GRID_SPATIAL_SUMMARY_URL}}"><img class="app_img" alt="RiskMaps" title="RiskMaps" src="{{MEDIA_URL}}img/Area_TS.png"></a>
-                </td>
-                <td valign="top">
-                    <p>Temporal &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_CLIM_SUM_MAP')"><br/>Summary Maps (Beta)</p>
-                    <div class="pop-up">                        
-                    <p>Generates climate summary maps for different elements, time ranges and region using NRCC interpolated data. <br/>Click on the question mark for more information!</p>
-                    </div>
-                    <a  href="{{GRID_TEMPORAL_SUMMARY_URL}}"><img class="app_img" alt="SummaryMaps" title="SummaryMaps" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
-                </td>
-            </tr>
-            <tr>
-            <td valign="top">
-                <p>Monthly/Annual &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SODXTRMTS')">  <br/> Averages/Extremes<br /> and Time Series for individual gridpoints</p>
-                <div class="pop-up" id="sodxtrmts">
-                    <p>Monthly and annual time series of a large number of properties derived from daily data set. <br/>Click on the question mark for more information!</p>
-                </div>
-                {%if user_params_dict %}
-                    <a  href="{{GRID_SODXTRMTS_URL}}?{%for key, val in user_params_dict.items %}{{key}}={{val}}&{%endfor%}"><img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
-                {%else%}
-                    <a  href="{{GRID_SODXTRMTS_URL}}"><img  class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a>
-                {%endif%}
-            </td>
-            <td></td>
-            <td></td>
-            </tr>
-            </table>
-
-    </td>
-    <td valign="top" width="25%">
-           <table frame="box" cellpadding="5px">
-           <td>
-           <h3 >Links to external Gridded/Modeled Data Applications</h3>
-            <h4 align="center">Southwest US Applications</h4>
-            <table frame="box" cellpadding="5px">
-                <tr><td>
-                <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/cal-mon/frames_version.html" class="trigger_hover" target="_blank">WRCC-California Climate Tracker(<font color="red">CA</font>)</a>
-                <div class="pop-up">
-                    <p>Tracking Climate Variability and Change for the state of California.</p>
-                </div>
-                </td><td>
-                <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_CalTracker')">
-                </td></tr>
-                <tr><td>
-                <a id="us_wide" href="http://www.wrcc.dri.edu/monitor/nev-mon/index.html" class="trigger_hover" target="_blank">WRCC-Nevada Climate Tracker(<font color="red">NV</font>)</a>
-                <div class="pop-up">
-                <p>Tracking Climate Variability and Change for the state of Nevada.</p>
-                </div>
-                </td><td>
-                <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_NevTracker')">
-                </td></tr>
-                <tr><td><a id="us_wide" target="_blank" href="http://www.cefa.dri.edu/Westmap/" class="trigger_hover">WRCC-Westmap</a>
-                <div class="pop-up">
-                    <p>Climate Analysis and Mapping Tool.</p>
-                </div>
-                </td><td>
-                <!--style="border:4px solid #FF007F" -->
-                <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_WESTMAP')">
-                </td></tr>
-            </table>
-            
-
-            <h4 align="center">US-Wide Applications</h4>
-            
-                <table frame="box" cellpadding="5px">
-                    <tr><td>
-                    <a id="us_wide" href="http://www.wrcc.dri.edu/cwd/products/" class="trigger_hover">WRCC-North American Freezing Level Tracker</a>
-                    <div class="pop-up">
-                        <p>Track through time the height of the freezing level above sea level.</p>
-                    </div>
-                    </td><td>
-                   <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png"  onclick="ShowPopupDocu('Docu_FreezTracker')">
-                    </td></tr>
-                </table>
-    </td>
+<table cellpadding="20" align="center">
+<td valign="top">
+    <table cellspacing="10">
+    <tr>
+       <td valign="top"><a href="{{GRID_SODXTRMTS_URL}}">Single gridpoint statistics </a>
+       <div class="pop-up">
+       <p>Obtain monthly and anual means and extremes for individual gridpoints.<br />Generate customized time series from results.</p>
+       </div>
+       </td>
+       <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_GRID_SODXTRMTS')">
+       </td>
+       <td valign="top"><a href="{{GRID_SPATIAL_SUMMARY_URL}}">Spatial Summaries</a>
+       <div class="pop-up">
+       <p>Computes max/min/mean/sum over custom search areas and generates time series.</p>
+       </div>
+       </td>
+       <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_AREA_TIME_SERIES')">
+       </td>
+       <td valign="top"><a href="{{GRID_TEMPORAL_SUMMARY_URL}}">Temporal Summaries </a>
+       <div class="pop-up">
+       <p>Generates climate summary maps for US states.<br />Only available for NRCC interpolated data.</p>
+       </div>
+       </td>
+       <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_CLIM_SUM_MAP')">
+       </td>
+    </tr>
+    <tr>
+       <td colspan="2">
+       <a  href="{{GRID_SODXTRMTS_URL}}" class="trigger_hover"><img class="app_img" alt="DataLister" title="DataLister" src="{{MEDIA_URL}}img/Sodxtrmts.png"></a> 
+        <div class="pop-up">
+       <p>Obtain monthly and anual means and extremes for individual gridpoints.<br />Generate customized time series from results.</p>
+       </div>
+       </td>
+       <td colspan="2">
+       <a  href="{{GRID_SPATIAL_SUMMARY_URL}}" class="trigger_hover"><img class="app_img" alt="SpatialSummary" title="SpatialSummary" src="{{MEDIA_URL}}img/Area_TS.png"></a>
+       <div class="pop-up">
+       <p>Computes max/min/mean/sum over custom search areas and generates time series.</p>
+       </div>
+       </td>
+       <td colspan="2">
+       <a  href="{{GRID_TEMPORAL_SUMMARY_URL}}" class="trigger_hover"><img class="app_img" alt="TemporalSummary" title="TemporalSummary" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
+       <div class="pop-up">
+       <p>Generates climate summary maps for US states.<br />Only available for NRCC interpolated data.</p>
+       </div>
+       </td>
+   </tr>
+    <tr>
+       <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}/gridded/">Gridded Data Lister</a>
+        <div class="pop-up">
+       <p>Get a listing of gridded data.<br/>Click on the question mark for more information!</p>
+       </div>
+       </td>
+       <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_DATA_GRIDDED')">
+       <td></td><td></td>
+       <td></td><td></td>
+    </tr>
+    <tr>
+    <td colspan="2">
+    <a  href="{{DATA_URL}}gridded/" class="trigger_hover"><img class="app_img" alt="DataLister" title="DataLister" src="{{MEDIA_URL}}img/ClimateModel2.png"></a> 
+    <div class="pop-up">
+    <p>Get a listing of gridded data.<br/>Click on the question mark for more information!</p>
+    </div>
+    </td> 
+    <td colspan="2"></td>
+    <td colspan="2"></td>
+    </tr>
     </table>
-    </td>
-    </table>
+</td>
+</table>
 {%endblock%}
