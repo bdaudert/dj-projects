@@ -64,6 +64,24 @@ def main_map(request):
     context['json_file'] = 'Network.json'
     return render_to_response('scenic/main_map.html', context, context_instance=RequestContext(request))
 
+def resources(request):
+    context = {
+        'title': 'Resources'
+    }
+    return render_to_response('scenic/resources.html', context, context_instance=RequestContext(request))
+
+def resources_station(request):
+    context = {
+        'title': 'Station Data Resources'
+    }
+    return render_to_response('scenic/resources_station.html', context, context_instance=RequestContext(request))
+
+def resources_grid(request):
+    context = {
+        'title': 'Gridded Data Resources'
+    }
+    return render_to_response('scenic/resources_grid.html', context, context_instance=RequestContext(request))
+
 #Temp home page fpr Kelly to look at
 def main(request):
     context = {
@@ -143,7 +161,7 @@ def dashboard(request):
 
 def data_home(request):
     context = {
-        'title': 'Data',
+        'title': 'Data Lister',
         'icon':'DataPortal.png'
     }
     return render_to_response('scenic/data/home.html', context, context_instance=RequestContext(request))
@@ -222,7 +240,7 @@ def download(request):
 
 def data_station(request):
     context = {
-        'title': 'Historic Station Data (Daily)',
+        'title': 'Historic Station Data Lister (Daily)',
     }
 
     initial, checkbox_vals = set_data_station_initial(request)
@@ -442,7 +460,7 @@ def data_station(request):
 
 def data_gridded(request):
     context = {
-        'title': 'Gridded/Modeled Data',
+        'title': 'Gridded Data Lister',
     }
     initial, checkbox_vals = set_data_gridded_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
@@ -849,7 +867,7 @@ def monthly_aves(request):
 
 def temporal_summary(request):
     context = {
-        'title': 'Temporal Summary Maps',
+        'title': 'Temporal Summaries',
     }
     json_file = request.GET.get('json_file', None)
     #Check if we are coming in from other page, e.g. Gridded Data
@@ -992,7 +1010,7 @@ def clim_prob_maps(request):
 
 def spatial_summary(request):
     context = {
-        'title': 'Spatial Summary Time Series',
+        'title': 'Spatial Summaries',
     }
     json_file = request.GET.get('json_file', None)
     #Check if we are coming in from other page, e.g. Gridded Data
@@ -1361,14 +1379,13 @@ def sodxtrmts(request, app_type):
     app_type = 'station' or 'grid'
     Both are processed via this view
     '''
-    context = {
-        'title': 'Monthly/Annual Averages/Extremes and Time Series',
-        'icon':'ToolProduct.png'
-    }
+    context = {}
     if app_type == 'grid':
+        context['title'] = 'Single gridpoint statistics'
         url ='scenic/apps/gridded/grid_sodxtrmts.html'
     else:
         url = 'scenic/apps/station/sodxtrmts.html'
+        context['title'] = 'Station Statistics/Custom Time Series'
     json_dict =  None
     json_file = request.GET.get('json_file', None)
     if json_file is not None:
@@ -1597,7 +1614,7 @@ def sodxtrmts(request, app_type):
 
 def sodsumm(request):
     context = {
-        'title': 'Monthly/Seasonal Averages/Extremes and Bar Charts',
+        'title': 'Station Climatology',
         'icon':'ToolProduct.png'
         }
     initial = set_sod_initial(request, 'Sodsumm')
@@ -2675,10 +2692,15 @@ def set_user_params(form, app_name):
         area_select = 'select_grid_by'
         if app_name == 'temporal_summary':
             f['temporal_resolution'] = 'dly'
-    elif app_name in ['monthly_aves','sodsumm', 'station_locator_app','data_station']:
+    elif app_name in ['monthly_aves','sodsumm','data_station']:
         area_select = 'select_stations_by'
         if not 'select_stations_by' in f.keys():
             f['select_stations_by'] = 'station_id'
+    elif app_name == 'station_locator_app':
+            area_select = 'select_stations_by'
+            if not 'select_stations_by' in f.keys():
+                f['select_stations_by']='state'
+            #f['select_stations_by'] = f['area_select']
     elif app_name == 'sodxtrmts':
         area_select = 'select_stations_by'
         if not 'select_stations_by' in f.keys():
@@ -2700,6 +2722,7 @@ def set_user_params(form, app_name):
     user_params_list = []
     user_params_dict ={
         'area_select':f[area_select],
+        area_select:f[area_select],
         f[area_select]:f[f[area_select]],
         'elements':','.join(el_list).rstrip(',')
     }
@@ -2724,13 +2747,11 @@ def set_user_params(form, app_name):
         else:
             els_long+=WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + ', '
     user_params_list.insert(0,['Elements',els_long])
-    '''
     try:
         user_params_list.insert(0,[WRCCData.DISPLAY_PARAMS[f[area_select]],f[f[area_select]]])
     except:
         pass
-    '''
-    user_params_list.insert(0,[WRCCData.DISPLAY_PARAMS[f[area_select]],f[f[area_select]]])
+    #user_params_list.insert(0,[WRCCData.DISPLAY_PARAMS[f[area_select]],f[f[area_select]]])
     if 'temporal_resolution' in f.keys():
         user_params_dict['temporal_resolution'] = f['temporal_resolution']
     if 'temporal_summary' in f.keys():

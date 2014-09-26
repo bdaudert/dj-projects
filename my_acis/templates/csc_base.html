@@ -149,6 +149,27 @@
 
 <body>
 
+<div class="searchbox">
+    <!-- Search Box -->
+    <form target="_blank"  method="get" action="http://www.google.com/search">
+    <div id="searchbox">
+        <table border="0">
+        <tr>
+        <td><input type="text"   name="q" size="25" maxlength="255"/></td>
+        <td><input type="submit" value="Search" /></td>
+        </tr>
+        <tr>
+        <td>
+        <input type="radio"  name="sitesearch" value="http://wrcc.dri.edu/csc/scenic/" checked />This Site
+        <input type="radio"  name="sitesearch" value="" />The Web
+        </td>
+        <td></td>
+        </tr>
+        </table>
+    </div>
+    </form>
+</div>
+
 <div class="container">
     <!-- Header -->
     <img src="{{ MEDIA_URL }}img/SCENIC.png">
@@ -164,18 +185,18 @@
             <li><a href="{{CONTACT_URL}}">Contact Us</a></li>
             </ul>
         </li>
-        <li><a href="{{DATA_URL}}"><font size="3">DATA</font></a>
+        <li><a href="{{DATA_URL}}"><font size="3">DATA LISTER</font></a>
             <ul>
             <li><a href="{{STATION_FINDER_URL}}">Station Finder</a></li>
-            <li><a href="{{STATION_DATA_URL}}">Historic Station Data</a></li>
-            <li><a href="{{GRID_DATA_URL}}">Gridded/Modeled Data</a></li>
+            <li><a href="{{STATION_DATA_URL}}">Station Data Lister</a></li>
+            <li><a href="{{GRID_DATA_URL}}">Gridded Data Lister</a></li>
             </ul>
         </li>
         <li><a href="{{TOOLS_URL}}"><font size="3">DATA ANALYSIS</font></a>
             <ul>
             <li><a href="{{STATION_TOOLS_URL}}">Station Data Analysis</a></li>
             <li><a href="{{GRID_TOOLS_URL}}">Gridded Data Analaysis</a></li>
-            <li><a href="{{TOOLS_GIS_URL}}">Geospatial Data Analysis</a></li>
+            <!--<li><a href="{{GIS_TOOLS_URL}}">Geospatial Data Analysis</a></li>-->
             <!--<li><a target="_blank" href="/csc/wrcc_apps/">WRCC-SOD</a></li>-->
             </ul>
         </li>
@@ -188,32 +209,15 @@
             <li><a href="{{SCENIC_URL}}dashboard#projections">Projections</a></li>
             </ul>
         </li>
-        <!--
-        <li><a href="{{SCENIC_URL}}main_map"><font size="3">RESOURCES</font></a></li>
-        -->
+        <li><a href="{{SCENIC_URL}}resources/"><font size="3">RESOURCES</font></a>
+        <ul>
+        <li><a href="{{SCENIC_URL}}resources/station_data_resources/">Station Data Resources</a></li>
+        <li><a href="{{SCENIC_URL}}resources/gridded_data_resources/">Gridded Data Resources</a></li>
+        </ul>
+        </li>
         </ul>
     </div><!--End menue -->
     <div class="content">
-        <div class="searchbox">
-            <!-- Search Box -->
-            <form target="_blank"  method="get" action="http://www.google.com/search">
-            <div id="searchbox">
-                <table border="0">
-                <tr>
-                <td><input type="text"   name="q" size="25" maxlength="255"/></td>
-                <td><input type="submit" value="Search" /></td>
-                </tr>
-                <tr>
-                <td>
-                <input type="radio"  name="sitesearch" value="http://wrcc.dri.edu/csc/scenic/" checked />This Site
-                <input type="radio"  name="sitesearch" value="" />The Web
-                </td>
-                <td></td>
-                </tr>
-                </table>
-            </div>
-            </form>
-        </div>
         <h1 align="center" class="tiltle">{{title}}</h1>
         <!--Loading image-->
         <div id="loading">

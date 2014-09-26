@@ -13,47 +13,33 @@
 <a href="{{TOOLS_URL}}">Analysis Tools</a></p>
 -->
 
-        <table class="dash" cellspacing="80px"i align="center">
-            <tr>
-            <td><font size="3"><a class="trigger_hover" href="{{TOOLS_URL}}station"><b>STATION<br /> DATA ANALYSIS</b></a>
-            <div class="pop-up" style="display:none;" align="left">
-            <b>Data Analysis/Visualization of <br />histroric station data</b>
+<!--Documentation -->
+<!--FIX ME: need qmark docu for station/grid analysis-->
+<div class="docu" id="Docu_NONE" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_NONE").load("{{HTML_URL}}/Docu_NONE.html");
+    </script>
+
+<table cellpadding="20" align="center">
+<td valign="top">
+    <table cellspacing="10">
+    <tr>
+       <td valign="top"><a href="{{STATION_TOOLS_URL}}" class="trigger_hover"><b>STATION DATA<br />ANALYSIS</b></a>
+       <div class="pop-up">
+       <b>Data Analysis/Visualization of <br />histroric station data</b>
             <ul>
-            <li>Generate Climate Sumary Tables <br />(Averages/Extremes/...)</li>
-            <li>Create customized Time Series</li>
+            <li>Generate Climate Summary Tables for a station</li>
+            <li>Find averages/extremes</li>
+            <li>Monthly/Annual/Seasonal statistics</li>
+            <li>Create custom time series</li>
             </ul>
-            </div>
-            <br />
-            <br />
-            <a class="trigger_hover"href="{{STATION_TOOLS_URL}}"><img alt="MonAves" title="MonAves" class="dash_img" src="{{MEDIA_URL}}img/MonAves.png"></a>
-            <div class="pop-up" style="display:none;" align="left">
-            <b>Data Analysis/Visualization of <br />histroric station data</b>
-            <ul>
-            <li>Generate Climate Sumary Tables <br />(Averages/Extremes/...)</li>
-            <li>Create customized Time Series</li>
-            </ul>
-            </div>
-            </td>
-            <td><font size="3"><a class="trigger_hover" href="{{TOOLS_URL}}gridded"><b>GRIDDED<br /> DATA ANALYSIS</b></a>
-            <div class="pop-up" style="display:none;" align="left">
-            <b>Data Analysis/Visualization of <br />gridded/modeled data</b>
-            <ul>
-            <li>Temporal Summaries: Generate Climate Summary Maps for a US State</li>
-            <li>Spatial Summaries: Create customized Time Series for:
-            <ul>
-            <li>Individual grid points, US states</li>
-            <li>County, County Warning Area</li>
-            <li>Climate Division, Drainage Basin</li>
-            <li>Custom polygon, Circle, Bounding Box</li>
-            </ul>
-            </li>
-            </ul>
-            </div>
-            <br />
-            <br />
-            <a class="trigger_hover" href="{{GRID_TOOLS_URL}}"><img alt="ClimSumMap" title="ClimSumMap" class="dash_img" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
-            <div class="pop-up" style="display:none;" align="left">
-            <b>Data Analysis/Visualization of <br />gridded/modeled data</b>
+       </div>
+       </td>
+       <td><img class="qmark" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" onclick="ShowPopupDocu('Docu_NONE')">
+       </td>
+       <td valign="top"><a href="{{GRID_TOOLS_URL}}" class="trigger_hover"><b>GRIDDED DATA<br />ANALYSIS</b></a>
+       <div class="pop-up">
+       <b>Data Analysis/Visualization of <br />gridded/modeled data</b>
             <ul>
             <li>Temporal Summaries: Generate Climate Summary Maps for a US State</li>
             <li>Spatial Summaries: Create customized Time Series for:
@@ -65,28 +51,44 @@
             </ul>
             </li>
             </ul>
-            </td>
-            <!--
-            <td><font size="3"><a class="trigger_hover" href="{{GIS_TOOLS_URL}}"><b>GEOSPATIAL<br /> DATA ANALYSIS</b></a>
-            <div class="pop-up" style="display:none;" align="left">
-            <b>Data Analysis/Visualization of <br />geospatial data</b>
+        </div>
+       </td>
+       <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_NONE')">
+       </td>
+    </tr>
+    <tr>
+       <td colspan="2">
+       <a  href="{{STATION_TOOLS_URL}}" class="trigger_hover"><img class="app_img" alt="StationAnalysis" title="StationD=Analysis" src="{{MEDIA_URL}}img/MonAves.png"></a>
+        <div class="pop-up">
+       <b>Data Analysis/Visualization of <br />histroric station data</b>
             <ul>
-            <li>Generate Vulnerability Maps</li>
+            <li>Generate Climate Summary Tables for a station</li>
+            <li>Find averages/extremes</li>
+            <li>Monthly/Annual/Seasonal statistics</li>
+            <li>Create custom time series</li>
             </ul>
-            </div>
-            <br />
-            <br />
-            <a class="trigger_hover" href="{{GIS_TOOLS_URL}}"><img alt="GISMap" title="GISMap" class="dash_img" src="{{MEDIA_URL}}img/GISMap.png"></a>
-            <div class="pop-up" style="display:none;" align="left">
-            <b>Data Analysis/Visualization of <br />geospatial data</b>
+       </div>
+       </td>
+       <td colspan="2">
+       <a  href="{{GRID_TOOLS_URL}}" class="trigger_hover"><img class="app_img" alt="GridAnalysis" title="GridAnalysis" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
+       <div class="pop-up">
+       <b>Data Analysis/Visualization of <br />gridded/modeled data</b>
             <ul>
-            <li>Generate Vulnerability Maps</li>
+            <li>Temporal Summaries: Generate Climate Summary Maps for a US State</li>
+            <li>Spatial Summaries: Create customized Time Series for:
+            <ul>
+            <li>Individual grid points, US states</li>
+            <li>County, County Warning Area</li>
+            <li>Climate Division, Drainage Basin</li>
+            <li>Custom polygon, Circle, Bounding Box</li>
             </ul>
-            </div>
-            </td>
-            -->
-            </tr>
-         </table>
-</div>    
+            </li>
+            </ul>
+       </div>
+       </td>
+    </tr>
+    </table>
+</td>
+</table>
 
 {%endblock%}

@@ -36,21 +36,21 @@
 <td valign="top">
     <table cellspacing="10">
     <tr>
-       <td valign="top"><a href="{{GRID_SODXTRMTS_URL}}">Single gridpoint statistics </a>
+       <td valign="top"><a class="trigger_hover" href="{{GRID_SODXTRMTS_URL}}"><b>Single gridpoint statistics</b></a>
        <div class="pop-up">
        <p>Obtain monthly and anual means and extremes for individual gridpoints.<br />Generate customized time series from results.</p>
        </div>
        </td>
        <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_GRID_SODXTRMTS')">
        </td>
-       <td valign="top"><a href="{{GRID_SPATIAL_SUMMARY_URL}}">Spatial Summaries</a>
+       <td valign="top"><a class="trigger_hover" href="{{GRID_SPATIAL_SUMMARY_URL}}"><b>Spatial Summaries</b></a>
        <div class="pop-up">
        <p>Computes max/min/mean/sum over custom search areas and generates time series.</p>
        </div>
        </td>
        <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_AREA_TIME_SERIES')">
        </td>
-       <td valign="top"><a href="{{GRID_TEMPORAL_SUMMARY_URL}}">Temporal Summaries </a>
+       <td valign="top"><a class="trigger_hover" href="{{GRID_TEMPORAL_SUMMARY_URL}}"><b>Temporal Summaries</b></a>
        <div class="pop-up">
        <p>Generates climate summary maps for US states.<br />Only available for NRCC interpolated data.</p>
        </div>
@@ -79,20 +79,20 @@
        </td>
    </tr>
     <tr>
-       <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}/gridded/">Gridded Data Lister</a>
+       <td valign="top"><a class="trigger_hover" href="{{GRID_DATA_URL}}"><b>Gridded Data Lister</b></a>
         <div class="pop-up">
        <p>Get a listing of gridded data.<br/>Click on the question mark for more information!</p>
        </div>
        </td>
-       <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_DATA_GRIDDED')">
+       <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_DATA_GRIDDED')"></td>
        <td></td><td></td>
        <td></td><td></td>
     </tr>
     <tr>
     <td colspan="2">
-    <a  href="{{DATA_URL}}gridded/" class="trigger_hover"><img class="app_img" alt="DataLister" title="DataLister" src="{{MEDIA_URL}}img/ClimateModel2.png"></a> 
+    <a  href="{{GRID_DATA_URL}}" class="trigger_hover"><img class="app_img" alt="DataLister" title="DataLister" src="{{MEDIA_URL}}img/ClimateModel2.png"></a> 
     <div class="pop-up">
-    <p>Get a listing of gridded data.<br/>Click on the question mark for more information!</p>
+    <p>Get a listing of gridded data for one or multiple gridpoints.<br/>Queries are customizable over spatial and temoral extend.</p>
     </div>
     </td> 
     <td colspan="2"></td>

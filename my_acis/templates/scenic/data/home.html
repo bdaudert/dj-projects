@@ -8,11 +8,9 @@
 <!--
 <p align="center">You are here 
 <a href="{{HOME_URL}}">Home></a>
-<a href="{{DATA_URL}}">Data</a></p>
+<a href="{{DATA_URL}}">Data Lister</a></p>
 -->
 
-<table cellpadding="20">
-<td valign="top" width="75%">
 <!--Documentation-->
 <div align="left" id="Docu_About_station_finder" style="display:none;"></div>
         <script type="text/javascript">                        
@@ -26,102 +24,55 @@
     <script type="text/javascript">                        
         $("#Docu_About_gridded_data").load("{{HTML_URL}}/Docu_About_gridded_data.html");
     </script>
-<!--End Documenation-->
 
-<table class="dash" cellspacing="10px" align="center">
+<table cellpadding="40" align="center">
+<td valign="top">
+    <table cellspacing="10">
     <tr>
-        <td><font size="3"><a href="{{STATION_FINDER_URL}}"><b>Station Finder</b></a></font>
-        <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_About_station_finder')"></td>
-        <td><font size="3"><a href="{{STATION_DATA_URL}}"><b>Historic Station<br />Data Lister</b></a></font>
-        <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_About_station_data')"></td>
-        <td><font size="3"><a href="{{GRID_DATA_URL}}"><b>Gridded/Modeled<br /> Data Lister</b></a></font>
-        <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_About_gridded_data')"></td>
+       <td valign="top"><a class="trigger_hover" href="{{STATION_FINDER_URL}}"><b>Station Finder</b></a>
+       <div class="pop-up">
+       <p>Find stations with data for specific climate elements and a chosen time range.</p>
+       </div>
+       </td>
+       <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_About_station_finder')">
+       </td>
+       <td valign="top"><a class="trigger_hover" href="{{STATION_DATA_URL}}"><b>Station Data Lister</b></a>
+        <div class="pop-up">
+       <p>Get a listing of station data for one or multiple stations.<br /> Queries are customizable over spatial and temoral extend.<br/></p>
+       </div>
+       </td>
+       <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_About_station_data')">
+       </td>
+       <td valign="top"><a class="trigger_hover" href="{{STATION_METAGRAPH_URL}}"><b>Gridded Data Lister</b></a>
+       <div class="pop-up">
+       <p>Get a listing of gridded data.<br/>Queries are customizable over spatial and temoral extend.</p>
+       </div>
+       </td>
+       <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_About_gridded_data')">
+       </td>
     </tr>
     <tr>
-        <td><a href="{{STATION_FINDER_URL}}"><img alt="StationFinder" title="StationFinder" class="dash_img" src="{{MEDIA_URL}}img/StationFinder.png"></a></td>
-        <td><a href="{{STATION_DATA_URL}}"><img alt="Station" title="Station" class="dash_img" src="{{MEDIA_URL}}img/Stn.png"></a></td>
-        <td><a href="{{GRID_DATA_URL}}"><img alt="ClimateModel" title="ClimateModel" class="dash_img" src="{{MEDIA_URL}}img/ClimateModel2.png"></a></td>
+    <td colspan="2">
+    <a  href="{{STATION_FINDER_URL}}" class="trigger_hover"><img class="app_img" alt="StationFinder" title="StationFinder" src="{{MEDIA_URL}}img/StationFinder.png"></a> 
+    <div class="pop-up">
+    <p>Find stations with data for specific climate elements and a chosen time range.</p>
+    </div>
+    </td>
+    <td colspan="2">
+    <a  href="{{STATION_DATA_URL}}" class="trigger_hover"><img class="app_img" alt="StationData" title="StationData" src="{{MEDIA_URL}}img/Stn.png"></a>
+    <div class="pop-up">
+    <p>Get a listing of station data for one or multiple stations.<br /> Queries are customizable over spatial and temoral extend.<br/></p>
+    </div>
+    </td> 
+    <td colspan="2">
+    <a  href="{{GRID_DATA_URL}}" class="trigger_hover"><img class="app_img" alt="GridData" title="GridData" src="{{MEDIA_URL}}img/ClimateModel2.png"></a>
+    <div class="pop-up">
+    <p>Get a listing of gridded data.<br/>Queries are customizable over spatial and temoral extend.<</p>
+    </div>
+    </td>  
     </tr>
- </table>
-</td> 
-<td valign="top" width="25%">
-<h2>External <br / >Data Resources</h2>
-    <table cellpadding="5px" frame="box">
-        <tr><td>
-        <a href="http://www.ncdc.noaa.gov/" class="trigger_hover" target="_blank">NCDC</a>
-        <div class="pop-up">
-            <p>National Climatic Data Center. Access to: <br >Satellite Data<br />Radar<br />Modeled Data<br /> Marine/Ocean<br />Weather Balloons<br /> Paleoclimate<br />Severe Weather data<br />
-            </p>
-        </div>
-        </td><td>
-        <a href="http://www.ncdc.noaa.gov/" class="trigger_hover" target="_blank"><img alt="NOAA" title="NOAA" class="icon" src="{{MEDIA_URL}}img/NOAALogo.png"></a>
-        </td></tr>
-        <tr><td>
-        <a href="http://wrcc.dri.edu/" class="trigger_hover" target="_blank">WRCC</a>
-        <div class="pop-up">
-            <p>Western Regional Climate Center</p>
-        </div>
-        </td><td>
-        <a href="http://wrcc.dri.edu/" class="trigger_hover" target="_blank"><img alt="WRCC" title="WRCC" class="logo" src="{{MEDIA_URL}}img/WRCCLogo.png"></a>
-        </td></tr>
-        <tr><td>
-        <a href="{{DATA_URL}}sw_networks/" class="trigger_hover" target="_blank">SW Networks</a>
-        <div class="pop-up">
-            <p>Links to several Southwest US Data Networks</p>
-        </div>
-        </td><td>
-        <a href="{{DATA_URL}}sw_networks/" class="trigger_hover" target="_blank"><img alt="HappyFace" title="HappyFace" class="icon" src="{{MEDIA_URL}}img/HappyFace.png"></a>
-        </td></tr>
-        <tr><td>
-        <a href="http://www.cpc.ncep.noaa.gov/products/monitoring_and_data/" class="trigger_hover" target="_blank">ESRL</a>
-        <div class="pop-up">
-            <p>NOAA Earth System Research Laboratory (ESRL) Interactive Plotting Analysis</p>
-        </div>
-        </td><td>
-        <a href="http://www.esrl.noaa.gov/psd/cgi-bin/data/getpage.pl" class="trigger_hover" target="_blank"><img alt="NOAA" title="NOAA" class="icon" src="{{MEDIA_URL}}img/NOAALogo.png"></a>
-        </td></tr>
-        <tr><td>
-        <a href="http://www.cpc.ncep.noaa.gov/products/monitoring_and_data/" class="trigger_hover" target="_blank">CPC</a>
-        <div class="pop-up">
-            <p>NOAA Climate Prediction Center (CPC) Monitoring and Data</p>
-        </div>
-        </td><td>
-        <a href="http://www.cpc.ncep.noaa.gov/products/monitoring_and_data/" class="trigger_hover" target="_blank"><img alt="NOAA" title="NOAA" class="icon" src="{{MEDIA_URL}}img/NOAALogo.png"></a>
-        </td></tr>
-        <tr><td>
-        <a href="http://www.raws.dri.edu/index.html" class="trigger_hover" target="_blank">WRCC-RAWS</a>
-        <div class="pop-up">
-            <p>Access Summaries, Graphs, and other products for sub-daily
-            Remote Automatic Weather Stations (RAWS). Made available via the USA Climate Archive developed by WRCC.</p>
-        </div>
-        </td><td>
-        <a href="http://www.raws.dri.edu/index.html" class="trigger_hover" target="_blank"><img alt="RAWS" title="RAWS" class="icon" src="{{MEDIA_URL}}img/RAWSLogo.gif"></a>
-        </td></tr>
-        <tr><td>
-        <a href="http://water.usgs.gov/data/" class="trigger_hover" target="_blank">USGS Water Data Discovery</a>
-        <div class="pop-up">
-            <p>Access to past and present water and drought data as well as various anomly maps.</p>
-        </div>
-        </td><td>
-        <a href="http://water.usgs.gov/data/" class="trigger_hover" target="_blank"><img alt="USGS" title="USGS" class="logo" src="{{MEDIA_URL}}img/USGSLogo.png"></a>
-        </td></tr>
-        <!--<tr><td><a href="http://his.cuahsi.org/" class="trigger_hover" target="_blank">CUAHSI</a>
-        <div class="pop-up">
-            <p>An internet-based system for sharing hydrologic data. It is comprised of databases and servers, connected through web services, to client applications, allowing for the publication, discovery and access of data.</p>
-        </div>
-        </td><td>
-        <a href="http://his.cuahsi.org/" class="trigger_hover" target="_blank"><img alt="CUAHSI" title="CUAHSI" class="logo" src="{{MEDIA_URL}}img/CUAHSILogo.gif"></a>
-        </td></tr>-->
-        <tr><td>
-        <a href="http://cida.usgs.gov/climate/gdp/" class="trigger_hover" target="_blank">USGS Geo Data Portal</a>
-        <div class="pop-up">
-            <p>Access to downscaled climate projections developed in cooperation with the U.S. Geological Survey National Climate Change Wildlife Science Center.</p>
-        </div>
-        </td><td>
-        <a href="http://cida.usgs.gov/climate/gdp/" class="trigger_hover" target="_blank"><img alt="USGS" title="USGS" class="logo" src="{{MEDIA_URL}}img/USGSLogo.png"></a>
-        </td></tr>
     </table>
-</td> 
+</td>
 </table>
 
 {%endblock content%}

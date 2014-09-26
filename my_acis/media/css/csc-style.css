@@ -23,7 +23,7 @@ body {
     min-height:1000px;
     color:#000000;
     background-color: #FFEFD5;
-    padding: 5px;
+    padding: 0px;
     /*
     display:table-cell;
     height:auto;*/
@@ -150,11 +150,11 @@ ul#nav {
   padding: 0;
   list-style: none;
   /*background: #dc0000 url(../img/menu-parent.png) repeat-x;*/
-  background:#006666 repeat-x; 
+  background:#006666 repeat-x;
   -moz-border-radius-topright: 10px;
   -webkit-border-top-right-radius: 10px;
   -moz-border-radius-topleft: 10px;
-  -webkit-border-top-left-radius: 10px; 
+  -webkit-border-top-left-radius: 10px;
 }
  
 ul#nav li {
@@ -163,20 +163,19 @@ ul#nav li {
  
 ul#nav li a {
   float: left;
-  font: bold 1.1em arial,verdana,tahoma,sans-serif;
+  font: bold 1em arial,verdana,tahoma,sans-serif;
   line-height: 40px;
-  /*color: #fff;*/
   color:#FFEFD5;
   text-decoration: none;
   text-shadow: 1px 1px 1px #006666;
   margin: 0;
-  padding: 0 30px;
+  padding: 0 20px;
   /*background: #006666 url(../img/menu-parent.png) repeat-x;*/
   background:#006666 repeat-x;
   -moz-border-radius-topright: 10px;
   -webkit-border-top-right-radius: 10px;
   -moz-border-radius-topleft: 10px;
-  -webkit-border-top-left-radius: 10px;    
+  -webkit-border-top-left-radius: 10px;
 }
  
 /* APPLIES THE ACTIVE STATE */
@@ -217,13 +216,14 @@ ul#nav li:hover > ul {
 
 ul#nav li:hover > ul li a {
   float: left;
-  font: bold 1.1em arial,verdana,tahoma,sans-serif;
+  /*font: bold 1.1em arial,verdana,tahoma,sans-serif;*/
+  font: bold 1em arial,verdana,tahoma,sans-serif;
   line-height: 45px;
   color:#FFEFD5;
   text-decoration: none;
   text-shadow: 1px 1px 1px #006666;
   margin: 0;
-  padding: 0 30px 0 0;
+  padding: 0 0 0 0;
   /*background: #00906E url(../img/menu-child.png) repeat-x;*/
   background:#00B98F repeat-x;
 }
@@ -334,6 +334,17 @@ table.page td, th {
     border:1px solid #000000;
 }
 
+table.links {
+    background-color: #CCE0E0;
+    border: 2px solid #006666;
+    height: 100%;
+    width: 100%;
+}
+
+table.links tr, th {
+    outline: 1px solid #006666;
+    border: 0;
+}
 
 table.dash {
 padding: 10px 10px 10px 10px;
@@ -381,14 +392,16 @@ ul.navbar a {
   background-color:#F8E1D0;
 }
 
+
 .pop-up {
   display: none;
   position: absolute;
   /*width: 300px;*/
   padding: 5px;
   background: #FFEFD5;
-  border: 1px solid #000000;
+  border: 2px solid #006666;
   font-size: 3;
+  font-style:bold;
   z-index:10;
 }
 
@@ -532,14 +545,13 @@ img.center {
     height:250px;
 }
 
-/*
 .searchbox {
     position:absolute;
-    top:230px;
+    top: 15px;
+    right: 80px;
 
 }
-*/
-
+/*
 .searchbox {
     position:relative;
     top:0px;
@@ -549,7 +561,7 @@ img.center {
     background-color:#FFEFD5;
     color:#000000;
 }
-
+/*
 /*Map related stuff*/
 #map_legend {
     position:relative;
