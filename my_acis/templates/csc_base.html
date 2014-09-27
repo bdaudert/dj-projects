@@ -148,8 +148,12 @@
 <!--<body onbeforeunload="reset_options()">-->
 
 <body>
+<div class="container">
 
-<div class="searchbox">
+    <!-- Header -->
+    <div id="wrap">
+    <img width="100%" src="{{ MEDIA_URL }}img/SCENIC.png">
+   <div class="searchbox">
     <!-- Search Box -->
     <form target="_blank"  method="get" action="http://www.google.com/search">
     <div id="searchbox">
@@ -168,11 +172,8 @@
         </table>
     </div>
     </form>
-</div>
-
-<div class="container">
-    <!-- Header -->
-    <img src="{{ MEDIA_URL }}img/SCENIC.png">
+    </div> 
+    </div>
     <!-- Nav bar at top of page-->
     <div id="menu">
     <ul id="nav">
@@ -211,6 +212,9 @@
         </li>
         <li><a href="{{SCENIC_URL}}resources/"><font size="3">RESOURCES</font></a>
         <ul>
+        <li></li>
+        <li></li>
+        <li></li>
         <li><a href="{{SCENIC_URL}}resources/station_data_resources/">Station Data Resources</a></li>
         <li><a href="{{SCENIC_URL}}resources/gridded_data_resources/">Gridded Data Resources</a></li>
         </ul>

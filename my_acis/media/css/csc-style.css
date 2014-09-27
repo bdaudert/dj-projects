@@ -546,11 +546,19 @@ img.center {
 }
 
 .searchbox {
-    position:absolute;
-    top: 15px;
-    right: 80px;
+    position:relative;
+    top: 0px;
+    left: 700px;
 
 }
+
+#wrap {
+    position:relative; /* make this relative to have the inner div absolute without breaking out */
+    /*width: 200px;*/  /* fix the width or else it'll be the entire page's width */
+    border: 1px solid #006666;
+}
+
+
 /*
 .searchbox {
     position:relative;
@@ -701,4 +709,8 @@ height:20px;
   top: 15%;
   left:35%;
   z-index: 100;
+}
+
+#footer {
+  padding: 10px;
 }
