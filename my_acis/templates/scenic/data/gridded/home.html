@@ -25,7 +25,7 @@ $(function(){
     hide_errors_results_on_change('tableDataForm');
 });
 </script>
-<table cellpadding="10">
+<table cellpadding="5">
 <td valign="top" width="40%">
     <input type="submit" value="Start Over" onclick="window.location='{{GRID_DATA_URL}}'"/>
     <div id='formData'>
@@ -631,7 +631,7 @@ $(function(){
         <input type="hidden" id="initial_lat" name="initial_lat" value='40'>
         <input type="hidden" id="initial_lon" name="initial_lon" value='-111'>
         {%endif%}
-        <div id="map-gridpoint" style="width:500px;height:360px;"></div>
+        <div id="map-gridpoint" style="width:500px;height:410px;"></div>
         <script type="text/javascript">
         initialize_grid_point_map('data_gridded');
         </script>
@@ -716,8 +716,8 @@ $(function(){
     {%if overlay_error%}
     <p class="error">{{overlay_error}}</p>
     {%else%}
-    <div id="map-overlay" style="width:100%;height:360px;"></div>
-    <div id="content-window" style="width:100px; height:100px;"></div>
+    <div id="map-overlay" height="410px" width="420px"></div>
+    <div id="content-window"></div>
     <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
     {%endif%} 
     {%endif%}
@@ -745,6 +745,76 @@ $(function(){
 <td valign="top" width="100%">
     <div class="results">
     {%if results and not results.error%}
+    <!--Download data button-->
+    <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
+    <!--Download form-->
+    <div id="formDownload" class="form" style="display:none;">
+        {%if json_dict%}
+        <form method="post" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading()">
+        {%elif json_file%}
+        <form method="post" action="?json_file={{json_file}}" onsubmit="show_loading()">
+        {%else%}
+        <form method="post" action="" onsubmit="show_loading()">
+        {%endif%}
+        {% csrf_token %}
+        <table id="tableDownload" bgcolor="#CCE0E0">
+        <tr valign="top">
+        <td>Data Format: </td>
+        <td>
+        <select id="data_format_download" name="data_format_download" onchange="set_delimiter(this, 'delim_download');">
+        <option value="clm">Columnar, .txt</option>
+        <option value="dlm">Delimited, .dat</option>
+        <option value="xl" selected>Excel, .xls</option>
+        </select>
+        </td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_data_format_download"></div>
+        <script type="text/javascript">                        
+            $("#ht_data_format_download").load("{{HTML_URL}}Docu_help_texts.html #ht_data_format");
+        </script>
+        </div>
+        </td>
+        </tr>
+        <!--Only show when format is clm or dlm, don't show if xl-->
+        <tr valign="top" id="delim_download" style="display:none;">
+        <td>Delimiter:</td>
+        <td>
+        <select id="delimiter_download" name="delimiter_download">
+        <option value="comma" selected>Comma (,)</option>
+        <option value="tab">Tab (    )</option>
+        <option value="space">Space ( )</option>
+        <option value="colon">Colon (:)</option>
+        <option value="pipe">pipe(|)</option>
+        </select>
+        </td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_delimiter_download"></div>
+        <script type="text/javascript">                        
+            $("#ht_delimiter_download").load("{{HTML_URL}}Docu_help_texts.html #ht_delimiter");
+        </script>
+        </div>
+        </td>
+        </tr>
+        <tr valign="top">
+        <td>Outputfile Name: </td>
+        <td><input type="text" id="output_file_name_download" name="output_file_name_download" value="Output"></td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_output_file_name_download"></div>
+        <script type="text/javascript">                        
+            $("#ht_output_file_name_download").load("{{HTML_URL}}Docu_help_texts.html #ht_output_file_name");
+        </script>
+        </div>
+        </td>
+        </tr>
+        </table>
+        <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+        <input type="submit" value="Download" name="formDownload">
+        </form>
+     </div><!--end formDownload-->
+
     <!--Link to relevant applications-->
     <!--
     {%if params_dict.data_summary == "temporal" and params_dict.select_grid_by == "state" and params_dict.units == "english"%}

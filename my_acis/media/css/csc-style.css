@@ -17,6 +17,8 @@ body {
     font-size: 14px;
 }
 
+
+
 .container {
     margin: 0 auto;
     width: 960px;
@@ -33,6 +35,13 @@ body {
     position:relative;
     top:0px;
 }
+
+select {
+    /*
+    outline:1px solid green;border:1px solid black;
+    */
+    font-weight: bold;
+    }
 
 .center {
     position:relative;
@@ -548,7 +557,7 @@ img.center {
 .searchbox {
     position:relative;
     top: 0px;
-    left: 700px;
+    left: 500px;
 
 }
 
@@ -658,11 +667,17 @@ img.center {
   z-index: 1;
 }
 
-/*Polygon map stuff*/
+/*map stuff*/
 #map-polygon {
 padding: 0;
 margin: 0;
 height: 100%;
+}
+
+
+#content-window {
+width:100px;
+height:100px;
 }
 
 #panel {

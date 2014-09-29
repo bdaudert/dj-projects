@@ -8,12 +8,19 @@
 <a href="/csc/documentation/grid_acis">GridACIS</a>
 </p>
 
+<!--Documentation-->
+<div id="Docu_netCDF_HDF5_Conversion" style="display:none"></div>
+<script type="text/javascript">            
+    $("#Docu_netCDF_HDF5_Conversion").load("{{HTML_URL}}/Docu_netCDF_HDF5_Conversion.html");
+</script>
+
 <h1 align="center">{{title}}</h1>
-<h2 align="center">Documentation for gridded ACIS data</h2>
-<table>
-<td width="30%">
+<h2 align="center">How to add a gridded dataset to the ACIS system</h2>
+<table cellpadding="20px">
+<td width="50%">
 
 <table align="left" bgcolor="#ccffff">
+<th>Useful links</th>
 <tr><td>
     <a target="_blank" href="http://rcc-acis.org/docs_gridded.html" class="trigger_hover">Gridded Datasets</a>
     <div class="pop-up" id="ACIS">
@@ -21,22 +28,26 @@
     </div>
 </td></tr>
 <tr><td>
-    <p class="trigger_hover pop_link" onclick="ShowPopupDocu('Docu_netCDF_HDF5_Conversion')"><font color=""><u>NetCDF --> HDF5 Converter</u></font></p>
+    <a target="_blank" href="http://maca.northwestknowledge.net/" class="trigger_hover">MACA Home</a>
+    <div class="pop-up" id="MACA">
+    <p><font size="4">Webpages for MACA dataset. (External)</font></p>
+    </div>
+</td></tr>
+<!--
+<tr><td>
+    <p class="trigger_hover pop_link" onclick="ShowPopupDocu('Docu_netCDF_HDF5_Conversion')"><font color=""><u>NetCDF to  HDF5 Converter</u></font></p>
     <div class="pop-up" id="ACIS">
     <p><font size="4">Describes methology for conversion of netCDF to HDF5 format. (Internal)</font></p>
     </div>
 </td></tr>
+-->
 </table>
 
 </td>
 
-<td width="70%">
-
-<!--Documentation-->
-<div id="Docu_netCDF_HDF5_Conversion" style="display:none"></div>
-<script type="text/javascript">            
-    $("#Docu_netCDF_HDF5_Conversion").load("{{HTML_URL}}/Docu_netCDF_HDF5_Conversion.html");
-</script>
+<td width="50%" align="center">
+<h3>1. Netcdf to hdf5 conversion</h3>
+<h3>2. Grid Definition file</h3>
 </td>
 </table>
 {% endblock %}

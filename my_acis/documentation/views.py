@@ -23,6 +23,23 @@ def home(request):
     }
     return render_to_response('documentation/home.html', context, context_instance=RequestContext(request))
 
+def ee(request):
+    context = {
+        'title': 'Google Earth Engine/App Engine projects',
+    }
+    return render_to_response('documentation/ee/ee.html', context, context_instance=RequestContext(request))
+
+def ee_set_up(request):
+    context = {
+        'title': 'Google Earth Engine/App Engine set up',
+    }
+    return render_to_response('documentation/ee/set_up.html', context, context_instance=RequestContext(request))
+
+def ee_hello_world(request):
+    context = {
+        'title': 'Google Earth Engine/App Engine Hello World example',
+    }
+    return render_to_response('documentation/ee/hello_world.html', context, context_instance=RequestContext(request))
 
 def acis(request):
     context = {

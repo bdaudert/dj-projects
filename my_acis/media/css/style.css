@@ -32,6 +32,11 @@ table, tr, th{
 
 }
 
+.navbar {
+    border: 1px solid #EDAB79;
+    background-color:#79BAEC;
+    color:#EDAB79;
+}
 
 /*
 td{
@@ -82,9 +87,16 @@ ul.navbar a {
 }
 
 
-h1,h2,h3,h4,h5,h6 {
+h1,h2 {
     font-family: Georgia,serif;
     color: #5050aa;
+    margin: 0;
+    padding: 1px;
+}
+
+h3,h4,h5,h6 {
+    font-family: Georgia,serif;
+    color: #006666;
     margin: 0;
     padding: 1px;
 }

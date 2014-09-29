@@ -435,6 +435,20 @@ def data_station(request):
                 resultsdict['station_ids_error'] = stn_error
         if form_cleaned['data_format'] != 'html':
             return WRCCUtils.write_station_data_to_file(resultsdict,params_dict,request=request)
+        else:
+            #Write results to json file for later download
+            json_dict = {
+                'params_dict':params_dict,
+                'resultsdict':resultsdict
+            }
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+            json_file = '%s_data_station.json' %(time_stamp)
+            json_dict['json_file'] = json_file
+            json_dict['JSON_URL'] = settings.TEMP_DIR
+            results_json = json.dumps(json_dict)
+            with open(settings.TEMP_DIR + '%s' %(json_file),'w+') as f:
+                f.write(results_json)
+            context['json_file'] = json_file
 
     #Overlay maps
     if 'formOverlay' in request.POST:
@@ -455,6 +469,22 @@ def data_station(request):
         context['kml_file_path'] = kml_file_path
         context['area_type'] = form['select_overlay_by']
         context['host'] = settings.HOST
+
+    #Downlaod Table Data
+    if 'formDownload' in request.POST:
+        form = set_form(request,clean=False)
+        json_file = request.POST.get('json_file', None)
+        if not json_file:
+            results = {'error':'No json file found for data download.'}
+            return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
+        with open(settings.TEMP_DIR + json_file, 'r') as f:
+            json_dict =  json.load(f)
+            #Overwrite download options
+            json_dict['params_dict']['data_format'] = form['data_format_download']
+            json_dict['params_dict']['delimiter'] = form['delimiter_download']
+            json_dict['params_dict']['output_file_name'] = form['output_file_name_download']
+        return WRCCUtils.write_station_data_to_file(json_dict['resultsdict'],json_dict['params_dict'],request=request)
+
     return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
 
 
@@ -626,6 +656,19 @@ def data_gridded(request):
             context['json_file'] = json_file
         #Render to page if html format was chosen, else save to file
         if form_cleaned['data_format'] == 'html':
+            #Write results to json file for later download
+            json_dict = {
+                'results':results,
+                'form':form
+            }
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+            json_file = '%s_data_station.json' %(time_stamp)
+            json_dict['json_file'] = json_file
+            json_dict['JSON_URL'] = settings.TEMP_DIR
+            results_json = json.dumps(json_dict)
+            with open(settings.TEMP_DIR + '%s' %(json_file),'w+') as f:
+                f.write(results_json)
+            context['json_file'] = json_file
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
         else:
             return WRCCUtils.write_griddata_to_file(results,form,request=request)
@@ -648,6 +691,22 @@ def data_gridded(request):
         context['kml_file_path'] = kml_file_path
         context['area_type'] = form['select_overlay_by']
         context['host'] = settings.HOST
+
+   #Downlaod Table Data
+    if 'formDownload' in request.POST:
+        form = set_form(request,clean=False)
+        json_file = request.POST.get('json_file', None)
+        if not json_file:
+            results = {'error':'No json file found for data download.'}
+            return render_to_response('scenic/data/station/home.html', context, context_instance=RequestContext(request))
+        with open(settings.TEMP_DIR + json_file, 'r') as f:
+            json_dict =  json.load(f)
+            #Overwrite download options
+            json_dict['form']['data_format'] = form['data_format_download']
+            json_dict['form']['delimiter'] = form['delimiter_download']
+            json_dict['form']['output_file_name'] = form['output_file_name_download']
+        return WRCCUtils.write_griddata_to_file(json_dict['results'],json_dict['form'],request=request)
+
     return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext(request))
 
 
@@ -1517,7 +1576,6 @@ def sodxtrmts(request, app_type):
             data = DJ.get_data_grid()
         #Set dates list
         dates_list = DJ.get_dates_list()
-        context['x'] = len(data['data'][0][0])
         #Run application
         App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
         results = App.run_app()
@@ -1877,6 +1935,14 @@ def set_form(request,clean=True):
             form_dict = dict((x,y) for x,y in request.items())
         except:
             form_dict = {}
+    #Resolve naming conflicts in data_station/data_gridded
+    #similar fields appear in both, main form and download form
+    if 'data_format_download' in form.keys():
+        form['data_format'] = form['data_format_download']
+    if 'delimiter_download' in form.keys():
+        form['delimiter']= form['delimiter_download']
+    if 'output_file_name_download' in form.keys():
+        form['output_file_name'] = form['output_file_name_download']
     for key,val in form_dict.iteritems():
         if key == 'csrfmiddlewaretoken':
             continue
