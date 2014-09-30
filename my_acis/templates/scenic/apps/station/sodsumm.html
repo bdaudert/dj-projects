@@ -27,15 +27,15 @@ $(function(){
     <input type="submit" value="Start Over" onclick="window.location='{{SODSUMM_URL}}'"/>
     <div id='form1'>
         <form method="post" id='form1' action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" bgcolor="#CCE0E0">
+        <table class="form" >
         {%for field in form1 %}
         {%if not field.is_hidden%}
         {%if user_params_dict.station_id and field.label == "Station id"%}
-        <tr bgcolor="#FFEFD5">
+        <tr >
         {%elif user_params_dict.start_year and field.label == "Start year"%}
-        <tr bgcolor="#FFEFD5">
+        <tr >
         {%elif user_params_dict.end_year and field.label == "End year"%}
-        <tr bgcolor="#FFEFD5">
+        <tr >
         {%else%}
         <tr>
         {%endif%}
@@ -159,7 +159,7 @@ $(function(){
                 <div id="formDownload{{forloop.counter0}}" class="form" style="display:none;">
                     <form method="post" action="" onsubmit="show_loading()">
                     {% csrf_token %}
-                    <table id="tableDownload" bgcolor="#CCE0E0">
+                    <table id="tableDownload" >
                     <tr valign="top">
                     <td>Data Format: </td>
                     <td>

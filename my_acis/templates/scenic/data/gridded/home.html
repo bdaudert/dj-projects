@@ -30,12 +30,8 @@ $(function(){
     <input type="submit" value="Start Over" onclick="window.location='{{GRID_DATA_URL}}'"/>
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" id="tableData" bgcolor="#CCE0E0">
-        {%if user_params_dict.select_grid_by or large_request%}
-        <tr valign="top" bgcolor="#FFEFD5">
-        {%else%}
+        <table class="form" id="tableData">
         <tr valign="top">
-        {%endif%}
         <td>Select grid by:</td>
         <td>
             <select id="select_grid_by" name="select_grid_by" onchange="set_station_grid_select('area',this)" onfocus="set_station_grid_select('area',this);">
@@ -55,11 +51,7 @@ $(function(){
         </script>
         </td>
         </tr>
-        {%if user_params_dict.select_grid_by or large_request%}
-        <tr id="area" valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr id="area" valign="top">
-        {%endif%}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
         <td><input autocomplete="off" type="text" size="20" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_value(this.value) & unset_large_request();"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -71,11 +63,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if user_params_dict.temporal_resolution or large_request%}
-        <tr valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr valign="top">
-        {%endif%}
         <td>Temporal Resolution: </td>
         <td>
             <select id="temporal_resolution" name="temporal_resolution" onchange="set_grid_and_els(this, 'grid_type')">
@@ -93,11 +81,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if user_params_dict.elements or large_request%}
-        <tr id="Els" valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr id="Els" valign="top">
-        {%endif%}
         <td id="Elements">Elements: </td>
         <td>
             <select id="elements" name="elements" multiple onchange="update_elements(this)">
@@ -118,25 +102,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if initial.temporal_resolution == 'dly' and not user_params_dict.add_degree_days%}
-        {%if large_request%}
-        <tr id="add" valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr id="add" valign="top">
-        {%endif%}
-        {%elif  not user_params_dict.add_degree_days %}
-        {%if large_request%}
-        <tr id="add" valign="top" bgcolor="#FFEFD5">
-        {%else%}
-        <tr id="add" valign="top">
-        {%endif%}
-        {%else%}
-        {%if large_request%}
-        <tr id="add" valign="top" bgcolor="#FFEFD5">
-        {%else%}
-        <tr id="add" valign="top">
-        {%endif%}
-        {%endif%}
         <td>Add special degree days: </td>
 
         <td>
@@ -158,11 +124,7 @@ $(function(){
         <tr id="dd" valign="top">
         {%else%}
         {%if user_params_dict.add_degree_days == "T"%}
-        {%if large_request%}
-        <tr id="add" valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr id="add" valign="top">
-        {%endif%}
         {%else%}
         <tr id="dd" valign="top" style="display:none">
         {%endif%}
@@ -178,11 +140,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if user_params_dict.units or large_request%}
-        <tr valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr valign="top">
-        {%endif%}
         <td>Units: </td>
         <td>
         <select id="units" name="units" onchange="update_value(this.value) & set_degree_days(this.value)">
@@ -199,11 +157,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if user_params_dict.start_date or large_request%}
-        <tr valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr valign="top">
-        {%endif%}
         <td id="Start Date">Start Date: </td>
         <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value) & unset_large_request();"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -215,11 +169,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if user_params_dict.end_date or large_request%}
-        <tr valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr valign="top">
-        {%endif%}
         <td id="End Date">End Date: </td>
         <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value) & unset_large_request();"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -231,11 +181,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if user_params_dict.grid or large_request%}
-        <tr id="grid_type" valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr id="grid_type" valign="top">
-        {%endif%}
         <td>Grid: </td>
         <td>
             <select id="grid" name="grid" onchange="update_value(this.value)">
@@ -266,11 +212,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if user_params_dict.data_summary or large_request%}
-        <tr id="summary_type" valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr id="summary_type" valign="top">
-        {%endif%}
         <td>Data Summary: </td>
         <td>
             <select id="data_summary" name="data_summary" onchange="set_data_summary(this, 'temp_summary','spat_summary') & update_value(this.value) & unset_large_request();">
@@ -289,19 +231,11 @@ $(function(){
         </td>
         </tr>
         {%if initial.data_summary == "temporal" and not user_params_dict.temporal_summary%}
-        {%if large_request%}
-        <tr id="add" valign="top" id="temp_summary" bgcolor="#FFEFD5" style="display:table-row">
-        {%else%}
         <tr id="add" valign="top" id="temp_summary" style="display:table-row">
-        {%endif%}
         {%elif not initial.data_summary == "temporal" and not user_params_dict.temporal_summary%}
         <tr valign="top" id="temp_summary" style="display:none">
         {%else%}
-        {%if large_request%}
-        <tr id="add" valign="top" id="temp_summary" bgcolor="#FFEFD5">
-        {%else%}
         <tr id="add" valign="top" id="tem_summary">
-        {%endif%}
         {%endif%}
         <td>Temporal Summary: </td>
         <td>
@@ -322,19 +256,11 @@ $(function(){
         </td>
         </tr>
         {%if initial.data_summary == "spatial" and not user_params_dict.spatial_summary%}
-        {%if large_request%}
-        <tr valign="top" id="spat_summary" style="display:table-row" bgcolor="#FFEFD5">
-        {%else%}
         <tr valign="top" id="spat_summary" style="display:table-row">
-        {%endif%}
         {%elif not initial.data_summary == "spatial" and not user_params_dict.spatial_summary%}
         <tr valign="top" id="spat_summary" style="display:none">
         {%else%}
-        {%if large_request%}
-        <tr valign="top" id="spat_summary" style="display:table-row" bgcolor="#FFEFD5">
-        {%else%}
         <tr valign="top" id="spat_summary" style="display:table-row">
-        {%endif%}
         {%endif%}
         <td>Spatial Summary: </td>
         <td>
@@ -354,11 +280,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if large_request%}
-        <tr valign="top" style="display:table-row" bgcolor="#FFEFD5">
-        {%else%}
         <tr valign="top" style="display:table-row">
-        {%endif%}
         <td>Date Format: </td>
         <td>
         <select id="date_format" name="date_format" onchange="update_value(this.value)">
@@ -435,7 +357,7 @@ $(function(){
         {%if large_request%}
         <tr valign="top" id="out_file" style="display:table-row;" class="large_request">
         {%else%}
-        <tr valign="top" id="out_file" style="display:table-row;" bgcolor="#FFEFD5">
+        <tr valign="top" id="out_file" style="display:table-row;" >
         {%endif%}
         {%endif%}
         <td>Outputfile Name: </td>
@@ -644,7 +566,7 @@ $(function(){
     {%endif%}
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableDataForm')">{% csrf_token %}
-            <table class="form" bgcolor="#CCE0E0">
+            <table class="form" >
             <tr>
             <td>State: </td>
             <td>
@@ -757,7 +679,7 @@ $(function(){
         <form method="post" action="" onsubmit="show_loading()">
         {%endif%}
         {% csrf_token %}
-        <table id="tableDownload" bgcolor="#CCE0E0">
+        <table id="tableDownload" >
         <tr valign="top">
         <td>Data Format: </td>
         <td>

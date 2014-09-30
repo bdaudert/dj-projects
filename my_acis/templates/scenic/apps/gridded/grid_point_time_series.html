@@ -28,7 +28,7 @@
 
     <div id='form0' align="center">
         <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" bgcolor="#CCE0E0">
+        <table class="form" >
         {%for field in form0 %}
         <tr>
         <td>{{field.label}}:</td>

@@ -253,19 +253,24 @@ def data_station(request):
     context[initial['overlay_state'] + '_selected'] = 'selected'
     context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
 
+    '''
     #Check if we linked from other page and set user parameters
     if request.method == 'GET' and 'elements' in request.GET:
         form_cleaned = set_form(request,clean=True)
         form = set_form(request,clean=False)
         user_params_list, user_params_dict =set_user_params(form, 'data_station')
         context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
+    '''
 
-    #if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
-    if 'formData' in request.POST:
+    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+        if request.method == 'GET':
+            context['form_message'] = True
+        #if 'formData' in request.POST:
         #Turn request object into python dict
         form = set_form(request,clean=False)
-        context['x'] = form
         form_cleaned = set_form(request)
+        context['x'] = form
+        context['xx'] = form_cleaned
         #Back Button/download files issue fix:
         #if select_stations_by none, find it
         if not 'select_stations_by' in form_cleaned.keys() or form_cleaned['select_stations_by'] not in form_cleaned.keys():
@@ -433,6 +438,8 @@ def data_station(request):
                 stn_error+= missing_stations
                 context['station_ids_error'] = stn_error
                 resultsdict['station_ids_error'] = stn_error
+        if 'data_format' not in form_cleaned.keys():
+            form_cleaned['data_format'] == 'html'
         if form_cleaned['data_format'] != 'html':
             return WRCCUtils.write_station_data_to_file(resultsdict,params_dict,request=request)
         else:
@@ -2645,10 +2652,14 @@ def set_data_station_params(form):
         return {}
 
     key_order = [form['select_stations_by'], 'elements', 'start_date', 'end_date', 'units']
+    defaults = ['station_ids', 'maxt,mint,pcpn', fourtnight, yesterday,'english']
     display_params_list = [[] for k in range(len(key_order))]
     params_dict = {}
     for key_idx, key in enumerate(key_order):
-        display_params_list[key_idx] = [WRCCData.DISPLAY_PARAMS[key],form[key]]
+        try:
+            display_params_list[key_idx] = [WRCCData.DISPLAY_PARAMS[key],form[key]]
+        except:
+            display_params_list[key_idx] = [WRCCData.DISPLAY_PARAMS[key], defaults[key_idx]]
     for key, val in form.iteritems():
         #Need station list for missing data
         if key == 'station_ids':

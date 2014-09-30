@@ -131,8 +131,9 @@ h1.error, h2.error, h3.error, h4.error, h5.error {
 
 
 .message{
-    color:#9400D3;
-    font-size:4;
+    color:#4B0082;
+    font-size:16px;
+    font-weight:bold;
 }
 
 
@@ -356,27 +357,21 @@ table.links tr, th {
 }
 
 table.dash {
-padding: 10px 10px 10px 10px;
-border: none;
-text-align:center;
-color: #000000;
+    padding: 10px 10px 10px 10px;
+    border: none;
+    text-align:center;
+    color: #000000;
+}
+
+table.form {
+    border:1px solid #006666;
+    /*border-collapse:collapse;*/
+    background-color:#CCE0E0;
 }
 
 
 table.form td {
     margin: 0px 0px;
-    font-weight: bold;
-}
-
-
-.form {
-    /*border: 1px solid #99C1C1;*/
-    color:#000000;
-    text-align:left;
-    padding:10px;
-}
-
-.form table td {
     font-weight: bold;
 }
 

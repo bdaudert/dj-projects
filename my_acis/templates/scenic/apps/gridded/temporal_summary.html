@@ -34,9 +34,9 @@ $(function(){
     <input type="submit" value="Start Over" onclick="window.location='{{GRID_TEMPORAL_SUMMARY_URL}}'"/>
     <div id='formMap'>
         <form method="post" id="tableMapForm" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" id="tableMap" bgcolor="#CCE0E0">
+        <table class="form" id="tableMap" >
         {%if user_params_dict.select_grid_by%}
-        <tr valign="top" bgcolor="#FFEFD5">
+        <tr valign="top" >
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -60,7 +60,7 @@ $(function(){
         </td>
         </tr>
         {%if user_params_dict.select_grid_by%}
-        <tr id="area" valign="top" bgcolor="#FFEFD5">
+        <tr id="area" valign="top" >
         {%else%}
         <tr id="area" valign="top">
         {%endif%}
@@ -76,7 +76,7 @@ $(function(){
         </td>
         </tr>
         {%if user_params_dict.elements%}
-        <tr id="Els" valign="top" bgcolor="#FFEFD5">
+        <tr id="Els" valign="top" >
         {%else%}
         <tr id="Els" valign="top">
         {%endif%}
@@ -102,7 +102,7 @@ $(function(){
         </td>
         </tr>
         {%if user_params_dict.add_degree_days%}
-        <tr id="add" valign="top" bgcolor="#FFEFD5">
+        <tr id="add" valign="top" >
         {%else%}
         <tr id="add" valign="top">
         {%endif%}
@@ -126,7 +126,7 @@ $(function(){
         <tr id="dd" valign="top">
         {%else%}
         {%if user_params_dict.add_degree_days == "T"%}
-        <tr id="dd" valign="top" bgcolor="#FFEFD5">
+        <tr id="dd" valign="top" >
         {%else%}        
         <tr id="dd" valign="top" style="display:none">
         {%endif%}
@@ -143,7 +143,7 @@ $(function(){
         </td>
         </tr>
         {%if user_params_dict.start_date%}
-        <tr valign="top" bgcolor="#FFEFD5">
+        <tr valign="top" >
         {%else%}
         <tr valign="top">
         {%endif%} 
@@ -159,7 +159,7 @@ $(function(){
         </td>
         </tr>
         {%if user_params_dict.end_date%}
-        <tr valign="top" bgcolor="#FFEFD5">
+        <tr valign="top" >
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -175,7 +175,7 @@ $(function(){
         </td>
         </tr>
         {%if user_params_dict.select_grid_by%}
-        <tr id="grid_type" valign="top" bgcolor="#FFEFD5">
+        <tr id="grid_type" valign="top" >
         {%else%}
         <tr id="grid_type" valign="top">
         {%endif%}
@@ -210,7 +210,7 @@ $(function(){
         </td>
         </tr>
         {%if user_params_dict.temporal_summary%}
-        <tr valign="top" bgcolor="#FFEFD5">
+        <tr valign="top" >
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -500,7 +500,7 @@ $(function(){
     {%endif%}
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableMapForm')">">{% csrf_token %}
-            <table class="form" bgcolor="#CCE0E0">
+            <table class="form" >
             <tr>
             <td>State: </td>
             <td>

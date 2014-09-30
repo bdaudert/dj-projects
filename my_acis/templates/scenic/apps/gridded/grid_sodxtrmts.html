@@ -106,11 +106,11 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
         <form method="post" id="fSodxtrmts" action="" onsubmit="show_loading()">
     {%endif%}
     {% csrf_token %}
-    <table id="tableSodxtrmts" frame="void" style="border-collapse:collapse;" bgcolor="#CCE0E0">
+    <table id="tableSodxtrmts" frame="void" style="border-collapse:collapse;" >
     <td valign="top">
-    <table id="tableData" frame="box" cell-padding="20" bgcolor="#CCE0E0">
+    <table id="tableData" frame="box" cell-padding="20" >
     {%if user_params_dict.location%}
-    <tr valign="top" bgcolor="#FFEFD5">
+    <tr valign="top" >
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -126,12 +126,12 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </td>
     </tr>
     {%if user_params_dict.start_date or user_params_dict.start_year%}
-    <tr valign="top" bgcolor="#FFEFD5">
+    <tr valign="top" >
     {%else%}
     <tr valign="top">
     {%endif%}
         {%if user_params_dict.grid or large_request%}
-        <tr id="grid_type" valign="top" bgcolor="#FFEFD5">
+        <tr id="grid_type" valign="top" >
         {%else%}
         <tr id="grid_type" valign="top">
         {%endif%}
@@ -177,7 +177,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </td>
     </tr>
     {%if user_params_dict.end_date or user_params_dict.end_year%}
-    <tr valign="top" bgcolor="#FFEFD5">
+    <tr valign="top" >
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -193,7 +193,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </td>
     </tr>
     {%if user_params_dict.elements%}
-    <tr valign="top" bgcolor="#FFEFD5">
+    <tr valign="top" >
     {%else%}
     <tr valign="top">
     {%endif%}
@@ -222,7 +222,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     {%if initial.base_temperature and not user_params_dict.base_temperature%}
     <tr id="base_temp" valign="top">
     {%elif initial.base_temperature and user_params_dict.base_temperature%}
-    <tr id="base_temp" valign="top" bgcolor="#FFEFD5">
+    <tr id="base_temp" valign="top" >
     {%else%}
     <tr id="base_temp" valign="top" style="display:none">
     {%endif%}
@@ -417,7 +417,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </table>
     </td><td valign="top">
     {%if initial.generate_graph == "T"%}
-    <table frame="box" class="formGraph" bgcolor="#CCE0E0">
+    <table frame="box" class="formGraph" >
     {%else%}
     {%if user_params_list%}
     <div id="user_params_list">
@@ -446,7 +446,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </script>
     {%endif%}
     {%endif%}
-    <table frame="box" class="formGraph" style="display:none" bgcolor="#CCE0E0">
+    <table frame="box" class="formGraph" style="display:none" >
     {%endif%}
     <tr valign="top" class="formGraph" style="display:table-row;">
     <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Graph Options</u></b></td>
@@ -603,9 +603,9 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </table>
     </td><td valign="top">
     {%if initial.generate_graph == "T"%}
-    <table class="formGraph" frame="box" bgcolor="#CCE0E0">
+    <table class="formGraph" frame="box" >
     {%else%}
-    <table class="formGraph" frame="box" style="display:none" bgcolor="#CCE0E0">
+    <table class="formGraph" frame="box" style="display:none" >
     {%endif%}
     <tr valign="top" class="formGraph" style="display:table-row;">
     <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Plot Options</u></b></td>
@@ -860,7 +860,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
         <form method="post" action="" onsubmit="show_loading()">
         {%endif%}
         {% csrf_token %}
-        <table id="tableDownload" bgcolor="#CCE0E0">
+        <table id="tableDownload" >
         <tr valign="top">
         <td>Data Format: </td>
         <td>

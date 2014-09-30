@@ -30,7 +30,7 @@ $(function(){
     <input type="submit" value="Start Over" onclick="window.location='{{STATION_METAGRAPH_URL}}'"/>
     <div id='form1'>
         <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" bgcolor="#CCE0E0">
+        <table class="form" >
         {%for field in form_meta %}
         <tr>
         <td>{{field.label}}/name:</td>

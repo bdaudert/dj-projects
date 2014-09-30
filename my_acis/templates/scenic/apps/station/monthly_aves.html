@@ -27,9 +27,9 @@ $(function(){
     <input type="submit" value="Start Over" onclick="window.location='{{MON_AVES_URL}}'"/>
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" id="tableData" bgcolor="#CCE0E0">
+        <table class="form" id="tableData" >
         {%if user_params_dict.station_id%}
-        <tr valign="top" bgcolor="#FFEFD5">
+        <tr valign="top" >
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -50,7 +50,7 @@ $(function(){
         <td></td>
         </td>
         {%if user_params_dict.elements%}
-        <tr valign="top" bgcolor="#FFEFD5">
+        <tr valign="top" >
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -80,7 +80,7 @@ $(function(){
         </td>
         </tr>
         {%if user_params_dict.add_degree_days == "T"%}
-        <tr valign="top" bgcolor="#FFEFD5">
+        <tr valign="top" >
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -104,7 +104,7 @@ $(function(){
         <tr id="dd" valign="top">
         {%else%}
         {%if user_params_dict.add_degree_days == "T"%}
-        <tr id="dd" valign="top" bgcolor="#FFEFD5">
+        <tr id="dd" valign="top" >
         {%else%}
         <tr id="dd" valign="top" style="display:none">
         {%endif%}
@@ -121,7 +121,7 @@ $(function(){
         </td>
         </tr>
         {%if user_params_dict.units%}
-        <tr valign="top" bgcolor="#FFEFD5">
+        <tr valign="top" >
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -142,7 +142,7 @@ $(function(){
         </td>
         </tr>
         {%if user_params_dict.start_date%}
-        <tr valign="top" bgcolor="#FFEFD5">
+        <tr valign="top" >
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -158,7 +158,7 @@ $(function(){
         </td>
         </tr>
         {%if user_params_dict.elements%}
-        <tr valign="top" bgcolor="#FFEFD5">
+        <tr valign="top" >
         {%else%}
         <tr valign="top">
         {%endif%}

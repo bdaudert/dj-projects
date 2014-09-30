@@ -35,12 +35,8 @@ $(function(){
     <input type="submit" value="Start Over" onclick="window.location='{{STATION_DATA_URL}}'"/>
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
-        <table class="form" id="tableData" bgcolor="#CCE0E0">
-        {%if user_params_dict.select_stations_by or large_request%}
-        <tr valign="top" bgcolor="#FFEFD5">
-        {%else%}
-        <tr valign="top">
-        {%endif%}
+        <table class="form" id="tableData" >
+        <tr valign="top" >
         <td>Select stations by:</td>
         <td>
             <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this) & update_value(this.value);" onfocus="set_station_grid_select('area',this);">
@@ -61,11 +57,7 @@ $(function(){
             $("#Docu_select_stations_by").load("{{HTML_URL}}/Docu_select_stations_by.html");
         </script>
         </td>
-        {%if user_params_dict.select_stations_by or large_request%}
-        <tr id="area" valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr id="area" valign="top">
-        {%endif%}
         {%if initial.select_stations_by == "station_id" %}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}/Name: </td>
         {%else%}
@@ -82,21 +74,13 @@ $(function(){
         </td>
         </tr>
         {%if initial.station_id or initial.station_ids%}
-        {%if user_params_dict.select_stations_by or large_request %}
-        <tr bgcolor="#FFEFD5">
-        {%else%}
         <tr>
-        {%endif%}
         <td></td>
         <td><a target="_blank" href="{{STATION_FINDER_URL}}">Station Finder</a></td>
         <td></td>
         </td>
         {%endif%}
-        {%if user_params_dict.elements or large_request %}
-        <tr valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr valign="top">
-        {%endif%}
         <td id="Elements">Elements: </td>
         <td>
             <select id="elements" name="elements" multiple onchange="update_elements(this)">
@@ -122,11 +106,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if user_params_dict.add_degree_days or large_request%}
-        <tr valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr valign="top">
-        {%endif%}
         <td>Add special degree days: </td>
         <td>
         <select id="add_degree_days" name="add_degree_days" onchange="show_div_if_true(this,'dd') & update_value(this.value)">
@@ -147,7 +127,7 @@ $(function(){
         <tr id="dd" valign="top">
         {%else%}
         {%if user_params_dict.add_degree_days == "T"%}
-        <tr id="dd" valign="top" bgcolor="#FFEFD5">
+        <tr id="dd" valign="top" >
         {%else%}
         <tr id="dd" valign="top" style="display:none">
         {%endif%}
@@ -163,11 +143,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if user_params_dict.units or large_request%}
-        <tr valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr valign="top">
-        {%endif%}
         <td>Units: </td>
         <td>
         <select id="units" name="units" onchange="update_value(this.value) & set_degree_days(this.value)">
@@ -184,11 +160,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if user_params_dict.start_date or large_request %}
-        <tr valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr valign="top">
-        {%endif%} 
         <td id="Start Date">Start Date: </td>
         <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value) & unset_large_request();"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -200,11 +172,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if user_params_dict.end_date or large_request %}
-        <tr valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr valign="top">
-        {%endif%}
         <td id="End Date">End Date: </td>
         <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value) & unset_large_request();"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -216,11 +184,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if large_request%}
-        <tr valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr valign="top">
-        {%endif%}
         <td>Show Flags: </td>
         <td>
             <select id="show_flags" name="show_flags" onchange="update_value(this.value)">
@@ -237,11 +201,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if large_request%}
-        <tr valign="top" bgcolor="#FFEFD5">
-        {%else%}
         <tr valign="top">
-        {%endif%}
         <td>Show Observation Time: </td>
         <td>
             <select id="show_observation_time" name="show_observation_time" onchange="update_value(this.value)">
@@ -258,11 +218,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if large_request%}
-        <tr valign="top" bgcolor="#FFEFD5">
-        {%else%}
-        <tr valign="top">
-        {%endif%}
+        <tr valign="top" >
         <td>Date Format: </td>
         <td>
         <select id="date_format" name="date_format" onchange="update_value(this.value)">
@@ -309,7 +265,7 @@ $(function(){
         {%if large_request and initial.data_format != "xl" %}
         <tr valign="top" id="delim" style="display:table-row">
         {%else%}
-        <tr valign="top" id="delim" style="display:none" bgcolor="#FFEFD5">
+        <tr valign="top" id="delim" style="display:none" >
         {%endif%}
         {%endif%}
         <td>Delimiter:</td>
@@ -338,7 +294,7 @@ $(function(){
         {%if large_request%}
         <tr valign="top" id="out_file" style="display:table-row;" class="large_request">
         {%else%}
-        <tr valign="top" id="out_file" style="display:table-row;" bgcolor="#FFEFD5">
+        <tr valign="top" id="out_file" style="display:table-row;" >
         {%endif%}
         {%endif%}
         <td>Outputfile Name:</td>
@@ -456,13 +412,10 @@ $(function(){
     {%endif%}
 
     <div class="results">
-    {%if user_params_list and not results.stn_data%}
+    {%if user_params_list or form_message%}
     <div class="message" id="user_params_list">
     <p class="message">
-    Please use the form on the left to complete your data request.<br />
-    Double check your input parameters and fill out the highlighted form fields.<br />
-    Submit the form.<br />
-    Your Parameters were:<br /><br />
+    Additional format changes can be made using the form on the left!<br />
     {%for key_val in user_params_list%}
     <b>{{key_val.0}}</b>:
     {%if key_val.0 == "Station IDs"%}
@@ -484,7 +437,7 @@ $(function(){
     {%endif%}
     
     {%if display_params_list%}
-    <p><b>SEARCH PARAMETERS</b>:<br />
+    <p class="message"><b>YOUR SEARCH PARAMETERS</b>:<br /><br />
     {%for param in display_params_list%}
     {%if forloop.counter|divisibleby:"3" or forloop.last%}<br />
     {%endif %}
@@ -536,7 +489,7 @@ $(function(){
     {%endif%}
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableDataForm')">{% csrf_token %}
-            <table class="form" bgcolor="#CCE0E0">
+            <table class="form" >
             <td>State: </td>
             <td>
                 <select name="overlay_state" id="overlay_state">
@@ -648,7 +601,7 @@ $(function(){
         <form method="post" action="" onsubmit="show_loading()">
         {%endif%}
         {% csrf_token %}
-        <table id="tableDownload" bgcolor="#CCE0E0">
+        <table id="tableDownload" >
         <tr valign="top">
         <td>Data Format: </td>
         <td>

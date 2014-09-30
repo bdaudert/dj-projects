@@ -45,9 +45,9 @@ $(function(){
     <input type="submit" value="Start Over" onclick="window.location='{{STATION_FINDER_URL}}'"/>
     <div id='formData'>
         <form id="tableDataForm" method="post" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" id="tableData" bgcolor="#CCE0E0">
+        <table class="form" id="tableData" >
         {%if user_params_dict.select_stations_by%}
-        <tr valign="top" bgcolor="#FFEFD5">
+        <tr valign="top" >
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -71,7 +71,7 @@ $(function(){
         </script>
         </td>
         {%if user_params_dict.select_stations_by%}
-        <tr id="area" valign="top" bgcolor="#FFEFD5">
+        <tr id="area" valign="top" >
         {%else%}
         <tr id="area" valign="top">
         {%endif%}
@@ -87,7 +87,7 @@ $(function(){
         </td>
         </tr>
         {%if user_params_dict.elements%}
-        <tr valign="top" bgcolor="#FFEFD5">
+        <tr valign="top" >
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -135,7 +135,7 @@ $(function(){
         </td>
         </tr> 
         {%if user_params_dict.start_date%}
-        <tr valign="top" bgcolor="#FFEFD5">
+        <tr valign="top" >
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -151,7 +151,7 @@ $(function(){
         </td>
         </tr>
         {%if user_params_dict.end_date%}
-        <tr valign="top" bgcolor="#FFEFD5">
+        <tr valign="top" >
         {%else%}
         <tr valign="top">
         {%endif%}
@@ -282,11 +282,11 @@ $(function(){
         <!--Link to data portal-->
         {%if params_dict.select_stations_by == "station_ids"%}
         {%if not error%}
-        <a align="left" target="_blank" href="{{STATION_DATA_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
+        <a align="left" target="_blank" href="{{STATION_DATA_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&data_format=html&units=english&date_format=dash" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
         {%endif%}
         {%else%}
         {%if not error%}
-        <a align="left" target="_blank" href="{{STATION_DATA_URL}}?{{params_dict.select_stations_by}}={{params_dict|lookup:params_dict.select_stations_by}}&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
+        <a align="left" target="_blank" href="{{STATION_DATA_URL}}?{{params_dict.select_stations_by}}={{params_dict|lookup:params_dict.select_stations_by}}&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&data_format=html&units=english&date_format=dash" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
         {%endif%}
         {%endif%}
 
@@ -318,7 +318,7 @@ $(function(){
         {%endif%}
             <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableDataForm')">{% csrf_token %}
-            <table class="form" bgcolor="#CCE0E0">
+            <table class="form" >
             <tr valign="top">
             <td>State: </td>
             <td>
