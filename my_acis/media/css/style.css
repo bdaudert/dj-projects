@@ -26,6 +26,13 @@ p.intro {
     font-size:22px;
     font-weight: bold;
 }
+
+pre.code {
+    /*border:1px solid grey;*/
+    width:800px;
+    background-color:LightGrey;
+}
+
 table, tr, th{
     border:0px solid white;
     text-align:right;
@@ -33,7 +40,9 @@ table, tr, th{
 }
 
 .navbar {
-    border: 1px solid #EDAB79;
+    width:100%;
+    text-align:left;
+    border: 1px solid blue;
     background-color:#79BAEC;
     color:#EDAB79;
 }

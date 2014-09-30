@@ -27,10 +27,9 @@ Due to bandwidth and computer memory limitations, large data request implementat
 <li>If file was created within last x minutes, exwecute data request.</li>
 </ul>
 </li>
-<li>For each data request:
+<li>For each data request file found:
 <ol>
-<li>Determine suitable spatial and temporal sub divisions to be run in background batch mode.</li>
-<li>Execute the batch data request and amalagmate the results into one output file.</li>
+<li>Execute the data request in background mode and write results to output file.</li>
 <li>Move the output file to the ftp server.</li>
 <li>Notify the user that his/her dataset is ready for pickup.</li>
 </ol>

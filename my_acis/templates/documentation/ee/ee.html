@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 align="center">{{title}}</h1>
+<table align="center">
+<td valign="top" width="20%">
+    <table align="left" class="navbar">
+    <tr><td>
+    <a href="/csc/documentation/ee/set_up/" class="trigger_hover">Set up</a>
+    <div class="pop-up" id="EESetUp">
+    <p><font size="4">Installation Instructions and other set up required for EE</font></p>
+    </div>
+    </td></tr>
+    <tr><td>
+    <a href="/csc/documentation/ee/hello_world/" class="trigger_hover">Hello World</a>
+    <div class="pop-up" id="EESetUp">
+    <p><font size="4">Hello World example</font></p>
+    </div>
+    </td></tr>
+    </table>
+</td>
+<td valign="top" width="80%">
+    <a target="_blank" href="https://earthengine.google.org/#intro"><img src="/csc/media/img/EE.png"></a>
+</td>
+</table>
+{% endblock %}

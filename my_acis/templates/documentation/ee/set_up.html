@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 align="center">{{title}}</h1>
+<table align="center">
+    <td valign="top" width="10%">
+    </td>
+    <td valign="top" width="90%" align="left">
+    <h3>1. Authentication/Access</h3>
+    <p>
+    Follow the instructions below to set up your service account.<br />
+    <a target="_blank" href="https://sites.google.com/site/earthengineapidocs/python-api">Oauth2 Instructions</a><br />
+    Once you have set up your account, you can view your credentials (Account ID, email, keys) at the 
+    <a target="_blank" href="https://code.google.com/apis/console/">Console</a><br />
+    Note that it is advantageous to add the Google EE account information to your env variables:<br />
+    In your .bashrc (.bash_profile on OSX), add these lines (xxxxx is your account number)<br />
+
+    <pre class="code"><code>
+    #Google Earth Engine env
+    export EE_SERVICE_ACCOUNT=xxxxxxx.apps.googleusercontent.com
+    export EE_SERVICE_EMAIL= xxxxxxx@developer.gserviceaccount.com
+    export EE_PRIVATE_KEY_FILE=/path_to_.p12_file
+    </code></pre>
+    </p>
+    <h3>2. Python API Installation</h3>
+    <p>
+    Follow the instructions below to set install the Earth Engine python API.<br />
+    <a target="_blank" href="https://code.google.com/p/earthengine-api/wiki/Installation">EE python API installation</a>
+    </p> 
+</td>
+</table>
+{% endblock %}
