@@ -197,8 +197,6 @@ function popup_window(mylink, windowname)
     {
         href=mylink.href;
     }
-    //var height = 800;
-    //var width = 800;
     var height = window.height - 50;
     var width = window.width - 50;
     window.open(href, windowname, 'width=' + width + ',height=' + height + ',scrollbars=yes');

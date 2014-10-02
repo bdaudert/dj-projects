@@ -110,38 +110,42 @@ function initialize_station_finder() {
 
         var map = new google.maps.Map(document.getElementById("map"),mapOptions);
         
-        var legend = document.getElementById('map_legend');
+        var legend_table = document.getElementById('map_legend');
         //Sort network_codes according to Kelly's preference and append to legend:
+        count = 0;
+        var tr = document.createElement('tr');
         for (var key in data.network_codes) {
+            count = count + 1;
             var name = data.network_codes[key];
             var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
-            //var icon = 'http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_' + data.network_icons[key] + '.png';
-            var div = document.createElement('div');
+            var td = document.createElement('td');
             //Omit RCC/Misc/Threadex
             if (['RCC','Misc'].indexOf(data.network_codes[key]) >= 0){
-                div.setAttribute("style", "display:none");
+                //div.setAttribute("style", "display:none");
+                continue
             }
-            div.innerHTML = '<input type="checkbox" id="'+ name +
+            td.innerHTML = '<input type="checkbox" id="'+ name +
             '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' + 
             ' <img alt="Icon" title="Icon" src="' + icon + '">'  +name + '</div>';
             '<div onmouseover="ShowNetworkDocu(\''+ name + '\')" onmouseout="HideNetworkDocu(\''+ name + '\')">' + name;
-            /*
-            div.innerHTML = '<div onmouseover="ShowNetworkDocu(\''+ name + '\')" onmouseout="HideNetworkDocu(\''+ name + '\')">'+ 
-            '<input type="checkbox" id="'+ name +
-            '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' + 
-            ' <img alt="Icon" title="Icon" src="' + icon + '">'  +name + '</div>';
-            '<div onmouseover="ShowNetworkDocu(\''+ name + '\')" onmouseout="HideNetworkDocu(\''+ name + '\')">' + name + '</div>';
-            */
-            legend.appendChild(div);
+            tr.appendChild(td);
+            if (count == 5){
+                legend_table.appendChild(tr);
+                tr =  document.createElement('tr');
+            }
+            if (count == 9){
+                var name = 'All';
+                var icon = 'http://thydzik.com/thydzikGoogleMap/markerlink.php?text=A&color=FC6355';
+                var td = document.createElement('td');
+                td.innerHTML = '<input type="checkbox" id="all" onclick="my_boxclick(this,\'all\')" checked />' + ' <img alt="Icon" title="Icon" src="' + icon + '"><b> ' + name + '</b><br />';
+                tr.appendChild(td);
+                legend_table.appendChild(tr);
+            }
         }
-        //Create 'show all networks' button first
-        var name = 'All';
-        var icon = 'http://thydzik.com/thydzikGoogleMap/markerlink.php?text=A&color=FC6355';
-        var div = document.createElement('div');
-        div.innerHTML = '<input type="checkbox" id="all" onclick="my_boxclick(this,\'all\')" checked />' + ' <img alt="Icon" title="Icon" src="' + icon + '"><b> ' + name + '</b><br />';
-        legend.appendChild(div);
+        //Adjust map bounds
         var bounds=new google.maps.LatLngBounds();
 
+        //Create info window
         infowindow = new google.maps.InfoWindow({
             content: 'oi'
         });
@@ -934,7 +938,8 @@ function initialize_map_overlays(type, host, kml_file_path) {
         var text = kmlEvent.featureData.description;
         document.getElementById(type).value = kmlEvent.featureData.description;
         //showInDiv(text);
-        var contentString = '<div id="LayerWindow" style="line-height:1.35;width:200px;overflow:hidden;white-space:nowrap;">'+
+        //var contentString = '<div id="LayerWindow" style="line-height:1.35;width:200px;overflow:hidden;white-space:nowrap;">'+
+        var contentString = '<div id="LayerWindow">' +
             kmlEvent.featureData.description +
             '</div>';
         infowindow.close();

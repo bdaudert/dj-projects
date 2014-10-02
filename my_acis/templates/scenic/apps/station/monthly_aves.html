@@ -178,16 +178,6 @@ $(function(){
         </form>
     </div>
     <br />
-    {%if results%}
-    <div id="results" class="results">
-    <img onClick="ShowHide('averaged_data')" alt="averaged_data" title="averaged_data" src="{{MEDIA_URL}}img/show_hide_button.png">
-    <div id="averaged_data" width="450" height="450" border="0" style="display:none;">
-        {% for el, vals in averaged_data.items%}
-        <p>{{el}} : {{vals}}
-        {%endfor%}
-    </div>
-    </div>
-    {%endif%}
 </td>
 <td valign="top" width="70%">
     <table>
@@ -249,11 +239,21 @@ $(function(){
     <img onClick="ShowHide('metadata')" alt="metadata" title="metadata" src="{{MEDIA_URL}}img/metadata_button.png">
     </td>
     <td>
-    <a target="_blank" href="{{STATION_DATA_URL}}?{%for key,val in params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Get data behind this graphic here!</font></a>
+    <div id="results" class="results">
+    <img onClick="ShowHide('averaged_data')" alt="averaged_data" title="averaged_data" src="{{MEDIA_URL}}img/show_hide_button.png">
+    </div>
+    </td>
+    <td>
+    <a target="_blank" href="{{STATION_DATA_URL}}?{%for key,val in params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Get data behind this graphic!</font></a>
 
     </td>
     </table>
 
+    <div id="averaged_data" width="450" height="450" border="0" style="display:none;">
+        {% for el, vals in averaged_data.items%}
+        <p>{{el}} : {{vals}}
+        {%endfor%}
+    </div>
 
     <div id="metadata" style="display:none;">
         <p>

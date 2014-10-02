@@ -26,38 +26,7 @@ $(function(){
 });
 </script>
 
-
-<table align="center">
-    <tr>
-    <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
-    </tr>
-</table>
-
-<script type="text/javascript">                        
-    $("#tool_info_head").load("{{HTML_URL}}Buttons.html .tool_info");
-</script>
-<div id="tool_info" style="display:none;"></div>
-<!--<div id="tool_info" style="display:none;position:relative;left:300px"></div>-->
-<script type="text/javascript">            
-    $("#tool_info").load("{{HTML_URL}}Docu_SODXTRMTS.html");
-</script>
-
-<script type="text/javascript">            
-    $("#how_to_head").load("{{HTML_URL}}Buttons.html .tool_how_to");
-</script>
-
-
-{%if json_dict.data and initial.generate_graph == "F"%}
-<div id="Arrow" class="results" style="position:absolute;top:250px;right:310px;">
-<table style="display:block;">
-<td valign="top"><b>RESULTS:</b></td>
-<td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="300px"></td>
-</table>
-</div>
-{%endif%}
-
-
-<!--<div id="how_to" style="display:none;position:relative;left:200px" >-->
+<!--Documentation-->
 <div id="how_to" style="display:none;">
 <div id="Docu_station_id"></div>
 <script type="text/javascript">                        
@@ -102,6 +71,35 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
 </div>
 
 
+<table align="center">
+    <tr>
+    <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
+    </tr>
+</table>
+
+<script type="text/javascript">                        
+    $("#tool_info_head").load("{{HTML_URL}}Buttons.html .tool_info");
+</script>
+<div id="tool_info" style="display:none;"></div>
+<!--<div id="tool_info" style="display:none;position:relative;left:300px"></div>-->
+<script type="text/javascript">            
+    $("#tool_info").load("{{HTML_URL}}Docu_SODXTRMTS.html");
+</script>
+
+<script type="text/javascript">            
+    $("#how_to_head").load("{{HTML_URL}}Buttons.html .tool_how_to");
+</script>
+
+
+{%if json_dict.data and initial.generate_graph == "F"%}
+<div id="Arrow" class="results" style="position:absolute;top:250px;right:310px;">
+<table style="display:block;">
+<td valign="top"><b>RESULTS:</b></td>
+<td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="300px"></td>
+</table>
+</div>
+{%endif%}
+
 <input type="submit" value="Start Over" onclick="window.location='{{STATION_SODXTRMTS_URL}}'"/>
 <div id="formSodxtrmts" class="form" style="border:none;">
     {%if json_dict%}
@@ -110,9 +108,9 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
         <form method="post" id="fSodxtrmts" action="" onsubmit="show_loading()">
     {%endif%}
     {% csrf_token %}
-    <table id="tableSodxtrmts" frame="void" style="border-collapse:collapse;" >
+    <table id="tableSodxtrmts" class="form" frame="void" style="border-collapse:collapse;" >
     <td valign="top">
-    <table id="tableData" frame="box" cell-padding="20" >
+    <table id="tableData">
     {%if user_params_dict.station_id%}
     <tr valign="top" >
     {%else%}
@@ -400,7 +398,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </table>
     </td><td valign="top">
     {%if initial.generate_graph == "T"%}
-    <table frame="box" class="formGraph" >
+    <table class="formGraph form" >
     {%else%}
     {%if user_params_list%}
     <div id="user_params_list">
@@ -415,7 +413,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </p>
     </div>
     {%endif%}
-    <table frame="box" class="formGraph" style="display:none" >
+    <table class="formGraph form" style="display:none" >
     {%endif%}
     <tr valign="top" class="formGraph" style="display:table-row;">
     <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Graph Options</u></b></td>
@@ -572,9 +570,9 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </table>
     </td><td valign="top">
     {%if initial.generate_graph == "T"%}
-    <table class="formGraph" frame="box" >
+    <table class="formGraph form" >
     {%else%}
-    <table class="formGraph" frame="box" style="display:none" >
+    <table class="formGraph form" style="display:none" >
     {%endif%}
     <tr valign="top" class="formGraph" style="display:table-row;">
     <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Plot Options</u></b></td>

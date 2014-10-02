@@ -106,9 +106,9 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
         <form method="post" id="fSodxtrmts" action="" onsubmit="show_loading()">
     {%endif%}
     {% csrf_token %}
-    <table id="tableSodxtrmts" frame="void" style="border-collapse:collapse;" >
+    <table id="tableSodxtrmts" class="form" frame="void" style="border-collapse:collapse;" >
     <td valign="top">
-    <table id="tableData" frame="box" cell-padding="20" >
+    <table id="tableData">
     {%if user_params_dict.location%}
     <tr valign="top" >
     {%else%}
@@ -417,7 +417,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </table>
     </td><td valign="top">
     {%if initial.generate_graph == "T"%}
-    <table frame="box" class="formGraph" >
+    <table class="formGraph form" >
     {%else%}
     {%if user_params_list%}
     <div id="user_params_list">
@@ -440,13 +440,13 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     <input type="hidden" id="initial_lat" name="initial_lat" value='40'>
     <input type="hidden" id="initial_lon" name="initial_lon" value='-111'>
     {%endif%}
-    <div align="center" id="map-gridpoint" style="width:500px; height:350px"></div>
+    <div align="center" id="map-gridpoint"></div>
     <script type="text/javascript">
         initialize_grid_point_map('data_gridded')
     </script>
     {%endif%}
     {%endif%}
-    <table frame="box" class="formGraph" style="display:none" >
+    <table class="formGraph form" style="display:none" >
     {%endif%}
     <tr valign="top" class="formGraph" style="display:table-row;">
     <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Graph Options</u></b></td>
@@ -603,9 +603,9 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </table>
     </td><td valign="top">
     {%if initial.generate_graph == "T"%}
-    <table class="formGraph" frame="box" >
+    <table class="formGraph form">
     {%else%}
-    <table class="formGraph" frame="box" style="display:none" >
+    <table class="formGraph form"style="display:none" >
     {%endif%}
     <tr valign="top" class="formGraph" style="display:table-row;">
     <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Plot Options</u></b></td>

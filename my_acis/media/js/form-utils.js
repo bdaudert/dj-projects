@@ -306,7 +306,6 @@ function set_autofill(datalist){
     var JSON_URL = document.getElementById('JSON_URL').value;
     dl = document.createElement('datalist');
     dl.setAttribute('id',datalist);
-    dl.setAttribute('style','height:500px;width=100%;overflow:hidden;');
     dl.setAttribute('class', datalist.replace('US_',''));
     $.getJSON(JSON_URL + datalist + '.json', function(metadata) {
         for (idx=0;idx<metadata.length;idx++){
@@ -634,7 +633,7 @@ function show_gridpoint_map(){
     if (!$('#map-gridpoint').length){
         var m = document.createElement('div');
         m.setAttribute('id', 'map-gridpoint');
-        m.setAttribute('style', 'width:500px;height:400px;');
+        m.setAttribute('style','width:650px;')
         gp_map_div.appendChild(m);
     }
     //Generate Map
@@ -664,13 +663,12 @@ function show_overlay_map(){
     if (!$('#map-overlay').length){
         var m = document.createElement('div');
         m.setAttribute('id', 'map-overlay');
-        m.setAttribute('style', 'width:550px;height:400px;')
+        m.setAttribute('style','width:650px;')
         ol_map_div.appendChild(m);
     }
     if (!$('#content-window').length){
         var w = document.createElement('div');
         w.setAttribute('id', 'content-window');
-        w.setAttribute('style', 'width:100px;height:100px;')
         ol_map_div.appendChild(w);
     }
     //Generate Map
@@ -690,11 +688,13 @@ function show_polygon_map(){
     //Show polygon map
     var p_map_div = document.getElementById('PolyMap');
     p_map_div.style.display = "block";
+    var panel=p_map_div.firstChild;
     if (!$('#map-polygon').length){
         var m = document.createElement('div');
         m.setAttribute('id', 'map-polygon');
-        m.setAttribute('style', 'width:500px;height:400px;');
-        p_map_div.appendChild(m);
+        m.setAttribute('style','width:650px;');
+        p_map_div.insertBefore(m,panel);
+        /*p_map_div.appendChild(m);*/
     }
     //Generate Map
     initialize_polygon_map();

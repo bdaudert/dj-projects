@@ -28,10 +28,77 @@ $(function(){
 });
 </script>
 
-<table cellpadding="5">
-<!--LEFT-->
-<td valign="top" width="30%">
+
+<!--Documentation-->
+<div id="tool_info" style="display:none;"></div>
+<script type="text/javascript">            
+    $("#tool_info").load("{{HTML_URL}}/Docu_AREA_TIME_SERIES.html");
+</script>
+<div id="how_to" style="display:none;">
+    <div id="Doc_select_grid_by"></div>
+<script type="text/javascript">            
+    $("#Doc_select_grid_by").load("{{HTML_URL}}/Docu_select_grid_by.html");
+</script>
+<div id="Docu_elements"></div>
+ <script type="text/javascript">            
+    $("#Docu_elements").load("{{HTML_URL}}/Docu_elements_grid_apps.html");
+</script>
+<div id="Docu_add_degree_days"></div>
+<script type="text/javascript">            
+    $("#Docu_add_degree_days").load("{{HTML_URL}}/Docu_add_degree_days.html");
+</script>
+<div id="Docu_degree_days"></div>
+<script type="text/javascript">            
+    $("#Docu_degree_days").load("{{HTML_URL}}/Docu_degree_days.html");
+</script>
+<div id="Docu_start_end_date"></div>
+ <script type="text/javascript">            
+    $("#Docu_start_end_date").load("{{HTML_URL}}/Docu_start_end_date.html");
+</script>
+<div id="Docu_grid"></div>
+<script type="text/javascript">            
+    $("#Docu_grid").load("{{HTML_URL}}/Docu_grid.html");
+</script>
+<div id="Docu_spatial_summary"></div>
+<script type="text/javascript">            
+    $("#Docu_spatial_summary").load("{{HTML_URL}}/Docu_spatial_summary_grid.html");
+</script>
+<div id="Docu_show_running_mean"></div>
+<script type="text/javascript">            
+    $("#Docu_show_running_mean").load("{{HTML_URL}}/Docu_show_running_mean.html");
+</script>
+<div id="Docu_running_mean_days"></div>
+<script type="text/javascript">            
+    $("#Docu_running_mean_days").load("{{HTML_URL}}/Docu_running_mean_days.html");
+</script>
+<div id="Docu_plot_opts" style="display:none;"></div>
+<script type="text/javascript">                        
+    $("#Docu_plot_opts").load("{{HTML_URL}}/Docu_PLOT_OPTS_AREA_TS.html");
+</script>
+</div>
+
+<table>
+<td valign="bottom" width="300px">
     <input type="submit" value="Start Over" onclick="window.location='{{GRID_SPATIAL_SUMMARY_URL}}'"/>
+</td>
+<td valign="top" width="650px" align="left">
+    <table>
+    <td><div id=tool_info_head></div></td>
+    <td><div id="how_to_head"></div></td>
+    </table>
+    <script type="text/javascript">                        
+        $("#tool_info_head").load("{{HTML_URL}}/Buttons.html .tool_info");
+    </script>
+    <script type="text/javascript">            
+        $("#how_to_head").load("{{HTML_URL}}/Buttons.html .tool_how_to");
+    </script>
+</td>
+</table>
+
+
+<table>
+<!--LEFT-->
+<td valign="top" width="300px">
     <div id='formTS'>
         <form method="post" id="tableTSForm" action="{{GRID_SPATIAL_SUMMARY_URL}}" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableTS" >
@@ -43,7 +110,7 @@ $(function(){
         <td>Select grid by:</td>
         <td>
             <select id="select_grid_by" name="select_grid_by" onchange="set_station_grid_select('area',this);" onfocus="set_station_grid_select('area',this);">
-            <option value="location" {{checkbox_vals.location_selected}}>Individual grid point</option>
+            <option value="location" {{checkbox_vals.location_selected}}>Individual gridpoint</option>
             <option value="state" {{checkbox_vals.state_selected}}>State</option>
             <option value="county" {{checkbox_vals.county_selected}}>County</option>
             <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
@@ -65,7 +132,7 @@ $(function(){
         <tr id="area" valign="top">
         {%endif%}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
-        <td><input autocomplete="off" type="text" size="35" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
+        <td><input autocomplete="off" type="text" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up" id="area-pop-up">
             <div id="ht_{{initial.select_grid_by}}"></div>
@@ -490,7 +557,7 @@ $(function(){
         {%else%}
         <tr class="plOpts" style="display:none;">
         {%endif%}
-        <td><input type="submit" value="Genrate time series" name="formTS"/></td><td></td><td></td>
+        <td><input type="submit" value="Generate time series" name="formTS"/></td><td></td><td></td>
         </table>
         <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
         </form>
@@ -498,63 +565,7 @@ $(function(){
 
 <!--RIGHT-->
 </td>
-<td valign="top" width="70%">
-    <table>
-        <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
-    </table>
-    <script type="text/javascript">            
-        $("#tool_info_head").load("{{HTML_URL}}/Buttons.html .tool_info");
-    </script>
-    <div id="tool_info" style="display:none;"></div>
-    <script type="text/javascript">            
-        $("#tool_info").load("{{HTML_URL}}/Docu_AREA_TIME_SERIES.html");
-    </script>
-    <script type="text/javascript">
-        $("#how_to_head").load("{{HTML_URL}}/Buttons.html .tool_how_to");
-    </script>
-    <div id="how_to" style="display:none;">
-        <div id="Doc_select_grid_by"></div>
-    <script type="text/javascript">            
-        $("#Doc_select_grid_by").load("{{HTML_URL}}/Docu_select_grid_by.html");
-    </script>
-    <div id="Docu_elements"></div>
-     <script type="text/javascript">            
-        $("#Docu_elements").load("{{HTML_URL}}/Docu_elements_grid_apps.html");
-    </script>
-    <div id="Docu_add_degree_days"></div>
-    <script type="text/javascript">            
-        $("#Docu_add_degree_days").load("{{HTML_URL}}/Docu_add_degree_days.html");
-    </script>
-    <div id="Docu_degree_days"></div>
-    <script type="text/javascript">            
-        $("#Docu_degree_days").load("{{HTML_URL}}/Docu_degree_days.html");
-    </script>
-    <div id="Docu_start_end_date"></div>
-     <script type="text/javascript">            
-        $("#Docu_start_end_date").load("{{HTML_URL}}/Docu_start_end_date.html");
-    </script>
-    <div id="Docu_grid"></div>
-    <script type="text/javascript">            
-        $("#Docu_grid").load("{{HTML_URL}}/Docu_grid.html");
-    </script>
-    <div id="Docu_spatial_summary"></div>
-    <script type="text/javascript">            
-        $("#Docu_spatial_summary").load("{{HTML_URL}}/Docu_spatial_summary_grid.html");
-    </script>
-    <div id="Docu_show_running_mean"></div>
-    <script type="text/javascript">            
-        $("#Docu_show_running_mean").load("{{HTML_URL}}/Docu_show_running_mean.html");
-    </script>
-   <div id="Docu_running_mean_days"></div>
-    <script type="text/javascript">            
-        $("#Docu_running_mean_days").load("{{HTML_URL}}/Docu_running_mean_days.html");
-    </script>
-    <div id="Docu_plot_opts" style="display:none;"></div>
-    <script type="text/javascript">                        
-        $("#Docu_plot_opts").load("{{HTML_URL}}/Docu_PLOT_OPTS_AREA_TS.html");
-    </script>
-    </div>
-
+<td valign="top">
     {%if results%}
     <div class="results">
         <b>Your Parameters</b>:<br />
@@ -651,7 +662,7 @@ $(function(){
         <input type="hidden" id="initial_lat" name="initial_lat" value='40'>
         <input type="hidden" id="initial_lon" name="initial_lon" value='-111'>
         {%endif%}
-        <div id="map-gridpoint" style="width:500px;height:400px;"></div>
+        <div id="map-gridpoint"></div>
         <script type="text/javascript">
         initialize_grid_point_map('data_gridded');
         </script>
@@ -744,8 +755,8 @@ $(function(){
     {%if overlay_error%}
     <p class="error">{{overlay_error}}</p>
     {%else%}
-    <div id="map-overlay" style="width:100%; height:400px;"></div>
-    <div id="content-window" style="width:100px; height:100px;"></div>
+    <div id="map-overlay"></div>
+    <div id="content-window"></div>
     <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
     {%endif%} 
     {%endif%}
@@ -755,12 +766,13 @@ $(function(){
     {%endif%}
 
 </td></table>
+
 <table align="center">
 <td>
     {%if results%}
     <!--Results section-->
     <div id="results" class="results">
-    <table cellpadding="0px">
+    <table>
     <td>
     <p class="pop_link" onClick="ShowHide('printable_table')"><img alt="ShowHide" src ="{{MEDIA_URL}}img/show_hide_button.png"></p>
     </td>
@@ -771,7 +783,7 @@ $(function(){
     <!--Download form-->
     <div id="formDownload" class="form" style="display:none;" align="right">
         <form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table id="tableDownload" width="40%" >
+        <table id="tableDownload">
         <tr valign="top">
         <td>Data Format: </td>
         <td>

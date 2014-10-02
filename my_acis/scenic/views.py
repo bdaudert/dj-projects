@@ -269,8 +269,6 @@ def data_station(request):
         #Turn request object into python dict
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
-        context['x'] = form
-        context['xx'] = form_cleaned
         #Back Button/download files issue fix:
         #if select_stations_by none, find it
         if not 'select_stations_by' in form_cleaned.keys() or form_cleaned['select_stations_by'] not in form_cleaned.keys():
@@ -1347,7 +1345,6 @@ def station_locator_app(request):
     #Set up initial map (NV stations)
     context['station_json'] = 'NV_stn.json'
     context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/NV_stn.json')
-    context['map_title'] = 'Map of Nevada COOP stations!'
     initial,checkbox_vals = set_station_locator_initial(request)
     context['initial'] = initial;context['checkbox_vals']=checkbox_vals
     #Set up maps if needed
@@ -1358,8 +1355,25 @@ def station_locator_app(request):
     context['kml_file_path'] = create_kml_file(initial['select_stations_by'], 'nv')
     #Add params for link to station data
     form = set_form(initial, clean=False)
+    form_cleaned = set_form(initial,clean=True)
     params_list, params_dict = set_user_params(form, 'station_locator_app')
     context['params_list'] = params_list;context['params_dict'] = params_dict
+    '''
+    el_vX_list = [1,2,4]
+    #Set up params for station_json generation
+    by_type = 'state'; val='nv'
+    context['map_title'] = 'Map of Nevada COOP stations!'
+    date_range = [form_cleaned['start_date'],form_cleaned['end_date']]
+    el_date_constraints = form_cleaned['elements_constraints'] + '_' + form_cleaned['dates_constraints']
+    station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=el_date_constraints)
+    context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
+    if 'error' in station_json.keys():
+        context['error'] = station_json['error']
+    if 'stations' not in station_json.keys() or  station_json['stations'] == []:
+        context['error'] = "No stations found for these search parameters."
+    context['station_json'] = f_name
+    '''
+
 
     #Link from other page
     if request.method == 'GET' and 'select_stations_by' in request.GET:
@@ -1950,6 +1964,17 @@ def set_form(request,clean=True):
         form['delimiter']= form['delimiter_download']
     if 'output_file_name_download' in form.keys():
         form['output_file_name'] = form['output_file_name_download']
+
+    #Sanity check for optional inputs
+    if 'data_format' not in form.keys():
+        form['data_format'] = 'html'
+    if 'date_format' not in form.keys():
+        form['date_format'] = 'dash'
+    if 'delimiter' not in form.keys():
+        form['delimiter']= 'comma'
+    if 'output_file_name' not in form.keys():
+        form['output_file_name'] = 'Output'
+
     for key,val in form_dict.iteritems():
         if key == 'csrfmiddlewaretoken':
             continue
@@ -2662,9 +2687,10 @@ def set_data_station_params(form):
             display_params_list[key_idx] = [WRCCData.DISPLAY_PARAMS[key], defaults[key_idx]]
     for key, val in form.iteritems():
         #Need station list for missing data
+        '''
         if key == 'station_ids':
             params_dict['station_list'] = form['station_ids'].replace(' ','').split(',')
-
+        '''
         if key == form['select_stations_by'] and key not in  ['station_ids', 'state', 'shape']:
             params_dict[key] = find_id(val, settings.MEDIA_DIR + '/json/US_' + key +'.json')
             params_dict['user_id']= val

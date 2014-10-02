@@ -12,6 +12,7 @@
 <a href="{{GRID_DATA_URL}}">Gridded Data Lister</a></p>
 -->
 
+<!--Hidden Variables-->
 <input type="hidden" id="datafind" name="datafind" value="True">
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
 <input type="hidden" id="host" name="host" value="{{host}}">
@@ -25,9 +26,88 @@ $(function(){
     hide_errors_results_on_change('tableDataForm');
 });
 </script>
-<table cellpadding="5">
-<td valign="top" width="40%">
+
+<!--Documentation-->
+<div class="docu" id="tool_info" style="display:none;"></div>
+<script type="text/javascript">                        
+$("#tool_info").load("{{HTML_URL}}/Docu_About_gridded_data.html");
+</script>
+<div id="how_to" style="display:none;">
+<div id="Doc_select_grid_by"></div>
+<script type="text/javascript">            
+    $("#Doc_select_grid_by").load("{{HTML_URL}}/Docu_select_grid_by.html");
+</script>
+<div id="Docu_temporal_resolution"></div>
+<script type="text/javascript">            
+    $("#Docu_temporal_resolution").load("{{HTML_URL}}/Docu_temporal_resolution.html");
+</script>
+<div id="Docu_elements"></div>
+ <script type="text/javascript">            
+    $("#Docu_elements").load("{{HTML_URL}}/Docu_elements_grid.html");
+</script>
+<div id="Docu_add_degree_days"></div>
+<script type="text/javascript">            
+    $("#Docu_add_degree_days").load("{{HTML_URL}}/Docu_add_degree_days.html");
+</script>
+<div id="Docu_degree_days"></div>
+<script type="text/javascript">            
+    $("#Docu_degree_days").load("{{HTML_URL}}/Docu_degree_days.html");
+</script>
+<div id="Docu_units"></div>
+<script type="text/javascript">            
+    $("#Docu_units").load("{{HTML_URL}}/Docu_units.html");
+</script>
+<div id="Docu_start_end_date"></div>
+ <script type="text/javascript">            
+    $("#Docu_start_end_date").load("{{HTML_URL}}/Docu_start_end_date.html");
+</script>
+<div id="Docu_grid"></div>
+<script type="text/javascript">            
+    $("#Docu_grid").load("{{HTML_URL}}/Docu_grid.html");
+</script>
+<div id="Docu_data_summary"></div>
+<script type="text/javascript">            
+    $("#Docu_data_summary").load("{{HTML_URL}}/Docu_data_summary_grid.html");
+</script>
+<div id="Docu_date_format"></div>
+<script type="text/javascript">            
+    $("#Docu_date_format").load("{{HTML_URL}}/Docu_date_format.html");
+</script>
+<div id="Docu_data_format"></div>
+<script type="text/javascript">            
+    $("#Docu_data_format").load("{{HTML_URL}}/Docu_data_format.html");
+</script>
+<div id="Docu_delimiter"></div>
+<script type="text/javascript">
+    $("#Docu_delimiter").load("{{HTML_URL}}/Docu_delimiter.html");         
+</script>
+</div>
+
+ <div class="pop-link" id="Docu_grids" style="display:none;"></div>
+<script type="text/javascript">                        
+$("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
+</script>
+
+<table>
+<td valign="bottom" width="300px">
     <input type="submit" value="Start Over" onclick="window.location='{{GRID_DATA_URL}}'"/>
+</td>
+<td valign="top" width="650px" align="left">
+    <table>
+    <td><div id=tool_info_head></div></td>
+    <td><div id="how_to_head"></div></td>
+    </table>
+    <script type="text/javascript">                        
+        $("#tool_info_head").load("{{HTML_URL}}/Buttons.html .tool_info");
+    </script>
+    <script type="text/javascript">            
+        $("#how_to_head").load("{{HTML_URL}}/Buttons.html .tool_how_to");
+    </script>
+</td>
+</table>
+
+<table>
+<td valign="top">
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData">
@@ -405,76 +485,7 @@ $(function(){
     <br /><br />
 <!--RIGHT-->
 </td>
-<td valign="top" width="60%">
-    <table>
-    <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
-    </table>
-    <script type="text/javascript">                        
-        $("#tool_info_head").load("{{HTML_URL}}/Buttons.html .tool_info");
-    </script>
-    <div class="docu" id="tool_info" style="display:none;"></div>
-    <script type="text/javascript">                        
-        $("#tool_info").load("{{HTML_URL}}/Docu_About_gridded_data.html");
-    </script>
-    <script type="text/javascript">            
-        $("#how_to_head").load("{{HTML_URL}}/Buttons.html .tool_how_to");
-    </script>
-    <div id="how_to" style="display:none;">
-    <div id="Doc_select_grid_by"></div>
-    <script type="text/javascript">            
-        $("#Doc_select_grid_by").load("{{HTML_URL}}/Docu_select_grid_by.html");
-    </script>
-    <div id="Docu_temporal_resolution"></div>
-    <script type="text/javascript">            
-        $("#Docu_temporal_resolution").load("{{HTML_URL}}/Docu_temporal_resolution.html");
-    </script>
-    <div id="Docu_elements"></div>
-     <script type="text/javascript">            
-        $("#Docu_elements").load("{{HTML_URL}}/Docu_elements_grid.html");
-    </script>
-    <div id="Docu_add_degree_days"></div>
-    <script type="text/javascript">            
-        $("#Docu_add_degree_days").load("{{HTML_URL}}/Docu_add_degree_days.html");
-    </script>
-    <div id="Docu_degree_days"></div>
-    <script type="text/javascript">            
-        $("#Docu_degree_days").load("{{HTML_URL}}/Docu_degree_days.html");
-    </script>
-    <div id="Docu_units"></div>
-    <script type="text/javascript">            
-        $("#Docu_units").load("{{HTML_URL}}/Docu_units.html");
-    </script>
-    <div id="Docu_start_end_date"></div>
-     <script type="text/javascript">            
-        $("#Docu_start_end_date").load("{{HTML_URL}}/Docu_start_end_date.html");
-    </script>
-    <div id="Docu_grid"></div>
-    <script type="text/javascript">            
-        $("#Docu_grid").load("{{HTML_URL}}/Docu_grid.html");
-    </script>
-    <div id="Docu_data_summary"></div>
-    <script type="text/javascript">            
-        $("#Docu_data_summary").load("{{HTML_URL}}/Docu_data_summary_grid.html");
-    </script>
-    <div id="Docu_date_format"></div>
-    <script type="text/javascript">            
-        $("#Docu_date_format").load("{{HTML_URL}}/Docu_date_format.html");
-    </script>
-    <div id="Docu_data_format"></div>
-    <script type="text/javascript">            
-        $("#Docu_data_format").load("{{HTML_URL}}/Docu_data_format.html");
-    </script>
-    <div id="Docu_delimiter"></div>
-    <script type="text/javascript">
-        $("#Docu_delimiter").load("{{HTML_URL}}/Docu_delimiter.html");         
-    </script>
-    </div>
-
-    <div class="pop-link" id="Docu_grids" style="display:none;"></div>
-    <script type="text/javascript">                        
-    $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
-    </script> 
-
+<td valign="top">
     {%if form_error%}
         <p class="error" id="form_error">ERROR: Please correct the form error(s) highlighted in red!</p>
         {%for key, val in form_error.items%}
@@ -506,7 +517,7 @@ $(function(){
 
  
     {%if display_params_list%}
-    <p><b>SEARCH PARAMETERS</b>:<br />
+    <p><b>YOUR SEARCH PARAMETERS</b>:<br />
     {%for param in display_params_list%}
     {%if forloop.counter|divisibleby:"3" %}<br />
     {%endif %}
@@ -524,6 +535,15 @@ $(function(){
     </p>
     {%endif%}
     </div>
+
+   {%if results and not results.error%}
+    <div id="Arrow" class="results">
+    <table style="display:block;">
+    <td valign="top"><b>RESULTS:</b></td><td>
+    <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td>
+    </table>
+    </div>
+    {%endif%}
 
     <div id="PolyMap" style="display:none;">
         <div id="panel">
@@ -553,7 +573,7 @@ $(function(){
         <input type="hidden" id="initial_lat" name="initial_lat" value='40'>
         <input type="hidden" id="initial_lon" name="initial_lon" value='-111'>
         {%endif%}
-        <div id="map-gridpoint" style="width:500px;height:410px;"></div>
+        <div id="map-gridpoint"></div>
         <script type="text/javascript">
         initialize_grid_point_map('data_gridded');
         </script>
@@ -638,29 +658,22 @@ $(function(){
     {%if overlay_error%}
     <p class="error">{{overlay_error}}</p>
     {%else%}
-    <div id="map-overlay" height="410px" width="420px"></div>
+    <div id="map-overlay"></div>
     <div id="content-window"></div>
     <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
     {%endif%} 
     {%endif%}
-    <br /><br />
+</td>
+</table>
+
+<table cellpadding="10" align="center">
+<td valign="top" width="97%">
     <!--Results section-->
-    <div class="results">
-    
+    <div class="results"> 
     {%if results.error%}
     <p class="error">{{results.error}}</p>
     {%endif%}
     </div>
-
-
-    {%if results and not results.error%}
-    <div id="Arrow" class="results">
-    <table style="display:block;">
-    <td valign="top"><b>RESULTS:</b></td><td>
-    <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td>
-    </table>
-    </div>
-    {%endif%}
     </div>
 </td></table>
 <table cellpadding="10" align="center">
