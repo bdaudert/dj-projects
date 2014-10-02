@@ -98,7 +98,7 @@ $(function(){
 
 <table>
 <!--LEFT-->
-<td valign="top" width="300px">
+<td valign="top">
     <div id='formTS'>
         <form method="post" id="tableTSForm" action="{{GRID_SPATIAL_SUMMARY_URL}}" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableTS" >
@@ -355,7 +355,6 @@ $(function(){
         </div>
         </td>
         </tr>
-        <tr><td><input type="submit" value="Generate time series" name="formTS"></td><td></td></tr>
         <tr>
         <td colspan="3"><hr style="border-color:#006666;"></td>
         </tr>
@@ -433,7 +432,7 @@ $(function(){
         <div class="pop-up">
             <div id="ht_minor_grid"></div>
             <script type="text/javascript">                        
-            $("#ht_minor_grid").load("{{HTML_URL}}/Docu_help_texts.html #ht_major_minor");
+            $("#ht_minor_grid").load("{{HTML_URL}}/Docu_help_texts.html #ht_minor_grid");
             </script>
         </div>
         </td>
@@ -557,8 +556,8 @@ $(function(){
         {%else%}
         <tr class="plOpts" style="display:none;">
         {%endif%}
-        <td><input type="submit" value="Generate time series" name="formTS"/></td><td></td><td></td>
         </table>
+        <input type="submit" value="Generate time series" name="formTS">
         <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
         </form>
     </div>
@@ -675,7 +674,7 @@ $(function(){
     {%endif%}
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableTSForm')">{% csrf_token %}
-            <table class="form" >
+            <table class="form" style="margin:0px;">
             <tr>
             <td>State: </td>
             <td>

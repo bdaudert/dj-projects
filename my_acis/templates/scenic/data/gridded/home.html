@@ -131,7 +131,7 @@ $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
         </script>
         </td>
         </tr>
-        <tr id="area" valign="top">
+        <tr id="area" valign="bottom">
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
         <td><input autocomplete="off" type="text" size="20" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_value(this.value) & unset_large_request();"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -143,7 +143,7 @@ $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
         </div>
         </td>
         </tr>
-        <tr valign="top">
+        <tr valign="bottom">
         <td>Temporal Resolution: </td>
         <td>
             <select id="temporal_resolution" name="temporal_resolution" onchange="set_grid_and_els(this, 'grid_type')">
@@ -292,7 +292,7 @@ $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
         </div>
         </td>
         </tr>
-        <tr id="summary_type" valign="top">
+        <tr id="summary_type" valign="bottom">
         <td>Data Summary: </td>
         <td>
             <select id="data_summary" name="data_summary" onchange="set_data_summary(this, 'temp_summary','spat_summary') & update_value(this.value) & unset_large_request();">
@@ -586,7 +586,7 @@ $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
     {%endif%}
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableDataForm')">{% csrf_token %}
-            <table class="form" >
+            <table class="form" style="margin:0px;">
             <tr>
             <td>State: </td>
             <td>

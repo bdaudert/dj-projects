@@ -106,7 +106,7 @@ $(function(){
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
         <table class="form" id="tableData" >
-        <tr valign="top" >
+        <tr valign="bottom" >
         <td>Select stations by:</td>
         <td>
             <select id="select_stations_by" name="select_stations_by" onchange="set_station_grid_select('area',this) & update_value(this.value);" onfocus="set_station_grid_select('area',this);">
@@ -127,7 +127,7 @@ $(function(){
             $("#Docu_select_stations_by").load("{{HTML_URL}}/Docu_select_stations_by.html");
         </script>
         </td>
-        <tr id="area" valign="top">
+        <tr id="area" valign="bottom">
         {%if initial.select_stations_by == "station_id" %}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}/Name: </td>
         {%else%}
@@ -176,7 +176,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        <tr valign="top">
+        <tr valign="bottom">
         <td>Add special degree days: </td>
         <td>
         <select id="add_degree_days" name="add_degree_days" onchange="show_div_if_true(this,'dd') & update_value(this.value)">
@@ -271,7 +271,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        <tr valign="top">
+        <tr valign="bottom">
         <td>Show Observation Time: </td>
         <td>
             <select id="show_observation_time" name="show_observation_time" onchange="update_value(this.value)">
@@ -406,74 +406,13 @@ $(function(){
         {%endif%}
         </table>
         <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
-        <input type="submit" value="Get data" name="formData"/>
+        <input style="margin:10px" type="submit" value="Get data" name="formData"/>
         </form>
     </div>
     <br /><br />
 </td>
-<td valign="top"  align="left">
-    {%if form_error%}
-    <div id="form_error">
-        <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
-        {%for key, val in form_error.items%}
-            <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
-        {%endfor%}
-    </div>
-    {%endif%}
-
-    <div class="results">
-    {%if user_params_list or form_message%}
-    <div class="message" id="user_params_list">
-    <p class="message">
-    Additional format changes can be made using the form on the left!<br />
-    {%for key_val in user_params_list%}
-    <b>{{key_val.0}}</b>:
-    {%if key_val.0 == "Station IDs"%}
-    <div id="stn_list"></div>
-    {%else%}
-    {{key_val.1}}<br />
-    {%endif%}
-    {%endfor%}
-    </p>
-    </div>
-    {%endif%}
-
-    {%if large_request %}
-    <p class="message">{{large_request}}</p>
-    {%endif%}
-
-    {%if too_large%}
-    <p class="error">{{too_large}}</p>
-    {%endif%}
-    
-    {%if display_params_list%}
-    <p class="message"><b>YOUR SEARCH PARAMETERS</b>:<br /><br />
-    {%for param in display_params_list%}
-    {%if forloop.counter|divisibleby:"3" or forloop.last%}<br />
-    {%endif %}
-    {%if param.0 == "Elements"%}<br />{%endif%}
-    {%if param.0 and param.1%}
-    <b>{{param.0}}</b>:
-    {%if param.0 == "shape"%}
-    <p class="message" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
-    <div id="coords" style="display:none;">{{params.1}}</div>
-    {%elif param.0 == "Station IDs"%}
-    {%for ID in params_dict.station_list%}
-    {{ID}}
-    {%if not forloop.last%},{%endif%}     
-    {%if forloop.counter0|divisibleby:4 and forloop.counter != 0%}
-    <br />      
-    {%endif%}   
-    {%endfor%}  
-    {%else%}    
-    {{param.1}} 
-    {%endif%}   
-    {%endif%}   
-    {%endfor%}  
-    </p>        
-    {%endif%}
-    </div>
-
+<td valign="top">
+    <!--Map section-->
     <div id="PolyMap" style="display:none;">
         <div id="map-polygon"></div>
         <div id="panel">
@@ -492,6 +431,7 @@ $(function(){
         {%endif%}
     </div>
 
+    <div id="GridpointMap" style="display:none;"></div>
 
     {%if need_overlay_map%}
     <div id="OverlayMap" style="display:block;">
@@ -500,7 +440,7 @@ $(function(){
     {%endif%}
          <div id="formOverlay" style="display:inherit;">
             <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableDataForm')">{% csrf_token %}
-            <table class="form" >
+            <table class="form" style="margin:0px;">
             <td>State: </td>
             <td>
                 <select name="overlay_state" id="overlay_state">
@@ -567,9 +507,6 @@ $(function(){
         </div>
     </div>
 
-
-    <div id="GridpointMap" style="display:none;"></div>
-
     {%if need_overlay_map%}
     {%if overlay_error%}
     <p class="error">{{overlay_error}}</p>
@@ -581,7 +518,69 @@ $(function(){
     <br /><br /> 
     {%endif%}
   
-    <!--Results section--> 
+    <!--Errors and search parameter section-->
+    {%if form_error%}
+    <div id="form_error">
+        <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
+        {%for key, val in form_error.items%}
+            <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
+        {%endfor%}
+    </div>
+    {%endif%}
+ 
+    <div class="results">
+    {%if user_params_list or form_message%}
+    <div class="message" id="user_params_list">
+    <p class="message">
+    Additional format changes can be made using the form on the left!<br />
+    {%for key_val in user_params_list%}
+    <b>{{key_val.0}}</b>:
+    {%if key_val.0 == "Station IDs"%}
+    <div id="stn_list"></div>
+    {%else%}
+    {{key_val.1}}<br />
+    {%endif%}
+    {%endfor%}
+    </p>
+    </div>
+    {%endif%}
+
+    {%if large_request %}
+    <p class="message">{{large_request}}</p>
+    {%endif%}
+
+    {%if too_large%}
+    <p class="error">{{too_large}}</p>
+    {%endif%}
+
+    {%if display_params_list%}
+    <p class="message"><b>YOUR SEARCH PARAMETERS</b>:<br /><br />
+    {%for param in display_params_list%}
+    {%if forloop.counter|divisibleby:"3" or forloop.last%}<br />
+    {%endif %}
+    {%if param.0 == "Elements"%}<br />{%endif%}
+    {%if param.0 and param.1%}
+    <b>{{param.0}}</b>:
+    {%if param.0 == "shape"%}
+    <p class="message" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
+    <div id="coords" style="display:none;">{{params.1}}</div>
+    {%elif param.0 == "Station IDs"%}
+    {%for ID in params_dict.station_list%}
+    {{ID}}
+    {%if not forloop.last%},{%endif%}
+    {%if forloop.counter0|divisibleby:4 and forloop.counter != 0%}
+    <br />
+    {%endif%}
+    {%endfor%}
+    {%else%}
+    {{param.1}}
+    {%endif%}
+    {%endif%}
+    {%endfor%}
+    </p>
+    {%endif%}
+    </div>
+
     <div class="results">
     {%if results%}
     {%if results.error%}

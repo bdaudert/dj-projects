@@ -28,7 +28,7 @@ $(function(){
 });
 </script>
 
-<table cellpadding="20">
+<table cellpadding="10">
 <!--LEFT-->
 <td valign="top" width="30%">
     <input type="submit" value="Start Over" onclick="window.location='{{GRID_TEMPORAL_SUMMARY_URL}}'"/>
@@ -232,7 +232,6 @@ $(function(){
         </div>
         </td>
         </tr>
-        <tr><td><input type="submit" value="Generate maps" name="formMap"></td><td></td><td></td></tr>
         <tr>
         <td colspan="3"><hr style="border-color:#006666;"></td>
         </tr>
@@ -244,13 +243,6 @@ $(function(){
         <tr>   
         <td colspan="3"><hr style="border-color:#006666;"></td>
         </tr>
-        <!--
-        {%if initial.show_plot_opts == "T"%}
-        <tr valign="top" class="plOpts" style="display:table-row;">
-        {%else%}
-        <tr valign="top" class="plOpts" style="display:none;">
-        {%endif%}
-        -->
         <tr valign="top" class="plOpts" style="display:none;">
         <td>Image Size: </td>
         <td>
@@ -292,11 +284,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if initial.show_plot_opts == "T"%}
-            <tr valign="top" class="plOpts">
-        {%else%}
-            <tr valign="top" class="plOpts" style="display:none;">
-        {%endif%}
+        <tr valign="top" class="plOpts" style="display:none;">
         <td id="Color Map">Color Map:</td>
         <td><input type="text" id="cmap" name="cmap" value="{{initial.cmap}}" list="US_CMAP" onchange="update_value(this.value)"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -308,17 +296,9 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if initial.show_plot_opts == "T"%}
-        <tr valign="top" class="plOpts">
-        {%else%}
         <tr valign="top" class="plOpts" style="display:none;">
-         {%endif%}
         <td></td><td><a target="_blank" href="http://matplotlib.org/mpl_examples/pylab_examples/show_colormaps.pdf">List of available color maps</a></td><td></td></tr>
-        {%if initial.show_plot_opts == "T"%}
-        <tr valign="top" class="plOpts" style="display:table-row;">
-        {%else%}
         <tr valign="top" class="plOpts" style="display:none;">
-        {%endif%}
         <td>Overlays:</td>
         <td>
             <select id="map_ol" name="map_ol" onchange="update_value(this.value)">
@@ -335,11 +315,7 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if initial.show_plot_opts == "T"%}
-        <tr valign="top" class="plOpts" style="display:table-row;">
-        {%else%}
         <tr valign="top" class="plOpts" style="display:none;">
-        {%endif%}
         <td>Interpolation:</td>
         <td>
             <select id="interpolation" name="interpolation" onchange="update_value(this.value)">
@@ -356,11 +332,7 @@ $(function(){
         </div>
         </td>
         </tr>
-       {%if initial.show_plot_opts == "T"%}
-        <tr valign="top" class="plOpts" style="display:table-row;">
-        {%else%}
         <tr valign="top" class="plOpts" style="display:none;">
-        {%endif%}
         <td>Projection:</td>
         <td>
             <select id="projection" name="projection" onchange="update_value(this.value)">
@@ -376,13 +348,8 @@ $(function(){
         </div>
         </td>
         </tr>
-        {%if initial.show_plot_opts == "T"%}
-        <tr class="plOpts" style="display:table-row;">
-        {%else%}
-        <tr class="plOpts" style="display:none;">
-        {%endif%}
-        <td><input type="submit" value="Generate maps" name="formMap"/></td><td></td><td></td>
         </table>
+        <input type="submit" value="Generate maps" name="formMap">
         <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
         </form>
     </div>

@@ -633,7 +633,7 @@ function show_gridpoint_map(){
     if (!$('#map-gridpoint').length){
         var m = document.createElement('div');
         m.setAttribute('id', 'map-gridpoint');
-        m.setAttribute('style','width:650px;')
+        m.setAttribute('style','width:615px;')
         gp_map_div.appendChild(m);
     }
     //Generate Map
@@ -663,7 +663,7 @@ function show_overlay_map(){
     if (!$('#map-overlay').length){
         var m = document.createElement('div');
         m.setAttribute('id', 'map-overlay');
-        m.setAttribute('style','width:650px;')
+        m.setAttribute('style','width:615px;')
         ol_map_div.appendChild(m);
     }
     if (!$('#content-window').length){
@@ -692,7 +692,7 @@ function show_polygon_map(){
     if (!$('#map-polygon').length){
         var m = document.createElement('div');
         m.setAttribute('id', 'map-polygon');
-        m.setAttribute('style','width:650px;');
+        m.setAttribute('style','width:615px;');
         p_map_div.insertBefore(m,panel);
         /*p_map_div.appendChild(m);*/
     }

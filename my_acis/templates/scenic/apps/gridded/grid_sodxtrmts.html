@@ -394,7 +394,6 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </div>
     </td>
     </tr>
-    <tr><td><input type="submit" value="Analyze" name="formSodxtrmts"></td><td></td><td></td></tr>
     {%if json_file %}
     <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
     <tr valign="top" id="generate_graph_row">
@@ -776,6 +775,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     <tr class="plOpt" ><td><input type="submit" value="Generate time series" name="formSodxtrmts"></td><td></td><td></td></tr>
     </table><!--End inside table-->
     </td></table>
+    <input type="submit" value="Analyze" name="formSodxtrmts">
    {%if json_dict%}
     <input type="hidden" value="{{json_dict.json_file}}" id="j_file" name="j_file">
     {%elif json_file%}

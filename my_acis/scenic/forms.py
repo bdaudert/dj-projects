@@ -268,7 +268,7 @@ help_grids = 'Gridded/modeled datasets available in ACIS.'
 help_stn_selection = 'Defines the type of search area.'
 help_grid_selection = 'Defines the type of search area.'
 help_comma_stns = 'Delimiter separated list of station identifiers. Supported delimiters: comma, space, colon, semi-colon. Please use the station finder to find station IDs.'
-help_stn_id = 'Station identification number or name. If you do not know either, please use the Station Finder to find a station.'
+help_stn_id = 'Station identification number or name.<br /> If you do not know either, please use the Station Finder to find a station.'
 help_date_por = 'yyyymmdd, yyyy-mm-dd, yyyy/mm/dd or "POR" for period of record if single station request.'
 help_date_por_single = 'yyyymmdd, yyyy-mm-dd, yyyy/mm/dd or "POR" for period of record.'
 help_lon_lat = 'Grid point coordinate pair: Longitude, Latitude. Use the map interface by dragging the marker to change location.'
@@ -974,9 +974,9 @@ class MetaGraphForm(forms.Form):
             station_id = self.data.get('station_id')
 
         if station_id is None:
-            self.fields['station_id'] = forms.CharField(required=True, initial='266779', help_text='Enter a COOP station name aor use the station finder to find a station ID.')
+            self.fields['station_id'] = forms.CharField(required=True, initial='266779', help_text='Enter a COOP station name or use the station finder to find a station ID.')
         else:
-            self.fields['station_id'] = forms.CharField(required=True, initial=station_id, help_text='Enter a COOP station name aor use the station finder to find a station ID.')
+            self.fields['station_id'] = forms.CharField(required=True, initial=station_id, help_text='Enter a COOP station name or use the station finder to find a station ID.')
 
 class MonthlyAveragesForm(forms.Form):
     def __init__(self, *args, **kwargs):
