@@ -507,6 +507,7 @@ def data_gridded(request):
     context[initial['overlay_state'] + '_selected'] = 'selected'
     context[initial['select_grid_by']] = WRCCData.AREA_DEFAULTS[initial['select_grid_by']]
 
+    '''
     #Check if we linked from another page and set up user parameters
     if request.method == 'GET' and 'elements' in request.GET:
         form_cleaned = set_form(request,clean=True)
@@ -514,11 +515,18 @@ def data_gridded(request):
         user_params_list, user_params_dict =set_user_params(form, 'data_gridded')
         context['user_params_list'] = user_params_list
         context['user_params_dict']=user_params_dict
+    '''
 
-    if 'formData' in request.POST:
+    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+        if request.method == 'GET':
+            context['form_message'] = True
         #Turn request object into python dict
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
+        #Set form defaults for link from other pages
+        if 'units' not in form.keys():
+            form['units']='english'
+            form_cleaned['units'] = 'english'
         #Back Button/download files issue fix:
         #if select_grid_by none, find it
         if not 'select_grid_by' in form_cleaned.keys() or form_cleaned['select_grid_by'] not in form_cleaned.keys():
@@ -2587,6 +2595,10 @@ def set_data_gridded_params(form):
     #params_dict used to link to relevant apps in html doc
     if not form:
         return {}
+
+    #Set defaults in case we are linked from other pages
+    if 'units' not in form.keys():
+        form['units']='english'
 
     key_order = [form['select_grid_by'], 'elements','degree_days', 'grid', 'start_date', 'end_date','temporal_resolution', 'data_summary', 'units']
     display_params_list = [[] for k in range(len(key_order))]
