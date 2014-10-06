@@ -253,14 +253,6 @@ def data_station(request):
     context[initial['overlay_state'] + '_selected'] = 'selected'
     context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
 
-    '''
-    #Check if we linked from other page and set user parameters
-    if request.method == 'GET' and 'elements' in request.GET:
-        form_cleaned = set_form(request,clean=True)
-        form = set_form(request,clean=False)
-        user_params_list, user_params_dict =set_user_params(form, 'data_station')
-        context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
-    '''
 
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         if request.method == 'GET':
@@ -506,16 +498,6 @@ def data_gridded(request):
     kml_file = initial['overlay_state'] + '_' + initial['select_grid_by'] + '.kml'
     context[initial['overlay_state'] + '_selected'] = 'selected'
     context[initial['select_grid_by']] = WRCCData.AREA_DEFAULTS[initial['select_grid_by']]
-
-    '''
-    #Check if we linked from another page and set up user parameters
-    if request.method == 'GET' and 'elements' in request.GET:
-        form_cleaned = set_form(request,clean=True)
-        form = set_form(request,clean=False)
-        user_params_list, user_params_dict =set_user_params(form, 'data_gridded')
-        context['user_params_list'] = user_params_list
-        context['user_params_dict']=user_params_dict
-    '''
 
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         if request.method == 'GET':
@@ -1487,17 +1469,18 @@ def sodxtrmts(request, app_type):
     join_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
     context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
 
-    #Link from other page
-    if request.method == 'GET' and 'elements' in request.GET:
-        form_cleaned = set_form(request,clean=True)
-        form = set_form(request,clean=False)
-        user_params_list, user_params_dict = set_user_params(form, 'sodxtrmts')
-        context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
-
     #Time Serie Table Generation and graph if desired
-    if 'formSodxtrmts' in request.POST:
+    if 'formSodxtrmts' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+        if request.method == 'GET':
+            context['form_message'] = True
+            form_initial = set_form(request,clean=False)
+            user_params_list, user_params_dict = set_user_params(form_initial, 'sodxtrmts')
+            context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
         #Turn request object into python dict
-        form = set_form(request, clean=True)
+        if app_type == 'station':
+            form = set_form(request, app_name='sodxtrmts',clean=True)
+        else:
+            form = set_form(request, app_name='sodxtrmts_grid',clean=True)
         #Set initial form parameters for html
         initial,checkbox_vals = set_sodxtrmts_initial(request,app_type)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
@@ -1708,109 +1691,118 @@ def sodsumm(request):
     form1 = set_as_form(request,'SodsummForm', init=initial)
     context['form1'] = form1
 
+    '''
     #Link from other page
     if request.method == 'GET' and 'elements' in request.GET:
         form_cleaned = set_form(request,clean=True)
         form = set_form(request,clean=False)
         user_params_list, user_params_dict = set_user_params(form, 'sodsumm')
         context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
+    '''
 
-    if 'form1' in request.POST:
+    if 'form1' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+        if request.method == 'GET':
+            context['form_message'] = True
+            form_initial = set_form(request,clean=False)
+            user_params_list, user_params_dict = set_user_params(form_initial, 'sodsumm')
+            context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
         form1 = set_as_form(request,'SodsummForm', init={'date_type':'y'})
         context['form1'] = form1
-        if form1.is_valid():
-            data_params = {
-                    'sid':find_id(form1.cleaned_data['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json'),
-                    'start_date':form1.cleaned_data['start_year'],
-                    'end_date':form1.cleaned_data['end_year'],
-                    'element':'all'
-                    }
-            app_params = {
-                    'el_type':form1.cleaned_data['summary_type'],
-                    'max_missing_days':form1.cleaned_data['max_missing_days'],
-                    }
-            #Run data retrieval job
-            DJ = WRCCClasses.SODDataJob('Sodsumm', data_params)
-            #Obtain metadata and perform sanity check
-            meta_dict = DJ.get_station_meta()
-            if not meta_dict['names'] or not meta_dict['ids']:
-                results = {}
-                context['run_done']= True
-                return render_to_response('scenic/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
-            dates_list = DJ.get_dates_list()
-            data = DJ.get_data_station()
-            if not data or not dates_list:
-                results = {}
-                context['run_done']= True
-                return render_to_response('scenic/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
-            #Run application
-            App = WRCCClasses.SODApplication('Sodsumm', data, app_specific_params=app_params)
-            results = App.run_app()
-            #format results to single station output
-            if not results:
-                results = {}
-                context['run_done']= True
-                return render_to_response('scenic/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
-            else:
-                results = dict(results[0])
-            context['results'] = results
-            #Input parameters:
-            context['station_id'] = data_params['sid']
-            context['max_missing_days'] = app_params['max_missing_days']
-            #Sodsumm table headers for html
+        if not form1.is_valid():
+            context['form1']= form1
+            return render_to_response('scenic/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
+        data_params = {
+                'sid':find_id(form1.cleaned_data['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json'),
+                'start_date':form1.cleaned_data['start_year'],
+                'end_date':form1.cleaned_data['end_year'],
+                'element':'all'
+                }
+        app_params = {
+                'el_type':form1.cleaned_data['summary_type'],
+                'max_missing_days':form1.cleaned_data['max_missing_days'],
+                }
+        #Run data retrieval job
+        DJ = WRCCClasses.SODDataJob('Sodsumm', data_params)
+        #Obtain metadata and perform sanity check
+        meta_dict = DJ.get_station_meta()
+        if not meta_dict['names'] or not meta_dict['ids']:
+            results = {}
+            context['run_done']= True
+            return render_to_response('scenic/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
+        dates_list = DJ.get_dates_list()
+        data = DJ.get_data_station()
+        if not data or not dates_list:
+            results = {}
+            context['run_done']= True
+            return render_to_response('scenic/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
+        #Run application
+        App = WRCCClasses.SODApplication('Sodsumm', data, app_specific_params=app_params)
+        results = App.run_app()
+        #format results to single station output
+        if not results:
+            results = {}
+            context['run_done']= True
+            return render_to_response('scenic/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
+        else:
+            results = dict(results[0])
+        context['results'] = results
+        #Input parameters:
+        context['station_id'] = data_params['sid']
+        context['max_missing_days'] = app_params['max_missing_days']
+        #Sodsumm table headers for html
+        if form1.cleaned_data['generate_graphics'] == 'T':
+            context['tab_names'] = WRCCData.TAB_NAMES_WITH_GRAPHICS[form1.cleaned_data['summary_type']]
+            tab_list = WRCCData.TAB_LIST_WITH_GRAPHICS[form1.cleaned_data['summary_type']]
+            table_list =WRCCData.TABLE_LIST_WITH_GRAPHICS[form1.cleaned_data['summary_type']]
+        else:
+            context['tab_names'] = WRCCData.TAB_NAMES_NO_GRAPHICS[form1.cleaned_data['summary_type']]
+            tab_list = WRCCData.TAB_LIST_NO_GRAPHICS[form1.cleaned_data['summary_type']]
+            table_list =WRCCData.TABLE_LIST_NO_GRAPHICS[form1.cleaned_data['summary_type']]
+        context['table_list'] = table_list
+        context['tab_list'] = tab_list
+        #Define html content
+        context['run_done'] = True
+        #Check if dates_list is
+        if dates_list and len(dates_list) >=2 and len(dates_list[0])>=4 and len(dates_list[1])>=4:
+            context['start_year'] = dates_list[0][0:4]
+            context['end_year'] = dates_list[-1][0:4]
+        else:
+            context['start_year'] = '0000'
+            context['end_year'] = '0000'
+            dates_list = ['0000','0000']
+        context['station_name'] = meta_dict['names']
+        headers = set_sodsumm_headers(table_list)
+        context['headers'] = headers
+
+        #Generate grahics
+        if form1.cleaned_data['generate_graphics'] == 'T' and results:
+            context['graphics'] = True
+
+        json_list = []
+        for tab_idx, tab in enumerate(tab_list):
+            table = table_list[tab_idx]
+            table_dict = {}
             if form1.cleaned_data['generate_graphics'] == 'T':
-                context['tab_names'] = WRCCData.TAB_NAMES_WITH_GRAPHICS[form1.cleaned_data['summary_type']]
-                tab_list = WRCCData.TAB_LIST_WITH_GRAPHICS[form1.cleaned_data['summary_type']]
-                table_list =WRCCData.TABLE_LIST_WITH_GRAPHICS[form1.cleaned_data['summary_type']]
+                table_dict = generate_sodsumm_graphics(results,tab,table)
             else:
-                context['tab_names'] = WRCCData.TAB_NAMES_NO_GRAPHICS[form1.cleaned_data['summary_type']]
-                tab_list = WRCCData.TAB_LIST_NO_GRAPHICS[form1.cleaned_data['summary_type']]
-                table_list =WRCCData.TABLE_LIST_NO_GRAPHICS[form1.cleaned_data['summary_type']]
-            context['table_list'] = table_list
-            context['tab_list'] = tab_list
-            #Define html content
-            context['run_done'] = True
-            #Check if dates_list is
-            if dates_list and len(dates_list) >=2 and len(dates_list[0])>=4 and len(dates_list[1])>=4:
-                context['start_year'] = dates_list[0][0:4]
-                context['end_year'] = dates_list[-1][0:4]
-            else:
-                context['start_year'] = '0000'
-                context['end_year'] = '0000'
-                dates_list = ['0000','0000']
-            context['station_name'] = meta_dict['names']
-            headers = set_sodsumm_headers(table_list)
-            context['headers'] = headers
-
-            #Generate grahics
-            if form1.cleaned_data['generate_graphics'] == 'T' and results:
-                context['graphics'] = True
-
-            json_list = []
-            for tab_idx, tab in enumerate(tab_list):
-                table = table_list[tab_idx]
-                table_dict = {}
-                if form1.cleaned_data['generate_graphics'] == 'T':
-                    table_dict = generate_sodsumm_graphics(results,tab,table)
-                else:
-                    table_dict = {
-                        'table_name':tab,
-                        'table_data':results[table]
-                    }
-                #Add other params to table_dict
-                table_dict['record_start'] = dates_list[0][0:4]
-                table_dict['record_end'] = dates_list[-1][0:4]
-                table_dict['stn_name'] = meta_dict['names'][0]
-                table_dict['stn_network'] = meta_dict['networks'][0]
-                table_dict['stn_state'] = meta_dict['states'][0]
-                table_dict['stn_id'] = str(data_params['sid'])
-                json_list.append(table_dict)
-            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-            json_file = '%s_sodsumm_%s_%s_%s.json' \
-            %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
-            WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_file, json_list)
-            context['JSON_URL'] = settings.TEMP_DIR
-            context['json_file'] = json_file
+                table_dict = {
+                    'table_name':tab,
+                    'table_data':results[table]
+                }
+            #Add other params to table_dict
+            table_dict['record_start'] = dates_list[0][0:4]
+            table_dict['record_end'] = dates_list[-1][0:4]
+            table_dict['stn_name'] = meta_dict['names'][0]
+            table_dict['stn_network'] = meta_dict['networks'][0]
+            table_dict['stn_state'] = meta_dict['states'][0]
+            table_dict['stn_id'] = str(data_params['sid'])
+            json_list.append(table_dict)
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        json_file = '%s_sodsumm_%s_%s_%s.json' \
+        %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
+        WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_file, json_list)
+        context['JSON_URL'] = settings.TEMP_DIR
+        context['json_file'] = json_file
 
     #Downlaod Table Data
     for table_idx in range(7):
@@ -1946,7 +1938,7 @@ def find_id(form_name_field, json_file_path):
             return entry['id']
     return str(form_name_field)
 
-def set_form(request,clean=True):
+def set_form(request,app_name=None,clean=True):
     '''
     Deals with unicode issues
     and autofill options for identifiers
@@ -1982,7 +1974,19 @@ def set_form(request,clean=True):
         form['delimiter']= 'comma'
     if 'output_file_name' not in form.keys():
         form['output_file_name'] = 'Output'
-
+    if app_name in ['sodxtrmts','sodxtrmts_grid']:
+        if app_name == 'sodxtrmts':
+            form, checkbox_vals = set_sodxtrmts_initial(form,'station')
+        else:
+            form, checkbox_vals = set_sodxtrmts_initial(form,'grid')
+        if 'element' not in form.keys() and 'elements' in form.keys():
+            form['element'] = form['elements']
+        form_graph, checkbox_vals = set_sodxtrmts_graph_initial(form)
+        form = dict(form.items() + form_graph.items())
+        form_pl_opts, checkbox = set_plot_options(form)
+        form = dict(form.items() + form_pl_opts.items())
+        #FIX ME: not sure why el_type defaults to maxt
+        form['el_type'] = form['element']
     for key,val in form_dict.iteritems():
         if key == 'csrfmiddlewaretoken':
             continue
@@ -2841,6 +2845,8 @@ def set_user_params(form, app_name):
         f[area_select]:f[f[area_select]],
         'elements':','.join(el_list).rstrip(',')
     }
+    if app_name == 'sodxtrmts' and 'elements' in f.keys():
+        user_params_dict['element'] = user_params_dict['elements']
     key_list = []
     if 'start_date' in f.keys():
         key_list = ['start_date','end_date']
@@ -2893,6 +2899,7 @@ def set_user_params(form, app_name):
             if k in f.keys():
                 user_params_list.insert(0,[WRCCData.DISPLAY_PARAMS[k],f[k]])
     return user_params_list, user_params_dict
+
 ##################
 #Initialization
 ###################
@@ -3002,8 +3009,8 @@ def set_sodxtrmts_initial(request,app_type):
         initial['end_year'] = Get('end_year', Get('end_date',end_year))
     if len(initial['start_year'])>4:initial['start_year'] = initial['start_year'][0:4]
     if len(initial['end_year'])>4:initial['end_year'] = initial['end_year'][0:4]
-    initial['element'] = Get('element',Get('elements','pcpn').replace(' ','').split(',')[0])
-    initial['monthly_statistic'] = Get('monthly_statistic', 'msum')
+    initial['element'] = Get('element',Get('elements','maxt').replace(' ','').split(',')[0])
+    initial['monthly_statistic'] = Get('monthly_statistic', 'mave')
     initial['max_missing_days'] = Get('max_missing_days', '5')
     initial['start_month'] = Get('start_month', '01')
     initial['departures_from_averages'] = Get('departures_from_averages', 'F')
@@ -3019,7 +3026,7 @@ def set_sodxtrmts_initial(request,app_type):
     if not initial['base_temperature'] and initial['element'] in ['gdd']:
         initial['base_temperature'] = '50'
     #FIX ME request.POST.get does not return base_temperature and thresholds
-    if request.POST:
+    if type(request) != dict  and request.POST:
         ks = ['base_temperature','less_greater_or_between','threshold_for_less_or_greater','threshold_low_for_between','threshold_high_for_between']
         req_dict = dict(request.POST.items())
         for k in ks:

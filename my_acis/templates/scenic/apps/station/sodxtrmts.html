@@ -92,7 +92,19 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
 
 
 {%if json_dict.data and initial.generate_graph == "F"%}
-<div id="Arrow" class="results" style="position:absolute;top:250px;right:310px;">
+<div id="Arrow" class="results" style="position:absolute;top:150px;right:100px;">
+{%if form_message%}
+<div id="user_params_list">
+<p class="message">
+Additional format changes can be made using the form on the left!<br />
+YOUR SEARCH PARAMETERS:<br />
+{%for key_val in user_params_list%}
+<b>{{key_val.0}}</b>: {{key_val.1}}<br />
+{%endfor%}
+</p>
+</div>
+{%endif%}
+
 <table style="display:block;">
 <td valign="top"><b>RESULTS:</b></td>
 <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="300px"></td>
@@ -111,11 +123,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     <table id="tableSodxtrmts" class="form" frame="void" style="border-collapse:collapse;" >
     <td valign="top">
     <table id="tableData">
-    {%if user_params_dict.station_id%}
     <tr valign="top" >
-    {%else%}
-    <tr valign="top">
-    {%endif%}
     <td>Station ID/Name: </td>
     <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{initial.station_id}}" list="US_station_id" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -127,20 +135,12 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </div>
     </td>
     </tr>
-    {%if user_params_dict.station_id%}
-    <tr valign="top" >
-    {%else%}
     <tr valign="top">
-    {%endif%}
     <td></td>
     <td><a target="_blank" href="{{STATION_FINDER_URL}}">Station Finder</a></td>
     <td></td>
     </tr>
-    {%if user_params_dict.start_date or user_params_dict.start_year%}
-    <tr valign="top" >
-    {%else%}
     <tr valign="top">
-    {%endif%}
     <td id="Start Year">Start Year: </td>
     <td><input type="text" id="start_year" name="start_year" value="{{initial.start_year}}" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -152,11 +152,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </div>
     </td>
     </tr>
-    {%if user_params_dict.end_date or user_params_dict.end_year%}
-    <tr valign="top" >
-    {%else%}
     <tr valign="top">
-    {%endif%}
     <td id="End Year">End Year: </td>
     <td><input type="text" id="end_year" name="end_year" value="{{initial.end_year}}" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -168,11 +164,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </div>
     </td>
     </tr>
-    {%if user_params_dict.elements%}
-    <tr valign="top" >
-    {%else%}
     <tr valign="top">
-    {%endif%}
     <td>Element: </td>
     <td>
         <select id="element" name="element" onchange="set_BaseTemp_and_Threshes('tableData',this);hide_formGraph('formGraph');">
@@ -200,10 +192,8 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </div>
     </td>
     </tr>
-    {%if initial.base_temperature and not user_params_dict.base_temperature%}
+    {%if initial.base_temperature%}
     <tr id="base_temp" valign="top">
-    {%elif initial.base_temperature and user_params_dict.base_temperature%}
-    <tr id="base_temp" valign="top" >
     {%else%}
     <tr id="base_temp" valign="top" style="display:none">
     {%endif%}
@@ -399,19 +389,6 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     {%if initial.generate_graph == "T"%}
     <table class="formGraph form" >
     {%else%}
-    {%if user_params_list%}
-    <div id="user_params_list">
-    <p class="message">
-    Please use the form on the left to complete your data request.<br />
-    Double check your input parameters and fill out the highlighted form fields.<br />
-    Submit the form.<br />
-    Your Parameters were:<br />
-    {%for key_val in user_params_list%}
-    <b>{{key_val.0}}</b>: {{key_val.1}}<br />
-    {%endfor%}
-    </p>
-    </div>
-    {%endif%}
     <table class="formGraph form" style="display:none" >
     {%endif%}
     <tr valign="top" class="formGraph" style="display:table-row;">

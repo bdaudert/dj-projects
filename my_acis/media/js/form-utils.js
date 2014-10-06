@@ -378,23 +378,12 @@ function set_BaseTemp(table_id,node){
     var element = document.getElementById("element").value;
     if (element =='hdd' || element =='cdd' || element=='gdd'){
         document.getElementById("base_temp").style.display="table-row";
-        /*
-        if (!$('#base_temp').length){
-            idx = node.parentNode.parentNode.rowIndex + 1;
-            var row=table.insertRow(parseInt(idx));
-            row.setAttribute('id', 'base_temp');
-            var cell0=row.insertCell(0);
-            var cell1=row.insertCell(1);
-            var cell2 = row.insertCell(2);
-            cell0.innerHTML='Base Temperature';
-            cell1.innerHTML='<input type="text" name="base_temperature" value="65">';
-            cell2.innerHTML = '<img alt="Help" title="Help" src="' + IMG_URL + 'QMark.png" class="trigger">' +
-            ' <div class="pop-up"><div id="ht_base_temperature"></div>' +
-            ' <script type="text/javascript">' +
-            '$("#ht_base_temperature").load("' + HTML_URL + 'Docu_help_texts.html #ht_base_temperature");' +
-            '</script></div>';
+        if (element == 'hdd' || element == 'cdd'){
+            document.getElementById("base_temp").value = '65';
         }
-        */
+        else{
+            document.getElementById("base_temp").value='50';
+        }
     }
     else{document.getElementById("base_temp").style.display="none";}
 }

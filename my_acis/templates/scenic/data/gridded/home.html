@@ -114,7 +114,7 @@ $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
         <tr valign="top">
         <td>Select grid by:</td>
         <td>
-            <select id="select_grid_by" name="select_grid_by" onchange="set_station_grid_select('area',this)" onfocus="set_station_grid_select('area',this);">
+            <select id="select_grid_by" name="select_grid_by" onchange="set_station_grid_select('area',this)">
             <option value="location" {{checkbox_vals.location_selected}}>Individual grid point</option>
             <option value="state" {{checkbox_vals.state_selected}}>State</option>
             <option value="county" {{checkbox_vals.county_selected}}>County</option>

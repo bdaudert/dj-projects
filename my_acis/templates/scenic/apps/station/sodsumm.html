@@ -102,14 +102,24 @@ $(function(){
         $("#Docu_plot_opts").load("{{HTML_URL}}/Docu_PLOT_OPTS_SODSUMM.html");
         </script>
         </div>
+       
+        Form ERROR: {{form1}} 
+        {% if form1.errors %}
+        <div id="form-error">
+        <p>The operation could not be performed because one or more error(s) occurred.<br />Please resubmit the form after making the following changes:</p>
+        <ul>
+        {% for field in form1 %}
+        <li>{{ field.errors|striptags }}</li>
+        {% endfor %}
+        </ul>
+        </div>
+        {% endif %}
 
-        {%if user_params_list and not results%}
+        {%if user_params_list and form_message%}
         <div id="user_params_list">
         <p class="message">
-        Please use the form on the left to complete your data request.<br />
-        Double check your input parameters and fill out the highlighted form fields.<br />
-        Submit the form.<br />
-        Your Parameters were:<br />
+        Additional format changes can be made using the form on the left!<br />
+        YOUR SEARCH PARAMETERS:<br />
         {%for key_val in user_params_list%}
         <b>{{key_val.0}}</b>: {{key_val.1}}<br />
         {%endfor%}
