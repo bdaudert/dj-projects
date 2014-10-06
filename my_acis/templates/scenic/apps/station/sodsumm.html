@@ -18,51 +18,108 @@
 <script type="text/javascript">
 $(function(){
         //On form change, hide results and form errors
-        hide_errors_results_on_change('form1');
+        hide_errors_results_on_change('formSodsumm');
 });
 </script>
 
 <table cellpadding="10">
 <td valign="top" width="25%">
     <input type="submit" value="Start Over" onclick="window.location='{{SODSUMM_URL}}'"/>
-    <div id='form1'>
-        <form method="post" id='form1' action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" >
-        {%for field in form1 %}
-        {%if not field.is_hidden%}
-        {%if user_params_dict.station_id and field.label == "Station id"%}
-        <tr >
-        {%elif user_params_dict.start_year and field.label == "Start year"%}
-        <tr >
-        {%elif user_params_dict.end_year and field.label == "End year"%}
-        <tr >
-        {%else%}
-        <tr>
-        {%endif%}
-        {%if field.label == "Station id" and not user_params_dict.station_id%}
-            <td>Station ID/Name</td>
-            <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{field.value}}" list="US_station_id"></td>
-        {%else%}
-            <td>{{field.label}}: </td>
-            <td>{{field}}</td>
-        {%endif%}
-        <td>
-        <img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">{{field.help_text}}</div>
-        </td>
-        </tr>
-        {%if field.label == "Station id" and not user_params_dict.station_id%}
-        <tr><td></td><td><a target="_blank" href="{{STATION_FINDER_URL}}">Station Finder</a></td><td></td></tr>
-        {%endif%}
-        {%endif%}
-
-        {%if field.errors%}
-        <tr><td></td><td>{{field.errors}}</td><td></td></tr>
-        {%endif%}
-        {%endfor%}
-        </table>
-        <input type="submit" value="Analyze" name="form1"/>
-        </form>
+    <div id='formSodsumm'>
+        <form method="post" id='formSodsumm' action="" onsubmit="show_loading()">{% csrf_token %}
+        <table class="form" frame="void" style="border-collapse:collapse;" >
+            <tr valign="top" >
+    <td>Station ID/Name: </td>
+    <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{initial.station_id}}" list="US_station_id" onchange="hide_formGraph('formGraph');"></td>
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_station_id"></div>
+        <script type="text/javascript">                        
+        $("#ht_station_id").load("{{HTML_URL}}Docu_help_texts.html #ht_station_id");
+        </script>
+    </div>
+    </td>
+    </tr>
+    <tr valign="top">
+    <td></td>
+    <td><a target="_blank" href="{{STATION_FINDER_URL}}">Station Finder</a></td>
+    <td></td>
+    </tr>
+    <tr valign="top">
+    <td id="Start Year">Start Year: </td>
+    <td><input type="text" id="start_year" name="start_year" value="{{initial.start_year}}" onchange="hide_formGraph('formGraph');"></td>
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_start_year"></div>
+        <script type="text/javascript">                        
+        $("#ht_start_year").load("{{HTML_URL}}Docu_help_texts.html #ht_start_year_por");
+        </script>
+    </div>
+    </td>
+    </tr>
+    <tr valign="top">
+    <td id="End Year">End Year: </td>
+    <td><input type="text" id="end_year" name="end_year" value="{{initial.end_year}}" onchange="hide_formGraph('formGraph');"></td>
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_end_year"></div>
+        <script type="text/javascript">                        
+        $("#ht_end_year").load("{{HTML_URL}}Docu_help_texts.html #ht_end_year_por");
+        </script>
+    </div>
+    </td>
+    </tr>
+    <td>Summary Type: </td>
+    <td>
+        <select id="summary_type" name="summary_type">
+            <option value="all" {{checkbox_vals.all_selected}}>All of those below</option>
+            <option value="temp" {{checkbox_vals.temp_selected}}>Temperature</option>
+            <option value="prsn" {{checkbox_vals.prsn_selected}}>Precip/Snowfall</option>
+            <option value="both" {{checkbox_vals.both_selected}}>Temp/Precip</option>
+            <option value="hc" {{checkbox_vals.hc_selected}}>Degree Days</option>
+            <option value="g" {{checkbox_vals.g_selected}}>Growing Degree Days</option>
+            </select>
+    </td>
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_summary_type"></div>
+        <script type="text/javascript">                        
+        $("#ht_summary_type").load("{{HTML_URL}}Docu_help_texts.html #ht_sodsumm_summary_type");
+        </script>
+    </div>
+    </td>
+    </tr>
+    <tr valign="top">
+    <td id="Maximum Number of Missing Days">Max Missing Days: </td>
+    <td><input type="text" name="max_missing_days" value="{{initial.max_missing_days}}" onchange="hide_formGraph('formGraph');"></td>
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_max_missing_days"></div>
+        <script type="text/javascript">                        
+        $("#ht_max_missing_days").load("{{HTML_URL}}Docu_help_texts.html #ht_max_missing_days");
+        </script>
+    </div>
+    </td>
+    </tr>
+    <tr valign="top" id="generate_graph_row">
+    <td>Generate graphics:</td>
+    <td>
+        <select id="generate_graphics" name="generate_graphics">
+        <option value="F" {{checkbox_vals.generate_graphics_F_selected}}>No</option>
+        <option value="T" {{checkbox_vals.generate_graphics_T_selected}}>Yes</option>
+    </td>
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_generate_graphics"></div>
+        <script type="text/javascript">                        
+        $("#ht_generate_graphics").load("{{HTML_URL}}Docu_help_texts.html #ht_sodsumm_generate_graphics");
+        </script>
+    </div>
+    </td>
+    </tr>
+    </table>
+    <input type="submit" value="Analyze" name="formSodsumm"/>
+    </form>
     </div>
 </td>
 <td valign="top" width="75%">
@@ -103,17 +160,6 @@ $(function(){
         </script>
         </div>
        
-        Form ERROR: {{form1}} 
-        {% if form1.errors %}
-        <div id="form-error">
-        <p>The operation could not be performed because one or more error(s) occurred.<br />Please resubmit the form after making the following changes:</p>
-        <ul>
-        {% for field in form1 %}
-        <li>{{ field.errors|striptags }}</li>
-        {% endfor %}
-        </ul>
-        </div>
-        {% endif %}
 
         {%if user_params_list and form_message%}
         <div id="user_params_list">

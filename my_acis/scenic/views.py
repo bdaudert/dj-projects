@@ -1687,39 +1687,27 @@ def sodsumm(request):
         'title': 'Station Climatology',
         'icon':'ToolProduct.png'
         }
-    initial = set_sod_initial(request, 'Sodsumm')
-    form1 = set_as_form(request,'SodsummForm', init=initial)
-    context['form1'] = form1
-
-    '''
-    #Link from other page
-    if request.method == 'GET' and 'elements' in request.GET:
-        form_cleaned = set_form(request,clean=True)
-        form = set_form(request,clean=False)
-        user_params_list, user_params_dict = set_user_params(form, 'sodsumm')
-        context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
-    '''
-
-    if 'form1' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+    initial, checkbox_vals = set_sodsumm_initial(request)
+    context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+    if 'formSodsumm' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         if request.method == 'GET':
             context['form_message'] = True
-            form_initial = set_form(request,clean=False)
+            form_initial = set_form(request,app_name='sodsumm',clean=False)
             user_params_list, user_params_dict = set_user_params(form_initial, 'sodsumm')
             context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
-        form1 = set_as_form(request,'SodsummForm', init={'date_type':'y'})
-        context['form1'] = form1
-        if not form1.is_valid():
-            context['form1']= form1
-            return render_to_response('scenic/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
+        form = set_form(request,app_name='sodsumm',clean=False)
+        form_cleaned = set_form(request,app_name='sodsumm',clean=True)
+        initial, checkbox_vals = set_sodsumm_initial(request)
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         data_params = {
-                'sid':find_id(form1.cleaned_data['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json'),
-                'start_date':form1.cleaned_data['start_year'],
-                'end_date':form1.cleaned_data['end_year'],
+                'sid':find_id(form['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json'),
+                'start_date':form['start_year'],
+                'end_date':form['end_year'],
                 'element':'all'
                 }
         app_params = {
-                'el_type':form1.cleaned_data['summary_type'],
-                'max_missing_days':form1.cleaned_data['max_missing_days'],
+                'el_type':form['summary_type'],
+                'max_missing_days':form['max_missing_days'],
                 }
         #Run data retrieval job
         DJ = WRCCClasses.SODDataJob('Sodsumm', data_params)
@@ -1750,14 +1738,14 @@ def sodsumm(request):
         context['station_id'] = data_params['sid']
         context['max_missing_days'] = app_params['max_missing_days']
         #Sodsumm table headers for html
-        if form1.cleaned_data['generate_graphics'] == 'T':
-            context['tab_names'] = WRCCData.TAB_NAMES_WITH_GRAPHICS[form1.cleaned_data['summary_type']]
-            tab_list = WRCCData.TAB_LIST_WITH_GRAPHICS[form1.cleaned_data['summary_type']]
-            table_list =WRCCData.TABLE_LIST_WITH_GRAPHICS[form1.cleaned_data['summary_type']]
+        if form['generate_graphics'] == 'T':
+            context['tab_names'] = WRCCData.TAB_NAMES_WITH_GRAPHICS[form['summary_type']]
+            tab_list = WRCCData.TAB_LIST_WITH_GRAPHICS[form['summary_type']]
+            table_list =WRCCData.TABLE_LIST_WITH_GRAPHICS[form['summary_type']]
         else:
-            context['tab_names'] = WRCCData.TAB_NAMES_NO_GRAPHICS[form1.cleaned_data['summary_type']]
-            tab_list = WRCCData.TAB_LIST_NO_GRAPHICS[form1.cleaned_data['summary_type']]
-            table_list =WRCCData.TABLE_LIST_NO_GRAPHICS[form1.cleaned_data['summary_type']]
+            context['tab_names'] = WRCCData.TAB_NAMES_NO_GRAPHICS[form['summary_type']]
+            tab_list = WRCCData.TAB_LIST_NO_GRAPHICS[form['summary_type']]
+            table_list =WRCCData.TABLE_LIST_NO_GRAPHICS[form['summary_type']]
         context['table_list'] = table_list
         context['tab_list'] = tab_list
         #Define html content
@@ -1775,14 +1763,14 @@ def sodsumm(request):
         context['headers'] = headers
 
         #Generate grahics
-        if form1.cleaned_data['generate_graphics'] == 'T' and results:
+        if form['generate_graphics'] == 'T' and results:
             context['graphics'] = True
 
         json_list = []
         for tab_idx, tab in enumerate(tab_list):
             table = table_list[tab_idx]
             table_dict = {}
-            if form1.cleaned_data['generate_graphics'] == 'T':
+            if form['generate_graphics'] == 'T':
                 table_dict = generate_sodsumm_graphics(results,tab,table)
             else:
                 table_dict = {
@@ -1987,6 +1975,13 @@ def set_form(request,app_name=None,clean=True):
         form = dict(form.items() + form_pl_opts.items())
         #FIX ME: not sure why el_type defaults to maxt
         form['el_type'] = form['element']
+    if app_name =='sodsumm':
+        if 'summary_type' not in form.keys():
+            form['summary_type'] = 'all'
+        if 'max_missing_days' not in form.keys():
+            form['max_missing_days'] = '5'
+        if 'generate_graphics' not in form.keys():
+            form['generate_graphics'] = 'T'
     for key,val in form_dict.iteritems():
         if key == 'csrfmiddlewaretoken':
             continue
@@ -2976,20 +2971,28 @@ def set_plot_options(request):
     return initial, checkbox_vals
 
 
-def set_sod_initial(request, app_name):
-    initial = {}
+def set_sodsumm_initial(request):
     Get = set_GET(request)
+    initial = {};checkbox_vals = {};
     initial['station_id'] = Get('station_id','RENO TAHOE INTL AP, 266779')
     initial['start_year'] = Get('start_year', Get('start_date','POR'))
     initial['end_year'] = Get('end_year', Get('end_date','POR'))
     if len(initial['start_year'])>4:initial['start_year'] = initial['start_year'][0:4]
     if len(initial['end_year'])>4:initial['end_year'] = initial['end_year'][0:4]
     initial['element'] = Get('element',Get('elements','pcpn').replace(' ','').split(',')[0])
-    if app_name in ['Sodsumm', 'Sodxtrmts']:
-        initial['date_type'] = 'y'
-    else:
-        initial['date_type'] = 'd'
-    return initial
+    initial['date_type'] = 'y'
+    initial['summary_type'] = Get('summary_type','all')
+    initial['max_missing_days'] = Get('max_missing_days','5')
+    initial['generate_graphics'] = Get('generate_graphics','T')
+    for st in ['all','temp','prsn','both','hc','g']:
+        checkbox_vals[st + '_selected'] =''
+        if st == initial['summary_type']:
+            checkbox_vals[st + '_selected'] ='selected'
+    for bl in ['T','F']:
+        checkbox_vals['generate_graphics' + '_' + bl + '_selected'] = ''
+        if initial['generate_graphics'] == bl:
+            checkbox_vals['generate_graphics' + '_' + bl + '_selected'] = 'selected'
+    return initial,checkbox_vals
 
 def set_sodxtrmts_initial(request,app_type):
     initial = {}
