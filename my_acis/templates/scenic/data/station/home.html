@@ -529,8 +529,8 @@ $(function(){
     {%endif%}
  
     <div class="results">
-    {%if user_params_list or form_message%}
-    <div class="message" id="user_params_list">
+    {%if form_message%}
+    <div class="results" id="user_params_list">
     <p class="message">
     Additional format changes can be made using the form on the left!<br />
     YOUR SEARCH PARAMETERS:<br />
@@ -554,7 +554,7 @@ $(function(){
     <p class="error">{{too_large}}</p>
     {%endif%}
 
-    {%if display_params_list%}
+    {%if display_params_list and not form_message%}
     <p class="message"><b>YOUR SEARCH PARAMETERS</b>:<br /><br />
     {%for param in display_params_list%}
     {%if forloop.counter|divisibleby:"3" or forloop.last%}<br />
@@ -679,7 +679,7 @@ $(function(){
     <a target="_blank" href="{{STATION_MON_AVES_URL}}?{%for key,val in monthly_aves_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Barcharts of Monthly Averages</font></a><br />
     {%endif%}
     {%if link_to_mon_aves and not results.error%}
-    <a target="_blank" href="{{STATION_MON_AVES_URL}}?{%for key,val in monthly_aves_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Barcharts of aonthly averages</font></a><br />
+    <a target="_blank" href="{{STATION_MON_AVES_URL}}?{%for key,val in monthly_aves_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Barcharts of monthly averages</font></a><br />
     {%endif%}
     {%endif%}
 

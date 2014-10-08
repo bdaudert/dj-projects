@@ -29,6 +29,7 @@
 {%if params_dict.elements%}
 <input type="hidden" id="elements" name="variable" value="{{params_dict.elements}}">
 {%endif%}
+<input type="hidden" id="elements_str" value="{{initial.elements_string}}" class="elements_string">
 <!--Overlay map parameters-->
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
 <input type="hidden" id="host" name="host" value="{{host}}">
@@ -147,7 +148,7 @@ $(function(){
 </td>
 <td valign="top" align="left" width="650px">
     <div class="results">
-    {%if station_ids_for_datafind %}
+    {%if station_ids_for_datafind and params_dict%}
     <!--Link to data portal-->
     {%if params_dict.select_stations_by == "station_ids" and not error and not form_error%}
     <a align="center" target="_blank" href="{{STATION_DATA_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&data_format=html&units=english&date_format=dash" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
@@ -311,7 +312,7 @@ date_format=dash" id="link_to_datafind"><font size="4"><b>Obtain data for all st
     </script>
 
 
-    {%if station_ids_for_datafind %}
+    {%if station_ids_for_datafind  and params_dict%}
     <!--Link to data portal-->
     {%if params_dict.select_stations_by == "station_ids" and not error and not form_error%}
     <a align="center" target="_blank" href="{{STATION_DATA_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&data_format=html&units=english&date_format=dash" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>

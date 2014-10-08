@@ -495,7 +495,7 @@ $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
 
     <div class="results">
     {%if form_message%}
-    <div id="user_params_list">
+    <div id="user_params_list" class="results">
     <p class="message">
     Additional format changes can be made using the form on the left!<br />
     YOYR SEARCH PARAMETERS:<br />
@@ -514,7 +514,7 @@ $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
     {%endif%}
 
  
-    {%if display_params_list%}
+    {%if display_params_list and not form_message%}
     <p><b>YOUR SEARCH PARAMETERS</b>:<br />
     {%for param in display_params_list%}
     {%if forloop.counter|divisibleby:"3" %}<br />

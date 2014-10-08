@@ -210,13 +210,11 @@ $(function(){
     </script>
     </div>
     
-    {%if user_params_list and not results%}
-    <div id="user_params_list">
+    {%if user_params_list and form_message%}
+    <div id="user_params_list" class="results">
     <p class="message">
-    Please use the form on the left to complete your data request.<br />
-    Double check your input parameters and fill out the highlighted form fields.<br />
-    Submit the form.<br />
-    Your Parameters were:<br />
+    Additional format changes can be made using the form on the left!<br />
+    YOUR SEARCH PARAMETERS:<br />
     {%for key_val in user_params_list%}
     <b>{{key_val.0}}</b>: {{key_val.1}}<br />
     {%endfor%}

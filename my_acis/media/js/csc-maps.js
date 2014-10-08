@@ -93,10 +93,11 @@ function initialize_station_finder() {
         var end_date = document.getElementById("end_date").value;
     }
     else { var end_date = null }
-    if (document.getElementById("elements_string")) {
-        var elements = document.getElementById("elements_string").value;
+    if (document.getElementById("elements_str")) {
+        var elements = document.getElementById("elements_str").value;
+        var el_list = elements.split(',');
     }
-    else { var elements = null } 
+    else { var elements = null }
     //Read in stn data json file
     $.getJSON(station_json, function(data) {
 
@@ -218,25 +219,35 @@ function initialize_station_finder() {
                 '">Access Climate Summaries for this Station (by WRCC)</a>'
             }
             */
-            var data_portal_link = '<a target="_blank" href="' + STATION_DATA_URL + '?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid;
-            var app_portal_link = '<a target="_blank" href="' + STATION_TOOLS_URL + '?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid; 
+            var data_portal_link = '<a target="_blank" href="' + STATION_DATA_URL + 
+            '?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid; 
+            var app_portal_link = '<a target="_blank" href="' + STATION_TOOLS_URL + 
+            '?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid;
+            var sodsumm_portal_link = '<a target="_blank" href="' + STATION_TOOLS_URL +
+            'sodsumm?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid;
+            //var metagraph_portal_link = '<a target="_blank" href="' + STATION_TOOLS_URL +
+            //'metagraph?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid; 
+            if (elements != null){
+                data_portal_link = data_portal_link + '&elements=' + elements;
+                app_portal_link = app_portal_link + '&elements=' + elements;
+            }
             if (start_date != null){ 
                 data_portal_link = data_portal_link + '&start_date=' + start_date;
                 app_portal_link = app_portal_link + '&start_date=' + start_date; 
+                sodsumm_portal_link = sodsumm_portal_link + '&start_year=' + start_date.substring(0,4);
             }
             if (end_date != null){ 
                 data_portal_link = data_portal_link + '&end_date=' + end_date;
                 app_portal_link = app_portal_link + '&end_date=' + end_date; 
+                sodsumm_portal_link = sodsumm_portal_link + '&end_year=' + end_date.substring(0,4);
             }
-            if (elements != null && elements != 'Any climate element'){ 
-                data_portal_link = data_portal_link + '&elements=' + elements;
-                app_portal_link = app_portal_link + '&elements=' + elements;
-            }
-            data_portal_link = data_portal_link + '">Obtain Data for this Station </a>'
-            app_portal_link = app_portal_link + '">Find Tools/Applications for this Station</a>'
+            data_portal_link = data_portal_link + '">Obtain data for this station </a>'
+            sodsumm_portal_link = sodsumm_portal_link + '">Generate Station Climatology </a>'
+            app_portal_link = app_portal_link + '">Run custom data analysis</a>'
+            //metagraph_portal_link = data_portal_link + '">Completeness of data collection for maxt/mint/pcpn/snow/snwd</a>'
             var contentString = '<div id="MarkerWindow">'+
-                //wrcc_info_link + '<br />' +
                 data_portal_link + '<br />' +
+                sodsumm_portal_link + '<br />' +
                 app_portal_link + '<br />' +
                 '<b>Name: </b><font color="#FF007F">' + c.name + '</font><br/>'+
                 '<b>Station ID: </b>' + c.sid + '<br/>' +

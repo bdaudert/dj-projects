@@ -257,6 +257,9 @@ def data_station(request):
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         if request.method == 'GET':
             context['form_message'] = True
+            form_initial = set_form(request,clean=False)
+            user_params_list, user_params_dict = set_user_params(form_initial, 'data_station')
+            context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
         #if 'formData' in request.POST:
         #Turn request object into python dict
         form = set_form(request,clean=False)
@@ -297,7 +300,7 @@ def data_station(request):
             context['element_list'] = form['elements']
             for el in form['elements']:
                 el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
-                if not base_temp : base_temp=''
+                if not base_temp:base_temp=''
                 el_name_dict[el] = WRCCData.MICHELES_ELEMENT_NAMES[str(el_strip)] + str(base_temp)
                 if 'units' in form.keys() and  form['units'] == 'metric':
                     unit_dict[el] = WRCCData.UNITS_METRIC[el_strip]
@@ -502,6 +505,9 @@ def data_gridded(request):
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         if request.method == 'GET':
             context['form_message'] = True
+            form_initial = set_form(request, clean=False)
+            user_params_list, user_params_dict = set_user_params(form_initial, 'data_gridded')
+            context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
         #Turn request object into python dict
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
@@ -731,30 +737,20 @@ def apps_home(request):
 
 def apps_station(request):
     context = {
-        'title': 'Station Data Analysis',
-        'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
-        'icon':'ToolProduct.png'
+        'title': 'Station Data Analysis'
         }
-    '''
-    station_id = request.GET.get('station_id', None)
-    start_date = request.GET.get('start_date', None)
-    end_date = request.GET.get('end_date', None)
-    elements = request.GET.get('elements', None)
-    initial = {}
-    if station_id is not None:context['station_id'] = station_id;initial['station_id'] = station_id
-    if start_date is not None:context['start_date'] = start_date;initial['start_date'] = start_date
-    if end_date is not None:context['end_date'] = end_date;initial['end_date'] = end_date
-    if elements is not None:context['elements'] = elements;initial['elements'] = elements
-    context['initial'] = initial
-    '''
     #Link from other page
-    if request.method == 'GET' and 'elements' in request.GET:
+    if request.method == 'GET':
+        context['hide_sodsumm'] = True
+        context['hide_metagrapgh'] = True
         form_cleaned = set_form(request,clean=True)
         form = set_form(request,clean=False)
         user_params_list, user_params_dict =set_user_params(form, 'apps_station')
+        if 'elements' in user_params_dict.keys():
+            context['hide_sodxtrmts'] = True
         context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
-
     return render_to_response('scenic/apps/station/home.html', context, context_instance=RequestContext(request))
+
 
 def apps_gridded(request):
     context = {
@@ -789,7 +785,7 @@ def metagraph(request):
         context['station_id'] = station_id
     context['form_meta'] = form_meta
 
-    if 'form_meta' in request.POST:
+    if 'form_meta' in request.POST or request.method == 'GET':
         form_meta = set_as_form(request,'MetaGraphForm')
         context['form_meta']  = form_meta
         if form_meta.is_valid():
@@ -832,14 +828,12 @@ def monthly_aves(request):
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #context['search_params'] = initial
 
-    #Link from other page
-    if request.method == 'GET' and 'elements' in request.GET:
-        form_cleaned = set_form(request,clean=True)
-        form = set_form(request,clean=False)
-        user_params_list, user_params_dict =set_user_params(form, 'monthly_aves')
-        context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
-
-    if 'formData' in request.POST:
+    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+        if request.method == 'GET':
+            context['form_message'] = True
+            form_initial = set_form(request,clean=False)
+            user_params_list, user_params_dict =set_user_params(form_initial, 'monthly_aves')
+            context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
         search_params ={}
@@ -1346,37 +1340,16 @@ def station_locator_app(request):
     #Add params for link to station data
     form = set_form(initial, clean=False)
     form_cleaned = set_form(initial,clean=True)
-    params_list, params_dict = set_user_params(form, 'station_locator_app')
+    params_list, params_dict = set_user_params(initial, 'station_locator_app')
     context['params_list'] = params_list;context['params_dict'] = params_dict
-    '''
-    el_vX_list = [1,2,4]
-    #Set up params for station_json generation
-    by_type = 'state'; val='nv'
-    context['map_title'] = 'Map of Nevada COOP stations!'
-    date_range = [form_cleaned['start_date'],form_cleaned['end_date']]
-    el_date_constraints = form_cleaned['elements_constraints'] + '_' + form_cleaned['dates_constraints']
-    station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=el_date_constraints)
-    context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
-    if 'error' in station_json.keys():
-        context['error'] = station_json['error']
-    if 'stations' not in station_json.keys() or  station_json['stations'] == []:
-        context['error'] = "No stations found for these search parameters."
-    context['station_json'] = f_name
-    '''
 
-
-    #Link from other page
-    if request.method == 'GET' and 'select_stations_by' in request.GET:
-        form_cleaned = set_form(request,clean=True)
-        form = set_form(request,clean=False)
+    if 'formData' in request.POST or (request.method == 'GET' and 'station_id' in request.GET):
+        form_initial = set_form(request,clean=False)
         user_params_list, user_params_dict =set_user_params(form, 'station_locator_app')
         context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
-
-
-    if 'formData' in request.POST:
         #Turn request object into python dict
-        form = set_form(request, clean=False)
-        form_cleaned = set_form(request)
+        form = set_form(request, app_name='station_locator_app',clean=False)
+        form_cleaned = set_form(request,app_name='station_locator_app',clean=True)
         #Add params for link to station data
         params_list, params_dict = set_user_params(form, 'station_locator_app')
         context['params_list'] = params_list;context['params_dict'] = params_dict
@@ -1689,12 +1662,11 @@ def sodsumm(request):
         }
     initial, checkbox_vals = set_sodsumm_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-    if 'formSodsumm' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
-        if request.method == 'GET':
-            context['form_message'] = True
-            form_initial = set_form(request,app_name='sodsumm',clean=False)
-            user_params_list, user_params_dict = set_user_params(form_initial, 'sodsumm')
-            context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
+    if 'formSodsumm' in request.POST or request.method == 'GET':
+        context['form_message'] = True
+        form_initial = set_form(request,app_name='sodsumm',clean=False)
+        user_params_list, user_params_dict = set_user_params(form_initial, 'sodsumm')
+        context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
         form = set_form(request,app_name='sodsumm',clean=False)
         form_cleaned = set_form(request,app_name='sodsumm',clean=True)
         initial, checkbox_vals = set_sodsumm_initial(request)
@@ -1944,6 +1916,11 @@ def set_form(request,app_name=None,clean=True):
             form_dict = dict((x,y) for x,y in request.items())
         except:
             form_dict = {}
+
+    for key,val in form_dict.iteritems():
+        if key == 'csrfmiddlewaretoken':
+            continue
+        form[str(key)] =str(val)
     #Resolve naming conflicts in data_station/data_gridded
     #similar fields appear in both, main form and download form
     if 'data_format_download' in form.keys():
@@ -1962,6 +1939,11 @@ def set_form(request,app_name=None,clean=True):
         form['delimiter']= 'comma'
     if 'output_file_name' not in form.keys():
         form['output_file_name'] = 'Output'
+    if 'units' not in form.keys():
+        form['units']= 'english'
+    if 'element' not in form.keys() and 'elements' not in form.keys():
+        form['element'] = 'maxt'
+        form['elements'] = 'maxt,mint,pcpn'
     if app_name in ['sodxtrmts','sodxtrmts_grid']:
         if app_name == 'sodxtrmts':
             form, checkbox_vals = set_sodxtrmts_initial(form,'station')
@@ -1975,17 +1957,26 @@ def set_form(request,app_name=None,clean=True):
         form = dict(form.items() + form_pl_opts.items())
         #FIX ME: not sure why el_type defaults to maxt
         form['el_type'] = form['element']
-    if app_name =='sodsumm':
+    if app_name == 'sodsumm':
         if 'summary_type' not in form.keys():
             form['summary_type'] = 'all'
         if 'max_missing_days' not in form.keys():
             form['max_missing_days'] = '5'
         if 'generate_graphics' not in form.keys():
             form['generate_graphics'] = 'T'
-    for key,val in form_dict.iteritems():
-        if key == 'csrfmiddlewaretoken':
-            continue
-        form[str(key)] =str(val)
+        if 'start_date' in form.keys() and 'start_year' not in form.keys():
+            form['start_year'] = form['start_date'][0:4]
+        if 'end_date' in form.keys() and 'end_year' not in form.keys():
+            form['end_year'] = form['end_date'][0:4]
+
+    if app_name == 'station_locator_app':
+        if 'elements_constraints' not in form.keys():
+            form['elements_constraints'] = 'all'
+        if 'dates_constraints' not in form.keys():
+            form['dates_constraints'] = 'all'
+        if 'elements' not in form.keys():
+            form['elements'] = 'maxt,mint,pcpn'
+    for key,val in form.iteritems():
         #Override element if needed, elements should be a list
         if str(key) == 'elements':
             try:
@@ -2711,7 +2702,10 @@ def set_data_station_params(form):
                 display_params_list[0][1]+= ', ' + params_dict[key]
             '''
         elif key == 'delimiter':
-           params_dict['delimiter'] = WRCCData.DELIMITERS[val]
+            if 'data_format' in form.keys() and form['data_format'] == 'html':
+                params_dict['delimiter'] = WRCCData.DELIMITERS['space']
+            else:
+                params_dict['delimiter'] = WRCCData.DELIMITERS[val]
         elif key in ['show_flags', 'show_observation_time']:
             params_dict[key] = val
         elif key == 'elements':
@@ -2813,8 +2807,18 @@ def set_user_params(form, app_name):
     elif app_name == 'station_locator_app':
             area_select = 'select_stations_by'
             if not 'select_stations_by' in f.keys():
-                f['select_stations_by']='state'
-            #f['select_stations_by'] = f['area_select']
+                try:
+                    f['select_stations_by'] = f['area_select']
+                except:
+                    if 'station_id' in f.keys():f['select_stations_by']='station_id'
+                    if 'station_ids' in f.keys():f['select_stations_by']='station_ids'
+                    if 'state' in f.keys():f['select_stations_by']='state'
+                    if 'county' in f.keys():f['select_stations_by']='county'
+                    if 'county_warning_area' in f.keys():f['select_stations_by']='county_warning_area'
+                    if 'basin' in f.keys():f['select_stations_by']='basin'
+                    if 'climate_division' in f.keys():f['select_stations_by']='climate_division'
+                    if 'shape' in f.keys():f['select_stations_by']='shape'
+            if not 'select_stations_by' in f.keys():f['select_stations_by']='station_id'
     elif app_name == 'sodxtrmts':
         area_select = 'select_stations_by'
         if not 'select_stations_by' in f.keys():
@@ -2823,12 +2827,21 @@ def set_user_params(form, app_name):
             area_select = 'select_grid_by'
             if not 'select_grid_by' in f.keys():
                 f['select_grid_by'] = 'location'
+    elif app_name == 'apps_station':
+        area_select = 'select_stations_by'
+        f[area_select] = 'station_id'
+        if 'element' not in f.keys() and 'elements' not in f.keys():
+            f['element'] = 'maxt'
+            f['elements'] = 'maxt,mint,pcpn'
     else:
         area_select = 'select_stations_by'
     el_list = []
     if 'elements' in f.keys():
         if isinstance(f['elements'], list):
-            el_list = f['elements']
+            if app_name == 'station_locator_app':
+                el_list = [WRCCUtils.u_convert(e) for e in el_list]
+            else:
+                el_list = f['elements']
         elif isinstance(f['elements'], basestring):
             el_list = f['elements'].replace(' ','').split(',')
     elif 'element' in f.keys():
@@ -3394,10 +3407,10 @@ def set_station_locator_initial(request):
     initial['data_format'] = 'html'
     initial['show_observation_time'] = 'F'
     initial['show_flags'] = 'F'
-    initial['elements_constraints'] = Get('elements_constraints', 'any')
+    initial['elements_constraints'] = Get('elements_constraints', 'all')
     initial['start_date']  = Get('start_date', '20140101')
     initial['end_date']  = Get('end_date', yesterday)
-    initial['dates_constraints']  = Get('dates_constraints', 'any')
+    initial['dates_constraints']  = Get('dates_constraints', 'all')
     #set the check box values
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
         checkbox_vals[area_type + '_selected'] =''
