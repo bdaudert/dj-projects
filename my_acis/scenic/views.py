@@ -161,7 +161,7 @@ def dashboard(request):
 
 def data_home(request):
     context = {
-        'title': 'Data Lister',
+        'title': 'Data Listers',
         'icon':'DataPortal.png'
     }
     return render_to_response('scenic/data/home.html', context, context_instance=RequestContext(request))
@@ -740,7 +740,7 @@ def apps_station(request):
         'title': 'Station Data Analysis'
         }
     #Link from other page
-    if request.method == 'GET':
+    if request.method == 'GET' and 'station_id' in request.GET:
         context['hide_sodsumm'] = True
         context['hide_metagrapgh'] = True
         form_cleaned = set_form(request,clean=True)
@@ -1327,8 +1327,8 @@ def station_locator_app(request):
         'title': 'Station Finder',
     }
     #Set up initial map (NV stations)
-    context['station_json'] = 'NV_stn.json'
-    context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/NV_stn.json')
+    #context['station_json'] = 'NV_stn.json'
+    #context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/NV_stn.json')
     initial,checkbox_vals = set_station_locator_initial(request)
     context['initial'] = initial;context['checkbox_vals']=checkbox_vals
     #Set up maps if needed
@@ -1337,15 +1337,25 @@ def station_locator_app(request):
     context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
     context[initial['overlay_state'] + '_selected'] = 'selected'
     context['kml_file_path'] = create_kml_file(initial['select_stations_by'], 'nv')
-    #Add params for link to station data
-    form = set_form(initial, clean=False)
-    form_cleaned = set_form(initial,clean=True)
     params_list, params_dict = set_user_params(initial, 'station_locator_app')
     context['params_list'] = params_list;context['params_dict'] = params_dict
+    #Generate initial map
+    by_type = WRCCData.ACIS_TO_SEARCH_AREA['state']
+    val = 'nv'
+    date_range = [initial['start_date'],initial['end_date']]
+    el_date_constraints = initial['elements_constraints'] + '_' + initial['dates_constraints']
+    station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=['1','2','4'],time_range=date_range, constraints=el_date_constraints)
 
-    if 'formData' in request.POST or (request.method == 'GET' and 'station_id' in request.GET):
+    context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
+    if 'error' in station_json.keys():
+        context['error'] = station_json['error']
+    if 'stations' not in station_json.keys() or  station_json['stations'] == []:
+        context['error'] = "No stations found for these search parameters."
+    context['station_json'] = f_name
+
+    if 'formData' in request.POST:
         form_initial = set_form(request,clean=False)
-        user_params_list, user_params_dict =set_user_params(form, 'station_locator_app')
+        user_params_list, user_params_dict =set_user_params(form_initial, 'station_locator_app')
         context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
         #Turn request object into python dict
         form = set_form(request, app_name='station_locator_app',clean=False)
@@ -1411,8 +1421,6 @@ def station_locator_app(request):
         context['area_type'] = form['select_overlay_by']
         context['host'] = settings.HOST
     return render_to_response('scenic/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
-
-
 #######################
 #SOD programs
 ######################
@@ -1657,13 +1665,13 @@ def sodxtrmts(request, app_type):
 
 def sodsumm(request):
     context = {
-        'title': 'Station Climatology',
-        'icon':'ToolProduct.png'
+        'title': 'Station Climatology'
         }
     initial, checkbox_vals = set_sodsumm_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-    if 'formSodsumm' in request.POST or request.method == 'GET':
-        context['form_message'] = True
+    if 'formSodsumm' in request.POST or (request.method == 'GET' and 'station_id' in request.GET):
+        if request.method == 'GET':
+            context['form_message'] = True
         form_initial = set_form(request,app_name='sodsumm',clean=False)
         user_params_list, user_params_dict = set_user_params(form_initial, 'sodsumm')
         context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
@@ -1671,6 +1679,12 @@ def sodsumm(request):
         form_cleaned = set_form(request,app_name='sodsumm',clean=True)
         initial, checkbox_vals = set_sodsumm_initial(request)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        fields_to_check = ['start_year', 'end_year','max_missing_days']
+        #Check for form errors
+        form_error = check_form(form_cleaned, fields_to_check)
+        if form_error:
+            context['form_error'] = form_error
+            return render_to_response('scenic/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
         data_params = {
                 'sid':find_id(form['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json'),
                 'start_date':form['start_year'],
@@ -1854,6 +1868,8 @@ def find_id(form_name_field, json_file_path):
     '''
     i = str(form_name_field)
     name_id_list = i.rsplit(',',1)
+    if len(name_id_list) == 1:
+        name_id_list = i.rsplit(', ',1)
     name = None
     if len(name_id_list) >=2:
         i= str(name_id_list[-1]).replace(' ','')
@@ -2818,7 +2834,9 @@ def set_user_params(form, app_name):
                     if 'basin' in f.keys():f['select_stations_by']='basin'
                     if 'climate_division' in f.keys():f['select_stations_by']='climate_division'
                     if 'shape' in f.keys():f['select_stations_by']='shape'
-            if not 'select_stations_by' in f.keys():f['select_stations_by']='station_id'
+            if not 'select_stations_by' in f.keys():
+                f['select_stations_by']='state'
+                f['state'] = 'NV'
     elif app_name == 'sodxtrmts':
         area_select = 'select_stations_by'
         if not 'select_stations_by' in f.keys():
@@ -2987,6 +3005,7 @@ def set_plot_options(request):
 def set_sodsumm_initial(request):
     Get = set_GET(request)
     initial = {};checkbox_vals = {};
+    initial['autofill_list'] = 'US_station_id'
     initial['station_id'] = Get('station_id','RENO TAHOE INTL AP, 266779')
     initial['start_year'] = Get('start_year', Get('start_date','POR'))
     initial['end_year'] = Get('end_year', Get('end_date','POR'))
@@ -3012,7 +3031,7 @@ def set_sodxtrmts_initial(request,app_type):
     checkbox_vals = {}
     Get = set_GET(request)
     if app_type == 'station':
-        initial['station_id'] = Get('station_id','266779')
+        initial['station_id'] = Get('station_id','RENO TAHOE INTL AP, 266779')
         initial['start_year'] = Get('start_year', Get('start_date','POR'))
         initial['end_year'] = Get('end_year', Get('end_date','POR'))
         initial['autofill_list'] = 'US_station_id'

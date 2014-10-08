@@ -14,6 +14,9 @@
     <a href="{{SODSUMM_URL}}">Monthly/Seasonal Averages/Extremes and Bar Charts</a></p>
 -->
 
+<!--Hidden Variables-->
+<input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ TMP_DIR }}">
+
 <script type="text/javascript">set_autofill("US_station_id");</script>
 <script type="text/javascript">
 $(function(){
@@ -22,15 +25,18 @@ $(function(){
 });
 </script>
 
+<!--Set up autofill-->
+<script type="text/javascript">set_autofill("US_station_id");</script>
+
 <table cellpadding="10">
-<td valign="top" width="25%">
+<td valign="top" width="300px">
     <input type="submit" value="Start Over" onclick="window.location='{{SODSUMM_URL}}'"/>
     <div id='formSodsumm'>
         <form method="post" id='formSodsumm' action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" frame="void" style="border-collapse:collapse;" >
             <tr valign="top" >
     <td>Station ID/Name: </td>
-    <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{initial.station_id}}" list="US_station_id" onchange="hide_formGraph('formGraph');"></td>
+    <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{initial.station_id}}" list="US_station_id"></td>
     <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_station_id"></div>
@@ -122,7 +128,7 @@ $(function(){
     </form>
     </div>
 </td>
-<td valign="top" width="75%">
+<td valign="top">
     <div style="border:none;background-color:X^H#947e6e;">
         <table>
         <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
@@ -159,7 +165,13 @@ $(function(){
         $("#Docu_plot_opts").load("{{HTML_URL}}/Docu_PLOT_OPTS_SODSUMM.html");
         </script>
         </div>
-       
+      
+        {%if form_error%}
+        <p class="error" align="left">ERROR: Please correct the form error(s) highlighted in red!</p>
+        {%for key, val in form_error.items%}
+        <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
+        {%endfor%}
+        {%endif%} 
 
         {%if user_params_list and form_message%}
         <div id="user_params_list" class="results">

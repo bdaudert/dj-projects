@@ -146,7 +146,7 @@ $(function(){
 <td valign="top" width="300px">   
     <input type="submit" value="Start Over" onclick="window.location='{{STATION_FINDER_URL}}'"/>
 </td>
-<td valign="top" align="left" width="650px">
+<td valign="top" align="center" width="660px">
     <div class="results">
     {%if station_ids_for_datafind and params_dict%}
     <!--Link to data portal-->
@@ -454,6 +454,7 @@ date_format=dash" id="link_to_datafind"><font size="4"><b>Obtain data for all st
     {%endfor%}
     {%endif%}
 
+    <br />
     {%if error%}
     <div style="padding:5px;position:relative;">
     <p align="left"><font color="red">{{error}}</font></p>
