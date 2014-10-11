@@ -134,7 +134,7 @@ h1.error, h2.error, h3.error, h4.error, h5.error {
 
 .message{
     color:#4B0082;
-    font-size:16px;
+    font-size:14px;
     font-weight:bold;
 }
 
@@ -576,7 +576,7 @@ img.center {
 .searchbox {
     position:relative;
     top: 0px;
-    left: 500px;
+    left: 200px;
 
 }
 
@@ -778,3 +778,15 @@ color:#FFEFD5;
 #footer {
   padding: 10px;
 }
+
+/*
+#about_blank {
+    height: 0px; 
+    width: 0px; 
+    visibility: hidden; 
+    border-top-style: none; 
+    border-right-style: none; 
+    border-bottom-style: none; 
+    border-left-style: none; 
+}
+*/

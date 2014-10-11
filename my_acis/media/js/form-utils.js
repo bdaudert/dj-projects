@@ -790,13 +790,6 @@ function unset_large_request(){
     if ($('#' + 'un').length){
         document.getElementById('un').parentNode.removeChild(document.getElementById('un'));
     }
-    //reset background color on all table rows
-    var form_tables = document.getElementsByClassName('form');
-    for (i=0;i<form_tables.length;i++) {
-        for (var j = 0;j < form_tables[i].rows.length; j++) {
-            form_tables[i].rows[j].style.background="#CCE0E0";
-        } 
-    }
     //Add html option to data format
     if ($('#data_format').length){
         var df = $('#data_format');
