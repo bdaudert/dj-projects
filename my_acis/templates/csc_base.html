@@ -73,14 +73,7 @@
 
         });
     </script>
-    <!--Hide loading icon iupon page load-->
-    <script language="javascript" type="text/javascript">
-        $(window).load(function() {
-            $('#loading').hide(); 
-        });
-    </script>
-    <!--
-    <!--Back button warning -->
+    <!-- Back button warning
     <script type="text/javascript">
     $( document ).ready(function(){
     //save_form_options('tableDataForm', 'rememberselects');
@@ -95,7 +88,16 @@
         });
     }
     });
-    </script>-->
+    </script>
+    --> 
+    
+    <!--Hide loading icon iupon page load-->
+    <script language="javascript" type="text/javascript">
+        $(window).load(function() {
+            $('#loading').hide(); 
+        });
+
+    </script>
     {% block extrahead %}{% endblock %}
     {% block extrastyle %}{% endblock %}
     <!--Django env variables from settings -->

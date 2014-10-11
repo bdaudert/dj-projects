@@ -2853,13 +2853,17 @@ def set_user_params(form, app_name):
             f['elements'] = 'maxt,mint,pcpn'
     else:
         area_select = 'select_stations_by'
+    #Deal with elements
     el_list = []
     if 'elements' in f.keys():
         if isinstance(f['elements'], list):
+            '''
             if app_name == 'station_locator_app':
-                el_list = [WRCCUtils.u_convert(e) for e in el_list]
+                el_list = f['elements']
             else:
                 el_list = f['elements']
+            '''
+            el_list = f['elements']
         elif isinstance(f['elements'], basestring):
             el_list = f['elements'].replace(' ','').split(',')
     elif 'element' in f.keys():

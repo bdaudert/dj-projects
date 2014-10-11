@@ -150,11 +150,8 @@ $(function(){
     <div class="results">
     {%if station_ids_for_datafind and params_dict%}
     <!--Link to data portal-->
-    {%if params_dict.select_stations_by == "station_ids" and not error and not form_error%}
-    <a align="center" target="_blank" href="{{STATION_DATA_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&data_format=html&units=english&date_format=dash" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
-    {%elif params_dict.select_stations_by != "station_ids" and not error and not form_error%}
-    <a align="center" target="_blank" href="{{STATION_DATA_URL}}?{{params_dict.select_stations_by}}={{params_dict|lookup:params_dict.select_stations_by}}&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&data_format=html&units=english&
-date_format=dash" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
+    {%if not error and not form_error%}
+    <a align="center" target="_blank" href="{{STATION_DATA_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&data_format=html&units=english&date_format=dash" class="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
     {%endif%}<!--end if params_dict.select_stations_by == "station_ids"-->
     {%endif%}<!--end if station_ids_for_datafind-->
     </div>
@@ -311,17 +308,11 @@ date_format=dash" id="link_to_datafind"><font size="4"><b>Obtain data for all st
         initialize_station_finder()
     </script>
 
-
-    {%if station_ids_for_datafind  and params_dict%}
     <!--Link to data portal-->
-    {%if params_dict.select_stations_by == "station_ids" and not error and not form_error%}
-    <a align="center" target="_blank" href="{{STATION_DATA_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&data_format=html&units=english&date_format=dash" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
-    {%elif params_dict.select_stations_by != "station_ids" and not error and not form_error%}
-    <a align="center" target="_blank" href="{{STATION_DATA_URL}}?{{params_dict.select_stations_by}}={{params_dict|lookup:params_dict.select_stations_by}}&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&data_format=html&units=english&
-date_format=dash" id="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
-    {%endif%}<!--end if params_dict.select_stations_by == "station_ids"-->
-    {%endif%}<!--end if station_ids_for_datafind-->
+    <a align="center" target="_blank" href="{{STATION_DATA_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&data_format=html&units=english&date_format=dash" class="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
 
+
+    
     <!--Station List-->
     <div class="station_list">
         <table cellspacing="1" id="station_list" border=1>
@@ -445,6 +436,7 @@ date_format=dash" id="link_to_datafind"><font size="4"><b>Obtain data for all st
     <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
     {%endif%} 
     {%endif%}
+
 
     <!--Errors-->
     {%if form_error%}

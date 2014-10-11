@@ -32,7 +32,7 @@ function form_change(formID){
 
 
 $(function() {
-    $('#link_to_datafind').click(function(event){
+    $('.link_to_datafind').click(function(event){
         event.preventDefault();
         var href_pre = this.href;
         stn_ids = document.getElementById('station_ids_str').value;
