@@ -44,6 +44,10 @@ $("#Docu_element").load("{{HTML_URL}}Docu_elements_sodxtrmts.html");
 <script type="text/javascript">            
 $("#Docu_monthly_statistic").load("{{HTML_URL}}Docu_monthly_statistic.html");
 </script>
+<div id="Docu_units"></div>
+<script type="text/javascript">            
+$("#Docu_units").load("{{HTML_URL}}/Docu_units.html");
+</script>
 <div id="Docu_max_missing_days"></div>
 <script type="text/javascript">            
 $("#Docu_max_missing_days").load("{{HTML_URL}}Docu_max_missing_days.html");
@@ -90,6 +94,10 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     $("#how_to_head").load("{{HTML_URL}}Buttons.html .tool_how_to");
 </script>
 
+
+{%if not json_dict.data and run_done%}
+<p align="center" style="color:red">No data found for these parameters!</p></br>
+{% endif %}
 
 {%if json_dict.data and initial.generate_graph == "F"%}
 <div id="Arrow" class="results" style="position:absolute;top:150px;right:100px;width:500px;">
@@ -293,6 +301,23 @@ YOUR SEARCH PARAMETERS:<br />
     </td>
     </tr>
     {%endif%}
+    <tr valign="top">
+    <td>Units: </td>
+    <td>
+    <select id="units" name="units" onchange="update_value(this.value) & set_degree_days(this.value)">
+        <option value="metric" {{checkbox_vals.units_metric_selected}}>Metric</option>
+        <option value="english" {{checkbox_vals.units_english_selected}}>English</option>
+    </select>
+    </td>
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+    <div id="ht_units"></div>
+    <script type="text/javascript">                        
+        $("#ht_units").load("{{HTML_URL}}/Docu_help_texts.html #ht_units");
+    </script>    
+    </div>
+    </td>
+    </tr>
     <tr valign="top">
     <td id="Maximum Number of Missing Days">Max Missing Days: </td>
     <td><input type="text" name="max_missing_days" value="{{initial.max_missing_days}}" onchange="hide_formGraph('formGraph');"></td>
@@ -979,10 +1004,6 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
 </div><!--end div results-->
 <br />
 {%else%} <!--No results-->
-    {%if run_done%}
-        <p align="center" style="color:red">No data found for these parameters!</p></br>
-    {%endif%}
-    
     {%if form_error%}
     <script type="text/javascript">hide_formGraph('formGraph')</script>
     <p class="error" id="form_error" style="position:absolute;top:210px;right:200px;">

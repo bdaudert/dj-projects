@@ -61,6 +61,10 @@ $("#Docu_element").load("{{HTML_URL}}Docu_elements_sodxtrmts.html");
 <script type="text/javascript">            
 $("#Docu_monthly_statistic").load("{{HTML_URL}}Docu_monthly_statistic.html");
 </script>
+<div id="Docu_units"></div>
+<script type="text/javascript">            
+$("#Docu_units").load("{{HTML_URL}}/Docu_units.html");
+</script>
 <div id="Docu_max_missing_days"></div>
 <script type="text/javascript">            
 $("#Docu_max_missing_days").load("{{HTML_URL}}Docu_max_missing_days.html");
@@ -321,6 +325,23 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </td>
     </tr>
     {%endif%}
+    <tr valign="top">
+    <td>Units: </td>
+    <td>
+    <select id="units" name="units" onchange="update_value(this.value) & set_degree_days(this.value)">
+        <option value="english" {{checkbox_vals.units_english_selected}}>English</option>
+        <option value="metric" {{checkbox_vals.units_metric_selected}}>Metric</option>
+    </select>
+    </td>
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+    <div id="ht_units"></div>
+    <script type="text/javascript">                        
+        $("#ht_units").load("{{HTML_URL}}/Docu_help_texts.html #ht_units");
+    </script>    
+    </div>
+    </td>
+    </tr>
     <tr valign="top">
     <td id="Maximum Number of Missing Days">Max Missing Days: </td>
     <td><input type="text" name="max_missing_days" value="{{initial.max_missing_days}}" onchange="hide_formGraph('formGraph');"></td>

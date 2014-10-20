@@ -120,25 +120,30 @@ function initialize_station_finder() {
             var name = data.network_codes[key];
             var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
             var td = document.createElement('td');
+            td.name = name;
             //Omit RCC/Misc/Threadex
             if (['RCC','Misc'].indexOf(data.network_codes[key]) >= 0){
                 //div.setAttribute("style", "display:none");
                 continue
             }
-            td.innerHTML = '<input type="checkbox" id="'+ name +
+            td.innerHTML = '<input type="checkbox" name="'+ name +
             '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' + 
-            ' <img alt="Icon" title="Icon" src="' + icon + '">'  +name + '</div>';
-            '<div onmouseover="ShowNetworkDocu(\''+ name + '\')" onmouseout="HideNetworkDocu(\''+ name + '\')">' + name;
+            '<img  onmouseover="ShowNetworkDocu(\''+ name + '\')" onmouseout="HideNetworkDocu(\''+ name + 
+            '\')" alt="Icon" title="Icon" src="' + icon + '">' +
+            name;
+            //'<div onmouseover="ShowNetworkDocu(\''+ name + '\')" onmouseout="HideNetworkDocu(\''+ name + '\')">' + name + '</div>';
             tr.appendChild(td);
             if (count == 5){
                 legend_table.appendChild(tr);
                 tr =  document.createElement('tr');
+
             }
             if (count == 9){
-                var name = 'All';
-                var icon = 'http://thydzik.com/thydzikGoogleMap/markerlink.php?text=A&color=FC6355';
-                var td = document.createElement('td');
-                td.innerHTML = '<input type="checkbox" id="all" onclick="my_boxclick(this,\'all\')" checked />' + ' <img alt="Icon" title="Icon" src="' + icon + '"><b> ' + name + '</b><br />';
+                name = 'All';
+                icon = 'http://thydzik.com/thydzikGoogleMap/markerlink.php?text=A&color=FC6355';
+                td = document.createElement('td');
+                td.innerHTML = '<input type="checkbox" id="all" onclick="my_boxclick(this,\'all\')" checked />' + 
+                '<img alt="Icon" title="Icon" src="' + icon + name;
                 tr.appendChild(td);
                 legend_table.appendChild(tr);
             }
@@ -198,27 +203,9 @@ function initialize_station_finder() {
                     dr = c.available_elements[i][1];
                     avbl_elements += '<b>' + c.available_elements[i][1] + '</b><br />';
                 }
-                avbl_elements += c.available_elements[i][0] + '<br />' 
-                
-                /*
-                //Check of we should have link to Greg's climate summary pages
-                if (c.available_elements[i][0] == 'Maximum Daily Temperature(F)' || c.available_elements[i][0] == 'Minimum Daily Temperature(F)' || c.available_elements[i][0] == 'Precipitation(In)'){
-                    if (parseInt(c.available_elements[i][1][0].slice(0,4)) - parseInt(c.available_elements[i][1][1].slice(0,4)) > 5){
-                        var greg_flag = true;
-                    }
-                }
-                */
+                avbl_elements += c.available_elements[i][0] + '<br />'     
             }
 
-            var wrcc_info_link = new String();
-            /*
-            //if ( c.sids[0] && c.sids[0].length == 6 && greg_flag && !isNaN(c.sids[0].replace(/^[0]/g,"") * 1)){
-            if ( c.marker_category == "COOP"){
-                var wrcc_info_link = '<a  target="_blank" href="http://www.wrcc.dri.edu/cgi-bin/cliMAIN.pl?'
-                + c.state + c.sids[0].substring(2,6) +
-                '">Access Climate Summaries for this Station (by WRCC)</a>'
-            }
-            */
             var data_portal_link = '<a target="_blank" href="' + STATION_DATA_URL + 
             '?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid; 
             var app_portal_link = '<a target="_blank" href="' + STATION_TOOLS_URL + 

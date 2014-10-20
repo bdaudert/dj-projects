@@ -345,20 +345,56 @@ function set_threshes(element){
     Sets sodxtrmts thresholds
     */
     var threshes = '0.1,0.01,0.01,0.1';
+    if ($('#units').length){
+        u = document.getElementById('units').value;
+        if (u == 'metric'){
+            threshes = '2.5,0.25, 0.25,2.5';
+        }
+    }
     if (element == 'avgt' || element == 'dtr'){
         threshes = '65,65,40,65';
+        if ($('#units').length){
+            u = document.getElementById('units').value;
+            if (u == 'metric'){
+                threshes = '18,18,4,18';
+            }
+        }
     }
     if (element == 'maxt'){
         threshes = '40,90,65,80';
+        if ($('#units').length){
+            u = document.getElementById('units').value;
+            if (u == 'metric'){
+                threshes = '4,32,18,27';
+            }
+        }
     }
     if (element == 'mint'){
         threshes = '32,70,32,40';
+        if ($('#units').length){
+            u = document.getElementById('units').value;
+            if (u == 'metric'){
+                threshes = '0,21,0,4';
+            }
+        }
     }
     if (element == 'hdd' || element == 'gdd' || element == 'cdd'){
         threshes = '10,30,10,30';
+        if ($('#units').length){
+            u = document.getElementById('units').value;
+            if (u == 'metric'){
+                threshes = '-12,-1,-12,-1';
+            }
+        }
     }
     if (element == 'wdmv'){
         threshes = '100,200,100,200';
+        if ($('#units').length){
+            u = document.getElementById('units').value;
+            if (u == 'metric'){
+                threshes = '160.9,321.9,160.9,321.9';
+            }
+        }
     }
     return threshes;
 }
@@ -379,10 +415,10 @@ function set_BaseTemp(table_id,node){
     if (element =='hdd' || element =='cdd' || element=='gdd'){
         document.getElementById("base_temp").style.display="table-row";
         if (element == 'hdd' || element == 'cdd'){
-            document.getElementById("base_temp").value = '65';
+            document.getElementById("base_temperature").value = '65';
         }
         else{
-            document.getElementById("base_temp").value='50';
+            document.getElementById("base_temperature").value='50';
         }
     }
     else{document.getElementById("base_temp").style.display="none";}

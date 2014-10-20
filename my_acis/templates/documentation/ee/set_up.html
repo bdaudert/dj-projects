@@ -6,7 +6,7 @@
 <table align="center">
     <td valign="top" width="10%">
     </td>
-    <td valign="top" width="90%" align="left">
+    <td valign="top" width="50%" align="left">
     <h3>1. Authentication/Access</h3>
     <p>
     Follow the instructions below to set up your service account.<br />
@@ -27,7 +27,36 @@
     <p>
     Follow the instructions below to set install the Earth Engine python API.<br />
     <a target="_blank" href="https://code.google.com/p/earthengine-api/wiki/Installation">EE python API installation</a>
+    NOTE: Good luck with this! I had some issues installing pycrypto and openssl. 
+    Unfortunately, I did not take notes a I was installing the API. 
+    It took a long time, a combination of apt-get, port install, pi-install  and the additionof a few grey hairs
+    to get all packages installed correctly. The best I can tell you is this: 
+    Don't despair, google the error messages you get. User the developers forum to get help.
     </p> 
+    <h3>3. Start playing</h3>
+        <p>I recommend you start with these two examples:<br />
+        <a target="_blank" href="https://cloud.google.com/appengine/docs/python/gettingstartedpython27/helloworld">Hello World (Easy)</a><br />
+        <a href="http://cyclone1.dri.edu/csc/documentation/ee/hello_world/">Hello World (Hard)</a>
+    <h4>General guidelines and tips from Dr. Britta</h4>
+    <div>
+    <h5>localhost versus appspot</h5>
+    <p>
+    Just because your code runs on your localhost does not mean it will run on appspot 
+    This may be due to appsot not being able to locate one or more of the packages you are using.</p>
+    <h5>Error messages and logs</h5>
+    <p>
+    If your browser and your developer console do not give you constructive error message, go to the <a target="_blank" href="https://console.developers.google.com/">Console</a> and check the logs under the projects <b>Monitoring</b> tab on the left.
+    </p>
+    <h5>Effect of code changes</h5>
+    <p>
+    On localhost it is sufficient to reload your browser for code changes to take effect.
+    For code changes to take effect on appsot, you will need to redeploy your code.
+    </p>
+    <p>Have fun!<br />
+    <a target="_blank" href="https://cloud.google.com/appengine/docs/python/gettingstartedpython27/helloworld">Hello World (Easy)</a><br />
+    <a href="http://cyclone1.dri.edu/csc/documentation/ee/hello_world/">Hello World (Hard)</p>
+    </div>
 </td>
+<td width="10%"></td>
 </table>
 {% endblock %}

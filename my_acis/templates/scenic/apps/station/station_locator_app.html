@@ -75,7 +75,7 @@ $("#COOP").load("{{HTML_URL}}/Docu_networks_short.html #COOP");
 </script> 
 <div id="GHCN" style="display:none;"></div>
 <script type="text/javascript">                        
-$("#GNCN").load("{{HTML_URL}}/Docu_networks_short.html #GHCN");
+$("#GHCN").load("{{HTML_URL}}/Docu_networks_short.html #GHCN");
 </script>
 <div id="ICAO" style="display:none;"></div>
 <script type="text/javascript">                        
@@ -101,9 +101,9 @@ $("#WMO").load("{{HTML_URL}}/Docu_networks_short.html #WMO");
 <script type="text/javascript">                        
 $("#CoCoRaHS").load("{{HTML_URL}}/Docu_networks_short.html #CoCoRaHS");
 </script>
-<div id="ThreadEx" style="display:none;"></div>
+<div id="Threadex" style="display:none;"></div>
 <script type="text/javascript">                        
-$("#ThreadEx").load("{{HTML_URL}}/Docu_networks_short.html #ThreadEx");
+$("#Threadex").load("{{HTML_URL}}/Docu_networks_short.html #Threadex");
 </script>   
 <div id="SNOTEL" style="display:none;"></div>
 <script type="text/javascript">                        
@@ -293,7 +293,7 @@ $(function(){
     <div class="results">
     {%if station_json and not error and not form_error and not need_overlay_map%}
     <table id="map_legend" valign="top">
-    <tr><td colspan="5" align="center" class="tirgger_hover"><b>Station Network Legend</b>
+    <tr><td colspan="5" align="center" class="trigger_hover"><b>Station Network Legend</b>
     <div class="pop-up">
     Use the checkboxes to click on/off networks.
     </div>

@@ -1444,7 +1444,7 @@ def sodxtrmts(request, app_type):
     initial,checkbox_vals = set_sodxtrmts_initial(request,app_type)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set graph and plot options
-    initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(request)
+    initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(request, init=initial)
     initial_pl_opts, checkbox_vals_pl_opts = set_plot_options(request)
     #combine the graph options with the plot options
     join_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
@@ -1466,7 +1466,7 @@ def sodxtrmts(request, app_type):
         initial,checkbox_vals = set_sodxtrmts_initial(request,app_type)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         #Set graph and plot options
-        initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(request)
+        initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(request,init=initial)
         initial_pl_opts, checkbox_vals_pl_opts = set_plot_options(request)
         #combine the graph options with the plot options
         join_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
@@ -1585,14 +1585,19 @@ def sodxtrmts(request, app_type):
             month_list+=months[0:(start_month-1)]
         #generate Mean/Range Graphics
         if results:
+            if app_params['units'] == 'english':
+                units =  WRCCData.UNITS_ENGLISH[data_params['element']]
+            else:
+                units = WRCCData.UNITS_METRIC[data_params['element']]
             averages = [[mon] for mon in month_list]
             ranges = [[mon] for mon in month_list]
+
             if data_params['element'] == 'dtr':
-                element_name = 'Temperature Range (F)'
+                element_name = 'Temperature Range (' + units + ')'
             elif data_params['element'] == 'pet':
-                element_name = 'Potential ET (in/day)'
+                element_name = 'Potential ET (' + units + ')'
             else:
-                element_name = WRCCData.ACIS_ELEMENTS_DICT[data_params['element']]['name_long'] + ' (' + WRCCData.UNITS_ENGLISH[data_params['element']]+ ')'
+                element_name = WRCCData.ACIS_ELEMENTS_DICT[data_params['element']]['name_long'] + ' (' + units + ')'
             if 'base_temperature' in form.keys():
                 try:
                     base_temperature = int(form['base_temperature'])
@@ -1637,7 +1642,10 @@ def sodxtrmts(request, app_type):
                 json_dict['start_date'] = '----'
                 json_dict['end_date'] = '----'
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-            name = meta_dict['ids'][0]
+            if app_type == 'grid':
+                name = '_'.join(meta_dict['location_list'])
+            else:
+                name = meta_dict['ids'][0]
             json_file = '%s_sodxtrmts_%s_%s_%s.json' \
             %(time_stamp, str(name), dates_list[0][0:4], dates_list[-1][0:4])
             json_dict['json_file'] = json_file
@@ -1694,6 +1702,7 @@ def sodsumm(request):
         app_params = {
                 'el_type':form['summary_type'],
                 'max_missing_days':form['max_missing_days'],
+                'units':form['units']
                 }
         #Run data retrieval job
         DJ = WRCCClasses.SODDataJob('Sodsumm', data_params)
@@ -1731,7 +1740,7 @@ def sodsumm(request):
         else:
             context['tab_names'] = WRCCData.TAB_NAMES_NO_GRAPHICS[form['summary_type']]
             tab_list = WRCCData.TAB_LIST_NO_GRAPHICS[form['summary_type']]
-            table_list =WRCCData.TABLE_LIST_NO_GRAPHICS[form['summary_type']]
+            table_list = WRCCData.TABLE_LIST_NO_GRAPHICS[form['summary_type']]
         context['table_list'] = table_list
         context['tab_list'] = tab_list
         #Define html content
@@ -1757,7 +1766,7 @@ def sodsumm(request):
             table = table_list[tab_idx]
             table_dict = {}
             if form['generate_graphics'] == 'T':
-                table_dict = generate_sodsumm_graphics(results,tab,table)
+                table_dict = generate_sodsumm_graphics(results,tab,table,form['units'])
             else:
                 table_dict = {
                     'table_name':tab,
@@ -2122,7 +2131,11 @@ def set_sodxtrmts_head(form):
         if key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'monthly_statistic', 'elements','element']:
             header.append([WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[str(form[key])]])
             if key == 'element':
-                header.append(['Units', WRCCData.UNITS_ENGLISH[str(form[key])]])
+                if form['units'] == 'metric':
+                     units = WRCCData.UNITS_METRIC[str(form[key])]
+                else:
+                     units = WRCCData.UNITS_ENGLISH[str(form[key])]
+                header.append(['Units', units])
         elif key == '':
             #header.append([])
             pass
@@ -2140,12 +2153,12 @@ def set_sodsumm_headers(table_list):
             rows.append('<tr><td colspan="5">-------</td><td colspan="5">Averages</td><td colspan="4">-----------Daily Extremes </td><td colspan="4">----------------Mean Extremes </td><td colspan="4">-----------Number of Days</td></tr>')
         elif table == 'prsn':
             rows.append('<th colspan="15"><b>Precipitation/Snow Statistics</b></th>')
-            rows.append('<tr><td colspan="6">----------------------Total Precipitation </td><td colspan="2">----------------------------</td><td colspan="2">Number of Days</td><td colspan="3">---------------Total Snowfall</td></tr>')
+            rows.append('<tr><td colspan="6">-------------------Total Precipitation </td><td colspan="2">---------------------------</td><td colspan="2">Number of Days</td><td colspan="3">-------------Total Snowfall</td></tr>')
 
         elif table == 'hdd':
             rows.append('<th colspan="14"><b>Heating degree days</b></th>')
             rows.append('<tr><td colspan="14">Output is rounded, unlike NCDC values, which round input.</td></tr>')
-            rows.append('<tr><td colspan="14">Degree Days to selected Base Temperatures(F)</td></tr>')
+            rows.append('<tr><td colspan="14">Degree Days to selected Base Temperatures</td></tr>')
         elif table == 'cdd':
             rows.append('<th colspan="14"><b>Cooling degree days</b></th>')
             rows.append('<tr><td colspan="14">Output is rounded, unlike NCDC values, which round input.</td></tr>')
@@ -2153,7 +2166,7 @@ def set_sodsumm_headers(table_list):
         elif table == 'gdd':
             rows.append('<th colspan="15"><b>Growing degree days</b></th>')
             rows.append('<tr><td colspan="15">Output is rounded, unlike NCDC values, which round input.</td>')
-            rows.append('<tr><td colspan="15">Growing Degree Days to selected Base Temperatures(F)</td></tr>')
+            rows.append('<tr><td colspan="15">Growing Degree Days to selected Base Temperatures</td></tr>')
         elif table == 'corn':
             rows.append('<th colspan="15"><b>Corn Growing Degree Days</b></th>')
         return "\n".join(rows)
@@ -2231,16 +2244,21 @@ def set_params_for_shape_queries(search_params):
 ######################
 #Graphics generation
 ######################
-def generate_sodsumm_graphics(results, tab, table):
+def generate_sodsumm_graphics(results, tab, table, units):
     if not results:
         return {}
     cats = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-    units = ''
     if tab =='temp':
+        if units == 'metric':
+            Units =  'Celsius'
+            U = 'C'
+        else:
+            Units = 'Fahrenheit'
+            U = 'F'
         legend = ['Extr Low','Ave Low','Mean', 'Ave High', 'Extr High']
         colors  = ['#FF0000', '#690000', '#00FF00', '#ADD8E6', '#0000FF']
-        table_name_long = 'Temperatures (F)'
-        units = 'Fahrenheit'
+        table_name_long = 'Temperatures (' + U + ')'
+        Units = 'Fahrenheit'
         graph_data = [[] for i in range(12)]
         #graph_data = [[] for i in range(5)] # low, ave min, ave mean,ave max, high
         for idx, row in enumerate(results[table][1:13]):
@@ -2255,13 +2273,24 @@ def generate_sodsumm_graphics(results, tab, table):
                 except:
                     graph_data[idx].append(None)
     elif tab in ['hdd', 'cdd']:
-        units = 'Fahrenheit'
+        if units == 'metric':
+            Units =  'Celsius'
+            U = 'C'
+        else:
+            Units = 'Fahrenheit'
+            U = 'F'
         colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
         if table == 'hdd':
-            legend = ['Base 65', 'Base 60', 'Base 57', 'Base 55', 'Base 50']
+            if units == 'metric':
+                legend = ['Base 18', 'Base 16', 'Base 14', 'Base 13', 'Base 10']
+            else:
+                legend = ['Base 65', 'Base 60', 'Base 57', 'Base 55', 'Base 50']
         else:
-            legend = ['Base 55', 'Base 57', 'Base 60', 'Base 65', 'Base 70']
-        table_name_long = WRCCData.ACIS_ELEMENTS_DICT[table]['name_long']
+            if units == 'metric':
+                legend = ['Base 13', 'Base 14', 'Base 16', 'Base 18', 'Base 21']
+            else:
+                legend = ['Base 55', 'Base 57', 'Base 60', 'Base 65', 'Base 70']
+        table_name_long = WRCCData.ACIS_ELEMENTS_DICT[table]['name_long']  + '(' + U + ')'
         graph_data = [[] for i in range(5)]
         for i in range(5):
             for k in range(len(cats)):
@@ -2270,10 +2299,18 @@ def generate_sodsumm_graphics(results, tab, table):
                 except:
                     graph_data[i].append(None)
     elif tab == 'gdd':
-        units = 'Fahrenheit'
+        if units == 'metric':
+            Units =  'Celsius'
+            U = 'C'
+        else:
+            Units = 'Fahrenheit'
+            U = 'F'
         colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-        table_name_long = WRCCData.ACIS_ELEMENTS_DICT[table]['name_long']
-        legend = ['Base 40', 'Base 45', 'Base 50', 'Base 55', 'Base 60']
+        table_name_long = WRCCData.ACIS_ELEMENTS_DICT[table]['name_long'] + '(' + U + ')'
+        if units == 'metric':
+            legend = ['Base 4', 'Base 7', 'Base 10', 'Base 13', 'Base 16']
+        else:
+            legend = ['Base 40', 'Base 45', 'Base 50', 'Base 55', 'Base 60']
         graph_data = [[] for i in range(5)]
         for i in range(5):
             for k in range(len(cats)):
@@ -2282,10 +2319,18 @@ def generate_sodsumm_graphics(results, tab, table):
                 except:
                     graph_data[i].append(None)
     elif tab == 'corn':
-        units = 'Fahrenheit'
+        if units == 'metric':
+            Units =  'Celsius'
+            U = 'C'
+        else:
+            Units = 'Fahrenheit'
+            U = 'F'
         colors = ['#14FFFF', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-        table_name_long = 'Corn Degree Days (F)'
-        legend = ['Base 50']
+        table_name_long = 'Corn Degree Days (' + U + ')'
+        if units == 'metric':
+            legend = ['Base 10']
+        else:
+            legend = ['Base 50']
         graph_data =[[]]
         for k in range(len(cats)):
             try:
@@ -2293,10 +2338,15 @@ def generate_sodsumm_graphics(results, tab, table):
             except:
                 graph_data[0].append(None)
     elif  tab == 'pcpn':
-        units = 'Inches'
+        if units == 'metric':
+            Units =  'Millimeter'
+            U = 'mm'
+        else:
+            Units = 'Inches'
+            U = 'In'
         colors = ['#00FFFF','#00009B', ' #0000FF']
         legend = ['Ave Precip Low', 'Precip Mean', 'Ave Precip High']
-        table_name_long = 'Precipitation (in)'
+        table_name_long = 'Precipitation (' + U + ')'
         graph_data = [[] for k in range(3)]
         for idx, row in enumerate(results[table][1:13]):
             for i in range(3):
@@ -2308,10 +2358,15 @@ def generate_sodsumm_graphics(results, tab, table):
                 except:
                     graph_data[i].append(None)
     elif tab == 'snow':
-        units = 'Inches'
+        if units == 'metric':
+            Units =  'Millimeter'
+            U = 'mm'
+        else:
+            Units = 'Inches'
+            U = 'In'
         colors = ['#00FFFF','#00009B']
         legend = ['Snow Mean', 'Ave Snow High']
-        table_name_long = 'Snow Falli (in)'
+        table_name_long = 'Snow Fall (' + U + ')'
         graph_data = [[] for k in range(2)]
         for idx, row in enumerate(results[table][1:13]):
             for i in range(2):
@@ -2323,7 +2378,7 @@ def generate_sodsumm_graphics(results, tab, table):
                     graph_data[i].append(None)
     table_dict = {
         'cats':cats,
-        'units':units,
+        'units':Units,
         'table_name':tab,
         'table_name_long':table_name_long,
         'legend':legend,
@@ -3016,6 +3071,7 @@ def set_sodsumm_initial(request):
     if len(initial['start_year'])>4:initial['start_year'] = initial['start_year'][0:4]
     if len(initial['end_year'])>4:initial['end_year'] = initial['end_year'][0:4]
     initial['element'] = Get('element',Get('elements','pcpn').replace(' ','').split(',')[0])
+    initial['units'] =  Get('units','english')
     initial['date_type'] = 'y'
     initial['summary_type'] = Get('summary_type','all')
     initial['max_missing_days'] = Get('max_missing_days','5')
@@ -3024,6 +3080,10 @@ def set_sodsumm_initial(request):
         checkbox_vals[st + '_selected'] =''
         if st == initial['summary_type']:
             checkbox_vals[st + '_selected'] ='selected'
+    for u in ['english', 'metric']:
+        checkbox_vals['units_' + u + '_selected'] =''
+        if u == initial['units']:
+            checkbox_vals['units_' +u + '_selected'] ='selected'
     for bl in ['T','F']:
         checkbox_vals['generate_graphics' + '_' + bl + '_selected'] = ''
         if initial['generate_graphics'] == bl:
@@ -3050,6 +3110,7 @@ def set_sodxtrmts_initial(request,app_type):
     if len(initial['end_year'])>4:initial['end_year'] = initial['end_year'][0:4]
     initial['element'] = Get('element',Get('elements','maxt').replace(' ','').split(',')[0])
     initial['monthly_statistic'] = Get('monthly_statistic', 'mave')
+    initial['units'] =  Get('units','english')
     initial['max_missing_days'] = Get('max_missing_days', '5')
     initial['start_month'] = Get('start_month', '01')
     initial['departures_from_averages'] = Get('departures_from_averages', 'F')
@@ -3091,21 +3152,29 @@ def set_sodxtrmts_initial(request,app_type):
         checkbox_vals[stat + '_selected'] =''
         if initial['monthly_statistic'] == stat:
             checkbox_vals[stat + '_selected'] ='selected'
+    for u in ['english', 'metric']:
+        checkbox_vals['units_' + u + '_selected'] =''
+        if u == initial['units']:
+            checkbox_vals['units_' +u + '_selected'] ='selected'
     for lgb in ['l', 'g', 'b']:
         checkbox_vals[lgb + '_selected'] =''
         if initial['less_greater_or_between'] == lgb:
             checkbox_vals[lgb + '_selected'] ='selected'
     return initial, checkbox_vals
 
-def set_sodxtrmts_graph_initial(request):
+def set_sodxtrmts_graph_initial(request, init=None):
     initial = {}
     checkbox_vals = {}
     Get = set_GET(request)
     initial['graph_generate_graph']= str(Get('graph_generate_graph', 'F'))
     initial['graph_start_month'] = Get('graph_start_month', '01')
     initial['graph_end_month'] = Get('graph_end_month', '02')
-    initial['graph_start_year'] = Get('graph_start_year', Get('start_year', 'POR'))
-    initial['graph_end_year'] = Get('graph_end_year', Get('end_year', 'POR'))
+    if init and 'start_year' in init.keys() and 'end_year' in init.keys():
+        initial['graph_start_year'] = init['start_year']
+        initial['graph_end_year'] = init['end_year']
+    else:
+        initial['graph_start_year'] = Get('start_year', Get('graph_start_year', 'POR'))
+        initial['graph_end_year'] = Get('end_year', Get('graph_end_year', 'POR'))
     initial['graph_summary'] = Get('graph_summary', 'mean')
     initial['graph_show_running_mean'] = Get('graph_show_running_mean', 'T')
     initial['graph_running_mean_years'] = Get('graph_running_mean_years', '9')

@@ -647,7 +647,7 @@ table #map_legend {
 
 #map-gridpoint, #map-overlay, #map-polygon {
     width:615px;
-    height:400px;
+    height:425px;
     border:2px solid #006666;
 }
 

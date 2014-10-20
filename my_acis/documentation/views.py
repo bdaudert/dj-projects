@@ -41,6 +41,12 @@ def ee_hello_world(request):
     }
     return render_to_response('documentation/ee/hello_world.html', context, context_instance=RequestContext(request))
 
+def ee_organizing_code(request):
+    context = {
+        'title': 'Organizing your code',
+    }
+    return render_to_response('documentation/ee/organizing_code.html', context, context_instance=RequestContext(request))
+
 def acis(request):
     context = {
         'title': 'ACIS',

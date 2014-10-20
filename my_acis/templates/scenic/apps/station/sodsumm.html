@@ -96,6 +96,23 @@ $(function(){
     </td>
     </tr>
     <tr valign="top">
+    <td>Units: </td>
+    <td>
+    <select id="units" name="units" onchange="update_value(this.value) & set_degree_days(this.value)">
+        <option value="metric" {{checkbox_vals.units_metric_selected}}>Metric</option>
+        <option value="english" {{checkbox_vals.units_english_selected}}>English</option>
+    </select>
+    </td>
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+    <div id="ht_units"></div>
+    <script type="text/javascript">                        
+        $("#ht_units").load("{{HTML_URL}}/Docu_help_texts.html #ht_units");
+    </script>    
+    </div>
+    </td>
+    </tr>
+    <tr valign="top">
     <td id="Maximum Number of Missing Days">Max Missing Days: </td>
     <td><input type="text" name="max_missing_days" value="{{initial.max_missing_days}}" onchange="hide_formGraph('formGraph');"></td>
     <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -156,6 +173,10 @@ $(function(){
         <script type="text/javascript">            
         $("#Docu_summary_sodsumm").load("{{HTML_URL}}/Docu_summary_sodsumm.html");
         </script>
+        <div id="Docu_units"></div>
+        <script type="text/javascript">            
+        $("#Docu_units").load("{{HTML_URL}}/Docu_units.html");
+        </script>
         <div id="Docu_max_missing_days"></div>
         <script type="text/javascript">            
         $("#Docu_max_missing_days").load("{{HTML_URL}}/Docu_max_missing_days.html");
@@ -185,6 +206,20 @@ $(function(){
         </div>
         {%endif%} 
     
+        {%if results or graphics%}
+        <div id="Arrow" class="results">
+        <table style="display:block;">
+        <td valign="top"><b>RESULTS:</b></td><td>
+        <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td>
+        </table>
+        </div>
+        {%endif%}
+</td><!-- end center-->
+</table>
+
+<table align="center">
+<td valign="top" width="700px">
+
         {%if results or graphics%}
         <div class="results">
         <p>
@@ -360,6 +395,5 @@ $(function(){
         </div>
         {%endif%}
         {%endif%}<!--if results or graphics-->
-</td><!-- end center-->
-</table>
+</td></table>
 {%endblock%}
