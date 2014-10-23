@@ -503,6 +503,7 @@ img.sidebar {
 }
 
 img.app_img {
+    border: 2px solid #006666;
     width: 150px;
     height:150px;
 }

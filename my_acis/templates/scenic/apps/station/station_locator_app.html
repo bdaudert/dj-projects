@@ -69,49 +69,50 @@ $("#Docu_el_date_constraints_examples").load("{{HTML_URL}}/Docu_el_date_constrai
 </div>
 
 <!--Network Documentation-->
-<div id="COOP" style="display:none;"></div>
+
+<div id="Docu_COOP" style="display:none;"></div>
 <script type="text/javascript">                        
-$("#COOP").load("{{HTML_URL}}/Docu_networks_short.html #COOP");
+$("#Docu_COOP").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_COOP");
 </script> 
-<div id="GHCN" style="display:none;"></div>
+<div id="Docu_GHCN" style="display:none;"></div>
 <script type="text/javascript">                        
-$("#GHCN").load("{{HTML_URL}}/Docu_networks_short.html #GHCN");
+$("#Docu_GHCN").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_GHCN");
 </script>
-<div id="ICAO" style="display:none;"></div>
+<div id="Docu_ICAO" style="display:none;"></div>
 <script type="text/javascript">                        
-$("#ICAO").load("{{HTML_URL}}/Docu_networks_short.html #ICAO");
+$("#Docu_ICAO").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_ICAO");
 </script>
-<div id="NWSLI" style="display:none;"></div>
+<div id="Docu_NWSLI" style="display:none;"></div>
 <script type="text/javascript">                        
-$("#NWSLI").load("{{HTML_URL}}/Docu_networks_short.html #NWSLI");
+$("#Docu_NWSLI").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_NWSLI");
 </script>
-<div id="FAA" style="display:none;"></div>
+<div id="Docu_FAA" style="display:none;"></div>
 <script type="text/javascript">                        
-$("#FAA").load("{{HTML_URL}}/Docu_networks_short.html #FAA");
+$("#Docu_FAA").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_FAA");
 </script>
-<div id="WBAN" style="display:none;"></div>
+<div id="Docu_WBAN" style="display:none;"></div>
 <script type="text/javascript">                        
-$("#WBAN").load("{{HTML_URL}}/Docu_networks_short.html #WBAN");
+$("#Docu_WBAN").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_WBAN");
 </script>
-<div id="WMO" style="display:none;"></div>
+<div id="Docu_WMO" style="display:none;"></div>
 <script type="text/javascript">                        
-$("#WMO").load("{{HTML_URL}}/Docu_networks_short.html #WMO");
+$("#Docu_WMO").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_WMO");
 </script>
-<div id="CoCoRaHS" style="display:none;"></div>
+<div id="Docu_CoCoRaHS" style="display:none;"></div>
 <script type="text/javascript">                        
-$("#CoCoRaHS").load("{{HTML_URL}}/Docu_networks_short.html #CoCoRaHS");
+$("#Docu_CoCoRaHS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_CoCoRaHS");
 </script>
-<div id="Threadex" style="display:none;"></div>
+<div id="Docu_Threadex" style="display:none;"></div>
 <script type="text/javascript">                        
-$("#Threadex").load("{{HTML_URL}}/Docu_networks_short.html #Threadex");
+$("#Docu_Threadex").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_Threadex");
 </script>   
-<div id="SNOTEL" style="display:none;"></div>
+<div id="Docu_SNOTEL" style="display:none;"></div>
 <script type="text/javascript">                        
-$("#SNOTEL").load("{{HTML_URL}}/Docu_networks_short.html #SNOTEL");
+$("#Docu_SNOTEL").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_SNOTEL");
 </script>
-<div id="RAWS" style="display:none;"></div>
+<div id="Docu_RAWS" style="display:none;"></div>
 <script type="text/javascript">                        
-$("#RAWS").load("{{HTML_URL}}/Docu_networks_short.html #RAWS");
+$("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 </script>
 
 
@@ -293,10 +294,7 @@ $(function(){
     <div class="results">
     {%if station_json and not error and not form_error and not need_overlay_map%}
     <table id="map_legend" valign="top">
-    <tr><td colspan="5" align="center" class="trigger_hover"><b>Station Network Legend</b>
-    <div class="pop-up">
-    Use the checkboxes to click on/off networks.
-    </div>
+    <tr><td colspan="5" align="center"><b>Station Network Legend</b>
     </td></tr>
     </table>
     {%endif%}

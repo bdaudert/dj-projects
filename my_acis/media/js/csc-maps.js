@@ -120,18 +120,17 @@ function initialize_station_finder() {
             var name = data.network_codes[key];
             var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
             var td = document.createElement('td');
-            td.name = name;
             //Omit RCC/Misc/Threadex
             if (['RCC','Misc'].indexOf(data.network_codes[key]) >= 0){
                 //div.setAttribute("style", "display:none");
                 continue
             }
-            td.innerHTML = '<input type="checkbox" name="'+ name +
-            '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' + 
-            '<img  onmouseover="ShowNetworkDocu(\''+ name + '\')" onmouseout="HideNetworkDocu(\''+ name + 
-            '\')" alt="Icon" title="Icon" src="' + icon + '">' +
-            name;
-            //'<div onmouseover="ShowNetworkDocu(\''+ name + '\')" onmouseout="HideNetworkDocu(\''+ name + '\')">' + name + '</div>';
+            td.innerHTML = '<input type="checkbox" id="' + name + '"' +
+            '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' +
+            '<img alt="Icon" title="Icon" src="' + icon + '">' + 
+            '<div onmouseenter="ShowNetworkDocu(\'Docu_' + name + '\')"' + 
+            'onmouseleave="HideNetworkDocu(\'Docu_' + name + '\')" >' + 
+            name + '</div>';
             tr.appendChild(td);
             if (count == 5){
                 legend_table.appendChild(tr);
@@ -143,7 +142,7 @@ function initialize_station_finder() {
                 icon = 'http://thydzik.com/thydzikGoogleMap/markerlink.php?text=A&color=FC6355';
                 td = document.createElement('td');
                 td.innerHTML = '<input type="checkbox" id="all" onclick="my_boxclick(this,\'all\')" checked />' + 
-                '<img alt="Icon" title="Icon" src="' + icon + name;
+                '<img alt="Icon" title="Icon" src="' + icon  + '">' + name;
                 tr.appendChild(td);
                 legend_table.appendChild(tr);
             }
@@ -211,7 +210,8 @@ function initialize_station_finder() {
             var app_portal_link = '<a target="_blank" href="' + STATION_TOOLS_URL + 
             '?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid;
             var sodsumm_portal_link = '<a target="_blank" href="' + STATION_TOOLS_URL +
-            'sodsumm?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid;
+            'sodsumm?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid +
+            '&start_date=POR&end_date=POR';
             //var metagraph_portal_link = '<a target="_blank" href="' + STATION_TOOLS_URL +
             //'metagraph?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid; 
             if (elements != null){
@@ -221,12 +221,10 @@ function initialize_station_finder() {
             if (start_date != null){ 
                 data_portal_link = data_portal_link + '&start_date=' + start_date;
                 app_portal_link = app_portal_link + '&start_date=' + start_date; 
-                sodsumm_portal_link = sodsumm_portal_link + '&start_year=' + start_date.substring(0,4);
             }
             if (end_date != null){ 
                 data_portal_link = data_portal_link + '&end_date=' + end_date;
                 app_portal_link = app_portal_link + '&end_date=' + end_date; 
-                sodsumm_portal_link = sodsumm_portal_link + '&end_year=' + end_date.substring(0,4);
             }
             data_portal_link = data_portal_link + '">Obtain data for this station </a>'
             sodsumm_portal_link = sodsumm_portal_link + '">Generate Station Climatology </a>'
@@ -380,7 +378,7 @@ function initialize_station_finder() {
                         // == check all the checkboxes ==
                         document.getElementById(data.network_codes[key]).checked = true;
                     }
-                    document.getElementById('all').checked = true;
+                    //document.getElementById('all').checked = true;
                 }
                 else if (markers[i].category == category) {
                     markers[i].setVisible(true);
@@ -438,11 +436,6 @@ function initialize_station_finder() {
                 if (category == 'all') {
                     station_ids_str = ''
                     markers[i].setVisible(false);
-                    /*
-                    for (var t=0;t<table_rows.length;t++){
-                        table_rows[t].parentNode.removeChild(table_rows[t]);
-                    }
-                    */
                     for (var key in data.network_codes) {
                         // == clear all the checkboxes ==
                         document.getElementById(data.network_codes[key]).checked = false;
@@ -524,7 +517,7 @@ function initialize_network_map() {
             legend.appendChild(div);
         }
         //Create show all
-        type = 'Show All';
+        type = 'All';
         icon = MEDIA_URL + 'img/ALLIcon.png'
         div = document.createElement('div');
         div.innerHTML = '<p><img alt="Icon" title="Icon" class="icon" src="' + icon + '"> ' + type +'<input type="checkbox" id="all" onclick="my_networkclick(this,\''+ 'all' +'\')" checked /></p>';
@@ -630,7 +623,7 @@ function initialize_network_map() {
                 show(category);
             }
             else {
-                //remove category form cheked list
+                //remove category form checked list
                 /*
                 for(var i =0;i<checked_categories.length;i++) {
                     if (checked_categories[i] == category){

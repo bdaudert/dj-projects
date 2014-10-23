@@ -242,14 +242,18 @@ def data_station(request):
     context = {
         'title': 'Historic Station Data Lister (Daily)',
     }
-
+    context['x'] = "IP Address for debug-toolbar: " + request.META['REMOTE_ADDR']
     initial, checkbox_vals = set_data_station_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set up maps if needed
     context['host'] = settings.HOST
     context['area_type'] = initial['select_stations_by']
-    context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
+    kml_file_path = create_kml_file('basin', 'NV')
+    kml_file_path = create_kml_file('county', 'NV')
+    kml_file_path = create_kml_file('county_warning_area', 'NV')
+    kml_file_path = create_kml_file('climate_division', 'NV')
     kml_file_name = initial['overlay_state'] + '_' + initial['select_stations_by'] + '.kml'
+    context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
     context[initial['overlay_state'] + '_selected'] = 'selected'
     context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
 
@@ -275,7 +279,7 @@ def data_station(request):
         context['form_cleaned'] = form_cleaned
         #Set wich apps to link to:
         if len(form_cleaned['elements'].replace(' ','').split(',')) == 1:
-            if 'station_id' in form.keys() and form['units'] == 'english':
+            if 'station_id' in form.keys():
                 context['link_to_all'] = True
         elif len(form_cleaned['elements'].replace(' ','').split(',')) >= 1 and 'station_id' in form.keys():
             context['link_to_mon_aves'] = True
@@ -835,7 +839,7 @@ def monthly_aves(request):
             user_params_list, user_params_dict =set_user_params(form_initial, 'monthly_aves')
             context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
         form = set_form(request,clean=False)
-        form_cleaned = set_form(request)
+        form_cleaned = set_form(request,clean=True)
         search_params ={}
         for key, val in form_cleaned.items():
             if key != 'formData':
@@ -1893,6 +1897,7 @@ def find_id(form_name_field, json_file_path):
             name = name_id_list[0]
         '''
         name = name_id_list[0]
+        return i
     elif len(name_id_list) == 1:
         name_list= i.split(' ')
         #check for digits
@@ -2153,7 +2158,7 @@ def set_sodsumm_headers(table_list):
             rows.append('<tr><td colspan="5">-------</td><td colspan="5">Averages</td><td colspan="4">-----------Daily Extremes </td><td colspan="4">----------------Mean Extremes </td><td colspan="4">-----------Number of Days</td></tr>')
         elif table == 'prsn':
             rows.append('<th colspan="15"><b>Precipitation/Snow Statistics</b></th>')
-            rows.append('<tr><td colspan="6">-------------------Total Precipitation </td><td colspan="2">---------------------------</td><td colspan="2">Number of Days</td><td colspan="3">-------------Total Snowfall</td></tr>')
+            rows.append('<tr><td colspan="6">----------------------Total Precipitation </td><td colspan="2">---------------------------</td><td colspan="2">Number of Days</td><td colspan="3">----------------Total Snowfall</td></tr>')
 
         elif table == 'hdd':
             rows.append('<th colspan="14"><b>Heating degree days</b></th>')

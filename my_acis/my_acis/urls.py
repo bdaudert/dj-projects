@@ -6,10 +6,7 @@ from django.conf import settings
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'my_acis.views.home', name='home'),
-    # url(r'^my_acis/', include('my_acis.foo.urls')),
-    (r'^media/$', 'my_acis.views.media'),
+    #(r'^media/$', 'my_acis.views.media'),
     (r'^$', 'my_acis.views.home_view'),
     (r'^documentation/$', 'documentation.views.home'),
     (r'^documentation/acis/$', 'documentation.views.acis'),
@@ -31,17 +28,11 @@ urlpatterns = patterns('',
     (r'^wrcc_meta/by_nina/$', 'wrcc_meta.views.by_location'),
     (r'^wrcc_meta/station_detail/$', 'wrcc_meta.views.station_detail'),
     (r'^wrcc_meta/station_tables/$', 'wrcc_meta.views.station_tables'),
-    (r'^wrcc_meta/station_tables_nina/$', 'wrcc_meta.views.station_tables_nina'),
     (r'^wrcc_meta/(?P<tbl_name>[Station][Location|AltName|TimeZone|ClimDiv|County|Digital|Equipment|Maintenance|Physical|Photo|Contact]*)/$', 'wrcc_meta.views.station_tables_merge'),
     (r'^wrcc_meta/sub_tables/$', 'wrcc_meta.views.sub_tables'),
-    #(r'^wrcc_meta/(?P<tbl_name>[Station][Variable|Network|Digital]*)/$', 'wrcc_meta.views.station_tables_add'),
-    #(r'^wrcc_meta/(?P<tbl_name>[Station][Location|Network|Subnetwork|AltName|TimeZone|ClimDiv|County|Digital|Equipment|Maintenance|Physical|Photo|Contact]*)/(?P<tbl_id>\d+)/$', 'wrcc_meta.views.sub_tables'),
-    #(r'^wrcc_meta/Station/(?P<tbl_id>\d+)/$', 'wrcc_meta.views.sub_tables'),
     (r'^wrcc_meta/add/$', 'wrcc_meta.views.station_tables_add'),
     (r'^wrcc_meta/merge/$', 'wrcc_meta.views.station_tables_merge'),
     (r'^wrcc_apps/$', 'wrcc_apps.views.home_view'),
-    #sub process apps: FIX ME: Need to be converted to module approach
-    #module approach apps
     (r'^wrcc_apps/cemp/$', 'wrcc_apps.views.cemp'),
     (r'^wrcc_apps/nevcan/$', 'wrcc_apps.views.nevcan'),
     (r'^wrcc_apps/(?P<app_name>Sodsum)/$', 'wrcc_apps.views.sodsum'),
@@ -80,11 +71,7 @@ urlpatterns = patterns('',
     (r'^scenic/data/gridded/(\?P<start_date>[\d{8,10}|por])(\&P<end_date>[\d{8,10}|por)(\&P<elements>[^,]+)(\&P<grid>[^,]+)(\&P<loc>[^,]+)(\&P<summary>[^,]+)(\&P<temporal_resolution>[^,]+)$', 'scenic.views.data_gridded'),
     (r'^scenic/apps/$', 'scenic.views.apps_home'),
     (r'^scenic/apps/(?P<stn_id>\d+)/$', 'scenic.views.apps_home'),
-    #(r'^scenic/apps/scenic_station_apps/$', 'scenic.views.scenic_station_apps'),
-    #(r'^scenic/apps/scenic_station_apps/(?P<stn_id>\d+)(\&P<start_date>[\d{8,10}|por])(\&P<end_date>[\d{8,10}|por)(\&P<elements>[^,]+)$', 'scenic.views.scenic_station_apps'),
     (r'^scenic/apps/station/$', 'scenic.views.apps_station'),
-    #(r'^scenic/apps/station/(?P<stn_id>\d+)/$', 'scenic.views.apps_station'),
-    (r'^scenic/apps/station/(?P<stn_id>\d+)(\&P<start_date>[\d{8,10}|por])(\&P<end_date>[\d{8,10}|por)(\&P<elements>[^,]+)$', 'scenic.views.scenic_station_apps'),
     (r'^scenic/apps/station/station_finder/$', 'scenic.views.station_locator_app'),
     (r'^scenic/apps/station/station_locator/$', 'scenic.views.station_locator_app'),
     (r'^scenic/apps/station/metagraph/$', 'scenic.views.metagraph'),
@@ -94,7 +81,6 @@ urlpatterns = patterns('',
     (r'^scenic/apps/station/sodxtrmts/$', 'scenic.views.sodxtrmts',{'app_type':'station'}),
     (r'^scenic/apps/station/sodxtrmts/(?P<stn_id>[^,]+)(\&P<start_date>[\d{4}])(\&P<end_date>[\d{4})(\&P<element>[^,]+)$', 'scenic.views.sodxtrmts',{'app_type':'station'}),
     (r'^scenic/apps/station/monthly_aves/$', 'scenic.views.monthly_aves'),
-    #(r'^scenic/apps/monthly_aves/(?P<stn_id>[^,]+)(\&P<start_date>[\d{8,10}|por])(\&P<end_date>[\d{8,10}|por)(\&P<elements>[^,]+)$', 'scenic.views.monthly_aves'),
     (r'^scenic/apps/gridded/$', 'scenic.views.apps_gridded'),
     (r'^scenic/apps/gridded/grid_point_time_series/$', 'scenic.views.grid_point_time_series'),
     (r'^scenic/apps/gridded/grid_point_time_series/(?P<lat>\-?(0|1-9+)\.?\d+)(\&P<lon>\-?(0|1-9+)\.?\d+)$', 'scenic.views.grid_point_time_series'),
@@ -118,7 +104,12 @@ urlpatterns = patterns('',
 )
 
 if settings.DEBUG:
+    import debug_toolbar
     urlpatterns += patterns('',
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+        url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.STATIC_ROOT, 'show_indexes':True
+        }),
         url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
             'document_root': settings.MEDIA_ROOT, 'show_indexes':True
         }),

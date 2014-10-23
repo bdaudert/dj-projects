@@ -137,8 +137,14 @@ function ShowPopupDocu(DivId){
 }
 
 function ShowNetworkDocu(NetWork){
+    var title = NetWork.replace('Docu_',''); 
     $( '#' + NetWork ).dialog({
-        title:NetWork
+        title:title,
+        position: {
+            my:'center',
+            at:'center top',
+            of:'#map_legend'
+        }
     });
 }
 
