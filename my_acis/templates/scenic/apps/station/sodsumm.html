@@ -15,8 +15,8 @@
 -->
 
 <!--Hidden Variables-->
-<input type="hidden" id="JSON_URL" name="JSON_URL" value="{{ TMP_DIR }}">
-
+<input type="hidden" id="JSON_URL" name="JSON_URL" value="/csc/media/json/">
+<!--Set up autofill-->
 <script type="text/javascript">set_autofill("US_station_id");</script>
 <script type="text/javascript">
 $(function(){
@@ -24,9 +24,6 @@ $(function(){
         hide_errors_results_on_change('formSodsumm');
 });
 </script>
-
-<!--Set up autofill-->
-<script type="text/javascript">set_autofill("US_station_id");</script>
 
 <table cellpadding="10">
 <td valign="top" width="300px">
@@ -36,7 +33,7 @@ $(function(){
         <table class="form" frame="void" style="border-collapse:collapse;" >
             <tr valign="top" >
     <td>Station ID/Name: </td>
-    <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{initial.station_id}}" list="US_station_id"></td>
+    <td><input autocomplete="off" type="text" size="20" id="station_id" name="station_id" value="{{initial.station_id}}" list="US_station_id" ></td>
     <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_station_id"></div>
@@ -303,7 +300,7 @@ $(function(){
                     </td>
                     </tr>
                     <tr valign="top">
-                    <td>Outputfile Name: </td>
+                    <td>Output file name: </td>
                     <td><input type="text" id="output_file_name" name="output_file_name" value="Output"></td>
                     <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
                     <div class="pop-up">
