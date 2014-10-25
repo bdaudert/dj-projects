@@ -7,13 +7,14 @@
 
 {% block content %}
 
+<table cellpadding="10px">
+<td width="500px">
 <h1>{{title}}</h1>
-
 {% if stations %}
     <h2>{{stations.count}} results</h2>
 
     <form method="get" action="{{URL_PREFIX}}wrcc_meta/station_tables/ " name="station_select">
-        <select  name="ucan_id" multiple>
+        <select  name="ucan_id" multiple size="20" style="width:100%;">
             {% for s in stations %}
                 <option type="radio" value="{{s.ucan_station_id}}">{{s}}</option>
             {% endfor %}
@@ -23,5 +24,6 @@
 {% else %}
     <p>No stations found</p>
 {% endif %}
-
+</td>
+</table>
 {% endblock %}

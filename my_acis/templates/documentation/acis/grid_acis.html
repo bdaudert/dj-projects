@@ -17,12 +17,15 @@
 <script type="text/javascript">            
     $("#Docu_maca_grid_def").load("{{HTML_URL}}/Docu_maca_grid_def.html");
 </script>
-
+<div id="Docu_settings" style="display:none"></div>
+<script type="text/javascript">            
+    $("#Docu_settings").load("{{HTML_URL}}/Docu_maca_settings.html");
+</script>
 
 <h1 align="center">{{title}}</h1>
 <h2 align="center">How to add a gridded dataset to the ACIS system</h2>
-<table cellpadding="20px">
-<td width="20%">
+<table cellpadding="10px">
+<td width="20%"valign="top">
     <table align="left" class="navbar">
     <tr><td>
     <a target="_blank" href="http://rcc-acis.org/docs_gridded.html" class="trigger_hover">Gridded Datasets</a>
@@ -38,10 +41,38 @@
     </td></tr>
     </table>
 </td>
-<td width="80%" align="center">
+<td width="80%" valign="top">
     <h3>1. Netcdf to hdf5 conversion</h3>
-    <p align=left"">Since data in the ACIS system is stored in hdf5 files, we first need to convert all data files into this format. Below is the python script that converts the MACA netCDF files into HDF5 format. Each HDF5 file (yyyy.h5) contains data for one year for all elements.</p>
+    <p align=left"">Since data in the ACIS system is stored in hdf5 files, we first need to convert all data files into this format.<br />
+    Each hdf5 file contains data for on year for all climate elements. <br />
+    Each element in the mACA dataset is stored seperately in files overing 10/5 year chunks for version 1, 2, respectively.<br />
+    Below is the python script that converts the MACA netCDF files into HDF5 format.<br />
+    These are the main steps that are are involved in the process.<br />
+    Given a year and a MACA model, we
+    <ul>
+    <li>Find the start/end year of the MACA netCDF file that contains this year's data.</li>
+    <li>For each element, </li>
+    <ul>
+    <li>Download the nedCDF</li>
+    <li>Find the time indices for our year in the netCDF data array</li>
+    <li>Create a hdf5 data object of shape (time=365 days, lat,lon)</li>
+    <li>Reads the data for this year from the netCDF file and stres it in a python data array</li>
+    <li>Loads the data from the data array into the hdf5  data object.</li>
+    </ul>
+    <li>Write the data for one year to hdf5 file [year].h5</li> 
+    </u;>
     <p class="trigger_hover pop_link" onclick="ShowPopupDocu('Docu_netCDF_HDF5_Conversion')"><font color=""><u>MACA_HDF5_converter.py</u></font></p>
+    <p>
+    <h4>Dependencies</h4>
+    <ul>
+    <li>urllib --> to download netCDF files from ftp server</li>
+    <li>netCDF4 --> python interface to netCDF (reads and writes netCDF files)</li>
+    <li>h5py --> python interface to hdf5 (reads and writes hdf5 files)</li>
+    <li>settings.py --> configuration file containing dataset and directorty structure information
+    <p class="trigger_hover pop_link" onclick="ShowPopupDocu('Docu_settings')"><font color=""><u>settings.py</u></font></p>
+    </li>
+    </ul>
+    </p>
     <div class="pop-up" id="NetHdf5">
     <p><font size="4">Describes methology for conversion of netCDF to HDF5 format. (Internal)</font></p>
     </div>

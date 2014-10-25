@@ -44,6 +44,7 @@ $(function(){
         <td>
             <select id="select_grid_by" name="select_grid_by" onchange="set_station_grid_select('area',this);">
             <option value="state" {{checkbox_vals.state_selected}}>State</option>
+            <option value="bounding_box" {{checkbox_vals.bounding_box_selected}}>Bounding Box</option>
             <!--
             <option value="county" {{checkbox_vals.county_selected}}>County</option>
             <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
@@ -417,6 +418,22 @@ $(function(){
     <script type="text/javascript">                        
         $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
     </script>
+
+    {%if initial.select_grid_by == "bounding_box" and not hide_bbox_map%}
+    <div id="BBoxMap" style="display:block;">
+    {%else%}
+    <div id="BBoxMap" style="display:none;">
+    {%endif%}
+    {%if bbox %}
+    <input type="hidden" id="bbox" name="bbox" value={{bbox}}>
+    {%else%}
+    <input type="hidden" id="bbox" name="bbox" value='-115,34,-114,35'>
+    {%endif%}
+    <div id="map-bbox"></div>
+    {%if initial.select_grid_by == "bounding_box" and not hide_bbox_map%}
+    <script type="text/javascript">initialize_bbox_map();</script>
+    {%endif%}
+    </div>
 
     {%if form_error%}
     <div class="results">

@@ -118,8 +118,8 @@ p.blue {
 }
 
 h1, h2, h3, h4, h5 {
-    /*color:#006666;*/
-    color:#000000;
+    color:#006666;
+    /*color:#000000;*/
 }
 
 h1.error, h2.error, h3.error, h4.error, h5.error {
@@ -262,6 +262,12 @@ input[value="Submit"] {
     margin:10px;
 }
 
+input[value="Merge"] {
+    background-color:#006666;
+    color:#FFEFD5;
+    margin:10px;
+}
+
 input[value="Generate graphics"] {
     background-color:#006666;
     color:#FFEFD5;
@@ -385,6 +391,13 @@ table.dash {
     color: #000000;
 }
 
+table.form_center {
+    border:2px solid #006666;
+    /*border-collapse:collapse;*/
+    background-color:#CCE0E0;
+    width:400px;
+}
+
 table.form {
     border:2px solid #006666;
     /*border-collapse:collapse;*/
@@ -399,25 +412,15 @@ table.form td {
     font-weight: bold;
 }
 
-ul.navbar {
+.navbar {
+  width:200px;
   list-style-type: none;
-  padding: 0;
-  margin: 0;
+  padding: 5px;
+  margin:0px 5px;
   top: 1em;
   left: 5em;
-  border: 1px solid #000000;
-}
-
-ul.navbar li {
-  width:96%
-  color:#FF00FF;
-  padding-left: 0.5em;
-}
-
-ul.navbar a {
-  display:block;
-  width:100%;
-  background-color:#F8E1D0;
+  border: 2px solid #006666;
+  background-color:#CCE0E0;
 }
 
 
@@ -652,6 +655,12 @@ table #map_legend {
     border:2px solid #006666;
 }
 
+#map-bbox {
+    width:600px;
+    height:425px;
+    border:2px solid #006666;
+}
+
 #LayerWindow {
     line-height:1.35;
     width:200px;
@@ -673,6 +682,12 @@ table #map_legend {
   margin: 10px auto;
 }
 
+.label {
+    font-style:bold;
+    font-size:14px;
+    color:006666;
+}
+
 .tabs {
   position: relative;   
   min-height: 1000px; /* This part sucks */
@@ -683,6 +698,7 @@ table #map_legend {
 .tab {
   float: left;
 }
+
 .tab label {
   background: #FFEFD5; 
   padding: 10px; 

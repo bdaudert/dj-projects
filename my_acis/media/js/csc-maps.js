@@ -643,12 +643,20 @@ function my_networkclick(box, category){
 }
 
 function initialize_bbox_map() {
-      //create map
+     
+    function clearRect() {
+        if (rect) {
+          rect.setEditable(false);
+          rect.setMap(null);
+          rect = null;
+        }
+    }
+
      var bbox_list = ','.split(document.getElementById("bbox").value)
-     var west = new google.maps.LatLng(bbox_list[3],bbox_list[0]);
-     var south = new google.maps.LatLng(bbox_list[1],bbox_list[0]);
-     var east = new google.maps.LatLng(bbox_list[1],bbox_list[2]);
-     var north = new google.maps.LatLng(bbox_list[3],bbox_list[2]);
+     var west = new google.maps.LatLng(parseFloat(bbox_list[3]),parseFloat(bbox_list[0]));
+     var south = new google.maps.LatLng(parseFloat(bbox_list[1]),parseFloat(bbox_list[0]));
+     var east = new google.maps.LatLng(parseFloat(bbox_list[1]),parseFloat(bbox_list[2]));
+     var north = new google.maps.LatLng(parseFloat(bbox_list[3]),parseFloat(bbox_list[2]));
      var initial_rect = [west, south, east, north];
 
      var Center=new google.maps.LatLng(37.0, -114.05);
@@ -657,52 +665,52 @@ function initialize_bbox_map() {
         center: Center,
         mapTypeId: google.maps.MapTypeId.HYBRID
       }
-     map = new google.maps.Map(document.getElementById('map'), myOptions);
+     map = new google.maps.Map(document.getElementById('map-bbox'), myOptions);
      var rect = new google.maps.Polygon({
          path:initial_rect,
-         fillColor: "black",
+         fillColor: "#blue",
          fillOpacity: 0.1,
-         strokeColor: "black",
+         strokeColor: "blue",
          strokeWeight: 1
      });
     rect.setMap(map);
-
-     var drawingManager = new google.maps.drawing.DrawingManager({
-        drawingMode: google.maps.drawing.OverlayType.RECTANGLE,
-        drawingControl: true,
-        drawingControlOptions: {
-        position: google.maps.ControlPosition.TOP_CENTER,
+    var drawingManager = new google.maps.drawing.DrawingManager({
         drawingModes: [
+            google.maps.drawing.OverlayType.RECTANGLE
+        ],
+        drawingControlOptions: {
+            position: google.maps.ControlPosition.TOP_LEFT,
+            drawingModes: [
             google.maps.drawing.OverlayType.RECTANGLE
             ]
         },
         rectangleOptions: {
             editable: true,
-            fillColor: "black",
+            fillColor: "blue",
             fillOpacity: 0.1,
             map: map,
-            strokeColor: "black",
+            strokeColor: "blue",
             strokeWeight: 1
         }
-    });
-    drawingManager.setMap(map);
-    google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
-        if (event.type == google.maps.drawing.OverlayType.RECTANGLE) {
-            if (rect){
-                rect.setMap(null);
-            }
-            rect = event.overlay;
-            var bounds=event.overlay.getBounds();
-            //set new bounding box
-            var w = precise_round(bounds.getSouthWest().lng(),2);
-            var s = precise_round(bounds.getSouthWest().lat(),2);
-            var e = precise_round(bounds.getNorthEast().lng(),2);
-            var n = precise_round(bounds.getNorthEast().lat(),2);
-            document.getElementById("bbox").value = w + ',' + s + ',' + e + ',' + n;
+     });
+     drawingManager.setMap(map);
+     
+     
+     google.maps.event.addListener(map, 'click', clearRect);
+     google.maps.event.addListener(drawingManager, 'drawingmode_changed', clearRect);
+     google.maps.event.addListener(drawingManager, 'overlaycomplete', function(e) {
+        if (rect){
+            rect.setMap(null);
         }
-        if (event.type == google.maps.drawing.OverlayType.CIRCLE) {
-            var radius = event.overlay.getRadius();
-        }
+        rect = e.overlay;
+        var bounds=e.overlay.getBounds();
+        //set new bounding box
+        var w = precise_round(bounds.getSouthWest().lng(),2);
+        var s = precise_round(bounds.getSouthWest().lat(),2);
+        var e = precise_round(bounds.getNorthEast().lng(),2);
+        var n = precise_round(bounds.getNorthEast().lat(),2);
+        document.getElementById("bbox").value = w + ',' + s + ',' + e + ',' + n;
+        document.getElementById("bounding_box").value = w + ',' + s + ',' + e + ',' + n; 
     });
 }   
 

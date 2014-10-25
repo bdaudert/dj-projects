@@ -643,11 +643,12 @@ function hide_formGraph(rowClass) {
 }
 
 function hide_gridpoint_map(){
-    //Hide gridpoint maip
-    document.getElementById('GridpointMap').style.display = "none";
-    if ($('#map-gridpoint').length){
-        m = document.getElementById('map-gridpoint');
-        m.parentNode.removeChild(m);
+    if ($('#GridpointMap').length){
+        document.getElementById('GridpointMap').style.display = "none";
+        if ($('#map-gridpoint').length){
+            m = document.getElementById('map-gridpoint');
+            m.parentNode.removeChild(m);
+        }
     }
 }
 
@@ -665,16 +666,41 @@ function show_gridpoint_map(){
     initialize_grid_point_map('data_gridded');
 }
 
-function hide_overlay_map(){
-    //Hide overlay map
-    document.getElementById('OverlayMap').style.display = "none";
-    if ($('#map-overlay').length){
-        var m = document.getElementById('map-overlay');
-        m.parentNode.removeChild(m);
+function show_bbox_map() {
+    var bb_map_div = document.getElementById('BBoxMap');
+    bb_map_div.style.display = "block";
+    if (!$('#map-bbox').length){
+        var m = document.createElement('div');
+        m.setAttribute('id', 'map-bbox');
+        m.setAttribute('style','width:600px;');
+        bb_map_div.appendChild(m);
     }
-    if ($('#content-window').length){
-        var w = document.getElementById('content-window');
-        w.parentNode.removeChild(w);
+    //Generate Map
+    initialize_bbox_map('data_gridded');
+}
+
+function hide_bbox_map(){
+    if ($('#BBoxMap').length){
+        var bb_map_div = document.getElementById('BBoxMap');
+        bb_map_div.style.display = "none";
+        if ($('#map-bbox').length){
+            m = document.getElementById('map-bbox');
+            m.parentNode.removeChild(m);
+        }
+    }
+}
+
+function hide_overlay_map(){
+    if ($('#OverlayMap').length){
+        document.getElementById('OverlayMap').style.display = "none";
+        if ($('#map-overlay').length){
+            var m = document.getElementById('map-overlay');
+            m.parentNode.removeChild(m);
+        }
+        if ($('#content-window').length){
+            var w = document.getElementById('content-window');
+            w.parentNode.removeChild(w);
+        }
     }
 }
 
@@ -701,11 +727,12 @@ function show_overlay_map(){
 }
 
 function hide_polygon_map(){
-    //Hide poly_map
-    document.getElementById('PolyMap').style.display = "none";
-    if ($('#map-polygon').length){
-        m = document.getElementById('map-polygon');
-        m.parentNode.removeChild(m);
+    if ($('#PolyMap').length){
+        document.getElementById('PolyMap').style.display = "none";
+        if ($('#map-polygon').length){
+            m = document.getElementById('map-polygon');
+            m.parentNode.removeChild(m);
+        }
     }
 }
 
@@ -806,10 +833,17 @@ function set_area_and_map(area_type){
         hide_polygon_map();
         show_gridpoint_map();
     }
+    else if (area_type == 'bounding_box'){
+        show_bbox_map();
+        hide_overlay_map();
+        hide_polygon_map();
+        hide_gridpoint_map();
+    }
     else {
         hide_overlay_map();
         hide_polygon_map();
         hide_gridpoint_map();
+        hide_bbox_map();
     }
     return lv;
 }

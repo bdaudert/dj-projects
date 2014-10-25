@@ -8,7 +8,7 @@
 {% if title %} ] {% endif %}
 </title>
 {%load my_wrcc_apps_filters%}
-<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/base.css"></link>
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/csc-style.css"></link>
 <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
 <!-- jquery -->
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
@@ -78,22 +78,21 @@ $(document).ready(function() {
 </head>
 
 <body {% if bodyclass %}class="{% block bodyclass %}{% endblock %}" {% endif %} {% if bodyid %} id="{% block bodyid %}{% endblock %}"{% endif %}>
+<div class="container">
     <!-- Header -->
-    <div id="header">
-	<h1>BRITTA'S WRCC-CSC PAGES</h1>
-    </div> <!-- END Header -->
+	<h1 align="center">BRITTA'S WRCC-CSC PAGES</h1>
 
-    <div id="breadcrumbs">
-    {% block breadcrumbs %}
-    <a href="/csc">HOME </a>&nbsp;&nbsp;
-	<a href="/csc/wrcc_meta/">WRCC-METADATA</a>&nbsp;&nbsp;
-    <a href="/csc/scenic/">SCENIC</a>&nbsp;&nbsp;
-	<a href="/csc/wrcc_apps/">WRCC-APPLICATIONS</a>&nbsp;&nbsp;
-    <a href="/csc/documentation/">DOCUMENTATION</a>&nbsp;&nbsp;
-    {% endblock breadcrumbs%}
+    <div id="menu">
+    <ul id="nav">
+        <li><a href="/csc"><font size="3">HOME</font></a></li>
+        <li><a href="/csc/scenic/"><font size="3">SCENIC</font></a>
+        <li><a href="/csc/wrcc_meta/"><font size="3">WRCC-METADATA</font></a>
+        <li><a href="/csc/wrcc_apps/"><font size="3">WRCC-APPLICATIONS</font></a>
+        <li><a href="/csc/documentation/"><font size="3">DOCUMENTATION</font></a>
+    </ul>
     </div>
 
-    <div id="content">
+    <div class="content" style="margin:10px">
     {% block content %}
         <br /><br /><br />
         <p style="color:red;font-size:20px;" align="center"><b>PROVIDING EASY ACCESS TO CLIMATE DATA AND PRODUCTS</b></p>
@@ -102,12 +101,12 @@ $(document).ready(function() {
     {% endblock content %}
     </div> <!-- END content -->
 
-    <!--
     {% block footer %}
-	<div class="footer">
-	    <p>Created by <a href="http://www.wrcc.dri.edu/">WRCC</a></p>
-	</div>
+        <div id="footer" align="center"></div>
+        <script type="text/javascript">    
+        $("#footer").load("{{HTML_URL}}/Footers.html .footer-wrcc");
+        </script>
     {% endblock footer%}
-    -->
+</div><!-- END container -->
 </body>
 </html>

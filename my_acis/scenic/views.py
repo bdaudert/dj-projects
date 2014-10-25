@@ -936,6 +936,8 @@ def temporal_summary(request):
     initial_plot, checkbox_vals_plot = set_map_plot_options(request)
     join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+    if initial['select_grid_by'] != 'bounding_box':
+        context['hide_bbox_map'] = True
     #Set up maps if needed
     #context['host'] = settings.HOST
     #context['area_type'] = initial['select_grid_by']
@@ -950,6 +952,7 @@ def temporal_summary(request):
         context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
 
     if 'formMap' in request.POST:
+        context['hide_bbox_map'] = True
         form = set_form(request, clean=False)
         form_cleaned = set_form(request)
         initial, checkbox_vals = set_temporal_summary_initial(request)
@@ -992,8 +995,8 @@ def temporal_summary(request):
         params = {
             'image':image,
             'output':'json',
-            'select_grid_by':form['select_grid_by'],
-            form['select_grid_by']:form[form['select_grid_by']],
+            'select_grid_by':WRCCData.SEARCH_AREA_FORM_TO_ACIS[form['select_grid_by']],
+            WRCCData.SEARCH_AREA_FORM_TO_ACIS[form['select_grid_by']]:form[form['select_grid_by']],
             'grid': form['grid'],
             'sdate':form['start_date'],
             'edate':form['end_date'],

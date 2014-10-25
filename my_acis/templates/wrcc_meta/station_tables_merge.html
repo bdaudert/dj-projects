@@ -3,26 +3,27 @@
 {% block content %}
 
 
-<h1>{{title}}</h1>
+<h1 align="center">{{title}}</h1>
 
-DATE: {{x}}
-<br />
-
+<p align="center">
 {%if tbl_done%}
 <a href="/csc/wrcc_meta/station_tables/?{%for id in ucan_id_list%}&ucan_id={{id}}{%endfor%}{%for tbl in tbl_done_list%}&tbl_done={{tbl}}{%endfor%}">Back to Station Tables</a>
 {%else%}
 <a href="/csc/wrcc_meta/station_tables/?{%for id in ucan_id_list%}&ucan_id={{id}}{%endfor%}{%for tbl in tbl_done_list%}&tbl_done={{tbl}}{%endfor%}">Back to Station Tables (I am NOT done!)</a>
 {%endif%}
 <br />
-<h3><font color="red"><b>!!!Please remember to merge tables in order from top to bottom!!!</b></font></h3>
+<h3 align="center"><font color="red"><b>!!!Please remember to merge tables in order from top to bottom!!!</b></font></h3>
+</p>
+
 {%if results%}
-<table>
+<table align="center" border="1" cellpadding="10px">
     {%for stn_id in ucan_id_list%}<th>{{stn_id}}</th>{%endfor%}<th>Form</th>
     {%for instance in results%}
         <tr>
         {%for table in instance%}
-        <td>
+        <td align="right">
             {%if forloop.last%}
+                <br />
                 <div id='form'>
                 <form method="post" action="">{% csrf_token %}
                 {%if merge_successful and forloop.parentloop.counter|l_e:form_id%}
@@ -30,11 +31,11 @@ DATE: {{x}}
                 {%elif tbl_done%}
                     <table class="merge_table" id={{forloop.parentloop.counter}} border="1" style="background-color:Grey">
                 {%else%}
-                    <table class="merge_table" id={{forloop.parentloop.counter}} border="1" style="background-color:MediumPurple">
+                    <table class="merge_table" id={{forloop.parentloop.counter}} border="1" style="background-color:#CCE0E0">
                 {%endif%}
                 {%for key_val in table%}
                     <tr valign="top">
-                        <td>{{key_val.0}} <input type="text" value="{{key_val.1}}" name="{{key_val.0}}"/></td>
+                        <td align="right">{{key_val.0}} <input type="text" value="{{key_val.1}}" name="{{key_val.0}}"/></td>
                     </tr>
                 {%endfor%}
                     <tr valign="top">
@@ -46,30 +47,34 @@ DATE: {{x}}
                     <a href="/csc/wrcc_meta/station_tables/?{%for id in ucan_id_list%}&ucan_id={{id}}{%endfor%}{%for tbl in tbl_done_list%}&tbl_done={{tbl}}{%endfor%}&tbl_done={{tbl_name}}">Back to Station Tables (I AM DONE with {{tbl_name}}!)</a>
                 {%elif tbl_done%}
                     {%if forloop.parentloop.last%}
+                    <br />
                     <p><b>All tables already merged!</b></p>
                     {%endif%}
                 {%else%}
-                    <input type="submit" value="MERGE" name="form_merge"/>
+                    <br />
+                    <input type="submit" value="Merge" name="form_merge"/>
                 {%endif%}
                 </form>
                 </div>
             {%else%}
                 {%if table%}
-                    <a href="#" onClick="ShowHide('{{stn_id}}_{{forloop.counter}}')">Click here to show/hide</a>
+                    <a href="#" onClick="ShowHide('{{stn_id}}_{{forloop.counter}}')">Click here to show/hide</a><br />
                 {%endif%}
+
                 <div id="{{stn_id}}_{{forloop.counter}}" style='display:block'>
-                    <table border="1" style="background-color:DeepSkyBlue">
+                    <table border="1" style="background-color:Grey">
                     {%for key_val in table%}
                         <tr valign="top">
-                            <td>{{key_val.0}}: <input onClick="populateFormField('merge_table', {{forloop.parentloop.parentloop.counter}}, '{{key_val.0}}', '{{key_val.1}}')" type="text" value="{{key_val.1}}" name="{{key_val.0}}" readonly style="background-color:#CCCCCC;"/></td>
+                            <td align="right">{{key_val.0}}: <input onClick="populateFormField('merge_table', {{forloop.parentloop.parentloop.counter}}, '{{key_val.0}}', '{{key_val.1}}')" type="text" value="{{key_val.1}}" name="{{key_val.0}}" readonly style="background-color:#CCCCCC;"/></td>
                         </tr>
                     {%endfor%}
                     </table>
 
                     {%if network_station_ids_dict%}
                     {%if table%}
+                    <br />
                     <a href="/csc/wrcc_meta/sub_tables/?tbl_name=Variable&ucan_id={{table.0.1}}{%for id in network_station_ids_dict|lookup:table.0.1%}&network_station_id={{id}}{%endfor%}">Go to Variable Tables</a>
-                    <br />              
+                    <br /><br />              
                     <a href="/csc/wrcc_meta/sub_tables/?tbl_name=StationDigital&ucan_id={{table.0.1}}{%for id in network_station_ids_dict|lookup:table.0.1%}&network_station_id={{id}}{%endfor%}">Go to StationDigital Tables</a>
                     {%endif%}
                     {%endif%}

@@ -2,27 +2,40 @@
 
 {% block content %}
 
-<h1>{{title}}</h1>
+<h1 align="center">{{title}}</h1>
 
-<p>Search by name</p>
+<table class="form_center" align="center" border="1">
+<tr>
+<td>
+<p class="label">Search by name</p>
+</td><td align="right">
 <form method="get" action="by_name/">
-    <input type="text" name="q" />
+<input type="text" name="q" />
     <input type="submit" value="Submit"/>
 </form>
-
-<p>Search by ID</p>
+</td>
+</tr><tr>
+<td>
+<p class="label">Search by ID</p>
+</td><td align="right">
 <form method="get" action="by_id/">
     <input type="text" name="q" />
     <input type="submit" value="Submit" />
 </form>
-
-<p>UCAN station ID</p>
+</td>
+</tr><tr>
+<td>
+<p class="label">UCAN station ID</p>
+</td><td align="right">
 <form method="get" action="by_ucan_id/">
     <input type="text" name="q" />
     <input type="submit" value="Submit"/>
 </form>
-
-<p>List stations by state</p>
+</td>
+</tr><tr>
+<td>
+<p class="label">List stations by state</p>
+</td><td align="right">
 <form method="get" action="by_state/">
     <select name="state_key">
 	{% for state in state_choices %}
@@ -35,13 +48,16 @@
     </select>
     <input type="submit" value="Submit"/>
 </form>
-
-<p>List stations by name AND state</p>
+</td>
+</tr><tr>
+<td valign="top">
+<p class="label">List stations state and name</p>
+</td><td align="right">
 <form method="get" action="by_name_and_state/">
-    <select name="state_key">
+    <select name="state_key" align="center">
     {% for state in state_choices %}
     {%if state.1 == "Nevada"%}
-    <option value="{{state.0}}" selected="selected">{{state.1}}</option>
+    <option size="30px" value="{{state.0}}" selected="selected">{{state.1}}</option>
     {%else%}
     <option value="{{state.0}}">{{state.1}}</option>
     {%endif%}
@@ -50,15 +66,22 @@
     <input type="text" name="q" />
     <input type="submit" value="Submit"/>
 </form>
-
-<p>Location</p>
+</td>
+</tr><tr>
+<td>
+<p class="label">By Location</p>
+</td><td align="right">
 <form method="get" action="by_location/">
     Lat: <input type="text" name="lat" size="8" />
     Lon: <input type="text" name="lon" size="8" />
     <input type="submit" value="Submit"/>
 </form>
-
-<p><font color="red" size="6">Nina: Choose Lat/Lon! :-)</font></p>
+</td></tr>
+<!--
+<tr>
+<td>
+<p class="label">By Nina Lat/Lon</p>
+</td><td align="right">
 <form method="get" action="by_nina/">
 <select name="lat_lon">
 {%for lat_lon in lat_lon_list%}
@@ -67,6 +90,10 @@
 </select>
 <input type="submit" value="Select"/>
 </form>
+</td>
+</tr>
+-->
+</table>
 
 {% endblock %}
 
