@@ -582,12 +582,13 @@ $(function(){
     <a target="_blank" href="{{GRID_DATA_URL}}?{%for key,val in params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size=3><b>Get data behind this graphic</b></font></a>
     <br /></br /></br>
     {%for fig in figure_files%}
+        <!--
         <p>
         Parameters: <br />
         {%for key_val in display_params|lookup:forloop.counter0%}
         <b>{{key_val.0}}</b>: {{key_val.1}}<br /> 
         {%endfor%}
-        </p>
+        </p>-->
         <img alt="FigureFile" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br /><br />
     {%endfor%}
     {%endif%}
