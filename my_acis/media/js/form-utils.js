@@ -642,7 +642,7 @@ function hide_formGraph(rowClass) {
     }
 }
 
-function hide_gridpoint_map(){
+function hide_grid_point_map(){
     if ($('#GridpointMap').length){
         document.getElementById('GridpointMap').style.display = "none";
         if ($('#map-gridpoint').length){
@@ -663,7 +663,7 @@ function show_gridpoint_map(){
         gp_map_div.appendChild(m);
     }
     //Generate Map
-    initialize_grid_point_map('data_gridded');
+    initialize_grid_point_map();
 }
 
 function show_bbox_map() {
@@ -821,12 +821,12 @@ function set_area_and_map(area_type){
     if (area_type =='county' || area_type =='climate_division' || area_type == 'basin' || area_type == 'county_warning_area'){
         show_overlay_map();
         hide_polygon_map();
-        hide_gridpoint_map(); 
+        hide_grid_point_map(); 
     } 
     else if (area_type == 'shape') {
         hide_overlay_map();
         show_polygon_map();
-        hide_gridpoint_map();
+        hide_grid_point_map();
     }
     else if (area_type == 'location'){
         hide_overlay_map();
@@ -837,15 +837,34 @@ function set_area_and_map(area_type){
         show_bbox_map();
         hide_overlay_map();
         hide_polygon_map();
-        hide_gridpoint_map();
+        hide_grid_point_map();
     }
     else {
         hide_overlay_map();
         hide_polygon_map();
-        hide_gridpoint_map();
+        hide_grid_point_map();
         hide_bbox_map();
     }
     return lv;
+}
+
+function update_maps(area_field){
+    /*
+    Updates maps if user uses autofill or 
+    or types in area_input field
+    */
+    var id = area_field.id;
+    /*
+    if (id == 'basin' || id == 'county_warning_area' || id == 'county' || id == 'climate_division'){
+      //Generate new kml file and regenerate the map  
+    }
+    */
+    if (id == 'shape'){
+        initialize_polygon_map(area_field.value);
+    }
+    if (id == 'location'){
+        initialize_grid_point_map(area_field.value);
+    }
 }
 
 function unset_large_request(){

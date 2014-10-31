@@ -42,8 +42,8 @@ select {
     outline:1px solid green;border:1px solid black;
     */
     font-weight: bold;
-    max-width:150px;
-    }
+    max-width:180px;
+}
 
 .center {
     position:relative;
@@ -98,6 +98,12 @@ select {
     width:600px;
 }
 
+.frame {
+    margin:auto;
+    width:940px;
+    height:700px;
+    text-align:center;
+}
 
 p, ul, ol, li {
     color:#000000;
@@ -135,7 +141,6 @@ h1.error, h2.error, h3.error, h4.error, h5.error {
 .message{
     color:#4B0082;
     font-size:14px;
-    font-weight:bold;
 }
 
 
@@ -256,70 +261,83 @@ input[type=text]{
     font-weight:bold;
 }
 
+input[name=start_date]{
+    width:80px;
+}
+input[name=end_date]{
+    width:80px;
+}
+input[name=start_year]{
+    width:80px;
+}
+input[name=end_year]{
+    width:80px;
+}
+
 input[value="Submit"] {
     background-color:#006666;
     color:#FFEFD5;
-    margin:10px;
+    margin:5px;
 }
 
 input[value="Merge"] {
     background-color:#006666;
     color:#FFEFD5;
-    margin:10px;
+    margin:5px;
 }
 
 input[value="Generate graphics"] {
     background-color:#006666;
     color:#FFEFD5;
-    margin:10px;
+    margin:5px;
 }
 
 input[value="Get data"] {
     background-color:#006666;
     color:#FFEFD5;
-    margin:10px;
+    margin:5px;
 }
 
 input[value="Generate maps"] {
     background-color:#006666;
     color:#FFEFD5;
-    margin:10px;
+    margin:5px;
 }
 
 input[value="Generate time series"] {
     background-color:#006666;
     color:#FFEFD5;
-    margin:10px;
+    margin:5px;
 }
 
 input[value="Generate barcharts"] {
     background-color:#006666;
     color:#FFEFD5;
-    margin:10px;
+    margin:5px;
 }
 
 input[value="Show me stations"] {
     background-color:#006666;
     color:#FFEFD5;
-    margin:10px;
+    margin:5px;
 }
 
 input[value="Download"] {
     background-color:#006666;
     color:#FFEFD5;
-    margin:10px;
+    margin:5px;
 }
 
 input[value="Analyze"] {
     background-color:#006666;
     color:#FFEFD5;
-    margin:10px;
+    margin:5px;
 }
 
 input[value="Update Map"] {
     background-color:#006666;
     color:#FFEFD5;
-    margin:10px;
+    margin:5px;
 }
 
 
@@ -327,7 +345,7 @@ input[value="Start Over"] {
     /*background-color:#8FBC8F;*/
     background-color:#006666;
     color:#FFEFD5;
-    margin:10px;
+    margin:5px;
 }
 
 input[value="Select"] {
@@ -403,9 +421,13 @@ table.form {
     /*border-collapse:collapse;*/
     background-color:#CCE0E0;
     width:300px;
-    margin:0px 10px 0px 10px;
+    padding:0px;
+    text-align:right;
+    margin:0px 5px 0px 5px;
 }
-
+table.form tr td{
+    outline:1px solid #006666;
+}
 
 table.form td {
     margin: 0px 0px;
@@ -740,7 +762,7 @@ height:100px;
 
 #panel {
 position:relative;
-bottom:400px;
+bottom:425px;
 left:180px;
 /*width: 200px;*/
 font-family: Arial, sans-serif;
@@ -765,7 +787,8 @@ cursor: pointer;
 }
 
 #delete-button {
-margin-top: 1px;
+margin-top:1px;
+margin-right:1px;
 width:150px;
 height:20px;
 background-color:#006666;

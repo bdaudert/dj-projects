@@ -119,7 +119,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     <tr valign="top">
     {%endif%}
     <td>Location: </td>
-    <td><input autocomplete="off" type="text" size="20" id="location" name="location" value="{{initial.location}}" onchange="hide_formGraph('formGraph');"></td>
+    <td><input autocomplete="off" type="text" size="20" id="location" name="location" value="{{initial.location}}" onchange="hide_formGraph('formGraph') & update_maps(this);"></td>
     <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_location"></div>
@@ -208,9 +208,9 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
             <option value="maxt" {{checkbox_vals.maxt_selected}}>Daily Max Temperature</option>
             <option value="mint" {{checkbox_vals.mint_selected}}>Daily Min Temperature</option>
             <option value="avgt" {{checkbox_vals.avgt_selected}}>Daily Mean Temperature</option>
-            <option value="hdd" {{checkbox_vals.hdd_selected}}>Heating Degree Days</option>
-            <option value="cdd" {{checkbox_vals.cdd_selected}}>Cooling Degree Days</option>
-            <option value="gdd" {{checkbox_vals.gdd_selected}}>Growing Degree Days</option>
+            <option value="hdd" {{checkbox_vals.hdd_selected}}>Heating Deg. Days(65F/18C)</option>
+            <option value="cdd" {{checkbox_vals.cdd_selected}}>Cooling Deg. Days(65F/18C)</option>
+            <option value="gdd" {{checkbox_vals.gdd_selected}}>Growing Deg. Days(50F/10C)</option>
             <option value="pet" {{checkbox_vals.pet_selected}}>Potential ET</option>
             </select>
     </td>
@@ -416,7 +416,6 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </td>
     </tr>
     {%if json_file %}
-    <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
     <tr valign="top" id="generate_graph_row">
     <td><font color="#9900CC"><b>Generate a time series graph?</b></font></td>
     <td>
@@ -453,16 +452,9 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     </div>
     {%else%}
     {%if not json_dict.data%}
-    {%if lat and lon %}
-    <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
-    <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
-    {%else%}
-    <input type="hidden" id="initial_lat" name="initial_lat" value='40'>
-    <input type="hidden" id="initial_lon" name="initial_lon" value='-111'>
-    {%endif%}
     <div align="center" id="map-gridpoint"></div>
     <script type="text/javascript">
-        initialize_grid_point_map('data_gridded')
+        initialize_grid_point_map()
     </script>
     {%endif%}
     {%endif%}
@@ -470,9 +462,6 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     {%endif%}
     <tr valign="top" class="formGraph" style="display:table-row;">
     <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Graph Options</u></b></td>
-    </tr>
-    <tr valign="top" class="formGraph" style="display:table-row;">
-    <td colspan="3"><hr style="border-color:#006666;"></td>
     </tr>
     <tr valign="top" class="formGraph" style="display:table-row;">
     <td>Start Month: </td>
@@ -629,9 +618,6 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
     {%endif%}
     <tr valign="top" class="formGraph" style="display:table-row;">
     <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Plot Options</u></b></td>
-    </tr>
-    <tr valign="top" class="formGraph" style="display:table-row;">
-    <td colspan="3"><hr style="border-color:#006666;"></td>
     </tr>
     <tr valign="top" class="plOpts" style="display:table-row;">
     <td>Graph Title:</td>

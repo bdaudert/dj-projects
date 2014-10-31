@@ -6,6 +6,20 @@ function set_href_to_datafind(anchor){
 }
 */
 
+function poll(url) {
+    setTimeout(function () {
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: url,
+            success: function (data) {
+                //MyNamespace.myFunction(data); //DO ANY PROCESS HERE
+                show_loading()
+            },
+            complete: poll
+        });
+    }, 5000);
+}
 
 function form_change(formID){ 
     $('#' + formID).find('input,select').change(function(){

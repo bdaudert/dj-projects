@@ -88,9 +88,9 @@ $(function(){
             <option value="mint" {{checkbox_vals.elements_mint_selected}}>Minimum Temperature</option>
             <option value="avgt" {{checkbox_vals.elements_avgt_selected}}>Average Temperature</option>
             <option value="pcpn" {{checkbox_vals.elements_pcpn_selected}}>Precipitation</option>
-            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Degree Days(65F)</option>
-            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Degree Days(65F)</option>
-            <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Degree Days(50F)</option>
+            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Deg. Days(65F)</option>
+            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Deg. Days(65F)</option>
+            <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Deg. Days(50F)</option>
             </select>
         </td>
         <td><img class="trigger" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
@@ -234,15 +234,9 @@ $(function(){
         </td>
         </tr>
         <tr>
-        <td colspan="3"><hr style="border-color:#006666;"></td>
-        </tr>
-        <tr>
         <td colspan="3" onClick="show_hide_opts('plOpts')"><b><u>Plot Options</u></b>
         <input type="hidden" id="show_plot_opts" name="show_plot_opts" value="{{initial.show_plot_opts}}">
         </td>
-        </tr>
-        <tr>   
-        <td colspan="3"><hr style="border-color:#006666;"></td>
         </tr>
         <tr valign="top" class="plOpts" style="display:none;">
         <td>Image Size: </td>
@@ -579,17 +573,9 @@ $(function(){
     <!--Results section-->
     <div id="results" class="results">
     {%if figure_files%}
-    <a target="_blank" href="{{GRID_DATA_URL}}?{%for key,val in params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size=3><b>Get data behind this graphic</b></font></a>
-    <br /></br /></br>
+    <a target="_blank" href="{{GRID_DATA_URL}}?{%for key,val in params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size=3><b>Get data behind the graphics</b></font></a><br /><br /><br />
     {%for fig in figure_files%}
-        <!--
-        <p>
-        Parameters: <br />
-        {%for key_val in display_params|lookup:forloop.counter0%}
-        <b>{{key_val.0}}</b>: {{key_val.1}}<br /> 
-        {%endfor%}
-        </p>-->
-        <img alt="FigureFile" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br /><br />
+        <img alt="FigureFile" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br /><br /><br /><br /><br />
     {%endfor%}
     {%endif%}
     </div><!--end results div-->

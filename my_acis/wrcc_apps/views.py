@@ -138,6 +138,7 @@ def sodsum(request, app_name):
         app_params ={}
         SS_wrapper = WRCCWrappers.Wrapper('Sodsum', data_params, app_specific_params=app_params)
         data = SS_wrapper.get_data()
+        results = data
         results = SS_wrapper.run_app(data)
         context['elements'] = data['elements']
     context['results']= dict(results)
@@ -229,8 +230,15 @@ def sods(request, app_name):
                 'thresh':context['thresh'], 'verbose': form2.cleaned_data['verbose'], 'minimum_run': form2.cleaned_data['minimum_run']}
                 results = WRCCDataApps.Sodrun(**app_args)
             elif app_name == 'Soddynorm':
+                app_args = {'app_name': app_name, 'data':data,'dates':dates,'elements':elements,\
+                'coop_station_ids':coop_station_ids,'station_names':station_names,\
+                'filter_type':form2.cleaned_data['filter_type'],\
+                'filter_days':form2.cleaned_data['number_of_days']}
+                results = WRCCDataApps.Soddynorm(**app_args)
+                '''
                 results = run_data_app(app_name, data, dates, elements, coop_station_ids, station_names, \
                 form2.cleaned_data['filter_type'], form2.cleaned_data['number_of_days'])
+                '''
             elif app_name == 'Soddyrec':
                 results = run_data_app(app_name, data, dates, elements, coop_station_ids, station_names)
                 #context['data'] =results

@@ -132,7 +132,7 @@ $(function(){
         <tr id="area" valign="top">
         {%endif%}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
-        <td><input autocomplete="off" type="text" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
+        <td><input autocomplete="off" type="text" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_maps(this)"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up" id="area-pop-up">
             <div id="ht_{{initial.select_grid_by}}"></div>
@@ -155,9 +155,9 @@ $(function(){
             <option value="mint" {{checkbox_vals.elements_mint_selected}}>Minimum Temperature</option>
             <option value="avgt" {{checkbox_vals.elements_avgt_selected}}>Average Temperature</option>
             <option value="pcpn" {{checkbox_vals.elements_pcpn_selected}}>Precipitation</option>
-            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Degree Days(65F/18C)</option>
-            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Degree Days(65F/18C)</option>
-            <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Degree Days(50F/10C)</option>
+            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Deg. Days(65F/18C)</option>
+            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Deg. Days(65F/18C)</option>
+            <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Deg. Days(50F/10C)</option>
             </select>
         </td>
         <td><img class="trigger" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
@@ -356,15 +356,9 @@ $(function(){
         </td>
         </tr>
         <tr>
-        <td colspan="3"><hr style="border-color:#006666;"></td>
-        </tr>
-        <tr>
         <td colspan="3" onClick="show_hide_opts('plOpts')"><b><u>Plot Options</u></b>
         <input type="hidden" name="show_plot_opts" id="show_plot_opts" value={{initial.show_plot_opts}}>
         </td>
-        </tr>
-        <tr>   
-        <td colspan="3"><hr style="border-color:#006666;"></td>
         </tr>
         <!--
         {%if initial.show_plot_opts == "T"%}
@@ -640,13 +634,6 @@ $(function(){
                 <button id="delete-button">Delete Selected Shape</button>
             </div>
         </div>
-        {%if lat and lon %}
-        <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
-        <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
-        {%else%}
-        <input type="hidden" id="initial_lat" name="initial_lat" value='40'>
-        <input type="hidden" id="initial_lon" name="initial_lon" value='-111'>
-        {%endif%}
     </div>
 
     {%if need_gridpoint_map%}
@@ -654,16 +641,9 @@ $(function(){
     {%else%}
     <div id="GridpointMap" style="display:none;">
     {%endif%}
-        {%if lat and lon %}
-        <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
-        <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
-        {%else%}
-        <input type="hidden" id="initial_lat" name="initial_lat" value='40'>
-        <input type="hidden" id="initial_lon" name="initial_lon" value='-111'>
-        {%endif%}
         <div id="map-gridpoint"></div>
         <script type="text/javascript">
-        initialize_grid_point_map('data_gridded');
+        initialize_grid_point_map();
         </script>
     </div>
 

@@ -133,7 +133,7 @@ $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
         </tr>
         <tr id="area" valign="bottom">
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
-        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_value(this.value) & unset_large_request();"></td>
+        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_value(this.value) & unset_large_request() & update_maps(this);"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up" id="area-pop-up">
             <div id="ht_{{initial.select_grid_by}}"></div>
@@ -169,9 +169,9 @@ $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
             <option value="mint" {{checkbox_vals.elements_mint_selected}}>Minimum Temperature</option>
             <option value="avgt" {{checkbox_vals.elements_avgt_selected}}>Average Temperature</option>
             <option value="pcpn" {{checkbox_vals.elements_pcpn_selected}}>Precipitation</option>
-            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Degree Days(65F/18C)</option>
-            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Degree Days(65F/18C)</option>
-            <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Degree Days(50F/10C)</option>
+            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Deg. Days(65F/18C)</option>
+            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Deg. Days(65F/18C)</option>
+            <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Deg. Days(50F/10C)</option>
             </select>
         </td>        <td><img class="trigger" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
         <div class="pop-up">
@@ -515,18 +515,20 @@ $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
 
  
     {%if display_params_list and not form_message%}
-    <p><b>YOUR SEARCH PARAMETERS</b>:<br />
+    <p class="message"><b>YOUR SEARCH PARAMETERS</b>:<br />
     {%for param in display_params_list%}
-    {%if forloop.counter|divisibleby:"3" %}<br />
-    {%endif %}
-    {%if param.0 == "Elements"%}<br />{%endif%}
     {%if param.0 and param.1%}
     <b>{{param.0}}</b>:
-    {%if param.0 == "shape"%}
+    {%if param.0 == "Elements"%}
+    <br />
+    {%for el in params_dict.elems_long%}
+    {{el}}<br />
+    {%endfor%}
+    {%elif param.0 == "shape"%}
     <p class="message" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
     <div id="coords" style="display:none;">{{params.1}}</div>
     {%else%}
-    {{param.1}}
+    {{param.1}}{%if not forloop.last%}<br />{%endif%}
     {%endif%}
     {%endif%}
     {%endfor%}
@@ -550,13 +552,6 @@ $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
                 <button id="delete-button">Delete Selected Shape</button>
             </div>
         </div>
-        {%if lat and lon %}
-        <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
-        <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
-        {%else%}
-        <input type="hidden" id="initial_lat" name="initial_lat" value='40'>
-        <input type="hidden" id="initial_lon" name="initial_lon" value='-111'>
-        {%endif%}
     </div>
 
     {%if initial.select_grid_by == "location" and not hide_gp_map%}
@@ -564,16 +559,9 @@ $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
     {%else%}
     <div id="GridpointMap" style="display:none;">
     {%endif%}
-        {%if lat and lon %}
-        <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
-        <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
-        {%else%}
-        <input type="hidden" id="initial_lat" name="initial_lat" value='40'>
-        <input type="hidden" id="initial_lon" name="initial_lon" value='-111'>
-        {%endif%}
         <div id="map-gridpoint"></div>
         <script type="text/javascript">
-        initialize_grid_point_map('data_gridded');
+            initialize_grid_point_map('{{initial.location}}');
         </script>
     </div>
 
@@ -748,6 +736,7 @@ $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
         </form>
      </div><!--end formDownload-->
 
+    {%if param.0 == "Elements"%}<br />{%endif%}
     <!--Link to relevant applications-->
     <!--
     {%if params_dict.data_summary == "temporal" and params_dict.select_grid_by == "state" and params_dict.units == "english"%}
@@ -768,11 +757,11 @@ $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
     <p><b>DATA</b>:</p>
     <table border="1">
     {%if initial.data_summary == "temporal"%}    
-    <th>date range{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev ({{elev_unit}}){{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}} ({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
+    <th>date range{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev ({{elev_unit}}){{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
     {%elif initial.data_summary == "spatial"%}
-    <th>date {{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}} ({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
+    <th>date {{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
     {%else%}
-    <th>date{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev ({{elev_unit}}){{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{el}} ({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
+    <th>date{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev ({{elev_unit}}){{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
     {%endif%}
     {%for row in results%}
     {%if row.0%}

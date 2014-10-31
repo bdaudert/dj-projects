@@ -184,9 +184,9 @@ YOUR SEARCH PARAMETERS:<br />
             <option value="avgt" {{checkbox_vals.avgt_selected}}>Daily Mean Temperature</option>
             <option value="obst" {{checkbox_vals.obst_selected}}>Observation Time Temperature</option>
             <option value="dtr" {{checkbox_vals.dtr_selected}}>Daily Temp Range</option>
-            <option value="hdd" {{checkbox_vals.hdd_selected}}>Heating Degree Days</option>
-            <option value="cdd" {{checkbox_vals.cdd_selected}}>Cooling Degree Days</option>
-            <option value="gdd" {{checkbox_vals.gdd_selected}}>Growing Degree Days</option>
+            <option value="hdd" {{checkbox_vals.hdd_selected}}>Heating Deg. Days(65F/18C)</option>
+            <option value="cdd" {{checkbox_vals.cdd_selected}}>Cooling Deg. Days(65F/18C)</option>
+            <option value="gdd" {{checkbox_vals.gdd_selected}}>Growing Deg. Days(50F/10C)</option>
             <option value="evap" {{checkbox_vals.evap_selected}}>Daily Pan Evaporation</option>
             <!--<option value="wdmv" {{checkbox_vals.wdmv_selected}}>Daily Wind Movement</option>-->
             <option value="pet" {{checkbox_vals.pet_selected}}>Potential ET</option>
@@ -392,7 +392,6 @@ YOUR SEARCH PARAMETERS:<br />
     </td>
     </tr>
     {%if json_file %}
-    <tr><td colspan="3"><hr style="border-color:#006666;"></td></tr>
     <tr valign="top" id="generate_graph_row">
     <td><font color="#9900CC"><b>Generate a time series graph?</b></font></td>
     <td>
@@ -419,9 +418,6 @@ YOUR SEARCH PARAMETERS:<br />
     {%endif%}
     <tr valign="top" class="formGraph" style="display:table-row;">
     <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Graph Options</u></b></td>
-    </tr>
-    <tr valign="top" class="formGraph" style="display:table-row;">
-    <td colspan="3"><hr style="border-color:#006666;"></td>
     </tr>
     <tr valign="top" class="formGraph" style="display:table-row;">
     <td>Start Month: </td>
@@ -578,9 +574,6 @@ YOUR SEARCH PARAMETERS:<br />
     {%endif%}
     <tr valign="top" class="formGraph" style="display:table-row;">
     <td colspan="3" onClick="show_plot_opts('plOpts')"><b><u>Plot Options</u></b></td>
-    </tr>
-    <tr valign="top" class="formGraph" style="display:table-row;">
-    <td colspan="3"><hr style="border-color:#006666;"></td>
     </tr>
     <tr valign="top" class="plOpts" style="display:table-row;">
     <td>Graph Title:</td>

@@ -60,7 +60,7 @@
     </tr>
     <tr>
        <td colspan="2">
-       <a  href="{{GRID_SODXTRMTS_URL}}" class="trigger_hover"><img class="app_img" alt="DataLister" title="DataLister" src="{{MEDIA_URL}}img/Sodxtrmts.png"></a> 
+       <a  href="{{GRID_SODXTRMTS_URL}}" class="trigger_hover"><img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/Sodxtrmts.png"></a> 
         <div class="pop-up">
        <p>Obtain monthly and anual means and extremes for individual gridpoints.<br />Generate customized time series from results.</p>
        </div>
@@ -84,12 +84,17 @@
     <tr>
        <td valign="top"><a class="trigger_hover" href="{{GRID_DATA_URL}}"><b>Gridded Data Lister</b></a>
         <div class="pop-up">
-       <p>Get a listing of gridded data.<br/>Click on the question mark for more information!</p>
+       <p>Get a listing of gridded data for one or multiple gridpoints.<br/>Queries are customizable over spatial and temoral extend.</p>
        </div>
        </td>
        <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_DATA_GRIDDED')"></td>
-       <td></td><td></td>
-       <td></td><td></td>
+       <td valign="top"><a class="trigger_hover" href="{{GRID_TOOLS_URL}}google_ee/"><b>Google Earth Engine</b></a>
+       <div class="pop-up">
+       <p>Explore geospatial datasets with Google's Earth Engine!</p>
+       </div>
+       </td>
+       <td><img class="qmark" alt="Help" title="Help" src="{{MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_EE')"></td>
+       <td></td>
     </tr>
     <tr>
     <td colspan="2">
@@ -98,7 +103,9 @@
     <p>Get a listing of gridded data for one or multiple gridpoints.<br/>Queries are customizable over spatial and temoral extend.</p>
     </div>
     </td> 
-    <td colspan="2"></td>
+    <td colspan="2">
+    <a  href="{{GRID_TOOLS_URL}}google_ee/" class="trigger_hover"><img class="app_img" alt="EE" title="EE" src="{{MEDIA_URL}}img/EE_small.png"></a>
+    </td>
     <td colspan="2"></td>
     </tr>
     </table>

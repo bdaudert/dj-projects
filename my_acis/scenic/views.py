@@ -242,7 +242,6 @@ def data_station(request):
     context = {
         'title': 'Historic Station Data Lister (Daily)',
     }
-    context['x'] = "IP Address for debug-toolbar: " + request.META['REMOTE_ADDR']
     initial, checkbox_vals = set_data_station_initial(request)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set up maps if needed
@@ -303,7 +302,12 @@ def data_station(request):
             el_name_dict = {}
             context['element_list'] = form['elements']
             for el in form['elements']:
-                el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
+                if 'units' in form.keys() and form['units'] == 'metric':
+                    el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el,units='metric')
+                else:
+                    el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
+                if 'units' in form.keys() and  form['units'] == 'metric' and base_temp:
+                    base_temp = WRCCUtils.convert_to_metric('maxt',base_temp)
                 if not base_temp:base_temp=''
                 el_name_dict[el] = WRCCData.MICHELES_ELEMENT_NAMES[str(el_strip)] + str(base_temp)
                 if 'units' in form.keys() and  form['units'] == 'metric':
@@ -776,6 +780,13 @@ def apps_gis(request):
         }
     return render_to_response('scenic/apps/gis/home.html', context, context_instance=RequestContext(request))
 
+def google_ee(request):
+    context = {
+        'title': 'Google Earth Engine'
+        }
+    return render_to_response('scenic/apps/gridded/google_ee.html', context, context_instance=RequestContext(request))
+
+
 def metagraph(request):
     context = {
         'title': 'Station Metadata Graphics',
@@ -865,10 +876,11 @@ def monthly_aves(request):
         }
         elems = []
         for el in form['elements']:
-            el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
+            if 'units' in form.keys() and form['units'] == 'metric':
+                el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el,units='metric')
+            else:
+                el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
             if base_temp:
-                if 'units' in form.keys() and form['units'] == 'metric':
-                    base_temp = round(WRCCUtils.convert_to_english('maxt',base_temp))
                 elems.append({'vX':WRCCData.ACIS_ELEMENTS_DICT[el_strip]['vX'], 'base':int(base_temp),'groupby':'year'})
             else:
                 elems.append({'vX':WRCCData.ACIS_ELEMENTS_DICT[el]['vX'],'groupby':'year'})
@@ -1020,7 +1032,10 @@ def temporal_summary(request):
             d_p = []
             for key in ['start_date', 'end_date']:
                 d_p.append([WRCCData.DISPLAY_PARAMS[key],form[key]])
-            el_strip, base_temp = WRCCUtils.get_el_and_base_temp(element)
+            if 'units' in form_cleaned.keys() and form_cleaned['units'] == 'metric':
+                el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el,units='metric')
+            else:
+                el_strip, base_temp = WRCCUtils.get_el_and_base_temp(element)
             el_str = WRCCData.DISPLAY_PARAMS[el_strip] + ' (' + WRCCData.UNITS_ENGLISH[el_strip] + ')'
             if base_temp:
                 d_p.insert(0,['Element', el_str + ' Base Temperature: ' + str(base_temp)])
@@ -1240,92 +1255,6 @@ def spatial_summary(request):
         return DDJ.write_to_file()
 
     return render_to_response('scenic/apps/gridded/spatial_summary.html', context, context_instance=RequestContext(request))
-
-def grid_point_time_series(request):
-    context = {
-        'title': 'Grid Point Time Series',
-        'icon':'ToolProduct.png'
-    }
-    location = request.GET.get('location', None)
-    elements= request.GET.get('elements', None)
-    start_date = request.GET.get('start_date', None)
-    end_date = request.GET.get('end_date', None)
-    grid = request.GET.get('grid', None)
-    initial = {}
-    if elements is not None:initial['elements'] = str(elements)
-    if start_date is not None:initial['start_date'] = str(start_date)
-    if end_date is not None:initial['end_date'] = str(end_date)
-    if location is None:
-        location= '-111.0,40.0'
-    initial['location']= location
-    initial['lat'] = location.replace(' ','').split(',')[1]
-    initial['lon'] = location.replace(' ','').split(',')[0]
-    if grid is not None:
-        initial['grid'] = str(grid)
-
-    if initial:
-        form0 = set_as_form(request,'GPTimeSeriesForm', init=initial)
-    else:
-        form0 = set_as_form(request,'GPTimeSeriesForm')
-    context['form0'] = form0
-    context['search_params'] = initial
-
-    if 'form0' in request.POST:
-        form0 = set_as_form(request,'GPTimeSeriesForm')
-        context['form0']  = form0
-
-        if form0.is_valid():
-            search_params = {}
-            for key, val in form0.cleaned_data.iteritems():
-                search_params[key]=str(val)
-            #check for base temperature if gdd, hdd, cdd
-            elements = ','.join(form0.cleaned_data['elements'])
-            search_params['elements'] = elements
-            search_params['element_list'] = form0.cleaned_data['elements']
-            elements_long = ['' for el in form0.cleaned_data['elements']]
-            base_temps = ['' for el in form0.cleaned_data['elements']]
-            for el_idx, el in enumerate(form0.cleaned_data['elements']):
-                element, base_temp = WRCCUtils.get_el_and_base_temp(el)
-                if base_temp is not None:
-                    base_temps[el_idx] = base_temp
-                elements_long[el_idx] = WRCCData.ACIS_ELEMENTS_DICT[element]['name_long']
-                if base_temp:
-                    elements_long[el_idx]+=' ' + str(base_temp)
-            search_params['elements_long'] = elements_long
-            location = form0.cleaned_data['location']
-            search_params['lat'] = location.replace(' ','').split(',')[1]
-            search_params['lon'] = location.replace(' ','').split(',')[0]
-            context['search_params'] = search_params
-            #Note: acis takes lon, lat in that order
-            req = AcisWS.get_grid_data(form0.cleaned_data, 'GPTimeSeries')
-            if not 'data' in req.keys():
-                context['error'] = 'No data found for this set of parameters. Check that your grid has data for the time period you are interested in.'
-                return render_to_response('scenic/apps/gridded/grid_point_time_series.html', context, context_instance=RequestContext(request))
-            data = [[] for el in search_params['element_list']]
-            dates = []
-            for date_idx, dat in enumerate(req['data']):
-                for el_idx in range(1,len(search_params['element_list']) + 1):
-                    if abs(req['data'][date_idx][el_idx] - 999.0) < 0.0001 or abs(req['data'][date_idx][el_idx] + 999.0) < 0.0001:
-                        data[el_idx - 1].append(None)
-                    else:
-                        data[el_idx - 1].append(req['data'][date_idx][el_idx])
-                dates.append('%s%s%s' %(str(req['data'][date_idx][0][0:4]), str(req['data'][date_idx][0][5:7]), str(req['data'][date_idx][0][8:10])))
-            context['start_date'] = dates[0]
-            context['end_date'] = dates[-1]
-            datadict = {'data':data, 'dates':dates, 'search_params':search_params}
-            context['datadict'] = datadict
-            #results_json = str(datadict).replace("\'", "\"")
-            results_json = json.dumps(datadict)
-            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-            json_file = '%s_gp_ts_%s_%s_%s_%s.json' %(time_stamp, search_params['lat'], \
-                search_params['lon'], form0.cleaned_data['start_date'], \
-                form0.cleaned_data['end_date'])
-            context['json_file'] = json_file
-            JSON_URL = settings.TEMP_DIR
-            f = open('%s%s' %(JSON_URL,json_file),'w+')
-            f.write(results_json)
-            f.close()
-    return render_to_response('scenic/apps/gridded/grid_point_time_series.html', context, context_instance=RequestContext(request))
 
 def station_locator_app(request):
     from subprocess import call
@@ -2482,21 +2411,12 @@ def compute_spatial_summary_summary(req, search_params, poly, PointIn):
 def write_monthly_aves_results(req, form_data, monthly_aves):
     results = [{} for k in form_data['elements']]
     for el_idx, el in enumerate(form_data['elements']):
-        el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
-        '''
-        el_strip = re.sub(r'(\d+)(\d+)', '', el)   #strip digits from gddxx, hddxx, cddxx
-        b = el[-2:len(el)]
-        base_temp = ''
-        try:
-            base_temp = int(b)
-        except:
-            if b == 'dd' and el in ['hdd', 'cdd']:
-                base_temp = '65'
-            elif b == 'dd' and el == 'gdd':
-                base_temp = '50'
-        '''
+        if 'units' in form_data.keys() and form_data['units'] == 'metric':
+            el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el, units='metric')
+        else:
+            el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
         if base_temp:
-            results[el_idx] = {'element_long': WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + 'Base Temperature: ' + str(base_temp)}
+            results[el_idx] = {'element_long': WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + ' Base Temperature: ' + str(base_temp)}
         else:
             results[el_idx] = {'element_long': WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long']}
         results[el_idx]['element'] = str(el)
@@ -2563,14 +2483,14 @@ def write_monthly_aves_meta(req, form_data):
     meta[2] = meta_vd
     el_string = ''
     for el in el_list:
-        el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
-        if form_data['units'] == 'metric':
-
-            unit = WRCCData.UNITS_METRIC[el_strip]
+        if 'units' in form_data.keys() and form_data['units'] == 'metric':
+            el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el, units='metric')
         else:
-            unit = WRCCData.UNITS_ENGLISH[el_strip]
+            el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
+        if form_data['units'] == 'metric':unit = WRCCData.UNITS_METRIC[el_strip]
+        else:unit = WRCCData.UNITS_ENGLISH[el_strip]
         if base_temp:
-            el_string+= WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + '('+ unit + ')' + ' Base Temp.: ' + str(base_temp) + ', '
+            el_string+= WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + '('+ unit + ')' + ' Base Temp: ' + str(base_temp) + ', '
         else:
             el_string+=WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + '('+ unit + ')' +  ', '
     meta.insert(2, ['Elements', el_string])
@@ -2596,7 +2516,10 @@ def set_spatial_summary_params(form):
             el_list = []
     el_list_display = []
     for el_idx, el in enumerate(el_list):
-        el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
+        if 'units' in form.keys() and form['units'] == 'metric':
+            el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el, units='metric')
+        else:
+            el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
         if 'units' in form.keys() and form['units'] == 'metric':
             el_list_display.append(el + ' (' + WRCCData.UNITS_METRIC[el_strip]+ ')')
         if 'units' in form.keys() and form['units'] == 'english':
@@ -2636,7 +2559,7 @@ def set_spatial_summary_params(form):
                             base_temp = dd_list[dx][3:]
                         else:
                             base_temp = int(round(WRCCUtils.convert_to_metric('maxt', base_temp)))
-                    bt = ' Base Temp.: ' + str(base_temp) + ' (' +  ut + ')'
+                    bt = ' Base Temp: ' + str(base_temp) + ' (' +  ut + ')'
                 else:
                     bt = ''
                 try:
@@ -2692,15 +2615,7 @@ def set_data_gridded_params(form):
                 el_list = val.replace(' ','').split(',')
             else:
                 el_list = val
-            unit_dict ={}
-            if isinstance(el_list, list):
-                for el in el_list:
-                    el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
-                    if form['units'] == 'metric':
-                        unit_dict[el] = WRCCData.UNITS_METRIC[el_strip]
-                    else:
-                        unit_dict[el] = WRCCData.UNITS_ENGLISH[el_strip]
-            params_dict['unit_dict'] = unit_dict
+            unit_dict ={};base_temp_dict = {};base_el_dict={}
             params_dict['elements'] = ','.join(el_list)
             params_dict['element_list'] = el_list
             params_dict['elements_string'] = ','.join(el_list)
@@ -2710,15 +2625,24 @@ def set_data_gridded_params(form):
             display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key], '']
             #params_dict[key] = ''
             for el_idx, el in enumerate(el_list):
-                try:
-                    int(el[3:5])
-                    display_params_list[1][1]+= WRCCData.DISPLAY_PARAMS[pre_el+el[0:3]] + ' Base Temperature '+ el[3:5]
-                    elems_long.append(WRCCData.DISPLAY_PARAMS[pre_el+el[0:3]] + ' Base Temperature '+ el[3:5])
-                except:
-                    display_params_list[1][1]+=WRCCData.DISPLAY_PARAMS[pre_el+el]
-                    elems_long.append(WRCCData.DISPLAY_PARAMS[pre_el+el])
-                if el_idx != len(el_list) -1:
-                    display_params_list[1][1]+=', '
+                if 'units' in form.keys() and form['units'] == 'metric':
+                    el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el,units='metric')
+                    unit_dict[el] = WRCCData.UNITS_METRIC[el_strip]
+                else:
+                    el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
+                    unit_dict[el] = WRCCData.UNITS_ENGLISH[el_strip]
+                base_el_dict[el] = el_strip
+                if not base_temp:
+                    BT=''
+                    base_temp_dict[el] = ''
+                else:
+                    BT = ', Base Temp: ' + str(base_temp)
+                    base_temp_dict[el] = str(base_temp)
+                display_params_list[1][1]+= WRCCData.DISPLAY_PARAMS[pre_el + el_strip] + BT
+                elems_long.append(WRCCData.DISPLAY_PARAMS[pre_el + el_strip] + BT)
+            params_dict['unit_dict'] = unit_dict
+            params_dict['base_temp_dict'] = base_temp_dict
+            params_dict['base_el_dict'] = base_el_dict
             params_dict['elems_long'] = elems_long
             #determine which apps to link to
             if len(val) == 1:
@@ -2768,18 +2692,9 @@ def set_data_station_params(form):
             display_params_list[key_idx] = [WRCCData.DISPLAY_PARAMS[key], defaults[key_idx]]
     for key, val in form.iteritems():
         #Need station list for missing data
-        '''
-        if key == 'station_ids':
-            params_dict['station_list'] = form['station_ids'].replace(' ','').split(',')
-        '''
         if key == form['select_stations_by'] and key not in  ['station_ids', 'state', 'shape']:
             params_dict[key] = find_id(val, settings.MEDIA_DIR + '/json/US_' + key +'.json')
             params_dict['user_id']= val
-            #override display_params_list
-            '''
-            if display_params_list[0][1].upper() != params_dict[key].upper():
-                display_params_list[0][1]+= ', ' + params_dict[key]
-            '''
         elif key == 'delimiter':
             if 'data_format' in form.keys() and form['data_format'] == 'html':
                 params_dict['delimiter'] = WRCCData.DELIMITERS['space']
@@ -2788,15 +2703,63 @@ def set_data_station_params(form):
         elif key in ['show_flags', 'show_observation_time']:
             params_dict[key] = val
         elif key == 'elements':
+            if isinstance(val, basestring):
+                el_list = val.replace(' ', '').split(',')
+            elif isinstance(val,list):
+                el_list = val
+            else:
+                el_list = val
+            params_dict[key] = val
+            idx = key_order.index('elements')
+            display_params_list[idx]=['Elements', '']
+            unit_dict ={};base_temp_dict = {};base_el_dict={}
+            params_dict['elements'] = ','.join(el_list)
+            params_dict['element_list'] = el_list
+            params_dict['elements_string'] = ','.join(el_list)
+            if len(el_list) == 1:
+                params_dict['element'] =  el_list[0]
+            elems_long = []
+            display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key], '']
+            #params_dict[key] = ''
+            for el_idx, el in enumerate(el_list):
+                if 'units' in form.keys() and form['units'] == 'metric':
+                    el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el,units='metric')
+                    unit_dict[el] = WRCCData.UNITS_METRIC[el_strip]
+                else:
+                    el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
+                    unit_dict[el] = WRCCData.UNITS_ENGLISH[el_strip]
+                base_el_dict[el] = el_strip
+                if not base_temp:
+                    BT=''
+                    base_temp_dict[el] = ''
+                else:
+                    BT = ', Base Temp: ' + str(base_temp)
+                    base_temp_dict[el] = str(base_temp)
+                display_params_list[idx][1]+= WRCCData.DISPLAY_PARAMS[el_strip] + BT
+                elems_long.append(WRCCData.DISPLAY_PARAMS[el_strip] + BT)
+            params_dict['unit_dict'] = unit_dict
+            params_dict['base_temp_dict'] = base_temp_dict
+            params_dict['base_el_dict'] = base_el_dict
+            params_dict['elems_long'] = elems_long
+
+            '''
+            elems_long = []
             params_dict[key] = val
             idx = key_order.index('elements')
             if isinstance(val, list):
                 el_str_long = ''
                 for v in val:
-                    el_strip, base_temp = WRCCUtils.get_el_and_base_temp(v)
-                    el_str_long+=WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + ', '
+                    if 'units' in form.keys() and form['units'] == 'metric':
+                        el_strip, base_temp = WRCCUtils.get_el_and_base_temp(v, units='metric')
+                    else:
+                        el_strip, base_temp = WRCCUtils.get_el_and_base_temp(v)
+                    if base_temp:
+                        el_str_long+=WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + '(' + str(base_temp) + '), '
+                    else:
+                        el_str_long+=WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + ', '
                 el_str_long.rstrip(', ')
                 display_params_list[idx]=['Elements',el_str_long]
+            '''
         else:
             params_dict[key] = val
     return display_params_list, params_dict
@@ -2953,7 +2916,10 @@ def set_user_params(form, app_name):
         user_params_dict['end_year'] = user_params_dict['end_date'][0:4]
     els_long = ''
     for idx,el in enumerate(el_list):
-        el_strip,base_temp = WRCCUtils.get_el_and_base_temp(el)
+        if 'units' in f.keys() and f['units'] == 'metric':
+            el_strip,base_temp = WRCCUtils.get_el_and_base_temp(el,units='metric')
+        else:
+            el_strip,base_temp = WRCCUtils.get_el_and_base_temp(el)
         if base_temp:
             els_long+=WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + ' Base Temp.: ' + str(base_temp) + ', '
             if app_name == 'sodxtrmts' and el_strip in ['hdd','cdd','gdd']:

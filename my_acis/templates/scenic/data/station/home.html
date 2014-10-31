@@ -162,9 +162,9 @@ $(function(){
             <option value="pcpn" {{checkbox_vals.elements_pcpn_selected}}>Precipitation</option>
             <option value="snow" {{checkbox_vals.elements_snow_selected}}>Snowfall</option>
             <option value="snwd" {{checkbox_vals.elements_snwd_selected}}>Snow Depth</option>
-            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Degree Days(65F/18C)</option>
-            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Degree Days(65F/18C)</option>
-            <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Degree Days(50F/10C)</option>
+            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Deg. Days(65F/18C)</option>
+            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Deg. Days(65F/18C)</option>
+            <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Deg. Days(50F/10C)</option>
             <option value="evap" {{checkbox_vals.elements_evap_selected}}>Pan Evaporation</option>
             <!--<option value="wdmv" {{checkbox_vals.elements_wdmv_selected}}>Wind Movement</option>-->
             </select>
@@ -427,8 +427,8 @@ $(function(){
         <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
         <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
         {%else%}
-        <input type="hidden" id="initial_lat" name="initial_lat" value='39.82'>
-        <input type="hidden" id="initial_lon" name="initial_lon" value='-98.57'>
+        <input type="hidden" id="initial_lat" name="initial_lat" value='34.5'>
+        <input type="hidden" id="initial_lon" name="initial_lon" value='-114.5'>
         {%endif%}
     </div>
 
@@ -558,30 +558,29 @@ $(function(){
     {%if display_params_list and not form_message%}
     <p class="message"><b>YOUR SEARCH PARAMETERS</b>:<br /><br />
     {%for param in display_params_list%}
-    {%if forloop.counter|divisibleby:"3" or forloop.last%}<br />
-    {%endif %}
-    {%if param.0 == "Elements"%}<br />{%endif%}
     {%if param.0 and param.1%}
     <b>{{param.0}}</b>:
-    {%if param.0 == "shape"%}
+    {%if param.0 == "Elements"%}
+    <br />
+    {%for el in params_dict.elems_long%}
+    {{el}}<br />
+    {%endfor%}
+    {%elif param.0 == "shape"%}
     <p class="message" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
     <div id="coords" style="display:none;">{{params.1}}</div>
     {%elif param.0 == "Station IDs"%}
     {%for ID in params_dict.station_list%}
     {{ID}}
     {%if not forloop.last%},{%endif%}
-    {%if forloop.counter0|divisibleby:4 and forloop.counter != 0%}
     <br />
-    {%endif%}
     {%endfor%}
     {%else%}
     {{param.1}}
     {%endif%}
     {%endif%}
     {%endfor%}
-    </p>
     {%endif%}
-    </div>
+    </p></div>
 
     <div class="results">
     {%if results%}
@@ -710,15 +709,15 @@ $(function(){
     <th>date{{params_dict.delimiter}}</th>
     {%if params_dict.show_flags == "T"%}
     {%if params_dict.show_observation_time == "T"%}
-    {%for el in element_list%}<th>{{el_name_dict|lookup:el}} ({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>Flag{{params_dict.delimiter}}</th><th>obs time (hr){{params_dict.delimiter}}</th>{%endfor%}
+    {%for el in element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>Flag{{params_dict.delimiter}}</th><th>obs time (hr){{params_dict.delimiter}}</th>{%endfor%}
     {%else%}
-    {%for el in  element_list%}<th>{{el_name_dict|lookup:el}} ({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>Flag{{params_dict.delimiter}}</th>{%endfor%}
+    {%for el in  element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>Flag{{params_dict.delimiter}}</th>{%endfor%}
     {%endif%}
     {%else%}
     {%if params_dict.show_observation_time == "T"%}
-    {%for el in element_list%}<th>{{el_name_dict|lookup:el}} ({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>obs time (hr){{params_dict.delimiter}}</th>{%endfor%}
+    {%for el in element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>obs time (hr){{params_dict.delimiter}}</th>{%endfor%}
     {%else%}
-    {%for el in element_list%}<th>{{el_name_dict|lookup:el}} ({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
+    {%for el in element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
     {%endif%}
     {%endif%}
     </th>
