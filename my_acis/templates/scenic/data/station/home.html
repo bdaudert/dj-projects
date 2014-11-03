@@ -134,7 +134,7 @@ $(function(){
         {%else%}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
         {%endif%}
-        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_value(this.value) & unset_large_request();"></td>
+        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_value(this.value) & unset_large_request() & update_maps(this);"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up" id="area-pop-up">
             <div id="ht_{{initial.select_stations_by}}"></div>

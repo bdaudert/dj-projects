@@ -723,6 +723,7 @@ function initialize_polygon_map(poly) {
         clearSelection();
         selectedShape = shape;
         shape.setEditable(true);
+        shape.setDraggable(true);
     }
     function deleteSelectedShape() {
         if (selectedShape) {
@@ -732,12 +733,20 @@ function initialize_polygon_map(poly) {
             drawingControl: true
         });
     }
-    function set_form_field(e){
-        //e is a map event, e.g. new polygon or circle was drawn
-        var newShape = e.overlay;
-        newShape.type = e.type;
-        if (e.type != google.maps.drawing.OverlayType.MARKER) {
-            if (e.type == google.maps.drawing.OverlayType.POLYGON || e.type == google.maps.drawing.OverlayType.POLYLINE) {
+    function set_form_field(ev){
+        //ev is a map event, e.g. new polygon or circle was drawn
+        /*
+        try {
+            var newShape = ev.overlay;
+        }
+        catch(e) {
+            var newShape = ev;
+        }
+        */
+        var newShape = ev;
+        newShape.type = ev.type;
+        if (ev.type != google.maps.drawing.OverlayType.MARKER) {
+            if (ev.type == google.maps.drawing.OverlayType.POLYGON || ev.type == google.maps.drawing.OverlayType.POLYLINE || ev.type == 'polygon') {
                 var polygon = newShape.getPath();
                 polCoords = [];
                 for (var j = 0;j<polygon.length;j++) {
@@ -748,7 +757,7 @@ function initialize_polygon_map(poly) {
                 }
                 document.getElementById("shape").value = polCoords;
             }
-            if (e.type == google.maps.drawing.OverlayType.RECTANGLE){
+            if (ev.type == google.maps.drawing.OverlayType.RECTANGLE){
                 var bounds=newShape.getBounds();
                 //set new bounding box
                 var w = precise_round(bounds.getSouthWest().lng(),2);
@@ -757,7 +766,7 @@ function initialize_polygon_map(poly) {
                 var n = precise_round(bounds.getNorthEast().lat(),2);
                 document.getElementById("shape").value = w + ',' + s + ',' + e + ',' + n;
             }
-            if (e.type == google.maps.drawing.OverlayType.CIRCLE){
+            if (ev.type == google.maps.drawing.OverlayType.CIRCLE){
                 var center = newShape.getCenter();
                 var radius = newShape.getRadius();
                 document.getElementById("shape").value = precise_round(center.lng(),2) + ',' + precise_round(center.lat(),2) + ',' + precise_round(radius,2);
@@ -769,45 +778,59 @@ function initialize_polygon_map(poly) {
         }
     }
 
-    function set_event_handlers(e){
-        var newShape = e.overlay;
-        newShape.type = e.type;
-        if (e.type == google.maps.drawing.OverlayType.POLYGON || e.type == google.maps.drawing.OverlayType.POLYLINE) {
+    function set_event_handlers(ev){
+        try {
+            var newShape = ev.overlay;
+        }
+        catch(e) {
+            var newShape = ev;
+        }
+        newShape.type = ev.type;
+        //If a vertex is right clicked, remove it from polygon and update form
+        newShape.addListener('rightclick', function(mev){
+            if(mev.vertex != null && this.getPath().getLength() > 3){
+                this.getPath().removeAt(mev.vertex);
+            }
+        });
+        //If a point is dragged, update the form fiels
+        if (ev.type == google.maps.drawing.OverlayType.POLYGON || ev.type == google.maps.drawing.OverlayType.POLYLINE) {
             newShape.getPaths().forEach(function(path, index){
-                google.maps.event.addListener(path, 'insert_at', function(e){
+                /*
+                google.maps.event.addListener(path, 'insert_at', function(){
                     // New point
                     set_form_field(e);
-                });
-                google.maps.event.addListener(path, 'remove_at', function(e){
+                */
+                google.maps.event.addListener(path, 'remove_at', function(){
                     // Point was removed
-                    set_form_field(e);
+                    set_form_field(ev);
                 });
-                google.maps.event.addListener(path, 'set_at', function(e){
+                google.maps.event.addListener(path, 'set_at', function(){
                     // Point was moved
-                    set_form_field(e);
+                    set_form_field(ev);
                 });
             });
         }
-        if (e.type == google.maps.drawing.OverlayType.RECTANGLE){
-            google.maps.event.addListener(newShape, 'bounds_changed', function(e){
+        if (ev.type == google.maps.drawing.OverlayType.RECTANGLE){
+            google.maps.event.addListener(newShape, 'bounds_changed', function(){
                 // Polygon was dragged
-                set_form_field(e);
+                set_form_field(ev);
             });
         }
-        if (e.type == google.maps.drawing.OverlayType.CIRCLE){
-            google.maps.event.addListener(newShape, 'radius_changed', function(e){
+        if (ev.type == google.maps.drawing.OverlayType.CIRCLE){
+            google.maps.event.addListener(newShape, 'radius_changed', function(){
                 // Polygon was dragged
-                set_form_field(e);
+                set_form_field(ev);
             });
-            google.maps.event.addListener(newShape, 'center_changed', function(e){
+            google.maps.event.addListener(newShape, 'center_changed', function(){
                 // Polygon was dragged
-                set_form_field(e);
+                set_form_field(ev);
             });
         }
-        /*
-        if (e.type == google.maps.drawing.OverlayType.MARKER) {
+        if (ev.type == google.maps.drawing.OverlayType.MARKER) {
+            google.maps.event.addListener(newShape, 'dragend', function () {
+                set_form_field(ev);
+            });
         }
-        */
     }
     //MAP
     var myLatlng = new google.maps.LatLng(parseFloat(poly_list[1]),parseFloat(poly_list[0]));
@@ -824,17 +847,44 @@ function initialize_polygon_map(poly) {
       editable: true,
       draggable:true,
       fillColor: "#1E90FF",
-      strokeColor: "#1E90FF"
+      strokeColor: "#1E90FF",
     };
     var mkrOptions = {draggable: true};
     //Set initial polygon
     var poly_initial = [];
     for (var idx=0;idx < poly_list.length ; idx+=2 ){
         poly_initial.push(new google.maps.LatLng(parseFloat(poly_list[idx+1]),parseFloat(poly_list[idx])))
+    }
+    var shape_init_opts = {
+        path:poly_initial,
+        editable: false,
+        draggable:false,
+        type:google.maps.drawing.OverlayType.POLYGON    
     } 
-    var selectedShape = new google.maps.Polygon($.extend({},polyOptions,{path:poly_initial}));
-    selectedShape.setMap(map);
-    setSelection(selectedShape);
+    var shape_init = new google.maps.Polygon($.extend({},polyOptions,shape_init_opts));
+    shape_init.setMap(map);
+    setSelection(shape_init);
+    google.maps.event.addListener(shape_init, "dragend", function(){
+        var len=selectedShape.getPath().getLength();
+        var htmlStr = '';
+        for (var i=0; i<len; i++) {
+            htmlStr += shape_init.getPath().getAt(i).toUrlValue(4);
+            if (i < len -1 ) {
+                htmlStr += ',';
+            }
+        }
+        document.getElementById('shape').value = htmlStr;
+    });
+    shape_init.getPaths().forEach(function(path, index){
+        google.maps.event.addListener(path, 'remove_at', function(){
+            // Point was removed
+            set_form_field(shape_init);
+        });
+        google.maps.event.addListener(path, 'set_at', function(){
+            // Point was moved
+            set_form_field(shape_init);
+        });
+    });
     // Creates a drawing manager attached to the map that allows the user to draw
     // markers, lines, and shapes.
     drawingManager = new google.maps.drawing.DrawingManager({
@@ -867,62 +917,12 @@ function initialize_polygon_map(poly) {
         drawingManager.setDrawingMode(null);
         set_form_field(e);
         set_event_handlers(e)
-        google.maps.event.addListener(newShape, 'click', function() {
-            setSelection(newShape);
-        });
-        /*
-        newShape.type = e.type;
-        if (e.type != google.maps.drawing.OverlayType.MARKER) {
-            // Switch back to non-drawing mode after drawing a shape.
-            drawingManager.setDrawingMode(null);
-
-            // Add an event listener that selects the newly-drawn shape when the user
-            // mouses down on it.
-            if (e.type == google.maps.drawing.OverlayType.POLYGON || e.type == google.maps.drawing.OverlayType.POLYLINE) {
-                var polygon = newShape.getPath();
-                polCoords = [];
-                for (var j = 0;j<polygon.length;j++) {
-                    var lat = precise_round(polygon.getAt(j).lat(),2);
-                    var lon = precise_round(polygon.getAt(j).lng(),2);
-                    polCoords.push(lon);
-                    polCoords.push(lat);
-                }
-                document.getElementById("shape").value = polCoords;
-            }
-            if (e.type == google.maps.drawing.OverlayType.RECTANGLE){
-                var bounds=newShape.getBounds();
-                //set new bounding box
-                var w = precise_round(bounds.getSouthWest().lng(),2);
-                var s = precise_round(bounds.getSouthWest().lat(),2);
-                var e = precise_round(bounds.getNorthEast().lng(),2);
-                var n = precise_round(bounds.getNorthEast().lat(),2);
-                document.getElementById("shape").value = w + ',' + s + ',' + e + ',' + n;
-            }
-            if (e.type == google.maps.drawing.OverlayType.CIRCLE){
-                var center = newShape.getCenter();
-                var radius = newShape.getRadius();
-                document.getElementById("shape").value = precise_round(center.lng(),2) + ',' + precise_round(center.lat(),2) + ',' + precise_round(radius,2);
-            }
-        }
-        else{ //MARKER
-            pos = newShape.position;
-            document.getElementById("shape").value = precise_round(pos.lng(),2) + ',' + precise_round(pos.lat(),2);
-        }
-        // Add an event listener that selects the newly-drawn shape when the user
-        // mouses clicks on it.
-        google.maps.event.addListener(newShape, 'click', function() {
-            setSelection(newShape);
-        });
-        */
+        setSelection(newShape);
     });
 
     //General event handlers
-    google.maps.event.addListener(selectedShape, 'dragend', function(e){
-        // Polygon was dragged
-        set_form_field(e);
-    });
     google.maps.event.addListener(drawingManager, 'drawingmode_changed', deleteSelectedShape);
-    google.maps.event.addListener(map,'click',clearSelection);
+    //google.maps.event.addListener(map,'click',clearSelection);
     google.maps.event.addDomListener(document.getElementById('delete-button'), 'click', deleteSelectedShape);
 }
 

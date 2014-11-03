@@ -137,7 +137,6 @@ function reset_area(){
     */
     var timesClicked = $(this).attr('times-clicked') || 0;
     $(this).attr('times-clicked', ++timesClicked);
-    alert(timesClicked);
     if (timesClicked == 1) {
         set_station_grid_select('area',this.parent);
     }
@@ -917,7 +916,9 @@ function set_station_grid_select(row_id,node){
     cell0.innerHTML= lv.label + ': ';
     //cell2 input
     var cell1 = cell0.nextSibling.nextSibling;
-    cell1.innerHTML= '<input type="text" id="' + node.value + '" name="'+ node.value +'" value="' +  lv.value + '" list="' + lv.autofill_list +'">'
+    cell1.innerHTML= '<input type="text" id="' + node.value + '" name="'+ 
+    node.value +'" value="' +  lv.value + '" list="' + lv.autofill_list + '"' +
+    ' onchange="update_value(this.value) & unset_large_request() & update_maps(this);" >';
     pop_id = document.getElementById('area-pop-up');
     pop_id.innerHTML='';
     var div = document.createElement('div');
