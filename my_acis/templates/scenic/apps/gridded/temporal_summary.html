@@ -66,7 +66,7 @@ $(function(){
         <tr id="area" valign="top">
         {%endif%}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
-        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
+        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_maps(this)"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up" id="area-pop-up">
             <div id="ht_{{initial.select_grid_by}}"></div>
@@ -417,11 +417,6 @@ $(function(){
     <div id="BBoxMap" style="display:block;">
     {%else%}
     <div id="BBoxMap" style="display:none;">
-    {%endif%}
-    {%if bbox %}
-    <input type="hidden" id="bbox" name="bbox" value={{bbox}}>
-    {%else%}
-    <input type="hidden" id="bbox" name="bbox" value='-115,34,-114,35'>
     {%endif%}
     <div id="map-bbox"></div>
     {%if initial.select_grid_by == "bounding_box" and not hide_bbox_map%}

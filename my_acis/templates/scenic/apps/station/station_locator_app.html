@@ -148,13 +148,24 @@ $(function(){
     <input type="submit" value="Start Over" onclick="window.location='{{STATION_FINDER_URL}}'"/>
 </td>
 <td valign="top" align="center" width="660px">
+    <!-- Form Errors-->
+    {%if form_error%}
+    <p class="error" align="center">ERROR: Please correct the form error(s) highlighted in red!</p>
+    {%endif%}
+
     <div class="results">
+    {%if params_json%}
+    {%if not error and not form_error%}
+    <p onclick="append_station_ids('{{STATION_DATA_URL}}?params_json={{params_json}}')" target="_blank" align="center"><font size="4" color="blue"><b><u>Obtain data for all stations displayed</u></b></font></p>
+    {%endif%}
+    {%endif%}
+    <!--
     {%if station_ids_for_datafind and params_dict%}
-    <!--Link to data portal-->
     {%if not error and not form_error%}
     <a align="center" target="_blank" href="{{STATION_DATA_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&data_format=html&units=english&date_format=dash" class="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
-    {%endif%}<!--end if params_dict.select_stations_by == "station_ids"-->
-    {%endif%}<!--end if station_ids_for_datafind-->
+    {%endif%}
+    {%endif%}
+    -->
     </div>
 </td>
 </table>
@@ -186,7 +197,7 @@ $(function(){
     </td>
     <tr id="area" valign="bottom">
     <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
-    <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}"></td>
+    <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange"update_maps(this);"></td>
     <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up" id="area-pop-up">
         <div id="ht_{{initial.select_stations_by}}"></div>
@@ -284,7 +295,7 @@ $(function(){
     </table>
     <input style="margin:10px" type="submit" value="Show me stations" name="formData"/>
     <input type="hidden" name="checked_categories" id="checked_categories" value="all">
-    <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
+    <input type="hidden" id="overlay_state" value="{{initial.overlay_state}}">
     </form>
 </div><!--end form data div-->
 
@@ -307,8 +318,10 @@ $(function(){
     </script>
 
     <!--Link to data portal-->
+    <p onclick="append_station_ids('{{STATION_DATA_URL}}?params_json={{params_json}}')" target="_blank" align="center"><font size="4" color="blue"><b><u>Obtain data for all stations displayed</u></b></font></p>
+    <!--
     <a align="center" target="_blank" href="{{STATION_DATA_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&data_format=html&units=english&date_format=dash" class="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
-
+    -->
 
     
     <!--Station List-->
@@ -435,16 +448,14 @@ $(function(){
     {%endif%} 
     {%endif%}
 
-
     <!--Errors-->
+    <!-- Form Errors-->
     {%if form_error%}
-    <p class="error" align="center">ERROR: Please correct the form error(s) highlighted in red!</p>
     {%for key, val in form_error.items%}
     <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
     {%endfor%}
     {%endif%}
 
-    <br />
     {%if error%}
     <div style="padding:5px;position:relative;">
     <p align="left"><font color="red">{{error}}</font></p>

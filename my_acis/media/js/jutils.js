@@ -1,10 +1,8 @@
-/*
-function set_href_to_datafind(anchor){
-    var href_pre = anchor.href;
-    stn_ids = document.getElementById('station_ids_str').value;
-    anchor.href = href_pre + '&station_ids=' + stn_ids;
+String.prototype.rsplit = function(sep, maxsplit) {
+    //js equivalent to python rspilt
+    var split = this.split(sep);
+    return maxsplit ? [ split.slice(0, -maxsplit).join(sep) ].concat(split.slice(-maxsplit)) : split;
 }
-*/
 
 function poll(url) {
     setTimeout(function () {
@@ -68,6 +66,14 @@ $(function() {
         return dataWindow;
     });
 });
+
+function append_station_ids(href) {
+    var stn_ids = document.getElementById('station_ids_str').value;
+    href+='&station_ids=' + stn_ids;
+    var dataWindow = window.open(href,'_blank');
+    return dataWindow;
+    
+}
 
 function populateFormField(form_name, form_id, label, value){
     //var formFields = document.getElementById(form_name).getElementsByTagName('input');

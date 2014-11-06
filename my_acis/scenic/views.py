@@ -257,16 +257,26 @@ def data_station(request):
     context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
 
 
-    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and ('elements' in request.GET or 'params_json' in  request.GET)):
+        params_json = request.GET.get('params_json',None)
+        station_ids = request.GET.get('station_ids',None)
         if request.method == 'GET':
+            if params_json:
+                #We are linking from station_finder
+                form_initial = WRCCUtils.load_json_data_from_file(settings.TEMP_DIR + params_json)
+            else:
+                form_initial = set_form(request,clean=False)
             context['form_message'] = True
-            form_initial = set_form(request,clean=False)
-            user_params_list, user_params_dict = set_user_params(form_initial, 'data_station')
-            context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
-        #if 'formData' in request.POST:
-        #Turn request object into python dict
-        form = set_form(request,clean=False)
-        form_cleaned = set_form(request)
+        if params_json:
+            if station_ids:
+                form_initial['station_ids'] = station_ids
+            form = set_form(form_initial,clean=False)
+            form_cleaned = set_form(form_initial)
+        else:
+            form = set_form(request,clean=False)
+            form_cleaned = set_form(request)
+        user_params_list, user_params_dict = set_user_params(form_initial, 'data_station')
+        context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
         #Back Button/download files issue fix:
         #if select_stations_by none, find it
         if not 'select_stations_by' in form_cleaned.keys() or form_cleaned['select_stations_by'] not in form_cleaned.keys():
@@ -283,16 +293,20 @@ def data_station(request):
         elif len(form_cleaned['elements'].replace(' ','').split(',')) >= 1 and 'station_id' in form.keys():
             context['link_to_mon_aves'] = True
         #Set params for external links
-        monthly_aves_params_list, monthly_aves_params_dict = set_user_params(form, 'monthly_aves')
-        sodsumm_params_list, sodsumm_params_dict = set_user_params(form, 'sodsumm')
-        if 'location' in form_cleaned.keys() or 'station_id' in form_cleaned.keys():
+        if 'station_id' in form.keys():
+            monthly_aves_params_list, monthly_aves_params_dict = set_user_params(form, 'monthly_aves')
+            sodsumm_params_list, sodsumm_params_dict = set_user_params(form, 'sodsumm')
             sodxtrmts_params_list, sodxtrmts_params_dict = set_user_params(form, 'sodxtrmts')
             context['sodsumm_params_list'] = sodsumm_params_list
-            context['sodxtrmts_params_dict']=sodxtrmts_params_dict
-        context['monthly_aves_params_list'] = monthly_aves_params_list
-        context['monthly_aves_params_dict']=monthly_aves_params_dict
-        context['sodsumm_params_list'] = sodsumm_params_list
-        context['sodsumm_params_dict']=sodsumm_params_dict
+            context['sodsumm_params_dict']=sodsumm_params_dict
+            context['monthly_aves_params_list'] = monthly_aves_params_list
+            context['monthly_aves_params_dict']= monthly_aves_params_dict
+            context['sodxtrmts_params_dict'] = sodxtrmts_params_dict
+            context['sodxtrmts_params_list']= sodxtrmts_params_list
+        if 'location' in form_cleaned.keys():
+            sodxtrmts_params_list, sodxtrmts_params_dict = set_user_params(form, 'sodxtrmts')
+            context['sodxtrmts_params_dict'] = sodxtrmts_params_dict
+            context['sodxtrmts_params_list']= sodxtrmts_params_list
         #Set element_list and unit_dict context for htl loops
         if not 'elements' in form.keys():
             context['element_list'] = []
@@ -447,6 +461,7 @@ def data_station(request):
             #Write results to json file for later download
             json_dict = {
                 'params_dict':params_dict,
+                'display_params_list':display_params_list,
                 'resultsdict':resultsdict
             }
             time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
@@ -1264,7 +1279,6 @@ def station_locator_app(request):
     }
     #Set up initial map (NV stations)
     #context['station_json'] = 'NV_stn.json'
-    #context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/NV_stn.json')
     initial,checkbox_vals = set_station_locator_initial(request)
     context['initial'] = initial;context['checkbox_vals']=checkbox_vals
     #Set up maps if needed
@@ -1275,19 +1289,30 @@ def station_locator_app(request):
     context['kml_file_path'] = create_kml_file(initial['select_stations_by'], 'nv')
     params_list, params_dict = set_user_params(initial, 'station_locator_app')
     context['params_list'] = params_list;context['params_dict'] = params_dict
-    #Generate initial map
-    by_type = WRCCData.ACIS_TO_SEARCH_AREA['state']
-    val = 'nv'
-    date_range = [initial['start_date'],initial['end_date']]
-    el_date_constraints = initial['elements_constraints'] + '_' + initial['dates_constraints']
-    station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=['1','2','4'],time_range=date_range, constraints=el_date_constraints)
+    if request.method == "GET":
+        #Generate initial map
+        by_type = WRCCData.ACIS_TO_SEARCH_AREA['state']
+        val = 'nv'
+        date_range = [initial['start_date'],initial['end_date']]
+        el_date_constraints = initial['elements_constraints'] + '_' + initial['dates_constraints']
+        station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=['1','2','4'],time_range=date_range, constraints=el_date_constraints)
 
-    context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
-    if 'error' in station_json.keys():
-        context['error'] = station_json['error']
-    if 'stations' not in station_json.keys() or  station_json['stations'] == []:
-        context['error'] = "No stations found for these search parameters."
-    context['station_json'] = f_name
+        #context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
+        #Write json file for link to data lister
+        json_dict ={};
+        for key,val in params_dict.iteritems():
+            json_dict[key] = val
+        json_dict['select_stations_by'] = 'station_ids'
+        json_dict['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        json_file_name = '%s_params.json' %(time_stamp)
+        WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_file_name, json_dict)
+        context['params_json'] = json_file_name
+        if 'error' in station_json.keys():
+            context['error'] = station_json['error']
+        if 'stations' not in station_json.keys() or  station_json['stations'] == []:
+            context['error'] = "No stations found for these search parameters."
+        context['station_json'] = f_name
 
     if 'formData' in request.POST:
         form_initial = set_form(request,clean=False)
@@ -1328,7 +1353,16 @@ def station_locator_app(request):
         date_range = [form_cleaned['start_date'],form_cleaned['end_date']]
         el_date_constraints = form_cleaned['elements_constraints'] + '_' + form_cleaned['dates_constraints']
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=el_date_constraints)
-        context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
+        #context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
+        json_dict ={};
+        for key,val in params_dict.iteritems():
+            json_dict[key] = val
+        json_dict['select_stations_by'] = 'station_ids'
+        json_dict['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        json_file_name = '%s_params.json' %(time_stamp)
+        WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_file_name, json_dict)
+        context['params_json'] = json_file_name
         if 'error' in station_json.keys():
             context['error'] = station_json['error']
         if 'stations' not in station_json.keys() or  station_json['stations'] == []:

@@ -675,7 +675,7 @@ function show_bbox_map() {
         bb_map_div.appendChild(m);
     }
     //Generate Map
-    initialize_bbox_map('data_gridded');
+    initialize_bbox_map();
 }
 
 function hide_bbox_map(){
@@ -775,7 +775,7 @@ function set_area_defaults(area_type){
     }
     if (area_type == 'county_warning_area'){
         lv.label ='County Warning Area';
-        lv.value ='Las Vegas  NV, VEF';
+        lv.value ='Las Vegas, NV, VEF';
     }
     if (area_type == 'basin'){
         lv.label ='Basin';
@@ -853,16 +853,81 @@ function update_maps(area_field){
     or types in area_input field
     */
     var id = area_field.id;
-    /*
-    if (id == 'basin' || id == 'county_warning_area' || id == 'county' || id == 'climate_division'){
-      //Generate new kml file and regenerate the map  
-    }
-    */
+    var val = area_field.value;
     if (id == 'shape'){
-        initialize_polygon_map(area_field.value);
+        initialize_polygon_map(val);
     }
-    if (id == 'location'){
-        initialize_grid_point_map(area_field.value);
+    else if (id == 'location'){
+        initialize_grid_point_map(val);
+    }
+    else if (id == 'bounding_box'){
+        initialize_bbox_map(val);
+    }
+    else if (id == 'county' || id == 'county_warning_area' || id == 'climate_division' || id == 'basin'){ 
+        var json_file = '/csc/media/json/US_' + id + '.json';
+        //remove id to just get the name
+        var name = val.split(',');
+        name.pop();
+        name = name.join(',');
+        $.getJSON(json_file, function(metadata) {
+            for (var i = 0,item; item = metadata[i]; i++){
+                if (item.name != name){
+                    continue
+                }
+                else {
+                    //Generate polygon overlay
+                    var coords = item.geojson.coordinates[0][0];
+                    var poly_path = [];
+                    for (var j=0,ll;ll=coords[j]; j++){
+                        poly_path.push(new google.maps.LatLng(ll[1],ll[0]));
+                    }
+                    var poly = new google.maps.Polygon({
+                        paths: poly_path,
+                        strokeColor: '#0000FF',
+                        strokeOpacity: 0.8,
+                        strokeWeight: 3,
+                        coords:poly_path,
+                        area_type: id,
+                        name: name,
+                        id: area_field.value
+                    });
+                    //Update overlay state
+                    var state = 'none';
+                    try {
+                       var state = item.state.toLowerCase();
+                    }
+                    catch(e){
+                        //Try to find state from name
+                        var state = name.split(', ');
+                        if (state.length == '1'){
+                            state = name.split(',');
+                        }
+                        try {
+                            state = state[1].toLowerCase();
+                        }
+                        catch(e){
+                            state = 'none';
+                        }
+                    }
+                    if (state != 'none' && id != 'basin'){
+                        document.getElementById('overlay_state').value = state 
+                        document.querySelector('#overlay_state [value="' + state + '"]').selected = true;
+                    }
+                    else {
+                        ols = document.getElementsByName('overlay_state');
+                        for (idx =0;idx < ols.length;idx++){
+                            try {
+                                ols[idx].selectedIndex = "-1";
+                            }
+                            catch(e){}
+                        }
+                    }
+                    //Update new map
+                    initialize_map_overlay('map-overlay', poly); 
+                    break
+                }
+            }
+        });
     }
 }
 

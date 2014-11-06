@@ -537,11 +537,7 @@ $(function(){
     YOUR SEARCH PARAMETERS:<br />
     {%for key_val in user_params_list%}
     <b>{{key_val.0}}</b>:
-    {%if key_val.0 == "Station IDs"%}
-    <div id="stn_list"></div>
-    {%else%}
     {{key_val.1}}<br />
-    {%endif%}
     {%endfor%}
     </p>
     </div>
@@ -575,7 +571,7 @@ $(function(){
     <br />
     {%endfor%}
     {%else%}
-    {{param.1}}
+    {{param.1}}<br />
     {%endif%}
     {%endif%}
     {%endfor%}
@@ -706,18 +702,18 @@ $(function(){
     <div class="error"> {{results.stn_errors|lookup:stn}}</div><br />
     {%if not json%}
     <table border="1">
-    <th>date{{params_dict.delimiter}}</th>
+    <th>date</th>
     {%if params_dict.show_flags == "T"%}
     {%if params_dict.show_observation_time == "T"%}
-    {%for el in element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>Flag{{params_dict.delimiter}}</th><th>obs time (hr){{params_dict.delimiter}}</th>{%endfor%}
+    {%for el in element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{unit_dict|lookup:el}})</th><th>Flag</th><th>obs time (hr)</th>{%endfor%}
     {%else%}
-    {%for el in  element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>Flag{{params_dict.delimiter}}</th>{%endfor%}
+    {%for el in  element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{unit_dict|lookup:el}})</th><th>Flag</th>{%endfor%}
     {%endif%}
     {%else%}
     {%if params_dict.show_observation_time == "T"%}
-    {%for el in element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th><th>obs time (hr){{params_dict.delimiter}}</th>{%endfor%}
+    {%for el in element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{unit_dict|lookup:el}})</th><th>obs time (hr)</th>{%endfor%}
     {%else%}
-    {%for el in element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
+    {%for el in element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{unit_dict|lookup:el}})</th>{%endfor%}
     {%endif%}
     {%endif%}
     </th>
@@ -726,26 +722,26 @@ $(function(){
     {%for el_val in date_vals%}
 
     {%if forloop.first %}
-    <td align="right">{{el_val}}{{params_dict.delimiter}}</td>
+    <td align="right">{{el_val}}</td>
     {%else%}
     {%if params_dict.show_flags == "T"%}
     {%if params_dict.show_observation_time == "T"%}
-    <td align="right">{{el_val|lookup:0}}{{params_dict.delimiter}}</td><td align="left">{{el_val|lookup:1}}{{params_dict.delimiter}}</td><td align="left">{{el_val|lookup:2}}{{params_dict.delimiter}}</td>
+    <td align="right">{{el_val|lookup:0}}</td><td align="left">{{el_val|lookup:1}}</td><td align="left">{{el_val|lookup:2}}</td>
     {%else%}
-    <td align="right">{{el_val|lookup:0}}{{params_dict.delimiter}}</td><td align="left">{{el_val|lookup:1}}{{params_dict.delimiter}}</td>
+    <td align="right">{{el_val|lookup:0}}</td><td align="left">{{el_val|lookup:1}}</td>
     {%endif%}
     {%else%}
     {%if params_dict.show_observation_time == "T"%}
     {%if el_val|lookup:1 == "T"%}
-    <td align="right">T{{params_dict.delimiter}}</td><td align="left">{{el_val|lookup:2}}{{params_dict.delimiter}}</td>
+    <td align="right">T</td><td align="left">{{el_val|lookup:2}}</td>
     {%else%}
-    <td align="right">{{el_val|lookup:0}}{{params_dict.delimiter}}</td><td align="left">{{el_val|lookup:2}}{{params_dict.delimiter}}</td>
+    <td align="right">{{el_val|lookup:0}}</td><td align="left">{{el_val|lookup:2}}</td>
     {%endif%}
     {%else%}
     {%if el_val|lookup:1 == "T"%}
-    <td align="right">T{{params_dict.delimiter}}</td>
+    <td align="right">T</td>
     {%else%}
-    <td align="right">{{el_val|lookup:0}}{{params_dict.delimiter}}</td>
+    <td align="right">{{el_val|lookup:0}}</td>
     {%endif%}
     {%endif%}
     {%endif%}

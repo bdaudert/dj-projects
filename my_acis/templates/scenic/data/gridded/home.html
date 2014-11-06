@@ -757,17 +757,17 @@ $("#Docu_grids").load("{{HTML_URL}}/Docu_grids.html");
     <p><b>DATA</b>:</p>
     <table border="1">
     {%if initial.data_summary == "temporal"%}    
-    <th>date range{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev ({{elev_unit}}){{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
+    <th>date range</th><th>lat</th><th>lon</th><th>elev ({{elev_unit}})</th>{%for el in params_dict.element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{params_dict.unit_dict|lookup:el}})</th>{%endfor%}
     {%elif initial.data_summary == "spatial"%}
-    <th>date {{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
+    <th>date</th>{%for el in params_dict.element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{params_dict.unit_dict|lookup:el}})</th>{%endfor%}
     {%else%}
-    <th>date{{params_dict.delimiter}}</th><th>lat{{params_dict.delimiter}}</th><th>lon{{params_dict.delimiter}}</th><th>elev ({{elev_unit}}){{params_dict.delimiter}}</th>{%for el in params_dict.element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{params_dict.unit_dict|lookup:el}}){{params_dict.delimiter}}</th>{%endfor%}
+    <th>date</th><th>lat</th><th>lon</th><th>elev ({{elev_unit}})</th>{%for el in params_dict.element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{params_dict.unit_dict|lookup:el}})</th>{%endfor%}
     {%endif%}
     {%for row in results%}
     {%if row.0%}
     <tr>
     {%for val  in row%}
-    <td align="right">{{val}}{{params_dict.delimiter}}</td>
+    <td align="right">{{val}}</td>
     {%endfor%}
     </tr>
     {%endif%}
