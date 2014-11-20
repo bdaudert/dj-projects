@@ -326,9 +326,24 @@ function initialize_station_finder() {
             }
             //Remove trailing comma and set html element
             if (station_ids_str){
-                station_ids_str = station_ids_str.substring(0,station_ids_str.length - 1);
+                station_ids_str = station_ids_str.substring(0,station_ids_str.length - 2);
             }
             document.getElementById('station_ids_str').value = station_ids_str;
+            /*
+            //Check  if we should link to data lister (if station_ids_str contains less than 6 stations)
+            var stn_list = station_ids_str.split(',');
+            var links = document.getElementsByClassName('link_to_datafind');
+            if (stn_list.length > 5){
+                for (i=0;i<links.length;i++) {
+                    links[i].style.display = 'none';
+                }
+            }
+            else {
+                for (i=0;i<links.length;i++) {
+                    links[i].style.display = 'block';
+                }                
+            }
+            */
         });  
         // == shows all markers of a particular category, and ensures the checkbox is checked and write station_list==
         show = function(category) {

@@ -156,16 +156,11 @@ $(function(){
     <div class="results">
     {%if params_json%}
     {%if not error and not form_error%}
-    <p onclick="append_station_ids('{{STATION_DATA_URL}}?params_json={{params_json}}')" target="_blank" align="center"><font size="4" color="blue"><b><u>Obtain data for all stations displayed</u></b></font></p>
-    {%endif%}
-    {%endif%}
+    <a align="center" target="_blank" href="{{STATION_DATA_URL}}?params_json={{params_json}}" class="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
     <!--
-    {%if station_ids_for_datafind and params_dict%}
-    {%if not error and not form_error%}
-    <a align="center" target="_blank" href="{{STATION_DATA_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&data_format=html&units=english&date_format=dash" class="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
+    <p onclick="append_station_ids('{{STATION_DATA_URL}}?params_json={{params_json}}')" target="_blank" align="center"><font size="4" color="blue"><b><u>Obtain data for all stations displayed</u></b></font></p> -->
     {%endif%}
     {%endif%}
-    -->
     </div>
 </td>
 </table>
@@ -318,11 +313,9 @@ $(function(){
     </script>
 
     <!--Link to data portal-->
-    <p onclick="append_station_ids('{{STATION_DATA_URL}}?params_json={{params_json}}')" target="_blank" align="center"><font size="4" color="blue"><b><u>Obtain data for all stations displayed</u></b></font></p>
+    <a align="center" target="_blank" href="{{STATION_DATA_URL}}?params_json={{params_json}}" class="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a> 
     <!--
-    <a align="center" target="_blank" href="{{STATION_DATA_URL}}?&select_stations_by=station_ids&start_date={{params_dict.start_date}}&end_date={{params_dict.end_date}}&elements={{params_dict.elements}}&data_format=html&units=english&date_format=dash" class="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
-    -->
-
+    <p onclick="append_station_ids('{{STATION_DATA_URL}}?params_json={{params_json}}')" target="_blank" align="center"><font size="4" color="blue"><b><u>Obtain data for all stations displayed</u></b></font></p>-->
     
     <!--Station List-->
     <div class="station_list">

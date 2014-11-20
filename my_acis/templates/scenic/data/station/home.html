@@ -82,7 +82,6 @@ $(function(){
 });
 </script>
 
-
 <table>
 <td valign="bottom" width="300px">
     <input type="submit" value="Start Over" onclick="window.location='{{STATION_DATA_URL}}'"/>
@@ -534,6 +533,9 @@ $(function(){
     <div class="results" id="user_params_list">
     <p class="message">
     Additional format changes can be made using the form on the left!<br />
+    {%if form_message_sf %}
+    Please check your parameters and click on "Get Data" to obtain your data.<br />
+    {%endif%}
     YOUR SEARCH PARAMETERS:<br />
     {%for key_val in user_params_list%}
     <b>{{key_val.0}}</b>:

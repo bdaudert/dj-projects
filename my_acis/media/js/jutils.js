@@ -4,19 +4,16 @@ String.prototype.rsplit = function(sep, maxsplit) {
     return maxsplit ? [ split.slice(0, -maxsplit).join(sep) ].concat(split.slice(-maxsplit)) : split;
 }
 
-function poll(url) {
-    setTimeout(function () {
-        $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            url: url,
-            success: function (data) {
-                //MyNamespace.myFunction(data); //DO ANY PROCESS HERE
-                show_loading()
-            },
-            complete: poll
-        });
-    }, 5000);
+function poll(url_str) {
+    show_loading()
+    $.ajax({
+        url:url_str, 
+        success: function(data){
+            window.open(url_str);
+        },
+        dataType: "json"
+    });
+    setTimeout(poll(url_str), 5000);
 }
 
 function form_change(formID){ 
@@ -61,7 +58,7 @@ $(function() {
         dataWindow = window.open(href_pre,'_blank');
         dataWindow.onload = function(){
             dataWindow.document.getElementById('station_ids').value = stn_ids;
-            dataWindow.document.getElementById('stn_list').innerHTML = stn_ids_html;
+            //dataWindow.document.getElementById('stn_list').innerHTML = stn_ids_html;
         }
         return dataWindow;
     });

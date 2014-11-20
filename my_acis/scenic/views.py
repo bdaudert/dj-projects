@@ -238,26 +238,51 @@ def download(request):
                 context['response'] = response
     return render_to_response('scenic/download.html', context, context_instance=RequestContext(request))
 
+def data_station_temp(request):
+    context = {
+        'title': 'Data download in progess...',
+    }
+    if request.method == 'GET':
+        context['params_json'] = request.GET.get('params_json',None)
+        context['station_ids'] = request.GET.get('station_ids',None)
+    return render_to_response('scenic/data/station/data_temp.html', context, context_instance=RequestContext(request))
+
 def data_station(request):
     context = {
         'title': 'Historic Station Data Lister (Daily)',
     }
-    initial, checkbox_vals = set_data_station_initial(request)
-    context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-    #Set up maps if needed
-    context['host'] = settings.HOST
-    context['area_type'] = initial['select_stations_by']
-    kml_file_path = create_kml_file('basin', 'NV')
-    kml_file_path = create_kml_file('county', 'NV')
-    kml_file_path = create_kml_file('county_warning_area', 'NV')
-    kml_file_path = create_kml_file('climate_division', 'NV')
-    kml_file_name = initial['overlay_state'] + '_' + initial['select_stations_by'] + '.kml'
-    context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
-    context[initial['overlay_state'] + '_selected'] = 'selected'
-    context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
+    if request.method == 'GET' and  'params_json' in  request.GET and 'station_ids' in request.GET:
+        #We are linking from station_finder
+        params_json = request.GET.get('params_json')
+        station_ids = request.GET.get('station_ids')
+        initial = WRCCUtils.load_json_data_from_file(settings.TEMP_DIR + params_json)
+        context['form_message'] = True
+        context['form_message_sf'] = True
+        initial['station_ids'] = station_ids
+        initial, checkbox_vals = set_data_station_initial(initial)
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        user_params_list, user_params_dict = set_user_params(initial, 'data_station')
+        context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
+    else:
+        #Set up maps if needed
+        initial, checkbox_vals = set_data_station_initial(request)
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        context['host'] = settings.HOST
+        context['area_type'] = initial['select_stations_by']
+        kml_file_path = create_kml_file('basin', 'NV')
+        kml_file_path = create_kml_file('county', 'NV')
+        kml_file_path = create_kml_file('county_warning_area', 'NV')
+        kml_file_path = create_kml_file('climate_division', 'NV')
+        kml_file_name = initial['overlay_state'] + '_' + initial['select_stations_by'] + '.kml'
+        context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
+        context[initial['overlay_state'] + '_selected'] = 'selected'
+        context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
+        initial, checkbox_vals = set_data_station_initial(request)
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
 
-
-    if 'formData' in request.POST or (request.method == 'GET' and ('elements' in request.GET or 'params_json' in  request.GET)):
+    #if 'formData' in request.POST or (request.method == 'GET' and ('elements' in request.GET or 'params_json' in  request.GET)):
+    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+        '''
         params_json = request.GET.get('params_json',None)
         station_ids = request.GET.get('station_ids',None)
         if request.method == 'GET':
@@ -275,7 +300,11 @@ def data_station(request):
         else:
             form = set_form(request,clean=False)
             form_cleaned = set_form(request)
-        user_params_list, user_params_dict = set_user_params(form_initial, 'data_station')
+        '''
+        form = set_form(request,clean=False)
+        form_cleaned = set_form(request)
+        #user_params_list, user_params_dict = set_user_params(form_initial, 'data_station')
+        user_params_list, user_params_dict = set_user_params(form, 'data_station')
         context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
         #Back Button/download files issue fix:
         #if select_stations_by none, find it
@@ -2729,6 +2758,8 @@ def set_data_station_params(form):
         if key == form['select_stations_by'] and key not in  ['station_ids', 'state', 'shape']:
             params_dict[key] = find_id(val, settings.MEDIA_DIR + '/json/US_' + key +'.json')
             params_dict['user_id']= val
+        elif key == form['select_stations_by'] and key == 'station_ids':
+            params_dict['station_list'] = form['station_ids'].split(',')
         elif key == 'delimiter':
             if 'data_format' in form.keys() and form['data_format'] == 'html':
                 params_dict['delimiter'] = WRCCData.DELIMITERS['space']
@@ -2986,11 +3017,12 @@ def set_user_params(form, app_name):
         user_params_dict['add_degree_days'] = f['add_degree_days']
         user_params_dict['degree_days'] = f['degree_days']
     #If link from station_locator, check for area type and value and add to params
-    if f[area_select] == 'station_ids':
-        user_params_dict['station_list'] = f['station_ids'].split(',')
-        for k in ['basin', 'climate_division','county', 'county_warning_area', 'state', 'shape']:
-            if k in f.keys():
-                user_params_list.insert(0,[WRCCData.DISPLAY_PARAMS[k],f[k]])
+    if 'select_stations_by'in f.keys():
+        if f['select_stations_by'] == 'station_ids' or f[area_select] == 'station_ids':
+            user_params_dict['station_list'] = f['station_ids'].split(',')
+            for k in ['basin', 'climate_division','county', 'county_warning_area', 'state', 'shape']:
+                if k in f.keys():
+                    user_params_list.insert(0,[WRCCData.DISPLAY_PARAMS[k],f[k]])
     return user_params_list, user_params_dict
 
 ##################

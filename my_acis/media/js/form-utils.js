@@ -243,6 +243,15 @@ function show_loading(){
     }, 9000);
 }
 
+function show_loading_gif(){
+   $("#loading-image").attr("src","/csc/media/img/LoadingGreen.gif");
+   $("#loading").show("fast"); 
+}
+
+function hide_loading_gif() {
+    $("#loading-image").attr("src","/csc/media/img/LoadingGreen.gif");
+   $("#loading").hide();
+}
 
 function show_hide_opts(rowClass){
     /*
