@@ -35,6 +35,7 @@ def get_urls(request):
             'STATION_DATA_URL':settings.STATION_DATA_URL,
             'TOOLS_URL':settings.TOOLS_URL,
             'GRID_TOOLS_URL':settings.GRID_TOOLS_URL,
+            'MIXED_TOOLS_URL':settings.MIXED_TOOLS_URL,
             'GRID_SPATIAL_SUMMARY_URL':settings.GRID_SPATIAL_SUMMARY_URL,
             'GRID_TEMPORAL_SUMMARY_URL':settings.GRID_TEMPORAL_SUMMARY_URL,
             'GRID_SODXTRMTS_URL':settings.GRID_SODXTRMTS_URL,

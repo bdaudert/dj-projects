@@ -47,6 +47,13 @@ def ee_organizing_code(request):
     }
     return render_to_response('documentation/ee/organizing_code.html', context, context_instance=RequestContext(request))
 
+def ee_ipython_notebooks(request):
+    context = {
+        'title':'IPython Notebooks',
+    }
+    return render_to_response('documentation/ee/ipython_notebooks.html', context, context_instance=RequestContext(request))
+
+
 def acis(request):
     context = {
         'title': 'ACIS',

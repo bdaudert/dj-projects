@@ -105,6 +105,12 @@ select {
     text-align:center;
 }
 
+pre.code {
+    /*border:1px solid grey;*/
+    width:930px;
+    background-color:LightGrey;
+}
+
 p, ul, ol, li {
     color:#000000;
     font-size:4;

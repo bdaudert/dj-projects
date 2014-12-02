@@ -1,0 +1,271 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="Time Series, Monthly Summary,graph, coop station, station data, historic data,application, product, tool">
+<meta name="description" content="SW-CKN Generates Monthly Summary Time Series">
+
+{%load my_scenic_filters%}
+
+{% block content %}
+<!--
+<p align="center">You are here
+    <a href="{{HOME_URL}}">Home></a>
+    <a href="{{TOOLS_URL}}">Data Analysis></a>
+    <a href="{{GRID_TOOLS_URL}}">Gridded Data Tools></a> 
+    <a href="{{GRID_TOOLS_URL}}likelihood">Likelihood</a>
+</p>
+-->
+<!--On form change, hide results and form errors-->
+<script type="text/javascript">
+$(function(){
+//On form change, hide results and form errors
+hide_errors_results_on_change('fLikelihood');
+});
+</script>
+
+<!--
+<table align="center">
+    <tr>
+    <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
+    </tr>
+</table>
+
+<script type="text/javascript">                        
+    $("#tool_info_head").load("{{HTML_URL}}Buttons.html .tool_info");
+</script>
+<div id="tool_info" style="display:none;"></div>
+
+<script type="text/javascript">            
+    $("#tool_info").load("{{HTML_URL}}Docu_GRID_SODXTRMTS.html");
+</script>
+
+<script type="text/javascript">            
+    $("#how_to_head").load("{{HTML_URL}}Buttons.html .tool_how_to");
+</script>
+-->
+
+<div id="how_to" style="display:none;">
+<div id="Docu_location"></div>
+<script type="text/javascript">                        
+$("#Docu_location").load("{{HTML_URL}}Docu_location.html");
+</script>
+<div id="Docu_element"></div>
+<script type="text/javascript">            
+$("#Docu_element").load("{{HTML_URL}}Docu_elements_sodxtrmts.html");
+</script>
+<div id="Docu_units"></div>
+<script type="text/javascript">            
+$("#Docu_units").load("{{HTML_URL}}/Docu_units.html");
+</script>
+    <div id="Docu_add_degree_days"></div>
+    <script type="text/javascript">            
+        $("#Docu_add_degree_days").load("{{HTML_URL}}/Docu_add_degree_days.html");
+    </script>
+    <div id="Docu_degree_days"></div>
+    <script type="text/javascript">            
+        $("#Docu_degree_days").load("{{HTML_URL}}/Docu_degree_days.html");
+    </script>
+<div id="Docu_start_end_date"></div>
+<script type="text/javascript">            
+$("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
+</script>
+</div>
+
+
+
+{%if results %}
+<div id="Arrow" class="results" style="position:absolute;top:250px;right:280px;">
+<table style="display:block;">
+<td valign="top"><b>RESULTS:</b></td>
+<td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="300px"></td>
+</table>
+</div>
+{%endif%}
+
+<table>
+<td valign="top">
+    <input type="submit" value="Start Over" onclick="window.location='{{MIXED_TOOLS_URL}}data_comparison/'"/>
+    <div id="formComparison" class="form" style="border:none;">
+    {%if json_dict%}
+        <form method="post" id="fComparison" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading()">
+    {%else%}
+        <form method="post" id="fComparison" action="" onsubmit="show_loading()">
+    {%endif%}
+    {% csrf_token %}
+    <table id="tableLikelihood" class="form" frame="void" style="border-collapse:collapse;" >
+    <tr>
+    <td valign="top">Location: </td>
+    <td><input autocomplete="off" type="text" size="20" id="location" name="location" value="{{initial.location}}" onchange="update_maps(this);"></td>
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_location"></div>
+        <script type="text/javascript">                        
+        $("#ht_location").load("{{HTML_URL}}Docu_help_texts.html #ht_location");
+        </script>
+    </div>
+    </td>
+    </tr>
+    <tr id="grid_type">
+    <td>Grid: </td>
+    <td>
+    <select id="grid" name="grid" onchange="update_value(this.value)">
+    <option value="1" {{checkbox_vals.grid_1_selected}}>NRCC Interpolated(1950-Present)</option>
+    <option value="3" {{checkbox_vals.grid_3_selected}}>NRCC Int. Hi-Res(2007-Present)</option>
+    <option value="21" {{checkbox_vals.grid_21_selected}}>PRISM(1981-Present,1895-Present)</option>
+    <option value="4" {{checkbox_vals.grid_4_selected}}>CRCM+NCEP(1970-2000)</option>
+    <option value="5" {{checkbox_vals.grid_5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>
+    <option value="6" {{checkbox_vals.grid_6_selected}}>CRCM+CCSM3(1970-2000,2040-2070)</option>
+    <option value="9" {{checkbox_vals.grid_9_selected}}>MM5I+NCEP(1970-2000)</option>
+    <option value="10" {{checkbox_vals.grid_10_selected}}>MM5I+CCSM(1970-2000,2040-2070)</option>
+    <option value="11" {{checkbox_vals.grid_11_selected}}>RCM3+NCEP(1970-2000)</option>
+    <option value="12" {{checkbox_vals.grid_12_selected}}>RCM3+CGCM3(1970-2000,2040-2070)</option>
+    <option value="13" {{checkbox_vals.grid_13_selected}}>RCM3+GFDL(1970-2000,2040-2070)</option>
+    <option value="14" {{checkbox_vals.grid_14_selected}}>WRFG+NCEP(1970-2000)</option>
+    <option value="15" {{checkbox_vals.grid_15_selected}}>WRFG+CCSM(1970-2000,2040-2070)</option>
+    <option value="16" {{checkbox_vals.grid_16_selected}}>WRFG+CGCM3(1970-2000,2040-2070)</option>
+    </select>
+    </td>
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_grid"></div>
+        <script type="text/javascript">                        
+        $("#ht_grid").load("{{HTML_URL}}/Docu_help_texts.html #ht_grid");
+        </script>
+    </div>
+    </td>
+    </tr>
+    <tr>
+    <td id="Start Date">Start Date: </td>
+    <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}"></td>
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_start_date"></div>
+        <script type="text/javascript">                        
+        $("#ht_start_date").load("{{HTML_URL}}Docu_help_texts.html #ht_start_date");
+        </script>
+    </div>
+    </td>
+    </tr>
+    <tr >
+    <td id="End Date">End Date: </td>
+    <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}"></td>
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_end_date"></div>
+        <script type="text/javascript">                        
+        $("#ht_end_date").load("{{HTML_URL}}Docu_help_texts.html #ht_end_date");
+        </script>
+    </div>
+    </td>
+    </tr>
+    <tr>
+    <td>Elements: </td>
+    <td>
+    <select id="elements" name="elements" multiple onchange="update_elements(this) & set_likelihood_thresholds(this)">
+    <option value="maxt" {{checkbox_vals.elements_maxt_selected}}>Maximum Temperature</option>
+    <option value="mint" {{checkbox_vals.elements_mint_selected}}>Minimum Temperature</option>
+    <option value="avgt" {{checkbox_vals.elements_avgt_selected}}>Average Temperature</option>
+    <option value="pcpn" {{checkbox_vals.elements_pcpn_selected}}>Precipitation</option>
+    <option value="snow" {{checkbox_vals.elements_snow_selected}}>Snowfall</option>
+    <option value="snwd" {{checkbox_vals.elements_snwd_selected}}>Snow Depth</option>
+    <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Deg. Days(65F/18C)</option>
+    <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Deg. Days(65F/18C)</option>
+    <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Deg. Days(50F/10C)</option>
+    </select>
+    </td>  
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_elements"></div>
+        <script type="text/javascript">                        
+        $("#ht_elements").load("{{HTML_URL}}Docu_help_texts.html #ht_elements");
+        </script>
+    </div>
+    </td>
+    </tr>
+    <tr valign="bottom">
+    <td>Add special degree days: </td>
+    <td>
+        <select id="add_degree_days" name="add_degree_days" onchange="show_div_if_true(this,'dd') & update_value(this.value)">
+            <option value="T" {{checkbox_vals.add_degree_days_T_selected}}>Yes</option>
+            <option value="F" {{checkbox_vals.add_degree_days_F_selected}}>No</option>
+        </select>
+        </td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_add_degree_days"></div>
+        <script type="text/javascript">                        
+            $("#ht_add_degree_days").load("{{HTML_URL}}/Docu_help_texts.html #ht_add_degree_days");
+        </script>
+        </div>
+    </td>
+    </tr>
+    {%if initial.add_degree_days == "T" and not user_params_dict.add_degree_days %}
+    <tr id="dd" valign="top">
+    {%else%}
+    {%if user_params_dict.add_degree_days == "T"%}
+    <tr id="dd" valign="top" >
+    {%else%}
+    <tr id="dd" valign="top" style="display:none">
+    {%endif%}
+    {%endif%}
+    <td id="Degree Days">Degree Days: </td>
+    <td><input type="text" id="degree_days" name="degree_days" value="{{initial.degree_days}}" onchange="update_value(this.value)"></td>
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_degree_days"></div>
+        <script type="text/javascript">                        
+            $("#ht_degree_days").load("{{HTML_URL}}/Docu_help_texts.html #ht_degree_days");
+            </script>
+        </div>
+    </td>
+    </tr>
+    <tr >
+    <td>Units: </td>
+    <td>
+        <select id="units" name="units" onchange="update_value(this.value) & set_degree_days(this.value)">
+            <option value="metric" {{checkbox_vals.units_metric_selected}}>Metric</option>
+            <option value="english" {{checkbox_vals.units_english_selected}}>English</option>
+        </select>
+    </td>
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_units"></div>
+        <script type="text/javascript">                        
+            $("#ht_units").load("{{HTML_URL}}/Docu_help_texts.html #ht_units");
+        </script>
+        </div>
+    </td>
+    </tr>  
+    </table>    
+    <input type="hidden" id="elements_string" value="{{initial.elements_string}}" name="elements" class="elements_string">
+    <input type="submit" value="Generate time series" name="formComparison"/>
+    </form>
+    </div>
+</td>
+<td>
+    {%if not results%}
+    <div id="GridpointMap" style="display:block;">
+    {%else%}
+    <div id="GridpointMap" style="display:none;">
+    {%endif%}
+    <div id="map-gridpoint"></div>
+    <script type="text/javascript">
+        initialize_grid_point_map('{{initial.location}}');
+    </script>
+    </div>
+</td>
+</table>
+
+<!--results-->
+<table cellpadding="10" align="center">
+<td valign="top" width="97%">
+    {% if form_error %}
+    <p class="error" id="form_error" style="position:absolute;top:210px;right:200px;">
+    ERROR: Please correct the form error(s) highlighted in red!</p>
+    {%for key, val in form_error.items%}
+    <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
+    {%endfor%}
+    {%endif%}
+</td>
+</table>
+
+{%endblock%}

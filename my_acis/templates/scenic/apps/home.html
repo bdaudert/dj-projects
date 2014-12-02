@@ -27,6 +27,10 @@
     <script type="text/javascript">                        
     $("#Docu_GridTools").load("{{HTML_URL}}/Docu_GridTools.html");
     </script>
+<div class="docu" id="Docu_MixedTools" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_MixedTools").load("{{HTML_URL}}/Docu_MixedTools.html");
+    </script>
 
 <table cellpadding="20" align="center">
 <td valign="top">
@@ -90,6 +94,24 @@
        </td>
        <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_GridTools')">
        </td>
+        <td valign="top"><a href="{{MIXED_TOOLS_URL}}" class="trigger_hover"><b>Combined Data<br />Analysis</b></a>
+       <div class="pop-up">
+       <b>Data Analysis/Visualization of <br />gridded/modeled and station data</b>
+            <ul>
+            <li>Data Comparison Tool:</li>
+            <ul>
+            <li>See how historic station data compares with Modeled data.</li>
+            <li>Visualize results as time series</li>
+            </ul>
+            <li>Likelihood</li>
+            <ul>
+            <li>Generate probabilities of exceedance of threshholds at a grid point</li>
+            <li>Compare the results with station data found near that point</li>
+            </ul>
+        </div>
+       </td>
+       <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_MixedTools')">
+       </td>
     </tr>
     <tr>
        <td colspan="2">
@@ -148,6 +170,23 @@
             </ul>
        </div>
        </td>
+        <td colspan="2">
+       <a  href="{{MIXED_TOOLS_URL}}" class="trigger_hover"><img class="app_img" alt="MixedAnalysis" title="MixedAnalysis" src="{{MEDIA_URL}}img/Compare_TS.png"></a>
+       <div class="pop-up">
+       <b>Data Analysis/Visualization of <br />gridded/modeled and station data</b>
+            <ul>
+            <li>Data Comparison Tool:</li>
+            <ul>
+            <li>See how historic station data compares with Modeled data.</li>
+            <li>Visualize results as time series</li>
+            </ul>
+            <li>Likelihood</li>
+            <ul>
+            <li>Generate probabilities of exceedance of threshholds at a grid point</li>
+            <li>Compare the results with station data found near that point</li>
+            </ul>
+        </div>
+        </td> 
     </tr>
     </table>
 </td>

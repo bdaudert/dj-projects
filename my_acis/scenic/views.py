@@ -806,8 +806,7 @@ def apps_station(request):
 
 def apps_gridded(request):
     context = {
-        'title': 'Gridded Data Analysis',
-        'icon':'ToolProduct.png'
+        'title': 'Gridded Data Analysis'
         }
     #Link from other page
     if request.method == 'GET' and 'elements' in request.GET:
@@ -816,6 +815,18 @@ def apps_gridded(request):
         user_params_list, user_params_dict =set_user_params(form, 'apps_gridded')
         context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
     return render_to_response('scenic/apps/gridded/home.html', context, context_instance=RequestContext(request))
+
+def apps_mixed(request):
+    context = {
+        'title': 'Combined Data Analysis'
+        }
+    #Link from other page
+    if request.method == 'GET' and 'elements' in request.GET:
+        form_cleaned = set_form(request,clean=True)
+        form = set_form(request,clean=False)
+        user_params_list, user_params_dict =set_user_params(form, 'apps_mixed')
+        context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
+    return render_to_response('scenic/apps/combined/home.html', context, context_instance=RequestContext(request))
 
 def apps_gis(request):
     context = {
@@ -1420,6 +1431,26 @@ def station_locator_app(request):
         context['area_type'] = form['select_overlay_by']
         context['host'] = settings.HOST
     return render_to_response('scenic/apps/station/station_locator_app.html', context, context_instance=RequestContext(request))
+
+#######################
+#Mixed Data Applications
+######################
+def likelihood(request):
+    context = {
+        'title': 'Likelihood'
+    }
+    initial,checkbox_vals = set_combined_analysis_initial(request,'likelihood')
+    context['initial'] = initial; context['checkbox_vals'] = checkbox_vals
+    return render_to_response('scenic/apps/combined/likelihood.html', context, context_instance=RequestContext(request))
+
+def data_comparison(request):
+    context = {
+        'title': 'Data Comparison'
+    }
+    initial, checkbox_vals = set_combined_analysis_initial(request,'data_comparison')
+    context['initial'] = initial; context['checkbox_vals'] = checkbox_vals
+    return render_to_response('scenic/apps/combined/data_comparison.html', context, context_instance=RequestContext(request))
+
 #######################
 #SOD programs
 ######################
@@ -2563,11 +2594,38 @@ def write_monthly_aves_meta(req, form_data):
 #############################
 #Display and search params
 ##############################
+def set_el_string_and_list(form):
+    if not 'elements' in form.keys() and not 'element' in form.keys() and not 'elements_string' in form.keys():
+        return '', []
+    if 'element' in form.keys():
+        form_els = form['element']
+    if 'elements' in form.keys():
+        form_els = form['elements']
+    if isinstance(form_els,list):
+        el_list = [str(el) for el in form_els]
+        el_string = ''
+        for el_idx, el in enumerate(el_list):
+            el_string+=str(el)
+            if el_idx < len(el_list) - 1:
+                el_string+=','
+        return el_string, el_list
+    elif isinstance(form_els,basestring):
+        el_string = form_els.replace(', ',',')
+        el_list = el_string.split(',')
+        return el_string, el_list
+    else:
+        try:
+            el_string = form['elements_string'].replace('  ','')
+            el_list = el_string.split(',')
+        except:
+            return '', []
 
 def set_spatial_summary_params(form):
     key_order = ['Area Type','elements','start_date', 'end_date', 'summary', 'grid','running_mean_days']
     display_params_list = [[] for k in range(len(key_order))]
     search_params = {}
+    el_string, el_list = set_el_string_and_list(form)
+    '''
     if isinstance(form['elements'],list):
         el_list = [str(el) for el in form['elements']]
     elif isinstance(form['elements'],basestring):
@@ -2577,6 +2635,7 @@ def set_spatial_summary_params(form):
             el_list = form['elements_string'].replace('  ','').split(',')
         except:
             el_list = []
+    '''
     el_list_display = []
     for el_idx, el in enumerate(el_list):
         if 'units' in form.keys() and form['units'] == 'metric':
@@ -3209,12 +3268,16 @@ def set_sodxtrmts_graph_initial(request, init=None):
     initial['graph_generate_graph']= str(Get('graph_generate_graph', 'F'))
     initial['graph_start_month'] = Get('graph_start_month', '01')
     initial['graph_end_month'] = Get('graph_end_month', '02')
+    '''
     if init and 'start_year' in init.keys() and 'end_year' in init.keys():
         initial['graph_start_year'] = init['start_year']
         initial['graph_end_year'] = init['end_year']
     else:
-        initial['graph_start_year'] = Get('start_year', Get('graph_start_year', 'POR'))
-        initial['graph_end_year'] = Get('end_year', Get('graph_end_year', 'POR'))
+        initial['graph_start_year'] = Get('graph_start_year', Get('start_year', 'POR'))
+        initial['graph_end_year'] = Get('graph_end_year', Get('end_year', 'POR'))
+    '''
+    initial['graph_start_year'] = Get('graph_start_year', Get('start_year', 'POR'))
+    initial['graph_end_year'] = Get('graph_end_year', Get('end_year', 'POR'))
     initial['graph_summary'] = Get('graph_summary', 'mean')
     initial['graph_show_running_mean'] = Get('graph_show_running_mean', 'T')
     initial['graph_running_mean_years'] = Get('graph_running_mean_years', '9')
@@ -3593,6 +3656,65 @@ def set_monthly_aves_initial(request):
             checkbox_vals[cbv + '_' + bl + '_selected'] = ''
             if initial[cbv] == bl:
                 checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
+    for u in ['english', 'metric']:
+        checkbox_vals['units_' + u + '_selected'] =''
+        if u == initial['units']:
+            checkbox_vals['units_' +u + '_selected'] ='selected'
+    return initial, checkbox_vals
+
+def set_combined_analysis_initial(request,app_name):
+    initial = {}
+    checkbox_vals = {}
+    Get = set_GET(request)
+    Getlist = set_GET_list(request)
+    initial['location'] = Get('location','-119,40')
+    initial['grid'] = Get('grid','1')
+    initial['start_date'] = Get('start_date', fourtnight)
+    initial['end_date'] = Get('end_date', yesterday)
+    #initial['elements'] = Get('elements','maxt,mint,pcpn')
+    el_str = Get('elements',None)
+    if isinstance(el_str,basestring) and el_str:
+        initial['elements']= el_str.replace(' ','').split(',')
+    else:
+        initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
+
+    #Set threshold flags
+    for el in initial['elements']:
+        initial[el + '_show_threshold'] = True
+
+    initial['units'] = Get('units','english')
+
+    if app_name == 'data_comparison':
+        initial['add_degree_days'] = Get('add_degree_days', 'F')
+        if initial['units'] == 'metric':
+            initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
+        else:
+            initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
+
+    if app_name == 'likelihood':
+        initial['start_year'] = Get('start_year', '1980')
+        initial['end_year'] = Get('end_year', '2010')
+        for el in ['maxt','mint','avgt','pcpn','snow','snwd','hdd','cdd','gdd']:
+            key = el + '_threshold_low'
+            initial[key] = Get(key, WRCCData.ELEMENT_THRESHOLDS[initial['units']][el][0])
+            key = el + '_threshold_high'
+            initial[key] = Get(key, WRCCData.ELEMENT_THRESHOLDS[initial['units']][el][1])
+    #Checkbox vals
+    for e in ['maxt','mint','avgt','pcpn', 'snow', 'snwd', 'gdd','hdd','cdd']:
+        checkbox_vals['elements_' + e + '_selected'] =''
+        for el in initial['elements']:
+            if el == e:
+                checkbox_vals['elements_' + e + '_selected'] ='selected'
+    for g in ['1','21','3','4','5','6','7','8','9','10','11','12','13','14','15','16']:
+        checkbox_vals['grid_' + g + '_selected'] =''
+        if initial['grid'] == g:
+            checkbox_vals['grid_' + g + '_selected'] ='selected'
+    if app_name == 'data_comparison':
+        for bl in ['T','F']:
+            for cbv in ['add_degree_days']:
+                checkbox_vals[cbv + '_' + bl + '_selected'] = ''
+                if initial[cbv] == bl:
+                    checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
     for u in ['english', 'metric']:
         checkbox_vals['units_' + u + '_selected'] =''
         if u == initial['units']:

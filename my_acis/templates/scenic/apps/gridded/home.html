@@ -27,6 +27,10 @@
     <script type="text/javascript">                        
     $("#Docu_GRID_SODXTRMTS").load("{{HTML_URL}}/Docu_GRID_SODXTRMTS.html");
     </script>
+<div class="docu" id="Docu_EE" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_EE").load("{{HTML_URL}}/Docu_NONE.html");
+    </script>
 <div class="docu" id="Docu_NONE" style="display:none;"></div>
     <script type="text/javascript">                        
     $("#Docu_NONE").load("{{HTML_URL}}/Docu_NONE.html");
@@ -83,7 +87,7 @@
    <tr></tr>
     <tr>
        <td valign="top"><a class="trigger_hover" href="{{GRID_DATA_URL}}"><b>Gridded Data Lister</b></a>
-        <div class="pop-up">
+       <div class="pop-up">
        <p>Get a listing of gridded data for one or multiple gridpoints.<br/>Queries are customizable over spatial and temoral extend.</p>
        </div>
        </td>

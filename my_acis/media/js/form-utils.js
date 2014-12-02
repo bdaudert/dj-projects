@@ -166,6 +166,31 @@ function update_value(val){
     this.value = val;
 }
 
+function set_likelihood_thresholds(node){
+    var options = node.options;
+    var threshes, thresh_low, thresh_high, thresh_id, el, html_el,html_tr;
+    for (var idx=0;idx<options.length;idx++) {
+        el = options[idx].value;
+        threshes = set_threshes(el).split(',');
+        thresh_low = threshes[2];
+        thresh_high = threshes[3];
+        thresh_id = el + '_threshold';
+        html_tr = document.getElementById(thresh_id);
+        if (options[idx].selected) {
+            html_tr.style.display="table-row";
+            thresh_id = el + '_threshold_low';
+            html_el = document.getElementById(thresh_id);
+            html_el.value = thresh_low;
+            thresh_id = el + '_threshold_high';
+            html_el = document.getElementById(thresh_id);
+            html_el.value = thresh_high;
+        }
+        else {
+            html_tr.style.display="none";
+        }
+    } 
+}
+
 function update_elements(node){
     /*
     Dynamic forms are not updated in browser cache

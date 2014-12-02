@@ -93,7 +93,8 @@
     
     <!--Hide loading icon iupon page load-->
     <script language="javascript" type="text/javascript">
-        $(window).load(function() {
+        //$(window).load(function() {
+        $(document).ready(function() {
             $('#loading').hide(); 
         });
     </script>
@@ -194,6 +195,7 @@
             <ul>
             <li><a href="{{STATION_TOOLS_URL}}">Station Data Analysis</a></li>
             <li><a href="{{GRID_TOOLS_URL}}">Gridded Data Analaysis</a></li>
+            <li><a href="{{MIXED_TOOLS_URL}}">Combined Data Analaysis</a></li>
             <!--<li><a href="{{GIS_TOOLS_URL}}">Geospatial Data Analysis</a></li>-->
             <!--<li><a target="_blank" href="/csc/wrcc_apps/">WRCC-SOD</a></li>-->
             </ul>
