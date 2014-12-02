@@ -421,7 +421,12 @@ function set_sodxtrmts_series_data_individual(datadict,initial,initial_graph,ser
     var yr_indices = set_start_end_yr_idx(datadict, initial, initial_graph);
     var md = set_date_idx_and_mon_list(initial,initial_graph);
     var yr_change_idx = 12 - parseInt(initial.start_month) + 2;
-    var month_names =  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var month_names =  ['Jan', 'Feb', 'Mar', 
+    'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 
+    'Oct', 'Nov', 'Dec'];
+    var colors = ['#800080','#000080','#008080',
+    '#008000','#808000','#800000','#000000','#808080',
+    '#FFFF00','#00FF00','#00FFFF','#0000FF'];
     for (var mon_idx=0;mon_idx<md.month_list.length;mon_idx++){
         data = [];
         values=[];
@@ -430,6 +435,7 @@ function set_sodxtrmts_series_data_individual(datadict,initial,initial_graph,ser
             s[key] = series[key];
         }
         s['name'] = month_names[md.month_list[mon_idx]-1];
+        s['color'] = colors[mon_idx]
         for (var yr_idx=yr_indices.yr_start_idx;yr_idx<yr_indices.yr_end_idx;yr_idx++) {
             var date;
             if (md.data_idx_list[mon_idx] == yr_change_idx && initial.start_month !="01"){
