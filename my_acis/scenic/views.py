@@ -1449,6 +1449,12 @@ def data_comparison(request):
     }
     initial, checkbox_vals = set_combined_analysis_initial(request,'data_comparison')
     context['initial'] = initial; context['checkbox_vals'] = checkbox_vals
+    if 'formComparison' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+        context['form_message'] = True
+        form = set_form(request, clean=False)
+        user_params_list, user_params_dict = set_user_params(form_initial, 'data_gridded')
+        context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
+        DC = WRCCClasses.DataComparer(**form)
     return render_to_response('scenic/apps/combined/data_comparison.html', context, context_instance=RequestContext(request))
 
 #######################

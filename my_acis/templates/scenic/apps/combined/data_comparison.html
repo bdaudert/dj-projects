@@ -11,14 +11,14 @@
     <a href="{{HOME_URL}}">Home></a>
     <a href="{{TOOLS_URL}}">Data Analysis></a>
     <a href="{{GRID_TOOLS_URL}}">Gridded Data Tools></a> 
-    <a href="{{GRID_TOOLS_URL}}likelihood">Likelihood</a>
+    <a href="{{GRID_TOOLS_URL}}data_comparison">data_comparison</a>
 </p>
 -->
 <!--On form change, hide results and form errors-->
 <script type="text/javascript">
 $(function(){
 //On form change, hide results and form errors
-hide_errors_results_on_change('fLikelihood');
+hide_errors_results_on_change('fdata_comparison');
 });
 </script>
 
@@ -91,7 +91,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
         <form method="post" id="fComparison" action="" onsubmit="show_loading()">
     {%endif%}
     {% csrf_token %}
-    <table id="tableLikelihood" class="form" frame="void" style="border-collapse:collapse;" >
+    <table id="table_data_comparison" class="form" frame="void" style="border-collapse:collapse;" >
     <tr>
     <td valign="top">Location: </td>
     <td><input autocomplete="off" type="text" size="20" id="location" name="location" value="{{initial.location}}" onchange="update_maps(this);"></td>
@@ -160,7 +160,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
     <tr>
     <td>Elements: </td>
     <td>
-    <select id="elements" name="elements" multiple onchange="update_elements(this) & set_likelihood_thresholds(this)">
+    <select id="elements" name="elements" multiple onchange="update_elements(this)">
     <option value="maxt" {{checkbox_vals.elements_maxt_selected}}>Maximum Temperature</option>
     <option value="mint" {{checkbox_vals.elements_mint_selected}}>Minimum Temperature</option>
     <option value="avgt" {{checkbox_vals.elements_avgt_selected}}>Average Temperature</option>
