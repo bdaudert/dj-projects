@@ -71,12 +71,12 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
 </div>
 
 
-
+<p align="center" class="error"><b>*(BETA) THIS PAGE IS UNDER DEVLOPMENT!</b></p>
 {%if results %}
-<div id="Arrow" class="results" style="position:absolute;top:250px;right:280px;">
+<div id="Arrow" class="results" style="position:absolute;top:100px;right:300px;">
 <table style="display:block;">
 <td valign="top"><b>RESULTS:</b></td>
-<td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="300px"></td>
+<td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="250px"></td>
 </table>
 </div>
 {%endif%}
@@ -110,18 +110,18 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
     <select id="grid" name="grid" onchange="update_value(this.value)">
     <option value="1" {{checkbox_vals.grid_1_selected}}>NRCC Interpolated(1950-Present)</option>
     <option value="3" {{checkbox_vals.grid_3_selected}}>NRCC Int. Hi-Res(2007-Present)</option>
-    <option value="21" {{checkbox_vals.grid_21_selected}}>PRISM(1981-Present,1895-Present)</option>
+    <option value="21" {{checkbox_vals.grid_21_selected}}>PRISM(1981-Present)</option>
     <option value="4" {{checkbox_vals.grid_4_selected}}>CRCM+NCEP(1970-2000)</option>
-    <option value="5" {{checkbox_vals.grid_5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>
-    <option value="6" {{checkbox_vals.grid_6_selected}}>CRCM+CCSM3(1970-2000,2040-2070)</option>
+    <option value="5" {{checkbox_vals.grid_5_selected}}>CRCM+CCSM(1970-2000)</option>
+    <option value="6" {{checkbox_vals.grid_6_selected}}>CRCM+CCSM3(1970-2000)</option>
     <option value="9" {{checkbox_vals.grid_9_selected}}>MM5I+NCEP(1970-2000)</option>
-    <option value="10" {{checkbox_vals.grid_10_selected}}>MM5I+CCSM(1970-2000,2040-2070)</option>
+    <option value="10" {{checkbox_vals.grid_10_selected}}>MM5I+CCSM(1970-2000)</option>
     <option value="11" {{checkbox_vals.grid_11_selected}}>RCM3+NCEP(1970-2000)</option>
-    <option value="12" {{checkbox_vals.grid_12_selected}}>RCM3+CGCM3(1970-2000,2040-2070)</option>
-    <option value="13" {{checkbox_vals.grid_13_selected}}>RCM3+GFDL(1970-2000,2040-2070)</option>
+    <option value="12" {{checkbox_vals.grid_12_selected}}>RCM3+CGCM3(1970-2000)</option>
+    <option value="13" {{checkbox_vals.grid_13_selected}}>RCM3+GFDL(1970-2000)</option>
     <option value="14" {{checkbox_vals.grid_14_selected}}>WRFG+NCEP(1970-2000)</option>
-    <option value="15" {{checkbox_vals.grid_15_selected}}>WRFG+CCSM(1970-2000,2040-2070)</option>
-    <option value="16" {{checkbox_vals.grid_16_selected}}>WRFG+CGCM3(1970-2000,2040-2070)</option>
+    <option value="15" {{checkbox_vals.grid_15_selected}}>WRFG+CCSM(1970-2000)</option>
+    <option value="16" {{checkbox_vals.grid_16_selected}}>WRFG+CGCM3(1970-2000)</option>
     </select>
     </td>
     <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
@@ -165,8 +165,6 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
     <option value="mint" {{checkbox_vals.elements_mint_selected}}>Minimum Temperature</option>
     <option value="avgt" {{checkbox_vals.elements_avgt_selected}}>Average Temperature</option>
     <option value="pcpn" {{checkbox_vals.elements_pcpn_selected}}>Precipitation</option>
-    <option value="snow" {{checkbox_vals.elements_snow_selected}}>Snowfall</option>
-    <option value="snwd" {{checkbox_vals.elements_snwd_selected}}>Snow Depth</option>
     <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Deg. Days(65F/18C)</option>
     <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Deg. Days(65F/18C)</option>
     <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Deg. Days(50F/10C)</option>
@@ -236,7 +234,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
     </td>
     </tr>  
     </table>    
-    <input type="hidden" id="elements_string" value="{{initial.elements_string}}" name="elements" class="elements_string">
+    <!--<input type="hidden" id="elements_string" value="{{initial.elements_string}}" name="elements" class="elements_string">-->
     <input type="submit" value="Generate time series" name="formComparison"/>
     </form>
     </div>
@@ -257,7 +255,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
 
 <!--results-->
 <table cellpadding="10" align="center">
-<td valign="top" width="97%">
+<td valign="top" width="97%" align="center">
     {% if form_error %}
     <p class="error" id="form_error" style="position:absolute;top:210px;right:200px;">
     ERROR: Please correct the form error(s) highlighted in red!</p>
@@ -265,6 +263,17 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
     <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
     {%endfor%}
     {%endif%}
+
+    {% if graph_data %}
+    <p class="message"><b>CLICK AND DRAG TO ZOOM IN!</b></p>
+    <!--Declare global variable-->
+     <script type="text/javascript">var gdata = {{graph_data | safe_json}}</script>
+    {%for el in user_params_dict.element_list%}
+    <div align="center" id="dc_{{forloop.counter0}}" style="height:400px;width:800px;"></div>
+    <br />
+     <script type="text/javascript">highcharts_graphs.data_comparison("dc_{{forloop.counter0}}","{{el}}");</script>
+    {% endfor %}
+    {% endif %}
 </td>
 </table>
 

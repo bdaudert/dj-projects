@@ -3,6 +3,8 @@
 
 from django import template
 from django.template.defaultfilters import stringfilter
+from django.utils.safestring import mark_safe
+import json
 
 register = template.Library()
 
@@ -19,6 +21,10 @@ def lookup(dict, index):
         return dict[index]
     return ''
 '''
+@register.filter(is_safe=True)
+def safe_json(obj):
+    return mark_safe(json.dumps(obj))
+
 
 @register.filter(name='greater_than')
 def greater_than(a, b):

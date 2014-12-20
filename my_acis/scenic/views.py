@@ -1452,9 +1452,15 @@ def data_comparison(request):
     if 'formComparison' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         context['form_message'] = True
         form = set_form(request, clean=False)
-        user_params_list, user_params_dict = set_user_params(form_initial, 'data_gridded')
-        context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
-        DC = WRCCClasses.DataComparer(**form)
+        form['select_grid_by'] = 'location'
+        user_params_list, user_params_dict = set_user_params(form, 'data_comparison')
+        context['user_params_list'] = user_params_list
+        context['user_params_dict'] = user_params_dict
+        DC = WRCCClasses.DataComparer(form)
+        gdata,sdata = DC.get_data()
+        context['results'] = {'grid_data':gdata,'station_data':sdata}
+        graph_data = DC.get_graph_data(gdata,sdata)
+        context['graph_data'] = graph_data
     return render_to_response('scenic/apps/combined/data_comparison.html', context, context_instance=RequestContext(request))
 
 #######################
@@ -3007,6 +3013,9 @@ def set_user_params(form, app_name):
         if 'element' not in f.keys() and 'elements' not in f.keys():
             f['element'] = 'maxt'
             f['elements'] = 'maxt,mint,pcpn'
+    elif app_name == 'data_comparison':
+        area_select = 'select_grid_by'
+        f['select_grid_by'] = 'location'
     else:
         area_select = 'select_stations_by'
     #Deal with elements
@@ -3029,7 +3038,8 @@ def set_user_params(form, app_name):
         'area_select':f[area_select],
         area_select:f[area_select],
         f[area_select]:f[f[area_select]],
-        'elements':','.join(el_list).rstrip(',')
+        'elements':','.join(el_list).rstrip(','),
+        'element_list':el_list
     }
     if app_name == 'sodxtrmts' and 'elements' in f.keys():
         user_params_dict['element'] = user_params_dict['elements']
@@ -3683,7 +3693,7 @@ def set_combined_analysis_initial(request,app_name):
         initial['elements']= el_str.replace(' ','').split(',')
     else:
         initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
-
+    #initial['elements_string'] = ','.join(initial['elements'])
     #Set threshold flags
     for el in initial['elements']:
         initial[el + '_show_threshold'] = True
