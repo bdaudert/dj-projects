@@ -3687,12 +3687,7 @@ def set_combined_analysis_initial(request,app_name):
     initial['grid'] = Get('grid','1')
     initial['start_date'] = Get('start_date', fourtnight)
     initial['end_date'] = Get('end_date', yesterday)
-    #initial['elements'] = Get('elements','maxt,mint,pcpn')
-    el_str = Get('elements',None)
-    if isinstance(el_str,basestring) and el_str:
-        initial['elements']= el_str.replace(' ','').split(',')
-    else:
-        initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
+    initial['elements'] =  Getlist('elements',None)
     #initial['elements_string'] = ','.join(initial['elements'])
     #Set threshold flags
     for el in initial['elements']:
@@ -3719,7 +3714,7 @@ def set_combined_analysis_initial(request,app_name):
     for e in ['maxt','mint','avgt','pcpn', 'snow', 'snwd', 'gdd','hdd','cdd']:
         checkbox_vals['elements_' + e + '_selected'] =''
         for el in initial['elements']:
-            if el == e:
+            if str(el) == e:
                 checkbox_vals['elements_' + e + '_selected'] ='selected'
     for g in ['1','21','3','4','5','6','7','8','9','10','11','12','13','14','15','16']:
         checkbox_vals['grid_' + g + '_selected'] =''
