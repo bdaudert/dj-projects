@@ -53,12 +53,12 @@ $(function() {
         }
         */
         stn_ids_html = stn_id_list.join(', ');
-        href_pre+='&station_ids=' + stn_ids;
-        //href_pre+='&station_ids=Multiple Stations';
+        //href_pre+='&station_ids=' + stn_ids;
+        href_pre+='&station_ids=Multiple Stations';
         dataWindow = window.open(href_pre,'_blank');
         dataWindow.onload = function(){
             dataWindow.document.getElementById('station_ids').value = stn_ids;
-            //dataWindow.document.getElementById('stn_list').innerHTML = stn_ids_html;
+            dataWindow.document.getElementById('stn_list').innerHTML = stn_ids;
         }
         return dataWindow;
     });
