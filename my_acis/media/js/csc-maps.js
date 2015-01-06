@@ -114,9 +114,8 @@ function initialize_station_finder() {
             }
             td.innerHTML = '<input type="checkbox" id="' + name + '"' +
             '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' +
-            '<img alt="Icon" title="Icon" src="' + icon + '">' + 
-            '<div onmouseenter="ShowNetworkDocu(\'Docu_' + name + '\')"' + 
-            'onmouseleave="HideNetworkDocu(\'Docu_' + name + '\')" >' + 
+            '<img style="cursor:pointer;" onclick="ShowNetworkDocu(\'Docu_' + name + '\')" alt="Icon" title="Icon" src="' + icon + '">' + 
+            '<div style="cursor:pointer;" onclick="ShowNetworkDocu(\'Docu_' + name + '\')" >' + 
             name + '</div>';
             tr.appendChild(td);
             if (count == 5){
