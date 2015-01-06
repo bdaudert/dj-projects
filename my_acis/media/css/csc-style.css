@@ -258,10 +258,6 @@ ul#nav li:hover > ul li a:hover {
 }
 /*END TAB navigation bar*/
 
-.tool_how_to:active {color: red;}
-
-.tool_info:active {color:red;}
-
 /*Submit and Select buttons*/
 input[type=text]{
     font-weight:bold;
@@ -440,6 +436,9 @@ table.form td {
     font-weight: bold;
 }
 
+#tableDownload {
+    border:1px solid #006666;
+}
 .navbar {
   width:200px;
   list-style-type: none;
@@ -476,6 +475,10 @@ table.form td {
     color: #33CCFF;
 }
 
+.tool_how_to:active {color: red;}
+
+.tool_info:active {color:red;}
+
 .pop_link {
     color:#0000FF;
     /*text-decoration:underline;*/
@@ -507,11 +510,12 @@ table.form td {
 }
 
 
-
+/*
 img.info {
     width: 120px;
     height:34px;
 }
+*/
 
 img.icon {
     width: 30px;

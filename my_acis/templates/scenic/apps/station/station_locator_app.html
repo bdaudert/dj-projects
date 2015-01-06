@@ -152,16 +152,6 @@ $(function(){
     {%if form_error%}
     <p class="error" align="center">ERROR: Please correct the form error(s) highlighted in red!</p>
     {%endif%}
-
-    <div class="results">
-    {%if params_json%}
-    {%if not error and not form_error%}
-    <a align="center" target="_blank" href="{{STATION_DATA_URL}}?params_json={{params_json}}" class="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a>
-    <!--
-    <p onclick="append_station_ids('{{STATION_DATA_URL}}?params_json={{params_json}}')" target="_blank" align="center"><font size="4" color="blue"><b><u>Obtain data for all stations displayed</u></b></font></p> -->
-    {%endif%}
-    {%endif%}
-    </div>
 </td>
 </table>
 
@@ -288,7 +278,7 @@ $(function(){
     </td>
     </tr>
     </table>
-    <input style="margin:10px" type="submit" value="Show me stations" name="formData"/>
+    <input style="margin:5px" type="submit" value="Show me stations" name="formData"/>
     <input type="hidden" name="checked_categories" id="checked_categories" value="all">
     <input type="hidden" id="overlay_state" value="{{initial.overlay_state}}">
     </form>
@@ -296,6 +286,13 @@ $(function(){
 
 <!--Second Column: Maps-->
 <td valign="top">
+    <div class="results">
+    {%if params_json%}
+    {%if not error and not form_error%}
+    <a align="left" target="_blank" href="{{STATION_DATA_URL}}?params_json={{params_json}}" class="link_to_datafind"><img src = "{{MEDIA_URL}}img/access_data_button.png"></a>
+    {%endif%}
+    {%endif%}
+    </div> 
     <!--Maps-->
     <div class="results">
     {%if station_json and not error and not form_error and not need_overlay_map%}
@@ -313,10 +310,7 @@ $(function(){
     </script>
 
     <!--Link to data portal-->
-    <a align="center" target="_blank" href="{{STATION_DATA_URL}}?params_json={{params_json}}" class="link_to_datafind"><font size="4"><b>Obtain data for all stations displayed</b></font></a> 
-    <!--
-    <p onclick="append_station_ids('{{STATION_DATA_URL}}?params_json={{params_json}}')" target="_blank" align="center"><font size="4" color="blue"><b><u>Obtain data for all stations displayed</u></b></font></p>-->
-    
+    <a align="center" target="_blank" href="{{STATION_DATA_URL}}?params_json={{params_json}}" class="link_to_datafind"><img src = "{{MEDIA_URL}}img/access_data_button.png"></a> 
     <!--Station List-->
     <div class="station_list">
         <table cellspacing="1" id="station_list" border=1>

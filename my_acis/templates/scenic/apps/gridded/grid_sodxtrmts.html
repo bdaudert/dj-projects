@@ -852,11 +852,11 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
 {%if json_dict.data%}
 <div class="results">
 <table align="center">
-    <td>
+    <td valign="top">
     <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
-    </td><td>
+    </td><td valign="top">
     <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
-    </td><td> 
+    <br />
     <!--Download form-->
     <div id="formDownload" class="form" style="display:none;">
         {%if json_dict%}
@@ -940,7 +940,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
 {%endif%}
 
 {%if json_dict.data_summary%}
-<p class="blue" align="center" onclick="ShowHide('Data_Summary')"><b><u>Show Summary Table</u></b></p>
+<p align="center"><img src="{{MEDIA_URL}}img/show_summ_table_button.png" alt="Show Summary Table" onclick="ShowHide('Data_Summary')"></p>
 <div align="center" id="Data_Summary" style="display:none;">
 <table class="right_aligned">
 <td><font size="+0">YEAR </font></td>
@@ -963,7 +963,7 @@ $("#Docu_PLOT_OPTS_SODXTRMTS").load("{{HTML_URL}}Docu_PLOT_OPTS_SODXTRMTS.html")
 
 <!--Graphics-->
 <div align="center">
-<p class="blue" onClick="ShowHide('range_plot')"><u><b>Show Summary Graph</b></u></p>
+<img src="{{MEDIA_URL}}img/show_summ_table_button.png" alt="Show Summary Table" onclick="ShowHide('range_plot')">
 <div id="range_plot" style="display:none;">
     <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
     <div id="graph_container" style="height:{{height}}px;width:{{width}}px;"></div>
