@@ -6,7 +6,7 @@
 {%block content %}
     <table class="dash" cellspacing="10px" align="center">
         <tr>
-        <td><a class="trigger_hover" href="{{DATA_URL}}"><b><font size="3">DATA LISTERS</font></b></a>
+        <td><a class="trigger_hover" href="{{DATA_URL}}"><b><font size="3">DATA ACCESS</font></b></a>
             <div class="pop-up" style="display:none;" align="left">
             <b>Access to various climate data/metadata</b>
             <ul>
@@ -14,11 +14,7 @@
             <li>Historic Station Data</li>
             <li>Gridded/Modeled and Downscaled Data</li>
             </ul>
-            </div>
-        </td>
-        <td><a class="trigger_hover" href="{{TOOLS_URL}}"><b><font size="4">DATA ANALYSIS</font></b></a>
-        <div class="pop-up" style="display:none;" align="left">
-            <b><b>Interactive Data Applications</b></b>
+            <b>Interactive Data Applications</b>
             <ul>
             <li>Custom Statistical Analysis</li>
             <ul>
@@ -28,9 +24,7 @@
             <li>Visualization</li>
             <ul>
             <li>Time series</li>
-            <li>Maps</li>
-            </ul>
-            </ul>
+            <li>Maps</li> 
             </div>
         </td>
         <td><a class="trigger_hover" href="{{SCENIC_URL}}dashboard/"><b><font size="4">CLIMATE DASHBOARD</font></b></a>
@@ -44,15 +38,12 @@
             </ul>
             </div>
         </td>
-        <!--
-        <td><a class="trigger_hover" href="{{SCENIC_URL}}resources/"><b><font size="4">RESOURCES</font></b></a>
+        <td><a class="trigger_hover" href="{{SCENIC_URL}}gallery/"><b><font size="4">GALLERY</font></b></a>
             <div class="pop-up" style="display:none;" align="left">
-            <b>External Resources</b><br />
-            Descriptions and links to<br />
-            Climate/Climate Change related<br />
-            projects and oganizations across the US<br />
+            <b>Gallery of SCENIC capabilities</b><br />
+            Samples of  data analysis and visualization with instuctions<br />
             </div>
-        </td>-->
+        </td>
         </tr>
         <tr>
             <td><a href="{{DATA_URL}}" class="trigger_hover"><img alt="DataPortal" title="DataPortal" class="front_dash_img" src="{{MEDIA_URL}}img/DataPortal.png"></a>
@@ -63,11 +54,7 @@
             <li>Historic Station Data</li>
             <li>Gridded/Modeled and Downscaled Data</li>
             </ul>
-            </div>
-            </td>
-            <td><a class="trigger_hover" href="{{TOOLS_URL}}"><img alt="Tool" title="Tool" class="front_dash_img" src="{{MEDIA_URL}}img/ToolProduct.png"></a>
-            <div class="pop-up" style="display:none;" align="left">
-                        <b><b>Interactive Data Applications</b></b>
+            <b>Interactive Data Applications</b>
             <ul>
             <li>Custom Statistical Analysis</li>
             <ul>
@@ -78,10 +65,7 @@
             <ul>
             <li>Time series</li>
             <li>Maps</li>
-            </ul>
-            </ul>
-            </div>
-            </td>
+            </div>            
             <td><a class="trigger_hover" href="{{SCENIC_URL}}dashboard/"><img alt="Dashboard" title="Dashboard" class="front_dash_img" src="{{MEDIA_URL}}img/Dashboard.png"></a>
             <div class="pop-up" style="display:none;" align="left">
             <b>Climate at a Glance</b>
@@ -93,17 +77,12 @@
             </ul>
             </div>
             </td>
-            <!--
-            <td><a class="trigger_hover" href="{{SCENIC_URL}}main_map/"><img alt="Network" title="Network" class="front_dash_img" src="{{MEDIA_URL}}img/Network.png"></a>
+            <td><a class="trigger_hover" href="{{SCENIC_URL}}gallery/"><img alt="Gallery" title="Gallery" class="front_dash_img" src="{{MEDIA_URL}}img/Gallery.png"></a>
             <div class="pop-up" style="display:none;" align="left">
-            <b>External Resources</b><br />
-            Descriptions and links to<br />
-            Climate/Climate Change related<br />
-            projects and oganizations across the US<br />
+            <b>Gallery of SCENIC capabilities</b><br />
+            Samples of  data analysis and visualization with instuctions<br />
             </div>
-            </td>-->
+            </td>
         </tr>
     </table>
-    <br />
-
 {%endblock content%}

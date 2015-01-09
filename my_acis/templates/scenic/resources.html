@@ -1,0 +1,56 @@
+{% extends "csc_base.html" %}
+
+{% block content %}
+<!--
+<p align="center">You are here 
+<a href="{{HOME_URL}}">Home></a>
+<a href="{{HOME_URL}}resources">Resources</a></p>
+-->
+
+<table class="dash" cellspacing="10px" align="center">
+    <tr>
+    <td><a class="trigger_hover" href="{{SCENIC_URL}}resources/station_data_resources"><b><font size="3">STATION DATA RESOURCES</font></b></a>
+        <div class="pop-up" style="display:none;" align="left">
+            <b>External links to</b>
+            <ul>
+            <li>Station Networks</li>
+            <li>Data providers</li>
+            <li>Data analysis tools</li>
+            </ul>
+        </div>
+    </td>
+    <td><a class="trigger_hover" href="{{SCENIC_URL}}resources/gridded_data_resources/"><b><font size="4">GRIDDED DATA RESOURCES</font></b></a>
+    <div class="pop-up" style="display:none;" align="left">
+        <b><b>External links to</b></b>
+        <ul>
+        <li>Data providers</li>
+        <li>Analysis Tools</li>
+        </ul>
+    </div>
+    </td>
+    </tr>
+    <tr>
+        <td><a href="{{SCENIC_URL}}resources/station_data_resources/" class="trigger_hover"><img alt="StationResources" title="StationResources" class="front_dash_img" src="{{MEDIA_URL}}img/StationResources.png"></a>
+        </td>
+        <div class="pop-up" style="display:none;" align="left">
+            <b>External links to</b>
+            <ul>
+            <li>Station Networks</li>
+            <li>Data providers</li>
+            <li>Data analysis tools</li>
+            </ul>
+        </div>
+        <td><a class="trigger_hover" href="{{SCENIC_URL}}resources/gridded_data_resources/"><img alt="GriddedResources" title="GriddedResources" class="front_dash_img" src="{{MEDIA_URL}}img/GridResources.png"></a>
+        <div class="pop-up" style="display:none;" align="left">
+            <b><b>External links to</b></b>
+            <ul>
+            <li>Data providers</li>
+            <li>Analysis Tools</li>
+            </ul>
+        </div>
+        </td>
+    </tr>
+</table>
+
+
+{% endblock %}

@@ -76,6 +76,12 @@ def resources_station(request):
     }
     return render_to_response('scenic/resources_station.html', context, context_instance=RequestContext(request))
 
+def gallery(request):
+    context = {
+        'title': 'Gallery'
+    }
+    return render_to_response('scenic/gallery.html', context, context_instance=RequestContext(request))
+
 def resources_grid(request):
     context = {
         'title': 'Gridded Data Resources'
@@ -161,10 +167,22 @@ def dashboard(request):
 
 def data_home(request):
     context = {
-        'title': 'Data Listers',
-        'icon':'DataPortal.png'
+        'title': 'Data Access'
     }
     return render_to_response('scenic/data/home.html', context, context_instance=RequestContext(request))
+
+def single_point_prods(request):
+    context = {
+        'title': 'Single Point Products'
+    }
+    return render_to_response('scenic/data/single/home.html', context, context_instance=RequestContext(request))
+
+def multi_point_prods(request):
+    context = {
+        'title': 'Multi Point Products'
+    }
+    return render_to_response('scenic/data/multi/home.html', context, context_instance=RequestContext(request))
+
 
 def sw_networks(request):
     context = {
@@ -237,6 +255,20 @@ def download(request):
                 response = DDJ.write_to_file()
                 context['response'] = response
     return render_to_response('scenic/download.html', context, context_instance=RequestContext(request))
+
+def single_lister(request):
+    context = {
+        'title': 'Data Lister',
+    }
+    initial, checkbox_vals = set_initial_single_lister(request)
+    context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
+    return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
+
+def multi_lister(request):
+    context = {
+        'title': 'Data Lister',
+    }
+    return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
 
 def data_station_temp(request):
     context = {
@@ -3731,3 +3763,20 @@ def set_combined_analysis_initial(request,app_name):
         if u == initial['units']:
             checkbox_vals['units_' +u + '_selected'] ='selected'
     return initial, checkbox_vals
+
+#NEW UTILS
+def set_initial_single_lister(request):
+    initial = {}
+    checkbox_vals = {}
+    Get = set_GET(request)
+    Getlist = set_GET_list(request)
+    initial['station_id'] = Get('station_id', 'RENO TAHOE INTL AP, 266779')
+    initial['location'] = Get('location','-119,40')
+    initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
+    #Checkbox vals
+    for e in ['maxt','mint','avgt','pcpn', 'snow', 'snwd', 'gdd','hdd','cdd']:
+        checkbox_vals['elements_' + e + '_selected'] =''
+        for el in initial['elements']:
+            if str(el) == e:
+                checkbox_vals['elements_' + e + '_selected'] ='selected'
+    return initial,checkbox_vals

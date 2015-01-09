@@ -1,0 +1,305 @@
+{% extends "csc_base.html" %}
+
+{% block content %}
+<!--
+<p align="center">You are here 
+<a href="{{HOME_URL}}">Home></a>
+<a href="{{SCENIC_URL}}resources/">Resources</a></p>
+<a href="{{SCENIC_URL}}resources/station_data_resources/">Resources</a></p>
+-->
+
+<table cellpadding="20px" width="100%" align="center">
+<tbody>
+<td valign="top" width="30%">
+    <table class="links">
+        <thead>
+        <th colspan="2">External data resources</th>
+        </thead>
+        <tbody>
+        <tr><td>
+        <a href="http://www.ncdc.noaa.gov/" class="trigger_hover" target="_blank">NCDC</a>
+        <div class="pop-up">
+            <p>National Climatic Data Center. Access to: <br >Satellite Data<br />Radar<br />Modeled Data<br /> Marine/Ocean<br />Weather Balloons<br /> Paleoclimate<br />Severe Weather data<br />
+            </p>
+        </div>
+    </td><td>
+<a href="http://www.ncdc.noaa.gov/" class="trigger_hover" target="_blank"><img alt="NOAA" title="NOAA" class="icon" src="{{MEDIA_URL}}img/NOAALogo.png"></a>
+    </td></tr>
+    <tr><td>
+    <a href="http://wrcc.dri.edu/" class="trigger_hover" target="_blank">WRCC</a>
+    <div class="pop-up">
+        <p>Western Regional Climate Center</p>
+    </div>
+    </td><td>
+    <a href="http://wrcc.dri.edu/" class="trigger_hover" target="_blank"><img alt="WRCC" title="WRCC" class="logo" src="{{MEDIA_URL}}img/WRCCLogo.png"></a>
+    </td></tr>
+    <tr><td>
+    <a href="{{DATA_URL}}sw_networks/" class="trigger_hover" target="_blank">SW Networks</a>
+    <div class="pop-up">
+        <p>Links to several Southwest US Data Networks</p>
+    </div>
+    </td><td>
+    <a href="{{DATA_URL}}sw_networks/" class="trigger_hover" target="_blank"><img alt="HappyFace" title="HappyFace" class="icon" src="http://www.wrcc.dri.edu/media/img/stateppt.thb.png"></a>
+    </td></tr>
+    <tr><td>
+    <a href="http://www.cpc.ncep.noaa.gov/products/monitoring_and_data/" class="trigger_hover" target="_blank">ESRL</a>
+    <div class="pop-up">
+        <p>NOAA Earth System Research Laboratory (ESRL) Interactive Plotting Analysis</p>
+    </div>
+    </td><td>
+    <a href="http://www.esrl.noaa.gov/psd/cgi-bin/data/getpage.pl" class="trigger_hover" target="_blank"><img alt="NOAA" title="NOAA" class="icon" src="{{MEDIA_URL}}img/NOAALogo.png"></a>
+    </td></tr>
+    <tr><td>
+    <a href="http://www.cpc.ncep.noaa.gov/products/monitoring_and_data/" class="trigger_hover" target="_blank">CPC</a>
+    <div class="pop-up">
+        <p>NOAA Climate Prediction Center (CPC) Monitoring and Data</p>
+    </div>
+    </td><td>
+    <a href="http://www.cpc.ncep.noaa.gov/products/monitoring_and_data/" class="trigger_hover" target="_blank"><img alt="NOAA" title="NOAA" class="icon" src="{{MEDIA_URL}}img/NOAALogo.png"></a>
+    </td></tr>
+    <tr><td>
+    <a href="http://www.raws.dri.edu/index.html" class="trigger_hover" target="_blank">WRCC-RAWS</a>
+    <div class="pop-up">
+        <p>Access Summaries, Graphs, and other products for sub-daily
+        Remote Automatic Weather Stations (RAWS).<br />Made available via the USA Climate Archive developed by WRCC.</p>
+    </div>
+    </td><td>
+    <a href="http://www.raws.dri.edu/index.html" class="trigger_hover" target="_blank"><img alt="RAWS" title="RAWS" class="icon" src="{{MEDIA_URL}}img/RAWSLogo.gif"></a>
+    </td></tr>
+    <tr><td>
+    <a href="http://water.usgs.gov/data/" class="trigger_hover" target="_blank">USGS Water Data Discovery</a>
+    <div class="pop-up">
+        <p>Access to past and present water and drought data as well as various anomly maps.</p>
+    </div>
+    </td><td>
+    <a href="http://water.usgs.gov/data/" class="trigger_hover" target="_blank"><img alt="USGS" title="USGS" class="logo" src="{{MEDIA_URL}}img/USGSLogo.png"></a>
+    </td></tr>
+    <!--<tr><td><a href="http://his.cuahsi.org/" class="trigger_hover" target="_blank">CUAHSI</a>
+    <div class="pop-up">
+        <p>An internet-based system for sharing hydrologic data. It is comprised of databases and servers, connected through web services, to client applications, allowing for the publication, discovery and access of data.</p>
+    </div>
+    </td><td>
+    <a href="http://his.cuahsi.org/" class="trigger_hover" target="_blank"><img alt="CUAHSI" title="CUAHSI" class="logo" src="{{MEDIA_URL}}img/CUAHSILogo.gif"></a>
+    </td></tr>-->
+    <tr><td>
+    <a href="http://cida.usgs.gov/climate/gdp/" class="trigger_hover" target="_blank">USGS Geo Data Portal</a>
+    <div class="pop-up">
+        <p>Access to downscaled climate projections developed in cooperation with the U.S. Geological Survey National Climate Change Wildlife Science Center.</p>
+    </div>
+    </td><td>
+    <a href="http://cida.usgs.gov/climate/gdp/" class="trigger_hover" target="_blank"><img alt="USGS" title="USGS" class="logo" src="{{MEDIA_URL}}img/USGSLogo.png"></a>
+ </td></tr>
+</tbody>
+</table>
+</td>
+<td valign="top" width="30%">
+<table cellpadding="10px" class="links">
+<thead>
+<th>External networks</th>
+</thead>
+<tbody>
+<tr><td>
+<a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger_hover" target="_blank">USA RAWS Climate Archive (WRCC)</a>
+<div class="pop-up">
+    <p><font size="2">Summaries, Graphs, and other products for RAWS (Remote Automatic Weather Stations).</font></p>
+</div>
+</td></tr>
+<tr><td>
+<a id="us_wide" href="http://www.wcc.nrcs.usda.gov/snow/" class="trigger_hover" target="_blank">SNOTEL (<font color="red">W-US/Alaska</font>)</a>
+<div class="pop-up">
+    <p><font size="2">Snowpack and related climatic data in the Western United States and Alaska.</font></p>
+</div>
+</td></tr>
+<tr><td>
+<a id="us_wide" href="http://www.cemp.dri.edu/" class="trigger_hover" target="_blank">CEMP (<font color="red">NV</font>)</a>
+<div class="pop-up">
+    <p><font size="2">Community Environmental Monitoring Porgram.<br />Monitoring air quality and climate near and downwind of the Nevada National Security Site.</font></p>
+</div>
+</td></tr>
+<tr><td>
+<a id="us_wide" href="http://nevcan.dri.edu/" class="trigger_hover" target="_blank">NevCAN (<font color="red">NV</font>)</a>
+<div class="pop-up">
+    <p><font size="2">The Nevada Climate-ecohydrological Assessment Network.<br />Sheep Range and Snake Range elevational transects of monitoring stations.</font></p>
+</div>
+</td></tr>
+<tr><td>
+<a id="us_wide" href="http://nicenet.dri.edu/" class="trigger_hover" target="_blank">NICE Net (<font color="red">NV</font>)</a>
+<div class="pop-up">
+    <p><font size="2">Nevada Integrated Climate and Evaporation Network.</font</p>
+</div>
+</td></tr>
+<tr><td>
+<a id="us_wide" href="http://www.wrcc.dri.edu/vallescaldera/" class="trigger_hover" target="_blank">Valles Caldera (<font color="red">NM</font>)</a>
+<div class="pop-up">
+    <p><font size="2">Valles Caldera Climate Network</font></p>
+</div>
+</td></tr>
+<tr><td>
+<a id="us_wide" href="http://mesowest.utah.edu/" class="trigger_hover" target="_blank">MesoWest (<font color="red">US</font>)</a>
+<div class="pop-up">
+    <p><font size="2">Access to current and archived weather observations across the United States.</font></p>
+</div>
+</td></tr>
+<tr><td>
+<a id="us_wide" href="http://www.cocorahs.org/" class="trigger_hover" target="_blank">CoCoRaHS (<font color="red">US</font>)</a>
+<div class="pop-up">
+    <p><font size="2">Community Collaborative Rain, Hail and Snow Network</font></p>
+</div>
+</td></tr>
+<tr><td>
+<a id="us_wide" href="http://www.ymp.dri.edu/index.html" class="trigger_hover" target="_blank">Yucca Mountain Project (<font color="red">NV</font>)</a>
+<div class="pop-up">
+    <p><font size="2">Climate Data from Yucca Mountain, Nevada.</font></p>
+</div>
+</td></tr>
+<tr><td>
+<a id="us_wide" href="http://www.wrcc.dri.edu/catalina/" class="trigger_hover" target="_blank">Santa Catalina Island Climate Network (<font color="red">CA</font>)</a>
+<div class="pop-up">
+    <p><font size="2">Climate Data from Santa Catalina Island.</font></p>
+</div>
+</td></tr>
+<tr><td>
+<a id="us_wide" href="http://www.wrcc.dri.edu/crn/" class="trigger_hover" target="_blank">USCRN (<font color="red">US</font>)</a>
+<div class="pop-up">
+    <p><font size="2">NOAA U.S. Climate Reference Network</font></p>
+</div>
+</td></tr>
+<tr><td>
+<a id="us_wide" href="http://www.wrcc.dri.edu/nrel/" class="trigger_hover" target="_blank">Wind Energy Assessment(<font color="red">NV</font>)</a>
+<div class="pop-up">
+    <p><font size="2"></font>Climate and Wind data for Nevada.</font</p>
+</div>
+</td></tr>
+<tr><td>
+<a id="us_wide" href="http://www.tahoeclim.dri.edu/" class="trigger_hover" target="_blank">TahoeClim(<font color="red">CA/NV</font>)</a>
+<div class="pop-up">
+    <p><font size="2">Lake Tahoe Climate Information and Data.</font></p>
+</div>
+</td></tr>
+<tr><td>
+<a id="us_wide" href="http://www.calclim.dri.edu/" class="trigger_hover" target="_blank">CalClim(<font color="red">CA</font>)</a>
+<div class="pop-up">
+    <p><font size="2">California Climate Data Archive.</font></p>
+</div>
+</td></tr>
+</tbody>
+</table>
+</td>
+<td valign="top" width="30%">
+    <table class="links" cellpadding="10px">
+    <thead>
+    <th colspan="2">Links to external applications</th>
+    </thead>
+    <tbody>
+        <tr><td>
+        <a id="us_wide" href="http://www.raws.dri.edu/index.html" class="trigger_hover" target="_blank">WRCC-USA Climate Archive</a>
+        <div class="pop-up">
+            <p>Summaries, Graphs, and other products for RAWS 
+            (Remote Automatic Weather Stations) and COOP stations (Cooperative Observer).</p>
+        </div>
+        </td>
+        <!--
+        <td>
+        <img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png"  onclick="ShowPopupDocu('Docu_ClimArch')">
+        </td>
+        -->
+        </tr>
+        <tr><td>
+        <a id="us_wide" href="http://wrcc.dri.edu/sod-products/" class="trigger_hover" target="_blank">WRCC-Summary of the Day products</a>
+        <div class="pop-up" id="sods">
+            <p>Data Lister, Graphs, Monthly Data Summaries for COOP stations.</p>
+        </div>
+        </td></tr>
+        <tr><td align="center">
+        <a id="us_wide" href="http://wrcc.dri.edu/sod/sodusa.html" target="_blank">Daily Lister</a>
+        </td>
+        <!--
+        <td>
+        <img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SOD_DLG')">
+        </td>
+        -->
+        </tr>
+        <tr><td align="center">
+        <a id="us_wide" href="http://wrcc.dri.edu/cgi-bin/coopdata0.pl"target="_blank">Monthly Data Lister</a>
+        </td>
+        <!--
+        <td>
+        <img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SOD_MDL')">
+        </td>
+        -->    
+        </tr>
+        <tr><td align="center">
+        <a id="us_wide" href="http://wrcc.dri.edu/sod/sodusaxtrm.html" target="_blank">Monthly Summaries</a>
+        </td>
+        <!--
+        <td>
+        <img alt="Help" title="Help" class="qmark" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SOD_MSUM')">
+        </td>-->
+        </tr>
+        </table>
+    </td>
+    </tbody>
+    </table>
+</td>
+</tbody>
+</table>
+
+  <!-- Application documentation -->
+    <div class="docu" id="Docu_SODSUMM" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_SODSUMM").load("{{HTML_URL}}/Docu_SODSUMM.html");
+        </script>
+    <div class="docu" id="Docu_SODXTRMTS" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_SODXTRMTS").load("{{HTML_URL}}/Docu_SODXTRMTS.html");
+        </script>
+    <div class="docu" id="Docu_CalTracker" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_CalTracker").load("{{HTML_URL}}/Docu_External_Resources.html #Docu_CalTracker.html");
+        </script>
+    <div class="docu" id="Docu_NevTracker" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_NevTracker").load("{{HTML_URL}}/Docu_External_Resources.html #Docu_NevTracker.html");
+        </script>
+    <div class="docu" id="Docu_SOD_DLG" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_SOD_DLG").load("{{HTML_URL}}/Docu_SODS.html #SOD_DLG");
+        </script>
+    <div class="docu" id="Docu_SOD_DLG" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_SOD_DLG").load("{{HTML_URL}}/Docu_SODS.html #SOD_DLG");
+        </script>
+   <div class="docu" id="Docu_SOD_MDL" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_SOD_MDL").load("{{HTML_URL}}/Docu_SODS.html #SOD_MDL");
+        </script>
+   <div class="docu" id="Docu_SOD_MSUM" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_SOD_MSUM").load("{{HTML_URL}}/Docu_SODS.html #SOD_MSUM");
+        </script>
+   <div class="docu" id="Docu_META_GRAPH" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_META_GRAPH").load("{{HTML_URL}}/Docu_META_GRAPH.html");
+        </script>
+    <div class="docu" id="Docu_MON_AVES" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_MON_AVES").load("{{HTML_URL}}/Docu_MON_AVES.html");
+        </script>
+    <div class="docu" id="Docu_ClimArch" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_ClimArch").load("{{HTML_URL}}/Docu_External_Resources.html #Docu_ClimArch");
+        </script>
+    <div class="docu" id="Docu_STATION_FINDER" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_STATION_FINDER").load("{{HTML_URL}}/Docu_About_station_finder.html");
+        </script>
+    <div class="docu" id="Docu_DATA_STATION" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_DATA_STATION").load("{{HTML_URL}}/Docu_About_station_data.html");
+        </script>
+    <div class="docu" id="Docu_NONE" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_NONE").load("{{HTML_URL}}/Docu_NONE.html");
+        </script>
+
+{% endblock %}

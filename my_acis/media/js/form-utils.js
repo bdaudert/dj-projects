@@ -1,3 +1,41 @@
+//Clean functions
+function set_station_or_location(node){
+    /*
+    For single point data lister, 
+    sets form field according to user selection of 
+    point of interest:
+    node.value == station_id --> station data request
+    --> Show all rows of class type station
+    node.value == location --> grid data request
+    --> Show all rows of class type location 
+    */
+    var form_rows_to_show = [];
+    var form_rows_to_hide = [];
+    if (node.value == "station_id"){
+        form_rows_to_show = document.getElementsByClassName('station');
+        form_rows_to_hide = document.getElementsByClassName('location');
+    }
+    if (node.value == "location"){
+        form_rows_to_show = document.getElementsByClassName('location');
+        form_rows_to_hide = document.getElementsByClassName('station');
+    }
+    if (node.value == "none"){
+        //Hide all
+        var form_rows_to_hide1 = document.getElementsByClassName('station');
+        var form_rows_to_hide2 = document.getElementsByClassName('location');
+        form_rows_to_hide = form_rows_to_hide1.concat(form_rows_to_hide2);
+    } 
+
+    for (var idx=0;idx<form_rows_to_show.length;idx++) {
+        form_rows_to_show[idx].style.display = "table-row";
+    }
+    for (var idx=0;idx<form_rows_to_hide.length;idx++) {
+        form_rows_to_hide[idx].style.display = "none";
+    }
+    
+}
+
+//Old functions (need cleanup)
 function save_form_options(formID,hiddenID){
     /* 
     Saves all input and select field of form
@@ -985,6 +1023,7 @@ function unset_large_request(){
         }
     }
 }
+
 
 function set_station_grid_select(row_id,node){
     var IMG_URL = document.getElementById('IMG_URL').value;

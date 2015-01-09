@@ -1,0 +1,29 @@
+<div id="content">
+<textarea rows="50" cols="100" style="background-color: LightBlue;color:DarkBlue;border:1px solid Blue;font-size:20px;">
+###########
+Soddynorm
+###########
+This program reads in data from the SOD data set, 
+chekcs for flags and finds daily normals.
+
+Input:
+    Coop Station Id(s)    dddddd, dddddd
+    Start date            yyyy
+    End date              yyyy
+    Filter Type           Gaussian or Running Mean
+    Number of Days         
+    to use for filter
+
+Sample Output:
+
+    Station_name: RENO TAHOE INTL AP Coop_station_id: 266779
+    DOY MON DAY MAXT AVE    MAXT STD    MAXT YRS    MINT AVE    MINT STD    MINT YRS    PCPN AVE    PCPN YRS
+    1   1   1       45.5       6.314         11         24.3       5.569         11        0.063         11
+    2   1   2       43.9       6.774         11         24.5       6.593         11        0.118         11
+    3   1   3       46.6       9.993         11         23.8       5.546         11        0.003         11
+    4   1   4       44.9       9.289         11         23.7       7.564         11        0.182         11
+    5   1   5       43.9       8.826         11         22.5       5.854         11        0.029         11
+    6   1   6       46.8       8.328         11         22.5       7.475         11        0.005         11
+...
+Notes:
+</div>

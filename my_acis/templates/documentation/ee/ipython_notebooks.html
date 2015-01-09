@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 align="center">{{title}}</h1>
+<h2 align="center"><a target="_blank" href="http://ipython.org/ipython-doc/stable/notebook/index.html">Official IPython Notebook documentation</a></h2>
+<table align="center">
+    <td valign="top" width="10%">
+    </td>
+    <td valign="top" width="50%" align="left">
+    <h3>Writing your notebook</h3> 
+    <p>
+    1. Start a notebook server.<br />
+    <pre class="code"><code>
+    ipython notebook
+    </code></pre>
+    2. Open this browser http://127.0.0.1:8888/<br /><br />
+    3. Start a new notebook.<br /><br />
+    <img src="/csc/media/img/NewNotebook.png"><br /><br />
+    4. Write your new notebook.<br /><br />
+    The interface is intuitive and  easy to use.<br />
+    For in-depth instructions, please consult the documentation.<br /><br />
+    <a target="_blank" href="http://ipython.org/ipython-doc/stable/notebook/index.html">IPython Notebook documentation</a><br /><br />
+    Note the different options of text type you can use.<br /><br />
+    <img src="/csc/media/img/NotebookTextTypes.png"><br /><br />
+    </p>    
+    <h3>Saving and storing your notebook</h3>
+    <p>
+    1. Download the notebook as .ipynb file<br /><br />
+    <img src="/csc/media/img/SaveNotebook.png"><br /><br />
+    2. Push it to your public github repository
+    </p>
+    <h3>Sharing your notebook</h3>
+    <p>
+    Everyone that has the github link to your notebook file<br />
+    can simply go to <a target="_blank" href="http://nbviewer.ipython.org/">nbviewer</a>, <br />
+    enter the link and hit "Go" to view your notebook in a browser.<br /><br />
+    <img src="/csc/media/img/NBViewer.png"><br />
+    </p>
+</td>
+<td width="10%"></td>
+</table>
+{% endblock %}

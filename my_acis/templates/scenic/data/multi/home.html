@@ -1,0 +1,75 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="data, station data, historic data, gridded data, modeled data, data portal, acis">
+<meta name="description" content="Multi Point Products">
+
+
+{%block content %}
+
+<!--Documentation-->
+<div class="docu" id="Docu_About_multi_lister" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_About_multi_lister").load("{{HTML_URL}}/Docu_About_multi_lister.html");
+    </script>
+<div class="docu" id="Docu_CLIM_SUM_MAP" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_CLIM_SUM_MAP").load("{{HTML_URL}}/Docu_CLIM_SUM_MAP.html");
+    </script>
+<div class="docu" id="Docu_AREA_TIME_SERIES" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_AREA_TIME_SERIES").load("{{HTML_URL}}/Docu_AREA_TIME_SERIES.html");
+    </script>
+
+<table cellpadding="20" align="center">
+<td valign="top">
+    <table cellspacing="10">
+    <tr>
+        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}multi/lister/"><b>Data Lister</b></a>
+        <div class="pop-up">
+        <p>Get a listing of station data for multiple stations or gridpoints.<br />
+        Data can be downloaded as .txt, .dat, .xls or displayed on the page (html).
+        </p>
+        </div>
+        </td>
+        <td valign="top"><a class="trigger_hover" href="{{GRID_SPATIAL_SUMMARY_URL}}"><b>Spatial Summaries</b></a>
+        <div class="pop-up">
+        <p>Computes max/min/mean/sum over custom search areas and generates time series.</p>
+        </div>
+        </td>
+        <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_AREA_TIME_SERIES')">
+        </td>
+        <td valign="top"><a class="trigger_hover" href="{{GRID_TEMPORAL_SUMMARY_URL}}"><b>Temporal Summaries</b></a>
+        <div class="pop-up">
+        <p>Generates climate summary maps for US states.<br />Only available for NRCC interpolated data.</p>
+        </div>
+        </td>
+        <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_CLIM_SUM_MAP')">
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+        <a  href="{{DATA_URL}}multi/lister/" class="trigger_hover"><img class="app_img" alt="DataLister" title="DataLister" src="{{MEDIA_URL}}img/ClimateModel2.png"></a>
+        <div class="pop-up">
+        <p>Get a listing of station data for multiple stations or gridpoints.<br />
+           Data can be downloaded as .txt, .dat, .xls or displayed on the page (html).
+        </p>
+        </div>
+        </td>
+        <td colspan="2">
+        <a  href="{{GRID_SPATIAL_SUMMARY_URL}}" class="trigger_hover"><img class="app_img" alt="SpatialSummary" title="SpatialSummary" src="{{MEDIA_URL}}img/Area_TS.png"></a>
+        <div class="pop-up">
+        <p>Computes max/min/mean/sum over custom search areas and generates time series.</p>
+        </div>
+        </td>
+        <td colspan="2">
+        <a  href="{{GRID_TEMPORAL_SUMMARY_URL}}" class="trigger_hover"><img class="app_img" alt="TemporalSummary" title="TemporalSummary" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
+        <div class="pop-up">
+        <p>Generates climate summary maps for US states.<br />Only available for NRCC interpolated data.</p>
+        </div>
+        </td>  
+    </tr>
+    </table>
+</td>
+</table>
+
+{%endblock content%}

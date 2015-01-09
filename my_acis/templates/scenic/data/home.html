@@ -5,24 +5,19 @@
 
 
 {%block content %}
-<!--
-<p align="center">You are here 
-<a href="{{HOME_URL}}">Home></a>
-<a href="{{DATA_URL}}">Data Lister</a></p>
--->
 
 <!--Documentation-->
 <div align="left" id="Docu_About_station_finder" style="display:none;"></div>
         <script type="text/javascript">                        
         $("#Docu_About_station_finder").load("{{HTML_URL}}/Docu_About_station_finder.html");
         </script>
-<div class="docu" id="Docu_About_station_data" style="display:none;"></div>
+<div class="docu" id="Docu_About_single_point_prods" style="display:none;"></div>
     <script type="text/javascript">                        
-        $("#Docu_About_station_data").load("{{HTML_URL}}/Docu_About_station_data.html");
+        $("#Docu_About_single_point_prods").load("{{HTML_URL}}/Docu_About_single_point_prods.html");
     </script>
-<div class="docu" id="Docu_About_gridded_data" style="display:none;"></div>
+<div class="docu" id="Docu_About_multi_point_prods" style="display:none;"></div>
     <script type="text/javascript">                        
-        $("#Docu_About_gridded_data").load("{{HTML_URL}}/Docu_About_gridded_data.html");
+        $("#Docu_About_multi_point_prods").load("{{HTML_URL}}/Docu_About_multi_point_prods.html");
     </script>
 
 <table cellpadding="40" align="center">
@@ -36,25 +31,34 @@
        </td>
        <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_About_station_finder')">
        </td>
-       <td valign="top"><a class="trigger_hover" href="{{STATION_DATA_URL}}"><b>Station Data Lister</b></a>
+       <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}single/"><b>Single Point Products</b></a>
         <div class="pop-up">
-       <p>Get a listing of station data for one or multiple stations.<br /> 
-       Queries are customizable over spatial and temoral extend.<br/>
-       Data can be downloaded as .txt, .dat, .xls.
+       <p>Get a listing of data for a weather station or lat/lon coordinate.<br /> 
+       Data can be downloaded as .txt, .dat, .xls or displayed on screen.<br />
+       Generate monthly and annual summary tables and time series<br />
+       Generate Climatology<br />
        </p>
        </div>
        </td>
-       <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_About_station_data')">
+       <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_About_single_point_prods')">
        </td>
-       <td valign="top"><a class="trigger_hover" href="{{STATION_METAGRAPH_URL}}"><b>Gridded Data Lister</b></a>
+       <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}multi/"><b>Multi Point Products</b></a>
        <div class="pop-up">
-       <p>Get a listing of gridded data.<br/>
-       Queries are customizable over spatial and temoral extend.<br />
-       Data can be downloaded as .txt, .dat, .xls.
+       <p>Get a listing of data for multiple weather station or lat/lon coordinates.<br />
+       Area options:<br />
+       <ul>
+       <li>County, County Warning Area</li>
+       <li>Drainage Basin, Climate Division</li>
+       <li>US State</li>
+       <li>Custom Polygons and Bounding Boxes</li>
+       </ul>
+       Data can be downloaded as .txt, .dat, .xls.<br />
+       Compute spatial summaries (Time Series)<br />
+       Compute temporal summaries (Maps)<br />
        </p>
        </div>
        </td>
-       <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_About_gridded_data')">
+       <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_About_multi_point_prods')">
        </td>
     </tr>
     <tr>
@@ -65,21 +69,31 @@
     </div>
     </td>
     <td colspan="2">
-    <a  href="{{STATION_DATA_URL}}" class="trigger_hover"><img class="app_img" alt="StationData" title="StationData" src="{{MEDIA_URL}}img/Stn.png"></a>
+    <a  href="{{DATA_URL}}single/" class="trigger_hover"><img class="app_img" alt="SinglePoint" title="SinglePoint" src="{{MEDIA_URL}}img/Stn.png"></a>
     <div class="pop-up">
-    <p>Get a listing of station data for one or multiple stations.<br />
-    Queries are customizable over spatial and temoral extend.<br/>
-    Data can be downloaded as .txt, .dat, .xls.
-    </p>
+    <p>Get a listing of data for a weather station or lat/lon coordinate.<br />
+       Data can be downloaded as .txt, .dat, .xls or displayed on screen.<br />
+       Generate monthly and annual summary tables and time series<br />
+       Generate Climatology<br />
+       </p>
+ 
     </div>
     </td> 
     <td colspan="2">
-    <a  href="{{GRID_DATA_URL}}" class="trigger_hover"><img class="app_img" alt="GridData" title="GridData" src="{{MEDIA_URL}}img/ClimateModel2.png"></a>
+    <a  href="{{DATA_URL}}multi/" class="trigger_hover"><img class="app_img" alt="MultiPoint" title="MultiPoint" src="{{MEDIA_URL}}img/ClimateModel2.png"></a>
     <div class="pop-up">
-    <p>Get a listing of gridded data.<br/>
-    Queries are customizable over spatial and temoral extend.<br />
-    Data can be downloaded as .txt, .dat, .xls.
-    </p>
+    <p>Get a listing of data for multiple weather station or lat/lon coordinates.<br />
+       Area options:<br />
+       <ul>
+       <li>County, County Warning Area</li>
+       <li>Drainage Basin, Climate Division</li>
+       <li>US State</li>
+       <li>Custom Polygons and Bounding Boxes</li>
+       </ul>
+       Data can be downloaded as .txt, .dat, .xls.<br />
+       Compute spatial summaries (Time Series)<br />
+       Compute temporal summaries (Maps)<br />
+       </p>
     </div>
     </td>  
     </tr>

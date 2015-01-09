@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 align="center">{{title}}</h1>
+<table align="center">
+<td valign="top" width=10%">
+</td>
+<td valign="top" width="90%" align="left">
+    <p width="450px">
+    <h3>Creating symlinks</h3>
+    It is inconvenient to copy all needed packages and modules into the application              
+    directory every time you develop a new app engine application.
+    Implementing symlinks that  point from your application directory 
+    to a central location where reusable code is stored solves this problem.
+    However, care must be taken as some of the packages can not be symlinked.
+    The httplib2 package  and the config.py file should not be symlinked.
+    They will need to be copied directly into the application directory.
+    <br />
+
+    <h3>Example of directory structure for the gridmet_ppt_anomaly application</h3>
+    Note: "Google" is my directory for all things EE related. In my case, 
+    it is a sub directory of my home directory.
+    The Google directory is  where I store all reusable code (media, my-python-lib, ee-lib folders).
+    Specific application code is stored in the applications folder. 
+    ~ stands for home directory and needs to be replaced with the approprate path to your google directory.
+    <pre class="code"><code>
+    <img src="/csc/media/img/FolderIcon.png">~/Google/
+        <img src="/csc/media/img/FolderIcon.png">ee-lib/
+            <img src="/csc/media/img/FolderIcon.png">ee/
+            <img src="/csc/media/img/FolderIcon.png">oauth2client/
+            <img src="/csc/media/img/FolderIcon.png">earthengine-api/
+            <img src="/csc/media/img/FolderIcon.png">pycrypto-2.6.1/
+            <img src="/csc/media/img/FolderIcon.png">google-api-python-client/
+        <img src="/csc/media/img/FolderIcon.png">my-python-lib/
+            form_utils.py
+            date_utils.py
+            ee_apps.py
+        <img src="/csc/media/img/FolderIcon.png">media/
+            <img src="/csc/media/img/FolderIcon.png">img/
+            <img src="/csc/media/img/FolderIcon.png">css/
+                google_style.css
+            <img src="/csc/media/img/FolderIcon.png">js/
+                form_utils.js
+                calendar.js
+        <img src="/csc/media/img/FolderIcon.png">applications/
+            <img src="/csc/media/img/FolderIcon.png">gridmet_ppt_anomaly/
+                <img src="/csc/media/img/FolderIcon.png">httplib2/
+                <img src="/csc/media/img/FolderIcon.png">ee -> ~/Google/ee-lib/ee
+                <img src="/csc/media/img/FolderIcon.png">media -> ~/Google/media
+                date_urtils.py  -> ~/Google/my-python-lib/date_utils.py
+                form_utils.py -> ~/Google/my-python-lib/form_utils.py
+                config.py
+                ee_appengine.py
+                app.yaml
+                
+    </code></pre>
+</td>
+</table>
+{% endblock %}
