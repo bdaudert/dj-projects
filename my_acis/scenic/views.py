@@ -260,7 +260,7 @@ def single_lister(request):
     context = {
         'title': 'Data Lister',
     }
-    initial, checkbox_vals = set_initial_single_lister(request)
+    initial, checkbox_vals = set_initial_lister(request, 'single')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
 
@@ -268,6 +268,30 @@ def multi_lister(request):
     context = {
         'title': 'Data Lister',
     }
+    initial, checkbox_vals = set_initial_lister(request, 'multi')
+    context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
+    #Set initial overlay state for over;ay mapmap
+    context[initial['overlay_state'].lower() + '_selected'] = 'selected'
+
+    #Overlay maps
+    if 'formOverlay' in request.POST:
+        context['need_overlay_map'] = True
+        form = set_form(request,clean=False)
+        initial, checkbox_vals = set_initial_lister(request,'multi')
+        #Override initial where needed
+        initial['area_type'] = form['select_overlay_by']
+        checkbox_vals[form['select_overlay_by'] + '_selected'] = 'selected'
+        #context['checked'] = form['select_overlay_by'] + '_selected'
+        initial['area_type_value'] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
+        initial[form['select_overlay_by']] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
+        initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[form['select_overlay_by']]
+        initial['autofill_list'] = 'US_' + form['select_overlay_by']
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        context[initial['overlay_state'] + '_selected'] = 'selected'
+        kml_file_path = create_kml_file(form['select_overlay_by'], form['overlay_state'])
+        context['kml_file_path'] = kml_file_path
+        context['area_type'] = form['select_overlay_by']
+        context['host'] = settings.HOST
     return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
 
 def data_station_temp(request):
@@ -3765,18 +3789,83 @@ def set_combined_analysis_initial(request,app_name):
     return initial, checkbox_vals
 
 #NEW UTILS
-def set_initial_single_lister(request):
+def set_element_list(area_type):
+    if area_type in ['station_ids', 'station']:
+        el_list = ['maxt','mint','avgt', 'obst', 'pcpn', 'snow', 'snwd', 'gdd','hdd','cdd', 'evap', 'wdmv']
+    else:
+        el_list = ['maxt','mint','pcpn','gdd','hdd','cdd']
+    return el_list
+
+def set_initial_lister(request, req_type):
+    '''
+    req_type == single or muti
+    '''
     initial = {}
     checkbox_vals = {}
     Get = set_GET(request)
     Getlist = set_GET_list(request)
-    initial['station_id'] = Get('station_id', 'RENO TAHOE INTL AP, 266779')
-    initial['location'] = Get('location','-119,40')
+    if req_type == 'single':
+        initial['area_type'] = Get('area_type', 'station_id')
+    else:
+        initial['area_type'] = Get('area_type', 'state')
+    #Set up map parameters
+    initial['host'] = settings.HOST
+    initial['overlay_state'] = Get('overlay_state','NV')
+    initial['kml_file_path'] = create_kml_file(initial['area_type'], 'NV')
+    initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
+    initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
+    initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['area_type']]
+    initial['area_type_value'] = initial[str(initial['area_type'])]
     initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
+    initial['add_degree_days'] = Get('add_degree_days', 'F')
+    initial['units'] = Get('units','english')
+    if initial['units'] == 'metric':
+        initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
+    else:
+        initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
+    initial['start_date']  = Get('start_date', fourtnight)
+    initial['end_date']  = Get('end_date', yesterday)
+    initial['show_flags'] = Get('show_flags', 'F')
+    initial['show_observation_time'] = Get('show_observation_time', 'F')
+    initial['data_format'] = Get('data_format', 'html')
+    initial['date_format'] = Get('date_format', 'dash')
+    initial['delimiter'] = Get('delimiter', 'space')
+    initial['output_file_name'] = Get('output_file_name', 'Output')
+    initial['user_name'] = Get('user_name', 'Your Name')
+    initial['user_email'] = Get('user_email', 'Your Email')
     #Checkbox vals
-    for e in ['maxt','mint','avgt','pcpn', 'snow', 'snwd', 'gdd','hdd','cdd']:
-        checkbox_vals['elements_' + e + '_selected'] =''
+    #Area
+    for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys() + ['none']:
+        checkbox_vals[area_type + '_selected'] =''
+        if area_type == initial['area_type']:
+            checkbox_vals[area_type + '_selected'] ='selected'
+    #Elements
+    el_list = set_element_list(initial['area_type'])
+    for element in el_list:
+        checkbox_vals['elements_' + element + '_selected'] =''
         for el in initial['elements']:
-            if str(el) == e:
-                checkbox_vals['elements_' + e + '_selected'] ='selected'
+            if str(el) == element:
+                checkbox_vals['elements_' + element + '_selected'] ='selected'
+    for df in ['clm', 'dlm','xl', 'html']:
+        checkbox_vals['data_format_' + df + '_selected'] =''
+        if df == initial['data_format']:
+            checkbox_vals['data_format_' + df + '_selected'] ='selected'
+    for u in ['english', 'metric']:
+        checkbox_vals['units_' + u + '_selected'] =''
+        if u == initial['units']:
+            checkbox_vals['units_' +u + '_selected'] ='selected'
+    for df in ['none', 'dash','colon', 'slash']:
+        checkbox_vals['date_format_' + df + '_selected'] =''
+        if df == initial['date_format']:
+            checkbox_vals['date_format_' + df + '_selected'] ='selected'
+    for dl in ['comma', 'tab', 'space', 'colon', 'pipe']:
+        checkbox_vals[dl + '_selected'] =''
+        if dl == initial['delimiter']:
+            checkbox_vals[dl + '_selected'] ='selected'
+    for bl in ['T','F']:
+        for cbv in ['show_flags', 'show_observation_time', 'add_degree_days']:
+            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
+            if initial[cbv] == bl:
+                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
     return initial,checkbox_vals
+

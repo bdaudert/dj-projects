@@ -1,0 +1,11 @@
+        <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
+        <td>
+            <input autocomplete="off" type="text" size="20" id="{{initial.area_type}}" name="{{initial.area_type}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_value(this.value) & unset_large_request() & set_map(this);"></td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up" id="area-pop-up">
+            <div id="ht_{{initial.area_type}}"></div>
+            <script type="text/javascript">                        
+            $("#ht_{{initial.area_type}}").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_{{initial.area_type}}");
+            </script>
+        </div>
+        </td>

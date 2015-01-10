@@ -1,31 +1,130 @@
 //Clean functions
-function set_station_or_location(node){
+function set_area_defaults(area_type){
+    var lv = {
+        'label':'Station ID',
+        'value':'RENO TAHOE INTL AP, 266779',
+        'autofill_list':'US_' + area_type
+    }
+    if (area_type == 'station_ids'){
+        lv.label = 'Station IDs';
+        lv.value ='266779,050848';
+    }
+    if (area_type == 'location'){
+        lv.label = 'Location (lon,lat)';
+        lv.value = '-119,39';
+    }
+    if (area_type == 'locations'){
+        lv.label = 'Locations (lon,lat pairs)';
+        lv.value = '-119,39,-119.1,39.1';
+    }
+    if (area_type == 'county'){
+        lv.label ='County';
+        lv.value ='Churchill, 32001';
+    }
+    if (area_type == 'climate_division'){
+        lv.label ='Climate Division';
+        lv.value ='Northwestern, NV01';
+    }
+    if (area_type == 'county_warning_area'){
+        lv.label ='County Warning Area';
+        lv.value ='Las Vegas, NV, VEF';
+    }
+    if (area_type == 'basin'){
+        lv.label ='Basin';
+        lv.value ='Hot Creek-Railroad Valleys, 16060012';
+    }
+    if (area_type == 'state'){
+        lv.label ='State';
+        lv.value ='nv';
+    }
+    if (area_type == 'bounding_box'){
+        lv.label ='Bounding Box';
+        lv.value ='-115,34,-114,35';
+    }
+    if (area_type == 'shape'){
+        lv.label ='Custom Shape';
+        lv.value ='-115,34, -115, 35,-114,35, -114, 34';
+    }
+    return lv;
+}
+
+function update_value(val){
+    /*
+    Dynamic forms are not updated in browser cache
+    This function updates the values upon user change
+    Needed when two different forms are present in page
+    and form fields of one form should be 
+    preserved upon submit of the other
+    */
+    this.value = val;
+}
+
+function set_autofill(datalist){
+    /*
+    Sets autofill lists
+    */
+    //Grab env var JSON_URL (defined in templates/csc_base.html)
+    var JSON_URL = document.getElementById('JSON_URL').value;
+    dl = document.createElement('datalist');
+    dl.setAttribute('id',datalist);
+    dl.setAttribute('class', datalist.replace('US_',''));
+    $.getJSON(JSON_URL + datalist + '.json', function(metadata) {
+        for (idx=0;idx<metadata.length;idx++){
+            var name = metadata[idx].name;
+            var id = metadata[idx].id;
+            if (id == '' || !id ){
+                continue
+            }
+            var opt = document.createElement('option');
+            if (datalist == "US_CMAP"){
+                opt.value = name;
+            }
+            else {
+                opt.value = name + ', ' + id;
+            }
+            opt.setAttribute('class','name')
+            dl.appendChild(opt);
+        }
+    });
+    document.body.appendChild(dl);
+}
+
+function set_lister_form(node){
     /*
     For single point data lister, 
     sets form field according to user selection of 
     point of interest:
-    node.value == station_id --> station data request
+    node.value == station --> station data request
     --> Show all rows of class type station
-    node.value == location --> grid data request
-    --> Show all rows of class type location 
+    node.value == grid --> grid data request
+    --> Show all rows of class type grid
+    --> Show all rows of common form elements ( class station_grid  
     */
-    var form_rows_to_show = [];
-    var form_rows_to_hide = [];
-    if (node.value == "station_id"){
-        form_rows_to_show = document.getElementsByClassName('station');
-        form_rows_to_hide = document.getElementsByClassName('location');
+    
+    var form_rows_to_show1 = [],form_rows_to_show2 = [],form_rows_to_show = [];
+    var rows = [],form_rows_to_hide = [];
+    if (node.value == "station" || node.value == "station_id"){
+        //NOTE: querySelectorAll only works in modern browsers:
+        //https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll
+        //form_rows_to_show  = document.querySelectorAll('.station_grid, .station');
+        form_rows_to_show1 = document.getElementsByClassName('station_grid');
+        form_rows_to_show2 = document.getElementsByClassName('station');
+        form_rows_to_show = Array.prototype.slice.call(form_rows_to_show1).concat(Array.prototype.slice.call(form_rows_to_show2));
+        form_rows_to_hide = document.getElementsByClassName('grid');
     }
-    if (node.value == "location"){
-        form_rows_to_show = document.getElementsByClassName('location');
+    if (node.value == "grid" || node.value == "location"){
+        form_rows_to_show1 = document.getElementsByClassName('station_grid');
+        form_rows_to_show2 = document.getElementsByClassName('grid');
+        form_rows_to_show = Array.prototype.slice.call(form_rows_to_show1).concat(Array.prototype.slice.call(form_rows_to_show2));
         form_rows_to_hide = document.getElementsByClassName('station');
     }
     if (node.value == "none"){
-        //Hide all
-        var form_rows_to_hide1 = document.getElementsByClassName('station');
-        var form_rows_to_hide2 = document.getElementsByClassName('location');
-        form_rows_to_hide = form_rows_to_hide1.concat(form_rows_to_hide2);
-    } 
-
+        //Hide all but the first table row
+        rows = document.getElementById('tableData').rows;
+        for (var idx=1;idx<rows.length;idx++) {
+            form_rows_to_hide.push(rows[idx]);
+        }
+    }
     for (var idx=0;idx<form_rows_to_show.length;idx++) {
         form_rows_to_show[idx].style.display = "table-row";
     }
@@ -35,6 +134,207 @@ function set_station_or_location(node){
     
 }
 
+function set_data_type(node){
+    /*
+    for data listers
+    Sets hidden variable data_type
+    depending on user choice
+    */
+    var dt = document.getElementById('data_type');
+    if (node.value == 'grid'){
+        dt.value = 'grid';
+    }
+    if (node.value == 'grid'){
+        dt.value = 'station';
+        
+    }
+}
+
+function set_area(row_id,node){
+    /*
+    Function that updates area row id on user change of node
+    node is the area selector element, row_id is the
+    row that needs changing, 
+    */
+    var lv, tbl_row, cell0,cell1,div;
+    //Update area default
+    lv = set_area_defaults(node.value);
+    //Update autofill list
+    set_autofill(lv.autofill_list);
+    //Update row_id
+    tbl_row = document.getElementById(row_id);
+    //Override table row
+    //cell1 = Label
+    cell0 = tbl_row.firstChild.nextSibling;
+    cell0.innerHTML= lv.label + ': ';
+    //cell2 input
+    cell1 = cell0.nextSibling.nextSibling;
+    cell1.innerHTML= '<input type="text" id="' + node.value + '" name="'+ 
+    node.value +'" value="' +  lv.value + '" list="' + lv.autofill_list + '"' +
+    ' onchange="update_value(this.value) & unset_large_request() & set_map(this);" >';
+    //Cell3 help text
+    pop_id = document.getElementById('area-pop-up');
+    pop_id.innerHTML='';
+    div = document.createElement('div');
+    div.setAttribute('id', 'ht_' + node.value);
+    pop_id.appendChild(div); 
+    $(div).load(HTML_URL + 'Docu_help_texts.html #ht_' + node.value);
+}
+//Functions to hide and show maps
+//Used in set_map function
+function hide_grid_point_map(){
+    if ($('#GridpointMap').length){
+        document.getElementById('GridpointMap').style.display = "none";
+        if ($('#map-gridpoint').length){
+            m = document.getElementById('map-gridpoint');
+            m.parentNode.removeChild(m);
+        }
+    }
+}
+
+function show_gridpoint_map(){
+    //Show gridpoint map
+    var gp_map_div = document.getElementById('GridpointMap');
+    gp_map_div.style.display = "block";
+    if (!$('#map-gridpoint').length){
+        var m = document.createElement('div');
+        m.setAttribute('id', 'map-gridpoint');
+        m.setAttribute('style','width:615px;')
+        gp_map_div.appendChild(m);
+    }
+    //Generate Map
+    initialize_grid_point_map();
+}
+
+function show_bbox_map() {
+    var bb_map_div = document.getElementById('BBoxMap');
+    bb_map_div.style.display = "block";
+    if (!$('#map-bbox').length){
+        var m = document.createElement('div');
+        m.setAttribute('id', 'map-bbox');
+        m.setAttribute('style','width:600px;');
+        bb_map_div.appendChild(m);
+    }
+    //Generate Map
+    initialize_bbox_map();
+}
+
+function hide_bbox_map(){
+    if ($('#BBoxMap').length){
+        var bb_map_div = document.getElementById('BBoxMap');
+        bb_map_div.style.display = "none";
+        if ($('#map-bbox').length){
+            m = document.getElementById('map-bbox');
+            m.parentNode.removeChild(m);
+        }
+    }
+}
+
+function hide_overlay_map(){
+    if ($('#OverlayMap').length){
+        document.getElementById('OverlayMap').style.display = "none";
+        if ($('#map-overlay').length){
+            var m = document.getElementById('map-overlay');
+            m.parentNode.removeChild(m);
+        }
+        if ($('#content-window').length){
+            var w = document.getElementById('content-window');
+            w.parentNode.removeChild(w);
+        }
+    }
+}
+
+function show_overlay_map(){
+    //Show overlay map 
+    var ol_map_div = document.getElementById('OverlayMap');
+    ol_map_div.style.display = "block";
+    var area_type = document.getElementById('area_type').value;
+    var host = document.getElementById('host').value;
+    var kml_file_path = document.getElementById('kml_file_path').value;
+    if (!$('#map-overlay').length){
+        var m = document.createElement('div');
+        m.setAttribute('id', 'map-overlay');
+        m.setAttribute('style','width:615px;')
+        ol_map_div.appendChild(m);
+    }
+    if (!$('#content-window').length){
+        var w = document.createElement('div');
+        w.setAttribute('id', 'content-window');
+        ol_map_div.appendChild(w);
+    }
+    //Generate Map
+    initialize_map_overlays(area_type,host,kml_file_path);
+}
+
+function hide_polygon_map(){
+    if ($('#PolyMap').length){
+        document.getElementById('PolyMap').style.display = "none";
+        if ($('#map-polygon').length){
+            m = document.getElementById('map-polygon');
+            m.parentNode.removeChild(m);
+        }
+    }
+}
+
+function show_polygon_map(){
+    //Show polygon map
+    var p_map_div = document.getElementById('PolyMap');
+    p_map_div.style.display = "block";
+    var panel=p_map_div.firstChild;
+    if (!$('#map-polygon').length){
+        var m = document.createElement('div');
+        m.setAttribute('id', 'map-polygon');
+        m.setAttribute('style','width:615px;');
+        p_map_div.insertBefore(m,panel);
+        /*p_map_div.appendChild(m);*/
+    }
+    //Generate Map
+    initialize_polygon_map();
+}
+
+function set_map(node){
+    /*
+    Sets map interfaces for data and applications
+    node is the area selector
+    */
+    //Get TMP env variable (defined in templates/csc_base.html)
+    var area_type = node.value;
+    var TMP_URL = document.getElementById('TMP_URL').value;
+    var state = document.getElementById('overlay_state').value;
+    var kml_file_path = TMP_URL + state + '_' + area_type + '.kml';
+    document.getElementById('kml_file_path').value=kml_file_path;
+    if (area_type == 'basin' || area_type == 'county' || area_type == 'county_warning_area' || area_type =='climate_division'){
+        document.getElementById('select_overlay_by').value= area_type;
+    }
+    //Set up maps for display
+    if (area_type =='county' || area_type =='climate_division' || area_type == 'basin' || area_type == 'county_warning_area'){
+        show_overlay_map();
+        hide_polygon_map();
+        hide_grid_point_map(); 
+    } 
+    else if (area_type == 'shape') {
+        hide_overlay_map();
+        show_polygon_map();
+        hide_grid_point_map();
+    }
+    else if (area_type == 'location'){
+        hide_overlay_map();
+        hide_polygon_map();
+        show_gridpoint_map();
+    }
+    else if (area_type == 'bounding_box'){
+        show_bbox_map();
+        hide_overlay_map();
+        hide_polygon_map();
+        hide_grid_point_map();
+    }
+    else {
+        hide_overlay_map();
+        hide_polygon_map();
+        hide_grid_point_map();
+        hide_bbox_map();
+    }
+}
 //Old functions (need cleanup)
 function save_form_options(formID,hiddenID){
     /* 
@@ -191,17 +491,6 @@ function set_degree_days(unit_value){
             document.getElementById('degree_days').value = 'gdd55,hdd70';
         }
     } 
-}
-
-function update_value(val){
-    /*
-    Dynamic forms are not updated in browser cache
-    This function updates the values upon user change
-    Needed when two different forms are present in page
-    and form fields of one form should be 
-    preserved upon submit of the other
-    */
-    this.value = val;
 }
 
 function set_likelihood_thresholds(node){
@@ -370,34 +659,6 @@ function hide_opts(rowClass){
     }
 }
 
-function set_autofill(datalist){
-    /*
-    Sets autofill lists
-    */
-    var JSON_URL = document.getElementById('JSON_URL').value;
-    dl = document.createElement('datalist');
-    dl.setAttribute('id',datalist);
-    dl.setAttribute('class', datalist.replace('US_',''));
-    $.getJSON(JSON_URL + datalist + '.json', function(metadata) {
-        for (idx=0;idx<metadata.length;idx++){
-            var name = metadata[idx].name;
-            var id = metadata[idx].id;
-            if (id == '' || !id ){
-                continue
-            }
-            var opt = document.createElement('option');
-            if (datalist == "US_CMAP"){
-                opt.value = name;
-            }
-            else {
-                opt.value = name + ', ' + id;
-            }
-            opt.setAttribute('class','name')
-            dl.appendChild(opt);
-        }
-    });
-    document.body.appendChild(dl);
-}
 
 function highlight_form_field(td_id, err){
 
@@ -711,161 +972,6 @@ function hide_formGraph(rowClass) {
     if ($('#generate_graph_row').length){
         document.getElementById('generate_graph_row').style.display = "none";
     }
-}
-
-function hide_grid_point_map(){
-    if ($('#GridpointMap').length){
-        document.getElementById('GridpointMap').style.display = "none";
-        if ($('#map-gridpoint').length){
-            m = document.getElementById('map-gridpoint');
-            m.parentNode.removeChild(m);
-        }
-    }
-}
-
-function show_gridpoint_map(){
-    //Show gridpoint map
-    var gp_map_div = document.getElementById('GridpointMap');
-    gp_map_div.style.display = "block";
-    if (!$('#map-gridpoint').length){
-        var m = document.createElement('div');
-        m.setAttribute('id', 'map-gridpoint');
-        m.setAttribute('style','width:615px;')
-        gp_map_div.appendChild(m);
-    }
-    //Generate Map
-    initialize_grid_point_map();
-}
-
-function show_bbox_map() {
-    var bb_map_div = document.getElementById('BBoxMap');
-    bb_map_div.style.display = "block";
-    if (!$('#map-bbox').length){
-        var m = document.createElement('div');
-        m.setAttribute('id', 'map-bbox');
-        m.setAttribute('style','width:600px;');
-        bb_map_div.appendChild(m);
-    }
-    //Generate Map
-    initialize_bbox_map();
-}
-
-function hide_bbox_map(){
-    if ($('#BBoxMap').length){
-        var bb_map_div = document.getElementById('BBoxMap');
-        bb_map_div.style.display = "none";
-        if ($('#map-bbox').length){
-            m = document.getElementById('map-bbox');
-            m.parentNode.removeChild(m);
-        }
-    }
-}
-
-function hide_overlay_map(){
-    if ($('#OverlayMap').length){
-        document.getElementById('OverlayMap').style.display = "none";
-        if ($('#map-overlay').length){
-            var m = document.getElementById('map-overlay');
-            m.parentNode.removeChild(m);
-        }
-        if ($('#content-window').length){
-            var w = document.getElementById('content-window');
-            w.parentNode.removeChild(w);
-        }
-    }
-}
-
-function show_overlay_map(){
-    //Show overlay map 
-    var ol_map_div = document.getElementById('OverlayMap');
-    ol_map_div.style.display = "block";
-    var area_type = document.getElementById('area_type').value;
-    var host = document.getElementById('host').value;
-    var kml_file_path = document.getElementById('kml_file_path').value;
-    if (!$('#map-overlay').length){
-        var m = document.createElement('div');
-        m.setAttribute('id', 'map-overlay');
-        m.setAttribute('style','width:615px;')
-        ol_map_div.appendChild(m);
-    }
-    if (!$('#content-window').length){
-        var w = document.createElement('div');
-        w.setAttribute('id', 'content-window');
-        ol_map_div.appendChild(w);
-    }
-    //Generate Map
-    initialize_map_overlays(area_type,host,kml_file_path);
-}
-
-function hide_polygon_map(){
-    if ($('#PolyMap').length){
-        document.getElementById('PolyMap').style.display = "none";
-        if ($('#map-polygon').length){
-            m = document.getElementById('map-polygon');
-            m.parentNode.removeChild(m);
-        }
-    }
-}
-
-function show_polygon_map(){
-    //Show polygon map
-    var p_map_div = document.getElementById('PolyMap');
-    p_map_div.style.display = "block";
-    var panel=p_map_div.firstChild;
-    if (!$('#map-polygon').length){
-        var m = document.createElement('div');
-        m.setAttribute('id', 'map-polygon');
-        m.setAttribute('style','width:615px;');
-        p_map_div.insertBefore(m,panel);
-        /*p_map_div.appendChild(m);*/
-    }
-    //Generate Map
-    initialize_polygon_map();
-}
-
-function set_area_defaults(area_type){
-    var lv = {
-        'label':'Station ID',
-        'value':'RENO TAHOE INTL AP, 266779',
-        'autofill_list':'US_' + area_type
-    }
-    if (area_type == 'station_ids'){
-        lv.label = 'Station IDs';
-        lv.value ='266779,050848';
-    }
-    if (area_type == 'location'){
-        lv.label = 'Location (lon/lat)';
-        lv.value = '-119,39';
-    }
-    if (area_type == 'county'){
-        lv.label ='County';
-        lv.value ='Churchill, 32001';
-    }
-    if (area_type == 'climate_division'){
-        lv.label ='Climate Division';
-        lv.value ='Northwestern, NV01';
-    }
-    if (area_type == 'county_warning_area'){
-        lv.label ='County Warning Area';
-        lv.value ='Las Vegas, NV, VEF';
-    }
-    if (area_type == 'basin'){
-        lv.label ='Basin';
-        lv.value ='Hot Creek-Railroad Valleys, 16060012';
-    }
-    if (area_type == 'state'){
-        lv.label ='State';
-        lv.value ='nv';
-    }
-    if (area_type == 'bounding_box'){
-        lv.label ='Bounding Box';
-        lv.value ='-115,34,-114,35';
-    }
-    if (area_type == 'shape'){
-        lv.label ='Custom Shape';
-        lv.value ='-115,34, -115, 35,-114,35, -114, 34';
-    }    
-    return lv;
 }
 
 function set_area_and_map(area_type){

@@ -1,6 +1,6 @@
 {% extends "csc_base.html" %}
-<meta name="keywords" content="data, station data, historic data, acis">
-<meta name="description" content="SCENIC Historic Station Data">
+<meta name="keywords" content="data, station data, gridded data, modeled data, acis">
+<meta name="description" content="SCENIC Multi point data lister">
 
 {%load my_scenic_filters%}
 
@@ -11,54 +11,54 @@
     <script type="text/javascript">                        
         $("#tool_info").load("{{HTML_URL}}/Docu_About_multi_lister.html");
     </script>
+    
     <div id="how_to" style="display:none;">
-    <div id="Doc_select_stations_by"></div>
-    <script type="text/javascript">            
-        $("#Docu_select_area").load("{{HTML_URL}}/Docu_select_area.html");
-    </script>
-    <div id="Docu_elements"></div>
-     <script type="text/javascript">            
-        $("#Docu_elements").load("{{HTML_URL}}/Docu_elements_station.html");
-    </script>
-    <div id="Docu_add_degree_days"></div>
-    <script type="text/javascript">            
-        $("#Docu_add_degree_days").load("{{HTML_URL}}/Docu_add_degree_days.html");
-    </script>
-    <div id="Docu_degree_days"></div>
-    <script type="text/javascript">            
-        $("#Docu_degree_days").load("{{HTML_URL}}/Docu_degree_days.html");
-    </script>
-    <div id="Docu_units"></div>
-    <script type="text/javascript">            
-        $("#Docu_units").load("{{HTML_URL}}/Docu_units.html");
-    </script>
-    <div id="Docu_start_end_date"></div>
-     <script type="text/javascript">            
-        $("#Docu_start_end_date").load("{{HTML_URL}}/Docu_start_end_date.html");
-    </script>
-    <div id="Docu_show_flags"></div>
-    <script type="text/javascript">            
-        $("#Docu_show_flags").load("{{HTML_URL}}/Docu_show_flags.html");
-    </script>
-    <div id="Docu_show_observation_time"></div>
-    <script type="text/javascript">            
-        $("#Docu_show_observation_time").load("{{HTML_URL}}/Docu_show_observation_time.html");
-    </script>
-    <div id="Docu_date_format"></div>
-    <script type="text/javascript">            
-        $("#Docu_date_format").load("{{HTML_URL}}/Docu_date_format.html");
-    </script>
-    <div id="Docu_data_format"></div>
-    <script type="text/javascript">            
-        $("#Docu_data_format").load("{{HTML_URL}}/Docu_data_format.html");
-    </script>
-    <div id="Docu_delimiter"></div>
-    <script type="text/javascript">
-        $("#Docu_delimiter").load("{{HTML_URL}}/Docu_delimiter.html");         
-    </script>
+        <div id="Docu_elements"></div>
+         <script type="text/javascript">            
+            $("#Docu_elements").load("{{HTML_URL}}/Docu_elements_station.html");
+        </script>
+        <div id="Docu_add_degree_days"></div>
+        <script type="text/javascript">            
+            $("#Docu_add_degree_days").load("{{HTML_URL}}/Docu_add_degree_days.html");
+        </script>
+        <div id="Docu_degree_days"></div>
+        <script type="text/javascript">            
+            $("#Docu_degree_days").load("{{HTML_URL}}/Docu_degree_days.html");
+        </script>
+        <div id="Docu_units"></div>
+        <script type="text/javascript">            
+            $("#Docu_units").load("{{HTML_URL}}/Docu_units.html");
+        </script>
+        <div id="Docu_start_end_date"></div>
+         <script type="text/javascript">            
+            $("#Docu_start_end_date").load("{{HTML_URL}}/Docu_start_end_date.html");
+        </script>
+        <div id="Docu_show_flags"></div>
+        <script type="text/javascript">            
+            $("#Docu_show_flags").load("{{HTML_URL}}/Docu_show_flags.html");
+        </script>
+        <div id="Docu_show_observation_time"></div>
+        <script type="text/javascript">            
+            $("#Docu_show_observation_time").load("{{HTML_URL}}/Docu_show_observation_time.html");
+        </script>
+        <div id="Docu_date_format"></div>
+        <script type="text/javascript">            
+            $("#Docu_date_format").load("{{HTML_URL}}/Docu_date_format.html");
+        </script>
+        <div id="Docu_data_format"></div>
+        <script type="text/javascript">            
+            $("#Docu_data_format").load("{{HTML_URL}}/Docu_data_format.html");
+        </script>
+        <div id="Docu_delimiter"></div>
+        <script type="text/javascript">
+            $("#Docu_delimiter").load("{{HTML_URL}}/Docu_delimiter.html");         
+        </script>
     </div><!--how_to-->
 
 <!---Hidded variables-->
+<input type="hidden" id="area_type" name="area_type" value="{{initial.area_type}}">
+<input type="hidden" id="host" name="host" value="{{iniial.host}}">
+<input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
 
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
@@ -94,418 +94,68 @@ $(function(){
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
         <table class="form" id="tableData" >
-        <tr valign="bottom" >
-        <td>Area of interest:</td>
-        <td>
-            <select id="select_area" name="select_area" onchange="set_station_grid_select('area',this) & update_value(this.value);">
-            <option value="station_ids" {{checkbox_vals.station_selected}}>List of Stations</option>
-            <option value="locations" {{checkbox_vals.location_selected}}>List of Gridpoints (Lon/Lat)</option>
-            <option value="county" {{checkbox_vals.county_selected}}>County</option>
-            <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
-            <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
-            <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
-            <option value="state" {{checkbox_vals.state_selected}}>State</option>
-            <!--<option value="bounding_box" {{checkbox_vals.bounding_box_selected}}>Bounding Box</option>-->
-            <option value="shape" {{checkbox_vals.shape_selected}}>Custom Shape</option>
-            </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" onclick="ShowPopupDocu('Docu_select_area')">
-        <div id="Docu_select_area" style="display:none;"></div>
-        <script type="text/javascript">                        
-            $("#Docu_select_area").load("{{HTML_URL}}/Docu_select_area.html");
-        </script>
-        </td>
-        <tr id="area" valign="bottom">
-        {%if initial.select_stations_by == "station_id" %}
-        <td id="{{initial.area_type_label}}">{{initial.area_type_label}}/Name: </td>
-        {%else%}
-        <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
-        {%endif%}
-        <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_value(this.value) & unset_large_request() & update_maps(this);"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up" id="area-pop-up">
-            <div id="ht_{{initial.select_stations_by}}"></div>
-            <script type="text/javascript">                        
-            $("#ht_{{initial.select_stations_by}}").load("{{HTML_URL}}/Docu_help_texts.html #ht_{{initial.select_stations_by}}");
-            </script>
-        </div>
-        </td>
-        </tr>
-        {%if initial.station_id or initial.station_ids%}
         <tr>
-        <td></td>
-        <td><a target="_blank" href="{{STATION_FINDER_URL}}">Station Finder</a></td>
-        <td></td>
-        </td>
-        {%endif%}
-        <tr valign="top">
-        <td id="Elements">Elements: </td>
+        <td>Data Type:</td>
         <td>
-            <select id="elements" name="elements" multiple onchange="update_elements(this)">
-            <option value="maxt" {{checkbox_vals.elements_maxt_selected}}>Maximum Temperature</option>
-            <option value="mint" {{checkbox_vals.elements_mint_selected}}>Minimum Temperature</option>
-            <option value="avgt" {{checkbox_vals.elements_avgt_selected}}>Average Temperature</option>
-            <option value="obst" {{checkbox_vals.elements_obst_selected}}>Observation Time Temp.</option>
-            <option value="pcpn" {{checkbox_vals.elements_pcpn_selected}}>Precipitation</option>
-            <option value="snow" {{checkbox_vals.elements_snow_selected}}>Snowfall</option>
-            <option value="snwd" {{checkbox_vals.elements_snwd_selected}}>Snow Depth</option>
-            <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Deg. Days(65F/18C)</option>
-            <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Deg. Days(65F/18C)</option>
-            <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Deg. Days(50F/10C)</option>
-            <option value="evap" {{checkbox_vals.elements_evap_selected}}>Pan Evaporation</option>
-            <!--<option value="wdmv" {{checkbox_vals.elements_wdmv_selected}}>Wind Movement</option>-->
-            </select>
-        </td>        <td><img class="trigger" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
-        <div class="pop-up">
-        <div id="ht_elements"></div>
-        <script type="text/javascript">                        
-        $("#ht_elements").load("{{HTML_URL}}/Docu_help_texts.html #ht_elements");
-        </script>
-        </div>
-        </td>
-        </tr>
-        <tr valign="bottom">
-        <td>Add special degree days: </td>
-        <td>
-        <select id="add_degree_days" name="add_degree_days" onchange="show_div_if_true(this,'dd') & update_value(this.value)">
-            <option value="T" {{checkbox_vals.add_degree_days_T_selected}}>Yes</option>
-            <option value="F" {{checkbox_vals.add_degree_days_F_selected}}>No</option>
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_add_degree_days"></div>
-        <script type="text/javascript">                        
-            $("#ht_add_degree_days").load("{{HTML_URL}}/Docu_help_texts.html #ht_add_degree_days");
-        </script>
-        </div>
-        </td>
-        </tr>
-        {%if initial.add_degree_days == "T" and not user_params_dict.add_degree_days %}
-        <tr id="dd" valign="top">
-        {%else%}
-        {%if user_params_dict.add_degree_days == "T"%}
-        <tr id="dd" valign="top" >
-        {%else%}
-        <tr id="dd" valign="top" style="display:none">
-        {%endif%}
-        {%endif%}
-        <td id="Degree Days">Degree Days: </td>
-        <td><input type="text" id="degree_days" name="degree_days" value="{{initial.degree_days}}" onchange="update_value(this.value)"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_degree_days"></div>
-        <script type="text/javascript">                        
-            $("#ht_degree_days").load("{{HTML_URL}}/Docu_help_texts.html #ht_degree_days");
-            </script>
-        </div>
-        </td>
-        </tr>
-        <tr valign="top">
-        <td>Units: </td>
-        <td>
-        <select id="units" name="units" onchange="update_value(this.value) & set_degree_days(this.value)">
-            <option value="metric" {{checkbox_vals.units_metric_selected}}>Metric</option>
-            <option value="english" {{checkbox_vals.units_english_selected}}>English</option>
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_units"></div>
-        <script type="text/javascript">                        
-            $("#ht_units").load("{{HTML_URL}}/Docu_help_texts.html #ht_units");
-        </script>    
-        </div>
-        </td>
-        </tr>
-        <tr valign="top">
-        <td id="Start Date">Start Date: </td>
-        <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value) & unset_large_request();"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_start_date"></div>
-            <script type="text/javascript">                        
-            $("#ht_start_date").load("{{HTML_URL}}/Docu_help_texts.html #ht_date_station");
-            </script>
-        </div>
-        </td>
-        </tr>
-        <tr valign="top">
-        <td id="End Date">End Date: </td>
-        <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value) & unset_large_request();"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_end_date"></div>
-            <script type="text/javascript">                        
-            $("#ht_end_date").load("{{HTML_URL}}/Docu_help_texts.html #ht_date_station");
-            </script>
-        </div>
-        </td>
-        </tr>
-        <tr valign="top">
-        <td>Show Flags: </td>
-        <td>
-            <select id="show_flags" name="show_flags" onchange="update_value(this.value)">
-            <option value="F" {{checkbox_vals.show_flags_F_selected}}>No</option>
-            <option value="T" {{checkbox_vals.show_flags_T_selected}}>Yes</option>
+            <select id="data_type" name="data_type" onchange="set_lister_form(this) & update_value(this.value);">
+            <option value="none" {{checkbox_vals.none_selected}}>Select Data Type</option>
+            <option value="station" {{checkbox_vals.station_selected}}>Station Data</option>
+            <option value="grid" {{checkbox_vals.grid_selected}}>Gridded Data</option>
             </select>
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_show_flags"></div>
-            <script type="text/javascript">                        
-            $("#ht_show_flags").load("{{HTML_URL}}/Docu_help_texts.html #ht_show_flags");
-            </script>
-        </div>
-        </td>
-        </tr>
-        <tr valign="bottom">
-        <td>Show Observation Time: </td>
-        <td>
-            <select id="show_observation_time" name="show_observation_time" onchange="update_value(this.value)">
-            <option value="F" {{checkbox_vals.show_observation_time_F_selected}}>No</option>
-            <option value="T" {{checkbox_vals.show_observation_time_T_selected}}>Yes</option>
-            </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_show_observation_time"></div>
-            <script type="text/javascript">                        
-            $("#ht_show_observation_time").load("{{HTML_URL}}/Docu_help_texts.html #ht_show_observation_time");
-            </script>
-        </div>
-        </td>
-        </tr>
-        <tr valign="top" >
-        <td>Date Format: </td>
-        <td>
-        <select id="date_format" name="date_format" onchange="update_value(this.value)">
-        <option value="none" {{checkbox_vals.date_format_none_selected}}>yyyymmdd</option>
-        <option value="dash" {{checkbox_vals.date_format_dash_selected}}>yyyy-mm-dd</option>
-        <option value="colon" {{checkbox_vals.date_format_colon_selected}}>yyyy:mm:dd</option>
-        <option value="slash" {{checkbox_vals.date_format_slash_selected}}>yyyy/mm/dd</option>
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_date_format"></div>
+        <div id="Docu_select_data_type" class="pop-up"></div>
         <script type="text/javascript">                        
-            $("#ht_date_format").load("{{HTML_URL}}/Docu_help_texts.html #ht_date_format");
+            $("#Docu_data_type").load("{{HTML_URL}}/Docu_help_texts.html #ht_data_type");
         </script>
-        </div>
         </td>
-        </tr>
-        <tr valign="top">
-        <td>Data Format: </td>
-        <td>
-        <select id="data_format" name="data_format" onchange="set_delimiter_and_output_file(this, 'delim','out_file') & update_value(this.value);">
-        {%if  not large_request%}
-        <option value="html" {{checkbox_vals.data_format_htnl_selected}}>Html (display on page)</option>
-        {%endif%}
-        <option value="clm" {{checkbox_vals.data_format_clm_selected}}>Columnar, .txt</option>
-        <option value="dlm" {{checkbox_vals.data_format_dlm_selected}}>Delimited, .dat</option>
-        <option value="xl" {{checkbox_vals.data_format_xl_selected}} >Excel, .xls</option>
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_data_format"></div>
-        <script type="text/javascript">                        
-            $("#ht_data_format").load("{{HTML_URL}}/Docu_help_texts.html #ht_data_format");
-        </script>
-        </div>
-        </td>
-        </tr>
-        <!--Only show when format is clm or dlm or large data request but not if xl-->
-        {%if initial.data_format == "clm" or initial.data_format == "dlm"%}
-        <tr valign="top" id="delim" style="display:table-row">
-        {%else%}
-        {%if large_request and initial.data_format != "xl" %}
-        <tr valign="top" id="delim" style="display:table-row">
-        {%else%}
-        <tr valign="top" id="delim" style="display:none" >
-        {%endif%}
-        {%endif%}
-        <td>Delimiter:</td>
-        <td>
-        <select id="delimiter" name="delimiter" onchange="update_value(this.value)">
-        <option value="comma" {{checkbox_vals.comma_selected}}>Comma (,)</option>
-        <option value="tab" {{checkbox_vals.tab_selected}}>Tab (    )</option>
-        <option value="space" {{checkbox_vals.space_selected}}>Space ( )</option>
-        <option value="colon" {{checkbox_vals.colon_selected}}>Colon (:)</option>
-        <option value="pipe" {{checkbox_vals.pipe_selected}}>pipe(|)</option>
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_delimiter"></div>
-        <script type="text/javascript">                        
-            $("#ht_delimiter").load("{{HTML_URL}}/Docu_help_texts.html #ht_delimiter");
-        </script>
-        </div>
-        </td>
-        </tr>
-        <!--Only show when data_format is clm,xl or dlm, don't show if html-->
-        {%if initial.data_format == "html" and not large_request%}
-        <tr valign="top" id="out_file" style="display:none;">
-        {%else%}
-        {%if large_request%}
-        <tr valign="top" id="out_file" style="display:table-row;" class="large_request">
-        {%else%}
-        <tr valign="top" id="out_file" style="display:table-row;" >
-        {%endif%}
-        {%endif%}
-        <td>Output file name:</td>
-        <td><input type="text" id="output_file_name" name="output_file_name" value="{{initial.output_file_name}}" onchange="update_value(this.value)"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_output_file_name"></div>
-        <script type="text/javascript">                        
-            $("#ht_output_file_name").load("{{HTML_URL}}/Docu_help_texts.html #ht_output_file_name");
-        </script>
-        </div>
-        </td>
-        </tr>
-        {%if large_request %}
-        <tr valign="top" class="large_request" id="un">
-        <td>Name: </td>
-        <td><input type="text" id="user_name" name="user_name" value="{{initial.user_name}}" onchange="update_value(this.value);"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_user_name"></div>
-        <script type="text/javascript">                        
-            $("#ht_user_name").load("{{HTML_URL}}/Docu_help_texts.html #ht_user_name");
-        </script>
-        </div>
-        </td>
-        </tr>
-        <tr valign="top" class="large_request">
-        <td id="User Email">User Email: </td>
-        <td><input type="text" id="user_email" name="user_email" value="{{initial.user_email}}" onchange="update_value(this.value);"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_user_email"></div>
-        <script type="text/javascript">                        
-            $("#ht_user_email").load("{{HTML_URL}}/Docu_help_texts.html #ht_user_email");
-        </script>
-        </div>
-        </td>
-        </tr>
+        </tr> 
+        <tr class="station" style="display:none">{% include 'includes/station_area_select.html'%}</tr>
+        <tr class="grid" style="display:none">{% include 'includes/grid_area_select.html'%}</tr>
+        <tr class="station_grid" style="display:none;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
+        <tr class="station" style="display:none">{% include 'includes/station_elements.html'%}</tr>
+        <tr class="grid" style="display:none">{% include 'includes/grid_elements.html'%}</tr>
+        <tr class="station_grid" id="add" valign="top" style="display:none;">{% include 'includes/add_special_degree_days.html'%}</tr>
+        <tr id="dd" valign="top" style="display:none">{% include 'includes/degree_days.html'%}</tr>
+        <tr class="station_grid" style="display:none;">{% include 'includes/units.html'%}</tr>
+        <tr class="station_grid" style="display:none;">{% include 'includes/start_date.html'%}</tr>
+        <tr class="station_grid" style="display:none;">{% include 'includes/end_date.html'%}</tr>
+        <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
+        <tr class="station" style="display:none">{% include 'includes/show_flags.html'%}</tr>
+        <tr class="station" style="display:none">{% include 'includes/show_observation_time.html'%}</tr>
+        <tr class="station_grid" style="display:none;">{% include 'includes/date_format.html'%}</tr>
+        <tr class="station_grid" style="display:none;">{% include 'includes/data_format_multi.html'%}</tr>
+        <tr class="station_grid" id="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
+        <tr id="out_file" style="display:none;" class="large_request">{% include 'includes/out_file.html'%}</tr>
+        {% if large_request %}
+        <tr class="large_request" id="un">{% include 'includes/user_name.html'%}</tr>
+        <tr class="large_request">{% include 'includes/user_email.html'%}</tr>
         {%endif%}
         </table>
         <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
         <input style="margin:5px" type="submit" value="Get data" name="formData"/>
         </form>
     </div>
-    <br /><br />
 </td>
 <td valign="top">
-    <!--Map section-->
+    <!--Map section-->  
+    <div id="GridpointMap" style="display:none;"></div>
+
+    <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>   
+
     <div id="PolyMap" style="display:none;">
-        <div id="map-polygon"></div>
         <div id="panel">
         <div id="color-palette"></div>
             <div>
                 <button id="delete-button">Delete Selected Shape</button>
             </div>
         </div>
-        <br />
-        {%if lat and lon %}
-        <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
-        <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
-        {%else%}
-        <input type="hidden" id="initial_lat" name="initial_lat" value='34.5'>
-        <input type="hidden" id="initial_lon" name="initial_lon" value='-114.5'>
-        {%endif%}
     </div>
+    <!--end map section--> 
+</td></table>
 
-    <div id="GridpointMap" style="display:none;"></div>
-
-    {%if need_overlay_map%}
-    <div id="OverlayMap" style="display:block;">
-    {%else%}
-    <div id="OverlayMap" style="display:none;">
-    {%endif%}
-         <div id="formOverlay" style="display:inherit;">
-            <form method="post" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableDataForm')">{% csrf_token %}
-            <table class="form" style="margin:0px;">
-            <td>State: </td>
-            <td>
-                <select name="overlay_state" id="overlay_state">
-                <option value="al" {{al_selected}}>Alabama</option>
-                <option value="ak" {{ak_selected}}>Alaska</option>
-                <option value="az" {{az_selected}}>Arizona</option>
-                <option value="ar" {{ar_selected}}>Arkansas</option>
-                <option value="ca" {{ca_selected}}>California</option>
-                <option value="co" {{co_selected}}>Colorado</option>
-                <option value="ct" {{ct_selected}}>Connecticut</option>
-                <option value="de" {{de_selected}}>Delaware</option>
-                <option value="dc" {{dc_selected}}>District of Columbia</option>
-                <option value="fl" {{fl_selected}}>Florida</option>
-                <option value="ga" {{ga_selected}}>Georgia</option>
-                <option value="hi" {{hi_selected}}>Hawaii</option>
-                <option value="id" {{id_selected}}>Idaho</option>
-                <option value="il" {{il_selected}}>Illinois</option>
-                <option value="in" {{in_selected}}>Indiana</option>
-                <option value="ia" {{ia_selected}}>Iowa</option>
-                <option value="ks" {{ks_selected}}>Kansas</option>
-                <option value="ky" {{ky_selected}}>Kentucky</option>
-                <option value="la" {{la_selected}}>Louisiana</option>
-                <option value="me" {{me_selected}}>Maine</option>
-                <option value="md" {{md_selected}}>Maryland</option>
-                <option value="ma" {{ma_selected}}>Massachusetts</option>
-                <option value="mi" {{mi_selected}}>Michigan</option>
-                <option value="mn" {{mn_selected}}>Minnesota</option>
-                <option value="ms" {{ms_selected}}>Mississippi</option>
-                <option value="mo" {{mo_selected}}>Missouri</option>
-                <option value="mt" {{mt_selected}}>Montana</option>
-                <option value="ne" {{ne_selected}} >Nebraska</option>
-                <option value="nv" {{nv_selected}}>Nevada</option>
-                <option value="nh" {{nh_selected}}>New Hampshire</option>
-                <option value="nj" {{nj_selected}}>New Jersey</option>
-                <option value="nm" {{nm_selected}}>New Mexico</option>
-                <option value="ny" {{ny_selected}}>New York</option>
-                <option value="nc" {{nc_selected}}>North Carolina</option>
-                <option value="nd" {{nd_selected}}>North Dakota</option>
-                <option value="oh" {{oh_selected}}>Ohio</option>
-                <option value="ok" {{ok_selected}}>Oklahoma</option>
-                <option value="or" {{or_selected}}>Oregon</option>
-                <option value="pa" {{pa_selected}}>Pennsylvania</option>
-                <option value="ri" {{ri_selected}}>Rhode Island</option>
-                <option value="sc" {{sc_selected}}>South Carolina</option>
-                <option value="sd" {{sd_selected}}>South Dakota</option>
-                <option value="tn" {{tn_selected}}>Tennessee</option>
-                <option value="tx" {{tx_selected}}>Texas</option>
-                <option value="ut" {{ut_selected}}>Utah</option>
-                <option value="vt" {{vt_selected}}>Vermont</option>
-                <option value="va" {{va_selected}}>Virginia</option>
-                <option value="wa" {{wa_selected}}>Washington</option>
-                <option value="wv" {{wv_selected}}>West Virginia</option>
-                <option value="wi" {{wi_selected}}>Wisconsin</option>
-                <option value="wy" {{wy_selected}}>Wyoming</option>
-            </select>
-            </td>
-            <td><input type="submit" value="Update Map" name="formOverlay"/></td>
-            </tr>
-            </table>
-            <input type="hidden" value="{{initial.select_stations_by}}" name="select_overlay_by" id="select_overlay_by">
-            <input type="hidden" value="{{area_type_value}}" name="{{area_type}}">
-            <input type="hidden" id="elements_string" value="{{initial.elements_string}}" name="elements" class="elements_string">
-            </form>
-        </div>
-    </div>
-
-    {%if need_overlay_map%}
-    {%if overlay_error%}
-    <p class="error">{{overlay_error}}</p>
-    {%else%}
-    <div id="map-overlay"></div>
-    <div id="content-window"></div>
-    <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
-    {%endif%}
-    <br /><br /> 
-    {%endif%}
-  
+<table cellpadding="10" align="center">
+<td valign="top" width="97%">
     <!--Errors and search parameter section-->
     {%if form_error%}
     <div id="form_error">
@@ -515,243 +165,6 @@ $(function(){
         {%endfor%}
     </div>
     {%endif%}
- 
-    <div class="results">
-    {%if form_message%}
-    <div class="results" id="user_params_list">
-    <p class="message">
-    Additional format changes can be made using the form on the left!<br />
-    {%if form_message_sf %}
-    Please check your parameters and click on "Get Data" to obtain your data.<br /><br />
-    {%endif%}
-    YOUR SEARCH PARAMETERS:<br />
-    {%for key_val in user_params_list%}
-    <b>{{key_val.0}}</b>:
-    {%if key_val.0 == "Station IDs" %}
-    <span id="stn_list" class="message"></span><br />
-    {%else%}
-    {{key_val.1}}<br />
-    {%endif%}
-    {%endfor%}
-    </p>
-    </div>
-    {%endif%}
-
-    {%if large_request %}
-    <p class="message">{{large_request}}</p>
-    {%endif%}
-
-    {%if too_large%}
-    <p class="error">{{too_large}}</p>
-    {%endif%}
-
-    {%if display_params_list and not form_message%}
-    <p class="message"><b>YOUR SEARCH PARAMETERS</b>:<br /><br />
-    {%for param in display_params_list%}
-    {%if param.0 and param.1%}
-    <b>{{param.0}}</b>:
-    {%if param.0 == "Elements"%}
-    <br />
-    {%for el in params_dict.elems_long%}
-    {{el}}<br />
-    {%endfor%}
-    {%elif param.0 == "shape"%}
-    <p class="message" onClick="ShowHide('coords')"><u>Click here to see/hide coordinates</u></p>
-    <div id="coords" style="display:none;">{{params.1}}</div>
-    {%elif param.0 == "Station IDs"%}
-    {%for ID in params_dict.station_list%}
-    {{ID}}
-    {%if not forloop.last%},{%endif%}
-    <br />
-    {%endfor%}
-    {%else%}
-    {{param.1}}<br />
-    {%endif%}
-    {%endif%}
-    {%endfor%}
-    {%endif%}
-    </p></div>
-
-    <div class="results">
-    {%if results%}
-    {%if results.error%}
-    <p class="error">{{results.error}}</p>
-    {%else%}
-    <div id="Arrow" class="results">
-    <table style="display:block;">
-    <td valign="top"><b>RESULTS:</b></td><td>
-    <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td>
-    </table>
-    </div>
-    {%endif%}
-    </div>
-</td></table>
-
-<table cellpadding="10" align="center">
-<td valign="top" width="97%">
-    <div class="results">
-    {%if results%}
-    <!--Download data button-->
-    <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
-    <!--Download form-->
-    <div id="formDownload" class="form" style="display:none;">
-        {%if json_dict%}
-        <form method="post" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading()">
-        {%elif json_file%}
-        <form method="post" action="?json_file={{json_file}}" onsubmit="show_loading()">
-        {%else%}
-        <form method="post" action="" onsubmit="show_loading()">
-        {%endif%}
-        {% csrf_token %}
-        <table id="tableDownload" >
-        <tr valign="top">
-        <td>Data Format: </td>
-        <td>
-        <select id="data_format_download" name="data_format_download" onchange="set_delimiter(this, 'delim_download');">
-        <option value="clm">Columnar, .txt</option>
-        <option value="dlm">Delimited, .dat</option>
-        <option value="xl" selected>Excel, .xls</option>
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_data_formati_download"></div>
-        <script type="text/javascript">                        
-            $("#ht_data_format_download").load("{{HTML_URL}}Docu_help_texts.html #ht_data_format");
-        </script>
-        </div>
-        </td>
-        </tr>
-        <!--Only show when format is clm or dlm, don't show if xl-->
-        <tr valign="top" id="delim_download" style="display:none;">
-        <td>Delimiter:</td>
-        <td>
-        <select id="delimiter_download" name="delimiter_download">
-        <option value="comma" selected>Comma (,)</option>
-        <option value="tab">Tab (    )</option>
-        <option value="space">Space ( )</option>
-        <option value="colon">Colon (:)</option>
-        <option value="pipe">pipe(|)</option>
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_delimiter_download"></div>
-        <script type="text/javascript">                        
-            $("#ht_delimiter_download").load("{{HTML_URL}}Docu_help_texts.html #ht_delimiter");
-        </script>
-        </div>
-        </td>
-        </tr>
-        <tr valign="top">
-        <td>Output file name: </td>
-        <td><input type="text" id="output_file_name_download" name="output_file_name_download" value="Output"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_output_file_name_download"></div>
-        <script type="text/javascript">                        
-            $("#ht_output_file_name_download").load("{{HTML_URL}}Docu_help_texts.html #ht_output_file_name");
-        </script>
-        </div>
-        </td>
-        </tr>
-        </table>
-        <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-        <input type="submit" value="Download" name="formDownload">
-        </form>
-     </div><!--end formDownload-->
-
-
-    <!--Link to relevant apps-->
-    {%if link_to_all and not results.error%}
-    <a target="_blank" href="{{STATION_SODXTRMTS_URL}}?{%for key,val in sodxtrmts_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate custom statistics and time series!</font></a><br />
-    <a target="_blank" href="{{STATION_SODSUMM_URL}}?{%for key,val in sodsumm_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate station climatology!</font></a><br />
-    <a target="_blank" href="{{STATION_MON_AVES_URL}}?{%for key,val in monthly_aves_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Barcharts of Monthly Averages</font></a><br />
-    {%endif%}
-    {%if link_to_mon_aves and not results.error%}
-    <a target="_blank" href="{{STATION_MON_AVES_URL}}?{%for key,val in monthly_aves_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size="3">Generate Barcharts of monthly averages</font></a><br />
-    {%endif%}
-    {%endif%}
-
-    {%if station_ids_error %}
-        <div class="error">{{station_ids_error}}</div><br />
-    {%endif%}
-    
-    {%for stn in stn_idx%}
-    {%if results.stn_data|lookup:stn%}
-
-    <b>Station Name</b>: {{results.stn_names|lookup:stn|safe}}<br />
-    <b>State</b>: {{results.stn_state|lookup:stn|safe}}<br />
-    <b>Station ID and Network Pairs</b>:<br /> 
-    {%for id_network in results.stn_ids|lookup:stn %}
-    {%if forloop.counter|divisibleby:2%}<br />{%endif%}
-    {{id_network}}
-    {%if not forloop.last%},{%endif%}
-    {%endfor%}<br />
-    <b>Latitude, Longitude</b>: {{results.stn_lat|lookup:stn|safe}}, {{results.stn_lon|lookup:stn|safe}}<br />
-    <b>Elevation</b>: {{results.stn_elev|lookup:stn|safe}} ft<br /><br />
-    <b>DATA:</b><br />
-    {%if not results.error%}
-    ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated<br />
-    {%endif%}
-    <div class="error"> {{results.stn_errors|lookup:stn}}</div><br />
-    {%if not json%}
-    <table border="1">
-    <th>date</th>
-    {%if params_dict.show_flags == "T"%}
-    {%if params_dict.show_observation_time == "T"%}
-    {%for el in element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{unit_dict|lookup:el}})</th><th>Flag</th><th>obs time (hr)</th>{%endfor%}
-    {%else%}
-    {%for el in  element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{unit_dict|lookup:el}})</th><th>Flag</th>{%endfor%}
-    {%endif%}
-    {%else%}
-    {%if params_dict.show_observation_time == "T"%}
-    {%for el in element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{unit_dict|lookup:el}})</th><th>obs time (hr)</th>{%endfor%}
-    {%else%}
-    {%for el in element_list%}<th>{{params_dict.base_el_dict|lookup:el}}{{params_dict.base_temp_dict|lookup:el}} ({{unit_dict|lookup:el}})</th>{%endfor%}
-    {%endif%}
-    {%endif%}
-    </th>
-    {%for date_vals in results.stn_data|lookup:stn%}
-    <tr>
-    {%for el_val in date_vals%}
-
-    {%if forloop.first %}
-    <td align="right">{{el_val}}</td>
-    {%else%}
-    {%if params_dict.show_flags == "T"%}
-    {%if params_dict.show_observation_time == "T"%}
-    <td align="right">{{el_val|lookup:0}}</td><td align="left">{{el_val|lookup:1}}</td><td align="left">{{el_val|lookup:2}}</td>
-    {%else%}
-    <td align="right">{{el_val|lookup:0}}</td><td align="left">{{el_val|lookup:1}}</td>
-    {%endif%}
-    {%else%}
-    {%if params_dict.show_observation_time == "T"%}
-    {%if el_val|lookup:1 == "T"%}
-    <td align="right">T</td><td align="left">{{el_val|lookup:2}}</td>
-    {%else%}
-    <td align="right">{{el_val|lookup:0}}</td><td align="left">{{el_val|lookup:2}}</td>
-    {%endif%}
-    {%else%}
-    {%if el_val|lookup:1 == "T"%}
-    <td align="right">T</td>
-    {%else%}
-    <td align="right">{{el_val|lookup:0}}</td>
-    {%endif%}
-    {%endif%}
-    {%endif%}
-    {%endif%}
-    {%endfor%}
-    </tr>
-    {%endfor%}
-    </table>
-    <br />
-    {%else%}
-    {{results.stn_data|lookup:stn}}
-    {%endif%}
-    {%endif%}<!--End if results.stn_data|lookup:stn-->
-    {%endfor%}<!--End station loop-->
-    {%endif%}<!--End if results-->
-    </div><!--end results div-->
+    <!--Results-->
 </td></table>
 {%endblock%}
