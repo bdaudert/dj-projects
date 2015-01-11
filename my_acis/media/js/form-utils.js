@@ -1,4 +1,15 @@
 //Clean functions
+function update_value(val){
+    /*
+    Dynamic forms are not updated in browser cache
+    This function updates the values upon user change
+    Needed when two different forms are present in page
+    and form fields of one form should be 
+    preserved upon submit of the other
+    */
+    this.value = val;
+}
+
 function set_area_defaults(area_type){
     var lv = {
         'label':'Station ID',
@@ -48,17 +59,6 @@ function set_area_defaults(area_type){
     return lv;
 }
 
-function update_value(val){
-    /*
-    Dynamic forms are not updated in browser cache
-    This function updates the values upon user change
-    Needed when two different forms are present in page
-    and form fields of one form should be 
-    preserved upon submit of the other
-    */
-    this.value = val;
-}
-
 function set_autofill(datalist){
     /*
     Sets autofill lists
@@ -89,21 +89,21 @@ function set_autofill(datalist){
     document.body.appendChild(dl);
 }
 
-function set_lister_form(node){
+function set_lister_form(node_value){
     /*
     For single point data lister, 
     sets form field according to user selection of 
     point of interest:
-    node.value == station --> station data request
+    node_value == station --> station data request
     --> Show all rows of class type station
-    node.value == grid --> grid data request
+    node_value == grid --> grid data request
     --> Show all rows of class type grid
     --> Show all rows of common form elements ( class station_grid  
     */
     
     var form_rows_to_show1 = [],form_rows_to_show2 = [],form_rows_to_show = [];
     var rows = [],form_rows_to_hide = [];
-    if (node.value == "station" || node.value == "station_id"){
+    if (node_value == "station" || node_value == "station_id"){
         //NOTE: querySelectorAll only works in modern browsers:
         //https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll
         //form_rows_to_show  = document.querySelectorAll('.station_grid, .station');
@@ -112,13 +112,13 @@ function set_lister_form(node){
         form_rows_to_show = Array.prototype.slice.call(form_rows_to_show1).concat(Array.prototype.slice.call(form_rows_to_show2));
         form_rows_to_hide = document.getElementsByClassName('grid');
     }
-    if (node.value == "grid" || node.value == "location"){
+    if (node_value == "grid" || node_value == "location"){
         form_rows_to_show1 = document.getElementsByClassName('station_grid');
         form_rows_to_show2 = document.getElementsByClassName('grid');
         form_rows_to_show = Array.prototype.slice.call(form_rows_to_show1).concat(Array.prototype.slice.call(form_rows_to_show2));
         form_rows_to_hide = document.getElementsByClassName('station');
     }
-    if (node.value == "none"){
+    if (node_value == "none"){
         //Hide all but the first table row
         rows = document.getElementById('tableData').rows;
         for (var idx=1;idx<rows.length;idx++) {
@@ -132,22 +132,6 @@ function set_lister_form(node){
         form_rows_to_hide[idx].style.display = "none";
     }
     
-}
-
-function set_data_type(node){
-    /*
-    for data listers
-    Sets hidden variable data_type
-    depending on user choice
-    */
-    var dt = document.getElementById('data_type');
-    if (node.value == 'grid'){
-        dt.value = 'grid';
-    }
-    if (node.value == 'grid'){
-        dt.value = 'station';
-        
-    }
 }
 
 function set_area(row_id,node){
@@ -304,7 +288,8 @@ function set_map(node){
     var kml_file_path = TMP_URL + state + '_' + area_type + '.kml';
     document.getElementById('kml_file_path').value=kml_file_path;
     if (area_type == 'basin' || area_type == 'county' || area_type == 'county_warning_area' || area_type =='climate_division'){
-        document.getElementById('select_overlay_by').value= area_type;
+        //document.getElementById('select_overlay_by').value= area_type;
+        $(".area_type").val(area_type);
     }
     //Set up maps for display
     if (area_type =='county' || area_type =='climate_division' || area_type == 'basin' || area_type == 'county_warning_area'){
@@ -335,6 +320,43 @@ function set_map(node){
         hide_bbox_map();
     }
 }
+
+function addHidden(theForm, name, value) {
+    /*
+    Create a hidden input element with name and value and append it to theForm
+    */
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    input.value = value;
+    theForm.appendChild(input);
+}
+
+
+function set_hidden_fields(theForm, mainForm) {
+    /*
+    Adds the fields of mainForm to 
+    theForm as hidden input
+    so that user input of mainForm is preserved upon
+    theForm submit 
+    Used when user updates the overlay map 
+    */
+    $('#' + mainForm + ' input, #' + mainForm + ' select').each(
+    function(index){
+        var input = $(this);
+        var name = input.attr('name');
+        //if (name != "csrfmiddlewaretoken" && name != 'select_stations_by' && name!= 'elements' && name!="overlay_state" && input.attr('type')!="submit"){
+        if (name != "csrfmiddlewaretoken" && input.attr('type')!="submit"){
+            //Only add visible fields and hidden inputs, omit display:none elements
+            if ($(this).is(':visible') || input.attr('type')=="hidden") {
+                addHidden(theForm, input.attr('name'), input.val());
+            }
+        }
+    });
+    theForm.submit()
+}
+
+
 //Old functions (need cleanup)
 function save_form_options(formID,hiddenID){
     /* 
@@ -522,7 +544,7 @@ function update_elements(node){
     /*
     Dynamic forms are not updated in browser cache
     This function updates the elements field
-    which is a multiple select fieldi list that
+    which is a multiple select field list that
     behaves in ways that can't be caught by the udate_value function above, 
     which only deals with string variables
     The passing of variables from/to html, django views and javascript
@@ -536,6 +558,12 @@ function update_elements(node){
         if (options[idx].selected) {
             els.push(options[idx].value);
             //document.getElementById('elements').options[idx].selected = true;
+            /*
+            el_nodes = document.getElementsByName('elements');
+            for (i=0;i<el_nodes.length;i++){
+                el_nodes[i].options[idx].selected = true;
+            }
+            */
         }
     }
     if ($('#elements_string').length){
@@ -546,38 +574,6 @@ function update_elements(node){
         }
     }
 }
-
-function addHidden(theForm, name, value) {
-    /*
-    Create a hidden input element with name and value and append it to theForm
-    */
-    var input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = name;
-    input.value = value;
-    theForm.appendChild(input);
-}
-
-
-function set_hidden_fields(theForm, mainForm) {
-    /*
-    Adds the fields of mainForm to 
-    theForm as hidden input
-    so that user input of mainForm is preserved upon
-    theForm submit 
-    Used when user updates the overlay map 
-    */
-    $('#' + mainForm + ' input, #' + mainForm + ' select').each(
-    function(index){  
-        var input = $(this);
-        var name = input.attr('name');
-        if (name != "csrfmiddlewaretoken" && name != 'select_stations_by' && name!= 'elements' && name!="overlay_state" && input.attr('type')!="submit"){
-            addHidden(theForm, input.attr('name'), input.val());
-        }
-    });
-    theForm.submit()
-}
-
 
 //Show "Loading image"
 function show_loading(){

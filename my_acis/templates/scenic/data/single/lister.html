@@ -97,8 +97,8 @@ $(function(){
         <tr valign="bottom" >
         <td>Point of interest:</td>
         <td>
-            <select id="select_area" name="select_area" onchange="set_lister_form(this) & set_area('area',this) & set_map(this) & update_value(this.value);">
-            <option value="none" {{checkbox_vals.none_selected}}>Select data type</option>
+            <select id="select_area" name="select_area" onchange="set_lister_form(this.value) & set_area('area',this) & set_map(this) & update_value(this.value);">
+            <!--<option value="none" {{checkbox_vals.none_selected}}>Select data type</option>-->
             <option value="station_id" {{checkbox_vals.station_selected}}>Station</option>
             <option value="location" {{checkbox_vals.location_selected}}>Location (Lon,Lat)</option>
             </select>
@@ -106,24 +106,25 @@ $(function(){
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div id="Docu_select_point" class="pop-up"></div>
         <script type="text/javascript">                        
-            $("#Docu_select_point").load("{{HTML_URL}}/Docu_help_texts.html #ht_select_point");
+            $("#Docu_select_point").load("{{HTML_URL}}Docu_help_texts.html #ht_select_point");
         </script>
         </td>
-        <tr class="station_grid" style="display:none" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
-        <tr class="station" style="display:none;">{% include 'includes/station_elements.html'%}</tr>
+        <tr class="station_grid" style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
+        <tr class="station" style="display:table-row">{% include 'includes/station_finder.html'%}</tr>
+        <tr class="station" style="display:table-row">{% include 'includes/station_elements.html'%}</tr>
         <tr class="grid" style="display:none;">{% include 'includes/grid_elements.html'%}</tr>
-        <tr class="station_grid" id="add" valign="top" style="display:none;">{% include 'includes/add_special_degree_days.html'%}</tr>
+        <tr class="station_grid" id="add" valign="top" style="display:table-row">{% include 'includes/add_special_degree_days.html'%}</tr>
         <tr id="dd" valign="top" style="display:none">{% include 'includes/degree_days.html'%}</tr>
-        <tr class="station_grid" style="display:none;">{% include 'includes/units.html'%}</tr>
-        <tr class="station_grid" style="display:none;">{% include 'includes/start_date.html'%}</tr>
-        <tr class="station_grid" style="display:none;">{% include 'includes/end_date.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/units.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
         <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
-        <tr class="station" style="display:none">{% include 'includes/show_flags.html'%}</tr>
-        <tr class="station" style="display:none">{% include 'includes/show_observation_time.html'%}</tr>
-        <tr class="station_grid" style="display:none;">{% include 'includes/date_format.html'%}</tr>
-        <tr class="station_grid" style="display:none;">{% include 'includes/data_format_single.html'%}</tr>
+        <tr class="station" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
+        <tr class="station" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/date_format.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/data_format_single.html'%}</tr>
         <tr id="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
-        <tr id="out_file" style="display:none;" class="large_request">{% include 'includes/out_file.html'%}</tr>
+        <tr id="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
         </table>
         <input type="hidden" id="data_type" name="data_type" value="{{initial.data_type}}">
         <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
@@ -133,7 +134,7 @@ $(function(){
 </td>
 <td valign="top">
     <!--Map section-->
-    <div id="GridpointMap" style="display:none;"></div>
+    <div id="GridpointMap" style="display:none"></div>
     <!--end map section--> 
 </td></table>
 

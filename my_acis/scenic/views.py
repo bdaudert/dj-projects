@@ -270,28 +270,18 @@ def multi_lister(request):
     }
     initial, checkbox_vals = set_initial_lister(request, 'multi')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
-    #Set initial overlay state for over;ay mapmap
+    #Set initial overlay state for overlay map
     context[initial['overlay_state'].lower() + '_selected'] = 'selected'
 
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
         form = set_form(request,clean=False)
-        initial, checkbox_vals = set_initial_lister(request,'multi')
-        #Override initial where needed
-        initial['area_type'] = form['select_overlay_by']
-        checkbox_vals[form['select_overlay_by'] + '_selected'] = 'selected'
-        #context['checked'] = form['select_overlay_by'] + '_selected'
-        initial['area_type_value'] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
-        initial[form['select_overlay_by']] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
-        initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[form['select_overlay_by']]
-        initial['autofill_list'] = 'US_' + form['select_overlay_by']
+        context['xx'] = form
+        initial, checkbox_vals = set_initial_lister(form,'multi')
+        #checkbox_vals[form['area_type'] + '_selected'] = 'selected'
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         context[initial['overlay_state'] + '_selected'] = 'selected'
-        kml_file_path = create_kml_file(form['select_overlay_by'], form['overlay_state'])
-        context['kml_file_path'] = kml_file_path
-        context['area_type'] = form['select_overlay_by']
-        context['host'] = settings.HOST
     return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
 
 def data_station_temp(request):
@@ -346,19 +336,19 @@ def data_station(request):
                 #We are linking from station_finder
                 form_initial = WRCCUtils.load_json_data_from_file(settings.TEMP_DIR + params_json)
             else:
-                form_initial = set_form(request,clean=False)
+                form_initial = set_form_old(request,clean=False)
             context['form_message'] = True
         if params_json:
             if station_ids:
                 form_initial['station_ids'] = station_ids
-            form = set_form(form_initial,clean=False)
-            form_cleaned = set_form(form_initial)
+            form = set_form_old(form_initial,clean=False)
+            form_cleaned = set_form_old(form_initial)
         else:
-            form = set_form(request,clean=False)
-            form_cleaned = set_form(request)
+            form = set_form_old(request,clean=False)
+            form_cleaned = set_form_old(request)
         '''
-        form = set_form(request,clean=False)
-        form_cleaned = set_form(request)
+        form = set_form_old(request,clean=False)
+        form_cleaned = set_form_old(request)
         #user_params_list, user_params_dict = set_user_params(form_initial, 'data_station')
         user_params_list, user_params_dict = set_user_params(form, 'data_station')
         context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
@@ -561,7 +551,7 @@ def data_station(request):
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
-        form = set_form(request,clean=False)
+        form = set_form_old(request,clean=False)
         initial, checkbox_vals = set_data_station_initial(request)
         #Override initial where needed
         initial['select_stations_by'] = form['select_overlay_by']
@@ -580,7 +570,7 @@ def data_station(request):
 
     #Downlaod Table Data
     if 'formDownload' in request.POST:
-        form = set_form(request,clean=False)
+        form = set_form_old(request,clean=False)
         json_file = request.POST.get('json_file', None)
         if not json_file:
             results = {'error':'No json file found for data download.'}
@@ -613,12 +603,12 @@ def data_gridded(request):
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         if request.method == 'GET':
             context['form_message'] = True
-            form_initial = set_form(request, clean=False)
+            form_initial = set_form_old(request, clean=False)
             user_params_list, user_params_dict = set_user_params(form_initial, 'data_gridded')
             context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
         #Turn request object into python dict
-        form = set_form(request,clean=False)
-        form_cleaned = set_form(request)
+        form = set_form_old(request,clean=False)
+        form_cleaned = set_form_old(request)
         #Set form defaults for link from other pages
         if 'units' not in form.keys():
             form['units']='english'
@@ -785,7 +775,7 @@ def data_gridded(request):
     #Overlay Maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
-        form = set_form(request)
+        form = set_form_old(request)
         initial, checkbox_vals = set_data_gridded_initial(request)
         #Override initial where needed
         initial['select_grid_by'] = form['select_overlay_by']
@@ -803,7 +793,7 @@ def data_gridded(request):
 
    #Downlaod Table Data
     if 'formDownload' in request.POST:
-        form = set_form(request,clean=False)
+        form = set_form_old(request,clean=False)
         json_file = request.POST.get('json_file', None)
         if not json_file:
             results = {'error':'No json file found for data download.'}
@@ -851,8 +841,8 @@ def apps_station(request):
     if request.method == 'GET' and 'station_id' in request.GET:
         context['hide_sodsumm'] = True
         context['hide_metagrapgh'] = True
-        form_cleaned = set_form(request,clean=True)
-        form = set_form(request,clean=False)
+        form_cleaned = set_form_old(request,clean=True)
+        form = set_form_old(request,clean=False)
         user_params_list, user_params_dict =set_user_params(form, 'apps_station')
         if 'elements' in user_params_dict.keys():
             context['hide_sodxtrmts'] = True
@@ -866,8 +856,8 @@ def apps_gridded(request):
         }
     #Link from other page
     if request.method == 'GET' and 'elements' in request.GET:
-        form_cleaned = set_form(request,clean=True)
-        form = set_form(request,clean=False)
+        form_cleaned = set_form_old(request,clean=True)
+        form = set_form_old(request,clean=False)
         user_params_list, user_params_dict =set_user_params(form, 'apps_gridded')
         context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
     return render_to_response('scenic/apps/gridded/home.html', context, context_instance=RequestContext(request))
@@ -878,8 +868,8 @@ def apps_mixed(request):
         }
     #Link from other page
     if request.method == 'GET' and 'elements' in request.GET:
-        form_cleaned = set_form(request,clean=True)
-        form = set_form(request,clean=False)
+        form_cleaned = set_form_old(request,clean=True)
+        form = set_form_old(request,clean=False)
         user_params_list, user_params_dict =set_user_params(form, 'apps_mixed')
         context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
     return render_to_response('scenic/apps/combined/home.html', context, context_instance=RequestContext(request))
@@ -957,11 +947,11 @@ def monthly_aves(request):
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         if request.method == 'GET':
             context['form_message'] = True
-            form_initial = set_form(request,clean=False)
+            form_initial = set_form_old(request,clean=False)
             user_params_list, user_params_dict =set_user_params(form_initial, 'monthly_aves')
             context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
-        form = set_form(request,clean=False)
-        form_cleaned = set_form(request,clean=True)
+        form = set_form_old(request,clean=False)
+        form_cleaned = set_form_old(request,clean=True)
         search_params ={}
         for key, val in form_cleaned.items():
             if key != 'formData':
@@ -1069,17 +1059,17 @@ def temporal_summary(request):
 
     #Link from other page
     if request.method == 'GET' and 'elements' in request.GET:
-        form_cleaned = set_form(request,clean=True)
-        form = set_form(request,clean=False)
+        form_cleaned = set_form_old(request,clean=True)
+        form = set_form_old(request,clean=False)
         user_params_list, user_params_dict =set_user_params(form, 'temporal_summary')
         context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
 
     if 'formMap' in request.POST:
         context['hide_bbox_map'] = True
-        form = set_form(request, clean=False)
-        form_cleaned = set_form(request)
+        form = set_form_old(request, clean=False)
+        form_cleaned = set_form_old(request)
         initial, checkbox_vals = set_temporal_summary_initial(request)
-        params_cleaned = set_form(initial)
+        params_cleaned = set_form_old(initial)
         params_list, params_dict =set_user_params(form, 'temporal_summary')
         context['params_list'] = params_list;context['params_dict']=params_dict
         #Back Button/download files issue fix:
@@ -1161,7 +1151,7 @@ def temporal_summary(request):
 
     #overlay map generation
     if 'formOverlay' in request.POST:
-        form = set_form(request, clean=False)
+        form = set_form_old(request, clean=False)
         context['need_overlay_map'] = True
         initial, checkbox_vals = set_temporal_summary_initial(request)
         initial_plot, checkbox_vals_plot = set_map_plot_options(form)
@@ -1222,15 +1212,15 @@ def spatial_summary(request):
 
     #Link from other page
     if request.method == 'GET' and 'elements' in request.GET:
-        form_cleaned = set_form(request,clean=True)
-        form = set_form(request,clean=False)
+        form_cleaned = set_form_old(request,clean=True)
+        form = set_form_old(request,clean=False)
         user_params_list, user_params_dict = set_user_params(form, 'spatial_summary')
         context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
 
     if 'formTS' in request.POST:
         context['need_gridpoint_map'] = False
-        form = set_form(request, clean=False)
-        form_cleaned = set_form(request)
+        form = set_form_old(request, clean=False)
+        form_cleaned = set_form_old(request)
         #Back Button/download files issue fix:
         #if select_grid_by none, find it
         if not 'select_grid_by' in form_cleaned.keys() or form_cleaned['select_grid_by'] not in form_cleaned.keys():
@@ -1333,7 +1323,7 @@ def spatial_summary(request):
 
     #overlay map generation
     if 'formOverlay' in request.POST:
-        form = set_form(request, clean=False)
+        form = set_form_old(request, clean=False)
         context['form'] = form
         context['need_overlay_map'] = True
         context['need_gridpoint_map'] = False
@@ -1411,17 +1401,17 @@ def station_locator_app(request):
         context['station_json'] = f_name
 
     if 'formData' in request.POST:
-        form_initial = set_form(request,clean=False)
+        form_initial = set_form_old(request,clean=False)
         user_params_list, user_params_dict =set_user_params(form_initial, 'station_locator_app')
         context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
         #Turn request object into python dict
-        form = set_form(request, app_name='station_locator_app',clean=False)
-        form_cleaned = set_form(request,app_name='station_locator_app',clean=True)
+        form = set_form_old(request, app_name='station_locator_app',clean=False)
+        form_cleaned = set_form_old(request,app_name='station_locator_app',clean=True)
         #Add params for link to station data
         params_list, params_dict = set_user_params(form, 'station_locator_app')
         context['params_list'] = params_list;context['params_dict'] = params_dict
 
-        form = set_form(request, clean=False)
+        form = set_form_old(request, clean=False)
         fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date', 'elements']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
@@ -1469,7 +1459,7 @@ def station_locator_app(request):
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
         context['station_json'] = False
-        form = set_form(request,clean=False)
+        form = set_form_old(request,clean=False)
         initial, checkbox_vals = set_station_locator_initial(form)
         #Override initial where needed
         initial['select_stations_by'] = form['select_overlay_by']
@@ -1507,7 +1497,7 @@ def data_comparison(request):
     context['initial'] = initial; context['checkbox_vals'] = checkbox_vals
     if 'formComparison' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         context['form_message'] = True
-        form = set_form(request, clean=False)
+        form = set_form_old(request, clean=False)
         form['select_grid_by'] = 'location'
         user_params_list, user_params_dict = set_user_params(form, 'data_comparison')
         context['user_params_list'] = user_params_list
@@ -1552,14 +1542,14 @@ def sodxtrmts(request, app_type):
     if 'formSodxtrmts' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         if request.method == 'GET':
             context['form_message'] = True
-            form_initial = set_form(request,clean=False)
+            form_initial = set_form_old(request,clean=False)
             user_params_list, user_params_dict = set_user_params(form_initial, 'sodxtrmts')
             context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
         #Turn request object into python dict
         if app_type == 'station':
-            form = set_form(request, app_name='sodxtrmts',clean=True)
+            form = set_form_old(request, app_name='sodxtrmts',clean=True)
         else:
-            form = set_form(request, app_name='sodxtrmts_grid',clean=True)
+            form = set_form_old(request, app_name='sodxtrmts_grid',clean=True)
         #Set initial form parameters for html
         initial,checkbox_vals = set_sodxtrmts_initial(request,app_type)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
@@ -1778,11 +1768,11 @@ def sodsumm(request):
     if 'formSodsumm' in request.POST or (request.method == 'GET' and 'station_id' in request.GET):
         if request.method == 'GET':
             context['form_message'] = True
-        form_initial = set_form(request,app_name='sodsumm',clean=False)
+        form_initial = set_form_old(request,app_name='sodsumm',clean=False)
         user_params_list, user_params_dict = set_user_params(form_initial, 'sodsumm')
         context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
-        form = set_form(request,app_name='sodsumm',clean=False)
-        form_cleaned = set_form(request,app_name='sodsumm',clean=True)
+        form = set_form_old(request,app_name='sodsumm',clean=False)
+        form_cleaned = set_form_old(request,app_name='sodsumm',clean=True)
         initial, checkbox_vals = set_sodsumm_initial(request)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         fields_to_check = ['start_year', 'end_year','max_missing_days']
@@ -2022,7 +2012,7 @@ def find_id(form_name_field, json_file_path):
             return entry['id']
     return str(form_name_field)
 
-def set_form(request,app_name=None,clean=True):
+def set_form_old(request,app_name=None,clean=True):
     '''
     Deals with unicode issues
     and autofill options for identifiers
@@ -3789,13 +3779,110 @@ def set_combined_analysis_initial(request,app_name):
     return initial, checkbox_vals
 
 #NEW UTILS
-def set_element_list(area_type):
-    if area_type in ['station_ids', 'station']:
-        el_list = ['maxt','mint','avgt', 'obst', 'pcpn', 'snow', 'snwd', 'gdd','hdd','cdd', 'evap', 'wdmv']
+def set_elements(form):
+    '''
+    Note: all requests and apps work with element lists
+    Form key elements should exist
+    Given form input we check if elements is key
+    if not, check if element is key and add elements to keys
+    '''
+    if 'elements' not in form.keys():
+        if 'element' in form.keys():
+            return form['element']
+        else:
+            return []
     else:
-        el_list = ['maxt','mint','pcpn','gdd','hdd','cdd']
+        return form['elements']
+
+def convert_elements_to_list(elements):
+    el_list = []
+    if isinstance(elements, basestring):
+        el_list = elements.replace(' ','').rstrip(',').split(',')
+    elif isinstance(elements,list):
+        el_list = [str(el) for el in elements]
     return el_list
 
+def convert_elements_to_string(elements):
+    el_str = ''
+    if isinstance(elements, basestring):
+        el_str = elements
+    elif isinstance(elements,list):
+        el_str = ','.join([str(el).rstrip(' ') for el in elements])
+    return el_str
+
+def set_form(request, clean=True):
+    '''
+    Coverts request input to usable form input:
+    Deals with unicode issues
+    and autofill options for identifiers
+    NOTE: elements should always be a list (also wen clean = False)
+    If Clean == True,
+    We also clean up some form fields for submission:
+        date fields, convert to yyyymmdd
+        name strings are converted to ids
+    '''
+    form = {}
+    #Convert request object to python dictionary
+    if isinstance(request,dict):
+        form_dict = dict(request)
+    elif request.method == 'POST':
+        form_dict = dict((x,y) for x,y in request.POST.items())
+    elif request.method == 'GET':
+        form_dict = dict((x,y) for x,y in request.GET.items())
+    else:
+        try:
+            form_dict = dict((x,y) for x,y in request.items())
+        except:
+            form_dict = {}
+    #Convert unicode to strings and elements to list
+    for key,val in form_dict.iteritems():
+        if key == 'csrfmiddlewaretoken':
+            continue
+        form[str(key)] =str(val)
+        if str(key) == 'elements':
+            #Convert elements to list
+            form['elements'] = convert_elements_to_list(form['elements'])
+    if  not clean:
+        return form
+    #Clean up form for submission
+    #Clean Dates
+    for key in ['start_date', 'end_date']:
+        if key in form.keys():
+            form[key] = form[key].replace('-','').replace(':','').replace('/','').replace(' ','')
+    #Convert user input of area names to ids
+    for key in ['station_id','county', 'basin', 'county_warning_area', 'climate_division']:
+        if not key in form.keys():
+            continue
+        form[key] = find_id(form[key],settings.MEDIA_DIR +'json/US_' + key + '.json')
+    #station_ids is special case
+    if 'station_ids' in form.keys():
+        stn_ids = ''
+        stn_list = form['station_ids'].rstrip(',').split(',')
+        #Remove leading spaces from list items
+        stn_list = [v.lstrip(' ').rstrip(' ') for v in stn_list]
+        #Make sure that no station is entered twice
+        id_previous = ''
+        for idx, stn_name in enumerate(stn_list):
+            stn_id = str(find_id(str(stn_name),settings.MEDIA_DIR +'json/US_' + 'station_id' + '.json'))
+            if stn_id == id_previous:
+                continue
+            id_previous = stn_id
+            stn_ids+=stn_id + ','
+        #Strip last comma
+        stn_ids = stn_ids.rstrip(',')
+        form['station_ids'] = stn_ids
+    return form
+
+def set_element_list(data_type):
+    if data_type in ['station']:
+        el_list = ['maxt','mint','avgt', 'obst', 'pcpn', 'snow', 'snwd', 'gdd','hdd','cdd', 'evap', 'wdmv']
+    elif data_type in ['grid']:
+        ['maxt','mint','avgt','pcpn','gdd','hdd','cdd']
+    else:
+        el_list = ['maxt','mint','pcpn']
+    return el_list
+
+#Initializers
 def set_initial_lister(request, req_type):
     '''
     req_type == single or muti
@@ -3811,9 +3898,12 @@ def set_initial_lister(request, req_type):
     #Set up map parameters
     initial['host'] = settings.HOST
     initial['overlay_state'] = Get('overlay_state','NV')
-    initial['kml_file_path'] = create_kml_file(initial['area_type'], 'NV')
+    initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
     initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
+    #Set form params
+    initial['data_type'] = Get('data_type','station')
     initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
+    initial['autofill_list'] = 'US_' + initial['area_type']
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['area_type']]
     initial['area_type_value'] = initial[str(initial['area_type'])]
     initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
@@ -3834,13 +3924,18 @@ def set_initial_lister(request, req_type):
     initial['user_name'] = Get('user_name', 'Your Name')
     initial['user_email'] = Get('user_email', 'Your Email')
     #Checkbox vals
+    #Data Type
+    for dt in ['station','grid','none']:
+        checkbox_vals['data_type_' + dt + '_selected'] =''
+        if dt == initial['data_type']:
+            checkbox_vals['data_type_' + dt + '_selected'] ='selected'
     #Area
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys() + ['none']:
         checkbox_vals[area_type + '_selected'] =''
         if area_type == initial['area_type']:
             checkbox_vals[area_type + '_selected'] ='selected'
     #Elements
-    el_list = set_element_list(initial['area_type'])
+    el_list = set_element_list(initial['data_type'])
     for element in el_list:
         checkbox_vals['elements_' + element + '_selected'] =''
         for el in initial['elements']:

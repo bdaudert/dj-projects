@@ -1,20 +1,22 @@
         
         <td id="Elements">Elements: </td>
         <td>
-            <select id="elements" name="elements" multiple onchange="update_elements(this)">
+            <select id="grid_elements" name="elements" multiple>
             <option value="maxt" {{checkbox_vals.elements_maxt_selected}}>Maximum Temperature</option>
             <option value="mint" {{checkbox_vals.elements_mint_selected}}>Minimum Temperature</option>
+            <option value="avgt" {{checkbox_vals.elements_avgt_selected}}>Average Temperature</option>
             <option value="pcpn" {{checkbox_vals.elements_pcpn_selected}}>Precipitation</option>
             <option value="hdd" {{checkbox_vals.elements_hdd_selected}}>Heating Deg. Days(65F/18C)</option>
             <option value="cdd" {{checkbox_vals.elements_cdd_selected}}>Cooling Deg. Days(65F/18C)</option>
             <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Deg. Days(50F/10C)</option>
             </select>
         </td>
-        <td><img class="trigger" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+        <td>
+            <img class="trigger" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
             <div class="pop-up">
-            <div id="ht_elements_grid"></div>
+            <div id="ht_elements_station"></div>
             <script type="text/javascript">                        
-            $("#ht_elements_grid").load("/csc/media/html/Docu_help_texts.html #ht_elements");
+            $("#ht_elements_station").load("{{HTML_URL}}Docu_help_texts.html #ht_elements");
             </script>
             </div>
         </td>
