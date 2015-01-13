@@ -1,4 +1,3 @@
-
 //function precise_round(num,decimals){
 //return Math.round(num*Math.pow(10,decimals))/Math.pow(10,decimals);
 //}
@@ -52,6 +51,64 @@ function initialize_grid_point_map(loc) {
 
 }//close initialize_grid_point_map
 
+/*
+//Multiple gridpoints
+function initialize_grid_points_map(locs) {
+    //optional argument location
+    switch (arguments.length - 0) { // <-- 0 is number of required arguments
+        case 0:  locs = '-111,40,-111.1,40.5';
+    }
+    var map,mapOptions,zoom_level = '5';
+    var GRID_DATA_URL = document.getElementById("GRID_DATA_URL").value;
+    var GRID_TOOLS_URL = document.getElementById("GRID_TOOLS_URL").value;
+    var lons = [],lats = [],locs_list, myLatlng;
+    locs_list = locs.replace(' ','').split(',');
+    for (idx=0;idx<locs;idx++){
+        if (idx % 2 == 0){
+            lons.push(locs[idx]);
+        }
+        else {
+            lats.push(locs[idx]);
+        }
+    }
+    myLatLng = new google.maps.LatLng(parseFloat(lats[0]),parseFloat(lons[0]));
+    mapOptions = {
+        center: myLatlng,
+        zoom: 4,
+        mapTypeId: google.maps.MapTypeId.HYBRID
+    };
+    map = new google.maps.Map(document.getElementById("map-gridpoint"),mapOptions);
+    for (idx=0;idx<lons;idx++){
+        myLatlng = new google.maps.LatLng(parseFloat(lat),parseFloat(lon));
+        infowindow = new google.maps.InfoWindow({
+            content: 'oi'
+        });
+
+        var marker = new google.maps.Marker({
+            draggable: true,
+            position: myLatlng,
+            map: map,
+            title: "Your locations"
+        });
+    }
+    google.maps.event.addListener(marker, 'dragend', function (event) {
+        infowindow.close();
+        var new_lat = precise_round(event.latLng.lat(),2).toString();
+        var new_lon = precise_round(event.latLng.lng(),2).toString();
+        var locs = new_lon + ',' + new_lat
+        document.getElementById("location").value = loc;
+        var href = GRID_DATA_URL +'?loc=' + new_lon + ',' + new_lat;
+        var contentString = '<div id="MarkerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
+            '<p><b>Lat: </b>' + new_lat + '<br/>'+
+            '<b>Lon: </b>' + new_lon + '<br/>' +
+
+            '</div>';
+        infowindow.setContent(contentString);
+        infowindow.open(map, marker);
+        myLatlng = google.maps.LatLng(parseFloat(new_lat),parseFloat(new_lon));
+    });
+}//close initialize_grid_points_map
+*/
 var stnclick;
 var boxclick;
 var show;

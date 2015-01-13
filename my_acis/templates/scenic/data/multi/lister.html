@@ -69,10 +69,6 @@ $(function(){
     hide_errors_results_on_change('tableDataForm');
 });
 </script>
-<!--Set initial form-->
-<script type="text/javascript">
-set_lister_form('{{initial.data_type}}');
-</script>
 
 
 <table>
@@ -99,30 +95,16 @@ set_lister_form('{{initial.data_type}}');
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
         <table class="form" id="tableData" >
-        <tr>
-        <td>Data Type:</td>
-        <td>
-            <select id="data_type" name="data_type" class="data_type" onchange="set_lister_form(this.value) & update_value(this.value);">
-            <!--<option value="none" {{checkbox_vals.data_type_none_selected}}>Select Data Type</option>-->
-            <option value="station" {{checkbox_vals.data_type_station_selected}}>Station Data</option>
-            <option value="grid" {{checkbox_vals.data_type_grid_selected}}>Gridded Data</option>
-            </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div id="Docu_data_type" class="pop-up"></div>
-        <script type="text/javascript">                        
-            $("#Docu_data_type").load("{{HTML_URL}}Docu_help_texts.html #ht_data_type");
-        </script>
-        </td>
-        </tr> 
-        <tr class="station" style="display:table-row">{% include 'includes/station_select_area.html'%}</tr>
-        <tr class="grid" style="display:none">{% include 'includes/grid_select_area.html'%}</tr>
+        <tr class="station_grid" style="display:table-row">{% include 'includes/multi_select_area.html'%}</tr>
         <tr class="station_grid" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
         <tr class="station" style="display:table-row">{% include 'includes/station_finder.html'%}</tr>
-        <tr class="station" style="display:table-row">{% include 'includes/station_elements.html'%}</tr>
-        <tr class="grid" style="display:none">{% include 'includes/grid_elements.html'%}</tr>
+        <tr class="station_grid" style="display:table-row">{% include 'includes/elements.html'%}</tr>
         <tr class="station_grid" id="add" valign="top" style="display:table-row">{% include 'includes/add_special_degree_days.html'%}</tr>
-        <tr id="dd" valign="top" style="display:none">{% include 'includes/degree_days.html'%}</tr>
+        {%if initial.add_degree_days == "T"%}
+            <tr id="dd" valign="top" style="display:table-row">{% include 'includes/degree_days.html'%}</tr>
+        {%else%}
+            <tr id="dd" valign="top" style="display:none">{% include 'includes/degree_days.html'%}</tr>
+        {%endif%}
         <tr class="station_grid" style="display:table-row">{% include 'includes/units.html'%}</tr>
         <tr class="station_grid" style="display:table-row">{% include 'includes/start_date.html'%}</tr>
         <tr class="station_grid" style="display:table-row">{% include 'includes/end_date.html'%}</tr>

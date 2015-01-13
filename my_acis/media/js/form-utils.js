@@ -1,4 +1,10 @@
 //Clean functions
+
+//Function to determine if element is in list
+String.prototype.inList=function(list){
+   return ( list.indexOf(this.toString()) != -1)
+}
+
 function update_value(val){
     /*
     Dynamic forms are not updated in browser cache
@@ -89,49 +95,53 @@ function set_autofill(datalist){
     document.body.appendChild(dl);
 }
 
-function set_lister_form(node_value){
+
+function set_form(node_value){
     /*
-    For single point data lister, 
-    sets form field according to user selection of 
-    point of interest:
-    node_value == station --> station data request
-    --> Show all rows of class type station
-    node_value == grid --> grid data request
-    --> Show all rows of class type grid
-    --> Show all rows of common form elements ( class station_grid  
+    Sets additional station or grid from elements
+    for single/multi requests: set on select_area element (value: station_id(s) or location(s))
+    for area requests: set on data_type element (value station or grid)
     */
-    
-    var form_rows_to_show1 = [],form_rows_to_show2 = [],form_rows_to_show = [];
-    var rows = [],form_rows_to_hide = [];
-    if (node_value == "station" || node_value == "station_id"){
+    var form_rows_to_show = [], form_rows_to_hide = [];
+    if (node_value.inList(['station','station_id','station_ids'])){
         //NOTE: querySelectorAll only works in modern browsers:
         //https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll
         //form_rows_to_show  = document.querySelectorAll('.station_grid, .station');
-        form_rows_to_show1 = document.getElementsByClassName('station_grid');
-        form_rows_to_show2 = document.getElementsByClassName('station');
-        form_rows_to_show = Array.prototype.slice.call(form_rows_to_show1).concat(Array.prototype.slice.call(form_rows_to_show2));
+        form_rows_to_show = document.getElementsByClassName('station');
         form_rows_to_hide = document.getElementsByClassName('grid');
     }
-    if (node_value == "grid" || node_value == "location"){
-        form_rows_to_show1 = document.getElementsByClassName('station_grid');
-        form_rows_to_show2 = document.getElementsByClassName('grid');
-        form_rows_to_show = Array.prototype.slice.call(form_rows_to_show1).concat(Array.prototype.slice.call(form_rows_to_show2));
+    if (node_value.inList(['grid','location','locations'])){
+        form_rows_to_show = document.getElementsByClassName('grid');
+        //form_rows_to_show = Array.prototype.slice.call(form_rows_to_show1).concat(Array.prototype.slice.call(form_rows_to_show2));
         form_rows_to_hide = document.getElementsByClassName('station');
     }
-    if (node_value == "none"){
-        //Hide all but the first table row
-        rows = document.getElementById('tableData').rows;
-        for (var idx=1;idx<rows.length;idx++) {
-            form_rows_to_hide.push(rows[idx]);
-        }
-    }
-    for (var idx=0;idx<form_rows_to_show.length;idx++) {
-        form_rows_to_show[idx].style.display = "table-row";
-    }
-    for (var idx=0;idx<form_rows_to_hide.length;idx++) {
-        form_rows_to_hide[idx].style.display = "none";
-    }
     
+    for (idx = 0;idx<form_rows_to_hide.length;idx++) {
+        form_rows_to_hide[idx].style.display = 'none';
+    } 
+    for (idx = 0;idx<form_rows_to_show.length;idx++) {
+        form_rows_to_show[idx].style.display = 'table-row';
+    }
+}
+
+function set_elements(data_type){
+    //if data type == grid, disable snow, obst
+    //if data type station --> leav all elements enabled
+    if (data_type == 'grid' || data_type == 'location' || data_type == 'locations'){
+        $("#elements option").each(function(){
+            if ($(this).val() == 'obst' || $(this).val() == 'snow' || $(this).val() == 'snwd' || $(this).val() == 'evap'){
+                $(this).attr('disabled',true);
+            }
+        });
+    }
+    if (data_type == 'station' || data_type == 'station_id' || data_type == 'station_ids'){
+        $("#elements option").each(function(){
+            if ($(this).val() == 'obst' || $(this).val() == 'snow' || $(this).val() == 'snwd' || $(this).val() == 'evap'){
+                $(this).attr('disabled',false);
+            }
+        });
+
+    }
 }
 
 function set_area(row_id,node){
@@ -215,14 +225,15 @@ function hide_bbox_map(){
 }
 
 function hide_overlay_map(){
+    var m,w;
     if ($('#OverlayMap').length){
         document.getElementById('OverlayMap').style.display = "none";
         if ($('#map-overlay').length){
-            var m = document.getElementById('map-overlay');
+            m = document.getElementById('map-overlay');
             m.parentNode.removeChild(m);
         }
         if ($('#content-window').length){
-            var w = document.getElementById('content-window');
+            w = document.getElementById('content-window');
             w.parentNode.removeChild(w);
         }
     }
@@ -230,19 +241,20 @@ function hide_overlay_map(){
 
 function show_overlay_map(){
     //Show overlay map 
-    var ol_map_div = document.getElementById('OverlayMap');
+    var host, ol_map_div,kml_file_path,w,m,area_type;
+    ol_map_div = document.getElementById('OverlayMap');
     ol_map_div.style.display = "block";
-    var area_type = document.getElementById('area_type').value;
-    var host = document.getElementById('host').value;
-    var kml_file_path = document.getElementById('kml_file_path').value;
+    area_type = document.getElementById('area_type').value;
+    host = document.getElementById('host').value;
+    kml_file_path = document.getElementById('kml_file_path').value;
     if (!$('#map-overlay').length){
-        var m = document.createElement('div');
+        m = document.createElement('div');
         m.setAttribute('id', 'map-overlay');
         m.setAttribute('style','width:615px;')
         ol_map_div.appendChild(m);
     }
     if (!$('#content-window').length){
-        var w = document.createElement('div');
+        w = document.createElement('div');
         w.setAttribute('id', 'content-window');
         ol_map_div.appendChild(w);
     }
@@ -287,12 +299,13 @@ function set_map(node){
     var state = document.getElementById('overlay_state').value;
     var kml_file_path = TMP_URL + state + '_' + area_type + '.kml';
     document.getElementById('kml_file_path').value=kml_file_path;
-    if (area_type == 'basin' || area_type == 'county' || area_type == 'county_warning_area' || area_type =='climate_division'){
+    //Update hidden elements
+    if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
         //document.getElementById('select_overlay_by').value= area_type;
         $(".area_type").val(area_type);
     }
     //Set up maps for display
-    if (area_type =='county' || area_type =='climate_division' || area_type == 'basin' || area_type == 'county_warning_area'){
+    if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
         show_overlay_map();
         hide_polygon_map();
         hide_grid_point_map(); 
@@ -302,7 +315,7 @@ function set_map(node){
         show_polygon_map();
         hide_grid_point_map();
     }
-    else if (area_type == 'location'){
+    else if (area_type.inList(['location'])){
         hide_overlay_map();
         hide_polygon_map();
         show_gridpoint_map();
@@ -349,7 +362,13 @@ function set_hidden_fields(theForm, mainForm) {
         if (name != "csrfmiddlewaretoken" && input.attr('type')!="submit"){
             //Only add visible fields and hidden inputs, omit display:none elements
             if ($(this).is(':visible') || input.attr('type')=="hidden") {
-                addHidden(theForm, input.attr('name'), input.val());
+                if (input.attr('name') == 'elements'){
+                    //Need to convert elements to list
+                    addHidden(theForm, input.attr('name'),input.val().toString());
+                }
+                else {
+                    addHidden(theForm, input.attr('name'), input.val());
+                }
             }
         }
     });

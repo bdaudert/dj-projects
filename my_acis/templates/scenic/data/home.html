@@ -19,6 +19,10 @@
     <script type="text/javascript">                        
         $("#Docu_About_multi_point_prods").load("{{HTML_URL}}/Docu_About_multi_point_prods.html");
     </script>
+<div class="docu" id="Docu_About_area_prods" style="display:none;"></div>
+    <script type="text/javascript">                        
+        $("#Docu_About_area_prods").load("{{HTML_URL}}/Docu_About_area_prods.html");
+    </script>
 
 <table cellpadding="40" align="center">
 <td valign="top">
@@ -38,6 +42,7 @@
             Data can be downloaded as .txt, .dat, .xls or displayed on screen.<br />
             Generate monthly and annual summary tables and time series<br />
             Generate Climatology<br />
+            Compare station to gridded data at a lon,lat coordinate
             </p>
             </div>
        </td>
@@ -46,7 +51,19 @@
        </td>
        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}multi/"><b>Multi Point Products</b></a>
             <div class="pop-up">
-            <p>Get a listing of data for multiple weather station or lat/lon coordinates.<br />
+            <p>Get a listing of data for multiple weather stations or lat/lon coordinates.<br />
+            Data can be downloaded as .txt, .dat, .xls.<br />
+            Compute spatial summaries (Time Series)<br />
+            Compute temporal summaries (Maps)<br />
+            </p>
+            </div>
+       </td>
+       <td>
+            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_About_multi_point_prods')">
+       </td>
+       <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}area/"><b>Area Products</b></a>
+            <div class="pop-up">
+            <p>Get a listing of data in an area.<br />
             Area options:<br />
             <ul>
             <li>County, County Warning Area</li>
@@ -61,7 +78,7 @@
             </div>
        </td>
        <td>
-            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_About_multi_point_prods')">
+            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_About_area_prods')">
        </td>
     </tr>
     <tr>
@@ -78,13 +95,24 @@
         Data can be downloaded as .txt, .dat, .xls or displayed on screen.<br />
         Generate monthly and annual summary tables and time series<br />
         Generate Climatology<br />
+        Compare station to gridded data at a lon,lat coordinate
+        </p>
+        </div>
+    </td>
+    <td colspan="2">
+        <a  href="{{DATA_URL}}multi/" class="trigger_hover"><img class="app_img" alt="SinglePoint" title="SinglePoint" src="{{MEDIA_URL}}img/Stn.png"></a>
+        <div class="pop-up">
+        <p>Get a listing of data for multiple weather stations or lat,lon coordinates.<br />
+        Data can be downloaded as .txt, .dat, .xls.<br />
+        Compute spatial summaries (Time Series)<br />
+        Compute temporal summaries (Maps)<br />
         </p>
         </div>
     </td> 
     <td colspan="2">
-        <a  href="{{DATA_URL}}multi/" class="trigger_hover"><img class="app_img" alt="MultiPoint" title="MultiPoint" src="{{MEDIA_URL}}img/ClimateModel2.png"></a>
+        <a  href="{{DATA_URL}}area/" class="trigger_hover"><img class="app_img" alt="area" title="area" src="{{MEDIA_URL}}img/ClimateModel2.png"></a>
         <div class="pop-up">
-        <p>Get a listing of data for multiple weather station or lat/lon coordinates.<br />
+        <p>Get a listing of data in an area.<br />
         Area options:<br />
         <ul>
         <li>County, County Warning Area</li>

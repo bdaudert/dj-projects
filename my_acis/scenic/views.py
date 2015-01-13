@@ -183,6 +183,11 @@ def multi_point_prods(request):
     }
     return render_to_response('scenic/data/multi/home.html', context, context_instance=RequestContext(request))
 
+def area_prods(request):
+    context = {
+        'title': 'Area Products'
+    }
+    return render_to_response('scenic/data/area/home.html', context, context_instance=RequestContext(request))
 
 def sw_networks(request):
     context = {
@@ -260,29 +265,65 @@ def single_lister(request):
     context = {
         'title': 'Data Lister',
     }
-    initial, checkbox_vals = set_initial_lister(request, 'single')
+    initial, checkbox_vals = set_initial_single_lister(request)
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
+    if 'formData' in request.POST:
+        form = set_form(request,clean=False)
+        form_cleaned = set_form(request)
+        #Check form fields
+        fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date','degree_days']
+        form_error = check_form(form_cleaned, fields_to_check)
+        if form_error:
+            context['form_error'] = form_error
+            if form_cleaned['select_area'] == 'location':
+                context['need_gridpoint_map'] = True
+                return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
+        context['xx'] = form_cleaned
     return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
+
 
 def multi_lister(request):
     context = {
         'title': 'Data Lister',
     }
-    initial, checkbox_vals = set_initial_lister(request, 'multi')
+    initial, checkbox_vals = set_initial_multi_lister(request)
+    context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
+    if 'formData' in request.POST:
+        form = set_form(request,clean=False)
+        form_cleaned = set_form(request)
+
+        #Check form fields
+        fields_to_check = [form_cleaned['select_area'],'start_date', 'end_date','degree_days']
+    return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
+
+def area_lister(request):
+    context = {
+        'title': 'Data Lister',
+    }
+    initial, checkbox_vals = set_initial_multi_lister(request)
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     #Set initial overlay state for overlay map
     context[initial['overlay_state'].lower() + '_selected'] = 'selected'
-
+    if 'formData' in request.POST:
+        form = set_form(request,clean=False)
+        form_cleaned = set_form(request)
+        fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date','degree_days']
+        if 'user_email' in form_cleaned.keys():
+            fields_to_check.append('user_email')
+            context['large_request'] = True
+        context['xx'] = request.POST.items()
     #Overlay maps
     if 'formOverlay' in request.POST:
+        context['x'] = request.POST.items()
         context['need_overlay_map'] = True
         form = set_form(request,clean=False)
         context['xx'] = form
-        initial, checkbox_vals = set_initial_lister(form,'multi')
+        initial, checkbox_vals = set_initial_multi_lister(form)
+        #context['xx'] = initial
         #checkbox_vals[form['area_type'] + '_selected'] = 'selected'
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         context[initial['overlay_state'] + '_selected'] = 'selected'
-    return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
+    return render_to_response('scenic/data/area/lister.html', context, context_instance=RequestContext(request))
 
 def data_station_temp(request):
     context = {
@@ -3815,33 +3856,39 @@ def set_form(request, clean=True):
     Coverts request input to usable form input:
     Deals with unicode issues
     and autofill options for identifiers
-    NOTE: elements should always be a list (also wen clean = False)
+    NOTE: elements should always be a list (also when clean = False)
     If Clean == True,
     We also clean up some form fields for submission:
         date fields, convert to yyyymmdd
         name strings are converted to ids
+        Combine elemenst weith degree days
     '''
     form = {}
     #Convert request object to python dictionary
     if isinstance(request,dict):
-        form_dict = dict(request)
+        form= dict(request)
+        #Special case elements, always needs to be list
+        form['elements'] = convert_elements_to_list(form_dict['elements'])
     elif request.method == 'POST':
-        form_dict = dict((x,y) for x,y in request.POST.items())
+        form = dict((str(x),str(y)) for x,y in request.POST.items())
+        #Special case elements, always needs to be list
+        form['elements'] = request.POST.getlist('elements',request.POST.get('elements','').split(','))
+        #Convert unicode to string
+        form['elements'] = [str(el) for el in form['elements']]
     elif request.method == 'GET':
-        form_dict = dict((x,y) for x,y in request.GET.items())
+        form = dict((str(x),str(y)) for x,y in request.GET.items())
+        #Special case elements, always needs to be list
+        form['elements'] = request.GET.getlist('elements',request.GET.get('elements','').split(','))
+        #Convert unicode to string
+        form['elements'] = [str(el) for el in form['elements']]
     else:
         try:
-            form_dict = dict((x,y) for x,y in request.items())
+            form = dict((str(x),str(y)) for x,y in request.items())
         except:
             form_dict = {}
-    #Convert unicode to strings and elements to list
-    for key,val in form_dict.iteritems():
-        if key == 'csrfmiddlewaretoken':
-            continue
-        form[str(key)] =str(val)
-        if str(key) == 'elements':
-            #Convert elements to list
-            form['elements'] = convert_elements_to_list(form['elements'])
+    if 'csrfmiddlewaretoken' in form.keys():
+        del form['csrfmiddlewaretoken']
+
     if  not clean:
         return form
     #Clean up form for submission
@@ -3871,19 +3918,19 @@ def set_form(request, clean=True):
         #Strip last comma
         stn_ids = stn_ids.rstrip(',')
         form['station_ids'] = stn_ids
+    #Combine elements
+    if 'add_degree_days' in form.keys() and form['add_degree_days'] == 'T':
+        for dd in form['degree_days'].replace(' ','').split(','):
+            if form['units'] == 'metric':
+                el_strip, base_temp = WRCCUtils.get_el_and_base_temp(dd)
+                form['elements'].append(el_strip + str(WRCCUtils.convert_to_english(el_strip,base_temp)))
+            else:
+                form['elements'].append(dd)
     return form
 
-def set_element_list(data_type):
-    if data_type in ['station']:
-        el_list = ['maxt','mint','avgt', 'obst', 'pcpn', 'snow', 'snwd', 'gdd','hdd','cdd', 'evap', 'wdmv']
-    elif data_type in ['grid']:
-        ['maxt','mint','avgt','pcpn','gdd','hdd','cdd']
-    else:
-        el_list = ['maxt','mint','pcpn']
-    return el_list
-
 #Initializers
-def set_initial_lister(request, req_type):
+
+def set_initial_single_lister(request):
     '''
     req_type == single or muti
     '''
@@ -3891,19 +3938,10 @@ def set_initial_lister(request, req_type):
     checkbox_vals = {}
     Get = set_GET(request)
     Getlist = set_GET_list(request)
-    if req_type == 'single':
-        initial['area_type'] = Get('area_type', 'station_id')
-    else:
-        initial['area_type'] = Get('area_type', 'state')
-    #Set up map parameters
-    initial['host'] = settings.HOST
-    initial['overlay_state'] = Get('overlay_state','NV')
-    initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
-    initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
-    #Set form params
-    initial['data_type'] = Get('data_type','station')
+    initial['area_type'] = Get('area_type','station_id')
     initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
-    initial['autofill_list'] = 'US_' + initial['area_type']
+    if initial['area_type'] == 'station_id':
+        initial['autofill_list'] = 'US_' + initial['area_type']
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['area_type']]
     initial['area_type_value'] = initial[str(initial['area_type'])]
     initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
@@ -3917,26 +3955,17 @@ def set_initial_lister(request, req_type):
     initial['end_date']  = Get('end_date', yesterday)
     initial['show_flags'] = Get('show_flags', 'F')
     initial['show_observation_time'] = Get('show_observation_time', 'F')
+    initial['grid'] = Get('grid','1')
     initial['data_format'] = Get('data_format', 'html')
     initial['date_format'] = Get('date_format', 'dash')
     initial['delimiter'] = Get('delimiter', 'space')
     initial['output_file_name'] = Get('output_file_name', 'Output')
-    initial['user_name'] = Get('user_name', 'Your Name')
-    initial['user_email'] = Get('user_email', 'Your Email')
     #Checkbox vals
-    #Data Type
-    for dt in ['station','grid','none']:
-        checkbox_vals['data_type_' + dt + '_selected'] =''
-        if dt == initial['data_type']:
-            checkbox_vals['data_type_' + dt + '_selected'] ='selected'
-    #Area
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys() + ['none']:
         checkbox_vals[area_type + '_selected'] =''
         if area_type == initial['area_type']:
             checkbox_vals[area_type + '_selected'] ='selected'
-    #Elements
-    el_list = set_element_list(initial['data_type'])
-    for element in el_list:
+    for element in initial['elements']:
         checkbox_vals['elements_' + element + '_selected'] =''
         for el in initial['elements']:
             if str(el) == element:
@@ -3964,3 +3993,74 @@ def set_initial_lister(request, req_type):
                 checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
     return initial,checkbox_vals
 
+def set_initial_multi_lister(request):
+    initial = {}
+    checkbox_vals = {}
+    Get = set_GET(request)
+    Getlist = set_GET_list(request)
+    initial['area_type'] = Get('area_type', 'state')
+    #Set up map parameters
+    initial['host'] = settings.HOST
+    initial['overlay_state'] = Get('overlay_state','NV')
+    initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
+    initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
+    #Set form params
+    initial['data_type'] = Get('data_type','station')
+    initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
+    initial['autofill_list'] = 'US_' + initial['area_type']
+    initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['area_type']]
+    initial['area_type_value'] = initial[str(initial['area_type'])]
+    initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
+    initial['add_degree_days'] = Get('add_degree_days', 'F')
+    initial['units'] = Get('units','english')
+    if initial['units'] == 'metric':
+        initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
+    else:
+        initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
+    initial['start_date']  = Get('start_date', fourtnight)
+    initial['end_date']  = Get('end_date', yesterday)
+    initial['show_flags'] = Get('show_flags', 'F')
+    initial['show_observation_time'] = Get('show_observation_time', 'F')
+    initial['grid'] = Get('grid','1')
+    initial['data_format'] = Get('data_format', 'html')
+    initial['date_format'] = Get('date_format', 'dash')
+    initial['delimiter'] = Get('delimiter', 'space')
+    initial['output_file_name'] = Get('output_file_name', 'Output')
+    initial['user_name'] = Get('user_name', 'Your Name')
+    initial['user_email'] = Get('user_email', 'Your Email')
+    #Checkbox vals
+    for dt in ['station','grid','none']:
+        checkbox_vals['data_type_' + dt + '_selected'] =''
+        if dt == initial['data_type']:
+            checkbox_vals['data_type_' + dt + '_selected'] ='selected'
+    for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys() + ['none']:
+        checkbox_vals[area_type + '_selected'] =''
+        if area_type == initial['area_type']:
+            checkbox_vals[area_type + '_selected'] ='selected'
+    for element in initial['elements']:
+        checkbox_vals['elements_' + element + '_selected'] =''
+        for el in initial['elements']:
+            if str(el) == element:
+                checkbox_vals['elements_' + element + '_selected'] ='selected'
+    for df in ['clm', 'dlm','xl', 'html']:
+        checkbox_vals['data_format_' + df + '_selected'] =''
+        if df == initial['data_format']:
+            checkbox_vals['data_format_' + df + '_selected'] ='selected'
+    for u in ['english', 'metric']:
+        checkbox_vals['units_' + u + '_selected'] =''
+        if u == initial['units']:
+            checkbox_vals['units_' +u + '_selected'] ='selected'
+    for df in ['none', 'dash','colon', 'slash']:
+        checkbox_vals['date_format_' + df + '_selected'] =''
+        if df == initial['date_format']:
+            checkbox_vals['date_format_' + df + '_selected'] ='selected'
+    for dl in ['comma', 'tab', 'space', 'colon', 'pipe']:
+        checkbox_vals[dl + '_selected'] =''
+        if dl == initial['delimiter']:
+            checkbox_vals[dl + '_selected'] ='selected'
+    for bl in ['T','F']:
+        for cbv in ['show_flags', 'show_observation_time', 'add_degree_days']:
+            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
+            if initial[cbv] == bl:
+                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
+    return initial,checkbox_vals

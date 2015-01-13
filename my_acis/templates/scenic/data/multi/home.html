@@ -1,7 +1,7 @@
 {% extends "csc_base.html" %}
 
 <meta name="keywords" content="data, station data, historic data, gridded data, modeled data, data portal, acis">
-<meta name="description" content="Multi Point Products">
+<meta name="description" content="area Point Products">
 
 
 {%block content %}
@@ -9,7 +9,7 @@
 <!--Documentation-->
 <div class="docu" id="Docu_About_multi_lister" style="display:none;"></div>
     <script type="text/javascript">                        
-    $("#Docu_About_multi_lister").load("{{HTML_URL}}/Docu_About_multi_lister.html");
+    $("#Docu_About_area_lister").load("{{HTML_URL}}/Docu_About_area_lister.html");
     </script>
 <div class="docu" id="Docu_CLIM_SUM_MAP" style="display:none;"></div>
     <script type="text/javascript">                        
@@ -18,6 +18,10 @@
 <div class="docu" id="Docu_AREA_TIME_SERIES" style="display:none;"></div>
     <script type="text/javascript">                        
     $("#Docu_AREA_TIME_SERIES").load("{{HTML_URL}}/Docu_AREA_TIME_SERIES.html");
+    </script>
+<div class="docu" id="Docu_DataComparison" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_DataComparison").load("{{HTML_URL}}/Docu_DataComparison.html");
     </script>
 
 <table cellpadding="20" align="center">
@@ -71,7 +75,13 @@
             <div class="pop-up">
             <p>Generates climate summary maps for US states.<br />Only available for NRCC interpolated data.</p>
             </div>
-        </td>  
+        </td> 
+        <td colspan="2">
+            <a  href="{{MIXED_TOOLS_URL}}data_comparison/" class="trigger_hover"><img class="app_img" alt="Compare" title="Compare" src="{{MEDIA_URL}}img/Compare_TS.png"></a>
+            <div class="pop-up">
+            <p>Compare gridded/modeled data with historic station data.</p>
+            </div>
+        </td> 
     </tr>
     </table>
 </td>
