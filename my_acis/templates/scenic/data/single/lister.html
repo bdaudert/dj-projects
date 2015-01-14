@@ -95,7 +95,7 @@ $(function(){
 <td valign="top">
     <div id='formData'>
         {{x}}<br /><br />
-        {{xx}}
+        {{initial}}
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
         <table class="form" id="tableData" >
         <tr class="station_grid" style="display:table-row" valign="bottom">{% include 'includes/single_select_area.html'%}</tr>
@@ -120,14 +120,12 @@ $(function(){
         <tr id="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
         </table>
         <input type="hidden" id="data_type" name="data_type" value="{{initial.data_type}}">
-        <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
         <input style="margin:5px" type="submit" value="Get data" name="formData"/>
         </form>
     </div>
 </td>
 <td valign="top">
-    <!--Form errors-->
-    <!--Errors and search parameter section-->
+    <!--Form errors and search parameter section-->
     {%if form_error%}
     <div id="form_error">
         <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
@@ -136,6 +134,20 @@ $(function(){
         {%endfor%}
     </div>
     {%endif%}
+    <!--Request errors or results arrow-->
+    <div class="results">
+    {%if results%}
+    {%if results.errors%}
+    <p class="error">{{results.errors}}</p>
+    {%else%}
+    <div id="Arrow" class="results">
+    <table style="display:block;">
+    <td valign="top"><b>RESULTS:</b></td><td>
+    <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td>
+    </table>
+    </div>
+    {%endif%}
+    </div>
     <!--Map section-->
     <div id="GridpointMap" style="display:none"></div>
     <!--end map section--> 
@@ -144,5 +156,8 @@ $(function(){
 <table cellpadding="10" align="center">
 <td valign="top" width="97%">
     <!--Results-->
+    {% if not results.errors and results %}
+    {{results}}
+    {%endif%}
 </td></table>
 {%endblock%}

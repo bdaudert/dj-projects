@@ -109,11 +109,19 @@ function set_form(node_value){
         //form_rows_to_show  = document.querySelectorAll('.station_grid, .station');
         form_rows_to_show = document.getElementsByClassName('station');
         form_rows_to_hide = document.getElementsByClassName('grid');
+        //Update data_type
+        if ($('#data_type').length){
+            $('#data_type').val('station');
+        }
     }
     if (node_value.inList(['grid','location','locations'])){
         form_rows_to_show = document.getElementsByClassName('grid');
         //form_rows_to_show = Array.prototype.slice.call(form_rows_to_show1).concat(Array.prototype.slice.call(form_rows_to_show2));
         form_rows_to_hide = document.getElementsByClassName('station');
+        //Update data_type
+        if ($('#data_type').length){
+            $('#data_type').val('grid');
+        }
     }
     
     for (idx = 0;idx<form_rows_to_hide.length;idx++) {

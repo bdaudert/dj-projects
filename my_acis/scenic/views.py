@@ -279,6 +279,14 @@ def single_lister(request):
                 context['need_gridpoint_map'] = True
                 return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
         context['xx'] = form_cleaned
+        #Data requests
+        results = WRCCUtils.make_data_request(form_cleaned)
+        context['results'] = results
+        '''
+        #Format Data
+        resultsdict = format_data(req, form_cleaned)
+        context['results'] = resultsdict
+        '''
     return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
 
 
@@ -3940,8 +3948,11 @@ def set_initial_single_lister(request):
     Getlist = set_GET_list(request)
     initial['area_type'] = Get('area_type','station_id')
     initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
-    if initial['area_type'] == 'station_id':
+    if initial['area_type'] in ['station_id']:
         initial['autofill_list'] = 'US_' + initial['area_type']
+        initial['data_type'] = 'station'
+    elif initial['area_type'] in ['location']:
+        initial['data_type'] = 'grid'
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['area_type']]
     initial['area_type_value'] = initial[str(initial['area_type'])]
     initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
