@@ -277,7 +277,7 @@ def single_lister(request):
             context['form_error'] = form_error
             if form_cleaned['select_area'] == 'location':
                 context['need_gridpoint_map'] = True
-                return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
+            return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
         context['xx'] = form_cleaned
         #Data requests
         results = WRCCUtils.make_data_request(form_cleaned)

@@ -1,0 +1,83 @@
+<div id="SODXTRMTS" title="Monthly Time Series">
+    <p class="error">What is this tool?</p>
+    <p>This tool calculates various monthly statistics<br />
+    over a range of years chosen by the user.<br /> 
+    Calculations are based on daily input data.<br />
+    Tables and graphs can be created for the following climate elements.<br />
+    <ul>
+    Maximum/Minimum/Mean Temperature, Temperature Range<br />
+    Precipitation/Snowfall<br />
+    Heating/Cooling/Growing Degree Days<br />
+    </ul>
+    Available monthly statistics:
+    <ul>
+    Monthly Maximum<br />
+    Monthly Minimum<br />
+    Monthly Average<br />
+    Standard Deviation<br />
+    Number of Days (above/below/between thresholds)<br />
+    Range during Month<br />
+    Monthly Sum<br />
+    </ul>
+</p>
+    
+    <p class="error">What datasets can be used?</p>
+<p class="pop_link" onClick="ShowHide('Docu_NRCC_INT')"><u>NRCC Interpolated</u></p>
+    <div id="Docu_NRCC_INT" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_NRCC_INT").load("/csc/media/html/Docu_grids.html #NRCC_INT");
+    </script>
+<p class="pop_link" onClick="ShowHide('Docu_NRCC_INT_HI')"><u>NRCC Interpolated Hi-Res</u></p>
+    <div id="Docu_NRCC_INT_HI" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_NRCC_INT_HI").load("/csc/media/html/Docu_grids.html #NRCC_INT_HI");
+    </script>
+<p class="pop_link" onClick="ShowHide('Docu_PRISM')"><u>PRISM</u></p>
+    <div id="Docu_PRISM" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_PRISM").load("/csc/media/html/Docu_grids.html #PRISM");
+    </script>
+<p class="pop_link" onClick="ShowHide('Docu_CRCM')"><u>NARCCAP - CRCM</u></p>
+    <div id="Docu_CRCM" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_CRCM").load("/csc/media/html/Docu_grids.html #CRCM");
+    </script>
+<p class="pop_link" onClick="ShowHide('Docu_HRM3')"><u>NARCCAP - HRM3</u></p>
+    <div id="Docu_HRM3" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_HRM3").load("/csc/media/html/Docu_grids.html #HRM3");
+    </script>
+<p class="pop_link" onClick="ShowHide('Docu_MM5I')"><u>NARCCAP - MM5I</u></p>
+    <div id="Docu_MM5I" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_MM5I").load("/csc/media/html/Docu_grids.html #MM5I");
+    </script>
+<p class="pop_link" onClick="ShowHide('Docu_RCM3')"><u>NARCCAP - RCM3</u></p>
+    <div id="Docu_RCM3" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_RCM3").load("/csc/media/html/Docu_grids.html #RCM3");
+    </script>
+<p class="pop_link" onClick="ShowHide('Docu_WRFG')"><u>NARCCAP - WRFG</u></p>
+    <div id="Docu_WRFG" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_WRFG").load("/csc/media/html/Docu_grids.html #WRFG");
+    </script>
+
+<!--
+<a target="_blank" href="https://gist.github.com/bnoon/4197956">NRCC Interpolated/Hi-Resolution</a><br />
+<a target="_blank" class="popup_map" href="http://www.prism.oregonstate.edu/">PRISM</a><br />
+
+<p>NARCCAP(North American Regional Climate Change Assessment Program) Datasets:</p>
+<a target="_blank" class="popup_map" target="_blank" href="http://www.earthsystemgrid.org/dataset/narccap.crcm.output.html">CRCM</a><br />
+<a target="_blank" class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.hrm3.output.html">HRM3</a><br />
+<a target="_blank" class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.mm5i.output.html">MM5I</a><br />
+<a target="_blank" class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.rcm3.output.html">RCM3</a><br />
+<a target="_blank" class="popup_map" href="http://www.earthsystemgrid.org/dataset/narccap.wrfg.output.html">WRFG</a>-->
+<p>All data sets are made available through the ACIS system.</p>
+    <p class="error">What can you do with this tool?</p>
+    <p>Generate summary tables</p>
+    <img alt="SodxtrmtsTable" title="SodxtrmtsTable" width="400px" height="350px" src="/csc/media/img/SodxtrmtsTable.png">
+    <p>Generate time series graphs for individual months or<br>summarize several months in one graph</p>
+    <img alt="SodxtrmtsTS" title="SodxtrmtsTS" width="400px" height="300px" src="/csc/media/img/SodxtrmtsTS.png">
+    <p>Get raw data behind the graphics</p>
+</div>

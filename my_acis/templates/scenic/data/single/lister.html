@@ -7,53 +7,22 @@
 {% block content %} 
 
 <!--Documentation-->
-    <div class="docu" id="tool_info" style="display:none;"></div>
-    <script type="text/javascript">                        
-        $("#tool_info").load("{{HTML_URL}}/Docu_About_single_lister.html");
-    </script>
-    
-    <div id="how_to" style="display:none;">
-        <div id="Docu_elements"></div>
-         <script type="text/javascript">            
-            $("#Docu_elements").load("{{HTML_URL}}/Docu_elements_station.html");
-        </script>
-        <div id="Docu_add_degree_days"></div>
-        <script type="text/javascript">            
-            $("#Docu_add_degree_days").load("{{HTML_URL}}/Docu_add_degree_days.html");
-        </script>
-        <div id="Docu_degree_days"></div>
-        <script type="text/javascript">            
-            $("#Docu_degree_days").load("{{HTML_URL}}/Docu_degree_days.html");
-        </script>
-        <div id="Docu_units"></div>
-        <script type="text/javascript">            
-            $("#Docu_units").load("{{HTML_URL}}/Docu_units.html");
-        </script>
-        <div id="Docu_start_end_date"></div>
-         <script type="text/javascript">            
-            $("#Docu_start_end_date").load("{{HTML_URL}}/Docu_start_end_date.html");
-        </script>
-        <div id="Docu_show_flags"></div>
-        <script type="text/javascript">            
-            $("#Docu_show_flags").load("{{HTML_URL}}/Docu_show_flags.html");
-        </script>
-        <div id="Docu_show_observation_time"></div>
-        <script type="text/javascript">            
-            $("#Docu_show_observation_time").load("{{HTML_URL}}/Docu_show_observation_time.html");
-        </script>
-        <div id="Docu_date_format"></div>
-        <script type="text/javascript">            
-            $("#Docu_date_format").load("{{HTML_URL}}/Docu_date_format.html");
-        </script>
-        <div id="Docu_data_format"></div>
-        <script type="text/javascript">            
-            $("#Docu_data_format").load("{{HTML_URL}}/Docu_data_format.html");
-        </script>
-        <div id="Docu_delimiter"></div>
-        <script type="text/javascript">
-            $("#Docu_delimiter").load("{{HTML_URL}}/Docu_delimiter.html");         
-        </script>
-    </div><!--End how_to-->
+<div class="docu" id="tool_info" style="display:none;">
+    {% include 'includes/Docu_About_single_lister.html'%}
+</div>
+<div id="how_to" style="display:none;">
+    <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
+    <div id="Docu_elements">{% include 'includes/Docu_elements.html'%}</div>
+    <div id="Docu_add_degree_days">{% include 'includes/Docu_add_degree_days.html'%}</div>
+    <div id="Docu_degree_days">{% include 'includes/Docu_degree_days.html'%}</div>
+    <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
+    <div id="Docu_start_end_date">{% include 'includes/Docu_start_end_date.html'%}</div>
+    <div id="Docu_show_flags">{% include 'includes/Docu_show_flags.html'%}</div>
+    <div id="Docu_show_observation_time">{% include 'includes/Docu_show_observation_time.html'%}</div>
+    <div id="Docu_date_format">{% include 'includes/Docu_date_format.html'%}</div>
+    <div id="Docu_data_format">{% include 'includes/Docu_data_format.html'%}</div>
+    <div id="Docu_delimiter">{% include 'includes/Docu_delimiter.html'%}</div>
+</div><!--End how_to-->
 
 <!---Hidded variables-->
 <input type="hidden" id="area_type" name="area_type" value="{{initial.area_type}}">
@@ -137,15 +106,16 @@ $(function(){
     <!--Request errors or results arrow-->
     <div class="results">
     {%if results%}
-    {%if results.errors%}
-    <p class="error">{{results.errors}}</p>
-    {%else%}
-    <div id="Arrow" class="results">
-    <table style="display:block;">
-    <td valign="top"><b>RESULTS:</b></td><td>
-    <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td>
-    </table>
-    </div>
+        {%if results.errors%}
+            <p class="error">{{results.errors}}</p>
+        {%else%}
+            <div id="Arrow" class="results">
+            <table style="display:block;">
+            <td valign="top"><b>RESULTS:</b></td><td>
+            <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td>
+            </table>
+            </div>
+        {%endif%}
     {%endif%}
     </div>
     <!--Map section-->

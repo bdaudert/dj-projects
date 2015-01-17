@@ -1,0 +1,15 @@
+        <td>Points of interest:</td>
+        <td>
+            <select id="area_type" name="area_type" onchange="set_elements(this.value) & set_form(this.value) & set_area('area',this) & set_map(this) & update_value(this.value);">
+            <!--<option value="none" {{checkbox_vals.none_selected}}>Select data type</option>-->
+            <option value="station_ids" {{checkbox_vals.station_selected}}>Stations</option>
+            <option value="locations" {{checkbox_vals.location_selected}}>Locations (Lon,Lat pairs)</option>
+            </select>
+        </td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div id="Docu_select_points" class="pop-up"></div>
+        <script type="text/javascript">                        
+            $("#Docu_select_points").load("{{HTML_URL}}Docu_help_texts.html #ht_select_points");
+        </script>
+        </td>
+
