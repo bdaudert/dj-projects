@@ -265,8 +265,9 @@ def single_lister(request):
     context = {
         'title': 'Data Lister',
     }
-    initial, checkbox_vals = set_initial_single_lister(request)
+    initial, checkbox_vals = set_initial_lister(request,'single')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
+    #Data request submitted
     if 'formData' in request.POST:
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
@@ -278,15 +279,71 @@ def single_lister(request):
             if form_cleaned['select_area'] == 'location':
                 context['need_gridpoint_map'] = True
             return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
-        context['xx'] = form_cleaned
         #Data requests
-        results = WRCCUtils.make_data_request(form_cleaned)
+        req_data = WRCCUtils.make_data_request(form_cleaned)
+        #Format Data for display and/or download
+        results = WRCCUtils.format_data_single_lister(req_data, form_cleaned)
+        if not results:
+            results = {'error':'No data found for these parameters.'}
+            context['results'] = results
+            return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
         context['results'] = results
-        '''
-        #Format Data
-        resultsdict = format_data(req, form_cleaned)
-        context['results'] = resultsdict
-        '''
+        context['params_display_list'] = set_display_list('single_lister', form_cleaned)
+        if 'meta' in req_data.keys() and req_data['meta']:
+            meta_keys = set_meta_keys('single_lister',form_cleaned)
+            meta_display_list = WRCCUtils.metadict_to_display_list(req_data['meta'], meta_keys,form)
+            context['meta_display_list'] = meta_display_list
+        #Write data to file if requested
+        #Make look like multi request
+        all_data = {'meta':[req_data['meta']],'data':[results],'form':form_cleaned}
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        file_name = form_cleaned['output_file_name'] + '_' + time_stamp
+        #Deal with different data formats
+        if form_cleaned['data_format'] in ['clm','dlm'] and results:
+            if form_cleaned['data_format'] == 'clm':
+                file_extension = '.txt'
+            else:
+                file_extension = '.dat'
+            response = HttpResponse(mimetype='text/csv')
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
+            WRCCUtils.write_to_csv(response, all_data)
+            return response
+        if form_cleaned['data_format'] in ['xl'] and results:
+            file_extension = '.xls'
+            response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
+            WRCCUtils.write_to_excel(response,all_data)
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
+            return response
+        #Save data for download button
+        if form_cleaned['data_format'] in ['html'] and results:
+            results_json = json.dumps(all_data)
+            json_file  = form['output_file_name'] + '.json'
+            with open(settings.TEMP_DIR + json_file,'w+') as f:
+                f.write(results_json)
+            context['json_file'] = json_file
+    #Download button pressed
+    if 'formDownload' in request.POST:
+        form = set_form(request,clean=False)
+        json_file = request.POST.get('json_file', None)
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        file_name = form['output_file_name'] + '_' + time_stamp
+        with open(settings.TEMP_DIR + json_file, 'r') as f:
+            all_data =  json.load(f)
+        if form['data_format'] in ['clm','dlm']:
+            if form['data_format'] == 'clm':
+                file_extension = '.txt'
+            else:
+                file_extension = '.dat'
+            response = HttpResponse(mimetype='text/csv')
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
+            WRCCUtils.write_to_csv(response, all_data)
+            return response
+        if form['data_format'] in ['xl']:
+            file_extension = '.xls'
+            response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
+            WRCCUtils.write_to_excel(response,all_data)
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
+            return response
     return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
 
 
@@ -294,7 +351,7 @@ def multi_lister(request):
     context = {
         'title': 'Data Lister',
     }
-    initial, checkbox_vals = set_initial_multi_lister(request)
+    initial, checkbox_vals = set_initial_lister(request,'multi')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     if 'formData' in request.POST:
         form = set_form(request,clean=False)
@@ -308,7 +365,7 @@ def area_lister(request):
     context = {
         'title': 'Data Lister',
     }
-    initial, checkbox_vals = set_initial_multi_lister(request)
+    initial, checkbox_vals = set_initial_lister(request,'area')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     #Set initial overlay state for overlay map
     context[initial['overlay_state'].lower() + '_selected'] = 'selected'
@@ -326,7 +383,7 @@ def area_lister(request):
         context['need_overlay_map'] = True
         form = set_form(request,clean=False)
         context['xx'] = form
-        initial, checkbox_vals = set_initial_multi_lister(form)
+        initial, checkbox_vals = set_initial_lister(form,'area')
         #context['xx'] = initial
         #checkbox_vals[form['area_type'] + '_selected'] = 'selected'
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
@@ -965,7 +1022,7 @@ def metagraph(request):
                 if len(meta_request['meta']) == 0:
                     station_meta = {'error': 'No metadata found for station: %s.' %str(form_meta.cleaned_data['station_id'])}
                 else:
-                    station_meta = WRCCUtils.metadict_to_display(meta_request['meta'][0], key_order)
+                    station_meta = WRCCUtils.metadict_to_display_list(meta_request['meta'][0], key_order,form)
             else:
                 station_meta = {'error':'No meta data found for station: %s.' %station_id}
             context['station_meta'] = station_meta
@@ -3843,22 +3900,6 @@ def set_elements(form):
     else:
         return form['elements']
 
-def convert_elements_to_list(elements):
-    el_list = []
-    if isinstance(elements, basestring):
-        el_list = elements.replace(' ','').rstrip(',').split(',')
-    elif isinstance(elements,list):
-        el_list = [str(el) for el in elements]
-    return el_list
-
-def convert_elements_to_string(elements):
-    el_str = ''
-    if isinstance(elements, basestring):
-        el_str = elements
-    elif isinstance(elements,list):
-        el_str = ','.join([str(el).rstrip(' ') for el in elements])
-    return el_str
-
 def set_form(request, clean=True):
     '''
     Coverts request input to usable form input:
@@ -3876,7 +3917,7 @@ def set_form(request, clean=True):
     if isinstance(request,dict):
         form= dict(request)
         #Special case elements, always needs to be list
-        form['elements'] = convert_elements_to_list(form_dict['elements'])
+        form['elements'] = WRCCUtils.convert_elements_to_list(form_dict['elements'])
     elif request.method == 'POST':
         form = dict((str(x),str(y)) for x,y in request.POST.items())
         #Special case elements, always needs to be list
@@ -3936,25 +3977,83 @@ def set_form(request, clean=True):
                 form['elements'].append(dd)
     return form
 
-#Initializers
+#Sets keys that should be displayed to user after request completion
+def set_display_keys(app_name,form):
+    display_keys = []
+    if app_name in ['single_lister','multi_lister']:
+        display_keys+=[form['area_type'], 'elements', 'units', 'start_date', 'end_date']
+    elif app_name == 'area_lister':
+        display_keys+= [form['data_type'], form['area_type'], 'elements', 'units', 'start_date', 'end_date']
+    return display_keys
 
-def set_initial_single_lister(request):
+def set_meta_keys(app_name,form):
+    meta_keys = []
+    if app_name in ['single_lister','multi_lister']:
+        if  form['area_type'] in ['station_id','station_ids']:
+            meta_keys = ['name', 'state', 'sids', 'elev', 'll', 'valid_daterange']
+        else:
+            meta_keys+=['ll','elev']
+    return meta_keys
+
+#Sets list of [key, form[key]] pairs for html display of request parameters
+def set_display_list(app_name, form):
+    display_list = []
+    display_keys = set_display_keys(app_name,form)
+    for key in display_keys:
+        #Treat elements separately
+        if key == 'elements':
+            el_list_long = []
+            el_list = WRCCUtils.convert_elements_to_list(form['elements'])
+            for el in el_list:
+                el_strip,base_temp = WRCCUtils.get_el_and_base_temp(el)
+                unit = WRCCData.UNITS_ENGLISH[el_strip]
+                if form['units'] == 'metric':
+                    unit = WRCCData.UNITS_METRIC[el_strip]
+                    base_temp = WRCCUtils.convert_to_metric(el_strip,base_temp)
+                if not base_temp:
+                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el_strip] + ' (' + unit + ')')
+                else:
+                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el_strip] + ' (' + unit + '), Base: ' + str(base_temp))
+            display_list.append([WRCCData.DISPLAY_PARAMS[key],el_list_long])
+        else:
+            display_list.append([WRCCData.DISPLAY_PARAMS[key],[form[key]]])
+
+    return display_list
+
+#Initializers
+def set_initial_lister(request,req_type):
     '''
-    req_type == single or muti
+    req_type == single/multi or area
     '''
     initial = {}
     checkbox_vals = {}
     Get = set_GET(request)
     Getlist = set_GET_list(request)
-    initial['area_type'] = Get('area_type','station_id')
+    #Set area type: station_id(s), location, basin,...
+    area_type = None
+    if req_type == 'single':
+        initial['area_type'] = Get('area_type','station_id')
+    elif req_type == 'multi':
+        initial['area_type'] = Get('area_type','station_ids')
+    elif req_type == 'area':
+        initial['area_type'] = Get('area_type','state')
+    #Set area depending on area_type
     initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
+    initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['area_type']]
+    initial['area_type_value'] = initial[str(initial['area_type'])]
     if initial['area_type'] in ['station_id']:
         initial['autofill_list'] = 'US_' + initial['area_type']
         initial['data_type'] = 'station'
     elif initial['area_type'] in ['location']:
         initial['data_type'] = 'grid'
-    initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['area_type']]
-    initial['area_type_value'] = initial[str(initial['area_type'])]
+    elif initial['area_type'] in ['basin','county_warning_area','county','climate_division','state','shape']:
+        initial['autofill_list'] = 'US_' + initial['area_type']
+        initial['data_type'] = Get('data_type','station')
+        #Set up map parameters
+        initial['host'] = settings.HOST
+        initial['overlay_state'] = Get('overlay_state','NV')
+        initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
+        initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
     initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
     initial['add_degree_days'] = Get('add_degree_days', 'F')
     initial['units'] = Get('units','english')
@@ -3972,78 +4071,6 @@ def set_initial_single_lister(request):
     initial['delimiter'] = Get('delimiter', 'space')
     initial['output_file_name'] = Get('output_file_name', 'Output')
     #Checkbox vals
-    for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys() + ['none']:
-        checkbox_vals[area_type + '_selected'] =''
-        if area_type == initial['area_type']:
-            checkbox_vals[area_type + '_selected'] ='selected'
-    for element in initial['elements']:
-        checkbox_vals['elements_' + element + '_selected'] =''
-        for el in initial['elements']:
-            if str(el) == element:
-                checkbox_vals['elements_' + element + '_selected'] ='selected'
-    for df in ['clm', 'dlm','xl', 'html']:
-        checkbox_vals['data_format_' + df + '_selected'] =''
-        if df == initial['data_format']:
-            checkbox_vals['data_format_' + df + '_selected'] ='selected'
-    for u in ['english', 'metric']:
-        checkbox_vals['units_' + u + '_selected'] =''
-        if u == initial['units']:
-            checkbox_vals['units_' +u + '_selected'] ='selected'
-    for df in ['none', 'dash','colon', 'slash']:
-        checkbox_vals['date_format_' + df + '_selected'] =''
-        if df == initial['date_format']:
-            checkbox_vals['date_format_' + df + '_selected'] ='selected'
-    for dl in ['comma', 'tab', 'space', 'colon', 'pipe']:
-        checkbox_vals[dl + '_selected'] =''
-        if dl == initial['delimiter']:
-            checkbox_vals[dl + '_selected'] ='selected'
-    for bl in ['T','F']:
-        for cbv in ['show_flags', 'show_observation_time', 'add_degree_days']:
-            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
-            if initial[cbv] == bl:
-                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
-    return initial,checkbox_vals
-
-def set_initial_multi_lister(request):
-    initial = {}
-    checkbox_vals = {}
-    Get = set_GET(request)
-    Getlist = set_GET_list(request)
-    initial['area_type'] = Get('area_type', 'state')
-    #Set up map parameters
-    initial['host'] = settings.HOST
-    initial['overlay_state'] = Get('overlay_state','NV')
-    initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
-    initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
-    #Set form params
-    initial['data_type'] = Get('data_type','station')
-    initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
-    initial['autofill_list'] = 'US_' + initial['area_type']
-    initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['area_type']]
-    initial['area_type_value'] = initial[str(initial['area_type'])]
-    initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
-    initial['add_degree_days'] = Get('add_degree_days', 'F')
-    initial['units'] = Get('units','english')
-    if initial['units'] == 'metric':
-        initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
-    else:
-        initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
-    initial['start_date']  = Get('start_date', fourtnight)
-    initial['end_date']  = Get('end_date', yesterday)
-    initial['show_flags'] = Get('show_flags', 'F')
-    initial['show_observation_time'] = Get('show_observation_time', 'F')
-    initial['grid'] = Get('grid','1')
-    initial['data_format'] = Get('data_format', 'html')
-    initial['date_format'] = Get('date_format', 'dash')
-    initial['delimiter'] = Get('delimiter', 'space')
-    initial['output_file_name'] = Get('output_file_name', 'Output')
-    initial['user_name'] = Get('user_name', 'Your Name')
-    initial['user_email'] = Get('user_email', 'Your Email')
-    #Checkbox vals
-    for dt in ['station','grid','none']:
-        checkbox_vals['data_type_' + dt + '_selected'] =''
-        if dt == initial['data_type']:
-            checkbox_vals['data_type_' + dt + '_selected'] ='selected'
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys() + ['none']:
         checkbox_vals[area_type + '_selected'] =''
         if area_type == initial['area_type']:

@@ -25,9 +25,6 @@
 </div><!--End how_to-->
 
 <!---Hidded variables-->
-<input type="hidden" id="area_type" name="area_type" value="{{initial.area_type}}">
-<input type="hidden" id="host" name="host" value="{{iniial.host}}">
-<input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
 
 <!--Set up autofill-->
 {%if initial.autofill_list %}
@@ -61,10 +58,8 @@ $(function(){
 
 
 <table>
-<td valign="top">
+<td valign="top" width="40%">
     <div id='formData'>
-        {{x}}<br /><br />
-        {{initial}}
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
         <table class="form" id="tableData" >
         <tr class="station_grid" style="display:table-row" valign="bottom">{% include 'includes/single_select_area.html'%}</tr>
@@ -93,10 +88,10 @@ $(function(){
         </form>
     </div>
 </td>
-<td valign="top">
+<td valign="top" width="60%">
     <!--Form errors and search parameter section-->
     {%if form_error%}
-    <div id="form_error">
+    <div id="form_error" align="center">
         <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
         {%for key, val in form_error.items%}
             <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
@@ -104,15 +99,27 @@ $(function(){
     </div>
     {%endif%}
     <!--Request errors or results arrow-->
-    <div class="results">
+    <div class="results" align="center">
     {%if results%}
         {%if results.errors%}
             <p class="error">{{results.errors}}</p>
         {%else%}
             <div id="Arrow" class="results">
             <table style="display:block;">
-            <td valign="top"><b>RESULTS:</b></td><td>
-            <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td>
+            <tr><td valign="top">
+            <p class="message"><b>RESULTS:</b></p>
+            </td></tr>
+            <tr><td>
+            <p class="message">YOUR PARAMETERS:<br />
+            {%for key_val in params_display_list%}
+                <b>{{key_val.0}}</b>:
+                {%for item in key_val.1%}
+                    {{item}}<br />
+                {%endfor%}
+            {%endfor%}
+            </p>
+            </td></tr>
+            <tr><td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td></tr>
             </table>
             </div>
         {%endif%}
@@ -126,8 +133,49 @@ $(function(){
 <table cellpadding="10" align="center">
 <td valign="top" width="97%">
     <!--Results-->
+    <!--Print and download buttons-->
+    {%if not results.errors and results%}
+        <table>
+        <td valign="top">
+        <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
+        </td><td valign="top">
+        <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
+        <!--Download form-->
+        <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
+        </td>
+        </table>
+    {%endif%}    
+
+    <!--Data-->
+    <div class="results" align="center">
+    <table id="printable_table">
+    <td>
     {% if not results.errors and results %}
-    {{results}}
-    {%endif%}
+        <p class="message" align="left"><b>METADATA</b>:</p>
+        <p align="left">
+        {%for key_val in meta_display_list%}
+            <b>{{key_val.0}}</b>:
+            {%if key_val.0 == "Station ID/Network List" or key_val.0 == "Valid Date Range (by element)"%}
+                <br />
+            {%endif%}
+            {%for item in key_val.1%}
+                {{item}}<br />
+            {%endfor%}
+        {%endfor%}
+        </p>
+        <p>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
+        <p class="message" align="left"><b>DATA</b>:</p>
+        <table border="1">
+        {%for date_data in results%}
+            <tr>
+            {%for data in date_data%}
+                <td>{{data}}</td>
+            {%endfor%}
+            </tr>
+        {%endfor%}
+        </table>
+    {%endif%}<!--end if not resulst.errors ...-->
+    <div><!--end results-->
+    </td></table><!--End printable table-->
 </td></table>
 {%endblock%}

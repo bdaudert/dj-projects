@@ -89,7 +89,7 @@ function precise_round(num,decimals){
 
 function printNode(ID){
   var NodeToPrint=document.getElementById(ID);
-  newWin= window.open("Print_Table_Date");
+  newWin= window.open("Print_Table_Data");
   newWin.document.write(NodeToPrint.outerHTML);
   newWin.print();
   newWin.close();

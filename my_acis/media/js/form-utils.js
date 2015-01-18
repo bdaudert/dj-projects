@@ -301,15 +301,19 @@ function set_map(node){
     Sets map interfaces for data and applications
     node is the area selector
     */
+    var area_type,TMP_URL,state,kml_file_path;
     //Get TMP env variable (defined in templates/csc_base.html)
-    var area_type = node.value;
-    var TMP_URL = document.getElementById('TMP_URL').value;
-    var state = document.getElementById('overlay_state').value;
-    var kml_file_path = TMP_URL + state + '_' + area_type + '.kml';
-    document.getElementById('kml_file_path').value=kml_file_path;
+    area_type = node.value;
+    try {
+        document.getElementById('kml_file_path').value=kml_file_path;
+    }
+    catch (e){}
     //Update hidden elements
     if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
-        //document.getElementById('select_overlay_by').value= area_type;
+        TMP_URL = document.getElementById('TMP_URL').value;
+        state = document.getElementById('overlay_state').value;
+        kml_file_path = TMP_URL + state + '_' + area_type + '.kml';
+        document.getElementById('kml_file_path').value=kml_file_path;
         $(".area_type").val(area_type);
     }
     //Set up maps for display

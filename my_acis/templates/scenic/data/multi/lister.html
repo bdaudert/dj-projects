@@ -72,10 +72,11 @@
     </div><!--how_to-->
 
 <!---Hidded variables-->
-<input type="hidden" id="area_type" name="area_type" value="{{initial.area_type}}">
+<!--for maps-->
+<!--<input type="hidden" id="area_type" name="area_type" value="{{initial.area_type}}">
 <input type="hidden" id="host" name="host" value="{{iniial.host}}">
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
-
+-->
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 <!--On form change, hide results and form errors-->
@@ -159,13 +160,25 @@ $(function(){
         {%else%}
             <div id="Arrow" class="results">
             <table style="display:block;">
-            <td valign="top"><b>RESULTS:</b></td><td>
-            <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td>
+            <tr><td valign="top">
+            <p class="message"><b>RESULTS:</b></p>
+            </td></tr>
+            <tr><td>
+            <p class="message">YOUR PARAMETERS:<br />
+            {%for key_val in params_display_list%}
+                <b>{{key_val.0}}</b>:
+                {%for item in key_val.1%}
+                    {{item}}<br />
+                {%endfor%}
+            {%endfor%}
+            </p>
+            </td></tr>
+            <tr><td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td></tr>
             </table>
             </div>
         {%endif%}
     {%endif%}
-    </div>
+    </div> 
     <!--Map section-->
     <!--Gridpoint map-->
     <div id="GridpointMap" style="display:none;"></div>
@@ -197,8 +210,16 @@ $(function(){
 <table cellpadding="10" align="center">
 <td valign="top" width="97%">
     <!--Results-->
+    <div class="results">
     {% if not results.errors and results %}
+    {%for key_val in meta_display_list%}
+        <b>{{key_val.0}}</b>:<br />
+        {%for item in key_val.1%}
+            {{item}}<br />
+        {%endfor%}
+    {%endfor%}
     {{results}}
     {%endif%}
+    <div>
 </td></table>
 {%endblock%}
