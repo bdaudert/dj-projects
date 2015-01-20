@@ -17,6 +17,7 @@
     <div id="Docu_degree_days">{% include 'includes/Docu_degree_days.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
     <div id="Docu_start_end_date">{% include 'includes/Docu_start_end_date.html'%}</div>
+    <div id="Docu_data_summary">{% include 'includes/Docu_data_summary.html'%}</div>
     <div id="Docu_show_flags">{% include 'includes/Docu_show_flags.html'%}</div>
     <div id="Docu_show_observation_time">{% include 'includes/Docu_show_observation_time.html'%}</div>
     <div id="Docu_date_format">{% include 'includes/Docu_date_format.html'%}</div>
@@ -75,6 +76,9 @@ $(function(){
         <tr class="station_grid" style="display:table-row;">{% include 'includes/units.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
+        <tr class="station_grid" id="data_summary" style="display:table-row;">{% include 'includes/data_summary_single.html'%}</tr>
+        <tr id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
+        <tr id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
         <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
         <tr class="station" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
         <tr class="station" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
@@ -100,7 +104,7 @@ $(function(){
     {%endif%}
     <!--Request errors or results arrow-->
     <div class="results" align="center">
-    {%if results%}
+    {%if results.data%}
         {%if results.errors%}
             <p class="error">{{results.errors}}</p>
         {%else%}
@@ -134,7 +138,26 @@ $(function(){
 <td valign="top" width="97%">
     <!--Results-->
     <!--Print and download buttons-->
-    {%if not results.errors and results%}
+    <div class="results">
+    <!--Show summary first-->
+    {%if results.smry%}
+        <p class="message" align="left"><b>DATA SUMMARY</b>:</p>
+        <table border="1">
+        {%for s_data in results.smry%}
+            <tr>
+            {%for s in s_data%}
+                <td>{{s}}</td>
+            {%endfor%}
+            </tr>
+        {%endfor%}
+        </table><br />
+        <img src = "{{MEDIA_URL}}img/show_hide_button.png" onclick="ShowHide('data_results')"></a>
+         <div id="data_results" style="display:none">
+    {%else%}
+        <div id="data_results">
+    {%endif%}
+    
+    {%if not results.errors and results.data%}
         <table>
         <td valign="top">
         <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
@@ -147,10 +170,9 @@ $(function(){
     {%endif%}    
 
     <!--Data-->
-    <div class="results" align="center">
     <table id="printable_table">
     <td>
-    {% if not results.errors and results %}
+    {% if not results.errors and results.data %}
         <p class="message" align="left"><b>METADATA</b>:</p>
         <p align="left">
         {%for key_val in meta_display_list%}
@@ -163,10 +185,11 @@ $(function(){
             {%endfor%}
         {%endfor%}
         </p>
+
         <p>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
         <p class="message" align="left"><b>DATA</b>:</p>
         <table border="1">
-        {%for date_data in results%}
+        {%for date_data in results.data%}
             <tr>
             {%for data in date_data%}
                 <td>{{data}}</td>
@@ -174,8 +197,9 @@ $(function(){
             </tr>
         {%endfor%}
         </table>
-    {%endif%}<!--end if not resulst.errors ...-->
+    {%endif%}<!--end if not results.errors-->
     <div><!--end results-->
     </td></table><!--End printable table-->
+    </div><!--end div data_results-->
 </td></table>
 {%endblock%}

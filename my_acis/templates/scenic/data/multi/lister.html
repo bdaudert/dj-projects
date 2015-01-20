@@ -17,60 +17,18 @@
     <div id="Docu_degree_days">{% include 'includes/Docu_degree_days.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
     <div id="Docu_start_end_date">{% include 'includes/Docu_start_end_date.html'%}</div>
+    <div id="Docu_data_summary">{% include 'includes/Docu_data_summary.html'%}</div>
     <div id="Docu_show_flags">{% include 'includes/Docu_show_flags.html'%}</div>
     <div id="Docu_show_observation_time">{% include 'includes/Docu_show_observation_time.html'%}</div>
     <div id="Docu_date_format">{% include 'includes/Docu_date_format.html'%}</div>
     <div id="Docu_data_format">{% include 'includes/Docu_data_format.html'%}</div>
     <div id="Docu_delimiter">{% include 'includes/Docu_delimiter.html'%}</div>
 </div><!--End how_to-->
-    <div class="docu" id="tool_info" style="display:none;"></div>
+<div class="docu" id="tool_info" style="display:none;"></div>
     <script type="text/javascript">                        
         $("#tool_info").load("{{HTML_URL}}/Docu_About_multi_lister.html");
     </script>
     
-    <div id="how_to" style="display:none;">
-        <div id="Docu_elements"></div>
-         <script type="text/javascript">            
-            $("#Docu_elements").load("{{HTML_URL}}/Docu_elements_station.html");
-        </script>
-        <div id="Docu_add_degree_days"></div>
-        <script type="text/javascript">            
-            $("#Docu_add_degree_days").load("{{HTML_URL}}/Docu_add_degree_days.html");
-        </script>
-        <div id="Docu_degree_days"></div>
-        <script type="text/javascript">            
-            $("#Docu_degree_days").load("{{HTML_URL}}/Docu_degree_days.html");
-        </script>
-        <div id="Docu_units"></div>
-        <script type="text/javascript">            
-            $("#Docu_units").load("{{HTML_URL}}/Docu_units.html");
-        </script>
-        <div id="Docu_start_end_date"></div>
-         <script type="text/javascript">            
-            $("#Docu_start_end_date").load("{{HTML_URL}}/Docu_start_end_date.html");
-        </script>
-        <div id="Docu_show_flags"></div>
-        <script type="text/javascript">            
-            $("#Docu_show_flags").load("{{HTML_URL}}/Docu_show_flags.html");
-        </script>
-        <div id="Docu_show_observation_time"></div>
-        <script type="text/javascript">            
-            $("#Docu_show_observation_time").load("{{HTML_URL}}/Docu_show_observation_time.html");
-        </script>
-        <div id="Docu_date_format"></div>
-        <script type="text/javascript">            
-            $("#Docu_date_format").load("{{HTML_URL}}/Docu_date_format.html");
-        </script>
-        <div id="Docu_data_format"></div>
-        <script type="text/javascript">            
-            $("#Docu_data_format").load("{{HTML_URL}}/Docu_data_format.html");
-        </script>
-        <div id="Docu_delimiter"></div>
-        <script type="text/javascript">
-            $("#Docu_delimiter").load("{{HTML_URL}}/Docu_delimiter.html");         
-        </script>
-    </div><!--how_to-->
-
 <!---Hidded variables-->
 <!--for maps-->
 <!--<input type="hidden" id="area_type" name="area_type" value="{{initial.area_type}}">
@@ -125,6 +83,9 @@ $(function(){
         <tr class="station_grid" style="display:table-row">{% include 'includes/units.html'%}</tr>
         <tr class="station_grid" style="display:table-row">{% include 'includes/start_date.html'%}</tr>
         <tr class="station_grid" style="display:table-row">{% include 'includes/end_date.html'%}</tr>
+        <tr class="station_grid" id="data_summary" style="display:table-row;">{% include 'includes/data_summary.html'%}</tr>
+        <tr id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
+        <tr id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
         <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
         <tr class="station" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
         <tr class="station" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>

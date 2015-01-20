@@ -587,6 +587,10 @@ def data_station(request):
                 Notification will be sent to %s when the request has been processed!' %form_cleaned['user_email']
             #Process request offline
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
+            #Make sure DATA_REQUEST BASE_DIR EXISTS AND HAS CORRECT PERMISSIONS
+            path_error = WRCCUtils.check_dir_path(settings.DATA_REQUEST_BASE_DIR,'777')
+            if path_error:
+                results = {'error': 'Unable to save parameter file in tmp directory. Please notify %s' %settings.CSC_FROM_ADDRESS}
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
             #WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, json_dict)
             context['large_request'] = ldr
@@ -804,6 +808,10 @@ def data_gridded(request):
                 Notification will be sent to %s when the request has been processed!' %form_cleaned['user_email']
             context['large_request'] = ldr
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
+            #Make sure DATA_REQUEST BASE_DIR EXISTS AND HAS CORRECT PERMISSIONS
+            path_error = WRCCUtils.check_dir_path(settings.DATA_REQUEST_BASE_DIR,'777')
+            if path_error:
+                results = {'error': 'Unable to save parameter file in tmp directory. Please notify %s' %settings.CSC_FROM_ADDRESS}
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
             return render_to_response('scenic/data/gridded/home.html', context, context_instance=RequestContext
 (request))
@@ -4063,6 +4071,9 @@ def set_initial_lister(request,req_type):
         initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
     initial['start_date']  = Get('start_date', fourtnight)
     initial['end_date']  = Get('end_date', yesterday)
+    initial['data_summary'] = Get('data_summary', 'none')
+    initial['temporal_summary'] = Get('temporal_summary', 'mean')
+    initial['spatial_summary'] = Get('spatial_summary', 'mean')
     initial['show_flags'] = Get('show_flags', 'F')
     initial['show_observation_time'] = Get('show_observation_time', 'F')
     initial['grid'] = Get('grid','1')
@@ -4088,6 +4099,10 @@ def set_initial_lister(request,req_type):
         checkbox_vals['units_' + u + '_selected'] =''
         if u == initial['units']:
             checkbox_vals['units_' +u + '_selected'] ='selected'
+    for ds in ['none','temporal', 'spatial']:
+        checkbox_vals['data_summary_' + ds + '_selected'] =''
+        if ds == initial['data_summary']:
+            checkbox_vals['data_summary_' + ds + '_selected'] ='selected'
     for df in ['none', 'dash','colon', 'slash']:
         checkbox_vals['date_format_' + df + '_selected'] =''
         if df == initial['date_format']:
