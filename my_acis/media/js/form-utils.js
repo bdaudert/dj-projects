@@ -387,6 +387,36 @@ function set_hidden_fields(theForm, mainForm) {
     theForm.submit()
 }
 
+function set_smry(node){
+    /*
+    Sets data summary fields.
+    data summary can be temporal, spatial or windowed data
+    */
+    if (node.value == 'windowed_data'){
+        document.getElementById('spat_summary').style.display = 'none';
+        document.getElementById('temp_summary').style.display = 'none';
+        document.getElementById('start_window').style.display = 'table-row';
+        document.getElementById('end_window').style.display = 'table-row';
+    }
+    else if (node.value == 'spatial'){
+        document.getElementById('spat_summary').style.display = 'table-row';
+        document.getElementById('temp_summary').style.display = 'none';
+        document.getElementById('start_window').style.display = 'none';
+        document.getElementById('end_window').style.display = 'none';
+    }
+    else if (node.value =='temporal'){
+        document.getElementById('spat_summary').style.display = 'none';
+        document.getElementById('temp_summary').style.display = 'table-row';
+        document.getElementById('start_window').style.display = 'none';
+        document.getElementById('end_window').style.display = 'none';
+    }
+    else{
+        document.getElementById('spat_summary').style.display = 'none';
+        document.getElementById('temp_summary').style.display = 'none';
+        document.getElementById('start_window').style.display = 'none';
+        document.getElementById('end_window').style.display = 'none';
+    }
+}
 
 //Old functions (need cleanup)
 function save_form_options(formID,hiddenID){
@@ -1270,7 +1300,7 @@ function set_grid_and_els(node, gridRowId){
         document.getElementById('add').style.display = "table-row";
     }
 }
-
+//Delete? replaced by set_smry
 function set_data_summary(node, rowId_t, rowId_s){
     if (node.value == 'spatial'){
         document.getElementById(rowId_s).style.display = 'table-row';

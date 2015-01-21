@@ -271,18 +271,27 @@ def single_lister(request):
     if 'formData' in request.POST:
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
+        context['xx'] = form_cleaned
         #Check form fields
-        fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date','degree_days']
+        fields_to_check = [form_cleaned['area_type'],'start_date','end_date','start_window','end_window','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
-            if form_cleaned['select_area'] == 'location':
+            if form_cleaned['area_type'] == 'location':
                 context['need_gridpoint_map'] = True
             return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
         #Data requests
         req_data = WRCCUtils.make_data_request(form_cleaned)
         #Format Data for display and/or download
         results = WRCCUtils.format_data_single_lister(req_data, form_cleaned)
+        #Overide data with windowed data if desired
+        if 'data_summary' in form.keys() and form['data_summary'] == 'windowed_data':
+            d = results['data']
+            sd = form_cleaned['start_date']
+            ed = form_cleaned['end_date']
+            sw = form_cleaned['start_window']
+            ew = form_cleaned['end_window']
+            results['data'] = WRCCUtils.get_window_data(d, sd, ed, sw, ew)
         if not results:
             results = {'error':'No data found for these parameters.'}
             context['results'] = results
@@ -358,7 +367,7 @@ def multi_lister(request):
         form_cleaned = set_form(request)
 
         #Check form fields
-        fields_to_check = [form_cleaned['select_area'],'start_date', 'end_date','degree_days']
+        fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date','degree_days']
     return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
 
 def area_lister(request):
@@ -376,15 +385,12 @@ def area_lister(request):
         if 'user_email' in form_cleaned.keys():
             fields_to_check.append('user_email')
             context['large_request'] = True
-        context['xx'] = request.POST.items()
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['x'] = request.POST.items()
         context['need_overlay_map'] = True
         form = set_form(request,clean=False)
-        context['xx'] = form
         initial, checkbox_vals = set_initial_lister(form,'area')
-        #context['xx'] = initial
         #checkbox_vals[form['area_type'] + '_selected'] = 'selected'
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         context[initial['overlay_state'] + '_selected'] = 'selected'
@@ -3917,6 +3923,7 @@ def set_form(request, clean=True):
     If Clean == True,
     We also clean up some form fields for submission:
         date fields, convert to yyyymmdd
+        window fields, convert to mmdd
         name strings are converted to ids
         Combine elemenst weith degree days
     '''
@@ -3949,8 +3956,8 @@ def set_form(request, clean=True):
     if  not clean:
         return form
     #Clean up form for submission
-    #Clean Dates
-    for key in ['start_date', 'end_date']:
+    #Clean Dates and windows
+    for key in ['start_date', 'end_date','start_window','end_window']:
         if key in form.keys():
             form[key] = form[key].replace('-','').replace(':','').replace('/','').replace(' ','')
     #Convert user input of area names to ids
@@ -4072,6 +4079,8 @@ def set_initial_lister(request,req_type):
     initial['start_date']  = Get('start_date', fourtnight)
     initial['end_date']  = Get('end_date', yesterday)
     initial['data_summary'] = Get('data_summary', 'none')
+    initial['start_window'] = Get('start_window', '01-01')
+    initial['end_window'] = Get('end_window','01-31')
     initial['temporal_summary'] = Get('temporal_summary', 'mean')
     initial['spatial_summary'] = Get('spatial_summary', 'mean')
     initial['show_flags'] = Get('show_flags', 'F')
@@ -4099,10 +4108,17 @@ def set_initial_lister(request,req_type):
         checkbox_vals['units_' + u + '_selected'] =''
         if u == initial['units']:
             checkbox_vals['units_' +u + '_selected'] ='selected'
-    for ds in ['none','temporal', 'spatial']:
+    for ds in ['none','windowed_data','temporal', 'spatial']:
         checkbox_vals['data_summary_' + ds + '_selected'] =''
         if ds == initial['data_summary']:
             checkbox_vals['data_summary_' + ds + '_selected'] ='selected'
+    for st in ['max','min','mean','sum','median']:
+        checkbox_vals['temporal_summary_' + st + '_selected'] =''
+        if st == initial['temporal_summary']:
+            checkbox_vals['temporal_summary_' + st + '_selected'] ='selected'
+        checkbox_vals['spatial_summary_' + st + '_selected'] =''
+        if st == initial['spatial_summary']:
+            checkbox_vals['spatial_summary_' + st + '_selected'] ='selected'
     for df in ['none', 'dash','colon', 'slash']:
         checkbox_vals['date_format_' + df + '_selected'] =''
         if df == initial['date_format']:

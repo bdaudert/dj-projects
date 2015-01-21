@@ -225,6 +225,17 @@ Wyoming wy<br />
     <p>yyyymmdd, yyyy/mm/dd, yyyy-mm-dd or POR for period of record.</p>
 </div>
 
+<div id="ht_windowed_data">
+    <p>Only get certain periods covering start/end date.</p>
+</div>
+
+<div id="ht_start_window">
+    <p>mmdd, mm/dd or mm-dd</p>
+</div>
+
+<div id="ht_end_window">
+    <p>mmdd, mm/dd or mm-dd</p>
+</div>
 
 <div id="ht_dates_constraints">
     <p>Choose Any if you are looking for stations that have at least one data record between Start and End Date.<br />Choose All if you are looking for stations that have data records for all dates between Start and End Date.</p>
@@ -353,11 +364,16 @@ and Cooling Degree Days with base temperature 70 F<br />
 </div>
 
 <div id="ht_data_summary">
-    <p>Chose a data summary type.<br /> 
-        <b>None</b>:<br />No data summary will be performed.<br />Raw data are returned.
-        <b>Temporal</b>:<br />Data is summarized over time at each data point.<br />The result is a geospatial layer or a single value in case of single point requests.
-        <b>Spatial</b>:<br />Data is summarized over the seach area.<br />The result is a time series.</li>
-    </p>
+Chose a data summary type.<br /> 
+<b>None</b>:<br />No data summary will be performed.<br />Raw data are returned.
+<b>Windowed Data</b>:<br />
+Returns data within Start Window and End Window for each year within Start Date and End Date.
+<b>Temporal</b>:<br />
+Data is summarized over time at each data point.<br />
+The result is a geospatial layer or a single value in case of single point requests.
+<b>Spatial</b>:<br />
+Data is summarized over the seach area.<br />
+The result is a time series.</li>
 </div>
 
 <div id="ht_grid_temporal_summary">
