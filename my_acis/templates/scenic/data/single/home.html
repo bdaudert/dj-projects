@@ -5,90 +5,67 @@
 
 {% block content %}
 <!--Documentation -->
-<div class="docu" id="Docu_About_single_lister" style="display:none;"></div>
-    <script type="text/javascript">                        
-    $("#Docu_About_single_lister").load("{{HTML_URL}}/Docu_About_single_lister.html");
-    </script>
-<div class="docu" id="Docu_SODXTRMTS" style="display:none;"></div>
-    <script type="text/javascript">                        
-    $("#Docu_SODXTRMTS").load("{{HTML_URL}}/Docu_SODXTRMTS.html");
-    </script>
-<div class="docu" id="Docu_SODSUMM" style="display:none;"></div>
-    <script type="text/javascript">                        
-    $("#Docu_SODSUMM").load("{{HTML_URL}}/Docu_SODSUMM.html");
-    </script>
-<div class="docu" id="Docu_DataComparison" style="display:none;"></div>
-    <script type="text/javascript">                        
-    $("#Docu_DataComparison").load("{{HTML_URL}}/Docu_DataComparison.html");
-    </script>
-<div class="docu" id="Docu_NONE" style="display:none;"></div>
-    <script type="text/javascript">                        
-    $("#Docu_NONE").load("{{HTML_URL}}/Docu_NONE.html");
-    </script>
+<div class="docu" id="Docu_app_single_lister" style="display:none;">
+    {% include 'includes/Docu_app_single_lister.html'%}
+</div>
+<div class="docu" id="Docu_app_sodxtrmts" style="display:none;">
+    {% include 'includes/Docu_app_sodxtrmts.html'%}
+</div>
+<div class="docu" id="Docu_app_sodsumm" style="display:none;">
+    {% include 'includes/Docu_app_sodsumm.html'%}
+</div>
+<div class="docu" id="Docu_app_data_comparison" style="display:none;">
+    {% include 'includes/Docu_app_data_comparison.html'%}
+</div>
+<div class="docu" id="Docu_none" style="display:none;">
+    {% include 'includes/Docu_none.html'%}
+</div>
 
 <table cellpadding="40" align="center">
 <td valign="top">
     <table cellspacing="10">
     <tr>
         <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}single/lister/"><b>Data Lister</b></a>
-            <div class="pop-up">
-            <p>Get a listing of station data for a single station or gridpoint.<br />
-            Data can be downloaded as .txt, .dat, .xls or displayed on the page (html).
-            </p>
-            </div>
+            <div class="pop-up">{% include 'includes/Docu_popup_single_lister.html'%}</div>
         </td>
         <td>
-            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_About_single_lister')">
+            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_single_lister')">
         </td>
         <td valign="top"><a class="trigger_hover" href="{{STATION_SODXTRMTS_URL}}"><b>Custom statistics/<br >Time Series</b></a>
-            <div class="pop-up">
-            <p>Obtain monthly and anual means and extremes for an individual station or gridpoint.<br />Generate customized time series from results.</p>
-            </div>
+            <div class="pop-up">{% include 'includes/Docu_popup_sodxtrmts.html'%}</div>
         </td>
         <td>
-            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SODXTRMTS')">
+            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_sodxtrmts')">
         </td>
         <td valign="top"><a class="trigger_hover" href="{{STATION_SODSUMM_URL}}"><b>Climatology</b></a>
-            <div class="pop-up">
-            <p>Obtain a climatology for an individual station or gridpoint.<br />Visualize results as barcharts.</p>
-            </div>
+            <div class="pop-up">{% include 'includes/Docu_popup_sodsumm.html'%}</div>
         </td>
         <td>
-            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_SODSUMM')">
+            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_sodsumm')">
         </td>
        <td valign="top"><a class="trigger_hover" href="{{MIXED_TOOLS_URL}}data_comparison/"><b>Data comparison</b></a>
-            <div class="pop-up">
-            <p>Compare gridded/modeled data with historic station data.</p>
-            </div>
+            <div class="pop-up">{% include 'includes/Docu_popup_data_comparison.html'%}</div>
        </td>
-        <td><img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_DataComparison')"></td>
+        <td>
+            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_data_comparison')">
+        </td>
     </tr>
     <tr>
         <td colspan="2">
             <a  href="{{DATA_URL}}single/lister/" class="trigger_hover"><img class="app_img" alt="DataLister" title="DataLister" src="{{MEDIA_URL}}img/Stn.png"></a>
-            <div class="pop-up">
-            <p>Get a listing of station data for a single station or gridpoint.<br />
-            Data can be downloaded as .txt, .dat, .xls or displayed on the page (html).
-            </p>
-            </div>
+            <div class="pop-up">{% include 'includes/Docu_popup_single_lister.html'%}</div>
         </td>
         <td colspan="2">
             <a  href="{{STATION_SODXTRMTS_URL}}" class="trigger_hover"><img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/Sodxtrmts.png"></a> 
-            <div class="pop-up">
-            <p>Obtain monthly and anual means and extremes for an individual station or gridpoint.<br />Generate customized time series from results.</p>
-            </div>
+            <div class="pop-up">{% include 'includes/Docu_popup_sodxtrmts.html'%}</div>
         </td>
         <td colspan="2">
             <a  href="{{STATION_SODSUMM_URL}}" class="trigger_hover"><img class="app_img" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
-            <div class="pop-up">
-            <p>Obtain a climatology for an individual station or gridpoint.<br />Visualize results as barcharts.</p>
-            </div>
+            <div class="pop-up">{% include 'includes/Docu_popup_sodsumm.html'%}</div>
         </td>
         <td colspan="2">
             <a  href="{{MIXED_TOOLS_URL}}data_comparison/" class="trigger_hover"><img class="app_img" alt="Compare" title="Compare" src="{{MEDIA_URL}}img/Compare_TS.png"></a>
-            <div class="pop-up">
-            <p>Compare gridded/modeled data with historic station data.</p>
-            </div>
+            <div class="pop-up">{% include 'includes/Docu_popup_data_comparison.html'%}</div>
         </td>
    </tr>
    </table>

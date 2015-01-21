@@ -1,0 +1,17 @@
+<td>Spatial Summary: </td>
+        <td>
+            <select id="spatial_summary" name="spatial_summary" onchange="update_value(this.value)">
+            <option value="max" {{checkbox_vals.spatial_summary_max_selected}}>Maximum</option>
+            <option value="min" {{checkbox_vals.spatial_summary_min_selected}}>Minimum</option>
+            <option value="mean" {{checkbox_vals.spatial_summary_mean_selected}}>Mean</option>
+            <option value="sum" {{checkbox_vals.spatial_summary_sum_selected}}>Sum</option>
+            </select>
+        </td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_spatial_summary"></div>
+            <script type="text/javascript">                        
+            $("#ht_spatial_summary").load("{{HTML_URL}}/Docu_help_texts.html #ht_spatial_summary");
+            </script>
+        </div>
+        </td>

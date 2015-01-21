@@ -7,81 +7,65 @@
 {%block content %}
 
 <!--Documentation-->
-<div class="docu" id="Docu_About_multi_lister" style="display:none;"></div>
-    <script type="text/javascript">                        
-    $("#Docu_About_area_lister").load("{{HTML_URL}}/Docu_About_area_lister.html");
-    </script>
-<div class="docu" id="Docu_CLIM_SUM_MAP" style="display:none;"></div>
-    <script type="text/javascript">                        
-    $("#Docu_CLIM_SUM_MAP").load("{{HTML_URL}}/Docu_CLIM_SUM_MAP.html");
-    </script>
-<div class="docu" id="Docu_AREA_TIME_SERIES" style="display:none;"></div>
-    <script type="text/javascript">                        
-    $("#Docu_AREA_TIME_SERIES").load("{{HTML_URL}}/Docu_AREA_TIME_SERIES.html");
-    </script>
-<div class="docu" id="Docu_DataComparison" style="display:none;"></div>
-    <script type="text/javascript">                        
-    $("#Docu_DataComparison").load("{{HTML_URL}}/Docu_DataComparison.html");
-    </script>
-
+<div class="docu" id="Docu_app_multi_lister" style="display:none;">
+    {% include 'includes/Docu_app_multi_lister.html'%}
+</div>    
+<div class="docu" id="Docu_app_temporal_summary" style="display:none;">
+    {% include 'includes/Docu_app_temporal_summary.html'%}
+</div>
+<div class="docu" id="Docu_app_spatial_summary" style="display:none;">
+    {% include 'includes/Docu_app_spatial_summary.html'%}
+</div>
+<div class="docu" id="Docu_app_data_comparison" style="display:none;">
+    {% include 'includes/Docu_app_data_comparison.html'%}
+</div>
+    
 <table cellpadding="20" align="center">
 <td valign="top">
     <table cellspacing="10">
     <tr>
         <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}multi/lister/"><b>Data Lister</b></a>
-            <div class="pop-up">
-            <p>Get a listing of station data for multiple stations or gridpoints.<br />
-            Data can be downloaded as .txt, .dat, .xls or displayed on the page (html).
-            </p>
-            </div>
-            </td>
-            <td>
-                <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_About_multi_lister')">
+            <div class="pop-up">{% include 'includes/Docu_popup_multi_lister.html'%}</div>
+        </td>
+        <td>
+            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_multi_lister')">
         </td>
         <td valign="top"><a class="trigger_hover" href="{{GRID_SPATIAL_SUMMARY_URL}}"><b>Spatial Summaries</b></a>
-            <div class="pop-up">
-            <p>Computes max/min/mean/sum over custom search areas and generates time series.</p>
-            </div>
+            <div class="pop-up">{% include 'includes/Docu_popup_spatial_summary.html'%}</div>
         </td>
         <td>
-            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_AREA_TIME_SERIES')">
+            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_spatial_summary')">
         </td>
         <td valign="top"><a class="trigger_hover" href="{{GRID_TEMPORAL_SUMMARY_URL}}"><b>Temporal Summaries</b></a>
-            <div class="pop-up">
-            <p>Generates climate summary maps for US states.<br />Only available for NRCC interpolated data.</p>
-            </div>
+            <div class="pop-up">{% include 'includes/Docu_popup_temporal_summary.html'%}</div>
         </td>
         <td>
-            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_CLIM_SUM_MAP')">
+            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_temporal_summary')">
         </td>
+        <td valign="top"><a class="trigger_hover" href="{{MIXED_TOOLS_URL}}data_comparison/"><b>Data comparison</b></a>
+            <div class="pop-up">{% include 'includes/Docu_popup_data_comparison.html'%}</div>
+       </td>
+       <td>
+            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_data_comparison')">
+       </td>
     </tr>
     <tr>
         <td colspan="2">
             <a  href="{{DATA_URL}}multi/lister/" class="trigger_hover"><img class="app_img" alt="DataLister" title="DataLister" src="{{MEDIA_URL}}img/ClimateModel2.png"></a>
-            <div class="pop-up">
-            <p>Get a listing of station data for multiple stations or gridpoints.<br />
-            Data can be downloaded as .txt, .dat, .xls or displayed on the page (html).
-            </p>
-            </div>
+            <div class="pop-up">{% include 'includes/Docu_popup_multi_lister.html'%}</div>
         </td>
         <td colspan="2">
             <a  href="{{GRID_SPATIAL_SUMMARY_URL}}" class="trigger_hover"><img class="app_img" alt="SpatialSummary" title="SpatialSummary" src="{{MEDIA_URL}}img/Area_TS.png"></a>
-            <div class="pop-up">
-            <p>Computes max/min/mean/sum over custom search areas and generates time series.</p>
-            </div>
+            <div class="pop-up">{% include 'includes/Docu_popup_spatial_summary.html'%}</div>
         </td>
         <td colspan="2">
             <a  href="{{GRID_TEMPORAL_SUMMARY_URL}}" class="trigger_hover"><img class="app_img" alt="TemporalSummary" title="TemporalSummary" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
-            <div class="pop-up">
-            <p>Generates climate summary maps for US states.<br />Only available for NRCC interpolated data.</p>
-            </div>
+            <div class="pop-up">{% include 'includes/Docu_popup_temporal_summary.html'%}</div>
         </td> 
         <td colspan="2">
             <a  href="{{MIXED_TOOLS_URL}}data_comparison/" class="trigger_hover"><img class="app_img" alt="Compare" title="Compare" src="{{MEDIA_URL}}img/Compare_TS.png"></a>
-            <div class="pop-up">
-            <p>Compare gridded/modeled data with historic station data.</p>
-            </div>
-        </td> 
+        <div class="pop-up">{% include 'includes/Docu_popup_data_comparison.html'%}</div>    
+    </td> 
     </tr>
     </table>
 </td>

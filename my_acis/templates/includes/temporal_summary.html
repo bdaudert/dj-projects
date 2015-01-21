@@ -1,0 +1,18 @@
+        <td>Temporal Summary: </td>
+        <td>
+            <select id="temporal_summary" name="temporal_summary" onchange="update_value(this.value)">
+            <option value="max" {{checkbox_vals.temporal_summary_max_selected}}>Maximum</option>
+            <option value="min" {{checkbox_vals.temporal_summary_min_selected}}>Minimum</option>
+            <option value="mean" {{checkbox_vals.temporal_summary_mean_selected}}>Mean</option>
+            <option value="sum" {{checkbox_vals.temporal_summary_sum_selected}}>Sum</option>
+            </select>
+        </td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_temporal_summary"></div>
+            <script type="text/javascript">                        
+            $("#ht_temporal_summary").load("{{HTML_URL}}/Docu_help_texts.html #ht_temporal_summary");
+            </script>
+        </div>
+        </td>
+

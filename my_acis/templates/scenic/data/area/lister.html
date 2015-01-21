@@ -1,0 +1,183 @@
+{% extends "csc_base.html" %}
+<meta name="keywords" content="data, station data, gridded data, modeled data, acis">
+<meta name="description" content="SCENIC Multi point data lister">
+
+{%load my_scenic_filters%}
+
+{% block content %} 
+
+<!--Documentation-->
+<div class="docu" id="tool_info" style="display:none;">
+    {% include 'includes/Docu_About_area_lister.html'%}
+</div>
+<div id="how_to" style="display:none;">
+    <div id="Docu_area_of_interest">{% include 'includes/Docu_area_of_interest.html'%}</div>
+    <div id="Docu_data_type">{% include 'includes/Docu_data_type.html'%}</div>
+    <div id="Docu_elements">{% include 'includes/Docu_elements.html'%}</div>
+    <div id="Docu_add_degree_days">{% include 'includes/Docu_add_degree_days.html'%}</div>
+    <div id="Docu_degree_days">{% include 'includes/Docu_degree_days.html'%}</div>
+    <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
+    <div id="Docu_start_end_date">{% include 'includes/Docu_start_end_date.html'%}</div>
+    <div id="Docu_data_summary">{% include 'includes/Docu_data_summary.html'%}</div>
+    <div id="Docu_show_flags">{% include 'includes/Docu_show_flags.html'%}</div>
+    <div id="Docu_show_observation_time">{% include 'includes/Docu_show_observation_time.html'%}</div>
+    <div id="Docu_date_format">{% include 'includes/Docu_date_format.html'%}</div>
+    <div id="Docu_data_format">{% include 'includes/Docu_data_format.html'%}</div>
+    <div id="Docu_delimiter">{% include 'includes/Docu_delimiter.html'%}</div>
+</div><!--End how_to-->
+
+<!---Hidded variables-->
+<!--For maps-->
+<input type="hidden" id="area_type" name="area_type" value="{{initial.select_area_by}}">
+<input type="hidden" id="host" name="host" value="{{iniial.host}}">
+<input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
+
+<!--Set up autofill-->
+<script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
+<!--On form change, hide results and form errors-->
+<script type="text/javascript">
+$(function(){
+    //On form change, hide results and form errors
+    hide_errors_results_on_change('tableDataForm');
+});
+</script>
+
+<table>
+<td valign="bottom" width="300px">
+    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}area/lister/'"/>
+</td>
+<td valign="top" width="650px" align="left">
+    <table>
+    <td><div id=tool_info_head></div></td>
+    <td><div id="how_to_head"></div></td>
+    </table>
+    <script type="text/javascript">                        
+        $("#tool_info_head").load("{{HTML_URL}}/Buttons.html .tool_info");
+    </script>
+    <script type="text/javascript">            
+        $("#how_to_head").load("{{HTML_URL}}/Buttons.html .tool_how_to");
+    </script>
+</td>
+</table>
+
+
+<table>
+<td valign="top">
+    <div id='formData'>
+        <form method="post" id="tableDataForm" action="" onsubmit="show_loading() & set_hidden_fields(this,'toverlayForm')">{% csrf_token %}
+        <table class="form" id="tableData" >
+        <tr class="station_grid" style="display:table-row">{% include 'includes/area_select_area.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
+        <tr class="station_grid" style="display:table-row">{% include 'includes/data_type.html'%}</tr>
+        <tr class="station" style="display:table-row">{% include 'includes/station_finder.html'%}</tr>
+        <tr class="station_grid" style="display:table-row">{% include 'includes/elements.html'%}</tr>
+        <tr class="station_grid" id="add" valign="top" style="display:table-row">{% include 'includes/add_special_degree_days.html'%}</tr>
+        {%if initial.add_degree_days == "T"%}
+            <tr id="dd" valign="top" style="display:table-row">{% include 'includes/degree_days.html'%}</tr>
+        {%else%}
+            <tr id="dd" valign="top" style="display:none">{% include 'includes/degree_days.html'%}</tr>
+        {%endif%}
+        <tr class="station_grid" style="display:table-row">{% include 'includes/units.html'%}</tr>
+        <tr class="station_grid" style="display:table-row">{% include 'includes/start_date.html'%}</tr>
+        <tr class="station_grid" style="display:table-row">{% include 'includes/end_date.html'%}</tr>
+        <tr class="station_grid" id="data_summary" style="display:table-row;">{% include 'includes/data_summary.html'%}</tr>
+        <tr id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
+        <tr id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
+        <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
+        <tr class="station" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
+        <tr class="station" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
+        <tr class="station_grid" style="display:table-row">{% include 'includes/date_format.html'%}</tr>
+        <tr class="station_grid" style="display:table-row">{% include 'includes/data_format_multi.html'%}</tr>
+        <tr class="station_grid" id="delim" style="display:table-row">{% include 'includes/delimiter.html'%}</tr>
+        <tr class="station_grid" id="out_file" style="display:table-row" class="large_request">{% include 'includes/out_file.html'%}</tr>
+        {% if large_request %}
+        <tr class="large_request" id="un">{% include 'includes/user_name.html'%}</tr>
+        <tr class="large_request">{% include 'includes/user_email.html'%}</tr>
+        {%endif%}
+        </table>
+        <input style="margin:5px" type="submit" value="Get data" name="formData"/>
+        </form>
+    </div>
+</td>
+<td valign="top">
+    <!--Form Errors and search parameter section-->
+    {%if form_error%}
+    <div id="form_error">
+        <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
+        {%for key, val in form_error.items%}
+            <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
+        {%endfor%}
+    </div>
+    {%endif%}
+    
+    <!--Request errors or results arrow-->
+    <div class="results">
+    {%if results%}
+        {%if results.errors%}
+            <p class="error">{{results.errors}}</p>
+        {%else%}
+            <div id="Arrow" class="results">
+            <table style="display:block;">
+            <tr><td valign="top">
+            <p class="message"><b>RESULTS:</b></p>
+            </td></tr>
+            <tr><td>
+            <p class="message">YOUR PARAMETERS:<br />
+            {%for key_val in params_display_list%}
+                <b>{{key_val.0}}</b>:
+                {%for item in key_val.1%}
+                    {{item}}<br />
+                {%endfor%}
+            {%endfor%}
+            </p>
+            </td></tr>
+            <tr><td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td></tr>
+            </table>
+            </div>
+        {%endif%}
+    {%endif%}
+    </div> 
+    <!--Map section-->
+    <!--Gridpoint map-->
+    <div id="GridpointMap" style="display:none;"></div>
+    <!--Overlay maps-->
+    {%if need_overlay_map%}
+        <div id="OverlayMap" style="display:block;">{% include 'includes/overlay_map.html'%}</div>
+        {%if overlay_error%}
+        <p class="error">{{overlay_error}}</p>
+        {%else%}
+        <div id="map-overlay"></div>
+        <div id="content-window"></div>
+        <script type="text/javascript">initialize_map_overlays("{{initial.select_area_type}}","{{initial.host}}", "{{initial.kml_file_path}}")</script>
+        {%endif%}
+    {%else%}
+        <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>   
+    {%endif%}
+    <!--Polygon map-->
+    <div id="PolyMap" style="display:none;">
+        <div id="panel">
+        <div id="color-palette"></div>
+            <div>
+                <button id="delete-button">Delete Selected Shape</button>
+            </div>
+        </div>
+    </div>
+    <!--end map section--> 
+</td></table>
+
+<table cellpadding="10" align="center">
+<td valign="top" width="97%">
+    <!--Results-->
+    <div class="results">
+    {% if not results.errors and results %}
+    {%for key_val in meta_display_list%}
+        <b>{{key_val.0}}</b>:
+        {%for item in key_val.1%}
+            {{item}}<br />
+        {%endfor%}
+    {%endfor%}
+    {{results}}
+    {%endif%}
+    <div>
+</td></table>
+{%endblock%}
