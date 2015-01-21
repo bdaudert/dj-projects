@@ -387,7 +387,6 @@ def area_lister(request):
             context['large_request'] = True
     #Overlay maps
     if 'formOverlay' in request.POST:
-        context['x'] = request.POST.items()
         context['need_overlay_map'] = True
         form = set_form(request,clean=False)
         initial, checkbox_vals = set_initial_lister(form,'area')
@@ -4078,7 +4077,10 @@ def set_initial_lister(request,req_type):
         initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
     initial['start_date']  = Get('start_date', fourtnight)
     initial['end_date']  = Get('end_date', yesterday)
-    initial['data_summary'] = Get('data_summary', 'none')
+    if req_type == 'area':
+        initial['data_summary'] = Get('data_summary', 'spatial')
+    else:
+        initial['data_summary'] = Get('data_summary', 'none')
     initial['start_window'] = Get('start_window', '01-01')
     initial['end_window'] = Get('end_window','01-31')
     initial['temporal_summary'] = Get('temporal_summary', 'mean')
@@ -4090,6 +4092,8 @@ def set_initial_lister(request,req_type):
     initial['date_format'] = Get('date_format', 'dash')
     initial['delimiter'] = Get('delimiter', 'space')
     initial['output_file_name'] = Get('output_file_name', 'Output')
+    initial['user_name'] = Get('user_name', 'Your Name')
+    initial['user_email'] = Get('user_email', 'Your Email')
     #Checkbox vals
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys() + ['none']:
         checkbox_vals[area_type + '_selected'] =''

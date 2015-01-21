@@ -8,7 +8,7 @@
 
 <!--Documentation-->
 <div class="docu" id="tool_info" style="display:none;">
-    {% include 'includes/Docu_About_single_lister.html'%}
+    {% include 'includes/Docu_app_single_lister.html'%}
 </div>
 <div id="how_to" style="display:none;">
     <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
@@ -101,9 +101,17 @@ $(function(){
         <tr id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
         <tr id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
         {%endif%}
+        {%if initial.data_type == "station" and initial.data_summary == "none"%}
+        <tr class="station" id="flags" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
+        <tr class="station" id="obs_time" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
+        {%elif initial.data_type == "station" and initial.data_summary == "windowed_data"%}
+        <tr class="station" id="flags" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
+        <tr class="station" id="obs_time" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
+        {%else%}
+        <tr class="station" id="flags" style="display:none">{% include 'includes/show_flags.html'%}</tr>
+        <tr class="station" id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</tr>
+        {%endif%}
         <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
-        <tr class="station" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
-        <tr class="station" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/date_format.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/data_format_single.html'%}</tr>
         <tr id="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>

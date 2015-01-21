@@ -128,7 +128,19 @@ function set_form(node_value){
         form_rows_to_hide[idx].style.display = 'none';
     } 
     for (idx = 0;idx<form_rows_to_show.length;idx++) {
-        form_rows_to_show[idx].style.display = 'table-row';
+        //Only show show_flags and show_observation time
+        //if data_summary is none
+        if (form_rows_to_show[idx].id == 'show_flags' || form_rows_to_show[idx].id == 'show_observation_time') {
+            if ($('#data_type').length && document.getElementById('data_summary').value != 'none'){
+                form_rows_to_show[idx].style.display = 'none';
+            }
+            else{
+                form_rows_to_show[idx].style.display = 'table-row';
+            }
+        }
+        else{
+            form_rows_to_show[idx].style.display = 'table-row';
+        }
     }
 }
 
@@ -397,24 +409,48 @@ function set_smry(node){
         document.getElementById('temp_summary').style.display = 'none';
         document.getElementById('start_window').style.display = 'table-row';
         document.getElementById('end_window').style.display = 'table-row';
+        //If data_type is station show flags/obs_time
+        if ($('#data_type').length && document.getElementById('data_type').value == 'station'){
+            document.getElementById('flags').style.display = 'table-row';
+            document.getElementById('obs_time').style.display = 'table-row';
+        }
+        else{
+            document.getElementById('flags').style.display = 'none';
+            document.getElementById('obs_time').style.display = 'none';
+        }
     }
     else if (node.value == 'spatial'){
         document.getElementById('spat_summary').style.display = 'table-row';
         document.getElementById('temp_summary').style.display = 'none';
         document.getElementById('start_window').style.display = 'none';
         document.getElementById('end_window').style.display = 'none';
+        //Hide flags obs time
+        document.getElementById('flags').style.display = 'none';
+        document.getElementById('obs_time').style.display = 'none';
     }
     else if (node.value =='temporal'){
         document.getElementById('spat_summary').style.display = 'none';
         document.getElementById('temp_summary').style.display = 'table-row';
         document.getElementById('start_window').style.display = 'none';
         document.getElementById('end_window').style.display = 'none';
+        //Hide flags obs time
+        document.getElementById('flags').style.display = 'none';
+        document.getElementById('obs_time').style.display = 'none'
     }
-    else{
+    else if (node.value =='none'){
         document.getElementById('spat_summary').style.display = 'none';
         document.getElementById('temp_summary').style.display = 'none';
         document.getElementById('start_window').style.display = 'none';
         document.getElementById('end_window').style.display = 'none';
+        //If data_type is station show flags/obs_time
+        if ($('#data_type').length && document.getElementById('data_type').value == 'station'){
+            document.getElementById('flags').style.display = 'table-row';
+            document.getElementById('obs_time').style.display = 'table-row';
+        }
+        else{
+            document.getElementById('flags').style.display = 'none';
+            document.getElementById('obs_time').style.display = 'none';
+        } 
     }
 }
 
