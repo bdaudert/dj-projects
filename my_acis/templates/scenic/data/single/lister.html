@@ -132,6 +132,9 @@ $(function(){
         {%endfor%}
     </div>
     {%endif%}
+    {%if results.errors%}
+        <p class="error">ERROR: {{results.errors}}</p>
+    {%endif%}
     <!--Request errors or results arrow-->
     <div class="results" align="center">
     {%if results.data%}

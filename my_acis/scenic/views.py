@@ -282,6 +282,7 @@ def single_lister(request):
             return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
         #Data requests
         req_data = WRCCUtils.make_data_request(form_cleaned)
+        context['xx'] = req_data
         #Format Data for display and/or download
         results = WRCCUtils.format_data_single_lister(req_data, form_cleaned)
         #Overide data with windowed data if desired
@@ -1092,7 +1093,7 @@ def monthly_aves(request):
             'sid':form_cleaned['station_id'],
             'sdate':form_cleaned['start_date'].lower(),
             'edate':form_cleaned['end_date'].lower(),
-            'meta':'valid_daterange,name,state,sids,ll,elev,uid,county,climdiv'
+            'meta':'valid_daterange,name,state,sids,ll,elev,uid'
         }
         elems = []
         for el in form['elements']:
@@ -1774,6 +1775,7 @@ def sodxtrmts(request, app_type):
             meta_dict = DJ.get_grid_meta()
             header.insert(0, ['Location (lon, lat)', meta_dict['location_list']])
             data = DJ.get_data_grid()
+        context['xx'] = data
         #Set dates list
         dates_list = DJ.get_dates_list()
         #Run application
