@@ -28,7 +28,7 @@
 
 <!---Hidded variables-->
 <!--For maps-->
-<input type="hidden" id="area_type" name="area_type" value="{{initial.select_area_by}}">
+<!--<input type="hidden" id="area_type" name="area_type" value="{{initial.select_area_by}}">-->
 <input type="hidden" id="host" name="host" value="{{iniial.host}}">
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
 
@@ -63,7 +63,6 @@ $(function(){
 
 <table>
 <td valign="top">
-    {{checkbox_vals}}
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading() & set_hidden_fields(this,'overlayForm')">{% csrf_token %}
         <table class="form" id="tableData">
@@ -127,7 +126,7 @@ $(function(){
         <tr id="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
         <tr id="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
         <tr class="large_request" id="un" style="display:none;">{% include 'includes/user_name.html'%}</tr>
-        <tr class="large_request" style="display:none;">{% include 'includes/user_email.html'%}</tr>
+        <tr class="large_request" id="ue" style="display:none;">{% include 'includes/user_email.html'%}</tr>
         {%endif%}
         </table>
         <input style="margin:5px" type="submit" value="Get data" name="formData"/>

@@ -402,8 +402,10 @@ function set_hidden_fields(theForm, mainForm) {
 function set_smry(node){
     /*
     Sets data summary fields.
-    data summary can be temporal, spatial or windowed data
+    data summary can be temporal, spatial, windowed data or none
     */
+    //ADD station_ids and locations??
+    var a_list = ['state','shape','climate_division','basin','county','county_warning_area'];
     if (node.value == 'windowed_data'){
         $('#spat_summary').css('display','none');
         $('#temp_summary').css('display','none');
@@ -418,6 +420,9 @@ function set_smry(node){
             $('#flags').css('display','none');
             $('#obs_time').css('display','none');
         }
+        if $('#area_type',val().inList(a_list) && $('#data_summary').val() == 'none'){
+            $('#data_format option[value="html"]').attr('disabled',true);
+        }
     }
     else if (node.value == 'spatial'){
         $('#spat_summary').css('display','table-row');
@@ -427,6 +432,9 @@ function set_smry(node){
         //Hide flags obs time
         $('#flags').css('display','none');
         $('#obs_time').css('display','none');
+        if $('#area_type',val().inList(a_list) && $('#data_summary').val() == 'none'){
+            $('#data_format option[value="html"]').attr('disabled',true);
+        }
     }
     else if (node.value =='temporal'){
         $('#spat_summary').css('display','none');
@@ -436,6 +444,9 @@ function set_smry(node){
         //Hide flags obs time
         $('#flags').css('display','none');
         $('#obs_time').css('display','none');
+        if $('#area_type',val().inList(a_list) && $('#data_summary').val() == 'none'){
+            $('#data_format option[value="html"]').attr('disabled',true);
+        }
     }
     else if (node.value =='none'){
         $('#spat_summary').css('display','none');
@@ -455,18 +466,14 @@ function set_smry(node){
         //If area_type is state,shape,cwa,climdiv or basin and data summary is none
         //Hide html option from data_format
         //Show delim,format,user name, email
-        var a_list = ['state','shape','climate_division','basin','county','county_warning_area'];
-        //FIX ME< NOT WORKING: area_type empty ???
-        console.log('Area: ' + $('#area_type').val());
         if ($('#area_type').length){
             if ($('#area_type').val().inList(a_list)){
                 $('#data_format option[value="html"]').attr('disabled',true);
                 $('#data_format option[value="clm"]').attr('selected',true);
-                $('#output_file_name').css('display','table-row');
-                $('#delimiter').css('display','table-row');
-                $('#output_file_name').css('display','table-row');
-                $('#user_name').css('display','table-row');
-                $('#user_email').css('display','table-row');                 
+                $('#outfile').css('display','table-row');
+                $('#delim').css('display','table-row');
+                $('#un').css('display','table-row');
+                $('#ue').css('display','table-row');                 
             }
         }
     }
