@@ -420,7 +420,7 @@ function set_smry(node){
             $('#flags').css('display','none');
             $('#obs_time').css('display','none');
         }
-        if $('#area_type',val().inList(a_list) && $('#data_summary').val() == 'none'){
+        if ($('#area_type').val().inList(a_list) && $('#data_summary').val() == 'none'){
             $('#data_format option[value="html"]').attr('disabled',true);
         }
     }
@@ -432,7 +432,7 @@ function set_smry(node){
         //Hide flags obs time
         $('#flags').css('display','none');
         $('#obs_time').css('display','none');
-        if $('#area_type',val().inList(a_list) && $('#data_summary').val() == 'none'){
+        if ($('#area_type').val().inList(a_list) && $('#data_summary').val() == 'none'){
             $('#data_format option[value="html"]').attr('disabled',true);
         }
     }
@@ -444,7 +444,7 @@ function set_smry(node){
         //Hide flags obs time
         $('#flags').css('display','none');
         $('#obs_time').css('display','none');
-        if $('#area_type',val().inList(a_list) && $('#data_summary').val() == 'none'){
+        if ($('#area_type').val().inList(a_list) && $('#data_summary').val() == 'none'){
             $('#data_format option[value="html"]').attr('disabled',true);
         }
     }
