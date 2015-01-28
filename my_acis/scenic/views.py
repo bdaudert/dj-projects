@@ -271,14 +271,15 @@ def single_lister(request):
     if 'formData' in request.POST:
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
-        context['xx'] = form_cleaned
         #Check form fields
         fields_to_check = [form_cleaned['area_type'],'start_date','end_date','start_window','end_window','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
             if form_cleaned['area_type'] == 'location':
-                context['need_gridpoint_map'] = True
+                #Only show gridpoint map if area caused form_error
+                if 'Location (lon,lat)' in form_error.keys():
+                    context['need_gridpoint_map'] = True
             return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
         #Data requests
         req_data = WRCCUtils.make_data_request(form_cleaned)
@@ -294,7 +295,7 @@ def single_lister(request):
             ew = form_cleaned['end_window']
             results['data'] = WRCCUtils.get_window_data(d, sd, ed, sw, ew)
         if not results:
-            results = {'error':'No data found for these parameters.'}
+            results = {'errors':'No data found for these parameters.'}
             context['results'] = results
             return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
         context['results'] = results
@@ -382,10 +383,62 @@ def area_lister(request):
     if 'formData' in request.POST:
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
+        context['xx'] = form_cleaned
+        #Check for form errors
         fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date','degree_days']
-        if 'user_email' in form_cleaned.keys():
+        if form_cleaned['data_summary'] == 'none':
             fields_to_check.append('user_email')
             context['large_request'] = True
+        form_error = check_form(form_cleaned, fields_to_check)
+        if form_error:
+            context['form_error'] = form_error
+            #Only show maps if area field is in form_error
+            if 'County'in form_error.keys() or 'County Warning Area' in form_error.keys():
+                context['need_overlay_map'] = True
+            if 'Basin'in form_error.keys() or 'Climate Division' in form_error.keys():
+                context['need_overlay_map'] = True
+            if 'Custom Shape' in form_error.keys():
+                context['need_polygon_map'] = True
+            return render_to_response('scenic/data/area/lister.html', context, context_instance=RequestContext(request))
+        req_data = WRCCUtils.make_data_request(form_cleaned)
+        #Format Data for display and/or download
+        results = WRCCUtils.format_data_area_lister(req_data, form_cleaned)
+        context['x'] = results
+        '''
+        context['params_display_list'] = set_display_list('area_lister', form_cleaned)
+        if 'meta' in req_data.keys() and req_data['meta']:
+            meta_keys = set_meta_keys('area_lister',form_cleaned)
+            meta_display_list = WRCCUtils.metadict_to_display_list(req_data['meta'], meta_keys,form)
+            context['meta_display_list'] = meta_display_list
+        #Write data to file if requested
+        #Make look like multi request
+        all_data = {'meta':req_data['meta'],'data':results,'form':form_cleaned}
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        file_name = form_cleaned['output_file_name'] + '_' + time_stamp
+        #Deal with different data formats
+        if form_cleaned['data_format'] in ['clm','dlm'] and results:
+            if form_cleaned['data_format'] == 'clm':
+                file_extension = '.txt'
+            else:
+                file_extension = '.dat'
+            response = HttpResponse(mimetype='text/csv')
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
+            WRCCUtils.write_to_csv(response, all_data)
+            return response
+        if form_cleaned['data_format'] in ['xl'] and results:
+            file_extension = '.xls'
+            response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
+            WRCCUtils.write_to_excel(response,all_data)
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
+            return response
+        #Save data for download button
+        if form_cleaned['data_format'] in ['html'] and results:
+            results_json = json.dumps(all_data)
+            json_file  = form['output_file_name'] + '.json'
+            with open(settings.TEMP_DIR + json_file,'w+') as f:
+                f.write(results_json)
+            context['json_file'] = json_file
+        '''
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
@@ -4080,7 +4133,7 @@ def set_initial_lister(request,req_type):
     initial['start_date']  = Get('start_date', fourtnight)
     initial['end_date']  = Get('end_date', yesterday)
     if req_type == 'area':
-        initial['data_summary'] = Get('data_summary', 'spatial')
+        initial['data_summary'] = Get('data_summary', 'temporal')
     else:
         initial['data_summary'] = Get('data_summary', 'none')
     initial['start_window'] = Get('start_window', '01-01')

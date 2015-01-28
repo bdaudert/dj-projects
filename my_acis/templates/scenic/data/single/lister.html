@@ -113,7 +113,7 @@ $(function(){
         {%endif%}
         <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/date_format.html'%}</tr>
-        <tr class="station_grid" style="display:table-row;">{% include 'includes/data_format_single.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
         <tr id="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
         <tr id="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
         </table>
@@ -132,6 +132,7 @@ $(function(){
         {%endfor%}
     </div>
     {%endif%}
+    RESULTS: {{xx}}
     {%if results.errors%}
         <p class="error">ERROR: {{results.errors}}</p>
     {%endif%}
@@ -163,7 +164,14 @@ $(function(){
     {%endif%}
     </div>
     <!--Map section-->
+    {%if need_gridpoint_map%}
+    <div id="GridpointMap" style="display:block">
+    <div id="map-gridpoint"></div>
+    </div>
+    <script type="text/javascript">initialize_grid_point_map();</script> 
+    {%else%}
     <div id="GridpointMap" style="display:none"></div>
+    {%endif%}
     <!--end map section--> 
 </td></table>
 

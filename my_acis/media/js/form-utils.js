@@ -405,52 +405,70 @@ function set_smry(node){
     data summary can be temporal, spatial or windowed data
     */
     if (node.value == 'windowed_data'){
-        document.getElementById('spat_summary').style.display = 'none';
-        document.getElementById('temp_summary').style.display = 'none';
-        document.getElementById('start_window').style.display = 'table-row';
-        document.getElementById('end_window').style.display = 'table-row';
+        $('#spat_summary').css('display','none');
+        $('#temp_summary').css('display','none');
+        $('#start_window').css('display','table-row');
+        $('#end_window').css('display','table-row');
         //If data_type is station show flags/obs_time
-        if ($('#data_type').length && document.getElementById('data_type').value == 'station'){
-            document.getElementById('flags').style.display = 'table-row';
-            document.getElementById('obs_time').style.display = 'table-row';
+        if ($('#data_type').length && $('#data_type').val() == 'station'){
+            $('#flags').css('display','table-row');
+            $('#obs_time').css('display','table-row');
         }
         else{
-            document.getElementById('flags').style.display = 'none';
-            document.getElementById('obs_time').style.display = 'none';
+            $('#flags').css('display','none');
+            $('#obs_time').css('display','none');
         }
     }
     else if (node.value == 'spatial'){
-        document.getElementById('spat_summary').style.display = 'table-row';
-        document.getElementById('temp_summary').style.display = 'none';
-        document.getElementById('start_window').style.display = 'none';
-        document.getElementById('end_window').style.display = 'none';
+        $('#spat_summary').css('display','table-row');
+        $('#temp_summary').css('display','none');
+        $('#start_window').css('display','none');
+        $('#end_window').css('display','none');
         //Hide flags obs time
-        document.getElementById('flags').style.display = 'none';
-        document.getElementById('obs_time').style.display = 'none';
+        $('#flags').css('display','none');
+        $('#obs_time').css('display','none');
     }
     else if (node.value =='temporal'){
-        document.getElementById('spat_summary').style.display = 'none';
-        document.getElementById('temp_summary').style.display = 'table-row';
-        document.getElementById('start_window').style.display = 'none';
-        document.getElementById('end_window').style.display = 'none';
+        $('#spat_summary').css('display','none');
+        $('#temp_summary').css('display','table-row');
+        $('#start_window').css('display','none');
+        $('#end_window').css('display','none');
         //Hide flags obs time
-        document.getElementById('flags').style.display = 'none';
-        document.getElementById('obs_time').style.display = 'none'
+        $('#flags').css('display','none');
+        $('#obs_time').css('display','none');
     }
     else if (node.value =='none'){
-        document.getElementById('spat_summary').style.display = 'none';
-        document.getElementById('temp_summary').style.display = 'none';
-        document.getElementById('start_window').style.display = 'none';
-        document.getElementById('end_window').style.display = 'none';
+        $('#spat_summary').css('display','none');
+        $('#temp_summary').css('display','none');
+        $('#start_window').css('display','none');
+        $('#end_window').css('display','none');
         //If data_type is station show flags/obs_time
         if ($('#data_type').length && document.getElementById('data_type').value == 'station'){
-            document.getElementById('flags').style.display = 'table-row';
-            document.getElementById('obs_time').style.display = 'table-row';
+            $('#flags').css('display','table-row');
+            $('#obs_time').css('display','table-row');
         }
         else{
-            document.getElementById('flags').style.display = 'none';
-            document.getElementById('obs_time').style.display = 'none';
-        } 
+            $('#flags').css('display','none');
+            $('#obs_time').css('display','none');
+        
+        }
+        //If area_type is state,shape,cwa,climdiv or basin and data summary is none
+        //Hide html option from data_format
+        //Show delim,format,user name, email
+        var a_list = ['state','shape','climate_division','basin','county','county_warning_area'];
+        //FIX ME< NOT WORKING: area_type empty ???
+        console.log('Area: ' + $('#area_type').val());
+        if ($('#area_type').length){
+            if ($('#area_type').val().inList(a_list)){
+                $('#data_format option[value="html"]').attr('disabled',true);
+                $('#data_format option[value="clm"]').attr('selected',true);
+                $('#output_file_name').css('display','table-row');
+                $('#delimiter').css('display','table-row');
+                $('#output_file_name').css('display','table-row');
+                $('#user_name').css('display','table-row');
+                $('#user_email').css('display','table-row');                 
+            }
+        }
     }
 }
 
