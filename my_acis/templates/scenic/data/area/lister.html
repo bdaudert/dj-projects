@@ -145,7 +145,7 @@ $(function(){
     {%endif%}
 
     {%if large_request and not form.error %}
-    <p class="message">You requested a large amount of data.<br />
+    <p class="message">
     Your data request will be processed offline.</br />
     An email confirmation with instructions on how to obtain your data will
     be sent on uccessful completion of the request.
@@ -217,6 +217,7 @@ $(function(){
 
 <table cellpadding="10" align="center">
 <td valign="top" width="97%">
+    {{xx}}<br />
     {{x}}
     <!--Results-->
     <!--Print and download buttons-->

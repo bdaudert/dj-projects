@@ -402,8 +402,8 @@ def area_lister(request):
             return render_to_response('scenic/data/area/lister.html', context, context_instance=RequestContext(request))
         req_data = WRCCUtils.make_data_request(form_cleaned)
         #Format Data for display and/or download
-        results = WRCCUtils.format_data_area_lister(req_data, form_cleaned)
-        context['x'] = results
+        #results = WRCCUtils.format_data_area_lister(req_data, form_cleaned)
+        context['x'] = req_data
         '''
         context['params_display_list'] = set_display_list('area_lister', form_cleaned)
         if 'meta' in req_data.keys() and req_data['meta']:
@@ -4154,6 +4154,10 @@ def set_initial_lister(request,req_type):
         checkbox_vals[area_type + '_selected'] =''
         if area_type == initial['area_type']:
             checkbox_vals[area_type + '_selected'] ='selected'
+    for data_type in ['station','grid']:
+        checkbox_vals['data_type_' + data_type + '_selected'] =''
+        if data_type == initial['data_type']:
+            checkbox_vals['data_type_' + data_type + '_selected'] ='selected'
     for element in initial['elements']:
         checkbox_vals['elements_' + element + '_selected'] =''
         for el in initial['elements']:

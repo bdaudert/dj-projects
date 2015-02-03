@@ -420,8 +420,12 @@ function set_smry(node){
             $('#flags').css('display','none');
             $('#obs_time').css('display','none');
         }
+        //Enable/Disable html output
         if ($('#area_type').val().inList(a_list) && $('#data_summary').val() == 'none'){
             $('#data_format option[value="html"]').attr('disabled',true);
+        }
+        else {
+             $('#data_format option[value="html"]').attr('disabled',false);
         }
     }
     else if (node.value == 'spatial'){
@@ -432,8 +436,12 @@ function set_smry(node){
         //Hide flags obs time
         $('#flags').css('display','none');
         $('#obs_time').css('display','none');
+        //Enable/Disable html output
         if ($('#area_type').val().inList(a_list) && $('#data_summary').val() == 'none'){
             $('#data_format option[value="html"]').attr('disabled',true);
+        }
+        else {
+             $('#data_format option[value="html"]').attr('disabled',false);
         }
     }
     else if (node.value =='temporal'){
@@ -444,8 +452,12 @@ function set_smry(node){
         //Hide flags obs time
         $('#flags').css('display','none');
         $('#obs_time').css('display','none');
+        //Enable/Disable html output
         if ($('#area_type').val().inList(a_list) && $('#data_summary').val() == 'none'){
             $('#data_format option[value="html"]').attr('disabled',true);
+        }
+        else {
+             $('#data_format option[value="html"]').attr('disabled',false);
         }
     }
     else if (node.value =='none'){
@@ -470,7 +482,7 @@ function set_smry(node){
             if ($('#area_type').val().inList(a_list)){
                 $('#data_format option[value="html"]').attr('disabled',true);
                 $('#data_format option[value="clm"]').attr('selected',true);
-                $('#outfile').css('display','table-row');
+                $('#out_file').css('display','table-row');
                 $('#delim').css('display','table-row');
                 $('#un').css('display','table-row');
                 $('#ue').css('display','table-row');                 
