@@ -282,52 +282,47 @@ def single_lister(request):
                     context['need_gridpoint_map'] = True
             return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
         #Data requests
-        req_data = WRCCUtils.make_data_request(form_cleaned)
-        context['xx'] = req_data
+        req = WRCCUtils.request_and_format_data(form_cleaned)
         #Format Data for display and/or download
-        results = WRCCUtils.format_data_single_lister(req_data, form_cleaned)
         #Overide data with windowed data if desired
         if 'data_summary' in form.keys() and form['data_summary'] == 'windowed_data':
-            d = results['data']
+            d = req['data']
             sd = form_cleaned['start_date']
             ed = form_cleaned['end_date']
             sw = form_cleaned['start_window']
             ew = form_cleaned['end_window']
-            results['data'] = WRCCUtils.get_window_data(d, sd, ed, sw, ew)
-        if not results:
-            results = {'errors':'No data found for these parameters.'}
-            context['results'] = results
+            req['data'] = WRCCUtils.get_window_data(d, sd, ed, sw, ew)
+        if not req['data'] and not req['smry']:
+            req['errors'] = {'errors':'No data found for these parameters.'}
+            context['results'] = req
             return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
-        context['results'] = results
+        context['results'] = req
         context['params_display_list'] = set_display_list('single_lister', form_cleaned)
-        if 'meta' in req_data.keys() and req_data['meta']:
+        if 'meta' in req.keys() and req['meta']:
             meta_keys = set_meta_keys('single_lister',form_cleaned)
-            meta_display_list = WRCCUtils.metadict_to_display_list(req_data['meta'], meta_keys,form)
+            meta_display_list = WRCCUtils.metadict_to_display_list(req['meta'][0], meta_keys,form)
             context['meta_display_list'] = meta_display_list
-        #Write data to file if requested
-        #Make look like multi request
-        all_data = {'meta':[req_data['meta']],'data':[results],'form':form_cleaned}
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         file_name = form_cleaned['output_file_name'] + '_' + time_stamp
         #Deal with different data formats
-        if form_cleaned['data_format'] in ['clm','dlm'] and results:
+        if form_cleaned['data_format'] in ['clm','dlm'] and (req['data'] or req['smry']):
             if form_cleaned['data_format'] == 'clm':
                 file_extension = '.txt'
             else:
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            WRCCUtils.write_to_csv(response, all_data)
+            WRCCUtils.write_to_csv(response, req)
             return response
-        if form_cleaned['data_format'] in ['xl'] and results:
+        if form_cleaned['data_format'] in ['xl'] and (req['data'] or req['smry']):
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            WRCCUtils.write_to_excel(response,all_data)
+            WRCCUtils.write_to_excel(response,req)
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
         #Save data for download button
-        if form_cleaned['data_format'] in ['html'] and results:
-            results_json = json.dumps(all_data)
+        if form_cleaned['data_format'] in ['html'] and (req['data'] or req['smry']):
+            results_json = json.dumps(req)
             json_file  = form['output_file_name'] + '.json'
             with open(settings.TEMP_DIR + json_file,'w+') as f:
                 f.write(results_json)
@@ -339,7 +334,7 @@ def single_lister(request):
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         file_name = form['output_file_name'] + '_' + time_stamp
         with open(settings.TEMP_DIR + json_file, 'r') as f:
-            all_data =  json.load(f)
+            req =  json.load(f)
         if form['data_format'] in ['clm','dlm']:
             if form['data_format'] == 'clm':
                 file_extension = '.txt'
@@ -347,12 +342,12 @@ def single_lister(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            WRCCUtils.write_to_csv(response, all_data)
+            WRCCUtils.write_to_csv(response, req)
             return response
         if form['data_format'] in ['xl']:
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            WRCCUtils.write_to_excel(response,all_data)
+            WRCCUtils.write_to_excel(response,req)
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
     return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
@@ -383,7 +378,6 @@ def area_lister(request):
     if 'formData' in request.POST:
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
-        context['xx'] = form_cleaned
         #Check for form errors
         fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date','degree_days']
         if form_cleaned['data_summary'] == 'none':
@@ -400,45 +394,38 @@ def area_lister(request):
             if 'Custom Shape' in form_error.keys():
                 context['need_polygon_map'] = True
             return render_to_response('scenic/data/area/lister.html', context, context_instance=RequestContext(request))
-        req_data = WRCCUtils.make_data_request(form_cleaned)
+        req = WRCCUtils.request_and_format_data(form_cleaned)
+        context['results'] = req
         #Format Data for display and/or download
-        #results = WRCCUtils.format_data_area_lister(req_data, form_cleaned)
-        context['x'] = req_data
-        '''
         context['params_display_list'] = set_display_list('area_lister', form_cleaned)
-        if 'meta' in req_data.keys() and req_data['meta']:
-            meta_keys = set_meta_keys('area_lister',form_cleaned)
-            meta_display_list = WRCCUtils.metadict_to_display_list(req_data['meta'], meta_keys,form)
-            context['meta_display_list'] = meta_display_list
         #Write data to file if requested
-        #Make look like multi request
-        all_data = {'meta':req_data['meta'],'data':results,'form':form_cleaned}
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         file_name = form_cleaned['output_file_name'] + '_' + time_stamp
         #Deal with different data formats
-        if form_cleaned['data_format'] in ['clm','dlm'] and results:
+        if form_cleaned['data_format'] in ['clm','dlm'] and (req['data'] or req['smry']):
             if form_cleaned['data_format'] == 'clm':
                 file_extension = '.txt'
             else:
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            WRCCUtils.write_to_csv(response, all_data)
+            WRCCUtils.write_to_csv(response, req)
             return response
-        if form_cleaned['data_format'] in ['xl'] and results:
+        if form_cleaned['data_format'] in ['xl'] and (req['data'] or req['smry']):
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            WRCCUtils.write_to_excel(response,all_data)
+            WRCCUtils.write_to_excel(response,req)
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
         #Save data for download button
-        if form_cleaned['data_format'] in ['html'] and results:
-            results_json = json.dumps(all_data)
+        if form_cleaned['data_format'] in ['html'] and (req['data'] or req['smry']):
+            results_json = json.dumps(req)
             json_file  = form['output_file_name'] + '.json'
             with open(settings.TEMP_DIR + json_file,'w+') as f:
                 f.write(results_json)
             context['json_file'] = json_file
-        '''
+
+    '''
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
@@ -447,6 +434,7 @@ def area_lister(request):
         #checkbox_vals[form['area_type'] + '_selected'] = 'selected'
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         context[initial['overlay_state'] + '_selected'] = 'selected'
+    '''
     return render_to_response('scenic/data/area/lister.html', context, context_instance=RequestContext(request))
 
 def data_station_temp(request):
@@ -4084,6 +4072,8 @@ def set_display_list(app_name, form):
                 else:
                     el_list_long.append(WRCCData.DISPLAY_PARAMS[el_strip] + ' (' + unit + '), Base: ' + str(base_temp))
             display_list.append([WRCCData.DISPLAY_PARAMS[key],el_list_long])
+        elif key in ['station','grid']:
+            display_list.append(['Data Type',[WRCCData.DISPLAY_PARAMS[key]]])
         else:
             display_list.append([WRCCData.DISPLAY_PARAMS[key],[form[key]]])
 

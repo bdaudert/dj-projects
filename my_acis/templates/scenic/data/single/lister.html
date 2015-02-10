@@ -229,7 +229,7 @@ $(function(){
         <p>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
         <p class="message" align="left"><b>DATA</b>:</p>
         <table border="1">
-        {%for date_data in results.data%}
+        {%for date_data in results.data.0%}
             <tr>
             {%for data in date_data%}
                 <td>{{data}}</td>
