@@ -145,7 +145,7 @@ $(function(){
     {%endif%}
 
     {%if large_request and not form.error %}
-    <p class="message">
+    <p class="message results">
     Your data request will be processed offline.</br />
     An email confirmation with instructions on how to obtain your data will
     be sent on uccessful completion of the request.
@@ -220,24 +220,6 @@ $(function(){
     <!--Results-->
     <!--Print and download buttons-->
     <div class="results">
-    <!--Show summary first-->
-    {%if results.smry%}
-        <p class="message" align="left"><b>DATA SUMMARY</b>:</p>
-        <table border="1">
-        {%for s_data in results.smry%}
-            <tr>
-            {%for s in s_data%}
-                <td>{{s}}</td>
-            {%endfor%}
-            </tr>
-        {%endfor%}
-        </table><br />
-        <img src = "{{MEDIA_URL}}img/show_hide_button.png" onclick="ShowHide('data_results')"></a>
-         <div id="data_results" style="display:none">
-    {%else%}
-        <div id="data_results">
-    {%endif%}
-
     {%if not results.errors and results.data%}
         <table>
         <td valign="top">
@@ -254,31 +236,36 @@ $(function(){
     <table id="printable_table">
     <td>
     {% if not results.errors and results.data %}
-        <p class="message" align="left"><b>METADATA</b>:</p>
-        <p align="left">
-        {%for key_val in meta_display_list%}
-            <b>{{key_val.0}}</b>:
-            {%if key_val.0 == "Station ID/Network List" or key_val.0 == "Valid Date Range (by element)"%}
-                <br />
-            {%endif%}
-            {%for item in key_val.1%}
-                {{item}}<br />
-            {%endfor%}
-        {%endfor%}
-        </p>
-
         <p>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
+        {% for point_data in results.data %}
+        <p class="message" align="left"><b>METADATA</b>:
+            {{results.meta|lookup:forloop.counter0}}
+        </p>
         <p class="message" align="left"><b>DATA</b>:</p>
         <table border="1">
-        {%for date_data in results.data%}
+        {%for data in point_data%}
+        <tr>
+        {%for d in data%}
+        <td>{{d}}</td>
+        {%endfor%}
+        </tr>
+        {%endfor%}
+        </table>
+        {% endfor %}
+    {%endif%}<!--end if not results.errors-->
+
+    {%if not results.errors and results.smry%}
+        <p class="message" align="left"><b>DATA SUMMARY</b>:</p>
+        <table border="1">
+        {%for s_data in results.smry%}
             <tr>
-            {%for data in date_data%}
-                <td>{{data}}</td>
+            {%for s in s_data%}
+                <td>{{s}}</td>
             {%endfor%}
             </tr>
         {%endfor%}
         </table>
-    {%endif%}<!--end if not results.errors-->
+    {%endif%}
     <div><!--end results-->
     </td></table><!--End printable table-->
     </div><!--end div data_results-->

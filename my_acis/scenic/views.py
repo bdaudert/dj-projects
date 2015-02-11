@@ -286,12 +286,15 @@ def single_lister(request):
         #Format Data for display and/or download
         #Overide data with windowed data if desired
         if 'data_summary' in form.keys() and form['data_summary'] == 'windowed_data':
-            d = req['data']
+            d = req['data'][0]
+            header = d[0]
             sd = form_cleaned['start_date']
             ed = form_cleaned['end_date']
             sw = form_cleaned['start_window']
             ew = form_cleaned['end_window']
             req['data'] = WRCCUtils.get_window_data(d, sd, ed, sw, ew)
+            req['data'].insert(0,header)
+            req['data'] = [req['data']]
         if not req['data'] and not req['smry']:
             req['errors'] = {'errors':'No data found for these parameters.'}
             context['results'] = req
@@ -401,6 +404,7 @@ def area_lister(request):
         #Write data to file if requested
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         file_name = form_cleaned['output_file_name'] + '_' + time_stamp
+        '''
         #Deal with different data formats
         if form_cleaned['data_format'] in ['clm','dlm'] and (req['data'] or req['smry']):
             if form_cleaned['data_format'] == 'clm':
@@ -424,7 +428,7 @@ def area_lister(request):
             with open(settings.TEMP_DIR + json_file,'w+') as f:
                 f.write(results_json)
             context['json_file'] = json_file
-
+        '''
     '''
     #Overlay maps
     if 'formOverlay' in request.POST:
@@ -4040,7 +4044,8 @@ def set_display_keys(app_name,form):
     if app_name in ['single_lister','multi_lister']:
         display_keys+=[form['area_type'], 'elements', 'units', 'start_date', 'end_date']
     elif app_name == 'area_lister':
-        display_keys+= [form['data_type'], form['area_type'], 'elements', 'units', 'start_date', 'end_date']
+        display_keys+= [form['data_type'], form['area_type'],'data_summary',\
+        'elements', 'units', 'start_date', 'end_date']
     return display_keys
 
 def set_meta_keys(app_name,form):
@@ -4074,6 +4079,16 @@ def set_display_list(app_name, form):
             display_list.append([WRCCData.DISPLAY_PARAMS[key],el_list_long])
         elif key in ['station','grid']:
             display_list.append(['Data Type',[WRCCData.DISPLAY_PARAMS[key]]])
+        elif key == 'data_summary':
+            if form['data_summary'] == 'none':
+                val = ''
+            if form['data_summary'] == 'spatial':
+                val = WRCCData.DISPLAY_PARAMS[form['spatial_summary']]
+            if form['data_summary'] == 'temporal':
+                val = WRCCData.DISPLAY_PARAMS[form['temporal_summary']]
+            if form['data_summary'] == 'windowed_data':
+                val = form['start_window'] + ' - ' + form['end_window']
+            display_list.append([WRCCData.DISPLAY_PARAMS[form['data_summary']],[val]])
         else:
             display_list.append([WRCCData.DISPLAY_PARAMS[key],[form[key]]])
 
