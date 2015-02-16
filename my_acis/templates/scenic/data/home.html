@@ -16,9 +16,6 @@
 <div class="docu" id="Docu_page_multi_point_prods" style="display:none;">
     {% include 'includes/Docu_page_multi_point_prods.html'%}
 </div>
-<div class="docu" id="Docu_page_area_prods" style="display:none;">
-    {% include 'includes/Docu_page_area_prods.html'%}
-</div>
 
 <table cellpadding="40" align="center">
 <td valign="top">
@@ -30,23 +27,24 @@
        <td>
             <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_station_finder')">
        </td>
-       <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}single/"><b>Single Point Products</b></a>
+       <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}single/"><b>Single-Point Products</b></a>
             <div class="pop-up">{% include 'includes/Docu_popup_single_point_prods.html'%}</div>   
        </td>
        <td>
             <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_single_point_prods')">
        </td>
+       <!--
        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}multi/"><b>Multi Point Products</b></a>
             <div class="pop-up">{% include 'includes/Docu_popup_multi_point_prods.html'%}</div>   
        </td>
        <td>
             <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_multi_point_prods')">
-       </td>
-       <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}area/"><b>Area Products</b></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_area_prods.html'%}</div>    
+       </td>-->
+       <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}multi/"><b>Multi-Point Products</b></a>
+            <div class="pop-up">{% include 'includes/Docu_popup_multi_prods.html'%}</div>    
        </td>
        <td>
-            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_area_prods')">
+            <img class="qmark" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_multi_point_prods')">
        </td>
     </tr>
     <tr>
@@ -58,13 +56,14 @@
         <a  href="{{DATA_URL}}single/" class="trigger_hover"><img class="app_img" alt="SinglePoint" title="SinglePoint" src="{{MEDIA_URL}}img/Stn.png"></a>
         <div class="pop-up">{% include 'includes/Docu_popup_single_point_prods.html'%}</div>
     </td>
+    <!--
     <td colspan="2">
         <a  href="{{DATA_URL}}multi/" class="trigger_hover"><img class="app_img" alt="SinglePoint" title="SinglePoint" src="{{MEDIA_URL}}img/Stn.png"></a>
         <div class="pop-up">{% include 'includes/Docu_popup_multi_point_prods.html'%}</div>
-    </td> 
+    </td>--> 
     <td colspan="2">
-        <a  href="{{DATA_URL}}area/" class="trigger_hover"><img class="app_img" alt="area" title="area" src="{{MEDIA_URL}}img/ClimateModel2.png"></a>
-        <div class="pop-up">{% include 'includes/Docu_popup_area_prods.html'%}</div> 
+        <a  href="{{DATA_URL}}multi/" class="trigger_hover"><img class="app_img" alt="multi" title="multi" src="{{MEDIA_URL}}img/ClimateModel2.png"></a>
+        <div class="pop-up">{% include 'includes/Docu_popup_multi_prods.html'%}</div> 
     </td>  
     </tr>
     </table>

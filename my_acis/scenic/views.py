@@ -183,11 +183,6 @@ def multi_point_prods(request):
     }
     return render_to_response('scenic/data/multi/home.html', context, context_instance=RequestContext(request))
 
-def area_prods(request):
-    context = {
-        'title': 'Area Products'
-    }
-    return render_to_response('scenic/data/area/home.html', context, context_instance=RequestContext(request))
 
 def sw_networks(request):
     context = {
@@ -360,20 +355,6 @@ def multi_lister(request):
     context = {
         'title': 'Data Lister',
     }
-    initial, checkbox_vals = set_initial_lister(request,'multi')
-    context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
-    if 'formData' in request.POST:
-        form = set_form(request,clean=False)
-        form_cleaned = set_form(request)
-
-        #Check form fields
-        fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date','degree_days']
-    return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
-
-def area_lister(request):
-    context = {
-        'title': 'Data Lister',
-    }
     initial, checkbox_vals = set_initial_lister(request,'area')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     #Set initial overlay state for overlay map
@@ -401,7 +382,7 @@ def area_lister(request):
         req = WRCCUtils.request_and_format_data(form_cleaned)
         context['results'] = req
         #Format Data for display and/or download
-        context['params_display_list'] = set_display_list('area_lister', form_cleaned)
+        context['params_display_list'] = set_display_list('multi_lister', form_cleaned)
         #Write data to file if requested
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         file_name = form_cleaned['output_file_name'] + '_' + time_stamp
@@ -430,17 +411,15 @@ def area_lister(request):
                 f.write(results_json)
             context['json_file'] = json_file
         '''
-    '''
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
         form = set_form(request,clean=False)
-        initial, checkbox_vals = set_initial_lister(form,'area')
+        initial, checkbox_vals = set_initial_lister(form,'multi')
         #checkbox_vals[form['area_type'] + '_selected'] = 'selected'
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         context[initial['overlay_state'] + '_selected'] = 'selected'
-    '''
-    return render_to_response('scenic/data/area/lister.html', context, context_instance=RequestContext(request))
+    return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
 
 def data_station_temp(request):
     context = {

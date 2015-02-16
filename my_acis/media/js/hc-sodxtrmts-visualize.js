@@ -89,6 +89,7 @@ $(function () {
                 SubTitle+=' (Departures from Average)'
             }
             var xAxisTitle = 'Year ' //+ datadict.data[datadict.data.length -7][0]
+            //var xAxisTitle = '';
             if (month_list[0]> month_list[month_list.length -1]){
                 xAxisTitle = 'Ending Year ' //+ datadict.data[datadict.data.length -8][0]
             }

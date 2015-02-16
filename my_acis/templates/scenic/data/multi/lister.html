@@ -11,7 +11,8 @@
     {% include 'includes/Docu_app_multi_lister.html'%}
 </div>
 <div id="how_to" style="display:none;">
-    <div id="Docu_points_of_interest">{% include 'includes/Docu_points_of_interest.html'%}</div>
+    <div id="Docu_area_of_interest">{% include 'includes/Docu_area_of_interest.html'%}</div>
+    <div id="Docu_data_type">{% include 'includes/Docu_data_type.html'%}</div>
     <div id="Docu_elements">{% include 'includes/Docu_elements.html'%}</div>
     <div id="Docu_add_degree_days">{% include 'includes/Docu_add_degree_days.html'%}</div>
     <div id="Docu_degree_days">{% include 'includes/Docu_degree_days.html'%}</div>
@@ -24,13 +25,13 @@
     <div id="Docu_data_format">{% include 'includes/Docu_data_format.html'%}</div>
     <div id="Docu_delimiter">{% include 'includes/Docu_delimiter.html'%}</div>
 </div><!--End how_to-->
-    
+
 <!---Hidded variables-->
-<!--for maps-->
-<!--<input type="hidden" id="area_type" name="area_type" value="{{initial.area_type}}">
+<!--For maps-->
+<!--<input type="hidden" id="area_type" name="area_type" value="{{initial.select_area_by}}">-->
 <input type="hidden" id="host" name="host" value="{{iniial.host}}">
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
--->
+
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 <!--On form change, hide results and form errors-->
@@ -41,10 +42,9 @@ $(function(){
 });
 </script>
 
-
 <table>
 <td valign="bottom" width="300px">
-    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/lister/'"/>
+    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}area/lister/'"/>
 </td>
 <td valign="top" width="650px" align="left">
     <table>
@@ -62,44 +62,78 @@ $(function(){
 
 
 <table>
-<td valign="top">
+<td valign="top" width="40%">
     <div id='formData'>
-        <form method="post" id="tableDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
-        <table class="form" id="tableData" >
-        <tr class="station_grid" style="display:table-row">{% include 'includes/multi_select_area.html'%}</tr>
+        <form method="post" id="tableDataForm" action="" onsubmit="show_loading() & set_hidden_fields(this,'overlayForm')">{% csrf_token %}
+        <table class="form" id="tableData">
+        <tr class="station_grid" style="display:table-row">{% include 'includes/area_select_area.html'%}</tr>
         <tr class="station_grid" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
-        <tr class="station" style="display:table-row">{% include 'includes/station_finder.html'%}</tr>
+        <tr class="station_grid" style="display:table-row">{% include 'includes/data_type.html'%}</tr>
         <tr class="station_grid" style="display:table-row">{% include 'includes/elements.html'%}</tr>
         <tr class="station_grid" id="add" valign="top" style="display:table-row">{% include 'includes/add_special_degree_days.html'%}</tr>
-        {%if initial.add_degree_days == "T"%}
+       {%if initial.add_degree_days == "T"%}
             <tr id="dd" valign="top" style="display:table-row">{% include 'includes/degree_days.html'%}</tr>
         {%else%}
             <tr id="dd" valign="top" style="display:none">{% include 'includes/degree_days.html'%}</tr>
         {%endif%}
-        <tr class="station_grid" style="display:table-row">{% include 'includes/units.html'%}</tr>
-        <tr class="station_grid" style="display:table-row">{% include 'includes/start_date.html'%}</tr>
-        <tr class="station_grid" style="display:table-row">{% include 'includes/end_date.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/units.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
         <tr class="station_grid" id="data_summary" style="display:table-row;">{% include 'includes/data_summary.html'%}</tr>
+        {%if initial.data_summary == "none"%}
         <tr id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
         <tr id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
+        <tr class="station_grid" id="start_window" style="display:none;">{% include 'includes/start_window.html'%}</tr>
+        <tr class="station_grid" id="end_window" style="display:none;">{% include 'includes/end_window.html'%}</tr>
+        {%endif%}
+        {%if initial.data_summary == "temporal"%}
+        <tr id="temp_summary" style="display:table-row">{% include 'includes/temporal_summary.html'%}</tr>
+        <tr id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
+        <tr class="station_grid" id="start_window" style="display:none;">{% include 'includes/start_window.html'%}</tr>
+        <tr class="station_grid" id="end_window" style="display:none;">{% include 'includes/end_window.html'%}</tr>
+        {%endif%}
+        {%if initial.data_summary == "spatial"%}
+        <tr id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
+        <tr id="spat_summary" style="display:table-row">{% include 'includes/spatial_summary.html'%}</tr>
+        <tr class="station_grid" id="start_window" style="display:none;">{% include 'includes/start_window.html'%}</tr>
+        <tr class="station_grid" id="end_window" style="display:none;">{% include 'includes/end_window.html'%}</tr>
+        {%endif%}
+        {%if initial.data_summary == "windowed_data"%}
+        <tr class="station_grid" id="start_window" style="display:table-row;">{% include 'includes/start_window.html'%}</tr>
+        <tr class="station_grid" id="end_window" style="display:table-row;">{% include 'includes/end_window.html'%}</tr>
+        <tr id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
+        <tr id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
+        {%endif%}
+        {%if initial.data_type == "station" and initial.data_summary == "none"%}
+        <tr class="station" id="flags" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
+        <tr class="station" id="obs_time" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
+        {%elif initial.data_type == "station" and initial.data_summary == "windowed_data"%}
+        <tr class="station" id="flags" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
+        <tr class="station" id="obs_time" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
+        {%else%}
+        <tr class="station" id="flags" style="display:none">{% include 'includes/show_flags.html'%}</tr>
+        <tr class="station" id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</tr>
+        {%endif%}
         <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
-        <tr class="station" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
-        <tr class="station" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
-        <tr class="station_grid" style="display:table-row">{% include 'includes/date_format.html'%}</tr>
-        <tr class="station_grid" style="display:table-row">{% include 'includes/data_format.html'%}</tr>
-        <tr class="station_grid" id="delim" style="display:table-row">{% include 'includes/delimiter.html'%}</tr>
-        <tr class="station_grid" id="out_file" style="display:table-row" class="large_request">{% include 'includes/out_file.html'%}</tr>
-        {% if large_request %}
-        <tr class="large_request" id="un">{% include 'includes/user_name.html'%}</tr>
-        <tr class="large_request">{% include 'includes/user_email.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/date_format.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
+        {%if initial.data_summary == "none"%}
+        <tr id="delim" style="display:table-row;">{% include 'includes/delimiter.html'%}</tr>
+        <tr id="out_file" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
+        <tr id="un">{% include 'includes/user_name.html'%}</tr>
+        <tr>{% include 'includes/user_email.html'%}</tr>
+        {%else%}
+        <tr id="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
+        <tr id="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
+        <tr class="large_request" id="un" style="display:none;">{% include 'includes/user_name.html'%}</tr>
+        <tr class="large_request" id="ue" style="display:none;">{% include 'includes/user_email.html'%}</tr>
         {%endif%}
         </table>
-        <!--<input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">-->
         <input style="margin:5px" type="submit" value="Get data" name="formData"/>
         </form>
     </div>
 </td>
-<td valign="top">
+<td valign="top" width="60%" align="center">
     <!--Form Errors and search parameter section-->
     {%if form_error%}
     <div id="form_error">
@@ -108,7 +142,16 @@ $(function(){
             <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
         {%endfor%}
     </div>
-    {%endif%}    
+    {%endif%}
+
+    {%if large_request and not form.error %}
+    <p class="message results">
+    Your data request will be processed offline.</br />
+    An email confirmation with instructions on how to obtain your data will
+    be sent on uccessful completion of the request.
+    </p>
+    {%endif%}
+
     <!--Request errors or results arrow-->
     <div class="results">
     {%if results%}
@@ -116,22 +159,10 @@ $(function(){
             <p class="error">{{results.errors}}</p>
         {%else%}
             <div id="Arrow" class="results">
-            <table style="display:block;">
-            <tr><td valign="top">
             <p class="message"><b>RESULTS:</b></p>
-            </td></tr>
-            <tr><td>
-            <p class="message">YOUR PARAMETERS:<br />
-            {%for key_val in params_display_list%}
-                <b>{{key_val.0}}</b>:
-                {%for item in key_val.1%}
-                    {{item}}<br />
-                {%endfor%}
-            {%endfor%}
-            </p>
-            </td></tr>
-            <tr><td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td></tr>
-            </table>
+            <img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px">
+            </div>
+ 
             </div>
         {%endif%}
     {%endif%}
@@ -147,36 +178,93 @@ $(function(){
         {%else%}
         <div id="map-overlay"></div>
         <div id="content-window"></div>
-        <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
+        <script type="text/javascript">initialize_map_overlays("{{initial.select_area_type}}","{{initial.host}}", "{{initial.kml_file_path}}")</script>
         {%endif%}
     {%else%}
         <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>   
     {%endif%}
     <!--Polygon map-->
+    {%if need_polygon_map%}
+    <div id="PolyMap" style="display:block;">
+    {%else%}
     <div id="PolyMap" style="display:none;">
+    {%endif%}
         <div id="panel">
         <div id="color-palette"></div>
             <div>
                 <button id="delete-button">Delete Selected Shape</button>
             </div>
         </div>
+        {%if need_polygon_map%}
+        <div id="map-polygon"></div>
+        <script type="text/javascript">initialize_polygon_map();</script>
+        {%endif%}
     </div>
     <!--end map section--> 
 </td></table>
 
 <table cellpadding="10" align="center">
-<td valign="top" width="97%">
+<td valign="top" width="97%" align="center">
     <!--Results-->
+    <!--Print and download buttons-->
     <div class="results">
-    {% if not results.errors and results %}
-    {%for key_val in meta_display_list%}
-        <b>{{key_val.0}}</b>:<br />
+    {%if not results.errors and results.data%}
+        <table>
+        <td valign="top">
+        <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
+        </td><td valign="top">
+        <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
+        <!--Download form-->
+        <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
+        </td>
+        </table>
+    {%endif%}
+
+    <!--Data-->
+    <table id="printable_table">
+    <td>
+    <p class="message">YOUR PARAMETERS:<br />
+    {%for key_val in params_display_list%}
+        <b>{{key_val.0}}</b>:
         {%for item in key_val.1%}
             {{item}}<br />
         {%endfor%}
     {%endfor%}
-    {{results}}
+    </p>
+    {% if not results.errors and results.data and not results.smry%}
+        <p>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
+        {% for point_data in results.data %}
+        <p class="message" align="left"><b>METADATA</b>:
+            {{results.meta|lookup:forloop.counter0}}
+        </p>
+        <p class="message" align="left"><b>DATA</b>:</p>
+        <table border="1">
+        {%for data in point_data%}
+        <tr>
+        {%for d in data%}
+        <td>{{d}}</td>
+        {%endfor%}
+        </tr>
+        {%endfor%}
+        </table>
+        {% endfor %}
+    {%endif%}<!--end if not results.errors-->
+
+    {%if not results.errors and results.smry%}
+        <p class="message" align="left"><b>DATA SUMMARY</b>:</p>
+        <table border="1">
+        {%for s_data in results.smry%}
+            <tr>
+            {%for s in s_data%}
+                <td>{{s}}</td>
+            {%endfor%}
+            </tr>
+        {%endfor%}
+        </table>
     {%endif%}
-    <div>
+    <div><!--end results-->
+    </td></table><!--End printable table-->
+    </div><!--end div data_results-->
+
 </td></table>
 {%endblock%}
