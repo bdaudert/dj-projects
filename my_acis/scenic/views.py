@@ -355,7 +355,7 @@ def multi_lister(request):
     context = {
         'title': 'Data Lister',
     }
-    initial, checkbox_vals = set_initial_lister(request,'area')
+    initial, checkbox_vals = set_initial_lister(request,'multi')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     #Set initial overlay state for overlay map
     context[initial['overlay_state'].lower() + '_selected'] = 'selected'
@@ -378,7 +378,7 @@ def multi_lister(request):
                 context['need_overlay_map'] = True
             if 'Custom Shape' in form_error.keys():
                 context['need_polygon_map'] = True
-            return render_to_response('scenic/data/area/lister.html', context, context_instance=RequestContext(request))
+            return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
         req = WRCCUtils.request_and_format_data(form_cleaned)
         context['results'] = req
         #Format Data for display and/or download
@@ -414,8 +414,7 @@ def multi_lister(request):
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
-        form = set_form(request,clean=False)
-        initial, checkbox_vals = set_initial_lister(form,'multi')
+        initial, checkbox_vals = set_initial_lister(request,'overlay')
         #checkbox_vals[form['area_type'] + '_selected'] = 'selected'
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         context[initial['overlay_state'] + '_selected'] = 'selected'
@@ -4077,7 +4076,7 @@ def set_display_list(app_name, form):
 #Initializers
 def set_initial_lister(request,req_type):
     '''
-    req_type == single/multi or area
+    req_type == single/multi or overlay
     '''
     initial = {}
     checkbox_vals = {}
@@ -4087,9 +4086,7 @@ def set_initial_lister(request,req_type):
     area_type = None
     if req_type == 'single':
         initial['area_type'] = Get('area_type','station_id')
-    elif req_type == 'multi':
-        initial['area_type'] = Get('area_type','station_ids')
-    elif req_type == 'area':
+    elif req_type in ['multi','overlay']:
         initial['area_type'] = Get('area_type','state')
     #Set area depending on area_type
     initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
@@ -4108,7 +4105,10 @@ def set_initial_lister(request,req_type):
         initial['overlay_state'] = Get('overlay_state','NV')
         initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
         initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
-    initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
+    if req_type == 'overlay':
+        initial['elements'] = Get('elements','maxt,mint,pcpn').split(',')
+    else:
+        initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
     initial['add_degree_days'] = Get('add_degree_days', 'F')
     initial['units'] = Get('units','english')
     if initial['units'] == 'metric':
@@ -4117,7 +4117,7 @@ def set_initial_lister(request,req_type):
         initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
     initial['start_date']  = Get('start_date', fourtnight)
     initial['end_date']  = Get('end_date', yesterday)
-    if req_type == 'area':
+    if req_type == 'multi':
         initial['data_summary'] = Get('data_summary', 'temporal')
     else:
         initial['data_summary'] = Get('data_summary', 'none')

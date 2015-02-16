@@ -387,8 +387,8 @@ function set_hidden_fields(theForm, mainForm) {
             //Only add visible fields and hidden inputs, omit display:none elements
             if ($(this).is(':visible') || input.attr('type')=="hidden") {
                 if (input.attr('name') == 'elements'){
-                    //Need to convert elements to list
-                    addHidden(theForm, input.attr('name'),input.val().toString());
+                    //all vars need to be passed as strings
+                    addHidden(theForm, input.attr('name'),input.val().join());
                 }
                 else {
                     addHidden(theForm, input.attr('name'), input.val());

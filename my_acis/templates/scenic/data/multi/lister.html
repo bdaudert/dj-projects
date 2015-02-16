@@ -44,7 +44,7 @@ $(function(){
 
 <table>
 <td valign="bottom" width="300px">
-    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}area/lister/'"/>
+    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/lister/'"/>
 </td>
 <td valign="top" width="650px" align="left">
     <table>
@@ -223,6 +223,7 @@ $(function(){
     <!--Data-->
     <table id="printable_table">
     <td>
+    {%if results%}
     <p class="message">YOUR PARAMETERS:<br />
     {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>:
@@ -231,6 +232,7 @@ $(function(){
         {%endfor%}
     {%endfor%}
     </p>
+    {%endif%}
     {% if not results.errors and results.data and not results.smry%}
         <p>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
         {% for point_data in results.data %}
