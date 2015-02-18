@@ -167,7 +167,6 @@ a:active { color:#FF0000;}
 }
 /*TAB navigation bar (breadcrumbs)*/
 
-/*
 #nav {
   float: left;
   width: 960px;
@@ -187,7 +186,7 @@ a:active { color:#FF0000;}
   line-height: 40px;
   color:#FFEFD5;
   text-decoration: none;
-  text-shadow: 1px 1px 1px #006666;
+  /*text-shadow: 1px 1px 1px #006666;*/
   margin: 0;
   padding: 0 20px;
   background:#006666 repeat-x;
@@ -196,7 +195,7 @@ a:active { color:#FF0000;}
 #nav .current a, ul#nav li:hover > a  {
   color:#FFEFD5;
   text-decoration: none;
-  text-shadow: 1px 1px 1px #006666;
+  text-shadow: 1px 1px 1px #00906E;
   background: #00906E;
 }
  
@@ -207,11 +206,11 @@ a:active { color:#FF0000;}
 #nav li:hover > ul {
   position: absolute;
   display: block;
-  width: 920px;
-  height: 45px;
+  /*width: 920px;
+  height: 45px;*/
   position: absolute;
   margin: 40px 0 0 0;
-  background:#006666 repeat-x;
+  background:#00906E repeat-x;
   z-index:1;
 }
 } 
@@ -222,7 +221,7 @@ a:active { color:#FF0000;}
   line-height: 45px;
   color:#FFEFD5;
   text-decoration: none;
-  text-shadow: 1px 1px 1px #006666;
+  /*text-shadow: 1px 1px 1px #006666;*/
   margin: 0;
   padding: 0 0 0 0;
   background:#00B98F repeat-x;
@@ -233,11 +232,11 @@ a:active { color:#FF0000;}
   text-decoration: none;
   text-shadow: none;
 }
-/*
 
 
 /*NEW Tab navigation for home page
 http://htmldog.com/techniques/dropdowns*/
+/*
 #nav {
     padding: 0;
     margin: 0;
@@ -282,6 +281,7 @@ http://htmldog.com/techniques/dropdowns*/
     display: block;
     z-index:1;
 }
+*/
 /*END TAB navigation bar*/
 
 /*Submit and Select buttons*/

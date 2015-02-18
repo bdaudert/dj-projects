@@ -53,7 +53,7 @@ $(function(){
             <option value="shape" {{checkbox_vals.shape_selected}}>Custom Shape</option>-->
             </select>
         </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" onclick="ShowPopupDocu('Docu_select_grid_by')">
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" onclick="ShowPopupDocu('Docu_select_grid_by')">
         <div id="Docu_select_grid_by" style="display:none;"></div>
         <script type="text/javascript">                        
             $("#Docu_select_grid_by").load("{{HTML_URL}}/Docu_select_grid_by.html");
@@ -67,7 +67,7 @@ $(function(){
         {%endif%}
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
         <td><input autocomplete="off" type="text" size="20" id="{{initial.select_grid_by}}" name="{{initial.select_grid_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_maps(this)"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up" id="area-pop-up">
             <div id="ht_{{initial.select_grid_by}}"></div>
             <script type="text/javascript">                        
@@ -93,7 +93,7 @@ $(function(){
             <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Deg. Days(50F)</option>
             </select>
         </td>
-        <td><img class="trigger" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+        <td><img class="trigger" alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png">
         <div class="pop-up">
         <div id="ht_elements"></div>
         <script type="text/javascript">                        
@@ -114,7 +114,7 @@ $(function(){
             <option value="F" {{checkbox_vals.add_degree_days_F_selected}}>No</option>
         </select>
         </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
         <div id="ht_add_degree_days"></div>
         <script type="text/javascript">                        
@@ -134,7 +134,7 @@ $(function(){
         {%endif%}
         <td id="Degree Days">Degree Days: </td>
         <td><input type="text" id="degree_days" name="degree_days" value="{{initial.degree_days}}" onchange="update_value(this.value)"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_degree_days"></div>
         <script type="text/javascript">                        
@@ -150,7 +150,7 @@ $(function(){
         {%endif%} 
         <td id="Start Date">Start Date: </td>
         <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value)"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_start_date"></div>
             <script type="text/javascript">                        
@@ -166,7 +166,7 @@ $(function(){
         {%endif%}
         <td id="End Date">End Date: </td>
         <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value)"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_end_date"></div>
             <script type="text/javascript">                        
@@ -201,7 +201,7 @@ $(function(){
             <option value="16" {{checkbox_vals.grid_16_selected}}>WRFG+CGCM3(1970-2000,2040-2070)</option>
             </select>
         </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_grid"></div>
             <script type="text/javascript">                        
@@ -224,7 +224,7 @@ $(function(){
             <option value="sum" {{checkbox_vals.temporal_summary_sum_selected}}>Sum</option>
             </select>
         </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_temporal_summary"></div>
             <script type="text/javascript">                        
@@ -247,7 +247,7 @@ $(function(){
             <option value="large" {{checkbox_vals.image_size_large_selected}}>Large</option>
             </select>
         </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_image_size"></div>
             <script type="text/javascript">                        
@@ -270,7 +270,7 @@ $(function(){
         </td>
         <!--
         <td><input type="text" id="level_number" name="level_number" value="{{initial.level_number}}" onchange="update_value(this.value)"></td>-->
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_level_number"></div>
             <script type="text/javascript">                        
@@ -282,7 +282,7 @@ $(function(){
         <tr valign="top" class="plOpts" style="display:none;">
         <td id="Color Map">Color Map:</td>
         <td><input type="text" id="cmap" name="cmap" value="{{initial.cmap}}" list="US_CMAP" onchange="update_value(this.value)"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_cmap"></div>
             <script type="text/javascript">                        
@@ -301,7 +301,7 @@ $(function(){
             <option value="county" {{checkbox_vals.map_ol_county_selected}}>County</option>
             </select>
         </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_map_ol"></div>
             <script type="text/javascript">                        
@@ -318,7 +318,7 @@ $(function(){
             <option value="none" {{checkbox_vals.interpolation_none_selected}}>None</option>
             </select>
         </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_interpolation"></div>
             <script type="text/javascript">                        
@@ -334,7 +334,7 @@ $(function(){
             <option value="lcc" {{checkbox_vals.projection_lcc_selected}}>Lambert Conformal Conic</option>
             </select>
         </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
             <div id="ht_projection"></div>
             <script type="text/javascript">                        
@@ -532,7 +532,7 @@ $(function(){
             </select>
             </td>
             <!--
-            <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+            <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
             <div class="pop-up">
                 <div id="ht_select_overlay_by">Specify US State</div>
             </div>

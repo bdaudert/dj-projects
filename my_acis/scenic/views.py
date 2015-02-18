@@ -310,12 +310,15 @@ def single_lister(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            WRCCUtils.write_to_csv(response, req)
+            CsvWriter = WRCCClasses.CsvWriter(response,req)
+            CsvWriter.write_to_file()
             return response
         if form_cleaned['data_format'] in ['xl'] and (req['data'] or req['smry']):
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            WRCCUtils.write_to_excel(response,req)
+            #WRCCUtils.write_to_excel(response,req)
+            ExcelWriter = WRCCClasses.ExcelWriter(response,req)
+            ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
         #Save data for download button
@@ -340,12 +343,15 @@ def single_lister(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            WRCCUtils.write_to_csv(response, req)
+            CsvWriter = WRCCClasses.CsvWriter(response,req)
+            CsvWriter.write_to_file()
             return response
         if form['data_format'] in ['xl']:
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            WRCCUtils.write_to_excel(response,req)
+            #WRCCUtils.write_to_excel(response,req)
+            ExcelWriter = WRCCClasses.ExcelWriter(response,req)
+            ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
     return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
@@ -386,7 +392,6 @@ def multi_lister(request):
         #Write data to file if requested
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         file_name = form_cleaned['output_file_name'] + '_' + time_stamp
-        '''
         #Deal with different data formats
         if form_cleaned['data_format'] in ['clm','dlm'] and (req['data'] or req['smry']):
             if form_cleaned['data_format'] == 'clm':
@@ -410,7 +415,7 @@ def multi_lister(request):
             with open(settings.TEMP_DIR + json_file,'w+') as f:
                 f.write(results_json)
             context['json_file'] = json_file
-        '''
+
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
@@ -4022,7 +4027,7 @@ def set_display_keys(app_name,form):
     display_keys = []
     if app_name in ['single_lister','multi_lister']:
         display_keys+=[form['area_type'], 'elements', 'units', 'start_date', 'end_date']
-    elif app_name == 'area_lister':
+    elif app_name == 'multi_lister':
         display_keys+= [form['data_type'], form['area_type'],'data_summary',\
         'elements', 'units', 'start_date', 'end_date']
     return display_keys

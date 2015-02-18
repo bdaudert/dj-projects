@@ -174,7 +174,7 @@ $(function(){
         <option value="shape" {{checkbox_vals.shape_selected}}>Custom Shape</option>
         </select>
     </td>
-    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" onclick="ShowPopupDocu('Docu_select_stations_by')">
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" onclick="ShowPopupDocu('Docu_select_stations_by')">
     <div id="Docu_select_stations_by" style="display:none;"></div>
     <script type="text/javascript">                        
         $("#Docu_select_stations_by").load("{{HTML_URL}}/Docu_select_stations_by.html");
@@ -183,7 +183,7 @@ $(function(){
     <tr id="area" valign="bottom">
     <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
     <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange"update_maps(this);"></td>
-    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up" id="area-pop-up">
         <div id="ht_{{initial.select_stations_by}}"></div>
         <script type="text/javascript">                        
@@ -210,7 +210,7 @@ $(function(){
         <!--<option value="wdmv" {{checkbox_vals.elements_wdmv_selected}}>Wind Movement</option>-->
         </select>
     </td>
-    <td><img class="trigger" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <td><img class="trigger" alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png">
     <div class="pop-up">
     <div id="ht_elements"></div>
     <script type="text/javascript">                        
@@ -227,7 +227,7 @@ $(function(){
         <option value="any" {{checkbox_vals.elements_any_selected}}>Any of the elements</option>
         </select>
     </td>
-    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_elements_constraints"></div>
         <script type="text/javascript">                        
@@ -239,7 +239,7 @@ $(function(){
     <tr valign="bottom">
     <td id="Start Date">Start Date: </td>
     <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}" onchange="update_value(this.value)"></td>
-    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
     <div id="ht_start_date"></div>
     <script type="text/javascript">                        
@@ -251,7 +251,7 @@ $(function(){
     <tr valign="bottom">
     <td id="End Date">End Date: </td>
     <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value)"></td>
-    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
     <div id="ht_end_date"></div>
     <script type="text/javascript">                        
@@ -268,7 +268,7 @@ $(function(){
         <option value="any" {{checkbox_vals.dates_any_selected}}>Any of the dates</option>
         </select>
     </td>
-    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_dates_constraints"></div>
         <script type="text/javascript">                        
