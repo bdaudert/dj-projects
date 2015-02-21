@@ -420,45 +420,44 @@ function set_smry(node){
             $('#flags').css('display','none');
             $('#obs_time').css('display','none');
         }
-        //Enable/Disable html output
-        if ($('#area_type').val().inList(a_list) && $('#data_summary').val() == 'none'){
-            $('#data_format option[value="html"]').attr('disabled',true);
-        }
-        else {
-             $('#data_format option[value="html"]').attr('disabled',false);
+        //Disable html option and show user name and user email
+        //for processing offline
+        if ($('#area_type').length){
+            if ($('#area_type').val().inList(a_list)){
+                $('#data_format option[value="html"]').attr('disabled',true);
+                $('#data_format option[value="clm"]').attr('selected',true);
+                $('#out_file').css('display','table-row');
+                $('#delim').css('display','table-row');
+                $('#un').css('display','table-row');
+                $('#ue').css('display','table-row');
+            }
         }
     }
-    else if (node.value == 'spatial'){
-        $('#spat_summary').css('display','table-row');
-        $('#temp_summary').css('display','none');
+    else if (node.value == 'spatial' || node.value == 'temporal'){
+        if (node.value == 'spatial'){
+            $('#spat_summary').css('display','table-row');
+            $('#temp_summary').css('display','none');
+        }
+        else{
+            $('#spat_summary').css('display','none');
+            $('#temp_summary').css('display','table-row');
+        }
+        //Hide indowed data options
         $('#start_window').css('display','none');
         $('#end_window').css('display','none');
         //Hide flags obs time
         $('#flags').css('display','none');
         $('#obs_time').css('display','none');
         //Enable/Disable html output
-        if ($('#area_type').val().inList(a_list) && $('#data_summary').val() == 'none'){
-            $('#data_format option[value="html"]').attr('disabled',true);
-        }
-        else {
-             $('#data_format option[value="html"]').attr('disabled',false);
-        }
-    }
-    else if (node.value =='temporal'){
-        $('#spat_summary').css('display','none');
-        $('#temp_summary').css('display','table-row');
-        $('#start_window').css('display','none');
-        $('#end_window').css('display','none');
-        //Hide flags obs time
-        $('#flags').css('display','none');
-        $('#obs_time').css('display','none');
-        //Enable/Disable html output
-        if ($('#area_type').val().inList(a_list) && $('#data_summary').val() == 'none'){
-            $('#data_format option[value="html"]').attr('disabled',true);
-        }
-        else {
-             $('#data_format option[value="html"]').attr('disabled',false);
-        }
+        $('#data_format option[value="html"]').attr('disabled',false);
+        //Set html option to selected
+        $('#data_format option[value="html"]').attr('selected',true);
+        //Hide user name and user email fields
+        $('#un').css('display','none');
+        $('#ue').css('display','none');
+        //Hide delimiter and outfile options
+        $('#out_file').css('display','none');
+        $('#delim').css('display','none');
     }
     else if (node.value =='none'){
         $('#spat_summary').css('display','none');

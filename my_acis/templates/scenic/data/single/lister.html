@@ -112,7 +112,7 @@ $(function(){
         <tr class="station" id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</tr>
         {%endif%}
         <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
-        <tr class="station_grid" style="display:table-row;">{% include 'includes/date_format.html'%}</tr>
+        <tr class="station_grid" style="display:none;">{% include 'includes/date_format.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
         <tr id="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
         <tr id="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
@@ -125,7 +125,7 @@ $(function(){
 <td valign="top" width="60%" align="center">
     <!--Form errors and search parameter section-->
     {%if form_error%}
-    <div id="form_error" align="center">
+    <div id="form_error" class="results" align="center">
         <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
         {%for key, val in form_error.items%}
             <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
@@ -162,27 +162,7 @@ $(function(){
 
 <table cellpadding="10" align="center">
 <td valign="top" width="97%">
-    <!--Results-->
-    <!--Print and download buttons-->
-    <div class="results">
-    <!--Show summary first-->
-    {%if results.smry%}
-        <p class="message" align="left"><b>DATA SUMMARY</b>:</p>
-        <table border="1">
-        {%for s_data in results.smry%}
-            <tr>
-            {%for s in s_data%}
-                <td>{{s}}</td>
-            {%endfor%}
-            </tr>
-        {%endfor%}
-        </table><br />
-        <!--<img src = "{{MEDIA_URL}}img/show_hide_button.png" onclick="ShowHide('data_results')"></a>-->
-         <div id="data_results" style="display:none">
-    {%else%}
-        <div id="data_results">
-    {%endif%}
-    
+    {{xx}}
     {%if not results.errors and results.data%}
         <table>
         <td valign="top">
@@ -198,7 +178,7 @@ $(function(){
     <!--Data-->
     <table id="printable_table">
     <td>
-    {% if results.data%}
+    {% if results.data or results.smry%}
     <p class="message">YOUR PARAMETERS:<br />
     {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>:
@@ -209,7 +189,20 @@ $(function(){
     </p>
     {%endif%}
 
-    {% if not results.errors and results.data %}
+    {%if not results.errors and results.smry %}
+        <p class="message" align="left"><b>DATA SUMMARY</b>:</p>
+        <table border="1">
+        {%for s_data in results.smry%}
+            <tr>
+            {%for s in s_data%}
+                <td>{{s}}</td>
+            {%endfor%}
+            </tr>
+        {%endfor%}
+        </table><br />
+    {%endif%} 
+
+    {% if not results.errors and not results.smry and results.data %}
         <p class="message" align="left"><b>METADATA</b>:</p>
         <p align="left">
         {%for key_val in meta_display_list%}

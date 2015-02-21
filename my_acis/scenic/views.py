@@ -266,6 +266,7 @@ def single_lister(request):
     if 'formData' in request.POST:
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
+        context['xx'] = form_cleaned
         #Check form fields
         fields_to_check = [form_cleaned['area_type'],'start_date','end_date','start_window','end_window','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -295,9 +296,11 @@ def single_lister(request):
             context['results'] = req
             return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
         context['results'] = req
-        context['params_display_list'] = set_display_list('single_lister', form_cleaned)
+        header_keys = [form_cleaned['area_type'],'data_summary',\
+        'elements', 'units', 'start_date', 'end_date']
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
         if 'meta' in req.keys() and req['meta']:
-            meta_keys = set_meta_keys('single_lister',form_cleaned)
+            meta_keys = WRCCUtils.get_meta_keys(form_cleaned)
             meta_display_list = WRCCUtils.metadict_to_display_list(req['meta'][0], meta_keys,form)
             context['meta_display_list'] = meta_display_list
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
@@ -371,9 +374,8 @@ def multi_lister(request):
         context['xx'] = form_cleaned
         #Check for form errors
         fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date','degree_days']
-        if form_cleaned['data_summary'] == 'none':
+        if form_cleaned['data_summary'] in['none','windowed_data']:
             fields_to_check.append('user_email')
-            context['large_request'] = True
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -385,10 +387,22 @@ def multi_lister(request):
             if 'Custom Shape' in form_error.keys():
                 context['need_polygon_map'] = True
             return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
+
+        #Deal with large requests
+        if form_cleaned['data_summary'] in['none','windowed_data']:
+            context['large_request'] = True
+            #Process request offline
+            json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
+            WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
+            return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
+
+        #Data request
         req = WRCCUtils.request_and_format_data(form_cleaned)
         context['results'] = req
         #Format Data for display and/or download
-        context['params_display_list'] = set_display_list('multi_lister', form_cleaned)
+        header_keys = ['data_type',form_cleaned['area_type'],\
+            'data_summary','elements','units','start_date', 'end_date']
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
         #Write data to file if requested
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         file_name = form_cleaned['output_file_name'] + '_' + time_stamp
@@ -400,12 +414,14 @@ def multi_lister(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            WRCCUtils.write_to_csv(response, req)
+            CsvWriter = WRCCClasses.CsvWriter(response,req)
+            CsvWriter.write_to_file()
             return response
         if form_cleaned['data_format'] in ['xl'] and (req['data'] or req['smry']):
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            WRCCUtils.write_to_excel(response,req)
+            ExcelWriter = WRCCClasses.ExcelWriter(response,req)
+            ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
         #Save data for download button
@@ -423,6 +439,33 @@ def multi_lister(request):
         #checkbox_vals[form['area_type'] + '_selected'] = 'selected'
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         context[initial['overlay_state'] + '_selected'] = 'selected'
+
+    #Download button pressed
+    if 'formDownload' in request.POST:
+        form = set_form(request,clean=False)
+        json_file = request.POST.get('json_file', None)
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        file_name = form['output_file_name'] + '_' + time_stamp
+        with open(settings.TEMP_DIR + json_file, 'r') as f:
+            req =  json.load(f)
+        if form['data_format'] in ['clm','dlm']:
+            if form['data_format'] == 'clm':
+                file_extension = '.txt'
+            else:
+                file_extension = '.dat'
+            response = HttpResponse(mimetype='text/csv')
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
+            CsvWriter = WRCCClasses.CsvWriter(response,req)
+            CsvWriter.write_to_file()
+            return response
+        if form['data_format'] in ['xl']:
+            file_extension = '.xls'
+            response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
+            #WRCCUtils.write_to_excel(response,req)
+            ExcelWriter = WRCCClasses.ExcelWriter(response,req)
+            ExcelWriter.write_to_file()
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
+            return response
     return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
 
 def data_station_temp(request):
@@ -4022,62 +4065,6 @@ def set_form(request, clean=True):
                 form['elements'].append(dd)
     return form
 
-#Sets keys that should be displayed to user after request completion
-def set_display_keys(app_name,form):
-    display_keys = []
-    if app_name in ['single_lister','multi_lister']:
-        display_keys+=[form['area_type'], 'elements', 'units', 'start_date', 'end_date']
-    elif app_name == 'multi_lister':
-        display_keys+= [form['data_type'], form['area_type'],'data_summary',\
-        'elements', 'units', 'start_date', 'end_date']
-    return display_keys
-
-def set_meta_keys(app_name,form):
-    meta_keys = []
-    if app_name in ['single_lister','multi_lister']:
-        if  form['area_type'] in ['station_id','station_ids']:
-            meta_keys = ['name', 'state', 'sids', 'elev', 'll', 'valid_daterange']
-        else:
-            meta_keys+=['ll','elev']
-    return meta_keys
-
-#Sets list of [key, form[key]] pairs for html display of request parameters
-def set_display_list(app_name, form):
-    display_list = []
-    display_keys = set_display_keys(app_name,form)
-    for key in display_keys:
-        #Treat elements separately
-        if key == 'elements':
-            el_list_long = []
-            el_list = WRCCUtils.convert_elements_to_list(form['elements'])
-            for el in el_list:
-                el_strip,base_temp = WRCCUtils.get_el_and_base_temp(el)
-                unit = WRCCData.UNITS_ENGLISH[el_strip]
-                if form['units'] == 'metric':
-                    unit = WRCCData.UNITS_METRIC[el_strip]
-                    base_temp = WRCCUtils.convert_to_metric(el_strip,base_temp)
-                if not base_temp:
-                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el_strip] + ' (' + unit + ')')
-                else:
-                    el_list_long.append(WRCCData.DISPLAY_PARAMS[el_strip] + ' (' + unit + '), Base: ' + str(base_temp))
-            display_list.append([WRCCData.DISPLAY_PARAMS[key],el_list_long])
-        elif key in ['station','grid']:
-            display_list.append(['Data Type',[WRCCData.DISPLAY_PARAMS[key]]])
-        elif key == 'data_summary':
-            if form['data_summary'] == 'none':
-                val = ''
-            if form['data_summary'] == 'spatial':
-                val = WRCCData.DISPLAY_PARAMS[form['spatial_summary']]
-            if form['data_summary'] == 'temporal':
-                val = WRCCData.DISPLAY_PARAMS[form['temporal_summary']]
-            if form['data_summary'] == 'windowed_data':
-                val = form['start_window'] + ' - ' + form['end_window']
-            display_list.append([WRCCData.DISPLAY_PARAMS[form['data_summary']],[val]])
-        else:
-            display_list.append([WRCCData.DISPLAY_PARAMS[key],[form[key]]])
-
-    return display_list
-
 #Initializers
 def set_initial_lister(request,req_type):
     '''
@@ -4120,8 +4107,8 @@ def set_initial_lister(request,req_type):
         initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
     else:
         initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
-    initial['start_date']  = Get('start_date', fourtnight)
-    initial['end_date']  = Get('end_date', yesterday)
+    initial['start_date']  = Get('start_date', WRCCUtils.format_date_string(fourtnight,'-'))
+    initial['end_date']  = Get('end_date', WRCCUtils.format_date_string(yesterday,'-'))
     if req_type == 'multi':
         initial['data_summary'] = Get('data_summary', 'temporal')
     else:

@@ -115,18 +115,18 @@ $(function(){
         <tr class="station" id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</tr>
         {%endif%}
         <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
-        <tr class="station_grid" style="display:table-row;">{% include 'includes/date_format.html'%}</tr>
+        <tr class="station_grid" style="display:none;">{% include 'includes/date_format.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
-        {%if initial.data_summary == "none"%}
+        {%if initial.data_summary == "none" or initial.data_summary == "windowed_data" %}
         <tr id="delim" style="display:table-row;">{% include 'includes/delimiter.html'%}</tr>
         <tr id="out_file" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
-        <tr id="un">{% include 'includes/user_name.html'%}</tr>
-        <tr>{% include 'includes/user_email.html'%}</tr>
+        <tr id="un" style="display:table-row;">{% include 'includes/user_name.html'%}</tr>
+        <tr id="ue" style="display:table-row;">{% include 'includes/user_email.html'%}</tr>
         {%else%}
         <tr id="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
         <tr id="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
-        <tr class="large_request" id="un" style="display:none;">{% include 'includes/user_name.html'%}</tr>
-        <tr class="large_request" id="ue" style="display:none;">{% include 'includes/user_email.html'%}</tr>
+        <tr id="un" style="display:none;">{% include 'includes/user_name.html'%}</tr>
+        <tr id="ue" style="display:none;">{% include 'includes/user_email.html'%}</tr>
         {%endif%}
         </table>
         <input style="margin:5px" type="submit" value="Get data" name="formData"/>
@@ -136,7 +136,7 @@ $(function(){
 <td valign="top" width="60%" align="center">
     <!--Form Errors and search parameter section-->
     {%if form_error%}
-    <div id="form_error">
+    <div id="form_error" class="results">
         <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
         {%for key, val in form_error.items%}
             <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
