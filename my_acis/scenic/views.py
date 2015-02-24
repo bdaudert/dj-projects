@@ -468,6 +468,298 @@ def multi_lister(request):
             return response
     return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
 
+def tsummary(request):
+    context = {
+        'title': 'Temporal Summary',
+    }
+    json_file = request.GET.get('json_file', None)
+    #Check if we are coming in from other page, e.g. Gridded Data
+    #Set initial accordingly
+    if json_file is not None:
+        json_data = WRCCUtils.load_json_data_from_file(settings.TEMP_DIR + json_file)
+        if not json_data or not 'search_params' in json_data.keys():
+            initial,checkbox_vals = set_temporal_summary_initial(request)
+        else:
+            initial,checkbox_vals = set_temporal_summary_initial(json_data['search_params'])
+    else:
+        initial,checkbox_vals = set_temporal_summary_initial(request)
+    #Plot Options
+    initial_plot, checkbox_vals_plot = set_map_plot_options(request)
+    join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
+    context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+    if initial['area_type'] != 'bounding_box':
+        context['hide_bbox_map'] = True
+    #Set up maps if needed
+    #context[initial['area_select']] = WRCCData.AREA_DEFAULTS[initial['area_select']]
+    #context[initial['overlay_state'] + '_selected'] = 'selected'
+
+    #Link from other page
+    if request.method == 'GET' and 'elements' in request.GET:
+        form_cleaned = set_form(request,clean=True)
+        form = set_form(request,clean=False)
+        header_keys = [form_cleaned['area_type'],'temporal_summary',\
+            'elements','units','start_date', 'end_date','grid']
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
+
+    if 'formMap' in request.POST:
+        context['hide_bbox_map'] = True
+        form = set_form(request, clean=False)
+        form_cleaned = set_form(request)
+        #Set initials
+        initial,checkbox_vals = set_temporal_summary_initial(form)
+        initial_plot, checkbox_vals_plot = set_map_plot_options(form)
+        join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        header_keys = [form_cleaned['area_type'],'temporal_summary',\
+            'elements','units','start_date', 'end_date','grid']
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
+
+        #Back Button/download files issue fix:
+        if not 'area_type' in form.keys():
+            for key in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
+                if key in form.keys():
+                    form['area_type'] = key
+                    break
+
+        #Form Check
+        fields_to_check = ['start_date', 'end_date','degree_days','level_number', 'cmap', form['area_type'], 'elements']
+        form_error = check_form(form_cleaned, fields_to_check)
+        if form_error:
+            context['form_error'] = form_error
+            if form_cleaned['area_type'] in ['basin','county','county_warning_area', 'climate_division']:
+                context['need_overlay_map'] = True
+            kml_file_path = create_kml_file(form['area_type'], form['overlay_state'])
+            context['kml_file_path'] = kml_file_path
+            return render_to_response('scenic/data/multi/temporal_summary.html', context, context_instance=RequestContext(request))
+
+        #Generate Maps
+        figure_files = []
+        image = {
+            'type':'png',
+            'proj':form['projection'],
+            'interp':form['interpolation'],
+            'overlays':[form['map_ol'], 'county:0.5:black'],
+            'cmap':form['cmap'],
+            'width':WRCCData.IMAGE_SIZES_MAP[form['image_size']]
+        }
+        params = {
+            'image':image,
+            'output':'json',
+            'area_type':WRCCData.SEARCH_AREA_FORM_TO_ACIS[form['area_type']],
+            WRCCData.SEARCH_AREA_FORM_TO_ACIS[form['area_type']]:form[form['area_type']],
+            'grid': form['grid'],
+            'sdate':form['start_date'],
+            'edate':form['end_date'],
+            'units':form['units'],
+            'level_number':form['level_number'],
+            'temporal_summary':form['temporal_summary'],
+            'elems':[]
+            }
+        for el_idx,element in enumerate(form_cleaned['elements']):
+            pms={}
+            for key, val in params.iteritems():
+                pms[key] = params[key]
+            a_el_dict = {
+                'name':element,
+                'smry':form_cleaned['temporal_summary'],
+                'smry_only':1
+            }
+            if pms['units'] == 'metric':
+                if element in ['pcpn','snow','snwd']:
+                    a_el_dict['units'] = 'mm'
+                else:
+                    a_el_dict['units'] = 'degreeC'
+            pms['elems'] = [a_el_dict]
+            fig = WRCCClasses.GridFigure(pms)
+            result = fig.get_grid()
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+            figure_file = 'clim_sum_map_' + time_stamp + '.png'
+            file_path_big =settings.TEMP_DIR + figure_file
+            fig.build_figure(result, file_path_big)
+            figure_files.append(figure_file)
+        context['JSON_URL'] = settings.TMP_URL
+        context['figure_files'] = figure_files
+
+    return render_to_response('scenic/data/multi/temporal_summary.html', context, context_instance=RequestContext(request))
+
+def ssummary(request):
+    context = {
+        'title': 'Spatial Summary',
+    }
+    json_file = request.GET.get('json_file', None)
+    #Check if we are coming in from other page, e.g. Gridded Data
+    #Set initial accordingly
+    if json_file is not None and json_file !='':
+        with open(settings.TEMP_DIR + json_file, 'r') as f:
+            try:
+                json_data = WRCCUtils.u_convert(json.loads(f.read()))
+                initial,checkbox_vals = set_spatial_summary_initial(json_data['search_params'])
+                #Link from other page
+                user_params_list, user_params_dict =set_user_params(json_data['search_params'], 'spatial_summary')
+                context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
+            except:
+                initial,checkbox_vals = set_spatial_summary_initial(request)
+    else:
+        initial,checkbox_vals = set_spatial_summary_initial(request)
+
+    if 'location' in initial.keys():
+        context['need_gridpoint_map'] = True
+    initial_plot, checkbox_vals_plot = set_plot_options(request)
+    join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
+    context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+    #Set up maps if needed
+    context['host'] = settings.HOST
+    context['area_type'] = initial['select_grid_by']
+    context[initial['select_grid_by']] = WRCCData.AREA_DEFAULTS[initial['select_grid_by']]
+    context[initial['overlay_state'] + '_selected'] = 'selected'
+
+    #Link from other page
+    if request.method == 'GET' and 'elements' in request.GET:
+        form_cleaned = set_form(request,clean=True)
+        form = set_form(request,clean=False)
+        user_params_list, user_params_dict = set_user_params(form, 'spatial_summary')
+        context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
+
+    if 'formTS' in request.POST:
+        context['need_gridpoint_map'] = False
+        form = set_form(request, clean=False)
+        form_cleaned = set_form(request)
+        #Back Button/download files issue fix:
+        #if select_grid_by none, find it
+        if not 'select_grid_by' in form_cleaned.keys() or form_cleaned['select_grid_by'] not in form_cleaned.keys():
+            for key in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
+                if key in form.keys():
+                    form['select_grid_by'] = key
+                    form_cleaned['select_grid_by'] = key
+                    break
+        #Form Check
+        fields_to_check = [form['select_grid_by'],'start_date', 'end_date','degree_days', 'elements']
+        #,'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
+        form_error = check_form(form_cleaned, fields_to_check)
+        if form_error:
+            context['form_error'] = form_error
+            if form_cleaned['select_grid_by'] in ['basin','county','county_warning_area', 'climate_division']:
+                context['need_overlay_map'] = True
+            kml_file_path = create_kml_file(form['select_grid_by'], form['overlay_state'])
+            context['kml_file_path'] = kml_file_path
+            return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+        #Set initials
+        initial,checkbox_vals = set_spatial_summary_initial(form)
+        initial_plot, checkbox_vals_plot = set_plot_options(form)
+        join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        #Display liust and serach params
+        search_params, display_params_list =  set_spatial_summary_params(form_cleaned)
+        context['display_params_list'] = display_params_list
+        #joins plot opts to search_params
+        join_dicts(search_params,initial_plot)
+        #Data Request
+        #Skip data generation of it has already been performed
+        json_file = request.GET.get('json_file', None)
+        if json_file is not None:
+            context['json_file'] =json_file
+            context['JSON_URL'] = settings.TEMP_DIR
+            with open(settings.TEMP_DIR + json_file, 'r') as f:
+                try:
+                    json_data = WRCCUtils.u_convert(json.loads(f.read()))
+                    if not 'graph_data' in json_data.keys() or not 'download_data' in json_data.keys():
+                        context['error'] = 'No data found in file %s' %json_file
+                        return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+                except Exception, e:
+                    context['error'] = 'Error when reading %s: %s' (json_file, str(e))
+                    return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+            summary_time_series = json_data['graph_data']
+            #Check that we have enough data to generate plot (enough > 2)
+            if not summary_time_series:
+                context['error'] = 'No data found to generate graph. Please check your input variables.'
+                return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+            elif len(summary_time_series[0])<=2:
+                context['error'] = 'Not enough data to generate graph. Please make sure to have a time range  larger than 2 days.'
+                return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+            download_data = json_data['download_data']
+        else:
+            #set up bbox query for area_type
+            data_request_params,shape_type,shape_coords,PointIn,poly  = set_params_for_shape_queries(search_params)
+
+            #Find data
+            try:
+                req = AcisWS.GridData(data_request_params)
+            except Exception, e:
+                context['error'] = 'Error in data request: ' + str(e)
+                return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+            if not 'data' in req.keys():
+                context['error'] = 'No data found for this set of parameters.'
+                return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+            #Generate time series from data request
+            summary_time_series, download_data = compute_spatial_summary_summary(req,search_params,poly,PointIn)
+            context['req']=req
+            #Check that we have enough data to generate plot (enough > 2)
+            if not summary_time_series:
+                context['error'] = 'No data found to generate graph. Please check your input variables.'
+                return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+            elif len(summary_time_series[0])<=2:
+                context['error'] = 'Not enough data to generate graph. Please make sure to have a time range  larger than 2 days.'
+                return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+        #Write data in download format
+        #Set rest of search_params,context variables and save results
+        search_params['spatial_summary'] = WRCCData.DISPLAY_PARAMS[form['spatial_summary']]
+        context['search_params'] = search_params
+        context['results']= summary_time_series
+        context['width'] = WRCCData.IMAGE_SIZES[search_params['image_size']][0]
+        context['height'] = WRCCData.IMAGE_SIZES[search_params['image_size']][1]
+
+        #Write results to json file
+        json_dict = {
+            'search_params':search_params,
+            'display_params_list':display_params_list,
+            'download_data':download_data,
+            'graph_data':summary_time_series
+        }
+        results_json = json.dumps(json_dict)
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        json_file = '%s_spatial_summary.json' %(time_stamp)
+        f = open(settings.TEMP_DIR + '%s' %(json_file),'w+')
+        f.write(results_json)
+        f.close()
+        context['JSON_URL'] = settings.TMP_URL
+        context['json_file'] = json_file
+
+    #overlay map generation
+    if 'formOverlay' in request.POST:
+        form = set_form(request, clean=False)
+        context['form'] = form
+        context['need_overlay_map'] = True
+        context['need_gridpoint_map'] = False
+        initial, checkbox_vals = set_spatial_summary_initial(request)
+        initial_plot, checkbox_vals_plot = set_plot_options(form)
+        join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
+        #Override initial where needed
+        initial['select_grid_by'] = form['select_overlay_by']
+        checkbox_vals[form['select_overlay_by'] + '_selected'] = 'selected'
+        initial['area_type_value'] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
+        initial[form['select_overlay_by']] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
+        initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[form['select_overlay_by']]
+        initial['autofill_list'] = 'US_' + form['select_overlay_by']
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        context[form['overlay_state'] + '_selected'] = 'selected'
+        kml_file_path = create_kml_file(form['select_overlay_by'], form['overlay_state'])
+        context['kml_file_path'] = kml_file_path
+        context['area_type'] = form['select_overlay_by']
+        context['host'] = settings.HOST
+
+    #Downlaod Table Data
+    if 'formDownload' in request.POST:
+        data_format = request.POST.get('data_format', 'clm')
+        delimiter = request.POST.get('delimiter', 'comma')
+        output_file_name = request.POST.get('output_file_name', 'output')
+        json_file = request.POST.get('json_file', None)
+        with open(settings.TEMP_DIR + json_file, 'r') as f:
+            json_dict =  json.load(f)
+        DDJ = WRCCClasses.DownloadDataJob('spatial_summary',data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_file)
+        return DDJ.write_to_file()
+
+    return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+
 def data_station_temp(request):
     context = {
         'title': 'Data download in progess...',
@@ -3787,13 +4079,10 @@ def set_temporal_summary_initial(request):
     checkbox_vals = {}
     Get = set_GET(request)
     Getlist = set_GET_list(request)
-    initial['select_grid_by'] = Get('select_grid_by', 'state')
-    initial[str(initial['select_grid_by'])] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
-    initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_grid_by']]
-    initial['area_type_value'] = Get(str(initial['select_grid_by']), WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
-    #initial['area_type_value'] = Get('area_type_value', WRCCData.AREA_DEFAULTS[initial['select_grid_by']])
+    initial['area_type'] = Get('area_type','state')
+    initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['area_type']]
+    initial['area_type_value'] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
     initial['overlay_state'] = Get('overlay_state', 'nv')
-    initial['autofill_list'] = 'US_' + initial['select_grid_by']
     el_str = Get('elements',None)
     if isinstance(el_str,basestring) and el_str:
         initial['elements']= el_str.replace(' ','').split(',')
@@ -3802,6 +4091,7 @@ def set_temporal_summary_initial(request):
     initial['elements_string'] = ','.join(initial['elements'])
     initial['add_degree_days'] = Get('add_degree_days', 'F')
     initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
+    initial['units'] = Get('units', 'english')
     initial['start_date']  = Get('start_date', week)
     initial['end_date']  = Get('end_date', yesterday)
     initial['grid'] = Get('grid', '1')
@@ -3810,7 +4100,7 @@ def set_temporal_summary_initial(request):
     #set the check box values
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
         checkbox_vals[area_type + '_selected'] =''
-        if area_type == initial['select_grid_by']:
+        if area_type == initial['area_type']:
             checkbox_vals[area_type + '_selected'] ='selected'
     for e in ['maxt','mint','avgt', 'pcpn','gdd','hdd','cdd']:
         checkbox_vals['elements_' + e + '_selected'] =''
@@ -3822,6 +4112,10 @@ def set_temporal_summary_initial(request):
             checkbox_vals[cbv + '_' + bl + '_selected'] = ''
             if initial[cbv] == bl:
                 checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
+    for u in ['english', 'metric']:
+        checkbox_vals['units_' + u + '_selected'] =''
+        if u == initial['units']:
+            checkbox_vals['units_' +u + '_selected'] ='selected'
     for g in ['1','21','3','4','5','6','7','8','9','10','11','12','13','14','15','16']:
         checkbox_vals['grid_' + g + '_selected'] =''
         if initial['grid'] == g:
@@ -4005,7 +4299,7 @@ def set_form(request, clean=True):
     if isinstance(request,dict):
         form= dict(request)
         #Special case elements, always needs to be list
-        form['elements'] = WRCCUtils.convert_elements_to_list(form_dict['elements'])
+        form['elements'] = WRCCUtils.convert_elements_to_list(form['elements'])
     elif request.method == 'POST':
         form = dict((str(x),str(y)) for x,y in request.POST.items())
         #Special case elements, always needs to be list
@@ -4022,7 +4316,7 @@ def set_form(request, clean=True):
         try:
             form = dict((str(x),str(y)) for x,y in request.items())
         except:
-            form_dict = {}
+            form = {}
     if 'csrfmiddlewaretoken' in form.keys():
         del form['csrfmiddlewaretoken']
 

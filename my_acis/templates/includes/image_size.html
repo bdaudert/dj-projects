@@ -1,0 +1,16 @@
+        <td>Image Size: </td>
+        <td>
+            <select id="image_size" name="image_size" onchange="update_value(this.value)">
+            <option value="small" {{checkbox_vals.image_size_small_selected}}>Small</option>
+            <option value="medium" {{checkbox_vals.image_size_medium_selected}}>Medium</option>
+            <option value="large" {{checkbox_vals.image_size_large_selected}}>Large</option>
+            </select>
+        </td>
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_image_size"></div>
+            <script type="text/javascript">
+            $("#ht_image_size").load("{{HTML_URL}}/Docu_help_texts.html #ht_image_size");
+            </script>
+        </div>
+        </td>

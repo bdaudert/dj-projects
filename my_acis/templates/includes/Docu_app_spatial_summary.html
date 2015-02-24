@@ -13,15 +13,64 @@
     </ul>
     </p><p>
     <p class="error">What datasets can be used?</p>
-    <p>This tool works with the NRCC interpolated and<br />
-    the NRCC Hi-Resolution daily gridded datasets developed<br /> 
-    at the Northern Regional Climate Center (NRCC)<br />
-    as well as with a variety of daily NARCCAP modeled datasets.<br />
-    For more information on NRCC interpolated, NRCC Hi-Resolution:<br />
-    <a class="pop_link" target="_blank" href="https://gist.github.com/4197956"><font color="#0000FF">GridACIS grids 1 and 3</font></a><br />
-    For more information and direct access to NARCCAP<br />
-    (North American Regional Climate Change Assessment Program):<br />
-    <a class="pop_link" target="_blank" href="http://www.earthsystemgrid.org/project/narccap.html"><font color="#0000FF">NARCCAP data page</font></a>
+    <p> Both station and grid data can be used to generate the time series.<br />
+    <b>Station Networks: </b><br />
+    <a  class="pop_link" target="_blank" href="http://cyclone1.dri.edu/csc/media/html/station_id_system_docu.html"><font color="#0000FF">Overview of station networks</font></a><br />
+    External links:
+    <ul>
+    <li><a class="pop_link" target="_blank" href="http://www.ncdc.noaa.gov/homr/"><font color="#0000FF">WBAN</font></a></li>
+    <li><a class="pop_link" target="_blank" href="http://www.nws.noaa.gov/om/coop/"><font color="#0000FF">COOP</font></a></li>
+    <li><a class="pop_link" target="_blank" href="http://www.ncdc.noaa.gov/oa/climate/ghcn-daily/"><font color="#0000FF">GHCN</font></a></li>
+    <li><a class="pop_link" target="_blank" href="http://www.icao.int/Pages/default.aspx"><font color="#0000FF">ICAO</font></a></li>
+    <li><a class="pop_link" target="_blank" href="http://www.weather.gov/"><font color="#0000FF">NWSLI</font></a></li>
+    <li><a class="pop_link" target="_blank" href="http://www.faa.gov/"><font color="#0000FF">FAA</font></a></li>
+    <li><a class="pop_link" target="_blank" href="http://www.wmo.int/pages/index_en.html"><font color="#0000FF">WMO</font></a></li>
+    <li><a class="pop_link" target="_blank" href="http://www.cocorahs.org/"><font color="#0000FF">CoCoRaHS</font></a></li>
+    <li><a class="pop_link" target="_blank" href="http://threadex.rcc-acis.org/"><font color="#0000FF">ThreadEx</font></a></li>
+    </ul>
+    <b>Gridded datasets:</b><br />
+    <p class="pop_link" onClick="ShowHide('Docu_NRCC_INT')"><u>NRCC Interpolated</u></p>
+    <div id="Docu_NRCC_INT" style="display:none;"></div>
+    <script type="text/javascript">                        
+    $("#Docu_NRCC_INT").load("/csc/media/html/Docu_grids.html #NRCC_INT");
+    </script>
+    <p class="pop_link" onClick="ShowHide('Docu_NRCC_INT_HI')"><u>NRCC Interpolated Hi-Res</u></p>
+        <div id="Docu_NRCC_INT_HI" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_NRCC_INT_HI").load("/csc/media/html/Docu_grids.html #NRCC_INT_HI");
+        </script>
+    <p class="pop_link" onClick="ShowHide('Docu_PRISM')"><u>PRISM</u></p>
+        <div id="Docu_PRISM" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_PRISM").load("/csc/media/html/Docu_grids.html #PRISM");
+        </script>
+    <p class="pop_link" onClick="ShowHide('Docu_CRCM')"><u>NARCCAP - CRCM</u></p>
+        <div id="Docu_CRCM" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_CRCM").load("/csc/media/html/Docu_grids.html #CRCM");
+        </script>
+    <p class="pop_link" onClick="ShowHide('Docu_HRM3')"><u>NARCCAP - HRM3</u></p>
+        <div id="Docu_HRM3" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_HRM3").load("/csc/media/html/Docu_grids.html #HRM3");
+        </script>
+    <p class="pop_link" onClick="ShowHide('Docu_MM5I')"><u>NARCCAP - MM5I</u></p>
+        <div id="Docu_MM5I" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_MM5I").load("/csc/media/html/Docu_grids.html #MM5I");
+        </script>
+    <p class="pop_link" onClick="ShowHide('Docu_RCM3')"><u>NARCCAP - RCM3</u></p>
+        <div id="Docu_RCM3" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_RCM3").load("/csc/media/html/Docu_grids.html #RCM3");
+        </script>
+    <p class="pop_link" onClick="ShowHide('Docu_WRFG')"><u>NARCCAP - WRFG</u></p>
+        <div id="Docu_WRFG" style="display:none;"></div>
+        <script type="text/javascript">                        
+        $("#Docu_WRFG").load("/csc/media/html/Docu_grids.html #WRFG");
+        </script>
+    All data sets are made available through the ACIS system.<br />
+    <a class="pop_link" target="_blank" href="http://rcc-acis.unl.edu/index.php"><font color="#0000FF">ACIS Home Page</font></a></p>
     <p class="error">What can you do with this tool?</p>
     <p>Generate Time Series</p>
     <img alt="AreaTS" title="AreaTS" width="400px"  height="300px" src="/csc/media/img/Area_TS.png">
