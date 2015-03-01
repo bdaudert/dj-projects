@@ -28,16 +28,13 @@ hide_errors_results_on_change('fLikelihood');
     <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
     </tr>
 </table>
-
 <script type="text/javascript">                        
     $("#tool_info_head").load("{{HTML_URL}}Buttons.html .tool_info");
 </script>
 <div id="tool_info" style="display:none;"></div>
-
 <script type="text/javascript">            
     $("#tool_info").load("{{HTML_URL}}Docu_GRID_SODXTRMTS.html");
 </script>
-
 <script type="text/javascript">            
     $("#how_to_head").load("{{HTML_URL}}Buttons.html .tool_how_to");
 </script>
@@ -98,7 +95,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
     <tr>
     <td valign="top">Location: </td>
     <td><input autocomplete="off" type="text" size="20" id="location" name="location" value="{{initial.location}}" onchange="update_maps(this);"></td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_location"></div>
         <script type="text/javascript">                        
@@ -127,7 +124,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
     <option value="16" {{checkbox_vals.grid_16_selected}}>WRFG+CGCM3(1970-2000,2040-2070)</option>
     </select>
     </td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_grid"></div>
         <script type="text/javascript">                        
@@ -139,7 +136,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
     <tr>
     <td id="Start Date">Start Date: </td>
     <td><input type="text" id="start_date" name="start_date" value="{{initial.start_date}}"></td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_start_date"></div>
         <script type="text/javascript">                        
@@ -151,7 +148,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
     <tr >
     <td id="End Date">End Date: </td>
     <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}"></td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_end_date"></div>
         <script type="text/javascript">                        
@@ -175,7 +172,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
     <option value="gdd" {{checkbox_vals.elements_gdd_selected}}>Growing Deg. Days(50F/10C)</option>
     </select>
     </td>  
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_elements"></div>
         <script type="text/javascript">                        
@@ -195,7 +192,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
         <input type="text" id="maxt_threshold_low" name="maxt_threshold_low" value={{initial.maxt_threshold_low}}><br />
         <input type="text" id="maxt_threshold_high" name="maxt_threshold_high" value={{initial.maxt_threshold_high}}>
     </td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_likelihood_threshold"></div>
         <script type="text/javascript">                        
@@ -215,7 +212,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
         <input type="text" id="mint_threshold_low" name="mint_threshold_low" value={{initial.mint_threshold_low}}><br />
         <input type="text" id="mint_threshold_high" name="mint_threshold_high" value={{initial.mint_threshold_high}}>
     </td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_likelihood_threshold"></div>
         <script type="text/javascript">                        
@@ -235,7 +232,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
         <input type="text" id="avgt_threshold_low" name="avgt_threshold_low" value={{initial.avgt_threshold_low}}><br />
         <input type="text" id="avgt_threshold_high" name="avgt_threshold_high" value={{initial.avgt_threshold_high}}>
     </td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_likelihood_threshold"></div>
         <script type="text/javascript">                        
@@ -255,7 +252,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
         <input type="text" id="pcpn_threshold_low" name="pcpn_threshold_low" value={{initial.pcpn_threshold_low}}><br />
         <input type="text" id="pcpn_threshold_high" name="pcpn_threshold_high" value={{initial.pcpn_threshold_high}}>
     </td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_likelihood_threshold"></div>
         <script type="text/javascript">                        
@@ -275,7 +272,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
         <input type="text" id="snow_threshold_low" name="snow_threshold_low" value={{initial.snow_threshold_low}}><br />
         <input type="text" id="snow_threshold_high" name="snow_threshold_high" value={{initial.snow_threshold_high}}>
     </td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_likelihood_threshold"></div>
         <script type="text/javascript">                        
@@ -295,7 +292,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
         <input type="text" id="snwd_threshold_low" name="snwd_threshold_low" value={{initial.snwd_threshold_low}}><br />
         <input type="text" id="snwd_threshold_high" name="snwd_threshold_high" value={{initial.snwd_threshold_high}}>
     </td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_likelihood_threshold"></div>
         <script type="text/javascript">                        
@@ -315,7 +312,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
         <input type="text" id="hdd_threshold_low" name="hdd_threshold_low" value={{initial.hdd_threshold_low}}><br />
         <input type="text" id="hdd_threshold_high" name="hdd_threshold_high" value={{initial.hdd_threshold_high}}>
     </td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_likelihood_threshold"></div>
         <script type="text/javascript">                        
@@ -335,7 +332,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
         <input type="text" id="cdd_threshold_low" name="cdd_threshold_low" value={{initial.cdd_threshold_low}}><br />
         <input type="text" id="cdd_threshold_high" name="cdd_threshold_high" value={{initial.cdd_threshold_high}}>
     </td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_likelihood_threshold"></div>
         <script type="text/javascript">                        
@@ -355,7 +352,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
         <input type="text" id="gdd_threshold_low" name="gdd_threshold_low" value={{initial.gdd_threshold_low}}><br />
         <input type="text" id="gdd_threshold_high" name="gdd_threshold_high" value={{initial.gdd_threshold_high}}>
     </td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_likelihood_threshold"></div>
         <script type="text/javascript">                        
@@ -372,7 +369,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
             <option value="english" {{checkbox_vals.units_english_selected}}>English</option>
         </select>
     </td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
         <div id="ht_units"></div>
         <script type="text/javascript">                        
@@ -384,7 +381,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
     <tr>
     <td id="Start Year">Sampling Start Year: </td>
     <td><input type="text" id="start_year" name="start_year" value="{{initial.start_year}}"></td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_sampling_start_year"></div>
         <script type="text/javascript">                        
@@ -396,7 +393,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
     <tr valign="top">
     <td>Sampling End Year: </td>
     <td><input type="text" id="end_year" name="end_year" value="{{initial.end_year}}"></td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_sampling_end_year"></div>
         <script type="text/javascript">                        

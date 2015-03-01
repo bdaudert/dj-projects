@@ -1,0 +1,224 @@
+{% extends "csc_base.html" %}
+<meta name="keywords" content="tools, application, gridded data, time series, graph">
+<meta name="description" content="SCENIC Historic Station Data">
+
+{%load my_scenic_filters%}
+
+{% block content %} 
+<!--Hidden variables-->
+<input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
+<input type="hidden" id="host" name="host" value="{{host}}">
+<input type="hidden" id="kml_file_path" name="kml_file_path" value="{{kml_file_path}}">
+<input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+
+<!--Set up autofill-->
+<script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
+<script type="text/javascript">
+$(function(){
+    //On form change, hide results and form errors
+    hide_errors_results_on_change('tableTSForm');
+});
+</script>
+
+
+<!--Documentation-->
+<div id="tool_info" style="display:none;">
+    {% include 'includes/Docu_app_spatial_summary.html'%}
+</div>
+<div id="how_to" style="display:none;">
+    <div id="Docu_area_of_interest">{% include 'includes/Docu_area_of_interest.html'%}</div>
+    <div id="Docu_elements">{% include 'includes/Docu_elements.html'%}</div>
+    <div id="Docu_add_degree_days">{% include 'includes/Docu_add_degree_days.html'%}</div>
+    <div id="Docu_degree_days">{% include 'includes/Docu_degree_days.html'%}</div>
+    <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
+    <div id="Docu_start_end_date">{% include 'includes/Docu_start_end_date.html'%}</div>
+    <div id="Docu_temporal_summary">{% include 'includes/Docu_temporal_summary.html'%}</div>
+    <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
+    <div id="Docu_show_running_mean">{% include 'includes/Docu_show_running_mean.html'%}</div>
+    <div id="Docu_running_mean_days">{% include 'includes/Docu_running_mean_days.html'%}</div>
+    <!--Plot Options-->
+    <!--
+    <div id="Docu_image_size">{% include 'includes/Docu_image_size.html'%}</div>
+    <div id="Docu_major_grid">{% include 'includes/Docu_major_grid.html'%}</div>
+    <div id="Docu_minor_grid">{% include 'includes/Docu_minor_grid.html'%}</div>
+    <div id="Docu_connector_line">{% include 'includes/Docu_connector_line.html'%}</div>
+    <div id="Docu_connector_line_width">{% include 'includes/Docu_connector_line_width.html'%}</div>
+    <div id="Docu_markers">{% include 'includes/Docu_markers.html'%}</div>
+    <div id="Docu_marker_type">{% include 'includes/Docu_marker_type.html'%}</div>
+    <div id="Docu_vertical_axis_min">{% include 'includes/Docu_vertical_axis_min.html'%}</div>
+    <div id="Docu_vertical_axis_max">{% include 'includes/Docu_vertical_axis_max.html'%}</div>
+    
+    -->
+</div>
+
+<!--Tool Info/Howto-->
+<table>
+<td valign="bottom" width="40%">
+    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/spatial_summary'"/>
+</td>
+<td valign="top" width="60%" align="left">
+    <table>
+    <td><div id=tool_info_head></div></td>
+    <td><div id="how_to_head"></div></td>
+    </table>
+    <script type="text/javascript">                        
+        $("#tool_info_head").load("{{HTML_URL}}/Buttons.html .tool_info");
+    </script>
+    <script type="text/javascript">            
+        $("#how_to_head").load("{{HTML_URL}}/Buttons.html .tool_how_to");
+    </script>
+</td>
+</table>
+
+
+<table>
+<!--Form-->
+<td valign="top"  width="40%">
+    <div id='formTS'>
+        <form method="post" id="tableTSForm" action="" onsubmit="show_loading()">{% csrf_token %}
+        <table class="form" id="tableTS" >
+        <tr class="station_grid" style="display:table-row">{% include 'includes/area_select_area.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
+        <tr class="station_grid" style="display:table-row">{% include 'includes/data_type.html'%}</tr>
+        <tr class="station_grid" style="display:table-row">{% include 'includes/elements.html'%}</tr>
+        <tr class="station_grid" id="add" valign="top" style="display:table-row">{% include 'includes/add_special_degree_days.html'%}</tr>
+       {%if initial.add_degree_days == "T"%}
+            <tr id="dd" valign="top" style="display:table-row">{% include 'includes/degree_days.html'%}</tr>
+        {%else%}
+            <tr id="dd" valign="top" style="display:none">{% include 'includes/degree_days.html'%}</tr>
+        {%endif%}
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/units.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/end_date.html'%}</tr> 
+        <tr class="grid" id="grid_type" style="display:table-row;">{% include 'includes/grids.html'%}</tr>
+        <tr id="spat_summary" style="display:table-row">{% include 'includes/spatial_summary.html'%}</tr>
+        <tr style="display:table-row">{% include 'includes/show_running_mean.html'%}</tr>
+        {%if initial.show_running_mean == "T"%}
+            <tr valign="top" id="rm_days" style="display:table-row">{% include 'includes/running_mean_days.html'%}</tr>
+        {%else%}
+            <tr valign="top" id="rm_days" style="display:none;">{% include 'includes/running_mean_days.html'%}</tr>
+        {%endif%}
+        <tr style="display:none;">
+        <td colspan="3" onClick="show_hide_opts('plOpts')"><b><u>Plot Options</u></b>
+        <input type="hidden" name="show_plot_opts" id="show_plot_opts" value={{initial.show_plot_opts}}>
+        </td></tr>
+        <tr class="plOpts" style="display:none">{% include 'includes/image_size.html'%}</tr>
+        <tr class="plOpts" style="display:none">{% include 'includes/show_major_grid.html'%}</tr>
+        <tr class="plOpts" style="display:none">{% include 'includes/show_minor_grid.html'%}</tr>
+        <tr class="plOpts" style="display:none">{% include 'includes/show_connector_line.html'%}</tr>
+        {%if initial.connector_line == "T" and initial.show_plot_opts == "T"%}
+            <tr valign="top" class="plOpts" id="cl_width">{% include 'includes/connector_line_width.html'%}</tr>
+        {%else%}
+            <tr valign="top" class="plOpts" id="cl_width" style="display:none;">{% include 'includes/connector_line_width.html'%}</tr>
+        {%endif%}
+        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/show_markers.html'%}</tr>
+        {%if initial.markers == "T" and initial.show_plot_opts == "T"%}
+            <tr valign="top" class="plOpts" id="mk_type">{% include 'includes/marker_type.html'%}</tr>
+        {%else%}
+            <tr valign="top" class="plOpts" id="mk_type" style="display:none;">{% include 'includes/marker_type.html'%}</tr>
+        {%endif%}
+        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/vertical_axis_min.html'%}</tr>
+        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/vertical_axis_max.html'%}</tr>
+        </table>
+        <input type="submit" value="Generate time series" name="formTS">
+        <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
+        </form>
+    </div><!--end div formTS-->
+</td>
+<!--Errors/Down Arrow/Maps-->
+<td valign="top" width="60%">
+    <!--Form Errors-->
+    {%if form_error%}
+    <div id="form_error" class="results">
+        <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
+        {%for key, val in form_error.items%}
+            <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
+        {%endfor%}
+    </div>
+    {%endif%}
+
+    <!--Request errors and down arrow-->
+    <div class="results">
+    {%if results%}
+        {%if results.errors%}
+            <p class="error">{{results.errors}}</p>
+        {%else%}
+            <div id="Arrow" class="results">
+            <p class="message"><b>RESULTS:</b></p>
+            <img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px">
+            </div>
+ 
+            </div>
+        {%endif%}
+    {%endif%}
+    </div> 
+
+    <!--Maps-->
+    <div id="PolyMap" style="display:none;">
+        <div id="panel">
+        <div id="color-palette"></div>
+            <div>
+                <button id="delete-button">Delete Selected Shape</button>
+            </div>
+        </div>
+    </div>
+
+    {%if need_overlay_map and not overlay_error %}
+        <div id="OverlayMap" style="display:block;">{% include 'includes/overlay_map.html'%}</div>
+        <div id="map-overlay"></div>
+        <div id="content-window"></div>
+        <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
+    {%else%}
+        <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>
+        {%if overlay_error%}
+            <p class="error">{{overlay_error}}</p>
+        {%endif%}
+    {%endif%}
+</td></table>
+
+<!--Results-->
+<table cellpadding="10" align="center">
+<td valign="top" width="97%" align="center">
+    <!--Results-->
+    <!--Print and download buttons-->
+    <div class="results">
+    {%if not results.errors and results.data%}
+        <table>
+        <td valign="top">
+        <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
+        </td><td valign="top">
+        <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
+        <!--Download form-->
+        <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
+        </td>
+        </table>
+    {%endif%}
+
+    <!--Data-->
+    <table id="printable_table">
+    <td>
+    {%if results%}
+    <p class="message" style="max-width:60%;">YOUR PARAMETERS:<br />
+    {%for key_val in params_display_list%}
+        <b>{{key_val.0}}</b>:
+        {%for item in key_val.1%}
+            {{item}}<br />
+        {%endfor%}
+    {%endfor%}
+    </p>
+    {%endif%}
+
+    {% if not results.errors and results.smry%}
+        <p class="message" align="left"><b>DATA</b>:</p>
+        <table border="1">
+        {%for data in results.smry%}
+        <tr>
+        {%for d in data%}
+        <td>{{d}}</td>
+        {%endfor%}
+        </tr>
+        {%endfor%}
+        </table>
+    {%endif%}
+</td></table>
+{%endblock%}

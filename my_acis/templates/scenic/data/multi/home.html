@@ -27,13 +27,13 @@
         <td>
             <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_multi_lister')">
         </td>
-        <td valign="top"><a class="trigger_hover" href="{{GRID_SPATIAL_SUMMARY_URL}}"><b>Spatial Summaries</b></a>
+        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}multi/spatial_summary/"><b>Spatial Summaries</b></a>
             <div class="pop-up">{% include 'includes/Docu_popup_spatial_summary.html' %}</div>
         </td>
         <td>
             <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_spatial_summary')">
         </td>
-        <td valign="top"><a class="trigger_hover" href="{{GRID_TEMPORAL_SUMMARY_URL}}"><b>Temporal Summaries</b></a>
+        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}multi/temporal_summary/"><b>Temporal Summaries</b></a>
             <div class="pop-up">{% include 'includes/Docu_popup_temporal_summary.html' %}</div>
         </td>
         <td>
@@ -46,11 +46,11 @@
             <div class="pop-up">{% include 'includes/Docu_popup_multi_lister.html' %}</div>
         </td>
         <td colspan="2">
-            <a  href="{{GRID_SPATIAL_SUMMARY_URL}}" class="trigger_hover"><img class="app_img" alt="SpatialSummary" title="SpatialSummary" src="{{MEDIA_URL}}img/Area_TS.png"></a>
+            <a  href="{{DATA_URL}}multi/spatial_summary/" class="trigger_hover"><img class="app_img" alt="SpatialSummary" title="SpatialSummary" src="{{MEDIA_URL}}img/Area_TS.png"></a>
             <div class="pop-up">{% include 'includes/Docu_popup_spatial_summary.html' %}</div>
         </td>
         <td colspan="2">
-            <a  href="{{GRID_TEMPORAL_SUMMARY_URL}}" class="trigger_hover"><img class="app_img" alt="TemporalSummary" title="TemporalSummary" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
+            <a  href="{{DATA_URL}}multi/temporal_summary/" class="trigger_hover"><img class="app_img" alt="TemporalSummary" title="TemporalSummary" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
             <div class="pop-up">{% include 'includes/Docu_popup_temporal_summary.html' %}</div>
         </td>  
     </tr>

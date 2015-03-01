@@ -42,6 +42,7 @@ $(function(){
 });
 </script>
 
+<!--Tool Infor/Howto-->
 <table>
 <td valign="bottom" width="300px">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/lister/'"/>
@@ -62,6 +63,7 @@ $(function(){
 
 
 <table>
+<!--Form-->
 <td valign="top" width="40%">
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading() & set_hidden_fields(this,'overlayForm')">{% csrf_token %}
@@ -133,6 +135,7 @@ $(function(){
         </form>
     </div>
 </td>
+<!--Errors/Down arow/Maps-->
 <td valign="top" width="60%" align="center">
     <!--Form Errors and search parameter section-->
     {%if form_error%}
@@ -203,7 +206,7 @@ $(function(){
     <!--end map section--> 
 </td></table>
 
-{{xx}}
+<!--Results-->
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
     <!--Results-->
@@ -225,7 +228,7 @@ $(function(){
     <table id="printable_table">
     <td>
     {%if results%}
-    <p class="message">YOUR PARAMETERS:<br />
+    <p class="message" style="max-width:60%;">YOUR PARAMETERS:<br />
     {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>:
         {%for item in key_val.1%}
@@ -237,7 +240,7 @@ $(function(){
     {% if not results.errors and results.data and not results.smry%}
         <p>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
         {% for point_data in results.data %}
-        <p class="message" align="left"><b>METADATA</b>:
+        <p class="message" align="left" style="max-width:60%;"><b>METADATA</b>:
             {{results.meta|lookup:forloop.counter0}}
         </p>
         <p class="message" align="left"><b>DATA</b>:</p>

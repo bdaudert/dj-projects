@@ -1,0 +1,15 @@
+        <td>Show Connector Line?</td>
+        <td>
+            <select id="connector_line" name="connector_line" onchange="show_div_if_true(this, 'cl_width') & update_value(this.value);">
+            <option value="T" {{checkbox_vals.connector_line_T_selected}}>Yes</option>
+            <option value="F" {{checkbox_vals.connector_line_F_selected}}>No</option>
+            </select>
+        </td>
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_connector_line"></div>
+            <script type="text/javascript">                        
+            $("#ht_connector_line").load("{{HTML_URL}}/Docu_help_texts.html #ht_connector_line");
+            </script>
+        </div>
+        </td>

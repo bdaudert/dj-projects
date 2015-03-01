@@ -1,0 +1,198 @@
+{% extends "csc_base.html" %}
+<meta name="keywords" content="tools, application, gridded data, time series, graph">
+<meta name="description" content="SCENIC Historic Station Data">
+
+{%load my_scenic_filters%}
+
+{% block content %} 
+
+<!--Documentation-->
+<div class="docu" id="tool_info" style="display:none;">
+    {% include 'includes/Docu_app_temporal_summary.html'%}
+</div>
+<div id="how_to" style="display:none;">
+    <div id="Docu_area_of_interest">{% include 'includes/Docu_area_of_interest.html'%}</div>
+    <div id="Docu_elements">{% include 'includes/Docu_elements.html'%}</div>
+    <div id="Docu_add_degree_days">{% include 'includes/Docu_add_degree_days.html'%}</div>
+    <div id="Docu_degree_days">{% include 'includes/Docu_degree_days.html'%}</div>
+    <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
+    <div id="Docu_start_end_date">{% include 'includes/Docu_start_end_date.html'%}</div>
+    <div id="Docu_temporal_summary">{% include 'includes/Docu_temporal_summary.html'%}</div>
+    <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
+    <!--Plot Options-->
+    <div id="Docu_image_size">{% include 'includes/Docu_image_size.html'%}</div>
+    <div id="Docu_num_levels">{% include 'includes/Docu_num_levels.html'%}</div>
+    <div id="Docu_colormap">{% include 'includes/Docu_colormap.html'%}</div>
+    <div id="Docu_map_overlay">{% include 'includes/Docu_map_overlay.html'%}</div>
+    <div id="Docu_interpolation">{% include 'includes/Docu_interpolation.html'%}</div>
+    <div id="Docu_projection">{% include 'includes/Docu_projection.html'%}</div>
+</div><!--End how_to-->
+
+<!--Hidden variables-->
+<input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
+<input type="hidden" id="host" name="host" value="{{host}}">
+<input type="hidden" id="kml_file_path" name="kml_file_path" value="{{kml_file_path}}">
+<input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+
+<!--Set up autofill-->
+<script type="text/javascript">
+$(function(){
+    //On form change, hide results and form errors
+    hide_errors_results_on_change('tableMapForm');
+});
+</script>
+
+<table>
+<td valign="bottom" width="300px">
+    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/temporal_summary/'"/>
+</td>
+<td valign="top" width="650px" align="left">
+    <table>
+    <td><div id=tool_info_head></div></td>
+    <td><div id="how_to_head"></div></td>
+    </table>
+    <script type="text/javascript">                        
+        $("#tool_info_head").load("{{HTML_URL}}/Buttons.html .tool_info");
+    </script>
+    <script type="text/javascript">            
+        $("#how_to_head").load("{{HTML_URL}}/Buttons.html .tool_how_to");
+    </script>
+</td>
+</table>
+
+<table cellpadding="10">
+<!--LEFT-->
+<td valign="top" width="300px">
+    <div id='formMap'>
+        <form method="post" id="tableMapForm" action="" onsubmit="show_loading()">{% csrf_token %}
+        <table class="form" id="tableMap" >
+        <tr class="station_grid" style="display:table-row">{% include 'includes/map_area_select.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
+        <tr class="station_grid" style="display:table-row">{% include 'includes/elements.html'%}</tr>
+        <tr class="station_grid" id="add" valign="top" style="display:table-row">{% include 'includes/add_special_degree_days.html'%}</tr>
+        {%if initial.add_degree_days == "T"%}
+            <tr id="dd" valign="top" style="display:table-row">{% include 'includes/degree_days.html'%}</tr>
+        {%else%}
+            <tr id="dd" valign="top" style="display:none">{% include 'includes/degree_days.html'%}</tr>
+        {%endif%}
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/units.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
+        <tr class="station_grid" style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
+        <tr id="temp_summary" style="display:table-row">{% include 'includes/temporal_summary.html'%}</tr>
+        <tr class="grid" id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr>
+        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/image_size.html'%}</tr>
+        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/num_levels.html'%}</tr>
+        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/colormap.html'%}</tr>
+        <tr valign="top" class="plOpts" style="display:none;">
+            <td></td>
+            <td><a target="_blank" href="http://matplotlib.org/mpl_examples/pylab_examples/show_colormaps.pdf">List of available color maps</a></td>
+            <td></td>
+        </tr>
+        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/map_overlay.html'%}</tr> 
+        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/interpolation.html'%}</tr>
+        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/projection.html'%}</tr>
+        </table>
+        <input type="submit" value="Generate maps" name="formMap">
+        <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
+        </form>
+    </div>
+    <br /><br />
+<!--RIGHT-->
+</td>
+<td valign="top" width="660px">
+
+
+    {%if initial.select_grid_by == "bounding_box" and not hide_bbox_map%}
+    <div id="BBoxMap" style="display:block;">
+    {%else%}
+    <div id="BBoxMap" style="display:none;">
+    {%endif%}
+    <div id="map-bbox"></div>
+    {%if initial.select_grid_by == "bounding_box" and not hide_bbox_map%}
+    <script type="text/javascript">initialize_bbox_map();</script>
+    {%endif%}
+    </div>
+
+    {%if form_error%}
+    <div class="results">
+        <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
+        {%for key, val in form_error.items%}
+            <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
+        {%endfor%}
+    </div>
+    {%endif%}
+        
+    {%if params_display_list %}
+    <div id="user_params_list">
+    <p class="message">
+    {%for key_val in params_display_list%}
+    <b>{{key_val.0}}</b>: {{key_val.1.0}}<br />
+    {%endfor%}
+    </p>
+    </div>
+    {%endif%}
+
+    <div id="PolyMap" style="display:none;">
+        <div id="panel">
+        <div id="color-palette"></div>
+            <div>
+                <button id="delete-button">Delete Selected Shape</button>
+            </div>
+        </div>
+        {%if lat and lon %}
+        <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
+        <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
+        {%else%}
+        <input type="hidden" id="initial_lat" name="initial_lat" value='40'>
+        <input type="hidden" id="initial_lon" name="initial_lon" value='-111'>
+        {%endif%}
+    </div>
+
+
+    <div id="GridpointMap" style="display:none;"></div>
+
+    {%if need_overlay_map%}
+        <div id="OverlayMap" style="display:block;">{% include 'includes/overlay_map.html'%}</div>
+        {%if overlay_error%}
+            <p class="error">{{overlay_error}}</p>
+        {%else%}
+            <div id="map-overlay"></div>
+            <div id="content-window"></div>
+            <script type="text/javascript">
+            initialize_map_overlays("{{initial.select_area_type}}","{{initial.host}}", "{{initial.kml_file_path}}")
+            </script>
+        {%endif%}
+    {%else%}
+        <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>  
+    {%endif%}
+ 
+    </div>
+
+
+    {%if need_overlay_map%}
+    {%if overlay_error%}
+    <p class="error">{{overlay_error}}</p>
+    {%else%}
+    <div id="map-overlay" style="width:100%; height:400px;"></div>
+    <div id="content-window" style="width:100px; height:100px;"></div>
+    <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
+    {%endif%} 
+    {%endif%}
+    <br /><br />
+
+    {%if error%}
+    <p class="error">{{error}}</p>
+    {%endif%}
+   
+
+    <!--Results section-->
+    <div id="results" class="results">
+    {%if figure_files%}
+    <!--<a target="_blank" href="{{GRID_DATA_URL}}?{%for key,val in params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size=3><b>Get data behind the graphics</b></font></a><br /><br /><br />-->
+    {%for fig in figure_files%}
+        <img alt="FigureFile" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br /><br /><br /><br /><br />
+    {%endfor%}
+    {%endif%}
+    </div><!--end results div-->
+</td></table>
+{%endblock%}

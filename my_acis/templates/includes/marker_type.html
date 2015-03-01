@@ -1,0 +1,18 @@
+        <td>Marker type:</td>
+        <td>
+            <select id="marker_type" name="marker_type" onchange="update_value(this.value)">
+            <option value="diamond" {{checkbox_vals.marker_type_diamond_selected}}>Diamond</option>
+            <option value="circle" {{checkbox_vals.marker_type_circle_selected}}>Circle</option>
+            <option value="square" {{checkbox_vals.marker_type_square_selected}}>Square</option>
+            <option value="triangle" {{checkbox_vals.marker_type_triangle_selected}}>Triangle</option>
+            <option value="triangle_down" {{checkbox_vals.marker_type_triangle_down_selected}}>Downward Triangle</option>
+            </select>
+        </td>
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_marker_type"></div>
+            <script type="text/javascript">                        
+            $("#ht_marker_type").load("{{HTML_URL}}/Docu_help_texts.html #ht_marker_type");
+            </script>
+        </div>
+        </td>
