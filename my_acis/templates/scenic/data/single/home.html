@@ -31,19 +31,19 @@
         <td>
             <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_single_lister')">
         </td>
-        <td valign="top"><a class="trigger_hover" href="{{STATION_SODXTRMTS_URL}}"><b>Custom statistics/<br >Time Series</b></a>
+        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}single/monann/"><b>Custom statistics/<br >Time Series</b></a>
             <div class="pop-up">{% include 'includes/Docu_popup_sodxtrmts.html'%}</div>
         </td>
         <td>
             <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_sodxtrmts')">
         </td>
-        <td valign="top"><a class="trigger_hover" href="{{STATION_SODSUMM_URL}}"><b>Climatology</b></a>
+        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}single/climatology/"><b>Climatology</b></a>
             <div class="pop-up">{% include 'includes/Docu_popup_sodsumm.html'%}</div>
         </td>
         <td>
             <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_sodsumm')">
         </td>
-       <td valign="top"><a class="trigger_hover" href="{{MIXED_TOOLS_URL}}data_comparison/"><b>Data comparison</b></a>
+       <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}single/data_comparison/"><b>Data comparison</b></a>
             <div class="pop-up">{% include 'includes/Docu_popup_data_comparison.html'%}</div>
        </td>
         <td>
@@ -56,15 +56,15 @@
             <div class="pop-up">{% include 'includes/Docu_popup_single_lister.html'%}</div>
         </td>
         <td colspan="2">
-            <a  href="{{STATION_SODXTRMTS_URL}}" class="trigger_hover"><img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/Sodxtrmts.png"></a> 
+            <a  href="{{DATA_URL}}single/monann/" class="trigger_hover"><img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/Sodxtrmts.png"></a> 
             <div class="pop-up">{% include 'includes/Docu_popup_sodxtrmts.html'%}</div>
         </td>
         <td colspan="2">
-            <a  href="{{STATION_SODSUMM_URL}}" class="trigger_hover"><img class="app_img" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
+            <a  href="{{DATA_URL}}single/climatology/" class="trigger_hover"><img class="app_img" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
             <div class="pop-up">{% include 'includes/Docu_popup_sodsumm.html'%}</div>
         </td>
         <td colspan="2">
-            <a  href="{{MIXED_TOOLS_URL}}data_comparison/" class="trigger_hover"><img class="app_img" alt="Compare" title="Compare" src="{{MEDIA_URL}}img/DataComparison.png"></a>
+            <a  href="{{DATA_URL}}single/data_comparison/" class="trigger_hover"><img class="app_img" alt="Compare" title="Compare" src="{{MEDIA_URL}}img/DataComparison.png"></a>
             <div class="pop-up">{% include 'includes/Docu_popup_data_comparison.html'%}</div>
         </td>
    </tr>

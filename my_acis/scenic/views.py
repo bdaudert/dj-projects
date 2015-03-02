@@ -266,7 +266,6 @@ def single_lister(request):
     if 'formData' in request.POST:
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
-        context['xx'] = form_cleaned
         #Check form fields
         fields_to_check = [form_cleaned['area_type'],'start_date','end_date','start_window','end_window','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -284,11 +283,11 @@ def single_lister(request):
             if 'smry' not in req.keys() or not req['smry']:
                 results['error'] = 'No data found for these parameters!'
                 context['results'] = results
-                return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+                return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
         except Exception, e:
             results['error'] = 'Data request error: %s' %str(e)
             context['results'] = results
-            return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+            return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
         '''
         req = WRCCUtils.request_and_format_data(form_cleaned)
         #Format Data for display and/or download
@@ -696,32 +695,23 @@ def spatial_summary(request):
         '''
         req = WRCCUtils.request_and_format_data(form_cleaned)
         results['smry'] = req['smry']
-        context['results'] = results
-        '''
-        #Write data in download format
-        #Set rest of search_params,context variables and save results
-        search_params['spatial_summary'] = WRCCData.DISPLAY_PARAMS[form['spatial_summary']]
-        context['search_params'] = search_params
-        context['results']= summary_time_series
-        context['width'] = WRCCData.IMAGE_SIZES[search_params['image_size']][0]
-        context['height'] = WRCCData.IMAGE_SIZES[search_params['image_size']][1]
-
-        #Write results to json file
-        json_dict = {
-            'search_params':search_params,
-            'display_params_list':display_params_list,
-            'download_data':download_data,
-            'graph_data':summary_time_series
-        }
-        results_json = json.dumps(json_dict)
+        #format data for highcarts
+        graph_data = []
+        for el_idx, element in enumerate(form_cleaned['elements']):
+            el_data = WRCCUtils.extract_highcarts_data(req['smry'],el_idx, element)
+            GraphDictWriter = WRCCClasses.GraphDictWriter(form_cleaned, el_data, element)
+            datadict = GraphDictWriter.write_dict()
+            graph_data.append(datadict)
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         json_file = '%s_spatial_summary.json' %(time_stamp)
-        f = open(settings.TEMP_DIR + '%s' %(json_file),'w+')
-        f.write(results_json)
-        f.close()
-        context['JSON_URL'] = settings.TMP_URL
-        context['json_file'] = json_file
-        '''
+        json_file_path = settings.TEMP_DIR + json_file
+        with open(json_file_path,'w+') as f:
+            f.write(json.dumps(graph_data))
+        results['graph_data'] = graph_data
+        results['elements'] = form_cleaned['elements']
+        results['json_file'] = json_file
+        context['results'] = results
+
     #overlay map generation
     if 'formOverlay' in request.POST:
         form = set_form(request, clean=False)
@@ -922,7 +912,7 @@ def data_comparison(request):
 #SOD programs
 ######################
 
-def sodxtrmts(request, app_type):
+def monann(request, app_type):
     '''
     app_type = 'station' or 'grid'
     Both are processed via this view
@@ -930,9 +920,9 @@ def sodxtrmts(request, app_type):
     context = {}
     if app_type == 'grid':
         context['title'] = 'Single gridpoint statistics'
-        url ='scenic/apps/gridded/grid_sodxtrmts.html'
+        url ='scenic/data/single/monann.html'
     else:
-        url = 'scenic/apps/station/sodxtrmts.html'
+        url = 'scenic/data/single/monann.html'
         context['title'] = 'Station Statistics/Custom Time Series'
     json_dict =  None
     json_file = request.GET.get('json_file', None)
@@ -1169,7 +1159,7 @@ def sodxtrmts(request, app_type):
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 
-def sodsumm(request):
+def climatlogy(request):
     context = {
         'title': 'Station Climatology'
         }
@@ -1209,13 +1199,13 @@ def sodsumm(request):
         if not meta_dict['names'] or not meta_dict['ids']:
             results = {}
             context['run_done']= True
-            return render_to_response('scenic/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
+            return render_to_response('scenic/data/single/climatology.html', context, context_instance=RequestContext(request))
         dates_list = DJ.get_dates_list()
         data = DJ.get_data_station()
         if not data or not dates_list:
             results = {}
             context['run_done']= True
-            return render_to_response('scenic/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
+            return render_to_response('scenic/data/single/climatology.html', context, context_instance=RequestContext(request))
         #Run application
         App = WRCCClasses.SODApplication('Sodsumm', data, app_specific_params=app_params)
         results = App.run_app()
@@ -1223,7 +1213,7 @@ def sodsumm(request):
         if not results:
             results = {}
             context['run_done']= True
-            return render_to_response('scenic/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
+            return render_to_response('scenic/data/single/climatology.html', context, context_instance=RequestContext(request))
         else:
             results = dict(results[0])
         context['results'] = results
@@ -1304,7 +1294,7 @@ def sodsumm(request):
             DDJ = WRCCClasses.DownloadDataJob('Sodsumm',data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_in_file_name)
             return DDJ.write_to_file()
 
-    return render_to_response('scenic/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
+    return render_to_response('scenic/data/single/climatology.html', context, context_instance=RequestContext(request))
 
 ##############################
 #Utlities
@@ -1886,89 +1876,6 @@ def generate_sodsumm_graphics(results, tab, table, units):
         'table_data':results[table]
         }
     return table_dict
-
-#####################
-#Results formatting
-#####################
-def compute_spatial_summary_summary(req, search_params, poly, PointIn):
-    #Sanity check
-    element_list = search_params['elements'].replace(' ','').split(',')
-    if not 'meta' in req.keys():
-        return []
-    if not 'lat' in req['meta'].keys():
-        return []
-    if not 'data' in req.keys():
-        return []
-    if 'location' in search_params.keys() or isinstance(req['meta']['lat'],float):
-        lats_bbox_unique = [req['meta']['lat']]
-        lons_bbox_unique = [req['meta']['lon']]
-    else:
-        lats_bbox_unique=[lat_grid[0] for lat_grid in req['meta']['lat']]
-        lons_bbox_unique = req['meta']['lon'][0]
-    #Generate time series from data request
-    summary_time_series = [[[str(dat[0])] for dat in req['data']] for el in element_list]
-    download_data = [[str(dat[0])] for dat in req['data']]
-    #list of list holding just the data values for each day at each gridpoint
-    values_poly = [[[] for dat in req['data']] for el in element_list]
-    #Check each bbox unique lat, lon combintation for containment in the polygon
-    for lat_idx,lat in enumerate(lats_bbox_unique):
-        for lon_idx, lon in enumerate(lons_bbox_unique):
-            #see if lat/lon inside poly
-            if not poly:
-                point_in = True
-            else:
-                point_in = PointIn(lon, lat, poly)
-            if point_in:
-                #point lies witin shape, add data to data_poly
-                for date_idx, date_data in enumerate(req['data']):
-                    for el_idx, el in enumerate(element_list):
-                        if 'location' in search_params.keys() or isinstance(req['meta']['lat'],float):
-                            try:
-                                if 'units' in search_params.keys() and search_params['units'] == 'metric':
-                                    val = WRCCUtils.convert_to_metric(el, float(date_data[el_idx+1]))
-                                else:
-                                    val = float(date_data[el_idx+1])
-                            except:
-                                continue
-                        else:
-                            try:
-                                if 'units' in search_params.keys() and search_params['units'] == 'metric':
-                                    val = WRCCUtils.convert_to_metric(el,float(date_data[el_idx+1][lat_idx][lon_idx]))
-                                else:
-                                    val = float(date_data[el_idx+1][lat_idx][lon_idx])
-                            except:
-                                continue
-                        if abs(val + 999.0) > 0.001 and abs(val - 999.0)>0.001:
-                            values_poly[el_idx][date_idx].append(val)
-    #Summarize data
-    for el_idx, el in enumerate(element_list):
-        if not values_poly[el_idx]:
-            for date_idx, val_list in enumerate(values_poly[el_idx]):
-                summary_time_series[el_idx][date_idx].append('-----')
-                download_data[date_idx].append('-----')
-        else:
-            for date_idx, val_list in enumerate(values_poly[el_idx]):
-                if not val_list:
-                    summary_time_series[el_idx][date_idx].append('-----')
-                    download_data[date_idx].append('-----')
-                    continue
-                if search_params['spatial_summary'] == 'sum':
-                    summary_time_series[el_idx][date_idx].append(round(sum(val_list),2))
-                    download_data[date_idx].append(round(sum(val_list),2))
-                elif search_params['spatial_summary'] == 'max':
-                    summary_time_series[el_idx][date_idx].append(round(max(val_list),2))
-                    download_data[date_idx].append(round(max(val_list),2))
-                elif search_params['spatial_summary'] == 'min':
-                    summary_time_series[el_idx][date_idx].append(round(min(val_list),2))
-                    download_data[date_idx].append(round(max(val_list),2))
-                elif search_params['spatial_summary'] == 'mean':
-                    if val_list:
-                        summary_time_series[el_idx][date_idx].append(round(sum(val_list) / len(val_list),2))
-                        download_data[date_idx].append(round(sum(val_list) / len(val_list),2))
-                    else:
-                        summary_time_series[el_idx][date_idx].append('-----')
-                        download_data[date_idx].append('-----')
-    return summary_time_series, download_data
 
 #############################
 #Display and search params

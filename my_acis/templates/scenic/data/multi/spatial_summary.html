@@ -138,7 +138,7 @@ $(function(){
     {%endif%}
 
     <!--Request errors and down arrow-->
-    <div class="results">
+    <div class="results" align="center">
     {%if results%}
         {%if results.errors%}
             <p class="error">{{results.errors}}</p>
@@ -195,9 +195,11 @@ $(function(){
     {%endif%}
 
     <!--Data-->
+    {% if not results.errors and results.smry %}
+
     <table id="printable_table">
     <td>
-    {%if results%}
+
     <p class="message" style="max-width:60%;">YOUR PARAMETERS:<br />
     {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>:
@@ -206,11 +208,11 @@ $(function(){
         {%endfor%}
     {%endfor%}
     </p>
-    {%endif%}
 
-    {% if not results.errors and results.smry%}
-        <p class="message" align="left"><b>DATA</b>:</p>
-        <table border="1">
+    
+    {%if results.smry%}
+    <p class="pop_link" onClick="ShowHide('DataList')"><img alt="ShowHide" src ="{{MEDIA_URL}}img/show_hide_button.png"></p>
+    <table id="DataList" style="display:none;">
         {%for data in results.smry%}
         <tr>
         {%for d in data%}
@@ -218,7 +220,20 @@ $(function(){
         {%endfor%}
         </tr>
         {%endfor%}
-        </table>
+    </table>
     {%endif%}
+
+    {%if results.json_file%}
+        <input type="hidden" id="json_file" value="{{results.json_file}}">
+        {%for el in results.elements%}
+            <div align="center" id="{{forloop.counter0}}" style="height:400px;width:400px;"></div>
+            <script type="text/javascript">
+                generateHighChartTS("{{forloop.counter0}}")
+            </script> 
+            <br />
+        {%endfor%} 
+    {%endif%}
+    {%endif%}<!--End if not results.errors and results.smry -->
+    </div><!--End div results-->
 </td></table>
 {%endblock%}
