@@ -709,7 +709,7 @@ def spatial_summary(request):
             f.write(json.dumps(graph_data))
         results['graph_data'] = graph_data
         results['elements'] = form_cleaned['elements']
-        results['json_file'] = json_file
+        results['json_file_path'] = settings.TMP_URL + json_file
         context['results'] = results
 
     #overlay map generation

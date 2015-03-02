@@ -223,14 +223,17 @@ $(function(){
     </table>
     {%endif%}
 
-    {%if results.json_file%}
-        <input type="hidden" id="json_file" value="{{results.json_file}}">
+    {%if results.json_file_path%}
+        <input type="hidden" id="json_file_path" value="{{results.json_file_path}}">
         {%for el in results.elements%}
-            <div align="center" id="{{forloop.counter0}}" style="height:400px;width:400px;"></div>
+            <div id="{{forloop.counter0}}">
+            {% include 'includes/chartType.html'%}
+            <div align="center" id="container_{{forloop.counter0}}" style="height:400px;width:700px;"></div>
             <script type="text/javascript">
-                generateHighChartTS("{{forloop.counter0}}")
+                generateHighChartTS("{{results.json_file_path}}","{{forloop.counter0}}");
             </script> 
             <br />
+            </div><!--end div chart-->
         {%endfor%} 
     {%endif%}
     {%endif%}<!--End if not results.errors and results.smry -->

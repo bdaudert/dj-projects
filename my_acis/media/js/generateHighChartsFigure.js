@@ -1,33 +1,35 @@
 //------------------------
 // General function for 
 //------------------------
-function generateHighChartTS(figureID) {
-    $(document).ready(function() {
-        var json_file = document.getElementById('json_file').value;
-        var chartID = parseInt(figureID)
-        $.getJSON('/tmp/' + json_file, function(datadict) {
-            var series_data = datadict[chartID].data;
-            var chartType = datadict[chartID].chartType;
-            var title = datadict[chartID].title;
-            var subtitle = datadict[chartID].subtitle;
-            var dateStart = datadict[chartID].start_date;
-            var dateEnd = datadict[chartID].end_date;
-            var yLable = datadict[chartID].yLabel;
-            var xLable = datadict[chartID].xLabel;
-            var legendTitle = datadict[chartID].legendTitle;
-            var axis_min = datadict[chartID].axis_min;
-            var varUnits = datadict[chartID].varUnits;
-        
-            axisFontSize = '16px';
-            labelsFontSize = '20px';
+function generateHighChartTS(json_file_path,figureID,chartType) {
+        /*
+        Generates highcarts figure
+        Required Args:
+            json_file_path
+        Optional Args:
+            figureId, if none is given, figureID is set to zero
+            chartType, if none is given chartType is obtained from json file
+        */
+        var chartID = parseInt(figureID);
+        $.getJSON(json_file_path, function(datadict) {
+            //Set figureID and chartType
+             switch (arguments.length - 1) { // <-- 1 is number of required arguments
+                case 0:  
+                    figureID = '0';
+                    chartType = datadict[chartID].chartType;
+                case 1:
+                    chartType = datadict[chartID].chartType;
+            }   
+            var chartID = parseInt(figureID);
+            var axisFontSize = '16px';
+            var labelsFontSize = '20px';
 
-            $('#' + figureID).highcharts({
+            $('#container_' + figureID).highcharts({
                 //------------------------
                 //  CHART PROPERTIES
                 //------------------------
                 chart: {
-                    //renderTo: figureID,
-                    type:  chartType,
+                    type:datadict[chartID].chartType,
                     zoomType: 'x',
                     spacingBottom: 30,
                     spacingTop: 10,
@@ -38,10 +40,10 @@ function generateHighChartTS(figureID) {
                 //    TITLE/SUBTITLE
                 //------------------------
                 title: {
-                    text: title,
+                    text: datadict[chartID].title,
                 },
                 subtitle: {
-                    text: subtitle,
+                    text: datadict[chartID].subtitle,
                 },
                 //------------------------
                 //XAXIS
@@ -73,12 +75,12 @@ function generateHighChartTS(figureID) {
                 yAxis: {
                     gridLineWidth: 1,
                     title: {
-                        text: yLabel,
+                        text: datadict[chartID].yLabel,
                         style: {
                             fontSize: labelsFontSize,
                         },
                     },
-                    min: axis_min,
+                    min: datadict[chartID].axisMin,
                     tickLength: 5,
                     tickWidth: 1,
                     tickPosition: 'outside',
@@ -106,7 +108,7 @@ function generateHighChartTS(figureID) {
                     draggable: true,
                     zIndex: 20,
                     title: {
-                        text: legendTitle,
+                        text: datadict[chartID].legendTitle
                     }
                 },
                 //------------------------
@@ -118,7 +120,7 @@ function generateHighChartTS(figureID) {
                             radius: 4,
                             lineWidth: 1,
                             enable: true,
-                            symbol: 'circle',
+                            symbol: 'circle'
                         }
                     },
                     series: {
@@ -126,17 +128,17 @@ function generateHighChartTS(figureID) {
                             hover: {
                                 enabled: true,
                                 brightness: 0.2
-                            },
+                            }
                         },
                         marker: {
                             radius: 4,
                             lineWidth: 1,
                             enable: true,
-                            symbol: 'circle',
+                            symbol: 'circle'
                         }
                     },
                     areaspline: {
-                        fillOpacity: 0.1, //not working to be transparent... someone set need hex colors not 'red'
+                        fillOpacity: 0.1 //not working to be transparent... someone set need hex colors not 'red'
                     },
                     line: {
                         connectNulls: false
@@ -155,14 +157,17 @@ function generateHighChartTS(figureID) {
                 //TOOLTIP -What happens when hover over the item
                 //------------------------
                 tooltip: {
-                headerFormat: '',
-                pointFormat: '<b>Date: </b>{point.x:%b %e,%Y}<br><b>Value:</b> {point.y:.2f}'+varUnits,
-                crosshairs: false,
-                    shared: false,
+                    headerFormat: '',
+                    pointFormat: '<b>Date: </b>{point.x:%b %e,%Y}<br><b>Value:</b> {point.y:.2f}'+datadict[chartID].elUnits,
+                    crosshairs: false,
+                    shared: false
                 },
                 //------------------------
-                series: series_data,
+                series: [{
+                    name: datadict[chartID].seriesName,
+                    color: datadict[chartID].plotColor,
+                    data: datadict[chartID].data
+                }]
               });//highCharts
         });//getJSON
-    });//document.ready function
 };
