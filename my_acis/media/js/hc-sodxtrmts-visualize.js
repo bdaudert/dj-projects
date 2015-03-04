@@ -88,7 +88,9 @@ $(function () {
             if (datadict.initial.departures_from_averages == "T"){
                 SubTitle+=' (Departures from Average)'
             }
-            var xAxisTitle = 'Year ' //+ datadict.data[datadict.data.length -7][0]
+            //var xAxisTitle = 'Year ' //+ datadict.data[datadict.data.length -7][0]
+            //var xAxisTitle = running_mean_years + '-year Running Mean';
+            var xAxisTitle =null;
             if (month_list[0]> month_list[month_list.length -1]){
                 xAxisTitle = 'Ending Year ' //+ datadict.data[datadict.data.length -8][0]
             }
@@ -126,11 +128,11 @@ $(function () {
             var Chart;
             Chart = {
                 chartContent:'container',
-                //spacingBottom:50,
-                //marginRigh:0,
+                spacingBottom:100,
+                marginRight:0,
                 options: {
-                    spacingBottom:50,
-                    marginRigh:0,
+                    //spacingBottom:100,
+                    //marginRight:0,
                     title: {
                         text:ChartTitle,
                         style:titleStyle
@@ -151,9 +153,13 @@ $(function () {
                     },
                     legend: {
                         enabled: true,
-                        //layout: 'vertical',
-                        align: 'left',
-                        padding:20,
+                        borderColor:'#006666',
+                        layout: 'vertical',
+                        //padding:20,
+                        verticalAlign: 'top',
+                        align:'left',
+                        x: 50,
+                        y: 50,
                         floating: true
                     },
                     xAxis:
