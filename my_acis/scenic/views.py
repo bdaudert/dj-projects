@@ -324,14 +324,14 @@ def single_lister(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriter(response,req)
+            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
             CsvWriter.write_to_file()
             return response
         if form_cleaned['data_format'] in ['xl'] and (req['data'] or req['smry']):
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
             #WRCCUtils.write_to_excel(response,req)
-            ExcelWriter = WRCCClasses.ExcelWriter(response,req)
+            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
@@ -357,14 +357,13 @@ def single_lister(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriter(response,req)
+            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
             CsvWriter.write_to_file()
             return response
         if form['data_format'] in ['xl']:
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            #WRCCUtils.write_to_excel(response,req)
-            ExcelWriter = WRCCClasses.ExcelWriter(response,req)
+            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
@@ -398,7 +397,7 @@ def multi_lister(request):
             if 'Custom Shape' in form_error.keys():
                 context['need_polygon_map'] = True
             return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
-
+        '''
         #Deal with large requests
         if form_cleaned['data_summary'] in['none','windowed_data']:
             context['large_request'] = True
@@ -406,9 +405,9 @@ def multi_lister(request):
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
             return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
+        '''
 
         #Data request
-        '''
         try:
             req = WRCCUtils.request_and_format_data(form_cleaned)
             if 'smry' not in req.keys() and 'data' not in  req.keys():
@@ -419,7 +418,7 @@ def multi_lister(request):
             results['error'] = 'Data request error: %s' %str(e)
             context['results'] = results
             return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
-        '''
+
         req = WRCCUtils.request_and_format_data(form_cleaned)
         context['results'] = req
         #Format Data for display and/or download
@@ -437,13 +436,13 @@ def multi_lister(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriter(response,req)
+            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
             CsvWriter.write_to_file()
             return response
         if form_cleaned['data_format'] in ['xl'] and (req['data'] or req['smry']):
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            ExcelWriter = WRCCClasses.ExcelWriter(response,req)
+            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
@@ -478,14 +477,14 @@ def multi_lister(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriter(response,req)
+            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
             CsvWriter.write_to_file()
             return response
         if form['data_format'] in ['xl']:
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
             #WRCCUtils.write_to_excel(response,req)
-            ExcelWriter = WRCCClasses.ExcelWriter(response,req)
+            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
@@ -717,7 +716,6 @@ def spatial_summary(request):
         form = set_form(request, clean=False)
         context['form'] = form
         context['need_overlay_map'] = True
-        context['need_gridpoint_map'] = False
         initial, checkbox_vals = set_spatial_summary_initial(request)
         initial_plot, checkbox_vals_plot = set_plot_options(form)
         join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
