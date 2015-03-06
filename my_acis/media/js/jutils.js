@@ -537,20 +537,44 @@ function set_sodxtrmts_series_data_summary(datadict,initial,initial_graph,series
     for (var yr_idx=yr_indices.yr_start_idx;yr_idx<yr_indices.yr_end_idx;yr_idx++) {
         var vals = [];
         var skip_year = 'F';
-        //Depending on start month, pick the correct data
-        if (md.month_list[0]> md.month_list[md.month_list.length -1] && initial.start_month != "01"){
-            var date = Date.UTC(parseInt(datadict.data[yr_idx][0]) + 1, 0, 1);
-            var acis_date = parseInt(datadict.data[yr_idx][0]);
+        var graph_yr_idx = yr_idx;
+        var data_yr_idx = yr_idx;
+        //Depending on start month,set correct year indices
+        if (md.month_list[0]> md.month_list[md.month_list.length -1]){
+            if (yr_idx < yr_indices.yr_end_idx -1){
+                graph_yr_idx+=1;
+            }
+            else{
+                //Last year
+                break;
+            }
+            //var date = Date.UTC(parseInt(datadict.data[yr_idx][0]) + 1, 0, 1);
+            //var acis_date = parseInt(datadict.data[yr_idx][0]);
         }
+        /*
         else {
             var date = Date.UTC(parseInt(datadict.data[yr_idx][0]), 0, 1);
             var acis_date = parseInt(datadict.data[yr_idx][0]);
         }
-        results.x_cats.push(datadict.data[yr_idx][0]);
+        */
+        var date = Date.UTC(parseInt(datadict.data[graph_yr_idx][0]), 0, 1);
+        var acis_date = parseInt(datadict.data[graph_yr_idx][0]);
+        results.x_cats.push(datadict.data[graph_yr_idx][0]);
 
         for (var mon_idx=0;mon_idx<md.data_idx_list.length;mon_idx++) {
-            var val = datadict.data[yr_idx][2*md.data_idx_list[mon_idx] - 1];
-            var flag = datadict.data[yr_idx][2*md.data_idx_list[mon_idx]].toString();
+            //Set the correct year index 
+            if (mon_idx > 0 && md.data_idx_list[mon_idx-1] > md.data_idx_list[mon_idx]){
+                if (yr_idx < yr_indices.yr_end_idx -1 ) {
+                    data_yr_idx+=1;
+                }
+                else{
+                    //Last year
+                    skip_year = 'T';
+                    break;
+                }
+            }
+            var val = datadict.data[data_yr_idx][2*md.data_idx_list[mon_idx] - 1];
+            var flag = datadict.data[data_yr_idx][2*md.data_idx_list[mon_idx]].toString();
             //Check if we need to skip this year
             if ((mischr.indexOf(flag) > datadict.initial.max_missing_days || val == '-----') && 
             initial_graph.graph_plot_incomplete_years == 'F') {

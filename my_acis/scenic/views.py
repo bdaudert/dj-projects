@@ -397,7 +397,6 @@ def multi_lister(request):
             if 'Custom Shape' in form_error.keys():
                 context['need_polygon_map'] = True
             return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
-        '''
         #Deal with large requests
         if form_cleaned['data_summary'] in['none','windowed_data']:
             context['large_request'] = True
@@ -405,7 +404,6 @@ def multi_lister(request):
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
             return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
-        '''
 
         #Data request
         try:
@@ -2156,7 +2154,7 @@ def set_plot_options(request):
     checkbox_vals = {}
     Get = set_GET(request)
     initial['graph_title'] = Get('graph_title','Use default')
-    initial['image_size'] = Get('image_size', 'medium')
+    initial['image_size'] = Get('image_size', 'large')
     initial['major_grid']  = Get('major_grid', 'T')
     initial['minor_grid'] = Get('minor_grid', 'F')
     initial['connector_line'] = str(Get('connector_line', 'T'))
