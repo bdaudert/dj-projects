@@ -43,7 +43,7 @@ function generateHighChartTS(json_file_path,figureID,chartType) {
                     text: datadict[chartID].title,
                 },
                 subtitle: {
-                    text: datadict[chartID].subtitle,
+                    text: datadict[chartID].subTitle,
                 },
                 //------------------------
                 //XAXIS
@@ -54,15 +54,15 @@ function generateHighChartTS(json_file_path,figureID,chartType) {
                     showLastTickLabel: true,
                     maxZoom: 1 * 24 * 3600*1000, // one day
                     title: {
-                        text: '', //no need to label this as Date
+                        text: 'Period: ' + datadict[chartID].startDate + ' - ' + datadict[chartID].endDate,
                         style: {
                             fontSize: labelsFontSize,
                         },
                     },
                     labels: {
                         format: '{value:%Y-%m-%d}',
-                        rotation: 90,
-                        align: 'left',
+                        rotation: -45,
+                        //align: 'left',
                         style: {
                             fontSize: axisFontSize,
                             zIndex: 6,
@@ -101,7 +101,7 @@ function generateHighChartTS(json_file_path,figureID,chartType) {
                     align: 'right',
                     verticalAlign: 'top',
                     y: 50, // >0 moves down
-                    x: -500, // >0 moves right
+                    x: -400, // >0 moves right
                     borderWidth: 1,
                     borderRadius: 5,
                     floating: true,

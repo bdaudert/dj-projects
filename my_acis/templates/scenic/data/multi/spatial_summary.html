@@ -16,7 +16,7 @@
 <script type="text/javascript">
 $(function(){
     //On form change, hide results and form errors
-    hide_errors_results_on_change('tableTSForm');
+    hide_errors_results_on_change('tableDataForm');
 });
 </script>
 
@@ -74,9 +74,9 @@ $(function(){
 <table>
 <!--Form-->
 <td valign="top"  width="40%">
-    <div id='formTS'>
-        <form method="post" id="tableTSForm" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" id="tableTS" >
+    <div id='formData'>
+        <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
+        <table class="form" id="tableData" >
         <tr class="station_grid" style="display:table-row">{% include 'includes/area_select_area.html'%}</tr>
         <tr class="station_grid" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
         <tr class="station_grid" style="display:table-row">{% include 'includes/data_type.html'%}</tr>
@@ -120,10 +120,9 @@ $(function(){
         <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/vertical_axis_min.html'%}</tr>
         <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/vertical_axis_max.html'%}</tr>
         </table>
-        <input type="submit" value="Generate time series" name="formTS">
-        <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
+        <input type="submit" value="Generate time series" name="formData">
         </form>
-    </div><!--end div formTS-->
+    </div><!--end div formData-->
 </td>
 <!--Errors/Down Arrow/Maps-->
 <td valign="top" width="60%">

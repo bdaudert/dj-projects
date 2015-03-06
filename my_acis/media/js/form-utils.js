@@ -721,7 +721,7 @@ function show_loading(){
     setTimeout(function(){
         form.submit();
         $("#loading").hide();
-    }, 30000);
+    }, 9000);
 }
 
 function show_loading_gif(){

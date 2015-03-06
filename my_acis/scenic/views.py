@@ -260,7 +260,7 @@ def single_lister(request):
     context = {
         'title': 'Data Lister',
     }
-    initial, checkbox_vals = set_initial_lister(request,'single')
+    initial, checkbox_vals = set_initial(request,'single_lister')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     #Data request submitted
     if 'formData' in request.POST:
@@ -374,7 +374,7 @@ def multi_lister(request):
     context = {
         'title': 'Data Lister',
     }
-    initial, checkbox_vals = set_initial_lister(request,'multi')
+    initial, checkbox_vals = set_initial(request,'multi_lister')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     #Set initial overlay state for overlay map
     context[initial['overlay_state'].lower() + '_selected'] = 'selected'
@@ -455,8 +455,7 @@ def multi_lister(request):
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
-        initial, checkbox_vals = set_initial_lister(request,'overlay')
-        #checkbox_vals[form['area_type'] + '_selected'] = 'selected'
+        initial, checkbox_vals = set_initial(request,'map_overlay')
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         context[initial['overlay_state'] + '_selected'] = 'selected'
 
@@ -613,11 +612,11 @@ def spatial_summary(request):
         with open(settings.TEMP_DIR + json_file, 'r') as f:
             try:
                 json_data = WRCCUtils.u_convert(json.loads(f.read()))
-                initial,checkbox_vals = set_spatial_summary_initial(json_data['search_params'])
+                initial,checkbox_vals = set_initial(json_data['search_params'], 'spatial_summary')
             except:
-                initial,checkbox_vals = set_spatial_summary_initial(request)
+                initial,checkbox_vals = set_initial(request, 'spatial_summary')
     else:
-        initial,checkbox_vals = set_spatial_summary_initial(request)
+        initial,checkbox_vals = set_initial(request,'spatial_summary')
 
     initial_plot, checkbox_vals_plot = set_plot_options(request)
     join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
@@ -626,11 +625,11 @@ def spatial_summary(request):
     context[initial['overlay_state'].lower() + '_selected'] = 'selected'
 
 
-    if 'formTS' in request.POST:
+    if 'formData' in request.POST:
         #Set form and initial
         form = set_form(request, clean=False)
         form_cleaned = set_form(request)
-        initial,checkbox_vals = set_spatial_summary_initial(form)
+        initial,checkbox_vals = set_initial(form,'spatial_summary')
         initial_plot, checkbox_vals_plot = set_plot_options(form)
         join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
@@ -709,27 +708,12 @@ def spatial_summary(request):
         results['json_file_path'] = settings.TMP_URL + json_file
         context['results'] = results
 
-    #overlay map generation
+    #Overlay maps
     if 'formOverlay' in request.POST:
-        form = set_form(request, clean=False)
-        context['form'] = form
         context['need_overlay_map'] = True
-        initial, checkbox_vals = set_spatial_summary_initial(request)
-        initial_plot, checkbox_vals_plot = set_plot_options(form)
-        join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
-        #Override initial where needed
-        initial['area_type'] = form['select_overlay_by']
-        checkbox_vals[form['select_overlay_by'] + '_selected'] = 'selected'
-        initial['area_type_value'] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
-        initial[form['select_overlay_by']] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
-        initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[form['select_overlay_by']]
-        initial['autofill_list'] = 'US_' + form['select_overlay_by']
+        initial, checkbox_vals = set_initial(request,'map_overlay')
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-        context[form['overlay_state'] + '_selected'] = 'selected'
-        kml_file_path = create_kml_file(form['select_overlay_by'], form['overlay_state'])
-        context['kml_file_path'] = kml_file_path
-        context['area_type'] = form['select_overlay_by']
-        context['host'] = settings.HOST
+        context[initial['overlay_state'] + '_selected'] = 'selected'
 
     #Downlaod Table Data
     if 'formDownload' in request.POST:
@@ -2805,6 +2789,7 @@ def set_form(request, clean=True):
     for key in ['station_id','county', 'basin', 'county_warning_area', 'climate_division']:
         if not key in form.keys():
             continue
+        form['user_area_id'] =  form[key]
         form[key] = find_id(form[key],settings.MEDIA_DIR +'json/US_' + key + '.json')
     #set data summary if needed
     if not 'data_summary' in form.keys():
@@ -2836,15 +2821,26 @@ def set_form(request, clean=True):
         for dd in form['degree_days'].replace(' ','').split(','):
             if form['units'] == 'metric':
                 el_strip, base_temp = WRCCUtils.get_el_and_base_temp(dd)
-                form['elements'].append(el_strip + str(WRCCUtils.convert_to_english(el_strip,base_temp)))
+                form['elements'].append(el_strip + str(WRCCUtils.convert_to_english('base_temp',base_temp)))
             else:
                 form['elements'].append(dd)
     return form
 
 #Initializers
-def set_initial_lister(request,req_type):
+def set_initial(request,req_type):
     '''
-    req_type == single/multi or overlay
+    Set html form
+    Args:
+        request: django request object
+        req_type: application, one of
+            single_lister
+            multi_lister
+            map_overlay
+            spatial_summary
+    Returns:
+        two dictionaries
+        initial: form input
+        checkbox_vals: values for checkboxes (selected or '')
     '''
     initial = {}
     checkbox_vals = {}
@@ -2852,9 +2848,9 @@ def set_initial_lister(request,req_type):
     Getlist = set_GET_list(request)
     #Set area type: station_id(s), location, basin,...
     area_type = None
-    if req_type == 'single':
+    if req_type == 'single_lister':
         initial['area_type'] = Get('area_type','station_id')
-    elif req_type in ['multi','overlay']:
+    elif req_type in ['multi_lister','map_overlay','spatial_summary']:
         initial['area_type'] = Get('area_type','state')
     #Set area depending on area_type
     initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
@@ -2873,7 +2869,7 @@ def set_initial_lister(request,req_type):
         initial['overlay_state'] = Get('overlay_state','NV')
         initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
         initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
-    if req_type == 'overlay':
+    if req_type == 'map_overlay':
         initial['elements'] = Get('elements','maxt,mint,pcpn').split(',')
     else:
         initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
@@ -2885,7 +2881,7 @@ def set_initial_lister(request,req_type):
         initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
     initial['start_date']  = Get('start_date', WRCCUtils.format_date_string(fourtnight,'-'))
     initial['end_date']  = Get('end_date', WRCCUtils.format_date_string(yesterday,'-'))
-    if req_type == 'multi':
+    if req_type == 'multi_lister':
         initial['data_summary'] = Get('data_summary', 'temporal')
     else:
         initial['data_summary'] = Get('data_summary', 'none')
