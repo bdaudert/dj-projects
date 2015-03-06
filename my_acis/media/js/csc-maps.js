@@ -21,16 +21,22 @@ function initialize_grid_point_map(loc) {
     mapTypeId: google.maps.MapTypeId.HYBRID
     };
     map = new google.maps.Map(document.getElementById("map-gridpoint"),mapOptions);
+    
     infowindow = new google.maps.InfoWindow({
-        content: 'oi'
+        content: '<div id="MarkerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
+            '<p><b>Lat: </b>' + lat + '<br/>'+
+            '<b>Lon: </b>' + lon + '<br/>' +
+            '</div>'
     });
 
     var marker = new google.maps.Marker({
         draggable: true,
         position: myLatlng,
+        animation: google.maps.Animation.DROP,
         map: map,
         title: "Your location"
     });
+    infowindow.open(map, marker);
 
     google.maps.event.addListener(marker, 'dragend', function (event) {
         infowindow.close();
@@ -46,7 +52,26 @@ function initialize_grid_point_map(loc) {
             '</div>';
         infowindow.setContent(contentString);
         infowindow.open(map, marker);
-        myLatlng = google.maps.LatLng(parseFloat(new_lat),parseFloat(new_lon));
+        var myLatlng = new google.maps.LatLng(parseFloat(new_lat),parseFloat(new_lon));
+        map.panTo(myLatlng);
+    });
+    google.maps.event.addListener(map, 'click', function (event) {
+        infowindow.close();
+        var new_lat = precise_round(event.latLng.lat(),2).toString();
+        var new_lon = precise_round(event.latLng.lng(),2).toString();
+        var loc = new_lon + ',' + new_lat
+        document.getElementById("location").value = loc;
+        var href = GRID_DATA_URL +'?loc=' + new_lon + ',' + new_lat;
+        var contentString = '<div id="MarkerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
+            '<p><b>Lat: </b>' + new_lat + '<br/>'+
+            '<b>Lon: </b>' + new_lon + '<br/>' +
+
+            '</div>';
+        infowindow.setContent(contentString);
+        myLatlng = new google.maps.LatLng(parseFloat(new_lat),parseFloat(new_lon));
+        marker.setPosition(myLatlng);
+        infowindow.open(map, marker);
+        map.panTo(myLatlng);
     });
 
 }//close initialize_grid_point_map
@@ -973,7 +998,7 @@ function initialize_polygon_map(poly) {
     drawingManager = new google.maps.drawing.DrawingManager({
         drawingModes: [
             google.maps.drawing.OverlayType.POLYGON,
-            google.maps.drawing.OverlayType.MARKER,
+            //google.maps.drawing.OverlayType.MARKER,
             google.maps.drawing.OverlayType.CIRCLE,
             google.maps.drawing.OverlayType.RECTANGLE
         ],
@@ -981,12 +1006,12 @@ function initialize_polygon_map(poly) {
             position: google.maps.ControlPosition.TOP_LEFT,
             drawingModes: [
                 google.maps.drawing.OverlayType.POLYGON,
-                google.maps.drawing.OverlayType.MARKER,
+                //google.maps.drawing.OverlayType.MARKER,
                 google.maps.drawing.OverlayType.CIRCLE,
                 google.maps.drawing.OverlayType.RECTANGLE        
             ]
         },
-        markerOptions: mkrOptions,
+        //markerOptions: mkrOptions,
         rectangleOptions: polyOptions,
         circleOptions: polyOptions,
         polygonOptions: polyOptions
