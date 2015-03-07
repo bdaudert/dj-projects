@@ -182,7 +182,7 @@ $(function(){
     </td>
     <tr id="area" valign="bottom">
     <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
-    <td><input autocomplete="off" type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange"update_maps(this);"></td>
+    <td><input type="text" size="20" id="{{initial.select_stations_by}}" name="{{initial.select_stations_by}}" value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange"update_maps(this);"></td>
     <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up" id="area-pop-up">
         <div id="ht_{{initial.select_stations_by}}"></div>

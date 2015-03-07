@@ -381,7 +381,6 @@ def multi_lister(request):
     if 'formData' in request.POST:
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
-        context['xx'] = form_cleaned
         #Check for form errors
         fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date','degree_days']
         if form_cleaned['data_summary'] in['none','windowed_data']:
@@ -406,17 +405,19 @@ def multi_lister(request):
             return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
 
         #Data request
+        req = {}
+        '''
         try:
             req = WRCCUtils.request_and_format_data(form_cleaned)
             if 'smry' not in req.keys() and 'data' not in  req.keys():
-                results['error'] = 'No data found for these parameters!'
-                context['results'] = results
+                req['error'] = 'No data found for these parameters!'
+                context['results'] = req
                 return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
         except Exception, e:
-            results['error'] = 'Data request error: %s' %str(e)
-            context['results'] = results
+            req['error'] = 'Data request error: %s' %str(e)
+            context['results'] = req
             return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
-
+        '''
         req = WRCCUtils.request_and_format_data(form_cleaned)
         context['results'] = req
         #Format Data for display and/or download
@@ -694,8 +695,8 @@ def spatial_summary(request):
         #format data for highcarts
         graph_data = []
         for el_idx, element in enumerate(form_cleaned['elements']):
-            el_data = WRCCUtils.extract_highcarts_data(req['smry'],el_idx, element)
-            GraphDictWriter = WRCCClasses.GraphDictWriter(form_cleaned, el_data, element)
+            el_data,rm_data = WRCCUtils.extract_highcarts_data(req['smry'],el_idx, element,form_cleaned)
+            GraphDictWriter = WRCCClasses.GraphDictWriter(form_cleaned, el_data, element,rm_data)
             datadict = GraphDictWriter.write_dict()
             graph_data.append(datadict)
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
@@ -1034,7 +1035,6 @@ def monann(request, app_type):
             meta_dict = DJ.get_grid_meta()
             header.insert(0, ['Location (lon, lat)', meta_dict['location_list']])
             data = DJ.get_data_grid()
-        context['xx'] = data
         #Set dates list
         dates_list = DJ.get_dates_list()
         #Run application
@@ -2898,6 +2898,9 @@ def set_initial(request,req_type):
     initial['output_file_name'] = Get('output_file_name', 'Output')
     initial['user_name'] = Get('user_name', 'Your Name')
     initial['user_email'] = Get('user_email', 'Your Email')
+    initial['show_running_mean'] = Get('show_running_mean','T')
+    initial['running_mean_days'] = Get('running_mean_days', '9')
+    initial['running_mean_years'] = Get('running_mean_years', '9')
     #Checkbox vals
     for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys() + ['none']:
         checkbox_vals[area_type + '_selected'] =''
@@ -2940,7 +2943,7 @@ def set_initial(request,req_type):
         if dl == initial['delimiter']:
             checkbox_vals[dl + '_selected'] ='selected'
     for bl in ['T','F']:
-        for cbv in ['show_flags', 'show_observation_time', 'add_degree_days']:
+        for cbv in ['show_flags', 'show_observation_time', 'add_degree_days', 'show_running_mean']:
             checkbox_vals[cbv + '_' + bl + '_selected'] = ''
             if initial[cbv] == bl:
                 checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'

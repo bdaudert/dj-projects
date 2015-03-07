@@ -24,6 +24,23 @@ function generateHighChartTS(json_file_path,figureID,chartType) {
             var axisFontSize = '16px';
             var labelsFontSize = '20px';
 
+            //Define series data
+            var series_data = [{
+                    name: datadict[chartID].seriesName,
+                    color: datadict[chartID].plotColor,
+                    data: datadict[chartID].data
+                }]
+            //Add running mean
+            if ('running_mean_data' in datadict[chartID]){
+                rm_series = {
+                    type:'spline',
+                    name:datadict[chartID].running_mean_title,
+                    color:'#FF0000',
+                    data:datadict[chartID].running_mean_data
+                }
+                series_data.push(rm_series);
+            }
+
             $('#container_' + figureID).highcharts({
                 //------------------------
                 //  CHART PROPERTIES
@@ -163,11 +180,7 @@ function generateHighChartTS(json_file_path,figureID,chartType) {
                     shared: false
                 },
                 //------------------------
-                series: [{
-                    name: datadict[chartID].seriesName,
-                    color: datadict[chartID].plotColor,
-                    data: datadict[chartID].data
-                }]
+                series: series_data
               });//highCharts
         });//getJSON
 };
