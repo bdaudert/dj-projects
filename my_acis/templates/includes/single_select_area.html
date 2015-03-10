@@ -1,7 +1,6 @@
         <td>Point of interest:</td>
         <td>
-            <select id="area_type" name="area_type" onchange="set_elements(this.value) & set_form(this.value) & set_area('area',this) & set_map(this) & update_value(this.value);">
-            <!--<option value="none" {{checkbox_vals.none_selected}}>Select data type</option>-->
+            <select class="data_type" id="area_type" name="area_type">
             <option value="station_id" {{checkbox_vals.station_selected}}>Station</option>
             <option value="location" {{checkbox_vals.location_selected}}>Location (Lon,Lat)</option>
             </select>

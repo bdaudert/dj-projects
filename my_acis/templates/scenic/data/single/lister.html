@@ -12,6 +12,8 @@
 </div>
 <div id="how_to" style="display:none;">
     <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
+    <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
+    <div id="Docu_temporal_resolution">{% include 'includes/Docu_temporal_resolution.html'%}</div>
     <div id="Docu_elements">{% include 'includes/Docu_elements.html'%}</div>
     <div id="Docu_add_degree_days">{% include 'includes/Docu_add_degree_days.html'%}</div>
     <div id="Docu_degree_days">{% include 'includes/Docu_degree_days.html'%}</div>
@@ -64,10 +66,22 @@ $(function(){
 <td valign="top" width="40%">
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
+        <input type="hidden" name="data_type" id="data_type" class="data_type" value="{{initial.data_type}}">
         <table class="form" id="tableData" >
         <tr class="station_grid" style="display:table-row" valign="bottom">{% include 'includes/single_select_area.html'%}</tr>
         <tr class="station_grid" style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
-        <tr class="station" style="display:table-row">{% include 'includes/station_finder.html'%}</tr>
+        <tr class="station" id="stn_finder" style="display:table-row">{% include 'includes/station_finder.html'%}</tr>
+        {%if initial.data_type == "grid"%}        
+        <tr class="grid" id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr>
+        {% if initial.grid == "21"%}
+        <tr class="grid" id="temp_res" style="display:table-row">{% include 'includes/temporal_resolution.html'%}</tr>
+        {%else%}
+        <tr class="grid" id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</tr>
+        {%endif%}
+        {%else%}
+        <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
+        <tr class="grid" id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</tr>
+        {%endif%}
         <tr class="station_grid" style="display:table-row">{% include 'includes/elements.html'%}</tr>
         <tr class="station_grid" id="add" valign="top" style="display:table-row">{% include 'includes/add_special_degree_days.html'%}</tr>
         {%if initial.add_degree_days == "T"%}
@@ -113,7 +127,6 @@ $(function(){
         <tr class="station" id="flags" style="display:none">{% include 'includes/show_flags.html'%}</tr>
         <tr class="station" id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</tr>
         {%endif%}
-        <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
         <tr class="station_grid" style="display:none;">{% include 'includes/date_format.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
         <tr id="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>

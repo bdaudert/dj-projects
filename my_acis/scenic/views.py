@@ -266,6 +266,7 @@ def single_lister(request):
     if 'formData' in request.POST:
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
+        context['x'] = form_cleaned
         #Check form fields
         fields_to_check = [form_cleaned['area_type'],'start_date','end_date','start_window','end_window','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -280,12 +281,12 @@ def single_lister(request):
         '''
         try:
             req = WRCCUtils.request_and_format_data(form_cleaned)
-            if 'smry' not in req.keys() or not req['smry']:
-                results['error'] = 'No data found for these parameters!'
+            if 'smry' not in req.keys() and 'data' not in  req.keys():
+                results = {'error':'No data found for these parameters!'}
                 context['results'] = results
                 return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
         except Exception, e:
-            results['error'] = 'Data request error: %s' %str(e)
+            results = {'error':'Data request error: %s' %str(e)}
             context['results'] = results
             return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
         '''
@@ -2889,6 +2890,7 @@ def set_initial(request,req_type):
     initial['end_window'] = Get('end_window','01-31')
     initial['temporal_summary'] = Get('temporal_summary', 'mean')
     initial['spatial_summary'] = Get('spatial_summary', 'mean')
+    initial['temporal_resolution'] = Get('temporal_resolution','dly')
     initial['show_flags'] = Get('show_flags', 'F')
     initial['show_observation_time'] = Get('show_observation_time', 'F')
     initial['grid'] = Get('grid','1')
@@ -2938,6 +2940,10 @@ def set_initial(request,req_type):
         checkbox_vals['date_format_' + df + '_selected'] =''
         if df == initial['date_format']:
             checkbox_vals['date_format_' + df + '_selected'] ='selected'
+    for tr in ['dly','mly','yly']:
+        checkbox_vals['temporal_resolution_' + tr + '_selected'] = ''
+        if tr == initial['temporal_resolution']:
+            checkbox_vals['temporal_resolution_' + tr + '_selected'] = 'selected'
     for dl in ['comma', 'tab', 'space', 'colon', 'pipe']:
         checkbox_vals[dl + '_selected'] =''
         if dl == initial['delimiter']:
@@ -2947,4 +2953,8 @@ def set_initial(request,req_type):
             checkbox_vals[cbv + '_' + bl + '_selected'] = ''
             if initial[cbv] == bl:
                 checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
+    for g in ['1','21','3','4','5','6','7','8','9','10','11','12','13','14','15','16']:
+        checkbox_vals['grid_' + g + '_selected'] =''
+        if initial['grid'] == g:
+            checkbox_vals['grid_' + g + '_selected'] ='selected'
     return initial,checkbox_vals

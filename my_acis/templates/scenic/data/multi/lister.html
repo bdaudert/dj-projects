@@ -13,6 +13,8 @@
 <div id="how_to" style="display:none;">
     <div id="Docu_area_of_interest">{% include 'includes/Docu_area_of_interest.html'%}</div>
     <div id="Docu_data_type">{% include 'includes/Docu_data_type.html'%}</div>
+    <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
+    <div id="Docu_temporal_resolution">{% include 'includes/Docu_temporal_resolution.html'%}</div>
     <div id="Docu_elements">{% include 'includes/Docu_elements.html'%}</div>
     <div id="Docu_add_degree_days">{% include 'includes/Docu_add_degree_days.html'%}</div>
     <div id="Docu_degree_days">{% include 'includes/Docu_degree_days.html'%}</div>
@@ -68,9 +70,20 @@ $(function(){
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading() & set_hidden_fields(this,'overlayForm')">{% csrf_token %}
         <table class="form" id="tableData">
-        <tr class="station_grid" style="display:table-row">{% include 'includes/area_select_area.html'%}</tr>
+        <tr class="station_grid" style="display:table-row">{% include 'includes/multi_select_area.html'%}</tr>
         <tr class="station_grid" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
         <tr class="station_grid" style="display:table-row">{% include 'includes/data_type.html'%}</tr>
+        {%if initial.data_type == "grid"%}
+        <tr class="grid" id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr>
+        {% if initial.grid == "21"%}
+        <tr class="grid" id="temp_res" style="display:table-row">{% include 'includes/temporal_resolution.html'%}</tr>
+        {%else%}
+        <tr class="grid" id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</tr>
+        {%endif%}
+        {%else%}
+        <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
+        <tr class="grid" id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</tr>
+        {%endif%}
         <tr class="station_grid" style="display:table-row">{% include 'includes/elements.html'%}</tr>
         <tr class="station_grid" id="add" valign="top" style="display:table-row">{% include 'includes/add_special_degree_days.html'%}</tr>
        {%if initial.add_degree_days == "T"%}
@@ -116,7 +129,6 @@ $(function(){
         <tr class="station" id="flags" style="display:none">{% include 'includes/show_flags.html'%}</tr>
         <tr class="station" id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</tr>
         {%endif%}
-        <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
         <tr class="station_grid" style="display:none;">{% include 'includes/date_format.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
         {%if initial.data_summary == "none" or initial.data_summary == "windowed_data" %}
@@ -147,11 +159,16 @@ $(function(){
     </div>
     {%endif%}
 
+    <p class="message results" id="request_email_message"  style="display:none">
+    Non-summarized data wll be processed offline. 
+    Please provide your name and email address at the bottom of the form.
+    </p>
+
     {%if large_request and not form.error %}
     <p class="message results" text-align="left">
     Your data request will be processed offline.</br />
     An email confirmation with instructions on how to obtain your data will
-    be sent on uccessful completion of the request.
+    be sent on successful completion of the request.
     Please contact scenic@dri.edu if you do not hear from us within 12 hours.
     </p>
     {%endif%}
@@ -171,6 +188,7 @@ $(function(){
         {%endif%}
     {%endif%}
     </div> 
+    
     <!--Map section-->
     <!--Gridpoint map-->
     <div id="GridpointMap" style="display:none;"></div>
@@ -178,15 +196,16 @@ $(function(){
     {%if need_overlay_map%}
         <div id="OverlayMap" style="display:block;">{% include 'includes/overlay_map.html'%}</div>
         {%if overlay_error%}
-        <p class="error">{{overlay_error}}</p>
+            <p class="error">{{overlay_error}}</p>
         {%else%}
-        <div id="map-overlay"></div>
-        <div id="content-window"></div>
-        <script type="text/javascript">initialize_map_overlays("{{initial.select_area_type}}","{{initial.host}}", "{{initial.kml_file_path}}")</script>
+            <div id="map-overlay"></div>
+            <div id="content-window"></div>
+            <script type="text/javascript">initialize_map_overlays("{{initial.select_area_type}}","{{initial.host}}", "{{initial.kml_file_path}}")</script>
         {%endif%}
     {%else%}
         <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>   
     {%endif%}
+
     <!--Polygon map-->
     {%if need_polygon_map%}
     <div id="PolyMap" style="display:block;">
@@ -213,7 +232,8 @@ $(function(){
     <!--Results-->
     <!--Print and download buttons-->
     <div class="results">
-    {%if not results.errors and results.data%}
+    {%if not results.errors %}
+        {% if results.data or results.smry%}
         <table>
         <td valign="top">
         <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
@@ -223,6 +243,7 @@ $(function(){
         <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
         </td>
         </table>
+        {% endif %}
     {%endif%}
 
     <!--Data-->

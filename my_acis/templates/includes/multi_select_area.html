@@ -1,15 +1,17 @@
-        <td>Points of interest:</td>
+        <td>Area of interest:</td>
         <td>
-            <select id="area_type" name="area_type" onchange="set_elements(this.value) & set_form(this.value) & set_area('area',this) & set_map(this) & update_value(this.value);">
-            <!--<option value="none" {{checkbox_vals.none_selected}}>Select data type</option>-->
-            <option value="station_ids" {{checkbox_vals.station_selected}}>Stations</option>
-            <option value="locations" {{checkbox_vals.location_selected}}>Locations (Lon,Lat pairs)</option>
+            <select class="area_type" id="area_type" name="area_type">
+            <option value="county" {{checkbox_vals.county_selected}}>County</option>
+            <option value="county_warning_area" {{checkbox_vals.county_warning_area_selected}}>County Warning Area</option>
+            <option value="climate_division" {{checkbox_vals.climate_division_selected}}>Climate Division</option>
+            <option value="basin" {{checkbox_vals.basin_selected}}>Drainage Basin</option>
+            <option value="state" {{checkbox_vals.state_selected}}>State</option>
+            <option value="shape" {{checkbox_vals.shape_selected}}>Custom Shape</option>
             </select>
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div id="Docu_select_points" class="pop-up"></div>
+        <div id="Docu_select_area" class="pop-up"></div>
         <script type="text/javascript">                        
-            $("#Docu_select_points").load("{{HTML_URL}}Docu_help_texts.html #ht_select_points");
+            $("#Docu_select_area").load("{{HTML_URL}}/Docu_help_texts.html #ht_select_area");
         </script>
         </td>
-

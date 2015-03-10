@@ -46,7 +46,7 @@ function generateHighChartTS(json_file_path,figureID,chartType) {
                 //  CHART PROPERTIES
                 //------------------------
                 chart: {
-                    type:datadict[chartID].chartType,
+                    type:chartType,
                     zoomType: 'x',
                     spacingBottom: 30,
                     spacingTop: 10,
