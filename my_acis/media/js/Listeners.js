@@ -43,11 +43,10 @@ $(function(){
 
     $('.area_type').on('change', function(){
        //Set area form field
-       set_area('area',this); //form_utils function
+      set_area('area',this); //form_utils function
       //set map
       set_map(this); //form_utils function
       update_value($(this).val()); //form_utils function
-
     });
     /*
     Sets form fields according to data_type (station/grid)
@@ -61,7 +60,7 @@ $(function(){
         $('#data_type').val(data_type);
         //Hide station finder link
         if ($('#stn_finder').length ){
-            if (data_type == 'grid'){
+            if (data_type == 'grid' || $(this).val() == "location"){
                 $('#stn_finder').css('display','none');
             }
             else{

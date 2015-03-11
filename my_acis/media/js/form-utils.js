@@ -191,8 +191,8 @@ function set_area(row_id,node){
     pop_id.innerHTML='';
     div = document.createElement('div');
     div.setAttribute('id', 'ht_' + node.value);
-    pop_id.appendChild(div); 
-    $(div).load(HTML_URL + 'Docu_help_texts.html #ht_' + node.value);
+    $(div).load('/csc/media/html/Docu_help_texts.html #ht_' + node.value);
+    pop_id.appendChild(div);
 }
 //Functions to hide and show maps
 //Used in set_map function
