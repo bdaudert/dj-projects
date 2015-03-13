@@ -100,9 +100,9 @@ YOUR SEARCH PARAMETERS:<br />
        {% if not hide_sodxtrmts %}
        <td colspan="2">
         {% if not user_params_dict %}
-       <a  href="{{STATION_SODXTRMTS_URL}}" class="trigger_hover"><img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/Sodxtrmts.png"></a> 
+       <a  href="{{STATION_SODXTRMTS_URL}}" class="trigger_hover"><img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a> 
        {% else %}
-       <a target="_blank" href="{{STATION_SODXTRMTS_URL}}?{%for key,val in user_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}" class="trigger_hover"><img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/Sodxtrmts.png"></a> 
+       <a target="_blank" href="{{STATION_SODXTRMTS_URL}}?{%for key,val in user_params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}" class="trigger_hover"><img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/SodxtrmtsTS.png"></a> 
        {% endif %}
         <div class="pop-up">
         <p>Obtain monthly and anual means and extremes for individual stations.<br />Generate customized time series from results.</p>
