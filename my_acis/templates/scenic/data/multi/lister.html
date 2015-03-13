@@ -121,7 +121,7 @@ $(function(){
         {%endif%}
         {%if initial.data_type == "station" and initial.data_summary == "none"%}
         <tr class="station" id="flags" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
-        <tr class="station" id="obs_time" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
+        <tr class="station" id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</tr>
         {%elif initial.data_type == "station" and initial.data_summary == "windowed_data"%}
         <tr class="station" id="flags" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
         <tr class="station" id="obs_time" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>

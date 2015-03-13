@@ -113,7 +113,7 @@ $(function(){
             });
             //Hide flags/obs time
             $('#flags').css('display','table-row');
-            $('#obs_time').css('display','table-row')
+            //$('#obs_time').css('display','table-row')
             //Show grid
             $('#grid_type').css('display','none');
         }
