@@ -1,0 +1,16 @@
+        <td>Temporal Resolution: </td>
+        <td>
+            <select id="temporal_resolution" name="temporal_resolution">
+            <option value="dly" {{checkbox_vals.temporal_resolution_dly_selected}}>Daily</option>
+            <option value="mly" {{checkbox_vals.temporal_resolution_mly_selected}}>Monthly (PRISM)</option>
+            <option value="yly" {{checkbox_vals.temporal_resolution_yly_selected}}>Yearly (PRISM)</option>
+            </select>
+        </td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_temporal_resolution"></div>
+        <script type="text/javascript">                        
+            $("#ht_temporal_resolution").load("{{HTML_URL}}/Docu_help_texts.html #ht_temporal_resolution");
+        </script>
+        </div>
+        </td>

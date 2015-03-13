@@ -1,0 +1,12 @@
+        
+        <td>Station ID/Name:</td>
+        <td><input type="text" size="20" id="stations_id" name="stations_id" value="{{initial.station_id}}" list="US_station_id" onchange="update_value(this.value);"></td>
+        <td>
+        <img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up" id="area-pop-up">
+            <div id="ht_station_id"></div>
+            <script type="text/javascript">                        
+            $("#ht_station_id").load("{{HTML_URL}}/Docu_help_texts.html #ht_station_id");
+            </script>
+        </div>
+        </td>

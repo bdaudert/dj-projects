@@ -1,0 +1,66 @@
+         <div id="formOverlay" style="display:inherit;">
+            <form method="post"  id="overlayForm" action="" onsubmit="show_loading() & set_hidden_fields(this,'tableDataForm')">{% csrf_token %}
+            <table class="form" style="margin:0px;">
+            <td>State: </td>
+            <td>
+                <select name="overlay_state" id="overlay_state">
+                <option value="al" {{al_selected}}>Alabama</option>
+                <option value="ak" {{ak_selected}}>Alaska</option>
+                <option value="az" {{az_selected}}>Arizona</option>
+                <option value="ar" {{ar_selected}}>Arkansas</option>
+                <option value="ca" {{ca_selected}}>California</option>
+                <option value="co" {{co_selected}}>Colorado</option>
+                <option value="ct" {{ct_selected}}>Connecticut</option>
+                <option value="de" {{de_selected}}>Delaware</option>
+                <option value="dc" {{dc_selected}}>District of Columbia</option>
+                <option value="fl" {{fl_selected}}>Florida</option>
+                <option value="ga" {{ga_selected}}>Georgia</option>
+                <option value="hi" {{hi_selected}}>Hawaii</option>
+                <option value="id" {{id_selected}}>Idaho</option>
+                <option value="il" {{il_selected}}>Illinois</option>
+                <option value="in" {{in_selected}}>Indiana</option>
+                <option value="ia" {{ia_selected}}>Iowa</option>
+                <option value="ks" {{ks_selected}}>Kansas</option>
+                <option value="ky" {{ky_selected}}>Kentucky</option>
+                <option value="la" {{la_selected}}>Louisiana</option>
+                <option value="me" {{me_selected}}>Maine</option>
+                <option value="md" {{md_selected}}>Maryland</option>
+                <option value="ma" {{ma_selected}}>Massachusetts</option>
+                <option value="mi" {{mi_selected}}>Michigan</option>
+                <option value="mn" {{mn_selected}}>Minnesota</option>
+                <option value="ms" {{ms_selected}}>Mississippi</option>
+                <option value="mo" {{mo_selected}}>Missouri</option>
+                <option value="mt" {{mt_selected}}>Montana</option>
+                <option value="ne" {{ne_selected}} >Nebraska</option>
+                <option value="nv" {{nv_selected}}>Nevada</option>
+                <option value="nh" {{nh_selected}}>New Hampshire</option>
+                <option value="nj" {{nj_selected}}>New Jersey</option>
+                <option value="nm" {{nm_selected}}>New Mexico</option>
+                <option value="ny" {{ny_selected}}>New York</option>
+                <option value="nc" {{nc_selected}}>North Carolina</option>
+                <option value="nd" {{nd_selected}}>North Dakota</option>
+                <option value="oh" {{oh_selected}}>Ohio</option>
+                <option value="ok" {{ok_selected}}>Oklahoma</option>
+                <option value="or" {{or_selected}}>Oregon</option>
+                <option value="pa" {{pa_selected}}>Pennsylvania</option>
+                <option value="ri" {{ri_selected}}>Rhode Island</option>
+                <option value="sc" {{sc_selected}}>South Carolina</option>
+                <option value="sd" {{sd_selected}}>South Dakota</option>
+                <option value="tn" {{tn_selected}}>Tennessee</option>
+                <option value="tx" {{tx_selected}}>Texas</option>
+                <option value="ut" {{ut_selected}}>Utah</option>
+                <option value="vt" {{vt_selected}}>Vermont</option>
+                <option value="va" {{va_selected}}>Virginia</option>
+                <option value="wa" {{wa_selected}}>Washington</option>
+                <option value="wv" {{wv_selected}}>West Virginia</option>
+                <option value="wi" {{wi_selected}}>Wisconsin</option>
+                <option value="wy" {{wy_selected}}>Wyoming</option>
+            </select>
+            </td>
+            <td><input type="submit" value="Update Map" name="formOverlay"/></td>
+            </tr>
+            </table>
+            <input type="hidden" id="host" name="host" value="{{initial.host}}">
+            <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
+            </form>
+        </div>

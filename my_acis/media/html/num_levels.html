@@ -1,0 +1,16 @@
+       <td>Number of Levels:</td>
+        <td>
+            <select id="level_number" name="level_number" onchange="update_value(this.value)">
+            <option value="5">5</option>
+            </select>
+        </td>
+        <!--
+        <td><input type="text" id="level_number" name="level_number" value="{{initial.level_number}}" onchange="update_value(this.value)"></td>-->
+        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_level_number"></div>
+            <script type="text/javascript">                        
+            $("#ht_level_number").load("{{HTML_URL}}/Docu_help_texts.html #ht_level_number");
+            </script>
+        </div>
+        </td>

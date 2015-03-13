@@ -1,0 +1,10 @@
+        <td>Output file name:</td>
+        <td><input type="text" id="output_file_name" name="output_file_name" value="{{initial.output_file_name}}" onchange="update_value(this.value)"></td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_output_file_name"></div>
+        <script type="text/javascript">                        
+            $("#ht_output_file_name").load("{{HTML_URL}}/Docu_help_texts.html #ht_output_file_name");
+        </script>
+        </div>
+        </td>

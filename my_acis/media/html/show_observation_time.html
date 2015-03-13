@@ -1,0 +1,15 @@
+        <td>Show Observation Time: </td>
+        <td>
+            <select id="show_observation_time" name="show_observation_time" onchange="update_value(this.value)">
+            <option value="F" {{checkbox_vals.show_observation_time_F_selected}}>No</option>
+            <option value="T" {{checkbox_vals.show_observation_time_T_selected}}>Yes</option>
+            </select>
+        </td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_show_observation_time"></div>
+            <script type="text/javascript">                        
+            $("#ht_show_observation_time").load("{{HTML_URL}}/Docu_help_texts.html #ht_show_observation_time");
+            </script>
+        </div>
+        </td>

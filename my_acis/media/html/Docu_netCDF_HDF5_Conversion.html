@@ -1,0 +1,294 @@
+<pre class="code"><code>
+import sys, os, re,datetime, glob
+import time as t
+import subprocess
+from cStringIO import StringIO
+import ftplib, zipfile
+import numpy as np
+import urllib
+
+from netCDF4 import Dataset
+import h5py
+
+
+#Settings
+import settings
+
+'''
+Converts MACA netCDF files to hdf5 format.
+http://maca.northwestknowledge.net/
+
+MACA version 1/2 data for each element are stored in
+netCDF files spanning 10/5 years, respectively.
+
+Each hdf5 file contains data for one year for all elements.
+
+Uses h5py, netCDF4 python modules
+on cyclone1:
+these modules are installed in special virtual env scipytest
+alias net='source /usr/local/pythonenv/scipytest/bin/activate'
+on bitz1:
+these modules are installed system wide
+Created By: Britta Daudert
+'''
+
+class NetCDFToHDF5Converter(object):
+    def __init__(self, year,model,base_dir,h5_name, version) :
+        self.year = year #hdf5 file year
+        self.base_dir = base_dir #directory in which hdf5 files will be stored
+        self.dirty = False
+        self.h5_name = h5_name #year.h5
+        self.model_name = model #MACA model name
+        self.version = version #MACA dataset version (1 or 2)
+        self.element_list = settings.grid_def_maca['elems'].keys() #List of climate elements
+
+    def open_grid(self) :
+        '''
+        Opens hdf5 file object for appending
+        '''
+        self.h5 = h5py.File(self.base_dir + self.h5_name,'a')
+
+    def close(self) :
+        '''
+        Closes hdf5 file object
+        '''
+        self.h5.close()
+
+    def create_grid(self) :
+        '''
+        Initializes hdf5 data structure
+        dimensions: (element, time, lat,lon)
+        Each hdf5 file holds data for one year for each element
+        at each lat/lon
+        '''
+        self.h5 = h5 = h5py.File(self.base_dir + self.h5_name,'w-')
+        shape_v, shape_h = self.grid_shape
+        for elem in self.element_list:
+            fV= settings.grid_def_maca['elems'][elem]['fillValue']
+            e = h5.create_dataset(elem,(1,shape_v,shape_h),dtype='i2',fillvalue=fV,
+                compression='lzf',chunks=(1,shape_v//4,shape_h//4),
+                maxshape=(365,shape_v,shape_h))
+            e.attrs.create('units',settings.grid_def_maca['elems'][elem]['units'])
+
+
+    def get_file_start_end_years(self):
+        '''
+        For a given year (self.year) finds start/end year
+        of the MACA netcdf file containing year
+        '''
+        start_year = None
+        end_year = None
+        if self.version == 'v2':
+            S_YEARS = settings.MACA_START_YEARS_V2
+            E_YEARS = settings.MACA_END_YEARS_V2
+        else:
+            S_YEARS = settings.MACA_START_YEARS_V1
+            E_YEARS = settings.MACA_END_YEARS_V1
+        for idx,s_yr in enumerate(S_YEARS):
+            if s_yr <= self.year and self.year <= E_YEARS[idx]:
+                start_year = s_yr
+                end_year = E_YEARS[idx]
+                break
+        return start_year, end_year
+
+    def set_file_name(self,start_year, end_year, var_name_short):
+        '''
+        Sets the maca dataset file name
+        Depends on start/end year and variable name
+        '''
+        if self.version == 'v2':
+            path = 'macav2metdata_' + var_name_short +'_' + self.model_name
+        else:
+            path ='maca_' + var_name_short +'_' + self.model_name
+        if 1950 <= int(start_year) and int(end_year) <= 2005:
+            path+='_historical_'
+        else:
+            path+= '_rcp85_'
+        if self.version == 'v2':
+            path+= str(start_year) + '_' + str(end_year) + '_CONUS.nc'
+        else:
+            path+= str(start_year) + '_' + str(end_year) + '_WUSA.nc'
+        return path
+
+    def download_data(self,file_name):
+        '''
+        Download MACA dataset file
+        '''
+        if self.version == 'v2':
+            base_path = settings.MACA_REMOTE_WGET_PATH_V2
+        else:
+            base_path = settings.MACA_REMOTE_WGET_PATH_V1 + self.model_name + '/'
+        print base_path + file_name
+        try:
+            urllib.urlretrieve(base_path + file_name, filename=file_name)
+        except Exception, e:
+            log.write('Error retieving data from  %s\n Error: %s'%(base_path + file_name))
+            pass
+
+    def get_date_indices(self, var_name):
+        '''
+        Finds the netCDF file for self.year and
+        the start/end indices in data array of the netCDF file.
+        Note: 10/5 (version 1/2) years per file.
+        If leap year, 366 entries, else 365 entries
+        '''
+        start_year, end_year = self.get_file_start_end_years()
+        #Find start index of data
+        s_e_year = [start_year,end_year]
+        idx_end = -1
+        if self.version == 'v2':
+            yrs_pf = settings.MACA_YRS_PER_FILE_V2
+        else:
+            yrs_pf = settings.MACA_YRS_PER_FILE_V1
+
+        for yr_idx in range(yrs_pf + 1):
+            idx_start = idx_end + 1
+            yr = int(s_e_year[0]) + yr_idx
+            idx_end = idx_start + 365
+            if int(self.year) == yr:
+                break
+        return idx_start, idx_end
+
+
+    def get_elem_array(self,net_file,el_name_short):
+        '''
+        Given the netCDF file and the element name,
+        we download the according netCDF file amd
+        get the element data and the time stamp
+        '''
+        el_name_long = settings.grid_def_maca['elems'][el_name_short]['var_name_long']
+        if not os.path.isfile(net_file):
+            print 'Downloading %s' %net_file
+            self.download_data(net_file)
+            if isinstance(type(net_file),str):
+                log.write('Could not download data file: %s' %net_file)
+                sys.exit(1)
+        if not os.path.isfile(net_file):
+            log.write('Could not download data file: %s' %net_file)
+            sys.exit(1)
+        idx_start,idx_end = self.get_date_indices(el_name_short)
+        f = filter(os.path.isfile, glob.glob(net_file))
+        if len(f) != 1:log.write('Can not find file: %s in %s' %(net_file, str(os.getcwd())))
+        self.dataset = Dataset(f[0], 'r')
+        elem_data = self.dataset.variables[el_name_long]
+        self.grid_shape = (len(self.dataset.variables['lat']), len(self.dataset.variables['lon']))
+        if self.version == 'v2':
+            creation_date = str(self.dataset.getncattr('date_created'))
+            date_t = datetime.datetime.strptime(creation_date, '%Y-%m-%d')
+        else:
+            creation_date = str(self.dataset.getncattr('date'))
+            date_t = datetime.datetime.strptime(creation_date, '%d %B %Y')
+        time_stamp = t.mktime(date_t.timetuple())
+        if os.path.isfile(net_file):
+            #os.remove(net_file)
+            pass
+        return elem_data,time_stamp
+
+    def save_array(self, h5_elem,doy_idx,data, time_stamp):
+        '''
+        Saves data array to hdf5 file
+        '''
+        if h5_elem.shape[0] <= doy_idx :
+            h5_elem.resize((doy_idx+1,)+self.grid_shape)
+        h5_elem[doy_idx,...] = data
+
+    def convert_data(self,time_data, elem):
+        '''
+        Since data in hdf5 file are stored as integers,
+        we need to conver the element data from the netCDF files to integer values.
+        '''
+        fract = settings.grid_def_maca['elems'][elem]['units'].split(' ')[0]
+        fact = int(1/float(fract))
+        new_data = time_data
+        np_data = np.array(time_data)
+        idx_array = np.where(np_data >-9998.0)
+        idx_array_fill = np.where(np_data < -9998.0)
+        sub = 0
+        if elem in ['tasmax','tasmin']:
+            sub = 273 #Convert Kelvin to C
+        elif elem ==  'pr':
+            fact = fact * 86400 #Convert kg/m^2s to mm/day (kg/m^2s ~ mm/s)
+        elif elem == 'huss':
+            fact=fact*1000  #convert from kg/kg to g/kg
+        np_data[idx_array] = np.floor(fact*(np_data[idx_array] - sub)).astype(int)
+        np_data[idx_array_fill] = settings.grid_def_maca['elems'][elem]['fillValue']
+        new_data = np_data.tolist()
+        return new_data
+
+
+    def load_dly(self):
+        '''
+        Loads element data from netCDF into hdf5 file
+        '''
+        for elem in settings.grid_def_maca['elems'].keys():
+            #for elem in ['tasmax']:
+            print 'Loading element %s' %elem
+            el_name_long = settings.grid_def_maca['elems'][elem]['var_name_long']
+            start_year, end_year = self.get_file_start_end_years()
+            net_file = self.set_file_name(start_year,end_year, elem)
+            idx_start,idx_end = self.get_date_indices(elem)
+            elem_data,time_stamp = self.get_elem_array(net_file, elem)
+            log.write('netCDF file:   %s\n' %net_file)
+            log.write('Converting  %s\n' %elem)
+            if os.path.isfile(self.base_dir + self.h5_name) :
+                self.open_grid()
+            else :
+                self.create_grid()
+
+            doy_idx = -1
+            for date_idx in range(idx_start, idx_end):
+                doy_idx+=1
+                #print 'Day of Year %s' %str(doy_idx+1)
+                #Convert data entires to integers
+                scaled_data = self.convert_data(elem_data[date_idx],elem)
+                self.save_array(self.h5[elem],doy_idx,scaled_data, time_stamp)
+                #self.save_array(self.h5[elem],doy_idx, elem_data[idx], time_stamp)
+            log.write('Saved data arrays \n')
+        self.dataset.close()
+        self.close()
+
+
+########
+#M A I N
+########
+if __name__ == '__main__' :
+    models= settings.MACA_CMIP5_MODELS.keys()
+    version = 'v1'
+    #version = 'v2'
+    #start_year =1950
+    #end_year = 2005
+    #for model in models:
+    for model in ['BNU-ESM']:
+        print model
+        log = open('maca_' + model + '_load.log','a+')
+        log.write(model)
+        log.write('*** start %s ***\n'%(t.ctime()))
+        #For testing only do one file spanning 5 years
+        if version == 'v2':
+            START_YEARS = settings.MACA_START_YEARS_V2
+            END_YEARS = settings.MACA_END_YEARS_V2
+        else:
+            START_YEARS = settings.MACA_START_YEARS_V1
+            END_YEARS = settings.MACA_END_YEARS_V1
+
+        for idx, start_year in enumerate([1950]):
+            #for idx, start_year in enumerate(START_YEARS):
+            end_year = END_YEARS[idx]
+            log.write('Start Year: %s End Year: %s\n' %(str(start_year), str(end_year)))
+            print 'File Start Year: %s File End Year: %s' %(str(start_year), str(end_year))
+            #for year in range(start_year, end_year + 1):
+            for year in [start_year]:
+                print 'Converting year %s' %str(year)
+                log.write('Converting netcdf to hdf5 for year %s\n' %str(year))
+                h5_name = '%s_%s.h5'%(model,year)
+                if os.path.isfile(h5_name):
+                    os.remove(h5_name)
+                FC =  NetCDFToHDF5Converter(year,model,settings.MACA_LOCAL_DIR,h5_name,version)
+                try:
+                    FC.load_dly()
+                    log.write('SUCCESS!')
+                except Exception, e :
+                    print 'FAILED with ERROR: %s' %str(e)
+                    log.write('FAIL!')
+                    log.write(str(e))
+</code></pre>

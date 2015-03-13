@@ -1,0 +1,15 @@
+        <td>Show Flags: </td>
+        <td>
+            <select id="show_flags" name="show_flags" onchange="update_value(this.value)">
+            <option value="F" {{checkbox_vals.show_flags_F_selected}}>No</option>
+            <option value="T" {{checkbox_vals.show_flags_T_selected}}>Yes</option>
+            </select>
+        </td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_show_flags"></div>
+            <script type="text/javascript">                        
+            $("#ht_show_flags").load("{{HTML_URL}}/Docu_help_texts.html #ht_show_flags");
+            </script>
+        </div>
+        </td>

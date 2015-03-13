@@ -1,0 +1,10 @@
+        <td id="Start Window">Start Window: </td>
+        <td><input type="text" id="start_window" name="start_window" value="{{initial.start_window}}" onchange="updata_value(this.value) & unset_large_request();"></td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_start_window"></div>
+            <script type="text/javascript">                        
+            $("#ht_start_window").load("{{HTML_URL}}/Docu_help_texts.html #ht_start_window");
+            </script>
+        </div>
+        </td>

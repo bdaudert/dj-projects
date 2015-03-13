@@ -1,0 +1,192 @@
+<pre class="code"><code>
+#Settings file for
+#gridACIS netCDF --> HDF5 conversion
+import re
+
+MACA_LOCAL_DIR='maca/'
+#V1
+#MACA_REMOTE_WGET_PATH_V1='http://nimbus.cos.uidaho.edu/DATA/CMIP5/DOWNSCALED/macav1metdata/'
+MACA_REMOTE_WGET_PATH_V1='http://www.reacchpna.org/reacchspace/obj1/netcdf/CMIP5/'
+#V2
+MACA_REMOTE_WGET_PATH_V2='http://nimbus.cos.uidaho.edu/DATA/CMIP5/DOWNSCALED/macav2metdata/'
+
+
+MACA_REMOTE_OPENDAP_PATH = ''
+MACA_YRS_PER_FILE_V1 = 10
+MACA_YRS_PER_FILE_V2 = 5
+#V1
+MACA_START_YEARS_V1 = [1950 +i*10 for i in range(6)] + [2006 +i*10 for i in range(10)]
+MACA_END_YEARS_V1 =  [1959 +i*10 for i in range(5)] + [2005 +i*10 for i in range(10)] + [2100]
+#V2
+MACA_START_YEARS_V2 = [1950 +i*5 for i in range(11)] + [2006 +i*5 for i in range(19)]
+MACA_END_YEARS_V2 =  [1954 +i*5 for i in range(11)] + [2010 +i*5 for i in range(18)] + [2100]
+
+MACA_CMIP5_MODELS = {
+    #'bcc-csm1-1': [1950,2099],       #(China)
+    'bcc-csm1-1-m':[1950,2100],      #(China)
+    'BNU-ESM':[1950,2100],           #(China)
+    'CanESM2':[1950,2100],           #(Canada)
+    #'CCSM4':[1950,2100],          #(USA) No rhsmin/max -- Wind Removed
+    'CNRM-CM5':[1950,2100],          #(France)
+    'CSIRO-Mk3-6-0':[1950,2100],     #(Austrailia)
+    'GFDL-ESM2G':[1950,2100],        #(USA)
+    'GFDL-ESM2M':[1950,2100],        #(USA)
+    #'HadGEM2-CC':[1950,2099]      #(United Kingdom) *1950-2099 (360 days)
+    #'HadGEM2-ES':[1950,2099]      #(United Kingdom) *1950-2099 (360 days)
+    #'HadGEM2-CC365':[1950,2099]   #(United Kingdom) *1950-2099 (365 days)
+    #'HadGEM2-ES365':[1950,2099]   #(United Kingdom) *1950-2099 (365 days)
+    'inmcm4':[1950,2100],            #(Russia)
+    'IPSL-CM5A-LR':[1950,2100],      #(France)
+    'IPSL-CM5A-MR':[1950,2100],      #(France)
+    'IPSL-CM5B-LR':[1950,2100],      #(France)
+    'MIROC5':[1950,2100],            #(Japan)
+    'MIROC-ESM':[1950,2100],         #(Japan)
+    'MIROC-ESM-CHEM':[1950,2100],    #(Japan)
+    'MRI-CGCM3':[1950,2100],         #(Japan)
+    'NorESM1-M':[1950,2100]         #(Norway) No rhsmin/max
+}
+
+
+grid_def_maurer = {
+    'elems' : {
+        'tasmax': {
+            'name': 'Maximum Daily Temperature',
+            'vX':1,'dtype':'i2',
+            'fillValue':-32768,
+            'units':'0.01 degC',
+            'base_interval':'dly'},
+        'tasmin': {
+            'name': 'Maximum Daily Temperature',
+            'vX':1,'dtype':'i2',
+            'fillValue':-32768,
+            'units':'0.01 degC',
+            'base_interval':'dly'},
+        'pr': {
+            'name': 'Daily Precipitation',
+            'vX':4,
+            'dtype':'i2',
+            'fillValue':-32768,
+            'units':'0.01 mm',
+            'base_interval':'dly'}
+    },
+    'vars': {
+        'tasmax':'maxt',
+        'tasmin':'mint',
+        'pr':'pcpn',
+        'time':'time',
+        'latitude':'lat',
+        'longitude':'lon'
+    }
+}
+
+grid_def_maca = {
+    'elems' : {
+        'tasmax':{
+            'var_name_long':'air_temperature',
+            'long_name':'Maximum daily temperature near surface',
+            'vX':1,
+            'dtype':'i2',
+            'fillValue':-32768,
+            'units':'0.01 degC',
+            'base_interval':'dly'
+        },
+        'tasmin':{
+            'var_name_long':'air_temperature',
+            'long_name':'Minimum daily temperature near surface',
+            'vX':2,
+            'dtype':'i2',
+            'fillValue':-32768,
+            'units':'0.01 degC',
+            'base_interval':'dly'
+        },
+        'rhsmax':{
+            'var_name_long':'relative_humidity',
+            'long_name':'Maximum daily relative humidity near surface',
+            'vX': 24, #?
+            'dtype':'i2',
+            'fillValue':-32768,
+            'units':'1 %',
+            'base_interval':'dly'
+        },
+        'rhsmin':{
+            'var_name_long':'relative_humidity',
+            'long_name':'Miniimum daily relative humidity near surface',
+            'vX':24, #?
+            'dtype':'i2',
+            'fillValue':-32768,
+            'units':'1 %',
+            'base_interval':'dly'
+        },
+        'pr':{
+            'var_name_long':'precipitation_flux',
+            'long_name':'Average daily precipitation amount at surface',
+            'vX':4,
+            'dtype':'i2',
+            'fillValue':-32768,
+            'units':'0.01 mm', #Orig units: kg/m^2s ~ mm/s
+            'base_interval':'dly'
+        },
+        'rsds':{
+            'var_name_long':'surface_downwelling_shortwave_flux_in_air',
+            'long_name':'Average daily downward shortwave radiation at surface',
+            'vX':70, #?
+            'dtype':'i2',
+            'fillValue':-32768,
+            'units':'0.01 W/m^2',
+            'base_interval':'dly'
+        },
+        'huss':{
+            'var_name_long':'specific_humidity',
+            'long_name':'Average daily specific humidity near surface',
+            'vX':99,#?
+            'dtype':'i2',
+            'fillValue':-32768,
+            'units':'0.00001 g/kg', #original kg/kg
+            'base_interval':'dly'
+        }
+    },
+    'vars': {
+        'tasmax':'maxt',
+        'tasmin':'mint',
+        'pr':'pcpn',
+        'rhsmax':'rhsmax',
+        'rhsmin':'rhsmin',
+        'rsds':'rsds',
+        'huss':'huss',
+        'time':'time',
+        'lat':'lat',
+        'lon':'lon'
+    }
+}
+
+#Not available right now
+'''
+        'was':{
+            'var_name_long':'wind', #Check
+            'long_name':'Average daily wind speed near surface',
+            'vX':99, #?
+            'dtype':'i2',
+            'fillValue':-32768,
+            'units':'1 m/s', #Check
+            'base_interval':'dly'
+        },
+        'uas':{
+            'var_name_long':'eastward_wind',
+            'long_name':'Average daily eastward component of wind near surface',
+            'vX':99,#?
+            'dtype':'i2',
+            'fillValue':-32768,
+            'units':'1 m/s',#Check
+            'base_interval':'dly'
+        },
+        'vas':{
+            'var_name_long':'northward_wind',
+            'long_name':'Average daily northward component of wind near surface',
+            'vX':99,#?
+            'dtype':'i2',
+            'fillValue':-32768,
+            'units':'1 m/s',#Check
+            'base_interval':'dly'
+        },
+'''
+</code></pre>

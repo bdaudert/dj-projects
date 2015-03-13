@@ -1,0 +1,59 @@
+<pre class="code"><code>
+#MACA grid def for version 1 dataset (Western US):
+#From http://maca.northwestknowledge.net/>> ABOUT THE DATA>>MACA PRODUCTS
+#Spatial extend: WUSA (31.02 to 49.01), (-124.77 to -103.02)
+#4 km grid = 1/24 deg
+min_x, min_y = -124.77, 31.02
+def geo_transform(out_ij,p0,p1): #p0 is input proj, p1 is output proj
+    lon,lat = (out_ij[1]+0.5)/24.+min_x, (out_ij[0]+0.5)/24.+min_y
+    in_ij = map(lambda x : x/50000., p0(lon,lat))
+    in_ij.reverse()
+    return tuple(in_ij)
+
+def lonlat_to_ij(lon_lat,prj):
+    lon,lat = lon_lat
+    ij = round((lat - min_y)*24.), round((lon - min_x)*24.)
+    return tuple(ij)
+
+def idx_to_ll(self,x,y):
+    return (min_x + x/24.),(min_y + y/24.)
+
+grid_def = {
+    'elems': {
+        'tasmax': {'vX':1,'dtype':'i2','fillValue':-32768,
+            'units':'0.01 degC','base_interval':'dly'},
+        'tasmin': {'vX':2,'dtype':'i2','fillValue':-32768,
+            'units':'0.01 degC','base_interval':'dly'},
+        'pr': {'vX':4,'dtype':'i2','fillValue':-32768,
+            'units':'0.01 mm','base_interval':'dly'},
+        #'rhsmax': {'vX':24,'dtype':'i2','fillValue':-32768,
+            #'units':'1 %','base_interval':'dly'},
+        #'rhsmin': {'vX':24,'dtype':'i2','fillValue':-32768,
+            #'units':'1 %','base_interval':'dly'},
+        #'rsds': {'vX':24,'dtype':'i2','fillValue':-32768,
+            #'units':'0.01 W/m^2','base_interval':'dly'},
+        #'huss': {'vX':24,'dtype':'i2','fillValue':-32768,
+            #'units':'0.00001 g/kg','base_interval':'dly'},
+        },
+    'static': {
+        'lat': [min_y,49.01,1./24.],
+        'lon': [min_x,-103.02,1./24.],
+        'elev': ['static.h5','elev','m'],
+        },
+    'areas': {
+        'state': ['static.h5','state'],
+        'county': ['static.h5','cnty'],
+        'climdiv': ['static.h5','climdiv'],
+        'basin': ['static.h5','basin'],
+        },
+    'h5_name': lambda path,yr_idx : os.path.join(path,
+                      'BNU-ESM_%d.h5'%(yr_idx[0])),
+    'calendar': 'gregorian',
+    'proj4': '+proj=longlat +ellps=GRS80 +no_defs ',
+    'proj_scale':1./24.,
+    'proj_origin':[min_x, min_y],
+    'shape':(523,442),
+    'geo_transform': geo_transform,
+    'lonlat_to_ij': lonlat_to_ij,
+    }
+</code></pre>
