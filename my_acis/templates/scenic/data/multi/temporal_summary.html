@@ -43,20 +43,16 @@ $(function(){
 </script>
 
 <table>
-<td valign="bottom" width="300px">
+<td valign="bottom" width="45%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/temporal_summary/'"/>
 </td>
-<td valign="top" width="650px" align="left">
+<td valign="top" width="55%" align="left">
     <table>
-    <td><div id=tool_info_head></div></td>
-    <td><div id="how_to_head"></div></td>
+    <tr>
+    <td><div id=tool_info_head>{% include 'includes/Button_tool_info.html'%}</div></td>
+    <td><div id="how_to_head">{% include 'includes/Button_how_to.html'%}</div></td>
+    </tr>
     </table>
-    <script type="text/javascript">                        
-        $("#tool_info_head").load("{{HTML_URL}}/Buttons.html .tool_info");
-    </script>
-    <script type="text/javascript">            
-        $("#how_to_head").load("{{HTML_URL}}/Buttons.html .tool_how_to");
-    </script>
 </td>
 </table>
 
