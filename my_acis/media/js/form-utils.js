@@ -421,7 +421,8 @@ function set_smry(node){
             $('#obs_time').css('display','none');
         }
         //Show message that asks user to enter email
-        $('#request_email_message').css('display','block');
+        ShowPopupDocu('request_email_message');
+        //$('#request_email_message').css('display','block');
         //Disable html option and show user name and user email
         //for processing offline
         if ($('#area_type').length){
@@ -445,7 +446,7 @@ function set_smry(node){
             $('#temp_summary').css('display','table-row');
         }
         //Hide message that asks user to enter email
-        $('#request_email_message').css('display','none');
+        //$('#request_email_message').css('display','none');
         //Hide indowed data options
         $('#start_window').css('display','none');
         $('#end_window').css('display','none');
@@ -479,7 +480,8 @@ function set_smry(node){
         
         }
         //Show message that asks user to enter email
-        $('#request_email_message').css('display','block');
+        ShowPopupDocu('request_email_message');
+        //$('#request_email_message').css('display','block');
         //If area_type is state,shape,cwa,climdiv or basin and data summary is none
         //Hide html option from data_format
         //Show delim,format,user name, email
