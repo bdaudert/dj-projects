@@ -1,5 +1,14 @@
 $(function(){
     /*
+    Station finder download data button
+    on click a second form pops up asking for user email, 
+    and additional data download options 
+    */
+    $('.obtain_sf_data').on('click', function(){
+        ShowPopupDocu('formDownload');
+        
+    });
+    /*
     Generates new highcarts
     graph when chartType is changed
     Currently used in spatial_summary

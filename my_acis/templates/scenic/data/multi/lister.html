@@ -30,7 +30,6 @@
 
 <!---Hidded variables-->
 <!--For maps-->
-<!--<input type="hidden" id="area_type" name="area_type" value="{{initial.select_area_by}}">-->
 <input type="hidden" id="host" name="host" value="{{iniial.host}}">
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
 
@@ -64,7 +63,7 @@ $(function(){
 <!--Form-->
 <td valign="top" width="40%">
     <div id='formData'>
-        <form method="post" id="tableDataForm" action="" onsubmit="show_loading() & set_hidden_fields(this,'overlayForm')">{% csrf_token %}
+        <form method="post" id="tableDataForm" action="" onsubmit="show_loading() & setHiddenFields('overlayForm', this)">{% csrf_token %}
         <table class="form" id="tableData">
         <tr class="station_grid" style="display:table-row">{% include 'includes/multi_select_area.html'%}</tr>
         <tr class="station_grid" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
@@ -196,7 +195,7 @@ $(function(){
         {%else%}
             <div id="map-overlay"></div>
             <div id="content-window"></div>
-            <script type="text/javascript">initialize_map_overlays("{{initial.select_area_type}}","{{initial.host}}", "{{initial.kml_file_path}}")</script>
+            <script type="text/javascript">initialize_map_overlays("{{initial.area_type}}","{{initial.host}}", "{{initial.kml_file_path}}")</script>
         {%endif%}
     {%else%}
         <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>   

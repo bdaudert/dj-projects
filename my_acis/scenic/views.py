@@ -783,14 +783,10 @@ def station_finder(request):
 
     if 'formData' in request.POST:
         form_initial = set_form_old(request,clean=False)
-        user_params_list, user_params_dict =set_user_params(form_initial, 'station_locator_app')
-        context['user_params_list'] = user_params_list;context['user_params_dict']=user_params_dict
         #Turn request object into python dict
         form = set_form_old(request, app_name='station_locator_app',clean=False)
         form_cleaned = set_form_old(request,app_name='station_locator_app',clean=True)
         #Add params for link to station data
-        params_list, params_dict = set_user_params(form, 'station_locator_app')
-        context['params_list'] = params_list;context['params_dict'] = params_dict
 
         form = set_form_old(request, clean=False)
         fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date', 'elements']

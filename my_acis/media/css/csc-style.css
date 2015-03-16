@@ -693,7 +693,7 @@ table #map_legend {
 }
 
 /* Do Not Delete, station finder does not work without */
-#map {
+#sf_map {
     position:relative;
     float:center;
     height: 400px;

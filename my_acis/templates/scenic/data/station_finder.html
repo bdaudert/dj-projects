@@ -67,20 +67,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 </script>
 
 <!--Hidden variables-->
-<input type="hidden" id="URL_PREFIX" name="variable" value="{{ URL_PREFIX }}">
-<input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-<input type="hidden" id="DATA_URL" name="DATA_URL" value="{{DATA_URL}}">
-<input type="hidden" id="TOOLS_URL" name="TOOLS_URL" value="{{TOOLS_URL}}">
 <input type="hidden" id="station_ids_str" name="station_ids_str" value="{{station_ids_str}}">
-{%if params_dict.start_date%}
-<input type="hidden" id="start_date" name="variable" value="{{params_dict.start_date}}">
-{%endif%}
-{%if params_dict.end_date%}
-<input type="hidden" id="end_date" name="variable" value="{{params_dict.end_date}}">
-{%endif%}
-{%if params_dict.elements%}
-<input type="hidden" id="elements" name="variable" value="{{params_dict.elements}}">
-{%endif%}
 <input type="hidden" id="elements_str" value="{{initial.elements_string}}" class="elements_string">
 <!--Overlay map parameters-->
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
@@ -110,11 +97,9 @@ $(function(){
     <tr>
     <td colspan="2">
     <div class="results">
-        {%if params_json%}
         {%if not error and not form_error%}
-        <a align="left" target="_blank" href="{{STATION_DATA_URL}}?params_json={{params_json}}" class="link_to_datafind"><img src = "{{MEDIA_URL}}img/access_data_button.png"></a>
+            <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
         {%endif%}
-        {%endif%} 
     </div>
     </td>
     </tr>
@@ -135,20 +120,19 @@ $(function(){
 <table cellpadding="none">
 <td valign="top">
     <div id='formData'>
-    <form id="tableDataForm" method="post" action="" onsubmit="show_loading()">{% csrf_token %}
+    <form id="tableDataForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('tableDownloadForm', this)">{% csrf_token %}
     <table class="form" id="tableData" >
-    <tr class="station" style="display:table-row">{% include 'includes/sf_select_area.html'%}</tr>
-    <tr class="station" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>    
-    <tr class="station" style="display:table-row">{% include 'includes/elements.html'%}</tr>
-    <tr class="station" style="display:table-row"  valign="bottom">{% include 'includes/element_constraints.html'%}</tr>
-    <tr class="station" style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
-    <tr class="station" style="display:table-row"  valign="bottom">{% include 'includes/date_constraints.html'%}</tr>    
-    </table>
+    <tr style="display:table-row">{% include 'includes/sf_select_area.html'%}</tr>
+    <tr style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>    
+    <tr style="display:table-row">{% include 'includes/elements.html'%}</tr>
+    <tr style="display:table-row"  valign="bottom">{% include 'includes/element_constraints.html'%}</tr>
+    <tr style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
+    <tr style="display:table-row"  valign="bottom">{% include 'includes/date_constraints.html'%}</tr>       </table>
     <input style="margin:5px" type="submit" value="Show me stations" name="formData"/>
     <input type="hidden" name="checked_categories" id="checked_categories" value="all">
     <input type="hidden" id="overlay_state" value="{{initial.overlay_state}}">
     </form>
-</div><!--end form data div-->
+    </div><!--end form data div-->
 
 <!--Errors/Maps-->
 <!--<td valign="top">-->
@@ -163,24 +147,46 @@ $(function(){
     </div>
     {%endif%}
 
+    
+    <!-Data Download-> 
+    <div id='formDownload' style="display:none;">
+    <p class="message">Your request will be processed offline.<br />
+    Please submit this request form.
+    </p>
+    <form id="tableDownloadForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('tableDataForm', this)">{% csrf_token %}
+    <table class="form" id="tableDownload" >
+    <tr class="data_sf" id="data_summary" style="display:table-row;">{% include 'includes/data_summary.html'%}</tr>
+    <tr id="temp_summary" class="data_sf" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
+    <tr id="spat_summary" class="data_sf" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
+    <tr class="data_sf" id="start_window" style="display:none;">{% include 'includes/start_window.html'%}</tr>
+    <tr class="data_sf" id="end_window" style="display:none;">{% include 'includes/end_window.html'%}</tr>
+    <tr class="data_sf" style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
+    <tr id="delim" class="data_sf" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
+    <tr id="out_file" class="data_sf" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
+    <tr id="un" class="data_sf" style="display:table-row;">{% include 'includes/user_name.html'%}</tr>
+    <tr id="ue" class="data_sf" style="display:table-row;">{% include 'includes/user_email.html'%}</tr>
+    </table>
+    <input style="margin:5px" type="submit" value="Show me stations" name="formDownload"/>
+    </form>
+    </div><!--end formDownload div-->
+
     <!--Maps-->
     <div class="results">
+    <!--Main Map-->
     {%if station_json and not error and not form_error and not need_overlay_map%}
     <table id="map_legend" valign="top">
     <tr><td colspan="5" align="center"><b>Station Network Legend</b>
     </td></tr>
     </table>
-    {%endif%}
 
-    {%if station_json and not error and not form_error and not need_overlay_map%}
     <input type="hidden" id="station_json" name="variable" value="{{station_json}}">
-    <div id="map"></div>
+    <div id="sf_map"></div>
     <script type="text/javascript">
         initialize_station_finder()
     </script>
 
     <!--Link to data portal-->
-    <a align="center" target="_blank" href="{{DATA_URL}}multi/lister/?params_json={{params_json}}" class="link_to_datafind"><img src = "{{MEDIA_URL}}img/access_data_button.png"></a>
+    <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
     
     <!--Station List-->
     <div class="station_list">
@@ -219,7 +225,7 @@ $(function(){
         {%else%}
             <div id="map-overlay"></div>
             <div id="content-window"></div>
-            <script type="text/javascript">initialize_map_overlays("{{initial.select_area_type}}","{{initial.host}}", "{{initial.kml_file_path}}")</script>
+            <script type="text/javascript">initialize_map_overlays("{{initial.area_type}}","{{initial.host}}", "{{initial.kml_file_path}}")</script>
         {%endif%}
     {%else%}
         <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>   

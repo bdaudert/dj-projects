@@ -368,21 +368,43 @@ function addHidden(theForm, name, value) {
     input.value = value;
     theForm.appendChild(input);
 }
-
-
-function set_hidden_fields(theForm, mainForm) {
+function setHiddenFields(fromFormID, toFormID) {
     /*
-    Adds the fields of mainForm to 
-    theForm as hidden input
-    so that user input of mainForm is preserved upon
-    theForm submit 
-    Used when user updates the overlay map 
+    Adds the fields from fromForm to toForm 
+    as hidden input so that user input of fromForm is preserved 
+    in toForm on submit
     */
+    //Make a list of form names in the toForm
+    //To avoid overwriting
+    var ff = [];
+    $('#' + toFormID + ' input, #' + toFormID + ' select').each(
+    function(){
+        ff.push($(this).attr('name'));
+    });
+    //Add submit and token entries
+    ff.push('submit');
+    ff.push('csrfmiddlewaretoken');
+
+    $('#' + fromFormID + ' input, #' + fromFormID + ' select').each(
+    function(){
+        var name = $(this).attr('name');
+        //Only save form elements that do not exists in toForm
+        if (!name.inList(ff)){
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = $(this).val();
+            document.getElementById(toFormID).appendChild(input);
+        }
+    });
+};   
+
+/*
+function set_hidden_fields(theForm, mainForm) {
     $('#' + mainForm + ' input, #' + mainForm + ' select').each(
     function(index){
         var input = $(this);
         var name = input.attr('name');
-        //if (name != "csrfmiddlewaretoken" && name != 'select_stations_by' && name!= 'elements' && name!="overlay_state" && input.attr('type')!="submit"){
         if (name != "csrfmiddlewaretoken" && input.attr('type')!="submit"){
             //Only add visible fields and hidden inputs, omit display:none elements
             if ($(this).is(':visible') || input.attr('type')=="hidden") {
@@ -398,6 +420,7 @@ function set_hidden_fields(theForm, mainForm) {
     });
     theForm.submit()
 }
+*/
 
 function set_smry(node){
     /*

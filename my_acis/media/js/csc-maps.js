@@ -140,8 +140,6 @@ var show;
 var hide;
 function initialize_station_finder() {
     var geocoder = new google.maps.Geocoder();
-    var STATION_DATA_URL = document.getElementById("STATION_DATA_URL").value;
-    var STATION_TOOLS_URL = document.getElementById("STATION_TOOLS_URL").value;
     var JSON_URL = document.getElementById("JSON_URL").value;
     var TMP_URL = document.getElementById("TMP_URL").value;
     var j_f = document.getElementById("station_json").value;
@@ -153,20 +151,10 @@ function initialize_station_finder() {
         //var station_json = '/csc/media/tmp/' + j_f
         var station_json = TMP_URL + j_f
     }
-
-    if (document.getElementById("start_date")) {
-        var start_date = document.getElementById("start_date").value;
-    } 
-    else { var start_date = null }
-    if (document.getElementById("end_date")) {
-        var end_date = document.getElementById("end_date").value;
-    }
-    else { var end_date = null }
-    if (document.getElementById("elements_str")) {
-        var elements = document.getElementById("elements_str").value;
-        var el_list = elements.split(',');
-    }
-    else { var elements = null }
+    var start_date = $('#start_date').val();
+    var end_date = $('#end_date').val();
+    var elements = $('#elements_str').val();
+    var el_list = elements.split(',');
     //Read in stn data json file
     $.getJSON(station_json, function(data) {
 
@@ -178,7 +166,7 @@ function initialize_station_finder() {
         mapTypeId:google.maps.MapTypeId.HYBRID
         };
 
-        var map = new google.maps.Map(document.getElementById("map"),mapOptions);
+        var map = new google.maps.Map(document.getElementById("sf_map"),mapOptions);
         
         var legend_table = document.getElementById('map_legend');
         //Sort network_codes according to Kelly's preference and append to legend:
@@ -273,40 +261,24 @@ function initialize_station_finder() {
                 avbl_elements += c.available_elements[i][0] + '<br />'     
             }
 
-            var data_portal_link = '<a target="_blank" href="' + STATION_DATA_URL + 
-            '?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid; 
-            var app_portal_link = '<a target="_blank" href="' + STATION_TOOLS_URL + 
-            '?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid;
-            var sodsumm_portal_link = '<a target="_blank" href="' + STATION_TOOLS_URL +
-            'sodsumm?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid +
-            '&start_date=POR&end_date=POR';
-            //var metagraph_portal_link = '<a target="_blank" href="' + STATION_TOOLS_URL +
-            //'metagraph?select_stations_by=station_id&station_id=' + c.name + ',' + c.sid; 
-            if (elements != null){
-                data_portal_link = data_portal_link + '&elements=' + elements;
-                app_portal_link = app_portal_link + '&elements=' + elements;
-            }
-            if (start_date != null){ 
-                data_portal_link = data_portal_link + '&start_date=' + start_date;
-                app_portal_link = app_portal_link + '&start_date=' + start_date; 
-            }
-            if (end_date != null){ 
-                data_portal_link = data_portal_link + '&end_date=' + end_date;
-                app_portal_link = app_portal_link + '&end_date=' + end_date; 
-            }
+            var data_portal_link = '<a target="_blank" href=/csc/scenic/data/single/lister/"' + 
+            '?station_id=' + c.name + ',' + c.sid; 
+            var app_portal_link = '<a target="_blank" href=/csc/scenic/data/single/"' 
+            '?station_id=' + c.name + ',' + c.sid;
+            data_portal_link = data_portal_link + '&elements=' + elements;
+            app_portal_link = app_portal_link + '&elements=' + elements;
+            data_portal_link = data_portal_link + '&start_date=' + start_date;
+            app_portal_link = app_portal_link + '&start_date=' + start_date; 
+            data_portal_link = data_portal_link + '&end_date=' + end_date;
+            app_portal_link = app_portal_link + '&end_date=' + end_date; 
             data_portal_link = data_portal_link + '">Obtain data for this station </a>'
-            sodsumm_portal_link = sodsumm_portal_link + '">Generate Station Climatology </a>'
             app_portal_link = app_portal_link + '">Run custom data analysis</a>'
-            //metagraph_portal_link = data_portal_link + '">Completeness of data collection for maxt/mint/pcpn/snow/snwd</a>'
             var contentString = '<div id="MarkerWindow">'+
                 data_portal_link + '<br />' +
-                sodsumm_portal_link + '<br />' +
                 app_portal_link + '<br />' +
                 '<b>Name: </b><font color="#FF007F">' + c.name + '</font><br/>'+
                 '<b>Station ID: </b>' + c.sid + '<br/>' +
-                //'<b>Other Station IDs: </b>' + c.sids + '<br/>' +
                 '<b>Network: </b>' + c.stn_network + '<br/>' +
-                //'<b>Other Networks: </b>' + c.stn_networks + '<br/>' +
                 '<b>State, Elev ft, Lat, Lon: </b>' + c.state + ', ' + c.elevation + ', ' + c.lat + ', ' +c.lon +'<br/>' +
                 '<b>Available elements with date range: </b>' + avbl_elements + '<br />' +
                 '</div>';
