@@ -63,7 +63,7 @@ $(function(){
 <!--Form-->
 <td valign="top" width="40%">
     <div id='formData'>
-        <form method="post" id="tableDataForm" action="" onsubmit="show_loading() & setHiddenFields('overlayForm', this)">{% csrf_token %}
+        <form method="post" id="tableDataForm" action="" onsubmit="show_loading() & setHiddenFields('overlayForm', $(this).attr('id'))">{% csrf_token %}
         <table class="form" id="tableData">
         <tr class="station_grid" style="display:table-row">{% include 'includes/multi_select_area.html'%}</tr>
         <tr class="station_grid" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
@@ -159,7 +159,7 @@ $(function(){
     Please provide your name and email address at the bottom of the form.
     </p>
 
-    {%if large_request and not form.error %}
+    {%if large_request and not form_error %}
     <p class="message results" text-align="left">
     Your data request will be processed offline.</br />
     An email confirmation with instructions on how to obtain your data will
@@ -195,7 +195,7 @@ $(function(){
         {%else%}
             <div id="map-overlay"></div>
             <div id="content-window"></div>
-            <script type="text/javascript">initialize_map_overlays("{{initial.area_type}}","{{initial.host}}", "{{initial.kml_file_path}}")</script>
+            <script type="text/javascript">initialize_map_overlays()</script>
         {%endif%}
     {%else%}
         <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>   

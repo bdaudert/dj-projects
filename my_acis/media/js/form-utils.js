@@ -185,7 +185,7 @@ function set_area(row_id,node){
     cell1 = cell0.nextSibling.nextSibling;
     cell1.innerHTML= '<input type="text" id="' + node.value + '" name="'+ 
     node.value +'" value="' +  lv.value + '" list="' + lv.autofill_list + '"' +
-    ' onchange="update_value(this.value) & unset_large_request() & set_map(this);" >';
+    ' onchange="update_value(this.value)" >';
     //Cell3 help text
     pop_id = document.getElementById('area-pop-up');
     pop_id.innerHTML='';
@@ -262,11 +262,8 @@ function hide_overlay_map(){
 function show_overlay_map(){
     //Show overlay map 
     var host, ol_map_div,kml_file_path,w,m,area_type;
+    //ol_map_div = $('#OverlayMap');
     ol_map_div = document.getElementById('OverlayMap');
-    ol_map_div.style.display = "block";
-    area_type = document.getElementById('area_type').value;
-    host = document.getElementById('host').value;
-    kml_file_path = document.getElementById('kml_file_path').value;
     if (!$('#map-overlay').length){
         m = document.createElement('div');
         m.setAttribute('id', 'map-overlay');
@@ -279,7 +276,8 @@ function show_overlay_map(){
         ol_map_div.appendChild(w);
     }
     //Generate Map
-    initialize_map_overlays(area_type,host,kml_file_path);
+    initialize_map_overlays();
+    ol_map_div.style.display = 'block';
 }
 
 function hide_polygon_map(){
@@ -313,19 +311,16 @@ function set_map(node){
     Sets map interfaces for data and applications
     node is the area selector
     */
-    var area_type,TMP_URL,state,kml_file_path;
+    var area_type, TMP_URL,state,kml_file_path;
     //Get TMP env variable (defined in templates/csc_base.html)
     area_type = node.value;
-    try {
-        document.getElementById('kml_file_path').value=kml_file_path;
-    }
-    catch (e){}
     //Update hidden elements
     if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
-        TMP_URL = document.getElementById('TMP_URL').value;
-        state = document.getElementById('overlay_state').value;
+        TMP_URL = $('#TMP_URL').val();
+        state = $('#overlay_state').val();
         kml_file_path = TMP_URL + state + '_' + area_type + '.kml';
-        document.getElementById('kml_file_path').value=kml_file_path;
+        //Update template variables 
+        $('#kml_file_path').val(kml_file_path);
         $(".area_type").val(area_type);
     }
     //Set up maps for display
@@ -389,7 +384,7 @@ function setHiddenFields(fromFormID, toFormID) {
     function(){
         var name = $(this).attr('name');
         //Only save form elements that do not exists in toForm
-        if (!name.inList(ff)){
+        if (!name.inList(ff) && name.substring(0,4) != 'form'){
             var input = document.createElement('input');
             input.type = 'hidden';
             input.name = name;

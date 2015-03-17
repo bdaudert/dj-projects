@@ -1035,7 +1035,10 @@ function initialize_map_overlay(map_id,poly) {
 }
 
 
-function initialize_map_overlays(type, host, kml_file_path) {
+function initialize_map_overlays() {
+    var area_type = $('#area_type').val();
+    var host = $('#HOST').val();
+    var kml_file_path = $('#kml_file_path').val();
     //type is one of: basin, cwa, climdiv, county
     var myLatLng = new google.maps.LatLng(37.0, -114.05);
     var mapOptions = {
@@ -1050,14 +1053,15 @@ function initialize_map_overlays(type, host, kml_file_path) {
     });
     var Layer = new google.maps.KmlLayer({
         url: 'http://'+ host + kml_file_path,
-        suppressInfoWindows: true,
-        map: map
+        suppressInfoWindows: true
+        //map: map
     });
     Layer.setMap(map);
+    //KML layer has no mouseover event!! 
     google.maps.event.addListener(Layer, 'click', function(kmlEvent) {
         var text = kmlEvent.featureData.description;
-        document.getElementById(type).value = kmlEvent.featureData.description;
-        //showInDiv(text);
+        //Set the area form field 
+        $('#' + area_type).val(kmlEvent.featureData.description);
         //var contentString = '<div id="LayerWindow" style="line-height:1.35;width:200px;overflow:hidden;white-space:nowrap;">'+
         var contentString = '<div id="LayerWindow">' +
             kmlEvent.featureData.description +
@@ -1073,27 +1077,4 @@ function initialize_map_overlays(type, host, kml_file_path) {
         //infowindow.open(map, Layer);
         infowindow.open(map);
     });
-    //KML layer has no mouseover event!! This is not working 
-    google.maps.event.addListener(Layer, 'mouseover', function(kmlEvent) {
-        var text = kmlEvent.featureData.description;
-        document.getElementById(type).value = kmlEvent.featureData.description;
-        //showInDiv(text);
-        var contentString = '<div id="LayerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">' +
-            kmlEvent.featureData.description +
-            '</div>';
-        infowindow.close();
-        //infowindow.setContent(contentString);
-        infowindow.setOptions({
-                content:contentString,
-                //position: kmlEvent.position
-                position:kmlEvent.latLng
-        });
-        //infowindow.open(map, Layer);
-        infowindow.open(map);
-    });
-
-    function showInDiv(text) {
-        var sidediv = document.getElementById('content-window');
-        sidediv.innerHTML = text;
-    }
 }

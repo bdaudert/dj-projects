@@ -1,0 +1,15 @@
+    <td>Find stations that have:</td>
+    <td>
+        <select id="elements_constraints" name="elements_constraints" onchange="update_value(this.value)">
+        <option value="all" {{checkbox_vals.elements_all_selected}}>All of the elements</option>
+        <option value="any" {{checkbox_vals.elements_any_selected}}>Any of the elements</option>
+        </select>
+    </td>
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_elements_constraints"></div>
+        <script type="text/javascript">                        
+            $("#ht_elements_constraints").load("{{HTML_URL}}/Docu_help_texts.html #ht_elements_constraints");
+        </script>
+    </div>
+    </td>

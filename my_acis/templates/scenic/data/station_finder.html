@@ -70,9 +70,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 <input type="hidden" id="station_ids_str" name="station_ids_str" value="{{station_ids_str}}">
 <input type="hidden" id="elements_str" value="{{initial.elements_string}}" class="elements_string">
 <!--Overlay map parameters-->
-<input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
-<input type="hidden" id="host" name="host" value="{{host}}">
-<input type="hidden" id="kml_file_path" name="kml_file_path" value="{{kml_file_path}}">
+<input type="hidden" id="kml_file_path" name="kml_file_path" value="">
 
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
@@ -97,7 +95,7 @@ $(function(){
     <tr>
     <td colspan="2">
     <div class="results">
-        {%if not error and not form_error%}
+        {%if not error and not form_error and station_json %}
             <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
         {%endif%}
     </div>
@@ -107,26 +105,17 @@ $(function(){
 </td>
 </table>
 
-<!--First Table: Form, HowTos, Links-->
-<table>
-<td valign="top" align="center" width="660px">
-    <!-- Form Errors-->
-    {%if form_error%}
-    <p class="error" align="center">ERROR: Please correct the form error(s) highlighted in red!</p>
-    {%endif%}
-</td>
-</table>
-
 <table cellpadding="none">
 <td valign="top">
     <div id='formData'>
-    <form id="tableDataForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('tableDownloadForm', this)">{% csrf_token %}
+    <form id="tableDataForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('tableDownloadForm', $(this).attr('id'))">{% csrf_token %}
     <table class="form" id="tableData" >
     <tr style="display:table-row">{% include 'includes/sf_select_area.html'%}</tr>
     <tr style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>    
     <tr style="display:table-row">{% include 'includes/elements.html'%}</tr>
     <tr style="display:table-row"  valign="bottom">{% include 'includes/element_constraints.html'%}</tr>
     <tr style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
+    <tr style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
     <tr style="display:table-row"  valign="bottom">{% include 'includes/date_constraints.html'%}</tr>       </table>
     <input style="margin:5px" type="submit" value="Show me stations" name="formData"/>
     <input type="hidden" name="checked_categories" id="checked_categories" value="all">
@@ -147,13 +136,21 @@ $(function(){
     </div>
     {%endif%}
 
+    {%if large_request and not form_error %}
+    <p class="message results" text-align="left">
+    Your data request will be processed offline.</br />
+    An email confirmation with instructions on how to obtain your data will
+    be sent on successful completion of the request.
+    Please contact scenic@dri.edu if you do not hear from us within 12 hours.
+    </p>
+    {%endif%}
     
     <!-Data Download-> 
     <div id='formDownload' style="display:none;">
     <p class="message">Your request will be processed offline.<br />
     Please submit this request form.
     </p>
-    <form id="tableDownloadForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('tableDataForm', this)">{% csrf_token %}
+    <form id="tableDownloadForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('tableDataForm', $(this).attr('id'))">{% csrf_token %}
     <table class="form" id="tableDownload" >
     <tr class="data_sf" id="data_summary" style="display:table-row;">{% include 'includes/data_summary.html'%}</tr>
     <tr id="temp_summary" class="data_sf" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
@@ -166,13 +163,22 @@ $(function(){
     <tr id="un" class="data_sf" style="display:table-row;">{% include 'includes/user_name.html'%}</tr>
     <tr id="ue" class="data_sf" style="display:table-row;">{% include 'includes/user_email.html'%}</tr>
     </table>
-    <input style="margin:5px" type="submit" value="Show me stations" name="formDownload"/>
+    <input style="margin:5px" type="submit" value="Get Data" name="formDownload"/>
     </form>
     </div><!--end formDownload div-->
 
     <!--Maps-->
     <div class="results">
     <!--Main Map-->
+    <!-- Form Errors-->
+    {%if form_error%}
+    <p class="error" align="center">ERROR: Please correct the form error(s) highlighted in red!</p>
+    {%endif%}
+    <!--Map error-->
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {%endif%} 
+
     {%if station_json and not error and not form_error and not need_overlay_map%}
     <table id="map_legend" valign="top">
     <tr><td colspan="5" align="center"><b>Station Network Legend</b>
@@ -225,7 +231,7 @@ $(function(){
         {%else%}
             <div id="map-overlay"></div>
             <div id="content-window"></div>
-            <script type="text/javascript">initialize_map_overlays("{{initial.area_type}}","{{initial.host}}", "{{initial.kml_file_path}}")</script>
+            <script type="text/javascript">initialize_map_overlays()</script>
         {%endif%}
     {%else%}
         <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>   

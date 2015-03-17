@@ -458,8 +458,10 @@ def multi_lister(request):
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
         initial, checkbox_vals = set_initial(request,'map_overlay')
-        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         context[initial['overlay_state'] + '_selected'] = 'selected'
+        #overide kml_file_path
+        initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
 
     #Download button pressed
     if 'formDownload' in request.POST:
@@ -714,8 +716,10 @@ def spatial_summary(request):
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
         initial, checkbox_vals = set_initial(request,'map_overlay')
-        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         context[initial['overlay_state'] + '_selected'] = 'selected'
+        #overide kml_file_path
+        initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
 
     #Downlaod Table Data
     if 'formDownload' in request.POST:
@@ -746,16 +750,10 @@ def station_finder(request):
     }
     #Set up initial map (NV stations)
     #context['station_json'] = 'NV_stn.json'
-    initial,checkbox_vals = set_station_locator_initial(request)
+    initial,checkbox_vals = set_initial(request,'station_finder')
+    context[initial['overlay_state'].lower() + '_selected'] = 'selected'
     context['initial'] = initial;context['checkbox_vals']=checkbox_vals
     #Set up maps if needed
-    context['host'] = settings.HOST
-    context['area_type'] = initial['select_stations_by']
-    context[initial['select_stations_by']] = WRCCData.AREA_DEFAULTS[initial['select_stations_by']]
-    context[initial['overlay_state'] + '_selected'] = 'selected'
-    context['kml_file_path'] = create_kml_file(initial['select_stations_by'], 'nv')
-    params_list, params_dict = set_user_params(initial, 'station_locator_app')
-    context['params_list'] = params_list;context['params_dict'] = params_dict
     if request.method == "GET":
         #Generate initial map
         by_type = WRCCData.ACIS_TO_SEARCH_AREA['state']
@@ -767,9 +765,8 @@ def station_finder(request):
         #context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
         #Write json file for link to data lister
         json_dict ={};
-        for key,val in params_dict.iteritems():
+        for key,val in initial.iteritems():
             json_dict[key] = val
-        json_dict['select_stations_by'] = 'station_ids'
         json_dict['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         json_file_name = '%s_params.json' %(time_stamp)
@@ -782,45 +779,35 @@ def station_finder(request):
         context['station_json'] = f_name
 
     if 'formData' in request.POST:
-        form_initial = set_form_old(request,clean=False)
+        form_initial = set_form(request,clean=False)
         #Turn request object into python dict
-        form = set_form_old(request, app_name='station_locator_app',clean=False)
-        form_cleaned = set_form_old(request,app_name='station_locator_app',clean=True)
-        #Add params for link to station data
-
-        form = set_form_old(request, clean=False)
-        fields_to_check = [form_cleaned['select_stations_by'],'start_date', 'end_date', 'elements']
+        form = set_form(request,clean=False)
+        form_cleaned = set_form(request,clean=True)
+        fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date', 'elements']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
-            if form_cleaned['select_stations_by'] in ['basin','county','county_warning_area', 'climate_division']:
+            if form_cleaned['area_type'] in ['basin','county','county_warning_area', 'climate_division']:
                 context['need_overlay_map'] = True
             return render_to_response('scenic/data/station_finder.html', context, context_instance=RequestContext(request))
-        initial,checkbox_vals = set_station_locator_initial(form)
-        context['initial'] = initial;context['checkbox_vals']  = checkbox_vals
         #Define map title
-        display_params_list, pd = set_station_locator_params(form)
-        context['display_params_list']= display_params_list
-        #context['params_dict']= params_dict
-        element_list = form_cleaned['elements'].replace(' ','').split(',')
         #Convert element list to var majors
         el_vX_list = []
-        for el_idx, element in enumerate(element_list):
+        for el_idx, element in enumerate(form_cleaned['elements']):
             el,base_temp = WRCCUtils.get_el_and_base_temp(element)
             el_vX_list.append(str(WRCCData.ACIS_ELEMENTS_DICT[el]['vX']))
         #context['req']= el_vX_list
         #Set up params for station_json generation
-        by_type = WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['select_stations_by']]
-        val = form_cleaned[WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['select_stations_by']]]
+        by_type = WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['area_type']]
+        val = form_cleaned[WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['area_type']]]
         context['map_title'] = WRCCData.DISPLAY_PARAMS[by_type].upper() + ': ' + val
         date_range = [form_cleaned['start_date'],form_cleaned['end_date']]
         el_date_constraints = form_cleaned['elements_constraints'] + '_' + form_cleaned['dates_constraints']
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=el_date_constraints)
         #context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
         json_dict ={};
-        for key,val in params_dict.iteritems():
+        for key,val in form_cleaned.iteritems():
             json_dict[key] = val
-        json_dict['select_stations_by'] = 'station_ids'
         json_dict['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         json_file_name = '%s_params.json' %(time_stamp)
@@ -832,6 +819,29 @@ def station_finder(request):
             context['error'] = "No stations found for these search parameters."
         context['station_json'] = f_name
 
+    #Download data for all sations displayed
+    #Request will be processed offline
+    if 'formDownload' in request.POST:
+        initial, checkbox_vals = set_initial(request,'map_overlay')
+        context[initial['overlay_state'] + '_selected'] = 'selected'
+        context['large_request'] = True
+        #Process request offline
+        form_cleaned = set_form(request, clean=True)
+        context['xx'] = form_cleaned
+        json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
+        WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
+        return render_to_response('scenic/data/station_finder.html', context, context_instance=RequestContext(request))
+
+    #Overlay maps
+    if 'formOverlay' in request.POST:
+        context['need_overlay_map'] = True
+        initial, checkbox_vals = set_initial(request,'map_overlay')
+        context[initial['overlay_state'] + '_selected'] = 'selected'
+        #overide kml_file_path
+        initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
+        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+
+    '''
     #overlay map generation
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
@@ -853,6 +863,7 @@ def station_finder(request):
         context['kml_file_path'] = kml_file_path
         context['area_type'] = form['select_overlay_by']
         context['host'] = settings.HOST
+    '''
     return render_to_response('scenic/data/station_finder.html', context, context_instance=RequestContext(request))
 
 #######################
@@ -1284,10 +1295,6 @@ def create_kml_file(area_type, overlay_state):
     kml_file_name = overlay_state + '_' + area_type + '.kml'
     kml_file_path = settings.TMP_URL +  kml_file_name
     status = WRCCUtils.generate_kml_file(area_type, overlay_state, kml_file_name, settings.TEMP_DIR)
-    '''
-    if not WRCCUtils.check_for_file(settings.TMP_DIR,kml_file_name):
-        status = WRCCUtils.generate_kml_file(area_type, overlay_state, kml_file_name, settings.TEMP)
-    '''
     return kml_file_path
 
 
@@ -2830,10 +2837,9 @@ def set_initial(request,req_type):
     Args:
         request: django request object
         req_type: application, one of
-            single_lister
-            multi_lister
+            single_lister, multi_lister
             map_overlay
-            spatial_summary
+            spatial_summary, temporal_summary
     Returns:
         two dictionaries
         initial: form input
@@ -2847,7 +2853,7 @@ def set_initial(request,req_type):
     area_type = None
     if req_type == 'single_lister':
         initial['area_type'] = Get('area_type','station_id')
-    elif req_type in ['multi_lister','map_overlay','spatial_summary']:
+    else:
         initial['area_type'] = Get('area_type','state')
     #Set area depending on area_type
     initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
@@ -2865,7 +2871,7 @@ def set_initial(request,req_type):
         initial['host'] = settings.HOST
         initial['overlay_state'] = Get('overlay_state','NV')
         initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
-        initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
+        #initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
     if req_type == 'map_overlay':
         initial['elements'] = Get('elements','maxt,mint,pcpn').split(',')
     else:
@@ -2878,8 +2884,10 @@ def set_initial(request,req_type):
         initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
     initial['start_date']  = Get('start_date', WRCCUtils.format_date_string(fourtnight,'-'))
     initial['end_date']  = Get('end_date', WRCCUtils.format_date_string(yesterday,'-'))
-    if req_type == 'multi_lister':
+    if req_type in  ['temporal_summary']:
         initial['data_summary'] = Get('data_summary', 'temporal')
+    elif req_type in ['spatial_summary','multi_lister']:
+        initial['data_summary'] = Get('data_summary', 'spatial')
     else:
         initial['data_summary'] = Get('data_summary', 'none')
     initial['start_window'] = Get('start_window', '01-01')
@@ -2898,59 +2906,98 @@ def set_initial(request,req_type):
     initial['user_email'] = Get('user_email', 'Your Email')
     initial['show_running_mean'] = Get('show_running_mean','T')
     initial['running_mean_days'] = Get('running_mean_days', '9')
+    initial['elements_constraints'] = Get('elements_constraints', 'all')
+    initial['dates_constraints']  = Get('dates_constraints', 'all')
     initial['running_mean_years'] = Get('running_mean_years', '9')
+
     #Checkbox vals
-    for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys() + ['none']:
-        checkbox_vals[area_type + '_selected'] =''
-        if area_type == initial['area_type']:
-            checkbox_vals[area_type + '_selected'] ='selected'
-    for data_type in ['station','grid']:
-        checkbox_vals['data_type_' + data_type + '_selected'] =''
-        if data_type == initial['data_type']:
-            checkbox_vals['data_type_' + data_type + '_selected'] ='selected'
-    for element in initial['elements']:
-        checkbox_vals['elements_' + element + '_selected'] =''
-        for el in initial['elements']:
-            if str(el) == element:
-                checkbox_vals['elements_' + element + '_selected'] ='selected'
-    for df in ['clm', 'dlm','xl', 'html']:
-        checkbox_vals['data_format_' + df + '_selected'] =''
-        if df == initial['data_format']:
-            checkbox_vals['data_format_' + df + '_selected'] ='selected'
-    for u in ['english', 'metric']:
-        checkbox_vals['units_' + u + '_selected'] =''
-        if u == initial['units']:
-            checkbox_vals['units_' +u + '_selected'] ='selected'
-    for ds in ['none','windowed_data','temporal', 'spatial']:
-        checkbox_vals['data_summary_' + ds + '_selected'] =''
-        if ds == initial['data_summary']:
-            checkbox_vals['data_summary_' + ds + '_selected'] ='selected'
-    for st in ['max','min','mean','sum','median']:
-        checkbox_vals['temporal_summary_' + st + '_selected'] =''
-        if st == initial['temporal_summary']:
-            checkbox_vals['temporal_summary_' + st + '_selected'] ='selected'
-        checkbox_vals['spatial_summary_' + st + '_selected'] =''
-        if st == initial['spatial_summary']:
-            checkbox_vals['spatial_summary_' + st + '_selected'] ='selected'
-    for df in ['none', 'dash','colon', 'slash']:
-        checkbox_vals['date_format_' + df + '_selected'] =''
-        if df == initial['date_format']:
-            checkbox_vals['date_format_' + df + '_selected'] ='selected'
-    for tr in ['dly','mly','yly']:
-        checkbox_vals['temporal_resolution_' + tr + '_selected'] = ''
-        if tr == initial['temporal_resolution']:
-            checkbox_vals['temporal_resolution_' + tr + '_selected'] = 'selected'
-    for dl in ['comma', 'tab', 'space', 'colon', 'pipe']:
-        checkbox_vals[dl + '_selected'] =''
-        if dl == initial['delimiter']:
-            checkbox_vals[dl + '_selected'] ='selected'
-    for bl in ['T','F']:
-        for cbv in ['show_flags', 'show_observation_time', 'add_degree_days', 'show_running_mean']:
-            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
-            if initial[cbv] == bl:
-                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
-    for g in ['1','21','3','4','5','6','7','8','9','10','11','12','13','14','15','16']:
-        checkbox_vals['grid_' + g + '_selected'] =''
-        if initial['grid'] == g:
-            checkbox_vals['grid_' + g + '_selected'] ='selected'
+    if 'elements_constraints' in initial.keys() and 'dates_constraints' in initial.keys():
+        for b in ['any', 'all']:
+            checkbox_vals['elements_' + b  + '_selected'] =''
+            checkbox_vals['dates_' + b  + '_selected'] =''
+            if initial['elements_constraints'] == b:
+                checkbox_vals['elements_' + b  + '_selected'] ='selected'
+            if initial['dates_constraints'] == b:
+                checkbox_vals['dates_' + b  + '_selected'] ='selected'
+    if 'area_type' in initial.keys():
+        for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys() + ['none']:
+            checkbox_vals[area_type + '_selected'] =''
+            if area_type == initial['area_type']:
+                checkbox_vals[area_type + '_selected'] ='selected'
+    if 'data_type' in initial.keys():
+        for data_type in ['station','grid']:
+            checkbox_vals['data_type_' + data_type + '_selected'] =''
+            if data_type == initial['data_type']:
+                checkbox_vals['data_type_' + data_type + '_selected'] ='selected'
+    if 'elements' in initial.keys():
+        for element in initial['elements']:
+            checkbox_vals['elements_' + element + '_selected'] =''
+            for el in initial['elements']:
+                if str(el) == element:
+                    checkbox_vals['elements_' + element + '_selected'] ='selected'
+    if 'data_format' in initial.keys():
+        for df in ['clm', 'dlm','xl', 'html']:
+            checkbox_vals['data_format_' + df + '_selected'] =''
+            if df == initial['data_format']:
+                checkbox_vals['data_format_' + df + '_selected'] ='selected'
+    if 'units' in initial.keys():
+        for u in ['english', 'metric']:
+            checkbox_vals['units_' + u + '_selected'] =''
+            if u == initial['units']:
+                checkbox_vals['units_' +u + '_selected'] ='selected'
+    if 'data_summary' in initial.keys():
+        for ds in ['none','windowed_data','temporal', 'spatial']:
+            checkbox_vals['data_summary_' + ds + '_selected'] =''
+            if ds == initial['data_summary']:
+                checkbox_vals['data_summary_' + ds + '_selected'] ='selected'
+    if 'temporal_summary' in initial.keys():
+        for st in ['max','min','mean','sum','median']:
+            checkbox_vals['temporal_summary_' + st + '_selected'] =''
+            if st == initial['temporal_summary']:
+                checkbox_vals['temporal_summary_' + st + '_selected'] ='selected'
+    if 'spatial_summary' in initial.keys():
+        for st in ['max','min','mean','sum','median']:
+            checkbox_vals['spatial_summary_' + st + '_selected'] =''
+            if st == initial['spatial_summary']:
+                checkbox_vals['spatial_summary_' + st + '_selected'] ='selected'
+    if 'date_format' in initial.keys():
+        for df in ['none', 'dash','colon', 'slash']:
+            checkbox_vals['date_format_' + df + '_selected'] =''
+            if df == initial['date_format']:
+                checkbox_vals['date_format_' + df + '_selected'] ='selected'
+    if 'temporal_resolution' in initial.keys():
+        for tr in ['dly','mly','yly']:
+            checkbox_vals['temporal_resolution_' + tr + '_selected'] = ''
+            if tr == initial['temporal_resolution']:
+                checkbox_vals['temporal_resolution_' + tr + '_selected'] = 'selected'
+    if 'delimiter' in initial.keys():
+        for dl in ['comma', 'tab', 'space', 'colon', 'pipe']:
+            checkbox_vals[dl + '_selected'] =''
+            if dl == initial['delimiter']:
+                checkbox_vals[dl + '_selected'] ='selected'
+    if 'show_flags' in initial.keys():
+        for bl in ['T','F']:
+            checkbox_vals['show_flags_' + bl + '_selected'] = ''
+            if initial['show_flags'] == bl:
+                checkbox_vals['show_flags_' + bl + '_selected'] = 'selected'
+    if 'show_observation_time' in initial.keys():
+        for bl in ['T','F']:
+            checkbox_vals['show_observation_time_' + bl + '_selected'] = ''
+            if initial['show_observation_time'] == bl:
+                checkbox_vals['show_observation_time' + '_' + bl + '_selected'] = 'selected'
+    if 'add_degree_days' in initial.keys():
+        for bl in ['T','F']:
+            checkbox_vals['add_degree_days_' + bl + '_selected'] = ''
+            if initial['add_degree_days'] == bl:
+                checkbox_vals['add_degree_days_' + bl + '_selected'] = 'selected'
+    if 'show_running_mean' in initial.keys():
+        for bl in ['T','F']:
+            checkbox_vals['show_running_mean_' + bl + '_selected'] = ''
+            if initial['show_running_mean'] == bl:
+                checkbox_vals['show_running_mean_' + bl + '_selected'] = 'selected'
+    if 'grid' in initial.keys():
+        for g in ['1','21','3','4','5','6','7','8','9','10','11','12','13','14','15','16']:
+            checkbox_vals['grid_' + g + '_selected'] =''
+            if initial['grid'] == g:
+                checkbox_vals['grid_' + g + '_selected'] ='selected'
     return initial,checkbox_vals

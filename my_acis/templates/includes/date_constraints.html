@@ -1,0 +1,15 @@
+    <td>Find stations that have data for:</td>
+    <td>
+        <select id="dates_constraints" name="dates_constraints" onchange="update_value(this.value)">
+        <option value="all" {{checkbox_vals.dates_all_selected}}>All of the dates</option>
+        <option value="any" {{checkbox_vals.dates_any_selected}}>Any of the dates</option>
+        </select>
+    </td>
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_dates_constraints"></div>
+        <script type="text/javascript">                        
+            $("#ht_dates_constraints").load("{{HTML_URL}}/Docu_help_texts.html #ht_dates_constraints");
+        </script>
+    </div>
+    </td>

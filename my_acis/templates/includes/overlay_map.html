@@ -1,5 +1,5 @@
          <div id="formOverlay" style="display:inherit;">
-            <form method="post"  id="overlayForm" action="" onsubmit="show_loading() & setHiddenFields('tableDataForm', this)">{% csrf_token %}
+            <form method="post"  id="overlayForm" action="" onsubmit="show_loading() & setHiddenFields('tableDataForm', $(this).attr('id'))">{% csrf_token %}
             <table class="form" style="margin:0px;">
             <td>State: </td>
             <td>
