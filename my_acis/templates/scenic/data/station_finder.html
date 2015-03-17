@@ -67,7 +67,6 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 </script>
 
 <!--Hidden variables-->
-<input type="hidden" id="station_ids_str" name="station_ids_str" value="{{station_ids_str}}">
 <input type="hidden" id="elements_str" value="{{initial.elements_string}}" class="elements_string">
 <!--Overlay map parameters-->
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="">
@@ -163,7 +162,8 @@ $(function(){
     <tr id="un" class="data_sf" style="display:table-row;">{% include 'includes/user_name.html'%}</tr>
     <tr id="ue" class="data_sf" style="display:table-row;">{% include 'includes/user_email.html'%}</tr>
     </table>
-    <input style="margin:5px" type="submit" value="Get Data" name="formDownload"/>
+    <input type="hidden" id="station_ids" name="station_ids" value="{{station_ids}}">
+    <input style="margin:5px" type="submit" value="Get Data"style="background-color:#006666;color:#FFEFD5" name="formDownload"/>
     </form>
     </div><!--end formDownload div-->
 

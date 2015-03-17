@@ -761,8 +761,8 @@ def station_finder(request):
         date_range = [initial['start_date'],initial['end_date']]
         el_date_constraints = initial['elements_constraints'] + '_' + initial['dates_constraints']
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=['1','2','4'],time_range=date_range, constraints=el_date_constraints)
+        context['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
 
-        #context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
         #Write json file for link to data lister
         json_dict ={};
         for key,val in initial.iteritems():
@@ -800,11 +800,11 @@ def station_finder(request):
         #Set up params for station_json generation
         by_type = WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['area_type']]
         val = form_cleaned[WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['area_type']]]
-        context['map_title'] = WRCCData.DISPLAY_PARAMS[by_type].upper() + ': ' + val
         date_range = [form_cleaned['start_date'],form_cleaned['end_date']]
         el_date_constraints = form_cleaned['elements_constraints'] + '_' + form_cleaned['dates_constraints']
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=el_date_constraints)
-        #context['station_ids_for_datafind'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
+        #Write to file for map generation
+        context['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
         json_dict ={};
         for key,val in form_cleaned.iteritems():
             json_dict[key] = val
@@ -812,7 +812,7 @@ def station_finder(request):
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         json_file_name = '%s_params.json' %(time_stamp)
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_file_name, json_dict)
-        context['params_json'] = json_file_name
+
         if 'error' in station_json.keys():
             context['error'] = station_json['error']
         if 'stations' not in station_json.keys() or  station_json['stations'] == []:
@@ -822,12 +822,10 @@ def station_finder(request):
     #Download data for all sations displayed
     #Request will be processed offline
     if 'formDownload' in request.POST:
-        initial, checkbox_vals = set_initial(request,'map_overlay')
+        initial, checkbox_vals = set_initial(request,'sf_download')
         context[initial['overlay_state'] + '_selected'] = 'selected'
         context['large_request'] = True
-        #Process request offline
         form_cleaned = set_form(request, clean=True)
-        context['xx'] = form_cleaned
         json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
         WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
         return render_to_response('scenic/data/station_finder.html', context, context_instance=RequestContext(request))
@@ -841,29 +839,6 @@ def station_finder(request):
         initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
 
-    '''
-    #overlay map generation
-    if 'formOverlay' in request.POST:
-        context['need_overlay_map'] = True
-        context['station_json'] = False
-        form = set_form_old(request,clean=False)
-        initial, checkbox_vals = set_station_locator_initial(form)
-        #Override initial where needed
-        initial['select_stations_by'] = form['select_overlay_by']
-        checkbox_vals[form['select_overlay_by'] + '_selected'] = 'selected'
-        #FIX ME: not sure why state is selected as well as correct area choice
-        checkbox_vals['state_selected'] = ''
-        initial['area_type_value'] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
-        initial[form['select_overlay_by']] = WRCCData.AREA_DEFAULTS[form['select_overlay_by']]
-        initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[form['select_overlay_by']]
-        initial['autofill_list'] = 'US_' + form['select_overlay_by']
-        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-        context[form['overlay_state'] + '_selected'] = 'selected'
-        kml_file_path = create_kml_file(form['select_overlay_by'], form['overlay_state'])
-        context['kml_file_path'] = kml_file_path
-        context['area_type'] = form['select_overlay_by']
-        context['host'] = settings.HOST
-    '''
     return render_to_response('scenic/data/station_finder.html', context, context_instance=RequestContext(request))
 
 #######################
@@ -2838,7 +2813,7 @@ def set_initial(request,req_type):
         request: django request object
         req_type: application, one of
             single_lister, multi_lister
-            map_overlay
+            map_overlay, sf_download
             spatial_summary, temporal_summary
     Returns:
         two dictionaries
@@ -2859,6 +2834,9 @@ def set_initial(request,req_type):
     initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['area_type']]
     initial['area_type_value'] = initial[str(initial['area_type'])]
+    #if station_finder download, we need to set the station_ids
+    if req_type == 'sf_download':
+        initial['station_ids'] = Get('station_ids','')
     if initial['area_type'] in ['station_id']:
         initial['autofill_list'] = 'US_' + initial['area_type']
         initial['data_type'] = 'station'

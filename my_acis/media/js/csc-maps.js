@@ -381,7 +381,7 @@ function initialize_station_finder() {
             if (station_ids_str){
                 station_ids_str = station_ids_str.substring(0,station_ids_str.length - 2);
             }
-            document.getElementById('station_ids_str').value = station_ids_str;
+            document.getElementById('station_ids').value = station_ids_str;
             /*
             //Check  if we should link to data lister (if station_ids_str contains less than 6 stations)
             var stn_list = station_ids_str.split(',');
@@ -461,7 +461,7 @@ function initialize_station_finder() {
             }
             //Remove trailing comma and set html element
             station_ids_str = station_ids_str.substring(0,station_ids_str.length - 1);
-            document.getElementById('station_ids_str').value = station_ids_str;
+            document.getElementById('station_ids').value = station_ids_str;
         };
 
         // == hides all markers of a particular category, and ensures the checkbox is cleared and delete station_list ==
@@ -518,7 +518,7 @@ function initialize_station_finder() {
             if (station_ids_str){
                 station_ids_str = station_ids_str.substring(0,station_ids_str.length - 1);
             }
-            document.getElementById('station_ids_str').value = station_ids_str;
+            document.getElementById('station_ids').value = station_ids_str;
 
         };
 
