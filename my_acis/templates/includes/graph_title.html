@@ -1,0 +1,10 @@
+    <td>Graph Title:</td>
+    <td><input type="text" id="graph_title" name="graph_title" value="{{initial_graph.graph_title}}"></td>
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_graph_title"></div>
+        <script type="text/javascript">                        
+        $("#ht_graph_title").load("{{HTML_URL}}Docu_help_texts.html #ht_graph_title");
+        </script>
+    </div>
+    </td>

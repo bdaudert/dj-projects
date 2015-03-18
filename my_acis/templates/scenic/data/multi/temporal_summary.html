@@ -42,6 +42,7 @@ $(function(){
 });
 </script>
 
+<!--Toolinfo/Howto-->
 <table>
 <td valign="bottom" width="45%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/temporal_summary/'"/>
@@ -56,9 +57,9 @@ $(function(){
 </td>
 </table>
 
-<table cellpadding="10">
-<!--LEFT-->
-<td valign="top" width="300px">
+<table>
+<!--Form-->
+<td valign="top" width="40%">
     <div id='formMap'>
         <form method="post" id="tableMapForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableMap" >
@@ -95,7 +96,7 @@ $(function(){
     <br /><br />
 <!--RIGHT-->
 </td>
-<td valign="top" width="660px">
+<td valign="top" width="60%">
 
 
     {%if initial.select_grid_by == "bounding_box" and not hide_bbox_map%}

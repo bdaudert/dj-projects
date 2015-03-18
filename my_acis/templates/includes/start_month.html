@@ -1,0 +1,25 @@
+    <td>Start Month: </td>
+    <td>
+        <select id="start_month" name="start_month">
+        <option value="01" {{checkbox_vals.start_month_01_selected}}>January</option>
+        <option value="02" {{checkbox_vals.start_month_02_selected}}>February</option>
+        <option value="03" {{checkbox_vals.start_month_03_selected}}>March</option>
+        <option value="04" {{checkbox_vals.start_month_04_selected}}>April</option>
+        <option value="05" {{checkbox_vals.start_month_05_selected}}>May</option>
+        <option value="06" {{checkbox_vals.start_month_06_selected}}>June</option>
+        <option value="07" {{checkbox_vals.start_month_07_selected}}>July</option>
+        <option value="08" {{checkbox_vals.start_month_08_selected}}>August</option>
+        <option value="09" {{checkbox_vals.start_month_09_selected}}>September</option>
+        <option value="10" {{checkbox_vals.start_month_10_selected}}>October</option>
+        <option value="11" {{checkbox_vals.start_month_11_selected}}>November</option>
+        <option value="12" {{checkbox_vals.start_month_12_selected}}>December</option>
+        </select>
+    </td>
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_start_month"></div>
+        <script type="text/javascript">                        
+        $("#ht_start_month").load("{{HTML_URL}}Docu_help_texts.html #ht_start_month");
+        </script>
+    </div>
+    </td>

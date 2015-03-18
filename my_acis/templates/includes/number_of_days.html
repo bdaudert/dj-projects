@@ -1,0 +1,16 @@
+    <td>Number of Days: </td>
+    <td>
+        <select id="less_greater_or_between" name="less_greater_or_between">
+        <option value="l" {{checkbox_vals.l_selected}}>Less Than</option>
+        <option value="g" {{checkbox_vals.g_selected}}>Greater Than</option>
+        <option value="b" {{checkbox_vals.b_selected}}>Between</option>
+        </select>
+    </td>
+    <td><img alt="Click me!" title="Help" src="/csc/media/img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_lgb"></div>
+        <script type="text/javascript">                        
+        $("#ht_lgb").load("{{HTML_URL}}Docu_help_texts.html #ht_lgb");
+        </script>
+    </div>
+    </td>

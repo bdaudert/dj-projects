@@ -285,6 +285,12 @@ http://htmldog.com/techniques/dropdowns*/
 /*END TAB navigation bar*/
 
 /*Submit and Select buttons*/
+button {
+    background-color:#006666;
+    color:#FFEFD5;
+    margin:5px;
+}
+
 input[type=text]{
     font-weight:bold;
 }
@@ -357,6 +363,12 @@ input[value="Download"] {
 }
 
 input[value="Analyze"] {
+    background-color:#006666;
+    color:#FFEFD5;
+    margin:5px;
+}
+
+input[value="Generate Time Series"] {
     background-color:#006666;
     color:#FFEFD5;
     margin:5px;

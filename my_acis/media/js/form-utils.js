@@ -5,6 +5,26 @@ String.prototype.inList=function(list){
    return ( list.indexOf(this.toString()) != -1)
 }
 
+function showHideTableRowClass(class_name, show_or_hide){
+    $('.' + class_name).each(function(){
+        if (show_or_hide == 'hide'){
+            $(this).css('display','none');
+        }
+        if (show_or_hide == 'show'){
+            $(this).css('display','table-row');
+        }
+    });
+}
+
+function showHideTableRowId(id_name,show_or_hide){
+    if (show_or_hide == 'hide'){
+        $('#' + id_name).css('display','none');
+    }
+    if (show_or_hide == 'show'){
+            $('#' + id_name).css('display','table-row');
+    }
+}
+
 function update_value(val){
     /*
     Dynamic forms are not updated in browser cache

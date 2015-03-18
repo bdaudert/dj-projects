@@ -1,10 +1,35 @@
 $(function(){
     /*
+    Hide results and errors on form change
+    Also hide plot options if they exits
+    */
+    $('#tableDataForm').on('change keyup', function(){
+        hide_errors_results_on_change('tableDataForm');
+        //If graph options extist, hide them
+        if ($('.formGraph')[0]){
+            showHideTableRowClass('formGraph', 'hide');
+        }
+    });
+    /*
+    plot options
+    */    
+    $('#plot_opts_button').on('click', function(){
+        if ($('#tableplOpts').css('display') == 'none'){ 
+            $('#tableplOpts').css('display','block');
+            
+        }
+        else {   
+            $('#tableplOpts').css('display','none');
+        }
+    });
+
+    /*
     Station finder download data button
     on click a second form pops up asking for user email, 
     and additional data download options 
     */
     $('.obtain_sf_data').on('click', function(){
+        $("#data_format").children('option[value="html"]').attr('disabled', true)
         ShowPopupDocu('formDownload');
         
     });
@@ -19,11 +44,11 @@ $(function(){
         var json_file_path = $('#json_file_path').val();
         generateHighChartTS(json_file_path,figureID,chartType); 
     });
-    
+
     /*
     Set temporal resoliuton field for PRISM grid
     */
-    $('#grid').on('change', function(){
+    $('#grid').on('change keyup', function(){
         if ($(this).val() == '21'){
             $('#temp_res').css('display','table-row');
             //Hide special degree day options
@@ -50,6 +75,10 @@ $(function(){
         
     });
 
+    /*
+    Sets maps and area form field
+    depending on area type
+    */
     $('.area_type').on('change', function(){
        //Set area form field
       set_area('area',this); //form_utils function
@@ -63,7 +92,7 @@ $(function(){
     elements
     grid
     */
-    $('.data_type').on('change', function(){
+    $('.data_type').on('change keyup', function(){
         var data_type = $(this).val();
         //Needed for single lister
         $('#data_type').val(data_type);
@@ -128,4 +157,20 @@ $(function(){
         }
         
     });
+
+    //monann functions --> clean up needed
+    $('#element').on('change', function(){
+        set_BaseTemp_and_Threshes('tableData',this);
+    });
+    $('#monthly_statistic').on('change', function(){
+        set_NDays_thresholds('tableData',this);
+    });
+    $('#less_greater_or_between').on('change', function(){
+        change_lgb();
+    });
+    /* CHECK THIS: units had set_degree_days(this.value) attached 
+    $('.monann_units').on('change', function(){
+        set_degree_days($(this).val());
+    });
+    */
 });

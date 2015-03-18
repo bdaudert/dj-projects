@@ -902,7 +902,7 @@ def monann(request, app_type):
     context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
 
     #Time Serie Table Generation and graph if desired
-    if 'formSodxtrmts' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         if request.method == 'GET':
             context['form_message'] = True
             form_initial = set_form_old(request,clean=False)

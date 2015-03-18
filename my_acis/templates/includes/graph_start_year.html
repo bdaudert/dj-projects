@@ -1,0 +1,10 @@
+    <td id="Graph Start Year">Graph Start Year: </td>
+    <td><input type="text" id="graph_start_year" name="graph_start_year" value="{{initial_graph.graph_start_year}}"></td>
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_graph_start_year"></div>
+        <script type="text/javascript">                        
+        $("#ht_graph_start_year").load("{{HTML_URL}}Docu_help_texts.html #ht_graph_start_year");
+        </script>
+    </div>
+    </td>

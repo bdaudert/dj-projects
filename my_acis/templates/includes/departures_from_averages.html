@@ -1,0 +1,15 @@
+    <td>Departures from Averages: </td>
+    <td>
+        <select id="departures_from_averages" name="departures_from_averages">
+        <option value="F" {{checkbox_vals.departures_from_averages_F_selected}}>No</option>
+        <option value="T" {{checkbox_vals.departures_from_averages_T_selected}}>Yes</option>
+        </select>
+    </td>
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_departures_from_averages"></div>
+        <script type="text/javascript">                        
+        $("#ht_departures_from_averages").load("{{HTML_URL}}Docu_help_texts.html #ht_departures_from_averages");
+        </script>
+    </div>
+    </td>

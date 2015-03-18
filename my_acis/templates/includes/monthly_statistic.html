@@ -1,0 +1,21 @@
+
+    <td>Monthly Statistic: </td>
+    <td>
+        <select id="monthly_statistic" name="monthly_statistic">
+        <option value="mmax" {{checkbox_vals.mmax_selected}}>Monthly Maximum</option>
+        <option value="mmin" {{checkbox_vals.mmin_selected}}>Monthly Minimum</option>
+        <option value="mave" {{checkbox_vals.mave_selected}}>Monthly Average</option>
+        <option value="sd" {{checkbox_vals.sd_selected}}>Standard Deviation</option>
+        <option value="ndays" {{checkbox_vals.ndays_selected}}>Number of Days</option>
+        <option value="rmon" {{checkbox_vals.rmon_selected}}>Range during Month</option>
+        <option value="msum" {{checkbox_vals.msum_selected}}>Monthly Sum</option>
+        </select>
+    </td>
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_monthly_statistic"></div>
+        <script type="text/javascript">                        
+        $("#ht_monthly_statistic").load("{{HTML_URL}}Docu_help_texts.html #ht_monthly_statistic");
+        </script>
+    </div>
+    </td
