@@ -12,7 +12,8 @@
     {% include 'includes/Docu_monann.html'%}
 </div>
 <div id="how_to" style="display:none;">
-    <div id="Docu_station_id">{% include 'includes/Docu_point_of_interest.html'%}</div>
+    <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
+    <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
     <div id="Docu_start_end_year">{% include 'includes/Docu_start_end_date.html'%}</div>
     <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
     <div id="Docu_base_temperature">{% include 'includes/Docu_base_temperature.html'%}</div>
@@ -28,7 +29,9 @@
 <!--Hidden variables-->
 
 <!--Set up autofill-->
-<script type="text/javascript">set_autofill("US_station_id");</script>
+{%if initial.autofill_list %}
+    <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
+{%endif%}
 
 <!--Toolinfo/Howto-->
 <table>
@@ -51,8 +54,15 @@
     <div id="formData" class="form" style="border:none;">
     <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
     <table id="tableData" class="form">
-    <tr valign="top" >{% include 'includes/station_id.html'%}</tr>
+    <tr class="station_grid" style="display:table-row" valign="bottom">{% include 'includes/single_select_area.html'%}</tr>
+    <tr class="station_grid" style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
+    {%if initial.data_type == "grid"%}        
+    <tr class="grid" id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr> 
+    <tr valign="top" id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</tr>
+    {% else%}
+    <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
     <tr valign="top" id="stn_finder">{% include 'includes/station_finder.html'%}</tr>
+    {%endif%}
     <tr valign="top">{% include 'includes/start_year.html'%}</tr>
     <tr valign="top">{% include 'includes/end_year.html'%}</tr>
     <tr valign="top">{% include 'includes/element.html'%}</tr>
@@ -79,18 +89,13 @@
         <button type="button">Plot Options</button>
     </td></tr>
     <!--Plot Options-->
-        {%if json_dict%}
-        <table id="tableplOpts" class="form">
-        {%else%}
-        <table id="tableplOpts" class="form" style="display:none">
-        {%endif%}
-        <tr valign="top" class="plOpts">{% include 'includes/graph_start_month.html'%}</tr>
-        <tr valign="top" class="plOpts ">{% include 'includes/graph_end_month.html'%}</tr>
+        <tr valign="top" class="plOpts" style="display:none">{% include 'includes/graph_start_month.html'%}</tr>
+        <tr valign="top" class="plOpts" style="display:none">{% include 'includes/graph_end_month.html'%}</tr>
         <tr valign="top" class="" style="display:none">{% include 'includes/graph_start_year.html'%}</tr>
         <tr valign="top" class="" style="display:none">{% include 'includes/graph_end_year.html'%}</tr>
-        <tr valign="top" class="plOpts">{% include 'includes/graph_summary.html'%}</tr>
-        <tr valign="top" class="plOpts">{% include 'includes/show_running_mean.html'%}</tr>
-        <tr valign="top" class="plOpts" id="rm_years">{% include 'includes/running_mean_years.html'%}</tr>
+        <tr valign="top" class="plOpts" style="display:none">{% include 'includes/graph_summary.html'%}</tr>
+        <tr valign="top" class="plOpts" style="display:none">{% include 'includes/show_running_mean.html'%}</tr>
+        <tr valign="top" class="plOpts" id="rm_years" style="display:none">{% include 'includes/running_mean_years.html'%}</tr>
         <tr valign="top" class="" style="display:none">{% include 'includes/graph_incomplete_years.html'%}</tr>
         <tr valign="top" class="" style="display:none">{% include 'includes/graph_title.html'%}</tr>
         <tr valign="top" class="" style="display:none">{% include 'includes/image_size.html'%}</tr>
@@ -102,7 +107,7 @@
         <tr valign="top" class="" style="display:none">{% include 'includes/marker_type.html'%}</tr>
         <tr valign="top" class="" style="display:none">{% include 'includes/vertical_axis_min.html'%}</tr>
         <tr valign="top" class="" style="display:none">{% include 'includes/vertical_axis_max.html'%}</tr>
-        </table><!--End plOpts table-->
+        </div><!--End plOpts table-->
     </table><!--End tableData-->
     <input type="submit" value="Generate Time Series" name="formData">
     </form>
@@ -137,7 +142,17 @@
             </div>
         {%endif%}
     {%endif%}
-    </div> 
+    </div>
+
+    <!--Maps-->
+    {%if need_gridpoint_map%}
+    <div id="GridpointMap" style="display:block">
+    <div id="map-gridpoint"></div>
+    </div>
+    <script type="text/javascript">initialize_grid_point_map();</script> 
+    {%else%}
+    <div id="GridpointMap" style="display:none"></div>
+    {%endif%} 
 </td>
 </table>
 

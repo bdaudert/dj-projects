@@ -55,20 +55,6 @@ def help(request):
     }
     return render_to_response('scenic/help/home.html', context, context_instance=RequestContext(request))
 
-def main_map(request):
-    context = {
-        'title': 'Resources',
-        'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
-        'icon':'Network.png'
-    }
-    context['json_file'] = 'Network.json'
-    return render_to_response('scenic/main_map.html', context, context_instance=RequestContext(request))
-
-def resources(request):
-    context = {
-        'title': 'Resources'
-    }
-    return render_to_response('scenic/resources.html', context, context_instance=RequestContext(request))
 
 def resources_station(request):
     context = {
@@ -88,32 +74,6 @@ def resources_grid(request):
     }
     return render_to_response('scenic/resources_grid.html', context, context_instance=RequestContext(request))
 
-#Temp home page fpr Kelly to look at
-def main(request):
-    context = {
-        'title': 'Resources',
-        'state_choices': ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT'],
-        'icon':'Network.png'
-    }
-    state = request.GET.get('state_key', None)
-    element = request.GET.get('element', None)
-    if state is None:state = 'NV'
-    if element is None: element='mint'
-    month = int(datetime.date.today().month)
-    if len(str(month)) == 1:
-        mon = '0%s' %str(month)
-    else:
-        mon = str(month)
-    day  = str(WRCCData.MONTH_LENGTHS[month -1])
-    if len(day) == 1:
-        day = '0%s' %day
-    context['day'] = day
-    context['month'] = month
-    context['mon'] = mon
-    context['month_name'] = WRCCData.MONTH_NAMES_LONG[month - 1]
-    context['state'] = state
-    context['element'] = element
-    return render_to_response('scenic/main_maves.html', context, context_instance=RequestContext(request))
 
 def about_us(request):
     context = {
@@ -257,6 +217,7 @@ def download(request):
     return render_to_response('scenic/download.html', context, context_instance=RequestContext(request))
 
 def single_lister(request):
+    url = 'scenic/data/single/lister.html'
     context = {
         'title': 'Data Lister',
     }
@@ -276,7 +237,7 @@ def single_lister(request):
                 #Only show gridpoint map if area caused form_error
                 if 'Location (lon,lat)' in form_error.keys():
                     context['need_gridpoint_map'] = True
-            return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
+            return render_to_response(url, context, context_instance=RequestContext(request))
         #Data requests
         '''
         try:
@@ -284,11 +245,11 @@ def single_lister(request):
             if 'smry' not in req.keys() and 'data' not in  req.keys():
                 results = {'error':'No data found for these parameters!'}
                 context['results'] = results
-                return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
+                return render_to_response(url, context, context_instance=RequestContext(request))
         except Exception, e:
             results = {'error':'Data request error: %s' %str(e)}
             context['results'] = results
-            return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
+            return render_to_response(url, context, context_instance=RequestContext(request))
         '''
         req = WRCCUtils.request_and_format_data(form_cleaned)
         #Format Data for display and/or download
@@ -306,7 +267,7 @@ def single_lister(request):
         if not req['data'] and not req['smry']:
             req['errors'] = {'errors':'No data found for these parameters.'}
             context['results'] = req
-            return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
+            return render_to_response(url, context, context_instance=RequestContext(request))
         context['results'] = req
         header_keys = [form_cleaned['area_type'],'data_summary',\
         'elements', 'units', 'start_date', 'end_date']
@@ -368,10 +329,11 @@ def single_lister(request):
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
-    return render_to_response('scenic/data/single/lister.html', context, context_instance=RequestContext(request))
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 
 def multi_lister(request):
+    url = 'scenic/data/multi/lister.html'
     context = {
         'title': 'Data Lister',
     }
@@ -396,14 +358,14 @@ def multi_lister(request):
                 context['need_overlay_map'] = True
             if 'Custom Shape' in form_error.keys():
                 context['need_polygon_map'] = True
-            return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
+            return render_to_response(url, context, context_instance=RequestContext(request))
         #Deal with large requests
         if form_cleaned['data_summary'] in['none','windowed_data']:
             context['large_request'] = True
             #Process request offline
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
-            return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
+            return render_to_response(url, context, context_instance=RequestContext(request))
 
         #Data request
         req = {}
@@ -413,11 +375,11 @@ def multi_lister(request):
             if 'smry' not in req.keys() and 'data' not in  req.keys():
                 req['error'] = 'No data found for these parameters!'
                 context['results'] = req
-                return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
+                return render_to_response(url, context, context_instance=RequestContext(request))
         except Exception, e:
             req['error'] = 'Data request error: %s' %str(e)
             context['results'] = req
-            return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
+            return render_to_response(url, context, context_instance=RequestContext(request))
         '''
         req = WRCCUtils.request_and_format_data(form_cleaned)
         context['results'] = req
@@ -489,9 +451,10 @@ def multi_lister(request):
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
-    return render_to_response('scenic/data/multi/lister.html', context, context_instance=RequestContext(request))
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 def temporal_summary(request):
+    url = 'scenic/data/multi/temporal_summary.html'
     context = {
         'title': 'Temporal Summary',
     }
@@ -553,7 +516,7 @@ def temporal_summary(request):
                 context['need_overlay_map'] = True
             kml_file_path = create_kml_file(form['area_type'], form['overlay_state'])
             context['kml_file_path'] = kml_file_path
-            return render_to_response('scenic/data/multi/temporal_summary.html', context, context_instance=RequestContext(request))
+            return render_to_response(url, context, context_instance=RequestContext(request))
 
         #Generate Maps
         figure_files = []
@@ -603,9 +566,10 @@ def temporal_summary(request):
         context['JSON_URL'] = settings.TMP_URL
         context['figure_files'] = figure_files
 
-    return render_to_response('scenic/data/multi/temporal_summary.html', context, context_instance=RequestContext(request))
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 def spatial_summary(request):
+    url = 'scenic/data/multi/spatial_summary.html'
     context = {
         'title': 'Spatial Summary',
     }
@@ -655,7 +619,7 @@ def spatial_summary(request):
                 context['need_overlay_map'] = True
             kml_file_path = create_kml_file(form['area_type'], form['overlay_state'])
             context['kml_file_path'] = kml_file_path
-            return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+            return render_to_response(url, context, context_instance=RequestContext(request))
 
         #Display parameters
         header_keys = ['data_type',form_cleaned['area_type'],\
@@ -675,11 +639,11 @@ def spatial_summary(request):
                     if not 'smry' in req.keys() or not req['smry']:
                         results['errors'] = 'No data found in file %s' %json_file
                         context['results'] = results
-                        return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+                        return render_to_response(url, context, context_instance=RequestContext(request))
                 except Exception, e:
                     results['error'] = 'Error when reading %s: %s' (json_file, str(e))
                     context['results'] = results
-                    return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+                    return render_to_response(url, context, context_instance=RequestContext(request))
         #Get Data
         '''
         try:
@@ -687,11 +651,11 @@ def spatial_summary(request):
             if 'smry' not in req.keys() or not req['smry']:
                 results['error'] = 'No data found for these parameters!'
                 context['results'] = results
-                return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+                return render_to_response(url, context, context_instance=RequestContext(request))
         except Exception, e:
             results['error'] = 'Data request error: %s' %str(e)
             context['results'] = results
-            return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+            return render_to_response(url, context, context_instance=RequestContext(request))
         '''
         req = WRCCUtils.request_and_format_data(form_cleaned)
         results['smry'] = req['smry']
@@ -732,7 +696,7 @@ def spatial_summary(request):
         DDJ = WRCCClasses.DownloadDataJob('spatial_summary',data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_file)
         return DDJ.write_to_file()
 
-    return render_to_response('scenic/data/multi/spatial_summary.html', context, context_instance=RequestContext(request))
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 
 def google_ee(request):
@@ -743,6 +707,7 @@ def google_ee(request):
 
 
 def station_finder(request):
+    url = 'scenic/data/station_finder.html'
     from subprocess import call
     call(["touch", settings.TEMP_DIR + "Empty.json"])
     context = {
@@ -789,8 +754,7 @@ def station_finder(request):
             context['form_error'] = form_error
             if form_cleaned['area_type'] in ['basin','county','county_warning_area', 'climate_division']:
                 context['need_overlay_map'] = True
-            return render_to_response('scenic/data/station_finder.html', context, context_instance=RequestContext(request))
-        #Define map title
+            return render_to_response(url, context, context_instance=RequestContext(request))
         #Convert element list to var majors
         el_vX_list = []
         for el_idx, element in enumerate(form_cleaned['elements']):
@@ -828,7 +792,7 @@ def station_finder(request):
         form_cleaned = set_form(request, clean=True)
         json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
         WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
-        return render_to_response('scenic/data/station_finder.html', context, context_instance=RequestContext(request))
+        return render_to_response(url, context, context_instance=RequestContext(request))
 
     #Overlay maps
     if 'formOverlay' in request.POST:
@@ -839,24 +803,26 @@ def station_finder(request):
         initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
 
-    return render_to_response('scenic/data/station_finder.html', context, context_instance=RequestContext(request))
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 #######################
 #Mixed Data Applications
 ######################
 def likelihood(request):
+    url = 'scenic/data/multi/likelihood.html'
     context = {
         'title': 'Likelihood'
     }
     initial,checkbox_vals = set_combined_analysis_initial(request,'likelihood')
     context['initial'] = initial; context['checkbox_vals'] = checkbox_vals
-    return render_to_response('scenic/apps/combined/likelihood.html', context, context_instance=RequestContext(request))
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 def data_comparison(request):
+    url = 'scenic/data/single/data_comparison.html'
     context = {
         'title': 'Data Comparison'
     }
-    initial, checkbox_vals = set_combined_analysis_initial(request,'data_comparison')
+    initial, checkbox_vals = set_initial(request,'data_comparison')
     context['initial'] = initial; context['checkbox_vals'] = checkbox_vals
     if 'formComparison' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         context['form_message'] = True
@@ -870,80 +836,42 @@ def data_comparison(request):
         context['results'] = {'grid_data':gdata,'station_data':sdata}
         graph_data = DC.get_graph_data(gdata,sdata)
         context['graph_data'] = graph_data
-    return render_to_response('scenic/apps/combined/data_comparison.html', context, context_instance=RequestContext(request))
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 #######################
 #SOD programs
 ######################
 
-def monann(request, app_type):
-    '''
-    app_type = 'station' or 'grid'
-    Both are processed via this view
-    '''
+def monann(request):
     context = {}
-    if app_type == 'grid':
-        context['title'] = 'Single gridpoint statistics'
-        url ='scenic/data/single/monann.html'
-    else:
-        url = 'scenic/data/single/monann.html'
-        context['title'] = 'Station Statistics/Custom Time Series'
-    json_dict =  None
-    json_file = request.GET.get('json_file', None)
-    if json_file is not None:
-        context['json_file'] =json_file
-    initial,checkbox_vals = set_sodxtrmts_initial(request,app_type)
+    url = 'scenic/data/single/monann.html'
+    context['title'] = 'Station Statistics/Custom Time Series'
+    initial,checkbox_vals = set_initial(request, 'monann')
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set graph and plot options
+    '''
     initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(request, init=initial)
     initial_pl_opts, checkbox_vals_pl_opts = set_plot_options(request)
     #combine the graph options with the plot options
     join_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
     context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
-
+    '''
     #Time Serie Table Generation and graph if desired
-    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
-        if request.method == 'GET':
-            context['form_message'] = True
-            form_initial = set_form_old(request,clean=False)
-            user_params_list, user_params_dict = set_user_params(form_initial, 'sodxtrmts')
-            context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
-        #Turn request object into python dict
-        if app_type == 'station':
-            form = set_form_old(request, app_name='sodxtrmts',clean=True)
-        else:
-            form = set_form_old(request, app_name='sodxtrmts_grid',clean=True)
-        #Set initial form parameters for html
-        initial,checkbox_vals = set_sodxtrmts_initial(request,app_type)
-        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-        #Set graph and plot options
-        initial_graph, checkbox_vals_graph = set_sodxtrmts_graph_initial(request,init=initial)
-        initial_pl_opts, checkbox_vals_pl_opts = set_plot_options(request)
-        #combine the graph options with the plot options
-        join_initials(initial_graph,initial_pl_opts, checkbox_vals_graph,checkbox_vals_pl_opts)
-        context['initial_graph'] = initial_graph;context['checkbox_vals_graph'] = checkbox_vals_graph
-        #show all plot options to user in case there are form errors
-        if checkbox_vals['generate_graph_T_selected'] =='selected':
-            initial['generate_graph'] = 'T'
+    if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
+        form = set_form(request,clean=False)
+        form_cleaned = set_form(request,clean=True)
+
         #Form sanity check
-        #form_error = check_sodxtrmts_form(form)
         fields_to_check = ['start_year', 'end_year','max_missing_days']
         form_error = check_form(form, fields_to_check)
-        fields_to_check = ['graph_start_year', 'graph_end_year', \
-        'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
-        form_graph_error = check_form(form, fields_to_check)
         if form_error:
             context['form_error'] = form_error
             return render_to_response(url, context, context_instance=RequestContext(request))
-        if form_graph_error:
-            context['form_graph_error'] = form_graph_error
-            return render_to_response(url, context, context_instance=RequestContext(request))
+
+        '''
         #Define header for html display
         header = set_sodxtrmts_head(form)
 
-        #Check if we should only generate graphics
-        if json_file is None:
-            json_file = request.POST.get('j_file', None)
         if json_file:
             with open(settings.TEMP_DIR + json_file, 'r') as f:
                 json_dict = WRCCUtils.u_convert(json.loads(f.read()))
@@ -1106,7 +1034,7 @@ def monann(request, app_type):
                 f.write(results_json)
             context['json_dict'] = json_dict
             context['json_file'] = json_file
-
+    '''
     #Downlaod Table Data
     if 'formDownload' in request.POST:
         data_format = request.POST.get('data_format', 'clm')
@@ -1122,76 +1050,74 @@ def monann(request, app_type):
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 
-def climatlogy(request):
+def climatology(request):
+    url = 'scenic/data/single/climatology.html'
     context = {
         'title': 'Station Climatology'
         }
-    initial, checkbox_vals = set_sodsumm_initial(request)
+    initial, checkbox_vals = set_initial(request,'climatology')
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-    if 'formSodsumm' in request.POST or (request.method == 'GET' and 'station_id' in request.GET):
-        if request.method == 'GET':
-            context['form_message'] = True
-        form_initial = set_form_old(request,app_name='sodsumm',clean=False)
-        user_params_list, user_params_dict = set_user_params(form_initial, 'sodsumm')
-        context['user_params_list'] = user_params_list;context['user_params_dict'] = user_params_dict
-        form = set_form_old(request,app_name='sodsumm',clean=False)
-        form_cleaned = set_form_old(request,app_name='sodsumm',clean=True)
-        initial, checkbox_vals = set_sodsumm_initial(request)
-        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+    if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
+        form = set_form(request,clean=False)
+        form_cleaned = set_form(request,clean=True)
         fields_to_check = ['start_year', 'end_year','max_missing_days']
+
         #Check for form errors
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
-            return render_to_response('scenic/apps/station/sodsumm.html', context, context_instance=RequestContext(request))
+            return render_to_response(url, context, context_instance=RequestContext(request))
+
+        #Set data and app params
         data_params = {
-                'sid':find_id(form['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json'),
+                #'sid':find_id(form['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json'),
                 'start_date':form['start_year'],
                 'end_date':form['end_year'],
-                'element':'all'
+                'element':form['summary_type']
                 }
         app_params = {
                 'el_type':form['summary_type'],
                 'max_missing_days':form['max_missing_days'],
                 'units':form['units']
                 }
-        #Run data retrieval job
+        if 'location' in form_cleaned.keys():
+            data_params['loc'] = form_cleaned['location']
+            data_params['grid'] = form_cleaned['grid']
+        if 'station_id' in form_cleaned.keys():
+            data_params['sid'] = find_id(form['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json')
+        #Initialize Data Job class
         DJ = WRCCClasses.SODDataJob('Sodsumm', data_params)
-        #Obtain metadata and perform sanity check
-        meta_dict = DJ.get_station_meta()
+        if 'location' in form_cleaned.keys():
+            meta_dict = DJ.get_grid_meta()
+            data = DJ.get_data_grid()
+        if 'station_id' in form_cleaned.keys():
+            meta_dict = DJ.get_station_meta()
+            data = DJ.get_data_station()
+        dates_list = DJ.get_dates_list()
+        #Sanity checks
         if not meta_dict['names'] or not meta_dict['ids']:
             results = {}
             context['run_done']= True
-            return render_to_response('scenic/data/single/climatology.html', context, context_instance=RequestContext(request))
-        dates_list = DJ.get_dates_list()
-        data = DJ.get_data_station()
+            return render_to_response(url, context, context_instance=RequestContext(request))
         if not data or not dates_list:
             results = {}
             context['run_done']= True
-            return render_to_response('scenic/data/single/climatology.html', context, context_instance=RequestContext(request))
+            return render_to_response(url, context, context_instance=RequestContext(request))
         #Run application
         App = WRCCClasses.SODApplication('Sodsumm', data, app_specific_params=app_params)
         results = App.run_app()
-        #format results to single station output
+        #Format results to single station output
         if not results:
             results = {}
             context['run_done']= True
-            return render_to_response('scenic/data/single/climatology.html', context, context_instance=RequestContext(request))
+            return render_to_response(url, context, context_instance=RequestContext(request))
         else:
             results = dict(results[0])
         context['results'] = results
-        #Input parameters:
-        context['station_id'] = data_params['sid']
-        context['max_missing_days'] = app_params['max_missing_days']
         #Sodsumm table headers for html
-        if form['generate_graphics'] == 'T':
-            context['tab_names'] = WRCCData.TAB_NAMES_WITH_GRAPHICS[form['summary_type']]
-            tab_list = WRCCData.TAB_LIST_WITH_GRAPHICS[form['summary_type']]
-            table_list =WRCCData.TABLE_LIST_WITH_GRAPHICS[form['summary_type']]
-        else:
-            context['tab_names'] = WRCCData.TAB_NAMES_NO_GRAPHICS[form['summary_type']]
-            tab_list = WRCCData.TAB_LIST_NO_GRAPHICS[form['summary_type']]
-            table_list = WRCCData.TABLE_LIST_NO_GRAPHICS[form['summary_type']]
+        context['tab_names'] = WRCCData.TAB_NAMES_WITH_GRAPHICS[form['summary_type']]
+        tab_list = WRCCData.TAB_LIST_WITH_GRAPHICS[form['summary_type']]
+        table_list =WRCCData.TABLE_LIST_WITH_GRAPHICS[form['summary_type']]
         context['table_list'] = table_list
         context['tab_list'] = tab_list
         #Define html content
@@ -1208,36 +1134,28 @@ def climatlogy(request):
         headers = set_sodsumm_headers(table_list)
         context['headers'] = headers
 
-        #Generate grahics
-        if form['generate_graphics'] == 'T' and results:
-            context['graphics'] = True
-
         json_list = []
         for tab_idx, tab in enumerate(tab_list):
             table = table_list[tab_idx]
             table_dict = {}
-            if form['generate_graphics'] == 'T':
-                table_dict = generate_sodsumm_graphics(results,tab,table,form['units'])
-            else:
-                table_dict = {
-                    'table_name':tab,
-                    'table_data':results[table]
-                }
+            table_dict = generate_sodsumm_graphics(results,tab,table,form['units'])
             #Add other params to table_dict
             table_dict['record_start'] = dates_list[0][0:4]
             table_dict['record_end'] = dates_list[-1][0:4]
-            table_dict['stn_name'] = meta_dict['names'][0]
-            table_dict['stn_network'] = meta_dict['networks'][0]
-            table_dict['stn_state'] = meta_dict['states'][0]
-            table_dict['stn_id'] = str(data_params['sid'])
+            if 'sid' in data_params.keys():
+                table_dict['title'] = meta_dict['names'][0] + ', ' +\
+                    meta_dict['states'][0] + ', ' + table_dict['table_name_long']
+                table_dict['subtitle'] = 'Network: ' + meta_dict['networks'][0] + ', ID: ' + str(data_params['sid'])
+            if 'loc' in data_params.keys():
+                table_dict['title'] = 'Location: ' + str(data_params['loc'])
+                table_dict['subtitle'] = ''
             json_list.append(table_dict)
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-        json_file = '%s_sodsumm_%s_%s_%s.json' \
-        %(time_stamp, str(data_params['sid']), dates_list[0][0:4], dates_list[-1][0:4])
+        json_file = '%s_sodsumm_%s_%s.json' \
+        %(time_stamp,dates_list[0][0:4], dates_list[-1][0:4])
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_file, json_list)
         context['JSON_URL'] = settings.TEMP_DIR
         context['json_file'] = json_file
-
     #Downlaod Table Data
     for table_idx in range(7):
         if 'formDownload' + str(table_idx) in request.POST:
@@ -1257,7 +1175,7 @@ def climatlogy(request):
             DDJ = WRCCClasses.DownloadDataJob('Sodsumm',data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_in_file_name)
             return DDJ.write_to_file()
 
-    return render_to_response('scenic/data/single/climatology.html', context, context_instance=RequestContext(request))
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 ##############################
 #Utlities
@@ -2815,6 +2733,8 @@ def set_initial(request,req_type):
             single_lister, multi_lister
             map_overlay, sf_download
             spatial_summary, temporal_summary
+            monann, climatology
+            data_comparison, liklihood
     Returns:
         two dictionaries
         initial: form input
@@ -2826,8 +2746,10 @@ def set_initial(request,req_type):
     Getlist = set_GET_list(request)
     #Set area type: station_id(s), location, basin,...
     area_type = None
-    if req_type == 'single_lister':
+    if req_type in ['single_lister','climatology','monann']:
         initial['area_type'] = Get('area_type','station_id')
+    elif req_type in ['data_comparison']:
+        initial['area_type'] = Get('area_type','location')
     else:
         initial['area_type'] = Get('area_type','state')
     #Set area depending on area_type
@@ -2862,6 +2784,9 @@ def set_initial(request,req_type):
         initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
     initial['start_date']  = Get('start_date', WRCCUtils.format_date_string(fourtnight,'-'))
     initial['end_date']  = Get('end_date', WRCCUtils.format_date_string(yesterday,'-'))
+    initial['start_year']  = Get('start_year', 'POR')
+    initial['end_year']  = Get('end_year', 'POR')
+    initial['max_missing_days']  = Get('max_missing_days', '5')
     if req_type in  ['temporal_summary']:
         initial['data_summary'] = Get('data_summary', 'temporal')
     elif req_type in ['spatial_summary','multi_lister']:
@@ -2884,10 +2809,12 @@ def set_initial(request,req_type):
     initial['user_email'] = Get('user_email', 'Your Email')
     initial['show_running_mean'] = Get('show_running_mean','T')
     initial['running_mean_days'] = Get('running_mean_days', '9')
+    initial['running_mean_years'] = Get('running_mean_years', '5')
     initial['elements_constraints'] = Get('elements_constraints', 'all')
     initial['dates_constraints']  = Get('dates_constraints', 'all')
     initial['running_mean_years'] = Get('running_mean_years', '9')
-
+    #Climatology summary type
+    initial['summary_type'] = Get('summary_type', 'all')
     #Checkbox vals
     if 'elements_constraints' in initial.keys() and 'dates_constraints' in initial.keys():
         for b in ['any', 'all']:
@@ -2978,4 +2905,9 @@ def set_initial(request,req_type):
             checkbox_vals['grid_' + g + '_selected'] =''
             if initial['grid'] == g:
                 checkbox_vals['grid_' + g + '_selected'] ='selected'
+    if req_type == 'climatology':
+        for st in ['all','temp','prsn','both','hc','g']:
+            checkbox_vals[st + '_selected'] =''
+            if st == initial['summary_type']:
+                checkbox_vals[st + '_selected'] ='selected'
     return initial,checkbox_vals

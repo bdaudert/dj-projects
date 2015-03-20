@@ -1,6 +1,6 @@
 {% extends "csc_base.html" %}
-<meta name="keywords" content="tools, application, gridded data, time series, graph">
-<meta name="description" content="SCENIC Historic Station Data">
+<meta name="keywords" content="tools, application, gridded data, station data, climate, maps">
+<meta name="description" content="SCENIC  Temporal Summary">
 
 {%load my_scenic_filters%}
 
@@ -34,13 +34,6 @@
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{kml_file_path}}">
 <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
 
-<!--Set up autofill-->
-<script type="text/javascript">
-$(function(){
-    //On form change, hide results and form errors
-    hide_errors_results_on_change('tableMapForm');
-});
-</script>
 
 <!--Toolinfo/Howto-->
 <table>

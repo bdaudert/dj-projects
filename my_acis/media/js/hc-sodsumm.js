@@ -102,7 +102,8 @@ $(function () {
                 highchart: null,
                 defaults: {
                     chart: {
-                        type: plot_type
+                        type: plot_type,
+                        plotBorderWidth: 1
                     },
                     credits: {
                         href: HOST_URL,
@@ -196,10 +197,10 @@ $(function () {
                 options: {
                     title: {
                          style:style,
-                         text: table_dict[i].stn_name + ', ' + table_dict[i].stn_state  + ', ' + table_dict[i].table_name_long
+                         text: table_dict[i].title
                     },
                     subtitle: {
-                        text: 'Network: ' + table_dict[i].stn_network + ', ID: ' + table_dict[i].stn_id
+                        text: table_dict[i].subtitle
                     },
                     yAxis: {
                         labels: {

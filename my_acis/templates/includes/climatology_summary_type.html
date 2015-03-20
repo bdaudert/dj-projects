@@ -1,0 +1,19 @@
+    <td>Summary Type: </td>
+    <td>
+        <select id="summary_type" name="summary_type">
+            <option value="all" {{checkbox_vals.all_selected}} {% if initial.area_type == "location"%}disabled{%endif%}>All of those below</option>
+            <option value="temp" {{checkbox_vals.temp_selected}}>Temperature</option>
+            <option value="prsn" {{checkbox_vals.prsn_selected}} {% if initial.area_type == "location"%}disabled{%endif%}>Precip/Snowfall</option>
+            <option value="both" {{checkbox_vals.both_selected}} {% if initial.area_type == "location"%}disabled{%endif%}>Temp/Precip/Snow</option>
+            <option value="hc" {{checkbox_vals.hc_selected}}>Degree Days</option>
+            <option value="g" {{checkbox_vals.g_selected}}>Growing Degree Days</option>
+            </select>
+    </td>
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_summary_type"></div>
+        <script type="text/javascript">                        
+        $("#ht_summary_type").load("{{HTML_URL}}Docu_help_texts.html #ht_sodsumm_summary_type");
+        </script>
+    </div>
+    </td>

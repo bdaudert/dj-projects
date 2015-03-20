@@ -33,13 +33,6 @@
 {%if initial.autofill_list %}
     <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 {%endif%}
-<!--On form change, hide results and form errors-->
-<script type="text/javascript">
-$(function(){
-    //On form change, hide results and form errors
-    hide_errors_results_on_change('tableDataForm');
-});
-</script>
 
 <!--Toolinfo/Howto-->
 <table>
@@ -174,6 +167,7 @@ $(function(){
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
     {%if not results.errors and results.data%}
+    <div class="results">
         <table>
         <td valign="top">
         <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
@@ -240,6 +234,6 @@ $(function(){
     {%endif%}<!--end if not results.errors-->
     <div><!--end results-->
     </td></table><!--End printable table-->
-    </div><!--end div data_results-->
+    </div><!--end div class=results-->
 </td></table>
 {%endblock%}

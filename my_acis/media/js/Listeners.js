@@ -3,8 +3,8 @@ $(function(){
     Hide results and errors on form change
     Also hide plot options if they exits
     */
-    $('#tableDataForm').on('change keyup', function(){
-        hide_errors_results_on_change('tableDataForm');
+    $('#tableDataForm, #tableMapForm').on('change keyup', function(){
+        hide_errors_results_on_change($(this).attr('id'));
         //If graph options extist, hide them
         if ($('.formGraph')[0]){
             showHideTableRowClass('formGraph', 'hide');
@@ -14,12 +14,12 @@ $(function(){
     plot options
     */    
     $('#plot_opts_button').on('click', function(){
-        if ($('#tableplOpts').css('display') == 'none'){ 
-            $('#tableplOpts').css('display','block');
+        if ($('.plOpts:first').css('display') == 'none'){ 
+            $('.plOpts').css('display','table-row');
             
         }
         else {   
-            $('#tableplOpts').css('display','none');
+            $('.plOpts').css('display','none');
         }
     });
 
@@ -140,6 +140,23 @@ $(function(){
             $('#obs_time').css('display','none')
             //Show grid
             $('#grid_type').css('display','table-row');
+            //Change POR to date or vice versa
+            if ($('#start_year').length && $('#end_year').length){
+                if ($('#start_year').val() == 'POR'){
+                    $('#start_year').val('1970');
+                }
+                if ($('#end_year').val() == 'POR'){
+                    $('#end_year').val('2000');
+                }
+            }
+            //Disable snow from climatology summary type
+            if ($('#summary_type').length){
+                $('#summary_type option[value="all"]').attr('disabled',true);
+                $('#summary_type option[value="prsn"]').attr('disabled',true);
+                $('#summary_type option[value="both"]').attr('disabled',true);
+                $('#summary_type option[value="temp"]').attr('selected',true);
+            }
+
         }
         //Set station form fields
         if (data_type == 'station' || data_type == 'station_id' || data_type == 'station_ids'){
@@ -154,6 +171,13 @@ $(function(){
             //$('#obs_time').css('display','table-row')
             //Show grid
             $('#grid_type').css('display','none');
+            //Enable snow from climatology summary type
+            if ($('#summary_type').length){
+                $('#summary_type option[value="all"]').attr('disabled',false);
+                $('#summary_type option[value="prsn"]').attr('disabled',false);
+                $('#summary_type option[value="both"]').attr('disabled',false);
+                $('#summary_type option[value="all"]').attr('selected',true);
+            }            
         }
         
     });

@@ -1,6 +1,6 @@
 {% extends "csc_base.html" %}
-<meta name="keywords" content="tools, application, gridded data, time series, graph">
-<meta name="description" content="SCENIC Historic Station Data">
+<meta name="keywords" content="tools, application, gridded data, station data,time series, graph">
+<meta name="description" content="SCENIC Spatial Summary">
 
 {%load my_scenic_filters%}
 
@@ -14,12 +14,6 @@
 <!--Set up autofill-->
 
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
-<script type="text/javascript">
-$(function(){
-    //On form change, hide results and form errors
-    hide_errors_results_on_change('tableDataForm');
-});
-</script>
 
 
 <!--Documentation-->

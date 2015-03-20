@@ -1,0 +1,14 @@
+    <td>Generate graphics:</td>
+    <td>
+        <select id="generate_graphics" name="generate_graphics">
+        <option value="F" {{checkbox_vals.generate_graphics_F_selected}}>No</option>
+        <option value="T" {{checkbox_vals.generate_graphics_T_selected}}>Yes</option>
+    </td>
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_generate_graphics"></div>
+        <script type="text/javascript">                        
+        $("#ht_generate_graphics").load("{{HTML_URL}}Docu_help_texts.html #ht_sodsumm_generate_graphics");
+        </script>
+    </div>
+    </td>

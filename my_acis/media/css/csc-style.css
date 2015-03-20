@@ -756,7 +756,7 @@ table #map_legend {
 .tabs {
   position: relative;   
   min-height: 1000px; /* This part sucks */
-  min-width:600px;
+  min-width:800px;
   clear: both;
   margin: 25px 0;
 }
