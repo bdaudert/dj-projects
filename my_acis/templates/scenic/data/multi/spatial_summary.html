@@ -222,10 +222,17 @@
         <input type="hidden" id="json_file_path" value="{{results.json_file_path}}">
         {%for el in results.elements%}
             <div id="{{forloop.counter0}}">
-            {% include 'includes/chart_type.html'%}
+            <!--Dynamic chart options-->
+            <table class='hc-options'>
+                <tr>
+                <td align="left">
+                    {% include 'includes/chart_type.html'%}
+                </td>
+                </tr>
+            </table>
             <div align="center" id="container_{{forloop.counter0}}" style="height:500px;width:700px;"></div>
             <script type="text/javascript">
-                generateHighChartTS("{{results.json_file_path}}","{{forloop.counter0}}");
+                generate_spatial_summaryTS("{{results.json_file_path}}","{{forloop.counter0}}");
             </script> 
             <br />
             </div><!--end div chart-->

@@ -52,70 +52,69 @@
 <!--Form-->
 <td valign="top" width="40%">
     <div id="formData" class="form" style="border:none;">
-    <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
-    <table id="tableData" class="form">
-    <tr class="station_grid" style="display:table-row" valign="bottom">{% include 'includes/single_select_area.html'%}</tr>
-    <tr class="station_grid" style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
-    {%if initial.data_type == "grid"%}        
-    <tr class="grid" id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr> 
-    <tr valign="top" id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</tr>
-    {% else%}
-    <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
-    <tr valign="top" id="stn_finder">{% include 'includes/station_finder.html'%}</tr>
-    {%endif%}
-    <tr valign="top">{% include 'includes/start_year.html'%}</tr>
-    <tr valign="top">{% include 'includes/end_year.html'%}</tr>
-    <tr valign="top">{% include 'includes/element.html'%}</tr>
-    {%if initial.base_temperature%}
-    <tr id="base_temp" valign="top">{% include 'includes/base_temperature.html'%}</tr>
-    {%else%}
-    <tr id="base_temp" valign="top" style="display:none">{% include 'includes/base_temperature.html'%}</tr>
-    {%endif%}
-    <tr valign="top">{% include 'includes/monthly_statistic.html'%}</tr>
-    {%if initial.less_greater_or_between%}
-    <tr id="threshold_type" valign="top">{% include 'includes/number_of_days.html'%}</tr>
-    <tr id="threshold" valign="top">{% include 'includes/num_days_threshold.html'%}</tr>
-    {%else%}
-    <tr id="threshold_type" valign="top" style="display:none">{% include 'includes/number_of_days.html'%}</tr>
-    <tr id="threshold" valign="top" style="display:none">{% include 'includes/num_days_threshold.html'%}</tr>
-    {%endif%}
+        <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
+        <table id="tableData" class="form">
+        <tr class="station_grid" style="display:table-row" valign="bottom">{% include 'includes/single_select_area.html'%}</tr>
+        <tr class="station_grid" style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
+        {%if initial.data_type == "grid"%}        
+        <tr class="grid" id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr> 
+        <tr valign="top" id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</tr>
+        {% else%}
+        <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
+        <tr valign="top" id="stn_finder">{% include 'includes/station_finder.html'%}</tr>
+        {%endif%}
+        <tr valign="top">{% include 'includes/start_year.html'%}</tr>
+        <tr valign="top">{% include 'includes/end_year.html'%}</tr>
+        <tr valign="top">{% include 'includes/element.html'%}</tr>
+        {%if initial.base_temperature%}
+        <tr id="base_temp" valign="top">{% include 'includes/base_temperature.html'%}</tr>
+        {%else%}
+        <tr id="base_temp" valign="top" style="display:none">{% include 'includes/base_temperature.html'%}</tr>
+        {%endif%}
+        <tr valign="top">{% include 'includes/monthly_statistic.html'%}</tr>
+        {%if initial.less_greater_or_between%}
+        <tr id="threshold_type" valign="top">{% include 'includes/number_of_days.html'%}</tr>
+        <tr id="threshold" valign="top">{% include 'includes/num_days_threshold.html'%}</tr>
+        {%else%}
+        <tr id="threshold_type" valign="top" style="display:none">{% include 'includes/number_of_days.html'%}</tr>
+        <tr id="threshold" valign="top" style="display:none">{% include 'includes/num_days_threshold.html'%}</tr>
+        {%endif%}
 
-    <tr valign="top">{% include 'includes/units.html'%}</tr>
-    <tr valign="top">{% include 'includes/max_missing_days.html'%}</tr>
-    <tr valign="top" style="display:none">{% include 'includes/start_month.html'%}</tr>
-    <tr valign="top">{% include 'includes/departures_from_averages.html'%}</tr>
-    <tr valign="top" style="display:none">{% include 'includes/frequency_analysis.html'%}</tr>
-    <tr id="plot_opts_button"><td align="center"  width="80%" colspan="3">
-        <button type="button">Plot Options</button>
-    </td></tr>
-    <!--Plot Options-->
-        <tr valign="top" class="plOpts" style="display:none">{% include 'includes/graph_start_month.html'%}</tr>
-        <tr valign="top" class="plOpts" style="display:none">{% include 'includes/graph_end_month.html'%}</tr>
-        <tr valign="top" class="" style="display:none">{% include 'includes/graph_start_year.html'%}</tr>
-        <tr valign="top" class="" style="display:none">{% include 'includes/graph_end_year.html'%}</tr>
-        <tr valign="top" class="plOpts" style="display:none">{% include 'includes/graph_summary.html'%}</tr>
-        <tr valign="top" class="plOpts" style="display:none">{% include 'includes/show_running_mean.html'%}</tr>
-        <tr valign="top" class="plOpts" id="rm_years" style="display:none">{% include 'includes/running_mean_years.html'%}</tr>
-        <tr valign="top" class="" style="display:none">{% include 'includes/graph_incomplete_years.html'%}</tr>
-        <tr valign="top" class="" style="display:none">{% include 'includes/graph_title.html'%}</tr>
-        <tr valign="top" class="" style="display:none">{% include 'includes/image_size.html'%}</tr>
-        <tr valign="top" class="" style="display:none">{% include 'includes/show_major_grid.html'%}</tr>
-        <tr valign="top" class="" style="display:none">{% include 'includes/show_minor_grid.html'%}</tr>
-        <tr valign="top" class="" style="display:none">{% include 'includes/show_connector_line.html'%}</tr>
-        <tr valign="top" class="" style="display:none">{% include 'includes/connector_line_width.html'%}</tr>
-        <tr valign="top" class="" style="display:none">{% include 'includes/show_markers.html'%}</tr>
-        <tr valign="top" class="" style="display:none">{% include 'includes/marker_type.html'%}</tr>
-        <tr valign="top" class="" style="display:none">{% include 'includes/vertical_axis_min.html'%}</tr>
-        <tr valign="top" class="" style="display:none">{% include 'includes/vertical_axis_max.html'%}</tr>
-        </div><!--End plOpts table-->
-    </table><!--End tableData-->
-    <input type="submit" value="Generate Time Series" name="formData">
-    </form>
+        <tr valign="top">{% include 'includes/units.html'%}</tr>
+        <tr valign="top">{% include 'includes/max_missing_days.html'%}</tr>
+        <tr valign="top" style="display:none">{% include 'includes/start_month.html'%}</tr>
+        <tr valign="top">{% include 'includes/departures_from_averages.html'%}</tr>
+        <tr valign="top" style="display:none">{% include 'includes/frequency_analysis.html'%}</tr>
+        <tr id="plot_opts_button"><td align="center"  width="80%" colspan="3">
+            <button type="button">Plot Options</button>
+        </td></tr>
+        <!--Plot Options-->
+            <tr valign="top" class="plOpts" style="display:none">{% include 'includes/graph_start_month.html'%}</tr>
+            <tr valign="top" class="plOpts" style="display:none">{% include 'includes/graph_end_month.html'%}</tr>
+            <tr valign="top" class="none" style="display:none">{% include 'includes/graph_start_year.html'%}</tr>
+            <tr valign="top" class="none" style="display:none">{% include 'includes/graph_end_year.html'%}</tr>
+            <tr valign="top" class="plOpts" style="display:none">{% include 'includes/graph_summary.html'%}</tr>
+            <tr valign="top" class="plOpts" style="display:none">{% include 'includes/show_running_mean.html'%}</tr>
+            <tr valign="top" class="plOpts" id="rm_years" style="display:none">{% include 'includes/running_mean_years.html'%}</tr>
+            <tr valign="top" class="none" style="display:none">{% include 'includes/graph_incomplete_years.html'%}</tr>
+            <tr valign="top" class="none" style="display:none">{% include 'includes/graph_title.html'%}</tr>
+            <tr valign="top" class="none" style="display:none">{% include 'includes/image_size.html'%}</tr>
+            <tr valign="top" class="none" style="display:none">{% include 'includes/show_major_grid.html'%}</tr>
+            <tr valign="top" class="none" style="display:none">{% include 'includes/show_minor_grid.html'%}</tr>
+            <tr valign="top" class="none" style="display:none">{% include 'includes/show_connector_line.html'%}</tr>
+            <tr valign="top" class="none" style="display:none">{% include 'includes/connector_line_width.html'%}</tr>
+            <tr valign="top" class="none" style="display:none">{% include 'includes/show_markers.html'%}</tr>
+            <tr valign="top" class="none" style="display:none">{% include 'includes/marker_type.html'%}</tr>
+            <tr valign="top" class="none" style="display:none">{% include 'includes/vertical_axis_min.html'%}</tr>
+            <tr valign="top" class="none" style="display:none">{% include 'includes/vertical_axis_max.html'%}</tr>
+        </table><!--End tableData-->
+        <input type="submit" value="Generate Time Series" name="formData">
+        </form>
     </div>
 </td>
 <!--Right-->
 <td valign="top" width="60%">
-    {%if not json_dict.data and run_done%}
+    {%if not results.data and run_done%}
         <p align="center" style="color:red">No data found for these parameters!</p></br>
     {% endif %}
     <!--Form Errors and search parameter section-->
@@ -130,17 +129,16 @@
 
     <!--Request errors or results arrow-->
     <div class="results">
-    {%if json_dict.data%}
-        {%if json_dict.errors%}
-            <p class="error">{{json_dict.errors}}</p>
-        {%else%}
-            <div id="Arrow" class="results">
+    {%if results.errors%}
+        <p class="error">{{results.errors}}</p>
+    {%endif%}
+    {%if results.data%}
+        <div id="Arrow" align="center">
             <p class="message"><b>RESULTS:</b></p>
             <img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px">
             </div>
  
             </div>
-        {%endif%}
     {%endif%}
     </div>
 
@@ -159,196 +157,120 @@
 <!--Results-->
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
-{%if json_dict.data%}
-<div class="results">
-<table align="center">
-    <td valign="top">
-    <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
-    </td><td valign="top">
-    <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
-    <br /> 
-    <!--Download form-->
-    <div id="formDownload" class="form" style="display:none;">
-        {%if json_dict%}
-        <form method="post" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading()">
-        {%elif json_file%}
-        <form method="post" action="?json_file={{json_file}}" onsubmit="show_loading()">
-        {%else%}
-        <form method="post" action="" onsubmit="show_loading()">
-        {%endif%}
-        {% csrf_token %}
-        <table id="tableDownload">
-        <tr valign="top">
-        <td>Data Format: </td>
-        <td>
-        <select id="data_format" name="data_format" onchange="set_delimiter(this, 'delim');">
-        <option value="clm">Columnar, .txt</option>
-        <option value="dlm">Delimited, .dat</option>
-        <option value="xl" selected>Excel, .xls</option>
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_data_format"></div>
-        <script type="text/javascript">                        
-            $("#ht_data_format").load("{{HTML_URL}}Docu_help_texts.html #ht_data_format");
-        </script>
+    {%if results.data%}
+    <div class="results">
+        <table align="center">
+            <td valign="top">
+            <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
+            </td><td valign="top">
+            <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
+            <br /> 
+            <!--Download form-->
+            <div id="formDownload" class="form" style="display:none;">{% include 'includes/monann_download_form.html'%}</div>
+            </td>
+        </table><!--End table about/howto/download form-->
+
+        <div align="center">
+        <p class="blue" onClick="ShowHide('user_graph')"><b><u>Show/Hide Time Series Graph</u></b></p>
+        <div id="user_graph">
+            <!--Dynamic chart options-->
+            <table class='hc-options' border="1">
+                <tr>
+                <td align="left" valign="top">
+                    {% include 'includes/chart_type.html'%}
+                </td>
+                </tr>
+                <tr>
+                <td align="left" valign="top">
+                    {% include 'includes/chart_layers.html'%}
+                </td>
+                </tr>
+                <tr>
+                <td align="left" valign="top">
+                    {% include 'includes/chart_smry_monann.html'%}
+                </td>
+                </tr>
+                <tr>
+                <td align="left" valign="top">
+                    {% include 'includes/chart_indices_monann.html'%}
+                </td>
+                </tr>
+            </table> 
+            <div align="center" id="container" style="height:500px;width:700px;"></div>
+            <script type="text/javascript" src="{{ MEDIA_URL }}js/generate_monannTS({{results.json_file_path}})"></script>
         </div>
-        </td>
-        </tr>
-        <!--Only show when format is clm or dlm, don't show if xl-->
-        <tr valign="top" id="delim" style="display:none;">
-        <td>Delimiter:</td>
-        <td>
-        <select id="delimiter" name="delimiter">
-        <option value="comma" selected>Comma (,)</option>
-        <option value="tab">Tab (    )</option>
-        <option value="space">Space ( )</option>
-        <option value="colon">Colon (:)</option>
-        <option value="pipe">pipe(|)</option>
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_delimiter"></div>
-        <script type="text/javascript">                        
-            $("#ht_delimiter").load("{{HTML_URL}}Docu_help_texts.html #ht_delimiter");
-        </script>
         </div>
-        </td>
-        </tr>
-        <tr valign="top">
-        <td>Output file name: </td>
-        <td><input type="text" id="output_file_name" name="output_file_name" value="Output"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_output_file_name"></div>
-        <script type="text/javascript">                        
-            $("#ht_output_file_name").load("{{HTML_URL}}Docu_help_texts.html #ht_output_file_name");
-        </script>
-        </div>
-        </td>
-        </tr>
+
+        <p align="center">
+        <img src="{{MEDIA_URL}}img/show_summ_table_button.png" alt="Show Summary Table" onclick="ShowHide('Data_Summary')">
+        </p>
+        <div align="center" id="Data_Summary" style="display:none;">
+        <table class="right_aligned">
+        {%for s_data in results.data_summary%}
+            <tr>
+            {%for s in s_data%}
+            {%if forloop.first%}
+            <td align="left">{{s}}</td>
+            {%else%}
+            <td>{{s}}</td>
+            {%endif%}
+            {%endfor%}
+            </tr>
+        {%endfor%}
         </table>
-        <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-        <input type="submit" value="Download" name="formDownload">
-        </form>
-</div><!--end formDownload-->
-</td>
-</table><!--End table about/howto/download form-->
+        </div><!--End data summary-->
 
-{%if generate_graph%} 
-<div align="center">
-<p class="blue" onClick="ShowHide('user_graph')"><b><u>Show/Hide Time Series Graph</u></b></p>
-<div id="user_graph">
-    <div align="center" id="container" style="height:{{height}}px;width:{{width}}px;"></div>
-    <input type="hidden" id="json_file" name="json_file" value="{{json_dict.json_file}}">
-    <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{json_dict.JSON_URL}}">
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts-visualize.js"></script>
-</div>
-</div>
-{%endif%}
+        <div id="printable_table" align="center">
+            <p class="black">
+            {%for key_val in results.header%}
+            {%if key_val%}
+            <b>{{key_val.0}}</b>: {{key_val.1}}
+            {%if forloop.counter|divisibleby:2%}
+            <br />        
+            {%endif%}
+            {%else%}
+            <br />
+            {%endif%}
+            {%endfor%}
+            </p>
+            
+            <p class="black"><b>Missing values</b><br />
+            Monthly information for months with more than this number of missing values will be displayed, but not used. <br />
+            The letter indicates the number of missing days.<br />
+            Letters after months show number of missing days;after annual values show missing months.<br />  
+            Value is displayed but not used if user-specified missing day criterion exceeded.<br />
+            (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
 
-{%if json_dict.data_summary%}
-<p align="center"><img src="{{MEDIA_URL}}img/show_summ_table_button.png" alt="Show Summary Table" onclick="ShowHide('Data_Summary')"></p>
-<div align="center" id="Data_Summary" style="display:none;">
-<table class="right_aligned">
-<td><font size="+0">YEAR </font></td>
-{%for mon in json_dict.month_list%}
-<td colspan="2"><font size="+0">{{mon}}</font></td>
-{%endfor%}
-</tr>
-{%for s_data in json_dict.data_summary%}
-<tr>
-{%for s in s_data%}
-{%if forloop.first%}
-<td align="left">{{s}}</td>
-{%else%}
-<td>{{s}}</td>
-{%endif%}
-{%endfor%}
-</tr>
-{%endfor%}
-</table>
-
-<!--Graphics-->
-<div align="center">
-<img src="{{MEDIA_URL}}img/show_summ_table_button.png" alt="Show Summary Table" onclick="ShowHide('range_plot')">
-<div id="range_plot" style="display:none;">
-    <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-    <div id="graph_container" style="height:{{height}}px;width:{{width}}px;"></div>
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodxtrmts.js"></script>
-</div>
-</div>
-</div>
-{%endif%}
-
-<div id="printable_table" align="center">
-
-    <!--json_dict.header-->
-    <p class="black">
-    {%for key_val in json_dict.header%}
-    {%if key_val%}
-    <b>{{key_val.0}}</b>: {{key_val.1}}
-    {%if forloop.counter|divisibleby:2%}
-    <br />        
-    {%endif%}
-    {%else%}
-    <br />
-    {%endif%}
-    {%endfor%}
-    </p>
-    
-    <p class="black"><b>Missing values</b><br />
-    Monthly information for months with more than this number of missing values will be displayed, but not used. <br />
-    The letter indicates the number of missing days.<br />
-    Letters after months show number of missing days;after annual values show missing months.<br />  
-    Value is displayed but not used if user-specified missing day criterion exceeded.<br />
-    (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
-
-    <table class="right_aligned" cellpadding="none" style="color:black">
-    <tr>
-    <td text-align="left"><font size="+0">YEAR </font></td>
-    {%for mon in json_dict.month_list%}
-        {%if forloop.last %}
-            <td colspan="2"><font size="+0"></td>
-            <td colspan="2"><font size="+0"></td>
-            <td colspan="2"><font size="+0"></td>
-        {%endif%}
-        <td colspan="2" text-align="left"><font size="+0">{{mon}}</font></td>
-    {%endfor%}
-    </tr>
-    {%for yr_data in json_dict.data%}
-    <tr>
-    </td>
-    {%if yr_data.0 == "MEAN"%}
-    <tr><td></td><td></td></tr>
-    <tr><td></td><td></td></tr>
-    <tr><td></td><td></td></tr>
-    <tr><td></td><td></td></tr>
-    <tr><td></td><td></td></tr>
-    <tr><td></td><td></td></tr>
-    {%endif%}
-    {%for dat in yr_data%}
-    {%if forloop.revcounter0 == 1%}
-    <td></td><td></td>
-    <td></td><td></td>
-    <td></td><td></td>
-    {%endif%}
-    {%if forloop.counter0 == 1%}
-    <td></td>
-    {%endif%}
-    {%if forloop.counter0 == 0%}
-    <td align="left">{{dat}}&nbsp;&nbsp;</td>
-    {%else%}
-    <td>{{dat}}</td>
-    {%endif%}
-    {%endfor%}
-    </tr>
-    {%endfor%}
-    </table>
-</div><!--End div="printable_table"-->
-</div><!--end div results-->
-{%endif%}
+            <table class="right_aligned" cellpadding="none" style="color:black">
+            {%for yr_data in results.data%}
+            {%if yr_data.0 == "MEAN"%}
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            {%endif%}
+            {%for dat in yr_data%}
+            {%if forloop.revcounter0 == 1%}
+            <td></td><td></td>
+            <td></td><td></td>
+            <td></td><td></td>
+            {%endif%}
+            {%if forloop.counter0 == 1%}
+            <td></td>
+            {%endif%}
+            {%if forloop.counter0 == 0%}
+            <td align="left">{{dat}}&nbsp;&nbsp;</td>
+            {%else%}
+            <td>{{dat}}</td>
+            {%endif%}
+            {%endfor%}
+            </tr>
+            {%endfor%}
+            </table>
+        </div><!--End div="printable_table"-->
+    </div><!--end div results-->
+    {%endif%}<!--End results.data-->
 </td></table>
 {%endblock%}

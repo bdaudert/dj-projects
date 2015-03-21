@@ -34,17 +34,45 @@ $(function(){
         
     });
     /*
+    DYNAMIC HIGHCHARTS
+    */
+    /*
     Generates new highcarts
     graph when chartType is changed
     Currently used in spatial_summary
     */
+    /*
     $('.chart_type').on('change', function(){
         var chartType = $(this).val();
-        var figureID = $(this).parents('div').attr('id');
         var json_file_path = $('#json_file_path').val();
-        generateHighChartTS(json_file_path,figureID,chartType); 
+        if (json_file_path.search(/spatial_summary/i) > -1){
+            var figureID = $(this).parents('div').attr('id');
+            generate_spatial_summaryTS(json_file_path,figureID,chartType);
+        }
+        if (json_file_path.search(/spatial_summary/i) > -1){
+            generate_monann_TS(json_file_path,figureID,chartType);
+        }
     });
-
+    */
+    $('input[name="chart_selector"], select[name="chart_selector"]').on('change', function(){
+        var chartType = $('#chart_type').val() 
+        var json_file_path = $('#json_file_path').val();
+        //Spatail summary
+        if (json_file_path.search(/spatial_summary/i) > -1){
+            var figureID = $('#chart_type').parents('div').attr('id');
+            generate_spatial_summaryTS(json_file_path,figureID,chartType);
+        }
+        //Monann
+        /*
+        if (json_file_path.search(/monann/i) > -1){
+            $(".chart_layer").each(function(){
+            if ($(this).is(':checked')){
+                
+            }
+            generate_monann_TS(json_file_path,figureID,chartType);
+        }
+        */
+    });
     /*
     Set temporal resoliuton field for PRISM grid
     */

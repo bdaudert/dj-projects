@@ -41,7 +41,7 @@ select {
     /*
     outline:1px solid green;border:1px solid black;
     */
-    font-weight: bold;
+    /*font-weight: bold;*/
     max-width:180px;
 }
 
@@ -290,11 +290,11 @@ button {
     color:#FFEFD5;
     margin:5px;
 }
-
+/*
 input[type=text]{
     font-weight:bold;
 }
-
+*/
 input[name=start_date]{
     width:80px;
 }
@@ -306,6 +306,10 @@ input[name=start_year]{
 }
 input[name=end_year]{
     width:80px;
+}
+input[value="Show"] {
+    background-color:#006666;
+    color:#FFEFD5;
 }
 
 input[value="Submit"] {
@@ -411,6 +415,12 @@ a#warning {
     color:#FF00FF;
 }
 
+table.hc-options {
+    border:1px solid #006666;
+    min-width:700px,
+}
+
+
 table.right_aligned td {
     text-align:right;
 }
@@ -456,11 +466,10 @@ table.form_center {
     width:400px;
 }
 
-table.form {
+table.form,  table.hc-options, table#tableDownload {
     border:2px solid #006666;
     /*border-collapse:collapse;*/
     background-color:#CCE0E0;
-    width:300px;
     padding:0px;
     text-align:right;
     margin:0px 5px 0px 5px;
@@ -474,9 +483,12 @@ table.form td {
     /*font-weight: bold;*/
 }
 
+/*
 #tableDownload {
     border:1px solid #006666;
 }
+*/
+
 .navbar {
   width:200px;
   list-style-type: none;

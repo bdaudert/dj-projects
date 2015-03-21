@@ -1,5 +1,3 @@
-    <!--Download form-->
-    <div id="formDownload" class="form" style="display:none;">
         {%if json_dict%}
         <form method="post" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading()">
         {%elif json_file%}
@@ -64,4 +62,3 @@
         <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
         <input type="submit" value="Download" name="formDownload">
         </form>
-</div><!--end formDownload-->
