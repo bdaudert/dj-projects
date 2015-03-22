@@ -1,3 +1,37 @@
+function compute_summary(data, smry){
+    var s, smry_data = [], ranges = [];
+    for (i = 0;i<data[0].length;i++){
+        var year_int = data[0][i][0];
+        var vals_to_summarize = [];
+        for (j=0;j<data.length;j++){
+            vals_to_summarize.push(data[j][i][1]);
+        }
+        //Summarize
+        var max = s = Math.max.apply(null,vals_to_summarize);
+        var min = Math.min.apply(null,vals_to_summarize);
+        if (vals_to_summarize.length >0){
+            if (smry == 'mean'){
+                s = Math.mean.apply(null,vals_to_summarize);
+            }
+            if (smry == 'sum'){
+                s = Math.sum.apply(null,vals_to_summarize);       
+            }
+            if (smry == 'max'){
+                s = max;
+            }
+            if (smry == 'min'){
+                s = min;
+            }
+            if (smry == 'median'){
+                s = Math.median.apply(null,vals_to_summarize);
+            }
+        }
+        ranges.push[year_int, min, max];
+        smry_data.push([year_int,s]);
+    }
+    return smry_data, ranges
+}
+
 function getAverage(chart) {
     //loop through data and build total/count to calculate average from
     //only use visible series
@@ -36,6 +70,7 @@ function getAverage(chart) {
         data:[[ext.min, average],[ext.max, average]]
     });
 }
+
 function getRange(chart) {
     //loop through data and build total/count to calculate min/max from
     //only use visible series
@@ -76,8 +111,7 @@ function getRange(chart) {
 }
 
 
-function getRunningMean(chart) {
-    var num=;
+function getRunningMean(chart,num) {
     var total = 0;
     var count = 0;
     var rm_data = [];

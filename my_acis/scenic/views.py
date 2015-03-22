@@ -665,17 +665,19 @@ def spatial_summary(request):
             el_data,rm_data = WRCCUtils.extract_highcarts_data_spatial_summary(req['smry'],el_idx, element,form_cleaned)
             GraphDictWriter = WRCCClasses.GraphDictWriter(form_cleaned, el_data, element,rm_data=rm_data)
             datadict = GraphDictWriter.write_dict()
-            graph_data.append(datadict)
+            datadict['running_mean_days'] = '9'
+            graph_data.append([datadict])
+        '''
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         json_file = '%s_spatial_summary.json' %(time_stamp)
         json_file_path = settings.TEMP_DIR + json_file
         with open(json_file_path,'w+') as f:
-            f.write(json.dumps(graph_data))
+            f.write(json.dumps(graph_data))i
+        '''
         results['graph_data'] = graph_data
         results['elements'] = form_cleaned['elements']
-        results['json_file_path'] = settings.TMP_URL + json_file
+        #results['json_file_path'] = settings.TMP_URL + json_file
         context['results'] = results
-
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
@@ -824,17 +826,17 @@ def data_comparison(request):
     }
     initial, checkbox_vals = set_initial(request,'data_comparison')
     context['initial'] = initial; context['checkbox_vals'] = checkbox_vals
-    if 'formComparison' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         context['form_message'] = True
         form = set_form_old(request, clean=False)
-        form['select_grid_by'] = 'location'
-        user_params_list, user_params_dict = set_user_params(form, 'data_comparison')
-        context['user_params_list'] = user_params_list
-        context['user_params_dict'] = user_params_dict
         DC = WRCCClasses.DataComparer(form)
         gdata,sdata = DC.get_data()
-        context['results'] = {'grid_data':gdata,'station_data':sdata}
-        graph_data = DC.get_graph_data(gdata,sdata)
+        context['results'] = {
+            'grid_data':gdata,
+            'station_data':sdata,
+            'element_list': form_cleaned['elements']
+        }
+        results['graph_data'] = DC.get_graph_data(gdata,sdata)
         context['graph_data'] = graph_data
     return render_to_response(url, context, context_instance=RequestContext(request))
 
@@ -910,24 +912,37 @@ def monann(request):
                 header_list.append(' ')
             results = {
                 'header':header,
+                'data_indices':'0,1',
+                'smry':'individual',
+                'running_mean_years':'5',
+                'show_range': False,
                 'data': [['YEAR'] + header_list + ['ANN']] + data[0][0][0:-6],
                 'data_summary':[[' '] + header_list + ['ANN']] + data[0][0][-6:],
             }
-        context['run_done'] = True
-        context['results'] = results
         #Write data to file for highcharts
         hc_data = WRCCUtils.extract_highcarts_data_monann(results['data'],form_cleaned)
-        GDWriter = WRCCClasses.GraphDictWriter(form_cleaned, hc_data, form_cleaned['element'])
-        graph_dict = GDWriter.write_dict()
-        context['x'] = graph_dict
+        graph_data = []
+        for mon_idx,d in enumerate(hc_data):
+            sname = WRCCData.MONTH_NAMES_SHORT_CAP[mon_idx]
+            GDWriter = WRCCClasses.GraphDictWriter(form_cleaned, d, form_cleaned['element'],name=sname)
+            graph_dict = GDWriter.write_dict()
+            #Add additional initial plot options
+            #1. chart layers
+            graph_data.append(graph_dict)
+
         '''
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         json_file = '%s_monann.json' %(time_stamp)
         json_file_path = settings.TMP_URL + json_file
         with open(settings.TEMP_DIR + '%s' %(json_file),'w+') as f:
             f.write(json.dumps(graph_dict))
-        context['json_file_path'] = json_file_path
+        results['json_file_path'] = json_file_path
         '''
+        results['graph_data'] = data
+        results['chartType'] = graph_dict['chartType']
+        context['run_done'] = True
+        context['results'] = results
+
     #Downlaod Table Data
     if 'formDownload' in request.POST:
         data_format = request.POST.get('data_format', 'clm')

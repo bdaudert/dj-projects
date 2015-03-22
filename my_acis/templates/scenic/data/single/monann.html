@@ -27,6 +27,7 @@
     <div id="Docu_plot_opts_monann">{% include 'includes/Docu_plot_opts_monann.html'%}</div>
 </div>
 <!--Hidden variables-->
+<input type="hidden" id="app_name" name="app_name" value="monann">
 
 <!--Set up autofill-->
 {%if initial.autofill_list %}
@@ -85,28 +86,6 @@
         <tr valign="top" style="display:none">{% include 'includes/start_month.html'%}</tr>
         <tr valign="top">{% include 'includes/departures_from_averages.html'%}</tr>
         <tr valign="top" style="display:none">{% include 'includes/frequency_analysis.html'%}</tr>
-        <tr id="plot_opts_button"><td align="center"  width="80%" colspan="3">
-            <button type="button">Plot Options</button>
-        </td></tr>
-        <!--Plot Options-->
-            <tr valign="top" class="plOpts" style="display:none">{% include 'includes/graph_start_month.html'%}</tr>
-            <tr valign="top" class="plOpts" style="display:none">{% include 'includes/graph_end_month.html'%}</tr>
-            <tr valign="top" class="none" style="display:none">{% include 'includes/graph_start_year.html'%}</tr>
-            <tr valign="top" class="none" style="display:none">{% include 'includes/graph_end_year.html'%}</tr>
-            <tr valign="top" class="plOpts" style="display:none">{% include 'includes/graph_summary.html'%}</tr>
-            <tr valign="top" class="plOpts" style="display:none">{% include 'includes/show_running_mean.html'%}</tr>
-            <tr valign="top" class="plOpts" id="rm_years" style="display:none">{% include 'includes/running_mean_years.html'%}</tr>
-            <tr valign="top" class="none" style="display:none">{% include 'includes/graph_incomplete_years.html'%}</tr>
-            <tr valign="top" class="none" style="display:none">{% include 'includes/graph_title.html'%}</tr>
-            <tr valign="top" class="none" style="display:none">{% include 'includes/image_size.html'%}</tr>
-            <tr valign="top" class="none" style="display:none">{% include 'includes/show_major_grid.html'%}</tr>
-            <tr valign="top" class="none" style="display:none">{% include 'includes/show_minor_grid.html'%}</tr>
-            <tr valign="top" class="none" style="display:none">{% include 'includes/show_connector_line.html'%}</tr>
-            <tr valign="top" class="none" style="display:none">{% include 'includes/connector_line_width.html'%}</tr>
-            <tr valign="top" class="none" style="display:none">{% include 'includes/show_markers.html'%}</tr>
-            <tr valign="top" class="none" style="display:none">{% include 'includes/marker_type.html'%}</tr>
-            <tr valign="top" class="none" style="display:none">{% include 'includes/vertical_axis_min.html'%}</tr>
-            <tr valign="top" class="none" style="display:none">{% include 'includes/vertical_axis_max.html'%}</tr>
         </table><!--End tableData-->
         <input type="submit" value="Generate Time Series" name="formData">
         </form>
@@ -170,11 +149,13 @@
             </td>
         </table><!--End table about/howto/download form-->
 
+        {%if results.graph_data%}
+        <input type="hidden" id="json_file_path" value="{{ results.json_file_path}}">
         <div align="center">
         <p class="blue" onClick="ShowHide('user_graph')"><b><u>Show/Hide Time Series Graph</u></b></p>
         <div id="user_graph">
             <!--Dynamic chart options-->
-            <table class='hc-options' border="1">
+            <table class='hc-options' border="1" width="700">
                 <tr>
                 <td align="left" valign="top">
                     {% include 'includes/chart_type.html'%}
@@ -195,11 +176,20 @@
                     {% include 'includes/chart_indices_monann.html'%}
                 </td>
                 </tr>
-            </table> 
+            </table>
             <div align="center" id="container" style="height:500px;width:700px;"></div>
-            <script type="text/javascript" src="{{ MEDIA_URL }}js/generate_monannTS({{results.json_file_path}})"></script>
+            <script type="text/javascript">
+                var graph_data = {{results.graph_data | safe_json}};
+                console.log(graph_data[0]);
+                var i = "{{results.data_indices}}";
+                var smry = "{{results.smry}}";
+                var rm = "{{results.running_mean_years}}";
+                var r = "{{results.show_range}}";
+                generate_monTS(i,smry,rm,r);
+            </script>
         </div>
         </div>
+        {%endif%}
 
         <p align="center">
         <img src="{{MEDIA_URL}}img/show_summ_table_button.png" alt="Show Summary Table" onclick="ShowHide('Data_Summary')">

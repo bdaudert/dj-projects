@@ -10,6 +10,7 @@
 <input type="hidden" id="host" name="host" value="{{host}}">
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{kml_file_path}}">
 <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+<input type="hidden" id="app_name" name="app_name" value="spatial_summary">
 
 <!--Set up autofill-->
 
@@ -218,8 +219,8 @@
     </table>
     {%endif%}
 
-    {%if results.json_file_path%}
-        <input type="hidden" id="json_file_path" value="{{results.json_file_path}}">
+    {%if results.graph_data%}
+        <script type="text/javascript">var graph_data = {{results.graph_data | safe_json}}</script>
         {%for el in results.elements%}
             <div id="{{forloop.counter0}}">
             <!--Dynamic chart options-->
@@ -232,7 +233,7 @@
             </table>
             <div align="center" id="container_{{forloop.counter0}}" style="height:500px;width:700px;"></div>
             <script type="text/javascript">
-                generate_spatial_summaryTS("{{results.json_file_path}}","{{forloop.counter0}}");
+                generate_dailyTS("{{forloop.counter0}}");
             </script> 
             <br />
             </div><!--end div chart-->

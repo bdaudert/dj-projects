@@ -36,42 +36,49 @@ $(function(){
     /*
     DYNAMIC HIGHCHARTS
     */
-    /*
-    Generates new highcarts
-    graph when chartType is changed
-    Currently used in spatial_summary
-    */
-    /*
-    $('.chart_type').on('change', function(){
-        var chartType = $(this).val();
-        var json_file_path = $('#json_file_path').val();
-        if (json_file_path.search(/spatial_summary/i) > -1){
-            var figureID = $(this).parents('div').attr('id');
-            generate_spatial_summaryTS(json_file_path,figureID,chartType);
-        }
-        if (json_file_path.search(/spatial_summary/i) > -1){
-            generate_monann_TS(json_file_path,figureID,chartType);
-        }
-    });
-    */
     $('input[name="chart_selector"], select[name="chart_selector"]').on('change', function(){
-        var chartType = $('#chart_type').val() 
         var json_file_path = $('#json_file_path').val();
-        //Spatail summary
-        if (json_file_path.search(/spatial_summary/i) > -1){
-            var figureID = $('#chart_type').parents('div').attr('id');
-            generate_spatial_summaryTS(json_file_path,figureID,chartType);
-        }
-        //Monann
         /*
-        if (json_file_path.search(/monann/i) > -1){
-            $(".chart_layer").each(function(){
-            if ($(this).is(':checked')){
-                
-            }
-            generate_monann_TS(json_file_path,figureID,chartType);
+        if ($(this).attr('id') == 'chart_type'){
+            $('#chart_type').val($(this).val());
         }
         */
+        //Spatial summary
+        if ($('#app_name').length  && $('#app_name').val() == 'spatial_summary'){
+            var data_index = $('#chart_type').parents('div').attr('id');
+            generate_dailyTS(data_index);
+        }
+        //Monann
+        if ($('#app_name').length  && $('#app_name').val() == 'monann'){
+            //Get Chart Layers
+            var running_mean_years = '0', show_range = 'F', smry;
+            if ($('#show_running_mean').is(':checked')){
+                running_mean_years = $('#running_mean_years').val();
+            }
+            //Get data summary
+            $('.smry_monann').each(function(){
+                if ($(this).is(':checked')){
+                     return (smry = $(this).val());
+                }
+            });
+            //Get month indices
+            var data_indices = '';
+            $('.chart_indices').each(function(){
+                if ($(this).is(':checked')){
+                    data_indices+=String(parseInt($(this).val() -1)) + ',';
+                }
+            });
+            //Remove trailing comma
+            data_indices = data_indices.slice(0,-1);
+            if (data_indices == ''){alert('Check at least one month for display!');
+            }
+            else{
+                if ($('#show_range').is(':checked')){
+                    show_range = 'T';
+                }
+                generate_monTS(data_indices, smry, running_mean_years, show_range);
+            }
+        }
     });
     /*
     Set temporal resoliuton field for PRISM grid
