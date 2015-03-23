@@ -36,46 +36,19 @@ $(function(){
     /*
     DYNAMIC HIGHCHARTS
     */
-    $('input[name="chart_selector"], select[name="chart_selector"]').on('change', function(){
-        var json_file_path = $('#json_file_path').val();
+    $('input[name="chart_selector"], select[name="chart_selector"]').on('change', function(event){
+        event.preventDefault();
         //Spatial summary
         if ($('#app_name').length  && $('#app_name').val() == 'spatial_summary'){
-            var data_index = $('#chart_type').parents('div').attr('id');
-            generate_dailyTS(data_index);
+            var data_index = $(this).parents('table').attr('id');
+            generateTS('container_' + data_index);
         }
         //Monann
         if ($('#app_name').length  && $('#app_name').val() == 'monann'){
-            //Get Chart Layers
-            var running_mean_years = '0', show_range = 'F', smry;
-            if ($('#show_running_mean').is(':checked')){
-                running_mean_years = $('#running_mean_years').val();
-            }
-            //Get data summary
-            $('.smry_monann').each(function(){
-                if ($(this).is(':checked')){
-                     return (smry = $(this).val());
-                }
-            });
-            //Get month indices
-            var data_indices = '';
-            $('.chart_indices').each(function(){
-                if ($(this).is(':checked')){
-                    data_indices+=String(parseInt($(this).val() -1)) + ',';
-                }
-            });
-            if ($('#show_range').is(':checked')){
-                show_range = 'T';
-            }
-            //Remove trailing comma
-            data_indices = data_indices.slice(0,-1);
-            alert(data_indices)
-            if (data_indices == ''){alert('Check at least one month for display!');
-            }
-            else{
-                generate_monTS(data_indices, smry, running_mean_years, show_range);
-            }
+            generateTS('container');
         }
     });
+
     /*
     Set temporal resoliuton field for PRISM grid
     */

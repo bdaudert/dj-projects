@@ -665,19 +665,12 @@ def spatial_summary(request):
             el_data,rm_data = WRCCUtils.extract_highcarts_data_spatial_summary(req['smry'],el_idx, element,form_cleaned)
             GraphDictWriter = WRCCClasses.GraphDictWriter(form_cleaned, el_data, element = element)
             datadict = GraphDictWriter.write_dict()
-            datadict['running_mean_days'] = '9'
             graph_data.append([datadict])
-        '''
-        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-        json_file = '%s_spatial_summary.json' %(time_stamp)
-        json_file_path = settings.TEMP_DIR + json_file
-        with open(json_file_path,'w+') as f:
-            f.write(json.dumps(graph_data))i
-        '''
         results['graph_data'] = graph_data
         results['elements'] = form_cleaned['elements']
         #results['json_file_path'] = settings.TMP_URL + json_file
         context['results'] = results
+
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
@@ -939,6 +932,11 @@ def monann(request):
         '''
         results['graph_data'] = graph_data
         results['chartType'] = graph_dict['chartType']
+        #Set initial chart options
+        #Plot Jan/DFeb individually
+        context['chart_data_indices_0_selected'] = 'selected'
+        context['chart_data_indices_1_selected'] = 'selected'
+        context['chart_smry_individual_selected'] = 'selected'
         context['run_done'] = True
         context['results'] = results
 

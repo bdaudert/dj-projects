@@ -1,7 +1,18 @@
 <font class="message">Summary: </font>
-<input name="chart_selector" id="mean" class="srmy_monann" type="radio" value="mean"/>Mean
-<input name="chart_selector" id="max" class="srmy_monann" type="radio" value="max" />Max
-<input name="chart_selector" id="min" class="smry_monann" type="radio" value="min" />Min
-<input name="chart_selector" id="median" class="smry_monann" type="radio" value="median" />Median
-<input name="chart_selector" id="sum" class="smry_monann" type="radio" value="sum" />Sum
-<input name="chart_selector" id="individual" class="smry_monann" type="radio" value="individual" checked/>Plot individual months
+<select id="chart_summary" name="chart_selector">
+    <option value="individual" {{chart_smry_individual_selected}}>Plot individual months</option>
+    <option value="max" {{chart_smry_max_selected}}>Maximum</option>
+    <option value="min" {{chart_smry_min_selected}}>Minimum</option>
+    <option value="mean" {{chart_smry_mean_selected}}>Mean</option>
+    <option value="median" {{chart_smry_median_selected}}>Median</option>
+    <option value="sum" {{chart_smry_sum_selected}}>Sum</option>
+</select>
+<!--
+<div id="chart_summary">
+<input name="chart_selector" id="mean" class="chart_srmy" type="radio" value="mean"/>Mean
+<input name="chart_selector" id="max" class="chart_smry" type="radio" value="max" />Max
+<input name="chart_selector" id="min" class="chart_smry" type="radio" value="min" />Min
+<input name="chart_selector" id="median" class="chart_smry" type="radio" value="median" />Median
+<input name="chart_selector" id="sum" class="chart_smry" type="radio" value="sum" />Sum
+<input name="chart_selector" id="individual" class="chart_smry" type="radio" value="individual" checked/>Plot individual months
+</div>-->

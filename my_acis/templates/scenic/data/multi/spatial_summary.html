@@ -222,21 +222,26 @@
     {%if results.graph_data%}
         <script type="text/javascript">var graph_data = {{results.graph_data | safe_json}}</script>
         {%for el in results.elements%}
-            <div id="{{forloop.counter0}}">
             <!--Dynamic chart options-->
-            <table class='hc-options'>
+            <table class='chart_options'  id="{{forloop.counter0}}" border="1" width="700">
                 <tr>
-                <td align="left">
+                <td align="left" valign="top">
                     {% include 'includes/chart_type.html'%}
                 </td>
                 </tr>
-            </table>
+                <tr>
+                <td align="left" valign="top">
+                    {% include 'includes/chart_layers_daily.html'%}
+                </td>
+                </tr>
+                <tr>
+            </table> 
             <div align="center" id="container_{{forloop.counter0}}" style="height:500px;width:700px;"></div>
             <script type="text/javascript">
-                generate_dailyTS("{{forloop.counter0}}");
-            </script> 
-            <br />
-            </div><!--end div chart-->
+                var graph_data = {{results.graph_data | safe_json}};
+                var data_indices = [{{forloop.counter0}}];
+                generateTS("container_{{forloop.counter0}}");
+            </script>
         {%endfor%} 
     {%endif%}
     {%endif%}<!--End if not results.errors and results.smry -->

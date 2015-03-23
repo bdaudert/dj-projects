@@ -1,120 +1,101 @@
 //------------------------
 // General function for monann
 //------------------------
-function generate_monTS(data_indices,smry,running_mean_years,show_range) {
+function generateTS(containerID) {
     /*
     Generates highcarts figure
     Required Args:
-        json_file_path
-    Optional Args:
-        (if not given, we take defaults from the json file)
-        chartType: spline/scatter/line/spline/column/area
-        data_indices: indices of months to be plotted
+        data_indices: indices of data to be plotted
         smry: summary of individual indices: mean/sum/median/max/min or individual
-        running_mean_years: number
+        running_mean_period: period of running mean
         show_range: T or F
     */
-    
-     var datadict = graph_data; //template_variable
-     //Set default arguments
-     var chartType = $('#chart_type').val();
-     /*
-     var args = arguments;
-     //Override default args with commandline args
-     switch (args.length) { // <-- 1 (json_file_path) is number of required arguments
-        case 1:
-            chartType = args[0];
-        case 2:
-            chartType = args[0];
-            data_indices = args[1];
-        case 3:
-            chartType = args[0];
-            data_indices = args[1];
-            smry = args[2];
-        case 4:
-            chartType = args[0];
-            data_indices = args[1];
-            smry = args[2];
-            running_mean_years = args[3]; 
-        case 5:
-            chartType = args[0];
-            data_indices = args[1];
-            smry = args[2];
-            running_mean_years = args[3];
-            show_range = args[4];
+
+    var running_mean_period = '0', show_range = 'F', smry = 'individual';
+    var datadict = graph_data; //template_variable
+    //Get chart variables from template
+    var chartType = $('#chart_type').val();
+    var data_indices = $('#data_indices').val();
+    if ($('#show_running_mean').length && $('#show_running_mean').is(':checked')) {
+        running_mean_period = $('#running_mean_period').val();
     }
-    */
+    if ($('#chart_summary').length) {
+        smry = $('#chart_summary').val();
+    }
+    if ($('#show_range').length && $('#show_range').is(':checked')) {
+        show_range = 'T';
+    }
+    //Set font size
     var axisFontSize = '16px';
     var labelsFontSize = '20px';
     //Define series data
-    var series_data = [];
+    var series_data = [],idx;
     if (smry == 'individual'){
-        r_data = []
-        for (var i = 0;i< data_indices.split(',').length;i++){
+        r_data = [];
+        for (var i=0;i < data_indices.length;i++){
+            idx = data_indices[i];
             var s = {
                 type:chartType,
-                name: datadict[i].seriesName,
-                color: datadict[i].series_color,
-                id:'data_' + String(i),
-                data: datadict[i].data
+                name: datadict[idx].seriesName,
+                color: datadict[idx].series_color,
+                id:'data_' + String(idx),
+                data: datadict[idx].data
             }
             series_data.push(s);
-            r_data.push(datadict[i].data);
+            r_data.push(datadict[idx].data);
             //Add running means
-            if (running_mean_years != '0'){
+            if (running_mean_period != '0'){
                 var rm = {
                     type:'trendline',
                     linkedTo:':previous',
                     algorithm: 'EMA',
-                    periods:parseInt(running_mean_years),
-                    name: 'Running Mean: ' + datadict[i].seriesName,
-                    color:datadict[i].running_mean_color,
+                    periods:parseInt(running_mean_period),
+                    name: 'Running Mean: ' + datadict[idx].seriesName,
+                    color:datadict[idx].running_mean_color,
                     showInLegend: true
                 }
+                series_data.push(rm);
+            }
+        }
+    }
+    if (smry != 'individual'){
+         var idx,names = '';to_summarize = []
+         for (var i=0;i < data_indices.length;i++){
+            idx = data_indices[i];
+            names+= datadict[idx].seriesName + ',';
+            to_summarize.push(datadict[idx].data);   
+         }
+         //Get smry and range data
+         var smry_data = compute_summary(to_summarize,smry);
+         //Strip last comma
+         name = names.slice(0,-1);
+         var s = {
+            name: smry.toUpperCase() + ' over: ' + names,
+            color: datadict[0].series_color,
+            id:'primary',
+            data:smry_data.data
+        }
+        series_data.push(s)
+        
+        //Add running Mean
+        if (running_mean_period != '0'){
+            var rm = {
+                type:'trendline',
+                linkedTo:'primary',
+                algorithm: 'EMA',
+                periods:parseInt(running_mean_period),
+                name: 'Running Mean',
+                color:datadict[0].running_mean_color,
+                showInLegend: true
             }
             series_data.push(rm);
         }
-        /*
-        //Add range
-        if (show_range == 'T'){
-            s_data, r_data =  compute_summary(r_data,smry);
-            var r = {
-                name: 'Range',
-                data:r_data,
-                type: 'arearange',
-                lineWidth: 0,
-                linkedTo: ':previous',
-                color: Highcharts.getOptions().colors[0],
-                fillOpacity: 0.3,
-                zIndex: 0
-            }
-            series_data.push(r)
-        }
-        */
-    }
-    alert(smry);
-    if (smry != 'individual'){
-         var months = '';smry_data = []
-         for (var i = 0;i< data_indices.split(',').length;i++){
-            months+= datadict[i].seriesName + ',';
-            smry_data.push(datadict[i].data);   
-         }
-         //Get smry and range data
-         var s_data, r_data = compute_summary(smry_data,smry);
-         //Strip last comma
-         months = months.slice(0,-1);
-         var s = {
-            name: smry.toUpperCase() + ' over months: ' + months,
-            color: datadict[0].series_color,
-            id:'primary',
-            data:s_data
-        }
-        series_data.push(s)
+
         //Add Range
         if (show_range == 'T'){
             var r = {
                 name: 'Range',
-                data:r_data,
+                data:smry_data.ranges,
                 type: 'arearange',
                 lineWidth: 0,
                 linkedTo: 'primary',
@@ -124,26 +105,11 @@ function generate_monTS(data_indices,smry,running_mean_years,show_range) {
             }
             series_data.push(r)
         }
-        //Add running Mean
-        if (running_mean_years != '0'){
-            var rm = {
-                type:'trendline',
-                linkedTo:'primary',
-                algorithm: 'EMA',
-                periods:parseInt(running_mean_years),
-                name: 'Running Mean',
-                color:datadict[0].running_mean_color,
-                showInLegend: true
-            }
-            series_data.push(rm);   
-        }
     }
-    //CHART
     //Clear old plot
-
-    $('#container').contents().remove();
-    
-    $('#container').highcharts({
+    $('#' + containerID).contents().remove();
+    //CHART
+    $('#' + containerID).highcharts({
         //------------------------
         //  CHART PROPERTIES
         //------------------------
@@ -293,7 +259,7 @@ function generate_monTS(data_indices,smry,running_mean_years,show_range) {
 //------------------------
 // General function for spatial summary
 //------------------------
-function generate_dailyTS(data_index, running_mean_days) {
+function generate_dailyTS(data_indices, running_mean_days) {
     /*
     Generates highcarts figure
     Required Args:
@@ -305,34 +271,17 @@ function generate_dailyTS(data_index, running_mean_days) {
     */
     var chartType = $('#chart_type').val();
     var datadict = graph_data;//template variable
-    var args = arguments;
-    //Set defaults from datadict
-    var data_index = '0';
-    var chartID = parseInt(data_index);
-    var chartType  = datadict[data_index][0].chartType;
-    var running_mean_days = datadict[data_index][0].running_mean_days; 
-    //Override defaults with commandline args if given
-    switch (args.length) { // <-- 2 is number of required arguments
-        case 1:
-            data_index = args[0]; 
-        case 2:
-            data_index = args[0];
-            chartType = args[2];
-        case 3:
-            data_index = args[0];
-            chartType = args[2];
-            running_mean_days = args[3];    
-    }   
+    
     var axisFontSize = '16px';
     var labelsFontSize = '20px';
 
     //Define series data
     var series_data = []
-    for (var j= 0;j<datadict[chartID].length;j++){
+    for (var i= 0;i<data_indices.split(',').length;i++){
         var s = {
-            name: datadict[chartID][j].seriesName,
-            color: datadict[chartID][j].series_color,
-            data: datadict[chartID][j].data
+            name: datadict[i].seriesName,
+            color: datadict[i].series_color,
+            data: datadict[i].data
         }
         series_data.push(s);
         //Add running Mean
@@ -343,7 +292,7 @@ function generate_dailyTS(data_index, running_mean_days) {
                 algorithm: 'EMA',
                 periods:parseInt(running_mean_days),
                 name:running_mean_days + '-day Running Mean',
-                color:datadict[chartID][j].running_mean_color,
+                color:datadict[i].running_mean_color,
                 showInLegend: true
             }
             series_data.push(rm);

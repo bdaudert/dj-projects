@@ -2,7 +2,7 @@ function findMedian(data) {
 
     // extract the .values field and sort the resulting array
     var m = data.map(function(v) {
-        return v[1];
+        return v;
     }).sort(function(a, b) {
         return a - b;
     });
@@ -14,6 +14,63 @@ function findMedian(data) {
         return (m[middle] + m[middle + 1]) / 2.0;
     }
 }
+
+function findSum(data){
+    var sum = null;
+    if (data.length > 0) {
+        sum = data.reduce(function(a,b) {
+            return a + b;
+        });
+    }
+    return sum
+}
+
+function compute_summary(data, smry){
+    smry_data = {
+        'data':[],
+        'ranges':[]
+    };
+    //time period loop
+    for (i = 0;i<data[0].length;i++){
+        var date_int = data[0][i][0];
+        var vals_to_summarize = [];
+        //data loop
+        for (j=0;j<data.length;j++){
+                var val = data[j][i][1];
+                if (val != null){
+                    vals_to_summarize.push(data[j][i][1]);
+                }
+        }
+        //Summarize
+        var max = Math.max.apply(null,vals_to_summarize);
+        var min = Math.min.apply(null,vals_to_summarize);
+        var sum = findSum(vals_to_summarize);
+        var s = null;
+        if (vals_to_summarize.length >0){
+            if (smry == 'mean'){
+                if (vals_to_summarize.length > 0  && sum != null) {
+                    s =  sum / vals_to_summarize.length;
+                }
+            }
+            if (smry == 'sum'){
+                s = sum;
+            }
+            if (smry == 'max'){
+                s = max;
+            }
+            if (smry == 'min'){
+                s = min;
+            }
+            if (smry == 'median'){
+                s = findMedian(vals_to_summarize);
+            }
+        }
+        smry_data.ranges.push([date_int, min, max]);
+        smry_data.data.push([date_int,s]);
+    }
+    return smry_data
+}
+
 
 function compute_running_mean(data, running_mean_points, chart_type){
     var running_mean_data = [];

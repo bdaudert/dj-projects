@@ -415,9 +415,9 @@ a#warning {
     color:#FF00FF;
 }
 
-table.hc-options {
+table.chart_options {
     border:1px solid #006666;
-    min-width:700px,
+    min-width:700px;
 }
 
 
@@ -466,7 +466,7 @@ table.form_center {
     width:400px;
 }
 
-table.form,  table.hc-options, table#tableDownload {
+table.form,  table.chart_options, table#tableDownload {
     border:2px solid #006666;
     /*border-collapse:collapse;*/
     background-color:#CCE0E0;
