@@ -150,7 +150,6 @@
         </table><!--End table about/howto/download form-->
 
         {%if results.graph_data%}
-        <input type="hidden" id="json_file_path" value="{{ results.json_file_path}}">
         <div align="center">
         <p class="blue" onClick="ShowHide('user_graph')"><b><u>Show/Hide Time Series Graph</u></b></p>
         <div id="user_graph">
@@ -180,7 +179,6 @@
             <div align="center" id="container" style="height:500px;width:700px;"></div>
             <script type="text/javascript">
                 var graph_data = {{results.graph_data | safe_json}};
-                console.log(graph_data[0]);
                 var i = "{{results.data_indices}}";
                 var smry = "{{results.smry}}";
                 var rm = "{{results.running_mean_years}}";

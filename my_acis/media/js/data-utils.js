@@ -1,3 +1,20 @@
+function findMedian(data) {
+
+    // extract the .values field and sort the resulting array
+    var m = data.map(function(v) {
+        return v[1];
+    }).sort(function(a, b) {
+        return a - b;
+    });
+
+    var middle = Math.floor((m.length - 1) / 2); // NB: operator precedence
+    if (m.length % 2) {
+        return m[middle];
+    } else {
+        return (m[middle] + m[middle + 1]) / 2.0;
+    }
+}
+
 function compute_running_mean(data, running_mean_points, chart_type){
     var running_mean_data = [];
     if (running_mean_points%2 == 0){

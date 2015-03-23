@@ -663,7 +663,7 @@ def spatial_summary(request):
         graph_data = []
         for el_idx, element in enumerate(form_cleaned['elements']):
             el_data,rm_data = WRCCUtils.extract_highcarts_data_spatial_summary(req['smry'],el_idx, element,form_cleaned)
-            GraphDictWriter = WRCCClasses.GraphDictWriter(form_cleaned, el_data, element,rm_data=rm_data)
+            GraphDictWriter = WRCCClasses.GraphDictWriter(form_cleaned, el_data, element = element)
             datadict = GraphDictWriter.write_dict()
             datadict['running_mean_days'] = '9'
             graph_data.append([datadict])
@@ -924,12 +924,11 @@ def monann(request):
         graph_data = []
         for mon_idx,d in enumerate(hc_data):
             sname = WRCCData.MONTH_NAMES_SHORT_CAP[mon_idx]
-            GDWriter = WRCCClasses.GraphDictWriter(form_cleaned, d, form_cleaned['element'],name=sname)
+            GDWriter = WRCCClasses.GraphDictWriter(form_cleaned, d, name=sname)
             graph_dict = GDWriter.write_dict()
             #Add additional initial plot options
             #1. chart layers
             graph_data.append(graph_dict)
-
         '''
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         json_file = '%s_monann.json' %(time_stamp)
@@ -938,7 +937,7 @@ def monann(request):
             f.write(json.dumps(graph_dict))
         results['json_file_path'] = json_file_path
         '''
-        results['graph_data'] = data
+        results['graph_data'] = graph_data
         results['chartType'] = graph_dict['chartType']
         context['run_done'] = True
         context['results'] = results

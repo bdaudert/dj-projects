@@ -38,11 +38,6 @@ $(function(){
     */
     $('input[name="chart_selector"], select[name="chart_selector"]').on('change', function(){
         var json_file_path = $('#json_file_path').val();
-        /*
-        if ($(this).attr('id') == 'chart_type'){
-            $('#chart_type').val($(this).val());
-        }
-        */
         //Spatial summary
         if ($('#app_name').length  && $('#app_name').val() == 'spatial_summary'){
             var data_index = $('#chart_type').parents('div').attr('id');
@@ -68,14 +63,15 @@ $(function(){
                     data_indices+=String(parseInt($(this).val() -1)) + ',';
                 }
             });
+            if ($('#show_range').is(':checked')){
+                show_range = 'T';
+            }
             //Remove trailing comma
             data_indices = data_indices.slice(0,-1);
+            alert(data_indices)
             if (data_indices == ''){alert('Check at least one month for display!');
             }
             else{
-                if ($('#show_range').is(':checked')){
-                    show_range = 'T';
-                }
                 generate_monTS(data_indices, smry, running_mean_years, show_range);
             }
         }

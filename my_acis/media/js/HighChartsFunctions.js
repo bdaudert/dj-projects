@@ -23,7 +23,7 @@ function compute_summary(data, smry){
                 s = min;
             }
             if (smry == 'median'){
-                s = Math.median.apply(null,vals_to_summarize);
+                s = findMedian(vals_to_summarize);
             }
         }
         ranges.push[year_int, min, max];

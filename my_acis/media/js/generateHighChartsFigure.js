@@ -16,10 +16,10 @@ function generate_monTS(data_indices,smry,running_mean_years,show_range) {
     */
     
      var datadict = graph_data; //template_variable
-     var args = arguments;
      //Set default arguments
      var chartType = $('#chart_type').val();
      /*
+     var args = arguments;
      //Override default args with commandline args
      switch (args.length) { // <-- 1 (json_file_path) is number of required arguments
         case 1:
@@ -92,6 +92,7 @@ function generate_monTS(data_indices,smry,running_mean_years,show_range) {
         }
         */
     }
+    alert(smry);
     if (smry != 'individual'){
          var months = '';smry_data = []
          for (var i = 0;i< data_indices.split(',').length;i++){
@@ -101,10 +102,10 @@ function generate_monTS(data_indices,smry,running_mean_years,show_range) {
          //Get smry and range data
          var s_data, r_data = compute_summary(smry_data,smry);
          //Strip last comma
-         months = months.splice(0,-1);
+         months = months.slice(0,-1);
          var s = {
             name: smry.toUpperCase() + ' over months: ' + months,
-            color: datadict[i].series_color,
+            color: datadict[0].series_color,
             id:'primary',
             data:s_data
         }
@@ -130,8 +131,8 @@ function generate_monTS(data_indices,smry,running_mean_years,show_range) {
                 linkedTo:'primary',
                 algorithm: 'EMA',
                 periods:parseInt(running_mean_years),
-                name: 'Running Mean:',
-                color:datadict[i].running_mean_color,
+                name: 'Running Mean',
+                color:datadict[0].running_mean_color,
                 showInLegend: true
             }
             series_data.push(rm);   
@@ -176,7 +177,7 @@ function generate_monTS(data_indices,smry,running_mean_years,show_range) {
             showLastTickLabel: true,
             maxZoom: 1 * 24 * 3600*1000, // one day
             title: {
-                text: 'Period: ' + datadict.startDate + ' - ' + datadict.endDate,
+                text: 'Period: ' + datadict[0].startDate + ' - ' + datadict[0].endDate,
                 style: {
                     fontSize: labelsFontSize,
                 },
