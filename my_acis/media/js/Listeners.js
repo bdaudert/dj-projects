@@ -37,16 +37,26 @@ $(function(){
     DYNAMIC HIGHCHARTS
     */
     $('input[name="chart_selector"], select[name="chart_selector"]').on('change', function(event){
-        event.preventDefault();
+        smry = 'individual';
+        if ($('#chart_summary').length) {
+            smry = $('#chart_summary').val();
+        }
+        if (smry == 'individual'){
+            generateTS_individual()
+        }
+        else{
+            generateTS_smry();
+        }    
+        /*
         //Spatial summary
         if ($('#app_name').length  && $('#app_name').val() == 'spatial_summary'){
-            var data_index = $(this).parents('table').attr('id');
-            generateTS('container_' + data_index,[data_index]);
+            generateTS('container);
         }
         //Monann
         if ($('#app_name').length  && $('#app_name').val() == 'monann'){
             generateTS('container');
         }
+        */
     });
 
     /*

@@ -220,12 +220,15 @@
     {%endif%}
 
     {%if results.graph_data%}
-        {%for el in results.elements%}
+        <div id="user_graph">
             <!--Dynamic chart options-->
-            <table class='chart_options'  id="{{forloop.counter0}}" border="1" width="700">
+            <table class='chart_options' border="1" width="700">
                 <tr>
                 <td align="left" valign="top">
                     {% include 'includes/chart_type.html'%}
+                </td>
+                 <td align="left" rowspan="2" valign="top">
+                    {% include 'includes/chart_indices_spatial_summary.html'%}
                 </td>
                 </tr>
                 <tr>
@@ -233,14 +236,13 @@
                     {% include 'includes/chart_layers_daily.html'%}
                 </td>
                 </tr>
-                <tr>
-            </table> 
-            <div align="center" id="container_{{forloop.counter0}}" style="height:500px;width:700px;"></div>
+            </table>
+            <div align="center" id="container" style="height:500px;width:700px;"></div>
             <script type="text/javascript">
                 var graph_data = {{results.graph_data | safe_json}};
-                generateTS("container_{{forloop.counter0}}", [{{forloop.counter0}}]);
-            </script><br />
-        {%endfor%} 
+                generateTS_individual();
+            </script>
+        </div>
     {%endif%}
     {%endif%}<!--End if not results.errors and results.smry -->
     </div><!--End div results-->

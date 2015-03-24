@@ -598,8 +598,6 @@ def spatial_summary(request):
         form = set_form(request, clean=False)
         form_cleaned = set_form(request)
         initial,checkbox_vals = set_initial(form,'spatial_summary')
-        initial_plot, checkbox_vals_plot = set_plot_options(form)
-        join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         #Back Button/download files issue fix:
         #if area_type none, find it
@@ -668,7 +666,15 @@ def spatial_summary(request):
             graph_data.append(datadict)
 
         results['graph_data'] = graph_data
-        results['elements'] = form_cleaned['elements']
+        elements = []
+        for el in form_cleaned['elements']:
+            el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
+            el_name = WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long']
+            if base_temp is not None:
+                el_name+= str(base_temp)
+            elements.append(el_name)
+        results['elements'] = elements
+        results['data_index'] = 0; results['chartType'] = graph_data[0]['chartType']
         #results['json_file_path'] = settings.TMP_URL + json_file
         context['results'] = results
 
