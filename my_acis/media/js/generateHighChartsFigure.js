@@ -1,21 +1,24 @@
 //------------------------
 // General function for monann
 //------------------------
-function generateTS(containerID) {
+function generateTS(containerID, data_indices) {
     /*
     Generates highcarts figure
     Required Args:
-        data_indices: indices of data to be plotted
-        smry: summary of individual indices: mean/sum/median/max/min or individual
-        running_mean_period: period of running mean
+        data_indices: indices of data to be plotted,
+            if not given, we pick it up from html element data_indices
         show_range: T or F
     */
+    var args = arguments;
+    var datadict = graph_data; //template_variable
+    switch (arguments.length) { // <-- 0 is number of required arguments
+        case 1: var data_indices = $('#data_indices').val();
+    }
 
     var running_mean_period = '0', show_range = 'F', smry = 'individual';
-    var datadict = graph_data; //template_variable
     //Get chart variables from template
     var chartType = $('#chart_type').val();
-    var data_indices = $('#data_indices').val();
+    
     if ($('#show_running_mean').length && $('#show_running_mean').is(':checked')) {
         running_mean_period = $('#running_mean_period').val();
     }
@@ -25,6 +28,14 @@ function generateTS(containerID) {
     if ($('#show_range').length && $('#show_range').is(':checked')) {
         show_range = 'T';
     }
+    var date_format = '%Y-%m-%d';
+    var chartTitle = datadict[0].title;
+    var subTitle = datadict[0].subTitle
+    if ($('#app_name').length && $('#app_name').val() == 'monann'){
+        var date_format = '%Y';
+    }
+    var elUnits = datadict[0].elUnits;
+    
     //Set font size
     var axisFontSize = '16px';
     var labelsFontSize = '20px';
@@ -35,9 +46,10 @@ function generateTS(containerID) {
         for (var i=0;i < data_indices.length;i++){
             idx = data_indices[i];
             var s = {
-                type:chartType,
+                type:datadict[idx].chartType,
                 name: datadict[idx].seriesName,
-                color: datadict[idx].series_color,
+                //color: datadict[idx].series_color,
+                color:Highcharts.getOptions().colors[2*idx],
                 id:'data_' + String(idx),
                 data: datadict[idx].data
             }
@@ -71,7 +83,8 @@ function generateTS(containerID) {
          name = names.slice(0,-1);
          var s = {
             name: smry.toUpperCase() + ' over: ' + names,
-            color: datadict[0].series_color,
+            //color: datadict[0].series_color,
+            color:Highcharts.getOptions().colors[2*idx],
             id:'primary',
             data:smry_data.data
         }
@@ -93,13 +106,13 @@ function generateTS(containerID) {
 
         //Add Range
         if (show_range == 'T'){
+            alert(smry_data.ranges);
             var r = {
                 name: 'Range',
                 data:smry_data.ranges,
                 type: 'arearange',
                 lineWidth: 0,
-                linkedTo: 'primary',
-                color: Highcharts.getOptions().colors[0],
+                color: Highcharts.getOptions().colors[2*idx + 1],
                 fillOpacity: 0.3,
                 zIndex: 0
             }
@@ -126,13 +139,21 @@ function generateTS(containerID) {
             text: 'wrcc.dri.edu'
         },
         //------------------------
+        //    EXPORTING (CSV/EXCEL)
+        //------------------------ 
+        exporting: {
+            csv: {
+                dateFormat: date_format
+            }
+        },
+        //------------------------
         //    TITLE/SUBTITLE
         //------------------------
         title: {
-            text: datadict.title,
+            text: chartTitle,
         },
         subtitle: {
-            text: datadict.subTitle,
+            text: subTitle,
         },
         //------------------------
         //XAXIS
@@ -149,7 +170,7 @@ function generateTS(containerID) {
                 },
             },
             labels: {
-                format: '{value:%Y}',
+                format: '{value:' + date_format  + '}',
                 rotation: -45,
                 //align: 'left',
                 style: {
@@ -164,12 +185,12 @@ function generateTS(containerID) {
         yAxis: {
             gridLineWidth: 1,
             title: {
-                text: datadict.yLabel,
+                text: elUnits,
                 style: {
                     fontSize: labelsFontSize,
                 },
             },
-            min: datadict.axisMin,
+            min: datadict[0].axisMin,
             tickLength: 5,
             tickWidth: 1,
             tickPosition: 'outside',
@@ -195,10 +216,7 @@ function generateTS(containerID) {
             borderRadius: 5,
             floating: true,
             draggable: true,
-            zIndex: 20,
-            title: {
-                text: datadict.legendTitle
-            }
+            zIndex: 20
         },
         //------------------------
         // PLOT OPTIONS
@@ -247,7 +265,7 @@ function generateTS(containerID) {
             //------------------------
             tooltip: {
                 headerFormat: '',
-                pointFormat: '<b>Year: </b>{point.x:%Y}<br><b>Value:</b> {point.y:.2f}'+datadict.elUnits,
+                pointFormat: '<b>Year: </b>{point.x:'+  date_format +'}<br><b>Value:</b> {point.y:.2f}' + elUnits,
                 crosshairs: false,
                 shared: false
             },
@@ -356,12 +374,12 @@ function generate_dailyTS(data_indices, running_mean_days) {
         yAxis: {
             gridLineWidth: 1,
             title: {
-                text: datadict[chartID].yLabel,
+                text: elUnits,
                 style: {
                     fontSize: labelsFontSize,
                 },
             },
-            min: datadict[chartID].axisMin,
+            min: datadict[0].axisMin,
             tickLength: 5,
             tickWidth: 1,
             tickPosition: 'outside',

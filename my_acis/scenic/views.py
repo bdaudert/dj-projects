@@ -662,10 +662,11 @@ def spatial_summary(request):
         #format data for highcarts
         graph_data = []
         for el_idx, element in enumerate(form_cleaned['elements']):
-            el_data,rm_data = WRCCUtils.extract_highcarts_data_spatial_summary(req['smry'],el_idx, element,form_cleaned)
+            el_data = WRCCUtils.extract_highcarts_data_spatial_summary(req['smry'],el_idx, element,form_cleaned)
             GraphDictWriter = WRCCClasses.GraphDictWriter(form_cleaned, el_data, element = element)
             datadict = GraphDictWriter.write_dict()
-            graph_data.append([datadict])
+            graph_data.append(datadict)
+
         results['graph_data'] = graph_data
         results['elements'] = form_cleaned['elements']
         #results['json_file_path'] = settings.TMP_URL + json_file
@@ -890,13 +891,15 @@ def monann(request):
         data = App.run_app()
         #Set header
         header = set_sodxtrmts_head(form_cleaned)
-        if not data:
+        if not data[0]:
             results = {
                 'header':'',
                 'data':[],
                 'data_summary':[],
                 'errors': 'No Data found for these parameters'
             }
+            context['results'] = results
+            return render_to_response(url, context, context_instance=RequestContext(request))
         else:
             header_list = []
             for m in WRCCData.MONTH_NAMES_SHORT_CAP:
@@ -2480,8 +2483,15 @@ def set_form(request, clean=True):
                 k='end_date'; idx = 1;ed = 'por'
                 if form['start_year'].lower() == 'por':sd = 'por'
                 else:sd = form['start_year'] + '-01-01'
-            if 'elements' in form.keys():el_list = form['elements']
-            else:el_list = None
+            if 'element' in form.keys() and not 'elements' in form.keys():
+                if form['element'] in ['dtr']:
+                    el_list = ['maxt','mint']
+                if form['element'] in ['pet']:
+                    el_list = ['maxt','mint','pcpn']
+            if 'elements' in form.keys() and not 'element' in form.keys():
+                el_list = form['elements']
+            else:
+                el_list = None
             stn_id = find_id(str(form['station_id']),settings.MEDIA_DIR +'json/US_station_id.json')
             form[k] = WRCCUtils.find_valid_daterange(stn_id, start_date=sd, end_date=ed, el_list=el_list, max_or_min='max')[idx]
         else:
@@ -2580,6 +2590,9 @@ def set_initial(request,req_type):
         #initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
     if req_type == 'map_overlay':
         initial['elements'] = Get('elements','maxt,mint,pcpn').split(',')
+    elif req_type == 'monann':
+        initial['element'] = Get('element','pcpn')
+        initial['monthly_statistic'] = Get('monthly_statistic','msum')
     else:
         initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
     initial['add_degree_days'] = Get('add_degree_days', 'F')
@@ -2646,6 +2659,8 @@ def set_initial(request,req_type):
             for el in initial['elements']:
                 if str(el) == element:
                     checkbox_vals['elements_' + element + '_selected'] ='selected'
+    if 'element' in initial.keys():
+        checkbox_vals['element_' + initial['element'] + '_selected'] ='selected'
     if 'data_format' in initial.keys():
         for df in ['clm', 'dlm','xl', 'html']:
             checkbox_vals['data_format_' + df + '_selected'] =''
@@ -2671,6 +2686,8 @@ def set_initial(request,req_type):
             checkbox_vals['spatial_summary_' + st + '_selected'] =''
             if st == initial['spatial_summary']:
                 checkbox_vals['spatial_summary_' + st + '_selected'] ='selected'
+    if 'monthly_statistic' in initial.keys():
+        checkbox_vals[initial['monthly_statistic'] + '_selected'] ='selected'
     if 'date_format' in initial.keys():
         for df in ['none', 'dash','colon', 'slash']:
             checkbox_vals['date_format_' + df + '_selected'] =''

@@ -36,7 +36,9 @@ function compute_summary(data, smry){
         var vals_to_summarize = [];
         //data loop
         for (j=0;j<data.length;j++){
-                var val = data[j][i][1];
+                try{ var val = data[j][i][1]; }
+                catch(e){ var val = null; }
+
                 if (val != null){
                     vals_to_summarize.push(data[j][i][1]);
                 }
@@ -44,6 +46,12 @@ function compute_summary(data, smry){
         //Summarize
         var max = Math.max.apply(null,vals_to_summarize);
         var min = Math.min.apply(null,vals_to_summarize);
+        if (min == Number.POSITIVE_INFINITY || min == Number.NEGATIVE_INFINITY){
+            min = null;
+        }
+        if (max == Number.POSITIVE_INFINITY || max == Number.NEGATIVE_INFINITY){
+            max = null;
+        }
         var sum = findSum(vals_to_summarize);
         var s = null;
         if (vals_to_summarize.length >0){

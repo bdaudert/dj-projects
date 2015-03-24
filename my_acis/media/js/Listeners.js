@@ -41,7 +41,7 @@ $(function(){
         //Spatial summary
         if ($('#app_name').length  && $('#app_name').val() == 'spatial_summary'){
             var data_index = $(this).parents('table').attr('id');
-            generateTS('container_' + data_index);
+            generateTS('container_' + data_index,[data_index]);
         }
         //Monann
         if ($('#app_name').length  && $('#app_name').val() == 'monann'){
