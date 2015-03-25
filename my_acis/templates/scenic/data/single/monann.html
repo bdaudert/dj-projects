@@ -38,6 +38,9 @@
 <table>
 <td valign="bottom" width="45%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/monann/'">
+    {%if results.data%}
+    <input type="submit" value="Show/Hide Form" onclick="ShowHide('top_of_page')">
+    {%endif%}
 </td>
 <td valign="top" width="55%" align="left">
     <table>
@@ -48,8 +51,11 @@
     </table>
 </td>
 </table>
-
-<table>
+{% if not results.data%}
+<table id="top_of_page">
+{%else%}
+<table id="top_of_page" style="display:none">
+{%endif%}
 <!--Form-->
 <td valign="top" width="40%">
     <div id="formData" class="form" style="border:none;">
@@ -73,12 +79,22 @@
         <tr id="base_temp" valign="top" style="display:none">{% include 'includes/base_temperature.html'%}</tr>
         {%endif%}
         <tr valign="top">{% include 'includes/monthly_statistic.html'%}</tr>
-        {%if initial.less_greater_or_between%}
+        {%if initial.monthly_statistic == "ndays"%}
         <tr id="threshold_type" valign="top">{% include 'includes/number_of_days.html'%}</tr>
-        <tr id="threshold" valign="top">{% include 'includes/num_days_threshold.html'%}</tr>
+        {%if initial.less_greater_or_between == "b"%}
+        <tr id="threshold_between" valign="top">{% include 'includes/num_days_thresholds_between.html'%}</tr>
+        {%endif%}
+        {%if initial.less_greater_or_between == "g"%}
+        <tr id="threshold_above" valign="top">{% include 'includes/num_days_thresholds_above.html'%}</tr>
+        {%endif%}
+        {%if initial.less_greater_or_between == "l"%}
+        <tr id="threshold_below" valign="top">{% include 'includes/num_days_thresholds_below.html'%}</tr>
+        {%endif%}
         {%else%}
         <tr id="threshold_type" valign="top" style="display:none">{% include 'includes/number_of_days.html'%}</tr>
-        <tr id="threshold" valign="top" style="display:none">{% include 'includes/num_days_threshold.html'%}</tr>
+        <tr id="threshold_between" valign="top" style="display:none">{% include 'includes/num_days_thresholds_between.html'%}</tr>
+        <tr id="threshold_above" valign="top" style="display:none">{% include 'includes/num_days_thresholds_above.html'%}</tr>
+        <tr id="threshold_below" valign="top" style="display:none">{% include 'includes/num_days_thresholds_below.html'%}</tr>
         {%endif%}
 
         <tr valign="top">{% include 'includes/units.html'%}</tr>
@@ -92,6 +108,7 @@
     </div>
 </td>
 <!--Right-->
+
 <td valign="top" width="60%">
     {%if not results.data and run_done%}
         <p align="center" style="color:red">No data found for these parameters!</p></br>
@@ -136,22 +153,34 @@
 <!--Results-->
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
+    {%if not results.data and run_done%}
+        <p align="center" style="color:red">No data found for these parameters!</p></br>
+    {% endif %}
+    <!--Form Errors and search parameter section-->
+    {%if form_error%}
+    <div id="form_error" class="results">
+        <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
+        {%for key, val in form_error.items%}
+            <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
+        {%endfor%}
+    </div>
+    {%endif%}
+
+    <!--Request errors or results arrow-->
+    <div class="results">
+    {%if results.errors%}
+        <p class="error">{{results.errors}}</p>
+    {%endif%}
+    </div> 
+    
     {%if results.data%}
     <div class="results">
-        <table align="center">
-            <td valign="top">
-            <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
-            </td><td valign="top">
-            <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
-            <br /> 
-            <!--Download form-->
-            <div id="formDownload" class="form" style="display:none;">{% include 'includes/monann_download_form.html'%}</div>
-            </td>
-        </table><!--End table about/howto/download form-->
-
         {%if results.graph_data%}
         <div align="center">
-        <p class="blue" onClick="ShowHide('user_graph')"><b><u>Show/Hide Time Series Graph</u></b></p>
+
+        <p>
+            <img src="{{MEDIA_URL}}img/show_hide_button.png" alt="Show Summary Table" onclick="ShowHide('user_graph')">
+        </p>
         <div id="user_graph">
             <!--Dynamic chart options-->
             <table class='chart_options' border="1" width="700">
@@ -202,6 +231,18 @@
         </table>
         </div><!--End data summary-->
 
+        <!--Download/print buttons--> 
+        <table align="center">
+            <td valign="top">
+            <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
+            </td><td valign="top">
+            <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
+            <br />
+            <!--Download form-->
+            <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
+            </td>
+        </table><!--End table about/howto/download form-->       
+ 
         <div id="printable_table" align="center">
             <p class="black">
             {%for key_val in results.header%}

@@ -141,6 +141,10 @@ function generateTS_individual(data_indices) {
             spacingTop: 10,
             spacingLeft: 10,
             spacingRight: 10,
+            borderWidth:1,
+            borderColor: '#006666',
+            plotBorderColor: '#346691',
+            plotBorderWidth:1
         },
         credits: {
             href: 'http://wrcc.dri.edu',
@@ -199,12 +203,15 @@ function generateTS_individual(data_indices) {
             backgroundColor: 'white',
             align: 'right',
             verticalAlign: 'top',
-            y: 50, // >0 moves down
+            y: 60, // >0 moves down
             x: -400, // >0 moves right
             borderWidth: 1,
             borderRadius: 5,
             floating: true,
             draggable: true,
+            title:{
+                text: ':: Drag me'
+            },
             zIndex: 20
         },
         //------------------------
@@ -256,7 +263,7 @@ function generateTS_individual(data_indices) {
                 headerFormat: '',
                 pointFormat: '<b>Year: </b>{point.x:'+  date_format +'}<br><b>Value:</b> {point.y:.2f}',
                 crosshairs: false,
-                shared: false
+                shared: true
             },
             //------------------------
             series: series_data
@@ -361,6 +368,10 @@ function generateTS_smry(data_indices) {
             spacingTop: 10,
             spacingLeft: 10,
             spacingRight: 10,
+            borderWidth:1,
+            borderColor: '#006666',
+            plotBorderColor: '#346691',
+            plotBorderWidth:1
         },
         credits: {
             href: 'http://wrcc.dri.edu',
@@ -444,6 +455,9 @@ function generateTS_smry(data_indices) {
             borderRadius: 5,
             floating: true,
             draggable: true,
+            title:{
+                text: ':: Drag me'
+            },
             zIndex: 20
         },
         //------------------------
@@ -495,7 +509,7 @@ function generateTS_smry(data_indices) {
                 headerFormat: '',
                 pointFormat: '<b>Year: </b>{point.x:'+  date_format +'}<br><b>Value:</b> {point.y:.2f}' + elUnits,
                 crosshairs: false,
-                shared: false
+                shared: true
             },
             //------------------------
             series: series_data

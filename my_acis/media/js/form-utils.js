@@ -906,163 +906,20 @@ function set_threshes(element){
     return threshes;
 }
 
-function set_BaseTemp(table_id,node){
+function set_BaseTemp(element){
     /*
     sets sodxtrmts base temperatures for degree day calculations.
     */
-    var IMG_URL = document.getElementById('IMG_URL').value;
-    var HTML_URL = document.getElementById('HTML_URL').value;
-    /*
-    if ($('#base_temp').length){
-        $('table#tableSodxtrmts tr#base_temp').remove();
-    }
-    */
-    var table = document.getElementById(table_id);
-    var element = document.getElementById("element").value;
     if (element =='hdd' || element =='cdd' || element=='gdd'){
-        document.getElementById("base_temp").style.display="table-row";
+        $('#base_temp').css('display', 'table-row');
         if (element == 'hdd' || element == 'cdd'){
-            document.getElementById("base_temperature").value = '65';
+            $('#base_temperature').val('65');
         }
         else{
-            document.getElementById("base_temperature").value='50';
+            $('#base_temperature').val('50');
         }
     }
-    else{document.getElementById("base_temp").style.display="none";}
-}
-
-function set_NDay_threshes(){
-    /*
-    Sets sodxtrmts thersholds for number of days statistics.
-    */
-    var element = document.getElementById("element").value;
-    var threshes = set_threshes(element);
-    //Delete old threshes and make new hidded element hidden input
-    if ($('#threshes').length){
-        document.getElementById("threshes").remove();
-    }
-    var input = document.createElement('input');
-    input.setAttribute('type', 'hidden');
-    input.setAttribute('id', 'threshes');
-    input.setAttribute('value', threshes);
-    document.body.appendChild(input);
-    //Check if NDays boxes need to be repopulated
-    if ($('#threshold_for_less_or_greater').length){
-        var lgb = document.getElementById('less_greater_or_between').value;
-        if (lgb == 'l'){
-            document.getElementById('threshold_for_less_or_greater').value = threshes.split(',')[0];
-        }
-        if (lgb == 'g'){
-            document.getElementById('threshold_for_less_or_greater').value = threshes.split(',')[1];
-        }
-    }
-    if ($('#threshold_low_for_between').length){
-        document.getElementById('threshold_low_for_between').value = threshes.split(',')[2];
-    }
-    if ($('#threshold_high_for_between').length){
-        document.getElementById('threshold_high_for_between').value = threshes.split(',')[3];
-    }
-}
-
-function set_BaseTemp_and_Threshes(table_id,node){
-    /*
-    Sets sodxtrmts thresholds and base temperatures
-    */
-    set_BaseTemp(table_id, node)
-    set_NDay_threshes()
-}
-
-function set_NDays_threshold_cells(lgb, threshes,cell0, cell1){
-    if (lgb == "l"){
-        cell0.innerHTML='Less Than';
-        cell1.innerHTML ='<input type="text" id="threshold_for_less_or_greater" name="threshold_for_less_or_greater" value='+
-        threshes[0] +'>';
-    }
-    if (lgb == "g"){
-        cell0.innerHTML='Greater Than';
-        cell1.innerHTML ='<input type="text" id="threshold_for_less_or_greater" name="threshold_for_less_or_greater" value=' +
-        threshes[1] + '>';
-    }
-    if (lgb == "b"){
-        cell0.innerHTML='Between<br />And';
-        cell1.innerHTML ='<input type="text" id="threshold_low_for_between" name="threshold_low_for_between" value='+
-        threshes[2] +'><br />' +
-        '<input type="text" id="threshold_high_for_between" name="threshold_high_for_between" value='+
-        threshes[3] + '>';
-    }
-}
-
-function set_NDays_thresholds(table_id,node){
-    /*
-    sets sodxtrmts thresholds for number of days statisrtics
-    */
-    IMG_URL = document.getElementById('IMG_URL').value;
-    HTML_URL = document.getElementById('HTML_URL').value;
-    var table = document.getElementById(table_id);
-    //Delete old NDays entries
-    if ($('#threshold_type').length){
-        $('table#tableSodxtrmts tr#threshold_type').remove();
-    }
-    if ($('#threshold').length){
-        $('table#tableSodxtrmts tr#threshold').remove();
-    }
-    var stat = document.getElementById('monthly_statistic').value;
-    var idx = node.parentNode.parentNode.rowIndex + 1;
-    if (stat =='ndays'){
-        var row = table.insertRow(parseInt(idx));
-        row.setAttribute('id', 'threshold_type');
-        var cell0=row.insertCell(0);
-        var cell1=row.insertCell(1);
-        var cell2 = row.insertCell(2);
-        cell0.innerHTML='Number of Days';
-        cell1.innerHTML='<select id="less_greater_or_between" name="less_greater_or_between" onchange="change_lgb()">' +
-        '<option value="l">Less Than</option>' +
-        '<option value="g">Greater Than</option>' +
-        '<option value="b">Between</option></select>';
-        cell2.innerHTML = '<img alt="Help" title="Help" src="'+ IMG_URL +'QMark.png" class="trigger">' +
-        ' <div class="pop-up"><div id="ht_element"></div>' +
-        ' <script type="text/javascript">' +
-        '$("#ht_element").load("' + HTML_URL + 'Docu_help_texts.html #ht_element");' +
-        '</script></div>';
-
-        //Set up thresholds
-        var row = table.insertRow(idx + 1);
-        row.setAttribute('id', 'threshold');
-        var cell0=row.insertCell(0);
-        var cell1=row.insertCell(1);
-        var cell2 = row.insertCell(2);
-        var lgb = document.getElementById("less_greater_or_between").value;
-        var threshes = set_threshes(document.getElementById("element").value).split(",");
-        set_NDays_threshold_cells(lgb, threshes,cell0, cell1);
-        cell2.innerHTML = '<img alt="Help" title="Help" src="' + IMG_URL + 'QMark.png" class="trigger">' +
-        ' <div class="pop-up"><div id="ht_element"></div>' +
-        ' <script type="text/javascript">' +
-        '$("#ht_element").load("' + HTML_URL + 'Docu_help_texts.html #ht_element");' +
-        '</script></div>';
-
-        //Set onchange function
-        document.getElementById("less_greater_or_between").onchange = function(){
-            var lgb = document.getElementById("less_greater_or_between").value;
-            var tbl_row = document.getElementById('threshold');
-            var cell0 = tbl_row.firstChild;
-            var cell1 = cell0.nextSibling;
-            set_NDays_threshold_cells(lgb, threshes,cell0, cell1);
-        }
-    }
-}
-
-function change_lgb(){
-    /*
-    Sets sodxtrmts less than greate or between for number of days statistics
-    */
-    var lgb = document.getElementById("less_greater_or_between").value;
-    var tbl_row = document.getElementById('threshold');
-    var cell0 = tbl_row.firstChild;
-    cell0 = cell0.nextSibling;
-    var cell1 = cell0.nextSibling;
-    cell1 =  cell1.nextSibling;
-    var threshes = set_threshes(document.getElementById("element").value).split(",");
-    set_NDays_threshold_cells(lgb, threshes,cell0, cell1);
+    else{$('#base_temp').css('display', 'none');}
 }
 
 function set_delimiter(data_format_node, divId){

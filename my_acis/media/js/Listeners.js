@@ -198,13 +198,56 @@ $(function(){
 
     //monann functions --> clean up needed
     $('#element').on('change', function(){
-        set_BaseTemp_and_Threshes('tableData',this);
+        set_BaseTemp($(this).val());
+        var lgb = '';
+        if ( $('#less_greater_or_between').length){
+            var threshes = set_threshes($(this).val()).split(',');
+            lgb = $('#less_greater_or_between').val();
+        }
+        if (lgb == 'b'){ 
+            $('#threshold_low_for_between').val(threshes[2]);
+            $('#threshold_high_for_between').val(threshes[3]);
+        }
+        if (lgb == 'l'){ $('#threshold_for_less_than').val(threshes[0]);}
+        if (lgb == 'g'){$('#threshold_for_less_than').val(threshes[1]);}
     });
     $('#monthly_statistic').on('change', function(){
-        set_NDays_thresholds('tableData',this);
+        if ($(this).val() == 'ndays'){ 
+            $('#threshold_type').css('display','table-row');
+            var lgb = $('#less_greater_or_between').val();
+            if (lgb == 'b'){$('#threshold_between').css('display','table-row');}
+            if (lgb == 'l'){$('#threshold_below').css('display','table-row');}
+            if (lgb == 'g'){$('#threshold_above').css('display','table-row');}
+        }
+        else{
+            $('#threshold_between').css('display','none');
+            $('#threshold_below').css('display','none');
+            $('#threshold_above').css('display','none');
+        }
     });
     $('#less_greater_or_between').on('change', function(){
-        change_lgb();
+        var threshes = set_threshes($('#element').val()).split(',');
+        var lgb = $(this).val();
+        if (lgb == 'b'){ 
+            $('#threshold_low_for_between').val(threshes[2]);
+            $('#threshold_low_for_between').val(threshes[3]);
+            $('#threshold_between').css('display','table-row');
+            $('#threshold_below').css('display','none');
+            $('#threshold_above').css('display','none');
+        }   
+        if (lgb == 'l'){ 
+            $('#threshold_for_less_than').val(threshes[0]);
+            $('#threshold_below').css('display','table-row');
+            $('#threshold_between').css('display','none');
+            $('#threshold_above').css('display','none');
+        }
+        if (lgb == 'g'){
+            $('#threshold_for_less_than').val(threshes[1]);
+            $('#threshold_above').css('display','table-row');
+            $('#threshold_between').css('display','none');
+            $('#threshold_below').css('display','none');
+        }
+        
     });
     /* CHECK THIS: units had set_degree_days(this.value) attached 
     $('.monann_units').on('change', function(){

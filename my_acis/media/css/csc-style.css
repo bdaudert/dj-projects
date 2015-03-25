@@ -387,9 +387,19 @@ input[value="Update Map"] {
 
 input[value="Start Over"] {
     /*background-color:#8FBC8F;*/
-    background-color:#006666;
+    background-color:#4B0082;
     color:#FFEFD5;
     margin:5px;
+    width:100px;
+    height:25px;
+}
+input[value="Show/Hide Form"] {
+    /*background-color:#8FBC8F;*/
+    background-color:#4B0082;
+    color:#FFEFD5;
+    margin:5px;
+    width:100px;
+    height:25px;
 }
 
 input[value="Select"] {

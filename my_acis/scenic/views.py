@@ -311,7 +311,8 @@ def single_lister(request):
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         file_name = form['output_file_name'] + '_' + time_stamp
         with open(settings.TEMP_DIR + json_file, 'r') as f:
-            req =  json.load(f)
+            data =  json.load(f)
+
         if form['data_format'] in ['clm','dlm']:
             if form['data_format'] == 'clm':
                 file_extension = '.txt'
@@ -319,13 +320,13 @@ def single_lister(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
+            CsvWriter = WRCCClasses.CsvWriter(data, f=None, response=response)
             CsvWriter.write_to_file()
             return response
         if form['data_format'] in ['xl']:
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
+            ExcelWriter = WRCCClasses.ExcelWriter(data,response=response)
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
@@ -876,7 +877,11 @@ def monann(request):
         app_params = {}
         for key, val in form_cleaned.iteritems():
             app_params[key] = val
-        for key in ['location','station_id', 'start_year', 'end_year']:
+        if app_params['less_greater_or_between'] == 'l':
+            app_params['threshold_for_less_or_greater'] = app_params['threshold_for_less_than']
+        if app_params['less_greater_or_between'] == 'g':
+            app_params['threshold_for_less_or_greater'] = app_params['threshold_for_greater_than']
+        for key in ['location','station_id', 'start_year', 'end_year','threshold_for_less_than','threshold_for_greater_than']:
             try:del app_params[key]
             except:pass
         app_params['el_type'] = form_cleaned['element']
@@ -931,14 +936,6 @@ def monann(request):
             #Add additional initial plot options
             #1. chart layers
             graph_data.append(graph_dict)
-        '''
-        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-        json_file = '%s_monann.json' %(time_stamp)
-        json_file_path = settings.TMP_URL + json_file
-        with open(settings.TEMP_DIR + '%s' %(json_file),'w+') as f:
-            f.write(json.dumps(graph_dict))
-        results['json_file_path'] = json_file_path
-        '''
         results['graph_data'] = graph_data
         results['chartType'] = graph_dict['chartType']
         #Set initial chart options
@@ -948,6 +945,12 @@ def monann(request):
         context['chart_smry_individual_selected'] = 'selected'
         context['run_done'] = True
         context['results'] = results
+        #Save data table to file for later download
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        json_file = '%s_sodxtrmts.json' %(time_stamp)
+        with open(settings.TEMP_DIR + '%s' %(json_file),'w+') as f:
+            f.write(json.dumps(results))
+        context['json_file'] = json_file
 
     #Downlaod Table Data
     if 'formDownload' in request.POST:
@@ -956,8 +959,8 @@ def monann(request):
         output_file_name = request.POST.get('output_file_name', 'output')
         json_file = request.POST.get('json_file', None)
         with open(settings.TEMP_DIR + json_file, 'r') as f:
-            json_dict =  json.load(f)
-        context['json_dict'] = json_dict
+            results =  json.load(f)
+        context['results'] = results
         DDJ = WRCCClasses.DownloadDataJob('Sodxtrmts',data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_file)
         return DDJ.write_to_file()
 
@@ -2014,78 +2017,6 @@ def set_sodsumm_initial(request):
             checkbox_vals['generate_graphics' + '_' + bl + '_selected'] = 'selected'
     return initial,checkbox_vals
 
-def set_sodxtrmts_initial(request,app_type):
-    initial = {}
-    checkbox_vals = {}
-    Get = set_GET(request)
-    if app_type == 'station':
-        initial['station_id'] = Get('station_id','RENO TAHOE INTL AP, 266779')
-        initial['start_year'] = Get('start_year', Get('start_date','POR'))
-        initial['end_year'] = Get('end_year', Get('end_date','POR'))
-        initial['autofill_list'] = 'US_station_id'
-    else:
-        initial['location'] = Get('location','-111,40')
-        initial['grid'] = Get('grid','1')
-        start_year = WRCCData.GRID_CHOICES[initial['grid']][3][0][0]
-        end_year = WRCCData.GRID_CHOICES[initial['grid']][3][0][1]
-        initial['start_year'] = Get('start_year', Get('start_date',start_year))
-        initial['end_year'] = Get('end_year', Get('end_date',end_year))
-    if len(initial['start_year'])>4:initial['start_year'] = initial['start_year'][0:4]
-    if len(initial['end_year'])>4:initial['end_year'] = initial['end_year'][0:4]
-    initial['element'] = Get('element',Get('elements','maxt').replace(' ','').split(',')[0])
-    initial['monthly_statistic'] = Get('monthly_statistic', 'mave')
-    initial['units'] =  Get('units','english')
-    initial['max_missing_days'] = Get('max_missing_days', '5')
-    initial['start_month'] = Get('start_month', '01')
-    initial['departures_from_averages'] = Get('departures_from_averages', 'F')
-    initial['frequency_analysis'] = Get('frequency_analysis', 'F')
-    initial['less_greater_or_between']= Get('less_greater_or_between', None)
-    initial['threshold_for_less_or_greater']= Get('threshold_for_less_or_greater', None)
-    initial['threshold_low_for_between']= Get('threshold_low_for_between', None)
-    initial['threshold_high_for_between']= Get('threshold_high_for_between', None)
-    initial['generate_graph'] = Get('generate_graph', 'F')
-    initial['base_temperature'] = Get('base_temperature','')
-    if not initial['base_temperature'] and initial['element'] in ['hdd','cdd']:
-        initial['base_temperature'] = '65'
-    if not initial['base_temperature'] and initial['element'] in ['gdd']:
-        initial['base_temperature'] = '50'
-    #FIX ME request.POST.get does not return base_temperature and thresholds
-    if type(request) != dict  and request.POST:
-        ks = ['base_temperature','less_greater_or_between','threshold_for_less_or_greater','threshold_low_for_between','threshold_high_for_between']
-        req_dict = dict(request.POST.items())
-        for k in ks:
-            if k in req_dict.keys():
-                initial[k] = str(req_dict[k])
-
-    #set the check box values
-    for el in WRCCData.SXTR_ELEMENT_LIST:
-        checkbox_vals[el + '_selected'] =''
-        if el == initial['element']:
-            checkbox_vals[el + '_selected'] ='selected'
-    for start_month in ['01','02','03','04','05','06','07','08','09','10','11','12']:
-        for mon_type in ['start_month']:
-            checkbox_vals[mon_type + '_' + start_month + '_selected']=''
-        if initial[mon_type] == start_month:
-            checkbox_vals[mon_type + '_' + start_month + '_selected']='selected'
-    for bl in ['T','F']:
-        for cbv in ['departures_from_averages', 'frequency_analysis', 'generate_graph']:
-            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
-            if initial[cbv] == bl:
-               checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
-    for stat in ['mmax','mmin','mave','sd','ndays','rmon','msum']:
-        checkbox_vals[stat + '_selected'] =''
-        if initial['monthly_statistic'] == stat:
-            checkbox_vals[stat + '_selected'] ='selected'
-    for u in ['english', 'metric']:
-        checkbox_vals['units_' + u + '_selected'] =''
-        if u == initial['units']:
-            checkbox_vals['units_' +u + '_selected'] ='selected'
-    for lgb in ['l', 'g', 'b']:
-        checkbox_vals[lgb + '_selected'] =''
-        if initial['less_greater_or_between'] == lgb:
-            checkbox_vals[lgb + '_selected'] ='selected'
-    return initial, checkbox_vals
-
 def set_sodxtrmts_graph_initial(request, init=None):
     initial = {}
     checkbox_vals = {}
@@ -2441,7 +2372,7 @@ def set_form(request, clean=True):
             form[str(key)]= val
         #Special case elements, always needs to be list
         if 'element' in request.keys() and not 'elements' in request.keys():
-            form['elements'] = form['element']
+            form['elements'] = [form['element']]
         if 'elements' in request.keys():
             form['elements'] = WRCCUtils.convert_elements_to_list(request['elements'])
     elif req_method == 'POST':
@@ -2463,7 +2394,8 @@ def set_form(request, clean=True):
     else:
         form = {}
     #Convert unicode to string
-    form['elements'] = [str(el) for el in form['elements']]
+    if 'elements' in form.keys():
+        form['elements'] = [str(el) for el in form['elements']]
     if 'csrfmiddlewaretoken' in form.keys():
         del form['csrfmiddlewaretoken']
     if 'formData' in form.keys():
@@ -2594,11 +2526,17 @@ def set_initial(request,req_type):
         initial['overlay_state'] = Get('overlay_state','NV')
         initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
         #initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
+    #set app specific params
     if req_type == 'map_overlay':
         initial['elements'] = Get('elements','maxt,mint,pcpn').split(',')
     elif req_type == 'monann':
         initial['element'] = Get('element','pcpn')
         initial['monthly_statistic'] = Get('monthly_statistic','msum')
+        initial['less_greater_or_between'] = Get('less_greater_or_between','b')
+        initial['threshold_low_for_between'] = Get('threshold_low_for_between',0.01)
+        initial['threshold_high_for_between'] = Get('threshold_high_for_between',0.1)
+        initial['threshold_for_less_than'] = Get('threshold_for_less_than',1)
+        initial['threshold_for_greater_than'] = Get('threshold_for_greater_than',1)
     else:
         initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
     initial['add_degree_days'] = Get('add_degree_days', 'F')
@@ -2694,6 +2632,9 @@ def set_initial(request,req_type):
                 checkbox_vals['spatial_summary_' + st + '_selected'] ='selected'
     if 'monthly_statistic' in initial.keys():
         checkbox_vals[initial['monthly_statistic'] + '_selected'] ='selected'
+        for lgb in ['l', 'g', 'b']:
+            if initial['less_greater_or_between'] == lgb:
+                checkbox_vals[lgb + '_selected'] ='selected'
     if 'date_format' in initial.keys():
         for df in ['none', 'dash','colon', 'slash']:
             checkbox_vals['date_format_' + df + '_selected'] =''
