@@ -268,6 +268,7 @@ def single_lister(request):
             req['errors'] = {'errors':'No data found for these parameters.'}
             context['results'] = req
             return render_to_response(url, context, context_instance=RequestContext(request))
+        context['run_done'] = True
         context['results'] = req
         header_keys = [form_cleaned['area_type'],'data_summary',\
         'elements', 'units', 'start_date', 'end_date']
@@ -384,6 +385,7 @@ def multi_lister(request):
         '''
         req = WRCCUtils.request_and_format_data(form_cleaned)
         context['results'] = req
+        context['run_done'] = True
         #Format Data for display and/or download
         header_keys = ['data_type',form_cleaned['area_type'],\
             'data_summary','elements','units','start_date', 'end_date']
@@ -497,7 +499,7 @@ def temporal_summary(request):
         initial_plot, checkbox_vals_plot = set_map_plot_options(form)
         join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-        header_keys = [form_cleaned['area_type'],'temporal_summary',\
+        header_keys = [form['area_type'],'temporal_summary',\
             'elements','units','start_date', 'end_date','grid']
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
 
@@ -566,7 +568,7 @@ def temporal_summary(request):
             figure_files.append(figure_file)
         context['JSON_URL'] = settings.TMP_URL
         context['figure_files'] = figure_files
-
+        context['run_done'] = True
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def spatial_summary(request):
@@ -667,6 +669,7 @@ def spatial_summary(request):
             graph_data.append(datadict)
 
         results['graph_data'] = graph_data
+
         elements = []
         for el in form_cleaned['elements']:
             el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
@@ -675,10 +678,10 @@ def spatial_summary(request):
                 el_name+= str(base_temp)
             elements.append(el_name)
         results['elements'] = elements
-        results['data_index'] = 0; results['chartType'] = graph_data[0]['chartType']
+        results['data_indices'] = [0,1]; results['chartType'] = graph_data[0]['chartType']
         #results['json_file_path'] = settings.TMP_URL + json_file
         context['results'] = results
-
+        context['run_done'] = True
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
@@ -829,16 +832,17 @@ def data_comparison(request):
     context['initial'] = initial; context['checkbox_vals'] = checkbox_vals
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         context['form_message'] = True
-        form = set_form_old(request, clean=False)
+        form = set_form(request, clean=False)
+        form_cleaned = set_form(request, clean=True)
         DC = WRCCClasses.DataComparer(form)
         gdata,sdata = DC.get_data()
-        context['results'] = {
+        context['run_done'] = True
+        results = {
             'grid_data':gdata,
             'station_data':sdata,
-            'element_list': form_cleaned['elements']
         }
         results['graph_data'] = DC.get_graph_data(gdata,sdata)
-        context['graph_data'] = graph_data
+        context['results'] = results
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 #######################
@@ -2537,6 +2541,8 @@ def set_initial(request,req_type):
         initial['threshold_high_for_between'] = Get('threshold_high_for_between',0.1)
         initial['threshold_for_less_than'] = Get('threshold_for_less_than',1)
         initial['threshold_for_greater_than'] = Get('threshold_for_greater_than',1)
+    elif req_type == 'data_comparison':
+        initial['element'] = Get('element','pcpn')
     else:
         initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
     initial['add_degree_days'] = Get('add_degree_days', 'F')

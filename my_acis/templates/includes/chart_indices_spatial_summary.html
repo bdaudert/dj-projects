@@ -1,7 +1,8 @@
 <font class="message">Elements</font>
 <select style="max-height:200px;width:200px" multiple id='data_indices' name="chart_selector">
 {% for el in results.elements%}
-    <option value={{ forloop.counter0 }}  {% if results.data_index == forloop.counter0%}selected{%endif%}>
+    <option value={{ forloop.counter0 }}  
+        {%if forloop.counter0 == 0 or forloop.counter0 == 1%}selected {%endif%}>
      {{el}}    
     </option>
 {% endfor%}

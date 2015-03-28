@@ -33,11 +33,11 @@ function generateTS_individual(data_indices) {
     var axisFontSize = '16px';
     var labelsFontSize = '20px';
     //Set params according to application 
-    if (app_name== 'monann'){
+    if (app_name == 'monann'){
         var date_format = '%Y';
         var yLabelmain = datadict[0].elUnits;
     }
-    if (app_name== 'spatial_summary'){
+    if (app_name  == 'spatial_summary' || app_name == 'data_comparison'){
         var date_format = '%Y-%m-%d';
         var yLabelmain = datadict[0].seriesName + ' (' + datadict[0].elUnits + ')';
     }
@@ -203,8 +203,10 @@ function generateTS_individual(data_indices) {
             backgroundColor: 'white',
             align: 'right',
             verticalAlign: 'top',
+            /*
             y: 60, // >0 moves down
             x: -400, // >0 moves right
+            */
             borderWidth: 1,
             borderRadius: 5,
             floating: true,

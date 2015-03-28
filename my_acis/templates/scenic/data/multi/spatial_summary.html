@@ -6,6 +6,7 @@
 
 {% block content %} 
 <!--Hidden variables-->
+
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
 <input type="hidden" id="host" name="host" value="{{host}}">
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{kml_file_path}}">
@@ -52,6 +53,9 @@
 <table>
 <td valign="bottom" width="45%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/spatial_summary'"/>
+    {%if results.graph_data or results.smry%}
+        <input type="submit" value="Show/Hide Form" onclick="ShowHide('top_of_page')">
+    {%endif%} 
 </td>
 <td valign="top" width="55%" align="left">
     <table>
@@ -64,8 +68,12 @@
 </table>
 
 
-<table>
 <!--Form-->
+{% if not results.graph_data and not results.smry%}
+    <table id="top_of_page">
+{%else%}
+    <table id="top_of_page" style="display:none">
+{%endif%}
 <td valign="top"  width="40%">
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
@@ -123,31 +131,25 @@
 </td>
 <!--Errors/Down Arrow/Maps-->
 <td valign="top" width="60%">
-    <!--Form Errors-->
+
+    <!--Form errors and search parameter section-->
+    <div class="results">
     {%if form_error%}
-    <div id="form_error" class="results">
-        <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
-        {%for key, val in form_error.items%}
-            <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
-        {%endfor%}
-    </div>
+        {% include 'includes/form_error.html'%}
+    {%endif%}
+    {%if results.errors%}
+        <p class="error">ERROR: {{results.errors}}</p>
     {%endif%}
 
-    <!--Request errors and down arrow-->
-    <div class="results" align="center">
-    {%if results%}
-        {%if results.errors%}
-            <p class="error">{{results.errors}}</p>
-        {%else%}
-            <div id="Arrow" class="results">
-            <p class="message"><b>RESULTS:</b></p>
-            <img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px">
-            </div>
- 
-            </div>
-        {%endif%}
+    {%if  run_done and  not results.graph_data and not results.smry %}
+        {% include 'includes/no_results.html'%}
     {%endif%}
-    </div> 
+    <!--Request errors or results arrow-->
+    {%if results.data or results.smry %}
+        {% include 'includes/arrow.html'%}
+    {%endif%}
+    </div>
+
 
     <!--Maps-->
     <div id="PolyMap" style="display:none;">
@@ -178,6 +180,14 @@
     <!--Results-->
     <!--Print and download buttons-->
     <div class="results">
+    {%if form_error%}
+        {% include 'includes/form_error.html'%}
+    {%endif%}
+
+    {%if  run_done and not results.data and not results.smry %}
+        {% include 'includes/no_results.html'%}
+    {%endif%}
+
     {%if not results.errors and results.data%}
         <table>
         <td valign="top">
@@ -240,7 +250,8 @@
             <div align="center" id="container" style="height:500px;width:700px;"></div>
             <script type="text/javascript">
                 var graph_data = {{results.graph_data | safe_json}};
-                generateTS_individual();
+                var data_indices = {{ results.data_indices |safe }}
+                generateTS_individual(data_indices);
             </script>
         </div>
     {%endif%}

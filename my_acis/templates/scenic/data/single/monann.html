@@ -110,32 +110,19 @@
 <!--Right-->
 
 <td valign="top" width="60%">
+    <div class="results">
     {%if not results.data and run_done%}
-        <p align="center" style="color:red">No data found for these parameters!</p></br>
+        {% include 'includes/no_results.html'%}
     {% endif %}
-    <!--Form Errors and search parameter section-->
+
     {%if form_error%}
-    <div id="form_error" class="results">
-        <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
-        {%for key, val in form_error.items%}
-            <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
-        {%endfor%}
-    </div>
+        {% include 'includes/form_error.html'%}
     {%endif%}
 
-    <!--Request errors or results arrow-->
-    <div class="results">
-    {%if results.errors%}
-        <p class="error">{{results.errors}}</p>
-    {%endif%}
     {%if results.data%}
-        <div id="Arrow" align="center">
-            <p class="message"><b>RESULTS:</b></p>
-            <img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px">
-            </div>
- 
-            </div>
+        {% include 'includes/arrow.html'%}
     {%endif%}
+
     </div>
 
     <!--Maps-->
@@ -143,9 +130,10 @@
     <div id="GridpointMap" style="display:block">
     <div id="map-gridpoint"></div>
     </div>
-    <script type="text/javascript">initialize_grid_point_map();</script> 
-    {%else%}
+    <script type="text/javascript">initialize_grid_point_map();</script>
     <div id="GridpointMap" style="display:none"></div>
+    {%else%}
+    <div id="GridpointMap" style="display:none">
     {%endif%} 
 </td>
 </table>
@@ -153,21 +141,16 @@
 <!--Results-->
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
+    <div class="results">
     {%if not results.data and run_done%}
-        <p align="center" style="color:red">No data found for these parameters!</p></br>
+        {% include 'includes/no_results.html'%}
     {% endif %}
     <!--Form Errors and search parameter section-->
     {%if form_error%}
-    <div id="form_error" class="results">
-        <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
-        {%for key, val in form_error.items%}
-            <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
-        {%endfor%}
-    </div>
+        {% include 'includes/form_error.html'%}
     {%endif%}
 
     <!--Request errors or results arrow-->
-    <div class="results">
     {%if results.errors%}
         <p class="error">{{results.errors}}</p>
     {%endif%}

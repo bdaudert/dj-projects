@@ -29,24 +29,21 @@
 </div><!--End how_to-->
 
 <!---Hidded variables-->
+<input type="hidden" id="app_name" name="app_name" value="multi_lister">
 <!--For maps-->
 <input type="hidden" id="host" name="host" value="{{iniial.host}}">
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
 
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
-<!--On form change, hide results and form errors-->
-<script type="text/javascript">
-$(function(){
-    //On form change, hide results and form errors
-    hide_errors_results_on_change('tableDataForm');
-});
-</script>
 
 <!--Tool Infor/Howto-->
 <table>
 <td valign="bottom" width="45%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/lister/'"/>
+    {%if results.data or results.smry%}
+        <input type="submit" value="Show/Hide Form" onclick="ShowHide('top_of_page')">
+    {%endif%}    
 </td>
 <td valign="top" width="55%" align="left">
     <table>
@@ -59,8 +56,12 @@ $(function(){
 </table>
 
 
-<table>
 <!--Form-->
+{% if not results.data and not results.smry%}
+    <table id="top_of_page">
+{%else%}
+    <table id="top_of_page" style="display:none">
+{%endif%}
 <td valign="top" width="40%">
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading() & setHiddenFields('overlayForm', $(this).attr('id'))">{% csrf_token %}
@@ -145,15 +146,6 @@ $(function(){
 <!--Errors/Down arow/Maps-->
 <td valign="top" width="60%" align="center">
     <!--Form Errors and search parameter section-->
-    {%if form_error%}
-    <div id="form_error" class="results">
-        <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
-        {%for key, val in form_error.items%}
-            <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
-        {%endfor%}
-    </div>
-    {%endif%}
-
     <p class="message" id="request_email_message"  style="display:none">
     Non-summarized data wll be processed offline.<br /> 
     Please provide your name and email address at the bottom of the form.
@@ -170,17 +162,19 @@ $(function(){
 
     <!--Request errors or results arrow-->
     <div class="results">
-    {%if results%}
-        {%if results.errors%}
-            <p class="error">{{results.errors}}</p>
-        {%else%}
-            <div id="Arrow" class="results">
-            <p class="message"><b>RESULTS:</b></p>
-            <img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px">
-            </div>
- 
-            </div>
-        {%endif%}
+    {%if form_error%}
+        {% include 'includes/form_error.html'%}
+    {%endif%}
+    {%if results.errors%}
+        <p class="error">ERROR: {{results.errors}}</p>
+    {%endif%}
+
+    {%if  run_done and  not results.data and not results.smry %}
+        {% include 'includes/no_results.html'%}
+    {%endif%}
+    <!--Request errors or results arrow-->
+    {%if results.data or results.smry %}
+        {% include 'includes/arrow.html'%}
     {%endif%}
     </div> 
     
@@ -227,6 +221,15 @@ $(function(){
     <!--Results-->
     <!--Print and download buttons-->
     <div class="results">
+    {%if form_error%}
+        {% include 'includes/form_error.html'%}
+    {%endif%}
+
+    {%if  run_done and not results.data and not results.smry %}
+        {% include 'includes/no_results.html'%}
+    {%endif%}
+
+
     {%if not results.errors %}
         {% if results.data or results.smry%}
         <table>

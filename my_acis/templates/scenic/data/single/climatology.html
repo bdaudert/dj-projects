@@ -24,6 +24,8 @@
         </script>
         </div>
 
+<!--Hidden variables-->
+<input type="hidden" id="app_name" name="app_name" value="climatology">
 
 <!--Set up autofill-->
 {%if initial.autofill_list %}
@@ -33,7 +35,10 @@
 <!--Toolinfo/Howto-->
 <table>
 <td valign="bottom" width="45%">
-    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/climatology/'"/>
+    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/climatology/'">
+    {%if results%}
+    <input type="submit" value="Show/Hide Form" onclick="ShowHide('top_of_page')">
+    {%endif%}
 </td>
 <td valign="top" width="55%" align="left">
     <table>
@@ -45,8 +50,14 @@
 </td>
 </table>
 
-<table>
+
+
 <!--Form-->
+{% if not results%}
+<table id="top_of_page">
+{%else%}
+<table id="top_of_page" style="display:none">
+{%endif%}
 <td valign="top" width="40%">
     <div id="formData" class="form" style="border:none;">
     <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
@@ -73,27 +84,19 @@
 </td>
 <!--Errors/dowm arrow/maps-->
 <td valign="top" width="60%" align="center">
+    <div class="results">
     {%if form_error%}
-    <p class="error" align="left">ERROR: Please correct the form error(s) highlighted in red!</p>
-    {%for key, val in form_error.items%}
-    <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
-    {%endfor%}
+        {% include 'includes/form_error.html'%}
     {%endif%} 
 
     {%if results%}
-    <div id="Arrow" class="results">
-    <table align="center">
-    <td valign="top"><b>RESULTS:</b></td><td>
-    <td><img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px"></td>
-    </table>
-    </div>
+        {% include 'includes/arrow.html'%}
     {%endif%}
 
     {%if run_done and not results%}
-        <div class="results">
-        <p style="color:red">No data found for these parameters!</p> 
-        </div>
+           {% include 'includes/no_results.html'%}
     {%endif%}
+    </div>
 
     <!--Maps-->
     {%if need_gridpoint_map%}
@@ -110,8 +113,15 @@
 <!--Results-->
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
-    {%if results%}
     <div class="results">
+    {%if form_error%}
+        {% include 'includes/form_error.html'%}
+    {%endif%}
+
+    {%if run_done and not results%}
+           {% include 'includes/no_results.html'%}
+    {%endif%}
+    {%if results%}
         <p>
         For monthly and annual mean, thresholds and sums:</br>
         Months with {{initial.max_missing_days}} or more missing days are not considered.</br>

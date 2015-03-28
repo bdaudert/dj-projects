@@ -28,6 +28,7 @@
 </div><!--End how_to-->
 
 <!---Hidded variables-->
+<input type="hidden" id="app_name" name="app_name" value="single_lister">
 
 <!--Set up autofill-->
 {%if initial.autofill_list %}
@@ -37,7 +38,10 @@
 <!--Toolinfo/Howto-->
 <table>
 <td valign="bottom" width="45%">
-    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/lister/'"/>
+    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/lister/'">
+    {%if results.data or results.smry%}
+    <input type="submit" value="Show/Hide Form" onclick="ShowHide('top_of_page')">
+    {%endif%}
 </td>
 <td valign="top" width="55%" align="left">
     <table>
@@ -49,8 +53,12 @@
 </td>
 </table>
 
-<table>
 <!--Form-->
+{% if not results.data and not results.smry%}
+    <table id="top_of_page">
+{%else%}
+    <table id="top_of_page" style="display:none">
+{%endif%}
 <td valign="top" width="40%">
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
@@ -128,28 +136,20 @@
 <!--Errors/dowm arrow/maps-->
 <td valign="top" width="60%" align="center">
    <!--Form errors and search parameter section-->
+    <div class="results">
     {%if form_error%}
-    <div id="form_error" class="results" align="center">
-        <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
-        {%for key, val in form_error.items%}
-            <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
-        {%endfor%}
-    </div>
+        {% include 'includes/form_error.html'%}
     {%endif%}
     {%if results.errors%}
         <p class="error">ERROR: {{results.errors}}</p>
     {%endif%}
+
+    {%if  run_done and  not results.data and not results.smry %}
+        {% include 'includes/no_results.html'%}
+    {%endif%}
     <!--Request errors or results arrow-->
-    <div class="results">
-    {%if results.data%}
-        {%if results.errors%}
-            <p class="error">{{results.errors}}</p>
-        {%else%}
-            <div id="Arrow" class="results">
-            <p class="message"><b>RESULTS:</b></p>
-            <img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px">
-            </div>
-        {%endif%}
+    {%if results.data or results.smry %}
+        {% include 'includes/arrow.html'%}
     {%endif%}
     </div>
     <!--Maps-->
@@ -166,8 +166,17 @@
 <!--Results-->
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
-    {%if not results.errors and results.data%}
     <div class="results">
+    {%if form_error%}
+        {% include 'includes/form_error.html'%}
+    {%endif%}
+
+    {%if  run_done and not results.data and not results.smry %}
+        {% include 'includes/no_results.html'%}
+    {%endif%}
+
+
+    {%if not results.errors and results.data%}
         <table>
         <td valign="top">
         <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>

@@ -14,13 +14,15 @@
 </div>
 <div id="how_to" style="display:none;">
     <div id="Docu_location">{% include 'includes/Docu_location.html'%}</div>
-    <div id="Docu_element">{% include 'includes/Docu_elements.html'%}</div>
+    <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>    
     <div id="Docu_add_degree_days">{% include 'includes/Docu_add_degree_days.html'%}</div>
     <div id="Docu_degree_days">{% include 'includes/Docu_degree_days.html'%}</div>
     <div id="Docu_start_end_date">{% include 'includes/Docu_start_end_date.html'%}</div>
 </div>
 
+<!--Hidden variables-->
+<input type="hidden" id="app_name" name="app_name" value="data_comparison">
 
 <p align="center" class="error"><b>*(BETA) THIS PAGE IS UNDER DEVLOPMENT!</b></p>
 
@@ -28,6 +30,9 @@
 <table>
 <td valign="bottom" width="45%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/data_comparison/'"/>
+    {%if results.graph_data%}
+        <input type="submit" value="Show/Hide Form" onclick="ShowHide('top_of_page')">
+    {%endif%} 
 </td>
 <td valign="top" width="55%" align="left">
     <table>
@@ -40,21 +45,28 @@
 </table>
 
 
-<table>
+
 <!--Form-->
+{% if not results.graph_data%}
+<table id="top_of_page">
+{%else%}
+<table id="top_of_page" style="display:none">
+{%endif%}
+
 <td valign="top" width="40%">
     <div id='formData'>
     <form method="post" id="tableDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
     <table class="form" id="tableData" >  
     <tr style="display:table-row">{% include 'includes/location.html'%}</tr>  
     <tr class="grid" id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr>
-    <tr style="display:table-row">{% include 'includes/elements.html'%}</tr>
-    <tr id="add" valign="top" style="display:table-row">{% include 'includes/add_special_degree_days.html'%}</tr>
+    <tr style="display:table-row">{% include 'includes/element_data_comparison.html'%}</tr>
+    <tr id="add" valign="top" style="display:none">{% include 'includes/add_special_degree_days.html'%}</tr>
     {%if initial.add_degree_days == "T"%}
-    <tr id="dd" valign="top" style="display:table-row">{% include 'includes/degree_days.html'%}</tr>
+    <tr id="dd" valign="top" style="display:none">{% include 'includes/degree_days.html'%}</tr>
     {%else%}
     <tr id="dd" valign="top" style="display:none">{% include 'includes/degree_days.html'%}</tr>
     {%endif%}
+
     <tr style="display:table-row;">{% include 'includes/units.html'%}</tr>
     <tr style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
     <tr style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
@@ -66,32 +78,21 @@
 <!--Errors/dowm arrow/maps-->
 <td valign="top" width="60%" align="center">
    <!--Form errors and search parameter section-->
-    {%if form_error%}
-    <div id="form_error" class="results" align="center">
-        <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
-        {%for key, val in form_error.items%}
-            <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
-        {%endfor%}
-    </div>
-    {%endif%}
-    {%if results.errors%}
-        <p class="error">ERROR: {{results.errors}}</p>
-    {%endif%}
-    <!--Request errors or results arrow-->
     <div class="results">
+    {%if form_error%}
+        {% include 'includes/form_error.html'%}
+    {%endif%}
+
     {%if results.graph_data%}
-        {%if results.errors%}
-            <p class="error">{{results.errors}}</p>
-        {%else%}
-            <div id="Arrow" class="results">
-            <p class="message"><b>RESULTS:</b></p>
-            <img alt="DownArrow" src="{{MEDIA_URL}}img/DownArrow.png" height="200px">
-            </div>
-        {%endif%}
+        {% include 'includes/arrow.html'%}
+    {%endif%}
+
+    {%if run_done and not results.graph_data%}
+           {% include 'includes/no_results.html'%}
     {%endif%}
     </div>
     <!--Maps-->
-    {%if not results%}
+    {%if not results.graph_data%}
     <div id="GridpointMap" style="display:block">
     <div id="map-gridpoint"></div>
     </div>
@@ -105,18 +106,26 @@
 <!--results-->
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
+    <div class="results">
+    {%if form_error%}
+        {% include 'includes/form_error.html'%}
+    {%endif%}
+
+    {%if run_done and not results.graph_data%}
+           {% include 'includes/no_results.html'%}
+    {%endif%}
+    
     {% if results.graph_data %}
     <p class="message"><b>CLICK AND DRAG TO ZOOM IN!</b></p>
+    <div align="center" id="container" style="height:500px;width:700px;"></div>
     <!--Declare global variable-->
      <script type="text/javascript">
-        var gdata = {{results.graph_data | safe_json}}
+        var graph_data = {{results.graph_data | safe_json}}
+        generateTS_individual([0,1]);
     </script>
-    {%for el in results.element_list%}
-    <div align="center" id="container_{{forloop.counter0}}" style="height:500px;width:700px;"></div>
-    <br />
-     <script type="text/javascript">generate_dailyTS("{{forloop.counter0}}");</script>
-    {% endfor %}
+    
     {% endif %}
+    </div>
 </td>
 </table>
 

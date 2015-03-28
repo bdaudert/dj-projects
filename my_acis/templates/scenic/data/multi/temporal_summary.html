@@ -29,6 +29,7 @@
 </div><!--End how_to-->
 
 <!--Hidden variables-->
+<input type="hidden" id="app_name" name="app_name" value="temporal_summary">
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
 <input type="hidden" id="host" name="host" value="{{host}}">
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{kml_file_path}}">
@@ -39,6 +40,9 @@
 <table>
 <td valign="bottom" width="45%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/temporal_summary/'"/>
+    {%if figure_files%}
+    <input type="submit" value="Show/Hide Form" onclick="ShowHide('top_of_page')">
+    {%endif%}
 </td>
 <td valign="top" width="55%" align="left">
     <table>
@@ -50,8 +54,13 @@
 </td>
 </table>
 
-<table>
 <!--Form-->
+{% if not figure_files%}
+<table id="top_of_page">
+{%else%}
+<table id="top_of_page" style="display:none">
+{%endif%}
+
 <td valign="top" width="40%">
     <div id='formMap'>
         <form method="post" id="tableMapForm" action="" onsubmit="show_loading()">{% csrf_token %}
@@ -91,6 +100,29 @@
 </td>
 <td valign="top" width="60%">
 
+    <div class="results">
+    {%if form_error%}
+        {% include 'includes/form_error.html'%}
+    {%endif%}
+
+    {%if figure_files%}
+        {% include 'includes/arrow.html'%}
+    {%endif%}
+
+    {%if run_done and not results%}
+           {% include 'includes/no_results.html'%}
+    {%endif%}
+
+    {%if params_display_list %}
+    <div id="user_params_list">
+    <p class="message">
+    {%for key_val in params_display_list%}
+    <b>{{key_val.0}}</b>: {{key_val.1.0}}<br />
+    {%endfor%}
+    </p>
+    </div>
+    {%endif%}
+    </div>
 
     {%if initial.select_grid_by == "bounding_box" and not hide_bbox_map%}
     <div id="BBoxMap" style="display:block;">
@@ -102,26 +134,7 @@
     <script type="text/javascript">initialize_bbox_map();</script>
     {%endif%}
     </div>
-
-    {%if form_error%}
-    <div class="results">
-        <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
-        {%for key, val in form_error.items%}
-            <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
-        {%endfor%}
-    </div>
-    {%endif%}
-        
-    {%if params_display_list %}
-    <div id="user_params_list">
-    <p class="message">
-    {%for key_val in params_display_list%}
-    <b>{{key_val.0}}</b>: {{key_val.1.0}}<br />
-    {%endfor%}
-    </p>
-    </div>
-    {%endif%}
-
+    
     <div id="PolyMap" style="display:none;">
         <div id="panel">
         <div id="color-palette"></div>
@@ -157,26 +170,25 @@
     {%endif%}
  
     </div>
+</td></table>
 
 
-    {%if need_overlay_map%}
-    {%if overlay_error%}
-    <p class="error">{{overlay_error}}</p>
-    {%else%}
-    <div id="map-overlay" style="width:100%; height:400px;"></div>
-    <div id="content-window" style="width:100px; height:100px;"></div>
-    <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
-    {%endif%} 
+<!--Results section-->
+<table cellpadding="10" align="center">
+<td valign="top" width="97%" align="center">
+    <div class="results">
+    {%if form_error%}
+        {% include 'includes/form_error.html'%}
     {%endif%}
-    <br /><br />
+
+    {%if run_done and not figure_files%}
+           {% include 'includes/no_results.html'%}
+    {%endif%}
 
     {%if error%}
-    <p class="error">{{error}}</p>
-    {%endif%}
-   
+        <p class="error">{{ error }}</p>
+    {%endif%} 
 
-    <!--Results section-->
-    <div id="results" class="results">
     {%if figure_files%}
     <!--<a target="_blank" href="{{GRID_DATA_URL}}?{%for key,val in params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size=3><b>Get data behind the graphics</b></font></a><br /><br /><br />-->
     {%for fig in figure_files%}

@@ -1,0 +1,4 @@
+<p class="error" align="left">ERROR: Please correct the form error(s) highlighted in red!</p>
+    {%for key, val in form_error.items%}
+    <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
+    {%endfor%}
