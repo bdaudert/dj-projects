@@ -153,8 +153,7 @@ function initialize_station_finder() {
     }
     var start_date = $('#start_date').val();
     var end_date = $('#end_date').val();
-    var elements = $('#elements_str').val();
-    var el_list = elements.split(',');
+    var el_string = $('#elements').val().join(',');
     //Read in stn data json file
     $.getJSON(station_json, function(data) {
 
@@ -261,18 +260,18 @@ function initialize_station_finder() {
                 avbl_elements += c.available_elements[i][0] + '<br />'     
             }
 
-            var data_portal_link = '<a target="_blank" href=/csc/scenic/data/single/lister/"' + 
-            '?station_id=' + c.name + ',' + c.sid; 
-            var app_portal_link = '<a target="_blank" href=/csc/scenic/data/single/"' 
-            '?station_id=' + c.name + ',' + c.sid;
-            data_portal_link = data_portal_link + '&elements=' + elements;
-            app_portal_link = app_portal_link + '&elements=' + elements;
+            var data_portal_link = '<a target="_blank" href=/csc/scenic/data/single/lister/'+
+            '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid; 
+            var app_portal_link = '<a target="_blank" href=/csc/scenic/data/single/?'+
+            'area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid;
+            data_portal_link = data_portal_link + '&elements=' + el_string;
+            app_portal_link = app_portal_link + '&elements=' + el_string;
             data_portal_link = data_portal_link + '&start_date=' + start_date;
             app_portal_link = app_portal_link + '&start_date=' + start_date; 
             data_portal_link = data_portal_link + '&end_date=' + end_date;
             app_portal_link = app_portal_link + '&end_date=' + end_date; 
-            data_portal_link = data_portal_link + '">Obtain data for this station </a>'
-            app_portal_link = app_portal_link + '">Run custom data analysis</a>'
+            data_portal_link = data_portal_link + '>Obtain data for this station </a>'
+            app_portal_link = app_portal_link + '>Run custom data analysis</a>'
             var contentString = '<div id="MarkerWindow">'+
                 data_portal_link + '<br />' +
                 app_portal_link + '<br />' +
@@ -347,7 +346,6 @@ function initialize_station_finder() {
             */
             var station_ids_str = '';
             var station_list = document.getElementById('station_list');
-            //var table_rows = station_list.getElementsByTagName('tr'); 
             station_list.innerHTML = ' <thead>' + 
             '<tr><th>Name</th>' +
             '<th>ID</th>' +
@@ -382,21 +380,6 @@ function initialize_station_finder() {
                 station_ids_str = station_ids_str.substring(0,station_ids_str.length - 2);
             }
             document.getElementById('station_ids').value = station_ids_str;
-            /*
-            //Check  if we should link to data lister (if station_ids_str contains less than 6 stations)
-            var stn_list = station_ids_str.split(',');
-            var links = document.getElementsByClassName('link_to_datafind');
-            if (stn_list.length > 5){
-                for (i=0;i<links.length;i++) {
-                    links[i].style.display = 'none';
-                }
-            }
-            else {
-                for (i=0;i<links.length;i++) {
-                    links[i].style.display = 'block';
-                }                
-            }
-            */
         });  
         // == shows all markers of a particular category, and ensures the checkbox is checked and write station_list==
         show = function(category) {

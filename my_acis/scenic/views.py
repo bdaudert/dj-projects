@@ -224,10 +224,11 @@ def single_lister(request):
     initial, checkbox_vals = set_initial(request,'single_lister')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     #Data request submitted
-    if 'formData' in request.POST:
-        form = set_form(request,clean=False)
-        form_cleaned = set_form(request)
-        context['x'] = form_cleaned
+    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+        form = set_form(request, clean = False)
+        form_cleaned = set_form(request,clean = True)
+        context['x'] = initial
+        context['xx']  = form_cleaned
         #Check form fields
         fields_to_check = [form_cleaned['area_type'],'start_date','end_date','start_window','end_window','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -750,7 +751,6 @@ def station_finder(request):
         context['station_json'] = f_name
 
     if 'formData' in request.POST:
-        form_initial = set_form(request,clean=False)
         #Turn request object into python dict
         form = set_form(request,clean=False)
         form_cleaned = set_form(request,clean=True)
@@ -2370,6 +2370,7 @@ def set_form(request, clean=True):
             req_method = 'dict'
         else:req_method = None
     form= {}
+    form['req_method'] = req_method
     #Convert request object to python dictionary
     if req_method == 'dict':
         for key, val in request.iteritems():
@@ -2393,8 +2394,11 @@ def set_form(request, clean=True):
         if 'element' in request.GET.keys() and not 'elements' in request.GET.keys():
             form['elements'] = [str(request.GET['element'])]
         if 'elements' in request.GET.keys():
+            form['elements'] = request.GET.get('elements','').split(',')
+            '''
             els = request.GET.getlist('elements',request.GET.get('elements','').split(','))
             form['elements'] = [str(el) for el in els]
+            '''
     else:
         form = {}
     #Convert unicode to string
@@ -2431,7 +2435,10 @@ def set_form(request, clean=True):
                 if form['element'] in ['pet']:
                     el_list = ['maxt','mint','pcpn']
             if 'elements' in form.keys() and not 'element' in form.keys():
-                el_list = form['elements']
+                if isinstance(form['elements'],basestring):
+                    el_list = form['elements'].replace(' ','').split(',')
+                else:
+                    el_list = form['elements']
             else:
                 el_list = None
             stn_id = find_id(str(form['station_id']),settings.MEDIA_DIR +'json/US_station_id.json')
@@ -2446,7 +2453,7 @@ def set_form(request, clean=True):
         form['user_area_id'] =  form[key]
         form[key] = find_id(form[key],settings.MEDIA_DIR +'json/US_' + key + '.json')
     #set data summary if needed
-    if not 'data_summary' in form.keys():
+    if 'data_summary' not in form.keys():
         if 'temporal_summary' in form.keys():
             form['data_summary'] = 'temporal'
         if 'spatial_summary' in form.keys():
@@ -2544,7 +2551,13 @@ def set_initial(request,req_type):
     elif req_type == 'data_comparison':
         initial['element'] = Get('element','pcpn')
     else:
-        initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
+        if request.method == 'GET' and 'elements' in request.GET:
+            #Convert url element string to list
+            initial['elements'] = Get('elements',['maxt','mint','pcpn'])
+            if isinstance(initial['elements'], basestring):
+                initial['elements'] = initial['elements'].replace(' ','').split(',')
+        else:
+            initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
     initial['add_degree_days'] = Get('add_degree_days', 'F')
     initial['units'] = Get('units','english')
     if initial['units'] == 'metric':
