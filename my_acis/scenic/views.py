@@ -225,10 +225,8 @@ def single_lister(request):
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     #Data request submitted
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
-        form = set_form(request, clean = False)
-        form_cleaned = set_form(request,clean = True)
-        context['x'] = initial
-        context['xx']  = form_cleaned
+        form = set_form(initial, clean = False)
+        form_cleaned = set_form(initial,clean = True)
         #Check form fields
         fields_to_check = [form_cleaned['area_type'],'start_date','end_date','start_window','end_window','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)
