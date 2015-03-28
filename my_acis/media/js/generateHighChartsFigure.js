@@ -135,6 +135,7 @@ function generateTS_individual(data_indices) {
         //  CHART PROPERTIES
         //------------------------
         chart: {
+            marginTop: 100,
             type:chartType,
             zoomType: 'x',
             spacingBottom: 30,
@@ -199,18 +200,16 @@ function generateTS_individual(data_indices) {
         //LEGEND
         //------------------------
         legend: {
+            draggable: true,
             layout: 'vertical',
             backgroundColor: 'white',
-            align: 'right',
+            align: 'center',
             verticalAlign: 'top',
-            /*
-            y: 60, // >0 moves down
-            x: -400, // >0 moves right
-            */
+            y:30, // >0 moves down
+            x:0, // >0 moves right
             borderWidth: 1,
             borderRadius: 5,
             floating: true,
-            draggable: true,
             title:{
                 text: ':: Drag me'
             },
