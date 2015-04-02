@@ -13,7 +13,7 @@
     </ul>
     </p><p>
     <p class="error">What datasets can be used?</p>
-    <p> Both station and grid data can be used to generate the time series.<br />
+    <p>This tool works with historic station data as well as gridded datasets.</p>
     <b>Station Networks: </b><br />
     <a  class="pop_link" target="_blank" href="http://cyclone1.dri.edu/csc/media/html/station_id_system_docu.html"><font color="#0000FF">Overview of station networks</font></a><br />
     External links:
@@ -30,45 +30,21 @@
     </ul>
     <b>Gridded datasets:</b><br />
     <p class="pop_link" onClick="ShowHide('Docu_NRCC_INT')"><u>NRCC Interpolated</u></p>
-    <div id="Docu_NRCC_INT" style="display:none;"></div>
-    <script type="text/javascript">                        
-    $("#Docu_NRCC_INT").load("/csc/media/html/Docu_grids.html #NRCC_INT");
-    </script>
+        <div id="Docu_NRCC_INT" style="display:none;">{% include 'includes/Docu_NRCC_INT.html'%}</div>
     <p class="pop_link" onClick="ShowHide('Docu_NRCC_INT_HI')"><u>NRCC Interpolated Hi-Res</u></p>
-        <div id="Docu_NRCC_INT_HI" style="display:none;"></div>
-        <script type="text/javascript">                        
-        $("#Docu_NRCC_INT_HI").load("/csc/media/html/Docu_grids.html #NRCC_INT_HI");
-        </script>
+        <div id="Docu_NRCC_INT_HI" style="display:none;">{% include 'includes/Docu_NRCC_INT_HI_RES.html'%}</div>
     <p class="pop_link" onClick="ShowHide('Docu_PRISM')"><u>PRISM</u></p>
-        <div id="Docu_PRISM" style="display:none;"></div>
-        <script type="text/javascript">                        
-        $("#Docu_PRISM").load("/csc/media/html/Docu_grids.html #PRISM");
-        </script>
+        <div id="Docu_PRISM" style="display:none;">{% include 'includes/Docu_PRISM.html'%}</div>
     <p class="pop_link" onClick="ShowHide('Docu_CRCM')"><u>NARCCAP - CRCM</u></p>
-        <div id="Docu_CRCM" style="display:none;"></div>
-        <script type="text/javascript">                        
-        $("#Docu_CRCM").load("/csc/media/html/Docu_grids.html #CRCM");
-        </script>
+        <div id="Docu_CRCM" style="display:none;">{% include 'includes/Docu_CRCM.html'%}</div>
     <p class="pop_link" onClick="ShowHide('Docu_HRM3')"><u>NARCCAP - HRM3</u></p>
-        <div id="Docu_HRM3" style="display:none;"></div>
-        <script type="text/javascript">                        
-        $("#Docu_HRM3").load("/csc/media/html/Docu_grids.html #HRM3");
-        </script>
+        <div id="Docu_HRM3" style="display:none;">{% include 'includes/Docu_HRM3.html'%}</div>
     <p class="pop_link" onClick="ShowHide('Docu_MM5I')"><u>NARCCAP - MM5I</u></p>
-        <div id="Docu_MM5I" style="display:none;"></div>
-        <script type="text/javascript">                        
-        $("#Docu_MM5I").load("/csc/media/html/Docu_grids.html #MM5I");
-        </script>
+        <div id="Docu_MM5I" style="display:none;">{% include 'includes/Docu_MM5I.html'%}</div>
     <p class="pop_link" onClick="ShowHide('Docu_RCM3')"><u>NARCCAP - RCM3</u></p>
-        <div id="Docu_RCM3" style="display:none;"></div>
-        <script type="text/javascript">                        
-        $("#Docu_RCM3").load("/csc/media/html/Docu_grids.html #RCM3");
-        </script>
+        <div id="Docu_RCM3" style="display:none;">{% include 'includes/Docu_RCM3.html'%}</div>
     <p class="pop_link" onClick="ShowHide('Docu_WRFG')"><u>NARCCAP - WRFG</u></p>
-        <div id="Docu_WRFG" style="display:none;"></div>
-        <script type="text/javascript">                        
-        $("#Docu_WRFG").load("/csc/media/html/Docu_grids.html #WRFG");
-        </script>
+        <div id="Docu_WRFG" style="display:none;">{% include 'includes/Docu_WRFG.html'%}</div>
     All data sets are made available through the ACIS system.<br />
     <a class="pop_link" target="_blank" href="http://rcc-acis.unl.edu/index.php"><font color="#0000FF">ACIS Home Page</font></a></p>
     <p class="error">What can you do with this tool?</p>

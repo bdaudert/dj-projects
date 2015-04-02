@@ -343,7 +343,6 @@ function generateTS_smry(data_indices) {
 
     //Add Range
     if (show_range == 'T'){
-        alert(smry_data.ranges);
         var r = {
             name: 'Range',
             data:smry_data.ranges,
