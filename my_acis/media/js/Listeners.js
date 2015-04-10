@@ -47,30 +47,25 @@ $(function(){
         else{
             generateTS_smry();
         }    
-        /*
-        //Spatial summary
-        if ($('#app_name').length  && $('#app_name').val() == 'spatial_summary'){
-            generateTS('container);
-        }
-        //Monann
-        if ($('#app_name').length  && $('#app_name').val() == 'monann'){
-            generateTS('container');
-        }
-        */
     });
 
     /*
-    Set temporal resoliuton field for PRISM grid
+    Grid listener, changes start/end data 
+    and sets temp resolution for prism data
     */
     $('#grid').on('change keyup', function(){
         if ($(this).val() == '21'){
-            $('#temp_res').css('display','table-row');
+            if ($('#temp_res').length){
+                $('#temp_res').css('display','table-row');
+            }
             //Hide special degree day options
             $('#add').css('display','none');
             $('#dd').css('display','none');
         }
         else {
-            $('#temp_res').css('display','none');
+            if ($('#temp_res').length){
+                $('#temp_res').css('display','none');
+            }
         }
         //Disable elements if prism
         var non_prism_els = ['gdd','hdd','cdd'];
@@ -86,9 +81,27 @@ $(function(){
                 }
             }
         });
-        
+        var new_dates, ds, de;
+        //Change start/end dates/years according to grid
+        if ($('#start_year').length && $('#end_year').length){
+            ds = $('#start_year').val() + '-01-01';
+            de = String(parseInt($('#end_year').val()) - 1) + '-12-31';
+            new_dates = set_dates_for_grid($('#grid').val(),ds, de, 'year');
+            $('#start_year').val(new_dates.start);
+            $('#end_year').val(new_dates.end);
+        }
+        if ($('#start_date').length && $('#end_date').length){
+            ds = $('#start_date').val();
+            de = $('#end_date').val()
+            new_dates = set_dates_for_grid($('#grid').val(), ds, de, 'dates');
+            $('#start_date').val(new_dates.start);
+            $('#end_date').val(new_dates.end); 
+        }
     });
 
+    $('#temporal_resolution').on('change', function(){
+        set_dates_for_grid($('#grid').val(), $('#start_date').val(), $('#end_date').val(), 'dates');
+    });
     /*
     Sets maps and area form field
     depending on area type
@@ -131,7 +144,13 @@ $(function(){
         var non_prism_els = ['gdd','hdd','cdd'];
         //Set grid form fields
         if (data_type == 'grid' || data_type == 'location' || data_type == 'locations'){
-            $("#elements option").each(function(){
+            if ($('#elements').length){
+                var opts = $("#elements option");
+            }
+            if ($('#element').length){
+                var opts = $("#element option")
+            } 
+            opts.each(function(){
                 //Disable station elements
                 if ($(this).val().inList(station_only_els)){
                     $(this).attr('disabled',true);
@@ -249,9 +268,4 @@ $(function(){
         }
         
     });
-    /* CHECK THIS: units had set_degree_days(this.value) attached 
-    $('.monann_units').on('change', function(){
-        set_degree_days($(this).val());
-    });
-    */
 });

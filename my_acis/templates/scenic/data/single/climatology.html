@@ -127,10 +127,11 @@
         Months with {{initial.max_missing_days}} or more missing days are not considered.</br>
         </p>
         {% if initial.location%}
-        <p class="stronger">Location: ({{initial.location}})</br>
+        <p class="stronger">Location: {{initial.location}}</br>
+        Dataset: {{ grid_name }}<br />
         {%endif%}
         {% if initial.station_id%}
-        <p class="stronger">Station: ({{initial.station_id}})</br>
+        <p class="stronger">Station: {{station_name}}</br>
         {%endif%}
         From Year {{start_year}} To Year {{end_year}}</br>
         </p></br>

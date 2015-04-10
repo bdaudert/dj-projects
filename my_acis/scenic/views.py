@@ -225,8 +225,9 @@ def single_lister(request):
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     #Data request submitted
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
-        form = set_form(initial, clean = False)
+        #form = set_form(initial, clean = False)
         form_cleaned = set_form(initial,clean = True)
+        form = set_form(initial, clean = False)
         #Check form fields
         fields_to_check = [form_cleaned['area_type'],'start_date','end_date','start_window','end_window','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -238,7 +239,6 @@ def single_lister(request):
                     context['need_gridpoint_map'] = True
             return render_to_response(url, context, context_instance=RequestContext(request))
         #Data requests
-        '''
         try:
             req = WRCCUtils.request_and_format_data(form_cleaned)
             if 'smry' not in req.keys() and 'data' not in  req.keys():
@@ -249,8 +249,7 @@ def single_lister(request):
             results = {'error':'Data request error: %s' %str(e)}
             context['results'] = results
             return render_to_response(url, context, context_instance=RequestContext(request))
-        '''
-        req = WRCCUtils.request_and_format_data(form_cleaned)
+        #req = WRCCUtils.request_and_format_data(form_cleaned)
         #Format Data for display and/or download
         #Overide data with windowed data if desired
         if 'data_summary' in form.keys() and form['data_summary'] == 'windowed_data':
@@ -899,6 +898,7 @@ def monann(request):
             data = DJ.get_data_grid()
         #Set dates list
         dates_list = DJ.get_dates_list()
+        context['x'] = len(data['data'][0][1][0])
         #Run application
         App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
         data = App.run_app()
@@ -925,7 +925,7 @@ def monann(request):
                 'smry':'individual',
                 'running_mean_years':'5',
                 'show_range': False,
-                'data': [['YEAR'] + header_list + ['ANN']] + data[0][0][0:-6],
+                'data': [['YEAR'] + header_list + ['ANN']] + data[0][0],
                 'data_summary':[[' '] + header_list + ['ANN']] + data[0][0][-6:],
             }
         #Write data to file for highcharts
@@ -953,7 +953,6 @@ def monann(request):
         with open(settings.TEMP_DIR + '%s' %(json_file),'w+') as f:
             f.write(json.dumps(results))
         context['json_file'] = json_file
-
     #Downlaod Table Data
     if 'formDownload' in request.POST:
         data_format = request.POST.get('data_format', 'clm')
@@ -979,6 +978,12 @@ def climatology(request):
     if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
         form = set_form(request,clean=False)
         form_cleaned = set_form(request,clean=True)
+        #Set up page header params
+        if 'station_id' in form.keys():
+            context['station_name'] = form['station_id']
+        if 'location' in form.keys():
+            context['grid_name'] =  WRCCData.GRID_CHOICES[initial['grid']][0]
+
         fields_to_check = ['start_year', 'end_year','max_missing_days']
 
         #Check for form errors
@@ -1041,7 +1046,7 @@ def climatology(request):
         context['tab_list'] = tab_list
         #Define html content
         context['run_done'] = True
-        #Check if dates_list is
+        #Check if dates_list exits and has correct format
         if dates_list and len(dates_list) >=2 and len(dates_list[0])>=4 and len(dates_list[1])>=4:
             context['start_year'] = dates_list[0][0:4]
             context['end_year'] = dates_list[-1][0:4]
@@ -1052,7 +1057,6 @@ def climatology(request):
         context['station_name'] = meta_dict['names']
         headers = set_sodsumm_headers(table_list)
         context['headers'] = headers
-
         json_list = []
         for tab_idx, tab in enumerate(tab_list):
             table = table_list[tab_idx]
@@ -1150,7 +1154,8 @@ def check_form(form, fields_to_check):
         err = checker(form)
         if err:
             form_error[WRCCData.DISPLAY_PARAMS[field]] = err
-
+            #Stop at first error
+            break
     return form_error
 
 def find_id(form_name_field, json_file_path):
@@ -2379,7 +2384,9 @@ def set_form(request, clean=True):
         if 'elements' in request.keys():
             form['elements'] = WRCCUtils.convert_elements_to_list(request['elements'])
     elif req_method == 'POST':
-        form = dict((str(x),str(y)) for x,y in request.POST.items())
+        for key, val in request.POST.items():
+            form[str(key)]= val
+        #form = dict((str(x),str(y)) for x,y in request.POST.items())
         #Special case elements, always needs to be list
         if 'element' in request.POST.keys() and not 'elements' in request.POST.keys():
             form['elements'] = [str(request.POST['element'])]
@@ -2387,7 +2394,9 @@ def set_form(request, clean=True):
             els = request.POST.getlist('elements',request.POST.get('elements','').split(','))
             form['elements'] = [str(el) for el in els]
     elif req_method == 'GET':
-        form = dict((str(x),str(y)) for x,y in request.GET.items())
+        #form = dict((str(x),str(y)) for x,y in request.GET.items())
+        for key, val in request.GET.items():
+            form[str(key)]= val
         #Special case elements, always needs to be list
         if 'element' in request.GET.keys() and not 'elements' in request.GET.keys():
             form['elements'] = [str(request.GET['element'])]
@@ -2493,7 +2502,7 @@ def set_initial(request,req_type):
     Args:
         request: django request object
         req_type: application, one of
-            single_lister, multi_lister
+            single_lister, multi_lister, station_finder
             map_overlay, sf_download
             spatial_summary, temporal_summary
             monann, climatology
@@ -2504,6 +2513,7 @@ def set_initial(request,req_type):
         checkbox_vals: values for checkboxes (selected or '')
     '''
     initial = {}
+    initial['req_type'] = req_type
     checkbox_vals = {}
     Get = set_GET(request)
     Getlist = set_GET_list(request)
@@ -2515,13 +2525,17 @@ def set_initial(request,req_type):
         initial['area_type'] = Get('area_type','location')
     else:
         initial['area_type'] = Get('area_type','state')
+
     #Set area depending on area_type
     initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['area_type']]
     initial['area_type_value'] = initial[str(initial['area_type'])]
-    #if station_finder download, we need to set the station_ids
+
+    #If station_finder download, we need to set the station_ids
     if req_type == 'sf_download':
         initial['station_ids'] = Get('station_ids','')
+
+    #Set data type and map parameters
     if initial['area_type'] in ['station_id']:
         initial['autofill_list'] = 'US_' + initial['area_type']
         initial['data_type'] = 'station'
@@ -2535,66 +2549,97 @@ def set_initial(request,req_type):
         initial['overlay_state'] = Get('overlay_state','NV')
         initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
         #initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
-    #set app specific params
+
+    #Set element(s)
     if req_type == 'map_overlay':
         initial['elements'] = Get('elements','maxt,mint,pcpn').split(',')
-    elif req_type == 'monann':
+    elif req_type in ['monann','data_comparison']:
         initial['element'] = Get('element','pcpn')
-        initial['monthly_statistic'] = Get('monthly_statistic','msum')
-        initial['less_greater_or_between'] = Get('less_greater_or_between','b')
-        initial['threshold_low_for_between'] = Get('threshold_low_for_between',0.01)
-        initial['threshold_high_for_between'] = Get('threshold_high_for_between',0.1)
-        initial['threshold_for_less_than'] = Get('threshold_for_less_than',1)
-        initial['threshold_for_greater_than'] = Get('threshold_for_greater_than',1)
     elif req_type == 'data_comparison':
         initial['element'] = Get('element','pcpn')
     else:
-        if request.method == 'GET' and 'elements' in request.GET:
-            #Convert url element string to list
-            initial['elements'] = Get('elements',['maxt','mint','pcpn'])
-            if isinstance(initial['elements'], basestring):
-                initial['elements'] = initial['elements'].replace(' ','').split(',')
+        if isinstance(request,dict):
+            initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
         else:
-            initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
-    initial['add_degree_days'] = Get('add_degree_days', 'F')
+            if request.method == 'GET' and 'elements' in request.GET:
+                #Convert url element string to list
+                initial['elements'] = Get('elements',['maxt','mint','pcpn'])
+                if isinstance(initial['elements'], basestring):
+                    initial['elements'] = initial['elements'].replace(' ','').split(',')
+            else:
+                initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
+
+    #Set units
     initial['units'] = Get('units','english')
-    if initial['units'] == 'metric':
-        initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
+
+    #Set degree days
+    if req_type not in ['station_finder', 'monann', 'climatology', 'data_comparison']:
+        initial['add_degree_days'] = Get('add_degree_days', 'F')
+        if initial['units'] == 'metric':
+            initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
+        else:
+            initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
+
+    #Set dates
+    if req_type in ['monann','climatology']:
+        initial['start_year']  = Get('start_year', 'POR')
+        initial['end_year']  = Get('end_year', 'POR')
     else:
-        initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
-    initial['start_date']  = Get('start_date', WRCCUtils.format_date_string(fourtnight,'-'))
-    initial['end_date']  = Get('end_date', WRCCUtils.format_date_string(yesterday,'-'))
-    initial['start_year']  = Get('start_year', 'POR')
-    initial['end_year']  = Get('end_year', 'POR')
-    initial['max_missing_days']  = Get('max_missing_days', '5')
+        initial['start_date']  = Get('start_date', WRCCUtils.format_date_string(fourtnight,'-'))
+        initial['end_date']  = Get('end_date', WRCCUtils.format_date_string(yesterday,'-'))
+
+    #data windows and flags
+    if req_type in ['single_lister', 'multi_lister']:
+        initial['start_window'] = Get('start_window', '01-01')
+        initial['end_window'] = Get('end_window','01-31')
+        initial['temporal_resolution'] = Get('temporal_resolution','dly')
+        initial['show_flags'] = Get('show_flags', 'F')
+        initial['show_observation_time'] = Get('show_observation_time', 'F')
+    #data summaries
     if req_type in  ['temporal_summary']:
         initial['data_summary'] = Get('data_summary', 'temporal')
     elif req_type in ['spatial_summary','multi_lister']:
         initial['data_summary'] = Get('data_summary', 'spatial')
     else:
         initial['data_summary'] = Get('data_summary', 'none')
-    initial['start_window'] = Get('start_window', '01-01')
-    initial['end_window'] = Get('end_window','01-31')
-    initial['temporal_summary'] = Get('temporal_summary', 'mean')
-    initial['spatial_summary'] = Get('spatial_summary', 'mean')
-    initial['temporal_resolution'] = Get('temporal_resolution','dly')
-    initial['show_flags'] = Get('show_flags', 'F')
-    initial['show_observation_time'] = Get('show_observation_time', 'F')
-    initial['grid'] = Get('grid','1')
+    if req_type in ['single_lister', 'multi_lister','temporal_summary']:
+        initial['temporal_summary'] = Get('temporal_summary', 'mean')
+    if req_type in ['single_lister', 'multi_lister','spatial_summary']:
+        initial['spatial_summary'] = Get('spatial_summary', 'mean')
+    if req_type not in ['station_finder', 'sf_download']:
+        initial['grid'] = Get('grid','1')
+
+    #download options
     initial['data_format'] = Get('data_format', 'html')
     initial['date_format'] = Get('date_format', 'dash')
     initial['delimiter'] = Get('delimiter', 'space')
     initial['output_file_name'] = Get('output_file_name', 'Output')
     initial['user_name'] = Get('user_name', 'Your Name')
     initial['user_email'] = Get('user_email', 'Your Email')
-    initial['show_running_mean'] = Get('show_running_mean','T')
-    initial['running_mean_days'] = Get('running_mean_days', '9')
-    initial['running_mean_years'] = Get('running_mean_years', '5')
-    initial['elements_constraints'] = Get('elements_constraints', 'all')
-    initial['dates_constraints']  = Get('dates_constraints', 'all')
-    initial['running_mean_years'] = Get('running_mean_years', '9')
-    #Climatology summary type
-    initial['summary_type'] = Get('summary_type', 'all')
+
+    #Set app specific params
+    if req_type in ['spatial_summary', 'monann']:
+        initial['show_running_mean'] = Get('show_running_mean','T')
+        if req_type in ['spatial_summary']:
+            initial['running_mean_days'] = Get('running_mean_days', '9')
+        if req_type in ['monann']:
+            initial['running_mean_years'] = Get('running_mean_years', '5')
+    if req_type in ['monann','climatology']:
+        initial['max_missing_days']  = Get('max_missing_days', '5')
+    if req_type == 'station_finder':
+        initial['elements_constraints'] = Get('elements_constraints', 'all')
+        initial['dates_constraints']  = Get('dates_constraints', 'all')
+    if req_type == 'monann':
+        initial['monthly_statistic'] = Get('monthly_statistic','msum')
+        initial['less_greater_or_between'] = Get('less_greater_or_between','b')
+        initial['threshold_low_for_between'] = Get('threshold_low_for_between',0.01)
+        initial['threshold_high_for_between'] = Get('threshold_high_for_between',0.1)
+        initial['threshold_for_less_than'] = Get('threshold_for_less_than',1)
+        initial['threshold_for_greater_than'] = Get('threshold_for_greater_than',1)
+    if req_type == 'climatology':
+        initial['summary_type'] = Get('summary_type', 'all')
+
+
     #Checkbox vals
     if 'elements_constraints' in initial.keys() and 'dates_constraints' in initial.keys():
         for b in ['any', 'all']:

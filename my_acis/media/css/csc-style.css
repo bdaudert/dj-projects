@@ -161,9 +161,9 @@ a:active { color:#FF0000;}
 
 #menu {
   width: 960px;
-  height: 30px;
+  height: 45px;
   clear: both;
-  background:#006666;
+  /*background:#006666;*/
 }
 /*TAB navigation bar (breadcrumbs)*/
 
@@ -199,31 +199,32 @@ a:active { color:#FF0000;}
   -moz-border-radius-topleft: 10px;
   -webkit-border-top-left-radius: 10px;
 }
- 
-#nav .current a, ul#nav li:hover > a  {
+
+/* APPLIES THE ACTIVE STATE */
+#nav .current a, #nav li:hover > a  {
   color:#FFEFD5;
   text-decoration: none;
-  text-shadow: 1px 1px 1px #00906E;
+  text-shadow: 1px 1px 1px #006666;
   background: #00906E;
   -moz-border-radius-topright: 10px;
   -webkit-border-top-right-radius: 10px;
   -moz-border-radius-topleft: 10px;
   -webkit-border-top-left-radius: 10px;
 }
- 
+
+/* THE SUBMENU LIST HIDDEN BY DEFAULT */
 #nav  ul {
   display: none;
 }
  
+/* WHEN THE FIRST LEVEL MENU ITEM IS HOVERED, THE CHILD MENU APPEARS */
 #nav li:hover > ul {
   position: absolute;
   display: block;
-  /*width: 960px;
+  width: 960px;
   height: 45px;
-  */
-  position: absolute;
   margin: 40px 0 0 0;
-  background:#00906E repeat-x;
+  background:#006666 repeat-x;
   z-index:1;
   -moz-border-radius-topright: 10px;
   -webkit-border-top-right-radius: 10px;
@@ -234,7 +235,7 @@ a:active { color:#FF0000;}
 
 #nav li:hover > ul li a {
   float: left;
-  font: bold 1em arial,verdana,tahoma,sans-serif;
+  /*font: bold 1em arial,verdana,tahoma,sans-serif*/;
   line-height: 45px;
   color:#FFEFD5;
   text-decoration: none;
@@ -249,56 +250,6 @@ a:active { color:#FF0000;}
   text-decoration: none;
   text-shadow: none;
 }
-
-
-/*NEW Tab navigation for home page
-http://htmldog.com/techniques/dropdowns*/
-/*
-#nav {
-    padding: 0;
-    margin: 0;
-}
-
-
-#nav li {
-    float: left;
-    position: relative;
-    list-style: none;
-    padding: 0px;
-    -webkit-transition: .5s;
-    transition: .5s;
-}
-
-#nav li a {
-  float: left;
-  font: bold 1em arial,verdana,tahoma,sans-serif;
-  line-height: 30px;
-  color:#FFEFD5;
-  text-decoration: none;
-  margin: 0;
-  padding: 0px 5px;
-  min-width:150px;
-  background:#006666;
-}
-
-#nav li ul {
-    position:absolute;
-    top:10px;
-    left:0px;
-    display: none;
-}
-
-#nav ul ul {
-    left 100%;
-    top:0;
-}
-
-
-#nav li:hover > ul {
-    display: block;
-    z-index:1;
-}
-*/
 /*END TAB navigation bar*/
 
 /*Submit and Select buttons*/
@@ -507,14 +458,7 @@ table.form tr td{
 
 table.form td {
     margin: 0px 0px;
-    /*font-weight: bold;*/
 }
-
-/*
-#tableDownload {
-    border:1px solid #006666;
-}
-*/
 
 .navbar {
   width:200px;
@@ -716,7 +660,7 @@ table #map_legend {
     background: #FFEFD5;
     border:2px solid #006666;
     font-size:12px;
-    font-weight:bold;
+    /*font-weight:bold;*/
 }
 
 

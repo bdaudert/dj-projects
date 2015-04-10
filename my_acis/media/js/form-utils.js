@@ -5,6 +5,138 @@ String.prototype.inList=function(list){
    return ( list.indexOf(this.toString()) != -1)
 }
 
+
+
+function set_dates_for_grid(grid,start_date,end_date,year_or_date){
+    /*
+    Function that checks if start/end_date lie within
+    valid daterange for grid. If not, new dates are set.
+    Args: 
+        grid, start_date, end_date, year_or_date
+    Returns: 
+        new_dates.start: new start date or start year
+        new_dates.end: new end date or end year
+    */
+    var new_dates = {
+        'start': start_date,
+        'end': end_date
+    }
+    var grid_vd = {
+        '1':[['1950-01-01','today'],[]],
+        '3':[['2007-01-01','today'],[]],
+        '21':[['1981-01-01','today'],[]],
+        '4':[['1970-01-01','1999-12-31'],[]],
+        '5':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
+        '6':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
+        '8':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
+        '9':[['1970-01-01','1999-12-31'],[]],
+        '10':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
+        '11':[['1970-01-01','1999-12-31'],[]],
+        '12':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
+        '13':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
+        '14':[['1970-01-01','1999-12-31'],[]],
+        '15':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
+        '16':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
+    }
+    var ds = new Date(start_date), de = new Date(end_date);
+    //Funkyness with js dats
+    ds.setDate(ds.getDate() + 1);
+    de.setDate(de.getDate() + 1);
+    var today = new Date();
+    //lag in data
+    today.setDate(today.getDate() - 2);
+    var ds_past = new Date(grid_vd[grid][0][0]);
+    if (grid_vd[grid][0][1] == 'today') {
+        var de_past = today;
+    }
+    else{
+        var de_past = new Date(grid_vd[grid][0][1]);
+        de_past.setDate(de_past.getDate() + 1);
+    }
+    if (grid_vd[grid][1].length == 2){
+        if (grid_vd[grid][1][0] == 'today'){
+            var ds_fut = today;
+        }
+        else{
+            var ds_fut = new Date(grid_vd[grid][1][0]);
+            ds_fut.setDate(ds_fut.getDate() + 1);
+        }
+        var de_fut = new Date(grid_vd[grid][1][1]);
+        de_fut.setDate(de_fut.getDate() + 1);
+    }
+    else{
+        //Set bogus future dates for easy coding of checks
+        var ds_fut = ds_past, de_fut = de_past;
+    }
+    //Special case prism monthly/yearly
+    if (grid == '21'){
+        if ($('#temp_res').length && ($('#temporal_resolution').val == 'mly' || $('#temporal_resolution').val == 'yly')){
+            ds_past = new Date('1895-01-01');
+            ds_past.setDate(ds_past.getDate() + 1);
+            de_past = today;
+            ds_fut = new Date('1895-01-01');
+            ds_fut.setDate(ds_fut.getDate() + 1);
+            de_fut = today;
+        }
+    }
+    if ((ds_past <= ds && de <= de_past) || (ds_fut <= ds && de <= de_fut)){
+        //Don't change start/end dates
+        if (year_or_date == 'year'){
+            new_dates.start = new_dates.start.slice(0,4);
+            new_dates.end = new_dates.end.slice(0,4);
+            return new_dates;
+        }    
+        else{
+            return new_dates;
+        }
+    }
+    else{
+        //Set new start date
+        if (ds < ds_past){
+            new_dates.start = grid_vd[grid][0][0]; 
+        }
+        if (ds > de_past &&  ds < ds_fut){
+            new_dates.start = grid_vd[grid][0][0];
+        }
+        if (ds > de_fut){
+            new_dates.start = grid_vd[grid][0][0];
+        }
+        var new_ds = new Date(new_dates.start);
+        new_ds.setDate(new_ds.getDate() + 1);
+        
+        //Set new end date to one year later than start date
+        if (year_or_date == 'year'){
+            if (ds_past <= new_ds <= de_past){
+                var d = grid_vd[grid][0][1];
+            }
+            else {
+                var d = grid_vd[grid][1][1];
+            }
+        }
+        else{
+            var d = String(parseInt(new_dates.start.slice(0,4)) + 1) + new_dates.start.slice(4,new_dates.start.length);
+        }
+        if (de < ds_past){
+            new_dates.end = d; 
+        }
+        if (de > de_past && de < ds_fut){
+            new_dates.end = d;
+        }
+        if (de > de_fut){
+            new_dates.end = d;
+        }
+    }
+    //Check if we only want to return years
+    if (year_or_date == 'year'){
+        new_dates.start = new_dates.start.slice(0,4);
+        new_dates.end = String(parseInt(new_dates.end.slice(0,4)) + 1);
+        return new_dates;
+    }
+    else {
+        return new_dates;
+    }
+}   
+
 function showHideTableRowClass(class_name, show_or_hide){
     $('.' + class_name).each(function(){
         if (show_or_hide == 'hide'){
@@ -679,19 +811,6 @@ function reset_area(){
     if (timesClicked == 1) {
         set_station_grid_select('area',this.parent);
     }
-}
-
-function set_degree_days(unit_value){
-    if (unit_value == 'metric'){
-        if ($('#degree_days').length){
-            document.getElementById('degree_days').value = 'gdd13,hdd21';
-        }
-    }
-    else{
-       if ($('#degree_days').length){
-            document.getElementById('degree_days').value = 'gdd55,hdd70';
-        }
-    } 
 }
 
 function set_likelihood_thresholds(node){
