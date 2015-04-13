@@ -7,7 +7,6 @@
 {% block content %} 
 <!--Hidden variables-->
 
-<input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
 <input type="hidden" id="host" name="host" value="{{host}}">
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{kml_file_path}}">
 <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
@@ -32,10 +31,10 @@
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
     <div id="Docu_start_end_date">{% include 'includes/Docu_start_end_date.html'%}</div>
     <div id="Docu_temporal_summary">{% include 'includes/Docu_temporal_summary.html'%}</div>
+    <!--
     <div id="Docu_show_running_mean">{% include 'includes/Docu_show_running_mean.html'%}</div>
     <div id="Docu_running_mean_days">{% include 'includes/Docu_running_mean_days.html'%}</div>
     <!--Plot Options-->
-    <!--
     <div id="Docu_image_size">{% include 'includes/Docu_image_size.html'%}</div>
     <div id="Docu_major_grid">{% include 'includes/Docu_major_grid.html'%}</div>
     <div id="Docu_minor_grid">{% include 'includes/Docu_minor_grid.html'%}</div>
@@ -97,9 +96,9 @@
         <tr class="station_grid" style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/end_date.html'%}</tr> 
         <tr id="spat_summary" style="display:table-row">{% include 'includes/spatial_summary.html'%}</tr>
-        <tr style="display:table-row">{% include 'includes/show_running_mean.html'%}</tr>
+        <tr style="display:none">{% include 'includes/show_running_mean.html'%}</tr>
         {%if initial.show_running_mean == "T"%}
-            <tr valign="top" id="rm_days" style="display:table-row">{% include 'includes/running_mean_days.html'%}</tr>
+            <tr valign="top" id="rm_days" style="display:none">{% include 'includes/running_mean_days.html'%}</tr>
         {%else%}
             <tr valign="top" id="rm_days" style="display:none;">{% include 'includes/running_mean_days.html'%}</tr>
         {%endif%}

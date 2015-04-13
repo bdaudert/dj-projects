@@ -79,8 +79,58 @@ function compute_summary(data, smry){
     return smry_data
 }
 
+function compute_running_mean(data,running_mean_period){
+    var running_mean_data = [];
+    if (running_mean_period%2 == 0){
+        var num_nulls =running_mean_period/2 - 1;
+    }
+    else{
+        var num_nulls =(running_mean_period - 1)/2;
+    }
+    for (var idx=0;idx<data.length;idx++) {
+        var skip = 'F';
+        var rm_data = [];
+        if (idx >= num_nulls &&  idx <= data.length - 1 - num_nulls) {
+            var cnt = 0;
+            for(var i=idx - num_nulls,sum=0;i<=idx + num_nulls;i++){
+                var val = data[i][1];
+                if (val != null){
+                    sum+=val;
+                    cnt+=1;
+                }
+                else{
+                    skip = 'T';
+                    break;
+                }
+            }
+            if (cnt > 0 && skip =='F'){
+                rm_data = [data[idx][0],parseFloat(sum)/parseFloat(cnt)];
+            }
+        }
+        if (rm_data.length > 0){
+            running_mean_data.push(rm_data);
+        }
+    }
+    return running_mean_data
+}
 
-function compute_running_mean(data, running_mean_points, chart_type){
+function compute_range(data){
+    var d,dt = [],mx = null, mn = null;
+    for (var idx = 0;idx<data.length;idx++){
+        d = data[idx][1];
+        if (String(d) != '-9999' && d != null){
+            dt.push(d);
+        }
+    }
+    if (dt.length > 0){
+        var mn = Math.min.apply(Math,dt);
+        var mx = Math.max.apply(Math,dt);
+    }
+    return [[data[0][0], mn, mx], [data[data.length -1][0], mn, mx]]
+}
+
+
+function compute_running_mean_old(data, running_mean_points, chart_type){
     var running_mean_data = [];
     if (running_mean_points%2 == 0){
         var num_nulls =running_mean_points/2 - 1;
@@ -116,6 +166,7 @@ function compute_running_mean(data, running_mean_points, chart_type){
                     running_mean_data.push([data[idx][0],precise_round(sum/cnt,2)]);
                 }
             }
+            /*
             else{
                 if (chart_type == 'column'){
                     running_mean_data.push(null);
@@ -124,7 +175,9 @@ function compute_running_mean(data, running_mean_points, chart_type){
                     running_mean_data.push([data[idx][0],null]);
                 }
             }
+            */
         }
+        /*
         else{
             if (chart_type == 'column'){
                 running_mean_data.push(null);
@@ -133,6 +186,7 @@ function compute_running_mean(data, running_mean_points, chart_type){
                 running_mean_data.push([data[idx][0],null]);
             }
         }
+        */
     }
     return running_mean_data
 }

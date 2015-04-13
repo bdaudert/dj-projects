@@ -1,14 +1,13 @@
 //------------------------
 // General function for monann
 //------------------------
-
+var myChart;
 function generateTS_individual(data_indices) {
     /*
     Generates highcarts figure
     Required Args:
         data_indices: indices of data to be plotted,
-            if not given, we pick it up from html element data_indices
-        show_range: T or F
+        if not given, we pick it up from html element data_indices
     */
     var args = arguments;
     var datadict = graph_data; //template_variable
@@ -17,16 +16,10 @@ function generateTS_individual(data_indices) {
     }
     var app_name = '';
     if ($('#app_name').length){app_name=$('#app_name').val();}
-    var running_mean_period = '0', show_range = 'F', smry = 'individual';
+    var running_mean_period = '0', smry = 'individual';
     //Get chart variables from template
     var chartType = $('#chart_type').val();
-    
-    if ($('#show_running_mean').length && $('#show_running_mean').is(':checked')) {
-        running_mean_period = $('#running_mean_period').val();
-    }
-    if ($('#show_range').length && $('#show_range').is(':checked')) {
-        show_range = 'T';
-    }
+    var running_mean_period = $('#running_mean_period').val();
     var chartTitle = datadict[data_indices[0]].title;         
     var subTitle = datadict[data_indices[0]].subTitle;
     //Set font size
@@ -94,15 +87,15 @@ function generateTS_individual(data_indices) {
     }
     //Define series data
     var series_data = [],idx;
-    r_data = [];
     for (var i=0;i < data_indices.length;i++){
         idx = data_indices[i];
+        var s_id = String(idx);
         var s = {
             type:datadict[idx].chartType,
             name: datadict[idx].seriesName,
             //color: datadict[idx].series_color,
             color:Highcharts.getOptions().colors[2*idx],
-            id:'data_' + String(idx),
+            id:'main_' + s_id,
             data: datadict[idx].data
         }
         //link to approprate axis if we are
@@ -111,32 +104,62 @@ function generateTS_individual(data_indices) {
             s['yAxis'] =  i;
         }
         series_data.push(s);
-        r_data.push(datadict[idx].data);
-        //Add running means
+        //Add running mean
         if (running_mean_period != '0'){
-            var rm = {
-                type:'trendline',
-                linkedTo:':previous',
-                algorithm: 'EMA',
-                periods:parseInt(running_mean_period),
-                name: 'Running Mean: ' + datadict[idx].seriesName,
-                color:datadict[idx].running_mean_color,
-                showInLegend: true
+            var rm_data =compute_running_mean(datadict[idx].data, parseInt(running_mean_period));
+            var r_name = running_mean_period + '-';
+            if (app_name == 'monann'){
+                    r_name+='year Running Mean ';
             }
-            series_data.push(rm);
+            else{
+                    r_name+='day Running Mean ';
+            }
+            //Running mean
+            var v = false
+            if ($('#show_running_mean').is(':checked')){v = true;}
+            var rm = {
+                visible:v,
+                id:'runmean_' + s_id,
+                showInLegend:true,
+                type:'line',
+                lineWidth:1,
+                color:Highcharts.getOptions().colors[2*i+1],
+                name: r_name + s['name'],
+                data:rm_data
+            }
+            series_data.push(rm);            
         }
+        //Range
+        var range_data = compute_range(datadict[idx].data);
+        var v = false;
+        if ($('#show_range').is(':checked')){v = true;};
+        var r = {
+            visible:v,
+            id: 'range_' + s_id,
+            name: 'Range:' + s['name'],
+            showInLegend:false,
+            type:'arearange',
+            lineWidth:0,
+            color:'#ff0000',
+            data: range_data,
+            fillOpacity: 0.1,
+            zIndex:0.1,
+            linkedTo: s_id,
+        };
+        series_data.push(r);
     }
     
     //Clear old plot
     $('#container').contents().remove();
     //CHART
-    $('#container').highcharts({
+    var basicOptions = {
         //------------------------
         //  CHART PROPERTIES
         //------------------------
         chart: {
+            renderTo: 'container',
+            type:  chartType,
             marginTop: 100,
-            type:chartType,
             zoomType: 'x',
             spacingBottom: 30,
             spacingTop: 10,
@@ -203,16 +226,13 @@ function generateTS_individual(data_indices) {
             draggable: true,
             layout: 'vertical',
             backgroundColor: 'white',
-            align: 'center',
+            align: 'right',
             verticalAlign: 'top',
             y:30, // >0 moves down
-            x:0, // >0 moves right
+            //x:0, // >0 moves right
             borderWidth: 1,
             borderRadius: 5,
             floating: true,
-            title:{
-                text: ':: Drag me'
-            },
             zIndex: 20
         },
         //------------------------
@@ -262,13 +282,14 @@ function generateTS_individual(data_indices) {
             //------------------------
             tooltip: {
                 headerFormat: '',
-                pointFormat: '<b>Year: </b>{point.x:'+  date_format +'}<br><b>Value:</b> {point.y:.2f}',
+                pointFormat: '<span style="color:{point.series.color}">{point.x:' +  date_format + '}: {point.y:.2f}</span><br />',
                 crosshairs: false,
                 shared: true
             },
             //------------------------
             series: series_data
-    });//highCharts
+    } //end basicOptions
+    myChart=new Highcharts.Chart(basicOptions); 
 }
 
 function generateTS_smry(data_indices) {
@@ -277,24 +298,17 @@ function generateTS_smry(data_indices) {
     Required Args:
         data_indices: indices of data to be plotted,
             if not given, we pick it up from html element data_indices 
-        show_range: T or F
     */
     var args = arguments;
     var datadict = graph_data; //template_variable
     switch (arguments.length) { // <-- 0 is number of required arguments
         case 0: var data_indices = $('#data_indices').val();
     }
-    var running_mean_period = '0', show_range = 'F';
+    var running_mean_period = '0';
     //Get chart variables from template
     var chartType = $('#chart_type').val();
-    
-    if ($('#show_running_mean').length && $('#show_running_mean').is(':checked')) {
-        running_mean_period = $('#running_mean_period').val();
-    }
+    running_mean_period = $('#running_mean_period').val();
     smry = $('#chart_summary').val();
-    if ($('#show_range').length && $('#show_range').is(':checked')) {
-        show_range = 'T';
-    }
     var date_format = '%Y-%m-%d';
     var chartTitle = datadict[data_indices[0]].title;
     var subTitle = datadict[data_indices[0]].subTitle
@@ -307,8 +321,8 @@ function generateTS_smry(data_indices) {
     var axisFontSize = '16px';
     var labelsFontSize = '20px';
     //Define series data
-    var series_data = [],idx;
-    var idx,names = '';to_summarize = []
+    var series_data = [],idx, s_id;
+    var idx,names = '', to_summarize = []
     for (var i=0;i < data_indices.length;i++){
         idx = data_indices[i];
         names+= datadict[idx].seriesName + ',';
@@ -318,51 +332,70 @@ function generateTS_smry(data_indices) {
     var smry_data = compute_summary(to_summarize,smry);
     //Strip last comma
     name = names.slice(0,-1);
+    s_id = 'smry';
     var s = {
         name: smry.toUpperCase() + ' over: ' + names,
         //color: datadict[0].series_color,
-        color:Highcharts.getOptions().colors[2*idx],
-        id:'primary',
+        color:Highcharts.getOptions().colors[0],
+        id:'main_' + s_id,
         data:smry_data.data
     }
     series_data.push(s)
-    
-    //Add running Mean
+    //Add running mean
     if (running_mean_period != '0'){
+        var rm_data =compute_running_mean(smry_data.data, parseInt(running_mean_period));
+        var r_name = running_mean_period + '-';
+        if (app_name =='monann'){
+                r_name+='year Running Mean ';
+        }
+        else{
+                r_name+='day Running Mean ';
+        }
+        var v = false;
+        if ($('#show_running_mean').is(':checked')){v = true;}
+        //Running mean
         var rm = {
-            type:'trendline',
-            linkedTo:'primary',
-            algorithm: 'EMA',
-            periods:parseInt(running_mean_period),
-            name: 'Running Mean',
-            color:datadict[0].running_mean_color,
-            showInLegend: true
+            visible:v,
+            id:'runmean_' + s_id,
+            showInLegend:true,
+            type:'line',
+            lineWidth:1,
+            color:Highcharts.getOptions().colors[1],
+            name: r_name + s['name'],
+            data:rm_data
         }
         series_data.push(rm);
     }
-
-    //Add Range
-    if (show_range == 'T'){
-        var r = {
-            name: 'Range',
-            data:smry_data.ranges,
-            type: 'arearange',
-            lineWidth: 0,
-            color: Highcharts.getOptions().colors[2*idx + 1],
-            fillOpacity: 0.3,
-            zIndex: 0
-        }
-        series_data.push(r)
-    }
+    //Range
+    var v = false
+    if ($('#show_range').is(':checked')){v = true;}
+    var range_data = compute_range(smry_data.data);
+    var r = {
+        visible:v,
+        id: 'range_' + s_id,
+        name: 'Range:' + s['name'],
+        showInLegend:false,
+        type:'arearange',
+        lineWidth:0,
+        color:'#ff0000',
+        data: range_data,
+        fillOpacity: 0.1,
+        zIndex:0.1,
+        linkedTo: s_id,
+    };
+    series_data.push(r);
+    
     //Clear old plot
     $('#container').contents().remove();
     //CHART
-    $('#container').highcharts({
+    
+    var basicOptions = {
         //------------------------
         //  CHART PROPERTIES
         //------------------------
         chart: {
-            type:chartType,
+            renderTo: 'container',
+            type:  chartType,
             zoomType: 'x',
             spacingBottom: 30,
             spacingTop: 10,
@@ -447,17 +480,19 @@ function generateTS_smry(data_indices) {
         legend: {
             layout: 'vertical',
             backgroundColor: 'white',
-            align: 'right',
-            verticalAlign: 'top',
-            y: 50, // >0 moves down
-            x: -400, // >0 moves right
+            //align: 'right',
+            //verticalAlign: 'top',
+            y: 30, // >0 moves down
+            //x: -400, // >0 moves right
             borderWidth: 1,
             borderRadius: 5,
             floating: true,
             draggable: true,
+            /*
             title:{
                 text: ':: Drag me'
             },
+            */
             zIndex: 20
         },
         //------------------------
@@ -507,12 +542,13 @@ function generateTS_smry(data_indices) {
             //------------------------
             tooltip: {
                 headerFormat: '',
-                pointFormat: '<b>Year: </b>{point.x:'+  date_format +'}<br><b>Value:</b> {point.y:.2f}' + elUnits,
+                pointFormat: '<span style="color:{point.series.color}">{point.x:'+  date_format +'}<b>: {point.y:.2f}' + elUnits + '</span><br />',
                 crosshairs: false,
                 shared: true
             },
             //------------------------
             series: series_data
-    });//highCharts
+    }//end basicOptions
+    myChart=new Highcharts.Chart(basicOptions);
 }
 

@@ -1,4 +1,19 @@
 $(function(){
+
+    $('#element').on('change', function(){
+        //Set monthly statistic for monann
+        var sum_els = ['pcpn','snwd','snow','gdd','hdd','cdd','evap','pet'];
+        if ($(this).val().inList(sum_els)){
+            if ($('#monthly_statistic').length){
+                $('#monthly_statistic').val('msum');
+            }
+        }
+        else {
+            if ($('#monthly_statistic').length){
+                $('#monthly_statistic').val('mave');    
+            }
+        }
+    });
     /*
     Hide results and errors on form change
     Also hide plot options if they exits
@@ -36,7 +51,69 @@ $(function(){
     /*
     DYNAMIC HIGHCHARTS
     */
-    $('input[name="chart_selector"], select[name="chart_selector"]').on('change', function(event){
+    $('#chart_type').on('change keyup', function(){
+        var chartType = $('#chart_type').val();
+        for (var i = 0; i < myChart.series.length; i++) {
+            //Check if series is main/average or runmean
+            var c_type = myChart.series[i].options.id.split('_')[0];
+            if (c_type == 'main'){
+                myChart.series[i].update({type:chartType});
+            }
+        }
+    });
+    $('#show_range, #show_running_mean').on('click', function(){
+        //Find the correct chart
+        var l_type = $(this).val();
+        for(var i = myChart.series.length - 1; i > -1; i--){
+            if (myChart.series[i].options.id.split('_')[0] == l_type){
+                if ($(this).is( ":checked" )){
+                    myChart.series[i].setVisible(true, true);
+                    //myChart.series[i].show();
+                }
+                else{
+                    myChart.series[i].setVisible(false, false);
+                    //myChart.series[i].hide();
+                }
+                myChart.redraw();
+            }
+        }
+    });
+    
+    $('#running_mean_period').on('change keyup', function(){
+        var running_mean_period = $(this).val();
+        var rm_data = null, s_id = null, s_name = '';
+        for (var i = 0; i < myChart.series.length; i++) {
+            //Check if series is main/average or runmean
+            var c_type = myChart.series[i].options.id.split('_')[0];
+            if (c_type == 'main'){
+                //Chart series.data is an object, need to pick the correct x,y values
+                var s_data = [];
+                for (var j = 0; j < myChart.series[i].data.length; j++) {
+                    s_data.push([myChart.series[i].data[j].x,myChart.series[i].data[j].y])
+                }
+                s_id = myChart.series[i].options.id.split('_')[1];
+                s_name = myChart.series[i].options.name;
+                rm_data = compute_running_mean(s_data, running_mean_period);
+            }
+            if (c_type == 'runmean' &&  myChart.series[i].options.id == 'runmean_' + s_id  && rm_data != null){
+                var r_name = running_mean_period + '-';
+                if ($('#running_mean_days').length){
+                    r_name+='day Running Mean ' + s_name;
+                }
+                if ($('#running_mean_years').length){
+                    r_name+='year Running Mean ' + s_name
+                }
+                myChart.series[i].update({data: rm_data, name:r_name });
+
+                //myChart.series[i].data = rm_data;
+                myChart.redraw();
+                rm_data = null; 
+                s_id = null;
+            }
+        } 
+    });
+    //$('input[name="chart_selector"], select[name="chart_selector"]').on('change', function(event){
+     $('#data_indices, #chart_summary').on('change keyup', function(){
         smry = 'individual';
         if ($('#chart_summary').length) {
             smry = $('#chart_summary').val();
