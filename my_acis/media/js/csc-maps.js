@@ -37,7 +37,21 @@ function initialize_grid_point_map(loc) {
         title: "Your location"
     });
     infowindow.open(map, marker);
-
+    //Listeners
+    //Panning, zoom changed
+    google.maps.event.addListener(map,'center_changed zoom_changes',function(){
+        //If marker out of map bounds, re-center 
+        var newCenter = map.getCenter();
+        var myCenterLat = newCenter.lat().toFixed(4);
+        var myCenterLong = newCenter.lng().toFixed(4);
+        var LongLat = String(myCenterLong)+','+String(myCenterLat);
+        var latlong = new google.maps.LatLng(myCenterLat,myCenterLong);
+        if ( !map.getBounds().contains(marker.getPosition())) {
+            marker.position = latlong;
+            markers.setMap(map);
+        }
+    });
+    //Marker drag
     google.maps.event.addListener(marker, 'dragend', function (event) {
         infowindow.close();
         var new_lat = precise_round(event.latLng.lat(),2).toString();
@@ -55,6 +69,7 @@ function initialize_grid_point_map(loc) {
         var myLatlng = new google.maps.LatLng(parseFloat(new_lat),parseFloat(new_lon));
         map.panTo(myLatlng);
     });
+    //Map click
     google.maps.event.addListener(map, 'click', function (event) {
         infowindow.close();
         var new_lat = precise_round(event.latLng.lat(),2).toString();

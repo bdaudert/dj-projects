@@ -1,5 +1,7 @@
 $(function(){
-
+    /*
+    ELEMENT CHANGE
+    */
     $('#element').on('change', function(){
         //Set monthly statistic for monann
         var sum_els = ['pcpn','snwd','snow','gdd','hdd','cdd','evap','pet'];
@@ -14,7 +16,9 @@ $(function(){
             }
         }
     });
+
     /*
+    FORMS
     Hide results and errors on form change
     Also hide plot options if they exits
     */
@@ -25,8 +29,9 @@ $(function(){
             showHideTableRowClass('formGraph', 'hide');
         }
     });
+    
     /*
-    plot options
+    PLOTS
     */    
     $('#plot_opts_button').on('click', function(){
         if ($('.plOpts:first').css('display') == 'none'){ 
@@ -39,7 +44,7 @@ $(function(){
     });
 
     /*
-    Station finder download data button
+    STATION FINDER DOWNLOAD BUTTON
     on click a second form pops up asking for user email, 
     and additional data download options 
     */
@@ -48,86 +53,10 @@ $(function(){
         ShowPopupDocu('formDownload');
         
     });
-    /*
-    DYNAMIC HIGHCHARTS
-    */
-    $('#chart_type').on('change keyup', function(){
-        var chartType = $('#chart_type').val();
-        for (var i = 0; i < myChart.series.length; i++) {
-            //Check if series is main/average or runmean
-            var c_type = myChart.series[i].options.id.split('_')[0];
-            if (c_type == 'main'){
-                myChart.series[i].update({type:chartType});
-            }
-        }
-    });
-    $('#show_range, #show_running_mean').on('click', function(){
-        //Find the correct chart
-        var l_type = $(this).val();
-        for(var i = myChart.series.length - 1; i > -1; i--){
-            if (myChart.series[i].options.id.split('_')[0] == l_type){
-                if ($(this).is( ":checked" )){
-                    myChart.series[i].setVisible(true, true);
-                    //myChart.series[i].show();
-                }
-                else{
-                    myChart.series[i].setVisible(false, false);
-                    //myChart.series[i].hide();
-                }
-                myChart.redraw();
-            }
-        }
-    });
     
-    $('#running_mean_period').on('change keyup', function(){
-        var running_mean_period = $(this).val();
-        var rm_data = null, s_id = null, s_name = '';
-        for (var i = 0; i < myChart.series.length; i++) {
-            //Check if series is main/average or runmean
-            var c_type = myChart.series[i].options.id.split('_')[0];
-            if (c_type == 'main'){
-                //Chart series.data is an object, need to pick the correct x,y values
-                var s_data = [];
-                for (var j = 0; j < myChart.series[i].data.length; j++) {
-                    s_data.push([myChart.series[i].data[j].x,myChart.series[i].data[j].y])
-                }
-                s_id = myChart.series[i].options.id.split('_')[1];
-                s_name = myChart.series[i].options.name;
-                rm_data = compute_running_mean(s_data, running_mean_period);
-            }
-            if (c_type == 'runmean' &&  myChart.series[i].options.id == 'runmean_' + s_id  && rm_data != null){
-                var r_name = running_mean_period + '-';
-                if ($('#running_mean_days').length){
-                    r_name+='day Running Mean ' + s_name;
-                }
-                if ($('#running_mean_years').length){
-                    r_name+='year Running Mean ' + s_name
-                }
-                myChart.series[i].update({data: rm_data, name:r_name });
-
-                //myChart.series[i].data = rm_data;
-                myChart.redraw();
-                rm_data = null; 
-                s_id = null;
-            }
-        } 
-    });
-    //$('input[name="chart_selector"], select[name="chart_selector"]').on('change', function(event){
-     $('#data_indices, #chart_summary').on('change keyup', function(){
-        smry = 'individual';
-        if ($('#chart_summary').length) {
-            smry = $('#chart_summary').val();
-        }
-        if (smry == 'individual'){
-            generateTS_individual()
-        }
-        else{
-            generateTS_smry();
-        }    
-    });
-
     /*
-    Grid listener, changes start/end data 
+    GRID 
+    changes start/end data 
     and sets temp resolution for prism data
     */
     $('#grid').on('change keyup', function(){
@@ -175,22 +104,17 @@ $(function(){
             $('#end_date').val(new_dates.end); 
         }
     });
-
+    /*
+    GRID 
+    temporal resolution 
+    (PRISM has monthly/yearly as well as daily)
+    */
     $('#temporal_resolution').on('change', function(){
         set_dates_for_grid($('#grid').val(), $('#start_date').val(), $('#end_date').val(), 'dates');
     });
+
     /*
-    Sets maps and area form field
-    depending on area type
-    */
-    $('.area_type').on('change', function(){
-       //Set area form field
-      set_area('area',this); //form_utils function
-      //set map
-      set_map(this); //form_utils function
-      update_value($(this).val()); //form_utils function
-    });
-    /*
+    DATA TYPE
     Sets form fields according to data_type (station/grid)
     Affected form fields are
     elements
@@ -292,7 +216,10 @@ $(function(){
         
     });
 
-    //monann functions --> clean up needed
+    /*
+    MONANN THRESHOLDS FOR NDAYS
+    */
+    //lean up needed
     $('#element').on('change', function(){
         set_BaseTemp($(this).val());
         var lgb = '';
@@ -326,7 +253,7 @@ $(function(){
         var lgb = $(this).val();
         if (lgb == 'b'){ 
             $('#threshold_low_for_between').val(threshes[2]);
-            $('#threshold_low_for_between').val(threshes[3]);
+            $('#threshold_high_for_between').val(threshes[3]);
             $('#threshold_between').css('display','table-row');
             $('#threshold_below').css('display','none');
             $('#threshold_above').css('display','none');
@@ -338,11 +265,119 @@ $(function(){
             $('#threshold_above').css('display','none');
         }
         if (lgb == 'g'){
-            $('#threshold_for_less_than').val(threshes[1]);
+            $('#threshold_for_greater_than').val(threshes[1]);
             $('#threshold_above').css('display','table-row');
             $('#threshold_between').css('display','none');
             $('#threshold_below').css('display','none');
         }
         
     });
+
+
+    /* *******************
+       MAPS
+    ********************** */
+
+    /*
+    AREA TYPE 
+    Sets maps and area form field
+    depending on area type
+    */
+    $('.area_type').on('change', function(){
+       //Set area form field
+      set_area('area',this); //form_utils function
+      //set map
+      set_map(this); //form_utils function
+      update_value($(this).val()); //form_utils function
+    });
+   
+
+    /*
+    Update maps on area form field change
+    i.e. move marker or pan in on new location
+    */
+    $('.area_type').on('change', function(){
+        update_maps($(this));
+    });
+
+    /*
+    DYNAMIC HIGHCHARTS
+    */
+    $('#chart_type').on('change keyup', function(){
+        var chartType = $('#chart_type').val();
+        for (var i = 0; i < myChart.series.length; i++) {
+            //Check if series is main/average or runmean
+            var c_type = myChart.series[i].options.id.split('_')[0];
+            if (c_type == 'main'){
+                myChart.series[i].update({type:chartType});
+            }
+        }
+    });
+    $('#show_range, #show_running_mean').on('click', function(){
+        //Find the correct chart
+        var l_type = $(this).val();
+        for(var i = myChart.series.length - 1; i > -1; i--){
+            if (myChart.series[i].options.id.split('_')[0] == l_type){
+                if ($(this).is( ":checked" )){
+                    myChart.series[i].setVisible(true, true);
+                    //myChart.series[i].show();
+                }
+                else{
+                    myChart.series[i].setVisible(false, false);
+                    //myChart.series[i].hide();
+                }
+                myChart.redraw();
+            }
+        }
+    });
+
+    $('#running_mean_period').on('change keyup', function(){
+        var running_mean_period = $(this).val();
+        var rm_data = null, s_id = null, s_name = '';
+        for (var i = 0; i < myChart.series.length; i++) {
+            //Check if series is main/average or runmean
+            var c_type = myChart.series[i].options.id.split('_')[0];
+            if (c_type == 'main'){
+                //Chart series.data is an object, need to pick the correct x,y values
+                var s_data = [];
+                for (var j = 0; j < myChart.series[i].data.length; j++) {
+                    s_data.push([myChart.series[i].data[j].x,myChart.series[i].data[j].y])
+                }
+                s_id = myChart.series[i].options.id.split('_')[1];
+                s_name = myChart.series[i].options.name;
+                rm_data = compute_running_mean(s_data, running_mean_period);
+            }
+            if (c_type == 'runmean' &&  myChart.series[i].options.id == 'runmean_' + s_id  && rm_data != null){
+                var r_name = running_mean_period + '-';
+                if ($('#running_mean_days').length){
+                    r_name+='day Running Mean ' + s_name;
+                }
+                if ($('#running_mean_years').length){
+                    r_name+='year Running Mean ' + s_name
+                }
+                myChart.series[i].update({data: rm_data, name:r_name });
+
+                //myChart.series[i].data = rm_data;
+                myChart.redraw();
+                rm_data = null;
+                s_id = null;
+            }
+        }
+    });
+    //$('input[name="chart_selector"], select[name="chart_selector"]').on('change', function(event){
+     $('#data_indices, #chart_summary').on('change keyup', function(){
+        smry = 'individual';
+        if ($('#chart_summary').length) {
+            smry = $('#chart_summary').val();
+        }
+        if (smry == 'individual'){
+            generateTS_individual()
+        }
+        else{
+            generateTS_smry();
+        }   
+    });
+
 });
+
+

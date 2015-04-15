@@ -247,55 +247,6 @@ function set_autofill(datalist){
     document.body.appendChild(dl);
 }
 
-
-function set_form(node_value){
-    /*
-    Sets additional station or grid from elements
-    for single/multi requests: set on select_area element (value: station_id(s) or location(s))
-    for area requests: set on data_type element (value station or grid)
-    */
-    var form_rows_to_show = [], form_rows_to_hide = [];
-    if (node_value.inList(['station','station_id','station_ids'])){
-        //NOTE: querySelectorAll only works in modern browsers:
-        //https://developer.mozilla.org/en-US/docs/Web/API/Document.querySelectorAll
-        //form_rows_to_show  = document.querySelectorAll('.station_grid, .station');
-        form_rows_to_show = document.getElementsByClassName('station');
-        form_rows_to_hide = document.getElementsByClassName('grid');
-        //Update data_type
-        if ($('#data_type').length){
-            $('#data_type').val('station');
-        }
-    }
-    if (node_value.inList(['grid','location','locations'])){
-        form_rows_to_show = document.getElementsByClassName('grid');
-        //form_rows_to_show = Array.prototype.slice.call(form_rows_to_show1).concat(Array.prototype.slice.call(form_rows_to_show2));
-        form_rows_to_hide = document.getElementsByClassName('station');
-        //Update data_type
-        if ($('#data_type').length){
-            $('#data_type').val('grid');
-        }
-    }
-    
-    for (idx = 0;idx<form_rows_to_hide.length;idx++) {
-        form_rows_to_hide[idx].style.display = 'none';
-    } 
-    for (idx = 0;idx<form_rows_to_show.length;idx++) {
-        //Only show show_flags and show_observation time
-        //if data_summary is none
-        if (form_rows_to_show[idx].id == 'show_flags' || form_rows_to_show[idx].id == 'show_observation_time') {
-            if ($('#data_type').length && document.getElementById('data_summary').value != 'none'){
-                form_rows_to_show[idx].style.display = 'none';
-            }
-            else{
-                form_rows_to_show[idx].style.display = 'table-row';
-            }
-        }
-        else{
-            form_rows_to_show[idx].style.display = 'table-row';
-        }
-    }
-}
-
 function set_elements(data_type){
     //if data type == grid, disable snow, obst
     //if data type station --> leav all elements enabled
@@ -799,19 +750,6 @@ function hide_errors_results_on_change(formID){
     });
 }
 
-function reset_area(){
-    /*
-    select onchange does not fire when user selects same option twice
-    Fix for setting area types: add onclick="reset_area()" to each option tag
-    NOTE: onclick event for select tag doesn't seem to work in Chrome
-    FIX ME!! 
-    */
-    var timesClicked = $(this).attr('times-clicked') || 0;
-    $(this).attr('times-clicked', ++timesClicked);
-    if (timesClicked == 1) {
-        set_station_grid_select('area',this.parent);
-    }
-}
 
 function set_likelihood_thresholds(node){
     var options = node.options;
@@ -1125,64 +1063,14 @@ function hide_formGraph(rowClass) {
     }
 }
 
-function set_area_and_map(area_type){
-    /*
-    Sets area and map interfaces for data and applications
-    */
-    var TMP_URL = document.getElementById('TMP_URL').value;
-    var lv = set_area_defaults(area_type);
-    //Change value of hidden var area_type
-    document.getElementById('area_type').value = area_type;
-    var state = document.getElementById('overlay_state').value;
-    var kml_file_path = TMP_URL + state + '_' + area_type + '.kml';
-    document.getElementById('kml_file_path').value=kml_file_path;
-    if (area_type == 'basin' || area_type == 'county' || area_type == 'county_warning_area' || area_type =='climate_division'){
-        document.getElementById('select_overlay_by').value= area_type;
-        if ($('#select_stations_by').length){
-            document.getElementById('select_stations_by').value=area_type;
-        }
-        if ($('#select_grid_by').length){
-            document.getElementById('select_grid_by').value=area_type;
-        }
-    }
-    //Set up maps for display
-    if (area_type =='county' || area_type =='climate_division' || area_type == 'basin' || area_type == 'county_warning_area'){
-        show_overlay_map();
-        hide_polygon_map();
-        hide_grid_point_map(); 
-    } 
-    else if (area_type == 'shape') {
-        hide_overlay_map();
-        show_polygon_map();
-        hide_grid_point_map();
-    }
-    else if (area_type == 'location'){
-        hide_overlay_map();
-        hide_polygon_map();
-        show_gridpoint_map();
-    }
-    else if (area_type == 'bounding_box'){
-        show_bbox_map();
-        hide_overlay_map();
-        hide_polygon_map();
-        hide_grid_point_map();
-    }
-    else {
-        hide_overlay_map();
-        hide_polygon_map();
-        hide_grid_point_map();
-        hide_bbox_map();
-    }
-    return lv;
-}
 
 function update_maps(area_field){
     /*
     Updates maps if user uses autofill or 
     or types in area_input field
     */
-    var id = area_field.id;
-    var val = area_field.value;
+    var id = area_field.attr('id');
+    var val = area_field.val();
     if (id == 'shape'){
         initialize_polygon_map(val);
     }
@@ -1281,46 +1169,6 @@ function unset_large_request(){
     }
 }
 
-
-function set_station_grid_select(row_id,node){
-    var IMG_URL = document.getElementById('IMG_URL').value;
-    var HTML_URL = document.getElementById('HTML_URL').value;
-    /*
-    Sets area types an maps for data requests and applications
-    */
-    //hide previous results
-    if ($('#' + 'results').length){
-        document.getElementById('results').style.display = "none";
-    }
-    if ($('#' + 'map_legend').length){
-        document.getElementById('map_legend').style.display = "none";
-    }
-    if ($('#' + 'user_params_list').length){
-        document.getElementById('user_params_list').style.display = "none";
-    }
-    if ($('#' + 'datafind').length){
-        unset_large_request()
-    }
-    var lv = set_area_and_map(node.value);
-    //Set up autofill if needed
-    set_autofill(lv.autofill_list);
-    var tbl_row = document.getElementById(row_id);
-    //Override table row
-    //cell1 = Label
-    var cell0 = tbl_row.firstChild.nextSibling;
-    cell0.innerHTML= lv.label + ': ';
-    //cell2 input
-    var cell1 = cell0.nextSibling.nextSibling;
-    cell1.innerHTML= '<input type="text" id="' + node.value + '" name="'+ 
-    node.value +'" value="' +  lv.value + '" list="' + lv.autofill_list + '"' +
-    ' onchange="update_value(this.value) & unset_large_request() & update_maps(this);" >';
-    pop_id = document.getElementById('area-pop-up');
-    pop_id.innerHTML='';
-    var div = document.createElement('div');
-    div.setAttribute('id', 'ht_' + node.value);
-    pop_id.appendChild(div); 
-    $(div).load(HTML_URL + 'Docu_help_texts.html #ht_' + node.value);
-}
 
 function set_grid_and_els(node, gridRowId){
     /*

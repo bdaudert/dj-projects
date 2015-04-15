@@ -66,6 +66,30 @@ def gallery(request):
     context = {
         'title': 'Gallery'
     }
+    app_urls = {};app_names = {};param_urls = {}
+
+    #Gallery: FINDING A POINT/AREA OF INETREST
+    app_url = settings.APPLICATIONS['station_finder'][1]
+    p_url = app_url + '?'
+    p_url+='area_type=county&county=Sierra,%2006091'
+    p_url+='&elements=mint,pcpn&elements_constraints=all'
+    p_url+='&start_date=19300101&end_date=20141231&dates_constraints=all'
+    app_urls['station_finder'] = app_url
+    param_urls['station_finder'] = p_url
+    app_names['station_finder'] = settings.APPLICATIONS['station_finder'][0]
+    #Gallery: EXTREMES (monann ndays)
+    app_url = settings.APPLICATIONS['monann'][1]
+    p_url = app_url + '?'
+    #p_url+='area_type=location&location=-120.44,39.32&element=mint&grid=1&start_year=1970&end_year=2000'
+    p_url+='area_type=station_id&station_id=048218&element=mint&grid=1&start_year=POR&end_year=POR'
+    p_url+='&monthly_statistic=ndays&less_greater_or_between=l&threshold_for_less_than=32&plot_months=3,4,5'
+    app_urls['extremes'] = app_url
+    param_urls['extremes'] = p_url
+    app_names['extremes'] = settings.APPLICATIONS['monann'][0]
+    #Set context variables
+    context['app_urls'] = app_urls
+    context['app_names'] = app_names
+    context['param_urls'] = param_urls
     return render_to_response('scenic/gallery.html', context, context_instance=RequestContext(request))
 
 def resources_grid(request):
@@ -217,10 +241,10 @@ def download(request):
     return render_to_response('scenic/download.html', context, context_instance=RequestContext(request))
 
 def single_lister(request):
-    url = 'scenic/data/single/lister.html'
     context = {
-        'title': 'Data Lister',
+        'title': settings.APPLICATIONS['single_lister'][0]
     }
+    url = settings.APPLICATIONS['single_lister'][2]
     initial, checkbox_vals = set_initial(request,'single_lister')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     #Data request submitted
@@ -333,10 +357,10 @@ def single_lister(request):
 
 
 def multi_lister(request):
-    url = 'scenic/data/multi/lister.html'
     context = {
-        'title': 'Data Lister',
+        'title': settings.APPLICATIONS['multi_lister'][0]
     }
+    url = settings.APPLICATIONS['multi_lister'][2]
     initial, checkbox_vals = set_initial(request,'multi_lister')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     #Set initial overlay state for overlay map
@@ -455,10 +479,10 @@ def multi_lister(request):
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def temporal_summary(request):
-    url = 'scenic/data/multi/temporal_summary.html'
     context = {
-        'title': 'Temporal Summary',
+        'title': settings.APPLICATIONS['temporal_summary'][0]
     }
+    url = settings.APPLICATIONS['temporal_summary'][2]
     json_file = request.GET.get('json_file', None)
     #Check if we are coming in from other page, e.g. Gridded Data
     #Set initial accordingly
@@ -570,10 +594,11 @@ def temporal_summary(request):
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def spatial_summary(request):
-    url = 'scenic/data/multi/spatial_summary.html'
     context = {
-        'title': 'Spatial Summary',
+        'title': settings.APPLICATIONS['spatial_summary'][0]
     }
+    url = settings.APPLICATIONS['spatial_summary'][2]
+
     json_file = request.GET.get('json_file', None)
     #Check if we are coming in from other page, e.g. Gridded Data
     #Set initial accordingly
@@ -711,19 +736,20 @@ def google_ee(request):
 
 
 def station_finder(request):
-    url = 'scenic/data/station_finder.html'
+    context = {
+        'title': settings.APPLICATIONS['station_finder'][0]
+    }
+    url = settings.APPLICATIONS['station_finder'][2]
+
     from subprocess import call
     call(["touch", settings.TEMP_DIR + "Empty.json"])
-    context = {
-        'title': 'Station Finder',
-    }
     #Set up initial map (NV stations)
     #context['station_json'] = 'NV_stn.json'
     initial,checkbox_vals = set_initial(request,'station_finder')
     context[initial['overlay_state'].lower() + '_selected'] = 'selected'
     context['initial'] = initial;context['checkbox_vals']=checkbox_vals
     #Set up maps if needed
-    if request.method == "GET":
+    if request.method == "GET" and not 'elements' in request.GET:
         #Generate initial map
         by_type = WRCCData.ACIS_TO_SEARCH_AREA['state']
         val = 'nv'
@@ -747,7 +773,7 @@ def station_finder(request):
             context['error'] = "No stations found for these search parameters."
         context['station_json'] = f_name
 
-    if 'formData' in request.POST:
+    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         #Turn request object into python dict
         form = set_form(request,clean=False)
         form_cleaned = set_form(request,clean=True)
@@ -812,19 +838,21 @@ def station_finder(request):
 #Mixed Data Applications
 ######################
 def likelihood(request):
-    url = 'scenic/data/multi/likelihood.html'
     context = {
-        'title': 'Likelihood'
+        'title': settings.APPLICATIONS['likelihood'][0]
     }
+    url = settings.APPLICATIONS['likelihood'][2]
+
     initial,checkbox_vals = set_combined_analysis_initial(request,'likelihood')
     context['initial'] = initial; context['checkbox_vals'] = checkbox_vals
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def data_comparison(request):
-    url = 'scenic/data/single/data_comparison.html'
     context = {
-        'title': 'Data Comparison'
+        'title': settings.APPLICATIONS['data_comparison'][0]
     }
+    url = settings.APPLICATIONS['data_comparison'][2]
+
     initial, checkbox_vals = set_initial(request,'data_comparison')
     context['initial'] = initial; context['checkbox_vals'] = checkbox_vals
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
@@ -847,16 +875,18 @@ def data_comparison(request):
 ######################
 
 def monann(request):
-    context = {}
-    url = 'scenic/data/single/monann.html'
-    context['title'] = 'Station Statistics/Custom Time Series'
+    context = {
+        'title': settings.APPLICATIONS['monann'][0]
+    }
+    url = settings.APPLICATIONS['monann'][2]
+
     initial,checkbox_vals = set_initial(request, 'monann')
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set graph and plot options
     #Time Serie Table Generation and graph if desired
-    if 'formData' in request.POST:
-        form= set_form(request,clean=False)
-        form_cleaned = set_form(request,clean=True)
+    if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
+        form = set_form(initial,clean=False)
+        form_cleaned = set_form(initial,clean=True)
         #Form sanity check
         fields_to_check = ['start_year', 'end_year','max_missing_days']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -898,7 +928,6 @@ def monann(request):
             data = DJ.get_data_grid()
         #Set dates list
         dates_list = DJ.get_dates_list()
-        context['x'] = len(data['data'][0][1][0])
         #Run application
         App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
         data = App.run_app()
@@ -940,11 +969,6 @@ def monann(request):
             graph_data.append(graph_dict)
         results['graph_data'] = graph_data
         results['chartType'] = graph_dict['chartType']
-        #Set initial chart options
-        #Plot Jan/DFeb individually
-        context['chart_data_indices_0_selected'] = 'selected'
-        context['chart_data_indices_1_selected'] = 'selected'
-        context['chart_smry_individual_selected'] = 'selected'
         context['run_done'] = True
         context['results'] = results
         #Save data table to file for later download
@@ -969,10 +993,11 @@ def monann(request):
 
 
 def climatology(request):
-    url = 'scenic/data/single/climatology.html'
     context = {
-        'title': 'Station Climatology'
-        }
+        'title': settings.APPLICATIONS['climatology'][0]
+    }
+    url = settings.APPLICATIONS['climatology'][2]
+
     initial, checkbox_vals = set_initial(request,'climatology')
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
@@ -2630,12 +2655,18 @@ def set_initial(request,req_type):
         initial['elements_constraints'] = Get('elements_constraints', 'all')
         initial['dates_constraints']  = Get('dates_constraints', 'all')
     if req_type == 'monann':
+        initial['start_month'] = Get('start_month','01')
         initial['monthly_statistic'] = Get('monthly_statistic','msum')
         initial['less_greater_or_between'] = Get('less_greater_or_between','b')
         initial['threshold_low_for_between'] = Get('threshold_low_for_between',0.01)
         initial['threshold_high_for_between'] = Get('threshold_high_for_between',0.1)
         initial['threshold_for_less_than'] = Get('threshold_for_less_than',1)
         initial['threshold_for_greater_than'] = Get('threshold_for_greater_than',1)
+        initial['departures_from_averages'] = Get('departures_from_averages','F')
+        initial['frequency_analysis'] = Get('frequency_analysis','F')
+        #Set initial plot options
+        initial['plot_type'] = Get('plot_type','individual')
+        initial['plot_months'] = Get('plot_months','0,1')
     if req_type == 'climatology':
         initial['summary_type'] = Get('summary_type', 'all')
 
@@ -2697,6 +2728,12 @@ def set_initial(request,req_type):
         for lgb in ['l', 'g', 'b']:
             if initial['less_greater_or_between'] == lgb:
                 checkbox_vals[lgb + '_selected'] ='selected'
+        #set plot type and plot months
+        plot_months = initial['plot_months'].split(',')
+        for m_idx in range(0,12):
+            if str(m_idx) in plot_months:
+                checkbox_vals['chart_data_indices_' +  str(m_idx) + '_selected'] ='selected'
+        checkbox_vals['chart_smry_' +  initial['plot_type'] + '_selected'] = 'selected'
     if 'date_format' in initial.keys():
         for df in ['none', 'dash','colon', 'slash']:
             checkbox_vals['date_format_' + df + '_selected'] =''

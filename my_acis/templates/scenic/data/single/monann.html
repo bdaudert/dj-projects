@@ -83,12 +83,18 @@
         <tr id="threshold_type" valign="top">{% include 'includes/number_of_days.html'%}</tr>
         {%if initial.less_greater_or_between == "b"%}
         <tr id="threshold_between" valign="top">{% include 'includes/num_days_thresholds_between.html'%}</tr>
+        {%else%}
+        <tr id="threshold_between" valign="top" style="display:none">{% include 'includes/num_days_thresholds_between.html'%}</tr>
         {%endif%}
         {%if initial.less_greater_or_between == "g"%}
         <tr id="threshold_above" valign="top">{% include 'includes/num_days_thresholds_above.html'%}</tr>
+        {%else%}
+        <tr id="threshold_above" valign="top" style="display:none">{% include 'includes/num_days_thresholds_above.html'%}</tr>
         {%endif%}
         {%if initial.less_greater_or_between == "l"%}
         <tr id="threshold_below" valign="top">{% include 'includes/num_days_thresholds_below.html'%}</tr>
+        {%else%}
+         <tr id="threshold_below" valign="top" style="display:none">{% include 'includes/num_days_thresholds_below.html'%}</tr>
         {%endif%}
         {%else%}
         <tr id="threshold_type" valign="top" style="display:none">{% include 'includes/number_of_days.html'%}</tr>
@@ -122,7 +128,6 @@
     {%if results.data%}
         {% include 'includes/arrow.html'%}
     {%endif%}
-
     </div>
 
     <!--Maps-->

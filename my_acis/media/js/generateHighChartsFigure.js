@@ -28,7 +28,12 @@ function generateTS_individual(data_indices) {
     //Set params according to application 
     if (app_name == 'monann'){
         var date_format = '%Y';
-        var yLabelmain = datadict[0].elUnits;
+        if ($('#monthly_statistic').val() == 'ndays'){
+            var yLabelmain = 'days';
+        }
+        else {
+            var yLabelmain = datadict[0].elUnits;
+        }
     }
     if (app_name  == 'spatial_summary' || app_name == 'data_comparison'){
         var date_format = '%Y-%m-%d';
@@ -223,16 +228,16 @@ function generateTS_individual(data_indices) {
         //LEGEND
         //------------------------
         legend: {
-            draggable: true,
             layout: 'vertical',
             backgroundColor: 'white',
             align: 'right',
             verticalAlign: 'top',
-            y:30, // >0 moves down
+            y:50, // >0 moves down
             //x:0, // >0 moves right
             borderWidth: 1,
             borderRadius: 5,
             floating: true,
+            draggable: true,
             zIndex: 20
         },
         //------------------------
@@ -480,9 +485,9 @@ function generateTS_smry(data_indices) {
         legend: {
             layout: 'vertical',
             backgroundColor: 'white',
-            //align: 'right',
-            //verticalAlign: 'top',
-            y: 30, // >0 moves down
+            align: 'right',
+            verticalAlign: 'top',
+            y: 50, // >0 moves down
             //x: -400, // >0 moves right
             borderWidth: 1,
             borderRadius: 5,
