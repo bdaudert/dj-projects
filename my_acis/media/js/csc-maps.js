@@ -39,7 +39,7 @@ function initialize_grid_point_map(loc) {
     infowindow.open(map, marker);
     //Listeners
     //Panning, zoom changed
-    google.maps.event.addListener(map,'center_changed zoom_changed',function(){
+    google.maps.event.addListener(map,'center_changed',function(){
         //If marker out of map bounds, re-center 
         var newCenter = map.getCenter();
         var myCenterLat = newCenter.lat().toFixed(4);
@@ -48,7 +48,19 @@ function initialize_grid_point_map(loc) {
         var latlong = new google.maps.LatLng(myCenterLat,myCenterLong);
         if ( !map.getBounds().contains(marker.getPosition())) {
             marker.position = latlong;
-            markers.setMap(map);
+            marker.setMap(map);
+        }
+    });
+    google.maps.event.addListener(map,'zoom_changed',function(){
+        //If marker out of map bounds, re-center 
+        var newCenter = map.getCenter();
+        var myCenterLat = newCenter.lat().toFixed(4);
+        var myCenterLong = newCenter.lng().toFixed(4);
+        var LongLat = String(myCenterLong)+','+String(myCenterLat);
+        var latlong = new google.maps.LatLng(myCenterLat,myCenterLong);
+        if ( !map.getBounds().contains(marker.getPosition())) {
+            marker.position = latlong;
+            marker.setMap(map);
         }
     });
     //Marker drag

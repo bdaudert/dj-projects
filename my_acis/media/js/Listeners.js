@@ -4,12 +4,15 @@ $(function(){
     Selects are not reset properly
     Found this code here: 
     http://stackoverflow.com/questions/4370819/select-menu-not-being-restored-when-back-button-used
-    */    
+    */
+    /*
+    NOT WORKING
     $(document).ready(function () {
         $("select").each(function () {
             $(this).val($(this).find('option[selected]').val());
         });
     }) 
+    */
 
     /*
     ELEMENT CHANGE
