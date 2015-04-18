@@ -92,7 +92,7 @@ function printNode(ID){
   newWin= window.open("Print_Table_Data");
   newWin.document.write(NodeToPrint.outerHTML);
   newWin.print();
-  newWin.close();
+  //newWin.close();
 }
 
 

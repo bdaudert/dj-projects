@@ -39,7 +39,7 @@ function initialize_grid_point_map(loc) {
     infowindow.open(map, marker);
     //Listeners
     //Panning, zoom changed
-    google.maps.event.addListener(map,'center_changed zoom_changes',function(){
+    google.maps.event.addListener(map,'center_changed zoom_changed',function(){
         //If marker out of map bounds, re-center 
         var newCenter = map.getCenter();
         var myCenterLat = newCenter.lat().toFixed(4);
@@ -286,6 +286,9 @@ function initialize_station_finder() {
             data_portal_link = data_portal_link + '&end_date=' + end_date;
             app_portal_link = app_portal_link + '&end_date=' + end_date; 
             data_portal_link = data_portal_link + '>Obtain data for this station </a>'
+            //Add station location for data_comparison tool link
+            app_portal_link = app_portal_link + '&station_location=' +
+            String(c.lon) + ',' + String(c.lat);
             app_portal_link = app_portal_link + '>Run custom data analysis</a>'
             var contentString = '<div id="MarkerWindow">'+
                 data_portal_link + '<br />' +

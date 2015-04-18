@@ -159,12 +159,46 @@ def single_point_prods(request):
     context = {
         'title': 'Single Point Products'
     }
+    #Link from other apps
+    if request.method == 'GET' and ('elements' in request.GET or 'element' in request.GET):
+        #set link params
+        for app in ['single_lister', 'monann', 'climatology','data_comparison']:
+            initial, checkbox_vals = set_initial(request, app)
+            p_str = '?'
+            for key, val in initial.iteritems():
+                k = str(key);
+                #convert lists to strings (elements)
+                if isinstance(val, list):
+                    v = (',').join(val)
+                else:
+                    v = str(val)
+                p_str+= k +'=' + v + '&'
+            #strip last &
+            p_str=p_str[0:-1]
+            context['url_params_' + app] =  p_str
     return render_to_response('scenic/data/single/home.html', context, context_instance=RequestContext(request))
 
 def multi_point_prods(request):
     context = {
         'title': 'Multi Point Products'
     }
+    #Link from other apps
+    if request.method == 'GET' and ('elements' in request.GET or 'element' in request.GET):
+        #set link params
+        for app in ['multi_lister', 'spatial_summary', 'temporal_summary']:
+            initial, checkbox_vals = set_initial(request, app)
+            p_str = '?'
+            for key, val in initial.iteritems():
+                k = str(key);
+                #convert lists to strings (elements)
+                if isinstance(val, list):
+                    v = (',').join(val)
+                else:
+                    v = str(val)
+                p_str+= k +'=' + v + '&'
+            #strip last &
+            p_str=p_str[0:-1]
+            context['url_params_' + app] =  p_str
     return render_to_response('scenic/data/multi/home.html', context, context_instance=RequestContext(request))
 
 
@@ -598,7 +632,7 @@ def spatial_summary(request):
         'title': settings.APPLICATIONS['spatial_summary'][0]
     }
     url = settings.APPLICATIONS['spatial_summary'][2]
-
+    '''
     json_file = request.GET.get('json_file', None)
     #Check if we are coming in from other page, e.g. Gridded Data
     #Set initial accordingly
@@ -614,17 +648,18 @@ def spatial_summary(request):
 
     initial_plot, checkbox_vals_plot = set_plot_options(request)
     join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
+    '''
+    initial,checkbox_vals = set_initial(request,'spatial_summary')
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set initial overlay state for overlay map
     context[initial['overlay_state'].lower() + '_selected'] = 'selected'
 
 
-    if 'formData' in request.POST:
+    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.POST):
         #Set form and initial
-        form = set_form(request, clean=False)
-        form_cleaned = set_form(request)
-        initial,checkbox_vals = set_initial(form,'spatial_summary')
-        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        form = set_form(initial, clean=False)
+        form_cleaned = set_form(initial)
+        '''
         #Back Button/download files issue fix:
         #if area_type none, find it
         if not 'area_type' in form_cleaned.keys() or form_cleaned['area_type'] not in form_cleaned.keys():
@@ -633,6 +668,7 @@ def spatial_summary(request):
                     form['area_type'] = key
                     form_cleaned['area_type'] = key
                     break
+        '''
         #Form Check
         fields_to_check = [form['area_type'],'start_date', 'end_date','degree_days', 'elements']
         #,'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
@@ -641,8 +677,11 @@ def spatial_summary(request):
             context['form_error'] = form_error
             if form_cleaned['area_type'] in ['basin','county','county_warning_area', 'climate_division']:
                 context['need_overlay_map'] = True
-            kml_file_path = create_kml_file(form['area_type'], form['overlay_state'])
-            context['kml_file_path'] = kml_file_path
+            try:
+                kml_file_path = create_kml_file(form['area_type'], form['overlay_state'])
+                context['kml_file_path'] = kml_file_path
+            except:
+                pass
             return render_to_response(url, context, context_instance=RequestContext(request))
 
         #Display parameters
@@ -818,7 +857,18 @@ def station_finder(request):
         initial, checkbox_vals = set_initial(request,'sf_download')
         context[initial['overlay_state'] + '_selected'] = 'selected'
         context['large_request'] = True
-        form_cleaned = set_form(request, clean=True)
+        form_cleaned = set_form(initial, clean=True)
+        fields_to_check = ['user_email']
+        form_error = check_form(form_cleaned, fields_to_check)
+        if form_error:
+            context['form_error'] = form_error
+            m = ['basin','county','county_warning_area', 'climate_division']
+            if 'area_type' in initial.keys() and initial['area_type'] in m:
+                context['need_overlay_map'] = True
+            return render_to_response(url, context, context_instance=RequestContext(request))
+        context['x'] = initial
+        #context['xx'] = form_cleaned
+        #os.remove(settings.DATA_REQUEST_BASE_DIR + 'SFDownloadTest_params.json')
         json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
         WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
         return render_to_response(url, context, context_instance=RequestContext(request))
@@ -855,10 +905,14 @@ def data_comparison(request):
 
     initial, checkbox_vals = set_initial(request,'data_comparison')
     context['initial'] = initial; context['checkbox_vals'] = checkbox_vals
-    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'station_location' in request.GET):
         context['form_message'] = True
         form = set_form(request, clean=False)
         form_cleaned = set_form(request, clean=True)
+        #Link from station finder
+        if 'station_location' in request.GET:
+            form['location'] = request.GET['station_location']
+            form_cleaned['location'] = request.GET['station_location']
         DC = WRCCClasses.DataComparer(form)
         gdata,sdata = DC.get_data()
         context['run_done'] = True
@@ -1140,6 +1194,21 @@ def create_kml_file(area_type, overlay_state):
 
 
 def set_GET(request):
+    try:
+        rm = request.method
+    except:
+        def Get(key, default):
+            if key in request.keys():
+                return request[key]
+            else:
+                return default
+        return Get
+
+    if rm == 'GET':
+        Get = getattr(request.GET, 'get')
+    elif rm == 'POST':
+        Get = getattr(request.POST, 'get')
+    '''
     if type(request) == dict:
         def Get(key, default):
             if key in request.keys():
@@ -1150,9 +1219,29 @@ def set_GET(request):
         Get = getattr(request.GET, 'get')
     elif request.method == 'POST':
         Get = getattr(request.POST, 'get')
+    '''
     return Get
 
 def set_GET_list(request):
+    try:
+        rm = request.method
+    except:
+        def Get(key, default):
+            if key in request.keys():
+                val = request[key]
+                if isinstance(request[key],basestring):
+                    val = request[key].replace(' ','').split(',')
+                return val
+            else:
+                return default
+        return Get
+
+    if rm == 'GET':
+        Getlist = getattr(request.GET, 'getlist')
+    elif rm == 'POST':
+        Getlist = getattr(request.POST, 'getlist')
+
+    '''
     if type(request) == dict:
         def Getlist(key, default):
             if key in request.keys():
@@ -1163,6 +1252,7 @@ def set_GET_list(request):
         Getlist = getattr(request.GET, 'getlist')
     elif request.method == 'POST':
         Getlist = getattr(request.POST, 'getlist')
+    '''
     return Getlist
 
 #FORM SANITY CHECKS
@@ -1237,6 +1327,43 @@ def find_id(form_name_field, json_file_path):
         if entry['name'].upper() == i.upper():
             return entry['id']
     return str(form_name_field)
+
+def find_ids(in_list, json_file_path):
+    #Split up in_list into names and ids
+    names = ['No name' for i in in_list]
+    ids = ['No ID' for i in in_list]
+    for idx, item in enumerate(in_list):
+        i_list = item.rsplit(',',1)
+        if len(i_list) == 1:
+            i_list = item.rsplit(', ',1)
+        if len(i_list) == 2:
+            names[idx] = i_list[0]
+            ids[idx] = i_list[1]
+        if len(i_list) == 1:
+            #check if we have id
+            n = i_list[0].split(' ')
+            if bool(re.compile('\d').search(i_list[0])) and len(n) == 1:
+                ids[idx] = i_list[0]
+            else:
+                names[idx] = i_list[0].upper()
+    #If all ids are present, return ids
+    if ids.count('No ID') == 0:
+        return ','.join(ids)
+    #Check that autofill file exists
+    if not os.path.isfile(json_file_path) or os.path.getsize(json_file_path) == 0:
+        return ','.join(filter(lambda v: v is not 'No ID', ids))
+    #Loop over entries in autofill list and find missing ids
+    json_data = WRCCUtils.load_json_data_from_file(json_file_path)
+    for entry in json_data:
+        if entry['name'].upper() not in names:
+            continue
+        index = names.index(entry['name'].upper())
+        if ids[index] is 'No ID':
+            ids[index] = entry['id']
+        #check if we ids list is complete
+        if ids.count('No ID') == 0:
+            return ','.join(ids)
+    return ','.join(ids)
 
 def set_form_old(request,app_name=None,clean=True):
     '''
@@ -2416,6 +2543,7 @@ def set_form(request, clean=True):
         if 'element' in request.POST.keys() and not 'elements' in request.POST.keys():
             form['elements'] = [str(request.POST['element'])]
         if 'elements' in request.POST.keys():
+            #form['elements'] = WRCCUtils.convert_elements_to_list(request.POST['elements'])
             els = request.POST.getlist('elements',request.POST.get('elements','').split(','))
             form['elements'] = [str(el) for el in els]
     elif req_method == 'GET':
@@ -2426,7 +2554,9 @@ def set_form(request, clean=True):
         if 'element' in request.GET.keys() and not 'elements' in request.GET.keys():
             form['elements'] = [str(request.GET['element'])]
         if 'elements' in request.GET.keys():
+            #form['elements'] = WRCCUtils.convert_elements_to_list(request.GET['elements'])
             form['elements'] = request.GET.get('elements','').split(',')
+
             '''
             els = request.GET.getlist('elements',request.GET.get('elements','').split(','))
             form['elements'] = [str(el) for el in els]
@@ -2484,6 +2614,14 @@ def set_form(request, clean=True):
             continue
         form['user_area_id'] =  form[key]
         form[key] = find_id(form[key],settings.MEDIA_DIR +'json/US_' + key + '.json')
+    #station_ids is special case
+    if 'station_ids' in form.keys():
+        stn_ids = ''
+        stn_list = form['station_ids'].rstrip(',').split(',')
+        #Remove leading spaces from list items
+        stn_list = [v.lstrip(' ').rstrip(' ') for v in stn_list]
+        stn_ids = find_ids(stn_list,settings.MEDIA_DIR +'json/US_' + 'station_id' + '.json')
+        form['station_ids'] = stn_ids
     #set data summary if needed
     if 'data_summary' not in form.keys():
         if 'temporal_summary' in form.keys():
@@ -2492,23 +2630,6 @@ def set_form(request, clean=True):
             form['data_summary'] = 'spatial'
     if 'date_format' not in form.keys():
         form['date_format'] = 'dash'
-    #station_ids is special case
-    if 'station_ids' in form.keys():
-        stn_ids = ''
-        stn_list = form['station_ids'].rstrip(',').split(',')
-        #Remove leading spaces from list items
-        stn_list = [v.lstrip(' ').rstrip(' ') for v in stn_list]
-        #Make sure that no station is entered twice
-        id_previous = ''
-        for idx, stn_name in enumerate(stn_list):
-            stn_id = str(find_id(str(stn_name),settings.MEDIA_DIR +'json/US_' + 'station_id' + '.json'))
-            if stn_id == id_previous:
-                continue
-            id_previous = stn_id
-            stn_ids+=stn_id + ','
-        #Strip last comma
-        stn_ids = stn_ids.rstrip(',')
-        form['station_ids'] = stn_ids
     #Combine elements
     if 'add_degree_days' in form.keys() and form['add_degree_days'] == 'T':
         for dd in form['degree_days'].replace(' ','').split(','):
@@ -2528,7 +2649,8 @@ def set_initial(request,req_type):
         request: django request object
         req_type: application, one of
             single_lister, multi_lister, station_finder
-            map_overlay, sf_download
+            map_overlay,
+            sf_download
             spatial_summary, temporal_summary
             monann, climatology
             data_comparison, liklihood
@@ -2575,24 +2697,24 @@ def set_initial(request,req_type):
         initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
         #initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
 
-    #Set element(s)
+    #Set element(s)--> always as list if multiple
     if req_type == 'map_overlay':
         initial['elements'] = Get('elements','maxt,mint,pcpn').split(',')
     elif req_type in ['monann','data_comparison']:
         initial['element'] = Get('element','pcpn')
-    elif req_type == 'data_comparison':
-        initial['element'] = Get('element','pcpn')
     else:
-        if isinstance(request,dict):
-            initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
-        else:
-            if request.method == 'GET' and 'elements' in request.GET:
-                #Convert url element string to list
-                initial['elements'] = Get('elements',['maxt','mint','pcpn'])
-                if isinstance(initial['elements'], basestring):
-                    initial['elements'] = initial['elements'].replace(' ','').split(',')
-            else:
-                initial['elements'] =  Getlist('elements', ['maxt','mint','pcpn'])
+        els = Getlist('elements',None)
+        if not els:
+            els = Get('elements',None)
+            if not els:
+                els = ['maxt','mint','pcpn']
+            elif isinstance(els, basestring):
+                els = els.replace(' ','').split(',')
+        elif isinstance(els, list) and  len(els) == 1 and len(els[0].split(',')) > 1:
+            els = els[0].replace(' ','').split(',')
+        elif isinstance(els, basestring):
+            els = els.replace(' ','').split(',')
+        initial['elements'] = els
 
     #Set units
     initial['units'] = Get('units','english')
@@ -2649,12 +2771,12 @@ def set_initial(request,req_type):
             initial['running_mean_days'] = Get('running_mean_days', '9')
         if req_type in ['monann']:
             initial['running_mean_years'] = Get('running_mean_years', '5')
-    if req_type in ['monann','climatology']:
+    if req_type in ['monann','climatology','sf_link']:
         initial['max_missing_days']  = Get('max_missing_days', '5')
     if req_type == 'station_finder':
         initial['elements_constraints'] = Get('elements_constraints', 'all')
         initial['dates_constraints']  = Get('dates_constraints', 'all')
-    if req_type == 'monann':
+    if req_type in  ['monann','sf_link']:
         initial['start_month'] = Get('start_month','01')
         initial['monthly_statistic'] = Get('monthly_statistic','msum')
         initial['less_greater_or_between'] = Get('less_greater_or_between','b')
@@ -2667,7 +2789,7 @@ def set_initial(request,req_type):
         #Set initial plot options
         initial['plot_type'] = Get('plot_type','individual')
         initial['plot_months'] = Get('plot_months','0,1')
-    if req_type == 'climatology':
+    if req_type in ['climatology','sf_link']:
         initial['summary_type'] = Get('summary_type', 'all')
 
 

@@ -118,7 +118,7 @@ $(function(){
     <tr style="display:table-row"  valign="bottom">{% include 'includes/date_constraints.html'%}</tr>       </table>
     <input style="margin:5px" type="submit" value="Show me stations" name="formData"/>
     <input type="hidden" name="checked_categories" id="checked_categories" value="all">
-    <input type="hidden" id="overlay_state" value="{{initial.overlay_state}}">
+    <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
     </form>
     </div><!--end form data div-->
 
@@ -143,7 +143,7 @@ $(function(){
     Please contact scenic@dri.edu if you do not hear from us within 12 hours.
     </p>
     {%endif%}
-    
+
     <!-Data Download-> 
     <div id='formDownload' style="display:none;">
     <p class="message">Your request will be processed offline.<br />
@@ -156,14 +156,14 @@ $(function(){
     <tr id="spat_summary" class="data_sf" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
     <tr class="data_sf" id="start_window" style="display:none;">{% include 'includes/start_window.html'%}</tr>
     <tr class="data_sf" id="end_window" style="display:none;">{% include 'includes/end_window.html'%}</tr>
-    <tr class="data_sf" style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
+    <tr class="data_sf" style="display:table-row;">{% include 'includes/data_format_area.html'%}</tr>
     <tr id="delim" class="data_sf" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
     <tr id="out_file" class="data_sf" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
     <tr id="un" class="data_sf" style="display:table-row;">{% include 'includes/user_name.html'%}</tr>
     <tr id="ue" class="data_sf" style="display:table-row;">{% include 'includes/user_email.html'%}</tr>
     </table>
     <input type="hidden" id="station_ids" name="station_ids" value="{{station_ids}}">
-    <input style="margin:5px" type="submit" value="Get Data"style="background-color:#006666;color:#FFEFD5" name="formDownload"/>
+    <input style="margin:5px" type="submit" value="Get data"style="background-color:#006666;color:#FFEFD5" name="formDownload"/>
     </form>
     </div><!--end formDownload div-->
 

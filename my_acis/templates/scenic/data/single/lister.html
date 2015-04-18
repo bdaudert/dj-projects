@@ -191,6 +191,7 @@
     <!--Data-->
     <table id="printable_table">
     <td>
+    <!--
     {% if results.data or results.smry%}
     <p class="message" style="max-width:60%;"> YOUR PARAMETERS:<br />
     {%for key_val in params_display_list%}
@@ -200,7 +201,7 @@
         {%endfor%}
     {%endfor%}
     </p>
-    {%endif%}
+    {%endif%} -->
 
     {%if not results.errors and results.smry %}
         <p class="message" align="left"><b>DATA SUMMARY</b>:</p>
@@ -220,7 +221,7 @@
         <p align="left">
         {%for key_val in meta_display_list%}
             <b>{{key_val.0}}</b>:
-            {%if key_val.0 == "Station ID/Network List" or key_val.0 == "Valid Date Range (by element)"%}
+            {%if key_val.0 == "Station ID/Network List" or key_val.0 == "Valid Date Range (by Element)"%}
                 <br />
             {%endif%}
             {%for item in key_val.1%}
