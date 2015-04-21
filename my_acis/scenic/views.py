@@ -2636,11 +2636,14 @@ def set_form(request, clean=True):
     #Combine elements
     if 'add_degree_days' in form.keys() and form['add_degree_days'] == 'T':
         for dd in form['degree_days'].replace(' ','').split(','):
+            '''
             if form['units'] == 'metric':
                 el_strip, base_temp = WRCCUtils.get_el_and_base_temp(dd)
                 form['elements'].append(el_strip + str(WRCCUtils.convert_to_english('base_temp',base_temp)))
             else:
                 form['elements'].append(dd)
+            '''
+            form['elements'].append(dd)
     return form
 
 
