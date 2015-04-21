@@ -1008,9 +1008,12 @@ def monann(request):
                 'smry':'individual',
                 'running_mean_years':'5',
                 'show_range': False,
-                'data': [['YEAR'] + header_list + ['ANN']] + data[0][0],
-                'data_summary':[[' '] + header_list + ['ANN']] + data[0][0][-6:],
+                'data': [['YEAR'] + header_list + ['ANN', ' ']] + data[0][0],
+                'data_summary':[[' '] + header_list + ['ANN', ' ']] + data[0][0][-6:],
             }
+        test =[]
+        for i in results['data']:
+            test.append(len(i))
         #Write data to file for highcharts
         hc_data = WRCCUtils.extract_highcarts_data_monann(results['data'],form_cleaned)
         graph_data = []
@@ -2789,6 +2792,8 @@ def set_initial(request,req_type):
         #Set initial plot options
         initial['plot_type'] = Get('plot_type','individual')
         initial['plot_months'] = Get('plot_months','0,1')
+    if req_type == 'monann':
+        initial['base_temperature'] = Get('base_temperature','65')
     if req_type in ['climatology','sf_link']:
         initial['summary_type'] = Get('summary_type', 'all')
 

@@ -73,7 +73,7 @@
         <tr valign="top">{% include 'includes/start_year.html'%}</tr>
         <tr valign="top">{% include 'includes/end_year.html'%}</tr>
         <tr valign="top">{% include 'includes/element.html'%}</tr>
-        {%if initial.base_temperature%}
+        {%if initial.element == "gdd" or initial.element == "hdd" or initial.element == "gdd"%}
         <tr id="base_temp" valign="top">{% include 'includes/base_temperature.html'%}</tr>
         {%else%}
         <tr id="base_temp" valign="top" style="display:none">{% include 'includes/base_temperature.html'%}</tr>

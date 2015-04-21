@@ -232,7 +232,7 @@ function generateTS_individual(data_indices) {
             backgroundColor: 'white',
             align: 'right',
             verticalAlign: 'top',
-            y:50, // >0 moves down
+            y:10, // >0 moves down
             //x:0, // >0 moves right
             borderWidth: 1,
             borderRadius: 5,
@@ -487,7 +487,7 @@ function generateTS_smry(data_indices) {
             backgroundColor: 'white',
             align: 'right',
             verticalAlign: 'top',
-            y: 50, // >0 moves down
+            y: 10, // >0 moves down
             //x: -400, // >0 moves right
             borderWidth: 1,
             borderRadius: 5,
