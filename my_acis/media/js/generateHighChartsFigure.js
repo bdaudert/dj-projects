@@ -182,9 +182,47 @@ function generateTS_individual(data_indices) {
         //------------------------
         //    EXPORTING (CSV/EXCEL)
         //------------------------ 
+        /*
         exporting: {
             csv: {
                 dateFormat: date_format
+            }
+        },
+        */
+       navigation: {
+            buttonOptions: {
+                y:15,
+                theme: {
+                    // Good old text links
+                    style: {
+                        color: '#039',
+                        border:'1px solid #039',
+                        textDecoration: 'underline',
+                        fontWeight: 'bold',
+                        fontSize: '14px'
+                    }
+                }
+            }
+        },
+        exporting: {
+            csv: {
+                dateFormat: date_format
+            },
+            buttons: {
+                contextButton: {
+                    enabled: false, 
+                },
+                exportButton: {
+                    text: 'Download',
+                    // Use only the download related menu items from the default context button
+                    menuItems: Highcharts.getOptions().exporting.buttons.contextButton.menuItems.splice(2)
+                },
+                printButton: {
+                    text: 'Print',
+                    onclick: function () {
+                        this.print();
+                    }
+                }
             }
         },
         //------------------------
@@ -230,9 +268,9 @@ function generateTS_individual(data_indices) {
         legend: {
             layout: 'vertical',
             backgroundColor: 'white',
-            align: 'right',
+            align: 'left',
             verticalAlign: 'top',
-            y:10, // >0 moves down
+            y:20,// >0 moves down
             //x:0, // >0 moves right
             borderWidth: 1,
             borderRadius: 5,
@@ -418,9 +456,47 @@ function generateTS_smry(data_indices) {
         //------------------------
         //    EXPORTING (CSV/EXCEL)
         //------------------------ 
+        /*
         exporting: {
             csv: {
                 dateFormat: date_format
+            }
+        },
+        */
+       navigation: {
+            buttonOptions: {
+                y:15,
+                theme: {
+                    // Good old text links
+                    style: {
+                        color: '#039',
+                        border:'1px solid #039',
+                        textDecoration: 'underline',
+                        fontWeight: 'bold',
+                        fontSize: '14px'
+                    }
+                }
+            }
+        },
+        exporting: {
+            csv: {
+                dateFormat: date_format
+            },
+            buttons: {
+                contextButton: {
+                    enabled: false,
+                },
+                exportButton: {
+                    text: 'Download',
+                    // Use only the download related menu items from the default context button
+                    menuItems: Highcharts.getOptions().exporting.buttons.contextButton.menuItems.splice(2)
+                },
+                printButton: {
+                    text: 'Print',
+                    onclick: function () {
+                        this.print();
+                    }
+                }
             }
         },
         //------------------------
@@ -485,9 +561,9 @@ function generateTS_smry(data_indices) {
         legend: {
             layout: 'vertical',
             backgroundColor: 'white',
-            align: 'right',
+            align: 'left',
             verticalAlign: 'top',
-            y: 10, // >0 moves down
+            y: 20, // >0 moves down
             //x: -400, // >0 moves right
             borderWidth: 1,
             borderRadius: 5,

@@ -915,7 +915,7 @@ function set_threshes(element){
             threshes = '2.5,0.25, 0.25,2.5';
         }
     }
-    if (element == 'avgt' || element == 'dtr'){
+    if (element == 'avgt' || element == 'dtr' || element == 'obst'){
         threshes = '65,65,40,65';
         if ($('#units').length){
             u = document.getElementById('units').value;
