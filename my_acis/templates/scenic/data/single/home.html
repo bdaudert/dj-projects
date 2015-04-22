@@ -21,14 +21,16 @@
     {% include 'includes/Docu_none.html'%}
 </div>
 
-<!--
 {%if initial %}
-<p class="message"><b>Your parameters</b>:<br />
+<p class="message" align="center"><b>Your parameters</b>:<br />
 {%for key, val in initial.items %}
-{{key}}: {{val}}
+    <b>{{key}}</b>: {{val}}
+    {% if forloop.counter|divisibleby:2 or key == "Elements"%}
+        <br />
+    {% endif %}
 {%endfor%}
 {%endif%}
-</p>-->
+</p>
 
 <table cellpadding="40" align="center">
 <td valign="top">

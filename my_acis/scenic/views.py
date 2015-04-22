@@ -162,6 +162,15 @@ def single_point_prods(request):
     #Link from other apps
     if request.method == 'GET' and ('elements' in request.GET or 'element' in request.GET):
         #set link params
+        init = {}
+        for item in request.GET:
+            try:
+                key = WRCCData.DISPLAY_PARAMS[item]
+                val = str(request.GET[item])
+                init[key] = val
+            except:
+                continue
+        context['initial'] = init
         for app in ['single_lister', 'monann', 'climatology','data_comparison']:
             initial, checkbox_vals = set_initial(request, app)
             p_str = '?'
@@ -176,6 +185,7 @@ def single_point_prods(request):
             #strip last &
             p_str=p_str[0:-1]
             context['url_params_' + app] =  p_str
+
     return render_to_response('scenic/data/single/home.html', context, context_instance=RequestContext(request))
 
 def multi_point_prods(request):
@@ -2675,12 +2685,34 @@ def set_initial(request,req_type):
     if req_type in ['single_lister','climatology','monann']:
         initial['area_type'] = Get('area_type','station_id')
     elif req_type in ['data_comparison']:
-        initial['area_type'] = Get('area_type','location')
+        initial['area_type'] = 'location'
     else:
         initial['area_type'] = Get('area_type','state')
 
     #Set area depending on area_type
-    initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
+    if req_type == 'data_comparison':
+        location = Get('location',None)
+        station_id = Get('station_id',None)
+        if location is None and station_id is not None:
+            #Link from station finder,
+            #set location to station lon, lat if we are
+            stn_id = find_id(station_id,settings.MEDIA_DIR + '/json/US_station_id.json')
+            meta = AcisWS.StnMeta({'sids':stn_id,'meta':'ll'})
+            ll = None
+            ll = str(meta['meta'][0]['ll'][0]) + ',' + str(meta['meta'][0]['ll'][1])
+            initial['location'] = ll
+            initial['YOOOO'] = stn_id
+            '''
+            if meta and 'meta' in meta.keys():
+                if 'll' in meta['meta'][0].keys() and len(meta['meta'][0]['ll']) == 2:
+                    ll = str(meta['meta'][0]['ll'][0]) + ',' + str(meta['meta'][0]['ll'][1])
+            if ll:
+                initial['location'] = ll
+            '''
+        else:
+            initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
+    else:
+        initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['area_type']]
     initial['area_type_value'] = initial[str(initial['area_type'])]
 

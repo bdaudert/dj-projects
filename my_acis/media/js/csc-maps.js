@@ -298,9 +298,11 @@ function initialize_station_finder() {
             data_portal_link = data_portal_link + '&end_date=' + end_date;
             app_portal_link = app_portal_link + '&end_date=' + end_date; 
             data_portal_link = data_portal_link + '>Obtain data for this station </a>'
+            /*
             //Add station location for data_comparison tool link
             app_portal_link = app_portal_link + '&station_location=' +
             String(c.lon) + ',' + String(c.lat);
+            */
             app_portal_link = app_portal_link + '>Run custom data analysis</a>'
             var contentString = '<div id="MarkerWindow">'+
                 data_portal_link + '<br />' +

@@ -75,9 +75,9 @@
     </form>
     </div>
 </td>
-<!--Errors/dowm arrow/maps-->
+<!--Errors/down arrow/maps-->
 <td valign="top" width="60%" align="center">
-   <!--Form errors and search parameter section-->
+    <!--Form errors and search parameter section-->
     <div class="results">
     {%if form_error%}
         {% include 'includes/form_error.html'%}
@@ -96,7 +96,7 @@
     <div id="GridpointMap" style="display:block">
     <div id="map-gridpoint"></div>
     </div>
-    <script type="text/javascript">initialize_grid_point_map();</script> 
+    <script type="text/javascript">initialize_grid_point_map("{{initial.location}}");</script> 
     {%else%}
     <div id="GridpointMap" style="display:none"></div>
     {%endif%}
