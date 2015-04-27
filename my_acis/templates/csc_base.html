@@ -133,20 +133,6 @@
     <input type="hidden" id="CONTACT_URL" name="variable" value="{{ CONTACT_URL }}">
     <input type="hidden" id="DASH_URL" name="variable" value="{{ DASH_URL }}">
     <input type="hidden" id="DATA_URL" name="variable" value="{{ DATA_URL }}">
-    <input type="hidden" id="GRID_DATA_URL" name="variable" value="{{ GRID_DATA_URL }}">
-    <input type="hidden" id="TOOLS_URL" name="variable" value="{{ TOOLS_URL }}">
-    <input type="hidden" id="GRID_TOOLS_URL" name="variable" value="{{ GRID_TOOLS_URL }}">
-    <input type="hidden" id="GRID_SPATIAL_SUMMARY_URL" name="variable" value="{{ GRID_SPATIAL_SUMMARY_URL }}">
-    <input type="hidden" id="GRID_TEMPORAL_SUMMARY_URL" name="variable" value="{{ GRID_TEMPORAL_SUMMARY_URL }}">
-    <input type="hidden" id="GRID_SODXTRMTS_URL" name="variable" value="{{ GRID_SODXTRMTS_URL }}">
-    <input type="hidden" id="STATION_DATA_URL" name="variable" value="{{ STATION_DATA_URL }}">
-    <input type="hidden" id="STATION_TOOLS_URL" name="variable" value="{{ STATION_TOOLS_URL }}">
-    <input type="hidden" id="STATION_FINDER_URL" name="variable" value="{{ STATION_FINDER_URL  }}">
-    <input type="hidden" id="STATION_SODXTRMTS_URL" name="variable" value="{{ STATION_SODXTRMTS_URL }}">
-    <input type="hidden" id="STATION_SODSUMM_URL" name="variable" value="{{ STATION_SODSUMM_URL }}">
-    <input type="hidden" id="STATION_MON_AVES_URL" name="variable" value="{{ STATION_MON_AVES__URL }}">
-    <input type="hidden" id="STATION_METAGRAPH_URL" name="variable" value="{{ STATION_METAGRAPH_URL }}">
-    <input type="hidden" id="GIS_TOOLS_URL" name="variable" value="{{ GIS_TOOLS_URL }}">
 </head>
 
 <!--deals with back button issue... only works in Chrome and badly at that--> 
@@ -157,26 +143,10 @@
 
     <!-- Header -->
    <div id="wrap">
-   <img width="100%" src="{{ MEDIA_URL }}img/SCENIC.png">
-   <div class="searchbox">
-    <!-- Search Box -->
-    <form target="_blank"  method="get" action="http://www.google.com/search">
-    <div id="searchbox">
-        <table border="0">
-        <tr>
-        <td><p class="message">Recommended browsers: Chrome, FF, IE</p></td>
-        <td></td><td></td><td></td>
-        <td><input type="radio"  name="sitesearch" value="http://wrcc.dri.edu/csc/scenic/" checked />This Site</td>
-        <td><input type="radio"  name="sitesearch" value="" />The Web</td>
-        <td><input type="text"   name="q" size="25" maxlength="255"/></td>
-        <td><input type="submit" value="Search" /></td>
-        </tr>
-        </table>
-    </div><!--End id searchbox-->
-    </form>
-    </div><!--End class searchbox--> 
-    </div><!--End id wrap-->
-    
+        <img width="100%" src="{{ MEDIA_URL }}img/SCENIC.png">
+   </div><!--End id wrap-->
+
+
     <!-- Nav bar at top of page-->
     <div id="menu">
     <div id="nav">
@@ -223,7 +193,34 @@
     </div><!--Menu-->
 
     <div class="content">
-        <h1 align="center" class="tiltle">{{title}}</h1>
+        <table width="960px">
+        <td width="250px" valign="top">
+            <p class="message">Recommended browsers: Chrome, FF, IE</p>
+        </td>
+        <td width="480px" align="center">
+            <h1 align="center" class="tiltle">{{title}}</h1>
+        </td>
+        <td width="230px" valign="top" align="right">
+            <div class="searchbox">
+            <!-- Search Box -->
+            <form target="_blank"  method="get" action="http://www.google.com/search">
+            <div id="searchbox">
+            <table border="0">
+            <tr>
+            <td colspan="2"><input type="text"   name="q" size="25" maxlength="255"/></td>
+            <td><input type="submit" value="Search" /></td>
+            </tr>
+            <tr>
+            <td><input type="radio"  name="sitesearch" value="http://wrcc.dri.edu/csc/scenic/" checked />This Site</td>
+            <td><input type="radio"  name="sitesearch" value="" />The Web</td>
+            <td></td>
+            </tr>
+            </table>
+            </div><!--End id searchbox-->
+            </form>
+            </div><!--End class searchbox--> 
+        </td>
+        </table>
         <!--Loading image-->
         <div id="loading">
         <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />

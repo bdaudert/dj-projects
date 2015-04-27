@@ -161,7 +161,7 @@ a:active { color:#FF0000;}
 
 #menu {
   width: 960px;
-  height: 45px;
+  height: 40px;
   clear: both;
 }
 
@@ -172,10 +172,12 @@ a:active { color:#FF0000;}
   padding: 0;
   list-style: none;
   background:#006666 repeat-x;
+  /*
   -moz-border-radius-topright: 10px;
   -webkit-border-top-right-radius: 10px;
   -moz-border-radius-topleft: 10px;
   -webkit-border-top-left-radius: 10px;
+  */
 }
  
 #nav li {
@@ -275,6 +277,13 @@ input[value="Show"] {
 }
 
 input[value="Submit"] {
+    background-color:#006666;
+    color:#FFEFD5;
+    margin:5px;
+}
+
+
+input[value="Search"] {
     background-color:#006666;
     color:#FFEFD5;
     margin:5px;
@@ -619,31 +628,22 @@ img.center {
     height:250px;
 }
 
+/*
 .searchbox {
     position:relative;
     top: 0px;
     left: 200px;
 
 }
+*/
 
 #wrap {
     position:relative; /* make this relative to have the inner div absolute without breaking out */
     /*width: 200px;*/  /* fix the width or else it'll be the entire page's width */
-    border: 1px solid #006666;
+    /*border: 1px solid #006666;*/
 }
 
 
-/*
-.searchbox {
-    position:relative;
-    top:0px;
-    left:10px;
-    width:250px;
-    height:50px;
-    background-color:#FFEFD5;
-    color:#000000;
-}
-/*
 /*Map related stuff*/
 table #map_legend {
     position:relative;

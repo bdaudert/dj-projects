@@ -8,8 +8,7 @@
 
 <!--Documentation-->
 <div align="left" id="tool_info" style="display:none;">
-    
-        {% include 'includes/Docu_about_station_finder.html'%}
+    {% include 'includes/Docu_about_station_finder.html'%}
 </div>
 <div id="how_to" style="display:none;">
      <div id="Docu_area_of_interest">{% include 'includes/Docu_sf_area_of_interest.html'%}</div>
@@ -91,15 +90,6 @@ $(function(){
     <td><div id=tool_info_head>{% include 'includes/Button_tool_info.html'%}</div></td>
     <td><div id="how_to_head">{% include 'includes/Button_how_to.html'%}</div></td>
     </tr>
-    <tr>
-    <td colspan="2">
-    <div class="results">
-        {%if not error and not form_error and station_json %}
-            <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
-        {%endif%}
-    </div>
-    </td>
-    </tr>
     </table>
 </td>
 </table>
@@ -115,7 +105,8 @@ $(function(){
     <tr style="display:table-row"  valign="bottom">{% include 'includes/element_constraints.html'%}</tr>
     <tr style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
     <tr style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
-    <tr style="display:table-row"  valign="bottom">{% include 'includes/date_constraints.html'%}</tr>       </table>
+    <tr style="display:table-row"  valign="bottom">{% include 'includes/date_constraints.html'%}</tr>
+    </table>
     <input style="margin:5px" type="submit" value="Show me stations" name="formData"/>
     <input type="hidden" name="checked_categories" id="checked_categories" value="all">
     <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
@@ -181,8 +172,6 @@ $(function(){
 
     {%if station_json and not error and not form_error and not need_overlay_map%}
     <table id="map_legend" valign="top">
-    <tr><td colspan="5" align="center"><b>Station Network Legend</b>
-    </td></tr>
     </table>
 
     <input type="hidden" id="station_json" name="variable" value="{{station_json}}">

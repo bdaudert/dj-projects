@@ -214,17 +214,12 @@ function initialize_station_finder() {
             '<div style="cursor:pointer;" onclick="ShowNetworkDocu(\'Docu_' + name + '\')" >' + 
             name + '</div>';
             tr.appendChild(td);
-            if (count == 5){
-                legend_table.appendChild(tr);
-                tr =  document.createElement('tr');
-
-            }
             if (count == 9){
                 name = 'All';
                 icon = 'http://thydzik.com/thydzikGoogleMap/markerlink.php?text=A&color=FC6355';
                 td = document.createElement('td');
                 td.innerHTML = '<input type="checkbox" id="all" onclick="my_boxclick(this,\'all\')" checked />' + 
-                '<img alt="Icon" title="Icon" src="' + icon  + '">' + name;
+                '<img alt="Icon" title="Icon" src="' + icon  + '"><br />' + name;
                 tr.appendChild(td);
                 legend_table.appendChild(tr);
             }
