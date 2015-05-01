@@ -244,7 +244,7 @@
     <table id="printable_table">
     <td align="center">
     {%if results%}
-    <p class="message" style="max-width:400px;"><b>PARAMETERS</b>:<br />
+    <p class="message"  align="left" style="max-width:400px;"><b>PARAMETERS</b>:<br />
     {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>: {%for item in key_val.1%}{{item}}<br />{%endfor%}
     {%endfor%}
@@ -271,8 +271,8 @@
     {%endif%}<!--end if not results.errors-->
 
     {%if not results.errors and results.smry%}
-        <p class="message"><b>DATA SUMMARY</b>:</p>
-        <table border="1">
+        <p class="message"i align="left"><b>DATA SUMMARY</b>:</p>
+        <table border="1" align="left">
         {%for s_data in results.smry%}
             <tr>
             {%for s in s_data%}

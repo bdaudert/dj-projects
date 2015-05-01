@@ -443,7 +443,7 @@ def multi_lister(request):
         context['run_done'] = True
         #Format Data for display and/or download
         header_keys = ['data_type',form_cleaned['area_type'],\
-            'data_summary','elements','units','start_date', 'end_date']
+            'data_summary','start_date', 'end_date']
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
         #Write data to file if requested
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
