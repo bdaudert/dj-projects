@@ -711,45 +711,6 @@ function reset_options(){
     }  
 }
 
-function hide_errors_results_on_change(formID){
-    $('#' + formID).find('input,select').on('change keyup',function(){
-        //Hide results
-        $('.results').each(function() {
-            $(this).css('display','none');
-        });
-
-        //Hide appropriate form errors
-        //Start and end date may have correlated errors
-        $('#form_error').css('display','none');
-        if ($('#back_button_error').length){
-            $('#back_button_error').css('display','none');
-        }
-        if ($(this).parent().parent().next().attr('class') == 'form_error'){
-            $(this).parent().parent().next().css('display','none');
-        }
-        if ($(this).attr('id') == 'start_date'){
-            if ($('#end_date').parent().parent().next().attr('class') == 'form_error'){
-                $('#end_date').parent().parent().next().css('display','none');
-            }
-        }
-        if ($(this).attr('id') == 'end_date'){
-            if ($('#start_date').parent().parent().next().attr('class') == 'form_error'){
-                $('#start_date').parent().parent().next().css('display','none');
-            }
-        }
-        if ($(this).attr('id') == 'start_year'){
-            if ($('#end_year').parent().parent().next().attr('class') == 'form_error'){
-                $('#end_year').parent().parent().next().css('display','none');
-            }
-        }
-        if ($(this).attr('id') == 'end_date'){
-            if ($('#start_year').parent().parent().next().attr('class') == 'form_error'){
-                $('#start_year').parent().parent().next().css('display','none');
-            }
-        }
-    });
-}
-
 
 function set_likelihood_thresholds(node){
     var options = node.options;

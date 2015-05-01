@@ -164,7 +164,7 @@
         <div id="OverlayMap" style="display:block;">{% include 'includes/overlay_map.html'%}</div>
         <div id="map-overlay"></div>
         <div id="content-window"></div>
-        <script type="text/javascript">initialize_map_overlays("{{area_type}}","{{host}}", "{{kml_file_path}}")</script>
+        <script type="text/javascript">initialize_map_overlays()</script>
     {%else%}
         <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>
         {%if overlay_error%}
@@ -179,9 +179,6 @@
     <!--Results-->
     <!--Print and download buttons-->
     <div class="results">
-    {%if form_error%}
-        {% include 'includes/form_error.html'%}
-    {%endif%}
 
     {%if  run_done and not results.data and not results.smry %}
         {% include 'includes/no_results.html'%}

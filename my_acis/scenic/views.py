@@ -56,12 +56,6 @@ def help(request):
     return render_to_response('scenic/help/home.html', context, context_instance=RequestContext(request))
 
 
-def resources_station(request):
-    context = {
-        'title': 'Station Data Resources'
-    }
-    return render_to_response('scenic/resources_station.html', context, context_instance=RequestContext(request))
-
 def gallery(request):
     context = {
         'title': 'Gallery'
@@ -91,13 +85,6 @@ def gallery(request):
     context['app_names'] = app_names
     context['param_urls'] = param_urls
     return render_to_response('scenic/gallery.html', context, context_instance=RequestContext(request))
-
-def resources_grid(request):
-    context = {
-        'title': 'Gridded Data Resources'
-    }
-    return render_to_response('scenic/resources_grid.html', context, context_instance=RequestContext(request))
-
 
 def about_us(request):
     context = {
@@ -336,8 +323,10 @@ def single_lister(request):
             return render_to_response(url, context, context_instance=RequestContext(request))
         context['run_done'] = True
         context['results'] = req
-        header_keys = [form_cleaned['area_type'],'data_summary',\
-        'elements', 'units', 'start_date', 'end_date']
+        if form_cleaned['data_summary'] == 'none':
+            header_keys = ['user_area_id','start_date', 'end_date']
+        else:
+            header_keys = ['user_area_id','data_summary','start_date', 'end_date']
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
         if 'meta' in req.keys() and req['meta']:
             meta_keys = WRCCUtils.get_meta_keys(form_cleaned)
@@ -2616,8 +2605,11 @@ def set_form(request, clean=True):
                     el_list = form['elements']
             else:
                 el_list = None
-            stn_id = find_id(str(form['station_id']),settings.MEDIA_DIR +'json/US_station_id.json')
-            form[k] = WRCCUtils.find_valid_daterange(stn_id, start_date=sd, end_date=ed, el_list=el_list, max_or_min='max')[idx]
+            if 'station_id' in form.keys():
+                stn_id = find_id(str(form['station_id']),settings.MEDIA_DIR +'json/US_station_id.json')
+                form[k] = WRCCUtils.find_valid_daterange(stn_id, start_date=sd, end_date=ed, el_list=el_list, max_or_min='max')[idx]
+            else:
+                form[str(key)] = str(form[key]).replace('-','').replace(':','').replace('/','').replace(' ','')
         else:
             form[str(key)] = str(form[key]).replace('-','').replace(':','').replace('/','').replace(' ','')
 
@@ -2701,7 +2693,6 @@ def set_initial(request,req_type):
             ll = None
             ll = str(meta['meta'][0]['ll'][0]) + ',' + str(meta['meta'][0]['ll'][1])
             initial['location'] = ll
-            initial['YOOOO'] = stn_id
             '''
             if meta and 'meta' in meta.keys():
                 if 'll' in meta['meta'][0].keys() and len(meta['meta'][0]['ll']) == 2:

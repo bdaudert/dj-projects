@@ -6,39 +6,7 @@
 {%load my_scenic_filters%}
 
 {% block content %}
-<!--
-<p align="center">You are here
-    <a href="{{HOME_URL}}">Home></a>
-    <a href="{{TOOLS_URL}}">Data Analysis></a>
-    <a href="{{GRID_TOOLS_URL}}">Gridded Data Tools></a> 
-    <a href="{{GRID_TOOLS_URL}}likelihood">Likelihood</a>
-</p>
--->
-<!--On form change, hide results and form errors-->
-<script type="text/javascript">
-$(function(){
-//On form change, hide results and form errors
-hide_errors_results_on_change('fLikelihood');
-});
-</script>
 
-<!--
-<table align="center">
-    <tr>
-    <td><div id=tool_info_head></div></td><td><div id="how_to_head"></div></td>
-    </tr>
-</table>
-<script type="text/javascript">                        
-    $("#tool_info_head").load("{{HTML_URL}}Buttons.html .tool_info");
-</script>
-<div id="tool_info" style="display:none;"></div>
-<script type="text/javascript">            
-    $("#tool_info").load("{{HTML_URL}}Docu_GRID_SODXTRMTS.html");
-</script>
-<script type="text/javascript">            
-    $("#how_to_head").load("{{HTML_URL}}Buttons.html .tool_how_to");
-</script>
--->
 
 <div id="how_to" style="display:none;">
 <div id="Docu_location"></div>
@@ -83,7 +51,7 @@ $("#Docu_start_end_date").load("{{HTML_URL}}Docu_start_end_date.html");
 
 <table>
 <td valign="top">
-    <input type="submit" value="Start Over" onclick="window.location='{{MIXED_TOOLS_URL}}likelihood/'"/>
+    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/likelihood/'"/>
     <div id="formLikelihood" class="form" style="border:none;">
     {%if json_dict%}
         <form method="post" id="fLikelihood" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading()">

@@ -162,7 +162,7 @@
             <div id="map-overlay"></div>
             <div id="content-window"></div>
             <script type="text/javascript">
-            initialize_map_overlays("{{initial.area_type}}","{{initial.host}}", "{{initial.kml_file_path}}")
+            initialize_map_overlays()
             </script>
         {%endif%}
     {%else%}
@@ -177,9 +177,6 @@
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
     <div class="results">
-    {%if form_error%}
-        {% include 'includes/form_error.html'%}
-    {%endif%}
 
     {%if run_done and not figure_files%}
            {% include 'includes/no_results.html'%}
@@ -190,7 +187,6 @@
     {%endif%} 
 
     {%if figure_files%}
-    <!--<a target="_blank" href="{{GRID_DATA_URL}}?{%for key,val in params_dict.items%}{{key}}={{val}}{%if not forloop.last%}&{%endif%}{%endfor%}"><font size=3><b>Get data behind the graphics</b></font></a><br /><br /><br />-->
     {%for fig in figure_files%}
         <img alt="FigureFile" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br /><br /><br /><br /><br />
     {%endfor%}

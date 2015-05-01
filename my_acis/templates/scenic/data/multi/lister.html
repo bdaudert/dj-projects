@@ -144,7 +144,7 @@
     </div>
 </td>
 <!--Errors/Down arow/Maps-->
-<td valign="top" width="60%" align="center">
+<td valign="top" width="60%">
     <!--Form Errors and search parameter section-->
     <p class="message" id="request_email_message"  style="display:none">
     Non-summarized data wll be processed offline.<br /> 
@@ -221,10 +221,6 @@
     <!--Results-->
     <!--Print and download buttons-->
     <div class="results">
-    {%if form_error%}
-        {% include 'includes/form_error.html'%}
-    {%endif%}
-
     {%if  run_done and not results.data and not results.smry %}
         {% include 'includes/no_results.html'%}
     {%endif%}

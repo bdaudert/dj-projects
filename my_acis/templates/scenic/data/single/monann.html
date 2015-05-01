@@ -150,10 +150,6 @@
     {%if not results.data and run_done%}
         {% include 'includes/no_results.html'%}
     {% endif %}
-    <!--Form Errors and search parameter section-->
-    {%if form_error%}
-        {% include 'includes/form_error.html'%}
-    {%endif%}
 
     <!--Request errors or results arrow-->
     {%if results.errors%}

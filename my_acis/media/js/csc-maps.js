@@ -9,8 +9,6 @@ function initialize_grid_point_map(loc) {
     } 
     var map;
     var zoom_level = '5';
-    var GRID_DATA_URL = document.getElementById("GRID_DATA_URL").value;
-    var GRID_TOOLS_URL = document.getElementById("GRID_TOOLS_URL").value;
     var lat = loc.replace(' ','').split(',')[1];
     var lon = loc.replace(' ','').split(',')[0];
     var myLatlng = new google.maps.LatLng(parseFloat(lat),parseFloat(lon));
@@ -70,7 +68,6 @@ function initialize_grid_point_map(loc) {
         var new_lon = precise_round(event.latLng.lng(),2).toString();
         var loc = new_lon + ',' + new_lat
         document.getElementById("location").value = loc;
-        var href = GRID_DATA_URL +'?loc=' + new_lon + ',' + new_lat;
         var contentString = '<div id="MarkerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
             '<p><b>Lat: </b>' + new_lat + '<br/>'+
             '<b>Lon: </b>' + new_lon + '<br/>' +
@@ -88,7 +85,6 @@ function initialize_grid_point_map(loc) {
         var new_lon = precise_round(event.latLng.lng(),2).toString();
         var loc = new_lon + ',' + new_lat
         document.getElementById("location").value = loc;
-        var href = GRID_DATA_URL +'?loc=' + new_lon + ',' + new_lat;
         var contentString = '<div id="MarkerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
             '<p><b>Lat: </b>' + new_lat + '<br/>'+
             '<b>Lon: </b>' + new_lon + '<br/>' +
@@ -111,8 +107,6 @@ function initialize_grid_points_map(locs) {
         case 0:  locs = '-111,40,-111.1,40.5';
     }
     var map,mapOptions,zoom_level = '5';
-    var GRID_DATA_URL = document.getElementById("GRID_DATA_URL").value;
-    var GRID_TOOLS_URL = document.getElementById("GRID_TOOLS_URL").value;
     var lons = [],lats = [],locs_list, myLatlng;
     locs_list = locs.replace(' ','').split(',');
     for (idx=0;idx<locs;idx++){
@@ -149,7 +143,6 @@ function initialize_grid_points_map(locs) {
         var new_lon = precise_round(event.latLng.lng(),2).toString();
         var locs = new_lon + ',' + new_lat
         document.getElementById("location").value = loc;
-        var href = GRID_DATA_URL +'?loc=' + new_lon + ',' + new_lat;
         var contentString = '<div id="MarkerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
             '<p><b>Lat: </b>' + new_lat + '<br/>'+
             '<b>Lon: </b>' + new_lon + '<br/>' +
