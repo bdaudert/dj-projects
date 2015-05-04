@@ -48,44 +48,6 @@ def swcke_home(request):
     }
     return render_to_response('scenic/swcke_home.html', context, context_instance=RequestContext(request))
 
-def help(request):
-    context = {
-        'title': 'Help Tool',
-        'icon':'Magnify.png'
-    }
-    return render_to_response('scenic/help/home.html', context, context_instance=RequestContext(request))
-
-
-def gallery(request):
-    context = {
-        'title': 'Gallery'
-    }
-    app_urls = {};app_names = {};param_urls = {}
-
-    #Gallery: FINDING A POINT/AREA OF INETREST
-    app_url = settings.APPLICATIONS['station_finder'][1]
-    p_url = app_url + '?'
-    p_url+='area_type=county&county=Sierra,%2006091'
-    p_url+='&elements=mint,pcpn&elements_constraints=all'
-    p_url+='&start_date=19300101&end_date=20141231&dates_constraints=all'
-    app_urls['station_finder'] = app_url
-    param_urls['station_finder'] = p_url
-    app_names['station_finder'] = settings.APPLICATIONS['station_finder'][0]
-    #Gallery: EXTREMES (monann ndays)
-    app_url = settings.APPLICATIONS['monann'][1]
-    p_url = app_url + '?'
-    #p_url+='area_type=location&location=-120.44,39.32&element=mint&grid=1&start_year=1970&end_year=2000'
-    p_url+='area_type=station_id&station_id=048218&element=mint&grid=1&start_year=POR&end_year=POR'
-    p_url+='&monthly_statistic=ndays&less_greater_or_between=l&threshold_for_less_than=32&plot_months=3,4,5'
-    app_urls['extremes'] = app_url
-    param_urls['extremes'] = p_url
-    app_names['extremes'] = settings.APPLICATIONS['monann'][0]
-    #Set context variables
-    context['app_urls'] = app_urls
-    context['app_names'] = app_names
-    context['param_urls'] = param_urls
-    return render_to_response('scenic/gallery.html', context, context_instance=RequestContext(request))
-
 def about_us(request):
     context = {
         'title': 'About Us',
@@ -135,6 +97,43 @@ def dashboard(request):
     context['year_short'] = '%s%s' % (year[-2], year[-1])
 
     return render_to_response('scenic/dashboard.html', context, context_instance=RequestContext(request))
+
+def gallery(request):
+    context = {
+        'title': 'Gallery'
+    }
+    app_urls = {};app_names = {};param_urls = {}
+
+    #Gallery: FINDING A POINT/AREA OF INETREST
+    app_url = settings.APPLICATIONS['station_finder'][1]
+    p_url = app_url + '?'
+    p_url+='area_type=county&county=Sierra,%2006091'
+    p_url+='&elements=mint,pcpn&elements_constraints=all'
+    p_url+='&start_date=19300101&end_date=20141231&dates_constraints=all'
+    app_urls['station_finder'] = app_url
+    param_urls['station_finder'] = p_url
+    app_names['station_finder'] = settings.APPLICATIONS['station_finder'][0]
+    #Gallery: EXTREMES (monann ndays)
+    app_url = settings.APPLICATIONS['monann'][1]
+    p_url = app_url + '?'
+    #p_url+='area_type=location&location=-120.44,39.32&element=mint&grid=1&start_year=1970&end_year=2000'
+    p_url+='area_type=station_id&station_id=048218&element=mint&grid=1&start_year=POR&end_year=POR'
+    p_url+='&monthly_statistic=ndays&less_greater_or_between=l&threshold_for_less_than=32&plot_months=3,4,5'
+    app_urls['extremes'] = app_url
+    param_urls['extremes'] = p_url
+    app_names['extremes'] = settings.APPLICATIONS['monann'][0]
+    #Set context variables
+    context['app_urls'] = app_urls
+    context['app_names'] = app_names
+    context['param_urls'] = param_urls
+    return render_to_response('scenic/gallery.html', context, context_instance=RequestContext(request))
+
+
+def resources(request):
+    context = {
+        'title': 'External Resources'
+    }
+    return render_to_response('scenic/resources.html', context, context_instance=RequestContext(request))
 
 def data_home(request):
     context = {

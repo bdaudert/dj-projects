@@ -9,7 +9,10 @@
     {% include 'includes/Docu_gallery_station_finder.html'%}
 </div>
 
-<p align="center" class="error"><b>*(BETA) THIS PAGE IS UNDER DEVLOPMENT!</b></p>
+<p align="center" class="error">
+    <b>*(BETA) THIS PAGE IS UNDER DEVLOPMENT!</b><br /><br />
+    <b>CLICK THE QUESTION MARK FOR INFORMATION AND STEP BY STEP INSTRUCTIONS!</b>
+</p>
 
 <table cellpadding="40" align="center">
 <td valign="top">
@@ -22,7 +25,7 @@
         <td>
             <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_gallery_station_finder')">
         </td>
-        <td valign="top"><a class="trigger_hover" href="{{param_urls.growing_seeding}}" target="_blank"><b>EXTREMES</b></a>
+        <td valign="top"><a class="trigger_hover" href="{{param_urls.extremes}}" target="_blank"><b>EXTREMES</b></a>
             <div class="pop-up">{% include 'includes/Docu_popup_gallery_extremes.html'%}</div>
         </td>
         <td>
@@ -35,7 +38,7 @@
             <div class="pop-up">{% include 'includes/Docu_popup_gallery_station_finder.html'%}</div>
         </td>
         <td colspan="2">
-            <a  href="{{param_urls.growing_seeding}}" target="_blank">
+            <a  href="{{param_urls.extremes}}" target="_blank">
             <img class="app_img" alt="Gallery_Extremes" title="Gallery_Extremes" src="{{MEDIA_URL}}img/Extremes.png"></a>
             <div class="pop-up">{% include 'includes/Docu_popup_gallery_extremes.html'%}</div>
         </td>

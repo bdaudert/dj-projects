@@ -1,56 +1,92 @@
 {% extends "csc_base.html" %}
 
 {% block content %}
-<!--
-<p align="center">You are here 
-<a href="{{HOME_URL}}">Home></a>
-<a href="{{HOME_URL}}resources">Resources</a></p>
--->
+<!--Documentation -->
+<div class="docu" id="Docu_resources_geo_data_portal" style="display:none;">
+    {% include 'includes/Docu_resources_geo_data_portal.html'%}
+</div>
+<div class="docu" id="Docu_resources_geo_platform" style="display:none;">
+    {% include 'includes/Docu_resources_geo_platform.html'%}
+</div>
+<div class="docu" id="Docu_resources_data_gateway" style="display:none;">
+    {% include 'includes/Docu_resources_data_gateway.html'%}
+</div>
+<div class="docu" id="Docu_resources_cpc" style="display:none;">
+    {% include 'includes/Docu_resources_cpc.html'%}
+</div>
+<div class="docu" id="Docu_resources_climate_engine" style="display:none;">
+    {% include 'includes/Docu_resources_climate_engine.html'%}
+</div>
+<div class="docu" id="Docu_resources_data_basin" style="display:none;">
+    {% include 'includes/Docu_resources_data_basin.html'%}
+</div>
 
-<table class="dash" cellspacing="10px" align="center">
+<p align="center" class="error">
+<b>CLICK THE QUESTION MARK FOR INFORMATION</b>
+</p>
+
+<table cellpadding="40" align="center">
+<td valign="top">
+
+    <table cellspacing="10">
     <tr>
-    <td><a class="trigger_hover" href="{{SCENIC_URL}}resources/station_data_resources"><b><font size="3">STATION DATA RESOURCES</font></b></a>
-        <div class="pop-up" style="display:none;" align="left">
-            <b>External links to</b>
-            <ul>
-            <li>Station Networks</li>
-            <li>Data providers</li>
-            <li>Data analysis tools</li>
-            </ul>
-        </div>
-    </td>
-    <td><a class="trigger_hover" href="{{SCENIC_URL}}resources/gridded_data_resources/"><b><font size="4">GRIDDED DATA RESOURCES</font></b></a>
-    <div class="pop-up" style="display:none;" align="left">
-        <b><b>External links to</b></b>
-        <ul>
-        <li>Data providers</li>
-        <li>Analysis Tools</li>
-        </ul>
-    </div>
-    </td>
+        <td valign="top"><a class="trigger_hover" href="http://cida.usgs.gov/climate/gdp/" target="_blank"><b>GEO DATA PORTAL</b></a>
+        </td>
+        <td>
+            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_resources_geo_data_portal')">
+        </td>
+        <td valign="top"><a class="trigger_hover" href="http://www.geoplatform.gov/" target="_blank"><b>GEOPLATFORM</b></a>
+        </td>
+        <td>
+            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_resources_geo_platform')">
+        </td>
+        <td valign="top"><a class="trigger_hover" href="http://www.cpc.ncep.noaa.gov/" target="_blank"><b>CLIMATE<br />PREDCTION CENTER</b></a>
+        </td>
+        <td>
+            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_resources_cpc')">
+        </td>
+        <td valign="top"><a class="trigger_hover" href="http://databasin.org/" target="_blank"><b>DATA BASIN</b></a>
+        </td>
+        <td>
+            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_resources_data_basin')">
+        </td>
+    <tr>
+        <td colspan="2">
+            <a  href="http://cida.usgs.gov/climate/gdp/" target="_blank">
+            <img class="app_img" alt="resources_geo_data_portal" title="resources_geo_data_portal" src="{{MEDIA_URL}}img/resources_GeoDataPortal.png"></a>
+        </td>
+        <td colspan="2">
+            <a  href="http://www.geoplatform.gov/" target="_blank">
+            <img class="app_img" alt="resources_geoplatform" title="resources_geoplatform" src="{{MEDIA_URL}}img/resources_Geoplatform.png"></a>
+        </td>
+        <td colspan="2">
+            <a  href="http://www.cpc.ncep.noaa.gov/" target="_blank">
+            <img class="app_img" alt="resources_cpc" title="resources_cpc" src="{{MEDIA_URL}}img/resources_cpc.png"></a>
+        </td>
+        <td colspan="2">
+            <a  href="http://databasin.org/" target="_blank">
+            <img class="app_img" alt="resources_data_basin" title="resources_data_basin" src="{{MEDIA_URL}}img/resources_data_basin.png"></a>
+        </td>
+    </tr>
+    <!--SECOND ROW--> 
+    <!--
+    <tr>
+        <td valign="top"><a class="trigger_hover" href="http://clim-engine.appsot.com/" target="_blank"><b>CLIMATE ENGINE</b></a>
+        </td>
+        <td>
+            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_resources_climate_engine')">
+        </td>
     </tr>
     <tr>
-        <td><a href="{{SCENIC_URL}}resources/station_data_resources/" class="trigger_hover"><img alt="StationResources" title="StationResources" class="front_dash_img" src="{{MEDIA_URL}}img/StationResources.png"></a>
+        <td colspan="2">
+            <a  href="http://clim-engine.appsot.com/" target="_blank">
+            <img class="app_img" alt="resources_climate_engine" title="resources_climate_engine" src="{{MEDIA_URL}}img/resources_climate_engine.png"></a>
         </td>
-        <div class="pop-up" style="display:none;" align="left">
-            <b>External links to</b>
-            <ul>
-            <li>Station Networks</li>
-            <li>Data providers</li>
-            <li>Data analysis tools</li>
-            </ul>
-        </div>
-        <td><a class="trigger_hover" href="{{SCENIC_URL}}resources/gridded_data_resources/"><img alt="GriddedResources" title="GriddedResources" class="front_dash_img" src="{{MEDIA_URL}}img/GridResources.png"></a>
-        <div class="pop-up" style="display:none;" align="left">
-            <b><b>External links to</b></b>
-            <ul>
-            <li>Data providers</li>
-            <li>Analysis Tools</li>
-            </ul>
-        </div>
-        </td>
+
     </tr>
+    </table>
+    -->
+</td>
 </table>
-
 
 {% endblock %}
