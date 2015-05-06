@@ -50,7 +50,7 @@ def swcke_home(request):
 
 def about_us(request):
     context = {
-        'title': 'About Us',
+        'title': 'Overview',
         'icon':'AboutUs.png'
     }
     return render_to_response('scenic/about_us.html', context, context_instance=RequestContext(request))
@@ -720,6 +720,8 @@ def spatial_summary(request):
         '''
         req = WRCCUtils.request_and_format_data(form_cleaned)
         results['smry'] = req['smry']
+        #Save to json file for downloading
+
         #format data for highcarts
         graph_data = []
         for el_idx, element in enumerate(form_cleaned['elements']):
@@ -742,6 +744,17 @@ def spatial_summary(request):
         #results['json_file_path'] = settings.TMP_URL + json_file
         context['results'] = results
         context['run_done'] = True
+        #Save resulst for downloading
+        json_dict = {
+            'smry':results['smry'],
+            #'params_display_list':context['params_display_list']
+            'form':form_cleaned,
+            'data':[]
+        }
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        json_file = '%s_spatial_summary.json' %(time_stamp)
+        WRCCUtils.load_data_to_json_file(settings.TEMP_DIR +json_file, json_dict)
+        context['json_file'] = json_file
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
@@ -751,6 +764,34 @@ def spatial_summary(request):
         initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
 
+    #Download button pressed
+    if 'formDownload' in request.POST:
+        form = set_form(request,clean=False)
+        json_file = request.POST.get('json_file', None)
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        file_name = form['output_file_name'] + '_' + time_stamp
+        with open(settings.TEMP_DIR + json_file, 'r') as f:
+            req =  json.load(f)
+        if form['data_format'] in ['clm','dlm']:
+            if form['data_format'] == 'clm':
+                file_extension = '.txt'
+            else:
+                file_extension = '.dat'
+            response = HttpResponse(mimetype='text/csv')
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
+            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
+            CsvWriter.write_to_file()
+            return response
+        if form['data_format'] in ['xl']:
+            file_extension = '.xls'
+            response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
+            #WRCCUtils.write_to_excel(response,req)
+            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
+            ExcelWriter.write_to_file()
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
+            return response
+
+    '''
     #Downlaod Table Data
     if 'formDownload' in request.POST:
         data_format = request.POST.get('data_format', 'clm')
@@ -761,7 +802,7 @@ def spatial_summary(request):
             json_dict =  json.load(f)
         DDJ = WRCCClasses.DownloadDataJob('spatial_summary',data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_file)
         return DDJ.write_to_file()
-
+    '''
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 

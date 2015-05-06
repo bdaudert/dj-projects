@@ -246,7 +246,7 @@
     {%if results%}
     <p class="message"  align="left" style="max-width:400px;"><b>PARAMETERS</b>:<br />
     {%for key_val in params_display_list%}
-        <b>{{key_val.0}}</b>: {%for item in key_val.1%}{{item}}<br />{%endfor%}
+        <b>{{key_val.0}}</b>: {{key_val.1}}<br />
     {%endfor%}
     </p>
     {%endif%}

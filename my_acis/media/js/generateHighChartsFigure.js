@@ -24,7 +24,7 @@ function generateTS_individual(data_indices) {
     var subTitle = datadict[data_indices[0]].subTitle;
     //Set font size
     var axisFontSize = '16px';
-    var labelsFontSize = '20px';
+    var labelsFontSize = '16px';
     //Set params according to application 
     if (app_name == 'monann'){
         var date_format = '%Y';
@@ -75,7 +75,7 @@ function generateTS_individual(data_indices) {
                     title: {
                         text: datadict[idx].seriesName + ' (' + datadict[idx].elUnits + ')',
                         style: {
-                            color: Highcharts.getOptions().colors[idx]
+                            color: Highcharts.getOptions().colors[2*idx]
                         }
                     },
                     labels: {
@@ -106,7 +106,7 @@ function generateTS_individual(data_indices) {
         //link to approprate axis if we are
         //plotting multiple elements
         if (app_name == 'spatial_summary' && idx > 0) {
-            s['yAxis'] =  i;
+            s['yAxis'] = i;
         }
         series_data.push(s);
         //Add running mean
@@ -155,7 +155,7 @@ function generateTS_individual(data_indices) {
     }
     
     //Clear old plot
-    $('#container').contents().remove();
+    //$('#container').contents().remove();
     //CHART
     var basicOptions = {
         //------------------------
@@ -266,6 +266,7 @@ function generateTS_individual(data_indices) {
         //LEGEND
         //------------------------
         legend: {
+            draggable: true,
             layout: 'vertical',
             backgroundColor: 'white',
             align: 'left',
@@ -274,8 +275,11 @@ function generateTS_individual(data_indices) {
             //x:0, // >0 moves right
             borderWidth: 1,
             borderRadius: 5,
+            padding:10,
             floating: true,
-            draggable: true,
+            title:{
+                text: ':: Drag me'
+            },
             zIndex: 20
         },
         //------------------------
@@ -362,7 +366,7 @@ function generateTS_smry(data_indices) {
     
     //Set font size
     var axisFontSize = '16px';
-    var labelsFontSize = '20px';
+    var labelsFontSize = '16px';
     //Define series data
     var series_data = [],idx, s_id;
     var idx,names = '', to_summarize = []
@@ -559,6 +563,7 @@ function generateTS_smry(data_indices) {
         //LEGEND
         //------------------------
         legend: {
+            draggable:true,
             layout: 'vertical',
             backgroundColor: 'white',
             align: 'left',
@@ -568,12 +573,9 @@ function generateTS_smry(data_indices) {
             borderWidth: 1,
             borderRadius: 5,
             floating: true,
-            draggable: true,
-            /*
             title:{
                 text: ':: Drag me'
             },
-            */
             zIndex: 20
         },
         //------------------------
