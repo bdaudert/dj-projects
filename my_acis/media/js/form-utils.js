@@ -388,6 +388,7 @@ function hide_overlay_map(){
     if ($('#content-window').length){    
         $('#content-window').css('display','none');
     }
+}
 
 function show_overlay_map(){
     //Show overlay map 
@@ -409,13 +410,14 @@ function hide_polygon_map(){
 function show_polygon_map(){
     $('#PolyMap').css('display','block');
     $('#map-polygon').css('display','block');
-    if ($('shape').length){
-        initialize_polygon_map($('shape').val());
+    if ($('#shape').length){
+        initialize_polygon_map($('#shape').val());
     }
     else {
         initialize_polygon_map();
     }
 }
+
 
 function set_map(node){
     /*
@@ -1151,6 +1153,9 @@ function update_maps(area_field){
             $('#map-overlay').css('display','none');
             $('#content-window').css('display','none');
             
+        }
+        if ($('#BBoxMap').length && $('#BBoxMap').css('display')!='none'){
+            $('#BBoxMap').css('display','none');
         }
     }
 }
