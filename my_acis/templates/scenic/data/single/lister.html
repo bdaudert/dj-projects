@@ -40,7 +40,7 @@
 <td valign="bottom" width="45%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/lister/'">
     {%if results.data or results.smry%}
-    <input type="submit" value="Show/Hide Form" onclick="ShowHide('top_of_page')">
+    <input type="submit" value="Show/Hide Form" onclick="ShowHideTopOfPage()">
     {%endif%}
 </td>
 <td valign="top" width="55%" align="left">
@@ -149,18 +149,27 @@
     {%endif%}
     <!--Request errors or results arrow-->
     {%if results.data or results.smry %}
-        {% include 'includes/arrow.html'%}
+        {%if not initial.location%}
+            {% include 'includes/arrow.html'%}
+        {%endif%}
     {%endif%}
     </div>
     <!--Maps-->
     {%if need_gridpoint_map%}
     <div id="GridpointMap" style="display:block">
-    <div id="map-gridpoint"></div>
+        <div id="map-gridpoint"></div>
     </div>
-    <script type="text/javascript">initialize_grid_point_map();</script> 
     {%else%}
-    <div id="GridpointMap" style="display:none"></div>
+    <div id="GridpointMap" style="display:none">
+        <div id="map-gridpoint"></div>
+    </div>
     {%endif%}
+    {%if initial.location %}
+         <script type="text/javascript">initialize_grid_point_map("{{initial.location}}");</script>
+    {% else %}
+        <script type="text/javascript">initialize_grid_point_map();</script> 
+    {% endif %}
+
 </td></table>
 
 <!--Results-->

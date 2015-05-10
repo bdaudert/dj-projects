@@ -160,6 +160,7 @@
         </div>
     </div>
 
+    <!--Overlay Maps-->
     {%if need_overlay_map and not overlay_error %}
         <div id="OverlayMap" style="display:block;">{% include 'includes/overlay_map.html'%}</div>
         <div id="map-overlay"></div>
@@ -167,10 +168,9 @@
         <script type="text/javascript">initialize_map_overlays()</script>
     {%else%}
         <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>
-        {%if overlay_error%}
-            <p class="error">{{overlay_error}}</p>
-        {%endif%}
-    {%endif%}
+        <div id="map-overlay" style="display:none;"></div>
+        <div id="content-window" style="display:none;"></div>
+    {%endif%} 
 </td></table>
 
 <!--Results-->

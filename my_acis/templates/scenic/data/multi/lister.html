@@ -42,7 +42,7 @@
 <td valign="bottom" width="45%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/lister/'"/>
     {%if results.data or results.smry%}
-        <input type="submit" value="Show/Hide Form" onclick="ShowHide('top_of_page')">
+        <input type="submit" value="Show/Hide Form" onclick="ShowHideTopOfPage()">
     {%endif%}    
 </td>
 <td valign="top" width="55%" align="left">
@@ -174,25 +174,23 @@
     {%endif%}
     <!--Request errors or results arrow-->
     {%if results.data or results.smry %}
-        {% include 'includes/arrow.html'%}
+        {%if initial.state %}
+            {% include 'includes/arrow.html'%}
+        {% endif%}
     {%endif%}
     </div> 
     
     <!--Map section-->
-    <!--Gridpoint map-->
-    <div id="GridpointMap" style="display:none;"></div>
     <!--Overlay maps-->
     {%if need_overlay_map%}
         <div id="OverlayMap" style="display:block;">{% include 'includes/overlay_map.html'%}</div>
-        {%if overlay_error%}
-            <p class="error">{{overlay_error}}</p>
-        {%else%}
-            <div id="map-overlay"></div>
-            <div id="content-window"></div>
-            <script type="text/javascript">initialize_map_overlays()</script>
-        {%endif%}
+        <div id="map-overlay"></div>
+        <div id="content-window"></div>
+        <script type="text/javascript">initialize_map_overlays()</script>
     {%else%}
-        <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>   
+        <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>
+        <div id="map-overlay" style="display:none;"></div>
+        <div id="content-window" style="display:none;"></div>
     {%endif%}
 
     <!--Polygon map-->
@@ -208,8 +206,14 @@
             </div>
         </div>
         {%if need_polygon_map%}
-        <div id="map-polygon"></div>
-        <script type="text/javascript">initialize_polygon_map();</script>
+            <div id="map-polygon"></div>
+            {%if initial.shape %}
+                <script type="text/javascript">initialize_polygon_map("{{initial.shape}}");</script>
+            {%else%}
+                <script type="text/javascript">initialize_polygon_map();</script>
+            {%endif%}
+        {%else%}
+            <div id="map-polygon" style="display:none;"></div>
         {%endif%}
     </div>
     <!--end map section--> 

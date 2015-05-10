@@ -1,19 +1,23 @@
 $(function(){
     /*
     BACKBUTTON ISSUE
-    Selects are not reset properly
-    Found this code here: 
-    http://stackoverflow.com/questions/4370819/select-menu-not-being-restored-when-back-button-used
-    */
+    ***** ADDRESSED IN templates/csc_base.html, 
+          only affects the select elements of forms
     /*
-    NOT WORKING
-    $(document).ready(function () {
-        $("select").each(function () {
-            $(this).val($(this).find('option[selected]').val());
-        });
-    }) 
+    * GREYBOX PUPUPS from GRANT
     */
-
+    $(".popup_map").click(function(ev){ 
+        // Let alt-clicks and non-left clicks (which != 1) do their thing
+        if ( ev.shiftKey || ev.ctrlKey || ev.altKey || ev.metaKey || ev.which != 1 ) {
+            return true;
+        }
+        var url = this.getAttribute("href");
+        var title = $(this).text();
+        var width = 792 + 20;
+        var height = 700 + 40;
+        GB_show(title, url, height, width);
+        return false;
+    });
     /*
     ELEMENT CHANGE
     */
@@ -47,7 +51,7 @@ $(function(){
         }
     });
     */
-    $('#tableDataForm, #tableMapForm').on('keyup change', 'input, select, textarea', function(){
+    $('#tableDataForm, #tableMapForm').on('change', 'input, select, textarea', function(){
         //Hide results
         $('.results').each(function() {
             $(this).css('display','none');
@@ -191,8 +195,6 @@ $(function(){
         if ( $('#area_type').val() == 'location' ||  $('#area_type').val() == 'station_id'){
             set_area('area',this); //form_utils function
         }
-        //set map
-        set_map(this); //form_utils function
         update_value($(this).val()); //form_utils function
 
         var station_only_els = ['obst','snow','snwd','evap','wdmv'];
@@ -337,7 +339,7 @@ $(function(){
     Sets maps and area form field
     depending on area type
     */
-    $('.area_type').on('change', function(){
+    $('.area_type').on('keydown change', function(){
        //Set area form field
       set_area('area',this); //form_utils function
       //set map
@@ -345,14 +347,6 @@ $(function(){
       update_value($(this).val()); //form_utils function
     });
    
-
-    /*
-    Update maps on area form field change
-    i.e. move marker or pan in on new location
-    */
-    $('.area_type').on('change', function(){
-        update_maps($(this));
-    });
 
     /*
     DYNAMIC HIGHCHARTS

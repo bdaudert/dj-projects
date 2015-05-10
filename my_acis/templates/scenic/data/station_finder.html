@@ -205,22 +205,17 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     {%endif%}
 
     <!--Map section-->
-    <!--Gridpoint map-->
-    <div id="GridpointMap" style="display:none;"></div>
     <!--Overlay maps-->
-    {%if need_overlay_map%}
+    {%if need_overlay_map and not overlay_error %}
         <div id="OverlayMap" style="display:block;">{% include 'includes/overlay_map.html'%}</div>
-        {%if overlay_error%}
-            <p class="error">{{overlay_error}}</p>
-        {%else%}
-            <div id="map-overlay"></div>
-            <div id="content-window"></div>
-            <script type="text/javascript">initialize_map_overlays()</script>
-        {%endif%}
+        <div id="map-overlay"></div>
+        <div id="content-window"></div>
+        <script type="text/javascript">initialize_map_overlays()</script>
     {%else%}
-        <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>   
-    {%endif%}
-
+        <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>
+        <div id="map-overlay" style="display:none;"></div>
+        <div id="content-window" style="display:none;"></div>
+    {%endif%} 
     <!--Polygon map-->
     {%if need_polygon_map%}
     <div id="PolyMap" style="display:block;">

@@ -125,15 +125,20 @@
     </div>
 
     {%if initial.select_grid_by == "bounding_box" and not hide_bbox_map%}
-    <div id="BBoxMap" style="display:block;">
+        <div id="BBoxMap" style="display:block;">
+            <div id="map-bbox"></div>
+        </div>
+        {%if initial.bounding_box%}
+            <script type="text/javascript">initialize_bbox_map("{{initial.bounding_box}}");</script>
+        {%else%}
+            <script type="text/javascript">initialize_bbox_map();</script>
+        {%endif%}
     {%else%}
-    <div id="BBoxMap" style="display:none;">
-    {%endif%}
-    <div id="map-bbox"></div>
-    {%if initial.select_grid_by == "bounding_box" and not hide_bbox_map%}
-    <script type="text/javascript">initialize_bbox_map();</script>
-    {%endif%}
-    </div>
+        <div id="BBoxMap" style="display:none;">
+            <div id="map-bbox" style="display:none;"></div>
+        </div>
+   {%endif%}
+    
     
     <div id="PolyMap" style="display:none;">
         <div id="panel">
@@ -152,23 +157,17 @@
     </div>
 
 
-    <div id="GridpointMap" style="display:none;"></div>
 
-    {%if need_overlay_map%}
+   {%if need_overlay_map and not overlay_error %}
         <div id="OverlayMap" style="display:block;">{% include 'includes/overlay_map.html'%}</div>
-        {%if overlay_error%}
-            <p class="error">{{overlay_error}}</p>
-        {%else%}
-            <div id="map-overlay"></div>
-            <div id="content-window"></div>
-            <script type="text/javascript">
-            initialize_map_overlays()
-            </script>
-        {%endif%}
+        <div id="map-overlay"></div>
+        <div id="content-window"></div>
+        <script type="text/javascript">initialize_map_overlays()</script>
     {%else%}
-        <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>  
-    {%endif%}
- 
+        <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>
+        <div id="map-overlay" style="display:none;"></div>
+        <div id="content-window" style="display:none;"></div>
+    {%endif%}  
     </div>
 </td></table>
 

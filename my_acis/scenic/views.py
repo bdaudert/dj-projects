@@ -2659,6 +2659,14 @@ def set_form(request, clean=True):
             continue
         form['user_area_id'] =  form[key]
         form[key] = find_id(form[key],settings.MEDIA_DIR +'json/US_' + key + '.json')
+    if not 'user_area_id' in form.keys():
+        try:
+            form['user_area_id'] = form[form['area_type']]
+        except:
+            try:
+                form['user_area_id'] =  form[form['data_type']]
+            except:
+                pass
     #station_ids is special case
     if 'station_ids' in form.keys():
         stn_ids = ''
@@ -2885,10 +2893,12 @@ def set_initial(request,req_type):
                 checkbox_vals['data_type_' + data_type + '_selected'] ='selected'
     if 'elements' in initial.keys():
         for element in initial['elements']:
-            checkbox_vals['elements_' + element + '_selected'] =''
+            checkbox_vals['elements_' + element + '_selected'] ='selected'
+            '''
             for el in initial['elements']:
                 if str(el) == element:
                     checkbox_vals['elements_' + element + '_selected'] ='selected'
+            '''
     if 'element' in initial.keys():
         checkbox_vals['element_' + initial['element'] + '_selected'] ='selected'
     if 'data_format' in initial.keys():

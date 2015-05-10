@@ -13,10 +13,10 @@ function initialize_grid_point_map(loc) {
     var lon = loc.replace(' ','').split(',')[0];
     var myLatlng = new google.maps.LatLng(parseFloat(lat),parseFloat(lon));
     var mapOptions = {
-    //center: ll,
-    center: myLatlng,
-    zoom: 4,
-    mapTypeId: google.maps.MapTypeId.HYBRID
+        //center: ll,
+        center: myLatlng,
+        zoom: 4,
+        mapTypeId: google.maps.MapTypeId.HYBRID
     };
     map = new google.maps.Map(document.getElementById("map-gridpoint"),mapOptions);
     
@@ -30,7 +30,7 @@ function initialize_grid_point_map(loc) {
     var marker = new google.maps.Marker({
         draggable: true,
         position: myLatlng,
-        animation: google.maps.Animation.DROP,
+        //animation: google.maps.Animation.DROP,
         map: map,
         title: "Your location"
     });
@@ -861,6 +861,7 @@ function initialize_polygon_map(poly) {
         catch(e) {
             var newShape = ev;
         }
+        newSape = ev.overlay;
         newShape.type = ev.type;
         //If a vertex is right clicked, remove it from polygon and update form
         newShape.addListener('rightclick', function(mev){
@@ -875,16 +876,19 @@ function initialize_polygon_map(poly) {
                 google.maps.event.addListener(path, 'insert_at', function(){
                     // New point
                     set_form_field(e);
-                */
+                });
                 google.maps.event.addListener(path, 'remove_at', function(){
                     // Point was removed
                     set_form_field(ev);
                 });
+                */
                 google.maps.event.addListener(path, 'set_at', function(){
                     // Point was moved
                     set_form_field(ev);
                 });
+            
             });
+            
         }
         if (ev.type == google.maps.drawing.OverlayType.RECTANGLE){
             google.maps.event.addListener(newShape, 'bounds_changed', function(){
@@ -994,7 +998,7 @@ function initialize_polygon_map(poly) {
     drawingManager.setMap(map);
     //Event handlers
     google.maps.event.addListener(drawingManager, 'overlaycomplete', function(e) {
-        deleteSelectedShape()
+        deleteSelectedShape();
         // Switch back to non-drawing mode after drawing a shape.
         drawingManager.setDrawingMode(null);
         set_form_field(e);
@@ -1056,7 +1060,7 @@ function initialize_map_overlays() {
     });
     var Layer = new google.maps.KmlLayer({
         url: 'http://'+ host + kml_file_path,
-        suppressInfoWindows: true
+        suppressInfoWindows: true,
         //map: map
     });
     Layer.setMap(map);
