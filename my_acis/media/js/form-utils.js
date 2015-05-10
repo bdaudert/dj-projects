@@ -21,24 +21,34 @@ function ShowHideTopOfPage(){
             update_maps(document.getElementById('shape'));
         }
         if ($('#location').length ){
-            $('#GridpointMap').css('display','block'); 
+            $('#GridpointMap').css('display','block');
+            $('#map-gridpoint').css('display','block');
             update_maps(document.getElementById('location'));
         }
         if ($('#basin').length ){
             $('#OverlayMap').css('display','block');
+            $('#map-overlay').css('display','block');
             update_maps(document.getElementById('basin'));
         }
         if ($('#county_warning_area').length ){
             $('#OverlayMap').css('display','block');
+            $('#map-overlay').css('display','block');
             update_maps(document.getElementById('county_warning_area'));
         }
         if ($('#county').length ){
             $('#OverlayMap').css('display','block');
+            $('#map-overlay').css('display','block');
             update_maps(document.getElementById('county'));
         }
         if ($('#climate_division').length ){
             $('#OverlayMap').css('display','block');
+            $('#map-overlay').css('display','block');
             update_maps(document.getElementById('climate_division'));
+        }
+        if ($('#bounding_box').length ){
+            $('#BBoxMap').css('display','block');
+            $('#map-bbox').css('display','block');
+            update_maps(document.getElementById('bounding_box'));
         }
     }
 }
@@ -1144,9 +1154,11 @@ function update_maps(area_field){
         //Hide all maps
         if ($('#GridpointMap').length && $('#GridpointMap').css('display')!='none'){
             $('#GridpointMap').css('display','none');
+            $('#map-gridpoint').css('display','none');
         }
         if ($('#PolyMap').length && $('#PolyMap').css('display')!='none'){
             $('#PolytMap').css('display','none');
+            $('#map-polygon').css('display','none');
         }
         if ($('#OverlayMap').length && $('#OverlayMap').css('display')!='none'){
             $('#OverlayMap').css('display','none');
@@ -1156,6 +1168,7 @@ function update_maps(area_field){
         }
         if ($('#BBoxMap').length && $('#BBoxMap').css('display')!='none'){
             $('#BBoxMap').css('display','none');
+            $('#map-bbox').css('display','none');
         }
     }
 }

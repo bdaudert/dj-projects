@@ -651,6 +651,15 @@ img.center {
     /*border: 1px solid #006666;*/
 }
 
+/* Do Not Delete, station finder does not work without */
+#sf_map {
+    position:relative;
+    float:center;
+    height: 400px;
+    /*width: 620px;*/
+    border:2px solid #006666;
+
+}
 
 /*Map related stuff*/
 table #map_legend {
@@ -658,7 +667,7 @@ table #map_legend {
     left:0px;
     top:0px;
     padding:5px;
-    width: 625px;
+    /*width: 625px;*/
     background: #FFEFD5;
     border:2px solid #006666;
     font-size:12px;
@@ -671,14 +680,19 @@ table #map_legend {
     position:relative;
     left:0px;
     */
-    width:620px;
-    height:450px;
+    /*width:620px;*/
+    max-height:450px;
     overflow:scroll;
     background: #FFEFD5;
     color:#000000;
-    border:2px solid #006666;
+    /*border:2px solid #006666;*/
 }
 
+table#station_list tr {
+    display:table-row;
+    background-color:#FFEFD5;
+    min-width:100%;
+}
 
 .front_page_map {
     position:absolute;
@@ -687,16 +701,6 @@ table #map_legend {
     width:60%;
     height:60%;
     /*z-index:100;*/
-}
-
-/* Do Not Delete, station finder does not work without */
-#sf_map {
-    position:relative;
-    float:center;
-    height: 400px;
-    width: 620px;
-    border:2px solid #006666;
-
 }
 
 #map-gridpoint, #map-overlay, #map-polygon {

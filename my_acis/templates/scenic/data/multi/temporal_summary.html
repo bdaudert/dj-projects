@@ -41,7 +41,7 @@
 <td valign="bottom" width="45%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/temporal_summary/'"/>
     {%if figure_files%}
-    <input type="submit" value="Show/Hide Form" onclick="ShowHide('top_of_page')">
+    <input type="submit" value="Show/Hide Form" onclick="ShowHideTopOfPage()">
     {%endif%}
 </td>
 <td valign="top" width="55%" align="left">
@@ -100,12 +100,28 @@
 </td>
 <td valign="top" width="60%">
 
+    <!--MAPS-->
+    {%if not hide_bbox_map%}
+        <div id="BBoxMap" style="display:block;">
+            <div id="map-bbox"></div>
+            {%if initial.bounding_box%}
+                <script type="text/javascript">initialize_bbox_map("{{initial.bounding_box}}");</script>
+            {%else%}
+                <script type="text/javascript">initialize_bbox_map();</script>
+            {%endif%} 
+        </div>
+    {%else%}
+        <div id="BBoxMap" style="display:none;">
+            <div id="map-bbox" style="display:none;"></div>
+        </div>
+   {%endif%}
+    
     <div class="results">
     {%if form_error%}
         {% include 'includes/form_error.html'%}
     {%endif%}
 
-    {%if figure_files%}
+    {%if figure_files and initial.state %}
         {% include 'includes/arrow.html'%}
     {%endif%}
 
@@ -123,53 +139,7 @@
     </div>
     {%endif%}
     </div>
-
-    {%if initial.select_grid_by == "bounding_box" and not hide_bbox_map%}
-        <div id="BBoxMap" style="display:block;">
-            <div id="map-bbox"></div>
-        </div>
-        {%if initial.bounding_box%}
-            <script type="text/javascript">initialize_bbox_map("{{initial.bounding_box}}");</script>
-        {%else%}
-            <script type="text/javascript">initialize_bbox_map();</script>
-        {%endif%}
-    {%else%}
-        <div id="BBoxMap" style="display:none;">
-            <div id="map-bbox" style="display:none;"></div>
-        </div>
-   {%endif%}
-    
-    
-    <div id="PolyMap" style="display:none;">
-        <div id="panel">
-        <div id="color-palette"></div>
-            <div>
-                <button id="delete-button">Delete Selected Shape</button>
-            </div>
-        </div>
-        {%if lat and lon %}
-        <input type="hidden" id="initial_lat" name="initial_lat" value={{lat}}>
-        <input type="hidden" id="initial_lon" name="initial_lon" value={{lon}}>
-        {%else%}
-        <input type="hidden" id="initial_lat" name="initial_lat" value='40'>
-        <input type="hidden" id="initial_lon" name="initial_lon" value='-111'>
-        {%endif%}
-    </div>
-
-
-
-   {%if need_overlay_map and not overlay_error %}
-        <div id="OverlayMap" style="display:block;">{% include 'includes/overlay_map.html'%}</div>
-        <div id="map-overlay"></div>
-        <div id="content-window"></div>
-        <script type="text/javascript">initialize_map_overlays()</script>
-    {%else%}
-        <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>
-        <div id="map-overlay" style="display:none;"></div>
-        <div id="content-window" style="display:none;"></div>
-    {%endif%}  
-    </div>
-</td></table>
+</td></table><!--End table top_of_page-->
 
 
 <!--Results section-->

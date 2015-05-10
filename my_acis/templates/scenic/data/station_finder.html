@@ -77,7 +77,10 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 <!--Tool Info/Howto-->
 <table>
 <td valign="bottom" width="45%">
-    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}station_finder/'"/>
+    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}station_finder/'">
+    {%if station_json and not error and not form_error%}
+    <input type="submit" value="Show/Hide Form" onclick="ShowHideTopOfPage()">
+    {%endif%}
 </td>
 <td valign="top" width="55%" align="left">
     <table>
@@ -89,7 +92,11 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 </td>
 </table>
 
-<table cellpadding="none">
+{% if not run_done%}
+    <table id="top_of_page">
+{%else%}
+    <table id="top_of_page" style="display:none">
+{%endif%}
 <td valign="top">
     <div id='formData'>
     <form id="tableDataForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('tableDownloadForm', $(this).attr('id'))">{% csrf_token %}
@@ -108,8 +115,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     </form>
     </div><!--end form data div-->
 
-<!--Errors/Maps-->
-<!--<td valign="top">-->
+<!--Errors/dowm arrow/maps-->
 <td valign="top" width="60%" align="center">
     <!--Form Errors and search parameter section-->
     {%if form_error%}
@@ -130,6 +136,66 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     </p>
     {%endif%}
 
+    <!-- Form Errors-->
+    {%if form_error%}
+    <p class="error" align="center">ERROR: Please correct the form error(s) highlighted in red!</p>
+    {%endif%}
+    <!--Map error-->
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {%endif%}
+   
+    <!--Map section-->
+    <!--Overlay maps-->
+    {%if need_overlay_map%}
+        <div id="OverlayMap" style="display:block;">{% include 'includes/overlay_map.html'%}</div>
+        <div id="map-overlay"></div>
+        <div id="content-window"></div>
+        <script type="text/javascript">initialize_map_overlays()</script>
+    {%else%}
+        <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>
+        <div id="map-overlay" style="display:none;"></div>
+        <div id="content-window" style="display:none;"></div>
+    {%endif%}
+
+    <!--Polygon map-->
+    {%if need_polygon_map%}
+    <div id="PolyMap" style="display:block;">
+    {%else%}
+    <div id="PolyMap" style="display:none;">
+    {%endif%}
+        <div id="panel">
+        <div id="color-palette"></div>
+            <div>
+                <button id="delete-button">Delete Selected Shape</button>
+            </div>
+        </div>
+        {%if need_polygon_map%}
+            <div id="map-polygon"></div>
+            {%if initial.shape %}
+                <script type="text/javascript">initialize_polygon_map("{{initial.shape}}");</script>
+            {%else%}
+                <script type="text/javascript">initialize_polygon_map();</script>
+            {%endif%}
+        {%else%}
+            <div id="map-polygon" style="display:none;"></div>
+        {%endif%}
+    </div>
+    <!--end map section-->  
+
+   <!-- Main Map-->
+    {%if station_json and not run_done%}
+    <div class="results">
+        {% include 'includes/station_finder_map.html'%}
+    </div>
+    {%endif%}
+</td>
+</table><!--End table top_of_page-->
+
+
+<!--Results-->
+<table cellpadding="10" align="center">
+<td valign="top" width="97%" align="center">
     <!-Data Download-> 
     <div id='formDownload' style="display:none;">
     <p class="message">Your request will be processed offline.<br />
@@ -148,54 +214,16 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <tr id="un" class="data_sf" style="display:table-row;">{% include 'includes/user_name.html'%}</tr>
     <tr id="ue" class="data_sf" style="display:table-row;">{% include 'includes/user_email.html'%}</tr>
     </table>
-    <input type="hidden" id="station_ids" name="station_ids" value="{{station_ids}}">
     <input style="margin:5px" type="submit" value="Get data"style="background-color:#006666;color:#FFEFD5" name="formDownload"/>
     </form>
     </div><!--end formDownload div-->
 
-    <!--Maps-->
+    <!-- Main Map-->
+    {% if station_json and run_done%}
     <div class="results">
-    <!--Main Map-->
-    <!-- Form Errors-->
-    {%if form_error%}
-    <p class="error" align="center">ERROR: Please correct the form error(s) highlighted in red!</p>
+        {% include 'includes/station_finder_map.html'%}
+    </div>
     {%endif%}
-    <!--Map error-->
-    {% if error %}
-        <p class="error">{{ error }}</p>
-    {%endif%} 
-
-    {%if station_json and not error and not form_error and not need_overlay_map%}
-    <table id="map_legend" valign="top">
-    </table>
-
-    <input type="hidden" id="station_json" name="variable" value="{{station_json}}">
-    <div id="sf_map"></div>
-    <script type="text/javascript">
-        initialize_station_finder()
-    </script>
-
-    <!--Link to data portal-->
-    <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
-    
-    <!--Station List-->
-    <div class="station_list">
-        <table cellspacing="1" id="station_list" border=1>
-        <thead>
-        <tr>
-        <th>Name</th>
-        <th>ID</th>
-        <th>State</th>
-        <th>Lat</th>
-        <th>Lon</th>
-        <th>Elev</th>
-        <th>Networks</th>
-        </tr>
-        </thead>
-        </table>
-    </div>
-    {%endif%}<!--end if  station_json and not error and not form_error and not need_overlay_map-->
-    </div>
 
     <!-- Form Errors-->
     {%if form_error%}
@@ -203,37 +231,6 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
     {%endfor%}
     {%endif%}
-
-    <!--Map section-->
-    <!--Overlay maps-->
-    {%if need_overlay_map and not overlay_error %}
-        <div id="OverlayMap" style="display:block;">{% include 'includes/overlay_map.html'%}</div>
-        <div id="map-overlay"></div>
-        <div id="content-window"></div>
-        <script type="text/javascript">initialize_map_overlays()</script>
-    {%else%}
-        <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>
-        <div id="map-overlay" style="display:none;"></div>
-        <div id="content-window" style="display:none;"></div>
-    {%endif%} 
-    <!--Polygon map-->
-    {%if need_polygon_map%}
-    <div id="PolyMap" style="display:block;">
-    {%else%}
-    <div id="PolyMap" style="display:none;">
-    {%endif%}
-        <div id="panel">
-        <div id="color-palette"></div>
-            <div>
-                <button id="delete-button">Delete Selected Shape</button>
-            </div>
-        </div>
-        {%if need_polygon_map%}
-        <div id="map-polygon"></div>
-        <script type="text/javascript">initialize_polygon_map();</script>
-        {%endif%}
-    </div>
-    <!--end map section--> 
 
 </td>
 </table>

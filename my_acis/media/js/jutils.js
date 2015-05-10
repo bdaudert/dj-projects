@@ -40,38 +40,6 @@ function form_change(formID){
 }
 
 
-$(function() {
-    $('.link_to_datafind').click(function(event){
-        event.preventDefault();
-        var href_pre = this.href;
-        stn_ids = document.getElementById('station_ids_str').value;
-        stn_id_list = stn_ids.split(',');
-        stn_ids_html =''
-        /*
-        for (i=5;i<stn_id_list.length;i+5){
-            stn_id_list.splice(i,0,'<br />');
-        }
-        */
-        stn_ids_html = stn_id_list.join(', ');
-        //href_pre+='&station_ids=' + stn_ids;
-        href_pre+='&station_ids=Multiple Stations';
-        dataWindow = window.open(href_pre,'_blank');
-        dataWindow.onload = function(){
-            dataWindow.document.getElementById('station_ids').value = stn_ids;
-            dataWindow.document.getElementById('stn_list').innerHTML = stn_ids;
-        }
-        return dataWindow;
-    });
-});
-
-function append_station_ids(href) {
-    var stn_ids = document.getElementById('station_ids_str').value;
-    href+='&station_ids=' + stn_ids;
-    var dataWindow = window.open(href,'_blank');
-    return dataWindow;
-    
-}
-
 function populateFormField(form_name, form_id, label, value){
     //var formFields = document.getElementById(form_name).getElementsByTagName('input');
     var formFields = document.getElementById(form_id).getElementsByTagName('input');

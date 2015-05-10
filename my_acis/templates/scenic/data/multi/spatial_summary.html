@@ -53,7 +53,7 @@
 <td valign="bottom" width="45%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/spatial_summary'"/>
     {%if results.graph_data or results.smry%}
-        <input type="submit" value="Show/Hide Form" onclick="ShowHide('top_of_page')">
+        <input type="submit" value="Show/Hide Form" onclick="ShowHideTopOfPage()">
     {%endif%} 
 </td>
 <td valign="top" width="55%" align="left">
@@ -145,13 +145,27 @@
     {%endif%}
     <!--Request errors or results arrow-->
     {%if results.data or results.smry %}
-        {% include 'includes/arrow.html'%}
+        {%if initial.state%}
+            {% include 'includes/arrow.html'%}
+        {%endif%}
     {%endif%}
     </div>
 
 
     <!--Maps-->
+    <!--Polygon map-->
+    {%if need_polygon_map%}
+    <div id="PolyMap" style="display:block;">
+    <div id="map-polygon" style="display:block;"></div>
+    {%if initial.shape%}
+        <script type="text/javascript">initialize_polygon_map();</script>
+    {%else%}
+        <script type="text/javascript">initialize_polygon_map("{{initial.shape}}");</script>
+    {%endif%}
+    {%else%}
     <div id="PolyMap" style="display:none;">
+    <div id="map-polygon" style="display:none;"></div>
+    {%endif%}
         <div id="panel">
         <div id="color-palette"></div>
             <div>

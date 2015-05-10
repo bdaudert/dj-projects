@@ -889,7 +889,7 @@ def station_finder(request):
         if 'stations' not in station_json.keys() or  station_json['stations'] == []:
             context['error'] = "No stations found for these search parameters."
         context['station_json'] = f_name
-
+        context['run_done'] = True
     #Download data for all sations displayed
     #Request will be processed offline
     if 'formDownload' in request.POST:
