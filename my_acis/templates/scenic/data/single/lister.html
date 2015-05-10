@@ -156,20 +156,19 @@
     </div>
     <!--Maps-->
     {%if need_gridpoint_map%}
-    <div id="GridpointMap" style="display:block">
-        <div id="map-gridpoint"></div>
-    </div>
+        <div id="GridpointMap" style="display:block">
+            <div id="map-gridpoint"></div>
+        </div>
+        {%if initial.location %}
+            <script type="text/javascript">initialize_grid_point_map("{{initial.location}}");</script>
+        {% else %}
+            <script type="text/javascript">initialize_grid_point_map();</script>
+        {% endif %}
     {%else%}
-    <div id="GridpointMap" style="display:none">
-        <div id="map-gridpoint"></div>
-    </div>
+        <div id="GridpointMap" style="display:none">
+            <div id="map-gridpoint"></div>
+        </div>
     {%endif%}
-    {%if initial.location %}
-         <script type="text/javascript">initialize_grid_point_map("{{initial.location}}");</script>
-    {% else %}
-        <script type="text/javascript">initialize_grid_point_map();</script> 
-    {% endif %}
-
 </td></table>
 
 <!--Results-->

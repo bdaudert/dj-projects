@@ -783,6 +783,7 @@ function initialize_polygon_map(poly) {
     //optional argument location
     switch (arguments.length - 0) { // <-- 0 is number of required arguments
         case 0:  poly = '-115,34,-115,35,-114,35,-114,34';
+        //case 0: poly = '-120.48,40.46,-118.86,40.04,-119.3,38.77,-121.03,38.94,-120.31,39.96';
     }
     var poly_list = poly.replace(' ','').split(','); 
     var drawingManager;
@@ -808,22 +809,14 @@ function initialize_polygon_map(poly) {
             selectedShape.setMap(null);
         }
         drawingManager.setOptions({
+            //drawingMode: google.maps.drawing.OverlayType.POLYGON,
             drawingControl: true
         });
     }
     function set_form_field(ev){
-        //ev is a map event, e.g. new polygon or circle was drawn
-        try {
-            var newShape = ev.overlay;
-        }
-        catch(e) {
-            var newShape = ev;
-        }
-        newShape = ev.overlay;
-        newShape.type = ev.type;
         if (ev.type != google.maps.drawing.OverlayType.MARKER) {
             if (ev.type == google.maps.drawing.OverlayType.POLYGON || ev.type == google.maps.drawing.OverlayType.POLYLINE || ev.type == 'polygon') {
-                var polygon = newShape.getPath();
+                var polygon = ev.overlay.getPath();
                 polCoords = [];
                 for (var j = 0;j<polygon.length;j++) {
                     var lat = precise_round(polygon.getAt(j).lat(),2);
@@ -834,7 +827,7 @@ function initialize_polygon_map(poly) {
                 document.getElementById("shape").value = polCoords;
             }
             if (ev.type == google.maps.drawing.OverlayType.RECTANGLE){
-                var bounds=newShape.getBounds();
+                var bounds = ev.overlay.getBounds();
                 //set new bounding box
                 var w = precise_round(bounds.getSouthWest().lng(),2);
                 var s = precise_round(bounds.getSouthWest().lat(),2);
@@ -843,35 +836,27 @@ function initialize_polygon_map(poly) {
                 document.getElementById("shape").value = w + ',' + s + ',' + e + ',' + n;
             }
             if (ev.type == google.maps.drawing.OverlayType.CIRCLE){
-                var center = newShape.getCenter();
-                var radius = newShape.getRadius();
+                var center = ev.overlay.getCenter();
+                var radius = ev.overlay.getRadius();
                 document.getElementById("shape").value = precise_round(center.lng(),2) + ',' + precise_round(center.lat(),2) + ',' + precise_round(radius,2);
             }
         }
         else{ //MARKER
-            pos = newShape.position;
+            pos = ev.overlay.position;
             document.getElementById("shape").value = precise_round(pos.lng(),2) + ',' + precise_round(pos.lat(),2);
         }
     }
 
     function set_event_handlers(ev){
-        try {
-            var newShape = ev.overlay;
-        }
-        catch(e) {
-            var newShape = ev;
-        }
-        newSape = ev.overlay;
-        newShape.type = ev.type;
         //If a vertex is right clicked, remove it from polygon and update form
-        newShape.addListener('rightclick', function(mev){
+        ev.overlay.addListener('rightclick', function(mev){
             if(mev.vertex != null && this.getPath().getLength() > 3){
                 this.getPath().removeAt(mev.vertex);
             }
         });
         //If a point is dragged, update the form fiels
         if (ev.type == google.maps.drawing.OverlayType.POLYGON || ev.type == google.maps.drawing.OverlayType.POLYLINE) {
-            newShape.getPaths().forEach(function(path, index){
+            ev.overlay.getPaths().forEach(function(path, index){
                 /*
                 google.maps.event.addListener(path, 'insert_at', function(){
                     // New point
@@ -891,23 +876,23 @@ function initialize_polygon_map(poly) {
             
         }
         if (ev.type == google.maps.drawing.OverlayType.RECTANGLE){
-            google.maps.event.addListener(newShape, 'bounds_changed', function(){
+            google.maps.event.addListener(ev.overlay, 'bounds_changed', function(){
                 // Polygon was dragged
                 set_form_field(ev);
             });
         }
         if (ev.type == google.maps.drawing.OverlayType.CIRCLE){
-            google.maps.event.addListener(newShape, 'radius_changed', function(){
+            google.maps.event.addListener(ev.overlay, 'radius_changed', function(){
                 // Polygon was dragged
                 set_form_field(ev);
             });
-            google.maps.event.addListener(newShape, 'center_changed', function(){
+            google.maps.event.addListener(ev.overlay, 'center_changed', function(){
                 // Polygon was dragged
                 set_form_field(ev);
             });
         }
         if (ev.type == google.maps.drawing.OverlayType.MARKER) {
-            google.maps.event.addListener(newShape, 'dragend', function () {
+            google.maps.event.addListener(ev.overlay, 'dragend', function () {
                 set_form_field(ev);
             });
         }
@@ -931,9 +916,12 @@ function initialize_polygon_map(poly) {
     };
     var mkrOptions = {draggable: true};
     //Set initial polygon
-    var poly_initial = [];
+    var bounds = new google.maps.LatLngBounds();
+    var poly_initial = [], point;
     for (var idx=0;idx < poly_list.length ; idx+=2 ){
         poly_initial.push(new google.maps.LatLng(parseFloat(poly_list[idx+1]),parseFloat(poly_list[idx])))
+        point = new google.maps.LatLng(parseFloat(poly_list[idx+1]), parseFloat(poly_list[idx]));
+        bounds.extend(point);
     }
     var shape_init_opts = {
         path:poly_initial,
@@ -943,12 +931,9 @@ function initialize_polygon_map(poly) {
     } 
     var shape_init = new google.maps.Polygon($.extend({},polyOptions,shape_init_opts));
     shape_init.setMap(map);
+    map.fitBounds(bounds);
     setSelection(shape_init);
-    try {
-        var bounds = selectedShape.getBounds;
-        map.fitBounds(bounds);
-    }
-    catch(e){}
+
     google.maps.event.addListener(shape_init, "dragend", function(){
         var len=selectedShape.getPath().getLength();
         var htmlStr = '';
@@ -1003,8 +988,7 @@ function initialize_polygon_map(poly) {
         drawingManager.setDrawingMode(null);
         set_form_field(e);
         set_event_handlers(e)
-        var newShape = e.overlay;
-        setSelection(newShape);
+        setSelection(e.overlay);
     });
 
     //General event handlers
@@ -1023,7 +1007,7 @@ function initialize_map_overlay(map_id,poly) {
         mapTypeId: google.maps.MapTypeId.ROADMAP
     }
     var map = new google.maps.Map(document.getElementById(map_id), mapOptions);
-    var bounds = new google.maps.LatLngBounds();;
+    var bounds = new google.maps.LatLngBounds();
     var paths = poly.getPath()
     for(var i = 0; i < paths.length; i++){
         points = new google.maps.LatLng(paths.getAt(i).lat(), paths.getAt(i).lng());
