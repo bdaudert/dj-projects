@@ -39,7 +39,7 @@
 <td valign="bottom" width="45%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/monann/'">
     {%if results.data%}
-    <input type="submit" value="Show/Hide Form" onclick="ShowHide('top_of_page')">
+    <input type="submit" value="Show/Hide Form" onclick="ShowHideTopOfPage()">
     {%endif%}
 </td>
 <td valign="top" width="55%" align="left">
@@ -125,21 +125,26 @@
         {% include 'includes/form_error.html'%}
     {%endif%}
 
-    {%if results.data%}
+    {%if results.data and not initial.location %}
         {% include 'includes/arrow.html'%}
     {%endif%}
     </div>
 
     <!--Maps-->
     {%if need_gridpoint_map%}
-    <div id="GridpointMap" style="display:block">
-    <div id="map-gridpoint"></div>
-    </div>
-    <script type="text/javascript">initialize_grid_point_map();</script>
-    <div id="GridpointMap" style="display:none"></div>
+        <div id="GridpointMap" style="display:block">
+            <div id="map-gridpoint"></div>
+        </div>
+        {%if initial.location %}
+            <script type="text/javascript">initialize_grid_point_map("{{initial.location}}");</script>
+        {% else %}
+            <script type="text/javascript">initialize_grid_point_map();</script>
+        {% endif %}
     {%else%}
-    <div id="GridpointMap" style="display:none">
-    {%endif%} 
+        <div id="GridpointMap" style="display:none">
+            <div id="map-gridpoint"></div>
+        </div>
+    {%endif%}
 </td>
 </table>
 
@@ -221,12 +226,12 @@
             <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
             </td><td valign="top">
             <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
-            <br />
-            <!--Download form-->
-            <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
             </td>
         </table><!--End table about/howto/download form-->       
- 
+
+        <!--Download form-->
+        <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
+
         <div id="printable_table" align="center">
             <p class="black">
             {%for key_val in results.header%}

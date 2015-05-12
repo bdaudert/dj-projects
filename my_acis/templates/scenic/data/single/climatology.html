@@ -37,7 +37,7 @@
 <td valign="bottom" width="45%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/climatology/'">
     {%if results%}
-    <input type="submit" value="Show/Hide Form" onclick="ShowHide('top_of_page')">
+    <input type="submit" value="Show/Hide Form" onclick="ShowHideTopOfPage()">
     {%endif%}
 </td>
 <td valign="top" width="55%" align="left">
@@ -89,7 +89,7 @@
         {% include 'includes/form_error.html'%}
     {%endif%} 
 
-    {%if results%}
+    {%if results and not initial.location %}
         {% include 'includes/arrow.html'%}
     {%endif%}
 
@@ -100,13 +100,20 @@
 
     <!--Maps-->
     {%if need_gridpoint_map%}
-    <div id="GridpointMap" style="display:block">
-    <div id="map-gridpoint"></div>
-    </div>
-    <script type="text/javascript">initialize_grid_point_map();</script> 
+        <div id="GridpointMap" style="display:block">
+            <div id="map-gridpoint"></div>
+        </div>
+        {%if initial.location %}
+            <script type="text/javascript">initialize_grid_point_map("{{initial.location}}");</script>
+        {% else %}
+            <script type="text/javascript">initialize_grid_point_map();</script>
+        {% endif %}
     {%else%}
-    <div id="GridpointMap" style="display:none"></div>
+        <div id="GridpointMap" style="display:none">
+            <div id="map-gridpoint"></div>
+        </div>
     {%endif%}
+
 </td><!-- end center-->
 </table>
 
@@ -137,7 +144,7 @@
       
   
     <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-    <input type="hidden" id="JSON_URL" name="JSON_URL" value="{{JSON_URL}}">
+    <input type="hidden" id="JSON_DIR" name="JSON_DIR" value="{{JSON_DIR}}">
         
     <!-- TAB results -->
     {%if results%}
@@ -161,14 +168,14 @@
             </td><td>
             <p onClick="ShowHide('formDownload{{forloop.counter0}}')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
             </td>
-            <td>
+            </table><!--End table download/print buttons-->
+            
             <!--Download form-->
             <div id="formDownload{{forloop.counter0}}" class="form" style="display:none;">
                 {% include 'includes/climatology_download_form.html'%}
             </div>
-            </td>
-            </table><!--End table download button/form and print button-->
 
+            
             <div id="printable_table{{forloop.counter0}}">
                 <table cellspacing="2">
                 {%if tab != 'pcpn'%}

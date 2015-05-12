@@ -1191,14 +1191,14 @@ def climatology(request):
                     meta_dict['states'][0] + ', ' + table_dict['table_name_long']
                 table_dict['subtitle'] = 'Network: ' + meta_dict['networks'][0] + ', ID: ' + str(data_params['sid'])
             if 'loc' in data_params.keys():
-                table_dict['title'] = 'Location: ' + str(data_params['loc'])
+                table_dict['title'] = 'Location ' + str(data_params['loc']) + ', ' + table_dict['table_name_long']
                 table_dict['subtitle'] = ''
             json_list.append(table_dict)
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         json_file = '%s_sodsumm_%s_%s.json' \
         %(time_stamp,dates_list[0][0:4], dates_list[-1][0:4])
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_file, json_list)
-        context['JSON_URL'] = settings.TEMP_DIR
+        context['JSON_DIR'] = settings.TEMP_DIR
         context['json_file'] = json_file
     #Downlaod Table Data
     for table_idx in range(7):

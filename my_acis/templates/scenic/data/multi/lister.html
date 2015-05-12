@@ -234,12 +234,13 @@
         <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
         </td><td valign="top">
         <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
-        <!--Download form-->
-        <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
         </td>
         </table>
         {% endif %}
     {%endif%}
+
+    <!--Download form-->
+    <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
 
     <!--Data-->
     <table id="printable_table">

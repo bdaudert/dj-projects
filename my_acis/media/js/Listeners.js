@@ -200,6 +200,7 @@ $(function(){
         var station_only_els = ['obst','snow','snwd','evap','wdmv'];
         var non_prism_els = ['gdd','hdd','cdd'];
         //Set grid form fields
+        var opts = null;
         if (data_type == 'grid' || data_type == 'location' || data_type == 'locations'){
             if ($('#elements').length){
                 var opts = $("#elements option");
@@ -207,16 +208,18 @@ $(function(){
             if ($('#element').length){
                 var opts = $("#element option")
             } 
-            opts.each(function(){
-                //Disable station elements
-                if ($(this).val().inList(station_only_els)){
-                    $(this).attr('disabled',true);
-                }
-                //Check if prism data, disable degree days
-                if ($('#grid').val() == '21' && $(this).val().inList(non_prism_els)){
-                    $(this).attr('disabled',true);
-                }
-            });
+            if (opts){
+                opts.each(function(){
+                    //Disable station elements
+                    if ($(this).val().inList(station_only_els)){
+                        $(this).attr('disabled',true);
+                    }
+                    //Check if prism data, disable degree days
+                    if ($('#grid').val() == '21' && $(this).val().inList(non_prism_els)){
+                        $(this).attr('disabled',true);
+                    }
+                });
+            }
             //If prism hide special degree days
             if ($('#grid').val() == '21'){
                 $('#add').css('display','none');
@@ -231,11 +234,13 @@ $(function(){
             //Show grid
             $('#grid_type').css('display','table-row');
             //Change POR to date or vice versa
-            if ($('#start_year').length && $('#end_year').length){
-                if ($('#start_year').val() == 'POR'){
+            if ($('#start_year').length){
+                if ($('#start_year').val().toUpperCase() == 'POR'){
                     $('#start_year').val('1970');
                 }
-                if ($('#end_year').val() == 'POR'){
+            }
+            if ($('#end_year').length){
+                if ($('#end_year').val().toUpperCase() == 'POR'){
                     $('#end_year').val('2000');
                 }
             }
