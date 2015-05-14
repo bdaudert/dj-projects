@@ -246,7 +246,8 @@
     <table id="printable_table">
     <td align="center">
     {%if results%}
-    <p class="message"  align="left" style="max-width:400px;"><b>PARAMETERS</b>:<br />
+    <p class="message"  align="left" style="max-width:400px;word-wrap:break-word;">
+    <b>PARAMETERS</b>:<br />
     {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>: {{key_val.1}}<br />
     {%endfor%}

@@ -117,11 +117,20 @@ def gallery(request):
     app_url = settings.APPLICATIONS['monann'][1]
     p_url = app_url + '?'
     #p_url+='area_type=location&location=-120.44,39.32&element=mint&grid=1&start_year=1970&end_year=2000'
-    p_url+='area_type=station_id&station_id=048218&element=mint&grid=1&start_year=POR&end_year=POR'
+    p_url+='area_type=station_id&station_id=048218&element=mint&start_year=POR&end_year=POR'
     p_url+='&monthly_statistic=ndays&less_greater_or_between=l&threshold_for_less_than=32&plot_months=3,4,5'
     app_urls['extremes'] = app_url
     param_urls['extremes'] = p_url
     app_names['extremes'] = settings.APPLICATIONS['monann'][0]
+    #Gallery: SUMMARIZING SPATIAL DATA (spatial_summary)
+    app_url = settings.APPLICATIONS['spatial_summary'][1]
+    p_url = app_url + '?'
+    p_url+='area_type=shape&shape=-120.77,36.84,-120.6,36.78,-120.54,36.71,-120.63,36.63,-120.76,36.77'
+    p_url+='&spatial_summary=mean&elements=maxt,mint,avgt&grid=1&start_date=20150301&end_date=20150331'
+    p_url+='&data_type=grid&grid=1'
+    app_urls['spatial_summary'] = app_url
+    param_urls['spatial_summary'] = p_url
+    app_names['spatial_summary'] = settings.APPLICATIONS['spatial_summary'][0]
     #Set context variables
     context['app_urls'] = app_urls
     context['app_names'] = app_names
@@ -653,7 +662,7 @@ def spatial_summary(request):
     context[initial['overlay_state'].lower() + '_selected'] = 'selected'
 
 
-    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.POST):
+    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         #Set form and initial
         form = set_form(initial, clean=False)
         form_cleaned = set_form(initial)
@@ -740,7 +749,7 @@ def spatial_summary(request):
                 el_name+= str(base_temp)
             elements.append(el_name)
         results['elements'] = elements
-        results['data_indices'] = [0,1]; results['chartType'] = graph_data[0]['chartType']
+        results['data_indices'] = [0]; results['chartType'] = graph_data[0]['chartType']
         #results['json_file_path'] = settings.TMP_URL + json_file
         context['results'] = results
         context['run_done'] = True

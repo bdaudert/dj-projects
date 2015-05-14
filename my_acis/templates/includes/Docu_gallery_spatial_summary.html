@@ -1,0 +1,89 @@
+<div id="gallery_spatial_summary">
+<p class="error">What is the application?</p>
+<p>
+<a href="{{app_urls.spatial_summary}}" target="_blank">
+<font color="blue">{{app_names.spatial_summary}}</font></a><br />
+You can use this tool to generate time series of climate variables<br />
+averaged over an area of interest.
+</p>
+<p class="error">What types of questions can be ansered?</p>
+<ul>
+<li>What was the average, median, min, max or sum of<br />
+temperature, precipitation, snow, degree day ... in a <br />
+state, county, climate division, county warning area or custo shape<br/>
+over a custom date range.</li>
+<li></li>
+</ul>
+<p class="error">Example 1</p>
+<p class="message">
+    The appropriate timing of flowering of plants is crucial for plant reproduction.<br />
+    Plants have developed mechanisms to detect environmental signals such as<br />
+    carbohydrate status, photoperiod and temperature.<br >
+    Crops are particularly sensitive to to temperature.<br >
+    <a target="_blank" href="http://jxb.oxfordjournals.org/content/60/9/2529.full">Climate change and the flowering time of annual crops</a><br />
+    Presume you are a farmer in the Central California Valley.<br /> 
+    Your crop usually start blooming in February.<br />
+    This year, you have observed an early onset of flowering in January.<br />
+    You would like to determine if this is due to warmer than normal temperatures in your area<br />
+    or if other factors have played a role. January max, min and mean temperatures on average are<br />
+    56F, 37F, 46F, respectively in yur area.<br />
+    Let's see how these numbers compare to this year.
+</p>
+<a href="{{param_urls.spatial_summary}}" target="_blank"><font color="blue">TRY IT!</font></a><br />
+<p class="error">Step by Step instuctions</p>
+<p>
+<ol>
+<li>Go to <a href="{{app_urls.spatial_summary}}" target="_blank">
+<font color="blue">{{app_names.spatial_summary}}</font></a><br /></li>
+<li>Set the form parameters:<br />
+Since we are looking at a local farm we want to choose <b>custom shape</b><br />
+<img src='/csc/media/img/Gallery_custom_shape.png' align="center"><br /><br />
+Use the map interface to draw a custom polygon, rectangle or circle around your farm.<br />
+<ul>
+<li><b>Using the map interface to draw a custom shape</b></li>
+<ul>
+<li>You can place a marker on the map or<br />
+draw a rectangle, circle or polygon.<br />
+Click on the appropriate icon in the legend on the top of the map.</li>
+<li><img src="/csc/media/img/MarkerIcon.png"> <b>Marker: </b>Point and click on the map.</li>
+<li><img src="/csc/media/img/RectangleIcon.png"> <b>Rectangle: </b> Point at a corner of your rectangle,<br />
+click, hold and drag in the desired direction.</li>
+<li><img src="/csc/media/img/CircleIcon.png"> <b>Circle: </b>Point at the center of your circle,<br />
+click, hold and drag outwards.</li>
+<li><img src="/csc/media/img/PolygonIcon.png"> <b>Polygon: </b>Point and click at each corner of your polygon.<br />
+Finish by double clicking at the final point<br />
+or by clicking on the first point of your ploygon.</li>
+</ul>
+Note that once you finished drawing you custom shape, <br />
+form field "Custom Shape" on the left was updated with the coordinates of your polygon.<br />
+Because we are looking at a smaller area that may not contain any weather stations,<br />
+we should probably work with <b>Data Type: gridded data</b>.<br />
+Pick  <b>Maximum, Minimum and Average Temperature</b> as you elements.<br />
+To select multiple elements:<br />
+<ul>
+<li>MAC: hold down the command (apple) button while selecting the elements.<br />
+<li>PC: hold down the control (ctrl) button while selecting the elements.<br />
+</ul>
+We are only interested in January temperatures so pick<br /> 
+<b>Start Date: 2015-01-01, End Date: 2015-01-31</b><br />
+The final form wil look like this:<br /><br />
+<img src='/csc/media/img/Gallery_spatial_summary_form.png' align="center"><br /><br />
+</li>
+<li>Submit the request by clicking on "Generate time series".</li>
+</ol><br />
+The <b>result</b> will look something like this:<br /><br />
+<img src='/csc/media/img/Gallery_spatial_summary_results.png' align="center"><br />
+You can look at each element individually or look at multiple elements<br /> 
+by selecting them from the "Elements" dropdown menue above the chart.<br />
+To see the average over the period click the "Average" checkbox above the chart.<br />
+By looking at the plots fro max, min and mean emperatures, we see that<br />
+Average max temperature in January lies at 59F<br />
+Average min temperature in January lies at 38F and <br />
+Average mean temperature in January lies at 48.5F<br />
+That is somewhat higher than the average temperatures( 56F, 37F, 46F)<br >
+recorded in this area in the past.<br />
+Depending on the sensitivity of your crop's blooming to temperature<br />
+you now have a better idea if temperature causeed this year's early onset.
+</p>
+</div>
+

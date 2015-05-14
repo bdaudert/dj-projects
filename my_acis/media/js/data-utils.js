@@ -114,6 +114,24 @@ function compute_running_mean(data,running_mean_period){
     return running_mean_data
 }
 
+function compute_average(data){
+    var sum=0, ave= null; var count = 0;
+    for (var idx = 0;idx<data.length;idx++){
+        d = data[idx][1];
+        if (String(d) != '-9999' && d != null){
+            try {
+                sum+= parseFloat(d);
+                count+=1;
+            }
+            catch(e){}
+        }
+    }
+    if (count > 0){
+        ave = sum / parseFloat(count);
+    }
+    return [[data[0][0], ave], [data[data.length -1][0], ave]]
+}
+
 function compute_range(data){
     var d,dt = [],mx = null, mn = null;
     for (var idx = 0;idx<data.length;idx++){

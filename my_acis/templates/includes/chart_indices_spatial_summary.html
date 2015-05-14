@@ -2,7 +2,7 @@
 <select style="max-height:200px;width:200px" multiple id='data_indices' name="chart_selector">
 {% for el in results.elements%}
     <option value={{ forloop.counter0 }}  
-        {%if forloop.counter0 == 0 or forloop.counter0 == 1%}selected {%endif%}>
+        {%if forloop.counter0 == 0 %}selected {%endif%}>
      {{el}}    
     </option>
 {% endfor%}

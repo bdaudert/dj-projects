@@ -366,7 +366,7 @@ $(function(){
             }
         }
     });
-    $('#show_range, #show_running_mean').on('click', function(){
+    $('#show_range, #show_running_mean, #show_average').on('click', function(){
         //Find the correct chart
         var l_type = $(this).val();
         for(var i = myChart.series.length - 1; i > -1; i--){

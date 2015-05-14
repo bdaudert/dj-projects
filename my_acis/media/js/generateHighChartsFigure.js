@@ -134,6 +134,22 @@ function generateTS_individual(data_indices) {
             }
             series_data.push(rm);            
         }
+        //Average over period
+        var ave_data = compute_average(datadict[idx].data);
+        var v = false;
+        if ($('#show_average').is(':checked')){v = true;};
+        var a = {
+            visible:v,
+            id: 'average_' + s_id,
+            name: 'Average:' + s['name'],
+            showInLegend:false,
+            type:'line',
+            lineWidth:1,
+            color:'#ff0000',
+            data: ave_data,
+            linkedTo: s_id,
+        };
+        series_data.push(a);
         //Range
         var range_data = compute_range(datadict[idx].data);
         var v = false;
@@ -413,6 +429,21 @@ function generateTS_smry(data_indices) {
         }
         series_data.push(rm);
     }
+    //Average over period
+    var ave_data = compute_average(datadict[idx].data);
+    var v = false;
+    if ($('#show_average').is(':checked')){v = true;};
+    var a = {
+        visible:v,
+        id: 'average_' + s_id,
+        name: 'Average:' + s['name'],
+        showInLegend:false,
+        type:'line',
+        lineWidth:1,
+        color:'#ff0000',
+        data: ave_data,
+    };
+    series_data.push(a);
     //Range
     var v = false
     if ($('#show_range').is(':checked')){v = true;}

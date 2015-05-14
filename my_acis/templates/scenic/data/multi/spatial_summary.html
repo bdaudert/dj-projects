@@ -198,12 +198,16 @@
         {% include 'includes/no_results.html'%}
     {%endif%}
 
+    <!--Buttons: print, download, show/hide data-->
     {%if not results.errors and results.smry%}
         <table>
         <td valign="top">
         <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
         </td><td valign="top">
         <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
+        </td>
+        <td>
+        <p class="pop_link" onClick="ShowHide('DataList')"><img alt="ShowHide" src ="{{MEDIA_URL}}img/show_hide_button.png"></p>
         </td>
         </table>
     {%endif%}
@@ -217,31 +221,29 @@
     <table id="printable_table">
     <td>
 
-    <!--Paramaters and Show/Hide Data button-->
-    <table>
-    <td>
-    <p class="message" style="max-width:80%;">YOUR PARAMETERS:<br />
-    {%for key_val in params_display_list%}
-        <b>{{key_val.0}}</b> {{key_val.1}}<br />
-    {%endfor%}
-    </p>
-    </td><td valign="top">
-    {%if results.smry%}
-    <p class="pop_link" onClick="ShowHide('DataList')"><img alt="ShowHide" src ="{{MEDIA_URL}}img/show_hide_button.png"></p>
-    {%endif%}
+    <!--Paramaters and Datalist-->
+    <table cellpadding="5px">
+    <td valign="top" width="25%" style="max-width:270px">
+        <p class="message" style="word-wrap: break-word;">
+        YOUR PARAMETERS:<br />
+        {%for key_val in params_display_list%}
+        <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+        {%endfor%}
+        </p>
+    </td>
+    <td valign="top" width="75%" align="left">
+        <!--Data List-->
+        <table id="DataList" border=1 style="display:none;border-collapse:collapse">
+        {%for data in results.smry%}
+        <tr>
+        {%for d in data%}
+        <td>{{d}}</td>
+        {%endfor%}
+        </tr>                               
+        {%endfor%}                                  
+        </table> 
     </td>
     </table>
-
-    <!--Data List-->
-    <table id="DataList" style="display:none;border-collapse:collapse">
-    {%for data in results.smry%}
-    <tr>
-    {%for d in data%}
-    <td>{{d}}</td>
-    {%endfor%}
-    </tr>                               
-    {%endfor%}                                  
-    </table> 
 
     {%if results.graph_data%}
     <table>

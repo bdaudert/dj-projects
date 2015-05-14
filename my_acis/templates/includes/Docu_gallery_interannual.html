@@ -1,33 +1,30 @@
-<div id="gallery_station_finder">
+<div id="gallery_spatial_summary">
 <p class="error">What is the application?</p>
 <p>
-<a href="{{app_urls.station_finder}}" target="_blank">
-<font color="blue">{{app_names.station_finder}}</font></a><br />
-You can use this tool to find a particual weather station lying in a<br />
-US state, County, County Warning Area, Climate Division or Drainage Basin.<br />
-Or you can draw your own custom polygon to find stations or grid points within.<br />
-You can find weather stations in an area that satisfy specific conditions<br />
-about avalable elements and record dates.<br />
-You can also use this tool to find names and ids of<br />
-US Counties, County Warning Areas, Climate Divisions or Drainage Basins<br />
-in a US state.<br />
+<a href="{{app_urls.spatial_summary}}" target="_blank">
+<font color="blue">{{app_names.spatial_summary}}</font></a><br />
+You can use this tool to generate time series of climate variables<br />
+averaged over an area of interest.
 </p>
 <p class="error">What types of questions can be ansered?</p>
 <ul>
-<li>How many County Warning Areas have area in a particular US state, what are their names?</li>
-<li>Which weather stations in a particular area record precip and temperature data.</li>
-<li>Which weather stations in a particular area have data records spannning a certain date range.</li>
+<li>What was the average, median, min, max or sum of<br />
+temperature, precipitation, snow, degree day ... in a <br />
+state, county, climate division, county warning area or custo shape<br/>
+over a custom date range.</li>
+<li>Is there a relation between observed increase in  mortality rate of species x<br />
+and min, max temperature, precipitation amounts, ....</li>
 </ul>
 <p class="error">Example 1</p>
-<p class="message">Find a station in the Tahoe region that has precipation and minimum temperature records<br />
-from at least 1930 up to 2015.
+<p class="message">
+    
 </p>
-<a href="{{param_urls.station_finder}}" target="_blank"><font color="blue">TRY IT!</font></a><br />
+<a href="{{param_urls.spatial_summary}}" target="_blank"><font color="blue">TRY IT!</font></a><br />
 <p class="error">Step by Step instuctions</p>
 <p>
 <ol>
-<li>Go to <a href="{{app_urls.station_finder}}" target="_blank">
-<font color="blue">{{app_names.station_finder}}</font></a><br /></li>
+<li>Go to <a href="{{app_urls.spatial_summary}}" target="_blank">
+<font color="blue">{{app_names.spatial_summary}}</font></a><br /></li>
 <li>Set the form parameters:<br />
 We have several options for the area of interest:<br />
 <img src='/csc/media/img/Gallery_Area_Of_Interest.png' align="center"><br />
