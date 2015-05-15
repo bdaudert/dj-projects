@@ -2777,11 +2777,11 @@ def set_initial(request,req_type):
     elif initial['area_type'] in ['basin','county_warning_area','county','climate_division','state','shape']:
         initial['autofill_list'] = 'US_' + initial['area_type']
         initial['data_type'] = Get('data_type','station')
-        #Set up map parameters
-        initial['host'] = settings.HOST
-        initial['overlay_state'] = Get('overlay_state','NV')
-        initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
-        #initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
+    #Set up map parameters
+    initial['host'] = settings.HOST
+    initial['overlay_state'] = Get('overlay_state','NV')
+    initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
+    #initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
 
     #Set element(s)--> always as list if multiple
     if req_type == 'map_overlay':
