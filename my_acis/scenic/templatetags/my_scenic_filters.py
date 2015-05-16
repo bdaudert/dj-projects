@@ -8,6 +8,37 @@ import json
 
 register = template.Library()
 
+@register.filter(name='make_range')
+def make_range(start, end):
+    return range(int(start),int(end))
+
+@register.filter(name='make_range_reversed')
+def make_range_reversed(start, end):
+    try:
+        l = list(reversed(range(int(start), int(end))))
+    except:
+        l = []
+    return l
+
+@register.filter(name='to_int')
+def to_int(string):
+    try:
+        integer = int(string)
+    except:
+        integer = None
+    return integer
+
+@register.filter(name='is_in')
+def is_in(var, args):
+    if args is None:
+        return False
+    arg_list = [arg.strip() for arg in args.split(',')]
+    return var in arg_list
+
+@register.filter(name='to_string')
+def to_string(number):
+    return str(number)
+
 @register.filter(name='lookup')
 def lookup(list_or_dict, index):
     try:

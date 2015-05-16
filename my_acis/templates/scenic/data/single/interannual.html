@@ -1,0 +1,204 @@
+{% extends "csc_base.html" %}
+<META name="keywords" content="interanual, time series">
+<meta name="description" content="SCENIC Single point interannual time series">
+
+{%load my_scenic_filters%}
+{% block content %} 
+
+<!--Documentation-->
+<div class="docu" id="tool_info" style="display:none;">
+    {% include 'includes/Docu_app_interannual.html'%}
+</div>
+<div id="how_to" style="display:none;">
+    <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
+    <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
+    <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
+    <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
+    <div id="Docu_start_end_date">{% include 'includes/Docu_start_end_date.html'%}</div>
+    <div id="Docu_temporal_summary">{% include 'includes/Docu_temporal_summary.html'%}</div>
+</div><!--End how_to-->
+
+<!---Hidded variables-->
+<input type="hidden" id="app_name" name="app_name" value="single_interannual">
+
+<!--Set up autofill-->
+{%if initial.autofill_list %}
+    <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
+{%endif%}
+
+<!--Toolinfo/Howto-->
+<table>
+<td valign="bottom" width="45%">
+    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/interannual/'">
+    {%if results.data or results.smry%}
+    <input type="submit" value="Show/Hide Form" onclick="ShowHideTopOfPage()">
+    {%endif%}
+</td>
+<td valign="top" width="55%" align="left">
+    <table>
+    <tr>
+    <td><div id=tool_info_head>{% include 'includes/Button_tool_info.html'%}</div></td>
+    <td><div id="how_to_head">{% include 'includes/Button_how_to.html'%}</div></td>
+    </tr>
+    </table>
+</td>
+</table>
+
+<!--Form-->
+{% if not results.data and not results.smry%}
+    <table id="top_of_page">
+{%else%}
+    <table id="top_of_page" style="display:none">
+{%endif%}
+<td valign="top" width="40%">
+    <div id='formData'>
+        <form method="post" id="tableDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
+        <input type="hidden" name="data_type" id="data_type" class="data_type" value="{{initial.data_type}}">
+        <table class="form" id="tableData" >
+        <tr style="display:table-row" valign="bottom">{% include 'includes/single_select_area.html'%}</tr>
+        <tr style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
+        <tr id="stn_finder" style="display:table-row">{% include 'includes/station_finder.html'%}</tr>
+        {%if initial.data_type == "grid"%}        
+        <tr id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr>
+        {%endif%}
+        <tr style="display:table-row">{% include 'includes/element.html'%}</tr>
+        <tr style="display:table-row;">{% include 'includes/units.html'%}</tr>
+        <tr style="display:table-row;">{% include 'includes/start_month_day.html'%}</tr>
+        <tr style="display:table-row;">{% include 'includes/end_month_day.html'%}</tr>
+        <tr id="temp_summary" style="display:table-row;">{% include 'includes/temporal_summary.html'%}</tr>
+        <tr style="display:table-row;">{% include 'includes/start_end_year.html'%}</tr>
+        </table>
+        <input type="hidden" id="data_type" name="data_type" value="{{initial.data_type}}">
+        <input style="margin:5px" type="submit" value="Generate time series" name="formData"/>
+        </form>
+    </div>
+</td>
+<!--Errors/dowm arrow/maps-->
+<td valign="top" width="60%" align="center">
+   <!--Form errors and search parameter section-->
+    <div class="results">
+    {%if form_error%}
+        {% include 'includes/form_error.html'%}
+    {%endif%}
+    {%if results.errors%}
+        <p class="error">ERROR: {{results.errors}}</p>
+    {%endif%}
+
+    {%if  run_done and  not results.data and not results.smry %}
+        {% include 'includes/no_results.html'%}
+    {%endif%}
+    <!--Request errors or results arrow-->
+    {%if results.data or results.smry %}
+        {%if not initial.location%}
+            {% include 'includes/arrow.html'%}
+        {%endif%}
+    {%endif%}
+    </div>
+    <!--Maps-->
+    {%if need_gridpoint_map%}
+        <div id="GridpointMap" style="display:block">
+            <div id="map-gridpoint"></div>
+        </div>
+        {%if initial.location %}
+            <script type="text/javascript">initialize_grid_point_map("{{initial.location}}");</script>
+        {% else %}
+            <script type="text/javascript">initialize_grid_point_map();</script>
+        {% endif %}
+    {%else%}
+        <div id="GridpointMap" style="display:none">
+            <div id="map-gridpoint"></div>
+        </div>
+    {%endif%}
+</td></table>
+
+<!--Results-->
+<table cellpadding="10" align="center">
+<td valign="top" width="97%" align="center">
+    <div class="results">
+    {%if  run_done and not results.data and not results.smry %}
+        {% include 'includes/no_results.html'%}
+    {%endif%}
+    
+    {%if not results.errors and results.data%}
+        <table>
+        <td valign="top">
+        <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
+        </td><td valign="top">
+        <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
+        </td>
+        <td>
+        <p onClick="ShowHide('metadata')" align="center"><img alt="Metadata" title="Metadata" src="{{MEDIA_URL}}img/metadata_button.png"></p>
+        </td>
+        </table>
+    {%endif%}    
+
+    <!--Download form-->
+    <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
+    <!--Data-->
+    <table id="printable_table">
+    <td>
+    <!--
+    {% if results.data or results.smry%}
+    <p class="message" style="max-width:400px;word-wrap:break-word;"> YOUR PARAMETERS:<br />
+    {%for key_val in params_display_list%}
+        <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+    {%endfor%}
+    </p>
+    {%endif%} -->
+
+    {%if not results.errors %}
+        {% if results.smry or results.data %}
+        <div id="metadata" align="left" style="max-width:60%;display:none;">
+        {%for key_val in meta_display_list%}
+            <b>{{key_val.0}}</b>:
+            {%if key_val.0 == "Station ID/Network List" or key_val.0 == "Valid Date Range (by Element)"%}
+                <br />
+            {%endif%}
+            {%for item in key_val.1%}
+                {{item}}<br />
+            {%endfor%}
+        {%endfor%}
+        </div>
+        {% endif %}
+    {%endif%}
+
+    {%if not results.errors and results.smry %}
+        <p align="left"><b>DATA SUMMARY</b>:<br />
+            {% for key_val in params_display_list %}
+                <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+            {% endfor %}
+        </p>
+        <table border="1">
+        {%for s_data in results.smry%}
+            <tr>
+            {%for s in s_data%}
+                <td>{{s}}</td>
+            {%endfor%}
+            </tr>
+        {%endfor%}
+        </table><br />
+    {%endif%} 
+
+    {% if not results.errors and not results.smry and results.data %}
+        <p>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
+        <p align="left"><b>DATA</b>:<br />
+            {% for key_val in params_display_list %}
+                <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+            {% endfor %}
+        </p>
+ 
+        <table border="1">
+        {%for date_data in results.data.0%}
+            <tr>
+            {%for data in date_data%}
+                <td>{{data}}</td>
+            {%endfor%}
+            </tr>
+        {%endfor%}
+        </table>
+    {%endif%}<!--end if not results.errors-->
+    <div><!--end results-->
+    </td></table><!--End printable table-->
+    </div><!--end div class=results-->
+</td></table>
+{%endblock%}

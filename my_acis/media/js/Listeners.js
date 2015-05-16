@@ -37,6 +37,76 @@ $(function(){
     });
 
     /*
+    DATES
+    */
+    $('.year').on('change', function(){
+        var which = $(this).attr('id');
+        var s_yr_int, e_yr_int;
+        s_yr_int = parseInt($('#start_year').val());
+        e_yr_int = parseInt($('#end_year').val());
+        if (s_yr_int - e_yr_int < 0){
+            if (which == 'start_year'){
+                try{
+                    $('#end_year').val(String(s_yr_int + 10));
+                }
+                catch(e){
+                    $('#end_year').val(String(s_yr_int));
+                }
+            }
+            if (which == 'end_year'){
+                try{
+                    $('#start_year').val(String(e_yr_int - 10));
+                }
+                catch(e){
+                    $('#start_year').val(String(e_yr_int));
+                }
+            } 
+        }
+    });
+    $('.month').on('change', function(){
+        mon_lens = [31,28,31,30,31,30,31,31,30,31,30,31]
+        var which = $(this).attr('id');
+        var s_month_int = parseInt($('#start_month').val());
+        var e_month_int = parseInt($('#end_month').val());
+        var s_day_int = parseInt($('#start_day').val());
+        var e_day_int = parseInt($('#end_day').val());
+        if ( which == 'start_month' && s_month_int - e_month_int < 0){
+            $('#end_month').val(String(s_month_int));
+        }
+        if (which == 'end_month' && s_month_int - e_month_int < 0){
+            $('#start_month').val(String(s_month_int));
+        } 
+        //Chech the days
+        if ( which == 'start_month'){
+            mon_len = mon_lens[s_month_int -1];
+            if (s_day_int > mon_len){
+                $('#start_day').val(String(mon_len));
+            }
+        }
+        if ( which == 'end_month'){
+            mon_len = mon_lens[s_month_int -1];
+            if (s_day_int > mon_len){
+                $('#end_day').val(String(mon_len));
+            }
+        }
+
+    });
+
+    $('.day').on('change', function(){
+        var which = $(this).attr('id');
+        var s_day_int = parseInt($('#start_day').val());
+        var e_day_int = parseInt($('#end_day').val());
+        if (s_day_int - e_day_int < 0){
+            try{
+                $('#end_day').val(String(s_day_int + 1))
+            }
+            catch(e){
+                $('#start_day').val(String(e_day_int - 1))
+            }
+        }
+
+    });
+    /*
     FORMS
     Hide results and errors on form change
     Also hide plot options if they exits

@@ -25,6 +25,9 @@ import scenic.forms as forms
 
 #Set dates
 today = WRCCUtils.set_back_date(0)
+today_year = today[0:4]
+today_month = today[5:7]
+today_day = today[8:10]
 begin_10yr = WRCCUtils.set_back_date(3660)
 yesterday = WRCCUtils.set_back_date(1)
 fourtnight = WRCCUtils.set_back_date(14)
@@ -396,6 +399,43 @@ def single_lister(request):
             return response
     return render_to_response(url, context, context_instance=RequestContext(request))
 
+
+def single_interannual(request):
+    context = {
+        'title': settings.APPLICATIONS['single_interannual'][0]
+    }
+    url = settings.APPLICATIONS['single_interannual'][2]
+    initial, checkbox_vals = set_initial(request,'interannual')
+    context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
+    if 'formData' in request.POST:
+        form = set_form(request,clean=False)
+   #Download button pressed
+    if 'formDownload' in request.POST:
+        form = set_form(request,clean=False)
+        json_file = request.POST.get('json_file', None)
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        file_name = form['output_file_name'] + '_' + time_stamp
+        with open(settings.TEMP_DIR + json_file, 'r') as f:
+            data =  json.load(f)
+
+        if form['data_format'] in ['clm','dlm']:
+            if form['data_format'] == 'clm':
+                file_extension = '.txt'
+            else:
+                file_extension = '.dat'
+            response = HttpResponse(mimetype='text/csv')
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
+            CsvWriter = WRCCClasses.CsvWriter(data, f=None, response=response)
+            CsvWriter.write_to_file()
+            return response
+        if form['data_format'] in ['xl']:
+            file_extension = '.xls'
+            response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
+            ExcelWriter = WRCCClasses.ExcelWriter(data,response=response)
+            ExcelWriter.write_to_file()
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
+            return response
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 def multi_lister(request):
     context = {
@@ -2731,13 +2771,16 @@ def set_initial(request,req_type):
     Getlist = set_GET_list(request)
     #Set area type: station_id(s), location, basin,...
     area_type = None
-    if req_type in ['single_lister','climatology','monann']:
+    if req_type in ['single_lister','climatology','monann', 'interannual']:
         initial['area_type'] = Get('area_type','station_id')
     elif req_type in ['data_comparison']:
         initial['area_type'] = 'location'
     else:
         initial['area_type'] = Get('area_type','state')
-
+    #Set todays date parameters
+    initial['today_year'] = today_year
+    initial['today_month'] = today_month
+    initial['today_day'] = today_day
     #Set area depending on area_type
     if req_type == 'data_comparison':
         location = Get('location',None)
@@ -2786,7 +2829,7 @@ def set_initial(request,req_type):
     #Set element(s)--> always as list if multiple
     if req_type == 'map_overlay':
         initial['elements'] = Get('elements','maxt,mint,pcpn').split(',')
-    elif req_type in ['monann','data_comparison']:
+    elif req_type in ['monann','data_comparison', 'interannual']:
         initial['element'] = Get('element','pcpn')
     else:
         els = Getlist('elements',None)
@@ -2806,7 +2849,7 @@ def set_initial(request,req_type):
     initial['units'] = Get('units','english')
 
     #Set degree days
-    if req_type not in ['station_finder', 'monann', 'climatology', 'data_comparison']:
+    if req_type not in ['station_finder', 'monann', 'climatology', 'data_comparison', 'interannual']:
         initial['add_degree_days'] = Get('add_degree_days', 'F')
         if initial['units'] == 'metric':
             initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
@@ -2817,10 +2860,16 @@ def set_initial(request,req_type):
     if req_type in ['monann','climatology']:
         initial['start_year']  = Get('start_year', 'POR')
         initial['end_year']  = Get('end_year', 'POR')
+    elif req_type in ['interannual']:
+        initial['start_year']  = Get('start_year', '1970')
+        initial['end_year']  = Get('end_year', '2000')
+        initial['start_month']  = Get('start_month', '1')
+        initial['end_month']  = Get('end_month', '1')
+        initial['start_day']  = Get('start_day', '1')
+        initial['end_day']  = Get('end_day', '31')
     else:
         initial['start_date']  = Get('start_date', WRCCUtils.format_date_string(fourtnight,'-'))
         initial['end_date']  = Get('end_date', WRCCUtils.format_date_string(yesterday,'-'))
-
     #data windows and flags
     if req_type in ['single_lister', 'multi_lister']:
         initial['start_window'] = Get('start_window', '01-01')
@@ -2829,13 +2878,13 @@ def set_initial(request,req_type):
         initial['show_flags'] = Get('show_flags', 'F')
         initial['show_observation_time'] = Get('show_observation_time', 'F')
     #data summaries
-    if req_type in  ['temporal_summary']:
+    if req_type in  ['temporal_summary', 'interannual']:
         initial['data_summary'] = Get('data_summary', 'temporal')
     elif req_type in ['spatial_summary','multi_lister']:
         initial['data_summary'] = Get('data_summary', 'spatial')
     else:
         initial['data_summary'] = Get('data_summary', 'none')
-    if req_type in ['single_lister', 'multi_lister','temporal_summary']:
+    if req_type in ['single_lister', 'multi_lister','temporal_summary', 'interannual']:
         initial['temporal_summary'] = Get('temporal_summary', 'mean')
     if req_type in ['single_lister', 'multi_lister','spatial_summary']:
         initial['spatial_summary'] = Get('spatial_summary', 'mean')
