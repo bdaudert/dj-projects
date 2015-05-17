@@ -408,8 +408,26 @@ def single_interannual(request):
     initial, checkbox_vals = set_initial(request,'interannual')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     if 'formData' in request.POST:
-        form = set_form(request,clean=False)
-   #Download button pressed
+        form = set_form(request,clean = False)
+        form_cleaned = set_form(request,clean = True)
+        results = {
+            'data_indices':[0],
+            'data':[],
+            'errors':''
+        }
+        #Data request
+        year_data, hc_data = WRCCUtils.get_single_interannaul_data(form_cleaned)
+        context['run_done'] = True
+        if not year_data:
+            context['results'] = results
+            return render_to_response(url, context, context_instance=RequestContext(request))
+        results['data'] = year_data
+        #Set up graph data
+        GDWriter = WRCCClasses.GraphDictWriter(form_cleaned, hc_data)
+        graph_dict = GDWriter.write_dict()
+        results['graph_data'] = [graph_dict]
+        context['results'] = results
+    #Download button pressed
     if 'formDownload' in request.POST:
         form = set_form(request,clean=False)
         json_file = request.POST.get('json_file', None)
@@ -2885,7 +2903,10 @@ def set_initial(request,req_type):
     else:
         initial['data_summary'] = Get('data_summary', 'none')
     if req_type in ['single_lister', 'multi_lister','temporal_summary', 'interannual']:
-        initial['temporal_summary'] = Get('temporal_summary', 'mean')
+        if req_type == 'interannual':
+            initial['temporal_summary'] = Get('temporal_summary', 'sum')
+        else:
+            initial['temporal_summary'] = Get('temporal_summary', 'mean')
     if req_type in ['single_lister', 'multi_lister','spatial_summary']:
         initial['spatial_summary'] = Get('spatial_summary', 'mean')
     if req_type not in ['station_finder', 'sf_download']:
@@ -2900,11 +2921,11 @@ def set_initial(request,req_type):
     initial['user_email'] = Get('user_email', 'Your Email')
 
     #Set app specific params
-    if req_type in ['spatial_summary', 'monann']:
+    if req_type in ['spatial_summary', 'monann','interannual']:
         initial['show_running_mean'] = Get('show_running_mean','T')
         if req_type in ['spatial_summary']:
             initial['running_mean_days'] = Get('running_mean_days', '9')
-        if req_type in ['monann']:
+        if req_type in ['monann','interannual']:
             initial['running_mean_years'] = Get('running_mean_years', '5')
     if req_type in ['monann','climatology','sf_link']:
         initial['max_missing_days']  = Get('max_missing_days', '5')

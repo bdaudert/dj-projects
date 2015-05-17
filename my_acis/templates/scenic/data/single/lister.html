@@ -175,9 +175,6 @@
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
     <div class="results">
-    {%if  run_done and not results.data and not results.smry %}
-        {% include 'includes/no_results.html'%}
-    {%endif%}
     
     {%if not results.errors and results.data%}
         <table>
@@ -208,7 +205,7 @@
 
     {%if not results.errors %}
         {% if results.smry or results.data %}
-        <div id="metadata" align="left" style="max-width:60%;display:none;">
+        <div id="metadata" align="left" style="display:none;">
         {%for key_val in meta_display_list%}
             <b>{{key_val.0}}</b>:
             {%if key_val.0 == "Station ID/Network List" or key_val.0 == "Valid Date Range (by Element)"%}

@@ -21,6 +21,12 @@
 <!---Hidded variables-->
 <input type="hidden" id="app_name" name="app_name" value="single_interannual">
 
+<p align="center" class="error">
+    <b>*(BETA) THIS PAGE IS UNDER DEVLOPMENT!</b><br /><br />
+    <b>CLICK THE QUESTION MARK FOR INFORMATION AND STEP BY STEP INSTRUCTIONS!</b>
+</p>
+
+
 <!--Set up autofill-->
 {%if initial.autofill_list %}
     <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
@@ -30,7 +36,7 @@
 <table>
 <td valign="bottom" width="45%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/interannual/'">
-    {%if results.data or results.smry%}
+    {%if results.data %}
     <input type="submit" value="Show/Hide Form" onclick="ShowHideTopOfPage()">
     {%endif%}
 </td>
@@ -45,7 +51,7 @@
 </table>
 
 <!--Form-->
-{% if not results.data and not results.smry%}
+{% if not results.data %}
     <table id="top_of_page">
 {%else%}
     <table id="top_of_page" style="display:none">
@@ -75,6 +81,8 @@
 </td>
 <!--Errors/dowm arrow/maps-->
 <td valign="top" width="60%" align="center">
+   {{x}}<br />
+   {{xx}}
    <!--Form errors and search parameter section-->
     <div class="results">
     {%if form_error%}
@@ -84,11 +92,11 @@
         <p class="error">ERROR: {{results.errors}}</p>
     {%endif%}
 
-    {%if  run_done and  not results.data and not results.smry %}
+    {%if  run_done and  not results.data %}
         {% include 'includes/no_results.html'%}
     {%endif%}
     <!--Request errors or results arrow-->
-    {%if results.data or results.smry %}
+    {%if results.data %}
         {%if not initial.location%}
             {% include 'includes/arrow.html'%}
         {%endif%}
@@ -115,10 +123,6 @@
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
     <div class="results">
-    {%if  run_done and not results.data and not results.smry %}
-        {% include 'includes/no_results.html'%}
-    {%endif%}
-    
     {%if not results.errors and results.data%}
         <table>
         <td valign="top">
@@ -127,77 +131,71 @@
         <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
         </td>
         <td>
-        <p onClick="ShowHide('metadata')" align="center"><img alt="Metadata" title="Metadata" src="{{MEDIA_URL}}img/metadata_button.png"></p>
+        <p class="pop_link" onClick="ShowHide('DataList')"><img alt="ShowHide" src ="{{MEDIA_URL}}img/show_hide_button.png"></p>
         </td>
         </table>
     {%endif%}    
 
     <!--Download form-->
     <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
-    <!--Data-->
+    
+<!--RESULTS-->
     <table id="printable_table">
     <td>
-    <!--
-    {% if results.data or results.smry%}
+    {% if results.data %}
     <p class="message" style="max-width:400px;word-wrap:break-word;"> YOUR PARAMETERS:<br />
     {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>: {{key_val.1}}<br />
     {%endfor%}
     </p>
-    {%endif%} -->
-
-    {%if not results.errors %}
-        {% if results.smry or results.data %}
-        <div id="metadata" align="left" style="max-width:60%;display:none;">
-        {%for key_val in meta_display_list%}
-            <b>{{key_val.0}}</b>:
-            {%if key_val.0 == "Station ID/Network List" or key_val.0 == "Valid Date Range (by Element)"%}
-                <br />
-            {%endif%}
-            {%for item in key_val.1%}
-                {{item}}<br />
-            {%endfor%}
-        {%endfor%}
-        </div>
-        {% endif %}
     {%endif%}
 
-    {%if not results.errors and results.smry %}
-        <p align="left"><b>DATA SUMMARY</b>:<br />
-            {% for key_val in params_display_list %}
-                <b>{{key_val.0}}</b>: {{key_val.1}}<br />
-            {% endfor %}
-        </p>
+    <!--DATA-->
+    {{initial}}
+    {% if not results.errors and results.data %}
+        <div id="DataList" style="display:none;">
         <table border="1">
-        {%for s_data in results.smry%}
+        {%for date_data in results.data%}
             <tr>
-            {%for s in s_data%}
-                <td>{{s}}</td>
-            {%endfor%}
-            </tr>
-        {%endfor%}
-        </table><br />
-    {%endif%} 
-
-    {% if not results.errors and not results.smry and results.data %}
-        <p>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
-        <p align="left"><b>DATA</b>:<br />
-            {% for key_val in params_display_list %}
-                <b>{{key_val.0}}</b>: {{key_val.1}}<br />
-            {% endfor %}
-        </p>
- 
-        <table border="1">
-        {%for date_data in results.data.0%}
-            <tr>
-            {%for data in date_data%}
-                <td>{{data}}</td>
-            {%endfor%}
+            <td>{{data_data.0}}</td><td>{{date_data.1}}</td>
             </tr>
         {%endfor%}
         </table>
+        </div>
+
+    <!--GRAPH-->
+    <div id="user_graph" width="800px">
+        <!--Dynamic chart options-->
+        <table align="left" class='chart_options' border="1" width="800px">
+            <tr>
+            <td align="left" valign="top">
+                {% include 'includes/chart_type.html'%}
+            </td>
+             <td align="left" rowspan="2" valign="top">
+                {% include 'includes/chart_threshold.html'%}
+            </td>
+            </tr>
+            <tr>
+            <td align="left" valign="top">
+                {% include 'includes/chart_layers_interannual.html'%}
+            </td>
+            </tr>
+            <tr>
+            <td colspan="2">
+        <div align="right" id="container" style="height:600px;width:800px;"></div>
+        <script type="text/javascript">
+            var graph_data = {{results.graph_data | safe_json}};
+            var data_indices = {{ results.data_indices |safe }}
+            generateTS_individual(data_indices);
+        </script>
+            </td></tr>
+        </table>
+    </div>
+
     {%endif%}<!--end if not results.errors-->
-    <div><!--end results-->
+
+
+    <div><!--end results-->    
     </td></table><!--End printable table-->
     </div><!--end div class=results-->
 </td></table>

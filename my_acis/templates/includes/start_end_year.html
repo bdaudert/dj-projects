@@ -3,14 +3,14 @@
         <td>
             <select class="year" id="start_year" name="start_year">
                 {%for yr in 1850|make_range_reversed:initial.today_year%} 
-                    <option value=year {% if initial.start_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
+                    <option value="{{yr}}" {% if initial.start_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
                 {%endfor%}
             </select>
             -- 
            <select class="year" id="end_year" name="end_year">
                 {%for yr in initial.start_year|make_range_reversed:initial.today_year%}  
                     
-                    <option value=year {% if initial.end_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
+                    <option value="{{yr}}" {% if initial.end_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
                 {%endfor%}
             </select> 
         </td>
