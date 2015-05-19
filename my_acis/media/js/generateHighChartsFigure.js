@@ -26,9 +26,9 @@ function generateTS_individual(data_indices) {
     var axisFontSize = '16px';
     var labelsFontSize = '16px';
     //Set params according to application 
-    if (app_name == 'monann'){
+    if (app_name == 'monann' || app_name =='single_interannual'){
         var date_format = '%Y';
-        if ($('#monthly_statistic').val() == 'ndays'){
+        if ( $('#monthly_statistic').length && $('#monthly_statistic').val() == 'ndays'){
             var yLabelmain = 'days';
         }
         else {
@@ -94,6 +94,8 @@ function generateTS_individual(data_indices) {
     var series_data = [],idx;
     for (var i=0;i < data_indices.length;i++){
         idx = data_indices[i];
+        //Compute average over series
+        var ave_data = compute_average(datadict[idx].data);
         var s_id = String(idx);
         var s = {
             type:datadict[idx].chartType,
@@ -108,12 +110,18 @@ function generateTS_individual(data_indices) {
         if (app_name == 'spatial_summary' && idx > 0) {
             s['yAxis'] = i;
         }
+        //Set threshold for interannual
+        if (app_name == 'single_interannual'){
+            s['threshold'] = ave_data[0][1].toFixed(2);
+            s['color'] = 'blue';
+            s['negativeColor'] = 'red';
+        }
         series_data.push(s);
         //Add running mean
         if (running_mean_period != '0'){
             var rm_data =compute_running_mean(datadict[idx].data, parseInt(running_mean_period));
             var r_name = running_mean_period + '-';
-            if (app_name == 'monann'){
+            if (app_name == 'monann' || app_name == 'single_interannual'){
                     r_name+='year Running Mean ';
             }
             else{
@@ -135,7 +143,6 @@ function generateTS_individual(data_indices) {
             series_data.push(rm);            
         }
         //Average over period
-        var ave_data = compute_average(datadict[idx].data);
         var v = false;
         if ($('#show_average').is(':checked')){v = true;};
         var a = {
@@ -150,6 +157,10 @@ function generateTS_individual(data_indices) {
             linkedTo: s_id,
         };
         series_data.push(a);
+        //Set average as initial threshold for interannual
+        if (app_name == 'single_interannual'){
+            $('#threshold').val(ave_data[0][1].toFixed(2));
+        }
         //Range
         var range_data = compute_range(datadict[idx].data);
         var v = false;

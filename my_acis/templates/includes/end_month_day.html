@@ -1,5 +1,5 @@
 {%load my_scenic_filters%}
-        <td id="EndMonthDay">End month/day: </td>
+        <td id="EndMonthDay">End Month/Day: </td>
         <td>
             <select id="end_month" name="end_month" class="month"> 
                 <option value="1"  {%if initial.end_month == "1"%}selected{%endif%}>January</option>
@@ -16,7 +16,7 @@
                 <option value="12" {%if initial.end_month == "12"%}selected{%endif%}>December</option>
             <select>
             <select id="end_day" name="end_day" class="day">
-                {% for i in 1|make_range:28%}
+                {% for i in 1|make_range:29%}
                     <option value="{{i}}" {%if initial.end_day == i|to_string%}selected{%endif%}>{{i}}</option>
                 {%endfor%}
                 {%if initial.end_month != "2"%}

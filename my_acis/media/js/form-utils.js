@@ -182,7 +182,85 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
     else {
         return new_dates;
     }
-}   
+}
+
+function set_year_range_for_interannual(){
+    if ($('#area_type').val() == 'location'){
+        var today = new Date();
+        today_yr = String(today.getFullYear());
+        today_mon = String(today.getMonth());
+        today_day = String(today.getDay());
+        if (String(today_mon).length == 1){
+            today_mon = '0' + today_mon;
+        }
+        if (String(today_day).length == 1){
+            today_day = '0' + today_day;
+        }
+        var start_date = $('#start_year').val() + '-01-01';
+        if ($('#end_year').val() == String(today_yr)){
+            var end_date = today_yr + '-' + today_mon + '-' + today_day;
+        }
+        else{
+            var end_date = $('#end_year').val() + '-12-31';
+        }
+        new_dates = set_dates_for_grid($('#grid').val(),start_date,end_date,'year');
+        $('#start_year').val(new_dates.start);
+        $('#end_year').val(new_dates.end);
+        //Disable all other options
+        $("#start_year option").each(function(){
+            if (parseInt($(this).val()) >= parseInt(new_dates.start) && parseInt($(this).val()) <= parseInt(new_dates.end) + 1){
+                $(this).show();
+            }
+            else if ($('#grid').val().inList(['5','6','8','10','12','13','15','16'])){
+                if (parseInt($(this).val()) >= 2040 && parseInt($(this).val()) <= 2069){
+                    $(this).show();
+                }
+                else{
+                     $(this).hide();
+                }
+            }
+            else {
+                $(this).hide();
+            }
+        });
+        $("#end_year option").each(function(){
+            if (parseInt($(this).val()) >= parseInt(new_dates.start) && parseInt($(this).val()) <= parseInt(new_dates.end) + 1){
+                $(this).show();
+            }
+            else if ($('#grid').val().inList(['5','6','8','10','12','13','15','16'])){
+                if (parseInt($(this).val()) >= 2040 && parseInt($(this).val()) <= 2069){
+                    $(this).show();
+                }
+                else{
+                     $(this).hide();
+                }
+            }
+            else {
+                $(this).hide();
+            }
+        });
+    }
+    if ($('#area_type').val() == 'station_id'){
+        //enable all date options
+        $("#start_year option").each(function(){
+            if (parseInt($(this).val()) >= 2040 && parseInt($(this).val()) <= 2069){
+                $(this).hide();
+            }
+            else{
+                $(this).show();
+            }
+        });
+         //enable all date options
+        $("#end_year option").each(function(){
+            if (parseInt($(this).val()) >= 2040 && parseInt($(this).val()) <= 2069){
+                $(this).hide();
+            }
+            else{
+                $(this).show();
+            }
+        });
+    }
+}
 
 function showHideTableRowClass(class_name, show_or_hide){
     $('.' + class_name).each(function(){

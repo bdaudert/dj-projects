@@ -23,7 +23,6 @@
 
 <p align="center" class="error">
     <b>*(BETA) THIS PAGE IS UNDER DEVLOPMENT!</b><br /><br />
-    <b>CLICK THE QUESTION MARK FOR INFORMATION AND STEP BY STEP INSTRUCTIONS!</b>
 </p>
 
 
@@ -64,8 +63,10 @@
         <tr style="display:table-row" valign="bottom">{% include 'includes/single_select_area.html'%}</tr>
         <tr style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
         <tr id="stn_finder" style="display:table-row">{% include 'includes/station_finder.html'%}</tr>
-        {%if initial.data_type == "grid"%}        
+        {%if initial.location%}        
         <tr id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr>
+        {%else%}
+        <tr id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
         {%endif%}
         <tr style="display:table-row">{% include 'includes/element.html'%}</tr>
         <tr style="display:table-row;">{% include 'includes/units.html'%}</tr>
@@ -81,8 +82,7 @@
 </td>
 <!--Errors/dowm arrow/maps-->
 <td valign="top" width="60%" align="center">
-   {{x}}<br />
-   {{xx}}
+   <br />
    <!--Form errors and search parameter section-->
     <div class="results">
     {%if form_error%}
@@ -151,13 +151,13 @@
     {%endif%}
 
     <!--DATA-->
-    {{initial}}
     {% if not results.errors and results.data %}
         <div id="DataList" style="display:none;">
         <table border="1">
+        <th>Year</th><th>{{results.element_short}}</th>
         {%for date_data in results.data%}
             <tr>
-            <td>{{data_data.0}}</td><td>{{date_data.1}}</td>
+            <td>{{date_data.0}}</td><td>{{date_data.1}}</td>
             </tr>
         {%endfor%}
         </table>

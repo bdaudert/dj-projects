@@ -231,6 +231,10 @@ $(function(){
             $('#start_date').val(new_dates.start);
             $('#end_date').val(new_dates.end); 
         }
+        //Change start/end years for interannual
+        if ($('#app_name').val() == 'single_interannual'){
+            set_year_range_for_interannual()
+        }
     });
     /*
     GRID 
@@ -343,8 +347,7 @@ $(function(){
                 $('#summary_type option[value="both"]').attr('disabled',false);
                 $('#summary_type option[value="all"]').attr('selected',true);
             }            
-        }
-        
+        } 
     });
 
     /*
@@ -408,18 +411,22 @@ $(function(){
     /* *******************
        MAPS
     ********************** */
-
     /*
     AREA TYPE 
     Sets maps and area form field
     depending on area type
     */
     $('.area_type').on('keydown change', function(){
-       //Set area form field
-      set_area('area',this); //form_utils function
-      //set map
-      set_map(this); //form_utils function
-      update_value($(this).val()); //form_utils function
+        //Set area form field
+        set_area('area',this); //form_utils function
+        //set map
+        set_map(this); //form_utils function
+        update_value($(this).val()); //form_utils function
+        //Change start/end years for interannual
+        if ($('#app_name').val() == 'single_interannual'){
+            set_year_range_for_interannual()
+        }
+     
     });
    
 
@@ -499,6 +506,23 @@ $(function(){
         else{
             generateTS_smry();
         }   
+    });
+
+    //Threshold for interannual
+    $('#threshold').on('change keyup', function(){
+    var thresh = $(this).val();
+    for (var i = 0; i < myChart.series.length; i++) {
+        //Only change main series, not aves and runmeans
+        var c_type = myChart.series[i].options.id.split('_')[0];
+        if(c_type == 'main'){
+            myChart.series[i].update({
+                threshold: thresh,
+                color:'blue',
+                negativeColor:'red',
+            });
+            myChart.redraw(true);
+        }
+    } 
     });
 
 });

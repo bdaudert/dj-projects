@@ -410,14 +410,19 @@ def single_interannual(request):
     if 'formData' in request.POST:
         form = set_form(request,clean = False)
         form_cleaned = set_form(request,clean = True)
+        element_short = WRCCUtils.elements_to_table_headers(form['element'],form['units'])[0]
         results = {
             'data_indices':[0],
+            'element_short':element_short,
             'data':[],
             'errors':''
         }
         #Data request
         year_data, hc_data = WRCCUtils.get_single_interannaul_data(form_cleaned)
         context['run_done'] = True
+        header_keys = ['user_area_id','temporal_summary', 'element',\
+        'start_year', 'end_year','window']
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
         if not year_data:
             context['results'] = results
             return render_to_response(url, context, context_instance=RequestContext(request))
@@ -426,6 +431,7 @@ def single_interannual(request):
         GDWriter = WRCCClasses.GraphDictWriter(form_cleaned, hc_data)
         graph_dict = GDWriter.write_dict()
         results['graph_data'] = [graph_dict]
+        results['chartType'] = graph_dict['chartType']
         context['results'] = results
     #Download button pressed
     if 'formDownload' in request.POST:
@@ -2880,7 +2886,13 @@ def set_initial(request,req_type):
         initial['end_year']  = Get('end_year', 'POR')
     elif req_type in ['interannual']:
         initial['start_year']  = Get('start_year', '1970')
-        initial['end_year']  = Get('end_year', '2000')
+        initial['end_year']  = Get('end_year', '1999')
+        if initial['area_type'] == 'station_id':
+            initial['min_year'] = Get('min_year','1850')
+            initial['max_year'] = Get('max_year', str(int(today_year) + 1))
+        if initial['area_type'] == 'location':
+            initial['min_year'] = Get('min_year','1970')
+            initial['max_year'] = Get('max_year', '2000')
         initial['start_month']  = Get('start_month', '1')
         initial['end_month']  = Get('end_month', '1')
         initial['start_day']  = Get('start_day', '1')
