@@ -34,7 +34,8 @@ body {
 
 .content {
     position:relative;
-    top:0px;
+    left:0;
+    clear:both;
 }
 
 select {
@@ -164,6 +165,13 @@ a:active { color:#FF0000;}
   height: 40px;
   clear: both;
 }
+#menu_new {
+  width: 960px;
+  height: 40px;
+  clear: both;
+  background:#006666;
+}
+
 
 #nav {
   float: left;
@@ -215,6 +223,7 @@ a:active { color:#FF0000;}
 #nav  ul {
   display: none;
 }
+
 /* WHEN THE FIRST LEVEL MENU ITEM IS HOVERED, THE CHILD MENU APPEARS */
 #nav li:hover > ul {
   position: absolute;

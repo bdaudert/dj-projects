@@ -23,7 +23,7 @@ function BarChart() {
                 labels: {
                     style: this.style_axes,
                     step:1,
-                    align:'left',
+                    align:'left'
                 },
                 categories:null,
                 minPadding: 0,
@@ -74,7 +74,7 @@ function BarChart() {
                     pointPadding: 0.2,
                     borderWidth: 0
                 }
-            },
+            }
         }, //end defaults
         //Functions
         set_yAxis_props: function(data_max,data_min, element) {
@@ -176,7 +176,7 @@ function TimeSeries(){
             },
             legend: {
                 enabled: true
-            },   
+            }  
         },//end defaults
         // here you'll merge the defauls with the object options
         init: function(options) {

@@ -103,7 +103,7 @@ def dashboard(request):
 
 def gallery(request):
     context = {
-        'title': 'Gallery'
+        'title': 'How To'
     }
     app_urls = {};app_names = {};param_urls = {}
 

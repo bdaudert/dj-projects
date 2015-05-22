@@ -72,7 +72,7 @@ function getRange(chart) {
         data: [[extx.min, exty.dataMin, exty.dataMax],[extx.max, exty.dataMin,exty.dataMax]],
     fillOpacity: 0.1,
     zIndex:0.1,
-    linkedTo: 'previous',
+    linkedTo: 'previous'
     });
 }
 

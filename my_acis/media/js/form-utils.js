@@ -1,5 +1,13 @@
 //Clean functions
 
+//Needed fo indexOf to work in IE
+Array.prototype.indexOf = function(obj, start) {
+     for (var i = (start || 0), j = this.length; i < j; i++) {
+         if (this[i] === obj) { return i; }
+     }
+     return -1;
+}
+
 //Function to determine if element is in list
 String.prototype.inList=function(list){
    return ( list.indexOf(this.toString()) != -1)
@@ -83,7 +91,7 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
         '13':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
         '14':[['1970-01-01','1999-12-31'],[]],
         '15':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
-        '16':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
+        '16':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']]
     }
     var ds = new Date(start_date), de = new Date(end_date);
     //Funkyness with js dats
@@ -392,36 +400,30 @@ function set_elements(data_type){
     }
 }
 
-function set_area(row_id,node){
-    /*
-    Function that updates area row id on user change of node
-    node is the area selector element, row_id is the
-    row that needs changing, 
-    */
-    var lv, tbl_row, cell0,cell1,div;
-    //Update area default
-    lv = set_area_defaults(node.value);
+function set_area(row_id, node){
+    var lv, html_text, cell0,cell1,div;
+    //Update area default 
+    lv = set_area_defaults(node.val());
+    console.log(node.val());
     //Update autofill list
     set_autofill(lv.autofill_list);
     //Update row_id
-    tbl_row = document.getElementById(row_id);
-    //Override table row
-    //cell1 = Label
-    cell0 = tbl_row.firstChild.nextSibling;
-    cell0.innerHTML= lv.label + ': ';
-    //cell2 input
-    cell1 = cell0.nextSibling.nextSibling;
-    cell1.innerHTML= '<input type="text" id="' + node.value + '" name="'+ 
-    node.value +'" value="' +  lv.value + '" list="' + lv.autofill_list + '"' +
+    cell0 = $('#' + row_id +  ' td:first-child');
+    html_text = lv.label + ': ';
+    cell0.html(html_text);
+    cell1 = cell0.next('td');
+    html_text = '<input type="text" id="' + node.val() + '" name="'+
+    node.val() +'" value="' +  lv.value + '" list="' + lv.autofill_list + '"' +
     ' onchange="update_value(this.value) & update_maps(this)" >';
-    //Cell3 help text
-    pop_id = document.getElementById('area-pop-up');
-    pop_id.innerHTML='';
-    div = document.createElement('div');
-    div.setAttribute('id', 'ht_' + node.value);
-    $(div).load('/csc/media/html/Docu_help_texts.html #ht_' + node.value);
-    pop_id.appendChild(div);
+    cell1.html(html_text)    
+    pop_id = $('#area-pop-up');
+    pop_id.html('');
+    div = $("<div>");
+    div.attr('id','ht_' + node.val());
+    $(div).load('/csc/media/html/Docu_help_texts.html #ht_' + node.val());
+    pop_id.append(div);
 }
+
 //Functions to hide and show maps
 //Used in set_map function
 function hide_grid_point_map(){
@@ -514,7 +516,7 @@ function set_map(node){
     */
     var area_type, TMP_URL,state,kml_file_path;
     //Get TMP env variable (defined in templates/csc_base.html)
-    area_type = node.value;
+    area_type = node.val();
     //Update hidden elements
     if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
         TMP_URL = $('#TMP_URL').val();

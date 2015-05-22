@@ -115,6 +115,7 @@ function ShowPopupDocu(DivId){
         resizable: true,
         modal: false,
         width:'auto',
+        maxWidth: 600,
         open: function () {
             $(this).scrollTop(0);
         }

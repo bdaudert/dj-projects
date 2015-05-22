@@ -154,7 +154,7 @@ function generateTS_individual(data_indices) {
             lineWidth:1,
             color:'#ff0000',
             data: ave_data,
-            linkedTo: s_id,
+            linkedTo: s_id
         };
         series_data.push(a);
         //Set average as initial threshold for interannual
@@ -176,7 +176,7 @@ function generateTS_individual(data_indices) {
             data: range_data,
             fillOpacity: 0.1,
             zIndex:0.1,
-            linkedTo: s_id,
+            linkedTo: s_id
         };
         series_data.push(r);
     }
@@ -237,7 +237,7 @@ function generateTS_individual(data_indices) {
             },
             buttons: {
                 contextButton: {
-                    enabled: false, 
+                    enabled: false 
                 },
                 exportButton: {
                     text: 'Download',
@@ -256,10 +256,10 @@ function generateTS_individual(data_indices) {
         //    TITLE/SUBTITLE
         //------------------------
         title: {
-            text: chartTitle,
+            text: chartTitle
         },
         subtitle: {
-            text: subTitle,
+            text: subTitle
         },
         //------------------------
         //XAXIS
@@ -272,8 +272,8 @@ function generateTS_individual(data_indices) {
             title: {
                 text: 'Period: ' + datadict[0].startDate + ' - ' + datadict[0].endDate,
                 style: {
-                    fontSize: labelsFontSize,
-                },
+                    fontSize: labelsFontSize
+                }
             },
             labels: {
                 format: '{value:' + date_format  + '}',
@@ -281,8 +281,8 @@ function generateTS_individual(data_indices) {
                 //align: 'left',
                 style: {
                     fontSize: axisFontSize,
-                    zIndex: 6,
-                },
+                    zIndex: 6
+                }
             }
         },
         //------------------------
@@ -349,7 +349,7 @@ function generateTS_individual(data_indices) {
                         lineWidth: 1,
                         lineColor: '#666666'
                     }
-                },
+                }
             },
             //------------------------
             //TOOLTIP -What happens when hover over the item
@@ -452,7 +452,7 @@ function generateTS_smry(data_indices) {
         type:'line',
         lineWidth:1,
         color:'#ff0000',
-        data: ave_data,
+        data: ave_data
     };
     series_data.push(a);
     //Range
@@ -470,7 +470,7 @@ function generateTS_smry(data_indices) {
         data: range_data,
         fillOpacity: 0.1,
         zIndex:0.1,
-        linkedTo: s_id,
+        linkedTo: s_id
     };
     series_data.push(r);
     
@@ -530,7 +530,7 @@ function generateTS_smry(data_indices) {
             },
             buttons: {
                 contextButton: {
-                    enabled: false,
+                    enabled: false
                 },
                 exportButton: {
                     text: 'Download',
@@ -549,10 +549,10 @@ function generateTS_smry(data_indices) {
         //    TITLE/SUBTITLE
         //------------------------
         title: {
-            text: chartTitle,
+            text: chartTitle
         },
         subtitle: {
-            text: subTitle,
+            text: subTitle
         },
         //------------------------
         //XAXIS
@@ -565,8 +565,8 @@ function generateTS_smry(data_indices) {
             title: {
                 text: 'Period: ' + datadict[0].startDate + ' - ' + datadict[0].endDate,
                 style: {
-                    fontSize: labelsFontSize,
-                },
+                    fontSize: labelsFontSize
+                }
             },
             labels: {
                 format: '{value:' + date_format  + '}',
@@ -574,8 +574,8 @@ function generateTS_smry(data_indices) {
                 //align: 'left',
                 style: {
                     fontSize: axisFontSize,
-                    zIndex: 6,
-                },
+                    zIndex: 6
+                }
             }
         },
         //------------------------
@@ -586,8 +586,8 @@ function generateTS_smry(data_indices) {
             title: {
                 text: elUnits,
                 style: {
-                    fontSize: labelsFontSize,
-                },
+                    fontSize: labelsFontSize
+                }
             },
             min: datadict[0].axisMin,
             tickLength: 5,
@@ -597,7 +597,7 @@ function generateTS_smry(data_indices) {
             labels: {
                 style: {
                     fontSize: axisFontSize,
-                    zIndex: 6,
+                    zIndex: 6
                 }
             }
         },
@@ -660,7 +660,7 @@ function generateTS_smry(data_indices) {
                         lineWidth: 1,
                         lineColor: '#666666'
                     }
-                },
+                }
             },
             //------------------------
             //TOOLTIP -What happens when hover over the item

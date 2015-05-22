@@ -494,7 +494,7 @@ function set_sodxtrmts_x_plotlines(data,major_grid, minor_grid){
         'plotLines':[],
         'tickPositions':[],
         'axisMin':null,
-        'axisMax':null,
+        'axisMax':null
     };
     if (!data.length){return results;}
     results.axisMin = parseInt(data[0][0]);

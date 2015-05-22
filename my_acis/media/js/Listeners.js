@@ -265,10 +265,12 @@ $(function(){
                 $('#stn_finder').css('display','table-row'); 
             }
         }
+        /*
         //Set area form field
         if ( $('#area_type').val() == 'location' ||  $('#area_type').val() == 'station_id'){
-            set_area('area',this); //form_utils function
+            set_area('area',$(this)); //form_utils function
         }
+        */
         update_value($(this).val()); //form_utils function
 
         var station_only_els = ['obst','snow','snwd','evap','wdmv'];
@@ -418,9 +420,9 @@ $(function(){
     */
     $('.area_type').on('keydown change', function(){
         //Set area form field
-        set_area('area',this); //form_utils function
+        set_area('area',$(this)); //form_utils function
         //set map
-        set_map(this); //form_utils function
+        set_map($(this)); //form_utils function
         update_value($(this).val()); //form_utils function
         //Change start/end years for interannual
         if ($('#app_name').val() == 'single_interannual'){
@@ -510,21 +512,35 @@ $(function(){
 
     //Threshold for interannual
     $('#threshold').on('change keyup', function(){
-    var thresh = $(this).val();
-    for (var i = 0; i < myChart.series.length; i++) {
-        //Only change main series, not aves and runmeans
-        var c_type = myChart.series[i].options.id.split('_')[0];
-        if(c_type == 'main'){
-            myChart.series[i].update({
-                threshold: thresh,
-                color:'blue',
-                negativeColor:'red',
-            });
-            myChart.redraw(true);
-        }
-    } 
+        var thresh = $(this).val();
+        for (var i = 0; i < myChart.series.length; i++) {
+            //Only change main series, not aves and runmeans
+            var c_type = myChart.series[i].options.id.split('_')[0];
+            if(c_type == 'main'){
+                myChart.series[i].update({
+                    threshold: thresh,
+                    color:'blue',
+                    negativeColor:'red'
+                });
+                myChart.redraw(true);
+            }
+        } 
+    });
+
+
+    //MAPS
+    $('#station_list').on('click', 'tr', function(){
+        infowindow.close();
+        infowindow.setContent($(this).attr('cString'));
+        infowindow.open(window.map, window.markers[$(this).attr('id')]);
+        var bounds = window.map.getBounds();
+        bounds.extend(new google.maps.LatLng($(this).attr('lat'), $(this).attr('lon')));
+    }); 
+    $('#station_list').on('mouseover', 'tr', function(){
+        $(this).css('backgroundColor', "#8FBC8F");
+    });
+    $('#station_list').on('mouseout', 'tr', function(){
+         $(this).css('backgroundColor',"#FFEFD5");
     });
 
 });
-
-
