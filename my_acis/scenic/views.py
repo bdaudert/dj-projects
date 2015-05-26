@@ -21,6 +21,7 @@ import sys, os, stat, re
 
 #My modules
 import WRCCUtils, AcisWS, WRCCDataApps, WRCCClasses, WRCCData, WRCCFormCheck
+import WRCCToReplace
 import scenic.forms as forms
 
 #Set dates
@@ -274,7 +275,7 @@ def download(request):
                         json_in_file_name = json_file_name + '_in'
                         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_in_file_name, data_dict)
                         break
-            DDJ = WRCCClasses.DownloadDataJob(app_name,data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_in_file_name)
+            DDJ = WRCCToReplace.DownloadDataJob(app_name,data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_in_file_name)
             if data_format in ['clm', 'dlm','xl']:
                 return DDJ.write_to_file()
             else:
@@ -878,7 +879,7 @@ def spatial_summary(request):
         json_file = request.POST.get('json_file', None)
         with open(settings.TEMP_DIR + json_file, 'r') as f:
             json_dict =  json.load(f)
-        DDJ = WRCCClasses.DownloadDataJob('spatial_summary',data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_file)
+        DDJ = WRCCToReplace.DownloadDataJob('spatial_summary',data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_file)
         return DDJ.write_to_file()
     '''
     return render_to_response(url, context, context_instance=RequestContext(request))
@@ -1161,7 +1162,7 @@ def monann(request):
         with open(settings.TEMP_DIR + json_file, 'r') as f:
             results =  json.load(f)
         context['results'] = results
-        DDJ = WRCCClasses.DownloadDataJob('Sodxtrmts',data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_file)
+        DDJ = WRCCToReplace.DownloadDataJob('Sodxtrmts',data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_file)
         return DDJ.write_to_file()
 
     return render_to_response(url, context, context_instance=RequestContext(request))
@@ -1295,7 +1296,7 @@ def climatology(request):
                     json_in_file_name = json_file + '_in'
                     WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_in_file_name, data_dict)
                     break
-            DDJ = WRCCClasses.DownloadDataJob('Sodsumm',data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_in_file_name)
+            DDJ = WRCCToReplace.DownloadDataJob('Sodsumm',data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_in_file_name)
             return DDJ.write_to_file()
 
     return render_to_response(url, context, context_instance=RequestContext(request))
