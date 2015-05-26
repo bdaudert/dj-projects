@@ -595,9 +595,12 @@ def temporal_summary(request):
         json_data = WRCCUtils.load_json_data_from_file(settings.TEMP_DIR + json_file)
         if not json_data or not 'search_params' in json_data.keys():
             initial,checkbox_vals = set_temporal_summary_initial(request)
+            #initial,checkbox_vals = set_initial(request,'temporal_summary')
         else:
+            #initial,checkbox_vals = set_initial(json_data['search_params'],'temporal_summary')
             initial,checkbox_vals = set_temporal_summary_initial(json_data['search_params'])
     else:
+        #initial,checkbox_vals = set_initial(request,'temporal_summary')
         initial,checkbox_vals = set_temporal_summary_initial(request)
     #Plot Options
     initial_plot, checkbox_vals_plot = set_map_plot_options(request)
@@ -623,6 +626,7 @@ def temporal_summary(request):
         form_cleaned = set_form(request)
         #Set initials
         initial,checkbox_vals = set_temporal_summary_initial(form)
+        #initial,checkbox_vals = set_initial(form,'temporal_summary')
         initial_plot, checkbox_vals_plot = set_map_plot_options(form)
         join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
@@ -639,6 +643,7 @@ def temporal_summary(request):
 
         #Form Check
         fields_to_check = ['start_date', 'end_date','degree_days','level_number', 'cmap', form['area_type'], 'elements']
+        #fields_to_check = ['start_date', 'end_date','degree_days',form['area_type'], 'elements']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -2413,7 +2418,7 @@ def set_data_station_initial(request):
     return initial, checkbox_vals
 
 def set_temporal_summary_initial(request):
-    initial = {}
+    initial = {'req_type':'temporal_summary'}
     checkbox_vals = {}
     Get = set_GET(request)
     Getlist = set_GET_list(request)
