@@ -1,4 +1,5 @@
-$(function(){
+$(document).ready(function ($) { 
+//$(function(){
     /*
     BACKBUTTON ISSUE
     ***** ADDRESSED IN templates/csc_base.html, 
@@ -352,6 +353,49 @@ $(function(){
         } 
     });
 
+    /*
+    MONANN LISTENERS
+    */
+    $('img#show_hide_graph, img#show_hide_summary, img#show_hide_data').on('click', function(){
+        var id = $(this).attr('id');
+        console.log(id);
+        if (id == 'show_hide_graph'){
+            if ($('#user_graph').css('display') == 'none'){
+                $('#user_graph').css('display', 'block');
+                $('#printable_table').css('display', 'none');
+                $('#data_summary').css('display', 'none');
+            }
+            else{
+                $('#user_graph').css('display', 'none');
+            }
+        }
+        if (id == 'show_hide_summary'){
+            if ($('#data_summary').css('display') == 'none'){
+                $('#user_graph').css('display', 'none');
+                $('#printable_table').css('display', 'none');
+                $('#data_summary').css('display', 'block');
+            }
+            else{
+                $('#data_summary').css('display', 'none');
+            }
+        }
+        if (id == 'show_hide_data'){
+            if ($('#printable_table').css('display') == 'none'){
+                $('#user_graph').css('display', 'none');
+                $('#printable_table').css('display', 'block');
+                $('#data_summary').css('display', 'none');
+            }
+            else{
+                if ($('#user_graph').css('display') == 'none') {
+                    $('#printable_table').css('display', 'none');
+                }
+                else {
+                    $('#printable_table').css('display', 'block');
+                    $('#user_graph').css('display', 'none');
+                }
+            }
+        }
+    });
     /*
     MONANN THRESHOLDS FOR NDAYS
     */

@@ -113,14 +113,50 @@
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
     <div class="results">
-
-    {%if run_done and not results.graph_data%}
-           {% include 'includes/no_results.html'%}
-    {%endif%}
-    
     {% if results.graph_data %}
-    <p class="message"><b>CLICK AND DRAG TO ZOOM IN!</b></p>
-    <div align="center" id="container" style="height:500px;width:700px;"></div>
+    <!--Stats table-->
+    <table align="center">
+    <td>
+        <img src="{{MEDIA_URL}}img/show_summ_table_button.png" alt="Show Summary Table" onclick="ShowHide('data_summary')">
+
+        <table id="data_summary" style="display:none;" align="center" border=1 class="results">
+            <th>Statistic</th><th>Station Data</th><th>Gridded Data</th>
+            <tr>
+                <td>Max</td><td>{{results.stats.max.0}}</td><td>{{results.stats.max.1}}</td>
+            </tr>
+            <tr>
+                <td>Min</td><td>{{results.stats.min.0}}</td><td>{{results.stats.min.1}}</td>
+            </tr>
+            <tr>
+                <td>Mean</td><td>{{results.stats.mean.0}}</td><td>{{results.stats.mean.1}}</td>
+            </tr>
+            <tr>
+                <td>Median</td><td>{{results.stats.median.0}}</td><td>{{results.stats.median.1}}</td>
+            </tr>
+            <tr>
+                <td>SD</td><td>{{results.stats.std.0}}</td><td>{{results.stats.std.1}}</td>
+            </tr>
+            <tr>
+                <td>Skew</td><td>{{results.stats.skew.0}}</td><td>{{results.stats.skew.1}}</td>
+            </tr>
+            <tr>
+                <td>Pearson correlation coeff</td><td colspan="2">{{results.stats.pearsonc}}</td>
+            </tr>
+            <tr>
+                <td>Pearson 2-tailed p-value</td><td colspan="2">{{results.stats.pearsonp}}</td>
+            </tr>
+            <tr>
+                <td>Kolmogorov-Smirnov</td><td colspan="2">{{results.stats.ksc}}</td>
+            </tr>
+            <tr>
+                <td>Kolmogorov-Smirnov p-value</td><td colspan="2">{{results.stats.ksp}}</td>
+            </tr>
+        </table>
+    </td>
+    </table>
+
+    <p class="message results"><b>CLICK AND DRAG TO ZOOM IN!</b></p>
+    <div align="center" id="container" class="results" style="height:500px;width:700px;"></div>
     <!--Declare global variable-->
      <script type="text/javascript">
         var graph_data = {{results.graph_data | safe_json}}

@@ -571,7 +571,7 @@ function set_sodxtrmts_series_data_summary(datadict,initial,initial_graph,series
         }
         var d = set_data_summary_series(date, vals,initial_graph.graph_summary,chart_type);
         var acis_d = set_data_summary_series(acis_date,vals,initial_graph.graph_summary,'line');
-        var val = compute_data_summary(vals,initial_graph.graph_summary);
+        var val = compute_statistic(vals,initial_graph.graph_summary);
         data.push(d); results.acis_data.push(acis_d);
         if (!!val){values.push(val);}
     } //End yr loop

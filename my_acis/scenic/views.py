@@ -1033,6 +1033,7 @@ def data_comparison(request):
             'station_data':sdata,
         }
         results['graph_data'] = DC.get_graph_data(gdata,sdata)
+        results['stats'] = DC.get_statistics(results['graph_data'][0],results['graph_data'][1])
         context['results'] = results
     return render_to_response(url, context, context_instance=RequestContext(request))
 

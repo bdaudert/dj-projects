@@ -167,10 +167,17 @@
         {%if results.graph_data%}
         <div align="center">
 
-        <p>
-            <img src="{{MEDIA_URL}}img/show_hide_button.png" alt="Show Summary Table" onclick="ShowHide('user_graph')">
-        </p>
-        <div id="user_graph">
+        <table>
+            <td><img src="{{MEDIA_URL}}img/show_hide_graph_button.png" alt="Show Graph" id="show_hide_graph">
+            </td>
+            <td>
+            <img src="{{MEDIA_URL}}img/show_summ_table_button.png" alt="Show Summary Table" id="show_hide_summary">
+            </td>
+            <td>
+            <img src="{{MEDIA_URL}}img/show_hide_button.png" alt="Show Data" id="show_hide_data">
+            </td>
+        </table>
+        <div id="user_graph" style="display:block;">
             <!--Dynamic chart options-->
             <table class='chart_options' border="1" width="700">
                 <tr>
@@ -201,10 +208,7 @@
         </div>
         {%endif%}
 
-        <p align="center">
-        <img src="{{MEDIA_URL}}img/show_summ_table_button.png" alt="Show Summary Table" onclick="ShowHide('Data_Summary')">
-        </p>
-        <div align="center" id="Data_Summary" style="display:none;">
+        <div align="center" id="data_summary" style="display:none;">
         <table class="right_aligned">
         {%for s_data in results.data_summary%}
             <tr>
@@ -232,7 +236,7 @@
         <!--Download form-->
         <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
 
-        <div id="printable_table" align="center">
+        <div id="printable_table" align="center" style="display:block;">
             <p class="black">
             {%for key_val in results.header%}
             {%if key_val%}

@@ -399,7 +399,7 @@ function find_closest_larger(num, divisor){
     return closest;
 }
 
-function compute_data_summary(vals, summary){
+function compute_statistic(vals, summary){
     /*
     Computes summary over vals
     vals must be non-empty array
@@ -430,7 +430,7 @@ function compute_data_summary(vals, summary){
 function set_data_summary_series(date, vals, summary, chart_type){
     results =[]; 
     if (vals.length > 0) {
-        var value = compute_data_summary(vals, summary);
+        var value = compute_statistic(vals, summary);
         if (chart_type == 'column'){
             results = value;
         }
