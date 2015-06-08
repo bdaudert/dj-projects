@@ -957,7 +957,8 @@ function initialize_polygon_map(poly) {
         var len=selectedShape.getPath().getLength();
         var htmlStr = '';
         for (var i=0; i<len; i++) {
-            htmlStr += shape_init.getPath().getAt(i).toUrlValue(4);
+            htmlStr+= precise_round(shape_init.getPath().getAt(i).lng(),4);
+            htmlStr+= ',' + precise_round(shape_init.getPath().getAt(i).lat(),4);
             if (i < len -1 ) {
                 htmlStr += ',';
             }

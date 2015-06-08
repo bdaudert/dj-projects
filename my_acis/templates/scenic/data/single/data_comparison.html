@@ -156,12 +156,28 @@
     </table>
 
     <p class="message results"><b>CLICK AND DRAG TO ZOOM IN!</b></p>
-    <div align="center" id="container" class="results" style="height:500px;width:700px;"></div>
-    <!--Declare global variable-->
-     <script type="text/javascript">
-        var graph_data = {{results.graph_data | safe_json}}
-        generateTS_individual([0,1]);
-    </script>
+            <table align="left" class='chart_options' border="1" width="800px">
+            <tr>
+            <td align="left" valign="top">
+                {% include 'includes/chart_type.html'%}
+            </td>
+            </tr>
+            <tr>
+            <td align="left" valign="top">
+                {% include 'includes/chart_layers_daily.html'%}
+            </td>
+            </tr>
+            <tr>
+            <td>
+                <div align="center" id="container" class="results" style="height:600px;width:800px;"></div>
+                <!--Declare global variable-->
+                <script type="text/javascript">
+                    var graph_data = {{results.graph_data | safe_json}}
+                    generateTS_individual([0,1]);
+                </script>
+            </td>
+            </tr>
+            </table>
     
     {% endif %}
     </div>

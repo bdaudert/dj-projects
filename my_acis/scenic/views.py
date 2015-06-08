@@ -2940,9 +2940,9 @@ def set_initial(request,req_type):
     initial['user_email'] = Get('user_email', 'Your Email')
 
     #Set app specific params
-    if req_type in ['spatial_summary', 'monann','interannual']:
+    if req_type in ['spatial_summary', 'monann','interannual','data_comparison']:
         initial['show_running_mean'] = Get('show_running_mean','T')
-        if req_type in ['spatial_summary']:
+        if req_type in ['spatial_summary','data_comparison']:
             initial['running_mean_days'] = Get('running_mean_days', '9')
         if req_type in ['monann','interannual']:
             initial['running_mean_years'] = Get('running_mean_years', '5')
