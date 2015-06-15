@@ -2973,6 +2973,7 @@ def set_initial(request,req_type):
         initial['plot_months'] = Get('plot_months','0,1')
     if req_type == 'monann':
         initial['base_temperature'] = Get('base_temperature','65')
+        initial['statistic_period'] = Get('statistic_period','monthly')
     if req_type in ['climatology','sf_link']:
         initial['summary_type'] = Get('summary_type', 'all')
 
@@ -3042,6 +3043,13 @@ def set_initial(request,req_type):
             if str(m_idx) in plot_months:
                 checkbox_vals['chart_data_indices_' +  str(m_idx) + '_selected'] ='selected'
         checkbox_vals['chart_smry_' +  initial['plot_type'] + '_selected'] = 'selected'
+    if 'statistic_period' in initial.keys():
+        checkbox_vals[initial['statistic_period'] + '_selected'] =''
+        for sp in ['monthly', 'weekly']:
+            checkbox_vals[sp  + '_selected'] =''
+            if initial['statistic_period'] == sp:
+                checkbox_vals[initial['statistic_period'] + '_selected'] ='selected'
+
     if 'date_format' in initial.keys():
         for df in ['none', 'dash','colon', 'slash']:
             checkbox_vals['date_format_' + df + '_selected'] =''

@@ -17,6 +17,7 @@
     <div id="Docu_start_end_year">{% include 'includes/Docu_start_end_date.html'%}</div>
     <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
     <div id="Docu_base_temperature">{% include 'includes/Docu_base_temperature.html'%}</div>
+    <div id="Docu_statistic_period">{% include 'includes/Docu_statistic_period.html'%}</div>
     <div id="Docu_statistic">{% include 'includes/Docu_sx_statistic.html'%}</div>
     <div id="Docu_num_days_thresholds">{% include 'includes/Docu_num_days_thresholds.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
@@ -78,6 +79,7 @@
         {%else%}
         <tr id="base_temp" valign="top" style="display:none">{% include 'includes/base_temperature.html'%}</tr>
         {%endif%}
+        <tr valign="top">{% include 'includes/statistic_period.html'%}</tr>
         <tr valign="top">{% include 'includes/sx_statistic.html'%}</tr>
         {%if initial.statistic == "ndays"%}
         <tr id="threshold_type" valign="top">{% include 'includes/number_of_days.html'%}</tr>

@@ -1,0 +1,16 @@
+
+    <td>Statistic Period: </td>
+    <td>
+        <select id="statistic_period" name="statistic_period">
+        <option value="monthly" {{checkbox_vals.monthly_selected}}>Monthly</option>
+        <option value="weekly" {{checkbox_vals.weekly_selected}}>Weekly</option>
+        </select>
+    </td>
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_statistic_period"></div>
+        <script type="text/javascript">                        
+        $("#ht_statistic_period").load("{{HTML_URL}}Docu_help_texts.html #ht_statistic_period");
+        </script>
+    </div>
+    </td
