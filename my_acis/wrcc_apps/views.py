@@ -178,7 +178,7 @@ def sods(request, app_name):
             elif app_name == 'Sodxtrmts':
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
                 'statistic':form1.cleaned_data['statistic'], 'element':form1.cleaned_data['element'], \
-                'frequency_analysis':form1.cleaned_data['frequency_analysis']}
+                'frequency_analysis':form1.cleaned_data['frequency_analysis'],'statistic_period':'monthly'}
             elif app_name == 'Sodpiii':
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
                 'skew':form1.cleaned_data['skew'], 'cv':form1.cleaned_data['cv'], 'mean':form1.cleaned_data['mean'], \
@@ -421,14 +421,21 @@ def sods(request, app_name):
                 context['frequency_analysis'] = WRCCData.DISPLAY_PARAMS[form2.cleaned_data['frequency_analysis']]
                 context['statistic'] = WRCCData.DISPLAY_PARAMS[form2.cleaned_data['statistic']]
                 context['departure_from_averages'] = WRCCData.DISPLAY_PARAMS[form2.cleaned_data['departures_from_averages']]
-                app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
-                'station_ids':station_ids,'station_names':station_names, \
-                'el_type':form2.cleaned_data['element'], \
-                'max_missing_days':form2.cleaned_data['max_missing_days'], \
-                'start_month': form2.cleaned_data['start_month'], \
-                'statistic': form2.cleaned_data['statistic'], \
-                'frequency_analysis': form2.cleaned_data['frequency_analysis'], \
-                'departures_from_averages':form2.cleaned_data['departures_from_averages']}
+                app_args = {
+                    'app_name':app_name,
+                    'data':data,
+                    'dates':dates,
+                    'elements':elements,
+                    'station_ids':station_ids,
+                    'station_names':station_names,
+                    'el_type':form2.cleaned_data['element'],
+                    'max_missing_days':form2.cleaned_data['max_missing_days'],
+                    'start_month': form2.cleaned_data['start_month'],
+                    'statistic_period':'monthly',
+                    'statistic': form2.cleaned_data['statistic'],
+                    'frequency_analysis': form2.cleaned_data['frequency_analysis'],
+                    'departures_from_averages':form2.cleaned_data['departures_from_averages']
+                }
                 if form2.cleaned_data['frequency_analysis'] == 'T':
                     context['frequency_analysis_type'] = form2.cleaned_data['frequency_analysis_type']
                     app_args['frequency_analysis_type'] = form2.cleaned_data['frequency_analysis_type']
@@ -442,8 +449,8 @@ def sods(request, app_name):
                 if form2.cleaned_data['element'] in ['hdd', 'gdd', 'cdd']:
                     app_args['base_temperature'] = form2.cleaned_data['base_temperature']
                 context['app_arg'] = app_args
-                (results,fa_results) = WRCCDataApps.Sodxtrmts(**app_args)
-                context['fa_results'] = dict(fa_results)
+                results = WRCCDataApps.Sodxtrmts(**app_args)
+                #context['fa_results'] = dict(fa_results)
             elif app_name == 'Sodpiii':
                 lisdur = [ '6 Hrs', '12 Hrs', '1 Day', '2 Days', '3 Days', \
                         '4 Days', '5 Days', '6 Days', '7 Days', '8 Days', '9 Days', \

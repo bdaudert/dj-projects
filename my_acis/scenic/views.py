@@ -1088,7 +1088,6 @@ def monann(request):
             data_params['sid'] = form_cleaned['station_id']
         #Set and format app params
         app_params = {}
-        context['x'] = form_cleaned
         for key, val in form_cleaned.iteritems():
             app_params[key] = val
         if app_params['less_greater_or_between'] == 'l':
@@ -1100,6 +1099,7 @@ def monann(request):
             except:pass
         app_params['el_type'] = form_cleaned['element']
         del app_params['element']
+        app_params['statistic_period'] = 'monthly'
         #Run data retrieval job
         DJ = WRCCClasses.SODDataJob('Sodxtrmts', data_params)
         #Obtain metadata and data
@@ -1114,8 +1114,6 @@ def monann(request):
         #Run application
         App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
         data = App.run_app()
-        context['x'] =  data_params
-        context['xx'] = app_params
         #Set header
         header = set_sodxtrmts_head(form_cleaned)
         if not data:
