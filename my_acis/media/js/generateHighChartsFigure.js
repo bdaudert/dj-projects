@@ -28,7 +28,7 @@ function generateTS_individual(data_indices) {
     //Set params according to application 
     if (app_name == 'monann' || app_name =='single_interannual'){
         var date_format = '%Y';
-        if ( $('#monthly_statistic').length && $('#monthly_statistic').val() == 'ndays'){
+        if ( $('#statistic').length && $('#statistic').val() == 'ndays'){
             var yLabelmain = 'days';
         }
         else {

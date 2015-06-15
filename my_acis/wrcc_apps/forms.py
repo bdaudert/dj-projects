@@ -106,7 +106,7 @@ DIGIT_CHOICES = (
         )
 #Sodsum choices
 SS_STATION_CHOICE = (
-        ('coop_station_id', 'Indidual Coop Station'),
+        ('station_id', 'Indidual Coop Station'),
         ('list', 'Comma separated list of stations'),
         ('climdiv', 'By Climate Division'),
         )
@@ -280,14 +280,14 @@ class MultiStnField(forms.CharField):
         return stn_list.split(',')
 
     def validate(self, stn_list):
-        "Check if value consists only of valid coop_station_ids."
+        "Check if value consists only of valid station_ids."
         for stn in stn_list:
             if len(str(stn))!=6:
-                raise forms.ValidationError("coop_station_ids should be a comma separated list of valid 6 digit coop_station_ids %s!" % str(stn))
+                raise forms.ValidationError("station_ids should be a comma separated list of valid 6 digit station_ids %s!" % str(stn))
 
 
 class SodrunForm(forms.Form):
-    coop_station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
+    station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
     start_date = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
     end_date = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
     element = forms.ChoiceField(choices=SR_ELEMENT_CHOICES, initial='pcpn')
@@ -299,7 +299,7 @@ class SodrunForm(forms.Form):
     verbose = forms.BooleanField(required=False, initial=False)
 
 class SodlistForm(forms.Form):
-    coop_station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
+    station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
     start_date = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
     end_date = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
     output_format = forms.ChoiceField(choices=SL_FRMT_CHOICES, initial='kr')
@@ -310,7 +310,7 @@ class SodlistForm(forms.Form):
     include_tobs_evap = forms.BooleanField(required=False, initial = False)
 
 class SodcnvForm(forms.Form):
-    coop_station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
+    station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
     start_date = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
     end_date = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
     #output_file = forms.CharField(max_length=256, required=False)
@@ -318,7 +318,7 @@ class SodcnvForm(forms.Form):
     end_window = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
 
 class SodmonlineForm(forms.Form):
-    coop_station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
+    station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
     start_date = MyDateField(max_length=4, initial='2012', help_text="yyyy")
     end_date = forms.CharField(max_length=4, initial='2012', help_text="yyyy")
     element = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
@@ -329,7 +329,7 @@ class SodmonlineForm(forms.Form):
     number_of_characters = forms.ChoiceField(choices=DIGIT_CHOICES, initial='3')
 
 class SodmonlinemyForm(forms.Form):
-    coop_station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
+    station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
     start_date = MyDateField(max_length=4, min_length=4, initial='2012', help_text="yyyymmdd")
     end_date = MyDateField(max_length=4, min_length=4, initial='2012', help_text="yyyymmdd")
     element = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
@@ -340,8 +340,8 @@ class SodmonlinemyForm(forms.Form):
     number_of_characters = forms.ChoiceField(choices=DIGIT_CHOICES, initial='4')
 
 class SodsumForm(forms.Form):
-    #coop_station_ids = forms.CharField(initial='266779')
-    coop_station_ids = MultiStnField(initial='266779,103732')
+    #station_ids = forms.CharField(initial='266779')
+    station_ids = MultiStnField(initial='266779,103732')
     start_date = MyDateField(max_length=8, required = False, initial='20120101', help_text="yyyymmdd")
     end_date = MyDateField(max_length=8, required = False, initial=today, help_text="yyyymmdd")
     element = forms.ChoiceField(choices=SS_ELEMENT_CHOICES, initial='multi')
@@ -370,7 +370,7 @@ class Sod0Form(forms.Form):
             self.fields['custom_tables'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F')
             self.fields['number_of_thresholds']= forms.IntegerField(min_value=1,max_value=10, initial=1)
         if app_name == 'Sodxtrmts':
-            self.fields['monthly_statistic'] = forms.ChoiceField(choices=SX_ANALYSIS_CHOICES, initial='mave')
+            self.fields['statistic'] = forms.ChoiceField(choices=SX_ANALYSIS_CHOICES, initial='mave')
             self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='maxt')
             self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F')
         if app_name == 'Sodpiii':
@@ -392,9 +392,9 @@ class SodForm(forms.Form):
             station_selection = self.data.get('station_selection')
 
         if station_selection == 'stnid':
-            self.fields['coop_station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779')
+            self.fields['station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779')
         elif station_selection == 'stnids':
-            self.fields['coop_station_ids'] = MultiStnField(required=False,initial='266779,103732')
+            self.fields['station_ids'] = MultiStnField(required=False,initial='266779,103732')
         elif station_selection == 'county':
             self.fields['county'] = forms.CharField(required=False,max_length=5, min_length=5, initial='09001')
         elif station_selection == 'climdiv':
@@ -538,11 +538,11 @@ class SodForm(forms.Form):
             self.fields['custom_tables'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = custom_tables, widget=forms.HiddenInput())
             #self.fields['custom_tables'].widget.attrs['readonly'] = 'readonly'
         elif app_name == 'Sodxtrmts':
-            monthly_statistic = kwargs.get('initial', {}).get('monthly_statistic', None)
+            statistic = kwargs.get('initial', {}).get('statistic', None)
             element = kwargs.get('initial', {}).get('element', None)
             frequency_analysis = kwargs.get('initial', {}).get('frequency_analysis', None)
             if element is None:element = self.data.get('element')
-            if monthly_statistic is None:monthly_statistic = self.data.get('monthly_statistic')
+            if statistic is None:statistic = self.data.get('statistic')
             if frequency_analysis is None:frequency_analysis = self.data.get('frequency_analysis')
             self.fields['frequency_analysis'] = forms.CharField(initial=frequency_analysis)
             self.fields['frequency_analysis'].widget.attrs['readonly'] = 'readonly'
@@ -552,15 +552,15 @@ class SodForm(forms.Form):
             self.fields['element'].widget.attrs['readonly'] = 'readonly'
             if element in ['hdd', 'cdd', 'gdd']:
                 self.fields['base_temperature'] = forms.IntegerField(initial=65)
-            if monthly_statistic == 'ndays':
+            if statistic == 'ndays':
                 self.fields['less_greater_or_between'] = forms.ChoiceField(choices=([('l','Less Than'), ('g','Greater Than'),('b','Between'), ]), initial='b')
                 self.fields['threshold_for_less_or_greater'] = forms.DecimalField(initial = 0.0)
                 self.fields['threshold_low_for_between'] = forms.DecimalField(initial = 0.0)
                 self.fields['threshold_high_for_between'] = forms.DecimalField(initial = 1.0)
             self.fields['element'] = forms.CharField(initial=element)
             self.fields['element'].widget.attrs['readonly'] = 'readonly'
-            self.fields['monthly_statistic'] = forms.CharField(initial=monthly_statistic)
-            self.fields['monthly_statistic'].widget.attrs['readonly'] = 'readonly'
+            self.fields['statistic'] = forms.CharField(initial=statistic)
+            self.fields['statistic'].widget.attrs['readonly'] = 'readonly'
             self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False)
             self.fields['start_month'] = forms.CharField(initial='01', required=False)
             self.fields['departures_from_averages'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F')

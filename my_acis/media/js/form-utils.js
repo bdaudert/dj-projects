@@ -404,7 +404,6 @@ function set_area(row_id, node){
     var lv, html_text, cell0,cell1,div;
     //Update area default 
     lv = set_area_defaults(node.val());
-    console.log(node.val());
     //Update autofill list
     set_autofill(lv.autofill_list);
     //Update row_id

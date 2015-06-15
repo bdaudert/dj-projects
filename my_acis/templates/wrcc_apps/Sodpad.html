@@ -26,14 +26,14 @@
 
 {%if results %}
   {%for stn, stn_data in results.items %}
-    <p>PRECIPITATION-DURATION-FREQUENCY TABLES FOR STATION: {{coop_station_ids|lookup:stn|safe}} {{station_names|lookup:stn|safe}}</br>
+    <p>PRECIPITATION-DURATION-FREQUENCY TABLES FOR STATION: {{station_ids|lookup:stn|safe}} {{station_names|lookup:stn|safe}}</br>
     BASED ON PERIOD {{start_year}} TO {{end_year}}</br>
     </p></br>
     {%if not stn_data%}
     <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}
       {%for doy, doy_data in stn_data.items %}
-      <p>STN={{coop_station_ids|lookup:stn|safe}} MON={{mon|lookup:doy|safe}} DAY={{day|lookup:doy|safe}}</p></br>
+      <p>STN={{station_ids|lookup:stn|safe}} MON={{mon|lookup:doy|safe}} DAY={{day|lookup:doy|safe}}</p></br>
       <table>
       <th>THRESHOLD:</th><th colspan="3">01</th><th colspan="4">10</th><th colspan="4">15</th><th colspan="4">20</th><th colspan="4">25<th colspan="4">30</th><th colspan="4">40</th><th colspan="4">50</th><th colspan="4">75</th><th colspan="4">100</th><th colspan="4">150</th><th colspan="4">200</th><th colspan="4">250</th><th colspan="4">300</th><th colspan="4">400</th><th colspan="4">500</th><th colspan="4">600</th><th colspan="4">800</th><th colspan="4">1000</th><th colspan="4">AVE PRECIP</th>
        {%for dur in doy_data %}

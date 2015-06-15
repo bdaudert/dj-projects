@@ -464,7 +464,7 @@ class MultiElementField(forms.CharField):
             return el_list
 
     def validate(self, el_tuple):
-        "Check if value consists only of valid coop_station_ids."
+        "Check if value consists only of valid station_ids."
         for el in el_tuple:
             el_strip= re.sub(r'(\d+)(\d+)', '', el) #strip digits from gddxx, hddxx, cddxx
             if str(el_strip) not in ['pcpn', 'snow', 'snwd', 'maxt', 'mint', 'avgt', 'obst', 'cdd', 'hdd', 'gdd', 'evap', 'wdmv']:
@@ -492,7 +492,7 @@ class MultiGridElementField(forms.CharField):
             return el_list
 
     def validate(self, el_tuple):
-        "Check if value consists only of valid coop_station_ids."
+        "Check if value consists only of valid station_ids."
         for el in el_tuple:
             el_strip= re.sub(r'(\d+)(\d+)', '', el) #strip digits from gddxx, hddxx, cddxx
             if str(el_strip) not in ['pcpn','maxt', 'mint', 'avgt', 'cdd', 'hdd', 'gdd']:
@@ -520,7 +520,7 @@ class MultiPRISMElementField(forms.CharField):
             return el_list
 
     def validate(self, el_tuple):
-        "Check if value consists only of valid coop_station_ids."
+        "Check if value consists only of valid station_ids."
         for el in el_tuple:
             if el not in ['maxt', 'mint', 'pcpn', 'dept']:
                 raise forms.ValidationError(\
@@ -630,12 +630,12 @@ class SodxtrmtsForm(SodForm):
     def __init__(self, *args, **kwargs):
         super(SodxtrmtsForm, self).__init__(*args, **kwargs)
 
-        #self.fields.keyOrder = ['station_id', 'element', 'monthly_statistic', 'start_year', 'end_year', 'max_missing_days', 'start_month', 'departures_from_averages', 'frequency_analysis','base_temperature', 'less_greater_or_between', 'threshold_low_for_between', 'threshold_low_for_between', 'threshold_for_less_or_greater', 'frequency_analysis_type']
+        #self.fields.keyOrder = ['station_id', 'element', 'statistic', 'start_year', 'end_year', 'max_missing_days', 'start_month', 'departures_from_averages', 'frequency_analysis','base_temperature', 'less_greater_or_between', 'threshold_low_for_between', 'threshold_low_for_between', 'threshold_for_less_or_greater', 'frequency_analysis_type']
 
         self.fields['element'] = forms.ChoiceField(choices=WRCCData.SXTR_ELEMENT_CHOICES, initial=kwargs.get('initial', {}).get('element', 'pcpn'), help_text = 'Climate Element')
         self.fields['start_year'] = MyYearField(max_length=4, min_length=3, initial=kwargs.get('initial', {}).get('start_year', 'POR'), help_text='Earliest start date. Format: yyyy or "POR" for period of record.')
         self.fields['end_year'] = MyYearField(max_length=4, min_length=3, initial=kwargs.get('initial', {}).get('end_year', '2013'), help_text='Latest end date. Format: yyyy or "POR" for period of record.')
-        self.fields['monthly_statistic'] = forms.ChoiceField(choices=WRCCData.SXTR_ANALYSIS_CHOICES, initial=kwargs.get('initial', {}).get('monthly_statistic', 'msum'), help_text = 'Desired monthly characteristic of the selected climate element')
+        self.fields['statistic'] = forms.ChoiceField(choices=WRCCData.SXTR_ANALYSIS_CHOICES, initial=kwargs.get('initial', {}).get('statistic', 'msum'), help_text = 'Desired monthly characteristic of the selected climate element')
         self.fields['max_missing_days'] = forms.IntegerField(initial=kwargs.get('initial', {}).get('max_missing_days', 5), help_text=HELP_TEXTS['max_missing_days'])
         self.fields['start_month'] = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial=kwargs.get('initial', {}).get('start_month', '01'),help_text = 'Define a year as starting with this month.')
         self.fields['departures_from_averages']= forms.ChoiceField(choices = ([('T', 'Yes'),('F', 'No'),]), initial = kwargs.get('initial', {}).get('departures_from_averages', 'F'), help_text = 'Express results as departures from column averages.')

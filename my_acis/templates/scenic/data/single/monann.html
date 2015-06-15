@@ -17,7 +17,7 @@
     <div id="Docu_start_end_year">{% include 'includes/Docu_start_end_date.html'%}</div>
     <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
     <div id="Docu_base_temperature">{% include 'includes/Docu_base_temperature.html'%}</div>
-    <div id="Docu_monthly_statistic">{% include 'includes/Docu_monthly_statistic.html'%}</div>
+    <div id="Docu_statistic">{% include 'includes/Docu_sx_statistic.html'%}</div>
     <div id="Docu_num_days_thresholds">{% include 'includes/Docu_num_days_thresholds.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
     <div id="Docu_max_missing_days">{% include 'includes/Docu_max_missing_days.html'%}</div>
@@ -78,8 +78,8 @@
         {%else%}
         <tr id="base_temp" valign="top" style="display:none">{% include 'includes/base_temperature.html'%}</tr>
         {%endif%}
-        <tr valign="top">{% include 'includes/monthly_statistic.html'%}</tr>
-        {%if initial.monthly_statistic == "ndays"%}
+        <tr valign="top">{% include 'includes/sx_statistic.html'%}</tr>
+        {%if initial.statistic == "ndays"%}
         <tr id="threshold_type" valign="top">{% include 'includes/number_of_days.html'%}</tr>
         {%if initial.less_greater_or_between == "b"%}
         <tr id="threshold_between" valign="top">{% include 'includes/num_days_thresholds_between.html'%}</tr>
@@ -161,7 +161,6 @@
         <p class="error">{{results.errors}}</p>
     {%endif%}
     </div> 
-    
     {%if results.data%}
     <div class="results">
         {%if results.graph_data%}

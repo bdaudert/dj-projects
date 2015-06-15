@@ -30,7 +30,7 @@
     {%else%}
     {%for tbl_idx, table in stn_data.items%}
     <p class="stronger" style="color:darkblue; font-size:large">
-    STATION NUMBER: {{coop_station_ids|lookup:stn|safe}}&nbsp;&nbsp;LOCATION:{{station_names|lookup:stn|safe}}</br>
+    STATION NUMBER: {{station_ids|lookup:stn|safe}}&nbsp;&nbsp;LOCATION:{{station_names|lookup:stn|safe}}</br>
     START YEAR {{start_year}} END YEAR {{end_year}}</br>
     START MONTH {{start_month}} END MONTH {{end_month}}</br>
     ELEMENT {{el_type}} UNITS {{units}}</br>
@@ -59,7 +59,7 @@
 
     {%for tbl_idx, table in stn_data.items%}
     <p class="stronger" style="color:darkblue; font-size:large">
-    STATION NUMBER: {{coop_station_ids|lookup:stn|safe}}&nbsp;&nbsp;LOCATION:{{station_names|lookup:stn|safe}}</br> 
+    STATION NUMBER: {{station_ids|lookup:stn|safe}}&nbsp;&nbsp;LOCATION:{{station_names|lookup:stn|safe}}</br> 
     START YEAR {{start_year}} END YEAR {{end_year}}</br>
     START MONTH {{start_month}} END MONTH {{end_month}}</br>
     ELEMENT {{el_type}} UNITS {{units}}</br>

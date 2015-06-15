@@ -26,13 +26,13 @@ $(document).ready(function ($) {
         //Set monthly statistic for monann
         var sum_els = ['pcpn','snwd','snow','gdd','hdd','cdd','evap','pet'];
         if ($(this).val().inList(sum_els)){
-            if ($('#monthly_statistic').length){
-                $('#monthly_statistic').val('msum');
+            if ($('#statistic').length){
+                $('#statistic').val('msum');
             }
         }
         else {
-            if ($('#monthly_statistic').length){
-                $('#monthly_statistic').val('mave');    
+            if ($('#statistic').length){
+                $('#statistic').val('mave');    
             }
         }
     });
@@ -414,7 +414,7 @@ $(document).ready(function ($) {
         if (lgb == 'l'){ $('#threshold_for_less_than').val(threshes[0]);}
         if (lgb == 'g'){$('#threshold_for_less_than').val(threshes[1]);}
     });
-    $('#monthly_statistic').on('change', function(){
+    $('#statistic').on('change', function(){
         if ($(this).val() == 'ndays'){ 
             $('#threshold_type').css('display','table-row');
             var lgb = $('#less_greater_or_between').val();

@@ -122,7 +122,7 @@ def gallery(request):
     p_url = app_url + '?'
     #p_url+='area_type=location&location=-120.44,39.32&element=mint&grid=1&start_year=1970&end_year=2000'
     p_url+='area_type=station_id&station_id=048218&element=mint&start_year=POR&end_year=POR'
-    p_url+='&monthly_statistic=ndays&less_greater_or_between=l&threshold_for_less_than=32&plot_months=3,4,5'
+    p_url+='&statistic=ndays&less_greater_or_between=l&threshold_for_less_than=32&plot_months=3,4,5'
     app_urls['extremes'] = app_url
     param_urls['extremes'] = p_url
     app_names['extremes'] = settings.APPLICATIONS['monann'][0]
@@ -468,6 +468,11 @@ def multi_lister(request):
     }
     url = settings.APPLICATIONS['multi_lister'][2]
     initial, checkbox_vals = set_initial(request,'multi_lister')
+    #Create kml files for oerlay state
+    for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
+        kml_file_path = create_kml_file(at, initial['overlay_state'])
+    if initial['area_type'] in ['basin', 'county', 'county_warning_area', 'climate_division']:
+        initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     #Set initial overlay state for overlay map
     context[initial['overlay_state'].lower() + '_selected'] = 'selected'
@@ -728,6 +733,10 @@ def spatial_summary(request):
     '''
     initial,checkbox_vals = set_initial(request,'spatial_summary')
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+    for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
+        kml_file_path = create_kml_file(at, initial['overlay_state'])
+    if initial['area_type'] in ['basin', 'county', 'county_warning_area', 'climate_division']:
+        initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
     #Set initial overlay state for overlay map
     context[initial['overlay_state'].lower() + '_selected'] = 'selected'
 
@@ -1079,6 +1088,7 @@ def monann(request):
             data_params['sid'] = form_cleaned['station_id']
         #Set and format app params
         app_params = {}
+        context['x'] = form_cleaned
         for key, val in form_cleaned.iteritems():
             app_params[key] = val
         if app_params['less_greater_or_between'] == 'l':
@@ -1104,9 +1114,11 @@ def monann(request):
         #Run application
         App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
         data = App.run_app()
+        context['x'] =  data_params
+        context['xx'] = app_params
         #Set header
         header = set_sodxtrmts_head(form_cleaned)
-        if not data[0]:
+        if not data:
             results = {
                 'header':'',
                 'data':[],
@@ -1127,12 +1139,9 @@ def monann(request):
                 'smry':'individual',
                 'running_mean_years':'5',
                 'show_range': False,
-                'data': [['YEAR'] + header_list + ['ANN', ' ']] + data[0][0],
-                'data_summary':[[' '] + header_list + ['ANN', ' ']] + data[0][0][-6:],
+                'data': [['YEAR'] + header_list + ['ANN', ' ']] + data[0],
+                'data_summary':[[' '] + header_list + ['ANN', ' ']] + data[0][-6:]
             }
-        test =[]
-        for i in results['data']:
-            test.append(len(i))
         #Write data to file for highcharts
         hc_data = WRCCUtils.extract_highcarts_data_monann(results['data'],form_cleaned)
         graph_data = []
@@ -1671,12 +1680,12 @@ def set_sodxtrmts_head(form):
     header_order =['start_year', 'end_year', '','element']
     #Additional headere items
     if form['element'] in ['gdd', 'hdd', 'cdd']:header_order+=['base_temperature']
-    header_order+=['monthly_statistic']
+    header_order+=['statistic']
     if form['departures_from_averages'] == 'T':
          header_order+=['departures_from_averages', '']
     else:
         header_order+=['']
-    if form['monthly_statistic'] == 'ndays':
+    if form['statistic'] == 'ndays':
         if form['less_greater_or_between'] == 'l':
             header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
         elif form['less_greater_or_between'] == 'g':
@@ -1693,7 +1702,7 @@ def set_sodxtrmts_head(form):
     #Define SCHTUPID header
     header = []
     for key in header_order:
-        if key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'monthly_statistic', 'elements','element']:
+        if key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'statistic', 'elements','element']:
             header.append([WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[str(form[key])]])
             if key == 'element':
                 if form['units'] == 'metric':
@@ -2853,7 +2862,7 @@ def set_initial(request,req_type):
         initial['data_type'] = Get('data_type','station')
     #Set up map parameters
     initial['host'] = settings.HOST
-    initial['overlay_state'] = Get('overlay_state','NV')
+    initial['overlay_state'] = Get('overlay_state','nv')
     initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
     #initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
 
@@ -2953,7 +2962,7 @@ def set_initial(request,req_type):
         initial['dates_constraints']  = Get('dates_constraints', 'all')
     if req_type in  ['monann','sf_link']:
         initial['start_month'] = Get('start_month','01')
-        initial['monthly_statistic'] = Get('monthly_statistic','msum')
+        initial['statistic'] = Get('statistic','msum')
         initial['less_greater_or_between'] = Get('less_greater_or_between','b')
         initial['threshold_low_for_between'] = Get('threshold_low_for_between',0.01)
         initial['threshold_high_for_between'] = Get('threshold_high_for_between',0.1)
@@ -3024,8 +3033,8 @@ def set_initial(request,req_type):
             checkbox_vals['spatial_summary_' + st + '_selected'] =''
             if st == initial['spatial_summary']:
                 checkbox_vals['spatial_summary_' + st + '_selected'] ='selected'
-    if 'monthly_statistic' in initial.keys():
-        checkbox_vals[initial['monthly_statistic'] + '_selected'] ='selected'
+    if 'statistic' in initial.keys():
+        checkbox_vals[initial['statistic'] + '_selected'] ='selected'
         for lgb in ['l', 'g', 'b']:
             if initial['less_greater_or_between'] == lgb:
                 checkbox_vals[lgb + '_selected'] ='selected'

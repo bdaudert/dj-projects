@@ -492,7 +492,7 @@ function set_sodxtrmts_series_data_summary(datadict,initial,initial_graph,series
         s[key] = series[key];
     }
     var SummaryText = set_summary_text(initial_graph.graph_summary);
-    s['name'] = SummaryText + datadict.monthly_statistic;
+    s['name'] = SummaryText + datadict.statistic;
     s['color'] = '#00008B'; 
     if (initial_graph.markers == 'F'){
         s['marker'] = {enabled:false};
@@ -581,8 +581,8 @@ function set_sodxtrmts_series_data_summary(datadict,initial,initial_graph,series
 
     //Find data min/max
     if (values.length > 0){
-        results.data_max = find_max(values,datadict.element,datadict.initial.monthly_statistic);
-        results.data_min = find_min(values,datadict.element,datadict.initial.monthly_statistic,datadict.initial.departures_from_averages);
+        results.data_max = find_max(values,datadict.element,datadict.initial.statistic);
+        results.data_min = find_min(values,datadict.element,datadict.initial.statistic,datadict.initial.departures_from_averages);
     }
     //Override max/min if needed
     if (initial_graph.vertical_axis_max != "Use default") { 

@@ -33,7 +33,7 @@
   Two-didgit years are departures from 1900: -20 = 1880, 102 = 2002</br>
   </p>
   {%for stn, stn_data in results.items %}
-    <p class="stronger" style="color:darkblue">Station: ({{coop_station_ids|lookup:stn|safe}}) {{station_names|lookup:stn|safe}}</br>
+    <p class="stronger" style="color:darkblue">Station: ({{station_ids|lookup:stn|safe}}) {{station_names|lookup:stn|safe}}</br>
     From Year {{start_year}} To Year {{end_year}}</br>
     </p></br>
     {%if not stn_data%}

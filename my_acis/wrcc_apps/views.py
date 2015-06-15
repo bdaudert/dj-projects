@@ -106,7 +106,7 @@ def sodlist_new(request):
     if form.is_valid():
         kwargs = {}
         for key, val in form.cleaned_data.iteritems():
-            if key == 'coop_station_id':
+            if key == 'station_id':
                 kwargs['station_id'] = str(val)
             else:
                 kwargs[key] = val
@@ -130,7 +130,7 @@ def sodsum(request, app_name):
     if form.is_valid():
         context['cleaned'] = form.cleaned_data
         data_params = {
-                'sids':form.cleaned_data['coop_station_ids'],
+                'sids':form.cleaned_data['station_ids'],
                 'start_date':form.cleaned_data['start_date'],
                 'end_date':form.cleaned_data['end_date'],
                 'element':form.cleaned_data['element']
@@ -177,7 +177,7 @@ def sods(request, app_name):
                 'custom_tables':form1.cleaned_data['custom_tables'],'number_of_thresholds': form1.cleaned_data['number_of_thresholds']}
             elif app_name == 'Sodxtrmts':
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
-                'monthly_statistic':form1.cleaned_data['monthly_statistic'], 'element':form1.cleaned_data['element'], \
+                'statistic':form1.cleaned_data['statistic'], 'element':form1.cleaned_data['element'], \
                 'frequency_analysis':form1.cleaned_data['frequency_analysis']}
             elif app_name == 'Sodpiii':
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
@@ -206,11 +206,11 @@ def sods(request, app_name):
                         sp[key] = yr + val[4:]
                     else:
                         sp[key] = val
-                (data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(sp, app_name)
+                (data, dates, elements, station_ids, station_names) = AcisWS.get_sod_data(sp, app_name)
             else:
-                (data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
+                (data, dates, elements, station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
             '''
-            (data, dates, elements, coop_station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
+            (data, dates, elements, station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
             #get contexts for the different apps and run data application
             if app_name in ['Sodrun', 'Sodrunr']:
                 if elements == ['maxt', 'mint']:
@@ -226,21 +226,21 @@ def sods(request, app_name):
                 context['thresh'] = form2.cleaned_data['threshold']
                 context['dur'] = form2.cleaned_data['minimum_run']
                 app_args = {'app_name': app_name, 'data':data,'dates':dates,'elements':elements,\
-                'coop_station_ids':coop_station_ids,'station_names':station_names,'op':context['op'],\
+                'station_ids':station_ids,'station_names':station_names,'op':context['op'],\
                 'thresh':context['thresh'], 'verbose': form2.cleaned_data['verbose'], 'minimum_run': form2.cleaned_data['minimum_run']}
                 results = WRCCDataApps.Sodrun(**app_args)
             elif app_name == 'Soddynorm':
                 app_args = {'app_name': app_name, 'data':data,'dates':dates,'elements':elements,\
-                'coop_station_ids':coop_station_ids,'station_names':station_names,\
+                'station_ids':station_ids,'station_names':station_names,\
                 'filter_type':form2.cleaned_data['filter_type'],\
                 'filter_days':form2.cleaned_data['number_of_days']}
                 results = WRCCDataApps.Soddynorm(**app_args)
                 '''
-                results = run_data_app(app_name, data, dates, elements, coop_station_ids, station_names, \
+                results = run_data_app(app_name, data, dates, elements, station_ids, station_names, \
                 form2.cleaned_data['filter_type'], form2.cleaned_data['number_of_days'])
                 '''
             elif app_name == 'Soddyrec':
-                results = run_data_app(app_name, data, dates, elements, coop_station_ids, station_names)
+                results = run_data_app(app_name, data, dates, elements, station_ids, station_names)
                 #context['data'] =results
             elif app_name == 'Soddd':
                 base_temp = form2.cleaned_data['base_temperature']
@@ -255,7 +255,7 @@ def sods(request, app_name):
                 ncdc_round = form2.cleaned_data['ncdc_roundoff']
                 context['ncdc_round'] = ncdc_round
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
-                'coop_station_ids':coop_station_ids,'station_names':station_names,\
+                'station_ids':station_ids,'station_names':station_names,\
                 'base_temp':base_temp, 'a_b':a_b,'output_type':output_type, \
                 'max_miss':max_miss, 'ncdc_round':ncdc_round}
                 context['skip_max_above'] = 'NO DAYS SKIPPED'
@@ -286,7 +286,7 @@ def sods(request, app_name):
                 results = run_data_app(**app_args)
             elif app_name == 'Sodpad':
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
-                'coop_station_ids':coop_station_ids,'station_names':station_names}
+                'station_ids':station_ids,'station_names':station_names}
                 results = run_data_app(**app_args)
                 mon_dict = {}
                 day_dict = {}
@@ -300,7 +300,7 @@ def sods(request, app_name):
             elif app_name == 'Sodsumm':
                 el_type  = form2.cleaned_data['element']
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
-                'coop_station_ids':coop_station_ids,'station_names':station_names,'el_type':el_type, 'max_missing_days':form2.cleaned_data['max_missing_days']}
+                'station_ids':station_ids,'station_names':station_names,'el_type':el_type, 'max_missing_days':form2.cleaned_data['max_missing_days']}
                 results = run_data_app(**app_args)
                 context['max_missing_days'] = form2.cleaned_data['max_missing_days']
                 if el_type  == 'temp':
@@ -349,7 +349,7 @@ def sods(request, app_name):
                 else:
                     accumulate_over_season = None
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
-                'coop_station_ids':coop_station_ids,'station_names':station_names,'el_type':el_type,\
+                'station_ids':station_ids,'station_names':station_names,'el_type':el_type,\
                 'ia':ia, 'number_days_ahead':number_days_ahead,'threshold':threshold, 'threshold_ab':threshold_ab, \
                 'base_temperature':base_temperature, 'min_temperature':min_temperature, \
                 'max_temperature':max_temperature, 'begin_month':begin_month, 'accumulate_over_season':accumulate_over_season }
@@ -391,7 +391,7 @@ def sods(request, app_name):
                         time_series.append(form2.cleaned_data['time_series_%s' % str(k)])
                     #set application arguments
                     app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
-                    'coop_station_ids':coop_station_ids,'station_names':station_names,'el_type':el_type, 'custom_tables':True, \
+                    'station_ids':station_ids,'station_names':station_names,'el_type':el_type, 'custom_tables':True, \
                     'interval_start':form2.cleaned_data['interval_start'], 'midpoint':form2.cleaned_data['midpoint'], \
                     'interval_end':form2.cleaned_data['interval_end'], 'thresholds': thresholds, 'time_series': time_series, \
                     'le_1': form2.cleaned_data['latest_or_earliest_for_period_1'], \
@@ -403,7 +403,7 @@ def sods(request, app_name):
                         header[k] = set_sodthr_headers(k, el_type, '0101', '0731',  '1231', start_year, \
                         end_year, 10, 10, 'BELOW', 'latest','earliest')
                     app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
-                    'coop_station_ids':coop_station_ids,'station_names':station_names,'el_type':el_type, 'custom_tables':False}
+                    'station_ids':station_ids,'station_names':station_names,'el_type':el_type, 'custom_tables':False}
                 context['header'] = header
                 results = run_data_app(**app_args)
             elif app_name == 'Sodxtrmts':
@@ -419,20 +419,20 @@ def sods(request, app_name):
                 month_list.append('ANN')
                 context['month_list'] = month_list
                 context['frequency_analysis'] = WRCCData.DISPLAY_PARAMS[form2.cleaned_data['frequency_analysis']]
-                context['monthly_statistic'] = WRCCData.DISPLAY_PARAMS[form2.cleaned_data['monthly_statistic']]
+                context['statistic'] = WRCCData.DISPLAY_PARAMS[form2.cleaned_data['statistic']]
                 context['departure_from_averages'] = WRCCData.DISPLAY_PARAMS[form2.cleaned_data['departures_from_averages']]
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
-                'coop_station_ids':coop_station_ids,'station_names':station_names, \
+                'station_ids':station_ids,'station_names':station_names, \
                 'el_type':form2.cleaned_data['element'], \
                 'max_missing_days':form2.cleaned_data['max_missing_days'], \
                 'start_month': form2.cleaned_data['start_month'], \
-                'monthly_statistic': form2.cleaned_data['monthly_statistic'], \
+                'statistic': form2.cleaned_data['statistic'], \
                 'frequency_analysis': form2.cleaned_data['frequency_analysis'], \
                 'departures_from_averages':form2.cleaned_data['departures_from_averages']}
                 if form2.cleaned_data['frequency_analysis'] == 'T':
                     context['frequency_analysis_type'] = form2.cleaned_data['frequency_analysis_type']
                     app_args['frequency_analysis_type'] = form2.cleaned_data['frequency_analysis_type']
-                if form2.cleaned_data['monthly_statistic'] == 'ndays':
+                if form2.cleaned_data['statistic'] == 'ndays':
                     app_args['less_greater_or_between'] = form2.cleaned_data['less_greater_or_between']
                     if form2.cleaned_data['less_greater_or_between'] == 'b':
                         app_args['threshold_low_for_between'] = form2.cleaned_data['threshold_low_for_between']
@@ -455,7 +455,7 @@ def sods(request, app_name):
                 context['start_month'] = form2.cleaned_data['start_date'][4:6]
                 context['end_month'] = form2.cleaned_data['end_date'][4:6]
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
-                'coop_station_ids':coop_station_ids,'station_names':station_names, \
+                'station_ids':station_ids,'station_names':station_names, \
                 'el_type':form2.cleaned_data['element'], 'skew':form2.cleaned_data['skew'], \
                 'cv':form2.cleaned_data['cv'], 'mean': form2.cleaned_data['mean'], \
                 'pct_average':form2.cleaned_data['pct_average'], \
@@ -503,7 +503,7 @@ def sods(request, app_name):
             context['num_yrs'] = int(dates[-1][0:4]) - int(dates[0][0:4])+1
             context['elements'] = dict([(k,v) for k,v in enumerate(elements)])
             context['data'] = dict(data)
-            context['coop_station_ids'] = dict([(k,v) for k,v in enumerate(coop_station_ids)])
+            context['station_ids'] = dict([(k,v) for k,v in enumerate(station_ids)])
             context['station_names'] = dict([(k,v) for k,v in enumerate(station_names)])
         #form_2 not valid or we are done with analysis
         form2 = set_as_form(request, 'Sod')

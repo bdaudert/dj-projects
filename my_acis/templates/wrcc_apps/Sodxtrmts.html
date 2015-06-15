@@ -26,11 +26,11 @@
 
 {%if results %}
   {%for stn, stn_data in results.items %}
-    <p class="stronger" style="color:darkblue; font-size:large">LOCATION:{{station_names|lookup:stn|safe}}&nbsp;&nbsp;STATION: {{coop_station_ids|lookup:stn|safe}}</br>
+    <p class="stronger" style="color:darkblue; font-size:large">LOCATION:{{station_names|lookup:stn|safe}}&nbsp;&nbsp;STATION: {{station_ids|lookup:stn|safe}}</br>
     START YEAR {{start_year}} END YEAR {{end_year}}</br>
     START MONTH {{start_month}}</br>
     ELEMENT {{el_type}} UNITS {{units}}</br>
-    ANALYSIS TYPE {{monthly_statistic}}</br>
+    ANALYSIS TYPE {{statistic}}</br>
     MAXIMUM NUMBER OF DAYS ALLOWED MISSING {{max_missing_days}}</br>
     FREQUENCY ANALYSIS {{frequency_analysis}}</br>
     DEPARTURES FROM AVERAGES {{departure_from_averages}}</br>
