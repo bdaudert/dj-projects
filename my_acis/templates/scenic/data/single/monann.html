@@ -209,7 +209,7 @@
         </div>
         {%endif%}
 
-        <div align="center" id="data_summary" style="display:none;">
+        <div align="center" id="data_summary" style="display:none;width:940px">
         <table class="right_aligned">
         {%for s_data in results.data_summary%}
             <tr>
@@ -237,7 +237,8 @@
         <!--Download form-->
         <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
 
-        <div id="printable_table" align="center" style="display:block;">
+        
+        <div id="printable_table" align="center" style="display:none;width:940px;">
             <p class="black">
             {%for key_val in results.header%}
             {%if key_val%}
@@ -252,9 +253,7 @@
             </p>
             
             <p class="black"><b>Missing values</b><br />
-            Monthly information for months with more than this number of missing values will be displayed, but not used. <br />
-            The letter indicates the number of missing days.<br />
-            Letters after months show number of missing days;after annual values show missing months.<br />  
+            Letters after data values show number of missing days;after annual values show missing months.<br />  
             Value is displayed but not used if user-specified missing day criterion exceeded.<br />
             (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
 

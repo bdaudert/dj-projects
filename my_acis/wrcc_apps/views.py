@@ -407,7 +407,7 @@ def sods(request, app_name):
                 context['header'] = header
                 results = run_data_app(**app_args)
             elif app_name == 'Sodxtrmts':
-                context['el_type'] = form2.cleaned_data['element']
+                context['element'] = form2.cleaned_data['element']
                 context['max_missing_days'] = form2.cleaned_data['max_missing_days']
                 context['start_month'] = WRCCData.NUMBER_TO_MONTH_NAME[form2.cleaned_data['start_month']]
                 mon_start = int(form2.cleaned_data['start_month'].lstrip('0'))
@@ -428,7 +428,7 @@ def sods(request, app_name):
                     'elements':elements,
                     'station_ids':station_ids,
                     'station_names':station_names,
-                    'el_type':form2.cleaned_data['element'],
+                    'element':form2.cleaned_data['element'],
                     'max_missing_days':form2.cleaned_data['max_missing_days'],
                     'start_month': form2.cleaned_data['start_month'],
                     'statistic_period':'monthly',

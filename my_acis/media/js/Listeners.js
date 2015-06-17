@@ -496,11 +496,11 @@ $(document).ready(function ($) {
             if (myChart.series[i].options.id.split('_')[0] == l_type){
                 if ($(this).is( ":checked" )){
                     myChart.series[i].setVisible(true, true);
-                    //myChart.series[i].show();
+                    myChart.series[i].update({showInLegend: true});
                 }
                 else{
                     myChart.series[i].setVisible(false, false);
-                    //myChart.series[i].hide();
+                    myChart.series[i].update({showInLegend: false});
                 }
                 myChart.redraw();
             }

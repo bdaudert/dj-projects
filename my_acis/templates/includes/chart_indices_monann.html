@@ -1,3 +1,5 @@
+
+{%if initial.statistic_period == "monthly"%}
 <font class="message">Months: </font>
 <select style="max-height:200px;width:200px" multiple id='data_indices' name="chart_selector">
     <option value=0 {{checkbox_vals.chart_data_indices_0_selected}}>January</option>
@@ -13,16 +15,14 @@
     <option value=10 {{checkbox_vals.chart_data_indices_10_selected}}>November</option>
     <option value=11 {{checkbox_vals.chart_data_indices_11_selected}}>December</option>
 </select>
-<!--
-<input name="chart_selector" id="JAN" class="chart_indices" type="checkbox" value="1" checked/>Jan
-<input name="chart_selector" id="FEB" class="chart_indices" type="checkbox" value="2" checked />Feb
-<input name="chart_selector" id="MAR" class="chart_indices" type="checkbox" value="3" />Mar
-<input name="chart_selector" id="APR" class="chart_indices" type="checkbox" value="4" />Apr
-<input name="chart_selector" id="MAY" class="chart_indices" type="checkbox" value="5" />May
-<input name="chart_selector" id="JUN" class="chart_indices" type="checkbox" value="6" />Jun
-<input name="chart_selector" id="JUL" class="chart_indices" type="checkbox" value="7" />Jul
-<input name="chart_selector" id="AUG" class="chart_indices" type="checkbox" value="8" />Aug
-<input name="chart_selector" id="SEP" class="chart_indices" type="checkbox" value="9" />Sep
-<input name="chart_selector" id="OCT" class="chart_indices" type="checkbox" value="10" />Oct
-<input name="chart_selector" id="NOV" class="chart_indices" type="checkbox" value="11" />Nov
-<input name="chart_selector" id="DEC" class="chart_indices" type="checkbox" value="12" />Dec-->
+{%endif%}
+
+{%if initial.statistic_period == "weekly"%}
+<font class="message">Weeks: </font>
+<select style="max-height:200px;width:200px" multiple id='data_indices' name="chart_selector">
+{% for week in weeks %}
+    <option value={{forloop.counter0}} 
+    {%if forloop.counter0 == 0 or forloop.counter0 == 0%}selected{%endif%}>Week {{forloop.counter0}}</option>
+{% endfor %}
+</select>
+{%endif%}

@@ -18,7 +18,8 @@ from collections import defaultdict
 import json
 from shutil import copy2 as scopy2
 import sys, os, stat, re
-
+#for copying mutable objects
+import copy
 #My modules
 import WRCCUtils, AcisWS, WRCCDataApps, WRCCClasses, WRCCData, WRCCFormCheck
 import WRCCToReplace
@@ -683,9 +684,7 @@ def temporal_summary(request):
             'elems':[]
             }
         for el_idx,element in enumerate(form_cleaned['elements']):
-            pms={}
-            for key, val in params.iteritems():
-                pms[key] = params[key]
+            pms = copy.deepcopy(params)
             a_el_dict = {
                 'name':element,
                 'smry':form_cleaned['temporal_summary'],
@@ -925,9 +924,7 @@ def station_finder(request):
         context['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
 
         #Write json file for link to data lister
-        json_dict ={};
-        for key,val in initial.iteritems():
-            json_dict[key] = val
+        json_dict = copy.deepcopy(initial)
         json_dict['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         json_file_name = '%s_params.json' %(time_stamp)
@@ -964,9 +961,7 @@ def station_finder(request):
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=el_date_constraints)
         #Write to file for map generation
         context['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
-        json_dict ={};
-        for key,val in form_cleaned.iteritems():
-            json_dict[key] = val
+        json_dict = copy.deepcopy(form_cleaned)
         json_dict['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         json_file_name = '%s_params.json' %(time_stamp)
@@ -1087,9 +1082,7 @@ def monann(request):
         if 'station_id' in form_cleaned.keys():
             data_params['sid'] = form_cleaned['station_id']
         #Set and format app params
-        app_params = {}
-        for key, val in form_cleaned.iteritems():
-            app_params[key] = val
+        app_params = copy.deepcopy(form_cleaned)
         if app_params['less_greater_or_between'] == 'l':
             app_params['threshold_for_less_or_greater'] = app_params['threshold_for_less_than']
         if app_params['less_greater_or_between'] == 'g':
@@ -1097,9 +1090,6 @@ def monann(request):
         for key in ['location','station_id', 'start_year', 'end_year','threshold_for_less_than','threshold_for_greater_than']:
             try:del app_params[key]
             except:pass
-        app_params['el_type'] = form_cleaned['element']
-        del app_params['element']
-        app_params['statistic_period'] = 'monthly'
         #Run data retrieval job
         DJ = WRCCClasses.SODDataJob('Sodxtrmts', data_params)
         #Obtain metadata and data
@@ -1127,8 +1117,13 @@ def monann(request):
             return render_to_response(url, context, context_instance=RequestContext(request))
         else:
             header_list = []
-            for m in WRCCData.MONTH_NAMES_SHORT_CAP:
-                header_list.append(m)
+            if app_params['statistic_period'] == 'monthly':
+                p =  copy.deepcopy(WRCCData.MONTH_NAMES_SHORT_CAP)
+            if app_params['statistic_period'] == 'weekly':
+                p = range(1,53)
+                context['weeks'] = copy.deepcopy(p)
+            for m in p:
+                header_list.append(str(m))
                 #space for data flag slots
                 header_list.append(' ')
             results = {
@@ -1143,8 +1138,11 @@ def monann(request):
         #Write data to file for highcharts
         hc_data = WRCCUtils.extract_highcarts_data_monann(results['data'],form_cleaned)
         graph_data = []
-        for mon_idx,d in enumerate(hc_data):
-            sname = WRCCData.MONTH_NAMES_SHORT_CAP[mon_idx]
+        for p_idx,d in enumerate(hc_data):
+            if app_params['statistic_period'] == 'monthly':
+                sname = WRCCData.MONTH_NAMES_SHORT_CAP[p_idx]
+            if app_params['statistic_period'] == 'weekly':
+                sname = 'Week ' + str(p[p_idx])
             GDWriter = WRCCClasses.GraphDictWriter(form_cleaned, d, name=sname)
             graph_dict = GDWriter.write_dict()
             #Add additional initial plot options
