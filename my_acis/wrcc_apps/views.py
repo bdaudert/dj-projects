@@ -240,7 +240,9 @@ def sods(request, app_name):
                 form2.cleaned_data['filter_type'], form2.cleaned_data['number_of_days'])
                 '''
             elif app_name == 'Soddyrec':
-                results = run_data_app(app_name, data, dates, elements, station_ids, station_names)
+                app_args = {'app_name': app_name, 'data':data,'dates':dates,'elements':elements,\
+                    'station_ids':station_ids,'station_names':station_names}
+                results = WRCCDataApps.Soddyrec(**app_args)
                 #context['data'] =results
             elif app_name == 'Soddd':
                 base_temp = form2.cleaned_data['base_temperature']

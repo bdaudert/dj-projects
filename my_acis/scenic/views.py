@@ -469,14 +469,9 @@ def multi_lister(request):
     }
     url = settings.APPLICATIONS['multi_lister'][2]
     initial, checkbox_vals = set_initial(request,'multi_lister')
-    #Create kml files for oerlay state
-    for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
-        kml_file_path = create_kml_file(at, initial['overlay_state'])
-    if initial['area_type'] in ['basin', 'county', 'county_warning_area', 'climate_division']:
-        initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     #Set initial overlay state for overlay map
-    context[initial['overlay_state'].lower() + '_selected'] = 'selected'
+    #context[initial['overlay_state'].lower() + '_selected'] = 'selected'
     if 'formData' in request.POST:
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
@@ -732,13 +727,6 @@ def spatial_summary(request):
     '''
     initial,checkbox_vals = set_initial(request,'spatial_summary')
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-    for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
-        kml_file_path = create_kml_file(at, initial['overlay_state'])
-    if initial['area_type'] in ['basin', 'county', 'county_warning_area', 'climate_division']:
-        initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
-    #Set initial overlay state for overlay map
-    context[initial['overlay_state'].lower() + '_selected'] = 'selected'
-
 
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         #Set form and initial
@@ -911,7 +899,6 @@ def station_finder(request):
     #Set up initial map (NV stations)
     #context['station_json'] = 'NV_stn.json'
     initial,checkbox_vals = set_initial(request,'station_finder')
-    context[initial['overlay_state'].lower() + '_selected'] = 'selected'
     context['initial'] = initial;context['checkbox_vals']=checkbox_vals
     #Set up maps if needed
     if request.method == "GET" and not 'elements' in request.GET:
@@ -1406,7 +1393,7 @@ def find_id(form_name_field, json_file_path):
     Note: Autofill sis set up to return name, id
     so we just pick up the id for data analysis
     '''
-    i = str(form_name_field)
+    i = str(form_name_field).strip()
     name_id_list = i.rsplit(',',1)
     if len(name_id_list) == 1:
         name_id_list = i.rsplit(', ',1)
@@ -1460,7 +1447,7 @@ def find_ids(in_list, json_file_path):
     names = ['No name' for i in in_list]
     ids = ['No ID' for i in in_list]
     for idx, item in enumerate(in_list):
-        i_list = item.rsplit(',',1)
+        i_list = item.strip().rsplit(',',1)
         if len(i_list) == 1:
             i_list = item.rsplit(', ',1)
         if len(i_list) == 2:
@@ -1491,164 +1478,6 @@ def find_ids(in_list, json_file_path):
         if ids.count('No ID') == 0:
             return ','.join(ids)
     return ','.join(ids)
-
-def set_form_old(request,app_name=None,clean=True):
-    '''
-    Deals with unicode issues
-    and autofill options for identifiers
-    '''
-    form = {}
-    el_list = None
-    if isinstance(request,dict):
-        form_dict = dict(request)
-    elif request.method == 'POST':
-        form_dict = dict((x,y) for x,y in request.POST.items())
-    elif request.method == 'GET':
-        form_dict = dict((x,y) for x,y in request.GET.items())
-    else:
-        try:
-            form_dict = dict((x,y) for x,y in request.items())
-        except:
-            form_dict = {}
-
-    for key,val in form_dict.iteritems():
-        if key == 'csrfmiddlewaretoken':
-            continue
-        form[str(key)] =str(val)
-    #Resolve naming conflicts in data_station/data_gridded
-    #similar fields appear in both, main form and download form
-    if 'data_format_download' in form.keys():
-        form['data_format'] = form['data_format_download']
-    if 'delimiter_download' in form.keys():
-        form['delimiter']= form['delimiter_download']
-    if 'output_file_name_download' in form.keys():
-        form['output_file_name'] = form['output_file_name_download']
-
-    #Sanity check for optional inputs
-    if 'data_format' not in form.keys():
-        form['data_format'] = 'html'
-    if 'date_format' not in form.keys():
-        form['date_format'] = 'dash'
-    if 'delimiter' not in form.keys():
-        form['delimiter']= 'comma'
-    if 'output_file_name' not in form.keys():
-        form['output_file_name'] = 'Output'
-    if 'units' not in form.keys():
-        form['units']= 'english'
-    if 'element' not in form.keys() and 'elements' not in form.keys():
-        form['element'] = 'maxt'
-        form['elements'] = 'maxt,mint,pcpn'
-    if app_name in ['sodxtrmts','sodxtrmts_grid']:
-        if app_name == 'sodxtrmts':
-            form, checkbox_vals = set_sodxtrmts_initial(form,'station')
-        else:
-            form, checkbox_vals = set_sodxtrmts_initial(form,'grid')
-        if 'element' not in form.keys() and 'elements' in form.keys():
-            form['element'] = form['elements']
-        form_graph, checkbox_vals = set_sodxtrmts_graph_initial(form)
-        form = dict(form.items() + form_graph.items())
-        form_pl_opts, checkbox = set_plot_options(form)
-        form = dict(form.items() + form_pl_opts.items())
-        #FIX ME: not sure why el_type defaults to maxt
-        form['el_type'] = form['element']
-    if app_name == 'sodsumm':
-        if 'summary_type' not in form.keys():
-            form['summary_type'] = 'all'
-        if 'max_missing_days' not in form.keys():
-            form['max_missing_days'] = '5'
-        if 'generate_graphics' not in form.keys():
-            form['generate_graphics'] = 'T'
-        if 'start_date' in form.keys() and 'start_year' not in form.keys():
-            form['start_year'] = form['start_date'][0:4]
-        if 'end_date' in form.keys() and 'end_year' not in form.keys():
-            form['end_year'] = form['end_date'][0:4]
-
-    if app_name == 'station_locator_app':
-        if 'elements_constraints' not in form.keys():
-            form['elements_constraints'] = 'all'
-        if 'dates_constraints' not in form.keys():
-            form['dates_constraints'] = 'all'
-        if 'elements' not in form.keys():
-            form['elements'] = 'maxt,mint,pcpn'
-    for key,val in form.iteritems():
-        #Override element if needed, elements should be a list
-        if str(key) == 'elements':
-            try:
-                el_list = request.POST.getlist('elements',[])
-            except:
-                el_list = []
-            if el_list:
-                #FIX ME!! deal with weird formatting of select multiple
-                if len(el_list) == 1 and isinstance(el_list[0], basestring) and len(el_list[0].split(',')) >1:
-                    el_list = [str(el) for el in el_list[0].replace(' ','').split(',')]
-                else:
-                    el_list = [str(el) for el in el_list]
-                form[str(key)] = el_list
-            else:
-                if isinstance(val, list):
-                    form[str(key)] = [str(v) for v in val]
-                else:
-                    form[str(key)] = val.replace(' ','').split(',')
-    if not clean:
-        #Add degree days as user inputs them
-        if 'elements' in form.keys()  and 'add_degree_days' in form.keys() and form['add_degree_days']=='T':
-            form['elements']= form['elements'] + form['degree_days'].replace(' ','').split(',')
-        return form
-
-    #Clean up form input
-    #Check if user autofilled name, if so, change to id
-    for key,val in form.iteritems():
-        if str(key) in ['station_id','county', 'basin', 'county_warning_area', 'climate_division']:
-            form[str(key)] = find_id(str(val),settings.MEDIA_DIR +'json/US_' + str(key) + '.json')
-        if str(key) == 'station_ids':
-            stn_ids = ''
-            stn_list = val.rstrip(',').split(',')
-            #Remove leading spaces from list items
-            stn_list = [v.lstrip(' ').rstrip(' ') for v in stn_list]
-            #Make sure that no station is entered twice
-            id_previous = ''
-            for idx, stn_name in enumerate(stn_list):
-                stn_id = str(find_id(str(stn_name),settings.MEDIA_DIR +'json/US_' + 'station_id' + '.json'))
-                if stn_id == id_previous:
-                    continue
-                id_previous = stn_id
-                stn_ids+=stn_id + ','
-            #Strip last comma
-            stn_ids = stn_ids.rstrip(',')
-            form[str(key)] = stn_ids
-        #format start and end data
-        if str(key) in ['start_date', 'end_date']:
-            '''
-            if val == 'por':
-                if str(key) == 'start_date':idx = 0
-                if str(key) == 'end_date':idx = 1
-                stn_id = find_id(str(form['station_id']),settings.MEDIA_DIR +'json/US_station_id.json')
-                form[str(key)] = WRCCUtils.find_valid_daterange(stn_id, start_date='por', end_date='por', max_or_min='max')[idx]
-            else:
-                form[str(key)] = str(val).replace('-','').replace(':','').replace('/','').replace(' ','')
-            '''
-            form[str(key)] = str(val).replace('-','').replace(':','').replace('/','').replace(' ','')
-        #Deal with PRISM data and add degree day elements
-        if str(key) == 'elements':
-            el_list_new = val
-            #form[str(key)] = str(val).replace(' ','')
-            #if PRISM data, change element names if monthly/yearly data
-            if 'grid' in form.keys() and form['grid'] == '21':
-                if 'temporal_resolution' in form.keys() and form['temporal_resolution'] in ['yly','mly']:
-                    for el_idx,el in enumerate(el_list_new):
-                        el_list_new[el_idx] = '%s_%s' %(form['temporal_resolution'], el)
-            #Add special degree days
-            if 'add_degree_days' in form.keys() and form['add_degree_days'] == 'T':
-                dd_list = form['degree_days'].replace(' ','').split(',')
-                #Convert degree days temp to Fahreheit if units are metric
-                if 'units' in form.keys() and form['units'] == 'metric':
-                    for idx,dd in enumerate(dd_list):
-                        el_strip, base_temp = WRCCUtils.get_el_and_base_temp(dd)
-                        dd_list[idx] = el_strip + str(WRCCUtils.convert_to_english('maxt',base_temp))
-                el_list_new+=dd_list
-            form[str(key)] = ','.join(el_list_new)
-    return form
-
 
 def set_as_form(request, f_name, init = None):
     form_name = f_name
@@ -1996,208 +1825,6 @@ def set_el_string_and_list(form):
         except:
             return '', []
 
-
-
-def set_station_locator_params(form):
-    #display_params_list used to dispaly search params to user
-    #params_dict iused to link to relevant apps in html doc
-    if not form:
-        return {}
-
-    key_order = ['select_stations_by', form['select_stations_by'], 'elements', 'elements_constraints','start_date', 'end_date', 'dates_constraints']
-    display_params_list = [[] for k in range(len(key_order))]
-    params_dict = {'units':'english'}
-    for key, val in form.iteritems():
-        if key == 'elements':
-            if isinstance(val, basestring):
-                el_list = val.replace(' ', '').split(',')
-            elif isinstance(val,list):
-                el_list = val
-            else:
-                el_list = val
-            elems_long = []
-            #display_params_list.insert(1, [WRCCData.DISPLAY_PARAMS[key], ''])
-            params_dict[key] = ','.join(el_list)
-            params_dict[key].rstrip(',')
-            for el_idx, el in enumerate(el_list):
-                try:
-                    int(el[3:5])
-                    #display_params_list[2] = [WRCCData.DISPLAY_PARAMS[key],WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5]]
-                    elems_long.append(WRCCData.DISPLAY_PARAMS[el[0:3]] + ' Base Temperature '+ el[3:5])
-                except:
-                    #display_params_list[2] = [WRCCData.DISPLAY_PARAMS[key],WRCCData.DISPLAY_PARAMS[el]]
-                    elems_long.append(WRCCData.DISPLAY_PARAMS[el])
-                if el_idx != 0 and el_idx != len(form['elements']) - 1:
-                    #display_params_list[2][1]+=', '
-                    params_dict['elements']+=','
-            display_params_list[2] = [WRCCData.DISPLAY_PARAMS[key],', \n'.join(elems_long)]
-            params_dict['elements'].rstrip(',')
-            params_dict['elems_long'] = elems_long
-        elif key == 'select_stations_by':
-            display_params_list[0] = [WRCCData.DISPLAY_PARAMS[key],WRCCData.DISPLAY_PARAMS[form[key]]]
-        elif key == 'station_ids':
-            #Deal with linebreaks
-            display_params_list[1] = [WRCCData.DISPLAY_PARAMS[key],form[key]]
-            stn_list = str(val).replace(' ','').split(',')
-            num_stns = len(stn_list)
-            if num_stns > 5:
-                div = num_stns / 5
-                for i in range(1,div):
-                    stn_list[i*5]= '\n' + stn_list[i*5]
-                    #stn_list.insert(i*5,'\n')
-                display_params_list[1][1] = ','.join(stn_list)
-        else:
-            try:
-                idx = key_order.index(key)
-                display_params_list[idx] = [WRCCData.DISPLAY_PARAMS[key], str(val)]
-                params_dict[key] = str(val)
-            except ValueError:
-                pass
-                '''
-                if key in ['station_id','station_ids', 'stnid', 'stn_id','basin', 'county_warning_area', 'climate_division', 'state', 'bounding_box', 'shape']:
-                    display_params_list.insert(1, [WRCCData.DISPLAY_PARAMS[key], str(val)])
-                '''
-    return display_params_list, params_dict
-
-
-def set_user_params(form, app_name):
-    '''
-    If user comes from different subpage,
-    we set the user parameters for sidplay to user
-    '''
-    f = {}
-    for key,val in form.iteritems():
-        #Remove hash tags and extra quotes from strings, they give issue in request.GET
-        if isinstance(val, basestring):
-            f[key] =val.replace('#','').replace('\'','')
-        else:
-            f[key] = val
-    if app_name in ['data_gridded', 'spatial_summary', 'temporal_summary']:
-        area_select = 'select_grid_by'
-        if app_name == 'temporal_summary':
-            f['temporal_resolution'] = 'dly'
-    elif app_name in ['monthly_aves','sodsumm','data_station']:
-        area_select = 'select_stations_by'
-        if not 'select_stations_by' in f.keys():
-            f['select_stations_by'] = 'station_id'
-    elif app_name == 'station_locator_app':
-            area_select = 'select_stations_by'
-            if not 'select_stations_by' in f.keys():
-                try:
-                    f['select_stations_by'] = f['area_select']
-                except:
-                    if 'station_id' in f.keys():f['select_stations_by']='station_id'
-                    if 'station_ids' in f.keys():f['select_stations_by']='station_ids'
-                    if 'state' in f.keys():f['select_stations_by']='state'
-                    if 'county' in f.keys():f['select_stations_by']='county'
-                    if 'county_warning_area' in f.keys():f['select_stations_by']='county_warning_area'
-                    if 'basin' in f.keys():f['select_stations_by']='basin'
-                    if 'climate_division' in f.keys():f['select_stations_by']='climate_division'
-                    if 'shape' in f.keys():f['select_stations_by']='shape'
-            if not 'select_stations_by' in f.keys():
-                f['select_stations_by']='state'
-                f['state'] = 'NV'
-    elif app_name == 'sodxtrmts':
-        area_select = 'select_stations_by'
-        if not 'select_stations_by' in f.keys():
-            f['select_stations_by'] = 'station_id'
-        if 'location' in form.keys():
-            area_select = 'select_grid_by'
-            if not 'select_grid_by' in f.keys():
-                f['select_grid_by'] = 'location'
-    elif app_name == 'apps_station':
-        area_select = 'select_stations_by'
-        f[area_select] = 'station_id'
-        if 'element' not in f.keys() and 'elements' not in f.keys():
-            f['element'] = 'maxt'
-            f['elements'] = 'maxt,mint,pcpn'
-    elif app_name == 'data_comparison':
-        area_select = 'select_grid_by'
-        f['select_grid_by'] = 'location'
-    else:
-        area_select = 'select_stations_by'
-    #Deal with elements
-    el_list = []
-    if 'elements' in f.keys():
-        if isinstance(f['elements'], list):
-            '''
-            if app_name == 'station_locator_app':
-                el_list = f['elements']
-            else:
-                el_list = f['elements']
-            '''
-            el_list = f['elements']
-        elif isinstance(f['elements'], basestring):
-            el_list = f['elements'].replace(' ','').split(',')
-    elif 'element' in f.keys():
-        el_list = [str(f['element'])]
-    user_params_list = []
-    user_params_dict ={
-        'area_select':f[area_select],
-        area_select:f[area_select],
-        f[area_select]:f[f[area_select]],
-        'elements':','.join(el_list).rstrip(','),
-        'element_list':el_list
-    }
-    if app_name == 'sodxtrmts' and 'elements' in f.keys():
-        user_params_dict['element'] = user_params_dict['elements']
-    key_list = []
-    if 'start_date' in f.keys():
-        key_list = ['start_date','end_date']
-    elif 'start_year' in f.keys():
-        key_list = ['start_year','end_year']
-    for key in key_list:
-            user_params_dict[key] = f[key]
-            user_params_list.append([WRCCData.DISPLAY_PARAMS[key],f[key]])
-    if app_name in ['sodxtrmts','sodsumm'] and key_list == ['start_date','end_date']:
-        user_params_dict['start_year'] = user_params_dict['start_date'][0:4]
-        user_params_dict['end_year'] = user_params_dict['end_date'][0:4]
-    els_long = ''
-    for idx,el in enumerate(el_list):
-        if 'units' in f.keys() and f['units'] == 'metric':
-            el_strip,base_temp = WRCCUtils.get_el_and_base_temp(el,units='metric')
-        else:
-            el_strip,base_temp = WRCCUtils.get_el_and_base_temp(el)
-        if base_temp:
-            els_long+=WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + ' Base Temp.: ' + str(base_temp) + ', '
-            if app_name == 'sodxtrmts' and el_strip in ['hdd','cdd','gdd']:
-                user_params_dict['base_temperature'] = base_temp
-        else:
-            els_long+=WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long'] + ', '
-    user_params_list.insert(0,['Elements',els_long])
-    try:
-        user_params_list.insert(0,[WRCCData.DISPLAY_PARAMS[f[area_select]],f[f[area_select]]])
-    except:
-        pass
-    #user_params_list.insert(0,[WRCCData.DISPLAY_PARAMS[f[area_select]],f[f[area_select]]])
-    if 'temporal_resolution' in f.keys():
-        user_params_dict['temporal_resolution'] = f['temporal_resolution']
-    if 'temporal_summary' in f.keys():
-        user_params_list.append(['Temporal Summary', WRCCData.DISPLAY_PARAMS[f['temporal_summary']]])
-        user_params_dict['temporal_summary'] = f['temporal_summary']
-        user_params_dict['data_summary'] = 'temporal'
-    if 'spatial_summary' in f.keys():
-        user_params_list.append(['Spatial Summary', WRCCData.DISPLAY_PARAMS[f['spatial_summary']]])
-        user_params_dict['spatial_summary'] = f['spatial_summary']
-        user_params_dict['data_summary'] = 'spatial'
-    if 'grid' in f.keys():
-        user_params_list.append(['Grid', WRCCData.GRID_CHOICES[f['grid']][0]])
-        user_params_dict['grid'] = f['grid']
-    if 'units' in f.keys():
-        user_params_list.append(['Units', WRCCData.DISPLAY_PARAMS[f['units']]])
-        user_params_dict['units'] = f['units']
-    if 'add_degree_days' in f.keys() and 'degree_days' in f.keys() and f['add_degree_days'] =='T':
-        user_params_dict['add_degree_days'] = f['add_degree_days']
-        user_params_dict['degree_days'] = f['degree_days']
-    #If link from station_locator, check for area type and value and add to params
-    if 'select_stations_by'in f.keys():
-        if f['select_stations_by'] == 'station_ids' or f[area_select] == 'station_ids':
-            user_params_dict['station_list'] = f['station_ids'].split(',')
-            for k in ['basin', 'climate_division','county', 'county_warning_area', 'state', 'shape']:
-                if k in f.keys():
-                    user_params_list.insert(0,[WRCCData.DISPLAY_PARAMS[k],f[k]])
-    return user_params_list, user_params_dict
-
 ##################
 #Initialization
 ###################
@@ -2346,82 +1973,6 @@ def set_sodxtrmts_graph_initial(request, init=None):
 
 
 
-def set_data_station_initial(request):
-    initial = {}
-    checkbox_vals = {}
-    Get = set_GET(request)
-    Getlist = set_GET_list(request)
-    initial['s_date'] = fourtnight
-    initial['e_date'] = yesterday
-    initial['select_stations_by'] = Get('select_stations_by', 'station_id')
-    initial[initial['select_stations_by']] = Get(initial['select_stations_by'], WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
-    #initial['area_type_label'] = Get('area_type_label', WRCCData.DISPLAY_PARAMS[initial['select_stations_by']])
-    initial['area_type_label'] =  WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
-    initial['area_type_value'] = initial[initial['select_stations_by']]
-    #initial['area_type_value'] = Get('area_type_value', WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
-    initial['overlay_state'] = Get('overlay_state', 'nv')
-    initial['autofill_list'] = 'US_' + initial['select_stations_by']
-    el_str = Get('elements',None)
-    if isinstance(el_str,basestring) and el_str:
-        initial['elements']= el_str.replace(' ','').split(',')
-    else:
-        initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
-    initial['elements_string'] = ','.join(initial['elements'])
-    initial['add_degree_days'] = Get('add_degree_days', 'F')
-    initial['units'] = Get('units','english')
-    if initial['units'] == 'metric':
-        initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
-    else:
-        initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
-
-    '''
-    if initial['select_stations_by'] == 'station_id':
-        initial['start_date'] = Get('start_date','POR')
-        initial['end_date']  = Get('end_date','POR')
-    else:
-    '''
-    initial['start_date']  = Get('start_date', fourtnight)
-    initial['end_date']  = Get('end_date', yesterday)
-    initial['show_flags'] = Get('show_flags', 'F')
-    initial['show_observation_time'] = Get('show_observation_time', 'F')
-    initial['data_format'] = Get('data_format', 'html')
-    initial['date_format'] = Get('date_format', 'dash')
-    initial['delimiter'] = Get('delimiter', 'space')
-    initial['output_file_name'] = Get('output_file_name', 'Output')
-    initial['user_name'] = Get('user_name', 'Your Name')
-    initial['user_email'] = Get('user_email', 'Your Email')
-    #set the check box values
-    for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
-        checkbox_vals[area_type + '_selected'] =''
-        if area_type == initial['select_stations_by']:
-            checkbox_vals[area_type + '_selected'] ='selected'
-    for e in ['maxt','mint','avgt', 'obst', 'pcpn', 'snow', 'snwd', 'gdd','hdd','cdd', 'evap', 'wdmv']:
-        checkbox_vals['elements_' + e + '_selected'] =''
-        for el in initial['elements']:
-            if el == e:
-                checkbox_vals['elements_' + e + '_selected'] ='selected'
-    for df in ['clm', 'dlm','xl', 'html']:
-        checkbox_vals['data_format_' + df + '_selected'] =''
-        if df == initial['data_format']:
-            checkbox_vals['data_format_' + df + '_selected'] ='selected'
-    for u in ['english', 'metric']:
-        checkbox_vals['units_' + u + '_selected'] =''
-        if u == initial['units']:
-            checkbox_vals['units_' +u + '_selected'] ='selected'
-    for df in ['none', 'dash','colon', 'slash']:
-        checkbox_vals['date_format_' + df + '_selected'] =''
-        if df == initial['date_format']:
-            checkbox_vals['date_format_' + df + '_selected'] ='selected'
-    for dl in ['comma', 'tab', 'space', 'colon', 'pipe']:
-        checkbox_vals[dl + '_selected'] =''
-        if dl == initial['delimiter']:
-            checkbox_vals[dl + '_selected'] ='selected'
-    for bl in ['T','F']:
-        for cbv in ['show_flags', 'show_observation_time', 'add_degree_days']:
-            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
-            if initial[cbv] == bl:
-                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
-    return initial, checkbox_vals
 
 def set_temporal_summary_initial(request):
     initial = {'req_type':'temporal_summary'}
@@ -2474,145 +2025,6 @@ def set_temporal_summary_initial(request):
         checkbox_vals['temporal_summary_' + st + '_selected'] =''
         if st == initial['temporal_summary']:
             checkbox_vals['temporal_summary_' + st + '_selected'] ='selected'
-    return initial, checkbox_vals
-
-def set_station_locator_initial(request):
-    initial = {}
-    checkbox_vals = {}
-    Get = set_GET(request)
-    Getlist = set_GET_list(request)
-    initial['select_stations_by'] = Get('select_stations_by', 'state')
-    initial[str(initial['select_stations_by'])] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
-    initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['select_stations_by']]
-    initial['area_type_value'] = Get(str(initial['select_stations_by']), WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
-    #initial['area_type_value'] = Get('area_type_value', WRCCData.AREA_DEFAULTS[initial['select_stations_by']])
-    initial['overlay_state'] = Get('overlay_state', 'nv')
-    initial['autofill_list'] = 'US_' + initial['select_stations_by']
-    el_str = Get('elements',None)
-    if isinstance(el_str,basestring) and el_str:
-        initial['elements']= el_str.replace(' ','').split(',')
-    else:
-        initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
-    initial['elements_string'] = ','.join(initial['elements'])
-    initial['units'] = 'english'
-    initial['add_degree_days'] = False
-    initial['degree_days'] = ''
-    initial['date_format'] = 'yyyy-mm-dd'
-    initial['data_format'] = 'html'
-    initial['show_observation_time'] = 'F'
-    initial['show_flags'] = 'F'
-    initial['elements_constraints'] = Get('elements_constraints', 'all')
-    initial['start_date']  = Get('start_date', '20140101')
-    initial['end_date']  = Get('end_date', yesterday)
-    initial['dates_constraints']  = Get('dates_constraints', 'all')
-    #set the check box values
-    for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
-        checkbox_vals[area_type + '_selected'] =''
-        if area_type == initial['select_stations_by']:
-            checkbox_vals[area_type + '_selected'] ='selected'
-    for e in ['maxt','mint','avgt', 'obst', 'pcpn', 'snow', 'snwd', 'gdd','hdd','cdd', 'evap','wdmv']:
-        checkbox_vals['elements_' + e + '_selected'] =''
-        for el in initial['elements']:
-            if el == e:
-                checkbox_vals['elements_' + e + '_selected'] ='selected'
-    for b in ['any', 'all']:
-        checkbox_vals['elements_' + b  + '_selected'] =''
-        checkbox_vals['dates_' + b  + '_selected'] =''
-        if initial['elements_constraints'] == b:
-            checkbox_vals['elements_' + b  + '_selected'] ='selected'
-        if initial['dates_constraints'] == b:
-            checkbox_vals['dates_' + b  + '_selected'] ='selected'
-    return initial, checkbox_vals
-
-def set_monthly_aves_initial(request):
-    initial = {}
-    checkbox_vals = {}
-    Get = set_GET(request)
-    Getlist = set_GET_list(request)
-    initial['station_id'] = Get('station_id', 'RENO TAHOE INTL AP, 266779')
-    initial['autofill_list'] = 'US_' + 'station_id'
-    el_str = Get('elements',None)
-    if isinstance(el_str,basestring) and el_str:
-        initial['elements']= el_str.replace(' ','').split(',')
-    else:
-        initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
-    initial['add_degree_days'] = Get('add_degree_days', 'F')
-    initial['units'] = Get('units','english')
-    if initial['units'] == 'metric':
-        initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
-    else:
-        initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
-    initial['start_date']  = Get('start_date', 'POR')
-    initial['end_date']  = Get('end_date', 'POR')
-    #Checkbox vals
-    for e in ['maxt','mint','avgt', 'obst', 'pcpn', 'snow', 'snwd', 'gdd','hdd','cdd', 'evap', 'wdmv']:
-        checkbox_vals['elements_' + e + '_selected'] =''
-        for el in initial['elements']:
-            if el == e:
-                checkbox_vals['elements_' + e + '_selected'] ='selected'
-    for bl in ['T','F']:
-        for cbv in ['add_degree_days']:
-            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
-            if initial[cbv] == bl:
-                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
-    for u in ['english', 'metric']:
-        checkbox_vals['units_' + u + '_selected'] =''
-        if u == initial['units']:
-            checkbox_vals['units_' +u + '_selected'] ='selected'
-    return initial, checkbox_vals
-
-def set_combined_analysis_initial(request,app_name):
-    initial = {}
-    checkbox_vals = {}
-    Get = set_GET(request)
-    Getlist = set_GET_list(request)
-    initial['location'] = Get('location','-119,40')
-    initial['grid'] = Get('grid','1')
-    initial['start_date'] = Get('start_date', fourtnight)
-    initial['end_date'] = Get('end_date', yesterday)
-    initial['elements'] =  Getlist('elements',None)
-    #initial['elements_string'] = ','.join(initial['elements'])
-    #Set threshold flags
-    for el in initial['elements']:
-        initial[el + '_show_threshold'] = True
-
-    initial['units'] = Get('units','english')
-
-    if app_name == 'data_comparison':
-        initial['add_degree_days'] = Get('add_degree_days', 'F')
-        if initial['units'] == 'metric':
-            initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
-        else:
-            initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
-
-    if app_name == 'likelihood':
-        initial['start_year'] = Get('start_year', '1980')
-        initial['end_year'] = Get('end_year', '2010')
-        for el in ['maxt','mint','avgt','pcpn','snow','snwd','hdd','cdd','gdd']:
-            key = el + '_threshold_low'
-            initial[key] = Get(key, WRCCData.ELEMENT_THRESHOLDS[initial['units']][el][0])
-            key = el + '_threshold_high'
-            initial[key] = Get(key, WRCCData.ELEMENT_THRESHOLDS[initial['units']][el][1])
-    #Checkbox vals
-    for e in ['maxt','mint','avgt','pcpn', 'snow', 'snwd', 'gdd','hdd','cdd']:
-        checkbox_vals['elements_' + e + '_selected'] =''
-        for el in initial['elements']:
-            if str(el) == e:
-                checkbox_vals['elements_' + e + '_selected'] ='selected'
-    for g in ['1','21','3','4','5','6','7','8','9','10','11','12','13','14','15','16']:
-        checkbox_vals['grid_' + g + '_selected'] =''
-        if initial['grid'] == g:
-            checkbox_vals['grid_' + g + '_selected'] ='selected'
-    if app_name == 'data_comparison':
-        for bl in ['T','F']:
-            for cbv in ['add_degree_days']:
-                checkbox_vals[cbv + '_' + bl + '_selected'] = ''
-                if initial[cbv] == bl:
-                    checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
-    for u in ['english', 'metric']:
-        checkbox_vals['units_' + u + '_selected'] =''
-        if u == initial['units']:
-            checkbox_vals['units_' +u + '_selected'] ='selected'
     return initial, checkbox_vals
 
 #NEW UTILS
@@ -2857,10 +2269,13 @@ def set_initial(request,req_type):
         initial['autofill_list'] = 'US_' + initial['area_type']
         initial['data_type'] = Get('data_type','station')
     #Set up map parameters
+    initial['overlay_state'] = Get('overlay_state','nv').lower()
     initial['host'] = settings.HOST
-    initial['overlay_state'] = Get('overlay_state','nv')
-    initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
-    #initial['kml_file_name'] = initial['overlay_state'] + '_' + initial['area_type'] + '.kml'
+    #Create kml files for oerlay state
+    for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
+        kml_file_path = create_kml_file(at, initial['overlay_state'])
+    if initial['area_type'] in ['basin', 'county', 'county_warning_area', 'climate_division']:
+        initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
 
     #Set element(s)--> always as list if multiple
     if req_type == 'map_overlay':
@@ -2977,6 +2392,7 @@ def set_initial(request,req_type):
 
 
     #Checkbox vals
+    checkbox_vals['state_' + initial['overlay_state'] + '_selected'] = 'selected'
     if 'elements_constraints' in initial.keys() and 'dates_constraints' in initial.keys():
         for b in ['any', 'all']:
             checkbox_vals['elements_' + b  + '_selected'] =''
