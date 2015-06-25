@@ -336,10 +336,17 @@ def single_lister(request):
             return render_to_response(url, context, context_instance=RequestContext(request))
         context['run_done'] = True
         context['results'] = req
+
         if form_cleaned['data_summary'] == 'none':
-            header_keys = ['user_area_id','start_date', 'end_date']
+            if 'station_id' in form_cleaned.keys():
+                header_keys = ['station_id','start_date', 'end_date']
+            else:
+                header_keys = ['user_area_id','start_date', 'end_date']
         else:
-            header_keys = ['user_area_id','data_summary','start_date', 'end_date']
+            if 'station_id' in form_cleaned.keys():
+                header_keys = ['station_id','data_summary','start_date', 'end_date']
+            else:
+                header_keys = ['user_area_id','data_summary','start_date', 'end_date']
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
         if 'meta' in req.keys() and req['meta']:
             meta_keys = WRCCUtils.get_meta_keys(form_cleaned)
@@ -1175,7 +1182,7 @@ def climatology(request):
 
         #Set data and app params
         data_params = {
-                #'sid':find_id(form['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json'),
+                #'sid':WRCCUtils.find_id(form['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json'),
                 'start_date':form['start_year'],
                 'end_date':form['end_year'],
                 'element':form['summary_type']
@@ -1189,7 +1196,7 @@ def climatology(request):
             data_params['loc'] = form_cleaned['location']
             data_params['grid'] = form_cleaned['grid']
         if 'station_id' in form_cleaned.keys():
-            data_params['sid'] = find_id(form['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json')
+            data_params['sid'] = WRCCUtils.find_id(form['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json')
         #Initialize Data Job class
         DJ = WRCCClasses.SODDataJob('Sodsumm', data_params)
         if 'location' in form_cleaned.keys():
@@ -1310,18 +1317,6 @@ def set_GET(request):
         Get = getattr(request.GET, 'get')
     elif rm == 'POST':
         Get = getattr(request.POST, 'get')
-    '''
-    if type(request) == dict:
-        def Get(key, default):
-            if key in request.keys():
-                return request[key]
-            else:
-                return default
-    elif request.method == 'GET':
-        Get = getattr(request.GET, 'get')
-    elif request.method == 'POST':
-        Get = getattr(request.POST, 'get')
-    '''
     return Get
 
 def set_GET_list(request):
@@ -1342,19 +1337,6 @@ def set_GET_list(request):
         Getlist = getattr(request.GET, 'getlist')
     elif rm == 'POST':
         Getlist = getattr(request.POST, 'getlist')
-
-    '''
-    if type(request) == dict:
-        def Getlist(key, default):
-            if key in request.keys():
-                return request[key]
-            else:
-                return default
-    elif request.method == 'GET':
-        Getlist = getattr(request.GET, 'getlist')
-    elif request.method == 'POST':
-        Getlist = getattr(request.POST, 'getlist')
-    '''
     return Getlist
 
 #FORM SANITY CHECKS
@@ -1374,98 +1356,6 @@ def check_form(form, fields_to_check):
             #Stop at first error
             break
     return form_error
-
-def find_id(form_name_field, json_file_path):
-    '''
-    Deals with autofill by station name.
-    Note: Autofill sis set up to return name, id
-    so we just pick up the id for data analysis
-    '''
-    i = str(form_name_field).strip()
-    name_id_list = i.rsplit(',',1)
-    if len(name_id_list) == 1:
-        name_id_list = i.rsplit(', ',1)
-    name = None
-    if len(name_id_list) >=2:
-        i= str(name_id_list[-1]).replace(' ','')
-        '''
-        #Special case CWA --> json file list Las Vegas, NV as name
-        #but form field is Las Vegas NV
-        if len(i) ==3 and i.isalpha():
-            sp = name_id_list[0].rsplit('  ',1)
-            if len(sp) != 2:sp = name_id_list[0].rsplit(' ',1)
-            name = ', '.join(sp)
-        else:
-            name = name_id_list[0]
-        '''
-        name = name_id_list[0]
-        return i
-    elif len(name_id_list) == 1:
-        name_list= i.split(' ')
-        #check for digits
-        if bool(re.compile('\d').search(i)) and len(name_list) == 1:
-            #User entered a station id
-            return i
-        else:
-            name = str(form_name_field)
-    if not os.path.isfile(json_file_path) or os.path.getsize(json_file_path) == 0:
-        return str(form_name_field)
-    #Find id in json file
-    json_data = WRCCUtils.load_json_data_from_file(json_file_path)
-    for entry in json_data:
-        #check if i is id
-        if entry['id'] == i:
-            #Check that names match
-            if name:
-                #kml file names have special chars removed
-                n = re.sub('[^a-zA-Z0-9\n\.]', ' ', entry['name'])
-                if entry['name'].upper() != name.upper() and n.upper() != name.upper():
-                    return str(form_name_field)
-                else:
-                    return i
-            else:
-                return i
-        #Check if i is name
-        if entry['name'].upper() == i.upper():
-            return entry['id']
-    return str(form_name_field)
-
-def find_ids(in_list, json_file_path):
-    #Split up in_list into names and ids
-    names = ['No name' for i in in_list]
-    ids = ['No ID' for i in in_list]
-    for idx, item in enumerate(in_list):
-        i_list = item.strip().rsplit(',',1)
-        if len(i_list) == 1:
-            i_list = item.rsplit(', ',1)
-        if len(i_list) == 2:
-            names[idx] = i_list[0]
-            ids[idx] = i_list[1]
-        if len(i_list) == 1:
-            #check if we have id
-            n = i_list[0].split(' ')
-            if bool(re.compile('\d').search(i_list[0])) and len(n) == 1:
-                ids[idx] = i_list[0]
-            else:
-                names[idx] = i_list[0].upper()
-    #If all ids are present, return ids
-    if ids.count('No ID') == 0:
-        return ','.join(ids)
-    #Check that autofill file exists
-    if not os.path.isfile(json_file_path) or os.path.getsize(json_file_path) == 0:
-        return ','.join(filter(lambda v: v is not 'No ID', ids))
-    #Loop over entries in autofill list and find missing ids
-    json_data = WRCCUtils.load_json_data_from_file(json_file_path)
-    for entry in json_data:
-        if entry['name'].upper() not in names:
-            continue
-        index = names.index(entry['name'].upper())
-        if ids[index] is 'No ID':
-            ids[index] = entry['id']
-        #check if we ids list is complete
-        if ids.count('No ID') == 0:
-            return ','.join(ids)
-    return ','.join(ids)
 
 def set_as_form(request, f_name, init = None):
     form_name = f_name
@@ -2131,7 +2021,7 @@ def set_form(request, clean=True):
             else:
                 el_list = None
             if 'station_id' in form.keys():
-                stn_id = find_id(str(form['station_id']),settings.MEDIA_DIR +'json/US_station_id.json')
+                stn_id = WRCCUtils.find_id(str(form['station_id']),settings.MEDIA_DIR +'json/US_station_id.json')
                 form[k] = WRCCUtils.find_valid_daterange(stn_id, start_date=sd, end_date=ed, el_list=el_list, max_or_min='max')[idx]
             else:
                 form[str(key)] = str(form[key]).replace('-','').replace(':','').replace('/','').replace(' ','')
@@ -2143,7 +2033,7 @@ def set_form(request, clean=True):
         if not key in form.keys():
             continue
         form['user_area_id'] =  form[key]
-        form[key] = find_id(form[key],settings.MEDIA_DIR +'json/US_' + key + '.json')
+        form[key] = WRCCUtils.find_id(form[key],settings.MEDIA_DIR +'json/US_' + key + '.json')
     if not 'user_area_id' in form.keys():
         try:
             form['user_area_id'] = form[form['area_type']]
@@ -2158,7 +2048,7 @@ def set_form(request, clean=True):
         stn_list = form['station_ids'].rstrip(',').split(',')
         #Remove leading spaces from list items
         stn_list = [v.lstrip(' ').rstrip(' ') for v in stn_list]
-        stn_ids = find_ids(stn_list,settings.MEDIA_DIR +'json/US_' + 'station_id' + '.json')
+        stn_ids = WRCCUtils.find_ids(stn_list,settings.MEDIA_DIR +'json/US_' + 'station_id' + '.json')
         form['station_ids'] = stn_ids
     #set data summary if needed
     if 'data_summary' not in form.keys():
@@ -2224,7 +2114,7 @@ def set_initial(request,req_type):
         if location is None and station_id is not None:
             #Link from station finder,
             #set location to station lon, lat if we are
-            stn_id = find_id(station_id,settings.MEDIA_DIR + '/json/US_station_id.json')
+            stn_id = WRCCUtils.find_id(station_id,settings.MEDIA_DIR + '/json/US_station_id.json')
             meta = AcisWS.StnMeta({'sids':stn_id,'meta':'ll'})
             ll = None
             ll = str(meta['meta'][0]['ll'][0]) + ',' + str(meta['meta'][0]['ll'][1])
