@@ -625,7 +625,7 @@ function set_smry(node){
     data summary can be temporal, spatial, windowed data or none
     */
     //ADD station_ids and locations??
-    var a_list = ['state','shape','climate_division','basin','county','county_warning_area'];
+    var a_list = ['state','shape','climate_division','basin','county','county_warning_area','station_ids'];
     if (node.value == 'windowed_data'){
         $('#spat_summary').css('display','none');
         $('#temp_summary').css('display','none');

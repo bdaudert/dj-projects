@@ -279,6 +279,8 @@ $(document).ready(function ($) {
         //Set grid form fields
         var opts = null;
         if (data_type == 'grid' || data_type == 'location' || data_type == 'locations'){
+            //Disable station_ids option
+            $('#area_type option[value="station_ids"]').attr('disabled',true);
             if ($('#elements').length){
                 var opts = $("#elements option");
             }
@@ -332,6 +334,8 @@ $(document).ready(function ($) {
         }
         //Set station form fields
         if (data_type == 'station' || data_type == 'station_id' || data_type == 'station_ids'){
+            //Enable station_ids option
+            $('#area_type option[value="station_ids"]').attr('disabled',false); 
             //Show add degree day option    
             $('#add').css('display','table-row');
             $("#elements option").each(function(){

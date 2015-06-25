@@ -866,18 +866,6 @@ def spatial_summary(request):
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
 
-    '''
-    #Downlaod Table Data
-    if 'formDownload' in request.POST:
-        data_format = request.POST.get('data_format', 'clm')
-        delimiter = request.POST.get('delimiter', 'comma')
-        output_file_name = request.POST.get('output_file_name', 'output')
-        json_file = request.POST.get('json_file', None)
-        with open(settings.TEMP_DIR + json_file, 'r') as f:
-            json_dict =  json.load(f)
-        DDJ = WRCCToReplace.DownloadDataJob('spatial_summary',data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_file)
-        return DDJ.write_to_file()
-    '''
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 
