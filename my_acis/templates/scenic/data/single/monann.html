@@ -135,6 +135,8 @@
     <!--Maps-->
     {%if need_gridpoint_map%}
         <div id="GridpointMap" style="display:block">
+        <input type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
+        <input id="address" type="textbox" value="Place/Location" style="height:15px;width:150px;"> 
             <div id="map-gridpoint"></div>
         </div>
         {%if initial.location %}
@@ -144,6 +146,8 @@
         {% endif %}
     {%else%}
         <div id="GridpointMap" style="display:none">
+        <input type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
+        <input id="address" type="textbox" value="Place/Location" style="height:15px;width:150px;">
             <div id="map-gridpoint"></div>
         </div>
     {%endif%}
@@ -178,7 +182,7 @@
             <img src="{{MEDIA_URL}}img/show_hide_button.png" alt="Show Data" id="show_hide_data">
             </td>
         </table>
-        <div id="user_graph" style="display:block;">
+        <div id="user_graph" style="display:none;">
             <!--Dynamic chart options-->
             <table class='chart_options' border="1" width="700">
                 <tr>
@@ -238,7 +242,7 @@
         <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
 
         
-        <div id="printable_table" align="center" style="display:none;width:940px;">
+        <div id="printable_table" align="center" style="display:block;width:940px;">
             <p class="black">
             {%for key_val in results.header%}
             {%if key_val%}

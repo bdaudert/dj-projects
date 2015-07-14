@@ -194,6 +194,8 @@
 
     <!--Polygon map-->
     {%if need_polygon_map%}
+    <input type="button" id="zoombutton" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
+    <input id="address" type="textbox" value="Place/Location" style="height:15px;width:150px;">
     <div id="PolyMap" style="display:block;">
     <div id="map-polygon" style="display:block;"></div>
     {%if initial.shape%}
@@ -202,6 +204,8 @@
         <script type="text/javascript">initialize_polygon_map("{{initial.shape}}");</script>
     {%endif%}
     {%else%}
+    <input style="display:none;" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
+    <input style="display:none;" id="address" type="textbox" value="Place/Location" style="height:15px;width:150px;">
     <div id="PolyMap" style="display:none;">
     <div id="map-polygon" style="display:none;"></div>
     {%endif%}

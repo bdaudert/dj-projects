@@ -11,9 +11,9 @@
         <td>Data Format: </td>
         <td>
         <select name="data_format" onchange="set_delimiter(this, 'delim');">
-        <option value="clm">Columnar, .txt</option>
-        <option value="dlm">Delimited, .dat</option>
-        <option value="xl" selected>Excel, .xls</option>
+        <option value="clm" {{checkbox_vals.data_format_clm_selected}}>Columnar, .txt</option>
+        <option value="dlm" {{checkbox_vals.data_format_dlm_selected}}>Delimited, .dat</option>
+        <option value="xl" {{checkbox_vals.data_format_xl_selected}}>Excel, .xls</option>
         </select>
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

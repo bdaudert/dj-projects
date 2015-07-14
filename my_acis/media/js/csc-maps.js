@@ -1,6 +1,34 @@
 //function precise_round(num,decimals){
 //return Math.round(num*Math.pow(10,decimals))/Math.pow(10,decimals);
 //}
+function zoomToLocation() {
+    var address = document.getElementById('address').value;
+    var geocoder = new google.maps.Geocoder(); 
+    geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+           window.map.setCenter(results[0].geometry.location);
+           window.map.setZoom(7);
+           if (window.marker){
+                window.marker.setPosition(results[0].geometry.location);
+                var lat = results[0].geometry.location.lat();
+                var lon = results[0].geometry.location.lng();
+                var infowindow = infowindow = new google.maps.InfoWindow({
+                    content: '<div id="MarkerWindow" ' + 
+                    'style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
+                    '<p><b>Lat: </b>' + lat + '<br/>'+
+                    '<b>Lon: </b>' + lon + '<br/>' +
+                    '</div>',
+                    maxWidth: 100
+                });
+                infowindow.open(window.map, window.marker);
+            }
+        } 
+        else {
+            alert('Geocode was not successful for the following reason: ' + status);
+        }
+  });
+}
+
 
 function initialize_grid_point_map(loc) {
     //optional argument location
@@ -19,7 +47,7 @@ function initialize_grid_point_map(loc) {
         mapTypeId: google.maps.MapTypeId.HYBRID
     };
     map = new google.maps.Map(document.getElementById("map-gridpoint"),mapOptions);
-    
+    window.map = map; 
     infowindow = new google.maps.InfoWindow({
         content: '<div id="MarkerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
             '<p><b>Lat: </b>' + lat + '<br/>'+
@@ -27,7 +55,7 @@ function initialize_grid_point_map(loc) {
             '</div>',
          maxWidth: 100
     });
-
+    window.infowindow = infowindow;
     var marker = new google.maps.Marker({
         draggable: true,
         position: myLatlng,
@@ -36,6 +64,7 @@ function initialize_grid_point_map(loc) {
         title: "Your location"
     });
     infowindow.open(map, marker);
+    window.marker = marker;
     //Listeners
     //Panning, zoom changed
     google.maps.event.addListener(map,'center_changed',function(){
@@ -722,6 +751,7 @@ function initialize_bbox_map(bbox) {
         strokeColor: "#0000FF",
         strokeWeight: 1
     }
+    window.map = map;
     rect_initialOptions = {
         bounds:new google.maps.LatLngBounds(
             new google.maps.LatLng(parseFloat(bbox_list[1]),parseFloat(bbox_list[0])),
@@ -908,6 +938,7 @@ function initialize_polygon_map(poly) {
       fillColor: "#1E90FF",
       strokeColor: "#1E90FF"
     };
+    window.map = map;
     var mkrOptions = {draggable: true};
     //Set initial polygon
     var bounds = new google.maps.LatLngBounds();

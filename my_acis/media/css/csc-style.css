@@ -291,6 +291,12 @@ input[value="Show"] {
     color:#FFEFD5;
 }
 
+input[value="Zoom To"] {
+    background-color:#006666;
+    color:#FFEFD5;
+    margin:5px;
+}
+
 input[value="Submit"] {
     background-color:#006666;
     color:#FFEFD5;

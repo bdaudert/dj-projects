@@ -362,7 +362,6 @@ $(document).ready(function ($) {
     */
     $('img#show_hide_graph, img#show_hide_summary, img#show_hide_data').on('click', function(){
         var id = $(this).attr('id');
-        console.log(id);
         if (id == 'show_hide_graph'){
             if ($('#user_graph').css('display') == 'none'){
                 $('#user_graph').css('display', 'block');
