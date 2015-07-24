@@ -715,23 +715,6 @@ def spatial_summary(request):
         'title': settings.APPLICATIONS['spatial_summary'][0]
     }
     url = settings.APPLICATIONS['spatial_summary'][2]
-    '''
-    json_file = request.GET.get('json_file', None)
-    #Check if we are coming in from other page, e.g. Gridded Data
-    #Set initial accordingly
-    if json_file is not None and json_file !='':
-        with open(settings.TEMP_DIR + json_file, 'r') as f:
-            try:
-                json_data = WRCCUtils.u_convert(json.loads(f.read()))
-                initial,checkbox_vals = set_initial(json_data['search_params'], 'spatial_summary')
-            except:
-                initial,checkbox_vals = set_initial(request, 'spatial_summary')
-    else:
-        initial,checkbox_vals = set_initial(request,'spatial_summary')
-
-    initial_plot, checkbox_vals_plot = set_plot_options(request)
-    join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
-    '''
     initial,checkbox_vals = set_initial(request,'spatial_summary')
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
 
@@ -876,11 +859,11 @@ def spatial_summary(request):
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 
-def google_ee(request):
+def climateengine(request):
     context = {
-        'title': 'Google Earth Engine'
+        'title': ''
         }
-    return render_to_response('scenic/apps/gridded/google_ee.html', context, context_instance=RequestContext(request))
+    return render_to_response('scenic/data/multi/climateengine.html', context, context_instance=RequestContext(request))
 
 
 def station_finder(request):
@@ -1018,11 +1001,12 @@ def data_comparison(request):
             form['location'] = request.GET['station_location']
             form_cleaned['location'] = request.GET['station_location']
         DC = WRCCClasses.DataComparer(form)
-        gdata,sdata = DC.get_data()
+        gdata,sdata,dist = DC.get_data()
         context['run_done'] = True
         results = {
             'grid_data':gdata,
             'station_data':sdata,
+            'distance':dist
         }
         results['graph_data'] = DC.get_graph_data(gdata,sdata)
         results['stats'] = DC.get_statistics(results['graph_data'][0],results['graph_data'][1])
@@ -1747,109 +1731,6 @@ def set_map_plot_options(request):
         if initial['projection'] == p:
             checkbox_vals['projection' + p + '_selected'] = 'selected'
     return initial, checkbox_vals
-
-def set_plot_options(request):
-    initial = {}
-    checkbox_vals = {}
-    Get = set_GET(request)
-    initial['graph_title'] = Get('graph_title','Use default')
-    initial['image_size'] = Get('image_size', 'large')
-    initial['major_grid']  = Get('major_grid', 'T')
-    initial['minor_grid'] = Get('minor_grid', 'F')
-    initial['connector_line'] = str(Get('connector_line', 'T'))
-    initial['connector_line_width'] = Get('connector_line_width', '1')
-    initial['markers'] = Get('markers', 'T')
-    initial['marker_type'] = Get('marker_type', 'diamond')
-    initial['vertical_axis_min']= Get('vertical_axis_min', 'Use default')
-    initial['vertical_axis_max']= Get('vertical_axis_max', 'Use default')
-    #set the check box values
-    for bl in ['T','F']:
-        for cbv in ['major_grid', 'minor_grid','connector_line', 'markers']:
-            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
-            if initial[cbv] == bl:
-                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
-    for image_size in ['small', 'medium', 'large', 'larger', 'extra_large', 'wide', 'wider', 'widest']:
-        checkbox_vals['image_size' + '_' + image_size + '_selected'] = ''
-        if initial['image_size'] == image_size:
-            checkbox_vals['image_size' + '_' + image_size + '_selected'] = 'selected'
-    for marker_type in ['diamond', 'circle', 'square', 'triangle', 'triangle_down']:
-        checkbox_vals['marker_type' + '_' + marker_type + '_selected'] = ''
-        if initial['marker_type'] == marker_type:
-            checkbox_vals['marker_type' + '_' + marker_type + '_selected'] = 'selected'
-    return initial, checkbox_vals
-
-
-def set_sodsumm_initial(request):
-    Get = set_GET(request)
-    initial = {};checkbox_vals = {};
-    initial['autofill_list'] = 'US_station_id'
-    initial['station_id'] = Get('station_id','RENO TAHOE INTL AP, 266779')
-    initial['start_year'] = Get('start_year', Get('start_date','POR'))
-    initial['end_year'] = Get('end_year', Get('end_date','POR'))
-    if len(initial['start_year'])>4:initial['start_year'] = initial['start_year'][0:4]
-    if len(initial['end_year'])>4:initial['end_year'] = initial['end_year'][0:4]
-    initial['element'] = Get('element',Get('elements','pcpn').replace(' ','').split(',')[0])
-    initial['units'] =  Get('units','english')
-    initial['date_type'] = 'y'
-    initial['summary_type'] = Get('summary_type','all')
-    initial['max_missing_days'] = Get('max_missing_days','5')
-    initial['generate_graphics'] = Get('generate_graphics','T')
-    for st in ['all','temp','prsn','both','hc','g']:
-        checkbox_vals[st + '_selected'] =''
-        if st == initial['summary_type']:
-            checkbox_vals[st + '_selected'] ='selected'
-    for u in ['english', 'metric']:
-        checkbox_vals['units_' + u + '_selected'] =''
-        if u == initial['units']:
-            checkbox_vals['units_' +u + '_selected'] ='selected'
-    for bl in ['T','F']:
-        checkbox_vals['generate_graphics' + '_' + bl + '_selected'] = ''
-        if initial['generate_graphics'] == bl:
-            checkbox_vals['generate_graphics' + '_' + bl + '_selected'] = 'selected'
-    return initial,checkbox_vals
-
-def set_sodxtrmts_graph_initial(request, init=None):
-    initial = {}
-    checkbox_vals = {}
-    Get = set_GET(request)
-    initial['graph_generate_graph']= str(Get('graph_generate_graph', 'F'))
-    initial['graph_start_month'] = Get('graph_start_month', '01')
-    initial['graph_end_month'] = Get('graph_end_month', '02')
-    '''
-    if init and 'start_year' in init.keys() and 'end_year' in init.keys():
-        initial['graph_start_year'] = init['start_year']
-        initial['graph_end_year'] = init['end_year']
-    else:
-        initial['graph_start_year'] = Get('graph_start_year', Get('start_year', 'POR'))
-        initial['graph_end_year'] = Get('graph_end_year', Get('end_year', 'POR'))
-    '''
-    initial['graph_start_year'] = Get('graph_start_year', Get('start_year', 'POR'))
-    initial['graph_end_year'] = Get('graph_end_year', Get('end_year', 'POR'))
-    initial['graph_summary'] = Get('graph_summary', 'mean')
-    initial['graph_show_running_mean'] = Get('graph_show_running_mean', 'T')
-    initial['graph_running_mean_years'] = Get('graph_running_mean_years', '9')
-    initial['graph_plot_incomplete_years'] = Get('graph_plot_incomplete_years', 'F')
-    #initial['json_file'] = Get('json_file', None)
-    #initial['JSON_URL'] = Get('JSON_URL', '/tmp/')
-    for graph_month in ['01','02','03','04','05','06','07','08','09','10','11','12']:
-        checkbox_vals['graph_start_month' + '_' + graph_month + '_selected']=''
-        checkbox_vals['graph_end_month' + '_' + graph_month + '_selected']=''
-        if initial['graph_start_month'] == graph_month:
-            checkbox_vals['graph_start_month' + '_' + graph_month + '_selected']='selected'
-        if initial['graph_end_month'] == graph_month:
-            checkbox_vals['graph_end_month' + '_' + graph_month + '_selected']='selected'
-    for bl in ['T','F']:
-        for cbv in ['graph_show_running_mean', 'graph_plot_incomplete_years', 'graph_generate_graph']:
-            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
-            if initial[cbv] == bl:
-                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
-    for graph_summary in ['max','min','mean','sum','individual']:
-        checkbox_vals[ 'graph_summary_' + graph_summary + '_selected'] = ''
-        if initial['graph_summary'] == graph_summary:
-            checkbox_vals['graph_summary_' + graph_summary + '_selected'] = 'selected'
-    return initial, checkbox_vals
-
-
 
 
 def set_temporal_summary_initial(request):
