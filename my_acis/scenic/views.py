@@ -142,12 +142,87 @@ def gallery(request):
     context['param_urls'] = param_urls
     return render_to_response('scenic/gallery.html', context, context_instance=RequestContext(request))
 
-
 def resources(request):
     context = {
         'title': 'External Resources'
     }
     return render_to_response('scenic/resources.html', context, context_instance=RequestContext(request))
+
+def upload_test(request):
+    context = {
+        'title': 'Shapefile upload test'
+    }
+    form = forms.UploadFileForm()
+    poly_ll = ''
+    if request.method == 'POST':
+        form = forms.UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            #shape_file = request.FILES['shape_file']
+            shape_files = request.FILES.getlist('files')
+            feature_id = form.cleaned_data['feature_id']
+            context['shape_files'] = shape_files
+            #Write shape files to /tmp
+            shp_file = None
+            for shape_file in shape_files:
+                if str(shape_file).split('.')[-1] == 'shp':
+                    shp_file = str(shape_file)
+                with open('/tmp/' + str(shape_file),'wb+') as dest:
+                    for chunk in shape_file.chunks():
+                        dest.write(chunk)
+            #Read shape file and retrieve lat, lon coordinates
+            context['shp_file'] = shp_file
+            if shp_file is not None:
+                from osgeo import gdal, ogr, osr
+                ## Project all coordinates to WGS84
+                output_osr = osr.SpatialReference()
+                output_osr.ImportFromEPSG(4326)  ## WGS84
+                ##output_osr.ImportFromEPSG(4269)  ## NAD83
+                ## Get the spatial reference
+                input_ds = ogr.Open('/tmp/' + shp_file)
+                input_layer = input_ds.GetLayer()
+                input_osr = input_layer.GetSpatialRef()
+                ## Build the tranform object for projecting the coordinates
+                tx = osr.CoordinateTransformation(input_osr, output_osr)
+                #Get the feature by ID
+                input_ftr = input_layer.GetFeature(long(feature_id))
+                context['FID'] = feature_id
+                input_geom = input_ftr.GetGeometryRef()
+                input_geom_type = input_geom.GetGeometryName()
+                context['geometry'] = input_geom_type
+                ## Project a copy of the geometry
+                proj_geom = input_geom.Clone()
+                proj_geom.Transform(tx)
+
+                #Extract lon, lat coordinates from
+                #different geometry types
+                #1.POINTS
+                if input_geom_type == 'POINT':
+                    for i in range(0, proj_geom.GetGeometryCount()):
+                        pt = proj_geom.GetPoint(i)
+                        poly_ll+=str(pt[0]) + ',' + str(pt[1])
+                        if i < proj_geom.GetPointCount() - 1:
+                            poly_ll+=','
+                #2.LINES
+                #3.POLYGONS
+                if input_geom_type == 'POLYGON':
+                    ## POLYGONS are made up of LINEAR RINGS
+                    for i in range(0, proj_geom.GetGeometryCount()):
+                        sub_geom = proj_geom.GetGeometryRef(i)
+
+                        ## LINEAR RINGS are made up of POINTS
+                        for j in range(0, sub_geom.GetPointCount()):
+                            pt = sub_geom.GetPoint(j)
+                            poly_ll+=str(pt[0]) + ',' + str(pt[1])
+                            if j < sub_geom.GetPointCount() - 1:
+                                poly_ll+=','
+
+                    ## Get the next feature
+                    #input_ftr = input_layer.GetNextFeature()
+                    ## Or break after the first one
+                    #break
+    context['poly_ll'] = poly_ll
+    context['form'] = form
+    return render_to_response('scenic/upload_test.html', context, context_instance=RequestContext(request))
 
 def data_home(request):
     context = {

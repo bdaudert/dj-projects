@@ -304,6 +304,11 @@ input[value="Submit"] {
     margin:5px;
 }
 
+input[value="Upload"] {
+    background-color:#006666;
+    color:#FFEFD5;
+    margin:5px;
+}
 
 input[value="Search"] {
     background-color:#006666;
@@ -379,6 +384,22 @@ input[value="Update Map"] {
 
 
 input[value="Start Over"] {
+    /*background-color:#8FBC8F;*/
+    background-color:#4B0082;
+    color:#FFEFD5;
+    margin:5px;
+    width:100px;
+    height:25px;
+}
+input[value="Upload shapefile"] {
+    /*background-color:#8FBC8F;*/
+    background-color:#4B0082;
+    color:#FFEFD5;
+    margin:5px;
+    width:100px;
+    height:25px;
+}
+input[value="Draw custom shape"] {
     /*background-color:#8FBC8F;*/
     background-color:#4B0082;
     color:#FFEFD5;

@@ -1,0 +1,41 @@
+{% extends "csc_base.html" %}
+
+{% block content %}
+<table>
+<td valign="top" width="40%">
+
+    <form action="" enctype="multipart/form-data" method="post">{% csrf_token %}  
+        Select shape file components(.shp, .dbf, .shx,...):<br />
+        <table class="form" style="width:200px; height:100%; background-color:#CCE0E0"
+        class="sortable">{{ form|safe }}</table>
+        &nbsp;<input type="submit" name="upload" value="Upload"/>
+    </form>
+
+
+    <!--
+    <form method="post" action="">{% csrf_token %}
+      <input type="file" name="shape_file" accept=".shp,.txt,.xls,.doc,.docx" value={{shape_file}}><br />
+      <input type="submit" value="Upload" name="upload">
+    </form>-->
+
+    <!--
+    {% if form.is_multipart %}
+        <form enctype="multipart/form-data" method="post" action="">
+    {% else %}
+        <form method="post" action="">
+    {% endif %}{% csrf_token %}
+    <table style="width:200px; height:100%; background-color:lightblue" class="sortable">{{ form|safe }}</table>
+    <input type="submit" value="Upload" name="upload"/>
+    </form>-->
+</td>
+<td valign="top" width="60%">
+{%if error%}
+{{error}}<br />
+{%endif%}
+SHAPE_FILE: {{shp_file}}<br />
+FID: {{FID}}<br />
+GEOMETRY: {{geometry}}<br />
+POLY: {{poly_ll}}
+</td>
+</table>
+{%endblock %}
