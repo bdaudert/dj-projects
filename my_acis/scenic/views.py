@@ -195,16 +195,15 @@ def upload_test(request):
 
                 #Extract lon, lat coordinates from
                 #different geometry types
-                #1.POINTS
-                if input_geom_type == 'POINT':
-                    for i in range(0, proj_geom.GetGeometryCount()):
+                #1.POINT and MULTIPOINT
+                if input_geom_type in  ['POINT','MULTIPOINT']:
+                    for i in range(0, proj_geom.GetPointCount()):
                         pt = proj_geom.GetPoint(i)
                         poly_ll+=str(pt[0]) + ',' + str(pt[1])
                         if i < proj_geom.GetPointCount() - 1:
                             poly_ll+=','
-                #2.LINES
-                #3.POLYGONS
-                if input_geom_type == 'POLYGON':
+                #4.POLYGONS, LINES, MULTILINESTRINGS
+                if input_geom_type in ['POLYGON','LINE','MULTILINESTRING']:
                     ## POLYGONS are made up of LINEAR RINGS
                     for i in range(0, proj_geom.GetGeometryCount()):
                         sub_geom = proj_geom.GetGeometryRef(i)
