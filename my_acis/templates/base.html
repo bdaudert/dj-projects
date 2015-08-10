@@ -90,10 +90,7 @@ $(document).ready(function() {
     </div> <!-- END content -->
 
     {% block footer %}
-        <div id="footer" align="center"></div>
-        <script type="text/javascript">    
-        $("#footer").load("{{HTML_URL}}/Footers.html .footer-wrcc");
-        </script>
+        <div id="footer" align="center">{% include 'includes/Footer_WRCC.html'%}</div>
     {% endblock footer%}
 </div><!-- END container -->
 </body>

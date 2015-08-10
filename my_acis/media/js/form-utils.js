@@ -301,11 +301,30 @@ function update_value(val){
     this.value = val;
 }
 
-function set_area_defaults(area_type){
+function set_area_defaults(area_type, kml_file_path){
     var lv = {
-        'label':'Station ID',
-        'value':'RENO TAHOE INTL AP, 266779',
+        'label':'',
+        'value':null,
         'autofill_list':'US_' + area_type
+    }
+    //Get first layer of kml_file
+    var layer_name = null;
+    if (kml_file_path != null) {
+        var myParser = new geoXML3.parser({
+            afterParse:getFirstLayer
+        });
+        myParser.parse(kml_file_path);
+        function getFirstLayer(doc) {
+            var first_layer = doc[0].placemarks[0].description;
+            set_lv_value(first_layer);
+        };
+        function set_lv_value(v){
+            lv.value = v;
+        }
+    }
+    if (area_type == 'station_id'){
+        lv.label = 'Station ID';
+        lv.value ='RENO TAHOE INTL AP, 266779';
     }
     if (area_type == 'station_ids'){
         lv.label = 'Station IDs';
@@ -321,19 +340,27 @@ function set_area_defaults(area_type){
     }
     if (area_type == 'county'){
         lv.label ='County';
-        lv.value ='Churchill, 32001';
+        if (lv.value == null){
+            lv.value ='Churchill County, 32001';
+        }
     }
     if (area_type == 'climate_division'){
         lv.label ='Climate Division';
-        lv.value ='Northwestern, NV01';
+        if (lv.value == null){
+            lv.value ='Northwestern, NV01';
+        }
     }
     if (area_type == 'county_warning_area'){
         lv.label ='County Warning Area';
-        lv.value ='Las Vegas, NV, VEF';
+        if (lv.value == null){
+            lv.value ='Las Vegas, NV, VEF';
+        }
     }
     if (area_type == 'basin'){
         lv.label ='Basin';
-        lv.value ='Hot Creek-Railroad Valleys, 16060012';
+        if (lv.value == null){
+            lv.value ='Hot Creek-Railroad Valleys, 16060012';
+        }
     }
     if (area_type == 'state'){
         lv.label ='State';
@@ -403,7 +430,14 @@ function set_elements(data_type){
 function set_area(row_id, node){
     var lv, html_text, cell0,cell1,div;
     //Update area default 
-    lv = set_area_defaults(node.val());
+    var area_type = node.val()
+    kml_file_path = null
+    if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
+        TMP_URL = $('#TMP_URL').val();
+        state = $('#overlay_state').val();
+        kml_file_path = TMP_URL + state + '_' + area_type + '.kml'; 
+    }
+    lv = set_area_defaults(area_type, kml_file_path);
     //Update autofill list
     set_autofill(lv.autofill_list);
     //Update row_id

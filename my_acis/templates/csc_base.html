@@ -39,10 +39,17 @@
     <script type="text/javascript" src="{{MEDIA_URL}}js/Listeners.js"></script>
     <!-- Map API scripts and properties-->
     <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+    <!--
     <script type="text/javascript"
         src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true&libraries=drawing">
+    </script>-->
+    <script type="text/javascript"
+        src="http://maps.googleapis.com/maps/api/js?sensor=true&libraries=drawing">
     </script>
     <script type="text/javascript" src="{{MEDIA_URL}}js/polygon.min.js"></script>
+    <script type="text/javascript" src="http://geoxml3.googlecode.com/svn/branches/polys/geoxml3.js"></script>
+    <script type="text/javascript" src="http://geoxml3.googlecode.com/svn/trunk/ProjectedOverlay.js"></script>
+
     <!-- Highcharts graphics -->
     <!--<script type="text/javascript" src="{{ MEDIA_URL }}js/highcharts-4.1.5.js"></script>-->
     <script src="http://code.highcharts.com/highcharts.js"></script>
@@ -218,10 +225,7 @@
         {% endblock content%}
 
         {% block footer %}
-        <div id="footer" align="center"></div>
-        <script type="text/javascript">    
-        $("#footer").load("{{HTML_URL}}/Footers.html .footer-scenic");
-        </script>
+        <div id="footer" align="center">{% include 'includes/Footer_SCENIC.html'%}</div>
         {% endblock footer %}
     </div><!-- END content --> 
 </div><!-- END container -->

@@ -1093,6 +1093,41 @@ function initialize_map_overlays() {
     var infowindow = new google.maps.InfoWindow({
         content: 'oi'
     });
+    //Parse the kml file and populate the map and form with layers
+    var myParser = new geoXML3.parser({
+        afterParse: useTheData
+    });
+    myParser.parse(kml_file_path);
+    function useTheData(doc) {
+        geoXmlDoc = doc[0];
+        if (!geoXmlDoc || !geoXmlDoc.placemarks) return;
+        for (var i = 0; i < geoXmlDoc.placemarks.length; i++) {
+            //get first layer and display in area form filed
+            if (i == 0){
+                var layer_name = geoXmlDoc.placemarks[0].description;
+                $('.area').val(layer_name);
+            }
+            var placemark = geoXmlDoc.placemarks[i];
+            highlightPoly(placemark.multigeometry, i);
+        }
+    };
+    function highlightPoly(mpoly, polynum) {
+        var highlightOptions = {fillColor: "#FFFF00", strokeColor: "#000000", fillOpacity: 0.9, strokeWidth: 10};
+        google.maps.event.addListener(mpoly,"mouseover",function() {
+            mpoly.setOptions(highlightOptions);
+        });
+        google.maps.event.addListener(mpoly,"mouseout",function() {
+            mpoly.setOptions(mpoly.Style);
+        });
+    }  
+
+    /*
+    function getFirstLayer(doc) {
+        var layer_name = doc[0].placemarks[0].description;
+        $('.area').val(layer_name);
+        console.log(layer_name);
+    };
+    */
     var Layer = new google.maps.KmlLayer({
         url: 'http://'+ host + kml_file_path,
         suppressInfoWindows: true

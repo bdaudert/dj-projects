@@ -152,6 +152,30 @@ def upload_test(request):
     context = {
         'title': 'Shapefile upload test'
     }
+    initial = {
+        'files':'',
+        'feature_id':0
+    }
+    context['initial'] = initial
+    if 'upload' in request.POST:
+        initial['files'] = request.FILES.getlist('files')
+        initial['feature_id'] = request.POST['feature_id']
+        #Write all files to /tmp dir
+        #Identify .shp file
+        shp_file = None
+        for shape_file in initial['files']:
+            if str(shape_file).split('.')[-1] == 'shp':
+                shp_file = '/tmp/' + str(shape_file)
+            with open('/tmp/' + str(shape_file),'wb+') as dest:
+                for chunk in shape_file.chunks():
+                    dest.write(chunk)
+        if shp_file is None:
+            context['error'] = 'No .shp file was uploaded'
+            return render_to_response('scenic/upload_test.html', context, context_instance=RequestContext(request))
+        context['shp_file'] = shp_file
+        poly_ll = WRCCUtils.shapefile_to_ll(shp_file, initial['feature_id'])
+        context['poly_ll'] = poly_ll
+    '''
     form = forms.UploadFileForm()
     poly_ll = ''
     if request.method == 'POST':
@@ -172,55 +196,10 @@ def upload_test(request):
             #Read shape file and retrieve lat, lon coordinates
             context['shp_file'] = shp_file
             if shp_file is not None:
-                from osgeo import gdal, ogr, osr
-                ## Project all coordinates to WGS84
-                output_osr = osr.SpatialReference()
-                output_osr.ImportFromEPSG(4326)  ## WGS84
-                ##output_osr.ImportFromEPSG(4269)  ## NAD83
-                ## Get the spatial reference
-                input_ds = ogr.Open('/tmp/' + shp_file)
-                input_layer = input_ds.GetLayer()
-                input_osr = input_layer.GetSpatialRef()
-                ## Build the tranform object for projecting the coordinates
-                tx = osr.CoordinateTransformation(input_osr, output_osr)
-                #Get the feature by ID
-                input_ftr = input_layer.GetFeature(long(feature_id))
-                context['FID'] = feature_id
-                input_geom = input_ftr.GetGeometryRef()
-                input_geom_type = input_geom.GetGeometryName()
-                context['geometry'] = input_geom_type
-                ## Project a copy of the geometry
-                proj_geom = input_geom.Clone()
-                proj_geom.Transform(tx)
-
-                #Extract lon, lat coordinates from
-                #different geometry types
-                #1.POINT and MULTIPOINT
-                if input_geom_type in  ['POINT','MULTIPOINT']:
-                    for i in range(0, proj_geom.GetPointCount()):
-                        pt = proj_geom.GetPoint(i)
-                        poly_ll+=str(pt[0]) + ',' + str(pt[1])
-                        if i < proj_geom.GetPointCount() - 1:
-                            poly_ll+=','
-                #4.POLYGONS, LINES, MULTILINESTRINGS
-                if input_geom_type in ['POLYGON','LINE','MULTILINESTRING']:
-                    ## POLYGONS are made up of LINEAR RINGS
-                    for i in range(0, proj_geom.GetGeometryCount()):
-                        sub_geom = proj_geom.GetGeometryRef(i)
-
-                        ## LINEAR RINGS are made up of POINTS
-                        for j in range(0, sub_geom.GetPointCount()):
-                            pt = sub_geom.GetPoint(j)
-                            poly_ll+=str(pt[0]) + ',' + str(pt[1])
-                            if j < sub_geom.GetPointCount() - 1:
-                                poly_ll+=','
-
-                    ## Get the next feature
-                    #input_ftr = input_layer.GetNextFeature()
-                    ## Or break after the first one
-                    #break
-    context['poly_ll'] = poly_ll
-    context['form'] = form
+                poly_ll =  WRCCUtils.shapefile_to_ll(shp_file, feature_id)
+            context['poly_ll'] = poly_ll
+            context['form'] = form
+    '''
     return render_to_response('scenic/upload_test.html', context, context_instance=RequestContext(request))
 
 def data_home(request):
