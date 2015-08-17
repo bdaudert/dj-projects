@@ -530,8 +530,6 @@ def multi_lister(request):
     url = settings.APPLICATIONS['multi_lister'][2]
     initial, checkbox_vals = set_initial(request,'multi_lister')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
-    #Set initial overlay state for overlay map
-    #context[initial['overlay_state'].lower() + '_selected'] = 'selected'
     if 'formData' in request.POST:
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
@@ -614,7 +612,10 @@ def multi_lister(request):
         initial, checkbox_vals = set_initial(request,'map_overlay')
         context[initial['overlay_state'] + '_selected'] = 'selected'
         #overide kml_file_path
-        initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
+        for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
+            kml_file_path = create_kml_file(at, initial['overlay_state'])
+            if initial['area_type'] == at:
+                initial['kml_file_path'] = kml_file_path
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
 
     #Download button pressed
@@ -711,8 +712,10 @@ def temporal_summary(request):
             context['form_error'] = form_error
             if form_cleaned['area_type'] in ['basin','county','county_warning_area', 'climate_division']:
                 context['need_overlay_map'] = True
-            kml_file_path = create_kml_file(form['area_type'], form['overlay_state'])
-            context['kml_file_path'] = kml_file_path
+                for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
+                    kml_file_path = create_kml_file(at, form['overlay_state'])
+                    if form['area_type'] == at:
+                        context['kml_file_path'] = kml_file_path
             return render_to_response(url, context, context_instance=RequestContext(request))
 
         #Generate Maps
@@ -793,11 +796,10 @@ def spatial_summary(request):
             context['form_error'] = form_error
             if form_cleaned['area_type'] in ['basin','county','county_warning_area', 'climate_division']:
                 context['need_overlay_map'] = True
-            try:
-                kml_file_path = create_kml_file(form['area_type'], form['overlay_state'])
-                context['kml_file_path'] = kml_file_path
-            except:
-                pass
+                for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
+                    kml_file_path = create_kml_file(at, form['overlay_state'])
+                    if form['area_type'] == at:
+                        context['kml_file_path'] = kml_file_path
             return render_to_response(url, context, context_instance=RequestContext(request))
 
         #Display parameters
@@ -879,7 +881,10 @@ def spatial_summary(request):
         initial, checkbox_vals = set_initial(request,'map_overlay')
         context[initial['overlay_state'] + '_selected'] = 'selected'
         #overide kml_file_path
-        initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
+        for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
+            kml_file_path = create_kml_file(at, initial['overlay_state'])
+            if initial['area_type'] == at:
+                initial['kml_file_path'] = kml_file_path
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
 
     #Download button pressed
@@ -1019,7 +1024,10 @@ def station_finder(request):
         initial, checkbox_vals = set_initial(request,'map_overlay')
         context[initial['overlay_state'] + '_selected'] = 'selected'
         #overide kml_file_path
-        initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
+        for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
+            kml_file_path = create_kml_file(at, initial['overlay_state'])
+            if initial['area_type'] == at:
+                initial['kml_file_path'] = kml_file_path
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
 
     return render_to_response(url, context, context_instance=RequestContext(request))
@@ -2086,8 +2094,8 @@ def set_initial(request,req_type):
     #Create kml files for oerlay state
     for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
         kml_file_path = create_kml_file(at, initial['overlay_state'])
-    if initial['area_type'] in ['basin', 'county', 'county_warning_area', 'climate_division']:
-        initial['kml_file_path'] = create_kml_file(initial['area_type'], initial['overlay_state'])
+        if initial['area_type'] == at:
+            initial['kml_file_path'] = kml_file_path
 
     #Set element(s)--> always as list if multiple
     if req_type == 'map_overlay':
@@ -2311,6 +2319,11 @@ def set_initial(request,req_type):
             checkbox_vals['show_running_mean_' + bl + '_selected'] = ''
             if initial['show_running_mean'] == bl:
                 checkbox_vals['show_running_mean_' + bl + '_selected'] = 'selected'
+    if 'departures_from_averages' in initial.keys():
+        for bl in ['T','F']:
+            checkbox_vals['departures_from_averages_' + bl + '_selected'] = ''
+            if initial['departures_from_averages'] == bl:
+                checkbox_vals['departures_from_averages_' + bl + '_selected'] = 'selected'
     if 'grid' in initial.keys():
         for g in ['1','21','3','4','5','6','7','8','9','10','11','12','13','14','15','16']:
             checkbox_vals['grid_' + g + '_selected'] =''

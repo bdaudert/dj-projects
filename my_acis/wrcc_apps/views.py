@@ -302,7 +302,7 @@ def sods(request, app_name):
             elif app_name == 'Sodsumm':
                 el_type  = form2.cleaned_data['element']
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
-                'station_ids':station_ids,'station_names':station_names,'el_type':el_type, 'max_missing_days':form2.cleaned_data['max_missing_days']}
+                'ids':station_ids,'station_names':station_names,'el_type':el_type, 'max_missing_days':form2.cleaned_data['max_missing_days']}
                 results = run_data_app(**app_args)
                 context['max_missing_days'] = form2.cleaned_data['max_missing_days']
                 if el_type  == 'temp':

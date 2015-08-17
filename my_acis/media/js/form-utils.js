@@ -309,6 +309,7 @@ function set_area_defaults(area_type, kml_file_path){
     }
     //Get first layer of kml_file
     var layer_name = null;
+    /*
     if (kml_file_path != null) {
         var myParser = new geoXML3.parser({
             afterParse:getFirstLayer
@@ -322,6 +323,7 @@ function set_area_defaults(area_type, kml_file_path){
             lv.value = v;
         }
     }
+    */
     if (area_type == 'station_id'){
         lv.label = 'Station ID';
         lv.value ='RENO TAHOE INTL AP, 266779';
@@ -435,7 +437,7 @@ function set_area(row_id, node){
     if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
         TMP_URL = $('#TMP_URL').val();
         state = $('#overlay_state').val();
-        kml_file_path = TMP_URL + state + '_' + area_type + '.kml'; 
+        kml_file_path = '/tmp/' + state + '_' + area_type + '.kml'; 
     }
     lv = set_area_defaults(area_type, kml_file_path);
     //Update autofill list

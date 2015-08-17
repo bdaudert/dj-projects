@@ -1093,6 +1093,7 @@ function initialize_map_overlays() {
     var infowindow = new google.maps.InfoWindow({
         content: 'oi'
     });
+    /*
     //Parse the kml file and populate the map and form with layers
     var myParser = new geoXML3.parser({
         afterParse: useTheData
@@ -1108,7 +1109,7 @@ function initialize_map_overlays() {
                 $('.area').val(layer_name);
             }
             var placemark = geoXmlDoc.placemarks[i];
-            highlightPoly(placemark.multigeometry, i);
+            //highlightPoly(placemark.MultiGeometry, i);
         }
     };
     function highlightPoly(mpoly, polynum) {
@@ -1120,7 +1121,7 @@ function initialize_map_overlays() {
             mpoly.setOptions(mpoly.Style);
         });
     }  
-
+    */
     /*
     function getFirstLayer(doc) {
         var layer_name = doc[0].placemarks[0].description;
