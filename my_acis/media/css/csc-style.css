@@ -195,6 +195,7 @@ a:active { color:#FF0000;}
  
 #nav li a {
   float: left;
+  display:block;
   font: bold 1em arial,verdana,tahoma,sans-serif;
   line-height: 40px;
   color:#FFEFD5;
@@ -210,6 +211,17 @@ a:active { color:#FF0000;}
   -webkit-border-top-left-radius: 10px;
   */
 }
+
+
+#nav li ul li a {
+  clear:both;
+  position:relative;
+  left:70px;
+  text-align:left;
+  width:150px;
+}
+
+
 /* APPLIES THE ACTIVE STATE */
 #nav .current a, #nav li:hover > a  {
   color:#FFEFD5;
@@ -247,7 +259,8 @@ a:active { color:#FF0000;}
 } 
 
 #nav li:hover > ul li a {
-  float: left;
+  display:block;
+  float:left;
   line-height: 45px;
   color:#FFEFD5;
   text-decoration: none;
