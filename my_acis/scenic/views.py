@@ -43,9 +43,10 @@ def test(request):
 
 def home(request):
     context = {
-        'title': 'Start by choosing one of the following:',
+        'title': settings.APPLICATIONS['home'][0],
     }
-    return render_to_response('scenic/home.html', context, context_instance=RequestContext(request))
+    url = settings.APPLICATIONS['home'][2]
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 def swcke_home(request):
     context = {
@@ -55,37 +56,42 @@ def swcke_home(request):
 
 def about_us(request):
     context = {
-        'title': 'Overview',
+        'title': settings.APPLICATIONS['about_us'][0],
         'icon':'AboutUs.png'
     }
-    return render_to_response('scenic/about_us.html', context, context_instance=RequestContext(request))
+    url = settings.APPLICATIONS['about_us'][2]
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 def who_we_are(request):
     context = {
-        'title': 'Who we are',
+        'title': settings.APPLICATIONS['who_we_are'][0],
         'icon':'AboutUs.png'
     }
-    return render_to_response('scenic/who_we_are.html', context, context_instance=RequestContext(request))
+    url = settings.APPLICATIONS['who_we_are'][2]
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 def what_we_do(request):
     context = {
-        'title': 'What we do',
+        'title': settings.APPLICATIONS['what_we_do'][0],
         'icon':'AboutUs.png'
     }
-    return render_to_response('scenic/what_we_do.html', context, context_instance=RequestContext(request))
+    url = settings.APPLICATIONS['what_we_do'][2]
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 def contact_us(request):
     context = {
-        'title': 'Contact Us',
+        'title': settings.APPLICATIONS['contact_us'][0],
         'icon':'AboutUs.png'
     }
-    return render_to_response('scenic/contact_us.html', context, context_instance=RequestContext(request))
+    url = settings.APPLICATIONS['contact_us'][2]
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 def dashboard(request):
     context = {
-        'title': 'Climate Dashboard',
+        'title': settings.APPLICATIONS['dashboard'][0],
         'icon':'Dashboard.png'
     }
+    url = settings.APPLICATIONS['dashboard'][2]
     #Find mon, year to locate snotel map
     year = str(datetime.datetime.today().year)
     month = str(datetime.datetime.today().month)
@@ -101,12 +107,13 @@ def dashboard(request):
     context['year'] = year
     context['year_short'] = '%s%s' % (year[-2], year[-1])
 
-    return render_to_response('scenic/dashboard.html', context, context_instance=RequestContext(request))
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 def gallery(request):
     context = {
-        'title': 'How To'
+        'title': settings.APPLICATIONS['gallery'][0],
     }
+    url = settings.APPLICATIONS['gallery'][2]
     app_urls = {};app_names = {};param_urls = {}
 
     #Gallery: FINDING A POINT/AREA OF INETREST
@@ -140,13 +147,14 @@ def gallery(request):
     context['app_urls'] = app_urls
     context['app_names'] = app_names
     context['param_urls'] = param_urls
-    return render_to_response('scenic/gallery.html', context, context_instance=RequestContext(request))
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 def resources(request):
     context = {
-        'title': 'External Resources'
+        'title': settings.APPLICATIONS['resources'][0],
     }
-    return render_to_response('scenic/resources.html', context, context_instance=RequestContext(request))
+    url = settings.APPLICATIONS['resources'][2]
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 def upload_test(request):
     context = {
@@ -204,14 +212,16 @@ def upload_test(request):
 
 def data_home(request):
     context = {
-        'title': 'Data Access'
+        'title': settings.APPLICATIONS['data_home'][0],
     }
-    return render_to_response('scenic/data/home.html', context, context_instance=RequestContext(request))
+    url = settings.APPLICATIONS['data_home'][2],
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 def single_point_prods(request):
     context = {
-        'title': 'Single Point Products'
+        'title': settings.APPLICATIONS['single_point_prods'][0],
     }
+    url = settings.APPLICATIONS['single_point_prods'][2]
     #Link from other apps
     if request.method == 'GET' and ('elements' in request.GET or 'element' in request.GET):
         #set link params
@@ -224,7 +234,7 @@ def single_point_prods(request):
             except:
                 continue
         context['initial'] = init
-        for app in ['single_lister', 'monann', 'climatology','data_comparison']:
+        for app in ['single_lister', 'monann', 'climatology','data_comparison', 'interannual', 'intraannual']:
             initial, checkbox_vals = set_initial(request, app)
             p_str = '?'
             for key, val in initial.iteritems():
@@ -239,12 +249,13 @@ def single_point_prods(request):
             p_str=p_str[0:-1]
             context['url_params_' + app] =  p_str
 
-    return render_to_response('scenic/data/single/home.html', context, context_instance=RequestContext(request))
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 def multi_point_prods(request):
     context = {
-        'title': 'Multi Point Products'
+        'title': settings.APPLICATIONS['multi_point_prods'][0],
     }
+    url = settings.APPLICATIONS['multi_point_prods'][2]
     #Link from other apps
     if request.method == 'GET' and ('elements' in request.GET or 'element' in request.GET):
         #set link params
@@ -262,7 +273,7 @@ def multi_point_prods(request):
             #strip last &
             p_str=p_str[0:-1]
             context['url_params_' + app] =  p_str
-    return render_to_response('scenic/data/multi/home.html', context, context_instance=RequestContext(request))
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 
 def sw_networks(request):
