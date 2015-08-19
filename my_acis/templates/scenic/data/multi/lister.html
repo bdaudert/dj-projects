@@ -27,7 +27,7 @@
     <div id="Docu_delimiter">{% include 'includes/Docu_delimiter.html'%}</div>
 </div><!--End how_to-->
 
-<!---Hidded variables-->
+<!---Hidden variables-->
 <input type="hidden" id="app_name" name="app_name" value="multi_lister">
 <!--For maps-->
 <input type="hidden" id="host" name="host" value="{{iniial.host}}">
@@ -36,7 +36,7 @@
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 
-<!--Tool Infor/Howto-->
+<!--Tool Info/Howto-->
 <table>
 <td valign="bottom" width="45%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/lister/'"/>
@@ -142,17 +142,17 @@
         </form>
     </div>
 </td>
-<!--Errors/Down arow/Maps-->
+<!--Errors/Down arrow/Maps-->
 <td valign="top" width="60%">
     <!--Form Errors and search parameter section-->
     <div id="request_email_message"  style="display:none">
-    Non-summarized data wll be processed offline.<br /> 
+    Non-summarized data will be processed off line.<br /> 
     Please provide your name and email address at the bottom of the form.
     </div>
 
     {%if large_request and not form_error %}
     <p class="message results" text-align="left">
-    Your data request will be processed offline.</br />
+    Your data request will be processed off line.</br />
     An email confirmation with instructions on how to obtain your data will
     be sent on successful completion of the request.
     Please contact scenic@dri.edu if you do not hear from us within 12 hours.
@@ -260,7 +260,7 @@
     {% if not results.errors and results.data and not results.smry%}
         <p>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
         {% for point_data in results.data %}
-        <p class="message" align="left" style="max-width:60%;"><b>METADATA</b>:
+        <p class="message" align="left" style="max-width:60%;"><b>META DATA</b>:
             {{results.meta|lookup:forloop.counter0}}
         </p>
         <p class="message" align="left"><b>DATA</b>:</p>

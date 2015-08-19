@@ -16,7 +16,7 @@
        {%if not error and not message%}
         <form action="" method="post">{% csrf_token %}
         <p>Subject: <input type="text" name="subject"></p>
-        <p>Your e-mail (optional): <input type="text" name="email"></p>
+        <p>Your email (optional): <input type="text" name="email"></p>
         <p>Message: <textarea name="message" rows="10" cols="50"></textarea></p>
         <input type="submit" value="Submit">
         </form>

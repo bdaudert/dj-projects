@@ -8,10 +8,10 @@
 </td>
 <td valign="top" width="90%" align="left">
     <p width="450px">
-    <h3>Creating symlinks</h3>
+    <h3>Creating symbolic links</h3>
     It is inconvenient to copy all needed packages and modules into the application              
-    directory every time you develop a new app engine application.
-    Implementing symlinks that  point from your application directory 
+    directory every time you develop a new appengine application.
+    Implementing symbolic links that  point from your application directory 
     to a central location where reusable code is stored solves this problem.
     However, care must be taken as some of the packages can not be symlinked.
     The httplib2 package  and the config.py file should not be symlinked.
@@ -23,7 +23,7 @@
     it is a sub directory of my home directory.
     The Google directory is  where I store all reusable code (media, my-python-lib, ee-lib folders).
     Specific application code is stored in the applications folder. 
-    ~ stands for home directory and needs to be replaced with the approprate path to your google directory.
+    ~ stands for home directory and needs to be replaced with the appropriate path to your google directory.
     <pre class="code"><code>
     <img src="/csc/media/img/FolderIcon.png">~/Google/
         <img src="/csc/media/img/FolderIcon.png">ee-lib/

@@ -114,7 +114,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     </form>
     </div><!--end form data div-->
 
-<!--Errors/dowm arrow/maps-->
+<!--Errors/down arrow/maps-->
 <td valign="top" width="60%" align="center">
     <!--Form Errors and search parameter section-->
     {%if form_error%}
@@ -128,7 +128,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 
     {%if large_request and not form_error %}
     <p class="message results" text-align="left">
-    Your data request will be processed offline.</br />
+    Your data request will be processed off line.</br />
     An email confirmation with instructions on how to obtain your data will
     be sent on successful completion of the request.
     Please contact scenic@dri.edu if you do not hear from us within 12 hours.
@@ -199,7 +199,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 <td valign="top" width="97%" align="center">
     <!-Data Download-> 
     <div id='formDownload' style="display:none;max-width:400px;">
-    <p class="message">Your request will be processed offline.<br />
+    <p class="message">Your request will be processed off line.<br />
     Please submit this request form.
     </p>
     <form id="tableDownloadForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('tableDataForm', $(this).attr('id'))">{% csrf_token %}

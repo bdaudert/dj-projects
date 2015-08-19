@@ -29,8 +29,8 @@
   <p>
   For monthly and annual mean, thresholds and sums:</br>
   Month with {{max_missing_days}} or more missing days are not considered</br>
-  Years with one or mor missing months are not considered</br>
-  Two-didgit years are departures from 1900: -20 = 1880, 102 = 2002</br>
+  Years with one or more missing months are not considered</br>
+  Two-digit years are departures from 1900: -20 = 1880, 102 = 2002</br>
   </p>
   {%for stn, stn_data in results.items %}
     <p class="stronger" style="color:darkblue">Station: ({{station_ids|lookup:stn|safe}}) {{station_names|lookup:stn|safe}}</br>

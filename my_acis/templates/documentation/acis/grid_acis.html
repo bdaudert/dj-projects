@@ -36,7 +36,7 @@
     <tr><td>
     <a target="_blank" href="http://maca.northwestknowledge.net/" class="trigger_hover">MACA Home</a>
     <div class="pop-up" id="MACA">
-    <p><font size="4">Webpages for MACA dataset. (External)</font></p>
+    <p><font size="4">Web pages for MACA dataset. (External)</font></p>
     </div>
     </td></tr>
     </table>
@@ -45,7 +45,7 @@
     <h3>1. Netcdf to hdf5 conversion</h3>
     <p align=left"">Since data in the ACIS system is stored in hdf5 files, we first need to convert all data files into this format.<br />
     Each hdf5 file contains data for on year for all climate elements. <br />
-    Each element in the mACA dataset is stored seperately in files overing 10/5 year chunks for version 1, 2, respectively.<br />
+    Each element in the mACA dataset is stored separately in files overing 10/5 year chunks for version 1, 2, respectively.<br />
     Below is the python script that converts the MACA netCDF files into HDF5 format.<br />
     These are the main steps that are are involved in the process.<br />
     Given a year and a MACA model, we
@@ -56,8 +56,8 @@
     <li>Download the nedCDF</li>
     <li>Find the time indices for our year in the netCDF data array</li>
     <li>Create a hdf5 data object of shape (time=365 days, lat,lon)</li>
-    <li>Reads the data for this year from the netCDF file and stres it in a python data array</li>
-    <li>Loads the data from the data array into the hdf5  data object.</li>
+    <li>Read the data for this year from the netCDF file and load it into a python data array</li>
+    <li>Load the data from the data array into the hdf5  data object.</li>
     </ul>
     <li>Write the data for one year to hdf5 file [year].h5</li> 
     </u;>
@@ -68,13 +68,13 @@
     <li>urllib --> to download netCDF files from ftp server</li>
     <li>netCDF4 --> python interface to netCDF (reads and writes netCDF files)</li>
     <li>h5py --> python interface to hdf5 (reads and writes hdf5 files)</li>
-    <li>settings.py --> configuration file containing dataset and directorty structure information
+    <li>settings.py --> configuration file containing dataset and directory structure information
     <p class="trigger_hover pop_link" onclick="ShowPopupDocu('Docu_settings')"><font color=""><u>settings.py</u></font></p>
     </li>
     </ul>
     </p>
     <div class="pop-up" id="NetHdf5">
-    <p><font size="4">Describes methology for conversion of netCDF to HDF5 format. (Internal)</font></p>
+    <p><font size="4">Describes methodology for conversion of netCDF to HDF5 format. (Internal)</font></p>
     </div>
     <h3>2. Grid Definition file</h3>
     <p align="left">

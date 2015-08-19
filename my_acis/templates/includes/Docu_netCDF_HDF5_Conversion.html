@@ -59,7 +59,7 @@ class NetCDFToHDF5Converter(object):
         Initializes hdf5 data structure
         dimensions: (element, time, lat,lon)
         Each hdf5 file holds data for one year for each element
-        at each lat/lon
+        at each lon/lat
         '''
         self.h5 = h5 = h5py.File(self.base_dir + self.h5_name,'w-')
         shape_v, shape_h = self.grid_shape
