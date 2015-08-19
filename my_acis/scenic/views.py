@@ -461,6 +461,14 @@ def single_lister(request):
             return response
     return render_to_response(url, context, context_instance=RequestContext(request))
 
+def single_intraannual(request):
+    context = {
+        'title': settings.APPLICATIONS['single_intraannual'][0]
+    }
+    url = settings.APPLICATIONS['single_intraannual'][2]
+    initial, checkbox_vals = set_initial(request,'intraannual')
+    context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
+    return render_to_response(url, context, context_instance=RequestContext(request))
 
 def single_interannual(request):
     context = {
@@ -2039,7 +2047,7 @@ def set_initial(request,req_type):
     Getlist = set_GET_list(request)
     #Set area type: station_id(s), location, basin,...
     area_type = None
-    if req_type in ['single_lister','climatology','monann', 'interannual']:
+    if req_type in ['single_lister','climatology','monann', 'interannual','intraannual']:
         initial['area_type'] = Get('area_type','station_id')
     elif req_type in ['data_comparison']:
         initial['area_type'] = 'location'
@@ -2088,6 +2096,9 @@ def set_initial(request,req_type):
     elif initial['area_type'] in ['basin','county_warning_area','county','climate_division','state','shape']:
         initial['autofill_list'] = 'US_' + initial['area_type']
         initial['data_type'] = Get('data_type','station')
+    #Grid
+    if req_type not in ['station_finder', 'sf_download']:
+        initial['grid'] = Get('grid','1')
     #Set up map parameters
     initial['overlay_state'] = Get('overlay_state','nv').lower()
     initial['host'] = settings.HOST
@@ -2100,7 +2111,7 @@ def set_initial(request,req_type):
     #Set element(s)--> always as list if multiple
     if req_type == 'map_overlay':
         initial['elements'] = Get('elements','maxt,mint,pcpn').split(',')
-    elif req_type in ['monann','data_comparison', 'interannual']:
+    elif req_type in ['monann','data_comparison', 'interannual','intraannual']:
         initial['element'] = Get('element','pcpn')
     else:
         els = Getlist('elements',None)
@@ -2132,17 +2143,30 @@ def set_initial(request,req_type):
         initial['start_year']  = Get('start_year', 'POR')
         initial['end_year']  = Get('end_year', 'POR')
     elif req_type in ['interannual']:
-        initial['start_year']  = Get('start_year', '1970')
-        initial['end_year']  = Get('end_year', '1999')
-        if initial['area_type'] == 'station_id':
-            initial['min_year'] = Get('min_year','1850')
-            initial['max_year'] = Get('max_year', str(int(today_year) + 1))
-        if initial['area_type'] == 'location':
-            initial['min_year'] = Get('min_year','1970')
-            initial['max_year'] = Get('max_year', '2000')
+        initial['start_date'] = Get('start_date', None)
+        initial['end_date'] = Get('end_date', None)
+        if initial['start_date'] is None or initial['end_date'] is None:
+            if 'station_id' in initial.keys():
+                stn_id = WRCCUtils.find_id(initial['station_id'],settings.MEDIA_DIR + '/json/US_station_id.json')
+                vd = WRCCUtils.find_valid_daterange(stn_id,el_list=[initial['element']])
+                if vd and initial['start_date'] is None and len(vd) >=1:
+                    initial['start_date'] = vd[0]
+                if vd and initial['end_date'] is None and len(vd) >1:
+                    initial['end_date'] = vd[1]
+                if initial['start_date'] is None or initial['end_date'] is None:
+                    initial['start_date'] = '9999-99-99'
+                    initial['end_date'] = '9999-99-99'
+            if 'location' in initial.keys():
+                initial['start_date'] = WRCCData.GRID_CHOICES[str(initial['grid'])][3][0][0]
+                initial['end_date'] = WRCCData.GRID_CHOICES[str(initial['grid'])][3][0][1]
+        initial['start_year'] = initial['start_date'][0:4]
+        initial['end_year'] = initial['end_date'][0:4]
         initial['start_month']  = Get('start_month', '1')
         initial['end_month']  = Get('end_month', '1')
         initial['start_day']  = Get('start_day', '1')
+        initial['end_day']  = Get('end_day', '31')
+    elif req_type == ['intraannual']:
+        initial['start_month']  = Get('start_month', '1')
         initial['end_day']  = Get('end_day', '31')
     else:
         initial['start_date']  = Get('start_date', WRCCUtils.format_date_string(fourtnight,'-'))
@@ -2168,8 +2192,6 @@ def set_initial(request,req_type):
             initial['temporal_summary'] = Get('temporal_summary', 'mean')
     if req_type in ['single_lister', 'multi_lister','spatial_summary']:
         initial['spatial_summary'] = Get('spatial_summary', 'mean')
-    if req_type not in ['station_finder', 'sf_download']:
-        initial['grid'] = Get('grid','1')
 
     #download options
     initial['data_format'] = Get('data_format', 'html')

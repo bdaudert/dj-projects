@@ -1,0 +1,16 @@
+        <td>Grid: </td>
+        <td>
+            <select class="grid" id="grid" name="grid">
+                <option value="1" {{checkbox_vals.grid_1_selected}}>NRCC Interpolated(1950-Present)</option>
+                <option value="3" {{checkbox_vals.grid_3_selected}}>NRCC Int. Hi-Res(2007-Present)</option>
+                <option value="21" {{checkbox_vals.grid_21_selected}}>PRISM(1981-Present)</option>
+            </select>
+        </td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+            <div id="ht_grid"></div>
+            <script type="text/javascript">                        
+            $("#ht_grid").load("{{HTML_URL}}/Docu_help_texts.html #ht_grid_historic");
+            </script>
+        </div>
+        </td>

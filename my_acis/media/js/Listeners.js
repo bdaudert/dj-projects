@@ -65,8 +65,41 @@ $(document).ready(function ($) {
         }
     });
     $('.month').on('change', function(){
-        mon_lens = [31,28,31,30,31,30,31,31,30,31,30,31]
+        mon_lens = [31,28,31,30,31,30,31,31,30,31,30,31];
+        mon_names = ['January','February','March','April',
+            'May','June','July','August','September','October','November','December'];
         var which = $(this).attr('id');
+        //Adjust days 
+        var mon_int = parseInt($(this).val());
+        if (which == 'start_month'){
+            $('#start_day > option').remove();
+            for (day=1; day<=mon_lens[mon_int -1]; day++) {
+                var option = '<option value="' + String(day) + '">' + String(day); 
+                /*
+                if (day == 1){
+                    option+= ' selected';
+                }
+                */
+                option+='</option>';
+                $('#start_day').append(option);
+            }
+            $('#start_day').val(1)
+        }
+        if (which == 'end_month'){
+            $('#end_day > option').remove();                                  
+            for (day=1; day<=mon_lens[mon_int -1]; day++) {
+                var option = '<option value="' + String(day) + '">' + String(day);   
+                /*
+                if (day == mon_lens[mon_int -1]){
+                    option+= ' selected';
+                }
+                */
+                option+='</option>';
+                $('#end_day').append(option);
+            }
+            $('#end_day').val(mon_lens[mon_int -1])
+        }
+        //Make sure start/end period are forming consistent time line
         var s_month_int = parseInt($('#start_month').val());
         var e_month_int = parseInt($('#end_month').val());
         var s_day_int = parseInt($('#start_day').val());
