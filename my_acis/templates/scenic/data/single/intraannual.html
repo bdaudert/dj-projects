@@ -72,6 +72,10 @@
         <tr style="display:table-row;">{% include 'includes/start_month_day.html'%}</tr>
         </table>
         <input type="hidden" id="data_type" name="data_type" value="{{initial.data_type}}">
+        <input type="hidden" id="start_date" name="start_date" value="{{initial.start_date}}">
+        <input type="hidden" id="end_date" name="end_date" value="{{initial.end_date}}">
+        <input type="hidden" id="start_year" name="start_year" value="{{initial.start_year}}">
+        <input type="hidden" id="end_year" name="end_year" value="{{initial.end_year}}">
         <input style="margin:5px" type="submit" value="Generate time series" name="formData"/>
         </form>
     </div>
@@ -149,6 +153,8 @@
     {%endfor%}
     </p>
     {%endif%}
+
+    {{yer_txt_data}}
 
     <!--DATA-->
     {% if not results.errors and results.data %}

@@ -479,6 +479,14 @@ def single_intraannual(request):
     url = settings.APPLICATIONS['single_intraannual'][2]
     initial, checkbox_vals = set_initial(request,'intraannual')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
+    if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
+        form = set_form(request,clean = False)
+        form_cleaned = set_form(request,clean = True)
+        year_txt_data, year_graph_data, climoData, percentileData = WRCCUtils.get_single_intraannual_data(form_cleaned)
+        context['year_txt_data'] = year_txt_data
+        context['year_graph_data'] = year_graph_data
+        context['climoData'] = climoData
+        context['percentileData'] = percentileData
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def single_interannual(request):
@@ -488,7 +496,7 @@ def single_interannual(request):
     url = settings.APPLICATIONS['single_interannual'][2]
     initial, checkbox_vals = set_initial(request,'interannual')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
-    if 'formData' in request.POST:
+    if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
         form = set_form(request,clean = False)
         form_cleaned = set_form(request,clean = True)
         element_short = WRCCUtils.elements_to_table_headers(form['element'],form['units'])[0]
@@ -2142,7 +2150,7 @@ def set_initial(request,req_type):
     initial['units'] = Get('units','english')
 
     #Set degree days
-    if req_type not in ['station_finder', 'monann', 'climatology', 'data_comparison', 'interannual']:
+    if req_type not in ['station_finder', 'monann', 'climatology', 'data_comparison']:
         initial['add_degree_days'] = Get('add_degree_days', 'F')
         if initial['units'] == 'metric':
             initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
@@ -2153,7 +2161,7 @@ def set_initial(request,req_type):
     if req_type in ['monann','climatology']:
         initial['start_year']  = Get('start_year', 'POR')
         initial['end_year']  = Get('end_year', 'POR')
-    elif req_type in ['interannual']:
+    elif req_type in ['interannual', 'intraannual']:
         initial['start_date'] = Get('start_date', None)
         initial['end_date'] = Get('end_date', None)
         if initial['start_date'] is None or initial['end_date'] is None:
@@ -2173,12 +2181,10 @@ def set_initial(request,req_type):
         initial['start_year'] = initial['start_date'][0:4]
         initial['end_year'] = initial['end_date'][0:4]
         initial['start_month']  = Get('start_month', '1')
-        initial['end_month']  = Get('end_month', '1')
         initial['start_day']  = Get('start_day', '1')
-        initial['end_day']  = Get('end_day', '31')
-    elif req_type == ['intraannual']:
-        initial['start_month']  = Get('start_month', '1')
-        initial['end_day']  = Get('end_day', '31')
+        if req_type == 'interannual':
+            initial['end_month']  = Get('end_month', '1')
+            initial['end_day']  = Get('end_day', '31')
     else:
         initial['start_date']  = Get('start_date', WRCCUtils.format_date_string(fourtnight,'-'))
         initial['end_date']  = Get('end_date', WRCCUtils.format_date_string(yesterday,'-'))

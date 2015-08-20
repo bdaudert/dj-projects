@@ -736,7 +736,6 @@ table #map_legend {
     position:relative;
     left:0px;
     */
-    /*width:620px;*/
     max-height:450px;
     overflow:scroll;
     background: #FFEFD5;

@@ -351,7 +351,18 @@ function initialize_station_finder() {
             var tdArray = [c.name, c.state, c.sid, c.lat, c.lon, c.elevation, c.stn_networks];
             for (var k=0;k<tdArray.length;k++){
                 td = $('<td>');
-                html_text = tdArray[k];
+                if (k != tdArray.length - 1) { 
+                    html_text = tdArray[k];
+                }
+                else{
+                    html_text ='';
+                    for (var j=0;j<tdArray[k].length;j++){
+                        html_text+=tdArray[k][j]
+                        if (j != tdArray[k].length - 1){
+                            html_text+= ',';
+                        }
+                    }
+                }
                 td.html(html_text);
                 tbl_row.append(td);
             }
