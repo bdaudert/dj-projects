@@ -136,9 +136,6 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     {%endif%}
 
     <!-- Form Errors-->
-    {%if form_error%}
-    <p class="error" align="center">ERROR: Please correct the form error(s) highlighted in red!</p>
-    {%endif%}
     <!--Map error-->
     {% if error %}
         <p class="error">{{ error }}</p>
@@ -225,14 +222,6 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
         {% include 'includes/station_finder_map.html'%}
     </div>
     {%endif%}
-
-    <!-- Form Errors-->
-    {%if form_error%}
-    {%for key, val in form_error.items%}
-    <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
-    {%endfor%}
-    {%endif%}
-
 </td>
 </table>
 

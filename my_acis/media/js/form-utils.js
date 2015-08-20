@@ -468,12 +468,20 @@ function hide_grid_point_map(){
     if ($('#map-gridpoint').length){
         $('#map-gridpoint').css('display','none');
     }
+    if ($('#address').length){
+        $('#address').css('display','none');
+    }
+    if ($('#zoombutton').length){
+        $('#zoombutton').css('display','none');
+    }
 }
 
 function show_gridpoint_map(){
     //Show gridpoint map
     $('#GridpointMap').css('display','block');
     $('#map-gridpoint').css('display','block');
+    $('#address').css('display','inline');
+    $('#zoombutton').css('display','inline'); 
     if ($('#location').length){
         initialize_grid_point_map($('#location').val());
     }
