@@ -525,7 +525,7 @@ $(document).ready(function ($) {
             }
         }
     });
-    $('#show_range, #show_running_mean, #show_average').on('click', function(){
+    $('#show_range, #show_running_mean, #show_average, #climatology, #percentile_5, #percentile_10, #percentile_25').on('click', function(){
         //Find the correct chart
         var l_type = $(this).val();
         for(var i = myChart.series.length - 1; i > -1; i--){
@@ -605,6 +605,124 @@ $(document).ready(function ($) {
                 myChart.redraw(true);
             }
         } 
+    });
+
+   $('#target_year_figure').on('change', function(){
+        var year = $(this).val();
+        //Clear old tab data
+        var data_table = $('#textData');
+        $('#textData tr').remove();
+        var x_min, x_max;
+        var p_indices = [], c_indices = [];
+        for (var i = 0; i < myChart.series.length; i++) {
+            var series_id = myChart.series[i].options.id;
+            var series_type = series_id.split('_')[0];
+            if (series_type == 'main'){
+                var idx = series_id.split('_')[1];
+                var s_year = parseInt($('#start_year')) + idx
+                if (s_year != year){
+                    //Hide series
+                    myChart.series[i].setVisible(false,false);
+                    myChart.series[i].update({showInLegend: false});
+                }
+                if (s_year == year){
+                    //Show series
+                    myChart.series[i].setVisible(true,true);
+                    //get x-axis max, min
+                    try{
+                        x_min = myChart.series[i].options.data[0][0];
+                        x_max = myChart.series[i].options.data[myChart.series[i].options.data.length -1][0];
+                    }
+                    catch(e){}
+                    
+                    myChart.series[i].update({showInLegend: true});
+                    //Show data in data tab
+                    for (var j=0; j< myChart.series[i].data.length;j++){
+                         date_int = series.data[j].x;
+                        //Convert integer time to date string
+                        var d = new Date(date_int + 1000*60*60*24);
+                        var day = ("0" + d.getDate()).slice(-2);
+                        var mon = ("0" + (d.getMonth() + 1)).slice(-2);
+                        var year = d.getFullYear();
+                        date_str = year + '-' + mon + '-' + day + ' ' + hr;
+                        try{
+                            val = parseFloat(series.data[j].y).toFixed(4);
+                        }
+                        catch(e){
+                            val = series.data[j].y;
+                        }
+                        if(typeof val !== "undefined") {
+                            var row = $('<tr></tr>').appendTo(data_table);
+                            $('<td></td>').text(date_string).appendTo(row);
+                            $('<td></td>').text(String(val)).appendTo(row);
+                        }
+                    }
+                }
+            }
+
+            //Get climo and percentile indices
+            if (series_type == 'climatology'){
+                c_indices.push(i)
+            }
+            if (series_type == 'percentile'){
+                p_indices.push(i)
+            }
+        }
+        //Update climo and perentile data to
+        //match the new x_axis
+        //CLIMO
+        for (var i = 0; i < c_indices.length; i++) {
+            new_data = [];
+            var series_id = myChart.series[c_indices[i]].options.id;
+            if (x_min === null){
+                myChart.series[c_indices[i]].setVisible(false,false);
+                myChart.series[c_indices[i]].update({showInLegend: false});
+            }
+            else{
+                for (var d_idx = 0;d_idx<myChart.series[c_indices[i]].options.data.length;d_idx++){
+                    var date = x_min + d_idx * (24 * 60 * 60 * 1000);
+                    new_data.push([date, myChart.series[c_indices[i]].options.data[d_idx][1]])
+                }
+                myChart.series[c_indices[i]].update({data:new_data});
+                if ($('#climatology').is(':checked')) {
+                    myChart.series[c_indices[i]].setVisible(true,true);
+                    myChart.series[c_indices[i]].update({showInLegend: true});
+                }
+                else{
+                    myChart.series[c_indices[i]].setVisible(false,false);
+                    myChart.series[c_indices[i]].update({showInLegend: false});
+                }
+            } 
+        }
+        //PERCENTILES
+        for (var i = 0; i < p_indices.length; i++) {
+            new_data = [];
+            var series_id = myChart.series[p_indices[i]].options.id;
+            var varnum = series_id.split('_')[2];
+            if (x_min === null){
+                myChart.series[p_indices[i]].setVisible(false,false);
+                myChart.series[p_indices[i]].update({showInLegend: false});
+            }
+            else{
+                for (var d_idx = 0;d_idx<myChart.series[p_indices[i]].options.data.length;d_idx++){
+                    var date = x_min + d_idx * (24 * 60 * 60 * 1000);
+                    new_data.push([date, myChart.series[p_indices[i]].options.data[d_idx][1],  myChart.series[p_indices[i]].options.data[d_idx][2]])
+                }
+                myChart.series[p_indices[i]].update({data:new_data});
+                var series_id = myChart.series[p_indices[i]].options.id;
+                var p = series_id.split('_')[1];
+                if ($('#percentile_' + p).is(':checked')){
+                    myChart.series[p_indices[i]].setVisible(true,true);
+                    myChart.series[p_indices[i]].update({showInLegend: true});
+                }
+                else{
+                    myChart.series[p_indices[i]].setVisible(false,false);
+                    myChart.series[p_indices[i]].update({showInLegend: false});
+                }
+            }
+        }
+        
+        myChart.redraw();
     });
 
 

@@ -483,10 +483,61 @@ def single_intraannual(request):
         form = set_form(request,clean = False)
         form_cleaned = set_form(request,clean = True)
         year_txt_data, year_graph_data, climoData, percentileData = WRCCUtils.get_single_intraannual_data(form_cleaned)
+        context['run_done'] = True
+        header_keys = ['user_area_id','element',\
+        'start_year', 'end_year','start_month', 'start_day']
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
         context['year_txt_data'] = year_txt_data
         context['year_graph_data'] = year_graph_data
         context['climoData'] = climoData
         context['percentileData'] = percentileData
+        results = {
+            'element_short': form['element'],
+            'data_indices':range(len(year_txt_data)),
+            'data':year_txt_data,
+            'errors':''
+        }
+        cp_data = {
+            'climoData':climoData,
+            'percentileData':percentileData
+        }
+        results['cp_data'] = cp_data
+        graph_data = []
+        for yr_idx, year in enumerate(year_graph_data.keys()):
+            year = int(form_cleaned['start_year']) + yr_idx
+            yr_data = year_graph_data[year]
+            GDWriter = WRCCClasses.GraphDictWriter(form_cleaned, yr_data)
+            graph_dict = GDWriter.write_dict()
+            graph_data.append(graph_dict)
+        results['graph_data'] = graph_data
+        results['chartType'] = graph_dict['chartType']
+        context['results'] = results
+    #Download button pressed
+    if 'formDownload' in request.POST:
+        form = set_form(request,clean=False)
+        json_file = request.POST.get('json_file', None)
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        file_name = form['output_file_name'] + '_' + time_stamp
+        with open(settings.TEMP_DIR + json_file, 'r') as f:
+            data =  json.load(f)
+
+        if form['data_format'] in ['clm','dlm']:
+            if form['data_format'] == 'clm':
+                file_extension = '.txt'
+            else:
+                file_extension = '.dat'
+            response = HttpResponse(mimetype='text/csv')
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
+            CsvWriter = WRCCClasses.CsvWriter(data, f=None, response=response)
+            CsvWriter.write_to_file()
+            return response
+        if form['data_format'] in ['xl']:
+            file_extension = '.xls'
+            response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
+            ExcelWriter = WRCCClasses.ExcelWriter(data,response=response)
+            ExcelWriter.write_to_file()
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
+            return response
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def single_interannual(request):
@@ -2185,6 +2236,8 @@ def set_initial(request,req_type):
         if req_type == 'interannual':
             initial['end_month']  = Get('end_month', '1')
             initial['end_day']  = Get('end_day', '31')
+        if req_type == 'intraannual':
+            initial['target_year'] = str(int(initial['end_year']) - 1)
     else:
         initial['start_date']  = Get('start_date', WRCCUtils.format_date_string(fourtnight,'-'))
         initial['end_date']  = Get('end_date', WRCCUtils.format_date_string(yesterday,'-'))

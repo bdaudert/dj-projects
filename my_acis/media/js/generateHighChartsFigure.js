@@ -11,15 +11,24 @@ function generateTS_individual(data_indices) {
     */
     var args = arguments;
     var datadict = graph_data; //template_variable
+    if (cp_data){
+        var climoData = cp_data.climoData;
+        var percentileData = cp_data.percentileData;
+    }
     switch (arguments.length) { // <-- 0 is number of required arguments
         case 0: var data_indices = $('#data_indices').val();
     }
     var app_name = '';
     if ($('#app_name').length){app_name=$('#app_name').val();}
-    var running_mean_period = '0', smry = 'individual';
+    var smry = 'individual';
     //Get chart variables from template
     var chartType = $('#chart_type').val();
-    var running_mean_period = $('#running_mean_period').val();
+    if ($('#running_mean_period').length){
+        var running_mean_period = $('#running_mean_period').val();
+    }
+    else {
+        var running_mean_period = '0';
+    }
     var chartTitle = datadict[data_indices[0]].title;         
     var subTitle = datadict[data_indices[0]].subTitle;
     //Set font size
@@ -35,7 +44,7 @@ function generateTS_individual(data_indices) {
             var yLabelmain = datadict[0].elUnits;
         }
     }
-    if (app_name  == 'spatial_summary' || app_name == 'data_comparison'){
+    if (app_name  == 'spatial_summary' || app_name == 'data_comparison' || app_name =='single_interannual'){
         var date_format = '%Y-%m-%d';
         var yLabelmain = datadict[0].seriesName + ' (' + datadict[0].elUnits + ')';
     }
@@ -90,7 +99,51 @@ function generateTS_individual(data_indices) {
             }
         }
     }
+    
     //Define series data
+    //Intraannual climo and precentile data
+    if (app_name == 'single_intraannual'){
+        //Find target_year
+        if ($('#year_target_figure').length){
+            var target_year = $('#year_target_figure').val();
+        }
+        else{
+            var target_year = $('#year_target_form').val();
+        }    
+        //Climo data
+        var climo = {
+            visible:false,
+            showInLegend:false,
+            id: 'climatology',
+            name: '50% Percentile',
+            data: climoData,
+            color: '#000'
+        }
+        //Percentile Data
+        var percentiles = ['5% -95%', '10% - 90%','25% - 75%'];
+        var percentile_names = ['5','10','25'];
+        var percentile_colors = ['#B7E2F0','#8FBAC8','#5D8896'];
+        for (var i=0; i< percentileData.length;i++){
+            var p_name = percentiles[i];
+            var p_id = percentile_names[i];
+            var p_color = percentile_colors[i];
+            var perc = [];
+            var r = {
+                visible:false,
+                id: 'percentile_' + p_id,
+                name: p_name + ' Percentile',
+                showInLegend:false,
+                type:'arearange',
+                lineWidth:1,
+                lineColor:'white',
+                color:p_color,
+                data: percentileData[i],
+                fillOpacity: 0.6,
+                zIndex:-1,
+            };
+            perc.push(r)
+        }
+    }
     var series_data = [],idx;
     for (var i=0;i < data_indices.length;i++){
         idx = data_indices[i];
@@ -116,7 +169,24 @@ function generateTS_individual(data_indices) {
             s['color'] = 'blue';
             s['negativeColor'] = 'red';
         }
+        if (app_name == 'single_intraannual'){
+            if (parseInt($('#start_year').val()) + idx === parseInt(target_year)){
+                s['visible'] = true;
+                s['showInLegend'] = true;
+            }
+            else{
+                s['visible'] = false;
+                s['showInLegend'] = false;
+            }
+        }
         series_data.push(s);
+        if (app_name == 'single_intraannual'){
+            series_data.push(climo);
+            for (j=0;j < perc.length;j++){
+                series_data.push(perc[j]);
+            }
+        }
+           
         //Add running mean
         if (running_mean_period != '0'){
             var rm_data =compute_running_mean(datadict[idx].data, parseInt(running_mean_period));
@@ -144,41 +214,45 @@ function generateTS_individual(data_indices) {
         }
         //Average over period
         var v = false;
-        if ($('#show_average').is(':checked')){v = true;};
-        var a = {
-            visible:v,
-            id: 'average_' + s_id,
-            name: 'Average:' + s['name'],
-            showInLegend:v,
-            type:'line',
-            lineWidth:1,
-            color:'#ff0000',
-            data: ave_data,
-            linkedTo: s_id
-        };
-        series_data.push(a);
+        if ($('#show_average').length && $('#show_average').is(':checked')){v = true;};
+        if (app_name != 'intraannual'){
+            var a = {
+                visible:v,
+                id: 'average_' + s_id,
+                name: 'Average:' + s['name'],
+                showInLegend:v,
+                type:'line',
+                lineWidth:1,
+                color:'#ff0000',
+                data: ave_data,
+                linkedTo: s_id
+            };
+            series_data.push(a);
+        }
         //Set average as initial threshold for interannual
         if (app_name == 'single_interannual'){
             $('#threshold').val(ave_data[0][1].toFixed(2));
         }
         //Range
-        var range_data = compute_range(datadict[idx].data);
-        var v = false;
-        if ($('#show_range').is(':checked')){v = true;};
-        var r = {
-            visible:v,
-            id: 'range_' + s_id,
-            name: 'Range:' + s['name'],
-            showInLegend:v,
-            type:'arearange',
-            lineWidth:0,
-            color:'#ff0000',
-            data: range_data,
-            fillOpacity: 0.1,
-            zIndex:0.1,
-            linkedTo: s_id
-        };
-        series_data.push(r);
+        if (app_name != 'intraannual'){
+            var range_data = compute_range(datadict[idx].data);
+            var v = false;
+            if ($('#show_range').is(':checked')){v = true;};
+            var r = {
+                visible:v,
+                id: 'range_' + s_id,
+                name: 'Range:' + s['name'],
+                showInLegend:v,
+                type:'arearange',
+                lineWidth:0,
+                color:'#ff0000',
+                data: range_data,
+                fillOpacity: 0.1,
+                zIndex:0.1,
+                linkedTo: s_id
+            };
+            series_data.push(r);
+        }
     }
     
     //Clear old plot

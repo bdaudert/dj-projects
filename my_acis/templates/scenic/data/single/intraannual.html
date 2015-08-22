@@ -76,6 +76,7 @@
         <input type="hidden" id="end_date" name="end_date" value="{{initial.end_date}}">
         <input type="hidden" id="start_year" name="start_year" value="{{initial.start_year}}">
         <input type="hidden" id="end_year" name="end_year" value="{{initial.end_year}}">
+        <input type="hidden" id="year_target_form" name="target_year" value="{{initial.target_year}}">
         <input style="margin:5px" type="submit" value="Generate time series" name="formData"/>
         </form>
     </div>
@@ -154,13 +155,12 @@
     </p>
     {%endif%}
 
-    {{yer_txt_data}}
 
     <!--DATA-->
     {% if not results.errors and results.data %}
         <div id="DataList" style="display:none;">
-        <table border="1">
-        <th>Year</th><th>{{results.element_short}}</th>
+        <table id="textData" border="1">
+        <th>Date</th><th>{{results.element_short}}</th>
         {%for date_data in results.data%}
             <tr>
             <td>{{date_data.0}}</td><td>{{date_data.1}}</td>
@@ -170,6 +170,7 @@
         </div>
 
     <!--GRAPH-->
+    {{year_graph_data}}
     <div id="user_graph" width="800px">
         <!--Dynamic chart options-->
         <table align="left" class='chart_options' border="1" width="800px">
@@ -178,21 +179,23 @@
                 {% include 'includes/chart_type.html'%}
             </td>
              <td align="left" rowspan="2" valign="top">
-                {% include 'includes/chart_threshold.html'%}
+                {% include 'includes/percentiles.html'%}
             </td>
             </tr>
             <tr>
             <td align="left" valign="top">
-                {% include 'includes/chart_layers_interannual.html'%}
+                {% include 'includes/target_year.html'%}
             </td>
+            <td></td>
             </tr>
             <tr>
             <td colspan="2">
         <div align="right" id="container" style="height:600px;width:800px;"></div>
         <script type="text/javascript">
             var graph_data = {{results.graph_data | safe_json}};
-            var data_indices = {{ results.data_indices |safe }}
-            generateTS_individual(data_indices);
+            var cp_data = {{results.cp_data | safe_json }};
+            var data_indices = {{ results.data_indices |safe }};
+            //generateTS_individual(data_indices);
         </script>
             </td></tr>
         </table>
