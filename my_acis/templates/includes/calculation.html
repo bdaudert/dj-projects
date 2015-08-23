@@ -1,0 +1,19 @@
+{%load my_scenic_filters%}
+    <td>Calculation: </td>
+    <td>
+        <select id="calculation" name="calculation">
+        <option value="cumulative" {{checkbox_vals.calulation_cumulative_selected}}
+        {%if initial.element|is_in:"maxt,mint,avgt,dtr,obst,snwd"%} disabled {%endif%}
+        >Cumulative</option>
+        <option value="values" {{checkbox_vals.calculation_values_selected}}>Values</option>
+        </select>
+    </td>
+    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_calculation"></div>
+        <script type="text/javascript">                        
+        $("#ht_calculation").load("{{HTML_URL}}Docu_help_texts.html #ht_calculation");
+        </script>
+    </div>
+    </td>
+

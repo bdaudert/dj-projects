@@ -11,10 +11,11 @@ function generateTS_individual(data_indices) {
     */
     var args = arguments;
     var datadict = graph_data; //template_variable
-    if (cp_data){
+    try{
         var climoData = cp_data.climoData;
         var percentileData = cp_data.percentileData;
     }
+    catch(e){}
     switch (arguments.length) { // <-- 0 is number of required arguments
         case 0: var data_indices = $('#data_indices').val();
     }
@@ -44,7 +45,7 @@ function generateTS_individual(data_indices) {
             var yLabelmain = datadict[0].elUnits;
         }
     }
-    if (app_name  == 'spatial_summary' || app_name == 'data_comparison' || app_name =='single_interannual'){
+    if (app_name  == 'spatial_summary' || app_name == 'data_comparison' || app_name =='single_intraannual'){
         var date_format = '%Y-%m-%d';
         var yLabelmain = datadict[0].seriesName + ' (' + datadict[0].elUnits + ')';
     }
@@ -109,7 +110,7 @@ function generateTS_individual(data_indices) {
         }
         else{
             var target_year = $('#year_target_form').val();
-        }    
+        }
         //Climo data
         var climo = {
             visible:false,
@@ -123,11 +124,11 @@ function generateTS_individual(data_indices) {
         var percentiles = ['5% -95%', '10% - 90%','25% - 75%'];
         var percentile_names = ['5','10','25'];
         var percentile_colors = ['#B7E2F0','#8FBAC8','#5D8896'];
+        var perc = []
         for (var i=0; i< percentileData.length;i++){
             var p_name = percentiles[i];
             var p_id = percentile_names[i];
             var p_color = percentile_colors[i];
-            var perc = [];
             var r = {
                 visible:false,
                 id: 'percentile_' + p_id,
@@ -147,8 +148,6 @@ function generateTS_individual(data_indices) {
     var series_data = [],idx;
     for (var i=0;i < data_indices.length;i++){
         idx = data_indices[i];
-        //Compute average over series
-        var ave_data = compute_average(datadict[idx].data);
         var s_id = String(idx);
         var s = {
             type:datadict[idx].chartType,
@@ -165,6 +164,7 @@ function generateTS_individual(data_indices) {
         }
         //Set threshold for interannual
         if (app_name == 'single_interannual'){
+            var ave_data = compute_average(datadict[idx].data);
             s['threshold'] = ave_data[0][1].toFixed(2);
             s['color'] = 'blue';
             s['negativeColor'] = 'red';
@@ -179,11 +179,23 @@ function generateTS_individual(data_indices) {
                 s['showInLegend'] = false;
             }
         }
+        //Deal with skinny bar bug
+        if (chartType == 'column'){
+            s['stacking'] = null;
+            if (app_name == 'monann' || app_name =='single_interannual'){
+                s['pointRange'] = 1 * 24 * 3600*1000*365;
+            }
+            else{
+                s['pointRange'] = 1 * 24 * 3600*1000;
+            }
+        }
         series_data.push(s);
         if (app_name == 'single_intraannual'){
-            series_data.push(climo);
-            for (j=0;j < perc.length;j++){
-                series_data.push(perc[j]);
+            if (parseInt($('#start_year').val()) + idx === parseInt(target_year)){
+                series_data.push(climo);
+                for (j=0;j < perc.length;j++){
+                    series_data.push(perc[j]);
+                }
             }
         }
            
@@ -234,7 +246,7 @@ function generateTS_individual(data_indices) {
             $('#threshold').val(ave_data[0][1].toFixed(2));
         }
         //Range
-        if (app_name != 'intraannual'){
+        if (app_name != 'single_intraannual'){
             var range_data = compute_range(datadict[idx].data);
             var v = false;
             if ($('#show_range').is(':checked')){v = true;};
@@ -532,22 +544,23 @@ function generateTS_smry(data_indices) {
     //Range
     var v = false
     if ($('#show_range').is(':checked')){v = true;}
-    var range_data = compute_range(smry_data.data);
-    var r = {
-        visible:v,
-        id: 'range_' + s_id,
-        name: 'Range:' + s['name'],
-        showInLegend:false,
-        type:'arearange',
-        lineWidth:0,
-        color:'#ff0000',
-        data: range_data,
-        fillOpacity: 0.1,
-        zIndex:0.1,
-        linkedTo: s_id
-    };
-    series_data.push(r);
-    
+    if (app_name != 'single_intraannual'){
+        var range_data = compute_range(smry_data.data);
+        var r = {
+            visible:v,
+            id: 'range_' + s_id,
+            name: 'Range:' + s['name'],
+            showInLegend:false,
+            type:'arearange',
+            lineWidth:0,
+            color:'#ff0000',
+            data: range_data,
+            fillOpacity: 0.1,
+            zIndex:0.1,
+            linkedTo: s_id
+        };
+        series_data.push(r);
+    }
     //Clear old plot
     $('#container').contents().remove();
     //CHART

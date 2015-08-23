@@ -13,6 +13,7 @@
     <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
     <div id="Docu_grids">{% include 'includes/Docu_grids_historic.html'%}</div>
     <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
+    <div id="Docu_cumulative_or_values">{% include 'includes/Docu_cumulative_or_values.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
     <div id="Docu_start_month_day">{% include 'includes/Docu_start_month_day.html'%}</div>
 </div><!--End how_to-->
@@ -68,6 +69,7 @@
         <tr id="grid_type" style="display:none">{% include 'includes/grids_historic.html'%}</tr>
         {%endif%}
         <tr style="display:table-row">{% include 'includes/element.html'%}</tr>
+        <tr style="display:table-row;">{% include 'includes/calculation.html'%}</tr>
         <tr style="display:table-row;">{% include 'includes/units.html'%}</tr>
         <tr style="display:table-row;">{% include 'includes/start_month_day.html'%}</tr>
         </table>
@@ -169,8 +171,8 @@
         </table>
         </div>
 
+
     <!--GRAPH-->
-    {{year_graph_data}}
     <div id="user_graph" width="800px">
         <!--Dynamic chart options-->
         <table align="left" class='chart_options' border="1" width="800px">
@@ -195,7 +197,7 @@
             var graph_data = {{results.graph_data | safe_json}};
             var cp_data = {{results.cp_data | safe_json }};
             var data_indices = {{ results.data_indices |safe }};
-            //generateTS_individual(data_indices);
+            generateTS_individual(data_indices);
         </script>
             </td></tr>
         </table>

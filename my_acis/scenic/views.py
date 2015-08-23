@@ -2238,6 +2238,10 @@ def set_initial(request,req_type):
             initial['end_day']  = Get('end_day', '31')
         if req_type == 'intraannual':
             initial['target_year'] = str(int(initial['end_year']) - 1)
+            if initial['element'] in ['pcpn','snwd','snow','gdd','hdd','cdd','evap','pet']:
+                initial['calculation'] = 'cumulative'
+            else:
+                initial['calculation'] = 'values'
     else:
         initial['start_date']  = Get('start_date', WRCCUtils.format_date_string(fourtnight,'-'))
         initial['end_date']  = Get('end_date', WRCCUtils.format_date_string(yesterday,'-'))
@@ -2411,6 +2415,11 @@ def set_initial(request,req_type):
             checkbox_vals['show_running_mean_' + bl + '_selected'] = ''
             if initial['show_running_mean'] == bl:
                 checkbox_vals['show_running_mean_' + bl + '_selected'] = 'selected'
+    if 'calculation' in initial.keys():
+        for c in ['cumulative','values']:
+            checkbox_vals['calculation_' + c + '_selected'] = ''
+            if initial['calculation'] == bl:
+                checkbox_vals['calculation_' + c + '_selected'] = 'selected'
     if 'departures_from_averages' in initial.keys():
         for bl in ['T','F']:
             checkbox_vals['departures_from_averages_' + bl + '_selected'] = ''

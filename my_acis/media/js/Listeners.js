@@ -35,6 +35,15 @@ $(document).ready(function ($) {
                 $('#statistic').val('mave');    
             }
         }
+        if ($('#calulation').length){
+            if ($(this).val().inList(sum_els)){
+                $('#calulation').val('cumulative');
+                $('#calculation').children('option[value="cumulative"]').attr('disabled', false);
+            }
+            else{
+                $('#calculation').children('option[value="cumulative"]').attr('disabled', true);    
+            }
+        }
     });
 
     /*
@@ -529,7 +538,7 @@ $(document).ready(function ($) {
         //Find the correct chart
         var l_type = $(this).val();
         for(var i = myChart.series.length - 1; i > -1; i--){
-            if (myChart.series[i].options.id.split('_')[0] == l_type){
+            if (myChart.series[i].options.id.split('_')[0] == l_type || myChart.series[i].options.id == l_type){
                 if ($(this).is( ":checked" )){
                     myChart.series[i].setVisible(true, true);
                     myChart.series[i].update({showInLegend: true});
@@ -608,7 +617,7 @@ $(document).ready(function ($) {
     });
 
    $('#target_year_figure').on('change', function(){
-        var year = $(this).val();
+        var year = parseInt($(this).val());
         //Clear old tab data
         var data_table = $('#textData');
         $('#textData tr').remove();
@@ -619,13 +628,13 @@ $(document).ready(function ($) {
             var series_type = series_id.split('_')[0];
             if (series_type == 'main'){
                 var idx = series_id.split('_')[1];
-                var s_year = parseInt($('#start_year')) + idx
+                var s_year = parseInt($('#start_year').val()) + parseInt(idx);
                 if (s_year != year){
                     //Hide series
                     myChart.series[i].setVisible(false,false);
                     myChart.series[i].update({showInLegend: false});
                 }
-                if (s_year == year){
+                else{
                     //Show series
                     myChart.series[i].setVisible(true,true);
                     //get x-axis max, min
@@ -638,22 +647,22 @@ $(document).ready(function ($) {
                     myChart.series[i].update({showInLegend: true});
                     //Show data in data tab
                     for (var j=0; j< myChart.series[i].data.length;j++){
-                         date_int = series.data[j].x;
+                        date_int = myChart.series[i].data[j].x;
                         //Convert integer time to date string
                         var d = new Date(date_int + 1000*60*60*24);
                         var day = ("0" + d.getDate()).slice(-2);
                         var mon = ("0" + (d.getMonth() + 1)).slice(-2);
-                        var year = d.getFullYear();
-                        date_str = year + '-' + mon + '-' + day + ' ' + hr;
+                        var yr = d.getFullYear();
+                        date_str = yr + '-' + mon + '-' + day;
                         try{
-                            val = parseFloat(series.data[j].y).toFixed(4);
+                            val = parseFloat(myChart.series[i].data[j].y).toFixed(4);
                         }
                         catch(e){
-                            val = series.data[j].y;
+                            val = myChart.series[i].data[j].y;
                         }
                         if(typeof val !== "undefined") {
                             var row = $('<tr></tr>').appendTo(data_table);
-                            $('<td></td>').text(date_string).appendTo(row);
+                            $('<td></td>').text(date_str).appendTo(row);
                             $('<td></td>').text(String(val)).appendTo(row);
                         }
                     }
