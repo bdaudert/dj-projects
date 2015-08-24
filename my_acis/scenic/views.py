@@ -1133,14 +1133,12 @@ def data_comparison(request):
 
     initial, checkbox_vals = set_initial(request,'data_comparison')
     context['initial'] = initial; context['checkbox_vals'] = checkbox_vals
-    if 'formData' in request.POST or (request.method == 'GET' and 'station_location' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
         context['form_message'] = True
         form = set_form(request, clean=False)
+        form['req_type'] = 'data_comparison'
         form_cleaned = set_form(request, clean=True)
-        #Link from station finder
-        if 'station_location' in request.GET:
-            form['location'] = request.GET['station_location']
-            form_cleaned['location'] = request.GET['station_location']
+        form_cleaned['req_type'] = 'data_comparison'
         DC = WRCCClasses.DataComparer(form)
         gdata,sdata,dist = DC.get_data()
         context['run_done'] = True

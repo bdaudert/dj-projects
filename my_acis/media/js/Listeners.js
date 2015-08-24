@@ -24,24 +24,54 @@ $(document).ready(function ($) {
     */
     $('#element').on('change', function(){
         //Set monthly statistic for monann
-        var sum_els = ['pcpn','snwd','snow','gdd','hdd','cdd','evap','pet'];
+        var sum_els = ['pcpn','snow','evap','pet'];
         if ($(this).val().inList(sum_els)){
             if ($('#statistic').length){
+                $('#statistic').children('option[value="msum"]').attr('disabled', false);                
                 $('#statistic').val('msum');
             }
         }
         else {
             if ($('#statistic').length){
-                $('#statistic').val('mave');    
+                $('#statistic').val('mave');
+                if ($(this).val() == 'snwd'){
+                    $('#statistic').children('option[value="msum"]').attr('disabled', true);
+                }
             }
         }
-        if ($('#calulation').length){
+        if ($('#calculation').length){
             if ($(this).val().inList(sum_els)){
-                $('#calulation').val('cumulative');
                 $('#calculation').children('option[value="cumulative"]').attr('disabled', false);
+                $('#calculation').val('cumulative');
             }
             else{
-                $('#calculation').children('option[value="cumulative"]').attr('disabled', true);    
+                $('#calculation').val('values');
+                $('#calculation').children('option[value="cumulative"]').attr('disabled', true);
+
+            }
+        }
+        if ($('#temporal_summary').length){
+            if ($(this).val().inList(sum_els)){
+                $('#temporal_summary').children('option[value="sum"]').attr('disabled', false);
+                $('#temporal_summary').val('sum');
+            }
+            else{
+                $('#temporal_summary').val('mean');
+                if ($(this).val() == 'snwd'){
+                    $('#temporal_summary').children('option[value="sum"]').attr('disabled', true);
+                }
+            }
+        }
+        if ($('#spatial_summary').length){
+            if ($(this).val().inList(sum_els)){
+                $('#spatial_summary').children('option[value="sum"]').attr('disabled', false);
+                $('#spatial_summary').val('sum');
+            }
+            else{
+                $('#spatial_summary').val('mean');
+                if ($(this).val() == 'snwd'){
+                    $('#spatial_summary').children('option[value="sum"]').attr('disabled', true);
+                }
             }
         }
     });

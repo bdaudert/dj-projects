@@ -799,7 +799,7 @@ table#station_list tr {
 
 .tabs {
   position: relative;   
-  min-height: 1000px; /* This part sucks */
+  min-height: 1020px; /* This part sucks */
   min-width:800px;
   clear: both;
   margin: 25px 0;

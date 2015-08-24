@@ -3,7 +3,7 @@
     <td>
         <select id="calculation" name="calculation">
         <option value="cumulative" {{checkbox_vals.calulation_cumulative_selected}}
-        {%if initial.element|is_in:"maxt,mint,avgt,dtr,obst,snwd"%} disabled {%endif%}
+        {%if initial.element|is_in:"maxt,mint,avgt,dtr,obst,snwd,gdd,hdd,cdd,wdmv"%} disabled {%endif%}
         >Cumulative</option>
         <option value="values" {{checkbox_vals.calculation_values_selected}}>Values</option>
         </select>

@@ -25,7 +25,6 @@
 <input type="hidden" id="app_name" name="app_name" value="data_comparison">
 
 <p align="center" class="error"><b>*(BETA) THIS PAGE IS UNDER DEVELOPMENT!</b></p>
-
 <!--Toolinfo/Howto-->
 <table>
 <td valign="bottom" width="45%">
@@ -124,7 +123,10 @@
         <img src="{{MEDIA_URL}}img/show_summ_table_button.png" alt="Show Summary Table" onclick="ShowHide('data_summary')">
 
         <table id="data_summary" style="display:none;" align="center" border=1 class="results">
-            <th>Statistic</th><th>Station Data</th><th>Gridded Data</th>
+            <th>Statistic</th><th>Station</th><th>Grid</th>
+            <tr>
+            <td></td><td><b>{{results.graph_data.0.seriesName}}</b></td><td><b>{{results.graph_data.1.seriesName}}</b></td>
+            </tr>
             <tr>
                 <td>Max</td><td>{{results.stats.max.0}}</td><td>{{results.stats.max.1}}</td>
             </tr>
@@ -184,7 +186,7 @@
             </table>
     
     {% endif %}
-    </div>
+    </div><!--end results-->
 </td>
 </table>
 
