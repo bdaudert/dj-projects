@@ -29,12 +29,13 @@
         <td>
             <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_gallery_station_finder')">
         </td>
+        <!--
         <td valign="top"><a class="trigger_hover" href="{{param_urls.extremes}}" target="_blank"><b>EXTREMES</b></a>
             <div class="pop-up">{% include 'includes/Docu_popup_gallery_extremes.html'%}</div>
         </td>
         <td>
             <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_gallery_extremes')">
-        </td>
+        </td>-->
         <td valign="top"><a class="trigger_hover" href="{{param_urls.spatial_summary}}" target="_blank"><b>SUMMARIZING<br />SPATIAL DATA</b></a>
             <div class="pop-up">{% include 'includes/Docu_popup_gallery_spatial_summary.html'%}</div>
         </td>
@@ -47,11 +48,12 @@
             <img class="app_img" alt="Gallery_Station_Finder" title="Gallery_Station_Finder" src="{{MEDIA_URL}}img/Gallery_Station.png"></a>
             <div class="pop-up">{% include 'includes/Docu_popup_gallery_station_finder.html'%}</div>
         </td>
+        <!--
         <td colspan="2">
             <a  href="{{param_urls.extremes}}" target="_blank">
             <img class="app_img" alt="Gallery_Extremes" title="Gallery_Extremes" src="{{MEDIA_URL}}img/Extremes.png"></a>
             <div class="pop-up">{% include 'includes/Docu_popup_gallery_extremes.html'%}</div>
-        </td>
+        </td>-->
         <td colspan="2">
             <a  href="{{param_urls.spatial_summary}}" target="_blank">
             <img class="app_img" alt="Gallery_Spatial_Summary" title="Gallery_Spatial_Summary" src="{{MEDIA_URL}}img/Gallery_spatial_summary.png"></a>

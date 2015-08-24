@@ -226,19 +226,19 @@ def single_point_prods(request):
     if request.method == 'GET' and ('elements' in request.GET or 'element' in request.GET):
         #set link params
         init = {}
+        get_params = ['station_id','elements', 'start_date','end_date']
         for item in request.GET:
-            try:
-                key = WRCCData.DISPLAY_PARAMS[item]
-                val = str(request.GET[item])
-                init[key] = val
-            except:
-                continue
-        context['initial'] = init
+            if str(item) not in get_params and str(item) != 'area_type':
+                get_params.append(str(item))
+        user_params = WRCCUtils.form_to_display_list(get_params,request.GET)
+        context['user_params'] = user_params
         for app in ['single_lister', 'monann', 'climatology','data_comparison', 'interannual', 'intraannual']:
             initial, checkbox_vals = set_initial(request, app)
+            if app == 'interannual':
+                context['x'] = initial
             p_str = '?'
             for key, val in initial.iteritems():
-                k = str(key);
+                k = str(key)
                 #convert lists to strings (elements)
                 if isinstance(val, list):
                     v = (',').join(val)
@@ -548,8 +548,10 @@ def single_interannual(request):
     initial, checkbox_vals = set_initial(request,'interannual')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
-        form = set_form(request,clean = False)
-        form_cleaned = set_form(request,clean = True)
+        context['x'] = initial
+        form = set_form(initial,clean = False)
+        form_cleaned = set_form(initial,clean = True)
+        context['xx'] = form_cleaned
         element_short = WRCCUtils.elements_to_table_headers(form['element'],form['units'])[0]
         results = {
             'data_indices':[0],
@@ -1169,6 +1171,7 @@ def monann(request):
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
         form = set_form(initial,clean=False)
         form_cleaned = set_form(initial,clean=True)
+        context['x'] = initial
         #Form sanity check
         fields_to_check = ['start_year', 'end_year','max_missing_days']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -2182,7 +2185,14 @@ def set_initial(request,req_type):
     if req_type == 'map_overlay':
         initial['elements'] = Get('elements','maxt,mint,pcpn').split(',')
     elif req_type in ['monann','data_comparison', 'interannual','intraannual']:
-        initial['element'] = Get('element','pcpn')
+            initial['element'] = Get('element',None)
+            if initial['element'] is not None and len(initial['element'].split(',')) > 1:
+                initial['element'] =  str(initial['element'].split(',')[0])
+            if initial['element'] is None:
+                #Link from station finder
+                initial['element'] = Get('elements','pcpn')
+                if len(initial['element'].split(',')) > 1:
+                    initial['element'] = str(initial['element'].split(',')[0])
     else:
         els = Getlist('elements',None)
         if not els:
@@ -2201,7 +2211,7 @@ def set_initial(request,req_type):
     initial['units'] = Get('units','english')
 
     #Set degree days
-    if req_type not in ['station_finder', 'monann', 'climatology', 'data_comparison']:
+    if req_type not in ['station_finder', 'monann', 'climatology', 'data_comparison', 'interannual','intraannual']:
         initial['add_degree_days'] = Get('add_degree_days', 'F')
         if initial['units'] == 'metric':
             initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
@@ -2210,9 +2220,20 @@ def set_initial(request,req_type):
 
     #Set dates
     if req_type in ['monann','climatology']:
-        initial['start_year']  = Get('start_year', 'POR')
-        initial['end_year']  = Get('end_year', 'POR')
+        initial['start_year'] = Get('start_year', None)
+        if initial['start_year'] is None:
+            #Link from station finder
+            initial['start_year'] = Get('start_date', '9999')[0:4]
+            if initial['start_year'] == '9999':
+                initial['start_year'] = 'POR'
+        initial['end_year']  = Get('end_year', None)
+        if initial['end_year'] is None:
+            #Link from station finder
+            initial['end_year'] = Get('end_date', '9999')[0:4]
+            if initial['end_year'] == '9999':
+                initial['end_year'] = 'POR'
     elif req_type in ['interannual', 'intraannual']:
+        #Chek for dates from link from station finder
         initial['start_date'] = Get('start_date', None)
         initial['end_date'] = Get('end_date', None)
         if initial['start_date'] is None or initial['end_date'] is None:
@@ -2230,6 +2251,7 @@ def set_initial(request,req_type):
                 initial['start_date'] = WRCCData.GRID_CHOICES[str(initial['grid'])][3][0][0]
                 initial['end_date'] = WRCCData.GRID_CHOICES[str(initial['grid'])][3][0][1]
         initial['start_year'] = initial['start_date'][0:4]
+
         initial['end_year'] = initial['end_date'][0:4]
         initial['start_month']  = Get('start_month', '1')
         initial['start_day']  = Get('start_day', '1')
@@ -2238,7 +2260,7 @@ def set_initial(request,req_type):
             initial['end_day']  = Get('end_day', '31')
         if req_type == 'intraannual':
             initial['target_year'] = str(int(initial['end_year']) - 1)
-            if initial['element'] in ['pcpn','snwd','snow','gdd','hdd','cdd','evap','pet']:
+            if initial['element'] in ['pcpn','snow','evap','pet']:
                 initial['calculation'] = 'cumulative'
             else:
                 initial['calculation'] = 'values'
@@ -2261,7 +2283,10 @@ def set_initial(request,req_type):
         initial['data_summary'] = Get('data_summary', 'none')
     if req_type in ['single_lister', 'multi_lister','temporal_summary', 'interannual']:
         if req_type == 'interannual':
-            initial['temporal_summary'] = Get('temporal_summary', 'sum')
+            if initial['element'] in ['pcpn','snow','evap','pet']:
+                initial['temporal_summary'] = Get('temporal_summary', 'sum')
+            else:
+                initial['temporal_summary'] = Get('temporal_summary', 'mean')
         else:
             initial['temporal_summary'] = Get('temporal_summary', 'mean')
     if req_type in ['single_lister', 'multi_lister','spatial_summary']:
@@ -2289,7 +2314,10 @@ def set_initial(request,req_type):
         initial['dates_constraints']  = Get('dates_constraints', 'all')
     if req_type in  ['monann','sf_link']:
         initial['start_month'] = Get('start_month','01')
-        initial['statistic'] = Get('statistic','msum')
+        if initial['element'] in ['pcpn','snow','evap','pet']:
+            initial['statistic'] = Get('statistic','msum')
+        else:
+            initial['statistic'] = Get('statistic','mave')
         initial['less_greater_or_between'] = Get('less_greater_or_between','b')
         initial['threshold_low_for_between'] = Get('threshold_low_for_between',0.01)
         initial['threshold_high_for_between'] = Get('threshold_high_for_between',0.1)
@@ -2418,7 +2446,7 @@ def set_initial(request,req_type):
     if 'calculation' in initial.keys():
         for c in ['cumulative','values']:
             checkbox_vals['calculation_' + c + '_selected'] = ''
-            if initial['calculation'] == bl:
+            if initial['calculation'] == c:
                 checkbox_vals['calculation_' + c + '_selected'] = 'selected'
     if 'departures_from_averages' in initial.keys():
         for bl in ['T','F']:
