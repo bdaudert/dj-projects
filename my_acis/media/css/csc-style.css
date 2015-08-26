@@ -452,6 +452,9 @@ a#warning {
     color:#FF00FF;
 }
 
+iframe.ee {
+}
+
 table.chart_options {
     border:1px solid #006666;
     min-width:700px;

@@ -480,8 +480,9 @@ def single_intraannual(request):
     initial, checkbox_vals = set_initial(request,'intraannual')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
-        form = set_form(request,clean = False)
-        form_cleaned = set_form(request,clean = True)
+        form = set_form(initial,clean = False)
+        form_cleaned = set_form(initial,clean = True)
+        context['xx'] = form_cleaned
         year_txt_data, year_graph_data, climoData, percentileData = WRCCUtils.get_single_intraannual_data(form_cleaned)
         context['run_done'] = True
         header_keys = ['user_area_id','element',\
@@ -512,6 +513,19 @@ def single_intraannual(request):
         results['graph_data'] = graph_data
         results['chartType'] = graph_dict['chartType']
         context['results'] = results
+
+        #Save results for downloading
+        json_dict = {
+            'smry':[],
+            #'params_display_list':context['params_display_list']
+            'form':form_cleaned,
+            'data':[results['data'][year] for year in range(int(initial['start_year']),int(initial['end_year']) + 1)]
+        }
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        json_file = '%s_intra_year_comparison.json' %(time_stamp)
+        WRCCUtils.load_data_to_json_file(settings.TEMP_DIR +json_file, json_dict)
+        context['json_file'] = json_file
+
     #Download button pressed
     if 'formDownload' in request.POST:
         form = set_form(request,clean=False)
@@ -548,10 +562,8 @@ def single_interannual(request):
     initial, checkbox_vals = set_initial(request,'interannual')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
-        context['x'] = initial
         form = set_form(initial,clean = False)
         form_cleaned = set_form(initial,clean = True)
-        context['xx'] = form_cleaned
         element_short = WRCCUtils.elements_to_table_headers(form['element'],form['units'])[0]
         results = {
             'data_indices':[0],
@@ -564,6 +576,8 @@ def single_interannual(request):
         context['run_done'] = True
         header_keys = ['user_area_id','temporal_summary', 'element',\
         'start_year', 'end_year','window']
+        if 'location' in form_cleaned.keys():
+            header_keys.insert(1,'grid')
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
         if not year_data:
             context['results'] = results
@@ -575,6 +589,19 @@ def single_interannual(request):
         results['graph_data'] = [graph_dict]
         results['chartType'] = graph_dict['chartType']
         context['results'] = results
+
+        #Save results for downloading
+        json_dict = {
+            'smry':[],
+            #'params_display_list':context['params_display_list']
+            'form':form_cleaned,
+            'data':[results['data']]
+        }
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        json_file = '%s_yearly_summaries.json' %(time_stamp)
+        WRCCUtils.load_data_to_json_file(settings.TEMP_DIR +json_file, json_dict)
+        context['json_file'] = json_file
+
     #Download button pressed
     if 'formDownload' in request.POST:
         form = set_form(request,clean=False)
@@ -629,8 +656,15 @@ def multi_lister(request):
                 context['need_polygon_map'] = True
             return render_to_response(url, context, context_instance=RequestContext(request))
         #Deal with large requests
-        if form_cleaned['data_summary'] in['none','windowed_data']:
+        large_temporal = False
+        start_year = int(form_cleaned['start_date'][0:4])
+        end_year = int(form_cleaned['end_date'][0:4])
+        if end_year - start_year > 10:
+            large_temporal =True
+        if form_cleaned['data_summary'] in ['none','windowed_data'] or large_temporal:
             context['large_request'] = True
+            if large_temporal:
+                context['large_temporal'] =True
             #Process request offline
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
@@ -858,16 +892,6 @@ def spatial_summary(request):
         #Set form and initial
         form = set_form(initial, clean=False)
         form_cleaned = set_form(initial)
-        '''
-        #Back Button/download files issue fix:
-        #if area_type none, find it
-        if not 'area_type' in form_cleaned.keys() or form_cleaned['area_type'] not in form_cleaned.keys():
-            for key in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
-                if key in form.keys():
-                    form['area_type'] = key
-                    form_cleaned['area_type'] = key
-                    break
-        '''
         #Form Check
         fields_to_check = [form['area_type'],'start_date', 'end_date','degree_days', 'elements']
         #,'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
@@ -944,7 +968,7 @@ def spatial_summary(request):
         #results['json_file_path'] = settings.TMP_URL + json_file
         context['results'] = results
         context['run_done'] = True
-        #Save resulst for downloading
+        #Save results for downloading
         json_dict = {
             'smry':results['smry'],
             #'params_display_list':context['params_display_list']
@@ -2105,7 +2129,8 @@ def set_initial(request,req_type):
             sf_download
             spatial_summary, temporal_summary
             monann, climatology
-            data_comparison, liklihood
+            data_comparison, liklihood,
+            data_download
     Returns:
         two dictionaries
         initial: form input
@@ -2140,13 +2165,6 @@ def set_initial(request,req_type):
             ll = None
             ll = str(meta['meta'][0]['ll'][0]) + ',' + str(meta['meta'][0]['ll'][1])
             initial['location'] = ll
-            '''
-            if meta and 'meta' in meta.keys():
-                if 'll' in meta['meta'][0].keys() and len(meta['meta'][0]['ll']) == 2:
-                    ll = str(meta['meta'][0]['ll'][0]) + ',' + str(meta['meta'][0]['ll'][1])
-            if ll:
-                initial['location'] = ll
-            '''
         else:
             initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
     else:
@@ -2256,7 +2274,7 @@ def set_initial(request,req_type):
         if req_type == 'interannual':
             initial['end_month']  = Get('end_month', '1')
             initial['end_day']  = Get('end_day', '31')
-        if req_type == 'intraannual':
+        if req_type in ['intraannual']:
             initial['target_year'] = str(int(initial['end_year']) - 1)
             if initial['element'] in ['pcpn','snow','evap','pet']:
                 initial['calculation'] = 'cumulative'
@@ -2291,7 +2309,10 @@ def set_initial(request,req_type):
         initial['spatial_summary'] = Get('spatial_summary', 'mean')
 
     #download options
-    initial['data_format'] = Get('data_format', 'html')
+    if req_type in ['single_lister','multi_lister']:
+        initial['data_format'] = Get('data_format', 'html')
+    else:
+        initial['data_format'] = Get('data_format', 'clm')
     initial['date_format'] = Get('date_format', 'dash')
     initial['delimiter'] = Get('delimiter', 'space')
     initial['output_file_name'] = Get('output_file_name', 'Output')
@@ -2446,6 +2467,11 @@ def set_initial(request,req_type):
             checkbox_vals['calculation_' + c + '_selected'] = ''
             if initial['calculation'] == c:
                 checkbox_vals['calculation_' + c + '_selected'] = 'selected'
+    if 'delimiter' in initial.keys():
+        for d in ['colon','pipe','tab','space','comma']:
+            checkbox_vals['delimiter_' + d + '_selected'] = ''
+            if initial['delimiter'] == d:
+                checkbox_vals['delimiter_' + d + '_selected'] = 'selected'
     if 'departures_from_averages' in initial.keys():
         for bl in ['T','F']:
             checkbox_vals['departures_from_averages_' + bl + '_selected'] = ''

@@ -20,6 +20,40 @@ $(document).ready(function ($) {
         return false;
     });
     /*
+    DATE CHANGES
+    */
+    $('#start_date, #end_date').bind('change', function(){
+        //Check for large temporal summary
+        if ($('#app_name').val() == 'multi_lister'){
+            var start_year = parseInt($('#start_date').val().slice(0,4));
+            var end_year = parseInt($('#end_date').val().slice(0,4));
+            if (end_year - start_year > 10 && $('#data_summary').val() == 'temporal'){
+                ShowPopupDocu('request_email_message_2');
+                $('#data_format option[value="html"]').attr('disabled',true);
+                //Set clm option to selected
+                $('#data_format option[value="clm"]').attr('selected',true);
+                //Show user name and user email fields
+                $('#un').css('display','table-row');
+                $('#ue').css('display','table-row');
+                //Show delimiter and outfile options
+                $('#out_file').css('display','table-row');
+                $('#delim').css('display','table-row');
+            }
+            else{
+                $('#data_format option[value="html"]').attr('disabled',false);
+                //Set clm option to selected
+                $('#data_format option[value="html"]').attr('selected',true);
+                //Show user name and user email fields
+                $('#un').css('display','none');
+                $('#ue').css('display','none');
+                //Show delimiter and outfile options
+                $('#out_file').css('display','none');
+                $('#delim').css('display','none');
+            } 
+        }
+    });
+
+    /*
     ELEMENT CHANGE
     */
     $('#element').on('change', function(){
@@ -438,27 +472,27 @@ $(document).ready(function ($) {
             if ($('#user_graph').css('display') == 'none'){
                 $('#user_graph').css('display', 'block');
                 $('#printable_table').css('display', 'none');
-                $('#data_summary').css('display', 'none');
+                $('#data_summ').css('display', 'none');
             }
             else{
                 $('#user_graph').css('display', 'none');
             }
         }
         if (id == 'show_hide_summary'){
-            if ($('#data_summary').css('display') == 'none'){
+            if ($('#data_summ').css('display') == 'none'){
                 $('#user_graph').css('display', 'none');
                 $('#printable_table').css('display', 'none');
-                $('#data_summary').css('display', 'block');
+                $('#data_summ').css('display', 'block');
             }
             else{
-                $('#data_summary').css('display', 'none');
+                $('#data_summ').css('display', 'none');
             }
         }
         if (id == 'show_hide_data'){
             if ($('#printable_table').css('display') == 'none'){
                 $('#user_graph').css('display', 'none');
                 $('#printable_table').css('display', 'block');
-                $('#data_summary').css('display', 'none');
+                $('#data_summ').css('display', 'none');
             }
             else{
                 if ($('#user_graph').css('display') == 'none') {

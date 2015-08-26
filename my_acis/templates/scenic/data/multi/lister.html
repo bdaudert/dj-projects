@@ -89,7 +89,7 @@
         <tr class="station_grid" style="display:table-row;">{% include 'includes/units.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
-        <tr class="station_grid" id="data_summary" style="display:table-row;">{% include 'includes/data_summary.html'%}</tr>
+        <tr class="station_grid" id="data_summ" style="display:table-row;">{% include 'includes/data_summary.html'%}</tr>
         {%if initial.data_summary == "none"%}
         <tr id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
         <tr id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
@@ -149,6 +149,11 @@
     Non-summarized data will be processed off line.<br /> 
     Please provide your name and email address at the bottom of the form.
     </div>
+
+    <div id="request_email_message_2"  style="display:none">
+    This is a large request. Data will be processed off line.<br />
+    Please provide your name and email address at the bottom of the form.
+    </div> 
 
     {%if large_request and not form_error %}
     <p class="message results" text-align="left">

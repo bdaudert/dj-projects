@@ -197,19 +197,20 @@ def sods(request, app_name):
         #import pdb; pdb.set_trace()
         if  form2.is_valid():
             context['cleaned'] = form2.cleaned_data
-            '''
-            if app_name == 'Sodsumm':
-                sp = {}
-                for key,val in form2.cleaned_data.iteritems():
-                    if key == 'end_date':
-                        yr = str(int(val[0:4]) + 1)
-                        sp[key] = yr + val[4:]
-                    else:
-                        sp[key] = val
-                (data, dates, elements, station_ids, station_names) = AcisWS.get_sod_data(sp, app_name)
-            else:
-                (data, dates, elements, station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
-            '''
+            #Check for POR
+            vd = None
+            if 'station_id' in form2.cleaned_data.keys() or 'stnid' in form2.cleaned_data.keys():
+                if 'station_id' in form2.cleaned_data.keys():
+                    stn_id = form2.cleaned_data['station_id']
+                if 'stnid' in form2.cleaned_data.keys():
+                    stn_id = form2.cleaned_data['stn_id']
+                if 'start_date' in form2.cleaned_data.keys() and form2.cleaned_data['start_date'].upper() == 'POR':
+                        vd = WRCCUtils.find_valid_daterange(stn_id, max_or_min='max')
+                if 'end_date' in form2.cleaned_data.keys() and form2.cleaned_data['end_date'].upper() == 'POR' and vd is None:
+                        vd = WRCCUtils.find_valid_daterange(stn_id, max_or_min='max')
+            if vd is not None and len(vd) == 2:
+                form2.cleaned_data['start_date'] = vd[0]
+                form2.cleaned_data['end_date'] = vd[1]
             (data, dates, elements, station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
             #get contexts for the different apps and run data application
             if app_name in ['Sodrun', 'Sodrunr']:

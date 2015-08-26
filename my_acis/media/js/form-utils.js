@@ -180,6 +180,10 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
         if (de > de_fut){
             new_dates.end = d;
         }
+        if ($('#app_name').val() == 'interannual' || $('#app_name').val() == 'intraannual'){
+            $('#start_year').val(String(new_dates.start));
+            $('#start_year').val(String(new_dates.end));
+        }
     }
     //Check if we only want to return years
     if (year_or_date == 'year'){
@@ -211,6 +215,7 @@ function set_year_range_for_interannual(){
         else{
             var end_date = $('#end_year').val() + '-12-31';
         }
+        console.log(start_date)
         new_dates = set_dates_for_grid($('#grid').val(),start_date,end_date,'year');
         $('#start_year').val(new_dates.start);
         $('#end_year').val(new_dates.end);
@@ -726,15 +731,38 @@ function set_smry(node){
         $('#flags').css('display','none');
         $('#obs_time').css('display','none');
         //Enable/Disable html output
-        $('#data_format option[value="html"]').attr('disabled',false);
-        //Set html option to selected
-        $('#data_format option[value="html"]').attr('selected',true);
-        //Hide user name and user email fields
-        $('#un').css('display','none');
-        $('#ue').css('display','none');
-        //Hide delimiter and outfile options
-        $('#out_file').css('display','none');
-        $('#delim').css('display','none');
+        //Check of temporal summary is large
+        var large_temporal = 'False';
+        if ($('#start_date').length && $('#start_date').length){
+            var start_year = parseInt($('#start_date').val().slice(0,4));
+            var end_year = parseInt($('#end_date').val().slice(0,4));
+            if (end_year - start_year > 10){
+                large_temporal = 'True';
+            }
+        }
+        if (large_temporal == 'True' && node.value == 'temporal'){
+            ShowPopupDocu('request_email_message_2');
+            $('#data_format option[value="html"]').attr('disabled',true);
+            //Set clm option to selected
+            $('#data_format option[value="clm"]').attr('selected',true);
+            //Show user name and user email fields
+            $('#un').css('display','table-row');
+            $('#ue').css('display','table-row');
+            //Show delimiter and outfile options
+            $('#out_file').css('display','table-row');
+            $('#delim').css('display','table-row');
+        }
+        else{
+            $('#data_format option[value="html"]').attr('disabled',false);
+            //Set html option to selected
+            $('#data_format option[value="html"]').attr('selected',true);
+            //Hide user name and user email fields
+            $('#un').css('display','none');
+            $('#ue').css('display','none');
+            //Hide delimiter and outfile options
+            $('#out_file').css('display','none');
+            $('#delim').css('display','none');
+        }
     }
     else if (node.value =='none'){
         $('#spat_summary').css('display','none');
@@ -1259,7 +1287,6 @@ function update_maps(area_field){
                         //var state = val.split(', ')[0].split(' ')[1].slice(0,2).toLowerCase();
                         state = item.name.split(', ')[1].toLowerCase();
                     }
-                    console.log('STATE: ' + state);
                     if (state != 'none'){
                         document.getElementById('overlay_state').value = state 
                         document.querySelector('#overlay_state [value="' + state + '"]').selected = true;
