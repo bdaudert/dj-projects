@@ -2,12 +2,12 @@
 // General function for monann
 //------------------------
 var myChart;
-function generateTS_individual(data_indices) {
+function generateTS_individual(chart_indices) {
     /*
     Generates highcarts figure
     Required Args:
-        data_indices: indices of data to be plotted,
-        if not given, we pick it up from html element data_indices
+        chart_indices: indices of data to be plotted,
+        if not given, we pick it up from html element chart_indices
     */
     var args = arguments;
     var datadict = graph_data; //template_variable
@@ -17,7 +17,11 @@ function generateTS_individual(data_indices) {
     }
     catch(e){}
     switch (arguments.length) { // <-- 0 is number of required arguments
-        case 0: var data_indices = $('#data_indices').val();
+        case 0: var chart_indices = $('#chart_indices').val();
+    }
+    //Convert daat indices to list
+    if (typeof chart_indices == 'string'){
+        chart_indices = chart_indices.replace(', ',',').split(',');
     }
     var app_name = '';
     if ($('#app_name').length){app_name=$('#app_name').val();}
@@ -30,8 +34,8 @@ function generateTS_individual(data_indices) {
     else {
         var running_mean_period = '0';
     }
-    var chartTitle = datadict[data_indices[0]].title;         
-    var subTitle = datadict[data_indices[0]].subTitle;
+    var chartTitle = datadict[chart_indices[0]].title;         
+    var subTitle = datadict[chart_indices[0]].subTitle;
     //Set font size
     var axisFontSize = '16px';
     var labelsFontSize = '16px';
@@ -59,7 +63,7 @@ function generateTS_individual(data_indices) {
                 color: Highcharts.getOptions().colors[0]
             }
         },
-        min: datadict[data_indices[0]].axisMin,
+        min: datadict[chart_indices[0]].axisMin,
         tickLength: 5,
         tickWidth: 1,
         tickPosition: 'outside',
@@ -75,12 +79,12 @@ function generateTS_individual(data_indices) {
     //When plotting multiple elements, change title/subtitle
     //And add yAxis for each element
     if (app_name == 'spatial_summary'){
-        if (data_indices.length > 1){
+        if (chart_indices.length > 1){
             //Change chart title/subtitle
             var chartTitle = subTitle;
             var subTitle = $('#spatial_summary').val().toUpperCase();
-            for (var i=1;i<data_indices.length;i++){
-                var idx = data_indices[i];
+            for (var i=1;i<chart_indices.length;i++){
+                var idx = chart_indices[i];
                 var yAxis = {
                     title: {
                         text: datadict[idx].seriesName + ' (' + datadict[idx].elUnits + ')',
@@ -146,8 +150,8 @@ function generateTS_individual(data_indices) {
         }
     }
     var series_data = [],idx;
-    for (var i=0;i < data_indices.length;i++){
-        idx = data_indices[i];
+    for (var i=0;i < chart_indices.length;i++){
+        idx = chart_indices[i];
         var s_id = String(idx);
         var s = {
             type:datadict[idx].chartType,
@@ -452,26 +456,30 @@ function generateTS_individual(data_indices) {
     myChart=new Highcharts.Chart(basicOptions); 
 }
 
-function generateTS_smry(data_indices) {
+function generateTS_smry(chart_indices) {
     /*
     Generates highcarts figure
     Required Args:
-        data_indices: indices of data to be plotted,
-            if not given, we pick it up from html element data_indices 
+        chart_indices: indices of data to be plotted,
+            if not given, we pick it up from html element chart_indices 
     */
     var args = arguments;
     var datadict = graph_data; //template_variable
     switch (arguments.length) { // <-- 0 is number of required arguments
-        case 0: var data_indices = $('#data_indices').val();
+        case 0: var chart_indices = $('#chart_indices').val();
     }
+    //Convert daat indices to list
+    if (typeof chart_indices == 'string'){
+        chart_indices = chart_indices.replace(', ',',').split(',');
+    } 
     var running_mean_period = '0';
     //Get chart variables from template
     var chartType = $('#chart_type').val();
     running_mean_period = $('#running_mean_period').val();
     smry = $('#chart_summary').val();
     var date_format = '%Y-%m-%d';
-    var chartTitle = datadict[data_indices[0]].title;
-    var subTitle = datadict[data_indices[0]].subTitle
+    var chartTitle = datadict[chart_indices[0]].title;
+    var subTitle = datadict[chart_indices[0]].subTitle
     if ($('#app_name').length && $('#app_name').val() == 'monann'){
         var date_format = '%Y';
     }
@@ -483,8 +491,8 @@ function generateTS_smry(data_indices) {
     //Define series data
     var series_data = [],idx, s_id;
     var idx,names = '', to_summarize = []
-    for (var i=0;i < data_indices.length;i++){
-        idx = data_indices[i];
+    for (var i=0;i < chart_indices.length;i++){
+        idx = chart_indices[i];
         names+= datadict[idx].seriesName + ',';
         to_summarize.push(datadict[idx].data);   
      }

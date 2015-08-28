@@ -650,7 +650,7 @@ $(document).ready(function ($) {
         }
     });
     //$('input[name="chart_selector"], select[name="chart_selector"]').on('change', function(event){
-     $('#data_indices, #chart_summary').on('change keyup', function(){
+     $('#chart_indices, #chart_summary').on('change keyup', function(){
         smry = 'individual';
         if ($('#chart_summary').length) {
             smry = $('#chart_summary').val();

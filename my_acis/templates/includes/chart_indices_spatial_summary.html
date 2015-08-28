@@ -1,9 +1,11 @@
+{%load my_scenic_filters%}
+
 <font class="message">Elements</font>
-<select style="max-height:200px;width:200px" multiple id='data_indices' name="chart_selector">
+<select style="max-height:200px;width:200px" multiple id='chart_indices' name="chart_selector">
 {% for el in results.elements%}
-    <option value={{ forloop.counter0 }}  
-        {%if forloop.counter0 == 0 %}selected {%endif%}>
-     {{el}}    
+    <option value={{forloop.counter0}}> 
+     {{el}} 
+    {%if forloop.counter0|is_in:chart_indices_string %} selected{%endif%}
     </option>
-{% endfor%}
+{%endfor%}
 </select>

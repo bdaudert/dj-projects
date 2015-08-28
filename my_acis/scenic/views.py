@@ -482,8 +482,13 @@ def single_intraannual(request):
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
         form = set_form(initial,clean = False)
         form_cleaned = set_form(initial,clean = True)
-        context['xx'] = form_cleaned
         year_txt_data, year_graph_data, climoData, percentileData = WRCCUtils.get_single_intraannual_data(form_cleaned)
+        if not year_txt_data:
+            results = {
+                'errors':'No data found for these parameters!'
+            }
+            context['results'] = results
+            return render_to_response(url, context, context_instance=RequestContext(request))
         context['run_done'] = True
         header_keys = ['user_area_id','element',\
         'start_year', 'end_year','start_month', 'start_day']
@@ -964,7 +969,8 @@ def spatial_summary(request):
                 el_name+= str(base_temp)
             elements.append(el_name)
         results['elements'] = elements
-        results['data_indices'] = [0]; results['chartType'] = graph_data[0]['chartType']
+        results['data_indices'] = [0]
+        results['chartType'] = graph_data[0]['chartType']
         #results['json_file_path'] = settings.TMP_URL + json_file
         context['results'] = results
         context['run_done'] = True
@@ -2230,9 +2236,9 @@ def set_initial(request,req_type):
     if req_type not in ['station_finder', 'monann', 'climatology', 'data_comparison', 'interannual','intraannual']:
         initial['add_degree_days'] = Get('add_degree_days', 'F')
         if initial['units'] == 'metric':
-            initial['degree_days'] = Get('degree_days', 'gdd13,hdd21')
+            initial['degree_days'] = Get('degree_days', 'gdd13,hdd21').replace(', ', ',')
         else:
-            initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
+            initial['degree_days'] = Get('degree_days', 'gdd55,hdd70').replace(', ',',')
 
     #Set dates
     if req_type in ['monann','climatology']:
@@ -2277,9 +2283,9 @@ def set_initial(request,req_type):
         if req_type in ['intraannual']:
             initial['target_year'] = str(int(initial['end_year']) - 1)
             if initial['element'] in ['pcpn','snow','evap','pet']:
-                initial['calculation'] = 'cumulative'
+                initial['calculation'] = Get('calculation','cumulative')
             else:
-                initial['calculation'] = 'values'
+                initial['calculation'] = Get('calculation','values')
     else:
         initial['start_date']  = Get('start_date', WRCCUtils.format_date_string(fourtnight,'-'))
         initial['end_date']  = Get('end_date', WRCCUtils.format_date_string(yesterday,'-'))
@@ -2320,12 +2326,6 @@ def set_initial(request,req_type):
     initial['user_email'] = Get('user_email', 'Your Email')
 
     #Set app specific params
-    if req_type in ['spatial_summary', 'monann','interannual','data_comparison']:
-        initial['show_running_mean'] = Get('show_running_mean','T')
-        if req_type in ['spatial_summary','data_comparison']:
-            initial['running_mean_days'] = Get('running_mean_days', '9')
-        if req_type in ['monann','interannual']:
-            initial['running_mean_years'] = Get('running_mean_years', '5')
     if req_type in ['monann','climatology','sf_link']:
         initial['max_missing_days']  = Get('max_missing_days', '5')
     if req_type == 'station_finder':
@@ -2353,7 +2353,18 @@ def set_initial(request,req_type):
     if req_type in ['climatology','sf_link']:
         initial['summary_type'] = Get('summary_type', 'all')
 
-
+    #Ploting options for all pages that have charts
+    if req_type in ['monann', 'spatial_summary','intraannual', 'intraannual','data_comparison']:
+        initial['chart_indices'] = Get('chart_indices',0)
+        initial['chart_type'] = Get('chart_type','spline')
+        initial['show_running_mean'] = Get('show_running_mean','T')
+        if req_type in ['monann', 'interannual']:
+            initial['running_mean_years'] = Get('running_mean_years',5)
+        else:
+            initial['running_mean_days'] = Get('running_mean_days',9)
+        initial['show_average'] = Get('show_average','T')
+        if req_type in ['monann']:
+            initial['show_range'] = Get('show_range','T')
     #Checkbox vals
     checkbox_vals['state_' + initial['overlay_state'] + '_selected'] = 'selected'
     if 'elements_constraints' in initial.keys() and 'dates_constraints' in initial.keys():
@@ -2418,7 +2429,7 @@ def set_initial(request,req_type):
         plot_months = initial['plot_months'].split(',')
         for m_idx in range(0,12):
             if str(m_idx) in plot_months:
-                checkbox_vals['chart_data_indices_' +  str(m_idx) + '_selected'] ='selected'
+                checkbox_vals['monann_chart_indices_' +  str(m_idx) + '_selected'] ='selected'
         checkbox_vals['chart_smry_' +  initial['plot_type'] + '_selected'] = 'selected'
     if 'statistic_period' in initial.keys():
         checkbox_vals[initial['statistic_period'] + '_selected'] =''

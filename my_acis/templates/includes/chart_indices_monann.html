@@ -1,19 +1,19 @@
-
+{%load my_scenic_filters%}
 {%if initial.statistic_period == "monthly"%}
 <font class="message">Months: </font>
-<select style="max-height:200px;width:200px" multiple id='data_indices' name="chart_selector">
-    <option value=0 {{checkbox_vals.chart_data_indices_0_selected}}>January</option>
-    <option value=1 {{checkbox_vals.chart_data_indices_1_selected}}>February</option>
-    <option value=2 {{checkbox_vals.chart_data_indices_2_selected}}>March</option>
-    <option value=3 {{checkbox_vals.chart_data_indices_3_selected}}>April</option>
-    <option value=4 {{checkbox_vals.chart_data_indices_4_selected}}>May</option>
-    <option value=5 {{checkbox_vals.chart_data_indices_5_selected}}>June</option>
-    <option value=6 {{checkbox_vals.chart_data_indices_6_selected}}>July</option>
-    <option value=7 {{checkbox_vals.chart_data_indices_7_selected}}>August</option>
-    <option value=8 {{checkbox_vals.chart_data_indices_8_selected}}>September</option>
-    <option value=9 {{checkbox_vals.chart_data_indices_9_selected}}>October</option>
-    <option value=10 {{checkbox_vals.chart_data_indices_10_selected}}>November</option>
-    <option value=11 {{checkbox_vals.chart_data_indices_11_selected}}>December</option>
+<select style="max-height:200px;width:200px" multiple id='chart_indices' name="chart_selector">
+    <option value=0 {%if 0|is_in:chart_indices_string %} selected{%endif%}>January</option>
+    <option value=1 {%if 1|is_in:chart_indices_string %}>February</option>
+    <option value=2 {%if 2|is_in:chart_indices_string %}>March</option>
+    <option value=3 {%if 3|is_in:chart_indices_string %}>April</option>
+    <option value=4 {%if 4|is_in:chart_indices_string %}>May</option>
+    <option value=5 {%if 5|is_in:chart_indices_string %}>June</option>
+    <option value=6 {%if 6|is_in:chart_indices_string %}>July</option>
+    <option value=7 {%if 7|is_in:chart_indices_string %}>August</option>
+    <option value=8 {%if 8|is_in:chart_indices_string %}>September</option>
+    <option value=9 {%if 9|is_in:chart_indices_string %}>October</option>
+    <option value=10 {%if 10|is_in:chart_indices_string %}>November</option>
+    <option value=11 {%if 11|is_in:chart_indices_string %}>December</option>
 </select>
 {%endif%}
 
@@ -22,7 +22,7 @@
 <select style="max-height:200px;width:200px" multiple id='data_indices' name="chart_selector">
 {% for week in weeks %}
     <option value={{forloop.counter0}} 
-    {%if forloop.counter0 == 0 or forloop.counter0 == 0%}selected{%endif%}>Week {{forloop.counter0}}</option>
+    {%if forloop.counter0|is_in:chart_indices_string %}selected{%endif%}>Week {{forloop.counter0}}</option>
 {% endfor %}
 </select>
 {%endif%}
