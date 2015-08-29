@@ -339,7 +339,7 @@ $(document).ready(function ($) {
             $('#end_date').val(new_dates.end); 
         }
         //Change start/end years for interannual
-        if ($('#app_name').val() == 'single_interannual'){
+        if ($('#app_name').val() == 'interannual'){
             set_year_range_for_interannual()
         }
     });
@@ -578,7 +578,7 @@ $(document).ready(function ($) {
         set_map($(this)); //form_utils function
         update_value($(this).val()); //form_utils function
         //Change start/end years for interannual
-        if ($('#app_name').val() == 'single_interannual'){
+        if ($('#app_name').val() == 'interannual'){
             set_year_range_for_interannual()
         }
      
@@ -597,7 +597,11 @@ $(document).ready(function ($) {
                 myChart.series[i].update({type:chartType});
             }
         }
+        //Update hidden chart variables in  main form
+        $('.chart_type').val($(this).val());
     });
+
+    //chart checkboxes
     $('#show_range, #show_running_mean, #show_average, #climatology, #percentile_5, #percentile_10, #percentile_25').on('click', function(){
         //Find the correct chart
         var l_type = $(this).val();
@@ -613,6 +617,13 @@ $(document).ready(function ($) {
                 }
                 myChart.redraw();
             }
+        }
+        //Update hidden chart variables in  main form
+        if ($(this).is(':checked')) { 
+            $('.' + $(this).attr('id')).val('T');
+        }
+        else{
+             $('.' + $(this).attr('id')).val('F');
         }
     });
 
@@ -636,9 +647,13 @@ $(document).ready(function ($) {
                 var r_name = running_mean_period + '-';
                 if ($('#running_mean_days').length){
                     r_name+='day Running Mean ' + s_name;
+                    //Update hidden chart vars
+                    $('.running_mean_days').val(running_mean_period);
                 }
                 if ($('#running_mean_years').length){
-                    r_name+='year Running Mean ' + s_name
+                    r_name+='year Running Mean ' + s_name;
+                    //Update hidden chart vars
+                    $('.running_mean_years').val(running_mean_period);
                 }
                 myChart.series[i].update({data: rm_data, name:r_name });
 
@@ -660,7 +675,12 @@ $(document).ready(function ($) {
         }
         else{
             generateTS_smry();
-        }   
+        }
+        //Update hidden chart variables in  main form
+        if ($(this).attr('id') == 'chart_indices'){
+            var index_str = $('select#chart_indices').val().join(',');
+            $('.chart_indices_string').val(index_str);
+        }
     });
 
     //Threshold for interannual
@@ -678,6 +698,8 @@ $(document).ready(function ($) {
                 myChart.redraw(true);
             }
         } 
+        //Update hidden chart variables in  main form
+         $('.threshold').val($(this.val()));
     });
 
    $('#target_year_figure').on('change', function(){

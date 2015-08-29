@@ -19,7 +19,7 @@
 </div><!--End how_to-->
 
 <!---Hidden variables-->
-<input type="hidden" id="app_name" name="app_name" value="single_intraannual">
+<input type="hidden" id="app_name" name="app_name" value="intraannual">
 
 <p align="center" class="error">
     <b>*(BETA) THIS PAGE IS UNDER DEVELOPMENT!</b><br /><br />
@@ -181,12 +181,12 @@
                 {% include 'includes/chart_type.html'%}
             </td>
              <td align="left" rowspan="2" valign="top">
-                {% include 'includes/percentiles.html'%}
+                {% include 'includes/chart_percentiles.html'%}
             </td>
             </tr>
             <tr>
             <td align="left" valign="top">
-                {% include 'includes/target_year.html'%}
+                {% include 'includes/chart_target_year.html'%}
             </td>
             <td></td>
             </tr>

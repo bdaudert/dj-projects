@@ -109,6 +109,12 @@
         <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/vertical_axis_min.html'%}</tr>
         <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/vertical_axis_max.html'%}</tr>
         </table>
+        <!--Hidden chart vars-->
+        <input type="hidden" class="chart_indices_string" id="chart_indices_string" value="{{initial.chart_indices_string}}" name="chart_indices_string">
+        <input type="hidden" value="{{initial.chart_type}}" name="chart_type" class="chart_type">
+        <input type="hidden" value="{{initial.show_running_mean}}" name="show_running_mean" class="show_running_mean">
+        <input type="hidden" value="{{initial.running_mean_days}}" name="running_mean_days" class="running_mean_days">
+        <input type="hidden" value="{{initial.show_average}}" name="show_average" class="show_average">
         <input type="submit" value="Generate time series" name="formData">
         </form>
     </div><!--end div formData-->
@@ -259,8 +265,8 @@
             <div align="right" id="container" style="height:600px;width:800px;"></div>
             <script type="text/javascript">
                 var graph_data = {{results.graph_data | safe_json}};
-                var data_indices = {{ results.data_indices |safe }}
-                generateTS_individual(data_indices);
+                var chart_indices = {{ results.chart_indices |safe }}
+                generateTS_individual(chart_indices);
             </script>
                 </td></tr>
             </table>

@@ -472,11 +472,11 @@ def single_lister(request):
             return response
     return render_to_response(url, context, context_instance=RequestContext(request))
 
-def single_intraannual(request):
+def intraannual(request):
     context = {
-        'title': settings.APPLICATIONS['single_intraannual'][0]
+        'title': settings.APPLICATIONS['intraannual'][0]
     }
-    url = settings.APPLICATIONS['single_intraannual'][2]
+    url = settings.APPLICATIONS['intraannual'][2]
     initial, checkbox_vals = set_initial(request,'intraannual')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
@@ -559,11 +559,11 @@ def single_intraannual(request):
             return response
     return render_to_response(url, context, context_instance=RequestContext(request))
 
-def single_interannual(request):
+def interannual(request):
     context = {
-        'title': settings.APPLICATIONS['single_interannual'][0]
+        'title': settings.APPLICATIONS['interannual'][0]
     }
-    url = settings.APPLICATIONS['single_interannual'][2]
+    url = settings.APPLICATIONS['interannual'][2]
     initial, checkbox_vals = set_initial(request,'interannual')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
@@ -969,7 +969,7 @@ def spatial_summary(request):
                 el_name+= str(base_temp)
             elements.append(el_name)
         results['elements'] = elements
-        results['data_indices'] = [0]
+        results['chart_indices'] = str(initial['chart_indices_string']).split(',')
         results['chartType'] = graph_data[0]['chartType']
         #results['json_file_path'] = settings.TMP_URL + json_file
         context['results'] = results
@@ -2354,8 +2354,8 @@ def set_initial(request,req_type):
         initial['summary_type'] = Get('summary_type', 'all')
 
     #Ploting options for all pages that have charts
-    if req_type in ['monann', 'spatial_summary','intraannual', 'intraannual','data_comparison']:
-        initial['chart_indices'] = Get('chart_indices',0)
+    if req_type in ['monann', 'spatial_summary','interannual', 'intraannual','data_comparison']:
+        initial['chart_indices_string'] = Get('chart_indices_string','0')
         initial['chart_type'] = Get('chart_type','spline')
         initial['show_running_mean'] = Get('show_running_mean','T')
         if req_type in ['monann', 'interannual']:
@@ -2365,6 +2365,8 @@ def set_initial(request,req_type):
         initial['show_average'] = Get('show_average','T')
         if req_type in ['monann']:
             initial['show_range'] = Get('show_range','T')
+        if req_type in ['interannual']:
+            initial['chart_threshold'] = Get('chart_threshold','')
     #Checkbox vals
     checkbox_vals['state_' + initial['overlay_state'] + '_selected'] = 'selected'
     if 'elements_constraints' in initial.keys() and 'dates_constraints' in initial.keys():

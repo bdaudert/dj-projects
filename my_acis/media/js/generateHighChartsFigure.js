@@ -40,7 +40,7 @@ function generateTS_individual(chart_indices) {
     var axisFontSize = '16px';
     var labelsFontSize = '16px';
     //Set params according to application 
-    if (app_name == 'monann' || app_name =='single_interannual'){
+    if (app_name == 'monann' || app_name =='interannual'){
         var date_format = '%Y';
         if ( $('#statistic').length && $('#statistic').val() == 'ndays'){
             var yLabelmain = 'days';
@@ -49,7 +49,7 @@ function generateTS_individual(chart_indices) {
             var yLabelmain = datadict[0].elUnits;
         }
     }
-    if (app_name  == 'spatial_summary' || app_name == 'data_comparison' || app_name =='single_intraannual'){
+    if (app_name  == 'spatial_summary' || app_name == 'data_comparison' || app_name =='intraannual'){
         var date_format = '%Y-%m-%d';
         var yLabelmain = datadict[0].seriesName + ' (' + datadict[0].elUnits + ')';
     }
@@ -107,7 +107,7 @@ function generateTS_individual(chart_indices) {
     
     //Define series data
     //Intraannual climo and precentile data
-    if (app_name == 'single_intraannual'){
+    if (app_name == 'intraannual'){
         //Find target_year
         if ($('#year_target_figure').length){
             var target_year = $('#year_target_figure').val();
@@ -167,13 +167,15 @@ function generateTS_individual(chart_indices) {
             s['yAxis'] = i;
         }
         //Set threshold for interannual
-        if (app_name == 'single_interannual'){
+        if (app_name != 'intraannual'){
             var ave_data = compute_average(datadict[idx].data);
+        }
+        if (app_name == 'interannual'){
             s['threshold'] = ave_data[0][1].toFixed(2);
             s['color'] = 'blue';
             s['negativeColor'] = 'red';
         }
-        if (app_name == 'single_intraannual'){
+        if (app_name == 'intraannual'){
             if (parseInt($('#start_year').val()) + idx === parseInt(target_year)){
                 s['visible'] = true;
                 s['showInLegend'] = true;
@@ -186,7 +188,7 @@ function generateTS_individual(chart_indices) {
         //Deal with skinny bar bug
         if (chartType == 'column'){
             s['stacking'] = null;
-            if (app_name == 'monann' || app_name =='single_interannual'){
+            if (app_name == 'monann' || app_name =='interannual'){
                 s['pointRange'] = 1 * 24 * 3600*1000*365;
             }
             else{
@@ -194,7 +196,7 @@ function generateTS_individual(chart_indices) {
             }
         }
         series_data.push(s);
-        if (app_name == 'single_intraannual'){
+        if (app_name == 'intraannual'){
             if (parseInt($('#start_year').val()) + idx === parseInt(target_year)){
                 series_data.push(climo);
                 for (j=0;j < perc.length;j++){
@@ -207,7 +209,7 @@ function generateTS_individual(chart_indices) {
         if (running_mean_period != '0'){
             var rm_data =compute_running_mean(datadict[idx].data, parseInt(running_mean_period));
             var r_name = running_mean_period + '-';
-            if (app_name == 'monann' || app_name == 'single_interannual'){
+            if (app_name == 'monann' || app_name == 'interannual'){
                     r_name+='year Running Mean ';
             }
             else{
@@ -246,11 +248,11 @@ function generateTS_individual(chart_indices) {
             series_data.push(a);
         }
         //Set average as initial threshold for interannual
-        if (app_name == 'single_interannual'){
+        if (app_name == 'interannual'){
             $('#threshold').val(ave_data[0][1].toFixed(2));
         }
         //Range
-        if (app_name != 'single_intraannual'){
+        if (app_name != 'intraannual'){
             var range_data = compute_range(datadict[idx].data);
             var v = false;
             if ($('#show_range').is(':checked')){v = true;};
@@ -552,7 +554,7 @@ function generateTS_smry(chart_indices) {
     //Range
     var v = false
     if ($('#show_range').is(':checked')){v = true;}
-    if (app_name != 'single_intraannual'){
+    if (app_name != 'intraannual'){
         var range_data = compute_range(smry_data.data);
         var r = {
             visible:v,
