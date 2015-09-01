@@ -109,6 +109,13 @@
         <tr valign="top">{% include 'includes/departures_from_averages.html'%}</tr>
         <tr valign="top" style="display:none">{% include 'includes/frequency_analysis.html'%}</tr>
         </table><!--End tableData-->
+<!--Hidden chart vars-->
+        <input type="hidden" class="chart_indices_string" id="chart_indices_string" value="{{initial.chart_indices_string}}" name="chart_indices_string">
+        <input type="hidden" value="{{initial.chart_type}}" name="chart_type" class="chart_type">
+        <input type="hidden" value="{{initial.show_running_mean}}" name="show_running_mean" class="show_running_mean">
+        <input type="hidden" value="{{initial.running_mean_years}}" name="running_mean_days" class="running_mean_days">
+        <input type="hidden" value="{{initial.show_range}}" name="show_range" class="show_range">
+        <input type="hidden" value="{{initial.show_range}}" name="chart_summary" class="chart_summary">
         <input type="submit" value="Generate Time Series" name="formData">
         </form>
     </div>
@@ -203,10 +210,17 @@
                 </tr>
             </table>
             <div align="center" id="container" style="height:500px;width:700px;"></div>
+            {% if initial.chart_summary == "individual"%}
             <script type="text/javascript">
                 var graph_data = {{results.graph_data | safe_json}};
                 generateTS_individual();
             </script>
+            {%else%}
+            <script type="text/javascript">
+                var graph_data = {{results.graph_data | safe_json}};
+                generateTS_smry();
+            </script>
+            {%endif%}
         </div>
         </div>
         {%endif%}

@@ -54,8 +54,21 @@ $(document).ready(function ($) {
     });
 
     /*
-    ELEMENT CHANGE
+    ELEMENT(S) CHANGE
     */
+    $('#elements').on('change', function(){
+        //Update chart indices string
+        if ($('#chart_indices_string').length){
+            var count = $("#elements :selected").length;
+            var indices = ''
+            for (var i=0;i<count;i++){
+                indices+=String(i) + ',';
+            }
+            indices = indices.substring(0, indices.length -1);
+            $('#chart_indices_string').val(indices);
+        }
+    });
+
     $('#element').on('change', function(){
         //Set monthly statistic for monann
         var sum_els = ['pcpn','snow','evap','pet'];
@@ -677,14 +690,21 @@ $(document).ready(function ($) {
             generateTS_smry();
         }
         //Update hidden chart variables in  main form
+        if ($(this).attr('id') == 'chart_summary'){
+            $('.chart_summary').val($(this).val());
+        }
         if ($(this).attr('id') == 'chart_indices'){
-            var index_str = $('select#chart_indices').val().join(',');
-            $('.chart_indices_string').val(index_str);
+            var index_string = '';
+            $("#chart_indices :selected").each(function(){
+                index_string+=$(this).val() + ','; 
+            });
+            index_string = index_string.substring(0,index_string.length - 1);
+            $('.chart_indices_string').val(index_string);
         }
     });
 
     //Threshold for interannual
-    $('#threshold').on('change keyup', function(){
+    $('#chart_threshold').on('change keyup', function(){
         var thresh = $(this).val();
         for (var i = 0; i < myChart.series.length; i++) {
             //Only change main series, not aves and runmeans
@@ -699,11 +719,13 @@ $(document).ready(function ($) {
             }
         } 
         //Update hidden chart variables in  main form
-         $('.threshold').val($(this.val()));
+         $('.chart_threshold').val($(this).val());
     });
 
    $('#target_year_figure').on('change', function(){
         var year = parseInt($(this).val());
+        //Set plot vars
+        $('.target_year').val(String(year));
         //Clear old tab data
         var data_table = $('#textData');
         $('#textData tr').remove();

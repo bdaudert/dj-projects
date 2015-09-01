@@ -21,6 +21,7 @@ function generateTS_individual(chart_indices) {
     }
     //Convert daat indices to list
     if (typeof chart_indices == 'string'){
+
         chart_indices = chart_indices.replace(', ',',').split(',');
     }
     var app_name = '';
@@ -109,16 +110,22 @@ function generateTS_individual(chart_indices) {
     //Intraannual climo and precentile data
     if (app_name == 'intraannual'){
         //Find target_year
-        if ($('#year_target_figure').length){
-            var target_year = $('#year_target_figure').val();
+        if ($('#target_year_figure').length){
+            var target_year = $('#target_year_figure').val();
         }
         else{
-            var target_year = $('#year_target_form').val();
+            var target_year = $('#target_year_form').val();
         }
+        //Sanity check on Target year:
+
         //Climo data
+        var v = false;
+        if ($('#show_climatology').val() == 'T' || $('#climatology').is(':checked')){
+            v = true;
+        }
         var climo = {
-            visible:false,
-            showInLegend:false,
+            visible:v,
+            showInLegend:v,
             id: 'climatology',
             name: '50% Percentile',
             data: climoData,
@@ -130,14 +137,18 @@ function generateTS_individual(chart_indices) {
         var percentile_colors = ['#B7E2F0','#8FBAC8','#5D8896'];
         var perc = []
         for (var i=0; i< percentileData.length;i++){
+            v = false;
+            if ($('#show_percentile_' + percentile_names[i]).val() == 'T' || $('#percentile_' + percentile_names[i]).is(':checked')){
+                v = true;
+            }
             var p_name = percentiles[i];
             var p_id = percentile_names[i];
             var p_color = percentile_colors[i];
             var r = {
-                visible:false,
+                visible:v,
                 id: 'percentile_' + p_id,
                 name: p_name + ' Percentile',
-                showInLegend:false,
+                showInLegend:v,
                 type:'arearange',
                 lineWidth:1,
                 lineColor:'white',
@@ -154,7 +165,7 @@ function generateTS_individual(chart_indices) {
         idx = chart_indices[i];
         var s_id = String(idx);
         var s = {
-            type:datadict[idx].chartType,
+            type:chartType,
             name: datadict[idx].seriesName,
             //color: datadict[idx].series_color,
             color:Highcharts.getOptions().colors[2*idx],
@@ -249,7 +260,7 @@ function generateTS_individual(chart_indices) {
         }
         //Set average as initial threshold for interannual
         if (app_name == 'interannual'){
-            $('#threshold').val(ave_data[0][1].toFixed(2));
+            $('#chart_threshold').val(ave_data[0][1].toFixed(2));
         }
         //Range
         if (app_name != 'intraannual'){

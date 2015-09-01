@@ -81,12 +81,6 @@
         <tr class="station_grid" style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/end_date.html'%}</tr> 
         <tr id="spat_summary" style="display:table-row">{% include 'includes/spatial_summary.html'%}</tr>
-        <tr style="display:none">{% include 'includes/show_running_mean.html'%}</tr>
-        {%if initial.show_running_mean == "T"%}
-            <tr valign="top" id="rm_days" style="display:none">{% include 'includes/running_mean_days.html'%}</tr>
-        {%else%}
-            <tr valign="top" id="rm_days" style="display:none;">{% include 'includes/running_mean_days.html'%}</tr>
-        {%endif%}
         <tr style="display:none;">
         <td colspan="3" onClick="show_hide_opts('plOpts')"><b><u>Plot Options</u></b>
         <input type="hidden" name="show_plot_opts" id="show_plot_opts" value={{initial.show_plot_opts}}>
@@ -215,6 +209,7 @@
 
     <table id="printable_table">
     <td>
+    
 
     <!--Paramaters and Data list-->
     <table cellpadding="5px">
@@ -265,8 +260,7 @@
             <div align="right" id="container" style="height:600px;width:800px;"></div>
             <script type="text/javascript">
                 var graph_data = {{results.graph_data | safe_json}};
-                var chart_indices = {{ results.chart_indices |safe }}
-                generateTS_individual(chart_indices);
+                generateTS_individual();
             </script>
                 </td></tr>
             </table>

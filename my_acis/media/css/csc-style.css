@@ -452,7 +452,22 @@ a#warning {
     color:#FF00FF;
 }
 
-iframe.ee {
+#ee_iframe {
+    width: 2000px;
+    height: 1100px;
+    border: 0;
+
+    -ms-transform: scale(0.8);
+    -moz-transform: scale(0.8);
+    -o-transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+    transform: scale(0.8);
+
+    -ms-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    -o-transform-origin: 0 0;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
 }
 
 table.chart_options {

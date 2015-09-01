@@ -1,7 +1,7 @@
 {%load my_scenic_filters%}
 
 <b>Choose Target Year:</b>
-<select id ="target_year_figure" name ="target_year_figure">
+<select id ="target_year_figure" name ="target_year_figure" class="target_year">
 {%for yr in initial.start_year|make_range_reversed:initial.end_year%} 
 <option value={{yr}}
 {% if initial.target_year == yr|to_string %}selected{%endif%}>{{yr}}</option>

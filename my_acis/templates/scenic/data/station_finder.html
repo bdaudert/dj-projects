@@ -127,12 +127,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     {%endif%}
 
     {%if large_request and not form_error %}
-    <p class="message results" text-align="left">
-    Your data request will be processed off line.</br />
-    An email confirmation with instructions on how to obtain your data will
-    be sent on successful completion of the request.
-    Please contact scenic@dri.edu if you do not hear from us within 12 hours.
-    </p>
+    <div>{% include 'includes/offline_message.html'%}</div>
     {%endif%}
 
     <!--Map section-->
@@ -206,11 +201,17 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <tr class="data_sf" id="start_window" style="display:none;">{% include 'includes/start_window.html'%}</tr>
     <tr class="data_sf" id="end_window" style="display:none;">{% include 'includes/end_window.html'%}</tr>
     <tr class="data_sf" style="display:table-row;">{% include 'includes/data_format_area.html'%}</tr>
-    <tr id="delim" class="data_sf" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
+    {%if initial.data_format == "xl" or initial.data_format == "html"%}
+        <tr id="delim" class="data_sf" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
+    {%else%}
+        <tr id="delim" class="data_sf" style="display:table-row;">{% include 'includes/delimiter.html'%}</tr>
+    {%endif%}
     <tr id="out_file" class="data_sf" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
     <tr id="un" class="data_sf" style="display:table-row;">{% include 'includes/user_name.html'%}</tr>
     <tr id="ue" class="data_sf" style="display:table-row;">{% include 'includes/user_email.html'%}</tr>
     </table>
+    <input type="hidden" name="station_json" value="{{station_json}}">
+    <input type="hidden" name="station_ids_string" value="{{station_ids}}">
     <input style="margin:5px" type="submit" value="Get data"style="background-color:#006666;color:#FFEFD5" name="formDownload"/>
     </form>
     </div><!--end formDownload div-->

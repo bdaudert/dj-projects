@@ -130,7 +130,7 @@ def gallery(request):
     p_url = app_url + '?'
     #p_url+='area_type=location&location=-120.44,39.32&element=mint&grid=1&start_year=1970&end_year=2000'
     p_url+='area_type=station_id&station_id=048218&element=mint&start_year=POR&end_year=POR'
-    p_url+='&statistic=ndays&less_greater_or_between=l&threshold_for_less_than=32&plot_months=3,4,5'
+    p_url+='&statistic=ndays&less_greater_or_between=l&threshold_for_less_than=32&chart_indices_string=3,4,5'
     app_urls['extremes'] = app_url
     param_urls['extremes'] = p_url
     app_names['extremes'] = settings.APPLICATIONS['monann'][0]
@@ -234,19 +234,7 @@ def single_point_prods(request):
         context['user_params'] = user_params
         for app in ['single_lister', 'monann', 'climatology','data_comparison', 'interannual', 'intraannual']:
             initial, checkbox_vals = set_initial(request, app)
-            if app == 'interannual':
-                context['x'] = initial
-            p_str = '?'
-            for key, val in initial.iteritems():
-                k = str(key)
-                #convert lists to strings (elements)
-                if isinstance(val, list):
-                    v = (',').join(val)
-                else:
-                    v = str(val)
-                p_str+= k +'=' + v + '&'
-            #strip last &
-            p_str=p_str[0:-1]
+            p_str = WRCCUtils.set_url_params(initial)
             context['url_params_' + app] =  p_str
 
     return render_to_response(url, context, context_instance=RequestContext(request))
@@ -261,17 +249,7 @@ def multi_point_prods(request):
         #set link params
         for app in ['multi_lister', 'spatial_summary', 'temporal_summary']:
             initial, checkbox_vals = set_initial(request, app)
-            p_str = '?'
-            for key, val in initial.iteritems():
-                k = str(key);
-                #convert lists to strings (elements)
-                if isinstance(val, list):
-                    v = (',').join(val)
-                else:
-                    v = str(val)
-                p_str+= k +'=' + v + '&'
-            #strip last &
-            p_str=p_str[0:-1]
+            p_str = WRCCUtils.set_url_params(initial)
             context['url_params_' + app] =  p_str
     return render_to_response(url, context, context_instance=RequestContext(request))
 
@@ -516,7 +494,7 @@ def intraannual(request):
             graph_dict = GDWriter.write_dict()
             graph_data.append(graph_dict)
         results['graph_data'] = graph_data
-        results['chartType'] = graph_dict['chartType']
+        #results['chartType'] = graph_dict['chartType']
         context['results'] = results
 
         #Save results for downloading
@@ -592,7 +570,7 @@ def interannual(request):
         GDWriter = WRCCClasses.GraphDictWriter(form_cleaned, hc_data)
         graph_dict = GDWriter.write_dict()
         results['graph_data'] = [graph_dict]
-        results['chartType'] = graph_dict['chartType']
+        #results['chartType'] = graph_dict['chartType']
         context['results'] = results
 
         #Save results for downloading
@@ -642,7 +620,7 @@ def multi_lister(request):
     url = settings.APPLICATIONS['multi_lister'][2]
     initial, checkbox_vals = set_initial(request,'multi_lister')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
-    if 'formData' in request.POST:
+    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         form = set_form(request,clean=False)
         form_cleaned = set_form(request)
         #Check for form errors
@@ -660,6 +638,7 @@ def multi_lister(request):
             if 'Custom Shape' in form_error.keys():
                 context['need_polygon_map'] = True
             return render_to_response(url, context, context_instance=RequestContext(request))
+        '''
         #Deal with large requests
         large_temporal = False
         start_year = int(form_cleaned['start_date'][0:4])
@@ -674,7 +653,7 @@ def multi_lister(request):
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
             return render_to_response(url, context, context_instance=RequestContext(request))
-
+        '''
         #Data request
         req = {}
         '''
@@ -969,8 +948,18 @@ def spatial_summary(request):
                 el_name+= str(base_temp)
             elements.append(el_name)
         results['elements'] = elements
-        results['chart_indices'] = str(initial['chart_indices_string']).split(',')
-        results['chartType'] = graph_data[0]['chartType']
+        #Pick up chart indices from previous run
+        chart_indices_list = str(initial['chart_indices_string']).split(',')
+        #Check that these indices exist in new run
+        chart_indices = []
+        for idx in chart_indices_list:
+            if idx < len(graph_data) and initial['chart_elements'][int(idx)] in form_cleaned['elements']:
+                new_idx = form_cleaned['elements'].index(initial['chart_elements'][int(idx)])
+                chart_indices.append(new_idx)
+        if not chart_indices:
+            chart_indices = [idx for idx in range(len(form_cleaned['elements']))]
+        results['chart_indices'] = chart_indices
+        #results['chartType'] = graph_data[0]['chartType']
         #results['json_file_path'] = settings.TMP_URL + json_file
         context['results'] = results
         context['run_done'] = True
@@ -1030,7 +1019,8 @@ def spatial_summary(request):
 def climateengine(request):
     context = {
         'title': ''
-        }
+    }
+    context['initial'] = {'req_type':'climateengine'}
     return render_to_response('scenic/data/multi/climateengine.html', context, context_instance=RequestContext(request))
 
 
@@ -1094,6 +1084,14 @@ def station_finder(request):
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=el_date_constraints)
         #Write to file for map generation
         context['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
+        context['number_of_stations'] = len(context['station_ids'].split(','))
+        '''
+        i,c = set_initial(request,'sf_download')
+        i['station_ids'] = context['station_ids']
+        i['user_email'] = 'bdaudert@dri.edu'
+        i['data_format'] = 'html'
+        context['url_params'] = WRCCUtils.set_url_params(i)
+        '''
         json_dict = copy.deepcopy(form_cleaned)
         json_dict['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
@@ -1111,7 +1109,6 @@ def station_finder(request):
     if 'formDownload' in request.POST:
         initial, checkbox_vals = set_initial(request,'sf_download')
         context[initial['overlay_state'] + '_selected'] = 'selected'
-        context['large_request'] = True
         form_cleaned = set_form(initial, clean=True)
         fields_to_check = ['user_email']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -1121,11 +1118,13 @@ def station_finder(request):
             if 'area_type' in initial.keys() and initial['area_type'] in m:
                 context['need_overlay_map'] = True
             return render_to_response(url, context, context_instance=RequestContext(request))
-        context['x'] = initial
-        #context['xx'] = form_cleaned
+        context['large_request'] = True
+        #Submit large request
         #os.remove(settings.DATA_REQUEST_BASE_DIR + 'SFDownloadTest_params.json')
+        json_dict = copy.deepcopy(form_cleaned)
         json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
-        WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
+        WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, json_dict)
+        #context['station_json'] = form_cleaned['station_json']
         return render_to_response(url, context, context_instance=RequestContext(request))
 
     #Overlay maps
@@ -1285,7 +1284,7 @@ def monann(request):
             #1. chart layers
             graph_data.append(graph_dict)
         results['graph_data'] = graph_data
-        results['chartType'] = graph_dict['chartType']
+        #results['chartType'] = graph_dict['chartType']
         context['run_done'] = True
         context['results'] = results
         #Save data table to file for later download
@@ -2178,10 +2177,6 @@ def set_initial(request,req_type):
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['area_type']]
     initial['area_type_value'] = initial[str(initial['area_type'])]
 
-    #If station_finder download, we need to set the station_ids
-    if req_type == 'sf_download':
-        initial['station_ids'] = Get('station_ids','')
-
     #Set data type and map parameters
     if initial['area_type'] in ['station_id']:
         initial['autofill_list'] = 'US_' + initial['area_type']
@@ -2202,6 +2197,18 @@ def set_initial(request,req_type):
         kml_file_path = create_kml_file(at, initial['overlay_state'])
         if initial['area_type'] == at:
             initial['kml_file_path'] = kml_file_path
+
+    #If station_finder download, we need to set the station_ids
+    #and override the original area type fields
+    if req_type == 'sf_download':
+        #delete old are type
+        del initial[str(initial['area_type'])]
+        #set new area params
+        initial['station_ids'] = str(Get('station_ids_string',''))
+        initial['area_type'] = 'station_ids'
+        initial['area_type_label'] = 'Station IDs'
+        initial['area_type_value'] = initial['station_ids']
+        initial['station_json'] = Get('station_json','')
 
     #Set element(s)--> always as list if multiple
     if req_type == 'map_overlay':
@@ -2227,13 +2234,13 @@ def set_initial(request,req_type):
             els = els[0].replace(' ','').split(',')
         elif isinstance(els, basestring):
             els = els.replace(' ','').split(',')
-        initial['elements'] = els
+        initial['elements'] = [str(el) for el in els]
 
     #Set units
     initial['units'] = Get('units','english')
 
     #Set degree days
-    if req_type not in ['station_finder', 'monann', 'climatology', 'data_comparison', 'interannual','intraannual']:
+    if req_type not in ['station_finder', 'monann', 'climatology', 'data_comparison']:
         initial['add_degree_days'] = Get('add_degree_days', 'F')
         if initial['units'] == 'metric':
             initial['degree_days'] = Get('degree_days', 'gdd13,hdd21').replace(', ', ',')
@@ -2255,25 +2262,21 @@ def set_initial(request,req_type):
             if initial['end_year'] == '9999':
                 initial['end_year'] = 'POR'
     elif req_type in ['interannual', 'intraannual']:
-        #Chek for dates from link from station finder
-        initial['start_date'] = Get('start_date', None)
-        initial['end_date'] = Get('end_date', None)
-        if initial['start_date'] is None or initial['end_date'] is None:
-            if 'station_id' in initial.keys():
-                stn_id = WRCCUtils.find_id(initial['station_id'],settings.MEDIA_DIR + '/json/US_station_id.json')
-                vd = WRCCUtils.find_valid_daterange(stn_id,el_list=[initial['element']])
-                if vd and initial['start_date'] is None and len(vd) >=1:
-                    initial['start_date'] = vd[0]
-                if vd and initial['end_date'] is None and len(vd) >1:
-                    initial['end_date'] = vd[1]
-                if initial['start_date'] is None or initial['end_date'] is None:
-                    initial['start_date'] = '9999-99-99'
-                    initial['end_date'] = '9999-99-99'
-            if 'location' in initial.keys():
-                initial['start_date'] = WRCCData.GRID_CHOICES[str(initial['grid'])][3][0][0]
-                initial['end_date'] = WRCCData.GRID_CHOICES[str(initial['grid'])][3][0][1]
+        initial['start_date'] = None;initial['end_date'] = None
+        if 'station_id' in initial.keys():
+            stn_id = WRCCUtils.find_id(initial['station_id'],settings.MEDIA_DIR + '/json/US_station_id.json')
+            vd = WRCCUtils.find_valid_daterange(stn_id,el_list=[initial['element']])
+            if vd and len(vd) >=1:
+                initial['start_date'] = vd[0]
+            if vd and len(vd) >1:
+                initial['end_date'] = vd[1]
+            if initial['start_date'] is None or initial['end_date'] is None:
+                initial['start_date'] = '9999-99-99'
+                initial['end_date'] = '9999-99-99'
+        if 'location' in initial.keys():
+            initial['start_date'] = WRCCData.GRID_CHOICES[str(initial['grid'])][3][0][0]
+            initial['end_date'] = WRCCData.GRID_CHOICES[str(initial['grid'])][3][0][1]
         initial['start_year'] = initial['start_date'][0:4]
-
         initial['end_year'] = initial['end_date'][0:4]
         initial['start_month']  = Get('start_month', '1')
         initial['start_day']  = Get('start_day', '1')
@@ -2281,7 +2284,17 @@ def set_initial(request,req_type):
             initial['end_month']  = Get('end_month', '1')
             initial['end_day']  = Get('end_day', '31')
         if req_type in ['intraannual']:
-            initial['target_year'] = str(int(initial['end_year']) - 1)
+            #Plotting vars
+            initial['show_climatology'] = Get('show_climatology','F')
+            initial['show_percentile_5'] = Get('show_percentile_5','F')
+            initial['show_percentile_10'] = Get('show_percentile_10','F')
+            initial['show_percentile_25'] = Get('show_percentile_25','F')
+            initial['target_year'] = Get('target_year_figure', None)
+            if initial['target_year'] is None:
+                initial['target_year'] = Get('target_year_form', str(int(initial['end_year']) - 1))
+            #Sanity check on target year
+            if initial['target_year'] < int(initial['start_year']) or initial['target_year'] > int(initial['end_year']):
+                initial['target_year'] = str(int(initial['end_year']) - 1)
             if initial['element'] in ['pcpn','snow','evap','pet']:
                 initial['calculation'] = Get('calculation','cumulative')
             else:
@@ -2345,8 +2358,8 @@ def set_initial(request,req_type):
         initial['departures_from_averages'] = Get('departures_from_averages','F')
         initial['frequency_analysis'] = Get('frequency_analysis','F')
         #Set initial plot options
-        initial['plot_type'] = Get('plot_type','individual')
-        initial['plot_months'] = Get('plot_months','0,1')
+        initial['chart_summary'] = Get('chart_summary','individual')
+        #initial['plot_months'] = Get('plot_months','0,1')
     if req_type == 'monann':
         initial['base_temperature'] = Get('base_temperature','65')
         initial['statistic_period'] = Get('statistic_period','monthly')
@@ -2355,18 +2368,27 @@ def set_initial(request,req_type):
 
     #Ploting options for all pages that have charts
     if req_type in ['monann', 'spatial_summary','interannual', 'intraannual','data_comparison']:
-        initial['chart_indices_string'] = Get('chart_indices_string','0')
+        if req_type in ['spatial_summary','monann','intraannual']:
+            if req_type == 'spatial_summary':
+                shown_indices = ','.join([str(idx) for idx in range(len(initial['elements']))])
+            elif req_type == 'intraannual':
+                shown_indices = str(int(initial['target_year']) - int(initial['start_year']))
+            else:
+                shown_indices = '0'
+            initial['chart_indices_string'] = Get('chart_indices_string',shown_indices)
+            index_list = initial['chart_indices_string'].replace(' ','').split(',')
+            if req_type in ['spatial_summary']:
+                #Keep track of elements
+                initial['chart_elements'] = [initial['elements'][int(idx)] for idx in index_list]
         initial['chart_type'] = Get('chart_type','spline')
-        initial['show_running_mean'] = Get('show_running_mean','T')
+        initial['show_running_mean'] = Get('show_running_mean','F')
         if req_type in ['monann', 'interannual']:
             initial['running_mean_years'] = Get('running_mean_years',5)
         else:
             initial['running_mean_days'] = Get('running_mean_days',9)
-        initial['show_average'] = Get('show_average','T')
+        initial['show_average'] = Get('show_average','F')
         if req_type in ['monann']:
-            initial['show_range'] = Get('show_range','T')
-        if req_type in ['interannual']:
-            initial['chart_threshold'] = Get('chart_threshold','')
+            initial['show_range'] = Get('show_range','F')
     #Checkbox vals
     checkbox_vals['state_' + initial['overlay_state'] + '_selected'] = 'selected'
     if 'elements_constraints' in initial.keys() and 'dates_constraints' in initial.keys():
@@ -2428,11 +2450,13 @@ def set_initial(request,req_type):
             if initial['less_greater_or_between'] == lgb:
                 checkbox_vals[lgb + '_selected'] ='selected'
         #set plot type and plot months
+        '''
         plot_months = initial['plot_months'].split(',')
         for m_idx in range(0,12):
             if str(m_idx) in plot_months:
                 checkbox_vals['monann_chart_indices_' +  str(m_idx) + '_selected'] ='selected'
         checkbox_vals['chart_smry_' +  initial['plot_type'] + '_selected'] = 'selected'
+        '''
     if 'statistic_period' in initial.keys():
         checkbox_vals[initial['statistic_period'] + '_selected'] =''
         for sp in ['monthly', 'weekly']:

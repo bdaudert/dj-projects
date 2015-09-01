@@ -25,7 +25,6 @@
     <b>*(BETA) THIS PAGE IS UNDER DEVELOPMENT!</b><br /><br />
 </p>
 
-
 <!--Set up autofill-->
 {%if initial.autofill_list %}
     <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
@@ -78,7 +77,13 @@
         <input type="hidden" id="end_date" name="end_date" value="{{initial.end_date}}">
         <input type="hidden" id="start_year" name="start_year" value="{{initial.start_year}}">
         <input type="hidden" id="end_year" name="end_year" value="{{initial.end_year}}">
-        <input type="hidden" id="year_target_form" name="target_year" value="{{initial.target_year}}">
+        <input type="hidden" id="target_year_form" name="target_year_form" value="{{initial.target_year}}" class="target_year">
+        <!--Plotting vars-->
+        <input type="hidden" value="{{initial.chart_type}}" name="chart_type" class="chart_type">
+        <input type="hidden" value="{{initial.show_percentile_5}}" name="show_percentile_5" class="percentile_5">
+        <input type="hidden" value="{{initial.show_percentile_10}}" name="show_percentile_10" class="percentile_10">
+        <input type="hidden" value="{{initial.show_percentile_25}}" name="show_percentile_25" class="percentile_25">
+        <input type="hidden" value="{{initial.show_climatology}}" name="show_climatology" class="climatology">
         <input style="margin:5px" type="submit" value="Generate time series" name="formData"/>
         </form>
     </div>

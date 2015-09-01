@@ -1,14 +1,18 @@
 <font class="message">Summary: </font>
 <select id="chart_summary" name="chart_selector">
     {%if initial.statistic_period == "monthly"%}
-    <option value="individual" {{checkbox_vals.chart_smry_individual_selected}}>Plot individual months</option>
+    <option value="individual" 
+    {% if initial.chart_summary == "individual" %} selected{%endif%}>
+    Plot individual months</option>
     {%endif%}
     {%if initial.statistic_period == "weekly"%}
-    <option value="individual" {{checkbox_vals.chart_smry_individual_selected}}>Plot individual weeks</option>
+    <option value="individual"
+    {% if initial.chart_summary == "individual" %} selected{%endif%}>
+    Plot individual weeks</option>
     {%endif%}
-    <option value="max" {{checkbox_vals.chart_smry_max_selected}}>Maximum</option>
-    <option value="min" {{checkbox_vals.chart_smry_min_selected}}>Minimum</option>
-    <option value="mean" {{checkbox_vals.chart_smry_mean_selected}}>Mean</option>
-    <option value="median" {{checkbox_vals.chart_smry_median_selected}}>Median</option>
-    <option value="sum" {{checkbox_vals.chart_smry_sum_selected}}>Sum</option>
+    <option value="max" {% if initial.chart_summary == "max" %} selected{%endif%}>Maximum</option>
+    <option value="min" {% if initial.chart_summary == "min" %} selected{%endif%}>Minimum</option>
+    <option value="mean" {% if initial.chart_summary == "mean" %} selected{%endif%}>Mean</option>
+    <option value="median" {% if initial.chart_summary == "median" %} selected{%endif%}>Median</option>
+    <option value="sum" {% if initial.chart_summary == "sum" %} selected{%endif%}>Sum</option>
 </select>

@@ -1,9 +1,9 @@
 <font class="message">Chart Type: </font>
 <select name="chart_selector" class="chart_type" id="chart_type">
-    <option value="scatter" {%if results.chartType == 'scatter'%}selected{%endif%}>Scatter Plot</option>
-    <option value="line" {%if results.chartType == 'line'%}selected{%endif%}>Line Plot</option>
-    <option value="spline" {%if results.chartType == 'spline'%}selected{%endif%}>Spline Plot</option>
-    <option value="column" {%if results.chartType == 'column'%}selected{%endif%}>Bar Chart</option>
-    <option value="area" {%if results.chartType == 'area'%}selected{%endif%}>Stacked Area Plot </option>
+    <option value="scatter" {%if initial.chart_type == 'scatter'%}selected{%endif%}>Scatter Plot</option>
+    <option value="line" {%if initial.chart_type == 'line'%}selected{%endif%}>Line Plot</option>
+    <option value="spline" {%if initial.chart_type == 'spline'%}selected{%endif%}>Spline Plot</option>
+    <option value="column" {%if initial.chart_type == 'column'%}selected{%endif%}>Bar Chart</option>
+    <option value="area" {%if initial.chart_type == 'area'%}selected{%endif%}>Stacked Area Plot </option>
 </select>
                   

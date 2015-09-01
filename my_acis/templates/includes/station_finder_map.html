@@ -1,5 +1,8 @@
     {%if station_json and not error and not form_error and not need_overlay_map%}
     {%if run_done%}
+    <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
+    <!--<p><a  target="_blank" href="{{DATA_URL}}multi/lister/{{url_params}}">TEST</a><p>-->
+
     <table id="map_legend" valign="top" style="width:900px;"></table>
     {%else%}
     <table id="map_legend" valign="top" style="width:625px;"></table>
@@ -19,6 +22,7 @@
 
     <!--Station List-->
     {%if run_done%}
+    <p class="message">Stations found: {{number_of_stations}}</p>
     <div class="station_list" align="center" width="900px">
     <table cellspacing="1" id="station_list" class="station_list"  border=1 width="900px">
     {%else%}
