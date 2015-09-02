@@ -61,7 +61,11 @@
         <table class="form" id="tableData" >
         <tr style="display:table-row" valign="bottom">{% include 'includes/single_select_area.html'%}</tr>
         <tr style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
-        <tr id="stn_finder" style="display:table-row">{% include 'includes/station_finder.html'%}</tr>
+        {%if initial.station_id%}
+            <tr id="stn_finder" style="display:table-row">{% include 'includes/station_finder.html'%}</tr>
+        {%else%}
+            <tr id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</tr>
+        {%endif%}
         {%if initial.location%}        
         <tr id="grid_type" style="display:table-row">{% include 'includes/grids_historic.html'%}</tr>
         {%else%}

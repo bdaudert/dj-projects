@@ -25,6 +25,20 @@ import WRCCUtils, AcisWS, WRCCDataApps, WRCCClasses, WRCCData, WRCCFormCheck
 import WRCCToReplace
 import scenic.forms as forms
 
+#Code to clean out data_request dir
+'''
+    import os, shutil
+    folder = '/tmp/data_requests'
+    for the_file in os.listdir(folder):
+        file_path = os.path.join(folder, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+            #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+        except Exception, e:
+            pass
+'''
+
 #Set dates
 today = WRCCUtils.set_back_date(0)
 today_year = today[0:4]
@@ -383,13 +397,13 @@ def single_lister(request):
             if 'station_id' in form_cleaned.keys():
                 header_keys = ['station_id','start_date', 'end_date']
             else:
-                header_keys = ['user_area_id','start_date', 'end_date']
+                header_keys = ['location','start_date', 'end_date']
         else:
             if 'station_id' in form_cleaned.keys():
                 header_keys = ['station_id','data_summary','start_date', 'end_date']
             else:
-                header_keys = ['user_area_id','data_summary','start_date', 'end_date']
-        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
+                header_keys = ['location','data_summary','start_date', 'end_date']
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
         if 'meta' in req.keys() and req['meta']:
             meta_keys = WRCCUtils.get_meta_keys(form_cleaned)
             meta_display_list = WRCCUtils.metadict_to_display_list(req['meta'][0], meta_keys,form)
@@ -468,9 +482,13 @@ def intraannual(request):
             context['results'] = results
             return render_to_response(url, context, context_instance=RequestContext(request))
         context['run_done'] = True
-        header_keys = ['user_area_id','element',\
-        'start_year', 'end_year','start_month', 'start_day']
-        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
+        header_keys = ['element','start_year', 'end_year','start_month', 'start_day']
+        if 'station_id' in form.keys():
+            header_keys.insert(0,'station_id')
+        else:
+            header_keys.insert(0,'location')
+            header_keys.insert(1,'grid')
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
         context['year_txt_data'] = year_txt_data
         context['year_graph_data'] = year_graph_data
         context['climoData'] = climoData
@@ -557,11 +575,14 @@ def interannual(request):
         #Data request
         year_data, hc_data = WRCCUtils.get_single_interannaul_data(form_cleaned)
         context['run_done'] = True
-        header_keys = ['user_area_id','temporal_summary', 'element',\
+        header_keys = ['temporal_summary', 'element',\
         'start_year', 'end_year','window']
-        if 'location' in form_cleaned.keys():
+        if 'station_id' in form.keys():
+            header_keys.insert(0,'station_id')
+        else:
+            header_keys.insert(0,'location')
             header_keys.insert(1,'grid')
-        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
         if not year_data:
             context['results'] = results
             return render_to_response(url, context, context_instance=RequestContext(request))
@@ -638,11 +659,15 @@ def multi_lister(request):
             if 'Custom Shape' in form_error.keys():
                 context['need_polygon_map'] = True
             return render_to_response(url, context, context_instance=RequestContext(request))
-        '''
         #Deal with large requests
-        large_temporal = False
         start_year = int(form_cleaned['start_date'][0:4])
         end_year = int(form_cleaned['end_date'][0:4])
+        too_large = False
+        if end_year - start_year > 50:
+            too_large =  True
+            context['too_large'] = too_large
+            return render_to_response(url, context, context_instance=RequestContext(request))
+        large_temporal = False
         if end_year - start_year > 10:
             large_temporal =True
         if form_cleaned['data_summary'] in ['none','windowed_data'] or large_temporal:
@@ -653,10 +678,8 @@ def multi_lister(request):
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
             return render_to_response(url, context, context_instance=RequestContext(request))
-        '''
         #Data request
         req = {}
-        '''
         try:
             req = WRCCUtils.request_and_format_data(form_cleaned)
             if 'smry' not in req.keys() and 'data' not in  req.keys():
@@ -667,14 +690,13 @@ def multi_lister(request):
             req['error'] = 'Data request error: %s' %str(e)
             context['results'] = req
             return render_to_response(url, context, context_instance=RequestContext(request))
-        '''
         req = WRCCUtils.request_and_format_data(form_cleaned)
         context['results'] = req
         context['run_done'] = True
         #Format Data for display and/or download
         header_keys = ['data_type',form_cleaned['area_type'],\
             'data_summary','start_date', 'end_date']
-        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
         #Write data to file if requested
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         file_name = form_cleaned['output_file_name'] + '_' + time_stamp
@@ -779,7 +801,7 @@ def temporal_summary(request):
         form = set_form(request,clean=False)
         header_keys = [form_cleaned['area_type'],'temporal_summary',\
             'elements','units','start_date', 'end_date','grid']
-        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
 
     if 'formMap' in request.POST:
         context['hide_bbox_map'] = True
@@ -793,7 +815,7 @@ def temporal_summary(request):
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
         header_keys = [form['area_type'],'temporal_summary',\
             'elements','units','start_date', 'end_date','grid']
-        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
 
         #Back Button/download files issue fix:
         if not 'area_type' in form.keys():
@@ -893,7 +915,7 @@ def spatial_summary(request):
         #Display parameters
         header_keys = ['data_type',form_cleaned['area_type'],\
             'spatial_summary','elements','units','start_date', 'end_date']
-        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form_cleaned)
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
 
         #Data Request
         #Skip data generation of it has already been performed
@@ -1335,7 +1357,6 @@ def climatology(request):
 
         #Set data and app params
         data_params = {
-                #'sid':WRCCUtils.find_id(form['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json'),
                 'start_date':form['start_year'],
                 'end_date':form['end_year'],
                 'element':form['summary_type']
@@ -1349,7 +1370,7 @@ def climatology(request):
             data_params['loc'] = form_cleaned['location']
             data_params['grid'] = form_cleaned['grid']
         if 'station_id' in form_cleaned.keys():
-            data_params['sid'] = WRCCUtils.find_id(form['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json')
+            data_params['sid'], name = WRCCUtils.find_id_and_name(form['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json')
         #Initialize Data Job class
         DJ = WRCCClasses.SODDataJob('Sodsumm', data_params)
         if 'location' in form_cleaned.keys():
@@ -2071,7 +2092,7 @@ def set_form(request, clean=True):
             else:
                 el_list = None
             if 'station_id' in form.keys():
-                stn_id = WRCCUtils.find_id(str(form['station_id']),settings.MEDIA_DIR +'json/US_station_id.json')
+                stn_id, stn_name = WRCCUtils.find_ids_and_names(str(form['station_id']),settings.MEDIA_DIR +'json/US_station_id.json')
                 form[k] = WRCCUtils.find_valid_daterange(stn_id, start_date=sd, end_date=ed, el_list=el_list, max_or_min='max')[idx]
             else:
                 form[str(key)] = str(form[key]).replace('-','').replace(':','').replace('/','').replace(' ','')
@@ -2082,8 +2103,9 @@ def set_form(request, clean=True):
     for key in ['station_id','county', 'basin', 'county_warning_area', 'climate_division']:
         if not key in form.keys():
             continue
-        form['user_area_id'] =  form[key]
-        form[key] = WRCCUtils.find_id(form[key],settings.MEDIA_DIR +'json/US_' + key + '.json')
+        ID,name = WRCCUtils.find_id_and_name(form[key],settings.MEDIA_DIR +'json/US_' + key + '.json')
+        form[key] = ID
+        form['user_area_id'] = str(name) + ', ' + str(ID)
     if not 'user_area_id' in form.keys():
         try:
             form['user_area_id'] = form[form['area_type']]
@@ -2098,8 +2120,13 @@ def set_form(request, clean=True):
         stn_list = form['station_ids'].rstrip(',').split(',')
         #Remove leading spaces from list items
         stn_list = [v.lstrip(' ').rstrip(' ') for v in stn_list]
-        stn_ids = WRCCUtils.find_ids(stn_list,settings.MEDIA_DIR +'json/US_' + 'station_id' + '.json')
+        stn_ids, stn_names = WRCCUtils.find_ids_and_names(stn_list,settings.MEDIA_DIR +'json/US_' + 'station_id' + '.json')
         form['station_ids'] = stn_ids
+        uai = ''
+        stn_names_list = stn_names.split(',')
+        for idx, stn_id in enumerate(stn_ids.split(',')):
+            uai+=str(stn_names[idx]) + ', ' + str(stn_id) + ';'
+        form['user_area_id'] = uai
     #set data summary if needed
     if 'data_summary' not in form.keys():
         if 'temporal_summary' in form.keys():
@@ -2165,7 +2192,7 @@ def set_initial(request,req_type):
         if location is None and station_id is not None:
             #Link from station finder,
             #set location to station lon, lat if we are
-            stn_id = WRCCUtils.find_id(station_id,settings.MEDIA_DIR + '/json/US_station_id.json')
+            stn_id, stn_name = WRCCUtils.find_id_and_name(station_id,settings.MEDIA_DIR + '/json/US_station_id.json')
             meta = AcisWS.StnMeta({'sids':stn_id,'meta':'ll'})
             ll = None
             ll = str(meta['meta'][0]['ll'][0]) + ',' + str(meta['meta'][0]['ll'][1])
@@ -2264,7 +2291,7 @@ def set_initial(request,req_type):
     elif req_type in ['interannual', 'intraannual']:
         initial['start_date'] = None;initial['end_date'] = None
         if 'station_id' in initial.keys():
-            stn_id = WRCCUtils.find_id(initial['station_id'],settings.MEDIA_DIR + '/json/US_station_id.json')
+            stn_id, stn_name = WRCCUtils.find_id_and_name(initial['station_id'],settings.MEDIA_DIR + '/json/US_station_id.json')
             vd = WRCCUtils.find_valid_daterange(stn_id,el_list=[initial['element']])
             if vd and len(vd) >=1:
                 initial['start_date'] = vd[0]

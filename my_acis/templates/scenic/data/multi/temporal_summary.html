@@ -92,7 +92,7 @@
 <!--RIGHT-->
 </td>
 <td valign="top" width="60%">
-
+    
     <!--MAPS-->
     {%if not hide_bbox_map%}
         <div id="BBoxMap" style="display:block;">
@@ -125,16 +125,6 @@
     {%if run_done and not figure_files %}
            {% include 'includes/no_results.html'%}
     {%endif%}
-
-    {%if params_display_list %}
-    <div id="user_params_list">
-    <p class="message">
-    {%for key_val in params_display_list%}
-    <b>{{key_val.0}}</b>: {{key_val.1}}<br />
-    {%endfor%}
-    </p>
-    </div>
-    {%endif%}
     </div>
 </td></table><!--End table top_of_page-->
 
@@ -153,6 +143,14 @@
     {%endif%} 
 
     {%if figure_files%}
+
+    <p class="message"  align="left" style="max-width:400px;word-wrap:break-word;">
+    <b>PARAMETERS</b>:<br />
+    {%for key_val in params_display_list%}
+        <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+    {%endfor%}
+    </p>
+
     {%for fig in figure_files%}
         <img alt="FigureFile" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br /><br /><br /><br /><br />
     {%endfor%}
