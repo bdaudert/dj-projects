@@ -83,7 +83,7 @@ function generateTS_individual(chart_indices) {
         if (chart_indices.length > 1){
             //Change chart title/subtitle
             var chartTitle = subTitle;
-            var subTitle = $('#spatial_summary').val().toUpperCase();
+            var subTitle = 'Spatial Summary: ' + $('#spatial_summary').val().toUpperCase();
             for (var i=1;i<chart_indices.length;i++){
                 var idx = chart_indices[i];
                 var yAxis = {

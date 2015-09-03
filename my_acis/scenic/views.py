@@ -477,7 +477,7 @@ def intraannual(request):
         year_txt_data, year_graph_data, climoData, percentileData = WRCCUtils.get_single_intraannual_data(form_cleaned)
         if not year_txt_data:
             results = {
-                'errors':'No data found for these parameters!'
+                'error':'No data found for these parameters!'
             }
             context['results'] = results
             return render_to_response(url, context, context_instance=RequestContext(request))
@@ -497,7 +497,7 @@ def intraannual(request):
             'element_short': form['element'],
             'data_indices':range(len(year_txt_data)),
             'data':year_txt_data,
-            'errors':''
+            'error':''
         }
         cp_data = {
             'climoData':climoData,
@@ -570,7 +570,7 @@ def interannual(request):
             'data_indices':[0],
             'element_short':element_short,
             'data':[],
-            'errors':''
+            'error':''
         }
         #Data request
         year_data, hc_data = WRCCUtils.get_single_interannaul_data(form_cleaned)
@@ -928,7 +928,7 @@ def spatial_summary(request):
                 try:
                     req = WRCCUtils.u_convert(json.loads(f.read()))
                     if not 'smry' in req.keys() or not req['smry']:
-                        results['errors'] = 'No data found in file %s' %json_file
+                        results['error'] = 'No data found in file %s' %json_file
                         context['results'] = results
                         return render_to_response(url, context, context_instance=RequestContext(request))
                 except Exception, e:
@@ -936,6 +936,12 @@ def spatial_summary(request):
                     context['results'] = results
                     return render_to_response(url, context, context_instance=RequestContext(request))
         #Get Data
+        #Check for large requests
+        #Greater than 2 years not allowed
+        if int(form['end_date'][0:4]) - int(form['start_date'][0:4]) > 2:
+            results['error'] = 'This request is too large. Please limit your analysis to 2 years or less!'
+            context['results'] = results
+            return render_to_response(url, context, context_instance=RequestContext(request))
         '''
         try:
             req = WRCCUtils.request_and_format_data(form_cleaned)
@@ -1220,7 +1226,6 @@ def monann(request):
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
         form = set_form(initial,clean=False)
         form_cleaned = set_form(initial,clean=True)
-        context['x'] = initial
         #Form sanity check
         fields_to_check = ['start_year', 'end_year','max_missing_days']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -1259,6 +1264,8 @@ def monann(request):
         #Set dates list
         dates_list = DJ.get_dates_list()
         #Run application
+        context['xxxx'] = data.keys()
+        context['x'] = app_params
         App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
         data = App.run_app()
         #Set header
@@ -2301,8 +2308,12 @@ def set_initial(request,req_type):
                 initial['start_date'] = '9999-99-99'
                 initial['end_date'] = '9999-99-99'
         if 'location' in initial.keys():
-            initial['start_date'] = WRCCData.GRID_CHOICES[str(initial['grid'])][3][0][0]
-            initial['end_date'] = WRCCData.GRID_CHOICES[str(initial['grid'])][3][0][1]
+            if str(initial['grid']) != '21':
+                initial['start_date'] = WRCCData.GRID_CHOICES[str(initial['grid'])][3][0][0]
+                initial['end_date'] = WRCCData.GRID_CHOICES[str(initial['grid'])][3][0][1]
+            else:
+                initial['start_date'] = WRCCData.GRID_CHOICES[str(initial['grid'])][3][1][0]
+                initial['end_date'] = WRCCData.GRID_CHOICES[str(initial['grid'])][3][1][1]
         initial['start_year'] = initial['start_date'][0:4]
         initial['end_year'] = initial['end_date'][0:4]
         initial['start_month']  = Get('start_month', '1')

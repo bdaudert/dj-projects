@@ -121,8 +121,8 @@
     {%if form_error%}
         {% include 'includes/form_error.html'%}
     {%endif%}
-    {%if results.errors%}
-        <p class="error">ERROR: {{results.errors}}</p>
+    {%if results.error%}
+        <p class="error">ERROR: {{results.error}}</p>
     {%endif%}
 
     {%if  run_done and  not results.graph_data and not results.smry %}
@@ -188,7 +188,7 @@
     {%endif%}
 
     <!--Buttons: print, download, show/hide data-->
-    {%if not results.errors and results.smry%}
+    {%if not results.error and results.smry%}
         <table>
         <td valign="top">
         <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
@@ -205,7 +205,7 @@
     <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
 
     <!--Data-->
-    {% if not results.errors and results.smry %}
+    {% if not results.error and results.smry %}
 
     <table id="printable_table">
     <td>
@@ -271,7 +271,7 @@
 
     </td>
     </table><!--End printable table-->
-    {%endif%}<!--End if not results.errors and results.smry -->
+    {%endif%}<!--End if not results.error and results.smry -->
     </div><!--End div results-->
 </td></table>
 {%endblock%}

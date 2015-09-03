@@ -100,8 +100,8 @@
     {%if form_error%}
         {% include 'includes/form_error.html'%}
     {%endif%}
-    {%if results.errors%}
-        <p class="error">ERROR: {{results.errors}}</p>
+    {%if results.error%}
+        <p class="error">ERROR: {{results.error}}</p>
     {%endif%}
 
     {%if  run_done and  not results.data %}
@@ -139,7 +139,7 @@
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
     <div class="results">
-    {%if not results.errors and results.data%}
+    {%if not results.error and results.data%}
         <table>
         <td valign="top">
         <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
@@ -168,7 +168,7 @@
 
 
     <!--DATA-->
-    {% if not results.errors and results.data %}
+    {% if not results.error and results.data %}
         <div id="DataList" style="display:none;">
         <table id="textData" border="1">
         <th>Date</th><th>{{results.element_short}}</th>
@@ -212,7 +212,7 @@
         </table>
     </div>
 
-    {%endif%}<!--end if not results.errors-->
+    {%endif%}<!--end if not results.error-->
 
 
     <div><!--end results-->    
