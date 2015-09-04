@@ -310,7 +310,10 @@ function set_area_defaults(area_type, kml_file_path){
     var lv = {
         'label':'',
         'value':null,
-        'autofill_list':'US_' + area_type
+        'autofill_list':''
+    }
+    if (area_type.inList(['station_id','basin','county','county_warning_area','climate_division'])) {
+        lv.autofill_list = 'US_' + area_type
     }
     //Get first layer of kml_file
     var layer_name = null;
@@ -381,6 +384,10 @@ function set_area_defaults(area_type, kml_file_path){
         lv.label ='Custom Shape';
         lv.value ='-115,34, -115, 35,-114,35, -114, 34';
     }
+    if (area_type == 'shape_file'){
+        lv.label ='Custom Shape';
+        lv.value ='';
+    }
     return lv;
 }
 
@@ -446,16 +453,21 @@ function set_area(row_id, node){
     }
     lv = set_area_defaults(area_type, kml_file_path);
     //Update autofill list
-    set_autofill(lv.autofill_list);
+    if (area_type.inList(['basin','county','county_warning_area','climate_division','station_id'])) {
+        set_autofill(lv.autofill_list);
+    }
     //Update row_id
     cell0 = $('#' + row_id +  ' td:first-child');
     html_text = lv.label + ': ';
     cell0.html(html_text);
     cell1 = cell0.next('td');
     html_text = '<input type="text" id="' + node.val() + '" name="'+
-    node.val() +'" value="' +  lv.value + '" list="' + lv.autofill_list + '"' +
-    ' onchange="update_value(this.value) & update_maps(this)" >';
-    cell1.html(html_text)    
+    node.val() +'" value="' +  lv.value + '"';
+    if (lv.autofill_list != '') {
+        html_text+=' list="' + lv.autofill_list + '"';
+    }
+    html_text+=' onchange="update_value(this.value) & update_maps(this)" >';
+    cell1.html(html_text) ;   
     pop_id = $('#area-pop-up');
     pop_id.html('');
     div = $("<div>");

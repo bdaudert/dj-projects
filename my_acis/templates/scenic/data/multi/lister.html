@@ -157,13 +157,16 @@
         <div>{% include 'includes/offline_message.html'%}</div>
     {%endif%}
 
+    <!--Shape file upload form-->
+    <div>{% include 'includes/upload_shape_file.html'%}</div>
+
     <!--Request errors or results arrow-->
     <div class="results">
     {%if form_error%}
         {% include 'includes/form_error.html'%}
     {%endif%}
-    {%if results.errors%}
-        <p class="error">ERROR: {{results.errors}}</p>
+    {%if results.error%}
+        <p class="error">ERROR: {{results.error}}</p>
     {%endif%}
 
     {%if  run_done and  not results.data and not results.smry %}
@@ -228,7 +231,7 @@
     {%endif%}
 
 
-    {%if not results.errors %}
+    {%if not results.error %}
         {% if results.data or results.smry%}
         <table>
         <td valign="top">
@@ -255,7 +258,7 @@
     </p>
     {%endif%}
     
-    {% if not results.errors and results.data and not results.smry%}
+    {% if not results.error and results.data and not results.smry%}
         <p>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
         {% for point_data in results.data %}
         <p class="message" align="left" style="max-width:60%;"><b>META DATA</b>:
@@ -274,7 +277,7 @@
         {% endfor %}
     {%endif%}<!--end if not results.errors-->
 
-    {%if not results.errors and results.smry%}
+    {%if not results.error and results.smry%}
         <p class="message"i align="left"><b>DATA SUMMARY</b>:</p>
         <table border="1" align="left">
         {%for s_data in results.smry%}

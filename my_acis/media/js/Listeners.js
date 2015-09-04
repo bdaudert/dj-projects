@@ -594,6 +594,9 @@ $(document).ready(function ($) {
         if ($('#app_name').val() == 'interannual'){
             set_year_range_for_interannual()
         }
+        if ($(this).val() == 'shape_file'){
+            ShowPopupDocu('uploadShapeFile');
+        }
      
     });
    

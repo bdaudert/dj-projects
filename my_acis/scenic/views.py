@@ -197,31 +197,6 @@ def upload_test(request):
         context['shp_file'] = shp_file
         poly_ll = WRCCUtils.shapefile_to_ll(shp_file, initial['feature_id'])
         context['poly_ll'] = poly_ll
-    '''
-    form = forms.UploadFileForm()
-    poly_ll = ''
-    if request.method == 'POST':
-        form = forms.UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            #shape_file = request.FILES['shape_file']
-            shape_files = request.FILES.getlist('files')
-            feature_id = form.cleaned_data['feature_id']
-            context['shape_files'] = shape_files
-            #Write shape files to /tmp
-            shp_file = None
-            for shape_file in shape_files:
-                if str(shape_file).split('.')[-1] == 'shp':
-                    shp_file = str(shape_file)
-                with open('/tmp/' + str(shape_file),'wb+') as dest:
-                    for chunk in shape_file.chunks():
-                        dest.write(chunk)
-            #Read shape file and retrieve lat, lon coordinates
-            context['shp_file'] = shp_file
-            if shp_file is not None:
-                poly_ll =  WRCCUtils.shapefile_to_ll(shp_file, feature_id)
-            context['poly_ll'] = poly_ll
-            context['form'] = form
-    '''
     return render_to_response('scenic/upload_test.html', context, context_instance=RequestContext(request))
 
 def data_home(request):
@@ -725,6 +700,33 @@ def multi_lister(request):
             with open(settings.TEMP_DIR + json_file,'w+') as f:
                 f.write(results_json)
             context['json_file'] = json_file
+
+    #Shape file upload
+    if 'formShapeFile' in request.POST:
+        results = {}
+        initial, checkbox_vals = set_initial(request, 'multi_lister')
+        files = request.FILES.getlist('files')
+        feature_id = request.POST['feature_id']
+        #Write all files to /tmp dir
+        #Identify .shp file
+        shp_file = None
+        for shape_file in files:
+            if str(shape_file).split('.')[-1] == 'shp':
+                shp_file = '/tmp/' + str(shape_file)
+            with open('/tmp/' + str(shape_file),'wb+') as dest:
+                for chunk in shape_file.chunks():
+                    dest.write(chunk)
+        if shp_file is None:
+            results['error'] = 'No .shp file was uploaded'
+            context['results'] = results
+            return render_to_response(url, context, context_instance=RequestContext(request))
+        poly_ll = WRCCUtils.shapefile_to_ll(shp_file, feature_id)
+        #Override shape coordinates
+        initial['area_type'] = 'shape'
+        initial['shape'] = poly_ll
+        initial['area_type_value'] = poly_ll
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
 
     #Overlay maps
     if 'formOverlay' in request.POST:
@@ -2205,9 +2207,9 @@ def set_initial(request,req_type):
             ll = str(meta['meta'][0]['ll'][0]) + ',' + str(meta['meta'][0]['ll'][1])
             initial['location'] = ll
         else:
-            initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
+            initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[str(initial['area_type'])])
     else:
-        initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
+        initial[str(initial['area_type'])] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[str(initial['area_type'])])
     initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['area_type']]
     initial['area_type_value'] = initial[str(initial['area_type'])]
 
