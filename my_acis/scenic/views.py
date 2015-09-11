@@ -616,7 +616,6 @@ def multi_lister(request):
     url = settings.APPLICATIONS['multi_lister'][2]
     initial, checkbox_vals = DJANGOUtils.set_initial(request,'multi_lister')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
-    context['xx'] = initial.keys()
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         form = DJANGOUtils.set_form(request,clean=False)
         form_cleaned = DJANGOUtils.set_form(request)
@@ -644,7 +643,7 @@ def multi_lister(request):
             context['too_large'] = too_large
             return render_to_response(url, context, context_instance=RequestContext(request))
         large_temporal = False
-        if end_year - start_year > 10:
+        if end_year - start_year > 10 and form_cleaned['data_summary'] == 'temporal':
             large_temporal =True
         if form_cleaned['data_summary'] in ['none','windowed_data'] or large_temporal:
             context['large_request'] = True

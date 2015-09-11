@@ -168,7 +168,7 @@
         <p class="error">ERROR: {{results.error}}</p>
     {%endif%}
 
-    {%if  run_done and  not results.data and not results.smry %}
+    {%if  run_done and not results.data and not results.smry %}
         {% include 'includes/no_results.html'%}
     {%endif%}
     <!--Request errors or results arrow-->
@@ -225,9 +225,6 @@
     <!--Results-->
     <!--Print and download buttons-->
     <div class="results">
-    {%if  run_done and not results.data and not results.smry %}
-        {% include 'includes/no_results.html'%}
-    {%endif%}
 
 
     {%if not results.error %}
@@ -248,13 +245,15 @@
     <!--Data-->
     <table id="printable_table">
     <td align="center">
-    {%if results%}
+    {%if results %}
+    {%if results.data or results.smry %}
     <p class="message"  align="left" style="max-width:400px;word-wrap:break-word;">
     <b>PARAMETERS</b>:<br />
     {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>: {{key_val.1}}<br />
     {%endfor%}
     </p>
+    {%endif%}
     {%endif%}
     
     {% if not results.error and results.data and not results.smry%}
