@@ -94,12 +94,12 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
         '16':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']]
     }
     var ds = new Date(start_date), de = new Date(end_date);
-    //Funkyness with js dats
+    //Funkyness with js dates
     ds.setDate(ds.getDate() + 1);
     de.setDate(de.getDate() + 1);
     var today = new Date();
     //lag in data
-    today.setDate(today.getDate() - 2);
+    //today.setDate(today.getDate() - 1);
     var ds_past = new Date(grid_vd[grid][0][0]);
     if (grid_vd[grid][0][1] == 'today') {
         var de_past = today;

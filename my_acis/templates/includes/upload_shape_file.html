@@ -1,11 +1,12 @@
 <div id="uploadShapeFile" style="display:none;">
     <p class="message">Only shape files of simple polygons without holes are supported.<br />
     Analysis is performed one polygon at the time.<br />
-    Select shape file components(.shp, .dbf, .shx,...) and the feature ID of the polygon:</p>
+    Select shape file (.shp)and the feature ID of the polygon:</p>
     <form id="formShapeFile" method="post" action="" enctype="multipart/form-data" onsubmit="show_loading() & setHiddenFields('tableDataForm', $(this).attr('id'));">{% csrf_token %}
     <table class="form" align="left">
       <tr><td>
-      Select Files: <input type="file" id="choose_files" name="files" multiple>
+      Select shapefile: <input type="file" id="choose_file" name="file">
+      <!--Select shapefiles: <input type="file" id="choose_files" name="files" multiple>-->
       </td></tr>
       <tr><td align="left">
       Feature ID<input type="number" name="feature_id"  value={{initial.feature_id}}>
