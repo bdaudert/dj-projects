@@ -9,9 +9,9 @@ html {
 }
 */
 body {
-    /*font:"Lucida Grande", Lucida, Verdana, sans-serif;*/
+    font:Verdana,"Lucida Grande", Lucida, sans-serif;
     /*font:"Arial Black",Gadget,sans-serif;*/
-    font:"DejaVu Serif";
+    /*font:"DejaVu Serif";*/
     background-color: #006666;
     margin: 0;
     padding: 0;
@@ -117,6 +117,15 @@ p, ul, ol, li {
     color:#000000;
     font-size:4;
 }
+
+p.link {
+    color:#0B0080;
+    text-decoration: underline;
+    font-size:20px;
+    font-weight: bold;
+}
+
+p.link:active { color:#800080;}
 
 h1.title {
     font-size:10;

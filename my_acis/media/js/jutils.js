@@ -125,6 +125,22 @@ function ShowPopupDocu(DivId){
     $(".ui-widget-header").css("color", "#006666");
 }
 
+function ShowHowtoDocu(DivId){
+    $( '#' + DivId ).dialog({
+        title:'You can move and resize me!',
+        resizable: true,
+        modal: false,
+        width:700,
+        open: function () {
+            $(this).scrollTop(0);
+        }
+    });
+    $(".ui-widget-content").css("background-color", "#FFEFD5");
+    $(".ui-widget-content").css("border", "1px solid #006666");
+    $(".ui-widget-header").css("color", "#006666");
+}
+
+
 function ShowNetworkDocu(NetWork){
     var title = NetWork.replace('Docu_',''); 
     $( '#' + NetWork ).dialog({

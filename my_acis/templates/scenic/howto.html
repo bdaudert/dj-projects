@@ -1,0 +1,18 @@
+{% extends "csc_base.html" %}
+
+{% block content %}
+
+<!--Documentation-->
+<div class="docu" id="Docu_howto_station_finder" style="display:none;">
+    {% include 'includes/Docu_howto_station_finder.html'%}
+</div>
+
+<table align="center" width="95%">
+<td valign="top" width="100%" align="left">
+<p class="link" onclick="ShowHowtoDocu('Docu_howto_station_finder')">
+    Find stations in a region that have precipitation and minimum temperature records
+    between two dates.
+</p>
+</td>
+</table>
+{% endblock %}
