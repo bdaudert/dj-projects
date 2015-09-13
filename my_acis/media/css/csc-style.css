@@ -123,6 +123,7 @@ p.link {
     text-decoration: underline;
     font-size:20px;
     font-weight: bold;
+    cursor:pointer;
 }
 
 p.link:active { color:#800080;}

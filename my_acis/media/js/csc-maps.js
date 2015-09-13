@@ -429,7 +429,8 @@ function initialize_station_finder() {
             if (station_ids_str){
                 station_ids_str = station_ids_str.substring(0,station_ids_str.length - 2);
             }
-            //document.getElementById('station_ids').value = station_ids_str;
+            //Update hidden var inf formDownload of sttaion_finder.html
+            document.getElementById('station_ids_string').value = station_ids_str;
         });  
         // == shows all markers of a particular category, and ensures the checkbox is checked and write station_list==
         show = function(category) {

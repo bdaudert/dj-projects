@@ -6,6 +6,9 @@
 {%load my_scenic_filters%}
 {% block content %}
 
+<!---Hidden variables-->
+<input type="hidden" id="app_name" name="app_name" value="station_finder">
+
 <!--Documentation-->
 <div align="left" id="tool_info" style="display:none;">
     {% include 'includes/Docu_about_station_finder.html'%}
@@ -188,18 +191,42 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
         <p class="error">{{ error }}</p>
     {%endif%} 
     
-    <!-Data Download-> 
+    <!-Data Download->
     <div id='formDownload' style="display:none;max-width:400px;">
-    <p class="message">Your request will be processed off line.<br />
-    Please submit this request form.
-    </p>
+    {%if form_error_download%}
+        <script type="text/javascript">         
+            $("#data_format").children('option[value="html"]').attr('disabled', true)
+            ShowPopupDocu('formDownload');
+        </script>
+        <p class="error">
+            {%for key, val in form_error_download.items%}
+                {{key}}: {{val}}<br />
+            {%endfor%}
+        </p>
+    {%else%}
+        <p class="message">Your request will be processed off line.<br />
+        Please submit this request form.</p>
+    {%endif%}
     <form id="tableDownloadForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('tableDataForm', $(this).attr('id'))">{% csrf_token %}
     <table class="form" id="tableDownload" >
-    <tr class="data_sf" id="data_summary" style="display:table-row;">{% include 'includes/data_summary.html'%}</tr>
-    <tr id="temp_summary" class="data_sf" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
-    <tr id="spat_summary" class="data_sf" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
-    <tr class="data_sf" id="start_window" style="display:none;">{% include 'includes/start_window.html'%}</tr>
-    <tr class="data_sf" id="end_window" style="display:none;">{% include 'includes/end_window.html'%}</tr>
+    <tr class="data_sf" id="data_summ" style="display:table-row;">{% include 'includes/data_summary.html'%}</tr>
+    {%if initial.data_summary == "temporal"%}
+        <tr id="temp_summary" class="data_sf" style="display:table-row">{% include 'includes/temporal_summary.html'%}</tr>
+    {%else%}
+        <tr id="temp_summary" class="data_sf" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
+    {%endif%}
+    {%if initial.data_summary == "spatial"%}
+        <tr id="spat_summary" class="data_sf" style="display:table-row">{% include 'includes/spatial_summary.html'%}</tr>
+    {%else%}
+        <tr id="spat_summary" class="data_sf" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
+    {%endif%}
+    {%if initial.data_summary == "windowed_data"%}
+        <tr class="data_sf" id="start_wind" style="display:table-row;">{% include 'includes/start_window.html'%}</tr>
+        <tr class="data_sf" id="end_wind" style="display:table-row;">{% include 'includes/end_window.html'%}</tr>
+    {%else%}
+        <tr class="data_sf" id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
+        <tr class="data_sf" id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</tr>
+    {%endif%}
     <tr class="data_sf" style="display:table-row;">{% include 'includes/data_format_area.html'%}</tr>
     {%if initial.data_format == "xl" or initial.data_format == "html"%}
         <tr id="delim" class="data_sf" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
@@ -211,7 +238,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <tr id="ue" class="data_sf" style="display:table-row;">{% include 'includes/user_email.html'%}</tr>
     </table>
     <input type="hidden" name="station_json" value="{{station_json}}">
-    <input type="hidden" name="station_ids_string" value="{{station_ids}}">
+    <input type="hidden" id="station_ids_string" name="station_ids_string" value="{{initial.station_ids_string}}">
     <input style="margin:5px" type="submit" value="Get data"style="background-color:#006666;color:#FFEFD5" name="formDownload"/>
     </form>
     </div><!--end formDownload div-->

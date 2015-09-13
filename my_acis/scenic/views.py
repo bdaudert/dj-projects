@@ -1169,7 +1169,6 @@ def station_finder(request):
         for el_idx, element in enumerate(form_cleaned['elements']):
             el,base_temp = WRCCUtils.get_el_and_base_temp(element)
             el_vX_list.append(str(WRCCData.ACIS_ELEMENTS_DICT[el]['vX']))
-        #context['req']= el_vX_list
         #Set up params for station_json generation
         by_type = WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['area_type']]
         val = form_cleaned[WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['area_type']]]
@@ -1178,8 +1177,10 @@ def station_finder(request):
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=el_date_constraints)
         #Write to file for map generation
         station_ids = WRCCUtils.get_station_ids('/tmp/' + f_name)
-        context['station_ids'] = station_ids
-        context['number_of_stations'] = len(context['station_ids'].split(','))
+        context['number_of_stations'] = len(station_ids.split(','))
+        #Update hidden var that keeps track of stations
+        initial['station_ids_string'] = station_ids
+        context['initial'] = initial
         json_dict = copy.deepcopy(form_cleaned)
         json_dict['station_ids'] = station_ids
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
@@ -1196,12 +1197,13 @@ def station_finder(request):
     #Request will be processed offline
     if 'formDownload' in request.POST:
         initial, checkbox_vals = DJANGOUtils.set_initial(request,'sf_download')
+        context['initial'] = initial; context['checkbox_vals']= checkbox_vals
         context[initial['overlay_state'] + '_selected'] = 'selected'
         form_cleaned = DJANGOUtils.set_form(initial, clean=True)
         fields_to_check = ['user_email']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
-            context['form_error'] = form_error
+            context['form_error_download'] = form_error
             m = ['basin','county','county_warning_area', 'climate_division']
             if 'area_type' in initial.keys() and initial['area_type'] in m:
                 context['need_overlay_map'] = True

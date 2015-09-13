@@ -1,6 +1,6 @@
        <td>Data Summary: </td>
         <td>
-            <select id="data_summary" name="data_summary" onchange="set_smry(this) & update_value(this.value);">
+            <select id="data_summary" name="data_summary" onchange="update_value(this.value);">
             <option value="none" {{checkbox_vals.data_summary_none_selected}}>None, just get raw data</option>
             <option value="windowed_data" {{checkbox_vals.data_summary_windowed_data_selected}}>Windowed Data</option>
             <option value="temporal" {{checkbox_vals.data_summary_temporal_selected}}>Temporal</option>
