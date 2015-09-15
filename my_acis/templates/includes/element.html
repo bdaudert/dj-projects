@@ -16,7 +16,9 @@
             <option value="gdd" {{checkbox_vals.element_gdd_selected}}>Growing Deg. Days
             {% if initial.app_name != "monann"%}(50F){% endif %}</option>
             <option value="evap" {{checkbox_vals.element_evap_selected}}>Daily Pan Evaporation</option>
+            {%if app_name == "monann"%}
             <option value="pet" {{checkbox_vals.element_pet_selected}}>Potential ET</option>
+            {%endif%}
             </select>
     </td>
     <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
