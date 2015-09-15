@@ -1,45 +1,45 @@
     {%if station_json and not error and not form_error and not need_overlay_map%}
     {%if run_done%}
-    <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
-    <!--<p><a  target="_blank" href="{{DATA_URL}}multi/lister/{{url_params}}">TEST</a><p>-->
-
-    <table id="map_legend" valign="top" style="width:900px;"></table>
+    <table width="100%">
     {%else%}
-    <table id="map_legend" valign="top" style="width:625px;"></table>
+    <table width="100%">
     {%endif%}
-    <input type="hidden" id="station_json" name="variable" value="{{station_json}}">
-    {%if run_done%}
-    <div id="sf_map" style="width:900px;"></div>
-    {%else%}
-    <div id="sf_map" style="width:620px;"></div>
-    {%endif%}
-    <script type="text/javascript">
-        initialize_station_finder()
-    </script>
-
-    <!--Link to data portal-->
-    <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
-
-    <!--Station List-->
-    {%if run_done%}
-    <p class="message">Stations found: {{number_of_stations}}</p>
-    <div class="station_list" align="center" width="900px">
-    <table cellspacing="1" id="station_list" class="station_list"  border=1 width="900px">
-    {%else%}
-    <div class="station_list" align="center" width="620px">
-    <table cellspacing="1" id="station_list" class="station_list"  border=1 width="620px">
-    {%endif%}
-        <thead>
-        <tr>
-        <th>Name</th>
-        <th>ID</th>
-        <th>State</th>
-        <th>Lat</th>
-        <th>Lon</th>
-        <th>Elev</th>
-        <th>Networks</th>
-        </tr>
-        </thead>
-        </table>
-    </div>
+    <tr><td align="center">
+        <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
+    </td></tr>
+    <tr><td align="center">
+        <table id="map_legend" valign="top"></table>
+        <input type="hidden" id="station_json" name="variable" value="{{station_json}}">
+    </td></tr>
+    <tr><td align="center" >
+        <div id="sf_map"></div>
+        <script type="text/javascript">
+            initialize_station_finder()
+        </script>
+    </td></tr>
+    <tr><td align="center">
+        <!--Link to data portal-->
+        <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
+    </td></tr>
+    <tr><td align="center">
+    
+        <!--Station List-->
+        <p class="message">Stations found: {{number_of_stations}}</p>
+        <div class="station_list">
+            <table id="station_list" border=1>
+            <thead>
+            <tr>
+            <th>Name</th>
+            <th>ID</th>
+            <th>State</th>
+            <th>Lat</th>
+            <th>Lon</th>
+            <th>Elev</th>
+            <th>Networks</th>
+            </tr>
+            </thead>
+            </table>
+        </div>
+    </td></tr>
+    </table>
     {%endif%}<!--end if  station_json and not error and not form_error and not need_overlay_map-->

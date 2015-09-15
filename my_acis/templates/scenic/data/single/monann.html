@@ -109,7 +109,8 @@
         <tr valign="top">{% include 'includes/departures_from_averages.html'%}</tr>
         <tr valign="top" style="display:none">{% include 'includes/frequency_analysis.html'%}</tr>
         </table><!--End tableData-->
-<!--Hidden chart vars-->
+        <!--Hidden vars-->
+        <input type="hidden" name="app_name" value="monann">
         <input type="hidden" class="chart_indices_string" id="chart_indices_string" value="{{initial.chart_indices_string}}" name="chart_indices_string">
         <input type="hidden" value="{{initial.chart_type}}" name="chart_type" class="chart_type">
         <input type="hidden" value="{{initial.show_running_mean}}" name="show_running_mean" class="show_running_mean">

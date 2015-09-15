@@ -324,7 +324,7 @@ function initialize_station_finder() {
                 '<b>Name: </b><font color="#FF007F">' + c.name + '</font><br/>'+
                 '<b>Station ID: </b>' + c.sid + '<br/>' +
                 '<b>Network: </b>' + c.stn_network + '<br/>' +
-                '<b>State, Elev ft, Lat, Lon: </b>' + c.state + ', ' + c.elevation + ', ' + c.lat + ', ' +c.lon +'<br/>' +
+                '<b>State, Elev ft, Lon, Lat: </b>' + c.state + ', ' + c.elevation + ', ' + c.lon + ', ' +c.lat +'<br/>' +
                 '<b>Available elements with date range: </b>' + avbl_elements + '<br />' +
                 '</div>';
             marker.contentString = contentString;

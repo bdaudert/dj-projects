@@ -111,6 +111,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <tr style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
     <tr style="display:table-row"  valign="bottom">{% include 'includes/date_constraints.html'%}</tr>
     </table>
+    <input type="hidden" name="app_name" value="station_finder">
     <input style="margin:5px" type="submit" value="Show me stations" name="formData"/>
     <input type="hidden" name="checked_categories" id="checked_categories" value="all">
     <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
@@ -118,7 +119,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     </div><!--end form data div-->
 
 <!--Errors/down arrow/maps-->
-<td valign="top" width="60%" align="center">
+<td valign="top" align="center">
     <!--Form Errors and search parameter section-->
     {%if form_error%}
     <div id="form_error" class="results">
@@ -188,7 +189,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 
 <!--Results-->
 <table cellpadding="10" align="center">
-<td valign="top" width="97%" align="center">
+<td valign="top" align="center">
     <!--Map error-->
     {% if error %}
         <p class="error">{{ error }}</p>

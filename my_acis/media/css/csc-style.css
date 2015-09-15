@@ -738,9 +738,9 @@ img.center {
 /* Do Not Delete, station finder does not work without */
 #sf_map {
     position:relative;
+    left:0px;
     float:center;
     height: 400px;
-    /*width: 620px;*/
     border:2px solid #006666;
 
 }
@@ -749,26 +749,20 @@ img.center {
 table #map_legend {
     position:relative;
     left:0px;
-    top:0px;
-    padding:5px;
-    /*width: 625px;*/
     background: #FFEFD5;
     border:2px solid #006666;
     font-size:12px;
-    /*font-weight:bold;*/
 }
 
 
 .station_list   {
-    /*
     position:relative;
     left:0px;
-    */
     max-height:450px;
-    overflow:scroll;
+    overflow:auto;
     background: #FFEFD5;
     color:#000000;
-    /*border:2px solid #006666;*/
+    border:1px solid #006666;
 }
 
 table#station_list tr {

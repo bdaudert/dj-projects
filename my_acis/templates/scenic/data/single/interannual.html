@@ -78,6 +78,7 @@
         <tr style="display:table-row;">{% include 'includes/end_month_day.html'%}</tr>
         <tr id="temp_summary" style="display:table-row;">{% include 'includes/temporal_summary.html'%}</tr>
         </table>
+        <input type="hidden" name="app_name" value="interannual">
         <input type="hidden" id="data_type" name="data_type" value="{{initial.data_type}}">
         <input type="hidden" id="start_date" name="start_date" value="{{initial.start_date}}">
         <input type="hidden" id="end_date" name="end_date" value="{{initial.end_date}}">

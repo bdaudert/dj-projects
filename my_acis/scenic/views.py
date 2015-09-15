@@ -658,8 +658,8 @@ def multi_lister(request):
     initial, checkbox_vals = DJANGOUtils.set_initial(request,'multi_lister')
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
-        form = DJANGOUtils.set_form(request,clean=False)
-        form_cleaned = DJANGOUtils.set_form(request)
+        form = DJANGOUtils.set_form(initial,clean=False)
+        form_cleaned = DJANGOUtils.set_form(initial)
         #Check for form errors
         fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date','degree_days']
         if form_cleaned['data_summary'] in['none','windowed_data']:

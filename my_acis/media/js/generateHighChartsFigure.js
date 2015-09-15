@@ -35,7 +35,12 @@ function generateTS_individual(chart_indices) {
     else {
         var running_mean_period = '0';
     }
-    var chartTitle = datadict[chart_indices[0]].title;         
+    if (app_name == 'data_comparison'){
+        var chartTitle = datadict[chart_indices[0]].title + ';' + datadict[chart_indices[1]].title; 
+    }
+    else{
+        var chartTitle = datadict[chart_indices[0]].title;
+    }
     var subTitle = datadict[chart_indices[0]].subTitle;
     //Set font size
     var axisFontSize = '16px';
@@ -52,7 +57,12 @@ function generateTS_individual(chart_indices) {
     }
     if (app_name  == 'spatial_summary' || app_name == 'data_comparison' || app_name =='intraannual'){
         var date_format = '%Y-%m-%d';
-        var yLabelmain = datadict[0].seriesName + ' (' + datadict[0].elUnits + ')';
+        if (app_name == 'data_comparison'){
+            var yLabelmain = datadict[0].yLabel;
+        }
+        else{
+            var yLabelmain = datadict[0].seriesName + ' (' + datadict[0].elUnits + ')';
+        }
     }
     //predefine main yAxis
     var yAxes =[{
