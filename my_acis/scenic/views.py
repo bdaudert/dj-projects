@@ -237,7 +237,7 @@ def upload_test(request):
             context['error'] = 'No .shp file was uploaded'
             return render_to_response('scenic/upload_test.html', context, context_instance=RequestContext(request))
         context['shp_file'] = shp_file
-        poly_ll = WRCCUtils.shapefile_to_ll(shp_file, initial['feature_id'])
+        poly_ll = WRCCUtils.o_ll(initial['app_name'], shp_file, initial['feature_id'])
         context['poly_ll'] = poly_ll
     return render_to_response('scenic/upload_test.html', context, context_instance=RequestContext(request))
 
@@ -676,13 +676,9 @@ def multi_lister(request):
                 context['need_polygon_map'] = True
             return render_to_response(url, context, context_instance=RequestContext(request))
         #Deal with large requests
+        form_cleaned['num_points'], form_cleaned['num_days'] = WRCCUtils.check_request_size(form_cleaned)
         start_year = int(form_cleaned['start_date'][0:4])
         end_year = int(form_cleaned['end_date'][0:4])
-        too_large = False
-        if end_year - start_year > 50:
-            too_large =  True
-            context['too_large'] = too_large
-            return render_to_response(url, context, context_instance=RequestContext(request))
         large_temporal = False
         if end_year - start_year > 10 and form_cleaned['data_summary'] == 'temporal':
             large_temporal =True
@@ -759,21 +755,8 @@ def multi_lister(request):
         with open('/tmp/' + str(shape_file),'wb+') as dest:
             for chunk in shape_file.chunks():
                 dest.write(chunk)
-        '''
-        shp_file = None
-        for shape_file in files:
-            if str(shape_file).split('.')[-1] == 'shp':
-                shp_file = '/tmp/' + str(shape_file)
-            with open('/tmp/' + str(shape_file),'wb+') as dest:
-                for chunk in shape_file.chunks():
-                    dest.write(chunk)
-        if shp_file is None:
-            results['error'] = 'No .shp file was uploaded'
-            context['results'] = results
-            return render_to_response(url, context, context_instance=RequestContext(request))
-        '''
         #Convert polygon coordinates to lon, lat coordinate string
-        poly_ll = WRCCUtils.shapefile_to_ll(shp_file, feature_id)
+        poly_ll = WRCCUtils.o_ll(initial['app_name'], shp_file, feature_id)
         if poly_ll is None:
             results['error'] = 'Uploaded file is not a valid shape file or feature ID.'
             form_error = [WRCCData.DISPLAY_PARAMS['shape']] = 'Only polygons without holes are supported'
@@ -1068,6 +1051,45 @@ def spatial_summary(request):
         json_file = '%s_spatial_summary.json' %(time_stamp)
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR +json_file, json_dict)
         context['json_file'] = json_file
+
+    #Shape file upload
+    if 'formShapeFile' in request.POST:
+        results = {}
+        #initial, checkbox_vals = DJANGOUtils.set_initial(request, 'multi_lister')
+        shape_file = request.FILES.get('file')
+        #files = request.FILES.getlist('files')
+        feature_id = request.POST['feature_id']
+        #Check that file format is correct
+        if str(shape_file).split('.')[-1] != 'shp':
+            results['error'] = 'File should have extension .shp'
+            context['results'] = results
+            return render_to_response(url, context, context_instance=RequestContext(request))
+
+        #Save shapefile in tmp dir
+        shp_file = '/tmp/' + str(shape_file)
+        with open('/tmp/' + str(shape_file),'wb+') as dest:
+            for chunk in shape_file.chunks():
+                dest.write(chunk)
+        #Convert polygon coordinates to lon, lat coordinate string
+        poly_ll = WRCCUtils.o_ll(initial['app_name'], shp_file, feature_id)
+        if poly_ll is None:
+            results['error'] = 'Uploaded file is not a valid shape file or feature ID.'
+            form_error = [WRCCData.DISPLAY_PARAMS['shape']] = 'Only polygons without holes are supported'
+            context['results'] = results
+            context['form_error'] = form_error
+        #Override shape parameters in initial
+        initial['area_type'] = 'shape'
+        initial['shape'] = poly_ll
+        initial['area_type_value'] = poly_ll
+        initial['area_type_lable'] = 'Custom Shape'
+        context['initial'] = initial
+        for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys() + ['none']:
+            checkbox_vals[area_type + '_selected'] =''
+        checkbox_vals['shape_selected'] = 'selected'
+        context['checkbox_vals'] = checkbox_vals
+        context['need_polygon_map'] = True
+        return render_to_response(url, context, context_instance=RequestContext(request))
+
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
@@ -1114,7 +1136,7 @@ def climateengine(request):
     context = {
         'title': ''
     }
-    context['initial'] = {'req_type':'climateengine'}
+    context['initial'] = {'app_name':'climateengine'}
     return render_to_response('scenic/data/multi/climateengine.html', context, context_instance=RequestContext(request))
 
 
@@ -1193,6 +1215,45 @@ def station_finder(request):
             context['error'] = "No stations found for these search parameters."
         context['station_json'] = f_name
         context['run_done'] = True
+
+    #Shape file upload
+    if 'formShapeFile' in request.POST:
+        results = {}
+        #initial, checkbox_vals = DJANGOUtils.set_initial(request, 'multi_lister')
+        shape_file = request.FILES.get('file')
+        #files = request.FILES.getlist('files')
+        feature_id = request.POST['feature_id']
+        #Check that file format is correct
+        if str(shape_file).split('.')[-1] != 'shp':
+            results['error'] = 'File should have extension .shp'
+            context['results'] = results
+            return render_to_response(url, context, context_instance=RequestContext(request))
+
+        #Save shapefile in tmp dir
+        shp_file = '/tmp/' + str(shape_file)
+        with open('/tmp/' + str(shape_file),'wb+') as dest:
+            for chunk in shape_file.chunks():
+                dest.write(chunk)
+        #Convert polygon coordinates to lon, lat coordinate string
+        poly_ll = WRCCUtils.o_ll(initial['app_name'], shp_file, feature_id)
+        if poly_ll is None:
+            results['error'] = 'Uploaded file is not a valid shape file or feature ID.'
+            form_error = [WRCCData.DISPLAY_PARAMS['shape']] = 'Only polygons without holes are supported'
+            context['results'] = results
+            context['form_error'] = form_error
+        #Override shape parameters in initial
+        initial['area_type'] = 'shape'
+        initial['shape'] = poly_ll
+        initial['area_type_value'] = poly_ll
+        initial['area_type_lable'] = 'Custom Shape'
+        context['initial'] = initial
+        for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys() + ['none']:
+            checkbox_vals[area_type + '_selected'] =''
+        checkbox_vals['shape_selected'] = 'selected'
+        context['checkbox_vals'] = checkbox_vals
+        context['need_polygon_map'] = True
+        return render_to_response(url, context, context_instance=RequestContext(request))
+
     #Download data for all sations displayed
     #Request will be processed offline
     if 'formDownload' in request.POST:
@@ -1255,9 +1316,9 @@ def data_comparison(request):
     if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
         context['form_message'] = True
         form = DJANGOUtils.set_form(request, clean=False)
-        form['req_type'] = 'data_comparison'
+        form['app_name'] = 'data_comparison'
         form_cleaned = DJANGOUtils.set_form(request, clean=True)
-        form_cleaned['req_type'] = 'data_comparison'
+        form_cleaned['app_name'] = 'data_comparison'
         DC = WRCCClasses.DataComparer(form)
         gdata,sdata,dist = DC.get_data()
         context['run_done'] = True
@@ -1949,7 +2010,7 @@ def set_map_plot_options(request):
 
 
 def set_temporal_summary_initial(request):
-    initial = {'req_type':'temporal_summary'}
+    initial = {'app_name':'temporal_summary'}
     checkbox_vals = {}
     Get = DJANGOUtils.set_GET(request)
     Getlist = DJANGOUtils.set_GET_list(request)

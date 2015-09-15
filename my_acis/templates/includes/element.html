@@ -10,11 +10,11 @@
             <option value="obst" {{checkbox_vals.element_obst_selected}}>Observation Time Temperature</option>
             <option value="dtr" {{checkbox_vals.element_dtr_selected}}>Daily Temp Range</option>
             <option value="hdd" {{checkbox_vals.element_hdd_selected}}>Heating Deg. Days
-            {% if initial.req_type != "monann"%}(65F){% endif %}</option>
+            {% if initial.app_name != "monann"%}(65F){% endif %}</option>
             <option value="cdd" {{checkbox_vals.element_cdd_selected}}>Cooling Deg. Days
-            {% if initial.req_type != "monann"%}(65F){% endif %}</option>
+            {% if initial.app_name != "monann"%}(65F){% endif %}</option>
             <option value="gdd" {{checkbox_vals.element_gdd_selected}}>Growing Deg. Days
-            {% if initial.req_type != "monann"%}(50F){% endif %}</option>
+            {% if initial.app_name != "monann"%}(50F){% endif %}</option>
             <option value="evap" {{checkbox_vals.element_evap_selected}}>Daily Pan Evaporation</option>
             <option value="pet" {{checkbox_vals.element_pet_selected}}>Potential ET</option>
             </select>

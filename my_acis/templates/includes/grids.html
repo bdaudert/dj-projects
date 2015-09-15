@@ -1,7 +1,7 @@
         <td>Grid: </td>
         <td>
             <select class="grid" id="grid" name="grid">
-            {% if initial.req_type == "data_comparison" %}
+            {% if initial.app_name == "data_comparison" %}
                 <option value="1" {{checkbox_vals.grid_1_selected}}>NRCC Interpolated(1950-Present)</option>
                 <option value="3" {{checkbox_vals.grid_3_selected}}>NRCC Int. Hi-Res(2007-Present)</option>
                 <option value="21" {{checkbox_vals.grid_21_selected}}>PRISM(1981-Present)</option>
@@ -21,7 +21,7 @@
             {% else %}
                 <option value="1" {{checkbox_vals.grid_1_selected}}>NRCC Interpolated(1950-Present)</option>
                 <option value="3" {{checkbox_vals.grid_3_selected}}>NRCC Int. Hi-Res(2007-Present)</option>
-                {% if initial.req_type == "single_lister"  or initial.req_type == "multi_lister" %}
+                {% if initial.app_name == "single_lister"  or initial.app_name == "multi_lister" %}
                     <option value="21" {{checkbox_vals.grid_21_selected}}>PRISM(1981-Present,1895-Present)</option>
                 {% else %}
                     <option value="21" {{checkbox_vals.grid_21_selected}}>PRISM(1981-Present)</option>

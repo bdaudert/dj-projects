@@ -133,6 +133,9 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <div>{% include 'includes/offline_message.html'%}</div>
     {%endif%}
 
+    <!--Shape file upload form-->
+    <div>{% include 'includes/upload_shape_file.html'%}</div>
+
     <!--Map section-->
     <!--Polygon map-->
     <!--Polygon map-->
@@ -142,9 +145,9 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <div id="PolyMap" style="display:block;">
     <div id="map-polygon" style="display:block;"></div>
     {%if initial.shape%}
-        <script type="text/javascript">initialize_polygon_map();</script>
-    {%else%}
         <script type="text/javascript">initialize_polygon_map("{{initial.shape}}");</script>
+    {%else%}
+        <script type="text/javascript">initialize_polygon_map();</script>
     {%endif%}
     {%else%}
     <input style="display:none;" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">

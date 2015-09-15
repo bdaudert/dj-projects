@@ -148,10 +148,6 @@
 
     <div>{% include 'includes/request_email_message_2.html'%}</div>
 
-    {%if too_large%}
-        <div>{% include 'includes/request_too_large_message.html'%}</div>
-    {%endif%}
-
     {%if large_request and not form_error %}
         <div>{% include 'includes/offline_message.html'%}</div>
     {%endif%}
