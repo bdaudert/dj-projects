@@ -38,13 +38,6 @@ body {
     clear:both;
 }
 
-select {
-    /*
-    outline:1px solid green;border:1px solid black;
-    */
-    /*font-weight: bold;*/
-    max-width:180px;
-}
 
 .center {
     position:relative;
@@ -287,17 +280,30 @@ a:active { color:#FF0000;}
 }
 /*END TAB navigation bar*/
 
+
+
 /*Submit and Select buttons*/
-button {
+select {
+    max-width:180px;
+}
+
+/*
+select option {
+    background-color: #FFEFD5;
+}
+
+input[type=text]{
+    background-color:#FFEFD5;
+}
+*/
+
+button, input[type=button]{
     background-color:#006666;
     color:#FFEFD5;
     margin:5px;
 }
-/*
-input[type=text]{
-    font-weight:bold;
-}
-*/
+
+
 input[name=start_date]{
     width:80px;
 }

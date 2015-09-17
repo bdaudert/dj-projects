@@ -793,6 +793,27 @@ $(document).ready(function ($) {
     /*
     DYNAMIC HIGHCHARTS
     */
+    $('#show_hide_legend').click(function(){
+        console.log($(this).val());
+        if ($(this).val() == 'HideLegend'){
+            $(this).val('ShowLegend');
+            console.log($(this).val());
+            //Hide the Legend
+            myChart.legend.group.hide();
+            myChart.legend.box.hide();
+            myChart.legend.display = false;
+            myChart.legend.enabled = false;
+        }
+        if ($(this).val() == 'ShowLegend'){
+            $(this).val('HideLegend');
+            //Show legend
+            myChart.legend.enabled = true;
+            myChart.legend.group.show();
+            myChart.legend.box.show();
+            myChart.legend.display = true;
+        }
+    });
+    
     $('#chart_type').on('change keyup', function(){
         var chartType = $('#chart_type').val();
         for (var i = 0; i < myChart.series.length; i++) {

@@ -116,7 +116,7 @@
         <input type="hidden" value="{{initial.show_running_mean}}" name="show_running_mean" class="show_running_mean">
         <input type="hidden" value="{{initial.running_mean_years}}" name="running_mean_days" class="running_mean_days">
         <input type="hidden" value="{{initial.show_range}}" name="show_range" class="show_range">
-        <input type="hidden" value="{{initial.show_range}}" name="chart_summary" class="chart_summary">
+        <input type="hidden" value="{{initial.chart_summary}}" name="chart_summary" class="chart_summary">
         <input type="submit" value="Generate Time Series" name="formData">
         </form>
     </div>
@@ -193,7 +193,7 @@
             <table class='chart_options' border="1" width="700">
                 <tr>
                 <td align="left" valign="top">
-                    {% include 'includes/chart_type.html'%}
+                    {% include 'includes/chart_type.html'%} &nbsp;&nbsp; {% include 'includes/show_hide_legend.html'%}
                 </td>
                 <td align="left" rowspan="3" valign="top">
                     {% include 'includes/chart_indices_monann.html'%}

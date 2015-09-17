@@ -1385,8 +1385,6 @@ def monann(request):
         #Set dates list
         dates_list = DJ.get_dates_list()
         #Run application
-        context['xxxx'] = data.keys()
-        context['x'] = app_params
         App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
         data = App.run_app()
         #Set header
@@ -1413,7 +1411,7 @@ def monann(request):
                 header_list.append(' ')
             results = {
                 'header':header,
-                'data_indices':'0,1',
+                'chart_indices':'0',
                 'smry':'individual',
                 'running_mean_years':'5',
                 'show_range': False,
