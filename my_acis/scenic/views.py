@@ -676,20 +676,17 @@ def multi_lister(request):
                 context['need_polygon_map'] = True
             return render_to_response(url, context, context_instance=RequestContext(request))
         #Deal with large requests
-        form_cleaned['num_points'], form_cleaned['num_days'] = WRCCUtils.check_request_size(form_cleaned)
-        start_year = int(form_cleaned['start_date'][0:4])
-        end_year = int(form_cleaned['end_date'][0:4])
-        large_temporal = False
-        if end_year - start_year > 10 and form_cleaned['data_summary'] == 'temporal':
-            large_temporal =True
-        if form_cleaned['data_summary'] in ['none','windowed_data'] or large_temporal:
+        num_points, num_days = WRCCUtils.check_request_size(form_cleaned)
+        large_request, data_summary = WRCCUtils.check_if_large_request(form_cleaned, num_points, num_days)
+        if large_request:
             context['large_request'] = True
-            if large_temporal:
+            if data_summary == 'temporal':
                 context['large_temporal'] =True
             #Process request offline
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
             return render_to_response(url, context, context_instance=RequestContext(request))
+
         #Data request
         req = {}
         try:
@@ -737,6 +734,7 @@ def multi_lister(request):
             with open(settings.TEMP_DIR + json_file,'w+') as f:
                 f.write(results_json)
             context['json_file'] = json_file
+
     #Shape file upload
     if 'formShapeFile' in request.POST:
         results = {}
