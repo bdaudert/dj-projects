@@ -793,20 +793,17 @@ $(document).ready(function ($) {
     /*
     DYNAMIC HIGHCHARTS
     */
-    $('#show_hide_legend').click(function(){
-        console.log($(this).val());
-        if ($(this).val() == 'HideLegend'){
-            $(this).val('ShowLegend');
-            console.log($(this).val());
+    $('#legend_button').click(function() {
+        if ($(this).val() == 'Hide Legend'){
+            $(this).val('Show Legend');
             //Hide the Legend
             myChart.legend.group.hide();
             myChart.legend.box.hide();
             myChart.legend.display = false;
             myChart.legend.enabled = false;
         }
-        if ($(this).val() == 'ShowLegend'){
-            $(this).val('HideLegend');
-            //Show legend
+        else{
+            $(this).val('Hide Legend');
             myChart.legend.enabled = true;
             myChart.legend.group.show();
             myChart.legend.box.show();
