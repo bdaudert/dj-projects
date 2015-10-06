@@ -171,7 +171,7 @@ def howto(request):
     url = settings.APPLICATIONS['howto'][2]
     app_urls = {};app_names = {};param_urls = {}
 
-    #Gallery: FINDING A POINT/AREA OF INETREST
+    #HOWTO: STATION FINDER
     app_url = settings.APPLICATIONS['station_finder'][1]
     p_url = app_url + '?'
     p_url+='area_type=shape'
@@ -181,6 +181,22 @@ def howto(request):
     app_urls['station_finder'] = app_url
     param_urls['station_finder'] = p_url
     app_names['station_finder'] = settings.APPLICATIONS['station_finder'][0]
+    #HOWTO MULTI LISTER
+    app_url = settings.APPLICATIONS['multi_lister'][1]
+    p_url = app_url + '?'
+    p_url+='area_type=county'
+    p_url+='&county=Washoe, 32031'
+    p_url+='&data_type=station'
+    p_url+='&elements=maxt,mint,avgt,obst'
+    p_url+='&start_date=19900101&end_date=' + yesterday
+    p_url+='&data_summary=none'
+    p_url+='&show_flags=F&show_observation_time=T'
+    p_url+='&output_file_name=multi_lister_example'
+    p_url+='&user_name=Tester&user_email=scenic@dri.edu'
+    app_urls['multi_lister'] = app_url
+    param_urls['multi_lister'] = p_url
+    app_names['multi_lister'] = settings.APPLICATIONS['multi_lister'][0]
+
     #Gallery: EXTREMES (monann ndays)
     app_url = settings.APPLICATIONS['monann'][1]
     p_url = app_url + '?'
@@ -754,12 +770,12 @@ def multi_lister(request):
             for chunk in shape_file.chunks():
                 dest.write(chunk)
         #Convert polygon coordinates to lon, lat coordinate string
-        poly_ll = WRCCUtils.o_ll(initial['app_name'], shp_file, feature_id)
+        poly_ll = WRCCUtils.shapefile_to_ll(initial['app_name'], shp_file, feature_id)
         if poly_ll is None:
             results['error'] = 'Uploaded file is not a valid shape file or feature ID.'
-            form_error = [WRCCData.DISPLAY_PARAMS['shape']] = 'Only polygons without holes are supported'
+            #form_error = [WRCCData.DISPLAY_PARAMS['shape'],'Only polygons without holes are supported']
             context['results'] = results
-            context['form_error'] = form_error
+            #context['form_error'] = form_error
         #Override shape parameters in initial
         initial['area_type'] = 'shape'
         initial['shape'] = poly_ll

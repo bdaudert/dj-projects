@@ -1,3 +1,8 @@
+//Function to determine if element is in list
+String.prototype.inList=function(list){
+   return ( list.indexOf(this.toString()) != -1)
+}
+
 //function precise_round(num,decimals){
 //return Math.round(num*Math.pow(10,decimals))/Math.pow(10,decimals);
 //}
@@ -376,6 +381,27 @@ function initialize_station_finder() {
                 $('#station_list').append(tbl_row);
             }
         }); //end each
+        //Add overlay to map
+        if (data.overlay_type && data.overlay_val){
+            if (data.overlay_type.inList(['county_warning_area','county','climate_division','basin'])) {
+                var coords_list = data.overlay_val.split(',');
+                var poly_path = [];
+                for (var j=0; j<coords_list.length; j= j+ 2){
+                    poly_path.push(new google.maps.LatLng(parseFloat(coords_list[j]),parseFloat(coords_list[j+1])));
+                }
+                var poly = new google.maps.Polygon({
+                    paths: poly_path,
+                    strokeColor: '#0000FF',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 3,
+                    coords:poly_path,
+                    area_type: data.overlay_type
+                });
+                poly.setMap(window.map);
+            }
+
+        }
+
         /*
         On zoom change reset the markers
         Note: zoom_changed event fires before the bounds have been recalculated. 

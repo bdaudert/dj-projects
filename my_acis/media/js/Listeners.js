@@ -415,21 +415,7 @@ $(document).ready(function ($) {
         }
 
     });
-    /*
-    FORMS
-    Hide results and errors on form change
-    Also hide plot options if they exits
-    */
-    /*
-    $('#tableDataForm, #tableMapForm').on('change keyup', function(){
-    //$('#tableDataForm, #tableMapForm').change(function(){
-        hide_errors_results_on_change($(this).attr('id'));
-        //If graph options extist, hide them
-        if ($('.formGraph')[0]){
-            showHideTableRowClass('formGraph', 'hide');
-        }
-    });
-    */
+    
     $('#tableDataForm, #tableMapForm').on('change', 'input, select, textarea', function(){
         //Hide results
         $('.results').each(function() {

@@ -1,7 +1,7 @@
         <td id="{{initial.area_type_label}}">{{initial.area_type_label}}: </td>
         <td>
             <input type="text" class="area" size="20" id="{{initial.area_type}}" name="{{initial.area_type}}"
-            value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_value(this.value)"></td>
+            value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_value(this.value) &update_maps(this)"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up" id="area-pop-up">
             <div id="ht_{{initial.area_type}}"></div>
