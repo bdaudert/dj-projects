@@ -221,7 +221,10 @@ function initialize_station_finder() {
         };
 
         var map = new google.maps.Map(document.getElementById('sf_map'),mapOptions);
-        window.map = map; 
+        window.map = map;
+        //Add overlay to map
+        var area_type = $('#area_type').val();
+        add_overlay_to_map(window.map, $('#' + area_type)); 
         //Sort network_codes according to Kelly's preference and append to legend:
         count = 0;
         var tr = $('<tr>'), td;
@@ -381,27 +384,6 @@ function initialize_station_finder() {
                 $('#station_list').append(tbl_row);
             }
         }); //end each
-        //Add overlay to map
-        if (data.overlay_type && data.overlay_val){
-            if (data.overlay_type.inList(['county_warning_area','county','climate_division','basin'])) {
-                var coords_list = data.overlay_val.split(',');
-                var poly_path = [];
-                for (var j=0; j<coords_list.length; j= j+ 2){
-                    poly_path.push(new google.maps.LatLng(parseFloat(coords_list[j]),parseFloat(coords_list[j+1])));
-                }
-                var poly = new google.maps.Polygon({
-                    paths: poly_path,
-                    strokeColor: '#0000FF',
-                    strokeOpacity: 0.8,
-                    strokeWeight: 3,
-                    coords:poly_path,
-                    area_type: data.overlay_type
-                });
-                poly.setMap(window.map);
-            }
-
-        }
-
         /*
         On zoom change reset the markers
         Note: zoom_changed event fires before the bounds have been recalculated. 
@@ -1189,3 +1171,113 @@ function initialize_map_overlays() {
         infowindow.open(map);
     });
 }
+
+function add_polygon_to_map(map, ll_coords){
+}
+function add_location_to_map(map,ll_coords){
+}
+function add_bbox_to_map(map,bbox_ccords) {
+}
+function add_kml_layer_to_map(map, id, val){
+        var json_file = '/csc/media/json/US_' + id + '.json';
+        //remove id to just get the name
+        var val_list = val.split(', ');
+        if (val_list.length == 1){val_list = val.split(',');}
+        var name, idx =  1;
+        if (id == 'county_warning_area' && val_list.length == "3"){
+            idx = 2;
+            name = val_list[0] + ', ' + val_list[1]
+        }
+        else if (id == 'county_warning_area' && val_list.length == "2"){
+            idx = 1;
+            name = val_list[0].split('  ').join(', ');
+        }
+        else{
+            name = val_list[0];
+            idx = 1;
+        }
+
+        try {
+            var ol_id = val_list[idx];
+        }
+        catch(e){var ol_id = 'none'}
+        $.getJSON(json_file, function(metadata) {
+            for (var i = 0,item; item = metadata[i]; i++){
+
+                if (item.name.toLowerCase() != name.toLowerCase() || item.id != ol_id){
+                    continue
+                }
+                else {
+                    //Generate polygon overlay
+                    var coords = item.geojson.coordinates[0][0];
+                    var poly_path = [];
+                    for (var j=0,ll;ll=coords[j]; j++){
+                        poly_path.push(new google.maps.LatLng(ll[1],ll[0]));
+                    }
+                    var poly = new google.maps.Polygon({
+                        paths: poly_path,
+                        strokeColor: '#0000FF',
+                        strokeOpacity: 0.8,
+                        strokeWeight: 3,
+                        coords:poly_path,
+                        area_type: id,
+                        name: name,
+                        id: val
+                    });
+                    //Find state from name and update overlay state
+                    var state = 'none';
+                    if (id == 'county' || id == 'climate_division') {
+                        state = item.state.toLowerCase();
+                    }
+                    if (id == 'county_warning_area'){
+                        //var state = val.split(', ')[0].split(' ')[1].slice(0,2).toLowerCase();
+                        state = item.name.split(', ')[1].toLowerCase();
+                    }
+                    if (id == 'county_warning_area'){
+                        //var state = val.split(', ')[0].split(' ')[1].slice(0,2).toLowerCase();
+                        state = item.name.split(', ')[1].toLowerCase();
+                    }
+                    if (state != 'none'){
+                        document.getElementById('overlay_state').value = state
+                        document.querySelector('#overlay_state [value="' + state + '"]').selected = true;
+                    }
+                    else {
+                        //Can't find the state
+                        ols = document.getElementsByName('overlay_state');
+                        for (idx =0;idx < ols.length;idx++){
+                            try {
+                                ols[idx].selectedIndex = "-1";
+                            }
+                            catch(e){}
+                        }
+                    }
+                    //Update new map
+                    poly.setMap(map);
+                    break
+                }
+            }
+        });
+}
+
+function add_overlay_to_map(map, area_field){
+    /*
+    Adds overlay defined by area_filed to map
+    */
+    
+    var id = area_field.attr('id');
+    var val = area_field.val();
+    if (id == 'shape'){
+        add_polygon_to_map(map, val);
+    }
+    else if (id == 'location'){
+        add_location_to_map(map, val);
+    }
+    else if (id == 'bounding_box'){
+        add_bbox_to_map(map,val);
+    }
+    else if (id == 'county' || id == 'county_warning_area' || id == 'climate_division' || id == 'basin'){ 
+        add_kml_layer_to_map(map, id, val);
+
+    }
+}
+

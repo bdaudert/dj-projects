@@ -1148,7 +1148,7 @@ function update_maps(area_field){
         $.getJSON(json_file, function(metadata) {
             for (var i = 0,item; item = metadata[i]; i++){
             
-                if (item.name != name || item.id != ol_id){
+                if (item.name.toLowerCase() != name.toLowerCase() || item.id != ol_id){
                     continue
                 }
                 else {
