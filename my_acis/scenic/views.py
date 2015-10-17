@@ -678,8 +678,10 @@ def multi_lister(request):
         form_cleaned = DJANGOUtils.set_form(initial)
         #Check for form errors
         fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date','degree_days']
+        '''
         if form_cleaned['data_summary'] in['none','windowed_data']:
             fields_to_check.append('user_email')
+        '''
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -694,16 +696,22 @@ def multi_lister(request):
         #Deal with large requests
         num_points, num_days = WRCCUtils.check_request_size(form_cleaned)
         large_request, data_summary = WRCCUtils.check_if_large_request(form_cleaned, num_points, num_days)
-        if large_request:
+        if large_request and form_cleaned['user_email'] != 'Your Email':
+            form_error = check_form(form_cleaned, ['user_email'])
+            if form_error:
+                context['large_request'] = True
+                context['form_error'] = form_error
+                return render_to_response(url, context, context_instance=RequestContext(request))
             context['large_request'] = True
-            if data_summary == 'temporal':
-                context['large_temporal'] =True
             #Process request offline
             json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
             WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
             return render_to_response(url, context, context_instance=RequestContext(request))
+        if large_request and form_cleaned['user_email'] == 'Your Email':
+            context['request_download_params'] = True
+            return render_to_response(url, context, context_instance=RequestContext(request))
 
-        #Data request
+        #Small Data request
         req = {}
         try:
             req = WRCCUtils.request_and_format_data(form_cleaned)

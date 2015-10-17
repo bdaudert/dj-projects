@@ -1173,10 +1173,83 @@ function initialize_map_overlays() {
 }
 
 function add_polygon_to_map(map, ll_coords){
+    var poly_path = [];
+    var coords = ll_coords.replace(' ','').split(',');
+    var bounds=new google.maps.LatLngBounds();
+    //Check for circle
+    if (coords.length == 3){
+        var circle = new google.maps.Circle({
+            strokeColor: '#0000FF',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#ADD8E6',
+            center: {lat: parseFloat(coords[1]), lng: parseFloat(coords[0])},
+            radius: parseFloat(coords[2])
+        });
+        circle.setMap(map);
+        bounds = circle.getBounds();    
+    }
+    else{
+        //Check for bbox
+        if (coords.length == 4){
+            coords = [coords[0],coords[1],coords[0],coords[3],coords[2],coords[3],coords[2],coords[1]];
+        }
+        for (var j=0;j<coords.length - 1; j=j+2){
+            var latLng = new google.maps.LatLng(parseFloat(coords[j+1]),parseFloat(coords[j]))
+            poly_path.push(latLng);
+            bounds.extend(latLng);
+        }
+
+        var poly = new google.maps.Polygon({
+            paths: poly_path,
+            strokeColor: '#0000FF',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            coords:poly_path,
+            fillColor:'#ADD8E6',
+            area_type: 'shape',
+            name: 'polygon',
+            id: ll_coords
+        });
+        poly.setMap(map);
+    } 
+    map.fitBounds(bounds);
 }
-function add_location_to_map(map,ll_coords){
-}
-function add_bbox_to_map(map,bbox_ccords) {
+function add_state_to_map(map,val) {
+    var json_file =  '/csc/media/json/US_states.json';
+    var bounds=new google.maps.LatLngBounds();
+    $.getJSON(json_file, function(metadata) {
+        for (var i = 0; i < metadata['features'].length; i++){
+            if (metadata['features'][i].properties.abbr.toLowerCase() == val.toLowerCase()){
+                var coords = metadata['features'][i].geometry.coordinates[0];
+                var poly_path = [];
+                for (var j=0,ll=coords[j];j<coords.length;j++){i
+                    if (j == 0){
+                        var last_latLng = new google.maps.LatLng(ll[1],ll[0]);
+                        console.log(coords[j]);
+                    }
+                    latLng = new google.maps.LatLng(ll[1],ll[0]);
+                    bounds.extend(latLng);
+                    poly_path.push(latLng);
+                }
+                poly_path.push(last_latLng);
+                var poly = new google.maps.Polygon({
+                    paths: poly_path,
+                    strokeColor: '#0000FF',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 3,
+                    coords:poly_path,
+                    area_type: 'state',
+                    name: val,
+                    id: val
+                });
+
+                //poly.setMap(poly);
+                //map.fitBounds(bounds);
+                break;
+            }
+        }
+    })    
 }
 function add_kml_layer_to_map(map, id, val){
         var json_file = '/csc/media/json/US_' + id + '.json';
@@ -1204,7 +1277,8 @@ function add_kml_layer_to_map(map, id, val){
         $.getJSON(json_file, function(metadata) {
             for (var i = 0,item; item = metadata[i]; i++){
 
-                if (item.name.toLowerCase() != name.toLowerCase() || item.id != ol_id){
+                //if (item.name.toLowerCase() != name.toLowerCase() || item.id != ol_id){
+                if (item.id != ol_id){
                     continue
                 }
                 else {
@@ -1233,14 +1307,14 @@ function add_kml_layer_to_map(map, id, val){
                         //var state = val.split(', ')[0].split(' ')[1].slice(0,2).toLowerCase();
                         state = item.name.split(', ')[1].toLowerCase();
                     }
-                    if (id == 'county_warning_area'){
-                        //var state = val.split(', ')[0].split(' ')[1].slice(0,2).toLowerCase();
-                        state = item.name.split(', ')[1].toLowerCase();
+                    if (id == 'basin'){ 
+                        state = $('#overlay_state').val();
                     }
                     if (state != 'none'){
-                        document.getElementById('overlay_state').value = state
+                        $('#overlay_state').val(state);
                         document.querySelector('#overlay_state [value="' + state + '"]').selected = true;
                     }
+                    
                     else {
                         //Can't find the state
                         ols = document.getElementsByName('overlay_state');
@@ -1269,15 +1343,12 @@ function add_overlay_to_map(map, area_field){
     if (id == 'shape'){
         add_polygon_to_map(map, val);
     }
-    else if (id == 'location'){
-        add_location_to_map(map, val);
-    }
-    else if (id == 'bounding_box'){
-        add_bbox_to_map(map,val);
-    }
     else if (id == 'county' || id == 'county_warning_area' || id == 'climate_division' || id == 'basin'){ 
         add_kml_layer_to_map(map, id, val);
 
+    }
+    else if (id == 'state'){
+        add_state_to_map(map, val);
     }
 }
 

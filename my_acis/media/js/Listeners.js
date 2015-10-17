@@ -23,34 +23,6 @@ $(document).ready(function ($) {
     DATE CHANGES
     */
     $('#start_date, #end_date').bind('change', function(){
-        //Check for large temporal summary
-        if ($('#app_name').val() == 'multi_lister'){
-            var start_year = parseInt($('#start_date').val().slice(0,4));
-            var end_year = parseInt($('#end_date').val().slice(0,4));
-            if (end_year - start_year > 10 && $('#data_summary').val() == 'temporal'){
-                ShowPopupDocu('request_email_message_2');
-                $('#data_format option[value="html"]').attr('disabled',true);
-                //Set clm option to selected
-                $('#data_format option[value="clm"]').attr('selected',true);
-                //Show user name and user email fields
-                $('#un').css('display','table-row');
-                $('#ue').css('display','table-row');
-                //Show delimiter and outfile options
-                $('#out_file').css('display','table-row');
-                $('#delim').css('display','table-row');
-            }
-            else{
-                $('#data_format option[value="html"]').attr('disabled',false);
-                //Set clm option to selected
-                $('#data_format option[value="html"]').attr('selected',true);
-                //Show user name and user email fields
-                $('#un').css('display','none');
-                $('#ue').css('display','none');
-                //Show delimiter and outfile options
-                $('#out_file').css('display','none');
-                $('#delim').css('display','none');
-            } 
-        }
         //Set start/end window according to dates
         if ($('#start_window').length || $('#end_window').length){
             var date_eight = $(this).val().replace(/\-/g,'').replace(/\//g,'').replace(/\:/g,'');
@@ -80,7 +52,6 @@ $(document).ready(function ($) {
                         d.setDate(d.getDate() + 1);
                         var mm = ('0' + (d.getMonth()+1).toString()).slice(-2); 
                         var dd = ('0' + d.getDate().toString()).slice(-2);
-                        console.log(mm + '-' + dd);
                         $('#start_window').val(mm + '-' + dd);
                     }
                 }
@@ -119,8 +90,6 @@ $(document).ready(function ($) {
         data summary can be temporal, spatial, windowed data or none
         */
         var app_name = $('#app_name').val();
-        //ADD station_ids and locations??
-        var a_list = ['state','shape','climate_division','basin','county','county_warning_area','station_ids'];
         if ($(this).val() == 'windowed_data'){
             $('#spat_summary').css('display','none');
             $('#temp_summary').css('display','none');
@@ -135,21 +104,6 @@ $(document).ready(function ($) {
                 $('#flags').css('display','none');
                 $('#obs_time').css('display','none');
             }
-            //Show message that asks user to enter email
-            ShowPopupDocu('request_email_message');
-            //$('#request_email_message').css('display','block');
-            //Disable html option and show user name and user email
-            //for processing offline
-            if ($('#area_type').length){
-                if ($('#area_type').val().inList(a_list)){
-                    $('#data_format option[value="html"]').attr('disabled',true);
-                    $('#data_format option[value="clm"]').attr('selected',true);
-                    $('#out_file').css('display','table-row');
-                    $('#delim').css('display','table-row');
-                    $('#un').css('display','table-row');
-                    $('#ue').css('display','table-row');
-                }
-            }
         }
         else if ($(this).val() == 'spatial' || $(this).val() == 'temporal'){
             if ($(this).val() == 'spatial'){
@@ -160,53 +114,13 @@ $(document).ready(function ($) {
                 $('#spat_summary').css('display','none');
                 $('#temp_summary').css('display','table-row');
             }
-            //Hide message that asks user to enter email
-            //$('#request_email_message').css('display','none');
-            //Hide indowed data options
+            
+            //Hide windowed data options
             $('#start_wind').css('display','none');
             $('#end_wind').css('display','none');
             //Hide flags obs time
             $('#flags').css('display','none');
             $('#obs_time').css('display','none');
-            //Enable/Disable html output
-            //Check of temporal summary is large
-            var large_temporal = 'False';
-            if ($('#start_date').length && $('#start_date').length){
-                var start_year = parseInt($('#start_date').val().slice(0,4));
-                var end_year = parseInt($('#end_date').val().slice(0,4));
-                if (end_year - start_year > 10){
-                    large_temporal = 'True';
-                }
-            }
-            if (large_temporal == 'True' && $(this).val() == 'temporal'){
-                ShowPopupDocu('request_email_message_2');
-                $('#data_format option[value="html"]').attr('disabled',true);
-                //Set clm option to selected
-                $('#data_format option[value="clm"]').attr('selected',true);
-                //Show user name and user email fields
-                $('#un').css('display','table-row');
-                $('#ue').css('display','table-row');
-                //Show delimiter and outfile options
-                $('#out_file').css('display','table-row');
-                $('#delim').css('display','table-row');
-            }
-            else{
-                $('#data_format option[value="html"]').attr('disabled',false);
-                //Set html option to selected
-                $('#data_format option[value="html"]').attr('selected',true);
-                //Hide user name and user email fields unless station finder download
-                if (app_name == 'station_finder'){
-                    $('#un').css('display','table-row');
-                    $('#ue').css('display','table-row');
-                }
-                else {
-                    $('#un').css('display','none');
-                    $('#ue').css('display','none');
-                }
-                //Hide delimiter and outfile options
-                $('#out_file').css('display','none');
-                $('#delim').css('display','none');
-            }
         }
         else if ($(this).val() =='none'){
             $('#spat_summary').css('display','none');
@@ -222,22 +136,6 @@ $(document).ready(function ($) {
                 $('#flags').css('display','none');
                 $('#obs_time').css('display','none');
             
-            }
-            //Show message that asks user to enter email
-            ShowPopupDocu('request_email_message');
-            //$('#request_email_message').css('display','block');
-            //If area_type is state,shape,cwa,climdiv or basin and data summary is none
-            //Hide html option from data_format
-            //Show delim,format,user name, email
-            if ($('#area_type').length){
-                if ($('#area_type').val().inList(a_list)){
-                    $('#data_format option[value="html"]').attr('disabled',true);
-                    $('#data_format option[value="clm"]').attr('selected',true);
-                    $('#out_file').css('display','table-row');
-                    $('#delim').css('display','table-row');
-                    $('#un').css('display','table-row');
-                    $('#ue').css('display','table-row');                 
-                }
             }
         }
     });

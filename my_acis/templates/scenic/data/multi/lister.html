@@ -125,7 +125,7 @@
         <tr class="station" id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</tr>
         {%endif%}
         <tr class="station_grid" style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
-        {%if initial.data_summary == "none" or initial.data_summary == "windowed_data" %}
+        {%if large_request %}
         <tr id="delim" style="display:table-row;">{% include 'includes/delimiter.html'%}</tr>
         <tr id="out_file" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
         <tr id="un" style="display:table-row;">{% include 'includes/user_name.html'%}</tr>
@@ -147,10 +147,17 @@
     <!--Form Errors and search parameter section-->
     <div>{% include 'includes/request_email_message.html'%}</div>
 
-    <div>{% include 'includes/request_email_message_2.html'%}</div>
 
     {%if large_request and not form_error %}
         <div>{% include 'includes/offline_message.html'%}</div>
+    {%endif%}
+    
+    {%if request_download_params %}
+        <script type="text/javascript">
+            ShowPopupDocu('request_email_message');
+            ShowDownloadFormParams();
+        </script>
+
     {%endif%}
 
     <!--Shape file upload form-->
