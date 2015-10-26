@@ -681,12 +681,13 @@ $(document).ready(function ($) {
         if ($(this).val() == 'Hide Legend'){
             $(this).val('Show Legend');
             //Hide the Legend
+            myChart.legend.enabled = false;
             myChart.legend.group.hide();
             myChart.legend.box.hide();
             myChart.legend.display = false;
-            myChart.legend.enabled = false;
         }
         else{
+            //Show Legend
             $(this).val('Hide Legend');
             myChart.legend.enabled = true;
             myChart.legend.group.show();

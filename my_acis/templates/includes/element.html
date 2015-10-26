@@ -8,7 +8,9 @@
             <option value="mint" {{checkbox_vals.element_mint_selected}}>Daily Min Temperature</option>
             <option value="avgt" {{checkbox_vals.element_avgt_selected}}>Daily Mean Temperature</option>
             <option value="obst" {{checkbox_vals.element_obst_selected}}>Observation Time Temperature</option>
+            {%if app_name == "monann"%}            
             <option value="dtr" {{checkbox_vals.element_dtr_selected}}>Daily Temp Range</option>
+            {%endif%}
             <option value="hdd" {{checkbox_vals.element_hdd_selected}}>Heating Deg. Days
             {% if initial.app_name != "monann"%}(65F){% endif %}</option>
             <option value="cdd" {{checkbox_vals.element_cdd_selected}}>Cooling Deg. Days

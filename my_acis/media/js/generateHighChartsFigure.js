@@ -1,6 +1,11 @@
 //------------------------
 // General function for monann
 //------------------------
+//Function to determine if element is in list
+String.prototype.inList=function(list){
+   return ( list.indexOf(this.toString()) != -1)
+}
+
 var myChart;
 function generateTS_individual(chart_indices) {
     /*
@@ -192,9 +197,18 @@ function generateTS_individual(chart_indices) {
             var ave_data = compute_average(datadict[idx].data);
         }
         if (app_name == 'interannual'){
+            //Precip/Snow/Evap colors
             s['threshold'] = ave_data[0][1].toFixed(2);
             s['color'] = 'blue';
             s['negativeColor'] = 'red';
+            if ($('#element').length && $('#element').val().inList(['maxt','mint','avgt','obst'])){
+                s['color'] = 'red';
+                s['negativeColor'] = 'blue';
+            }
+            if ($('#element').length && $('#element').val().inList(['gdd','hdd','cdd'])){
+                s['color'] = 'green';
+                s['negativeColor'] = 'goldenrod';
+            }
         }
         if (app_name == 'intraannual'){
             if (parseInt($('#start_year').val()) + idx === parseInt(target_year)){
@@ -322,13 +336,6 @@ function generateTS_individual(chart_indices) {
         //------------------------
         //    EXPORTING (CSV/EXCEL)
         //------------------------ 
-        /*
-        exporting: {
-            csv: {
-                dateFormat: date_format
-            }
-        },
-        */
        navigation: {
             buttonOptions: {
                 y:15,
@@ -347,6 +354,11 @@ function generateTS_individual(chart_indices) {
         exporting: {
             csv: {
                 dateFormat: date_format
+            },
+            chartOptions:{
+                legend:{
+                    enabled:false
+                }
             },
             buttons: {
                 contextButton: {
