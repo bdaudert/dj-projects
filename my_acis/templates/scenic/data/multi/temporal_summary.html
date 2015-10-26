@@ -72,17 +72,14 @@
         <tr class="station_grid" style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
         <tr id="temp_summary" style="display:table-row">{% include 'includes/temporal_summary.html'%}</tr>
         <tr class="grid" id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr>
+        <tr><hr></tr>
+        <tr><td align="center" colspan="3" class="message" id="plot_opts_button"><b>PLOT OPTIONS &darr;</b></td></tr>
         <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/image_size.html'%}</tr>
         <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/num_levels.html'%}</tr>
         <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/colormap.html'%}</tr>
-        <tr valign="top" class="plOpts" style="display:none;">
-            <td></td>
-            <td><a target="_blank" href="http://matplotlib.org/mpl_examples/pylab_examples/show_colormaps.pdf">List of available color maps</a></td>
-            <td></td>
-        </tr>
-        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/map_overlay.html'%}</tr> 
-        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/interpolation.html'%}</tr>
-        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/projection.html'%}</tr>
+        <tr valign="top" class="NotPlot" style="display:none;">{% include 'includes/map_overlay.html'%}</tr> 
+        <tr valign="top" class="NotPolt" style="display:none;">{% include 'includes/interpolation.html'%}</tr>
+        <tr valign="top" class="NotPlot" style="display:none;">{% include 'includes/projection.html'%}</tr>
         </table>
         <input type="hidden" name="app_name" value="temporal_summary">
         <input type="submit" value="Generate maps" name="formMap">

@@ -75,6 +75,25 @@ def about_us(request):
         'icon':'AboutUs.png'
     }
     url = settings.APPLICATIONS['about_us'][2]
+    errors = []
+    if request.method == 'POST':
+        if not request.POST.get('subject', ''):
+            errors.append('Enter a subject.')
+        if not request.POST.get('message', ''):
+            errors.append('Enter a message.')
+        if request.POST.get('email') and '@' not in request.POST['email']:
+            errors.append('Enter a valid e-mail address.')
+        if not errors:
+            send_mail(
+                request.POST['subject'],
+                request.POST['message'],
+                request.POST.get('email', 'noreply@example.com'),
+                ['scenic@dri.edu'],
+            )
+            context['message'] = 'Thank you for your input!'
+        else:
+            context['message'] = errors
+            context['error'] = errors
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def who_we_are(request):
@@ -326,7 +345,7 @@ def feedback(request):
                 request.POST['subject'],
                 request.POST['message'],
                 request.POST.get('email', 'noreply@example.com'),
-                ['csc-wrcc@dri.edu'],
+                ['scenic@dri.edu'],
             )
             context['message'] = 'Thank you for your input!'
         else:
@@ -2006,6 +2025,7 @@ def set_map_plot_options(request):
     initial['image_size'] = Get('image_size', 'medium')
     initial['level_number'] = Get('level_number', '5')
     initial['cmap'] = Get('cmap', 'rainbow')
+    initial['cmaps'] = WRCCData.CMAPS
     initial['map_ol'] = Get('map_ol', 'state')
     initial['interpolation'] = Get('interpolation', 'cspline')
     initial['projection'] = Get('projection', 'lcc')
