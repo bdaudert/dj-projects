@@ -247,41 +247,48 @@
     <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
 
     <!--Data-->
-    <table id="printable_table">
+    <table id="printable_table" align="center">
     <td align="center">
+    
     {%if results %}
     {%if results.data or results.smry %}
-    <p class="message"  align="left" style="max-width:400px;word-wrap:break-word;">
+    <p class="message"  align="left" style="max-width:70%;word-wrap:break-word;">
     <b>PARAMETERS</b>:<br />
     {%for key_val in params_display_list%}
-        <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+        <b>{{key_val.0}}</b>: {{key_val.1}}
     {%endfor%}
     </p>
     {%endif%}
     {%endif%}
     
-    {% if not results.error and results.data and not results.smry%}
-        <p>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
-        {% for point_data in results.data %}
-        <p class="message" align="left" style="max-width:60%;"><b>META DATA</b>:
-            {{results.meta|lookup:forloop.counter0}}
+    {% if not results.error and results.data and not results.smry %}
+    
+    {% if initial.data_type == "station" %}
+    <p class="message" align="left" style="max-width:70%;word-wrap:break-word;">
+        ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated
+    </p><br />
+    {% endif%}
+
+    <!--Loop over results-->
+    {% for point_data in results.data %}
+        <p class="message" align="left" style="max-width:70%;word-wrap:break-word;"><b>METADATA</b>:<br />
+           {% for meta_list in results.meta|lookup:forloop.counter0 %}
+                <b>{{meta_list.0}}</b>: {{meta_list.1}}
+           {%endfor%}
         </p>
-        <p class="message" align="left"><b>DATA</b>:</p>
+        <p class="message"><b>DATA</b>:</p>
         <table border="1">
         {%for data in point_data%}
-        <tr>
-        {%for d in data%}
-        <td>{{d}}</td>
-        {%endfor%}
-        </tr>
+        <tr>{%for d in data%}<td>{{d}}</td>{%endfor%}</tr>
         {%endfor%}
         </table>
-        {% endfor %}
+    {% endfor %}
+
     {%endif%}<!--end if not results.errors-->
 
     {%if not results.error and results.smry%}
-        <p class="message"i align="left"><b>DATA SUMMARY</b>:</p>
-        <table border="1" align="left">
+        <p class="message"><b>DATA SUMMARY</b>:</p>
+        <table border="1">
         {%for s_data in results.smry%}
             <tr>
             {%for s in s_data%}
