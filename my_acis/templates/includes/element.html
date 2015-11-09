@@ -1,15 +1,15 @@
     <td>Element: </td>
     <td>
         <select id="element" name="element">
-            <option value="pcpn" {{checkbox_vals.element_pcpn_selected}}>Daily Precipitation</option>
-            <option value="snow" {{checkbox_vals.element_snow_selected}}>Daily Snowfall</option>
-            <option value="snwd" {{checkbox_vals.element_snwd_selected}}>Daily Snow Depth</option>
-            <option value="maxt" {{checkbox_vals.element_maxt_selected}}>Daily Max Temperature</option>
-            <option value="mint" {{checkbox_vals.element_mint_selected}}>Daily Min Temperature</option>
-            <option value="avgt" {{checkbox_vals.element_avgt_selected}}>Daily Mean Temperature</option>
+            <option value="pcpn" {{checkbox_vals.element_pcpn_selected}}>Precipitation</option>
+            <option value="snow" {{checkbox_vals.element_snow_selected}}>Snowfall</option>
+            <option value="snwd" {{checkbox_vals.element_snwd_selected}}>Snow Depth</option>
+            <option value="maxt" {{checkbox_vals.element_maxt_selected}}>Maximum Temperature</option>
+            <option value="mint" {{checkbox_vals.element_mint_selected}}>Minimum Temperature</option>
+            <option value="avgt" {{checkbox_vals.element_avgt_selected}}>Mean Temperature</option>
             <option value="obst" {{checkbox_vals.element_obst_selected}}>Observation Time Temperature</option>
             {%if initial.app_name == "monann"%}            
-            <option value="dtr" {{checkbox_vals.element_dtr_selected}}>Daily Temp Range</option>
+            <option value="dtr" {{checkbox_vals.element_dtr_selected}}>Temperature Range</option>
             {%endif%}
             <option value="hdd" {{checkbox_vals.element_hdd_selected}}>Heating Deg. Days
             {% if initial.app_name != "monann"%}(65F){% endif %}</option>
@@ -17,7 +17,7 @@
             {% if initial.app_name != "monann"%}(65F){% endif %}</option>
             <option value="gdd" {{checkbox_vals.element_gdd_selected}}>Growing Deg. Days
             {% if initial.app_name != "monann"%}(50F){% endif %}</option>
-            <option value="evap" {{checkbox_vals.element_evap_selected}}>Daily Pan Evaporation</option>
+            <option value="evap" {{checkbox_vals.element_evap_selected}}>Pan Evaporation</option>
             {%if app_name == "monann"%}
             <option value="pet" {{checkbox_vals.element_pet_selected}}>Potential ET</option>
             {%endif%}

@@ -215,16 +215,15 @@ def howto(request):
     app_urls['multi_lister'] = app_url
     param_urls['multi_lister'] = p_url
     app_names['multi_lister'] = settings.APPLICATIONS['multi_lister'][0]
-
-    #Gallery: EXTREMES (monann ndays)
+    #Gallery: MONTHLY SUMMARIES
     app_url = settings.APPLICATIONS['monann'][1]
     p_url = app_url + '?'
-    #p_url+='area_type=location&location=-120.44,39.32&element=mint&grid=1&start_year=1970&end_year=2000'
-    p_url+='area_type=station_id&station_id=048218&element=mint&start_year=POR&end_year=POR'
-    p_url+='&statistic=ndays&less_greater_or_between=l&threshold_for_less_than=32&chart_indices_string=3,4,5'
-    app_urls['extremes'] = app_url
-    param_urls['extremes'] = p_url
-    app_names['extremes'] = settings.APPLICATIONS['monann'][0]
+    p_url+='area_type=station_id&station_id=269171&element=maxt'
+    p_url+='&start_year=POR&end_year=POR'
+    p_url+='&statistic=mmax'
+    app_urls['monann'] = app_url
+    param_urls['monann'] = p_url
+    app_names['monann'] = settings.APPLICATIONS['monann'][0]
     #Gallery: SUMMARIZING SPATIAL DATA (spatial_summary)
     app_url = settings.APPLICATIONS['spatial_summary'][1]
     p_url = app_url + '?'
@@ -434,7 +433,8 @@ def single_lister(request):
             ed = form_cleaned['end_date']
             sw = form_cleaned['start_window']
             ew = form_cleaned['end_window']
-            req['data'] = WRCCUtils.get_window_data(d, sd, ed, sw, ew)
+            #req['data'] = WRCCUtils.get_window_data(d, sd, ed, sw, ew)
+            req['data'] = WRCCUtils.get_windowed_data(d, sd, ed, sw, ew)
             #req['data'].insert(0,header)
             req['data'] = [req['data']]
         if not req['data'] and not req['smry']:

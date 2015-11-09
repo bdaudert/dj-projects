@@ -226,7 +226,7 @@
         </div>
         {%endif%}
 
-        <div align="center" id="data_summary" style="display:none;width:940px">
+        <div align="center" id="data_summary_table" style="display:none;width:940px">
         <table class="right_aligned">
         {%for s_data in results.data_summary%}
             <tr>
@@ -271,7 +271,7 @@
             
             <p class="black"><b>Missing values</b><br />
             Letters after data values show number of missing days;after annual values show missing months.<br />  
-            Value is displayed but not used if user-specified missing day criterion exceeded.<br />
+            Value is displayed but not used in calculations if user-specified missing day criterion exceeded.<br />
             (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
 
             <table class="right_aligned" cellpadding="none" style="color:black">

@@ -208,16 +208,18 @@
 
     {%if not results.errors %}
         {% if results.smry or results.data %}
-        <div id="metadata" align="left" style="display:none;">
+        <div id="metadata" align="left" style="display:none;max-width:600px">
         {%for key_val in meta_display_list%}
             <b>{{key_val.0}}</b>:
             {%if key_val.0 == "Station ID/Network List" or key_val.0 == "Valid Date Range (by Element)"%}
                 <br />
             {%endif%}
-            {%for item in key_val.1%}
-                {{item}}<br />
-            {%endfor%}
+            {{key_val.1}}
+            {% if forloop.counter|divisibleby:2 %}<br />{%endif%}
+
         {%endfor%}
+
+        
         </div>
         {% endif %}
     {%endif%}
@@ -240,7 +242,7 @@
     {%endif%} 
 
     {% if not results.errors and not results.smry and results.data %}
-        <p>ACIS Data Flags: M = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
+        <p>ACIS Data Flags: M,-9999 = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
         <p align="left"><b>DATA</b>:<br />
             {% for key_val in params_display_list %}
                 <b>{{key_val.0}}</b>: {{key_val.1}}<br />

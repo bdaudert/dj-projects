@@ -558,27 +558,27 @@ $(document).ready(function ($) {
             if ($('#user_graph').css('display') == 'none'){
                 $('#user_graph').css('display', 'block');
                 $('#printable_table').css('display', 'none');
-                $('#data_summ').css('display', 'none');
+                $('#data_summary_table').css('display', 'none');
             }
             else{
                 $('#user_graph').css('display', 'none');
             }
         }
         if (id == 'show_hide_summary'){
-            if ($('#data_summ').css('display') == 'none'){
+            if ($('#data_summary_table').css('display') == 'none'){
                 $('#user_graph').css('display', 'none');
                 $('#printable_table').css('display', 'none');
-                $('#data_summ').css('display', 'block');
+                $('#data_summary_table').css('display', 'block');
             }
             else{
-                $('#data_summ').css('display', 'none');
+                $('#data_summary_table').css('display', 'none');
             }
         }
         if (id == 'show_hide_data'){
             if ($('#printable_table').css('display') == 'none'){
                 $('#user_graph').css('display', 'none');
                 $('#printable_table').css('display', 'block');
-                $('#data_summ').css('display', 'none');
+                $('#data_summary_table').css('display', 'none');
             }
             else{
                 if ($('#user_graph').css('display') == 'none') {
