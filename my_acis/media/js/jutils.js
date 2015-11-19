@@ -4,6 +4,19 @@ String.prototype.rsplit = function(sep, maxsplit) {
     return maxsplit ? [ split.slice(0, -maxsplit).join(sep) ].concat(split.slice(-maxsplit)) : split;
 }
 
+function convertDateToString(date, sep){
+        yr = String(date.getFullYear());
+        mon = String(date.getMonth());
+        day = String(date.getDay());
+        if (String(mon).length == 1){
+            mon = '0' + mon;
+        }
+        if (String(day).length == 1){
+            day = '0' + day;
+        }
+        return yr + sep + mon + sep + day;
+}
+
 function poll(url_str) {
     show_loading()
     $.ajax({

@@ -17,6 +17,7 @@
     <div id="Docu_start_month_day">{% include 'includes/Docu_start_month_day.html'%}</div>
     <div id="Docu_end_month_day">{% include 'includes/Docu_end_month_day.html'%}</div>
     <div id="Docu_temporal_summary">{% include 'includes/Docu_temporal_summary.html'%}</div>
+    <div id="Docu_start_end_year">{% include 'includes/Docu_start_end_year.html'%}</div>
 </div><!--End how_to-->
 
 <!---Hidden variables-->
@@ -77,13 +78,11 @@
         <tr style="display:table-row;">{% include 'includes/start_month_day.html'%}</tr>
         <tr style="display:table-row;">{% include 'includes/end_month_day.html'%}</tr>
         <tr id="temp_summary" style="display:table-row;">{% include 'includes/temporal_summary.html'%}</tr>
+        <tr style="display:table-row">{% include 'includes/start_end_year.html'%}</tr>
         </table>
         <input type="hidden" name="app_name" value="interannual">
         <input type="hidden" id="data_type" name="data_type" value="{{initial.data_type}}">
-        <input type="hidden" id="start_date" name="start_date" value="{{initial.start_date}}">
-        <input type="hidden" id="end_date" name="end_date" value="{{initial.end_date}}">
-        <input type="hidden" id="start_year" name="start_year" value="{{initial.start_year}}">
-        <input type="hidden" id="end_year" name="end_year" value="{{initial.end_year}}">
+        
         <!--Hidden chart vars-->
         <input type="hidden" value="{{initial.chart_type}}" name="chart_type" class="chart_type">
         <input type="hidden" value="{{initial.show_running_mean}}" name="show_running_mean" class="show_running_mean">

@@ -3,10 +3,11 @@
         <td>
             <input type="hidden" id="min_year" value="{{initial.min_year}}">
             <input type="hidden" id="max_year" value="{{initial.max_year}}">
+            <input type="hidden" id="min_year_fut" value="{{initial.min_year_fut}}">
+            <input type="hidden" id="max_year_fut" value="{{initial.max_year_fut}}">
             <select class="year" id="start_year" name="start_year">
-                <!--
-                <!-Future dates for grids->
-                {%for yr in 2040|make_range_reversed:2070%}
+                <!--Future dates for grids-->
+                {%for yr in initial.min_year_fut|make_range:initial.max_year_fut%}
                     <option value="{{yr}}" 
                     {% if initial.location%} 
                         {%if initial.grid|is_in:'5,6,8,10,12,13,15,16'%}
@@ -15,17 +16,15 @@
                     {%endif%}
                     {% if initial.start_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
                 {%endfor%}
-                -->
                 <!--past dates-->
-                {%for yr in initial.min_year|make_range_reversed:initial.max_year%} 
+                {%for yr in initial.min_year|make_range:initial.max_year%} 
                     <option value="{{yr}}" {% if initial.start_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
                 {%endfor%}
             </select>
             -- 
            <select class="year" id="end_year" name="end_year">
-                <!--
-                <!-Future dates for grids->
-                {%for yr in 2040|make_range_reversed:2070%}
+                <!--Future dates for grids-->
+                {%for yr in initial.min_year_fut|make_range_reversed:initial.max_year_fut%}
                     <option value="{{yr}}" 
                     {% if initial.location%} 
                         {%if initial.grid|is_in:'5,6,8,10,12,13,15,16'%}
@@ -33,10 +32,10 @@
                         {%endif%}
                     {%endif%}
                     {% if initial.start_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
-                {%endfor%} -->
+                {%endfor%}
                 <!--past dates-->
                 {%for yr in initial.start_year|make_range_reversed:initial.max_year%}  
-                    
+                     
                     <option value="{{yr}}" {% if initial.end_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
                 {%endfor%}
             </select> 

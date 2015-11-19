@@ -76,23 +76,8 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
         'start': start_date,
         'end': end_date
     }
-    var grid_vd = {
-        '1':[['1950-01-01','today'],[]],
-        '3':[['2007-01-01','today'],[]],
-        '21':[['1981-01-01','today'],[]],
-        '4':[['1970-01-01','1999-12-31'],[]],
-        '5':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
-        '6':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
-        '8':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
-        '9':[['1970-01-01','1999-12-31'],[]],
-        '10':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
-        '11':[['1970-01-01','1999-12-31'],[]],
-        '12':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
-        '13':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
-        '14':[['1970-01-01','1999-12-31'],[]],
-        '15':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']],
-        '16':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']]
-    }
+    //Set new min/max_years for grid
+
     var ds = new Date(start_date), de = new Date(end_date);
     //Funkyness with js dates
     ds.setDate(ds.getDate() + 1);
@@ -101,27 +86,44 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
     //lag in data
     //today.setDate(today.getDate() - 1);
     var ds_past = new Date(grid_vd[grid][0][0]);
+     $('#min_year').val(grid_vd[grid][0][0].slice(0,4));
     if (grid_vd[grid][0][1] == 'today') {
         var de_past = today;
+        var max_year = convertDateToString(today,'-').slice(0,4);
+        //Update hidden var
+        $('#max_year').val(max_year);
     }
     else{
+        var max_year = grid_vd[grid][0][1].slice(0,4)
+        //Update hidden var
+        $('#max_year').val(max_year);
         var de_past = new Date(grid_vd[grid][0][1]);
         de_past.setDate(de_past.getDate() + 1);
     }
     if (grid_vd[grid][1].length == 2){
         if (grid_vd[grid][1][0] == 'today'){
             var ds_fut = today;
+            var min_year_fut = convertDateToString(today,'-').slice(0,4);
+            //Update hidden var
+            $('#min_year_fut').val(min_year_fut);
         }
         else{
             var ds_fut = new Date(grid_vd[grid][1][0]);
+            var min_year_fut = grid_vd[grid][1][0].slice(0,4);
+            //Update hidden var
+            $('#min_year_fut').val(min_year_fut);
             ds_fut.setDate(ds_fut.getDate() + 1);
         }
         var de_fut = new Date(grid_vd[grid][1][1]);
+        //Update hidden var
+        $('#max_year_fut').val(grid_vd[grid][1][1].slice(0,4));
         de_fut.setDate(de_fut.getDate() + 1);
     }
     else{
         //Set bogus future dates for easy coding of checks
         var ds_fut = ds_past, de_fut = de_past;
+        $('#max_year_fut').val("");
+        $('#min_year_fut').val("");
     }
     //Special case prism monthly/yearly
     if (grid == '21'){
@@ -171,6 +173,9 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
         else{
             var d = String(parseInt(new_dates.start.slice(0,4)) + 1) + new_dates.start.slice(4,new_dates.start.length);
         }
+        if (d == 'today'){
+            d = convertDateToString(today,'-');
+        }
         if (de < ds_past){
             new_dates.end = d; 
         }
@@ -180,15 +185,11 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
         if (de > de_fut){
             new_dates.end = d;
         }
-        if ($('#app_name').val() == 'interannual' || $('#app_name').val() == 'intraannual'){
-            $('#start_year').val(String(new_dates.start));
-            $('#start_year').val(String(new_dates.end));
-        }
     }
     //Check if we only want to return years
     if (year_or_date == 'year'){
         new_dates.start = new_dates.start.slice(0,4);
-        new_dates.end = String(parseInt(new_dates.end.slice(0,4)) + 1);
+        new_dates.end = String(parseInt(new_dates.end.slice(0,4)));
         return new_dates;
     }
     else {
@@ -199,23 +200,15 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
 function set_year_range_for_interannual(){
     if ($('#area_type').val() == 'location'){
         var today = new Date();
-        today_yr = String(today.getFullYear());
-        today_mon = String(today.getMonth());
-        today_day = String(today.getDay());
-        if (String(today_mon).length == 1){
-            today_mon = '0' + today_mon;
-        }
-        if (String(today_day).length == 1){
-            today_day = '0' + today_day;
-        }
+        var today_str = convertDateToString(today, '-')
+        var today_yr = today_str.slice(0,4);
         var start_date = $('#start_year').val() + '-01-01';
         if ($('#end_year').val() == String(today_yr)){
-            var end_date = today_yr + '-' + today_mon + '-' + today_day;
+            var end_date = today_str;
         }
         else{
             var end_date = $('#end_year').val() + '-12-31';
         }
-        console.log(start_date)
         new_dates = set_dates_for_grid($('#grid').val(),start_date,end_date,'year');
         $('#start_year').val(new_dates.start);
         $('#end_year').val(new_dates.end);

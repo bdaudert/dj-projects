@@ -9,16 +9,17 @@ import json
 register = template.Library()
 
 @register.filter(name='make_range')
-def make_range(start, end):
-    return range(int(start),int(end))
+def make_range(start,end):
+    return range(int(start),int(end) + 1)
 
 @register.filter(name='make_range_reversed')
 def make_range_reversed(start, end):
     try:
-        l = list(reversed(range(int(start), int(end))))
+        l = list(reversed(range(int(start), int(end) + 1)))
     except:
         l = []
     return l
+
 
 @register.filter(name='to_int')
 def to_int(string):
