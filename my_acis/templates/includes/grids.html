@@ -2,13 +2,18 @@
         <td>
             <select class="grid" id="grid" name="grid">
             {% if initial.app_name == "data_comparison" %}
+                <optgroup label="Gridded datasets interpolated from historic station data">
                 <option value="1" {{checkbox_vals.grid_1_selected}}>NRCC Interpolated(1950-Present)</option>
                 <option value="3" {{checkbox_vals.grid_3_selected}}>NRCC Int. Hi-Res(2007-Present)</option>
                 <option value="21" {{checkbox_vals.grid_21_selected}}>PRISM(1981-Present)</option>
+                </optgroup>
+                <optgroup label="LOCA CMIP5 datasets">
                 <option value="22" {{checkbox_vals.grid_22_selected}}>GFDL-CM3 rcp4.5(1950-2100)</option>
                 <option value="23" {{checkbox_vals.grid_23_selected}}>GFDL-CM3 rcp8.5(1950-2100)</option>
                 <option value="24" {{checkbox_vals.grid_24_selected}}>HadGEM2-CC rcp4.5(1950-2100)</option>
                 <option value="25" {{checkbox_vals.grid_25_selected}}>HadGEM2-CC rcp8.5(1950-2100)</option>
+                </optgroup>
+                <optgroup label="NARCAPP datasets">
                 <option value="4" {{checkbox_vals.grid_4_selected}}>CRCM+NCEP(1970-2000)</option>
                 <option value="5" {{checkbox_vals.grid_5_selected}}>CRCM+CCSM(1970-2000)</option>
                 <option value="6" {{checkbox_vals.grid_6_selected}}>CRCM+CCSM3(1970-2000)</option>
@@ -22,7 +27,9 @@
                 <option value="14" {{checkbox_vals.grid_14_selected}}>WRFG+NCEP(1970-2000)</option>
                 <option value="15" {{checkbox_vals.grid_15_selected}}>WRFG+CCSM(1970-2000)</option>
                 <option value="16" {{checkbox_vals.grid_16_selected}}>WRFG+CGCM3(1970-2000)</option>
+                </optgroup>
             {% else %}
+                <optgroup label="Gridded datasets interpolated from historic station data">
                 <option value="1" {{checkbox_vals.grid_1_selected}}>NRCC Interpolated(1950-Present)</option>
                 <option value="3" {{checkbox_vals.grid_3_selected}}>NRCC Int. Hi-Res(2007-Present)</option>
                 {% if initial.app_name == "single_lister"  or initial.app_name == "multi_lister" %}
@@ -30,10 +37,14 @@
                 {% else %}
                     <option value="21" {{checkbox_vals.grid_21_selected}}>PRISM(1981-Present)</option>
                 {% endif %}
+                </optgroup>
+                <optgroup label="LOCA CMIP5 datasets">
                 <option value="22" {{checkbox_vals.grid_22_selected}}>GFDL-CM3 rcp4.5(1950-2100)</option>
                 <option value="23" {{checkbox_vals.grid_23_selected}}>GFDL-CM3 rcp8.5(1950-2100)</option>
                 <option value="24" {{checkbox_vals.grid_24_selected}}>HadGEM2-CC rcp4.5(1950-2100)</option>
                 <option value="25" {{checkbox_vals.grid_25_selected}}>HadGEM2-CC rcp8.5(1950-2100)</option>
+                </optgroup>
+                <optgroup label="NARCAPP datasets">
                 <option value="4" {{checkbox_vals.grid_4_selected}}>CRCM+NCEP(1970-2000)</option>
                 <option value="5" {{checkbox_vals.grid_5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>
                 <option value="6" {{checkbox_vals.grid_6_selected}}>CRCM+CCSM3(1970-2000,2040-2070)</option>
@@ -47,6 +58,7 @@
                 <option value="14" {{checkbox_vals.grid_14_selected}}>WRFG+NCEP(1970-2000)</option>
                 <option value="15" {{checkbox_vals.grid_15_selected}}>WRFG+CCSM(1970-2000,2040-2070)</option>
                 <option value="16" {{checkbox_vals.grid_16_selected}}>WRFG+CGCM3(1970-2000,2040-2070)</option>
+                </optgroup>
             {% endif %}
             </select>
         </td>

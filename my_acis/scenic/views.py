@@ -1726,6 +1726,7 @@ def set_sodxtrmts_head(form):
             header.insert(0,['Station', form['station_id']])
     if 'location' in form.keys():
         header.insert(0,['Location (lon, lat)', form['location']])
+        header.insert(1,['Grid', WRCCData.GRID_CHOICES[form['grid']][0]])
     return header
 
 
