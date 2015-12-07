@@ -64,6 +64,8 @@
     <!-- include greybox media for pop-up windows: WRCC links to anomaly maps -->
     <script type="text/javascript" src="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.js"></script>
     <link href="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.css" rel="stylesheet" type="text/css" media="all">
+
+
     <!--Backbutton issue-->
     <!--<script type="text/javascript" src="http://balupton.github.com/history.js/scripts/bundled/html4+html5/jquery.history.js"></script>-->
     <script type="text/javascript">
@@ -97,8 +99,13 @@
             $('#loading').hide(); 
         });
     </script>
+
+
     {% block extrahead %}{% endblock %}
     {% block extrastyle %}{% endblock %}
+
+
+
     <!--Django env variables from settings -->
     <!-- SCENIC DIRS-->
     <input type="hidden" id="HOST" name="variable" value="{{ HOST }}">
@@ -148,7 +155,6 @@
         <li><a href="{{ABOUT_URL}}"><font size="3">ABOUT US</font></a>
             <ul class="l1">
             <li><a href="{{ABOUT_URL}}#overview">Overview</a></li>
-            <!--<li><a href="{{ABOUT_URL}}#who_we_are">Who we are</a></li>-->
             <li><a href="{{ABOUT_URL}}#what_we_do">What we do</a></li>
             <li><a href="{{ABOUT_URL}}#contact_us">Contact Us</a></li>
             <li><a href="{{ABOUT_URL}}#links">Links</a></li>
@@ -187,12 +193,11 @@
             </ul>
         </li>
         <li><a href="{{SCENIC_URL}}howto"><font size="3">HOW TO</font></a></li>
-        <!--<li><a href="{{SCENIC_URL}}gallery"><font size="3">GALLERY</font></a></li>-->
         <li><a href="{{SCENIC_URL}}resources"><font size="3">RESOURCES</font></a></li>
     </div>
     </div>
-
-   <div class="content">
+   
+    <div class="content">
         <table width="960px">
         <td width="300px" valign="top">
             <p class="message">Recommended browsers: Chrome, FF, IE9+</p>
