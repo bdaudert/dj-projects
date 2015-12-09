@@ -1,0 +1,309 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="Time Series, Monthly Summary,graph, coop station, station data, historic data,application, product, tool">
+<meta name="description" content="SCENIC Custom Statistic/Time Series">
+
+{%load my_scenic_filters%}
+
+{% block content %}
+
+<!--Documentation-->
+<div class="docu" id="tool_info" style="display:none;">
+    {% include 'includes/Docu_monthly_summaries.html'%}
+</div>
+<div id="how_to" style="display:none;">
+    <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
+    <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
+    <div id="Docu_start_end_year">{% include 'includes/Docu_start_end_date.html'%}</div>
+    <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
+    <div id="Docu_base_temperature">{% include 'includes/Docu_base_temperature.html'%}</div>
+    <div id="Docu_statistic_period">{% include 'includes/Docu_statistic_period.html'%}</div>
+    <div id="Docu_statistic">{% include 'includes/Docu_sx_statistic.html'%}</div>
+    <div id="Docu_num_days_thresholds">{% include 'includes/Docu_num_days_thresholds.html'%}</div>
+    <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
+    <div id="Docu_max_missing_days">{% include 'includes/Docu_max_missing_days.html'%}</div>
+    <div id="Docu_start_month">{% include 'includes/Docu_start_month.html'%}</div>
+    <div id="Docu_departure_from_averages">{% include 'includes/Docu_departure_from_averages.html'%}</div>
+</div>
+<!--Hidden variables-->
+<input type="hidden" id="app_name" name="app_name" value="monthly_summaries">
+
+<!--Set up autofill-->
+{%if initial.autofill_list %}
+    <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
+{%endif%}
+
+<!--Toolinfo/Howto-->
+<table>
+<td valign="bottom" width="45%">
+    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/monthly_summaries/'">
+    {%if results.data%}
+    <input type="submit" value="Change Options" onclick="ShowHideTopOfPage()">
+    {%endif%}
+</td>
+<td valign="top" width="55%" align="left">
+    <table>
+    <tr>
+    <td><div id=tool_info_head>{% include 'includes/Button_tool_info.html'%}</div></td>
+    <td><div id="how_to_head">{% include 'includes/Button_how_to.html'%}</div></td>
+    </tr>
+    </table>
+</td>
+</table>
+{% if not results.data%}
+<table id="top_of_page">
+{%else%}
+<table id="top_of_page" style="display:none">
+{%endif%}
+<!--Form-->
+<td valign="top" width="40%">
+    <div id="formData" class="form" style="border:none;">
+        <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
+        <table id="tableData" class="form">
+        <tr class="station_grid" style="display:table-row" valign="bottom">{% include 'includes/single_select_area.html'%}</tr>
+        <tr class="station_grid" style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
+        {%if initial.data_type == "grid"%}        
+        <tr class="grid" id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr> 
+        <tr valign="top" id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</tr>
+        {% else%}
+        <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
+        <tr valign="top" id="stn_finder">{% include 'includes/station_finder.html'%}</tr>
+        {%endif%}
+        <tr valign="top">{% include 'includes/start_year.html'%}</tr>
+        <tr valign="top">{% include 'includes/end_year.html'%}</tr>
+        <tr valign="top">{% include 'includes/element.html'%}</tr>
+        {%if initial.element == "gdd" or initial.element == "hdd" or initial.element == "gdd"%}
+        <tr id="base_temp" valign="top">{% include 'includes/base_temperature.html'%}</tr>
+        {%else%}
+        <tr id="base_temp" valign="top" style="display:none">{% include 'includes/base_temperature.html'%}</tr>
+        {%endif%}
+        <tr valign="top">{% include 'includes/statistic_period.html'%}</tr>
+        <tr valign="top">{% include 'includes/sx_statistic.html'%}</tr>
+        {%if initial.statistic == "ndays"%}
+        <tr id="threshold_type" valign="top">{% include 'includes/number_of_days.html'%}</tr>
+        {%if initial.less_greater_or_between == "b"%}
+        <tr id="threshold_between" valign="top">{% include 'includes/num_days_thresholds_between.html'%}</tr>
+        {%else%}
+        <tr id="threshold_between" valign="top" style="display:none">{% include 'includes/num_days_thresholds_between.html'%}</tr>
+        {%endif%}
+        {%if initial.less_greater_or_between == "g"%}
+        <tr id="threshold_above" valign="top">{% include 'includes/num_days_thresholds_above.html'%}</tr>
+        {%else%}
+        <tr id="threshold_above" valign="top" style="display:none">{% include 'includes/num_days_thresholds_above.html'%}</tr>
+        {%endif%}
+        {%if initial.less_greater_or_between == "l"%}
+        <tr id="threshold_below" valign="top">{% include 'includes/num_days_thresholds_below.html'%}</tr>
+        {%else%}
+         <tr id="threshold_below" valign="top" style="display:none">{% include 'includes/num_days_thresholds_below.html'%}</tr>
+        {%endif%}
+        {%else%}
+        <tr id="threshold_type" valign="top" style="display:none">{% include 'includes/number_of_days.html'%}</tr>
+        <tr id="threshold_between" valign="top" style="display:none">{% include 'includes/num_days_thresholds_between.html'%}</tr>
+        <tr id="threshold_above" valign="top" style="display:none">{% include 'includes/num_days_thresholds_above.html'%}</tr>
+        <tr id="threshold_below" valign="top" style="display:none">{% include 'includes/num_days_thresholds_below.html'%}</tr>
+        {%endif%}
+
+        <tr valign="top">{% include 'includes/units.html'%}</tr>
+        <tr valign="top">{% include 'includes/max_missing_days.html'%}</tr>
+        <tr valign="top" style="display:none">{% include 'includes/start_month.html'%}</tr>
+        <tr valign="top">{% include 'includes/departures_from_averages.html'%}</tr>
+        <tr valign="top" style="display:none">{% include 'includes/frequency_analysis.html'%}</tr>
+        </table><!--End tableData-->
+        <!--Hidden vars-->
+        <input type="hidden" name="app_name" value="monthly_summaries">
+        <input type="hidden" class="chart_indices_string" id="chart_indices_string" value="{{initial.chart_indices_string}}" name="chart_indices_string">
+        <input type="hidden" value="{{initial.chart_type}}" name="chart_type" class="chart_type">
+        <input type="hidden" value="{{initial.show_running_mean}}" name="show_running_mean" class="show_running_mean">
+        <input type="hidden" value="{{initial.running_mean_years}}" name="running_mean_days" class="running_mean_days">
+        <input type="hidden" value="{{initial.show_range}}" name="show_range" class="show_range">
+        <input type="hidden" value="{{initial.chart_summary}}" name="chart_summary" class="chart_summary">
+        <input type="submit" value="Generate Time Series" name="formData">
+        </form>
+    </div>
+</td>
+<!--Right-->
+
+<td valign="top" width="60%">
+    <div class="results">
+    {%if not results.data and run_done%}
+        {% include 'includes/no_results.html'%}
+    {% endif %}
+
+    {%if form_error%}
+        {% include 'includes/form_error.html'%}
+    {%endif%}
+
+    {%if results.data and not initial.location %}
+        {% include 'includes/arrow.html'%}
+    {%endif%}
+    </div>
+
+    <!--Maps-->
+    {%if need_gridpoint_map%}
+        <div id="GridpointMap" style="display:block">
+        <input type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
+        <input id="address" type="textbox" value="Place/Location" style="height:15px;width:150px;"> 
+            <div id="map-gridpoint"></div>
+        </div>
+        {%if initial.location %}
+            <script type="text/javascript">initialize_grid_point_map("{{initial.location}}");</script>
+        {% else %}
+            <script type="text/javascript">initialize_grid_point_map();</script>
+        {% endif %}
+    {%else%}
+        <div id="GridpointMap" style="display:none">
+        <input type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
+        <input id="address" type="textbox" value="Place/Location" style="height:15px;width:150px;">
+            <div id="map-gridpoint"></div>
+        </div>
+    {%endif%}
+</td>
+</table>
+
+<!--Results-->
+<table cellpadding="10" align="center">
+<td valign="top" width="97%" align="center">
+    <div class="results">
+    {%if not results.data and run_done%}
+        {% include 'includes/no_results.html'%}
+    {% endif %}
+
+    <!--Request errors or results arrow-->
+    {%if results.errors%}
+        <p class="error">{{results.errors}}</p>
+    {%endif%}
+    </div> 
+    {%if results.data%}
+    <div class="results">
+        {%if results.graph_data%}
+        <div align="center">
+
+        <table>
+            <td><img src="{{MEDIA_URL}}img/show_hide_graph_button.png" alt="Show Graph" id="show_hide_graph">
+            </td>
+            <td>
+            <img src="{{MEDIA_URL}}img/show_summ_table_button.png" alt="Show Summary Table" id="show_hide_summary">
+            </td>
+            <td>
+            <img src="{{MEDIA_URL}}img/show_hide_button.png" alt="Show Data" id="show_hide_data">
+            </td>
+        </table>
+        <div id="user_graph" style="display:none;">
+            <!--Dynamic chart options-->
+            <table class='chart_options' border="1" width="700">
+                <tr>
+                <td align="left" valign="top">
+                    {% include 'includes/chart_type.html'%} &nbsp;&nbsp; {% include 'includes/show_hide_legend.html'%}
+                </td>
+                <td align="left" rowspan="3" valign="top">
+                    {% include 'includes/chart_indices_monthly_summaries.html'%}
+                </td>
+                </tr>
+                <tr>
+                <td align="left" valign="top">
+                    {% include 'includes/chart_layers_monthly_summaries.html'%}
+                </td>
+                </tr>
+                <tr>
+                <td align="left" valign="top">
+                    {% include 'includes/chart_smry_monthly_summaries.html'%}
+                </td>
+                </tr>
+            </table>
+            <div align="center" id="container" style="height:500px;width:700px;"></div>
+            {% if initial.chart_summary == "individual"%}
+            <script type="text/javascript">
+                var graph_data = {{results.graph_data | safe_json}};
+                generateTS_individual();
+            </script>
+            {%else%}
+            <script type="text/javascript">
+                var graph_data = {{results.graph_data | safe_json}};
+                generateTS_smry();
+            </script>
+            {%endif%}
+        </div>
+        </div>
+        {%endif%}
+
+        <div align="center" id="data_summary_table" style="display:none;width:940px">
+        <table class="right_aligned">
+        {%for s_data in results.data_summary%}
+            <tr>
+            {%for s in s_data%}
+            {%if forloop.first%}
+            <td align="left">{{s}}</td>
+            {%else%}
+            <td>{{s}}</td>
+            {%endif%}
+            {%endfor%}
+            </tr>
+        {%endfor%}
+        </table>
+        </div><!--End data summary-->
+
+        <!--Download/print buttons--> 
+        <table align="center">
+            <td valign="top">
+            <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
+            </td><td valign="top">
+            <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
+            </td>
+        </table><!--End table about/howto/download form-->       
+
+        <!--Download form-->
+        <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
+
+        
+        <div id="printable_table" align="center" style="display:block;width:940px;">
+            <p class="black">
+            {%for key_val in results.header%}
+            {%if key_val%}
+            <b>{{key_val.0}}</b>: {{key_val.1}}
+            {%if forloop.counter|divisibleby:2%}
+            <br />        
+            {%endif%}
+            {%else%}
+            <br />
+            {%endif%}
+            {%endfor%}
+            </p>
+            
+            <p class="black"><b>Missing values</b><br />
+            Letters after data values show number of missing days;after annual values show missing months.<br />  
+            Value is displayed but not used in calculations if user-specified missing day criterion exceeded.<br />
+            (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
+
+            <table class="right_aligned" cellpadding="none" style="color:black">
+            {%for yr_data in results.data%}
+            {%if yr_data.0 == "MEAN"%}
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            {%endif%}
+            {%for dat in yr_data%}
+            {%if forloop.revcounter0 == 1%}
+            <td></td><td></td>
+            <td></td><td></td>
+            <td></td><td></td>
+            {%endif%}
+            {%if forloop.counter0 == 1%}
+            <td></td>
+            {%endif%}
+            {%if forloop.counter0 == 0%}
+            <td align="left">{{dat}}&nbsp;&nbsp;</td>
+            {%else%}
+            <td>{{dat}}</td>
+            {%endif%}
+            {%endfor%}
+            </tr>
+            {%endfor%}
+            </table>
+        </div><!--End div="printable_table"-->
+    </div><!--end div results-->
+    {%endif%}<!--End results.data-->
+</td></table>
+{%endblock%}
