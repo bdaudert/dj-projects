@@ -157,7 +157,7 @@ $(document).ready(function ($) {
     });
 
     $('#element').on('change', function(){
-        //Set monthly statistic for monann
+        //Set monthly statistic for monthly_summaries
         var sum_els = ['pcpn','snow','evap','pet'];
         if ($(this).val().inList(sum_els)){
             if ($('#statistic').length){
@@ -619,7 +619,7 @@ $(document).ready(function ($) {
     });
 
     /*
-    MONANN LISTENERS
+    MONTHLY SUMMARIES LISTENERS
     */
     $('img#show_hide_graph, img#show_hide_summary, img#show_hide_data').on('click', function(){
         var id = $(this).attr('id');
@@ -661,7 +661,7 @@ $(document).ready(function ($) {
         }
     });
     /*
-    MONANN THRESHOLDS FOR NDAYS
+    MONTHLY SUMMARIES THRESHOLDS FOR NDAYS
     */
     //lean up needed
     $('#element').on('change', function(){
@@ -741,8 +741,7 @@ $(document).ready(function ($) {
         }
      
     });
-   
-
+  
     /*
     DYNAMIC HIGHCHARTS
     */
@@ -841,8 +840,7 @@ $(document).ready(function ($) {
             }
         }
     });
-    //$('input[name="chart_selector"], select[name="chart_selector"]').on('change', function(event){
-     $('#chart_indices, #chart_summary').on('change keyup', function(){
+    $('#chart_indices, #chart_summary').on('change keyup', function(){
         smry = 'individual';
         if ($('#chart_summary').length) {
             smry = $('#chart_summary').val();
@@ -853,6 +851,7 @@ $(document).ready(function ($) {
         else{
             generateTS_smry();
         }
+        if (myChart){myChart.redraw();}
         //Update hidden chart variables in  main form
         if ($(this).attr('id') == 'chart_summary'){
             $('.chart_summary').val($(this).val());
@@ -865,6 +864,7 @@ $(document).ready(function ($) {
             index_string = index_string.substring(0,index_string.length - 1);
             $('.chart_indices_string').val(index_string);
         }
+
     });
 
     //Threshold for interannual

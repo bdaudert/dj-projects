@@ -11,18 +11,18 @@
             <option value="avgt" {{checkbox_vals.element_avgt_selected}}>Mean Temperature</option>
             <option value="obst" {{checkbox_vals.element_obst_selected}} 
             {%if initial.location%}disabled{%endif%}>Observation Time Temperature</option>
-            {%if initial.app_name == "monann"%}            
+            {%if initial.app_name == "monthly_summaries"%}            
             <option value="dtr" {{checkbox_vals.element_dtr_selected}}>Temperature Range</option>
             {%endif%}
             <option value="hdd" {{checkbox_vals.element_hdd_selected}}>Heating Deg. Days
-            {% if initial.app_name != "monann"%}(65F){% endif %}</option>
+            {% if initial.app_name != "monthly_summaries"%}(65F){% endif %}</option>
             <option value="cdd" {{checkbox_vals.element_cdd_selected}}>Cooling Deg. Days
-            {% if initial.app_name != "monann"%}(65F){% endif %}</option>
+            {% if initial.app_name != "monthly_summaries"%}(65F){% endif %}</option>
             <option value="gdd" {{checkbox_vals.element_gdd_selected}}>Growing Deg. Days
-            {% if initial.app_name != "monann"%}(50F){% endif %}</option>
+            {% if initial.app_name != "monthly_summaries"%}(50F){% endif %}</option>
             <option value="evap" {{checkbox_vals.element_evap_selected}} 
             {%if initial.location%}disabled{%endif%}>Pan Evaporation</option>
-            {%if app_name == "monann"%}
+            {%if app_name == "monthly_summaries"%}
             <option value="pet" {{checkbox_vals.element_pet_selected}} 
             {%if initial.location%}disabled{%endif%}>Potential ET</option>
             {%endif%}

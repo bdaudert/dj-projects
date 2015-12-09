@@ -50,11 +50,20 @@ yesterday = WRCCUtils.set_back_date(1)
 fourtnight = WRCCUtils.set_back_date(14)
 week = WRCCUtils.set_back_date(7)
 yrs_ago = WRCCUtils.set_back_date(3660)[0:4]
+############################################
+###PAGES
+############################################
 def test(request):
     context = {
         'title': 'Southwest Climate and ENvironmental Information Collaborative',
     }
     return render_to_response('scenic/index.html', context, context_instance=RequestContext(request))
+
+def download_map(request):
+    context = {
+        'title': 'Your Map',
+    }
+    return render_to_response('scenic/download_map.html', context, context_instance=RequestContext(request))
 
 def home(request):
     context = {
@@ -159,15 +168,15 @@ def gallery(request):
     app_urls['station_finder'] = app_url
     param_urls['station_finder'] = p_url
     app_names['station_finder'] = settings.APPLICATIONS['station_finder'][0]
-    #Gallery: EXTREMES (monann ndays)
-    app_url = settings.APPLICATIONS['monann'][1]
+    #Gallery: EXTREMES (monthly_summaries ndays)
+    app_url = settings.APPLICATIONS['monthly_summaries'][1]
     p_url = app_url + '?'
     #p_url+='area_type=location&location=-120.44,39.32&element=mint&grid=1&start_year=1970&end_year=2000'
     p_url+='area_type=station_id&station_id=048218&element=mint&start_year=POR&end_year=POR'
     p_url+='&statistic=ndays&less_greater_or_between=l&threshold_for_less_than=32&chart_indices_string=3,4,5'
     app_urls['extremes'] = app_url
     param_urls['extremes'] = p_url
-    app_names['extremes'] = settings.APPLICATIONS['monann'][0]
+    app_names['extremes'] = settings.APPLICATIONS['monthly_summaries'][0]
     #Gallery: SUMMARIZING SPATIAL DATA (spatial_summary)
     app_url = settings.APPLICATIONS['spatial_summary'][1]
     p_url = app_url + '?'
@@ -216,14 +225,14 @@ def howto(request):
     param_urls['multi_lister'] = p_url
     app_names['multi_lister'] = settings.APPLICATIONS['multi_lister'][0]
     #Gallery: MONTHLY SUMMARIES
-    app_url = settings.APPLICATIONS['monann'][1]
+    app_url = settings.APPLICATIONS['monthly_summaries'][1]
     p_url = app_url + '?'
     p_url+='area_type=station_id&station_id=269171&element=maxt'
     p_url+='&start_year=POR&end_year=POR'
     p_url+='&statistic=mmax'
-    app_urls['monann'] = app_url
-    param_urls['monann'] = p_url
-    app_names['monann'] = settings.APPLICATIONS['monann'][0]
+    app_urls['monthly_summaries'] = app_url
+    param_urls['monthly_summaries'] = p_url
+    app_names['monthly_summaries'] = settings.APPLICATIONS['monthly_summaries'][0]
     #Gallery: SUMMARIZING SPATIAL DATA (spatial_summary)
     app_url = settings.APPLICATIONS['spatial_summary'][1]
     p_url = app_url + '?'
@@ -297,7 +306,7 @@ def single_point_prods(request):
                 get_params.append(str(item))
         user_params = WRCCUtils.form_to_display_list(get_params,request.GET)
         context['user_params'] = user_params
-        for app in ['single_lister', 'monann', 'climatology','data_comparison', 'interannual', 'intraannual']:
+        for app in ['single_lister', 'monthly_summaries', 'climatology','data_comparison', 'interannual', 'intraannual']:
             initial, checkbox_vals = DJANGOUtils.set_initial(request, app)
             p_str = WRCCUtils.set_url_params(initial)
             context['url_params_' + app] =  p_str
@@ -1377,13 +1386,13 @@ def data_comparison(request):
 #SOD programs
 ######################
 
-def monann(request):
+def monthly_summaries(request):
     context = {
-        'title': settings.APPLICATIONS['monann'][0]
+        'title': settings.APPLICATIONS['monthly_summaries'][0]
     }
-    url = settings.APPLICATIONS['monann'][2]
+    url = settings.APPLICATIONS['monthly_summaries'][2]
 
-    initial,checkbox_vals = DJANGOUtils.set_initial(request, 'monann')
+    initial,checkbox_vals = DJANGOUtils.set_initial(request, 'monthly_summaries')
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set graph and plot options
     #Time Serie Table Generation and graph if desired
@@ -1462,7 +1471,7 @@ def monann(request):
                 'data_summary':[[' '] + header_list + ['ANN', ' ']] + data[0][-6:]
             }
         #Write data to file for highcharts
-        hc_data = WRCCUtils.extract_highcarts_data_monann(results['data'],form_cleaned)
+        hc_data = WRCCUtils.extract_highcarts_data_monthly_summaries(results['data'],form_cleaned)
         graph_data = []
         for p_idx,d in enumerate(hc_data):
             if app_params['statistic_period'] == 'monthly':

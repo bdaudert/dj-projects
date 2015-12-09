@@ -1,5 +1,5 @@
 //------------------------
-// General function for monann
+// General function for monthly_summaries
 //------------------------
 //Function to determine if element is in list
 String.prototype.inList=function(list){
@@ -51,7 +51,7 @@ function generateTS_individual(chart_indices) {
     var axisFontSize = '16px';
     var labelsFontSize = '16px';
     //Set params according to application 
-    if (app_name == 'monann' || app_name =='interannual'){
+    if (app_name == 'monthly_summaries' || app_name =='interannual'){
         var date_format = '%Y';
         if ( $('#statistic').length && $('#statistic').val() == 'ndays'){
             var yLabelmain = 'days';
@@ -223,7 +223,7 @@ function generateTS_individual(chart_indices) {
         //Deal with skinny bar bug
         if (chartType == 'column'){
             s['stacking'] = null;
-            if (app_name == 'monann' || app_name =='interannual'){
+            if (app_name == 'monthly_summaries' || app_name =='interannual'){
                 s['pointRange'] = 1 * 24 * 3600*1000*365;
             }
             else{
@@ -244,7 +244,7 @@ function generateTS_individual(chart_indices) {
         if (running_mean_period != '0'){
             var rm_data =compute_running_mean(datadict[idx].data, parseInt(running_mean_period));
             var r_name = running_mean_period + '-';
-            if (app_name == 'monann' || app_name == 'interannual'){
+            if (app_name == 'monthly_summaries' || app_name == 'interannual'){
                     r_name+='year Running Mean ';
             }
             else{
@@ -357,7 +357,7 @@ function generateTS_individual(chart_indices) {
             },
             chartOptions:{
                 legend:{
-                    enabled:false
+                    enabled:true
                 }
             },
             buttons: {
@@ -430,7 +430,7 @@ function generateTS_individual(chart_indices) {
             padding:10,
             floating: true,
             title:{
-                text: ':: Drag me'
+                text: ':: Legend'
             },
             zIndex: 20
         },
@@ -515,7 +515,7 @@ function generateTS_smry(chart_indices) {
     var date_format = '%Y-%m-%d';
     var chartTitle = datadict[chart_indices[0]].title;
     var subTitle = datadict[chart_indices[0]].subTitle
-    if ($('#app_name').length && $('#app_name').val() == 'monann'){
+    if ($('#app_name').length && $('#app_name').val() == 'monthly_summaries'){
         var date_format = '%Y';
     }
     var elUnits = datadict[0].elUnits;
@@ -548,7 +548,7 @@ function generateTS_smry(chart_indices) {
     if (running_mean_period != '0'){
         var rm_data =compute_running_mean(smry_data.data, parseInt(running_mean_period));
         var r_name = running_mean_period + '-';
-        if (app_name =='monann'){
+        if (app_name =='monthly_summaries'){
                 r_name+='year Running Mean ';
         }
         else{
@@ -629,16 +629,6 @@ function generateTS_smry(chart_indices) {
             href: 'http://wrcc.dri.edu',
             text: 'wrcc.dri.edu'
         },
-        //------------------------
-        //    EXPORTING (CSV/EXCEL)
-        //------------------------ 
-        /*
-        exporting: {
-            csv: {
-                dateFormat: date_format
-            }
-        },
-        */
        navigation: {
             buttonOptions: {
                 y:15,
@@ -654,6 +644,9 @@ function generateTS_smry(chart_indices) {
                 }
             }
         },
+        //------------------------
+        //    EXPORTING (CSV/EXCEL)
+        //------------------------ 
         exporting: {
             csv: {
                 dateFormat: date_format
@@ -746,7 +739,7 @@ function generateTS_smry(chart_indices) {
             borderRadius: 5,
             floating: true,
             title:{
-                text: ':: Drag me'
+                text: ':: Legend'
             },
             zIndex: 20
         },

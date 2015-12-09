@@ -29,6 +29,7 @@
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
 
+
     <!-- Britta's Javascript utilities -->
     <script type="text/javascript" src="{{ MEDIA_URL }}js/dataStore.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>
@@ -39,6 +40,8 @@
     <script type="text/javascript" src="{{MEDIA_URL}}js/csc-maps.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}js/Listeners.js"></script>
     <!-- Map API scripts and properties-->
+    <!--Print google maps-->
+    <script type="text/javascript" src="{{MEDIA_URL}}js/html2canvas.js"></script>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
     <!--
     <script type="text/javascript"
@@ -57,7 +60,7 @@
     <script src="https://rawgithub.com/highslide-software/draggable-legend/master/draggable-legend.js"></script>
     <script src="http://code.highcharts.com/highcharts-more.js"></script>
     <script src="http://code.highcharts.com/modules/exporting.js"></script>
-    <script src="http://highslide-software.github.io/export-csv/export-csv.js"></script>
+    <!--<script src="http://highslide-software.github.io/export-csv/export-csv.js"></script>-->
     <script type="text/javascript" src="{{MEDIA_URL}}js/regression.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}js/HighChartsFunctions.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}js/generateHighChartsFigure.js"></script>
@@ -166,7 +169,7 @@
             <li><a href="{{DATA_URL}}single/">Single-Point Products</a>
                 <ul>
                 <li><a href="{{DATA_URL}}single/lister/">Data Lister</a></li>
-                <li><a href="{{DATA_URL}}single/monann/">Monthly Summaries</a></li>
+                <li><a href="{{DATA_URL}}single/monthly_summaries/">Monthly Summaries</a></li>
                 <li><a href="{{DATA_URL}}single/interannual/">Yearly Summaries</a></li>
                 <li><a href="{{DATA_URL}}single/intraannual/">Intra-Year Comparison</a></li>
                 <li><a href="{{DATA_URL}}single/data_comparison/">Grid/Station Data Comparison</a></li>

@@ -748,7 +748,7 @@ img.center {
 }
 
 /* Do Not Delete, station finder does not work without */
-#sf_map {
+#map-station-finder {
     position:relative;
     left:0px;
     float:center;

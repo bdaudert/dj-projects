@@ -34,6 +34,43 @@ function zoomToLocation() {
   });
 }
 
+function downloadMapControl(controlDiv,map) {
+
+  // Set CSS for the control border.
+  var controlUI = document.createElement('div');
+  controlUI.style.backgroundColor = '#fff';
+  controlUI.style.border = '2px solid #fff';
+  controlUI.style.borderRadius = '3px';
+  controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+  controlUI.style.cursor = 'pointer';
+  controlUI.style.marginBottom = '22px';
+  controlUI.style.textAlign = 'center';
+  controlUI.title = 'Download Map';
+  controlDiv.appendChild(controlUI);
+  // Set CSS for the control interior.
+  var controlText = document.createElement('div');
+  controlText.style.color = 'rgb(25,25,25)';
+  controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+  controlText.style.fontSize = '16px';
+  controlText.style.lineHeight = '20px';
+  controlText.style.paddingLeft = '5px';
+  controlText.style.paddingRight = '5px';
+  controlText.innerHTML = 'Download Map';
+  controlUI.appendChild(controlText);
+  // Setup the click event listeners: simply set the map to Chicago.
+  controlUI.addEventListener('click', function() {
+      html2canvas(map, {
+        useCORS: true,
+        onrendered: function(canvas) {
+          //var dataUrl= canvas.toDataURL("image/png");
+         var dataUrl = canvas.toDatatURL("/scenic/download_map/") 
+         //write it to the page
+          document.write('<img src="' + dataUrl + '"/>');
+        }
+      });
+  });
+}
+
 
 function initialize_grid_point_map(loc) {
     //optional argument location
@@ -220,8 +257,19 @@ function initialize_station_finder() {
         mapTypeId:google.maps.MapTypeId.HYBRID
         };
 
-        var map = new google.maps.Map(document.getElementById('sf_map'),mapOptions);
+        var map = new google.maps.Map(document.getElementById('map-station-finder'),mapOptions);
         window.map = map;
+      
+        /*
+        // Add control to Download the map
+        var downloadMapControlDiv = document.createElement('div');
+        var downloadControl = new downloadMapControl(downloadMapControlDiv, window.map);
+
+        downloadMapControlDiv.index = 1;
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(downloadMapControlDiv);        
+        */
+
+    
         //Add overlay to map
         var area_type = $('#area_type').val();
         add_overlay_to_map(window.map, $('#' + area_type)); 
@@ -1141,7 +1189,6 @@ function initialize_map_overlays() {
     function getFirstLayer(doc) {
         var layer_name = doc[0].placemarks[0].description;
         $('.area').val(layer_name);
-        console.log(layer_name);
     };
     */
     var Layer = new google.maps.KmlLayer({
@@ -1226,7 +1273,6 @@ function add_state_to_map(map,val) {
                 for (var j=0,ll=coords[j];j<coords.length;j++){i
                     if (j == 0){
                         var last_latLng = new google.maps.LatLng(ll[1],ll[0]);
-                        console.log(coords[j]);
                     }
                     latLng = new google.maps.LatLng(ll[1],ll[0]);
                     bounds.extend(latLng);
