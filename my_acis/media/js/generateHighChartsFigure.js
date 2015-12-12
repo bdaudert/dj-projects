@@ -7,6 +7,7 @@ String.prototype.inList=function(list){
 }
 
 var myChart;
+var downloadMenu = $.extend(true,[],Highcharts.getOptions().exporting.buttons.contextButton.menuItems.splice(2));
 function generateTS_individual(chart_indices) {
     /*
     Generates highcarts figure
@@ -362,12 +363,12 @@ function generateTS_individual(chart_indices) {
             },
             buttons: {
                 contextButton: {
-                    enabled: false 
+                    enabled: false
                 },
                 exportButton: {
                     text: 'Download',
                     // Use only the download related menu items from the default context button
-                    menuItems: Highcharts.getOptions().exporting.buttons.contextButton.menuItems.splice(2)
+                    menuItems: downloadMenu
                 },
                 printButton: {
                     text: 'Print',
@@ -488,7 +489,7 @@ function generateTS_individual(chart_indices) {
             //------------------------
             series: series_data
     } //end basicOptions
-    myChart=new Highcharts.Chart(basicOptions); 
+    myChart = new Highcharts.Chart(basicOptions); 
 }
 
 function generateTS_smry(chart_indices) {
@@ -658,7 +659,7 @@ function generateTS_smry(chart_indices) {
                 exportButton: {
                     text: 'Download',
                     // Use only the download related menu items from the default context button
-                    menuItems: Highcharts.getOptions().exporting.buttons.contextButton.menuItems.splice(2)
+                    menuItems: downloadMenu
                 },
                 printButton: {
                     text: 'Print',

@@ -840,6 +840,7 @@ $(document).ready(function ($) {
             }
         }
     });
+    //Monthly summary dynamic chart updates
     $('#chart_indices, #chart_summary').on('change keyup', function(){
         smry = 'individual';
         if ($('#chart_summary').length) {
@@ -851,7 +852,6 @@ $(document).ready(function ($) {
         else{
             generateTS_smry();
         }
-        if (myChart){myChart.redraw();}
         //Update hidden chart variables in  main form
         if ($(this).attr('id') == 'chart_summary'){
             $('.chart_summary').val($(this).val());

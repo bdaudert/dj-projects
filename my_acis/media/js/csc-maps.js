@@ -62,10 +62,10 @@ function downloadMapControl(controlDiv,map) {
       html2canvas(map, {
         useCORS: true,
         onrendered: function(canvas) {
-          //var dataUrl= canvas.toDataURL("image/png");
-         var dataUrl = canvas.toDatatURL("/scenic/download_map/") 
-         //write it to the page
-          document.write('<img src="' + dataUrl + '"/>');
+            var dataUrl= canvas.toDataURL("image/png");
+            //var dataUrl = canvas.toDatatURL("/csc/scenic/download_map/") 
+            //write it to the page
+            document.write('<img src="' + dataUrl + '"/>');
         }
       });
   });
@@ -259,7 +259,7 @@ function initialize_station_finder() {
 
         var map = new google.maps.Map(document.getElementById('map-station-finder'),mapOptions);
         window.map = map;
-      
+        
         /*
         // Add control to Download the map
         var downloadMapControlDiv = document.createElement('div');
@@ -268,8 +268,7 @@ function initialize_station_finder() {
         downloadMapControlDiv.index = 1;
         map.controls[google.maps.ControlPosition.TOP_CENTER].push(downloadMapControlDiv);        
         */
-
-    
+        
         //Add overlay to map
         var area_type = $('#area_type').val();
         add_overlay_to_map(window.map, $('#' + area_type)); 
