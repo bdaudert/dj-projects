@@ -34,8 +34,39 @@ function zoomToLocation() {
   });
 }
 
-function downloadMapControl(controlDiv,map) {
+function printMapControl(controlDiv,map_div){
+  // Set CSS for the control border.
+  var controlUI = document.createElement('div');
+  controlUI.style.backgroundColor = '#fff';
+  controlUI.style.border = '2px solid #fff';
+  controlUI.style.borderRadius = '3px';
+  controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+  controlUI.style.cursor = 'pointer';
+  controlUI.style.marginBottom = '22px';
+  controlUI.style.textAlign = 'center';
+  controlUI.title = 'Print Map';
+  controlDiv.appendChild(controlUI);
+  // Set CSS for the control interior.
+  var controlText = document.createElement('div');
+  controlText.style.color = 'rgb(25,25,25)';
+  controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+  controlText.style.fontSize = '14px';
+  controlText.style.lineHeight = '15px';
+  controlText.style.paddingLeft = '5px';
+  controlText.style.paddingRight = '5px';
+  controlText.innerHTML = 'Print Map';
+  controlUI.appendChild(controlText);
+  
+  controlUI.addEventListener('click', function() {
+      var content = $('#' + map_div); //has to be first.
+      var win = window.open();
+      win.document.write(content);
+      win.print();
+      win.close();
+ });
+}
 
+function downloadMapControl(controlDiv,map) {
   // Set CSS for the control border.
   var controlUI = document.createElement('div');
   controlUI.style.backgroundColor = '#fff';
@@ -256,10 +287,20 @@ function initialize_station_finder() {
         zoom:7,
         mapTypeId:google.maps.MapTypeId.HYBRID
         };
-
-        var map = new google.maps.Map(document.getElementById('map-station-finder'),mapOptions);
+        var map_div = 'map-station-finder';
+        var map = new google.maps.Map(document.getElementById(map_div),mapOptions);
         window.map = map;
         
+
+        /*
+        //Add control to print the map
+        var printMapControlDiv = document.createElement('div');
+        var printControl = new printMapControl(printMapControlDiv, map_div);
+
+        printMapControlDiv.index = 1;
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(printMapControlDiv); 
+        */
+
         /*
         // Add control to Download the map
         var downloadMapControlDiv = document.createElement('div');
@@ -1143,6 +1184,7 @@ function initialize_map_overlays() {
     var area_type = $('#area_type').val();
     var host = $('#HOST').val();
     var kml_file_path = $('#kml_file_path').val();
+    console.log(host);
     //type is one of: basin, cwa, climdiv, county
     var myLatLng = new google.maps.LatLng(37.0, -114.05);
     var mapOptions = {
@@ -1152,70 +1194,42 @@ function initialize_map_overlays() {
     }
 
     var map = new google.maps.Map(document.getElementById("map-overlay"), mapOptions);
-    var infowindow = new google.maps.InfoWindow({
-        content: 'oi'
-    });
-    /*
     //Parse the kml file and populate the map and form with layers
     var myParser = new geoXML3.parser({
-        afterParse: useTheData
+        afterParse: useTheData,
+        singleInfoWindow: true
     });
     myParser.parse(kml_file_path);
     function useTheData(doc) {
         geoXmlDoc = doc[0];
         if (!geoXmlDoc || !geoXmlDoc.placemarks) return;
+        var defaultStyle = {fillColor: "#0000FF", strokeColor: "#0000FF", fillOpacity: 0.1};
+        var highlightStyle = {fillColor: "#0000FF", strokeColor: "#0000FF", fillOpacity: 0.5};
         for (var i = 0; i < geoXmlDoc.placemarks.length; i++) {
             //get first layer and display in area form filed
+            var layer =  geoXmlDoc.placemarks[i];
             if (i == 0){
-                var layer_name = geoXmlDoc.placemarks[0].description;
-                $('.area').val(layer_name);
+                $('#' + area_type).val(layer.description);
+                layer.polygon.setOptions(highlightStyle);
             }
-            var placemark = geoXmlDoc.placemarks[i];
-            //highlightPoly(placemark.MultiGeometry, i);
+            else{
+                layer.polygon.setOptions(defaultStyle);
+            }
+            layer.polygon.description = layer.description;
+            google.maps.event.addListener(layer.polygon,"click",function() {
+                var l = $(this)[0];
+                for (var j = 0; j < geoXmlDoc.placemarks.length; j++) {
+                    geoXmlDoc.placemarks[j].polygon.setOptions(defaultStyle);
+                }     
+                l.setOptions(highlightStyle);
+                //Set the area form field 
+                $('#' + area_type).val(l.description);
+                var contentString = '<div id="LayerWindow">' +
+                    l.description + '</div>';
+            });
+            layer.polygon.setMap(map);
         }
     };
-    function highlightPoly(mpoly, polynum) {
-        var highlightOptions = {fillColor: "#FFFF00", strokeColor: "#000000", fillOpacity: 0.9, strokeWidth: 10};
-        google.maps.event.addListener(mpoly,"mouseover",function() {
-            mpoly.setOptions(highlightOptions);
-        });
-        google.maps.event.addListener(mpoly,"mouseout",function() {
-            mpoly.setOptions(mpoly.Style);
-        });
-    }  
-    */
-    /*
-    function getFirstLayer(doc) {
-        var layer_name = doc[0].placemarks[0].description;
-        $('.area').val(layer_name);
-    };
-    */
-    var Layer = new google.maps.KmlLayer({
-        url: 'http://'+ host + kml_file_path,
-        suppressInfoWindows: true
-        //map: map
-    });
-    Layer.setMap(map);
-    //KML layer has no mouseover event!! 
-    google.maps.event.addListener(Layer, 'click', function(kmlEvent) {
-        var text = kmlEvent.featureData.description;
-        //Set the area form field 
-        $('#' + area_type).val(kmlEvent.featureData.description);
-        //var contentString = '<div id="LayerWindow" style="line-height:1.35;width:200px;overflow:hidden;white-space:nowrap;">'+
-        var contentString = '<div id="LayerWindow">' +
-            kmlEvent.featureData.description +
-            '</div>';
-        infowindow.close();
-        //infowindow.setContent(contentString);
-        infowindow.setOptions({
-                //content: kmlEvent.featureData.description,
-                content:contentString,
-                //position: kmlEvent.position
-                position:kmlEvent.latLng 
-        });
-        //infowindow.open(map, Layer);
-        infowindow.open(map);
-    });
 }
 
 function add_polygon_to_map(map, ll_coords){
