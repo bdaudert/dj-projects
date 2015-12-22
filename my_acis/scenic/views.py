@@ -751,7 +751,6 @@ def multi_lister(request):
             req['error'] = 'Data request error: %s' %str(e)
             context['results'] = req
             return render_to_response(url, context, context_instance=RequestContext(request))
-        req = WRCCUtils.request_and_format_data(form_cleaned)
         context['results'] = req
         context['run_done'] = True
         #Format Data for display and/or download
