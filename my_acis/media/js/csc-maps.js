@@ -1184,7 +1184,6 @@ function initialize_map_overlays() {
     var area_type = $('#area_type').val();
     var host = $('#HOST').val();
     var kml_file_path = $('#kml_file_path').val();
-    console.log(host);
     //type is one of: basin, cwa, climdiv, county
     var myLatLng = new google.maps.LatLng(37.0, -114.05);
     var mapOptions = {
@@ -1205,9 +1204,14 @@ function initialize_map_overlays() {
         if (!geoXmlDoc || !geoXmlDoc.placemarks) return;
         var defaultStyle = {fillColor: "#0000FF", strokeColor: "#0000FF", fillOpacity: 0.1};
         var highlightStyle = {fillColor: "#0000FF", strokeColor: "#0000FF", fillOpacity: 0.5};
+        var bounds = new google.maps.LatLngBounds();
         for (var i = 0; i < geoXmlDoc.placemarks.length; i++) {
             //get first layer and display in area form filed
             var layer =  geoXmlDoc.placemarks[i];
+            var latLng = new google.maps.LatLng(parseFloat(layer.polygon.bounds.N.N),parseFloat(layer.polygon.bounds.j.N));
+            bounds.extend(latLng);
+            latLng = new google.maps.LatLng(parseFloat(layer.polygon.bounds.N.j),parseFloat(layer.polygon.bounds.j.j));
+            bounds.extend(latLng);
             if (i == 0){
                 $('#' + area_type).val(layer.description);
                 layer.polygon.setOptions(highlightStyle);
@@ -1229,6 +1233,7 @@ function initialize_map_overlays() {
             });
             layer.polygon.setMap(map);
         }
+        map.fitBounds(bounds);
     };
 }
 

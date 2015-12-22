@@ -741,6 +741,8 @@ def multi_lister(request):
 
         #Small Data request
         req = {}
+        req = WRCCUtils.request_and_format_data(form_cleaned)
+        '''
         try:
             req = WRCCUtils.request_and_format_data(form_cleaned)
             if 'smry' not in req.keys() and 'data' not in  req.keys():
@@ -751,6 +753,7 @@ def multi_lister(request):
             req['error'] = 'Data request error: %s' %str(e)
             context['results'] = req
             return render_to_response(url, context, context_instance=RequestContext(request))
+        '''
         context['results'] = req
         context['run_done'] = True
         #Format Data for display and/or download
