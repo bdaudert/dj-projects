@@ -139,8 +139,8 @@
     {%if form_error%}
         {% include 'includes/form_error.html'%}
     {%endif%}
-    {%if results.errors%}
-        <p class="error">ERROR: {{results.errors}}</p>
+    {%if results.error%}
+        <p class="error">ERROR: {{results.error}}</p>
     {%endif%}
 
     {%if  run_done and  not results.data and not results.smry %}
@@ -177,9 +177,8 @@
 <!--Results-->
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
-    {{x}}
     <div class="results">
-    {%if not results.errors and results.data%}
+    {%if not results.error and results.data%}
         <table>
         <td valign="top">
         <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
@@ -206,7 +205,7 @@
     </p>
     {%endif%} -->
 
-    {%if not results.errors %}
+    {%if not results.error %}
         {% if results.smry or results.data %}
         <div id="metadata" align="left" style="display:none;max-width:600px">
         {%for key_val in meta_display_list%}
@@ -224,7 +223,7 @@
         {% endif %}
     {%endif%}
 
-    {%if not results.errors and results.smry %}
+    {%if not results.error and results.smry %}
         <p align="left"><b>DATA SUMMARY</b>:<br />
             {% for key_val in params_display_list %}
                 <b>{{key_val.0}}</b>: {{key_val.1}}<br />
@@ -241,7 +240,7 @@
         </table><br />
     {%endif%} 
 
-    {% if not results.errors and not results.smry and results.data %}
+    {% if not results.error and not results.smry and results.data %}
         <p>ACIS Data Flags: M,-9999 = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
         <p align="left"><b>DATA</b>:<br />
             {% for key_val in params_display_list %}
@@ -258,7 +257,7 @@
             </tr>
         {%endfor%}
         </table>
-    {%endif%}<!--end if not results.errors-->
+    {%endif%}<!--end if not results.error-->
     <div><!--end results-->
     </td></table><!--End printable table-->
     </div><!--end div class=results-->

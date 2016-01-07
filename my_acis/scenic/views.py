@@ -447,7 +447,7 @@ def single_lister(request):
             #req['data'].insert(0,header)
             req['data'] = [req['data']]
         if not req['data'] and not req['smry']:
-            req['errors'] = {'errors':'No data found for these parameters.'}
+            req['error'] = {'error':'No data found for these parameters.'}
             context['results'] = req
             return render_to_response(url, context, context_instance=RequestContext(request))
         context['run_done'] = True
@@ -793,27 +793,37 @@ def multi_lister(request):
     if 'formShapeFile' in request.POST:
         results = {}
         #initial, checkbox_vals = DJANGOUtils.set_initial(request, 'multi_lister')
-        shape_file = request.FILES.get('file')
-        #files = request.FILES.getlist('files')
+        #shape_file = request.FILES.get('file')
+        files = request.FILES.getlist('files')
         feature_id = request.POST['feature_id']
+        '''
         #Check that file format is correct
         if str(shape_file).split('.')[-1] != 'shp':
             results['error'] = 'File should have extension .shp'
             context['results'] = results
             return render_to_response(url, context, context_instance=RequestContext(request))
+        '''
 
-        #Save shapefile in tmp dir
-        shp_file = '/tmp/' + str(shape_file)
-        with open('/tmp/' + str(shape_file),'wb+') as dest:
-            for chunk in shape_file.chunks():
-                dest.write(chunk)
+        #Save shapefiles in tmp dir
+        #shp_file = '/tmp/' + str(shape_file)
+        shp_file = None
+        for shape_file in files:
+            if str(shape_file).split('.')[-1] == 'shp':
+                shp_file = '/tmp/' + str(shape_file)
+            with open('/tmp/' + str(shape_file),'wb+') as dest:
+                for chunk in shape_file.chunks():
+                    dest.write(chunk)
+        if shp_file is None:
+            results['error'] = 'One file must have extension .shp'
+            context['results'] = results
+            return render_to_response(url, context, context_instance=RequestContext(request))
         #Convert polygon coordinates to lon, lat coordinate string
         poly_ll = WRCCUtils.shapefile_to_ll(initial['app_name'], shp_file, feature_id)
-        if poly_ll is None:
-            results['error'] = 'Uploaded file is not a valid shape file or feature ID.'
+        if poly_ll is '':
+            results['error'] = 'Uploaded file is not a valid shape file or feature ID does not exists.'
             #form_error = [WRCCData.DISPLAY_PARAMS['shape'],'Only polygons without holes are supported']
             context['results'] = results
-            #context['form_error'] = form_error
+            return render_to_response(url, context, context_instance=RequestContext(request))
         #Override shape parameters in initial
         initial['area_type'] = 'shape'
         initial['shape'] = poly_ll

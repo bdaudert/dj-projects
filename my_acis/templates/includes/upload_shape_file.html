@@ -5,8 +5,9 @@
     <form id="formShapeFile" method="post" action="" enctype="multipart/form-data" onsubmit="show_loading() & setHiddenFields('tableDataForm', $(this).attr('id'));">{% csrf_token %}
     <table class="form" align="left">
       <tr><td>
-      Select shapefile: <input type="file" id="choose_file" name="file">
-      <!--Select shapefiles: <input type="file" id="choose_files" name="files" multiple>-->
+      <!--Some shapefiles need the shx and mauby some other files to be opened properly-->
+      <!--Select shapefiles: <input type="file" id="choose_file" name="file">-->
+      Select shapefiles: <input type="file" id="choose_files" name="files" multiple>
       </td></tr>
       <tr><td align="left">
       Feature ID<input type="number" name="feature_id"  value={{initial.feature_id}}>
