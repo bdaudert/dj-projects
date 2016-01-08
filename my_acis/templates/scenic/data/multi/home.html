@@ -16,8 +16,8 @@
 <div class="docu" id="Docu_app_spatial_summary" style="display:none;">
     {% include 'includes/Docu_app_spatial_summary.html'%}
 </div>
-<div class="docu" id="Docu_app_climateengine" style="display:none;">
-    {% include 'includes/Docu_app_climateengine.html'%}
+<div class="docu" id="Docu_app_climate_engine" style="display:none;">
+    {% include 'includes/Docu_app_climate_engine.html'%}
 </div>
 
 <table cellpadding="20" align="center">
@@ -45,12 +45,12 @@
         <td>
             <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_temporal_summary')">
         </td>
-        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}multi/climateengine/">
+        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}multi/climate_engine/">
         <b>Climate Engine</b></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_climateengine.html' %}</div>
+            <div class="pop-up">{% include 'includes/Docu_popup_climate_engine.html' %}</div>
         </td>
         <td>
-            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_cliamteengine')">
+            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_climate_engine')">
         </td>
     </tr>
     <tr>
@@ -70,9 +70,9 @@
             <div class="pop-up">{% include 'includes/Docu_popup_temporal_summary.html' %}</div>
         </td>
         <td colspan="2">
-            <a  href="{{DATA_URL}}multi/climateengine/">
+            <a  href="{{DATA_URL}}multi/climate_engine/">
             <img class="app_img" alt="ClimateEngine" title="ClimateEngine" src="{{MEDIA_URL}}img/ClimateEngine.png"></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_climateengine.html' %}</div>
+            <div class="pop-up">{% include 'includes/Docu_popup_climate_engine.html' %}</div>
         </td>
     </tr>
     </table>

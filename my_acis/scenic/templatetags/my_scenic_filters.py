@@ -4,9 +4,24 @@
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
+from django.utils.datastructures import SortedDict
 import json
 
 register = template.Library()
+
+@register.filter(name='sorted')
+def sorted(value):
+    if isinstance(value, dict):
+        new_dict = SortedDict()
+        key_list = sorted(value.keys())
+        for key in key_list:
+            new_dict[key] = value[key]
+        return new_dict
+    elif isinstance(value, list):
+        return sorted(value)
+    else:
+        return value
+    sorted.is_safe = True
 
 @register.filter(name='make_range')
 def make_range(start,end):
@@ -47,12 +62,6 @@ def lookup(list_or_dict, index):
     except:
         return ''
 
-'''
-def lookup(dict, index):
-    if index in dict:
-        return dict[index]
-    return ''
-'''
 @register.filter(is_safe=True)
 def safe_json(obj):
     return mark_safe(json.dumps(obj))

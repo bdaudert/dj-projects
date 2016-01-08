@@ -1,6 +1,25 @@
+        {%load my_scenic_filters%}
         <td>Grid: </td>
         <td>
             <select class="grid" id="grid" name="grid">
+            {% for grid_id, name in initial.form_options.grid%}
+                {%if grid_id == "1"%}
+                    <optgroup label="Gridded datasets interpolated from historic station data">
+                {%endif%}
+                {%if grid_id == "22"%}
+                    <optgroup label="LOCA CMIP5 datasets">
+                {%endif%}
+                {%if grid_id == "4"%}
+                    <optgroup label="NARCAPP datasets">
+                {%endif%}
+
+                <option value="{{grid_id}}" {%if initial.grid == grid_id%} selected{%endif%}>{{name}}</option>
+            
+                {%if grid_id|is_in:'21,41,16'%}
+                </optgroup>
+                {%endif%}
+            {%endfor%}
+            <!--
             {% if initial.app_name == "data_comparison" %}
                 <optgroup label="Gridded datasets interpolated from historic station data">
                 <option value="1" {{checkbox_vals.grid_1_selected}}>NRCC Interpolated(1950-Present)</option>
@@ -12,12 +31,27 @@
                 <option value="23" {{checkbox_vals.grid_23_selected}}>GFDL-CM3 rcp8.5(1950-2100)</option>
                 <option value="24" {{checkbox_vals.grid_24_selected}}>HadGEM2-CC rcp4.5(1950-2100)</option>
                 <option value="25" {{checkbox_vals.grid_25_selected}}>HadGEM2-CC rcp8.5(1950-2100)</option>
+                <option value="26" {{checkbox_vals.grid_26_selected}}>HadGEM2-ES rcp4.5(1950-2100)</option>
+                <option value="27" {{checkbox_vals.grid_27_selected}}>HadGEM2-ES rcp8.5(1950-2100)</option>
+                <option value="28" {{checkbox_vals.grid_28_selected}}>CCSM4 rcp4.5(1950-2100)</option>
+                <option value="29" {{checkbox_vals.grid_29_selected}}>CCSM4 rcp8.5(1950-2100)</option>
+                <option value="30" {{checkbox_vals.grid_30_selected}}>CanESM2 rcp4.5(1950-2100)</option>
+                <option value="31" {{checkbox_vals.grid_31_selected}}>CanESM2 rcp8.5(1950-2100)</option>
+                <option value="32" {{checkbox_vals.grid_32_selected}}>CESM1-BGC rcp4.5(1950-2100)</option>
+                <option value="33" {{checkbox_vals.grid_33_selected}}>CESM1-BGC rcp8.5(1950-2100)</option>
+                <option value="34" {{checkbox_vals.grid_34_selected}}>CMCC-CMS rcp4.5(1950-2100)</option>
+                <option value="35" {{checkbox_vals.grid_35_selected}}>CMCC-CMS rcp8.5(1950-2100)</option>
+                <option value="36" {{checkbox_vals.grid_36_selected}}>CNRM-CM5 rcp4.5(1950-2100)</option>
+                <option value="37" {{checkbox_vals.grid_37_selected}}>CNRM-CM5 rcp8.5(1950-2100)</option>
+                <option value="38" {{checkbox_vals.grid_38_selected}}>MICRO5 rcp4.5(1950-2100)</option>
+                <option value="39" {{checkbox_vals.grid_39_selected}}>MICRO5 rcp8.5(1950-2100)</option>
+                <option value="40" {{checkbox_vals.grid_40_selected}}>ACCESS1.0 rcp4.5(1950-2100)</option>
+                <option value="41" {{checkbox_vals.grid_41_selected}}>ACCESS1.0 rcp8.5(1950-2100)</option>
                 </optgroup>
                 <optgroup label="NARCAPP datasets">
                 <option value="4" {{checkbox_vals.grid_4_selected}}>CRCM+NCEP(1970-2000)</option>
                 <option value="5" {{checkbox_vals.grid_5_selected}}>CRCM+CCSM(1970-2000)</option>
                 <option value="6" {{checkbox_vals.grid_6_selected}}>CRCM+CCSM3(1970-2000)</option>
-                <!--<option value="7" {{checkbox_vals.grid_7_selected}}>HRM3+NCEP(1970-2000)</option>-->
                 <option value="8" {{checkbox_vals.grid_8_selected}}>HRM3+HadCM3(1970-2000)</option>
                 <option value="9" {{checkbox_vals.grid_9_selected}}>MM5I+NCEP(1970-2000)</option>
                 <option value="10" {{checkbox_vals.grid_10_selected}}>MM5I+CCSM(1970-2000)</option>
@@ -43,12 +77,27 @@
                 <option value="23" {{checkbox_vals.grid_23_selected}}>GFDL-CM3 rcp8.5(1950-2100)</option>
                 <option value="24" {{checkbox_vals.grid_24_selected}}>HadGEM2-CC rcp4.5(1950-2100)</option>
                 <option value="25" {{checkbox_vals.grid_25_selected}}>HadGEM2-CC rcp8.5(1950-2100)</option>
+                <option value="26" {{checkbox_vals.grid_26_selected}}>HadGEM2-ES rcp4.5(1950-2100)</option>
+                <option value="27" {{checkbox_vals.grid_27_selected}}>HadGEM2-ES rcp8.5(1950-2100)</option>
+                <option value="28" {{checkbox_vals.grid_28_selected}}>CCSM4 rcp4.5(1950-2100)</option>
+                <option value="29" {{checkbox_vals.grid_29_selected}}>CCSM4 rcp8.5(1950-2100)</option>
+                <option value="30" {{checkbox_vals.grid_30_selected}}>CanESM2 rcp4.5(1950-2100)</option>
+                <option value="31" {{checkbox_vals.grid_31_selected}}>CanESM2 rcp8.5(1950-2100)</option>
+                <option value="32" {{checkbox_vals.grid_32_selected}}>CESM1-BGC rcp4.5(1950-2100)</option>
+                <option value="33" {{checkbox_vals.grid_33_selected}}>CESM1-BGC rcp8.5(1950-2100)</option>
+                <option value="34" {{checkbox_vals.grid_34_selected}}>CMCC-CMS rcp4.5(1950-2100)</option>
+                <option value="35" {{checkbox_vals.grid_35_selected}}>CMCC-CMS rcp8.5(1950-2100)</option>
+                <option value="36" {{checkbox_vals.grid_36_selected}}>CNRM-CM5 rcp4.5(1950-2100)</option>
+                <option value="37" {{checkbox_vals.grid_37_selected}}>CNRM-CM5 rcp8.5(1950-2100)</option>
+                <option value="38" {{checkbox_vals.grid_38_selected}}>MICRO5 rcp4.5(1950-2100)</option>
+                <option value="39" {{checkbox_vals.grid_39_selected}}>MICRO5 rcp8.5(1950-2100)</option>
+                <option value="40" {{checkbox_vals.grid_40_selected}}>ACCESS1.0 rcp4.5(1950-2100)</option>
+                <option value="41" {{checkbox_vals.grid_41_selected}}>ACCESS1.0 rcp8.5(1950-2100)</option>
                 </optgroup>
                 <optgroup label="NARCAPP datasets">
                 <option value="4" {{checkbox_vals.grid_4_selected}}>CRCM+NCEP(1970-2000)</option>
                 <option value="5" {{checkbox_vals.grid_5_selected}}>CRCM+CCSM(1970-2000,2040-2070)</option>
                 <option value="6" {{checkbox_vals.grid_6_selected}}>CRCM+CCSM3(1970-2000,2040-2070)</option>
-                <!--<option value="7" {{checkbox_vals.grid_7_selected}}>HRM3+NCEP(1970-2000)</option>-->
                 <option value="8" {{checkbox_vals.grid_8_selected}}>HRM3+HadCM3(1970-2000,2040-2070)</option>
                 <option value="9" {{checkbox_vals.grid_9_selected}}>MM5I+NCEP(1970-2000)</option>
                 <option value="10" {{checkbox_vals.grid_10_selected}}>MM5I+CCSM(1970-2000,2040-2070)</option>
@@ -60,6 +109,7 @@
                 <option value="16" {{checkbox_vals.grid_16_selected}}>WRFG+CGCM3(1970-2000,2040-2070)</option>
                 </optgroup>
             {% endif %}
+            -->
             </select>
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

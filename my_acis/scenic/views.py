@@ -1194,12 +1194,12 @@ def spatial_summary(request):
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 
-def climateengine(request):
+def climate_engine(request):
     context = {
         'title': ''
     }
-    context['initial'] = {'app_name':'climateengine'}
-    return render_to_response('scenic/data/multi/climateengine.html', context, context_instance=RequestContext(request))
+    context['initial'] = {'app_name':'climate_engine'}
+    return render_to_response('scenic/data/multi/climate_engine.html', context, context_instance=RequestContext(request))
 
 
 def station_finder(request):

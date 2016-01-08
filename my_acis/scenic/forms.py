@@ -17,42 +17,6 @@ import WRCCUtils, WRCCData
 #Utilities
 ############################################
 
-'''
-#find yesterday's data, default end_data
-tdy = datetime.datetime.today()
-#Choose default start_date 4 weeks back
-b = datetime.datetime.today() - datetime.timedelta(days=15)
-p = datetime.datetime.today() - datetime.timedelta(days=366)
-y = datetime.datetime.today() - datetime.timedelta(days=1)
-yr = str(tdy.year)
-mon = str(tdy.month)
-day = str(tdy.day)
-if len(mon) == 1:
-    mon = '0%s' % mon
-if len(day) == 1:
-    day = '0%s' % day
-yr_b = str(b.year);mon_b = str(b.month);day_b = str(b.day)
-yr_p = str(p.year);mon_p = str(p.month);day_p = str(p.day)
-if len(mon_b) == 1:
-    mon_b = '0%s' % mon_b
-if len(day_b) == 1:
-    day_b = '0%s' % day_b
-if len(mon_p) == 1:
-    mon_p = '0%s' % mon_p
-if len(day_p) == 1:
-    day_p = '0%s' % day_p
-yr_y = str(y.year)
-mon_y = str(y.month)
-day_y = str(y.day)
-if len(mon_y) == 1:
-    mon_y = '0%s' % mon_y
-if len(day_y) == 1:
-    day_y = '0%s' % day_y
-today = '%s%s%s' % (yr, mon, day)
-begin = '%s%s%s' % (yr_b, mon_b, day_b)
-yesterday = '%s%s%s' % (yr_y, mon_y, day_y)
-begin_prism = '%s%s%s' % (yr_p, mon_p, day_p)
-'''
 #Set dates
 today = WRCCUtils.set_back_date(0)
 begin_14 = WRCCUtils.set_back_date(14)
@@ -62,15 +26,8 @@ begin_prism = WRCCUtils.set_back_date(366)
 readonly_style = 'background-color:#CCCCCC;'
 
 ######################################
-#Choice Fields
+#FORM FIELDS
 #######################################
-#Climate Risk Maps
-CLIM_RISK_ELEMENT_CHOICES = (
-    ('maxt', 'Maximum Temperature'),
-    ('mint', 'Minimum Temperature'),
-    ('avgt', 'Average Temperature'),
-    ('pcpn', 'Precipitation')
-)
 #Sodsumm
 SDMM_ELEMENT_CHOICES = (
     ('all', 'All of those below'),
