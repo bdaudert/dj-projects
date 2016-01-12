@@ -1,32 +1,13 @@
+    {%load my_scenic_filters%}
     <td>Element: </td>
     <td>
         <select id="element" name="element">
-            <option value="pcpn" {{checkbox_vals.element_pcpn_selected}}>Precipitation</option>
-            <option value="snow" {{checkbox_vals.element_snow_selected}} 
-            {%if initial.location%}disabled{%endif%}>Snowfall</option>
-            <option value="snwd" {{checkbox_vals.element_snwd_selected}} 
-            {%if initial.location%}disabled{%endif%}>Snow Depth</option>
-            <option value="maxt" {{checkbox_vals.element_maxt_selected}}>Maximum Temperature</option>
-            <option value="mint" {{checkbox_vals.element_mint_selected}}>Minimum Temperature</option>
-            <option value="avgt" {{checkbox_vals.element_avgt_selected}}>Mean Temperature</option>
-            <option value="obst" {{checkbox_vals.element_obst_selected}} 
-            {%if initial.location%}disabled{%endif%}>Observation Time Temperature</option>
-            {%if initial.app_name == "monthly_summaries"%}            
-            <option value="dtr" {{checkbox_vals.element_dtr_selected}}>Temperature Range</option>
-            {%endif%}
-            <option value="hdd" {{checkbox_vals.element_hdd_selected}}>Heating Deg. Days
-            {% if initial.app_name != "monthly_summaries"%}(65F){% endif %}</option>
-            <option value="cdd" {{checkbox_vals.element_cdd_selected}}>Cooling Deg. Days
-            {% if initial.app_name != "monthly_summaries"%}(65F){% endif %}</option>
-            <option value="gdd" {{checkbox_vals.element_gdd_selected}}>Growing Deg. Days
-            {% if initial.app_name != "monthly_summaries"%}(50F){% endif %}</option>
-            <option value="evap" {{checkbox_vals.element_evap_selected}} 
-            {%if initial.location%}disabled{%endif%}>Pan Evaporation</option>
-            {%if app_name == "monthly_summaries"%}
-            <option value="pet" {{checkbox_vals.element_pet_selected}} 
-            {%if initial.location%}disabled{%endif%}>Potential ET</option>
-            {%endif%}
-            </select>
+        {%for el, name in initial.form_options.element%}
+            <option value="{{el}}" 
+                {%if initial.element == el%}selected{%endif%}
+                {%if initial.data_type == "grid" and el|is_in:'obst,snow,snwd,evap,wdmv'%}disabled{%endif%}
+            >{{name}}</option> 
+        {%endfor%}
     </td>
     <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">

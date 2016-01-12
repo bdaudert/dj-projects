@@ -401,16 +401,18 @@ def download(request):
     return render_to_response('scenic/download.html', context, context_instance=RequestContext(request))
 
 def single_lister(request):
+    app_name = 'single_lister'
     context = {
-        'title': settings.APPLICATIONS['single_lister'][0]
+        'title': settings.APPLICATIONS[app_name][0]
     }
-    url = settings.APPLICATIONS['single_lister'][2]
-    initial, checkbox_vals = DJANGOUtils.set_initial(request,'single_lister')
+    url = settings.APPLICATIONS[app_name][2]
+    initial, checkbox_vals = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     #Data request submitted
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
         form = DJANGOUtils.set_form(initial, clean = False)
+        context['xx']  = form_cleaned
         #Check form fields
         fields_to_check = [form_cleaned['area_type'],'start_date','end_date','start_window','end_window','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -453,16 +455,7 @@ def single_lister(request):
         context['run_done'] = True
         context['results'] = req
         #Set display headers
-        if form_cleaned['data_summary'] == 'none':
-            if 'station_id' in form_cleaned.keys():
-                header_keys = ['station_id','start_date', 'end_date']
-            else:
-                header_keys = ['location','start_date', 'end_date']
-        else:
-            if 'station_id' in form_cleaned.keys():
-                header_keys = ['station_id','data_summary','start_date', 'end_date']
-            else:
-                header_keys = ['location','data_summary','start_date', 'end_date']
+        header_keys = WRCCUtils.set_display_keys(app_name, form_cleaned)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
         if 'meta' in req.keys() and req['meta']:
             meta_keys = WRCCUtils.get_meta_keys(form_cleaned)
@@ -525,11 +518,12 @@ def single_lister(request):
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def intraannual(request):
+    app_name = 'intraannual'
     context = {
-        'title': settings.APPLICATIONS['intraannual'][0]
+        'title': settings.APPLICATIONS[app_name][0]
     }
-    url = settings.APPLICATIONS['intraannual'][2]
-    initial, checkbox_vals = DJANGOUtils.set_initial(request,'intraannual')
+    url = settings.APPLICATIONS[app_name][2]
+    initial, checkbox_vals = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
         form = DJANGOUtils.set_form(initial,clean = False)
@@ -542,12 +536,7 @@ def intraannual(request):
             context['results'] = results
             return render_to_response(url, context, context_instance=RequestContext(request))
         context['run_done'] = True
-        header_keys = ['element','start_year', 'end_year','start_month', 'start_day']
-        if 'station_id' in form.keys():
-            header_keys.insert(0,'station_id')
-        else:
-            header_keys.insert(0,'location')
-            header_keys.insert(1,'grid')
+        header_keys = WRCCUtils.set_display_keys(app_name, form)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
         context['year_txt_data'] = year_txt_data
         context['year_graph_data'] = year_graph_data
@@ -583,7 +572,7 @@ def intraannual(request):
             'data':[results['data'][year] for year in range(int(initial['start_year']),int(initial['end_year']) + 1)]
         }
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-        json_file = '%s_intra_year_comparison.json' %(time_stamp)
+        json_file = '%s_%s.json' %(time_stamp,app_name)
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR +json_file, json_dict)
         context['json_file'] = json_file
 
@@ -616,11 +605,12 @@ def intraannual(request):
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def interannual(request):
+    app_name = 'interannual'
     context = {
-        'title': settings.APPLICATIONS['interannual'][0]
+        'title': settings.APPLICATIONS[app_name][0]
     }
-    url = settings.APPLICATIONS['interannual'][2]
-    initial, checkbox_vals = DJANGOUtils.set_initial(request,'interannual')
+    url = settings.APPLICATIONS[app_name][2]
+    initial, checkbox_vals = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
         form = DJANGOUtils.set_form(initial,clean = False)
@@ -635,13 +625,7 @@ def interannual(request):
         #Data request
         year_data, hc_data = WRCCUtils.get_single_interannaul_data(form_cleaned)
         context['run_done'] = True
-        header_keys = ['temporal_summary', 'element',\
-        'start_year', 'end_year','window']
-        if 'station_id' in form.keys():
-            header_keys.insert(0,'station_id')
-        else:
-            header_keys.insert(0,'location')
-            header_keys.insert(1,'grid')
+        header_keys = WRCCUtils.set_display_keys(app_name, form)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
         if not year_data:
             context['results'] = results
@@ -695,21 +679,18 @@ def interannual(request):
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def multi_lister(request):
+    app_name = 'multi_lister'
     context = {
-        'title': settings.APPLICATIONS['multi_lister'][0]
+        'title': settings.APPLICATIONS[app_name][0]
     }
-    url = settings.APPLICATIONS['multi_lister'][2]
-    initial, checkbox_vals = DJANGOUtils.set_initial(request,'multi_lister')
+    url = settings.APPLICATIONS[app_name][2]
+    initial, checkbox_vals = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         form = DJANGOUtils.set_form(initial,clean=False)
         form_cleaned = DJANGOUtils.set_form(initial)
         #Check for form errors
         fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date','degree_days']
-        '''
-        if form_cleaned['data_summary'] in['none','windowed_data']:
-            fields_to_check.append('user_email')
-        '''
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -723,7 +704,7 @@ def multi_lister(request):
             return render_to_response(url, context, context_instance=RequestContext(request))
         #Deal with large requests
         num_points, num_days = WRCCUtils.check_request_size(form_cleaned)
-        large_request, data_summary = WRCCUtils.check_if_large_request(form_cleaned, num_points, num_days)
+        large_request =  WRCCUtils.check_if_large_request(num_points, num_days)
         if large_request and form_cleaned['user_email'] != 'Your Email':
             form_error = check_form(form_cleaned, ['user_email'])
             if form_error:
@@ -757,8 +738,7 @@ def multi_lister(request):
         context['results'] = req
         context['run_done'] = True
         #Format Data for display and/or download
-        header_keys = ['data_type',form_cleaned['area_type'],\
-            'data_summary','start_date', 'end_date']
+        header_keys = WRCCUtils.set_display_keys(app_name, form_cleaned)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
         #Write data to file if requested
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
@@ -792,7 +772,7 @@ def multi_lister(request):
     #Shape file upload
     if 'formShapeFile' in request.POST:
         results = {}
-        #initial, checkbox_vals = DJANGOUtils.set_initial(request, 'multi_lister')
+        #initial, checkbox_vals = DJANGOUtils.set_initial(request, app_name)
         #shape_file = request.FILES.get('file')
         files = request.FILES.getlist('files')
         feature_id = request.POST['feature_id']
@@ -878,40 +858,33 @@ def multi_lister(request):
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def temporal_summary(request):
+    app_name = 'temporal_summary'
     context = {
-        'title': settings.APPLICATIONS['temporal_summary'][0]
+        'title': settings.APPLICATIONS[app_name][0]
     }
-    url = settings.APPLICATIONS['temporal_summary'][2]
+    url = settings.APPLICATIONS[app_name][2]
     json_file = request.GET.get('json_file', None)
     #Check if we are coming in from other page, e.g. Gridded Data
     #Set initial accordingly
     if json_file is not None:
         json_data = WRCCUtils.load_json_data_from_file(settings.TEMP_DIR + json_file)
         if not json_data or not 'search_params' in json_data.keys():
-            initial,checkbox_vals = set_temporal_summary_initial(request)
-            #initial,checkbox_vals = DJANGOUtils.set_initial(request,'temporal_summary')
+            initial,checkbox_vals = DJANGOUtils.set_initial(request,app_name)
         else:
-            #initial,checkbox_vals = DJANGOUtils.set_initial(json_data['search_params'],'temporal_summary')
-            initial,checkbox_vals = set_temporal_summary_initial(json_data['search_params'])
+            initial,checkbox_vals = DJANGOUtils.set_initial(json_data['search_params'],app_name)
     else:
-        #initial,checkbox_vals = DJANGOUtils.set_initial(request,'temporal_summary')
-        initial,checkbox_vals = set_temporal_summary_initial(request)
+        initial,checkbox_vals = DJANGOUtils.set_initial(request,app_name)
     #Plot Options
     initial_plot, checkbox_vals_plot = set_map_plot_options(request)
     join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     if initial['area_type'] != 'bounding_box':
         context['hide_bbox_map'] = True
-    #Set up maps if needed
-    #context[initial['area_select']] = WRCCData.AREA_DEFAULTS[initial['area_select']]
-    #context[initial['overlay_state'] + '_selected'] = 'selected'
-
     #Link from other page
     if request.method == 'GET' and 'elements' in request.GET:
         form_cleaned = DJANGOUtils.set_form(request,clean=True)
         form = DJANGOUtils.set_form(request,clean=False)
-        header_keys = [form_cleaned['area_type'],'temporal_summary',\
-            'elements','units','start_date', 'end_date','grid']
+        header_keys = WRCCUtils.set_display_keys(app_name, form_cleaned)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
 
     if 'formMap' in request.POST:
@@ -919,13 +892,11 @@ def temporal_summary(request):
         form = DJANGOUtils.set_form(request, clean=False)
         form_cleaned = DJANGOUtils.set_form(request)
         #Set initials
-        initial,checkbox_vals = set_temporal_summary_initial(form)
-        #initial,checkbox_vals = DJANGOUtils.set_initial(form,'temporal_summary')
+        initial,checkbox_vals = DJANGOUtils.set_initial(form, app_name)
         initial_plot, checkbox_vals_plot = set_map_plot_options(form)
         join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
         context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
-        header_keys = [form['area_type'],'temporal_summary',\
-            'elements','units','start_date', 'end_date','grid']
+        header_keys = WRCCUtils.set_display_keys(app_name, form_cleaned)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
 
         #Back Button/download files issue fix:
@@ -998,11 +969,12 @@ def temporal_summary(request):
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def spatial_summary(request):
+    app_name = 'spatial_summary'
     context = {
-        'title': settings.APPLICATIONS['spatial_summary'][0]
+        'title': settings.APPLICATIONS[app_name][0]
     }
-    url = settings.APPLICATIONS['spatial_summary'][2]
-    initial,checkbox_vals = DJANGOUtils.set_initial(request,'spatial_summary')
+    url = settings.APPLICATIONS[app_name][2]
+    initial,checkbox_vals = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
 
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
@@ -1024,8 +996,7 @@ def spatial_summary(request):
             return render_to_response(url, context, context_instance=RequestContext(request))
 
         #Display parameters
-        header_keys = ['data_type',form_cleaned['area_type'],\
-            'spatial_summary','elements','units','start_date', 'end_date']
+        header_keys = WRCCUtils.set_display_keys(app_name, form_cleaned)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
 
         #Data Request
@@ -1098,8 +1069,6 @@ def spatial_summary(request):
         if not chart_indices:
             chart_indices = [idx for idx in range(len(form_cleaned['elements']))]
         results['chart_indices'] = chart_indices
-        #results['chartType'] = graph_data[0]['chartType']
-        #results['json_file_path'] = settings.TMP_URL + json_file
         context['results'] = results
         context['run_done'] = True
         #Save results for downloading
@@ -1110,7 +1079,7 @@ def spatial_summary(request):
             'data':[]
         }
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-        json_file = '%s_spatial_summary.json' %(time_stamp)
+        json_file = '%s_%s.json' %(time_stamp, app_name)
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR +json_file, json_dict)
         context['json_file'] = json_file
 
@@ -1203,16 +1172,17 @@ def climate_engine(request):
 
 
 def station_finder(request):
+    app_name = 'station_finder'
     context = {
-        'title': settings.APPLICATIONS['station_finder'][0]
+        'title': settings.APPLICATIONS[app_name][0]
     }
-    url = settings.APPLICATIONS['station_finder'][2]
+    url = settings.APPLICATIONS[app_name][2]
 
     from subprocess import call
     call(["touch", settings.TEMP_DIR + "Empty.json"])
     #Set up initial map (NV stations)
     #context['station_json'] = 'NV_stn.json'
-    initial,checkbox_vals = DJANGOUtils.set_initial(request,'station_finder')
+    initial,checkbox_vals = DJANGOUtils.set_initial(request, app_name)
     context['initial'] = initial;context['checkbox_vals']=checkbox_vals
     #Set up maps if needed
     if request.method == "GET" and not 'elements' in request.GET:
@@ -1228,7 +1198,7 @@ def station_finder(request):
         json_dict = copy.deepcopy(initial)
         json_dict['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-        json_file_name = '%s_params.json' %(time_stamp)
+        json_file_name = '%s_%s_params.json' %(time_stamp,app_name)
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_file_name, json_dict)
         context['params_json'] = json_file_name
         if 'error' in station_json.keys():
@@ -1268,7 +1238,7 @@ def station_finder(request):
         json_dict = copy.deepcopy(form_cleaned)
         json_dict['station_ids'] = station_ids
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-        json_file_name = '%s_params.json' %(time_stamp)
+        json_file_name = '%s_%s_params.json' %(time_stamp,app_name)
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_file_name, json_dict)
 
         if 'error' in station_json.keys():
@@ -1337,7 +1307,6 @@ def station_finder(request):
         json_dict = copy.deepcopy(form_cleaned)
         json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
         WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, json_dict)
-        #context['station_json'] = form_cleaned['station_json']
         return render_to_response(url, context, context_instance=RequestContext(request))
 
     #Overlay maps
@@ -1399,12 +1368,13 @@ def data_comparison(request):
 ######################
 
 def monthly_summaries(request):
+    app_name = 'monthly_summaries'
     context = {
-        'title': settings.APPLICATIONS['monthly_summaries'][0]
+        'title': settings.APPLICATIONS[app_name][0]
     }
-    url = settings.APPLICATIONS['monthly_summaries'][2]
+    url = settings.APPLICATIONS[app_name][2]
 
-    initial,checkbox_vals = DJANGOUtils.set_initial(request, 'monthly_summaries')
+    initial,checkbox_vals = DJANGOUtils.set_initial(request, app_name)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     #Set graph and plot options
     #Time Serie Table Generation and graph if desired
@@ -1501,7 +1471,7 @@ def monthly_summaries(request):
         context['results'] = results
         #Save data table to file for later download
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-        json_file = '%s_sodxtrmts.json' %(time_stamp)
+        json_file = '%s_%s.json' %(time_stamp, app_name)
         with open(settings.TEMP_DIR + '%s' %(json_file),'w+') as f:
             f.write(json.dumps(results))
         context['json_file'] = json_file
@@ -1521,12 +1491,13 @@ def monthly_summaries(request):
 
 
 def climatology(request):
+    app_name = 'climatology'
     context = {
-        'title': settings.APPLICATIONS['climatology'][0]
+        'title': settings.APPLICATIONS[app_name][0]
     }
-    url = settings.APPLICATIONS['climatology'][2]
+    url = settings.APPLICATIONS[app_name][2]
 
-    initial, checkbox_vals = DJANGOUtils.set_initial(request,'climatology')
+    initial, checkbox_vals = DJANGOUtils.set_initial(request, app_name)
     context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
     if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
         form = DJANGOUtils.set_form(request,clean=False)
@@ -1626,8 +1597,8 @@ def climatology(request):
                 table_dict['subtitle'] = ''
             json_list.append(table_dict)
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-        json_file = '%s_sodsumm_%s_%s.json' \
-        %(time_stamp,dates_list[0][0:4], dates_list[-1][0:4])
+        json_file = '%s_%s_%s_%s.json' \
+        %(time_stamp,app_name,dates_list[0][0:4], dates_list[-1][0:4])
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_file, json_list)
         context['JSON_DIR'] = settings.TEMP_DIR
         context['json_file'] = json_file
@@ -2070,57 +2041,4 @@ def set_map_plot_options(request):
             checkbox_vals['projection' + p + '_selected'] = 'selected'
     return initial, checkbox_vals
 
-
-def set_temporal_summary_initial(request):
-    initial = {'app_name':'temporal_summary'}
-    checkbox_vals = {}
-    Get = DJANGOUtils.set_GET(request)
-    Getlist = DJANGOUtils.set_GET_list(request)
-    initial['area_type'] = Get('area_type','state')
-    initial['area_type_label'] = WRCCData.DISPLAY_PARAMS[initial['area_type']]
-    initial['area_type_value'] = Get(str(initial['area_type']), WRCCData.AREA_DEFAULTS[initial['area_type']])
-    initial['overlay_state'] = Get('overlay_state', 'nv')
-    el_str = Get('elements',None)
-    if isinstance(el_str,basestring) and el_str:
-        initial['elements']= el_str.replace(' ','').split(',')
-    else:
-        initial['elements'] = Getlist('elements', ['maxt','mint','pcpn'])
-    initial['elements_string'] = ','.join(initial['elements'])
-    initial['add_degree_days'] = Get('add_degree_days', 'F')
-    initial['degree_days'] = Get('degree_days', 'gdd55,hdd70')
-    initial['units'] = Get('units', 'english')
-    initial['start_date']  = Get('start_date', week)
-    initial['end_date']  = Get('end_date', yesterday)
-    initial['grid'] = Get('grid', '1')
-    initial['data_summary'] = 'temporal'
-    initial['temporal_summary'] = Get('temporal_summary', 'mean')
-    initial['show_plot_opts'] = Get('show_plot_opts','T')
-    #set the check box values
-    for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys():
-        checkbox_vals[area_type + '_selected'] =''
-        if area_type == initial['area_type']:
-            checkbox_vals[area_type + '_selected'] ='selected'
-    for e in ['maxt','mint','avgt', 'pcpn','gdd','hdd','cdd']:
-        checkbox_vals['elements_' + e + '_selected'] =''
-        for el in initial['elements']:
-            if el == e:
-                checkbox_vals['elements_' + e + '_selected'] ='selected'
-    for bl in ['T','F']:
-        for cbv in ['add_degree_days']:
-            checkbox_vals[cbv + '_' + bl + '_selected'] = ''
-            if initial[cbv] == bl:
-                checkbox_vals[cbv + '_' + bl + '_selected'] = 'selected'
-    for u in ['english', 'metric']:
-        checkbox_vals['units_' + u + '_selected'] =''
-        if u == initial['units']:
-            checkbox_vals['units_' +u + '_selected'] ='selected'
-    for g in ['1','21','3','4','5','6','7','8','9','10','11','12','13','14','15','16']:
-        checkbox_vals['grid_' + g + '_selected'] =''
-        if initial['grid'] == g:
-            checkbox_vals['grid_' + g + '_selected'] ='selected'
-    for st in ['max','min','mean','sum']:
-        checkbox_vals['temporal_summary_' + st + '_selected'] =''
-        if st == initial['temporal_summary']:
-            checkbox_vals['temporal_summary_' + st + '_selected'] ='selected'
-    return initial, checkbox_vals
 

@@ -23,6 +23,7 @@
 
 <!--Hidden variables-->
 <input type="hidden" id="app_name" name="app_name" value="temporal_summary">
+<input type="hidden" id="data_type" name="data_type" value="grid">
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
 <input type="hidden" id="host" name="host" value="{{host}}">
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{kml_file_path}}">
@@ -145,7 +146,7 @@
     <p class="message"  align="left" style="max-width:400px;word-wrap:break-word;">
     <b>PARAMETERS</b>:<br />
     {%for key_val in params_display_list%}
-        <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+        <b>{{key_val.0}}</b>: {{key_val.1}}; 
     {%endfor%}
     </p>
 

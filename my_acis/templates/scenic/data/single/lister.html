@@ -94,13 +94,13 @@
         <tr class="station_grid" id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
         <tr class="station_grid" id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</tr>
         {%endif%}
-        {%if initial.data_summary == "temporal"%}
+        {%if initial.data_summary == "temporal_summary"%}
         <tr id="temp_summary" style="display:table-row">{% include 'includes/temporal_summary.html'%}</tr>
         <tr id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
         <tr class="station_grid" id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
         <tr class="station_grid" id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</tr>
         {%endif%}
-        {%if initial.data_summary == "spatial"%}
+        {%if initial.data_summary == "spatial_summary"%}
         <tr id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
         <tr id="spat_summary" style="display:table-row">{% include 'includes/spatial_summary.html'%}</tr>
         <tr class="station_grid" id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
@@ -200,7 +200,7 @@
     {% if results.data or results.smry%}
     <p class="message" style="max-width:400px;word-wrap:break-word;"> YOUR PARAMETERS:<br />
     {%for key_val in params_display_list%}
-        <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+        <b>{{key_val.0}}</b>: {{key_val.1}}; 
     {%endfor%}
     </p>
     {%endif%} -->

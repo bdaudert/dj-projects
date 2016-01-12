@@ -1310,11 +1310,11 @@ function set_grid_and_els(node, gridRowId){
 }
 //Delete? replaced by set_smry
 function set_data_summary(node, rowId_t, rowId_s){
-    if (node.value == 'spatial'){
+    if (node.value == 'spatial_summary'){
         document.getElementById(rowId_s).style.display = 'table-row';
         document.getElementById(rowId_t).style.display = 'none';
     }
-    else if (node.value =='temporal'){
+    else if (node.value =='temporal_summary'){
         document.getElementById(rowId_s).style.display = 'none';
         document.getElementById(rowId_t).style.display = 'table-row';
     }

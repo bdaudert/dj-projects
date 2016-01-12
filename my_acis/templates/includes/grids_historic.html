@@ -1,9 +1,9 @@
         <td>Grid: </td>
         <td>
             <select class="grid" id="grid" name="grid">
-                <option value="1" {{checkbox_vals.grid_1_selected}}>NRCC Interpolated(1950-Present)</option>
-                <option value="3" {{checkbox_vals.grid_3_selected}}>NRCC Int. Hi-Res(2007-Present)</option>
-                <option value="21" {{checkbox_vals.grid_21_selected}}>PRISM(1981-Present)</option>
+                <option value="1" {%if initial.grid == "1"%}selected{%endif%}>NRCC Interpolated(1950-Present)</option>
+                <option value="3" {%if initial.grid == "3"%}selected{%endif%}>NRCC Int. Hi-Res(2007-Present)</option>
+                <option value="21"{%if initial.grid == "21"%}selected{%endif%}>PRISM(1981-Present)</option>
             </select>
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

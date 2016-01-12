@@ -105,8 +105,8 @@ $(document).ready(function ($) {
                 $('#obs_time').css('display','none');
             }
         }
-        else if ($(this).val() == 'spatial' || $(this).val() == 'temporal'){
-            if ($(this).val() == 'spatial'){
+        else if ($(this).val() == 'spatial_summary' || $(this).val() == 'temporal_summary'){
+            if ($(this).val() == 'spatial_summary'){
                 $('#spat_summary').css('display','table-row');
                 $('#temp_summary').css('display','none');
             }

@@ -48,7 +48,10 @@ def to_int(string):
 def is_in(var, args):
     if args is None:
         return False
-    arg_list = [str(arg.strip()) for arg in args.split(',')]
+    if isinstance(args, basestring):
+        arg_list = [str(arg.strip()) for arg in args.split(',')]
+    else:
+        arg_list = args
     return str(var) in arg_list
 
 @register.filter(name='to_string')

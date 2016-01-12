@@ -214,12 +214,12 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <form id="tableDownloadForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('tableDataForm', $(this).attr('id'))">{% csrf_token %}
     <table class="form" id="tableDownload" >
     <tr class="data_sf" id="data_summ" style="display:table-row;">{% include 'includes/data_summary.html'%}</tr>
-    {%if initial.data_summary == "temporal"%}
+    {%if initial.data_summary == "temporal_summary"%}
         <tr id="temp_summary" class="data_sf" style="display:table-row">{% include 'includes/temporal_summary.html'%}</tr>
     {%else%}
         <tr id="temp_summary" class="data_sf" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
     {%endif%}
-    {%if initial.data_summary == "spatial"%}
+    {%if initial.data_summary == "spatial_summary"%}
         <tr id="spat_summary" class="data_sf" style="display:table-row">{% include 'includes/spatial_summary.html'%}</tr>
     {%else%}
         <tr id="spat_summary" class="data_sf" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>

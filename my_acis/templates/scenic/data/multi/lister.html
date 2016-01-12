@@ -11,8 +11,8 @@
     {% include 'includes/Docu_app_multi_lister.html'%}
 </div>
 <div id="how_to" style="display:none;">
-    <div id="Docu_data_type">{% include 'includes/Docu_data_type.html'%}</div>
     <div id="Docu_area_of_interest">{% include 'includes/Docu_area_of_interest.html'%}</div>
+    <div id="Docu_data_type">{% include 'includes/Docu_data_type.html'%}</div>
     <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
     <div id="Docu_temporal_resolution">{% include 'includes/Docu_temporal_resolution.html'%}</div>
     <div id="Docu_elements">{% include 'includes/Docu_elements.html'%}</div>
@@ -65,9 +65,9 @@
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading() & setHiddenFields('overlayForm', $(this).attr('id'))">{% csrf_token %}
         <table class="form" id="tableData">
-        <tr class="station_grid" style="display:table-row">{% include 'includes/data_type.html'%}</tr>
         <tr class="station_grid" style="display:table-row">{% include 'includes/multi_select_area.html'%}</tr>
         <tr class="station_grid" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
+        <tr class="station_grid" style="display:table-row">{% include 'includes/data_type.html'%}</tr>
         {%if initial.data_type == "grid"%}
         <tr class="grid" id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr>
         {% if initial.grid == "21"%}
@@ -96,13 +96,13 @@
         <tr class="station_grid" id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
         <tr class="station_grid" id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</tr>
         {%endif%}
-        {%if initial.data_summary == "temporal"%}
+        {%if initial.data_summary == "temporal_summary"%}
         <tr id="temp_summary" style="display:table-row">{% include 'includes/temporal_summary.html'%}</tr>
         <tr id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
         <tr class="station_grid" id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
         <tr class="station_grid" id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</tr>
         {%endif%}
-        {%if initial.data_summary == "spatial"%}
+        {%if initial.data_summary == "spatial_summary"%}
         <tr id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
         <tr id="spat_summary" style="display:table-row">{% include 'includes/spatial_summary.html'%}</tr>
         <tr class="station_grid" id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
@@ -255,7 +255,7 @@
     <p class="message"  align="left" style="max-width:70%;word-wrap:break-word;">
     <b>PARAMETERS</b>:<br />
     {%for key_val in params_display_list%}
-        <b>{{key_val.0}}</b>: {{key_val.1}}
+        <b>{{key_val.0}}</b>: {{key_val.1}}; 
     {%endfor%}
     </p>
     {%endif%}
