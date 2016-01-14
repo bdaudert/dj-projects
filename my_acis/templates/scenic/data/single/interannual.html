@@ -61,7 +61,7 @@
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
         <input type="hidden" name="data_type" id="data_type" class="data_type" value="{{initial.data_type}}">
         <table class="form" id="tableData" >
-        <tr style="display:table-row" valign="bottom">{% include 'includes/single_select_area.html'%}</tr>
+        <tr style="display:table-row" valign="bottom">{% include 'includes/area_select.html'%}</tr>
         <tr style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
         {%if initial.station_id%}
             <tr id="stn_finder" style="display:table-row">{% include 'includes/station_finder.html'%}</tr>

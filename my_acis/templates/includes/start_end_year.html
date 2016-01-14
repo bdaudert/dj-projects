@@ -7,6 +7,9 @@
             <input type="hidden" id="max_year_fut" value="{{initial.max_year_fut}}">
             <select class="year" id="start_year" name="start_year">
                 <!--Future dates for grids-->
+                {%if initial.station_id%}
+                    <option value="POR"{% if initial.start_year == "POR"%}selected{%endif%}>POR</option>
+                {%endif%}
                 {%for yr in initial.min_year_fut|make_range:initial.max_year_fut%}
                     <option value="{{yr}}" 
                     {% if initial.location%} 
@@ -38,11 +41,14 @@
                      
                     <option value="{{yr}}" {% if initial.end_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
                 {%endfor%}
+                {%if initial.station_id%}
+                    <option value="POR"{% if initial.end_year == "POR"%}selected{%endif%}>POR</option>
+                {%endif%}
             </select> 
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div id="Docu_start_end_year" class="pop-up"></div>
+        <div id="Docu_year_range" class="pop-up"></div>
         <script type="text/javascript">                        
-            $("#Docu_start_end_year").load("{{HTML_URL}}Docu_help_texts.html #ht_start_end_year.html");
+            $("#Docu_year_range").load("{{HTML_URL}}Docu_help_texts.html #ht_year_range.html");
         </script>
         </td>

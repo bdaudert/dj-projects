@@ -14,7 +14,7 @@
 <div id="how_to" style="display:none;">
     <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
     <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
-    <div id="Docu_start_end_year">{% include 'includes/Docu_start_end_date.html'%}</div>
+    <div id="Docu_start_end_year">{% include 'includes/Docu_start_end_year.html'%}</div>
     <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
     <div id="Docu_base_temperature">{% include 'includes/Docu_base_temperature.html'%}</div>
     <div id="Docu_statistic_period">{% include 'includes/Docu_statistic_period.html'%}</div>
@@ -60,17 +60,16 @@
     <div id="formData" class="form" style="border:none;">
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table id="tableData" class="form">
-        <tr class="station_grid" style="display:table-row" valign="bottom">{% include 'includes/single_select_area.html'%}</tr>
+        <tr class="station_grid" style="display:table-row" valign="bottom">{% include 'includes/area_select.html'%}</tr>
         <tr class="station_grid" style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
-        {%if initial.data_type == "grid"%}        
+        {%if initial.area_type == "location"%}        
         <tr class="grid" id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr> 
         <tr valign="top" id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</tr>
         {% else%}
         <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
         <tr valign="top" id="stn_finder">{% include 'includes/station_finder.html'%}</tr>
         {%endif%}
-        <tr valign="top">{% include 'includes/start_year.html'%}</tr>
-        <tr valign="top">{% include 'includes/end_year.html'%}</tr>
+        <tr style="display:table-row">{% include 'includes/start_end_year.html'%}</tr>
         <tr valign="top">{% include 'includes/element.html'%}</tr>
         {%if initial.element == "gdd" or initial.element == "hdd" or initial.element == "gdd"%}
         <tr id="base_temp" valign="top">{% include 'includes/base_temperature.html'%}</tr>

@@ -48,6 +48,7 @@
 </td>
 </table>
 
+
 <!--Form-->
 {% if not figure_files%}
 <table id="top_of_page">
@@ -59,7 +60,7 @@
     <div id='formMap'>
         <form method="post" id="tableMapForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableMap" >
-        <tr class="station_grid" style="display:table-row">{% include 'includes/map_area_select.html'%}</tr>
+        <tr class="station_grid" style="display:table-row">{% include 'includes/area_select.html'%}</tr>
         <tr class="station_grid" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
         <tr class="station_grid" style="display:table-row">{% include 'includes/elements.html'%}</tr>
         <tr class="station_grid" id="add" valign="top" style="display:table-row">{% include 'includes/add_special_degree_days.html'%}</tr>

@@ -72,21 +72,24 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
         new_dates.start: new start date or start year
         new_dates.end: new end date or end year
     */
+    var today = new Date();
+    var today_string = convertDateToString(today,'-');
+    var s = start_date, e = end_date;
+    if (s == 'POR'){s = convertDateToString(today,'-');}
+    if (e == 'POR'){e = convertDateToString(today,'-');} 
+    if (s.length == 4){s = s + '-01-01';}
+    if (e.length == 4){e = e + today_string.slice(4,today_string.length);}
     var new_dates = {
-        'start': start_date,
-        'end': end_date
+        'start': s,
+        'end': e
     }
     //Set new min/max_years for grid
-
-    var ds = new Date(start_date), de = new Date(end_date);
+    var ds = new Date(s), de = new Date(e);
     //Funkyness with js dates
-    ds.setDate(ds.getDate() + 1);
-    de.setDate(de.getDate() + 1);
-    var today = new Date();
     //lag in data
     //today.setDate(today.getDate() - 1);
     var ds_past = new Date(grid_vd[grid][0][0]);
-     $('#min_year').val(grid_vd[grid][0][0].slice(0,4));
+    $('#min_year').val(grid_vd[grid][0][0].slice(0,4));
     if (grid_vd[grid][0][1] == 'today') {
         var de_past = today;
         var max_year = convertDateToString(today,'-').slice(0,4);
@@ -101,19 +104,11 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
         de_past.setDate(de_past.getDate() + 1);
     }
     if (grid_vd[grid][1].length == 2){
-        if (grid_vd[grid][1][0] == 'today'){
-            var ds_fut = today;
-            var min_year_fut = convertDateToString(today,'-').slice(0,4);
-            //Update hidden var
-            $('#min_year_fut').val(min_year_fut);
-        }
-        else{
-            var ds_fut = new Date(grid_vd[grid][1][0]);
-            var min_year_fut = grid_vd[grid][1][0].slice(0,4);
-            //Update hidden var
-            $('#min_year_fut').val(min_year_fut);
-            ds_fut.setDate(ds_fut.getDate() + 1);
-        }
+        var ds_fut = new Date(grid_vd[grid][1][0]);
+        var min_year_fut = grid_vd[grid][1][0].slice(0,4);
+        //Update hidden var
+        $('#min_year_fut').val(min_year_fut);
+        ds_fut.setDate(ds_fut.getDate() + 1);
         var de_fut = new Date(grid_vd[grid][1][1]);
         //Update hidden var
         $('#max_year_fut').val(grid_vd[grid][1][1].slice(0,4));
@@ -189,7 +184,7 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
     //Check if we only want to return years
     if (year_or_date == 'year'){
         new_dates.start = new_dates.start.slice(0,4);
-        new_dates.end = String(parseInt(new_dates.end.slice(0,4)));
+        new_dates.end = new_dates.end.slice(0,4);
         return new_dates;
     }
     else {
@@ -197,7 +192,7 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
     }
 }
 
-function set_year_range_for_interannual(){
+function set_year_range(){
     if ($('#area_type').val() == 'location'){
         var today = new Date();
         var today_str = convertDateToString(today, '-')
@@ -214,55 +209,75 @@ function set_year_range_for_interannual(){
         $('#end_year').val(new_dates.end);
         //Disable all other options
         $("#start_year option").each(function(){
-            if (parseInt($(this).val()) >= parseInt(new_dates.start) && parseInt($(this).val()) <= parseInt(new_dates.end) + 1){
-                $(this).show();
+            if ($(this).val() == 'POR'){
+                $(this).hide();
             }
-            else if ($('#grid').val().inList(['5','6','8','10','12','13','15','16'])){
-                if (parseInt($(this).val()) >= 2040 && parseInt($(this).val()) <= 2069){
+            else{
+                if (parseInt($(this).val()) >= parseInt(new_dates.start) && parseInt($(this).val()) <= parseInt(new_dates.end) + 1){
                     $(this).show();
                 }
-                else{
-                     $(this).hide();
+                else if ($('#grid').val().inList(['5','6','8','10','12','13','15','16'])){
+                    if (parseInt($(this).val()) >= 2040 && parseInt($(this).val()) <= 2069){
+                        $(this).show();
+                    }
+                    else{
+                         $(this).hide();
+                    }
                 }
-            }
-            else {
-                $(this).hide();
+                else {
+                    $(this).hide();
+                }
             }
         });
         $("#end_year option").each(function(){
-            if (parseInt($(this).val()) >= parseInt(new_dates.start) && parseInt($(this).val()) <= parseInt(new_dates.end) + 1){
-                $(this).show();
-            }
-            else if ($('#grid').val().inList(['5','6','8','10','12','13','15','16'])){
-                if (parseInt($(this).val()) >= 2040 && parseInt($(this).val()) <= 2069){
-                    $(this).show();
-                }
-                else{
-                     $(this).hide();
-                }
-            }
-            else {
+            if ($(this).val() == 'POR'){
                 $(this).hide();
             }
+            else { 
+                if (parseInt($(this).val()) >= parseInt(new_dates.start) && parseInt($(this).val()) <= parseInt(new_dates.end) + 1){
+                    $(this).show();
+                }
+                else if ($('#grid').val().inList(['5','6','8','10','12','13','15','16'])){
+                    if (parseInt($(this).val()) >= 2040 && parseInt($(this).val()) <= 2069){
+                        $(this).show();
+                    }
+                    else{
+                        $(this).hide();
+                    }
+                }
+                else {
+                    $(this).hide();
+                }
+            }   
         });
     }
     if ($('#area_type').val() == 'station_id'){
         //enable all date options
         $("#start_year option").each(function(){
-            if (parseInt($(this).val()) >= 2040 && parseInt($(this).val()) <= 2069){
-                $(this).hide();
+            if ($(this).val() == 'POR'){
+                $(this).show();
             }
             else{
-                $(this).show();
+                if (parseInt($(this).val()) >= 2040 && parseInt($(this).val()) <= 2069){
+                    $(this).hide();
+                }
+                else{
+                    $(this).show();
+                }
             }
         });
          //enable all date options
         $("#end_year option").each(function(){
-            if (parseInt($(this).val()) >= 2040 && parseInt($(this).val()) <= 2069){
-                $(this).hide();
+            if ($(this).val() == 'POR'){
+                $(this).show();
             }
             else{
-                $(this).show();
+                if (parseInt($(this).val()) >= 2040 && parseInt($(this).val()) <= 2069){
+                    $(this).hide();
+                }
+                else{
+                    $(this).show();
+                }
             }
         });
     }
@@ -1111,6 +1126,9 @@ function update_maps(area_field){
         $('#BBoxMap').css('display','block');
         $('#map-bbox').css('display','block');
         initialize_bbox_map(val);
+    }
+    else if (id == 'state'){
+        $('#overlay_state').val(val);
     }
     else if (id == 'county' || id == 'county_warning_area' || id == 'climate_division' || id == 'basin'){ 
         $('#OverlayMap').css('display','block');

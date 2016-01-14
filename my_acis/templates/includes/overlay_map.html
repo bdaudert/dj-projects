@@ -4,58 +4,11 @@
             <td>State: </td>
             <td>
                 <select name="overlay_state" id="overlay_state">
-                <option value="al" {{checkbox_vals.state_al_selected}}>Alabama</option>
-                <option value="ak" {{checkbox_vals.state_ak_selected}}>Alaska</option>
-                <option value="az" {{checkbox_vals.state_az_selected}}>Arizona</option>
-                <option value="ar" {{checkbox_vals.state_ar_selected}}>Arkansas</option>
-                <option value="ca" {{checkbox_vals.state_ca_selected}}>California</option>
-                <option value="co" {{checkbox_vals.state_co_selected}}>Colorado</option>
-                <option value="ct" {{checkbox_vals.state_ct_selected}}>Connecticut</option>
-                <option value="de" {{checkbox_vals.state_de_selected}}>Delaware</option>
-                <option value="dc" {{checkbox_vals.state_dc_selected}}>District of Columbia</option>
-                <option value="fl" {{checkbox_vals.state_fl_selected}}>Florida</option>
-                <option value="ga" {{checkbox_vals.state_ga_selected}}>Georgia</option>
-                <option value="hi" {{checkbox_vals.state_hi_selected}}>Hawaii</option>
-                <option value="id" {{checkbox_vals.state_id_selected}}>Idaho</option>
-                <option value="il" {{checkbox_vals.state_il_selected}}>Illinois</option>
-                <option value="in" {{checkbox_vals.state_in_selected}}>Indiana</option>
-                <option value="ia" {{checkbox_vals.state_ia_selected}}>Iowa</option>
-                <option value="ks" {{checkbox_vals.state_ks_selected}}>Kansas</option>
-                <option value="ky" {{checkbox_vals.state_ky_selected}}>Kentucky</option>
-                <option value="la" {{checkbox_vals.state_la_selected}}>Louisiana</option>
-                <option value="me" {{checkbox_vals.state_me_selected}}>Maine</option>
-                <option value="md" {{checkbox_vals.state_md_selected}}>Maryland</option>
-                <option value="ma" {{checkbox_vals.state_ma_selected}}>Massachusetts</option>
-                <option value="mi" {{checkbox_vals.state_mi_selected}}>Michigan</option>
-                <option value="mn" {{checkbox_vals.state_mn_selected}}>Minnesota</option>
-                <option value="ms" {{checkbox_vals.state_ms_selected}}>Mississippi</option>
-                <option value="mo" {{checkbox_vals.state_mo_selected}}>Missouri</option>
-                <option value="mt" {{checkbox_vals.state_mt_selected}}>Montana</option>
-                <option value="ne" {{checkbox_vals.state_ne_selected}} >Nebraska</option>
-                <option value="nv" {{checkbox_vals.state_nv_selected}}>Nevada</option>
-                <option value="nh" {{checkbox_vals.state_nh_selected}}>New Hampshire</option>
-                <option value="nj" {{checkbox_vals.state_nj_selected}}>New Jersey</option>
-                <option value="nm" {{checkbox_vals.state_nm_selected}}>New Mexico</option>
-                <option value="ny" {{checkbox_vals.state_ny_selected}}>New York</option>
-                <option value="nc" {{checkbox_vals.state_nc_selected}}>North Carolina</option>
-                <option value="nd" {{checkbox_vals.state_nd_selected}}>North Dakota</option>
-                <option value="oh" {{checkbox_vals.state_oh_selected}}>Ohio</option>
-                <option value="ok" {{checkbox_vals.state_ok_selected}}>Oklahoma</option>
-                <option value="or" {{checkbox_vals.state_or_selected}}>Oregon</option>
-                <option value="pa" {{checkbox_vals.state_pa_selected}}>Pennsylvania</option>
-                <option value="ri" {{checkbox_vals.state_ri_selected}}>Rhode Island</option>
-                <option value="sc" {{checkbox_vals.state_sc_selected}}>South Carolina</option>
-                <option value="sd" {{checkbox_vals.state_sd_selected}}>South Dakota</option>
-                <option value="tn" {{checkbox_vals.state_tn_selected}}>Tennessee</option>
-                <option value="tx" {{checkbox_vals.state_tx_selected}}>Texas</option>
-                <option value="ut" {{checkbox_vals.state_ut_selected}}>Utah</option>
-                <option value="vt" {{checkbox_vals.state_vt_selected}}>Vermont</option>
-                <option value="va" {{checkbox_vals.state_va_selected}}>Virginia</option>
-                <option value="wa" {{checkbox_vals.state_wa_selected}}>Washington</option>
-                <option value="wv" {{checkbox_vals.state_wv_selected}}>West Virginia</option>
-                <option value="wi" {{checkbox_vals.state_wi_selected}}>Wisconsin</option>
-                <option value="wy" {{checkbox_vals.state_wy_selected}}>Wyoming</option>
-            </select>
+                {%for st, name in initial.form_options.state%}
+                    <option value="{{st}}" {%if initial.overlay_state == st%} selected{%endif%}>
+                    {{name}}</option>
+                {%endfor%}
+                </select>
             </td>
             <td><input type="submit" value="Update Map" name="formOverlay"/></td>
             </tr>

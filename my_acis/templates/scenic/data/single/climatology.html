@@ -14,7 +14,7 @@
 <div id="how_to" style="display:none;">
         <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
         <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
-        <div id="Docu_start_end_year">{% include 'includes/Docu_start_end_year.html'%}</div>
+        <div id="Docu_start_end_year">{% include 'includes/Docu_year_range.html'%}</div>
         <div id="Docu_climatology_smry_type">{% include 'includes/Docu_climatology_smry_type.html'%}</div>
         <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
         <div id="Docu_max_missing_days">{% include 'includes/Docu_max_missing_days.html'%}</div>
@@ -61,7 +61,7 @@
     <div id="formData" class="form" style="border:none;">
     <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
     <table id="tableData" class="form">
-    <tr class="station_grid" style="display:table-row" valign="bottom">{% include 'includes/single_select_area.html'%}</tr>
+    <tr class="station_grid" style="display:table-row" valign="bottom">{% include 'includes/area_select.html'%}</tr>
     <tr class="station_grid" style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
     {%if initial.data_type == "grid"%}    
     <tr class="grid" id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr> 
@@ -70,8 +70,7 @@
     <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
     <tr valign="top" id="stn_finder">{% include 'includes/station_finder.html'%}</tr>
     {%endif%}
-    <tr valign="top">{% include 'includes/start_year.html'%}</tr>
-    <tr valign="top">{% include 'includes/end_year.html'%}</tr>
+    <tr style="display:table-row">{% include 'includes/start_end_year.html'%}</tr>
     <tr valign="top">{% include 'includes/climatology_summary_type.html'%}</tr>
     <tr valign="top">{% include 'includes/units.html'%}</tr>
     <tr valign="top">{% include 'includes/max_missing_days.html'%}</tr>
