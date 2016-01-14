@@ -1,6 +1,6 @@
 function convertDate(date, sep){
         var yr = String(date.getFullYear());
-        var mon = String(date.getMonth());
+        var mon = String(date.getMonth()+1);
         var day = String(date.getDay());
         if (String(mon).length == 1){
             mon = '0' + mon;

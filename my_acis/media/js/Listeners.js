@@ -438,28 +438,21 @@ $(document).ready(function ($) {
         //Change start/end dates/years according to grid
         var start=null, end=null,new_dates;
         if ($('#start_year').length && $('#end_year').length){
-            start = parseInt($('#start_year').val());
-            end = parseInt($('#end_year').val());
+            start = $('#start_year').val();
+            end = $('#end_year').val();
             p = 'year';
-            start_div = '#start_year';
-            end_div = '#end_year';
-        }
-        if ($('#start_date').length && $('#end_date').length){
-            start = parseInt($('#start_date').val());
-            end = parseInt($('#end_date').val());
-            p ='date';
-            start_div = '#start_date';
-            end_div = '#end_date';
-        }
-        new_dates = set_dates_for_grid($(this).val(),start,end,p);
-        $(start_div).val(new_dates.start);
-        $(end_div).val(new_dates.end);
-        /*
-        //Change start/end years for interannual
-        if ($('#app_name').val() == 'interannual'){
             set_year_range()
         }
-        */
+        if ($('#start_date').length && $('#end_date').length){
+            start = $('#start_date').val();
+            end = $('#end_date').val();
+            p ='date';
+            new_dates = set_dates_for_grid($(this).val(),start,end,p);
+        }
+        //Set date values
+        var date_vals = set_dates_for_grid($(this).val(),start,end,p);
+        $('#start_' + p).val(date_vals.start);
+        $('#end_' + p).val(date_vals.end); 
     });
     /*
     GRID 
@@ -467,7 +460,9 @@ $(document).ready(function ($) {
     (PRISM has monthly/yearly as well as daily)
     */
     $('#temporal_resolution').on('change', function(){
-        set_dates_for_grid($('#grid').val(), $('#start_date').val(), $('#end_date').val(), 'dates');
+        var date_vals = set_dates_for_grid($('#grid').val(), $('#start_date').val(), $('#end_date').val(), 'dates');
+        $('#start_date').val(date_vals.start);
+        $('#end_date').val(date_vals.end); 
     });
 
     /*
@@ -695,41 +690,39 @@ $(document).ready(function ($) {
         //set map
         set_map($(this)); //form_utils function
         update_value($(this).val()); //form_utils function
+        if ($(this).val() == 'shape_file'){
+            ShowPopupDocu('uploadShapeFile');
+        }
+        var start='9999-99-99', end= '9999-99-99';
+        if ($('#start_date').length && $('#end_date').length){
+            start = $('#start_date').val();
+            end = $('#end_date').val();
+            p = 'date';
+        }
+        if ($('#start_year').length && $('#end_year').length){
+            start = $('#start_year').val();
+            end = $('#end_year').val();
+            p = 'year';
+        } 
+        //Change start/end years
+        var app_name = $('#app_name').val();
+        if (app_name.inList(['interannual','intraannual','monthly_summaries','climatology'])){
+            //Set range dropdown values
+            set_year_range()
+        }
+        //Single app specific
         //Show/Hide grid form field and station finder form_field
         if ($(this).val() == 'station_id'){
             $('#grid_type').css('display','none');
             $('#stn_finder').css('station_finder','table-row');
+            var date_vals = set_dates_for_station($('#station_id').val(), start, end,p);
         }
         if ($(this).val() == 'location'){
             $('#grid_type').css('display','table-row');
-            $('#stn_finder').css('station_finder','none');
-        } 
-        //Change start/end years for interannual
-        var app_name = $('#app_name').val();
-        if (app_name.inList(['interannual','intraannual','monthly_summaries','climatology'])){
-            set_year_range()
+            var date_vals = set_dates_for_grid($('#grid').val(),start, end,p);
         }
-        /*
-        //Change start/end years from POR to years for certain apps
-        //if ($('#app_name').val() == 'monthly_summaries' || $('#app_name').val() == 'climatology' ){
-        if (app_name.inList(['monthly_summaries','climatology'])){
-            var s = $('#start_year').val()
-            var e = $('#end_year').val();
-            if ($(this).val() == 'location'){
-                var new_dates = set_dates_for_grid($('#grid').val(),s,e, 'year');
-                $('#start_year').val(new_dates.start);
-                $('#end_year').val(new_dates.end);
-            }
-            else {
-                $('#start_year').val('POR');
-                $('#end_year').val('POR');
-            }
-        }
-        */
-        if ($(this).val() == 'shape_file'){
-            ShowPopupDocu('uploadShapeFile');
-        }
-        
+        $('#start_' + p).val(date_vals.start);
+        $('#end_' + p).val(date_vals.end);
     });
   
     /*

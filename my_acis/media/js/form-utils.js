@@ -61,6 +61,26 @@ function ShowHideTopOfPage(){
     }
 }
 
+function set_dates_for_station(station_id,start_date,end_date,year_or_date){
+    var today = new Date();
+    var today_string = convertDateToString(today,'-');
+    /*
+    var s = start_date, e = end_date;
+    if (s == 'POR'){s = grid_vd[grid][0][0];}
+    if (e == 'POR'){e = grid_vd[grid][0][1];}
+    if (s.length == 4){s = s + '-01-01';}
+    if (e.length == 4){e = e + today_string.slice(4,today_string.length);}
+    //Replace with AJAX call
+    var vd_station = ['1850-01-01', today_string]
+    */
+    var s = 'POR', e = 'POR';
+    var new_dates = {
+        'start': s,
+        'end': e
+    }
+    
+    return new_dates;
+}
 
 function set_dates_for_grid(grid,start_date,end_date,year_or_date){
     /*
@@ -75,8 +95,8 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
     var today = new Date();
     var today_string = convertDateToString(today,'-');
     var s = start_date, e = end_date;
-    if (s == 'POR'){s = convertDateToString(today,'-');}
-    if (e == 'POR'){e = convertDateToString(today,'-');} 
+    if (s == 'POR'){s = grid_vd[grid][0][0];}
+    if (e == 'POR'){e = grid_vd[grid][0][1];} 
     if (s.length == 4){s = s + '-01-01';}
     if (e.length == 4){e = e + today_string.slice(4,today_string.length);}
     var new_dates = {
@@ -90,24 +110,14 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
     //today.setDate(today.getDate() - 1);
     var ds_past = new Date(grid_vd[grid][0][0]);
     $('#min_year').val(grid_vd[grid][0][0].slice(0,4));
-    if (grid_vd[grid][0][1] == 'today') {
-        var de_past = today;
-        var max_year = convertDateToString(today,'-').slice(0,4);
-        //Update hidden var
-        $('#max_year').val(max_year);
-    }
-    else{
-        var max_year = grid_vd[grid][0][1].slice(0,4)
-        //Update hidden var
-        $('#max_year').val(max_year);
-        var de_past = new Date(grid_vd[grid][0][1]);
-        de_past.setDate(de_past.getDate() + 1);
-    }
+    //Update hidden var
+    $('#max_year').val(grid_vd[grid][0][1].slice(0,4));
+    var de_past = new Date(grid_vd[grid][0][1]);
+    de_past.setDate(de_past.getDate() + 1);
     if (grid_vd[grid][1].length == 2){
         var ds_fut = new Date(grid_vd[grid][1][0]);
-        var min_year_fut = grid_vd[grid][1][0].slice(0,4);
         //Update hidden var
-        $('#min_year_fut').val(min_year_fut);
+        $('#min_year_fut').val(grid_vd[grid][1][0].slice(0,4));
         ds_fut.setDate(ds_fut.getDate() + 1);
         var de_fut = new Date(grid_vd[grid][1][1]);
         //Update hidden var
@@ -193,93 +203,48 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
 }
 
 function set_year_range(){
+    /*Set date range for drop downs for year range*/
     if ($('#area_type').val() == 'location'){
         var today = new Date();
         var today_str = convertDateToString(today, '-')
         var today_yr = today_str.slice(0,4);
-        var start_date = $('#start_year').val() + '-01-01';
-        if ($('#end_year').val() == String(today_yr)){
-            var end_date = today_str;
+        var start_year = $('#start_year').val(), end_year = $('#end_year').val();
+        var grid = $('#grid').val();
+        var min_year = grid_vd[grid][0][0].slice(0,4), max_year = grid_vd[grid][0][1].slice(0,4);
+        //Set bogus future years
+        var min_year_fut = min_year, max_year_fut = min_year;
+        //Check for projections and set future dates
+        if (grid_vd[grid][1].length == 2){
+            min_year_fut = grid_vd[grid][1][0].slice(0,4);
+            max_year_fut = grid_vd[grid][1][1].slice(0,4);
         }
-        else{
-            var end_date = $('#end_year').val() + '-12-31';
+        //Set new year dropdowns
+        $('#start_year > option').remove();
+        $('#end_year > option').remove();
+        var opt, i;
+        for (i=parseInt(min_year);i<=parseInt(max_year);i++){
+            opt = '<option value="' + String(i) + '">' + String(i) + '</option>';
+            $('#start_year').append(opt);
+            $('#end_year').append(opt);
         }
-        new_dates = set_dates_for_grid($('#grid').val(),start_date,end_date,'year');
-        $('#start_year').val(new_dates.start);
-        $('#end_year').val(new_dates.end);
-        //Disable all other options
-        $("#start_year option").each(function(){
-            if ($(this).val() == 'POR'){
-                $(this).hide();
-            }
-            else{
-                if (parseInt($(this).val()) >= parseInt(new_dates.start) && parseInt($(this).val()) <= parseInt(new_dates.end) + 1){
-                    $(this).show();
-                }
-                else if ($('#grid').val().inList(['5','6','8','10','12','13','15','16'])){
-                    if (parseInt($(this).val()) >= 2040 && parseInt($(this).val()) <= 2069){
-                        $(this).show();
-                    }
-                    else{
-                         $(this).hide();
-                    }
-                }
-                else {
-                    $(this).hide();
-                }
-            }
-        });
-        $("#end_year option").each(function(){
-            if ($(this).val() == 'POR'){
-                $(this).hide();
-            }
-            else { 
-                if (parseInt($(this).val()) >= parseInt(new_dates.start) && parseInt($(this).val()) <= parseInt(new_dates.end) + 1){
-                    $(this).show();
-                }
-                else if ($('#grid').val().inList(['5','6','8','10','12','13','15','16'])){
-                    if (parseInt($(this).val()) >= 2040 && parseInt($(this).val()) <= 2069){
-                        $(this).show();
-                    }
-                    else{
-                        $(this).hide();
-                    }
-                }
-                else {
-                    $(this).hide();
-                }
-            }   
-        });
+        for (i=parseInt(min_year_fut);i<=parseInt(max_year_fut);i++){
+            opt = '<option value="' + String(i) + '">' + String(i) + '</option>';
+            $('#start_year').append(opt);
+            $('#end_year').append(opt);
+        } 
     }
     if ($('#area_type').val() == 'station_id'){
-        //enable all date options
-        $("#start_year option").each(function(){
-            if ($(this).val() == 'POR'){
-                $(this).show();
-            }
-            else{
-                if (parseInt($(this).val()) >= 2040 && parseInt($(this).val()) <= 2069){
-                    $(this).hide();
-                }
-                else{
-                    $(this).show();
-                }
-            }
-        });
-         //enable all date options
-        $("#end_year option").each(function(){
-            if ($(this).val() == 'POR'){
-                $(this).show();
-            }
-            else{
-                if (parseInt($(this).val()) >= 2040 && parseInt($(this).val()) <= 2069){
-                    $(this).hide();
-                }
-                else{
-                    $(this).show();
-                }
-            }
-        });
+        //AJAX call to get vd of stations
+        var min_year = '1850'; max_year = today_yr;
+        //Set new year dropdowns
+        $('#start_year > option').remove();
+        $('#end_year > option').remove();
+        var opt, i;
+        for (i=parseInt(min_year);i<=parseInt(max_year);i++){
+            opt = '<option value="' + String(i) + '">' + String(i) + '</option>';
+            $('#start_year').append(opt);
+            $('#end_year').append(opt);
+        }
     }
 }
 
