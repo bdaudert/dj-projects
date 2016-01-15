@@ -2,8 +2,9 @@
 
         <td>
         <select id="add_degree_days" name="add_degree_days" onchange="show_div_if_true(this,'dd') & update_value(this.value)">
-            <option value="T" {{checkbox_vals.add_degree_days_T_selected}}>Yes</option>
-            <option value="F" {{checkbox_vals.add_degree_days_F_selected}}>No</option>
+            {%for b, name in initial.form_options.add_degree_days%}
+                <option value="{{b}}" {%if initial.add_degree_days == b%}selected{%endif%}>{{name}}</option>
+            {%endfor%}
         </select>
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

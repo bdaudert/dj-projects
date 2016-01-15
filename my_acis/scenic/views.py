@@ -528,6 +528,7 @@ def intraannual(request):
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
         form = DJANGOUtils.set_form(initial,clean = False)
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
+        context['xx'] = form_cleaned
         year_txt_data, year_graph_data, climoData, percentileData = WRCCUtils.get_single_intraannual_data(form_cleaned)
         if not year_txt_data:
             results = {
@@ -575,7 +576,6 @@ def intraannual(request):
         json_file = '%s_%s.json' %(time_stamp,app_name)
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR +json_file, json_dict)
         context['json_file'] = json_file
-
     #Download button pressed
     if 'formDownload' in request.POST:
         form = DJANGOUtils.set_form(request,clean=False)
@@ -615,6 +615,7 @@ def interannual(request):
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
         form = DJANGOUtils.set_form(initial,clean = False)
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
+        context['xx'] = form_cleaned
         element_short = WRCCUtils.elements_to_table_headers(form['element'],form['units'])[0]
         results = {
             'data_indices':[0],

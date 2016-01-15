@@ -1,10 +1,11 @@
        <td>Data Summary: </td>
         <td>
             <select id="data_summary" name="data_summary" onchange="update_value(this.value);">
-            <option value="none" {{checkbox_vals.data_summary_none_selected}}>None, just get raw data</option>
-            <option value="windowed_data" {{checkbox_vals.data_summary_windowed_data_selected}}>Windowed Data</option>
-            <option value="temporal_summary" {{checkbox_vals.data_summary_temporal_summary_selected}}>Temporal</option>
-            <option value="spatial_summary" {{checkbox_vals.data_summary_spatial_summary_selected}}>Spatial</option>
+            {%for ds, name in initial.form_options.data_summary%}
+                <option value="{{ds}}" {%if initial.data_summary == ds%} selected{%endif%}
+                {%if initial.app_name == "single_lister" and ds == 'spatial_summary'%}disabled{%endif%}
+                >{{name}}</option>
+            {%endfor%} 
             </select>
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

@@ -1,8 +1,9 @@
         <td>Show Flags: </td>
         <td>
             <select id="show_flags" name="show_flags" onchange="update_value(this.value)">
-            <option value="F" {{checkbox_vals.show_flags_F_selected}}>No</option>
-            <option value="T" {{checkbox_vals.show_flags_T_selected}}>Yes</option>
+            {%for b, name in initial.form_options.show_flags%}
+                <option value="{{b}}" {%if initial.show_flags == b%}selected{%endif%}>{{name}}</option>
+            {%endfor%} 
             </select>
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

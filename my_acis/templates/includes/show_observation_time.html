@@ -1,8 +1,9 @@
         <td>Show Observation Time: </td>
         <td>
             <select id="show_observation_time" name="show_observation_time" onchange="update_value(this.value)">
-            <option value="F" {{checkbox_vals.show_observation_time_F_selected}}>No</option>
-            <option value="T" {{checkbox_vals.show_observation_time_T_selected}}>Yes</option>
+            {%for b, name in initial.form_options.show_observation_time%}
+                <option value="{{b}}" {%if initial.show_observation_time == b%}selected{%endif%}>{{name}}</option>
+            {%endfor%}
             </select>
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

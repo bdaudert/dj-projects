@@ -1,8 +1,9 @@
     <td>Find stations that have:</td>
     <td>
         <select id="elements_constraints" name="elements_constraints" onchange="update_value(this.value)">
-        <option value="all" {{checkbox_vals.elements_all_selected}}>All of the elements</option>
-        <option value="any" {{checkbox_vals.elements_any_selected}}>Any of the elements</option>
+        {%for c, name in initial.form_options.elements_constraints%}
+            <option value="{{c}}" {%if initial.elements_constraints == c%}selected{%endif%}>{{name}}</option>
+        {%endfor%}
         </select>
     </td>
     <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

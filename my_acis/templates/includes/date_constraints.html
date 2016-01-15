@@ -1,8 +1,9 @@
     <td>Find stations that have data for:</td>
     <td>
         <select id="dates_constraints" name="dates_constraints" onchange="update_value(this.value)">
-        <option value="all" {{checkbox_vals.dates_all_selected}}>All of the dates</option>
-        <option value="any" {{checkbox_vals.dates_any_selected}}>Any of the dates</option>
+        {%for c, name in initial.form_options.dates_constraints%}
+            <option value="{{c}}" {%if initial.elements_constraints == c%}selected{%endif%}>{{name}}</option>
+        {%endfor%}
         </select>
     </td>
     <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

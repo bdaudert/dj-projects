@@ -1,8 +1,9 @@
         <td>Units: </td>
         <td>
-        <select id="units" name="units" onchange="update_value(this.value)">
-            <option value="metric" {{checkbox_vals.units_metric_selected}}>Metric</option>
-            <option value="english" {{checkbox_vals.units_english_selected}}>English</option>
+        <select id="units" name="units" onchange="update_value(this.value)"> 
+        {%for u, name in initial.form_options.units%}
+            <option value="{{u}}" {%if initial.units == u%} selected{%endif%}>{{name}}</option>
+        {%endfor%}
         </select>
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

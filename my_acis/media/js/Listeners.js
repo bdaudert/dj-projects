@@ -212,8 +212,12 @@ $(document).ready(function ($) {
 
     /*
     DATES
-    */
+    */ 
     $('.year').on('change', function(){
+        /*
+        Checks that start year < end year
+        and lies within grid range
+        */
         var which = $(this).attr('id');
         var s_yr_int, e_yr_int, diff;
         var min_year, max_year, min_year_fut=null, max_year_fut=null;
@@ -224,13 +228,15 @@ $(document).ready(function ($) {
         if ($('#min_year_fut').val() != ""){
             min_year_fut = parseInt($('#min_year_fut').val());
         }
+        else{min_year_fut = min_year;}
         if ($('#max_year_fut').val() != ""){
             max_year_fut = parseInt($('#max_year_fut').val());
         }
+        else{max_year_fut = max_year;}
         diff = Math.abs(e_yr_int - s_yr_int);
         if (which == 'start_year'){
             //Switch to fut
-            if (s_yr_int > max_year ){
+            if (s_yr_int > max_year  && e_yr_int < max_year){
                 $('#end_year').val(String(max_year_fut));
             }
             else{   
@@ -246,7 +252,7 @@ $(document).ready(function ($) {
         }
         if (which == 'end_year'){
             //Switch to fut
-            if (e_yr_int > max_year ){
+            if (e_yr_int > max_year  && s_yr_int < max_year){
                 $('#start_year').val(String(min_year_fut));
             }
             else{
@@ -485,12 +491,6 @@ $(document).ready(function ($) {
                 $('#stn_finder').css('display','table-row'); 
             }
         }
-        /*
-        //Set area form field
-        if ( $('#area_type').val() == 'location' ||  $('#area_type').val() == 'station_id'){
-            set_area('area',$(this)); //form_utils function
-        }
-        */
         update_value($(this).val()); //form_utils function
 
         var station_only_els = ['obst','snow','snwd','evap','wdmv'];

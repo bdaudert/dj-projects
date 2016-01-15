@@ -204,14 +204,14 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
 
 function set_year_range(){
     /*Set date range for drop downs for year range*/
+    var today = new Date();
+    var today_str = convertDateToString(today, '-')
+    var today_yr = today_str.slice(0,4); 
+    var max_year, min_year, min_year_fut = null, max_year_fut = null;
     if ($('#area_type').val() == 'location'){
-        var today = new Date();
-        var today_str = convertDateToString(today, '-')
-        var today_yr = today_str.slice(0,4);
-        var start_year = $('#start_year').val(), end_year = $('#end_year').val();
         var grid = $('#grid').val();
-        var min_year = grid_vd[grid][0][0].slice(0,4), max_year = grid_vd[grid][0][1].slice(0,4);
-        //Set bogus future years
+        min_year = grid_vd[grid][0][0].slice(0,4);
+        max_year = grid_vd[grid][0][1].slice(0,4);
         var min_year_fut = min_year, max_year_fut = min_year;
         //Check for projections and set future dates
         if (grid_vd[grid][1].length == 2){
@@ -221,30 +221,32 @@ function set_year_range(){
         //Set new year dropdowns
         $('#start_year > option').remove();
         $('#end_year > option').remove();
-        var opt, i;
-        for (i=parseInt(min_year);i<=parseInt(max_year);i++){
-            opt = '<option value="' + String(i) + '">' + String(i) + '</option>';
-            $('#start_year').append(opt);
-            $('#end_year').append(opt);
-        }
+    }
+    if ($('#area_type').val() == 'station_id'){
+        //AJAX call to get vd of stations
+        min_year = '1850';
+        max_year = today_yr;
+    }
+    //Set new year dropdowns
+    $('#start_year > option').remove();
+    $('#end_year > option').remove();
+    var opt, i;
+    for (i=parseInt(min_year);i<=parseInt(max_year);i++){
+        opt = '<option value="' + String(i) + '">' + String(i) + '</option>';
+        $('#start_year').append(opt);
+        $('#end_year').append(opt);
+    }
+    if (min_year_fut && max_year_fut){
         for (i=parseInt(min_year_fut);i<=parseInt(max_year_fut);i++){
             opt = '<option value="' + String(i) + '">' + String(i) + '</option>';
             $('#start_year').append(opt);
             $('#end_year').append(opt);
-        } 
+        }  
     }
     if ($('#area_type').val() == 'station_id'){
-        //AJAX call to get vd of stations
-        var min_year = '1850'; max_year = today_yr;
-        //Set new year dropdowns
-        $('#start_year > option').remove();
-        $('#end_year > option').remove();
-        var opt, i;
-        for (i=parseInt(min_year);i<=parseInt(max_year);i++){
-            opt = '<option value="' + String(i) + '">' + String(i) + '</option>';
+        opt = '<option value="POR">POR</option>';
             $('#start_year').append(opt);
             $('#end_year').append(opt);
-        }
     }
 }
 

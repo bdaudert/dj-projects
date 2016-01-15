@@ -103,7 +103,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <div id='formData'>
     <form id="tableDataForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('tableDownloadForm', $(this).attr('id'))">{% csrf_token %}
     <table class="form" id="tableData" >
-    <tr style="display:table-row">{% include 'includes/sf_select_area.html'%}</tr>
+    <tr style="display:table-row">{% include 'includes/area_select.html'%}</tr>
     <tr style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>    
     <tr style="display:table-row">{% include 'includes/elements.html'%}</tr>
     <tr style="display:table-row"  valign="bottom">{% include 'includes/element_constraints.html'%}</tr>
@@ -231,6 +231,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
         <tr class="data_sf" id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
         <tr class="data_sf" id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</tr>
     {%endif%}
+    <tr class="data_sf" style="display:table-row;">{% include 'includes/units.html'%}</tr>
     <tr class="data_sf" style="display:table-row;">{% include 'includes/data_format_area.html'%}</tr>
     {%if initial.data_format == "xl" or initial.data_format == "html"%}
         <tr id="delim" class="data_sf" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
