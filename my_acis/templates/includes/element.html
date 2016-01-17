@@ -2,10 +2,11 @@
     <td>Element: </td>
     <td>
         <select id="element" name="element">
-        {%for el, name in initial.form_options.element%}
-            <option value="{{el}}" 
-                {%if initial.element == el%}selected{%endif%}
-                {%if initial.data_type == "grid" and el|is_in:'obst,snow,snwd,evap,wdmv'%}disabled{%endif%}
+        {%for opt, name in initial.form_options.element%}
+            <option value="{{opt}}" 
+                {%if initial.element == opt%}selected{%endif%}
+                {%if initial.data_type == "grid" and opt|is_in:'obst,snow,snwd,evap,wdmv,pet,dtr'%}disabled{%endif%}
+                {%if initial.app_name == "data_comparison" and opt|is_in:'obst,snow,snwd,evap,wdmv,pet,dtr'%}disabled{%endif%}
             >{{name}}</option> 
         {%endfor%}
     </td>

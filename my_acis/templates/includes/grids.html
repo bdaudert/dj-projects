@@ -2,20 +2,20 @@
         <td>Grid: </td>
         <td>
             <select class="grid" id="grid" name="grid">
-            {% for grid_id, name in initial.form_options.grid%}
-                {%if grid_id == "1"%}
+            {% for opt, name in initial.form_options.grid%}
+                {%if opt == "1"%}
                     <optgroup label="Gridded datasets interpolated from historic station data">
                 {%endif%}
-                {%if grid_id == "22"%}
+                {%if opt == "22"%}
                     <optgroup label="LOCA CMIP5 datasets">
                 {%endif%}
-                {%if grid_id == "4"%}
+                {%if opt == "4"%}
                     <optgroup label="NARCAPP datasets">
                 {%endif%}
 
-                <option value="{{grid_id}}" {%if initial.grid == grid_id%} selected{%endif%}>{{name}}</option>
+                <option value="{{opt}}" {%if initial.grid == opt%} selected{%endif%}>{{name}}</option>
             
-                {%if grid_id|is_in:'21,41,16'%}
+                {%if opt|is_in:'21,41,16'%}
                 </optgroup>
                 {%endif%}
             {%endfor%}

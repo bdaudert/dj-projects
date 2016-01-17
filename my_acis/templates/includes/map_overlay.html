@@ -1,8 +1,9 @@
         <td>Overlays:</td>
         <td>
             <select id="map_ol" name="map_ol" onchange="update_value(this.value)">
-            <option value="state" {{checkbox_vals.map_ol_state_selected}}>State</option>
-            <option value="county" {{checkbox_vals.map_ol_county_selected}}>County</option>
+            {%for opt, name in initial.form_options.map_overlay%}
+                <option value="{{opt}}" {%if initial.map_overlay == opt%}selected{%endif%}>{{name}}</option>
+            {%endfor%} 
             </select>
         </td>
         <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

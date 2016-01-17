@@ -1,9 +1,9 @@
         <td>Image Size: </td>
         <td>
             <select id="image_size" name="image_size" onchange="update_value(this.value)">
-            <option value="small" {{checkbox_vals.image_size_small_selected}}>Small</option>
-            <option value="medium" {{checkbox_vals.image_size_medium_selected}}>Medium</option>
-            <option value="large" {{checkbox_vals.image_size_large_selected}}>Large</option>
+            {%for opt, name in initial.form_options.image_size%}
+                <option value="{{opt}}" {%if initial.image_size == opt%}selected{%endif%}>{{name}}</option>
+            {%endfor%} 
             </select>
         </td>
         <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

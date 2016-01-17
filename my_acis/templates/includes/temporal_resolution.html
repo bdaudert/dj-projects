@@ -1,9 +1,9 @@
         <td>Temporal Resolution: </td>
         <td>
             <select id="temporal_resolution" name="temporal_resolution">
-            <option value="dly" {{checkbox_vals.temporal_resolution_dly_selected}}>Daily</option>
-            <option value="mly" {{checkbox_vals.temporal_resolution_mly_selected}}>Monthly (PRISM)</option>
-            <option value="yly" {{checkbox_vals.temporal_resolution_yly_selected}}>Yearly (PRISM)</option>
+            {% for opt, name in initial.form_options.temporal_resolution%}
+            <option value="{{opt}}" {%if initial.temporal_resolution == opt%} selected{%endif%}>{{name}}</option>
+            {%endfor%}
             </select>
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

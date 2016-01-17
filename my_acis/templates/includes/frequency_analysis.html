@@ -1,7 +1,10 @@
     <td>
         <select id="frequency_analysis" name="frequency_analysis">
-        <!--<option value="T" {{checkbox_vals.frequency_analysis_T_selected}}>Yes</option>-->
-        <option value="F" {{checkbox_vals.frequency_analysis_F_selected}}>No</option>
+           {%for opt, name in initial.form_options.frequency_analysis%}
+            <option value="{{opt}}" 
+                {%if initial.frequency_analysis == opt%}selected{%endif%}
+            >{{name}}</option>
+        {%endfor%} 
         </select>
     </td>
     <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

@@ -2,10 +2,9 @@
     <td>Calculation: </td>
     <td>
         <select id="calculation" name="calculation">
-        <option value="cumulative" {{checkbox_vals.calculation_cumulative_selected}}
-        {%if initial.element|is_in:"maxt,mint,avgt,dtr,obst,snwd,gdd,hdd,cdd,wdmv"%} disabled {%endif%}
-        >Cumulative</option>
-        <option value="values" {{checkbox_vals.calculation_values_selected}}>Values</option>
+         {%for opt, name in initial.form_options.calculation%}
+            <option value="{{opt}}" {%if initial.calculation == opt%}selected{%endif%}>{{name}}</option>
+        {%endfor%} 
         </select>
     </td>
     <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

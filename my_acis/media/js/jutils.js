@@ -7,7 +7,7 @@ String.prototype.rsplit = function(sep, maxsplit) {
 function convertDateToString(date, sep){
         yr = String(date.getFullYear());
         mon = String(date.getMonth() + 1);
-        day = String(date.getDay());
+        day = String(date.getDate());
         if (String(mon).length == 1){
             mon = '0' + mon;
         }

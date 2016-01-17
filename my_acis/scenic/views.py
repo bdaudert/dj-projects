@@ -307,7 +307,7 @@ def single_point_prods(request):
         user_params = WRCCUtils.form_to_display_list(get_params,request.GET)
         context['user_params'] = user_params
         for app in ['single_lister', 'monthly_summaries', 'climatology','data_comparison', 'interannual', 'intraannual']:
-            initial, checkbox_vals = DJANGOUtils.set_initial(request, app)
+            initial= DJANGOUtils.set_initial(request, app)
             p_str = WRCCUtils.set_url_params(initial)
             context['url_params_' + app] =  p_str
 
@@ -322,7 +322,7 @@ def multi_point_prods(request):
     if request.method == 'GET' and ('elements' in request.GET or 'element' in request.GET):
         #set link params
         for app in ['multi_lister', 'spatial_summary', 'temporal_summary']:
-            initial, checkbox_vals = DJANGOUtils.set_initial(request, app)
+            initial = DJANGOUtils.set_initial(request, app)
             p_str = WRCCUtils.set_url_params(initial)
             context['url_params_' + app] =  p_str
     return render_to_response(url, context, context_instance=RequestContext(request))
@@ -406,8 +406,8 @@ def single_lister(request):
         'title': settings.APPLICATIONS[app_name][0]
     }
     url = settings.APPLICATIONS[app_name][2]
-    initial, checkbox_vals = DJANGOUtils.set_initial(request,app_name)
-    context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
+    initial = DJANGOUtils.set_initial(request,app_name)
+    context['initial'] = initial
     #Data request submitted
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
@@ -523,8 +523,8 @@ def intraannual(request):
         'title': settings.APPLICATIONS[app_name][0]
     }
     url = settings.APPLICATIONS[app_name][2]
-    initial, checkbox_vals = DJANGOUtils.set_initial(request,app_name)
-    context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
+    initial = DJANGOUtils.set_initial(request,app_name)
+    context['initial'] = initial
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
         form = DJANGOUtils.set_form(initial,clean = False)
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
@@ -610,8 +610,8 @@ def interannual(request):
         'title': settings.APPLICATIONS[app_name][0]
     }
     url = settings.APPLICATIONS[app_name][2]
-    initial, checkbox_vals = DJANGOUtils.set_initial(request,app_name)
-    context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
+    initial = DJANGOUtils.set_initial(request,app_name)
+    context['initial'] = initial
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
         form = DJANGOUtils.set_form(initial,clean = False)
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
@@ -685,8 +685,8 @@ def multi_lister(request):
         'title': settings.APPLICATIONS[app_name][0]
     }
     url = settings.APPLICATIONS[app_name][2]
-    initial, checkbox_vals = DJANGOUtils.set_initial(request,app_name)
-    context['initial'] = initial; context['checkbox_vals'] =  checkbox_vals
+    initial = DJANGOUtils.set_initial(request,app_name)
+    context['initial'] = initial
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         form = DJANGOUtils.set_form(initial,clean=False)
         form_cleaned = DJANGOUtils.set_form(initial)
@@ -773,7 +773,7 @@ def multi_lister(request):
     #Shape file upload
     if 'formShapeFile' in request.POST:
         results = {}
-        #initial, checkbox_vals = DJANGOUtils.set_initial(request, app_name)
+        #initial = DJANGOUtils.set_initial(request, app_name)
         #shape_file = request.FILES.get('file')
         files = request.FILES.getlist('files')
         feature_id = request.POST['feature_id']
@@ -811,24 +811,20 @@ def multi_lister(request):
         initial['area_type_value'] = poly_ll
         initial['area_type_lable'] = 'Custom Shape'
         context['initial'] = initial
-        for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys() + ['none']:
-            checkbox_vals[area_type + '_selected'] =''
-        checkbox_vals['shape_selected'] = 'selected'
-        context['checkbox_vals'] = checkbox_vals
         context['need_polygon_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
 
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
-        initial, checkbox_vals = DJANGOUtils.set_initial(request,'map_overlay')
+        initial = DJANGOUtils.set_initial(request,'map_overlay')
         context[initial['overlay_state'] + '_selected'] = 'selected'
         #overide kml_file_path
         for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
             kml_file_path = DJANGOUtils.create_kml_file(at, initial['overlay_state'])
             if initial['area_type'] == at:
                 initial['kml_file_path'] = kml_file_path
-        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        context['initial'] = initial
 
     #Download button pressed
     if 'formDownload' in request.POST:
@@ -870,15 +866,15 @@ def temporal_summary(request):
     if json_file is not None:
         json_data = WRCCUtils.load_json_data_from_file(settings.TEMP_DIR + json_file)
         if not json_data or not 'search_params' in json_data.keys():
-            initial,checkbox_vals = DJANGOUtils.set_initial(request,app_name)
+            initial = DJANGOUtils.set_initial(request,app_name)
         else:
-            initial,checkbox_vals = DJANGOUtils.set_initial(json_data['search_params'],app_name)
+            initial = DJANGOUtils.set_initial(json_data['search_params'],app_name)
     else:
-        initial,checkbox_vals = DJANGOUtils.set_initial(request,app_name)
+        initial = DJANGOUtils.set_initial(request,app_name)
     #Plot Options
-    initial_plot, checkbox_vals_plot = set_map_plot_options(request)
-    join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
-    context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+    initial_plot = DJANGOUtils.set_map_plot_options(request)
+    join_initials(initial, initial_plot)
+    context['initial'] = initial
     if initial['area_type'] != 'bounding_box':
         context['hide_bbox_map'] = True
     #Link from other page
@@ -893,10 +889,10 @@ def temporal_summary(request):
         form = DJANGOUtils.set_form(request, clean=False)
         form_cleaned = DJANGOUtils.set_form(request)
         #Set initials
-        initial,checkbox_vals = DJANGOUtils.set_initial(form, app_name)
-        initial_plot, checkbox_vals_plot = set_map_plot_options(form)
-        join_initials(initial, initial_plot, checkbox_vals, checkbox_vals_plot)
-        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        initial = DJANGOUtils.set_initial(form, app_name)
+        initial_plot = DJANGOUtils.set_map_plot_options(form)
+        join_initials(initial, initial_plot)
+        context['initial'] = initial
         header_keys = WRCCUtils.set_display_keys(app_name, form_cleaned)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
 
@@ -975,8 +971,8 @@ def spatial_summary(request):
         'title': settings.APPLICATIONS[app_name][0]
     }
     url = settings.APPLICATIONS[app_name][2]
-    initial,checkbox_vals = DJANGOUtils.set_initial(request,app_name)
-    context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+    initial  = DJANGOUtils.set_initial(request,app_name)
+    context['initial'] = initial
 
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         #Set form and initial
@@ -1087,7 +1083,7 @@ def spatial_summary(request):
     #Shape file upload
     if 'formShapeFile' in request.POST:
         results = {}
-        #initial, checkbox_vals = DJANGOUtils.set_initial(request, 'multi_lister')
+        #initial = DJANGOUtils.set_initial(request, 'multi_lister')
         shape_file = request.FILES.get('file')
         #files = request.FILES.getlist('files')
         feature_id = request.POST['feature_id']
@@ -1115,24 +1111,20 @@ def spatial_summary(request):
         initial['area_type_value'] = poly_ll
         initial['area_type_lable'] = 'Custom Shape'
         context['initial'] = initial
-        for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys() + ['none']:
-            checkbox_vals[area_type + '_selected'] =''
-        checkbox_vals['shape_selected'] = 'selected'
-        context['checkbox_vals'] = checkbox_vals
         context['need_polygon_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
 
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
-        initial, checkbox_vals = DJANGOUtils.set_initial(request,'map_overlay')
+        initial = DJANGOUtils.set_initial(request,'map_overlay')
         context[initial['overlay_state'] + '_selected'] = 'selected'
         #overide kml_file_path
         for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
             kml_file_path = DJANGOUtils.create_kml_file(at, initial['overlay_state'])
             if initial['area_type'] == at:
                 initial['kml_file_path'] = kml_file_path
-        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        context['initial'] = initial
 
     #Download button pressed
     if 'formDownload' in request.POST:
@@ -1183,8 +1175,8 @@ def station_finder(request):
     call(["touch", settings.TEMP_DIR + "Empty.json"])
     #Set up initial map (NV stations)
     #context['station_json'] = 'NV_stn.json'
-    initial,checkbox_vals = DJANGOUtils.set_initial(request, app_name)
-    context['initial'] = initial;context['checkbox_vals']=checkbox_vals
+    initial = DJANGOUtils.set_initial(request, app_name)
+    context['initial'] = initial
     #Set up maps if needed
     if request.method == "GET" and not 'elements' in request.GET:
         #Generate initial map
@@ -1252,7 +1244,7 @@ def station_finder(request):
     #Shape file upload
     if 'formShapeFile' in request.POST:
         results = {}
-        #initial, checkbox_vals = DJANGOUtils.set_initial(request, 'multi_lister')
+        #initial = DJANGOUtils.set_initial(request, 'multi_lister')
         shape_file = request.FILES.get('file')
         #files = request.FILES.getlist('files')
         feature_id = request.POST['feature_id']
@@ -1280,18 +1272,14 @@ def station_finder(request):
         initial['area_type_value'] = poly_ll
         initial['area_type_lable'] = 'Custom Shape'
         context['initial'] = initial
-        for area_type in WRCCData.SEARCH_AREA_FORM_TO_ACIS.keys() + ['none']:
-            checkbox_vals[area_type + '_selected'] =''
-        checkbox_vals['shape_selected'] = 'selected'
-        context['checkbox_vals'] = checkbox_vals
         context['need_polygon_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
 
     #Download data for all sations displayed
     #Request will be processed offline
     if 'formDownload' in request.POST:
-        initial, checkbox_vals = DJANGOUtils.set_initial(request,'sf_download')
-        context['initial'] = initial; context['checkbox_vals']= checkbox_vals
+        initial = DJANGOUtils.set_initial(request,'sf_download')
+        context['initial'] = initial
         context[initial['overlay_state'] + '_selected'] = 'selected'
         form_cleaned = DJANGOUtils.set_form(initial, clean=True)
         fields_to_check = ['user_email']
@@ -1313,29 +1301,17 @@ def station_finder(request):
     #Overlay maps
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
-        initial, checkbox_vals = DJANGOUtils.set_initial(request,'map_overlay')
+        initial = DJANGOUtils.set_initial(request,'map_overlay')
         context[initial['overlay_state'] + '_selected'] = 'selected'
         #overide kml_file_path
         for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
             kml_file_path = DJANGOUtils.create_kml_file(at, initial['overlay_state'])
             if initial['area_type'] == at:
                 initial['kml_file_path'] = kml_file_path
-        context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+        context['initial'] = initial
 
     return render_to_response(url, context, context_instance=RequestContext(request))
 
-#######################
-#Mixed Data Applications
-######################
-def likelihood(request):
-    context = {
-        'title': settings.APPLICATIONS['likelihood'][0]
-    }
-    url = settings.APPLICATIONS['likelihood'][2]
-
-    initial,checkbox_vals = set_combined_analysis_initial(request,'likelihood')
-    context['initial'] = initial; context['checkbox_vals'] = checkbox_vals
-    return render_to_response(url, context, context_instance=RequestContext(request))
 
 def data_comparison(request):
     context = {
@@ -1343,8 +1319,8 @@ def data_comparison(request):
     }
     url = settings.APPLICATIONS['data_comparison'][2]
 
-    initial, checkbox_vals = DJANGOUtils.set_initial(request,'data_comparison')
-    context['initial'] = initial; context['checkbox_vals'] = checkbox_vals
+    initial = DJANGOUtils.set_initial(request,'data_comparison')
+    context['initial'] = initial
     if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
         context['form_message'] = True
         form = DJANGOUtils.set_form(request, clean=False)
@@ -1375,8 +1351,9 @@ def monthly_summaries(request):
     }
     url = settings.APPLICATIONS[app_name][2]
 
-    initial,checkbox_vals = DJANGOUtils.set_initial(request, app_name)
-    context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+    initial = DJANGOUtils.set_initial(request, app_name)
+    context['initial'] = initial
+
     #Set graph and plot options
     #Time Serie Table Generation and graph if desired
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
@@ -1498,8 +1475,8 @@ def climatology(request):
     }
     url = settings.APPLICATIONS[app_name][2]
 
-    initial, checkbox_vals = DJANGOUtils.set_initial(request, app_name)
-    context['initial'] = initial;context['checkbox_vals'] = checkbox_vals
+    initial= DJANGOUtils.set_initial(request, app_name)
+    context['initial'] = initial
     if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
         form = DJANGOUtils.set_form(request,clean=False)
         form_cleaned = DJANGOUtils.set_form(request,clean=True)
@@ -2005,41 +1982,7 @@ def join_dicts(d, d_1):
         d[key]=val
 
 
-def join_initials(initial,initial_2, checkbox_vals,checkbox_vals_2):
+def join_initials(initial,initial_2):
     #combine the graph options with the plot options
     for key, val in initial_2.iteritems():
         initial[key] = val
-    for key, val in checkbox_vals_2.iteritems():
-        checkbox_vals[key] = val
-
-def set_map_plot_options(request):
-    initial = {}
-    checkbox_vals = {}
-    Get = DJANGOUtils.set_GET(request)
-    initial['image_size'] = Get('image_size', 'medium')
-    initial['level_number'] = Get('level_number', '5')
-    initial['cmap'] = Get('cmap', 'rainbow')
-    initial['cmaps'] = WRCCData.CMAPS
-    initial['map_ol'] = Get('map_ol', 'state')
-    initial['interpolation'] = Get('interpolation', 'cspline')
-    initial['projection'] = Get('projection', 'lcc')
-    #set the check box values
-    for image_size in ['small', 'medium', 'large', 'larger', 'extra_large', 'wide', 'wider', 'widest']:
-        checkbox_vals['image_size' + '_' + image_size + '_selected'] = ''
-        if initial['image_size'] == image_size:
-            checkbox_vals['image_size' + '_' + image_size + '_selected'] = 'selected'
-    for mo in ['county', 'state']:
-        checkbox_vals['map_ol' + mo + '_selected'] = ''
-        if initial['map_ol'] == mo:
-            checkbox_vals['map_ol' + mo + '_selected'] = 'selected'
-    for ip in ['cspline', 'none']:
-        checkbox_vals['interpolation' + ip + '_selected'] = ''
-        if initial['interpolation'] == ip:
-            checkbox_vals['interpolation' + ip + '_selected'] = 'selected'
-    for p in ['lcc']:
-        checkbox_vals['projection' + p + '_selected'] = ''
-        if initial['projection'] == p:
-            checkbox_vals['projection' + p + '_selected'] = 'selected'
-    return initial, checkbox_vals
-
-

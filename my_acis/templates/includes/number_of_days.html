@@ -1,9 +1,11 @@
     <td>Number of Days: </td>
     <td>
         <select id="less_greater_or_between" name="less_greater_or_between">
-        <option value="l" {{checkbox_vals.l_selected}}>Less than</option>
-        <option value="g" {{checkbox_vals.g_selected}}>Greater than</option>
-        <option value="b" {{checkbox_vals.b_selected}}>Between</option>
+        {% for opt, name in initial.form_options.less_greater_or_between%}
+                <option value="{{opt}}" 
+                {%if initial.less_greater_or_between == opt%} selected{%endif%}
+                >{{name}}</option>
+            {%endfor%} 
         </select>
     </td>
     <td><img alt="Click me!" title="Help" src="/csc/media/img/QMark.png" class="trigger">

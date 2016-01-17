@@ -1,26 +1,9 @@
         <td id="Color Map">Color Map:</td>
         <td>
         <select id="cmap" name="cmap" onchange="update_value(this.value);">
-            {% for cmap in initial.cmaps %}
-            <option value="{{cmap}}" {%if initial.cmap == cmap %}selected {%endif%}>{{cmap}}</option>
+            {% for opt, name in initial.form_options.cmap %}
+            <option value="{{opt}}" {%if initial.cmap == opt %}selected {%endif%}>{{name}}</option>
             {%endfor%}
-            <!--
-            <option value="Rainbow" {{checkbox_vals.cmap_Rainbow_selected}}>Rainbow</option>
-            <option value="Spectral" {{checkbox_vals.cmap_Spectral_selected}}>Spectral</option>
-            <option value="Prism" {{checkbox_vals.cmap_Prism_selected}}>Prism</option>
-            <option value="YlGn" {{checkbox_vals.cmap_YlGn_selected}}>Yellow to Green</option>
-            <option value="YlGnBu" {{checkbox_vals.cmap_YlGnBu_selected}}>Yellow to Green to Blue</option>
-            <option value="RdBu" {{checkbox_vals.cmap_RdBu_selected}}>Red to Blue</option>
-            <option value="RdYlB" {{checkbox_vals.cmap_RdYlBu_selected}}>Red to Yellow to Blue</option>    
-            <option value="Greys" {{checkbox_vals.cmap_Greys_selected}}>Greys</option>
-            <option value="Blues" {{checkbox_vals.cmap_Blues_selected}}>Blues</option>
-            <option value="Reds" {{checkbox_vals.cmap_Reds_selected}}>Reds</option>
-            <option value="Greens" {{checkbox_vals.cmap_Greens_selected}}>Greens</option>
-            <option value="gist_earth" {{checkbox_vals.cmap_gist_earth_selected}}>gist_earth</option>
-            <option value="gist_ncar" {{checkbox_vals.cmap_gist_ncar_selected}}>gist_ncar</option>
-            <option value="summer" {{checkbox_vals.cmap_summer_selected}}>summer</option>
-            <option value="winter" {{checkbox_vals.cmap_winter_selected}}>winter</option>
-            -->
         </select>
         </td>
         <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

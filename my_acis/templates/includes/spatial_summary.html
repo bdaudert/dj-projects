@@ -1,11 +1,15 @@
-<td>Spatial summary: </td>
+    {%load my_scenic_filters%}
+    <td>Spatial summary: </td>
         <td>
             <select id="spatial_summary" name="spatial_summary" onchange="update_value(this.value)">
-            <option value="max" {{checkbox_vals.spatial_summary_max_selected}}>Maximum</option>
-            <option value="min" {{checkbox_vals.spatial_summary_min_selected}}>Minimum</option>
-            <option value="mean" {{checkbox_vals.spatial_summary_mean_selected}}>Mean</option>
-            <option value="median" {{checkbox_vals.spatial_summary_median_selected}}>Median</option>
-            <option value="sum" {{checkbox_vals.spatial_summary_sum_selected}}>Sum</option>
+            {% for opt, name in initial.form_options.spatial_summary%}
+                <option value="{{opt}}" 
+                {%if initial.spatial_summary == opt%} selected{%endif%}
+                {%if opt == "median"%}
+                    {%if initial.app_name|is_in:'single_lister,multi_lister,spatial_summary'%} disabled{%endif%}
+                {%endif%}
+                >{{name}}</option>
+            {%endfor%} 
             </select>
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

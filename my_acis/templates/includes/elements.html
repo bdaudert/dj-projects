@@ -2,10 +2,10 @@
         <td id="Elements">Elements: </td>
         <td>
             <select id="elements" name="elements" multiple>
-            {%for el, name in initial.form_options.elements%}
-                <option value="{{el}}" 
-                    {%if el|is_in:initial.elements%}selected{%endif%}
-                    {%if initial.data_type == "grid" and el|is_in:'obst,snow,snwd,evap,wdmv'%}disabled{%endif%}
+            {%for opt, name in initial.form_options.elements%}
+                <option value="{{opt}}" 
+                    {%if opt|is_in:initial.elements%}selected{%endif%}
+                    {%if initial.data_type == "grid" and opt|is_in:'obst,snow,snwd,evap,wdmv'%}disabled{%endif%}
                 >{{name}}</option>
             {%endfor%}
             </select>

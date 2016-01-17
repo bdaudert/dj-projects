@@ -1,7 +1,7 @@
 function convertDate(date, sep){
         var yr = String(date.getFullYear());
         var mon = String(date.getMonth()+1);
-        var day = String(date.getDay());
+        var day = String(date.getDate());
         if (String(mon).length == 1){
             mon = '0' + mon;
         }
@@ -12,7 +12,6 @@ function convertDate(date, sep){
 }
 var tdy = new Date();
 var tdy_string = convertDate(tdy,'-');
-
 var grid_vd = {
     '1':[['1950-01-01',tdy_string],[]],
     '3':[['2007-01-01',tdy_string],[]],

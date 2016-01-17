@@ -1,11 +1,9 @@
         <td>Delimiter:</td>
         <td>
         <select id="delimiter" name="delimiter" onchange="update_value(this.value)">
-        <option value="comma" {{checkbox_vals.comma_selected}}>Comma (,)</option>
-        <option value="tab" {{checkbox_vals.tab_selected}}>Tab (    )</option>
-        <option value="space" {{checkbox_vals.space_selected}}>Space ( )</option>
-        <option value="colon" {{checkbox_vals.colon_selected}}>Colon (:)</option>
-        <option value="pipe" {{checkbox_vals.pipe_selected}}>pipe(|)</option>
+        {%for opt, name in initial.form_options.delimiter%}
+            <option value="{{opt}}" {%if initial.delimiter == opt%}selected{%endif%}>{{name}}</option>
+        {%endfor%}
         </select>
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

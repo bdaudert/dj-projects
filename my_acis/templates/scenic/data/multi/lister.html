@@ -65,7 +65,7 @@
     <div id='formData'>
         <form method="post" id="tableDataForm" action="" onsubmit="show_loading() & setHiddenFields('overlayForm', $(this).attr('id'))">{% csrf_token %}
         <table class="form" id="tableData">
-        <tr class="station_grid" style="display:table-row">{% include 'includes/multi_select_area.html'%}</tr>
+        <tr class="station_grid" style="display:table-row">{% include 'includes/area_select.html'%}</tr>
         <tr class="station_grid" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
         <tr class="station_grid" style="display:table-row">{% include 'includes/data_type.html'%}</tr>
         {%if initial.data_type == "grid"%}

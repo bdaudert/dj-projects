@@ -703,7 +703,7 @@ $(document).ready(function ($) {
             start = $('#start_year').val();
             end = $('#end_year').val();
             p = 'year';
-        } 
+        }
         //Change start/end years
         var app_name = $('#app_name').val();
         if (app_name.inList(['interannual','intraannual','monthly_summaries','climatology'])){
@@ -712,17 +712,20 @@ $(document).ready(function ($) {
         }
         //Single app specific
         //Show/Hide grid form field and station finder form_field
+        var date_vals = null;
         if ($(this).val() == 'station_id'){
             $('#grid_type').css('display','none');
             $('#stn_finder').css('station_finder','table-row');
-            var date_vals = set_dates_for_station($('#station_id').val(), start, end,p);
+            date_vals = set_dates_for_station($('#station_id').val(), start, end,p);
         }
         if ($(this).val() == 'location'){
             $('#grid_type').css('display','table-row');
-            var date_vals = set_dates_for_grid($('#grid').val(),start, end,p);
+            date_vals = set_dates_for_grid($('#grid').val(),start, end,p);
         }
-        $('#start_' + p).val(date_vals.start);
-        $('#end_' + p).val(date_vals.end);
+        if (date_vals){
+            $('#start_' + p).val(date_vals.start);
+            $('#end_' + p).val(date_vals.end);
+        }
     });
   
     /*

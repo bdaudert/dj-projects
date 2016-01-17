@@ -645,7 +645,7 @@ class SodxtrmtsForm(SodForm):
         self.fields['end_year'] = MyYearField(max_length=4, min_length=3, initial=kwargs.get('initial', {}).get('end_year', '2013'), help_text='Latest end date. Format: yyyy or "POR" for period of record.')
         self.fields['statistic'] = forms.ChoiceField(choices=WRCCData.SXTR_ANALYSIS_CHOICES, initial=kwargs.get('initial', {}).get('statistic', 'msum'), help_text = 'Desired monthly characteristic of the selected climate element')
         self.fields['max_missing_days'] = forms.IntegerField(initial=kwargs.get('initial', {}).get('max_missing_days', 5), help_text=HELP_TEXTS['max_missing_days'])
-        self.fields['start_month'] = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial=kwargs.get('initial', {}).get('start_month', '01'),help_text = 'Define a year as starting with this month.')
+        self.fields['start_month'] = forms.ChoiceField(choices=WRCCData.MONTH_TUPLE, initial=kwargs.get('initial', {}).get('start_month', '1'),help_text = 'Define a year as starting with this month.')
         self.fields['departures_from_averages']= forms.ChoiceField(choices = ([('T', 'Yes'),('F', 'No'),]), initial = kwargs.get('initial', {}).get('departures_from_averages', 'F'), help_text = 'Express results as departures from column averages.')
         self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('F', 'No'),]), initial = kwargs.get('initial', {}).get('frequency_analysis', 'F'), help_text='Perform Frequency Analysis. Coming Soon!')
 
@@ -660,9 +660,9 @@ class SodxtrmtsForm(SodForm):
 
 
 class SodxtrmtsVisualizeForm(forms.Form):
-    #months = forms.MultipleChoiceField(widget=CheckboxSelectMultiple, choices=WRCCData.MONTH_CHOICES, initial=WRCCData.MONTH_CHOICES[0], help_text = 'Choose one or more months to analyze.')
-    start_month = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial='01', required=False, help_text = 'Start the visualization on this month.')
-    end_month = forms.ChoiceField(choices=WRCCData.MONTH_CHOICES, initial='02', required=False, help_text = 'End the visualization on this month.')
+    #months = forms.MultipleChoiceField(widget=CheckboxSelectMultiple, choices=WRCCData.MONTH_TUPLE, initial=WRCCData.MONTH_TUPLE[0], help_text = 'Choose one or more months to analyze.')
+    start_month = forms.ChoiceField(choices=WRCCData.MONTH_TUPLE, initial='1', required=False, help_text = 'Start the visualization on this month.')
+    end_month = forms.ChoiceField(choices=WRCCData.MONTH_TUPLE, initial='2', required=False, help_text = 'End the visualization on this month.')
     summary = forms.ChoiceField(choices=WRCCData.SXTR_SUMMARY_CHOICES, initial='mean', help_text='How to summarize the months.')
     show_running_mean = forms.ChoiceField(choices=([('F', 'No'), ('T', 'Yes')]), required=False, initial='T', help_text='Show running mean.')
     running_mean_years = forms.IntegerField(initial=9,required=False, help_text='Number of years over which to compute the running mean.')

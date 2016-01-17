@@ -80,27 +80,6 @@
         <tr class="station_grid" style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/end_date.html'%}</tr> 
         <tr id="spat_summary" style="display:table-row">{% include 'includes/spatial_summary.html'%}</tr>
-        <tr style="display:none;">
-        <td colspan="3" onClick="show_hide_opts('plOpts')"><b><u>Plot Options</u></b>
-        <input type="hidden" name="show_plot_opts" id="show_plot_opts" value={{initial.show_plot_opts}}>
-        </td></tr>
-        <tr class="plOpts" style="display:none">{% include 'includes/image_size.html'%}</tr>
-        <tr class="plOpts" style="display:none">{% include 'includes/show_major_grid.html'%}</tr>
-        <tr class="plOpts" style="display:none">{% include 'includes/show_minor_grid.html'%}</tr>
-        <tr class="plOpts" style="display:none">{% include 'includes/show_connector_line.html'%}</tr>
-        {%if initial.connector_line == "T" and initial.show_plot_opts == "T"%}
-            <tr valign="top" class="plOpts" id="cl_width">{% include 'includes/connector_line_width.html'%}</tr>
-        {%else%}
-            <tr valign="top" class="plOpts" id="cl_width" style="display:none;">{% include 'includes/connector_line_width.html'%}</tr>
-        {%endif%}
-        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/show_markers.html'%}</tr>
-        {%if initial.markers == "T" and initial.show_plot_opts == "T"%}
-            <tr valign="top" class="plOpts" id="mk_type">{% include 'includes/marker_type.html'%}</tr>
-        {%else%}
-            <tr valign="top" class="plOpts" id="mk_type" style="display:none;">{% include 'includes/marker_type.html'%}</tr>
-        {%endif%}
-        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/vertical_axis_min.html'%}</tr>
-        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/vertical_axis_max.html'%}</tr>
         </table>
         <input type="hidden" name="app_name" value="spatial_summary">
         <!--Hidden chart vars-->

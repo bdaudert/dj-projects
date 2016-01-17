@@ -1,9 +1,9 @@
        <td>Data Summary: </td>
         <td>
             <select id="data_summary" name="data_summary" onchange="update_value(this.value);">
-            {%for ds, name in initial.form_options.data_summary%}
-                <option value="{{ds}}" {%if initial.data_summary == ds%} selected{%endif%}
-                {%if initial.app_name == "single_lister" and ds == 'spatial_summary'%}disabled{%endif%}
+            {%for opt, name in initial.form_options.data_summary%}
+                <option value="{{opt}}" {%if initial.data_summary == opt%} selected{%endif%}
+                {%if initial.app_name == "single_lister" and opt == 'spatial_summary'%}disabled{%endif%}
                 >{{name}}</option>
             {%endfor%} 
             </select>

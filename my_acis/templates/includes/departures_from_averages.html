@@ -1,8 +1,11 @@
     <td>Departures from Averages: </td>
     <td>
         <select id="departures_from_averages" name="departures_from_averages">
-        <option value="F" {{checkbox_vals.departures_from_averages_F_selected}}>No</option>
-        <option value="T" {{checkbox_vals.departures_from_averages_T_selected}}>Yes</option>
+        {%for opt, name in initial.form_options.departures_from_averages%}
+            <option value="{{opt}}" 
+                {%if initial.departures_from_averages == opt%}selected{%endif%}
+            >{{name}}</option>
+        {%endfor%}
         </select>
     </td>
     <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

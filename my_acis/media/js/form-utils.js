@@ -107,7 +107,6 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
     var ds = new Date(s), de = new Date(e);
     //Funkyness with js dates
     //lag in data
-    //today.setDate(today.getDate() - 1);
     var ds_past = new Date(grid_vd[grid][0][0]);
     $('#min_year').val(grid_vd[grid][0][0].slice(0,4));
     //Update hidden var

@@ -1,16 +1,15 @@
+         {%load my_scenic_filters%}
         <td>Temporal summary: </td>
         <td>
             <select id="temporal_summary" name="temporal_summary" onchange="update_value(this.value)">
-            <option value="max" {{checkbox_vals.temporal_summary_max_selected}}>Maximum</option>
-            <option value="min" {{checkbox_vals.temporal_summary_min_selected}}>Minimum</option>
-            <option value="mean" {{checkbox_vals.temporal_summary_mean_selected}}>Mean</option>
-            {%if initial.app_name == "single_lister" or  initial.app_name == "multi_lister" or initial.app_name == "temporal_summary"%}
-            <option value="median" {{checkbox_vals.temporal_summary_median_selected}} disabled>Median</option>
-            {%else%}
-            <option value="median" {{checkbox_vals.temporal_summary_median_selected}}>Median</option>
-            {%endif%}
-            <option value="sum" {{checkbox_vals.temporal_summary_sum_selected}}>Sum</option>
-        
+            {% for opt, name in initial.form_options.temporal_summary%}
+                <option value="{{opt}}" 
+                {%if initial.temporal_summary == opt%} selected{%endif%}
+                {%if opt == "median"%}
+                    {%if initial.app_name|is_in:'single_lister,multi_lister,temporal_summary'%} disabled{%endif%}
+                {%endif%}
+                >{{name}}</option>
+            {%endfor%}
             </select>
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
