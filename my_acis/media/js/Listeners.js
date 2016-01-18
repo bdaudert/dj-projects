@@ -886,7 +886,7 @@ $(document).ready(function ($) {
             var series_type = series_id.split('_')[0];
             if (series_type == 'main'){
                 var idx = series_id.split('_')[1];
-                var s_year = parseInt($('#start_year').val()) + parseInt(idx);
+                var s_year = parseInt($('#min_year').val()) + parseInt(idx);
                 if (s_year != year){
                     //Hide series
                     myChart.series[i].setVisible(false,false);

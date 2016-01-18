@@ -5,7 +5,8 @@
             {%for opt, name in initial.form_options.elements%}
                 <option value="{{opt}}" 
                     {%if opt|is_in:initial.elements%}selected{%endif%}
-                    {%if initial.data_type == "grid" and opt|is_in:'obst,snow,snwd,evap,wdmv'%}disabled{%endif%}
+                    {%if initial.data_type == "grid" and opt|is_in:'obst,snow,snwd,evap,wdmv,pet'%}disabled{%endif%}
+                    {%if initial.app_name != "monthly_summaries" and opt|is_in:'pet'%}disabled{%endif%}
                 >{{name}}</option>
             {%endfor%}
             </select>

@@ -528,13 +528,11 @@ def intraannual(request):
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
         form = DJANGOUtils.set_form(initial,clean = False)
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
-        context['xx'] = form_cleaned
         year_txt_data, year_graph_data, climoData, percentileData = WRCCUtils.get_single_intraannual_data(form_cleaned)
         if not year_txt_data:
             results = {
                 'error':'No data found for these parameters!'
             }
-            context['results'] = results
             return render_to_response(url, context, context_instance=RequestContext(request))
         context['run_done'] = True
         header_keys = WRCCUtils.set_display_keys(app_name, form)
@@ -554,6 +552,7 @@ def intraannual(request):
             'percentileData':percentileData
         }
         results['cp_data'] = cp_data
+        #Set graph data
         graph_data = []
         for yr_idx, year in enumerate(year_graph_data.keys()):
             year = int(form_cleaned['start_year']) + yr_idx
@@ -562,20 +561,21 @@ def intraannual(request):
             graph_dict = GDWriter.write_dict()
             graph_data.append(graph_dict)
         results['graph_data'] = graph_data
-        #results['chartType'] = graph_dict['chartType']
         context['results'] = results
 
         #Save results for downloading
+        yr_range = range(int(form_cleaned['start_year']),int(form_cleaned['end_year']) + 1)
         json_dict = {
             'smry':[],
             #'params_display_list':context['params_display_list']
             'form':form_cleaned,
-            'data':[results['data'][year] for year in range(int(initial['start_year']),int(initial['end_year']) + 1)]
+            'data':[results['data'][year] for year in yr_range]
         }
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         json_file = '%s_%s.json' %(time_stamp,app_name)
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR +json_file, json_dict)
         context['json_file'] = json_file
+
     #Download button pressed
     if 'formDownload' in request.POST:
         form = DJANGOUtils.set_form(request,clean=False)

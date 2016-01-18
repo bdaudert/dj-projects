@@ -212,7 +212,13 @@ function generateTS_individual(chart_indices) {
             }
         }
         if (app_name == 'intraannual'){
-            if (parseInt($('#start_year').val()) + idx === parseInt(target_year)){
+            if (String($('#start_year').val()).toLowerCase() == 'por'){
+                var sy = $('#min_year').val();
+            }
+            else{
+                var sy = $('#start_year').val()
+            }
+            if (parseInt(sy) + idx === parseInt(target_year)){
                 s['visible'] = true;
                 s['showInLegend'] = true;
             }
@@ -233,7 +239,7 @@ function generateTS_individual(chart_indices) {
         }
         series_data.push(s);
         if (app_name == 'intraannual'){
-            if (parseInt($('#start_year').val()) + idx === parseInt(target_year)){
+            if (parseInt(sy) + idx === parseInt(target_year)){
                 series_data.push(climo);
                 for (j=0;j < perc.length;j++){
                     series_data.push(perc[j]);
