@@ -66,8 +66,6 @@ function set_dates_for_station(station_id,start_date,end_date,year_or_date){
     var today_string = convertDateToString(today,'-');
     /*
     var s = start_date, e = end_date;
-    if (s == 'POR'){s = grid_vd[grid][0][0];}
-    if (e == 'POR'){e = grid_vd[grid][0][1];}
     if (s.length == 4){s = s + '-01-01';}
     if (e.length == 4){e = e + today_string.slice(4,today_string.length);}
     //Replace with AJAX call
@@ -78,7 +76,6 @@ function set_dates_for_station(station_id,start_date,end_date,year_or_date){
         'start': s,
         'end': e
     }
-    
     return new_dates;
 }
 

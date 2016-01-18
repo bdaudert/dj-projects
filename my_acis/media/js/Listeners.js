@@ -266,7 +266,13 @@ $(document).ready(function ($) {
                 }
             }
 
-        } 
+        }
+        //Update mn/max_year and target year
+        if ($('#app_name').val() == 'intraannual'){
+            $('.target_year').val($('#start_year').val());
+            $('#min_year').val($('#start_year').val());
+            $('#max_year').val($('#end_year').val());
+        }   
     });
 
     $('.month').on('change', function(){
@@ -448,6 +454,10 @@ $(document).ready(function ($) {
             end = $('#end_year').val();
             p = 'year';
             set_year_range()
+            //Update target year for intra
+            if ($('#app_name').val() == 'intraannual'){
+                $('.target_year').val($('#min_year').val());
+            }
         }
         if ($('#start_date').length && $('#end_date').length){
             start = $('#start_date').val();
@@ -709,6 +719,10 @@ $(document).ready(function ($) {
         if (app_name.inList(['interannual','intraannual','monthly_summaries','climatology'])){
             //Set range dropdown values
             set_year_range()
+            //Update target year for intra
+            if (app_name == 'intraannual'){
+                $('.target_year').val($('#min_year').val());
+            }
         }
         //Single app specific
         //Show/Hide grid form field and station finder form_field

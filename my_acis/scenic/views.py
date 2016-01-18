@@ -537,14 +537,11 @@ def intraannual(request):
         context['run_done'] = True
         header_keys = WRCCUtils.set_display_keys(app_name, form)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
-        context['year_txt_data'] = year_txt_data
-        context['year_graph_data'] = year_graph_data
-        context['climoData'] = climoData
-        context['percentileData'] = percentileData
         results = {
             'element_short': form['element'],
             'data_indices':range(len(year_txt_data)),
             'data':year_txt_data,
+            'target_year':int(form_cleaned['target_year']),
             'error':''
         }
         cp_data = {

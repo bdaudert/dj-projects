@@ -171,7 +171,7 @@
         <div id="DataList" style="display:none;">
         <table id="textData" border="1">
         <th>Date</th><th>{{results.element_short}}</th>
-        {%for date_data in results.data%}
+        {%for date_data in results.data|lookup:results.target_year%}
             <tr>
             <td>{{date_data.0}}</td><td>{{date_data.1}}</td>
             </tr>
