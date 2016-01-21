@@ -367,6 +367,7 @@ function set_autofill(datalist){
     Sets autofill lists
     */
     //Grab env var JSON_URL (defined in templates/csc_base.html)
+    if (!datalist){return;}
     var JSON_URL = document.getElementById('JSON_URL').value;
     dl = document.createElement('datalist');
     dl.setAttribute('id',datalist);

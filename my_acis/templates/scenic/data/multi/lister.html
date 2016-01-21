@@ -239,6 +239,9 @@
         </td><td valign="top">
         <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
         </td>
+        <!--<td valign="top">
+        <p onClick="ShowHide('metadata')" align="center"><img alt="Metadata" title="Metadata" src="{{MEDIA_URL}}img/metadata_button.png"></p>-->
+        </td>
         </table>
         {% endif %}
     {%endif%}
@@ -246,6 +249,12 @@
     <!--Download form-->
     <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
 
+    <!--Metadata-->
+    <!--
+    <p class="message">
+        <div id="metadata" style="display:none">results.metadata</div>
+    </p>
+    -->
     <!--Data-->
     <table id="printable_table" align="center">
     <td align="center">
@@ -269,6 +278,10 @@
     </p><br />
     {% endif%}
 
+    <!--
+    <p class="message"><b>DATA</b>:</p>
+    
+    -->
     <!--Loop over results-->
     {% for point_data in results.data %}
         <p class="message" align="left" style="max-width:70%;word-wrap:break-word;"><b>METADATA</b>:<br />

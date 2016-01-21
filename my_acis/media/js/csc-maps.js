@@ -1148,7 +1148,9 @@ function initialize_polygon_map(poly) {
     //General event handlers
     google.maps.event.addListener(drawingManager, 'drawingmode_changed', deleteSelectedShape);
     //google.maps.event.addListener(map,'click',clearSelection);
-    google.maps.event.addDomListener(document.getElementById('delete-button'), 'click', deleteSelectedShape);
+    if ($('#delete-button').length){
+        google.maps.event.addDomListener(document.getElementById('delete-button'), 'click', deleteSelectedShape);
+    }
 }
 
 function initialize_map_overlay(map_id,poly) {
@@ -1208,9 +1210,9 @@ function initialize_map_overlays() {
         for (var i = 0; i < geoXmlDoc.placemarks.length; i++) {
             //get first layer and display in area form filed
             var layer =  geoXmlDoc.placemarks[i];
-            var latLng = new google.maps.LatLng(parseFloat(layer.polygon.bounds.N.N),parseFloat(layer.polygon.bounds.j.N));
+            var latLng = new google.maps.LatLng(parseFloat(layer.polygon.bounds.R.R),parseFloat(layer.polygon.bounds.j.R));
             bounds.extend(latLng);
-            latLng = new google.maps.LatLng(parseFloat(layer.polygon.bounds.N.j),parseFloat(layer.polygon.bounds.j.j));
+            latLng = new google.maps.LatLng(parseFloat(layer.polygon.bounds.R.j),parseFloat(layer.polygon.bounds.j.j));
             bounds.extend(latLng);
             if (i == 0){
                 $('#' + area_type).val(layer.description);
