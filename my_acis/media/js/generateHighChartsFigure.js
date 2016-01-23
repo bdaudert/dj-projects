@@ -1,5 +1,5 @@
 //------------------------
-// General function for monthly_summaries
+// General function for monthly_summary
 //------------------------
 //Function to determine if element is in list
 String.prototype.inList=function(list){
@@ -52,7 +52,7 @@ function generateTS_individual(chart_indices) {
     var axisFontSize = '16px';
     var labelsFontSize = '16px';
     //Set params according to application 
-    if (app_name == 'monthly_summaries' || app_name =='interannual'){
+    if (app_name == 'monthly_summary' || app_name =='yearly_summary'){
         var date_format = '%Y';
         if ( $('#statistic').length && $('#statistic').val() == 'ndays'){
             var yLabelmain = 'days';
@@ -193,11 +193,11 @@ function generateTS_individual(chart_indices) {
         if (app_name == 'spatial_summary' && idx > 0) {
             s['yAxis'] = i;
         }
-        //Set threshold for interannual
+        //Set threshold for yearly_summary
         if (app_name != 'intraannual'){
             var ave_data = compute_average(datadict[idx].data);
         }
-        if (app_name == 'interannual'){
+        if (app_name == 'yearly_summary'){
             //Precip/Snow/Evap colors
             s['threshold'] = ave_data[0][1].toFixed(2);
             s['color'] = 'blue';
@@ -230,7 +230,7 @@ function generateTS_individual(chart_indices) {
         //Deal with skinny bar bug
         if (chartType == 'column'){
             s['stacking'] = null;
-            if (app_name == 'monthly_summaries' || app_name =='interannual'){
+            if (app_name == 'monthly_summary' || app_name =='yearly_summary'){
                 s['pointRange'] = 1 * 24 * 3600*1000*365;
             }
             else{
@@ -251,7 +251,7 @@ function generateTS_individual(chart_indices) {
         if (running_mean_period != '0'){
             var rm_data =compute_running_mean(datadict[idx].data, parseInt(running_mean_period));
             var r_name = running_mean_period + '-';
-            if (app_name == 'monthly_summaries' || app_name == 'interannual'){
+            if (app_name == 'monthly_summary' || app_name == 'yearly_summary'){
                     r_name+='year Running Mean ';
             }
             else{
@@ -289,8 +289,8 @@ function generateTS_individual(chart_indices) {
             };
             series_data.push(a);
         }
-        //Set average as initial threshold for interannual
-        if (app_name == 'interannual'){
+        //Set average as initial threshold for yearly_summary
+        if (app_name == 'yearly_summary'){
             $('#chart_threshold').val(ave_data[0][1].toFixed(2));
         }
         //Range
@@ -522,7 +522,7 @@ function generateTS_smry(chart_indices) {
     var date_format = '%Y-%m-%d';
     var chartTitle = datadict[chart_indices[0]].title;
     var subTitle = datadict[chart_indices[0]].subTitle
-    if ($('#app_name').length && $('#app_name').val() == 'monthly_summaries'){
+    if ($('#app_name').length && $('#app_name').val() == 'monthly_summary'){
         var date_format = '%Y';
     }
     var elUnits = datadict[0].elUnits;
@@ -555,7 +555,7 @@ function generateTS_smry(chart_indices) {
     if (running_mean_period != '0'){
         var rm_data =compute_running_mean(smry_data.data, parseInt(running_mean_period));
         var r_name = running_mean_period + '-';
-        if (app_name =='monthly_summaries'){
+        if (app_name =='monthly_summary'){
                 r_name+='year Running Mean ';
         }
         else{

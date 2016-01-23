@@ -9,7 +9,7 @@
 
 <!--Documentation-->
 <div class="docu" id="tool_info" style="display:none;">
-    {% include 'includes/Docu_monthly_summaries.html'%}
+    {% include 'includes/Docu_monthly_summary.html'%}
 </div>
 <div id="how_to" style="display:none;">
     <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
@@ -18,7 +18,7 @@
     <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
     <div id="Docu_base_temperature">{% include 'includes/Docu_base_temperature.html'%}</div>
     <div id="Docu_statistic_period">{% include 'includes/Docu_statistic_period.html'%}</div>
-    <div id="Docu_statistic">{% include 'includes/Docu_monthly_summaries_statistic.html'%}</div>
+    <div id="Docu_statistic">{% include 'includes/Docu_monthly_summary_statistic.html'%}</div>
     <div id="Docu_num_days_thresholds">{% include 'includes/Docu_num_days_thresholds.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
     <div id="Docu_max_missing_days">{% include 'includes/Docu_max_missing_days.html'%}</div>
@@ -26,7 +26,7 @@
     <div id="Docu_departure_from_averages">{% include 'includes/Docu_departure_from_averages.html'%}</div>
 </div>
 <!--Hidden variables-->
-<input type="hidden" id="app_name" name="app_name" value="monthly_summaries">
+<input type="hidden" id="app_name" name="app_name" value="monthly_summary">
 
 <!--Set up autofill-->
 {%if initial.autofill_list %}
@@ -36,7 +36,7 @@
 <!--Toolinfo/Howto-->
 <table>
 <td valign="bottom" width="45%">
-    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/monthly_summaries/'">
+    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/monthly_summary/'">
     {%if results.data%}
     <input type="submit" value="Change Options" onclick="ShowHideTopOfPage()">
     {%endif%}
@@ -78,7 +78,7 @@
         <tr id="base_temp" valign="top" style="display:none">{% include 'includes/base_temperature.html'%}</tr>
         {%endif%}
         <tr valign="top">{% include 'includes/statistic_period.html'%}</tr>
-        <tr valign="top">{% include 'includes/monthly_summaries_statistic.html'%}</tr>
+        <tr valign="top">{% include 'includes/monthly_summary_statistic.html'%}</tr>
         {%if initial.statistic == "ndays"%}
         <tr id="threshold_type" valign="top">{% include 'includes/number_of_days.html'%}</tr>
         {%if initial.less_greater_or_between == "b"%}
@@ -110,7 +110,7 @@
         <tr valign="top" style="display:none">{% include 'includes/frequency_analysis.html'%}</tr>
         </table><!--End tableData-->
         <!--Hidden vars-->
-        <input type="hidden" name="app_name" value="monthly_summaries">
+        <input type="hidden" name="app_name" value="monthly_summary">
         <input type="hidden" class="chart_indices_string" id="chart_indices_string" value="{{initial.chart_indices_string}}" name="chart_indices_string">
         <input type="hidden" value="{{initial.chart_type}}" name="chart_type" class="chart_type">
         <input type="hidden" value="{{initial.show_running_mean}}" name="show_running_mean" class="show_running_mean">
@@ -196,17 +196,17 @@
                     {% include 'includes/chart_type.html'%} &nbsp;&nbsp; {% include 'includes/show_hide_legend.html'%}
                 </td>
                 <td align="left" rowspan="3" valign="top">
-                    {% include 'includes/chart_indices_monthly_summaries.html'%}
+                    {% include 'includes/chart_indices_monthly_summary.html'%}
                 </td>
                 </tr>
                 <tr>
                 <td align="left" valign="top">
-                    {% include 'includes/chart_layers_monthly_summaries.html'%}
+                    {% include 'includes/chart_layers_monthly_summary.html'%}
                 </td>
                 </tr>
                 <tr>
                 <td align="left" valign="top">
-                    {% include 'includes/chart_smry_monthly_summaries.html'%}
+                    {% include 'includes/chart_smry_monthly_summary.html'%}
                 </td>
                 </tr>
             </table>

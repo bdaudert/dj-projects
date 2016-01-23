@@ -168,15 +168,15 @@ def gallery(request):
     app_urls['station_finder'] = app_url
     param_urls['station_finder'] = p_url
     app_names['station_finder'] = settings.APPLICATIONS['station_finder'][0]
-    #Gallery: EXTREMES (monthly_summaries ndays)
-    app_url = settings.APPLICATIONS['monthly_summaries'][1]
+    #Gallery: EXTREMES (monthly_summary ndays)
+    app_url = settings.APPLICATIONS['monthly_summary'][1]
     p_url = app_url + '?'
     #p_url+='area_type=location&location=-120.44,39.32&element=mint&grid=1&start_year=1970&end_year=2000'
     p_url+='area_type=station_id&station_id=048218&element=mint&start_year=POR&end_year=POR'
     p_url+='&statistic=ndays&less_greater_or_between=l&threshold_for_less_than=32&chart_indices_string=3,4,5'
     app_urls['extremes'] = app_url
     param_urls['extremes'] = p_url
-    app_names['extremes'] = settings.APPLICATIONS['monthly_summaries'][0]
+    app_names['extremes'] = settings.APPLICATIONS['monthly_summary'][0]
     #Gallery: SUMMARIZING SPATIAL DATA (spatial_summary)
     app_url = settings.APPLICATIONS['spatial_summary'][1]
     p_url = app_url + '?'
@@ -225,14 +225,14 @@ def howto(request):
     param_urls['multi_lister'] = p_url
     app_names['multi_lister'] = settings.APPLICATIONS['multi_lister'][0]
     #Gallery: MONTHLY SUMMARIES
-    app_url = settings.APPLICATIONS['monthly_summaries'][1]
+    app_url = settings.APPLICATIONS['monthly_summary'][1]
     p_url = app_url + '?'
     p_url+='area_type=station_id&station_id=269171&element=maxt'
     p_url+='&start_year=POR&end_year=POR'
     p_url+='&statistic=mmax'
-    app_urls['monthly_summaries'] = app_url
-    param_urls['monthly_summaries'] = p_url
-    app_names['monthly_summaries'] = settings.APPLICATIONS['monthly_summaries'][0]
+    app_urls['monthly_summary'] = app_url
+    param_urls['monthly_summary'] = p_url
+    app_names['monthly_summary'] = settings.APPLICATIONS['monthly_summary'][0]
     #Gallery: SUMMARIZING SPATIAL DATA (spatial_summary)
     app_url = settings.APPLICATIONS['spatial_summary'][1]
     p_url = app_url + '?'
@@ -306,7 +306,7 @@ def single_point_prods(request):
                 get_params.append(str(item))
         user_params = WRCCUtils.form_to_display_list(get_params,request.GET)
         context['user_params'] = user_params
-        for app in ['single_lister', 'monthly_summaries', 'climatology','data_comparison', 'interannual', 'intraannual']:
+        for app in ['single_lister', 'monthly_summary', 'climatology','data_comparison', 'yearly_summary', 'intraannual']:
             initial= DJANGOUtils.set_initial(request, app)
             p_str = WRCCUtils.set_url_params(initial)
             context['url_params_' + app] =  p_str
@@ -601,8 +601,8 @@ def intraannual(request):
             return response
     return render_to_response(url, context, context_instance=RequestContext(request))
 
-def interannual(request):
-    app_name = 'interannual'
+def yearly_summary(request):
+    app_name = 'yearly_summary'
     context = {
         'title': settings.APPLICATIONS[app_name][0]
     }
@@ -621,7 +621,7 @@ def interannual(request):
             'error':''
         }
         #Data request
-        year_data, hc_data = WRCCUtils.get_single_interannaul_data(form_cleaned)
+        year_data, hc_data = WRCCUtils.get_single_yearly_summary_data(form_cleaned)
         context['run_done'] = True
         header_keys = WRCCUtils.set_display_keys(app_name, form)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
@@ -749,13 +749,13 @@ def multi_lister(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
+            CsvWriter = WRCCClasses.CsvWriterNew(req, f=None, response=response)
             CsvWriter.write_to_file()
             return response
         if form_cleaned['data_format'] in ['xl'] and (req['data'] or req['smry']):
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
+            ExcelWriter = WRCCClasses.ExcelWriterNew(req,response=response)
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
@@ -1361,8 +1361,8 @@ def data_comparison(request):
 #SOD programs
 ######################
 
-def monthly_summaries(request):
-    app_name = 'monthly_summaries'
+def monthly_summary(request):
+    app_name = 'monthly_summary'
     context = {
         'title': settings.APPLICATIONS[app_name][0]
     }
@@ -1448,7 +1448,7 @@ def monthly_summaries(request):
                 'data_summary':[[' '] + header_list + ['ANN', ' ']] + data[0][-6:]
             }
         #Write data to file for highcharts
-        hc_data = WRCCUtils.extract_highcarts_data_monthly_summaries(results['data'],form_cleaned)
+        hc_data = WRCCUtils.extract_highcarts_data_monthly_summary(results['data'],form_cleaned)
         graph_data = []
         for p_idx,d in enumerate(hc_data):
             if app_params['statistic_period'] == 'monthly':

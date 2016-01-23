@@ -1,13 +1,13 @@
 {% extends "csc_base.html" %}
 <META name="keywords" content="interanual, time series">
-<meta name="description" content="SCENIC Single point interannual time series">
+<meta name="description" content="SCENIC Single point yearly_summary time series">
 
 {%load my_scenic_filters%}
 {% block content %} 
 
 <!--Documentation-->
 <div class="docu" id="tool_info" style="display:none;">
-    {% include 'includes/Docu_app_interannual.html'%}
+    {% include 'includes/Docu_app_yearly_summary.html'%}
 </div>
 <div id="how_to" style="display:none;">
     <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
@@ -21,7 +21,7 @@
 </div><!--End how_to-->
 
 <!---Hidden variables-->
-<input type="hidden" id="app_name" name="app_name" value="interannual">
+<input type="hidden" id="app_name" name="app_name" value="yearly_summary">
 
 <p align="center" class="error">
     <b>*(BETA) THIS PAGE IS UNDER DEVELOPMENT!</b><br /><br />
@@ -35,7 +35,7 @@
 <!--Toolinfo/Howto-->
 <table>
 <td valign="bottom" width="45%">
-    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/interannual/'">
+    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/yearly_summary/'">
     {%if results.data %}
     <input type="submit" value="Change Options" onclick="ShowHideTopOfPage()">
     {%endif%}
@@ -80,7 +80,7 @@
         <tr id="temp_summary" style="display:table-row;">{% include 'includes/temporal_summary.html'%}</tr>
         <tr style="display:table-row">{% include 'includes/start_end_year.html'%}</tr>
         </table>
-        <input type="hidden" name="app_name" value="interannual">
+        <input type="hidden" name="app_name" value="yearly_summary">
         <input type="hidden" id="data_type" name="data_type" value="{{initial.data_type}}">
         
         <!--Hidden chart vars-->
@@ -193,7 +193,7 @@
             </tr>
             <tr>
             <td align="left" valign="top">
-                {% include 'includes/chart_layers_interannual.html'%}
+                {% include 'includes/chart_layers_yearly_summary.html'%}
             </td>
             </tr>
             <tr>

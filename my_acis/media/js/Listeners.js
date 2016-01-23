@@ -157,7 +157,7 @@ $(document).ready(function ($) {
     });
 
     $('#element').on('change', function(){
-        //Set monthly statistic for monthly_summaries
+        //Set monthly statistic for monthly_summary
         var sum_els = ['pcpn','snow','evap','pet'];
         if ($(this).val().inList(sum_els)){
             if ($('#statistic').length){
@@ -510,6 +510,7 @@ $(document).ready(function ($) {
         if (data_type == 'grid' || data_type == 'location' || data_type == 'locations'){
             //Disable station_ids option
             $('#area_type option[value="station_ids"]').attr('disabled',true);
+            $('#area_type option[value="locations"]').attr('disabled',false);
             if ($('#elements').length){
                 var opts = $("#elements option");
             }
@@ -565,6 +566,7 @@ $(document).ready(function ($) {
         if (data_type == 'station' || data_type == 'station_id' || data_type == 'station_ids'){
             //Enable station_ids option
             $('#area_type option[value="station_ids"]').attr('disabled',false); 
+            $('#area_type option[value="locations"]').attr('disabled',true);
             //Show add degree day option    
             $('#add').css('display','table-row');
             $("#elements option").each(function(){
@@ -716,7 +718,7 @@ $(document).ready(function ($) {
         }
         //Change start/end years
         var app_name = $('#app_name').val();
-        if (app_name.inList(['interannual','intraannual','monthly_summaries','climatology'])){
+        if (app_name.inList(['yearly_summary','intraannual','monthly_summary','climatology'])){
             //Set range dropdown values
             set_year_range()
             //Update target year for intra
@@ -867,7 +869,7 @@ $(document).ready(function ($) {
 
     });
 
-    //Threshold for interannual
+    //Threshold for yearly_summary
     $('#chart_threshold').on('change keyup', function(){
         var thresh = $(this).val();
         for (var i = 0; i < myChart.series.length; i++) {
