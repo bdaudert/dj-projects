@@ -1472,9 +1472,11 @@ def monthly_summary(request):
         context['json_file'] = json_file
     #Downlaod Table Data
     if 'formDownload' in request.POST:
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         data_format = request.POST.get('data_format', 'clm')
         delimiter = request.POST.get('delimiter', 'comma')
         output_file_name = request.POST.get('output_file_name', 'output')
+        output_file_name = output_file_name + '_' + time_stamp
         json_file = request.POST.get('json_file', None)
         with open(settings.TEMP_DIR + json_file, 'r') as f:
             results =  json.load(f)
