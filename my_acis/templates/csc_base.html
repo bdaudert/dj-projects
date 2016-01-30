@@ -70,28 +70,19 @@
 
 
     <!--Backbutton issue-->
-    <!--<script type="text/javascript" src="http://balupton.github.com/history.js/scripts/bundled/html4+html5/jquery.history.js"></script>-->
     <script type="text/javascript">
-    //$(document).ready(function () {
+    $(document).ready(function () {
+       $("select").each(function () {
+            $(this).val($(this).find('option[selected]').val());
+        }); 
+    });
+    /*
+    //This causes uptions to go to default during processing.
     $(window).bind('beforeunload', function(e) {
         $("select").each(function () {
             $(this).val($(this).find('option[selected]').val());
         });
     })
-    /*
-    $( document ).ready(function(){
-    //save_form_options('tableDataForm', 'rememberselects');
-    if (window.history && window.history.pushState) {
-        window.history.pushState('forward', null, './');
-        $(window).on('popstate', function() {
-            //set_form_options('tableDataForm', 'rememberselects');
-            var forms = $('form');
-            if (forms.length){
-                alert('We discourage the use of the back/forward buttons.\nPlease be aware that form fields may not be preserved correctly!')
-            }
-        });
-    }
-    });
     */
     </script>
     

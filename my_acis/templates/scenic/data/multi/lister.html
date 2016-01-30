@@ -30,8 +30,10 @@
 <!---Hidden variables-->
 <input type="hidden" id="app_name" name="app_name" value="multi_lister">
 <!--For maps-->
-<input type="hidden" id="host" name="host" value="{{iniial.host}}">
+<input type="hidden" id="host" name="host" value="{{initial.host}}">
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
+<input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
+
 
 <!--Set up autofill-->
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
@@ -54,6 +56,7 @@
 </td>
 </table>
 
+{{xx}}
 
 <!--Form-->
 {% if not results.data and not results.smry%}
@@ -126,13 +129,13 @@
         {%endif%}
         <tr class="station_grid" style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
         {%if large_request %}
-        <tr id="delim" style="display:table-row;">{% include 'includes/delimiter.html'%}</tr>
-        <tr id="out_file" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
+        <tr id="delim" class="delim" style="display:table-row;">{% include 'includes/delimiter.html'%}</tr>
+        <tr class="out_file" id="out_file" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
         <tr id="un" style="display:table-row;">{% include 'includes/user_name.html'%}</tr>
         <tr id="ue" style="display:table-row;">{% include 'includes/user_email.html'%}</tr>
         {%else%}
-        <tr id="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
-        <tr id="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
+        <tr id="delim" class="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
+        <tr id="out_file" class="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
         <tr id="un" style="display:none;">{% include 'includes/user_name.html'%}</tr>
         <tr id="ue" style="display:none;">{% include 'includes/user_email.html'%}</tr>
         {%endif%}

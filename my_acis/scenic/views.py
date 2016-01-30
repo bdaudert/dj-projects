@@ -496,8 +496,11 @@ def single_lister(request):
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         file_name = form['output_file_name'] + '_' + time_stamp
         with open(settings.TEMP_DIR + json_file, 'r') as f:
-            data =  json.load(f)
-
+            req =  json.load(f)
+        #Override data_format, delimiter, output_file
+        req['form']['data_format'] = form['data_format']
+        req['form']['delimiter'] = form['delimiter']
+        req['form']['output_file_name'] = form['output_file_name']
         if form['data_format'] in ['clm','dlm']:
             if form['data_format'] == 'clm':
                 file_extension = '.txt'
@@ -505,13 +508,13 @@ def single_lister(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriter(data, f=None, response=response)
+            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
             CsvWriter.write_to_file()
             return response
         if form['data_format'] in ['xl']:
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            ExcelWriter = WRCCClasses.ExcelWriter(data,response=response)
+            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
@@ -580,8 +583,11 @@ def intraannual(request):
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         file_name = form['output_file_name'] + '_' + time_stamp
         with open(settings.TEMP_DIR + json_file, 'r') as f:
-            data =  json.load(f)
-
+            req =  json.load(f)
+        #Override data_format, delimiter, output_file
+        req['form']['data_format'] = form['data_format']
+        req['form']['delimiter'] = form['delimiter']
+        req['form']['output_file_name'] = form['output_file_name']
         if form['data_format'] in ['clm','dlm']:
             if form['data_format'] == 'clm':
                 file_extension = '.txt'
@@ -589,13 +595,13 @@ def intraannual(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriter(data, f=None, response=response)
+            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
             CsvWriter.write_to_file()
             return response
         if form['data_format'] in ['xl']:
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            ExcelWriter = WRCCClasses.ExcelWriter(data,response=response)
+            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
@@ -655,8 +661,11 @@ def yearly_summary(request):
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         file_name = form['output_file_name'] + '_' + time_stamp
         with open(settings.TEMP_DIR + json_file, 'r') as f:
-            data =  json.load(f)
-
+            req =  json.load(f)
+        #Override data_format, delimiter, output_file
+        req['form']['data_format'] = form['data_format']
+        req['form']['delimiter'] = form['delimiter']
+        req['form']['output_file_name'] = form['output_file_name']
         if form['data_format'] in ['clm','dlm']:
             if form['data_format'] == 'clm':
                 file_extension = '.txt'
@@ -664,13 +673,13 @@ def yearly_summary(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriter(data, f=None, response=response)
+            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
             CsvWriter.write_to_file()
             return response
         if form['data_format'] in ['xl']:
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            ExcelWriter = WRCCClasses.ExcelWriter(data,response=response)
+            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
@@ -815,11 +824,14 @@ def multi_lister(request):
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
         initial = DJANGOUtils.set_initial(request,'map_overlay')
-        context[initial['overlay_state'] + '_selected'] = 'selected'
         #overide kml_file_path
         for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
             kml_file_path = DJANGOUtils.create_kml_file(at, initial['overlay_state'])
             if initial['area_type'] == at:
+                if kml_file_path[0:5] == 'ERROR':
+                    results = {'error':kml_file_path}
+                    context['results'] = results
+                    return render_to_response(url, context, context_instance=RequestContext(request))
                 initial['kml_file_path'] = kml_file_path
         context['initial'] = initial
 
@@ -831,6 +843,10 @@ def multi_lister(request):
         file_name = form['output_file_name'] + '_' + time_stamp
         with open(settings.TEMP_DIR + json_file, 'r') as f:
             req =  json.load(f)
+        #Override data_format, delimiter, output_file
+        req['form']['data_format'] = form['data_format']
+        req['form']['delimiter'] = form['delimiter']
+        req['form']['output_file_name'] = form['output_file_name']
         if form['data_format'] in ['clm','dlm']:
             if form['data_format'] == 'clm':
                 file_extension = '.txt'
@@ -838,14 +854,14 @@ def multi_lister(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
+            CsvWriter = WRCCClasses.CsvWriterNew(req, f=None, response=response)
             CsvWriter.write_to_file()
             return response
         if form['data_format'] in ['xl']:
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
             #WRCCUtils.write_to_excel(response,req)
-            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
+            ExcelWriter = WRCCClasses.ExcelWriterNew(req,response=response)
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
@@ -911,6 +927,10 @@ def temporal_summary(request):
                 for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
                     kml_file_path = DJANGOUtils.create_kml_file(at, form['overlay_state'])
                     if form['area_type'] == at:
+                        if kml_file_path[0:5] == 'ERROR':
+                            results = {'error':kml_file_path}
+                            context['results'] = results
+                            return render_to_response(url, context, context_instance=RequestContext(request))
                         context['kml_file_path'] = kml_file_path
             return render_to_response(url, context, context_instance=RequestContext(request))
 
@@ -970,8 +990,8 @@ def spatial_summary(request):
     url = settings.APPLICATIONS[app_name][2]
     initial  = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
-
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+
         #Set form and initial
         form = DJANGOUtils.set_form(initial, clean=False)
         form_cleaned = DJANGOUtils.set_form(initial)
@@ -986,6 +1006,10 @@ def spatial_summary(request):
                 for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
                     kml_file_path = DJANGOUtils.create_kml_file(at, form['overlay_state'])
                     if form['area_type'] == at:
+                        if kml_file_path[0:5] == 'ERROR':
+                            results = {'error':kml_file_path}
+                            context['results'] = results
+                            return render_to_response(url, context, context_instance=RequestContext(request))
                         context['kml_file_path'] = kml_file_path
             return render_to_response(url, context, context_instance=RequestContext(request))
 
@@ -1125,11 +1149,14 @@ def spatial_summary(request):
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
         initial = DJANGOUtils.set_initial(request,'map_overlay')
-        context[initial['overlay_state'] + '_selected'] = 'selected'
         #overide kml_file_path
         for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
             kml_file_path = DJANGOUtils.create_kml_file(at, initial['overlay_state'])
             if initial['area_type'] == at:
+                if kml_file_path[0:5] == 'ERROR':
+                    results = {'error':kml_file_path}
+                    context['results'] = results
+                    return render_to_response(url, context, context_instance=RequestContext(request))
                 initial['kml_file_path'] = kml_file_path
         context['initial'] = initial
 
@@ -1141,6 +1168,10 @@ def spatial_summary(request):
         file_name = form['output_file_name'] + '_' + time_stamp
         with open(settings.TEMP_DIR + json_file, 'r') as f:
             req =  json.load(f)
+        #Override data_format, delimiter, output_file
+        req['form']['data_format'] = form['data_format']
+        req['form']['delimiter'] = form['delimiter']
+        req['form']['output_file_name'] = form['output_file_name']
         if form['data_format'] in ['clm','dlm']:
             if form['data_format'] == 'clm':
                 file_extension = '.txt'
@@ -1297,7 +1328,6 @@ def station_finder(request):
     if 'formDownload' in request.POST:
         initial = DJANGOUtils.set_initial(request,'sf_download')
         context['initial'] = initial
-        context[initial['overlay_state'] + '_selected'] = 'selected'
         form_cleaned = DJANGOUtils.set_form(initial, clean=True)
         fields_to_check = ['user_email']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -1319,7 +1349,6 @@ def station_finder(request):
     if 'formOverlay' in request.POST:
         context['need_overlay_map'] = True
         initial = DJANGOUtils.set_initial(request,'map_overlay')
-        context[initial['overlay_state'] + '_selected'] = 'selected'
         #overide kml_file_path
         for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
             kml_file_path = DJANGOUtils.create_kml_file(at, initial['overlay_state'])

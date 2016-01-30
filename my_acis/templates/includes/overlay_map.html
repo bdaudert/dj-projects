@@ -1,7 +1,7 @@
          <div align="left" id="formOverlay" style="display:inherit;">
             <form method="post"  id="overlayForm" action="" onsubmit="show_loading() & setHiddenFields('tableDataForm', $(this).attr('id'))">{% csrf_token %}
             <table class="form_overlay" style="margin:0px;">
-            <td>State: </td>
+            <td>State:</td>
             <td>
                 <select name="overlay_state" id="overlay_state">
                 {%for opt, name in initial.form_options.state%}

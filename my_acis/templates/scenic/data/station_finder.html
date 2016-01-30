@@ -8,6 +8,7 @@
 
 <!---Hidden variables-->
 <input type="hidden" id="app_name" name="app_name" value="station_finder">
+<input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
 
 <!--Documentation-->
 <div align="left" id="tool_info" style="display:none;">
@@ -234,11 +235,11 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <tr class="data_sf" style="display:table-row;">{% include 'includes/units.html'%}</tr>
     <tr class="data_sf" style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
     {%if initial.data_format == "xl" or initial.data_format == "html"%}
-        <tr id="delim" class="data_sf" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
+        <tr id="delim" class="data_sf delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
     {%else%}
-        <tr id="delim" class="data_sf" style="display:table-row;">{% include 'includes/delimiter.html'%}</tr>
+        <tr id="delim" class="data_sf delim" style="display:table-row;">{% include 'includes/delimiter.html'%}</tr>
     {%endif%}
-    <tr id="out_file" class="data_sf" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
+    <tr id="out_file" class="data_sf out_file" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
     <tr id="un" class="data_sf" style="display:table-row;">{% include 'includes/user_name.html'%}</tr>
     <tr id="ue" class="data_sf" style="display:table-row;">{% include 'includes/user_email.html'%}</tr>
     </table>

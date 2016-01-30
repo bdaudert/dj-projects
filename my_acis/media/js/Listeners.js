@@ -82,6 +82,23 @@ $(document).ready(function ($) {
         }
     });
     /*
+    DATA FORMAT
+    */
+    $('#data_format, #dat_format').on('change', function(){
+        if ($(this).val().inList(['clm','dlm'])){
+            $('.delim').css('display','table-row');
+         }
+         else{
+            $('.delim').css('display','none');         
+         }
+         if ($(this).val().inList(['clm','dlm','xl'])){
+            $('.out_file').css('display','table-row'); 
+         }
+         else{
+            $('.out_file').css('display','none');  
+         }   
+    });
+    /*
     DATA SUMMARY CHANGE
     */
     $('#data_summary').on('change', function(){

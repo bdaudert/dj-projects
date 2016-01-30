@@ -1,5 +1,5 @@
 {%load my_scenic_filters%}
-        <td id="EndMonthDay">End Month/Day: </td>
+        <td id="EndMonthDay">End Month/Day: {{initial.end_month}}</td>
         <td>
             <select id="end_month" name="end_month" class="month">
             {% for opt, name in initial.form_options.end_month%}

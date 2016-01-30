@@ -1,4 +1,5 @@
-        {%if json_dict%}
+       {%load my_scenic_filters%}
+      {%if json_dict%}
         <form method="post" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading() & setHiddenFields('tableDataForm', this)">
         {%elif json_file%}
         <form method="post" action="?json_file={{json_file}}" onsubmit="show_loading() & setHiddenFields('tableDataForm', this)">
@@ -8,12 +9,16 @@
         {% csrf_token %}
         <table id="tableDownload">
         <tr valign="top">
-        <td>Data Format: </td>
+        <td>Data Format:</td>
         <td>
-        <select name="data_format" onchange="set_delimiter(this, 'delim');">
+        <select name="data_format" id="dat_format">
         {%for opt, name in initial.form_options.data_format%}
             {%if opt != "html"%}
-            <option value="{{opt}}" {%if initial.data_format == opt%}selected{%endif%}>{{name}}</option>
+                {%if initial.data_format == "html"%}
+                <option value="{{opt}}" {%if opt == "xl" %}selected{%endif%}>{{name}}</option>
+                {%else%}
+                <option value="{{opt}}" {%if initial.data_format == opt%}selected{%endif%}>{{name}}</option>
+                {%endif%}
             {%endif%}
         {%endfor%}
         </select>
@@ -28,7 +33,11 @@
         </td>
         </tr>
         <!--Only show when format is clm or dlm, don't show if xl-->
-        <tr valign="top" id="delim" style="display:none;">
+        {%if initial.data_format|is_in:'xl,html'%}
+        <tr valign="top" id="delim" class="delim" style="display:none;">
+        {%else%}
+        <tr valign="top"id="delim" class="delim">
+        {%endif%}
         <td>Delimiter:</td>
         <td>
         <select name="delimiter">
@@ -46,7 +55,7 @@
         </div>
         </td>
         </tr>
-        <tr valign="top">
+        <tr class="out_file" id="out_file" valign="top">
         <td>Output file name: </td>
         <td><input type="text" name="output_file_name" value="{{initial.output_file_name}}"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
