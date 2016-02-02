@@ -1091,9 +1091,11 @@ function update_maps(area_field){
         $('#map-bbox').css('display','block');
         initialize_bbox_map(val);
     }
+    /*
     else if (id == 'state'){
         $('#overlay_state').val(val);
     }
+    */
     else if (id == 'county' || id == 'county_warning_area' || id == 'climate_division' || id == 'basin'){ 
         $('#OverlayMap').css('display','block');
         $('#map-overlay').css('display','block');

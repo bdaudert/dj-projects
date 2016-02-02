@@ -3,7 +3,7 @@
             {%if initial.area_type == "state"%}
                  <select name="state" id="state" onchange="update_value(this.value) &update_maps(this)">
                 {%for st, name in initial.form_options.state%}
-                    <option value="{{st}}" {%if initial.state == st%} selected{%endif%}>
+                    <option value="{{st}}" {%if initial.overlay_state == st%} selected{%endif%}>
                     {{name}}</option>
                 {%endfor%} 
             {%else%}

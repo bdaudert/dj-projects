@@ -91,7 +91,7 @@
         {% include 'includes/arrow.html'%}
     {%endif%}
 
-    {%if run_done and not results%}
+    {%if run_done and not results and not results.error%}
            {% include 'includes/no_results.html'%}
     {%endif%}
     </div>
@@ -124,9 +124,6 @@
 <td valign="top" width="97%" align="center">
     <div class="results">
 
-    {%if run_done and not results%}
-           {% include 'includes/no_results.html'%}
-    {%endif%}
     {%if results%}
         <p>
         For monthly and annual mean, thresholds and sums:</br>

@@ -1,8 +1,12 @@
-    <td>Summary Type: </td>
+    {%load my_scenic_filters%}
+    <td>Summary Type: {{initial.summary_type}}</td>
     <td>
         <select id="summary_type" name="summary_type">
          {%for opt, name in initial.form_options.summary_type%}
-            <option value="{{opt}}" {%if initial.summary_type == opt%}selected{%endif%}>{{name}}</option>
+            <option value="{{opt}}" 
+            {%if initial.summary_type == opt%}selected{%endif%}
+            {%if initial.location and opt|is_in:'both,all'%}disabled{%endif%}
+            >{{name}}</option>
         {%endfor%} 
         </select>
     </td>

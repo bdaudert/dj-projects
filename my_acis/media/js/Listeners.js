@@ -743,6 +743,20 @@ $(document).ready(function ($) {
                 $('.target_year').val($('#min_year').val());
             }
         }
+        if (app_name == 'climatology'){
+            if ($(this).val() == 'location'){
+                if ($('#summary_type').val().inList(['all','both'])){
+                    $('#summary_type').val('temp');
+                }
+                $('#summary_type option[value="all"]').attr('disabled',true);
+                $('#summary_type option[value="both"]').attr('disabled',true);
+            }
+            else{
+                $('#summary_type option[value="all"]').attr('disabled',false);      
+                $('#summary_type option[value="both"]').attr('disabled',false);
+            }
+        }
+
         //Single app specific
         //Show/Hide grid form field and station finder form_field
         var date_vals = null;

@@ -899,7 +899,8 @@ def temporal_summary(request):
 
     if 'formMap' in request.POST:
         context['hide_bbox_map'] = True
-        form = DJANGOUtils.set_form(request, clean=False)
+        form = DJANGOUtils.set_initial(request, app_name)
+        #form = DJANGOUtils.set_form(request, clean=False)
         form_cleaned = DJANGOUtils.set_form(request)
         #Set initials
         initial = DJANGOUtils.set_initial(form, app_name)
@@ -917,7 +918,7 @@ def temporal_summary(request):
                     break
 
         #Form Check
-        fields_to_check = ['start_date', 'end_date','degree_days','level_number', 'cmap', form['area_type'], 'elements']
+        fields_to_check = ['start_date', 'end_date','degree_days', 'cmap', form['area_type'], 'elements']
         #fields_to_check = ['start_date', 'end_date','degree_days',form['area_type'], 'elements']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
@@ -1611,6 +1612,10 @@ def climatology(request):
             table = table_list[tab_idx]
             table_dict = {}
             table_dict = generate_sodsumm_graphics(results,tab,table,form['units'])
+            if not table_dict:
+                results = {}
+                context['run_done']= True
+                return render_to_response(url, context, context_instance=RequestContext(request))
             #Add other params to table_dict
             table_dict['record_start'] = dates_list[0][0:4]
             table_dict['record_end'] = dates_list[-1][0:4]
@@ -1620,7 +1625,7 @@ def climatology(request):
                 table_dict['subtitle'] = 'Network: ' + meta_dict['networks'][0] + ', ID: ' + str(data_params['sid'])
             if 'loc' in data_params.keys():
                 table_dict['title'] = 'Location ' + str(data_params['loc']) + ', ' + table_dict['table_name_long']
-                table_dict['subtitle'] = ''
+                table_dict['subtitle'] = 'Grid ' + WRCCData.GRID_CHOICES[str(data_params['grid'])][0]
             json_list.append(table_dict)
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         json_file = '%s_%s_%s_%s.json' \
@@ -1935,6 +1940,7 @@ def generate_sodsumm_graphics(results, tab, table, units):
             legend = ['Base 10']
         else:
             legend = ['Base 50']
+        table_name_long = 'Corn Degree Days (' + U + ')'
         graph_data =[[]]
         for k in range(len(cats)):
             try:

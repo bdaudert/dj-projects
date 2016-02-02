@@ -26,7 +26,7 @@
 <input type="hidden" id="data_type" name="data_type" value="grid">
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
 <input type="hidden" id="host" name="host" value="{{host}}">
-<input type="hidden" id="kml_file_path" name="kml_file_path" value="{{kml_file_path}}">
+<input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
 <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
 
 
@@ -69,7 +69,7 @@
         {%else%}
             <tr id="dd" valign="top" style="display:none">{% include 'includes/degree_days.html'%}</tr>
         {%endif%}
-        <tr class="station_grid" style="display:table-row;">{% include 'includes/units.html'%}</tr>
+        <tr class="station_grid" style="display:none;">{% include 'includes/units.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
         <tr id="temp_summary" style="display:table-row">{% include 'includes/temporal_summary.html'%}</tr>
@@ -77,7 +77,7 @@
         <tr><hr></tr>
         <tr><td align="center" colspan="3" class="message" id="plot_opts_button"><b>PLOT OPTIONS &darr;</b></td></tr>
         <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/image_size.html'%}</tr>
-        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/num_levels.html'%}</tr>
+        <tr valign="top" class="NotPlot" style="display:none;">{% include 'includes/num_levels.html'%}</tr>
         <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/colormap.html'%}</tr>
         <tr valign="top" class="NotPlot" style="display:none;">{% include 'includes/map_overlay.html'%}</tr> 
         <tr valign="top" class="NotPolt" style="display:none;">{% include 'includes/interpolation.html'%}</tr>
