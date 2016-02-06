@@ -716,7 +716,14 @@ $(document).ready(function ($) {
     $('.area_type').on('keydown change', function(){
         //Set area form field
         set_area('area',$(this)); //form_utils function
-        //set map
+        /*need to change data type for single apps*/
+        if ($(this).val()== 'location'){
+            $('#data_type').val('grid');
+        }
+        else if ($(this).val()== 'station_id'){
+            $('#data_type').val('station');
+        }
+        set_elements();
         set_map($(this)); //form_utils function
         update_value($(this).val()); //form_utils function
         if ($(this).val() == 'shape_file'){

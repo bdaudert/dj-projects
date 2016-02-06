@@ -71,19 +71,24 @@
 
     <!--Backbutton issue-->
     <script type="text/javascript">
-    $(document).ready(function () {
-       $("select").each(function () {
-            $(this).val($(this).find('option[selected]').val());
-        }); 
-    });
-    /*
-    //This causes uptions to go to default during processing.
-    $(window).bind('beforeunload', function(e) {
+    //$(document).ready(function () {
+    //This causes select options to go to default during processing.
+    //$(window).bind('beforeunload', function(e) {
+    $(window).bind('pageshow', function(e) { 
         $("select").each(function () {
-            $(this).val($(this).find('option[selected]').val());
-        });
-    })
-    */
+            //var sel = $(this).find('option[selected]').val();
+            var sel = $(this).val();
+            if ($.isArray(sel)){
+                $.each(sel, function(i,val){
+                    $('option[value=' + val + ']').prop("selected", true);
+                });
+            }
+            else{
+                $(this).val($(this).find('option[selected]').val());
+            }
+        }); 
+        //$(this).val($(this).find('option[selected]').val()); 
+    });
     </script>
     
     <!--Hide loading icon iupon page load-->

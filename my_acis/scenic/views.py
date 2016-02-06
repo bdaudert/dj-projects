@@ -9,7 +9,6 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.db.models.query import QuerySet
 from django.contrib.localflavor.us.forms import USStateField
-from django.core.mail import send_mail
 from django.conf import settings
 
 #Python imports
@@ -84,25 +83,6 @@ def about_us(request):
         'icon':'AboutUs.png'
     }
     url = settings.APPLICATIONS['about_us'][2]
-    errors = []
-    if request.method == 'POST':
-        if not request.POST.get('subject', ''):
-            errors.append('Enter a subject.')
-        if not request.POST.get('message', ''):
-            errors.append('Enter a message.')
-        if request.POST.get('email') and '@' not in request.POST['email']:
-            errors.append('Enter a valid e-mail address.')
-        if not errors:
-            send_mail(
-                request.POST['subject'],
-                request.POST['message'],
-                request.POST.get('email', 'noreply@example.com'),
-                ['scenic@dri.edu'],
-            )
-            context['message'] = 'Thank you for your input!'
-        else:
-            context['message'] = errors
-            context['error'] = errors
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def who_we_are(request):
@@ -334,32 +314,6 @@ def sw_networks(request):
         'icon':'DataPortal.png'
     }
     return render_to_response('scenic/data/sw_networks.html', context, context_instance=RequestContext(request))
-
-def feedback(request):
-    context = {
-        'title': 'Feedback',
-        'icon':'AboutUs.png'
-    }
-    errors = []
-    if request.method == 'POST':
-        if not request.POST.get('subject', ''):
-            errors.append('Enter a subject.')
-        if not request.POST.get('message', ''):
-            errors.append('Enter a message.')
-        if request.POST.get('email') and '@' not in request.POST['email']:
-            errors.append('Enter a valid e-mail address.')
-        if not errors:
-            send_mail(
-                request.POST['subject'],
-                request.POST['message'],
-                request.POST.get('email', 'noreply@example.com'),
-                ['scenic@dri.edu'],
-            )
-            context['message'] = 'Thank you for your input!'
-        else:
-            context['message'] = errors
-            context['error'] = errors
-    return render_to_response('scenic/feedback.html', context, context_instance=RequestContext(request))
 
 def download(request):
     context = {
@@ -1257,7 +1211,7 @@ def station_finder(request):
             el_vX_list.append(str(WRCCData.ACIS_ELEMENTS_DICT[el]['vX']))
         #Set up params for station_json generation
         by_type = WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['area_type']]
-        val = form_cleaned[WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['area_type']]]
+        val = form_cleaned[by_type]
         date_range = [form_cleaned['start_date'],form_cleaned['end_date']]
         el_date_constraints = form_cleaned['elements_constraints'] + '_' + form_cleaned['dates_constraints']
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=el_date_constraints)
@@ -1279,7 +1233,6 @@ def station_finder(request):
             context['error'] = "No stations found for these search parameters."
         context['station_json'] = f_name
         context['run_done'] = True
-
     #Shape file upload
     if 'formShapeFile' in request.POST:
         results = {}
@@ -1444,7 +1397,7 @@ def monthly_summary(request):
         #Set dates list
         dates_list = DJ.get_dates_list()
         #Run application
-        App = WRCCClasses.SODApplication('Sodxtrmts', data, app_specific_params=app_params)
+        App = WRCCClasses.SODApplication('SodxtrmtsSCENIC', data, app_specific_params=app_params)
         data = App.run_app()
         #Set header
         header = set_sodxtrmts_head(form_cleaned)

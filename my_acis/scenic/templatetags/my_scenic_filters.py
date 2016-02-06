@@ -51,7 +51,7 @@ def is_in(var, args):
     if isinstance(args, basestring):
         arg_list = [str(arg.strip()) for arg in args.split(',')]
     else:
-        arg_list = args
+        arg_list = [str(arg.strip()) for arg in args]
     return str(var) in arg_list
 
 @register.filter(name='to_string')

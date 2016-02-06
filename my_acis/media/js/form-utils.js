@@ -448,6 +448,28 @@ function set_area(row_id, node){
     pop_id.append(div);
 }
 
+function set_elements(){
+    var non_prism_els = ['gdd','hdd','cdd'];
+    var station_only_els = ['obst','snow','snwd','evap','wdmv'];
+    $("#elements option").each(function(){
+        //Check if prism data, disable degree days
+        if ($('#data_type').val() == 'station'){
+            $(this).attr('disabled',false);
+        }
+    
+        if ($('#data_type').val() == 'grid'){    
+            if ($('#grid').val() == '21' && $(this).val().inList(non_prism_els)){
+                $(this).attr('disabled',true);
+            }
+            else{
+                if ($(this).val().inList(station_only_els)){
+                    $(this).attr('disabled',true);
+                }
+            }
+        }
+    });
+}
+
 //Functions to hide and show maps
 //Used in set_map function
 function hide_grid_point_map(){

@@ -107,7 +107,7 @@
     </p>
 
     <h2 align="center">Publications</h2>
-    <p>
+    <p align="center">
     <a target="_blank" href="http://journals.ametsoc.org/doi/abs/10.1175/BAMS-D-14-00121.1?af=R">
     Establishing best practices to improve usefulness and usability<br />
     of web interfaces providing atmospheric data
@@ -178,21 +178,10 @@
         <a href="https://nccwsc.usgs.gov/" target="_blank"><img alt="USGS" title="USGS" src="{{MEDIA_URL}}img/USGSLogo.png" class="logo"></a>
        --> 
 
-    <h2 align="center" id="contact_us" name="contact_us">Contact Us</h2>
+        <div align="center">
+        <h2 align="center" id="contact_us" name="contact_us">Contact Us</h2>
         <h3><font color="#FF007F">SCENIC</h3>
         Mail questions and comments to <a href="mailto:scenic@dri.edu">scenic@dri.edu</a><br /><br /> 
-        
-         <h3><font color="#FF007F">or</font></h3> 
- 
-        <p class="error" ><font size="4">{{message}}</font></p>
-       {%if not error and not message%}
-        <form action="" method="post">{% csrf_token %}
-        <p>Subject: <input type="text" name="subject"></p>
-        <p>Your email (optional): <input type="text" name="email"></p>
-        <p><textarea name="message" rows="10" cols="50"></textarea></p>
-        <input type="submit" value="Submit">
-        </form>
-        {%endif%}
 
         <h3><font color="#FF007F">WRCC</font></h3>
         <p><strong>Western Regional Climate Center</strong><br />
@@ -205,12 +194,13 @@
             8am - 4pm Pacific Time <br />
             <a target="_blank" href="http://www.facebook.com/pages/Western-Regional-Climate-Center-WRCC/330763610291776" rel="external"><img src="http://www.wrcc.dri.edu/media/img/facebook_16.png" alt="FB icon" title="FB Icon"></a>
             <a  target="_blank" href="http://www.facebook.com/pages/Western-Regional-Climate-Center-WRCC/330763610291776" rel="external">WRCC on Facebook</a>
+        </div>
 
-
-   <h2 align="center" id="links" name="links">Links</h2>
-   <table>
-   <td>
-   <a target="_blank" href="http://www.swcsc.arizona.edu/">Southwest CSC pages at the University of Arizona</a>
+    <div align="center">
+    <h2 align="center" id="links" name="links">Links</h2>
+    <table>
+    <td>
+    <a target="_blank" href="http://www.swcsc.arizona.edu/">Southwest CSC pages at the University of Arizona</a>
     <br />
     <a target="_blank" href="http://www.doi.gov/csc/southwest/index.cfm">Southwest CSC pages at the DOI</a>
     <br />
@@ -219,7 +209,7 @@
     <a target="_blank" href="http://www.doi.gov/csc/lcc/index.cfm">Landscape Conservation Cooperatives</a>
     </td>
     </table>
-
+    </div>
 </td>
 </table>
 

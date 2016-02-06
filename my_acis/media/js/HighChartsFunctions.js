@@ -11,10 +11,7 @@ function getAverage(chart) {
             });
         }
     });
-    console.log(total);
-    console.log(count);
     var average = (total / count);
-    console.log(average);
     
     //if the average series already exists, remove it
     var avgSer = chart.get('average');
@@ -60,8 +57,6 @@ function getRange(chart) {
     //get the axis extremes to use as the x values for the average series
     var extx = chart.xAxis[0].getExtremes();
     var exty = chart.yAxis[0].getExtremes();
-    console.log(extx)
-    console.log(exty)
     chart.addSeries({
         id: 'range',
         name: 'range',

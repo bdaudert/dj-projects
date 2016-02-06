@@ -773,7 +773,7 @@ class StationDataForm3(forms.Form):
 
 
         self.fields['user_name'] = MyNameField(initial='Your Name', help_text = 'Enter a user name without special characters (e.g. underscores are not allowed). Example: first name initial + last name.')
-        self.fields['email'] = forms.EmailField(initial='Your e-mail', help_text='Enter a valid e-mail address at wich we can reach you.')
+        self.fields['email'] = forms.EmailField(initial='Your e-mail', help_text='Enter a valid e-mail address at which we can reach you.')
 
         self.fields['select_stations_by'] = forms.CharField(initial=select_stations_by, widget=forms.HiddenInput(), help_text=HELP_TEXTS['select_stations_by'])
         if select_stations_by == 'stn_id':

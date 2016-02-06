@@ -372,7 +372,7 @@ class Sod0Form(forms.Form):
         if app_name == 'Sodxtrmts':
             self.fields['statistic'] = forms.ChoiceField(choices=SX_ANALYSIS_CHOICES, initial='mave')
             self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='maxt')
-            self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F')
+            self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F',widget=forms.HiddenInput())
         if app_name == 'Sodpiii':
             self.fields['skew'] = forms.ChoiceField(choices=([('as','Areal Skew'), ('ss','Station Skew'), ]), initial='ss')
             self.fields['cv'] = forms.ChoiceField(choices=([('acv','Areal CV'), ('scv','Station CV'), ]), initial='scv')
