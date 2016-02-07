@@ -433,12 +433,32 @@ function set_area(row_id, node){
     html_text = lv.label + ': ';
     cell0.html(html_text);
     cell1 = cell0.next('td');
-    html_text = '<input type="text" id="' + node.val() + '" name="'+
-    node.val() +'" value="' +  lv.value + '"';
-    if (lv.autofill_list != '') {
-        html_text+=' list="' + lv.autofill_list + '"';
+    if (node.val() != 'state'){
+        html_text = '<input type="text" id="' + node.val() + '" name="'+
+        node.val() +'" value="' +  lv.value + '"';
+        if (lv.autofill_list != '') {
+            html_text+=' list="' + lv.autofill_list + '"';
+        }
+        html_text+=' onchange="update_value(this.value) & update_maps(this)" >';
     }
-    html_text+=' onchange="update_value(this.value) & update_maps(this)" >';
+    else{
+        var st, state, selected = ' ';
+        html_text = '<select id="' + node.val() + '" name="'+node.val() + '>';
+        for (var i=0;i< state_choices.length;i++){  
+            st = state_choices[i];
+            state = state_names[st];
+            if ($('#overlay_state').length){
+                if (st == $('#overlay_state').val()){selected = ' selected';}
+                else{selected = ' ';}
+            }
+            else{
+                if (st == 'nv'){selected = ' selected';}
+                else {selected = ' ';}
+            } 
+            html_text+='<option' + selected + ' value="' + st +'">' + state + '</option>';
+        }
+        html_text+='</select>'
+    }
     cell1.html(html_text) ;   
     pop_id = $('#area-pop-up');
     pop_id.html('');
