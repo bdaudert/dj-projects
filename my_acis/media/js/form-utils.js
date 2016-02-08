@@ -1351,13 +1351,21 @@ function set_data_summary(node, rowId_t, rowId_s){
 }
 
 function ShowDownloadFormParams() {
+    if ($('#data_format').val() == 'html'){
+        $('#data_format option[value="html"]').attr('selected',false);
+        $('#data_format option[value="xl"]').attr('selected',true);
+        //$('#data_format').val('xl');
+    }
     $('#data_format option[value="html"]').attr('disabled',true);
-    //Set clm option to selected
-    $('#data_format option[value="clm"]').attr('selected',true);
     //Show user name and user email fields
     $('#un').css('display','table-row');
     $('#ue').css('display','table-row');
     //Show delimiter and outfile options
     $('#out_file').css('display','table-row');
-    $('#delim').css('display','table-row');
+    if ($('#data_format').val() == 'clm' || $('#data_format').val() == 'dlm'){
+        $('#delim').css('display','table-row');
+    }
+    else{
+        $('#delim').css('display','none');
+    }
 }
