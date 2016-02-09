@@ -1062,4 +1062,46 @@ $(document).ready(function ($) {
          $(this).css('backgroundColor',"#FFEFD5");
     });
 
+    /***************
+    AJAX CALLS
+    ****************/
+    //OVERLAY_STATES
+    $('#overlay_state').on('change', function(){
+        //$('#overlayForm').on('submit', function(event){
+        //event.preventDefault();
+        show_loading_gif() 
+        var form_data = $("#overlayForm").serialize()
+        form_data+='&area_type=' + $('#area_type').val();
+        var jqxhr = $.ajax({
+            url:'',
+            method: "POST",
+            data: form_data,
+        })
+        .done(function(response) {
+            response = JSON.parse(response);
+            if ('error' in response){
+                $('.ajax_error').html(response['error'])
+            }
+            else{
+                $('#kml_file_path').val(response['kml_file_path']);
+                initialize_map_overlays();
+            }
+            hide_loading_gif();
+        })
+        .fail(function(jqXHR) {
+            hide_loading_gif();
+            if (jqXHR.status == 500) {
+                 alert('Internal Server Error [500].');
+                 //$('#getValue500ErrorModal').modal('show');
+            }
+            else if(jqXHR.status == 429){
+                alert('Too many requests');
+                //$('#getValue429ErrorModal').modal('show');
+            }
+            else{
+                alert('BIG FAT FAIL');
+            }
+       }) 
+    });
+
 });

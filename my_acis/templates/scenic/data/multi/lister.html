@@ -32,7 +32,7 @@
 <!--For maps-->
 <input type="hidden" id="host" name="host" value="{{initial.host}}">
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
-<input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
+<!--<input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">-->
 
 
 <!--Set up autofill-->
@@ -55,8 +55,6 @@
     </table>
 </td>
 </table>
-
-{{xx}}
 
 <!--Form-->
 {% if not results.data and not results.smry%}
@@ -147,6 +145,9 @@
 </td>
 <!--Errors/Down arrow/Maps-->
 <td valign="top" width="60%">
+    <!--AJAX error-->
+    <div style="display:none" class="ajax_error"></div>
+
     <!--Form Errors and search parameter section-->
     <div>{% include 'includes/request_email_message.html'%}</div>
 

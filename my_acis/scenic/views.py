@@ -645,6 +645,23 @@ def multi_lister(request):
         'title': settings.APPLICATIONS[app_name][0]
     }
     url = settings.APPLICATIONS[app_name][2]
+
+    #Overlay maps
+    if 'formOverlay' in request.POST:
+        initial = DJANGOUtils.set_initial(request,'map_overlay')
+        #AJAX
+        kml_file_path = DJANGOUtils.create_kml_file(initial['area_type'], initial['overlay_state'])
+        if kml_file_path[0:5] == 'ERROR':
+            response_data = json.dumps({'error':kml_file_path})
+        else:
+            response_data = json.dumps({'kml_file_path':kml_file_path})
+        response = HttpResponse(
+            json.dumps(response_data),
+            content_type="application/json"
+        )
+        return response
+
+
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
@@ -655,13 +672,6 @@ def multi_lister(request):
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
-            #Only show maps if area field is in form_error
-            if 'County'in form_error.keys() or 'County Warning Area' in form_error.keys():
-                context['need_overlay_map'] = True
-            if 'Basin'in form_error.keys() or 'Climate Division' in form_error.keys():
-                context['need_overlay_map'] = True
-            if 'Custom Shape' in form_error.keys():
-                context['need_polygon_map'] = True
             return render_to_response(url, context, context_instance=RequestContext(request))
         #Deal with large requests
         num_points, num_days = WRCCUtils.check_request_size(form_cleaned)
@@ -774,20 +784,6 @@ def multi_lister(request):
         context['need_polygon_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
 
-    #Overlay maps
-    if 'formOverlay' in request.POST:
-        context['need_overlay_map'] = True
-        initial = DJANGOUtils.set_initial(request,'map_overlay')
-        #overide kml_file_path
-        for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
-            kml_file_path = DJANGOUtils.create_kml_file(at, initial['overlay_state'])
-            if initial['area_type'] == at:
-                if kml_file_path[0:5] == 'ERROR':
-                    results = {'error':kml_file_path}
-                    context['results'] = results
-                    return render_to_response(url, context, context_instance=RequestContext(request))
-                initial['kml_file_path'] = kml_file_path
-        context['initial'] = initial
 
     #Download button pressed
     if 'formDownload' in request.POST:
@@ -877,16 +873,6 @@ def temporal_summary(request):
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
-            if form_cleaned['area_type'] in ['basin','county','county_warning_area', 'climate_division']:
-                context['need_overlay_map'] = True
-                for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
-                    kml_file_path = DJANGOUtils.create_kml_file(at, form['overlay_state'])
-                    if form['area_type'] == at:
-                        if kml_file_path[0:5] == 'ERROR':
-                            results = {'error':kml_file_path}
-                            context['results'] = results
-                            return render_to_response(url, context, context_instance=RequestContext(request))
-                        context['kml_file_path'] = kml_file_path
             return render_to_response(url, context, context_instance=RequestContext(request))
 
         #Generate Maps
@@ -943,10 +929,27 @@ def spatial_summary(request):
         'title': settings.APPLICATIONS[app_name][0]
     }
     url = settings.APPLICATIONS[app_name][2]
+
+
+    #Overlay maps
+    if 'formOverlay' in request.POST:
+        initial = DJANGOUtils.set_initial(request,'map_overlay')
+        #AJAX
+        kml_file_path = DJANGOUtils.create_kml_file(initial['area_type'], initial['overlay_state'])
+        if kml_file_path[0:5] == 'ERROR':
+            response_data = json.dumps({'error':kml_file_path})
+        else:
+            response_data = json.dumps({'kml_file_path':kml_file_path})
+        response = HttpResponse(
+            json.dumps(response_data),
+            content_type="application/json"
+        )
+        return response
+
+
     initial  = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
-
         #Set form and initial
         form = DJANGOUtils.set_form(initial, clean=False)
         form_cleaned = DJANGOUtils.set_form(initial)
@@ -956,16 +959,6 @@ def spatial_summary(request):
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
-            if form_cleaned['area_type'] in ['basin','county','county_warning_area', 'climate_division']:
-                context['need_overlay_map'] = True
-                for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
-                    kml_file_path = DJANGOUtils.create_kml_file(at, form['overlay_state'])
-                    if form['area_type'] == at:
-                        if kml_file_path[0:5] == 'ERROR':
-                            results = {'error':kml_file_path}
-                            context['results'] = results
-                            return render_to_response(url, context, context_instance=RequestContext(request))
-                        context['kml_file_path'] = kml_file_path
             return render_to_response(url, context, context_instance=RequestContext(request))
 
         #Display parameters
@@ -1100,21 +1093,6 @@ def spatial_summary(request):
         context['need_polygon_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
 
-    #Overlay maps
-    if 'formOverlay' in request.POST:
-        context['need_overlay_map'] = True
-        initial = DJANGOUtils.set_initial(request,'map_overlay')
-        #overide kml_file_path
-        for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
-            kml_file_path = DJANGOUtils.create_kml_file(at, initial['overlay_state'])
-            if initial['area_type'] == at:
-                if kml_file_path[0:5] == 'ERROR':
-                    results = {'error':kml_file_path}
-                    context['results'] = results
-                    return render_to_response(url, context, context_instance=RequestContext(request))
-                initial['kml_file_path'] = kml_file_path
-        context['initial'] = initial
-
     #Download button pressed
     if 'formDownload' in request.POST:
         form = DJANGOUtils.set_form(request,clean=False)
@@ -1164,6 +1142,21 @@ def station_finder(request):
     }
     url = settings.APPLICATIONS[app_name][2]
 
+    #Overlay maps
+    if 'formOverlay' in request.POST:
+        initial = DJANGOUtils.set_initial(request,'map_overlay')
+        #AJAX
+        kml_file_path = DJANGOUtils.create_kml_file(initial['area_type'], initial['overlay_state'])
+        if kml_file_path[0:5] == 'ERROR':
+            response_data = json.dumps({'error':kml_file_path})
+        else:
+            response_data = json.dumps({'kml_file_path':kml_file_path})
+        response = HttpResponse(
+            json.dumps(response_data),
+            content_type="application/json"
+        )
+        return response
+
     from subprocess import call
     call(["touch", settings.TEMP_DIR + "Empty.json"])
     #Set up initial map (NV stations)
@@ -1201,8 +1194,6 @@ def station_finder(request):
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
-            if form_cleaned['area_type'] in ['basin','county','county_warning_area', 'climate_division']:
-                context['need_overlay_map'] = True
             return render_to_response(url, context, context_instance=RequestContext(request))
         #Convert element list to var majors
         el_vX_list = []
@@ -1287,9 +1278,6 @@ def station_finder(request):
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error_download'] = form_error
-            m = ['basin','county','county_warning_area', 'climate_division']
-            if 'area_type' in initial.keys() and initial['area_type'] in m:
-                context['need_overlay_map'] = True
             return render_to_response(url, context, context_instance=RequestContext(request))
         context['large_request'] = True
         #Submit large request
@@ -1298,17 +1286,6 @@ def station_finder(request):
         json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
         WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, json_dict)
         return render_to_response(url, context, context_instance=RequestContext(request))
-
-    #Overlay maps
-    if 'formOverlay' in request.POST:
-        context['need_overlay_map'] = True
-        initial = DJANGOUtils.set_initial(request,'map_overlay')
-        #overide kml_file_path
-        for at in ['basin', 'county', 'county_warning_area', 'climate_division']:
-            kml_file_path = DJANGOUtils.create_kml_file(at, initial['overlay_state'])
-            if initial['area_type'] == at:
-                initial['kml_file_path'] = kml_file_path
-        context['initial'] = initial
 
     return render_to_response(url, context, context_instance=RequestContext(request))
 
@@ -1606,6 +1583,8 @@ def climatology(request):
             return DDJ.write_to_file()
 
     return render_to_response(url, context, context_instance=RequestContext(request))
+
+
 
 ##############################
 #Utlities

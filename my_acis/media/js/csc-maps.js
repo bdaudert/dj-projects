@@ -1186,6 +1186,10 @@ function initialize_map_overlays() {
     var area_type = $('#area_type').val();
     var host = $('#HOST').val();
     var kml_file_path = $('#kml_file_path').val();
+    //Display map related divs
+    $('#OverlayMap').css('display','block');
+    $('#map-overlay').css('display','block');
+    $('#content-window').css('display','block');
     //type is one of: basin, cwa, climdiv, county
     var myLatLng = new google.maps.LatLng(37.0, -114.05);
     var mapOptions = {

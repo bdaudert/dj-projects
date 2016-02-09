@@ -1,5 +1,5 @@
          <div align="left" id="formOverlay" style="display:inherit;">
-            <form method="post"  id="overlayForm" action="" onsubmit="show_loading() & setHiddenFields('tableDataForm', $(this).attr('id'))">{% csrf_token %}
+            <form method="POST"  id="overlayForm" action="">{% csrf_token %}
             <table class="form_overlay" style="margin:0px;">
             <td>State:</td>
             <td>
@@ -10,9 +10,9 @@
                 {%endfor%}
                 </select>
             </td>
-            <td><input type="submit" value="Update Map" name="formOverlay"/></td>
             </tr>
             </table>
+            <input type="hidden" name="formOverlay" value="">
             <input type="hidden" id="host" name="host" value="{{initial.host}}">
             <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
             </form>

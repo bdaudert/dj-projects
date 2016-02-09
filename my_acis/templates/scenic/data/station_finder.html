@@ -8,7 +8,6 @@
 
 <!---Hidden variables-->
 <input type="hidden" id="app_name" name="app_name" value="station_finder">
-<input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
 
 <!--Documentation-->
 <div align="left" id="tool_info" style="display:none;">
@@ -115,12 +114,13 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <input type="hidden" name="app_name" value="station_finder">
     <input style="margin:5px" type="submit" value="Show me stations" name="formData"/>
     <input type="hidden" name="checked_categories" id="checked_categories" value="all">
-    <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
     </form>
     </div><!--end form data div-->
 
 <!--Errors/down arrow/maps-->
 <td valign="top" align="center">
+    <!--AJAX error-->
+    <div style="display:none" class="ajax_error"></div>
     <!--Form Errors and search parameter section-->
     {%if form_error%}
     <div id="form_error" class="results">
