@@ -34,7 +34,7 @@
                             style="display:none;"
                         {%endif%}
                     {%endif%}
-                    {% if initial.start_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
+                    {% if initial.end_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
                 {%endfor%}
                 <!--past dates-->
                 {%for yr in initial.start_year|make_range_reversed:initial.max_year%}  
