@@ -665,6 +665,8 @@ def multi_lister(request):
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+        initial = DJANGOUtils.set_initial(request,app_name)
+        context['initial'] = initial
         form = DJANGOUtils.set_form(initial,clean=False)
         form_cleaned = DJANGOUtils.set_form(initial)
         #Check for form errors

@@ -64,7 +64,7 @@
 {%endif%}
 <td valign="top" width="40%">
     <div id='formData'>
-        <form method="post" id="tableDataForm" action="" onsubmit="show_loading() & setHiddenFields('overlayForm', $(this).attr('id'))">{% csrf_token %}
+        <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData">
         <tr class="station_grid" style="display:table-row">{% include 'includes/area_select.html'%}</tr>
         <tr class="station_grid" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
@@ -117,7 +117,7 @@
         {%endif%}
         {%if initial.data_type == "station" and initial.data_summary == "none"%}
         <tr class="station" id="flags" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
-        <tr class="station" id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</tr>
+        <tr class="station" id="obs_time" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
         {%elif initial.data_type == "station" and initial.data_summary == "windowed_data"%}
         <tr class="station" id="flags" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
         <tr class="station" id="obs_time" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
@@ -132,14 +132,22 @@
         <tr id="un" style="display:table-row;">{% include 'includes/user_name.html'%}</tr>
         <tr id="ue" style="display:table-row;">{% include 'includes/user_email.html'%}</tr>
         {%else%}
+        {%if initial.data_format == "dlm" or initial.data_format == "clm"%}
+        <tr id="delim" class="delim" style="display:table-row;">{% include 'includes/delimiter.html'%}</tr>
+        {%else%}
         <tr id="delim" class="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
-        <tr id="out_file" class="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
+        {%endif%}
+        {%if inital.data_format != "html"%}
+            <tr id="out_file" class="out_file" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
+        {%else%}
+            <tr id="out_file" class="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
+        {%endif%}
         <tr id="un" style="display:none;">{% include 'includes/user_name.html'%}</tr>
         <tr id="ue" style="display:none;">{% include 'includes/user_email.html'%}</tr>
         {%endif%}
         </table>
         <input type="hidden" name="app_name" value="multi_lister">
-        <input style="margin:5px" type="submit" value="Get data" name="formData"/>
+        <input class="mainFormSubmit" style="margin:5px" type="submit" value="Get data" name="formData"/>
         </form>
     </div>
 </td>

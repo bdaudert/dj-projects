@@ -1070,7 +1070,7 @@ $(document).ready(function ($) {
         //$('#overlayForm').on('submit', function(event){
         //event.preventDefault();
         show_loading_gif() 
-        var form_data = $("#overlayForm").serialize()
+        var form_data = $("#overlayForm").serialize();
         form_data+='&area_type=' + $('#area_type').val();
         var jqxhr = $.ajax({
             url:'',
@@ -1104,4 +1104,10 @@ $(document).ready(function ($) {
        }) 
     });
 
+    /*
+    //CHECK FOR FORM ERRORS
+    $('.mainFormSubmit').on('click', function(){
+        var form = $(this).parents('form:first');
+        var form_data = form.serialize();
+    });*/
 });
