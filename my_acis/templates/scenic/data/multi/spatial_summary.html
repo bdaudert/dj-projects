@@ -59,7 +59,7 @@
 {%endif%}
 <td valign="top"  width="40%">
     <div id='formData'>
-        <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
+        <form method="post" id="DataForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table class="form" id="tableData" >
         <tr class="station_grid" style="display:table-row">{% include 'includes/area_select.html'%}</tr>
         <tr class="station_grid" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>

@@ -369,7 +369,7 @@ $(document).ready(function ($) {
 
     });
     
-    $('#tableDataForm, #tableMapForm').on('change', 'input, select, textarea', function(){
+    $('#DataForm, #MapForm').on('change', 'input, select, textarea', function(){
         //Hide results
         $('.results').each(function() {
             $(this).css('display','none');
@@ -1090,19 +1090,43 @@ $(document).ready(function ($) {
         })
         .fail(function(jqXHR) {
             hide_loading_gif();
-            if (jqXHR.status == 500) {
-                 alert('Internal Server Error [500].');
-                 //$('#getValue500ErrorModal').modal('show');
-            }
-            else if(jqXHR.status == 429){
-                alert('Too many requests');
-                //$('#getValue429ErrorModal').modal('show');
-            }
-            else{
-                alert('BIG FAT FAIL');
-            }
+            $('.ajax_error').html(get_ajax_error(jqXHR.status));
        }) 
     });
+
+    /*
+    //Station Finder data download
+    $('#StationFinderGetDataSubmit').on('submit', function(event){
+        show_loading_gif()
+        event.preventDefault();
+        setHiddenFields('DataForm', 'DownloadForm');
+        var form_data = $("#DownloadForm").serialize();
+        console.log(form_data);
+        var jqxhr = $.ajax({
+            url:'',
+            method: "POST",
+            data: form_data,
+        })
+        .done(function(response) {
+            response = JSON.parse(response);
+            if ('form_error_download' in response){
+                ShowPopupDocu('formDownload');
+                $('#formErrorDownload').css('display','block');
+            }
+            else{
+                //$('#formDownload').css('display','none');
+                $(".ui-dialog").dialog('close');
+                $('#formErrorDownload').css('display','none');
+                $('#offlineMessage').css('display','block'); 
+            }
+            hide_loading_gif();
+        })
+        .fail(function(jqXHR) {
+            hide_loading_gif();
+            $('.ajax_error').html(get_ajax_error(jqXHR.status));
+       })
+    });
+    */
 
     /*
     //CHECK FOR FORM ERRORS

@@ -58,7 +58,7 @@
 {%endif%}
 <td valign="top" width="40%">
     <div id='formData'>
-        <form method="post" id="tableDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
+        <form method="post" id="DataForm" action="" onsubmit="show_loading();">{% csrf_token %}
         <input type="hidden" name="data_type" id="data_type" class="data_type" value="{{initial.data_type}}">
         <table class="form" id="tableData" >
         <tr style="display:table-row" valign="bottom">{% include 'includes/area_select.html'%}</tr>

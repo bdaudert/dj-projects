@@ -101,7 +101,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 {%endif%}
 <td valign="top">
     <div id='formData'>
-    <form id="tableDataForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('tableDownloadForm', $(this).attr('id'))">{% csrf_token %}
+    <form id="DataForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('DownloadForm', $(this).attr('id'))">{% csrf_token %}
     <table class="form" id="tableData" >
     <tr style="display:table-row">{% include 'includes/area_select.html'%}</tr>
     <tr style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>    
@@ -131,9 +131,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     </div>
     {%endif%}
 
-    {%if large_request and not form_error %}
-    <div>{% include 'includes/offline_message.html'%}</div>
-    {%endif%}
+    <div id="offlineMessage" style="display:none">{% include 'includes/offline_message.html'%}</div>
 
     <!--Shape file upload form-->
     <div>{% include 'includes/upload_shape_file.html'%}</div>
@@ -196,9 +194,10 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
         <p class="error">{{ error }}</p>
     {%endif%} 
     
+
     <!-Data Download->
     <div id='formDownload' style="display:none;max-width:400px;">
-    {%if form_error_download%}
+           {%if form_error_download%}
         <script type="text/javascript">         
             $("#data_format").children('option[value="html"]').attr('disabled', true)
             ShowPopupDocu('formDownload');
@@ -210,43 +209,10 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
         </p>
     {%else%}
         <p class="message">Your request will be processed off line.<br />
-        Please submit this request form.</p>
-    {%endif%}
-    <form id="tableDownloadForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('tableDataForm', $(this).attr('id'))">{% csrf_token %}
-    <table class="form" id="tableDownload" >
-    <tr class="data_sf" id="data_summ" style="display:table-row;">{% include 'includes/data_summary.html'%}</tr>
-    {%if initial.data_summary == "temporal_summary"%}
-        <tr id="temp_summary" class="data_sf" style="display:table-row">{% include 'includes/temporal_summary.html'%}</tr>
-    {%else%}
-        <tr id="temp_summary" class="data_sf" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
-    {%endif%}
-    {%if initial.data_summary == "spatial_summary"%}
-        <tr id="spat_summary" class="data_sf" style="display:table-row">{% include 'includes/spatial_summary.html'%}</tr>
-    {%else%}
-        <tr id="spat_summary" class="data_sf" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
-    {%endif%}
-    {%if initial.data_summary == "windowed_data"%}
-        <tr class="data_sf" id="start_wind" style="display:table-row;">{% include 'includes/start_window.html'%}</tr>
-        <tr class="data_sf" id="end_wind" style="display:table-row;">{% include 'includes/end_window.html'%}</tr>
-    {%else%}
-        <tr class="data_sf" id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
-        <tr class="data_sf" id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</tr>
-    {%endif%}
-    <tr class="data_sf" style="display:table-row;">{% include 'includes/units.html'%}</tr>
-    <tr class="data_sf" style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
-    {%if initial.data_format == "xl" or initial.data_format == "html"%}
-        <tr id="delim" class="data_sf delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
-    {%else%}
-        <tr id="delim" class="data_sf delim" style="display:table-row;">{% include 'includes/delimiter.html'%}</tr>
-    {%endif%}
-    <tr id="out_file" class="data_sf out_file" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
-    <tr id="un" class="data_sf" style="display:table-row;">{% include 'includes/user_name.html'%}</tr>
-    <tr id="ue" class="data_sf" style="display:table-row;">{% include 'includes/user_email.html'%}</tr>
-    </table>
-    <input type="hidden" name="station_json" value="{{station_json}}">
-    <input type="hidden" id="station_ids_string" name="station_ids_string" value="{{initial.station_ids_string}}">
-    <input style="margin:5px" type="submit" value="Get data"style="background-color:#006666;color:#FFEFD5" name="formDownload"/>
-    </form>
+        Please submit this form.</p>
+    {%endif%} 
+        <div id="formErrorDownload" style="display:none;max-width:400px;"></div>
+        {% include 'includes/station_finder_download_data.html'%}
     </div><!--end formDownload div-->
 
     <!-- Main Map-->

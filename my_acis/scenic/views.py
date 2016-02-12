@@ -655,10 +655,7 @@ def multi_lister(request):
             response_data = json.dumps({'error':kml_file_path})
         else:
             response_data = json.dumps({'kml_file_path':kml_file_path})
-        response = HttpResponse(
-            json.dumps(response_data),
-            content_type="application/json"
-        )
+        response = set_ajax_response(response_data)
         return response
 
 
@@ -942,10 +939,7 @@ def spatial_summary(request):
             response_data = json.dumps({'error':kml_file_path})
         else:
             response_data = json.dumps({'kml_file_path':kml_file_path})
-        response = HttpResponse(
-            json.dumps(response_data),
-            content_type="application/json"
-        )
+        response = set_ajax_response(response_data)
         return response
 
 
@@ -1153,17 +1147,38 @@ def station_finder(request):
             response_data = json.dumps({'error':kml_file_path})
         else:
             response_data = json.dumps({'kml_file_path':kml_file_path})
-        response = HttpResponse(
-            json.dumps(response_data),
-            content_type="application/json"
-        )
+        response = set_ajax_response(response_data)
         return response
+
+    '''
+    #Download data for all sations displayed
+    #Request will be processed offline
+    if 'formDownload' in request.POST:
+        initial = DJANGOUtils.set_initial(request,'sf_download')
+        form_cleaned = DJANGOUtils.set_form(initial, clean=True)
+        fields_to_check = ['user_email']
+        form_error = check_form(form_cleaned, fields_to_check)
+        if form_error:
+            response_data = json.dumps({'form_error_download':form_error})
+        else:
+            response_data = json.dumps({'large_request':True})
+        #Submit large request
+        #os.remove(settings.DATA_REQUEST_BASE_DIR + 'SFDownloadTest_params.json')
+        json_dict = copy.deepcopy(form_cleaned)
+        json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
+        WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, json_dict)
+        response = set_ajax_response(response_data)
+        return response
+    '''
+
+    #Set initial
     from subprocess import call
     call(["touch", settings.TEMP_DIR + "Empty.json"])
     #Set up initial map (NV stations)
     #context['station_json'] = 'NV_stn.json'
     initial = DJANGOUtils.set_initial(request, app_name)
     context['initial'] = initial
+
     #Set up maps if needed
     if request.method == "GET" and not 'elements' in request.GET:
         #Generate initial map
@@ -1590,6 +1605,15 @@ def climatology(request):
 ##############################
 #Utlities
 ##############################
+###########
+#AJAX
+###########
+def set_ajax_response(response_data):
+    response = HttpResponse(
+        json.dumps(response_data),
+        content_type="application/json"
+    )
+    return response
 
 ###########
 #General

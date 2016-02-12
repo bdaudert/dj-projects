@@ -59,7 +59,7 @@
 <!--Form-->
 <td valign="top" width="40%">
     <div id="formData" class="form" style="border:none;">
-        <form method="post" id="tableDataForm" action="" onsubmit="show_loading()">{% csrf_token %}
+        <form method="post" id="DataForm" action="" onsubmit="show_loading()">{% csrf_token %}
         <table id="tableData" class="form">
         <tr class="station_grid" style="display:table-row" valign="bottom">{% include 'includes/area_select.html'%}</tr>
         <tr class="station_grid" style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>

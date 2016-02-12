@@ -4,7 +4,7 @@
     Upload all shape files (.shp, .prj, etc.) and choose the polygon ID.<br />
     e.g.if polyon ID = 1, the fist polygon in the file will be uploaded.
     </p>
-    <form id="formShapeFile" method="post" action="" enctype="multipart/form-data" onsubmit="show_loading() & setHiddenFields('tableDataForm', $(this).attr('id'));">{% csrf_token %}
+    <form id="formShapeFile" method="post" action="" enctype="multipart/form-data" onsubmit="show_loading() & setHiddenFields('DataForm', $(this).attr('id'));">{% csrf_token %}
     <table class="form" align="left">
       <tr><td>
       <!--Some shapefiles need the shx and mauby some other files to be opened properly-->
