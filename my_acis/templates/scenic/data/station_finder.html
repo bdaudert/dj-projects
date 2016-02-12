@@ -131,7 +131,11 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     </div>
     {%endif%}
 
-    <div id="offlineMessage" style="display:none">{% include 'includes/offline_message.html'%}</div>
+    {%if large_request and not form_download_error%}
+    <div id="offlineMessage" class="results">{% include 'includes/offline_message.html'%}</div>
+    {%else%}
+    <div id="offlineMessage" style="display:none" class="results">{% include 'includes/offline_message.html'%}</div>
+    {%endif%}
 
     <!--Shape file upload form-->
     <div>{% include 'includes/upload_shape_file.html'%}</div>
