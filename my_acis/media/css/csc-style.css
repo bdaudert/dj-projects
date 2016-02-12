@@ -751,7 +751,7 @@ img.center {
 #map-station-finder {
     position:relative;
     left:0px;
-    float:center;
+    float:left;
     height: 400px;
     border:2px solid #006666;
     width:90%;
@@ -762,15 +762,17 @@ img.center {
 table #map_legend {
     position:relative;
     left:0px;
+    float:left;
     background: #FFEFD5;
     border:2px solid #006666;
     font-size:12px;
-    width:90%;
+    width:92%;
 }
 
 .station_list   {
     position:relative;
     left:0px;
+    float:left;
     max-height:450px;
     width:90%;
     overflow:auto;

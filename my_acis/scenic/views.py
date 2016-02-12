@@ -1158,7 +1158,6 @@ def station_finder(request):
             content_type="application/json"
         )
         return response
-
     from subprocess import call
     call(["touch", settings.TEMP_DIR + "Empty.json"])
     #Set up initial map (NV stations)
@@ -1168,13 +1167,12 @@ def station_finder(request):
     #Set up maps if needed
     if request.method == "GET" and not 'elements' in request.GET:
         #Generate initial map
-        by_type = WRCCData.ACIS_TO_SEARCH_AREA['state']
-        val = 'nv'
+        by_type = 'state'; val = 'nv'
         date_range = [initial['start_date'],initial['end_date']]
         el_date_constraints = initial['elements_constraints'] + '_' + initial['dates_constraints']
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=['1','2','4'],time_range=date_range, constraints=el_date_constraints)
-        context['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
-
+        #context['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
+        #context['number_of_stations'] = len(context['station_ids'].split(','))
         #Write json file for link to data lister
         json_dict = copy.deepcopy(initial)
         json_dict['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
@@ -1226,6 +1224,7 @@ def station_finder(request):
             context['error'] = "No stations found for these search parameters."
         context['station_json'] = f_name
         context['run_done'] = True
+
     #Shape file upload
     if 'formShapeFile' in request.POST:
         results = {}
