@@ -425,9 +425,18 @@ $(document).ready(function ($) {
     and additional data download options 
     */
     $('.obtain_sf_data').on('click', function(){
-        $("#data_format").children('option[value="html"]').attr('disabled', true)
         ShowPopupDocu('formDownload');
-        
+        $("#data_format").children('option[value="html"]').attr('disabled', true);
+        /*
+        if ($('#formDownload').css('display') == 'none'){
+            $("#data_format").children('option[value="html"]').attr('disabled', true);
+            $('#formDownload').css('display','block');
+        }
+        else{
+            $('#formDownload').css('display','none');
+            $("#data_format").children('option[value="html"]').attr('disabled', false);
+        }
+        */
     });
     
     /*
@@ -1094,14 +1103,11 @@ $(document).ready(function ($) {
        }) 
     });
 
-    /*
     //Station Finder data download
-    $('#StationFinderGetDataSubmit').on('submit', function(event){
+    $('#StationFinderDownloadForm').on('submit', function(event){
         show_loading_gif()
         event.preventDefault();
-        setHiddenFields('DataForm', 'DownloadForm');
-        var form_data = $("#DownloadForm").serialize();
-        console.log(form_data);
+        var form_data = $('#DataForm, #StationFinderDownloadForm').serialize();
         var jqxhr = $.ajax({
             url:'',
             method: "POST",
@@ -1110,16 +1116,37 @@ $(document).ready(function ($) {
         .done(function(response) {
             response = JSON.parse(response);
             if ('form_error_download' in response){
-                ShowPopupDocu('formDownload');
+                $('#formErrorDownload').html(response['form_error_download']);
                 $('#formErrorDownload').css('display','block');
             }
             else{
-                //$('#formDownload').css('display','none');
-                $(".ui-dialog").dialog('close');
+                $("#formDownload").dialog('close');
                 $('#formErrorDownload').css('display','none');
                 $('#offlineMessage').css('display','block'); 
             }
             hide_loading_gif();
+        })
+        .fail(function(jqXHR) {
+            hide_loading_gif();
+            $('.ajax_error').html(get_ajax_error(jqXHR.status));
+       })
+    });
+  
+    /*
+    //Other data downloads
+    $('#formDownload').on('submit', function(event){
+        show_loading_gif()
+        console.log('yooooo');   
+        event.preventDefault();
+        var form_data = $('#DataForm, #DownloadForm').serialize();
+        var jqxhr = $.ajax({
+            url:'',
+            method: "POST",
+            data: form_data,
+        })
+        .done(function(response) {
+            
+            //response = JSON.parse(response);
         })
         .fail(function(jqXHR) {
             hide_loading_gif();

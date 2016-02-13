@@ -1,11 +1,14 @@
        {%load my_scenic_filters%}
+       <!--
       {%if json_dict%}
-        <form method="post" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading() & setHiddenFields('DataForm', this)">
+        <form method="post" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading() & setHiddenField('DataForm', this)">
         {%elif json_file%}
         <form method="post" action="?json_file={{json_file}}" onsubmit="show_loading() & setHiddenFields('DataForm', this)">
         {%else%}
         <form method="post" action="" onsubmit="show_loading() & setHiddenFields('DataForm', this)">
         {%endif%}
+        -->
+        <form method="post" action="" id="formDownload">
         {% csrf_token %}
         <table id="tableDownload">
         <tr valign="top">
@@ -68,6 +71,7 @@
         </td>
         </tr>
         </table>
+        <input type="hidden" name="formDownload">
         <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-        <input type="submit" value="Download" name="formDownload">
+        <input type="submit" value="Download">
         </form>

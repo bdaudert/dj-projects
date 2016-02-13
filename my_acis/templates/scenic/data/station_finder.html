@@ -91,6 +91,15 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <td><div id="how_to_head">{% include 'includes/Button_how_to.html'%}</div></td>
     </tr>
     </table>
+
+    <!--Download form-->
+    <div id="formDownload" class="form" style="display:none;">
+        {% include 'includes/station_finder_download_form.html'%}
+    </div>
+    <div id="offlineMessage"style="display:none;">
+        {% include 'includes/offline_message.html'%}
+    </div>
+
 </td>
 </table>
 
@@ -131,11 +140,12 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     </div>
     {%endif%}
 
+    <!--
     {%if large_request and not form_download_error%}
     <div id="offlineMessage" class="results">{% include 'includes/offline_message.html'%}</div>
     {%else%}
     <div id="offlineMessage" style="display:none" class="results">{% include 'includes/offline_message.html'%}</div>
-    {%endif%}
+    {%endif%}-->
 
     <!--Shape file upload form-->
     <div>{% include 'includes/upload_shape_file.html'%}</div>
@@ -198,27 +208,6 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
         <p class="error">{{ error }}</p>
     {%endif%} 
     
-
-    <!-Data Download->
-    <div id='formDownload' style="display:none;max-width:400px;">
-           {%if form_error_download%}
-        <script type="text/javascript">         
-            $("#data_format").children('option[value="html"]').attr('disabled', true)
-            ShowPopupDocu('formDownload');
-        </script>
-        <p class="error">
-            {%for key, val in form_error_download.items%}
-                {{key}}: {{val}}<br />
-            {%endfor%}
-        </p>
-    {%else%}
-        <p class="message">Your request will be processed off line.<br />
-        Please submit this form.</p>
-    {%endif%} 
-        <div id="formErrorDownload" style="display:none;max-width:400px;"></div>
-        {% include 'includes/station_finder_download_data.html'%}
-    </div><!--end formDownload div-->
-
     <!-- Main Map-->
     {% if station_json and run_done%}
     <div class="results">

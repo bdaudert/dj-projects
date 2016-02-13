@@ -362,6 +362,38 @@ def single_lister(request):
     url = settings.APPLICATIONS[app_name][2]
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
+
+    if 'formDownload' in request.POST:
+        form = DJANGOUtils.set_form(request,clean=False)
+        json_file = request.POST.get('json_file', None)
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        file_name = form['output_file_name'] + '_' + time_stamp
+        with open(settings.TEMP_DIR + json_file, 'r') as f:
+            req =  json.load(f)
+        #Override data_format, delimiter, output_file
+        req['form']['data_format'] = form['data_format']
+        req['form']['delimiter'] = form['delimiter']
+        req['form']['output_file_name'] = form['output_file_name']
+        if form['data_format'] in ['clm','dlm']:
+            if form['data_format'] == 'clm':
+                file_extension = '.txt'
+            else:
+                file_extension = '.dat'
+            response = HttpResponse(mimetype='text/csv')
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
+            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
+            CsvWriter.write_to_file()
+            return response
+        if form['data_format'] in ['xl']:
+            file_extension = '.xls'
+            response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
+            #WRCCUtils.write_to_excel(response,req)
+            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
+            ExcelWriter.write_to_file()
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
+            return response
+
+    #MAIN APP
     #Data request submitted
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
@@ -443,6 +475,15 @@ def single_lister(request):
             with open(settings.TEMP_DIR + json_file,'w+') as f:
                 f.write(results_json)
             context['json_file'] = json_file
+    return render_to_response(url, context, context_instance=RequestContext(request))
+
+def intraannual(request):
+    app_name = 'intraannual'
+    context = {
+        'title': settings.APPLICATIONS[app_name][0]
+    }
+    url = settings.APPLICATIONS[app_name][2]
+
     #Download button pressed
     if 'formDownload' in request.POST:
         form = DJANGOUtils.set_form(request,clean=False)
@@ -472,14 +513,8 @@ def single_lister(request):
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
-    return render_to_response(url, context, context_instance=RequestContext(request))
 
-def intraannual(request):
-    app_name = 'intraannual'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
-    url = settings.APPLICATIONS[app_name][2]
+    #MAIN APP
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
@@ -530,6 +565,15 @@ def intraannual(request):
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR +json_file, json_dict)
         context['json_file'] = json_file
 
+    return render_to_response(url, context, context_instance=RequestContext(request))
+
+def yearly_summary(request):
+    app_name = 'yearly_summary'
+    context = {
+        'title': settings.APPLICATIONS[app_name][0]
+    }
+    url = settings.APPLICATIONS[app_name][2]
+
     #Download button pressed
     if 'formDownload' in request.POST:
         form = DJANGOUtils.set_form(request,clean=False)
@@ -559,14 +603,8 @@ def intraannual(request):
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
-    return render_to_response(url, context, context_instance=RequestContext(request))
 
-def yearly_summary(request):
-    app_name = 'yearly_summary'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
-    url = settings.APPLICATIONS[app_name][2]
+    #MAIN APP
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
@@ -608,35 +646,6 @@ def yearly_summary(request):
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR +json_file, json_dict)
         context['json_file'] = json_file
 
-    #Download button pressed
-    if 'formDownload' in request.POST:
-        form = DJANGOUtils.set_form(request,clean=False)
-        json_file = request.POST.get('json_file', None)
-        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-        file_name = form['output_file_name'] + '_' + time_stamp
-        with open(settings.TEMP_DIR + json_file, 'r') as f:
-            req =  json.load(f)
-        #Override data_format, delimiter, output_file
-        req['form']['data_format'] = form['data_format']
-        req['form']['delimiter'] = form['delimiter']
-        req['form']['output_file_name'] = form['output_file_name']
-        if form['data_format'] in ['clm','dlm']:
-            if form['data_format'] == 'clm':
-                file_extension = '.txt'
-            else:
-                file_extension = '.dat'
-            response = HttpResponse(mimetype='text/csv')
-            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
-            CsvWriter.write_to_file()
-            return response
-        if form['data_format'] in ['xl']:
-            file_extension = '.xls'
-            response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
-            ExcelWriter.write_to_file()
-            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
-            return response
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def multi_lister(request):
@@ -658,7 +667,38 @@ def multi_lister(request):
         response = set_ajax_response(response_data)
         return response
 
+    if 'formDownload' in request.POST:
+        form = DJANGOUtils.set_form(request,clean=False)
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        file_name = form['output_file_name'] + '_' + time_stamp
+        json_file = request.POST.get('json_file', None)
+        with open(settings.TEMP_DIR + json_file, 'r') as f:
+            req =  json.load(f)
+        #Override data_format, delimiter, output_file
+        req['form']['data_format'] = form['data_format']
+        req['form']['delimiter'] = form['delimiter']
+        req['form']['output_file_name'] = form['output_file_name']
 
+        if form['data_format'] in ['clm','dlm']:
+            if form['data_format'] == 'clm':
+                file_extension = '.txt'
+            else:
+                file_extension = '.dat'
+            response = HttpResponse(mimetype='text/csv')
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
+            CsvWriter = WRCCClasses.CsvWriterNew(req, f=None, response=response)
+            CsvWriter.write_to_file()
+            return response
+        if form['data_format'] in ['xl']:
+            file_extension = '.xls'
+            response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
+            #WRCCUtils.write_to_excel(response,req)
+            ExcelWriter = WRCCClasses.ExcelWriterNew(req,response=response)
+            ExcelWriter.write_to_file()
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
+            return response
+
+    #MAIN APP
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
@@ -783,37 +823,6 @@ def multi_lister(request):
         context['need_polygon_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
 
-
-    #Download button pressed
-    if 'formDownload' in request.POST:
-        form = DJANGOUtils.set_form(request,clean=False)
-        json_file = request.POST.get('json_file', None)
-        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-        file_name = form['output_file_name'] + '_' + time_stamp
-        with open(settings.TEMP_DIR + json_file, 'r') as f:
-            req =  json.load(f)
-        #Override data_format, delimiter, output_file
-        req['form']['data_format'] = form['data_format']
-        req['form']['delimiter'] = form['delimiter']
-        req['form']['output_file_name'] = form['output_file_name']
-        if form['data_format'] in ['clm','dlm']:
-            if form['data_format'] == 'clm':
-                file_extension = '.txt'
-            else:
-                file_extension = '.dat'
-            response = HttpResponse(mimetype='text/csv')
-            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriterNew(req, f=None, response=response)
-            CsvWriter.write_to_file()
-            return response
-        if form['data_format'] in ['xl']:
-            file_extension = '.xls'
-            response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            #WRCCUtils.write_to_excel(response,req)
-            ExcelWriter = WRCCClasses.ExcelWriterNew(req,response=response)
-            ExcelWriter.write_to_file()
-            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
-            return response
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def temporal_summary(request):
@@ -941,6 +950,37 @@ def spatial_summary(request):
             response_data = json.dumps({'kml_file_path':kml_file_path})
         response = set_ajax_response(response_data)
         return response
+
+    #Download button pressed
+    if 'formDownload' in request.POST:
+        form = DJANGOUtils.set_form(request,clean=False)
+        json_file = request.POST.get('json_file', None)
+        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+        file_name = form['output_file_name'] + '_' + time_stamp
+        with open(settings.TEMP_DIR + json_file, 'r') as f:
+            req =  json.load(f)
+        #Override data_format, delimiter, output_file
+        req['form']['data_format'] = form['data_format']
+        req['form']['delimiter'] = form['delimiter']
+        req['form']['output_file_name'] = form['output_file_name']
+        if form['data_format'] in ['clm','dlm']:
+            if form['data_format'] == 'clm':
+                file_extension = '.txt'
+            else:
+                file_extension = '.dat'
+            response = HttpResponse(mimetype='text/csv')
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
+            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
+            CsvWriter.write_to_file()
+            return response
+        if form['data_format'] in ['xl']:
+            file_extension = '.xls'
+            response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
+            #WRCCUtils.write_to_excel(response,req)
+            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
+            ExcelWriter.write_to_file()
+            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
+            return response
 
 
     initial  = DJANGOUtils.set_initial(request,app_name)
@@ -1089,37 +1129,6 @@ def spatial_summary(request):
         context['need_polygon_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
 
-    #Download button pressed
-    if 'formDownload' in request.POST:
-        form = DJANGOUtils.set_form(request,clean=False)
-        json_file = request.POST.get('json_file', None)
-        time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-        file_name = form['output_file_name'] + '_' + time_stamp
-        with open(settings.TEMP_DIR + json_file, 'r') as f:
-            req =  json.load(f)
-        #Override data_format, delimiter, output_file
-        req['form']['data_format'] = form['data_format']
-        req['form']['delimiter'] = form['delimiter']
-        req['form']['output_file_name'] = form['output_file_name']
-        if form['data_format'] in ['clm','dlm']:
-            if form['data_format'] == 'clm':
-                file_extension = '.txt'
-            else:
-                file_extension = '.dat'
-            response = HttpResponse(mimetype='text/csv')
-            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
-            CsvWriter.write_to_file()
-            return response
-        if form['data_format'] in ['xl']:
-            file_extension = '.xls'
-            response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            #WRCCUtils.write_to_excel(response,req)
-            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
-            ExcelWriter.write_to_file()
-            response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
-            return response
-
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 
@@ -1150,7 +1159,6 @@ def station_finder(request):
         response = set_ajax_response(response_data)
         return response
 
-    '''
     #Download data for all sations displayed
     #Request will be processed offline
     if 'formDownload' in request.POST:
@@ -1159,9 +1167,9 @@ def station_finder(request):
         fields_to_check = ['user_email']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
-            response_data = json.dumps({'form_error_download':form_error})
+            response_data = json.dumps({'form_error_download':'Not a valid email address!'})
         else:
-            response_data = json.dumps({'large_request':True})
+            response_data = json.dumps({'large_request':'True'})
         #Submit large request
         #os.remove(settings.DATA_REQUEST_BASE_DIR + 'SFDownloadTest_params.json')
         json_dict = copy.deepcopy(form_cleaned)
@@ -1169,7 +1177,6 @@ def station_finder(request):
         WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, json_dict)
         response = set_ajax_response(response_data)
         return response
-    '''
 
     #Set initial
     from subprocess import call
@@ -1284,6 +1291,7 @@ def station_finder(request):
         context['need_polygon_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
 
+    '''
     #Download data for all sations displayed
     #Request will be processed offline
     if 'formDownload' in request.POST:
@@ -1302,6 +1310,7 @@ def station_finder(request):
         json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
         WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, json_dict)
         return render_to_response(url, context, context_instance=RequestContext(request))
+    '''
 
     return render_to_response(url, context, context_instance=RequestContext(request))
 
