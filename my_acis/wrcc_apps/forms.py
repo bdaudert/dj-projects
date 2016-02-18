@@ -287,7 +287,8 @@ class MultiStnField(forms.CharField):
 
 
 class SodrunForm(forms.Form):
-    station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
+    station_id = forms.CharField(initial='266779')
+    #station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
     start_date = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
     end_date = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
     element = forms.ChoiceField(choices=SR_ELEMENT_CHOICES, initial='pcpn')
@@ -299,7 +300,8 @@ class SodrunForm(forms.Form):
     verbose = forms.BooleanField(required=False, initial=False)
 
 class SodlistForm(forms.Form):
-    station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
+    station_id = forms.CharField(initial='266779')
+    #station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
     start_date = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
     end_date = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
     output_format = forms.ChoiceField(choices=SL_FRMT_CHOICES, initial='kr')
@@ -310,7 +312,8 @@ class SodlistForm(forms.Form):
     include_tobs_evap = forms.BooleanField(required=False, initial = False)
 
 class SodcnvForm(forms.Form):
-    station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
+    station_id = forms.CharField(initial='266779')
+    #station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
     start_date = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
     end_date = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
     #output_file = forms.CharField(max_length=256, required=False)
@@ -318,7 +321,8 @@ class SodcnvForm(forms.Form):
     end_window = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
 
 class SodmonlineForm(forms.Form):
-    station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
+    station_id = forms.CharField(initial='266779')
+    #station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
     start_date = MyDateField(max_length=4, initial='2012', help_text="yyyy")
     end_date = forms.CharField(max_length=4, initial='2012', help_text="yyyy")
     element = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
@@ -329,7 +333,8 @@ class SodmonlineForm(forms.Form):
     number_of_characters = forms.ChoiceField(choices=DIGIT_CHOICES, initial='3')
 
 class SodmonlinemyForm(forms.Form):
-    station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
+    station_id = forms.CharField(initial='266779')
+    #station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
     start_date = MyDateField(max_length=4, min_length=4, initial='2012', help_text="yyyymmdd")
     end_date = MyDateField(max_length=4, min_length=4, initial='2012', help_text="yyyymmdd")
     element = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
@@ -392,7 +397,8 @@ class SodForm(forms.Form):
             station_selection = self.data.get('station_selection')
 
         if station_selection == 'stnid':
-            self.fields['station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779')
+            self.fields['station_id'] = forms.CharField(initial='266779')
+            #self.fields['station_id'] = forms.CharField(max_length=6, min_length=6, initial='266779')
         elif station_selection == 'stnids':
             self.fields['station_ids'] = MultiStnField(required=False,initial='266779,103732')
         elif station_selection == 'county':

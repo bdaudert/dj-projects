@@ -381,14 +381,19 @@ def single_lister(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
+            if form['output_format'] == 'verbose':
+                CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
+            else:
+                CsvWriter = WRCCClasses.CsvWriterNew(req, f=None, response=response)
             CsvWriter.write_to_file()
             return response
         if form['data_format'] in ['xl']:
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            #WRCCUtils.write_to_excel(response,req)
-            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
+            if form['output_format'] == 'verbose':
+                ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
+            else:
+                ExcelWriter = WRCCClasses.ExcelWriterNew(req,response=response)
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
@@ -457,14 +462,19 @@ def single_lister(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
+            if form['output_format'] == 'verbose':
+                CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
+            else:
+                CsvWriter = WRCCClasses.CsvWriterNew(req, f=None, response=response)
             CsvWriter.write_to_file()
             return response
         if form_cleaned['data_format'] in ['xl'] and (req['data'] or req['smry']):
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            #WRCCUtils.write_to_excel(response,req)
-            ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
+            if form['output_format'] == 'verbose':
+                ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
+            else:
+                ExcelWriter = WRCCClasses.ExcelWriterNew(req,response=response)
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
@@ -667,6 +677,21 @@ def multi_lister(request):
         response = set_ajax_response(response_data)
         return response
 
+    '''
+    if 'formLargeRequest' in request.POST:
+        form_cleaned = DJANGOUtils.set_form(request,clean=True)
+        form_error = check_form(form_cleaned, ['user_email'])
+        if form_error:
+            response_data = json.dumps({'form_error':'Not a valid email address!'})
+        else:
+            response_data = json.dumps({'yo':'yo'})
+        #Process request offline
+        json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
+        WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
+        response = set_ajax_response(response_data)
+        return response
+    '''
+
     if 'formDownload' in request.POST:
         form = DJANGOUtils.set_form(request,clean=False)
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
@@ -680,20 +705,24 @@ def multi_lister(request):
         req['form']['output_file_name'] = form['output_file_name']
 
         if form['data_format'] in ['clm','dlm']:
-            if form['data_format'] == 'clm':
-                file_extension = '.txt'
-            else:
-                file_extension = '.dat'
+            if form['data_format'] == 'clm':file_extension = '.txt'
+            else:file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriterNew(req, f=None, response=response)
+            if form['output_format'] == 'verbose':
+                CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
+            else:
+                CsvWriter = WRCCClasses.CsvWriterNew(req, f=None, response=response)
             CsvWriter.write_to_file()
             return response
         if form['data_format'] in ['xl']:
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
             #WRCCUtils.write_to_excel(response,req)
-            ExcelWriter = WRCCClasses.ExcelWriterNew(req,response=response)
+            if form['output_format'] == 'verbose':
+                ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
+            else:
+                ExcelWriter = WRCCClasses.ExcelWriterNew(req,response=response)
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
@@ -761,13 +790,19 @@ def multi_lister(request):
                 file_extension = '.dat'
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-            CsvWriter = WRCCClasses.CsvWriterNew(req, f=None, response=response)
+            if form['output_format'] == 'verbose':
+                CsvWriter = WRCCClasses.CsvWriter(req, f=None, response=response)
+            else:
+                CsvWriter = WRCCClasses.CsvWriterNew(req, f=None, response=response)
             CsvWriter.write_to_file()
             return response
         if form_cleaned['data_format'] in ['xl'] and (req['data'] or req['smry']):
             file_extension = '.xls'
             response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-            ExcelWriter = WRCCClasses.ExcelWriterNew(req,response=response)
+            if form['output_format'] == 'verbose':
+                ExcelWriter = WRCCClasses.ExcelWriter(req,response=response)
+            else:
+                ExcelWriter = WRCCClasses.ExcelWriterNew(req,response=response)
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response

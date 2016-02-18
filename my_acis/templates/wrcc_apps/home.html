@@ -4,70 +4,21 @@
 
 {% block content %}
 
-<div class="docu" id="Docu_Sodrun" style="display:none;"></div>
-<script type="text/javascript">                        
-    $("#Docu_Sodrun").load("{{HTML_URL}}/sodrun.d");
-</script>
-<div class="docu" id="Docu_Sodrunr" style="display:none;"></div>
-<script type="text/javascript">                        
-    $("#Docu_Sodrunr").load("{{HTML_URL}}/sodrunr.d");
-</script>
-<div class="docu" id="Docu_Sodlist" style="display:none;"></div>
-<script type="text/javascript">                        
-    $("#Docu_Sodlist").load("{{HTML_URL}}/sodlist.d");
-</script>
-<div class="docu" id="Docu_Sodmonline" style="display:none;"></div>
-<script type="text/javascript">                        
-    $("#Docu_Sodmonline").load("{{HTML_URL}}/sodmonline.d");
-</script>
-<div class="docu" id="Docu_Sodmonlinemy" style="display:none;"></div>
-<script type="text/javascript">                        
-    $("#Docu_Sodmonlinemy").load("{{HTML_URL}}/sodmonlinemy.d");
-</script>
-<div class="docu" id="Docu_Sodcnv" style="display:none;"></div>
-<script type="text/javascript">                        
-    $("#Docu_Sodcnv").load("{{HTML_URL}}/sodcnv.d");
-</script>
-<div class="docu" id="Docu_Sodsum" style="display:none;"></div>
-<script type="text/javascript">                        
-    $("#Docu_Sodsum").load("{{HTML_URL}}/sodsum.d");
-</script>
-<div class="docu" id="Docu_Soddyrec" style="display:none;"></div>
-<script type="text/javascript">                        
-    $("#Docu_Soddyrec").load("{{HTML_URL}}/soddyrec.d");
-</script>
-<div class="docu" id="Docu_Soddynorm" style="display:none;"></div>
-<script type="text/javascript">                        
-    $("#Docu_Soddynorm").load("{{HTML_URL}}/soddynorm.d");
-</script>
-<div class="docu" id="Docu_Soddd" style="display:none;"></div>
-<script type="text/javascript">                        
-    $("#Docu_Soddd").load("{{HTML_URL}}/soddd.d");
-</script>
-<div class="docu" id="Docu_Sodpad" style="display:none;"></div>
-<script type="text/javascript">                        
-    $("#Docu_Sodpad").load("{{HTML_URL}}/sodpad.d");
-</script>
-<div class="docu" id="Docu_Sodsumm" style="display:none;"></div>
-<script type="text/javascript">                        
-    $("#Docu_Sodsumm").load("{{HTML_URL}}/sodsumm.d");
-</script>
-<div class="docu" id="Docu_Sodpct" style="display:none;"></div>
-<script type="text/javascript">                        
-    $("#Docu_Sodpct").load("{{HTML_URL}}/sodpct.d");
-</script>
-<div class="docu" id="Docu_Sodthr" style="display:none;"></div>
-<script type="text/javascript">                        
-    $("#Docu_Sodthr").load("{{HTML_URL}}/sodthr.d");
-</script>
-<div class="docu" id="Docu_Sodxtrmts" style="display:none;"></div>
-<script type="text/javascript">                        
-    $("#Docu_Sodxtrmts").load("{{HTML_URL}}/sodxtrmts.d");
-</script>
-<div class="docu" id="Docu_Sodpiii" style="display:none;"></div>
-<script type="text/javascript">                        
-    $("#Docu_Sodpiii").load("{{HTML_URL}}/sodpiii.d");
-</script>
+<div class="docu" id="Docu_Sodrun" style="display:none;">{% include 'includes/Docu_sodrun.html'%}</div>
+<div class="docu" id="Docu_Sodlist" style="display:none;">{% include 'includes/Docu_sodlist.html'%}</div>
+<div class="docu" id="Docu_Sodmonline" style="display:none;">{% include 'includes/Docu_sodmonline.html'%}</div>
+<div class="docu" id="Docu_Sodmonlinemy" style="display:none;">{% include 'includes/Docu_sodmonlinemy.html'%}</div>
+<div class="docu" id="Docu_Sodcnv" style="display:none;">{% include 'includes/Docu_sodcnv.html'%}</div>
+<div class="docu" id="Docu_Sodsum" style="display:none;">{% include 'includes/Docu_sodsum.html'%}</div>
+<div class="docu" id="Docu_Soddyrec" style="display:none;">{% include 'includes/Docu_soddyrec.html'%}</div>
+<div class="docu" id="Docu_Soddynorm" style="display:none;">{% include 'includes/Docu_soddynorm.html'%}</div>
+<div class="docu" id="Docu_Soddd" style="display:none;">{% include 'includes/Docu_soddd.html'%}</div>
+<div class="docu" id="Docu_Sodpad" style="display:none;">{% include 'includes/Docu_sodpad.html'%}</div>
+<div class="docu" id="Docu_Sodsumm" style="display:none;">{% include 'includes/Docu_sodsumm.html'%}</div>
+<div class="docu" id="Docu_Sodthr" style="display:none;">{% include 'includes/Docu_sodthr.html'%}</div>
+<div class="docu" id="Docu_Sodxtrmts" style="display:none;">{% include 'includes/Docu_sodxtrmts.html'%}</div>
+<div class="docu" id="Docu_Sodpiii" style="display:none;">{% include 'includes/Docu_sodpiii.html'%}</div>
+<div class="docu" id="Docu_Sodpct" style="display:none;">{% include 'includes/Docu_sodpct.html'%}</div>
 
 <h1 align='center'>{{title}}</h1>
     <table align="center"> 

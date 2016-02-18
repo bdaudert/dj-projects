@@ -369,6 +369,12 @@ input[value="Get data"] {
     margin:5px;
 }
 
+input[value="Submit request"] {
+    background-color:#006666;
+    color:#FFEFD5;
+    margin:5px;
+}
+
 input[value="Generate maps"] {
     background-color:#006666;
     color:#FFEFD5;

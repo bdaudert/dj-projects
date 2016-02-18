@@ -63,66 +63,71 @@
         <form method="post" id="DataForm" action="" onsubmit="show_loading();">{% csrf_token %}
         <input type="hidden" name="data_type" id="data_type" class="data_type" value="{{initial.data_type}}">
         <table class="form" id="tableData" >
-        <tr class="station_grid" style="display:table-row" valign="bottom">{% include 'includes/area_select.html'%}</tr>
-        <tr class="station_grid" style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
-        <tr class="station" id="stn_finder" style="display:table-row">{% include 'includes/station_finder.html'%}</tr>
+        <tr  style="display:table-row" valign="bottom">{% include 'includes/area_select.html'%}</tr>
+        <tr  style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
+        <tr  id="stn_finder" style="display:table-row">{% include 'includes/station_finder.html'%}</tr>
         {%if initial.data_type == "grid"%}        
-        <tr class="grid" id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr>
+        <tr  id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr>
         {% if initial.grid == "21"%}
-        <tr class="grid" id="temp_res" style="display:table-row">{% include 'includes/temporal_resolution.html'%}</tr>
+        <tr  id="temp_res" style="display:table-row">{% include 'includes/temporal_resolution.html'%}</tr>
         {%else%}
-        <tr class="grid" id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</tr>
+        <tr  id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</tr>
         {%endif%}
         {%else%}
-        <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
-        <tr class="grid" id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</tr>
+        <tr  id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
+        <tr  id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</tr>
         {%endif%}
-        <tr class="station_grid" style="display:table-row">{% include 'includes/elements.html'%}</tr>
-        <tr class="station_grid" id="add" valign="top" style="display:table-row">{% include 'includes/add_degree_days.html'%}</tr>
+        <tr  style="display:table-row">{% include 'includes/elements.html'%}</tr>
+        <tr  id="add" valign="top" style="display:table-row">{% include 'includes/add_degree_days.html'%}</tr>
         {%if initial.add_degree_days == "T"%}
             <tr id="dd" valign="top" style="display:table-row">{% include 'includes/degree_days.html'%}</tr>
         {%else%}
             <tr id="dd" valign="top" style="display:none">{% include 'includes/degree_days.html'%}</tr>
         {%endif%}
-        <tr class="station_grid" style="display:table-row;">{% include 'includes/units.html'%}</tr>
-        <tr class="station_grid" style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
-        <tr class="station_grid" style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
-        <tr class="station_grid" id="data_summ" style="display:table-row;">{% include 'includes/data_summary.html'%}</tr>
+        <tr  style="display:table-row;">{% include 'includes/units.html'%}</tr>
+        <tr  style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
+        <tr  style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
+        <tr  id="data_summ" style="display:table-row;">{% include 'includes/data_summary.html'%}</tr>
         {%if initial.data_summary == "none"%}
         <tr id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
         <tr id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
-        <tr class="station_grid" id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
-        <tr class="station_grid" id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</tr>
+        <tr  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
+        <tr  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</tr>
         {%endif%}
         {%if initial.data_summary == "temporal_summary"%}
         <tr id="temp_summary" style="display:table-row">{% include 'includes/temporal_summary.html'%}</tr>
         <tr id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
-        <tr class="station_grid" id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
-        <tr class="station_grid" id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</tr>
+        <tr  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
+        <tr  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</tr>
         {%endif%}
         {%if initial.data_summary == "spatial_summary"%}
         <tr id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
         <tr id="spat_summary" style="display:table-row">{% include 'includes/spatial_summary.html'%}</tr>
-        <tr class="station_grid" id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
-        <tr class="station_grid" id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</tr>
+        <tr  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
+        <tr  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</tr>
         {%endif%}
         {%if initial.data_summary == "windowed_data"%}
-        <tr class="station_grid" id="start_wind" style="display:table-row;">{% include 'includes/start_window.html'%}</tr>
-        <tr class="station_grid" id="end_wind" style="display:table-row;">{% include 'includes/end_window.html'%}</tr>
+        <tr  id="start_wind" style="display:table-row;">{% include 'includes/start_window.html'%}</tr>
+        <tr  id="end_wind" style="display:table-row;">{% include 'includes/end_window.html'%}</tr>
         <tr id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
         <tr id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
         {%endif%}
         {%if initial.data_type == "station" and initial.data_summary == "none"%}
-        <tr class="station" id="flags" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
-        <tr class="station" id="obs_time" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
+        <tr  id="flags" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
+        <tr  id="obs_time" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
         {%elif initial.data_type == "station" and initial.data_summary == "windowed_data"%}
-        <tr class="station" id="flags" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
-        <tr class="station" id="obs_time" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
+        <tr  id="flags" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
+        <tr  id="obs_time" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
         {%else%}
-        <tr class="station" id="flags" style="display:none">{% include 'includes/show_flags.html'%}</tr>
-        <tr class="station" id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</tr>
+        <tr  id="flags" style="display:none">{% include 'includes/show_flags.html'%}</tr>
+        <tr  id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</tr>
         {%endif%}
-        <tr class="station_grid" style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
+        <tr  style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
+        {%if initial.data_format == "html"%}
+        <tr id="out_format" class="out_format" style="display:none;">{% include 'includes/output_format.html'%}</tr>
+        {%else%}
+        <tr id="out_format" class="out_format" style="display:table-row;">{% include 'includes/output_format.html'%}</tr>
+        {%endif%}
         <tr id="delim" class="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
         <tr id="out_file" class="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
         </table>

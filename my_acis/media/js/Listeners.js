@@ -89,13 +89,21 @@ $(document).ready(function ($) {
             $('.delim').css('display','table-row');
          }
          else{
-            $('.delim').css('display','none');         
+            $('.delim').css('display','none');
+
          }
          if ($(this).val().inList(['clm','dlm','xl'])){
             $('.out_file').css('display','table-row'); 
+            if ($('#data_summary').val() == 'none' || $('#data_summary').val() == 'windowed_data'){
+                $('.out_format').css('display','table-row');
+            }
+            else{
+                $('.out_format').css('display','none');
+            }
          }
          else{
-            $('.out_file').css('display','none');  
+            $('.out_file').css('display','none'); 
+            $('.out_format').css('display','none');
          }   
     });
     /*
@@ -107,6 +115,20 @@ $(document).ready(function ($) {
         data summary can be temporal, spatial, windowed data or none
         */
         var app_name = $('#app_name').val();
+        
+        //Set output_format if data_format not html and no data summary
+        if ($(this).val() == 'none' || $(this).val() == 'windowed_data'){
+            if ($('#data_format').val() != 'html'){
+                $('.out_format').css('display','table-row');
+            }
+            else{
+                $('.out_format').css('display','none');
+            }
+        }
+        else{
+            $('.out_format').css('display','none');
+        }
+        
         if ($(this).val() == 'windowed_data'){
             $('#spat_summary').css('display','none');
             $('#temp_summary').css('display','none');
@@ -1131,21 +1153,53 @@ $(document).ready(function ($) {
             $('.ajax_error').html(get_ajax_error(jqXHR.status));
        })
     });
-  
+
     /*
-    //Other data downloads
-    $('#formDownload').on('submit', function(event){
-        show_loading_gif()
-        console.log('yooooo');   
+    //Large requests
+    $('#LargeRequestForm').on('submit', function(event){
+        show_loading_gif();
         event.preventDefault();
-        var form_data = $('#DataForm, #DownloadForm').serialize();
+        var form_data = $('#DataForm, #LargeRequestForm').serialize();
+        //var form_data = $('#LargeRequestForm').serialize();
+        console.log($('#DataForm').serialize());
+        hide_loading_gif();
         var jqxhr = $.ajax({
             url:'',
             method: "POST",
             data: form_data,
         })
         .done(function(response) {
-            
+            response = JSON.parse(response);
+            if ('form_error' in response){
+                $('#formErrorLargeRequest').html(response['form_error']);
+                $('#formErrorLargeRequest').css('display','block');
+            }
+            else{
+                $("#formLargeRequest").dialog('close');
+                $('#formErrorLargeRequest').css('display','none');
+                $('#offlineMessage').css('display','block');
+            }
+        })
+        .fail(function(jqXHR) {
+            hide_loading_gif();
+            $('.ajax_error').html(get_ajax_error(jqXHR.status));
+       }) 
+    });
+    */
+
+    /* 
+    //Other data downloads
+    $('#formDownload').on('submit', function(event){
+        show_loading_gif()
+        event.preventDefault();
+        var form_data = $('#DataForm, #formDownload').serialize();
+        var jqxhr = $.ajax({
+            url:'',
+            method: "POST",
+            data: form_data,
+        })
+        .done(function(response) {
+            return response;   
             //response = JSON.parse(response);
         })
         .fail(function(jqXHR) {
@@ -1154,7 +1208,6 @@ $(document).ready(function ($) {
        })
     });
     */
-
     /*
     //CHECK FOR FORM ERRORS
     $('.mainFormSubmit').on('click', function(){

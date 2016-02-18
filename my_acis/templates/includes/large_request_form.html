@@ -1,0 +1,13 @@
+<form id="LargeRequestForm" method="post" action="">{% csrf_token %}
+<p class="message">Large requests will be processed offline. <br />
+Please enter your name and email address and click <br />
+"Submit request" to submit your request.
+</p>
+<table class="form" id="tableLargeRequestForm">
+    <tr id="un">{% include 'includes/user_name.html'%}</tr>
+    <tr id="ue">{% include 'includes/user_email.html'%}</tr>
+</table>
+<input type="hidden" name="formLargeRequest" value="">
+<div class="error" id="formErrorLargeRequest" style="display:none;"></div>
+<input class="largeRequestsFormSubmit" type="submit" value="Submit request" name="formLargeRequest"/>
+</form>

@@ -8,8 +8,7 @@
         <form method="post" action="" onsubmit="show_loading() & setHiddenFields('DataForm', this)">
         {%endif%}
         -->
-        <form method="post" action="" id="formDownload">
-        {% csrf_token %}
+        <form method="post" action="" id="formDownload">{% csrf_token %}
         <table id="tableDownload">
         <tr valign="top">
         <td>Data Format:</td>
@@ -34,6 +33,29 @@
         </script>
         </div>
         </td>
+        {%if initial.data_summary == "none" or initial.data_summary == "windowed_data"%}
+        <tr valign="top"id="out_format" class="out_format" style="display:table-row">
+        {%else%}
+        <tr valign="top"id="out_format" class="out_format" style="display:none">
+        {%endif%}
+        <td>Output Format: </td>
+        <td>
+        <select id="output_format" name="output_format" onchange="update_value(this.value);">
+        {%for opt, name in initial.form_options.output_format%}
+            <option value="{{opt}}" {%if initial.output_format == opt%}selected{%endif%}
+            >{{name}}</option>
+        {%endfor%}
+        </select>
+        </td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div class="pop-up">
+        <div id="ht_output_format"></div>
+        <script type="text/javascript">                        
+            $("#ht_output_format").load("{{HTML_URL}}/Docu_help_texts.html #ht_output_format");
+        </script>
+        </div>
+        </td>
+        </tr>
         </tr>
         <!--Only show when format is clm or dlm, don't show if xl-->
         {%if initial.data_format|is_in:'xl,html'%}
@@ -59,7 +81,7 @@
         </td>
         </tr>
         <tr class="out_file" id="out_file" valign="top">
-        <td>Output file name: </td>
+        <td>Output File Name: </td>
         <td><input type="text" name="output_file_name" value="{{initial.output_file_name}}"></td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
