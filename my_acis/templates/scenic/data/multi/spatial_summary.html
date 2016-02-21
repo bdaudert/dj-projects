@@ -82,6 +82,7 @@
         <tr id="spat_summary" style="display:table-row">{% include 'includes/spatial_summary.html'%}</tr>
         </table>
         <input type="hidden" name="app_name" value="spatial_summary">
+        <input type="hidden" class="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
         <!--Hidden chart vars-->
         <input type="hidden" class="chart_indices_string" id="chart_indices_string" value="{{initial.chart_indices_string}}" name="chart_indices_string">
         <input type="hidden" value="{{initial.chart_type}}" name="chart_type" class="chart_type">

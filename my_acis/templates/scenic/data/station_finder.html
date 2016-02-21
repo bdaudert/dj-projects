@@ -8,6 +8,7 @@
 
 <!---Hidden variables-->
 <input type="hidden" id="app_name" name="app_name" value="station_finder">
+<input type="hidden" id="data_type" name="data_type" value="station">
 
 <!--Documentation-->
 <div align="left" id="tool_info" style="display:none;">
@@ -120,6 +121,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <tr style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
     <tr style="display:table-row"  valign="bottom">{% include 'includes/date_constraints.html'%}</tr>
     </table>
+    <input type="hidden" class="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
     <input type="hidden" name="app_name" value="station_finder">
     <input class="mainFormSubmit" style="margin:5px" type="submit" value="Show me stations" name="formData"/>
     <input type="hidden" name="checked_categories" id="checked_categories" value="all">

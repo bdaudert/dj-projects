@@ -32,7 +32,6 @@
 <!--For maps-->
 <input type="hidden" id="host" name="host" value="{{initial.host}}">
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
-<!--<input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">-->
 
 
 <!--Set up autofill-->
@@ -155,6 +154,7 @@
         <tr id="ue" style="display:none;">{% include 'includes/user_email.html'%}</tr>
         {%endif%}
         </table>
+        <input type="hidden" class="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
         <input type="hidden" name="app_name" value="multi_lister">
         <input class="mainFormSubmit" style="margin:5px" type="submit" value="Get data" name="formData"/>
         </form>
@@ -299,11 +299,7 @@
     </p><br />
     {% endif%}
 
-    <!--
-    <p class="message"><b>DATA</b>:</p>
-    
-    -->
-    <!--Loop over results-->
+    <!--lOOP over results-->
     {% for point_data in results.data %}
         <p class="message" align="left" style="max-width:70%;word-wrap:break-word;"><b>METADATA</b>:<br />
            {% for meta_list in results.meta|lookup:forloop.counter0 %}

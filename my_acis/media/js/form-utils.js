@@ -22,8 +22,9 @@ function ShowHideTopOfPage(){
     If div is shown and contains map, 
     the map needs to be re-initialized
     */
-    $('#top_of_page').toggle();
-    if ($('#top_of_page').is(':visible')){
+    //$('#top_of_page').toggle();
+    if ($('#top_of_page').is(':hidden')){
+    //if ($('#top_of_page').is(':visible')){
         if ($('#shape').length){
              $('#PolyMap').css('display','block');
             update_maps(document.getElementById('shape'));
@@ -59,23 +60,54 @@ function ShowHideTopOfPage(){
             update_maps(document.getElementById('bounding_box'));
         }
     }
+     $('#top_of_page').toggle();
+     if (window.map){
+        google.maps.event.trigger(window.map, 'resize');
+     }
 }
 
-function set_dates_for_station(station_id,start_date,end_date,year_or_date){
+function set_back_date(date_string,number){
+    /*
+    Advances or sets back date by number.
+    If number < 0, we go back number days
+    If number > 0, we go forward number dauys 
+    */
+    var d, new_d, year, mm,dd;
+    d = new Date(date_string);
+    d.setDate(d.getDate() + number);
+    year = String(d.getFullYear());
+    mm = ('0' + (d.getMonth()+1).toString()).slice(-2);
+    dd = ('0' + d.getDate().toString()).slice(-2);
+    return year + '-' + mm + '-' + dd;
+}
+
+function set_dates_for_station(area_type,start_date,end_date,year_or_date){
     var today = new Date();
     var today_string = convertDateToString(today,'-');
+    var s = DateStringToJSDateString(start_date);
+    var e = DateStringToJSDateString(end_date);
+    var new_dates;
     /*
-    var s = start_date, e = end_date;
-    if (s.length == 4){s = s + '-01-01';}
-    if (e.length == 4){e = e + today_string.slice(4,today_string.length);}
-    //Replace with AJAX call
-    var vd_station = ['1850-01-01', today_string]
+    if (area_type == 'station_id'){
+        s = 'POR', e = 'POR';
+    }
     */
-    var s = 'POR', e = 'POR';
-    var new_dates = {
+    if (area_type != 'station_id'){
+        if (end_date.toLowerCase() == 'por'){
+            e = set_back_date(today_string,0);
+        }
+        if (start_date.toLowerCase() == 'por'){
+            s = set_back_date(e,-14);
+        }   
+        if (year_or_date == 'year'){
+            s = s.slice(0,4);
+            e = e.slice(0,4);
+        }
+    }
+    new_dates = {
         'start': s,
         'end': e
-    }
+    } 
     return new_dates;
 }
 
@@ -92,8 +124,8 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
     var today = new Date();
     var today_string = convertDateToString(today,'-');
     var s = start_date, e = end_date;
-    if (s == 'POR'){s = grid_vd[grid][0][0];}
-    if (e == 'POR'){e = grid_vd[grid][0][1];} 
+    if (s.toLowerCase() == 'por'){s = grid_vd[grid][0][0];}
+    if (e.toLowerCase() == 'por'){e = grid_vd[grid][0][1];} 
     if (s.length == 4){s = s + '-01-01';}
     if (e.length == 4){e = e + today_string.slice(4,today_string.length);}
     var new_dates = {

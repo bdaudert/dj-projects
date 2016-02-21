@@ -30,6 +30,22 @@ function convertDateToString(date, sep){
         return yr + sep + mon + sep + day;
 }
 
+function DateStringToJSDateString(date){
+    /*
+    Return date in format yyy-mm-dd
+    */
+    if (date.length == 8){
+        return date.slice(0,4) + '-' + date.slice(4,6) + '-' + date.slice(6,8);
+    }
+    else if (date.length == 10){
+        return date.slice(0,4) + '-' + date.slice(5,7) + '-' + date.slice(8,10);
+    }
+    else{
+        return date
+    }
+
+}
+
 function poll(url_str) {
     show_loading()
     $.ajax({

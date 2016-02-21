@@ -794,6 +794,7 @@ $(document).ready(function ($) {
                 $('#summary_type option[value="both"]').attr('disabled',false);
             }
         }
+        
 
         //Single app specific
         //Show/Hide grid form field and station finder form_field
@@ -801,11 +802,15 @@ $(document).ready(function ($) {
         if ($(this).val() == 'station_id'){
             $('#grid_type').css('display','none');
             $('#stn_finder').css('station_finder','table-row');
-            date_vals = set_dates_for_station($('#station_id').val(), start, end,p);
+            date_vals = set_dates_for_station('station_id', start, end,p);
         }
         if ($(this).val() == 'location'){
+            console.log('yes')
             $('#grid_type').css('display','table-row');
             date_vals = set_dates_for_grid($('#grid').val(),start, end,p);
+        }
+        if ($('#app_name').val() == 'station_finder' && $(this).val() != 'station_id'){
+            date_vals = set_dates_for_station($(this).val(), start, end,p);
         }
         if (date_vals){
             $('#start_' + p).val(date_vals.start);
@@ -1098,6 +1103,7 @@ $(document).ready(function ($) {
     ****************/
     //OVERLAY_STATES
     $('#overlay_state').on('change', function(){
+        $('.overlay_state').val($(this).val());
         //$('#overlayForm').on('submit', function(event){
         //event.preventDefault();
         show_loading_gif() 

@@ -3,7 +3,7 @@
             <table class="form_overlay" style="margin:0px;">
             <td>State:</td>
             <td>
-                <select name="overlay_state" id="overlay_state">
+                <select class="overlay_state" name="overlay_state" id="overlay_state">
                 {%for opt, name in initial.form_options.state%}
                     <option value="{{opt}}" {%if initial.overlay_state == opt%} selected{%endif%}>
                     {{name}}</option>
