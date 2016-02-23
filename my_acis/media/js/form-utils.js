@@ -1272,27 +1272,6 @@ function update_maps(area_field){
     }
 }
 
-function unset_large_request(){
-    //Delete large data request entries
-    var large_requests_rows = document.getElementsByClassName('large_request');
-    for (i=0;i<large_requests_rows.length;i++) {
-        //large_requests_rows[i].style.display = "none";
-        large_requests_rows[i].parentNode.removeChild(large_requests_rows[i]);
-    }
-    //FIX ME: onchange not working correctly when option is not changes
-    //Need to delete user name manually
-    if ($('#' + 'un').length){
-        document.getElementById('un').parentNode.removeChild(document.getElementById('un'));
-    }
-    //Add html option to data format
-    if ($('#data_format').length){
-        var df = $('#data_format');
-        if (!df.find('option[value=html]').length > 0){
-            df.prepend('<option value="html" selected="selected">Html (display on page)</option>')
-        }
-    }
-}
-
 
 function set_grid_and_els(node, gridRowId){
     /*
@@ -1379,25 +1358,5 @@ function set_data_summary(node, rowId_t, rowId_s){
     else{
         document.getElementById(rowId_s).style.display = 'none';
         document.getElementById(rowId_t).style.display = 'none';
-    }
-}
-
-function ShowDownloadFormParams() {
-    if ($('#data_format').val() == 'html'){
-        $('#data_format option[value="html"]').attr('selected',false);
-        $('#data_format option[value="xl"]').attr('selected',true);
-        //$('#data_format').val('xl');
-    }
-    $('#data_format option[value="html"]').attr('disabled',true);
-    //Show user name and user email fields
-    $('#un').css('display','table-row');
-    $('#ue').css('display','table-row');
-    //Show delimiter and outfile options
-    $('#out_file').css('display','table-row');
-    if ($('#data_format').val() == 'clm' || $('#data_format').val() == 'dlm'){
-        $('#delim').css('display','table-row');
-    }
-    else{
-        $('#delim').css('display','none');
     }
 }

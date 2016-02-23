@@ -1,12 +1,23 @@
 $(document).ready(function ($) { 
-//$(function(){
     /*
-    BACKBUTTON ISSUE
-    ***** ADDRESSED IN templates/csc_base.html, 
-          only affects the select elements of forms
-    /*
-    * GREYBOX PUPUPS from GRANT
-    */
+    LINKED VARIABLE UPDATES
+    */ 
+    $('.data_format').on('change', function(){
+        $('.data_format').val($(this).val());
+    });
+    $('.delimiter').on('change', function(){
+        $('.delimiter').val($(this).val());
+    });
+    $('.output_file_name').on('change', function(){
+        $('.output_file_name').val($(this).val());
+    });
+    $('.user_name').on('change', function(){
+        $('.user_name').val($(this).val());
+    });
+    $('.user_email').on('change', function(){
+        $('.user_email').val($(this).val());
+    });
+
     $(".popup_map").click(function(ev){ 
         // Let alt-clicks and non-left clicks (which != 1) do their thing
         if ( ev.shiftKey || ev.ctrlKey || ev.altKey || ev.metaKey || ev.which != 1 ) {
@@ -84,7 +95,7 @@ $(document).ready(function ($) {
     /*
     DATA FORMAT
     */
-    $('#data_format, #dat_format').on('change', function(){
+    $('.data_format').on('change', function(){
         if ($(this).val().inList(['clm','dlm'])){
             $('.delim').css('display','table-row');
          }
@@ -118,7 +129,7 @@ $(document).ready(function ($) {
         
         //Set output_format if data_format not html and no data summary
         if ($(this).val() == 'none' || $(this).val() == 'windowed_data'){
-            if ($('#data_format').val() != 'html'){
+            if ($('.data_format').val() != 'html'){
                 $('.out_format').css('display','table-row');
             }
             else{
@@ -448,15 +459,16 @@ $(document).ready(function ($) {
     */
     $('.obtain_sf_data').on('click', function(){
         ShowPopupDocu('formDownload');
-        $("#data_format").children('option[value="html"]').attr('disabled', true);
+        //$('#formDownload').css('display','block');
+        $(".data_format").children('option[value="html"]').attr('disabled', true);
         /*
         if ($('#formDownload').css('display') == 'none'){
-            $("#data_format").children('option[value="html"]').attr('disabled', true);
+            $(".data_format").children('option[value="html"]').attr('disabled', true);
             $('#formDownload').css('display','block');
         }
         else{
             $('#formDownload').css('display','none');
-            $("#data_format").children('option[value="html"]').attr('disabled', false);
+            $(".data_format").children('option[value="html"]').attr('disabled', false);
         }
         */
     });
@@ -805,7 +817,6 @@ $(document).ready(function ($) {
             date_vals = set_dates_for_station('station_id', start, end,p);
         }
         if ($(this).val() == 'location'){
-            console.log('yes')
             $('#grid_type').css('display','table-row');
             date_vals = set_dates_for_grid($('#grid').val(),start, end,p);
         }
@@ -1135,7 +1146,7 @@ $(document).ready(function ($) {
     $('#StationFinderDownloadForm').on('submit', function(event){
         show_loading_gif()
         event.preventDefault();
-        var form_data = $('#DataForm, #StationFinderDownloadForm').serialize();
+        var form_data = $('#DataForm :input, #StationFinderDownloadForm :input').serialize();
         var jqxhr = $.ajax({
             url:'',
             method: "POST",
@@ -1160,14 +1171,13 @@ $(document).ready(function ($) {
        })
     });
 
-    /*
     //Large requests
     $('#LargeRequestForm').on('submit', function(event){
         show_loading_gif();
         event.preventDefault();
-        var form_data = $('#DataForm, #LargeRequestForm').serialize();
-        //var form_data = $('#LargeRequestForm').serialize();
-        console.log($('#DataForm').serialize());
+        //All extra input variables are linked and updated in the DataForm
+        //Note need hidded vars user_name, email, delimiter, etx in main form
+        var form_data = $('#DataForm :input, #LargeRequestForm :input[name="formLargeRequest"]').serialize(); 
         hide_loading_gif();
         var jqxhr = $.ajax({
             url:'',
@@ -1181,7 +1191,7 @@ $(document).ready(function ($) {
                 $('#formErrorLargeRequest').css('display','block');
             }
             else{
-                $("#formLargeRequest").dialog('close');
+                $("#largeRequestForm").dialog('close');
                 $('#formErrorLargeRequest').css('display','none');
                 $('#offlineMessage').css('display','block');
             }
@@ -1191,14 +1201,13 @@ $(document).ready(function ($) {
             $('.ajax_error').html(get_ajax_error(jqXHR.status));
        }) 
     });
-    */
 
     /* 
     //Other data downloads
     $('#formDownload').on('submit', function(event){
         show_loading_gif()
         event.preventDefault();
-        var form_data = $('#DataForm, #formDownload').serialize();
+        var form_data = $('#DataForm :input, #formDownload :input').serialize();
         var jqxhr = $.ajax({
             url:'',
             method: "POST",

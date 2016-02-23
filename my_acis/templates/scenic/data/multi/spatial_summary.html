@@ -80,6 +80,11 @@
         <tr class="station_grid" style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/end_date.html'%}</tr> 
         <tr id="spat_summary" style="display:table-row">{% include 'includes/spatial_summary.html'%}</tr>
+        <tr style="display:none;">{% include 'includes/data_format.html'%}</tr>
+        <tr style="display:none;">{% include 'includes/delimiter.html'%}</tr>
+        <tr style="display:none;">{% include 'includes/out_file.html'%}</tr>
+        <tr style="display:none;" class="un">{% include 'includes/user_name.html'%}</tr>
+        <tr style="display:none;" class="ue">{% include 'includes/user_email.html'%}</tr>
         </table>
         <input type="hidden" name="app_name" value="spatial_summary">
         <input type="hidden" class="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
@@ -93,8 +98,20 @@
         </form>
     </div><!--end div formData-->
 </td>
-<!--Errors/Down Arrow/Maps-->
+<!--Large Request Form/Errors/Down Arrow/Maps-->
 <td valign="top" width="60%">
+
+    <!--Large Request Form-->
+    <div id="largeRequestForm" style="display:none">
+        {% include 'includes/large_request_form.html'%}
+    </div>
+    <div id="offlineMessage" style="display:none">{% include 'includes/offline_message.html'%}</div>
+    {%if large_request%}
+       <script type="text/javascript">
+            ShowPopupDocu('largeRequestForm');
+        </script>
+    {%endif%}    
+
     <!--AJAX error-->
     <div style="display:none" class="ajax_error"></div> 
     <!--Form errors and search parameter section-->
@@ -162,6 +179,7 @@
 <!--Results-->
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
+    
     <!--Results-->
     <!--Print and download buttons-->
     <div class="results">

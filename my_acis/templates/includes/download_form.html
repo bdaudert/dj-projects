@@ -1,97 +1,19 @@
        {%load my_scenic_filters%}
-       <!--
-      {%if json_dict%}
-        <form method="post" action="?json_file={{json_dict.json_file}}" onsubmit="show_loading() & setHiddenField('DataForm', this)">
-        {%elif json_file%}
-        <form method="post" action="?json_file={{json_file}}" onsubmit="show_loading() & setHiddenFields('DataForm', this)">
-        {%else%}
-        <form method="post" action="" onsubmit="show_loading() & setHiddenFields('DataForm', this)">
-        {%endif%}
-        -->
         <form method="post" action="" id="formDownload">{% csrf_token %}
         <table id="tableDownload">
-        <tr valign="top">
-        <td>Data Format:</td>
-        <td>
-        <select name="data_format" id="dat_format">
-        {%for opt, name in initial.form_options.data_format%}
-            {%if opt != "html"%}
-                {%if initial.data_format == "html"%}
-                <option value="{{opt}}" {%if opt == "xl" %}selected{%endif%}>{{name}}</option>
-                {%else%}
-                <option value="{{opt}}" {%if initial.data_format == opt%}selected{%endif%}>{{name}}</option>
-                {%endif%}
-            {%endif%}
-        {%endfor%}
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_data_format"></div>
-        <script type="text/javascript">                        
-            $("#ht_data_format").load("{{HTML_URL}}Docu_help_texts.html #ht_data_format");
-        </script>
-        </div>
-        </td>
+        <tr valign="top">{% include 'includes/data_format_download.html'%}</tr>
         {%if initial.data_summary == "none" or initial.data_summary == "windowed_data"%}
         <tr valign="top"id="out_format" class="out_format" style="display:table-row">
         {%else%}
         <tr valign="top"id="out_format" class="out_format" style="display:none">
-        {%endif%}
-        <td>Output Format: </td>
-        <td>
-        <select id="output_format" name="output_format" onchange="update_value(this.value);">
-        {%for opt, name in initial.form_options.output_format%}
-            <option value="{{opt}}" {%if initial.output_format == opt%}selected{%endif%}
-            >{{name}}</option>
-        {%endfor%}
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_output_format"></div>
-        <script type="text/javascript">                        
-            $("#ht_output_format").load("{{HTML_URL}}/Docu_help_texts.html #ht_output_format");
-        </script>
-        </div>
-        </td>
-        </tr>
-        </tr>
+        {%endif%}{% include 'includes/output_format.html'%}</tr>
         <!--Only show when format is clm or dlm, don't show if xl-->
         {%if initial.data_format|is_in:'xl,html'%}
         <tr valign="top" id="delim" class="delim" style="display:none;">
         {%else%}
         <tr valign="top"id="delim" class="delim">
-        {%endif%}
-        <td>Delimiter:</td>
-        <td>
-        <select name="delimiter">
-        {%for opt, name in initial.form_options.delimiter%}
-            <option value="{{opt}}" {%if initial.delimiter == opt%}selected{%endif%}>{{name}}</option>
-        {%endfor%}
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_delimiter"></div>
-        <script type="text/javascript">                        
-            $("#ht_delimiter").load("{{HTML_URL}}Docu_help_texts.html #ht_delimiter");
-        </script>
-        </div>
-        </td>
-        </tr>
-        <tr class="out_file" id="out_file" valign="top">
-        <td>Output File Name: </td>
-        <td><input type="text" name="output_file_name" value="{{initial.output_file_name}}"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-        <div id="ht_output_file_name"></div>
-        <script type="text/javascript">                        
-            $("#ht_output_file_name").load("{{HTML_URL}}Docu_help_texts.html #ht_output_file_name");
-        </script>
-        </div>
-        </td>
-        </tr>
+        {%endif%}{% include 'includes/delimiter.html'%}</tr>
+        <tr class="out_file" id="out_file" valign="top">{% include 'includes/out_file.html'%}</tr>
         </table>
         <input type="hidden" name="formDownload">
         <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">

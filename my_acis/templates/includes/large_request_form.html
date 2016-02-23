@@ -1,13 +1,26 @@
+{%load my_scenic_filters%}
 <form id="LargeRequestForm" method="post" action="">{% csrf_token %}
 <p class="message">Large requests will be processed offline. <br />
 Please enter your name and email address and click <br />
 "Submit request" to submit your request.
 </p>
 <table class="form" id="tableLargeRequestForm">
-    <tr id="un">{% include 'includes/user_name.html'%}</tr>
-    <tr id="ue">{% include 'includes/user_email.html'%}</tr>
+    {%if show_extra_download_fields%}
+        {%if initial.app_name == "multi_lister" and initial.data_summary|is_in:'none,windowed_data' %}
+        <tr id="out_format" class="out_format" style="display:table-row;">{% include 'includes/output_format.html'%}</tr>
+        {%endif%}
+        <tr valign="top">{% include 'includes/data_format_download.html'%}</tr>
+        {%if initial.data_format|is_in:'xl,html'%}
+        <tr valign="top" id="delim" class="delim" style="display:none;">
+        {%else%}
+        <tr valign="top"id="delim" class="delim">
+        {%endif%}{% include 'includes/delimiter.html'%}</tr>
+        <tr class="out_file" id="out_file" valign="top">{% include 'includes/out_file.html'%}</tr>
+    {%endif%}
+    <tr class="un">{% include 'includes/user_name.html'%}</tr>
+    <tr class="ue">{% include 'includes/user_email.html'%}</tr>
 </table>
 <input type="hidden" name="formLargeRequest" value="">
-<div class="error" id="formErrorLargeRequest" style="display:none;"></div>
+<div id="formErrorLargeRequest" class="error" style="display:none"></div>
 <input class="largeRequestsFormSubmit" type="submit" value="Submit request" name="formLargeRequest"/>
 </form>

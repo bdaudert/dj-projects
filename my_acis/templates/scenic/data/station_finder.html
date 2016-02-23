@@ -111,7 +111,8 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 {%endif%}
 <td valign="top">
     <div id='formData'>
-    <form id="DataForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('DownloadForm', $(this).attr('id'))">{% csrf_token %}
+    <!--<form id="DataForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('DownloadForm', $(this).attr('id'))">{% csrf_token %}-->
+    <form id="DataForm" method="post" action="" onsubmit="show_loading()">{% csrf_token %}
     <table class="form" id="tableData" >
     <tr style="display:table-row">{% include 'includes/area_select.html'%}</tr>
     <tr style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>    

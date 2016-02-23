@@ -677,7 +677,6 @@ def multi_lister(request):
         response = set_ajax_response(response_data)
         return response
 
-    '''
     if 'formLargeRequest' in request.POST:
         form_cleaned = DJANGOUtils.set_form(request,clean=True)
         form_error = check_form(form_cleaned, ['user_email'])
@@ -690,7 +689,6 @@ def multi_lister(request):
         WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
         response = set_ajax_response(response_data)
         return response
-    '''
 
     if 'formDownload' in request.POST:
         form = DJANGOUtils.set_form(request,clean=False)
@@ -744,19 +742,12 @@ def multi_lister(request):
         #Deal with large requests
         num_points, num_days = WRCCUtils.check_request_size(form_cleaned)
         large_request =  WRCCUtils.check_if_large_request(num_points, num_days)
-        if large_request and form_cleaned['user_email'] != 'Your Email':
-            form_error = check_form(form_cleaned, ['user_email'])
-            if form_error:
-                context['large_request'] = True
-                context['form_error'] = form_error
-                return render_to_response(url, context, context_instance=RequestContext(request))
+        if large_request:
+            #context['request_download_params'] = True
+            #check if we need extra download form field
+            if form_cleaned['data_format'] == 'html':
+                context['show_extra_download_fields'] = True
             context['large_request'] = True
-            #Process request offline
-            json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
-            WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
-            return render_to_response(url, context, context_instance=RequestContext(request))
-        if large_request and form_cleaned['user_email'] == 'Your Email':
-            context['request_download_params'] = True
             return render_to_response(url, context, context_instance=RequestContext(request))
 
         #Small Data request
@@ -1018,6 +1009,19 @@ def spatial_summary(request):
             return response
 
 
+    if 'formLargeRequest' in request.POST:
+        form_cleaned = DJANGOUtils.set_form(request,clean=True)
+        form_error = check_form(form_cleaned, ['user_email'])
+        if form_error:
+            response_data = json.dumps({'form_error':'Not a valid email address!'})
+        else:
+            response_data = json.dumps({'yo':'yo'})
+        #Process request offline
+        json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
+        WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
+        response = set_ajax_response(response_data)
+        return response
+
     initial  = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
@@ -1058,8 +1062,12 @@ def spatial_summary(request):
         #Check for large requests
         #Greater than 2 years not allowed
         if int(form['end_date'][0:4]) - int(form['start_date'][0:4]) > 2:
-            results['error'] = 'This request is too large. Please limit your analysis to 2 years or less!'
+            context['show_extra_download_fields']  = True
+            context['large_request'] = True
+            '''
+            results['error'] = 'This request is too large. Please limit your analysis to 5 years or less!'
             context['results'] = results
+            '''
             return render_to_response(url, context, context_instance=RequestContext(request))
         '''
         try:

@@ -1,6 +1,6 @@
         <td>Delimiter:</td>
         <td>
-        <select id="delimiter" name="delimiter" onchange="update_value(this.value)">
+        <select class="delimiter" name="delimiter" onchange="update_value(this.value)">
         {%for opt, name in initial.form_options.delimiter%}
             <option value="{{opt}}" {%if initial.delimiter == opt%}selected{%endif%}>{{name}}</option>
         {%endfor%}

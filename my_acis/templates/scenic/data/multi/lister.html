@@ -125,34 +125,23 @@
         <tr  id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</tr>
         {%endif%}
         <tr  style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
-        {%if initial.data_format != "html" or large_request or request_download_params%}
+        {%if initial.data_format != "html"%}
         <tr id="out_format" class="out_format" style="display:table-row;">{% include 'includes/output_format.html'%}</tr>
         {%else%}
         <tr id="out_format" class="out_format" style="display:none;">{% include 'includes/output_format.html'%}</tr>
         {%endif%}
-        {%if large_request or request_download_params%}
-        {%if initial.data_format != "xl" and initial.data_format != "html" %}
-        <tr id="delim" class="delim" style="display:table-row;">{% include 'includes/delimiter.html'%}</tr>
-        {%else%}
-        <tr id="delim" class="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
-        {%endif%}
-        <tr class="out_file" id="out_file" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
-        <tr id="un" style="display:table-row;">{% include 'includes/user_name.html'%}</tr>
-        <tr id="ue" style="display:table-row;">{% include 'includes/user_email.html'%}</tr>
-        {%else%}
         {%if initial.data_format == "dlm" or initial.data_format == "clm"%}
         <tr id="delim" class="delim" style="display:table-row;">{% include 'includes/delimiter.html'%}</tr>
         {%else%}
         <tr id="delim" class="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
         {%endif%}
-        {%if inital.data_format != "html"%}
+        {%if initial.data_format != "html"%}
             <tr id="out_file" class="out_file" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
         {%else%}
             <tr id="out_file" class="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
         {%endif%}
-        <tr id="un" style="display:none;">{% include 'includes/user_name.html'%}</tr>
-        <tr id="ue" style="display:none;">{% include 'includes/user_email.html'%}</tr>
-        {%endif%}
+        <tr style="display:none;" class="un">{% include 'includes/user_name.html'%}</tr>
+        <tr style="display:none;" class="ue">{% include 'includes/user_email.html'%}</tr> 
         </table>
         <input type="hidden" class="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
         <input type="hidden" name="app_name" value="multi_lister">
@@ -160,26 +149,22 @@
         </form>
     </div>
 </td>
-<!--Errors/Down arrow/Maps-->
+<!--Large Request Form/Errors/Down arrow/Maps-->
 <td valign="top" width="60%">
+    <!--Large Request Form-->
+    <div id="largeRequestForm" style="display:none">
+        {% include 'includes/large_request_form.html'%}
+    </div>
+    <div id="offlineMessage" style="display:none">{% include 'includes/offline_message.html'%}</div>
+    {%if large_request%}
+       <script type="text/javascript">
+            ShowPopupDocu('largeRequestForm');
+        </script>
+    {%endif%} 
+
     <!--AJAX error-->
     <div style="display:none" class="ajax_error"></div>
 
-    <!--Form Errors and search parameter section-->
-    <div>{% include 'includes/request_email_message.html'%}</div>
-
-
-    {%if large_request and not form_error%}
-        <div>{% include 'includes/offline_message.html'%}</div>
-    {%endif%}
-    
-    {%if request_download_params %}
-        <script type="text/javascript">
-            ShowPopupDocu('request_email_message');
-            ShowDownloadFormParams();
-        </script>
-
-    {%endif%}
 
     <!--Shape file upload form-->
     <div>{% include 'includes/upload_shape_file.html'%}</div>

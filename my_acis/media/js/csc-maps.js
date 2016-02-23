@@ -493,8 +493,8 @@ function initialize_station_finder() {
             var station_ids_str = '';
             html_text = ' <thead>' + 
             '<tr><th>Name</th>' +
-            '<th>ID</th>' +
             '<th>State</th>' +
+            '<th>ID</th>' +
             '<th>Lat</th>' +
             '<th>Lon</th>' +
             '<th>Elev</th>' +
