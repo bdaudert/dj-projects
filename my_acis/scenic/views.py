@@ -739,11 +739,11 @@ def multi_lister(request):
         if form_error:
             context['form_error'] = form_error
             return render_to_response(url, context, context_instance=RequestContext(request))
+
         #Deal with large requests
         num_points, num_days = WRCCUtils.check_request_size(form_cleaned)
         large_request =  WRCCUtils.check_if_large_request(num_points, num_days)
         if large_request:
-            #context['request_download_params'] = True
             #check if we need extra download form field
             if form_cleaned['data_format'] == 'html':
                 context['show_extra_download_fields'] = True
@@ -1249,8 +1249,9 @@ def station_finder(request):
             context['error'] = station_json['error']
         if 'stations' not in station_json.keys() or  station_json['stations'] == []:
             context['error'] = "No stations found for these search parameters."
+        station_ids = WRCCUtils.get_station_ids(f_name)
+        context['number_of_stations'] = len(station_ids.split(','))
         context['station_json'] = f_name
-
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         #Turn request object into python dict
         form = DJANGOUtils.set_form(request,clean=False)
@@ -1446,7 +1447,7 @@ def monthly_summary(request):
         data = App.run_app()
         #Set header
         header = set_sodxtrmts_head(form_cleaned)
-        if not data:
+        if not data or len(data[0]) <=1:
             results = {
                 'header':'',
                 'data':[],

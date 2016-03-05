@@ -121,6 +121,25 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <tr style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
     <tr style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
     <tr style="display:table-row"  valign="bottom">{% include 'includes/date_constraints.html'%}</tr>
+    <tr style="display:table-row;">{% include 'includes/display.html'%}</tr>
+    {%if initial.display == "table"%}
+        <tr id="meta_keys" style="display:table-row;">{% include 'includes/metadata_keys.html'%}</tr>
+        <tr id="dat_format" style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
+        {%if initial.data_format == "dlm" or initial.data_format == "clm"%}
+        <tr id="delim" class="delim" style="display:table-row;">{% include 'includes/delimiter.html'%}</tr>
+        {%else%}
+        <tr id="delim" class="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
+        {%endif%}
+        {%if initial.data_format != "html"%}
+            <tr id="out_file" class="out_file" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
+        {%else%}
+            <tr id="out_file" class="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
+        {%endif%} 
+    {%else%}
+        <tr id="dat_format" style="display:none;">{% include 'includes/data_format.html'%}</tr>
+        <tr id="delim" class="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
+        <tr id="out_file" class="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
+    {%endif%}
     </table>
     <input type="hidden" class="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
     <input type="hidden" name="app_name" value="station_finder">
@@ -199,6 +218,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
         {% include 'includes/station_finder_map.html'%}
     </div>
     {%endif%}
+    
 </td>
 </table><!--End table top_of_page-->
 
@@ -211,12 +231,12 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
         <p class="error">{{ error }}</p>
     {%endif%} 
     
-    <!-- Main Map-->
+    <!--Map and Station List-->
     {% if station_json and run_done%}
     <div class="results">
-        {% include 'includes/station_finder_map.html'%}
+         {% include 'includes/station_finder_map.html'%}
     </div>
-    {%endif%}
+    {%endif%} 
 </td>
 </table>
 

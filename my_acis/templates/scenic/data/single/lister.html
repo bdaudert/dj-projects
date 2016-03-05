@@ -128,8 +128,16 @@
         {%else%}
         <tr id="out_format" class="out_format" style="display:table-row;">{% include 'includes/output_format.html'%}</tr>
         {%endif%}
+        {%if initial.data_format == "dlm" or initial.data_format == "clm"%}
+        <tr id="delim" class="delim" style="display:table-row;">{% include 'includes/delimiter.html'%}</tr>
+        {%else%}
         <tr id="delim" class="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
-        <tr id="out_file" class="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
+        {%endif%}
+        {%if initial.data_format != "html"%}
+            <tr id="out_file" class="out_file" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
+        {%else%}
+            <tr id="out_file" class="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
+        {%endif%}
         </table>
         <input type="hidden" name="app_name" value="single_lister">
         <input type="hidden" id="data_type" name="data_type" value="{{initial.data_type}}">

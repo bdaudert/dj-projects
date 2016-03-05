@@ -266,6 +266,8 @@ function initialize_station_finder() {
     var JSON_URL = $("#JSON_URL").val();
     var TMP_URL = $("#TMP_URL").val();
     var j_f = $("#station_json").val();
+    var metadata_keys_str = $('#metadata_keys').val();
+    var metadata_keys_list = metadata_keys_str.split(',')
     if (j_f == "NV_stn.json"){
         //var station_json = '/csc/media/json/' + j_f 
         var station_json = JSON_URL + j_f 
@@ -401,7 +403,16 @@ function initialize_station_finder() {
                 }
                 avbl_elements += c.available_elements[i][0] + '<br />'     
             }
-
+            var metadict = {
+                'name':c.name,
+                'state':c.state,
+                'ids':c.sids,
+                'sids':c.sids,
+                'networks':c.stn_networks,
+                'll':String(c.lon) + ', ' + String(c.lat),
+                'elev':String(c.elev),
+                'valid_daterange':avbl_elements
+            }
             var data_portal_link = '<a target="_blank" href=/csc/scenic/data/single/lister/'+
             '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid; 
             var app_portal_link = '<a target="_blank" href=/csc/scenic/data/single/?'+
@@ -438,8 +449,18 @@ function initialize_station_finder() {
             tbl_row.attr('id', marker_count - 1);
             tbl_row.attr('lat',c.lat);
             tbl_row.attr('lat',c.lon);
-            var td;
-            var tdArray = [c.name, c.state, c.sid, c.lat, c.lon, c.elevation, c.stn_networks];
+            var td, tdArray=[];
+            if ( metadata_keys_list && metadata_keys_list.length >0){
+                for (var m=0;m<metadata_keys_list.length;m++){
+                    try{
+                        tdArray.push(metadict[metadata_keys_list[m]]);
+                    }
+                    catch(e){continue;} 
+                }
+            }
+            else{
+                tdArray = [c.name, c.state, c.sid, c.lat, c.lon, c.elevation, c.stn_networks];
+            } 
             for (var k=0;k<tdArray.length;k++){
                 td = $('<td>');
                 if (k != tdArray.length - 1) { 
@@ -491,6 +512,9 @@ function initialize_station_finder() {
             of zoomed map
             */
             var station_ids_str = '';
+            //Delete old station_list table rows except header (th)
+            $('#station_list tr').has('td').remove();
+            /*
             html_text = ' <thead>' + 
             '<tr><th>Name</th>' +
             '<th>State</th>' +
@@ -502,6 +526,7 @@ function initialize_station_finder() {
             '</tr>' +
             '</thead>';
             $('#station_list').html(html_text); 
+            */
             var mapBounds = map.getBounds();
             var name_unique = ''
             for (var i=0; i<markers.length; i++) {
@@ -530,11 +555,14 @@ function initialize_station_finder() {
         });  
         // == shows all markers of a particular category, and ensures the checkbox is checked and write station_list==
         show = function(category) {
+            //Delete old station_list table rows except header (th)
+            $('#station_list tr').has('td').remove();
+            /*
             //Delete old station_list table rows
             html_text = ' <thead>' + 
             '<tr><th>Name</th>' +
-            '<th>ID</th>' +
             '<th>State</th>' +
+            '<th>ID</th>' +
             '<th>Lat</th>' +
             '<th>Lon</th>' +
             '<th>Elev</th>' +
@@ -542,6 +570,7 @@ function initialize_station_finder() {
             '</tr>' +
             '</thead>';
             $('#station_list').html(html_text);
+            */
             var station_ids_str = '';
             var name_unique = '';
             markers_showing = [];

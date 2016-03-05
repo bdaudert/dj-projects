@@ -93,6 +93,36 @@ $(document).ready(function ($) {
         }
     });
     /*
+    DISPLAY DISPLAY
+    */
+    $('#display').on('change', function(){
+        if ($(this).val() == 'map'){
+            $('#dat_format').css('display','none');
+            $('.delim').css('display','none');
+            $('.out_file').css('display','none');
+            if ($('#station_json').val() !=''){
+                $('#sf_map_div').css('display','block');
+            }
+        }
+        if ($(this).val() == 'table'){
+            $('#meta_keys').css('display','table-row');
+            $('#dat_format').css('display','table-row');
+            if ($('.data_format').val().inList(['dlm','clm'])){
+                $('.delim').css('display','table-row');
+            }
+            else{
+                $('.delim').css('display','none');
+            }
+            if ($('#data_format').val() != 'html'){
+                $('.out_file').css('display','table-row');
+            }
+            else{
+                $('.out_file').css('display','none');
+            }
+            $('#sf_map_div').css('display','none');
+        }
+    });
+    /*
     DATA FORMAT
     */
     $('.data_format').on('change', function(){
@@ -404,10 +434,11 @@ $(document).ready(function ($) {
     
     $('#DataForm, #MapForm').on('change', 'input, select, textarea', function(){
         //Hide results
-        $('.results').each(function() {
-            $(this).css('display','none');
-        });
-
+        if ($(this).attr('id')!= 'display'){
+            $('.results').each(function() {
+                $(this).css('display','none');
+            });
+        }
         //Hide appropriate form errors
         //Start and end date may have correlated errors
         $('#form_error').css('display','none');
@@ -717,6 +748,7 @@ $(document).ready(function ($) {
             if (lgb == 'g'){$('#threshold_above').css('display','table-row');}
         }
         else{
+            $('#threshold_type').css('display','none');
             $('#threshold_between').css('display','none');
             $('#threshold_below').css('display','none');
             $('#threshold_above').css('display','none');
@@ -806,8 +838,15 @@ $(document).ready(function ($) {
                 $('#summary_type option[value="both"]').attr('disabled',false);
             }
         }
-        
-
+        //Hide or show obs time and flags options
+        if ($('#data_type').val() == 'grid' || $('#area_type').val() == 'location'){
+            $('#obs_time').css('display','none');
+            $('#flags').css('display','none');
+        }
+        else{
+            $('#obs_time').css('display','table-row');
+            $('#flags').css('display','table-row'); 
+        }
         //Single app specific
         //Show/Hide grid form field and station finder form_field
         var date_vals = null;
@@ -1202,20 +1241,20 @@ $(document).ready(function ($) {
        }) 
     });
 
-    /* 
+    /*
     //Other data downloads
     $('#formDownload').on('submit', function(event){
         show_loading_gif()
         event.preventDefault();
-        var form_data = $('#DataForm :input, #formDownload :input').serialize();
+        var form_data = $('#formDownload :input').serialize();
         var jqxhr = $.ajax({
             url:'',
             method: "POST",
             data: form_data,
         })
         .done(function(response) {
-            return response;   
-            //response = JSON.parse(response);
+                hide_loading_gif();
+            }    
         })
         .fail(function(jqXHR) {
             hide_loading_gif();
@@ -1223,10 +1262,51 @@ $(document).ready(function ($) {
        })
     });
     */
+    
     /*
-    //CHECK FOR FORM ERRORS
-    $('.mainFormSubmit').on('click', function(){
-        var form = $(this).parents('form:first');
-        var form_data = form.serialize();
-    });*/
+    $('.DataForm').on('submit', function(event){
+        show_loading_gif()
+        event.preventDefault();
+        
+        //var form = $(this).parents('form:first');
+        var form_data = $('#DataForm :input').serialize();
+        var jqxhr = $.ajax({
+            url:'',
+            method: "POST",
+            data: form_data,
+        })
+        .done(function(response) {
+            try{
+                response = JSON.parse(response);
+            }
+            catch(e){response = {'submitForm':true}}
+            if ('form_error' in response){
+                $.each( response['form_error'], function(key,val){
+                    highlight_form_field(key,val);
+                });
+            }
+            if ('large_request' in response){
+                showLargeRequestForm();
+            }
+            
+            if ('submitForm' in response){
+                $('#DataForm').removeClass('DataForm');
+                console.log($('DataForm').attr('class'));
+                $('<input>').attr({
+                    type: 'hidden',
+                    id: 'submitFormToDjango',
+                    name: 'submitFormToDjango'
+                }).appendTo($('#DataForm'));
+                console.log($('#DataForm :input').serialize());
+                //$('#DataForm').submit();
+                
+            }    
+            hide_loading_gif();
+        })
+        .fail(function(jqXHR) {
+            hide_loading_gif();
+            $('.ajax_error').html(get_ajax_error(jqXHR.status));
+       })
+    });
+    */
 });

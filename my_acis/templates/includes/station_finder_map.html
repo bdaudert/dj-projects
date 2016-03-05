@@ -1,30 +1,42 @@
     {%if station_json and not error and not form_error and not need_overlay_map%}
-    {%if run_done%}
-    <table width="100%">
+    <input type="hidden" id="station_json" name="variable" value="{{station_json}}">
+    <input type="hidden" id="metadata_keys" name="metadata_keys" value="{{initial.metadata_keys_str}}">
+    {%if run_done%}<table width="100%">
+    {%else%}<table>
+    {%endif%}
+    {%if initial.display == "map"%}
+    <div id="sf_map_div" style="display:none">
     {%else%}
-    <table>
+    <div id="sf_map_div" style="display:block">
     {%endif%}
     <tr><td align="center">
         <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
     </td></tr>
     <tr><td align="center">
         <table id="map_legend" valign="top"></table>
-        <input type="hidden" id="station_json" name="variable" value="{{station_json}}">
     </td></tr>
     <tr><td align="center" >
         <div id="map-station-finder"></div>
-        <script type="text/javascript">
-            initialize_station_finder()
-        </script>
     </td></tr>
+    </div>
+    <div id="sf_table_div">
     <tr><td align="center">
         <!--Link to data portal-->
         <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
     </td></tr>
-    <tr><td align="center">
-    
+    <tr><td align="center"> 
         <!--Station List-->
         <p class="message">Stations found: {{number_of_stations}}</p>
+        <table id="station_list" border=1>
+        <thead>
+        <tr>
+        {%for meta_name in initial.metadata_names%}
+            <th>{{meta_name}}</th>
+        {%endfor%}
+        </tr>
+        </thead>
+        </table>
+        <!--
         <div class="station_list">
             <table id="station_list" border=1>
             <thead>
@@ -39,7 +51,12 @@
             </tr>
             </thead>
             </table>
-        </div>
+        </div>-->
     </td></tr>
+    </div>
     </table>
+    <!--Execute js script to generate map and station list-->
+    <script type="text/javascript">
+        initialize_station_finder()
+    </script>
     {%endif%}<!--end if  station_json and not error and not form_error and not need_overlay_map-->

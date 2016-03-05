@@ -1,112 +1,29 @@
 {% extends "csc_base.html" %}
 
 {% block content %}
+
+<div align="center" id="overview">
+<iframe src="/csc/media/img/SCENIC_Overview.pdf" width="800px" height="1090px"></iframe>
+</div>
+
 <table cellpadding="20" align="center">
 <td valign="top" width="600px">
-    <h2 align="center" id="overview" name="overview">Overview</h2>
-    <p align="left">SCENIC provides <font color="red">ACCESS TO CLIMATE DATA AND ANALYSIS TOOLS</font>
-    to support the research and decision making efforts of the Southwest Climate Science Center (SW CSC) 
-    and the Landscape Conservation Cooperatives(LCC).</p>
-    <p align="center"><img alt="LInKS" title="LInKS" width="400px" height="400px" src={{MEDIA_URL}}img/LInKS.png></p>
-    <br />
-    <p align="left">
-    In 2009 the US Department of Interior initiated a national system of Climate Science Centers (CSCs). This is the first-ever coordinated effort to synthesize existing climate change information to inform decisions about resource management. 
-    The Southwest CSC (SW CSC) consists of six partner institutions, one of which (Desert Research Institute) is the host of the Western Regional Climate center (WRCC).
-    As part of its contribution to the SW CSC, WRCC is developing an access point to historic and real-time climate data tools and applications for decision support as well as meaningful access to other links and resources pertaining to climate and climate change in the Southwest US.
-    </p>    
-
-    <h2 align="center" id="what_we_do" name="what_we_do">What We Do</h2>
-    <p>The Southwest Climate and ENvironmental Information Collaborative (SCENIC) serves as an access point of climate information for the full extent or any subset of the Southwest US. Users can  download various climate datasets and utilize our custom build decision support tools to analyze  and visualize the data. Data request can be customized by spatial and temporal extend and analysis can be performed on custom subsets of the available data.      
-    </p>
-    <h2 align="center"><font color="#FF007F">Data</font></h2>
-    <!--
-    <p align="left"><ul>
-    <li><b>Access to past and present climate data</b></li>
-    <ul>
-    <li>Observational Station Data</li>
-    <ul>
-    <li>Source/Network: <br /><a target="_blank" href="http://www.nws.noaa.gov/om/coop/">COOP</a>, <a target="_blank" href="http://www.ncdc.noaa.gov/oa/climate/ghcn-daily/">GHCN</a>, <a target="_blank" href="http://www.icao.int/Pages/default.aspx">ICAO</a>, <a target="_blank" href="http://www.nws.noaa.gov/om/osd/portal.shtml">NWSLI</a>, <a target="_blank" href="http://www.faa.gov/">FAA</a>, <a target="_blank" href="http://www.wmo.int/pages/index_en.html">WMO</a>, <a target="_blank" href="http://www.ncdc.noaa.gov/homr/reports/platforms;jsessionid=D55ED65183545FEDA512F1D0F19BA064.lwf2">WBAN</a>, <a target="_blank" href="http://threadex.rcc-acis.org/links.html">ThredEx</a>, <a target="_blank" href="http://www.cocorahs.org/">CoCoRaHS</a></li> 
-    <li>Time Range: Period of record is station dependent (1885 - Present)</li>
-    <li>Temporal Resolution: Daily</li>
-    <li>Domain: US</li>
-    <li>Download Options: 
-    <ul>
-    <li>Download individual station data, list of stations, by county, county warning area, climate division, state, drainage basin or custom shape</li>
-    <li>Formats: excel, html, columnar, delimited</li>
-    </ul>
-    </li>
-    </ul>    
-    <li>Gridded Data</li>
-    <ul>
-    <li>Source: </li>
-    <ul>
-    <li><a target="_blank" href="">NRCC</a> (1950 - Present)</li>
-    <li><a target="_blank" href="http://www.prism.oregonstate.edu/">PRISM</a> (1895 - Present)</li>
-    <li><a target="_blank" href="http://www.narccap.ucar.edu/data/model-info.html">NARCCAP</a> (1970 - 2000) 
-    <ul>
-    <li> Regional Models: CRCM, HRM3, MM5I, RCM3, WRFG </li>
-    <li> Global Climate Models (GCM): CCSM, CGCM3, GFDL, HadCM3 </li>
-    </ul>
-    </li>
-    </ul>
-    <li>Temporal Resolution: 
-    <ul>
-    <li>NRCC: Daily</li>
-    <li>PRISM: Monthly/Yearly/Daily(1981-Present)</li>
-    <li>NARCCAP: Daily</li>
-    </ul></li>
-    <li>Spatial Resolution:
-    <ul>
-    <li>NRCC: 5km</li>
-    <li>PRISM: 4km</li>
-    <li>NARCCAP: 50km</li>
-    </ul> 
-    </li>
-    <li>Domain: US</li>
-    <li>Download Options:
-    <ul>
-    <li>Download individual grid point, by county, county warning area, climate division, state, drainage basin or custom shape</li>
-    <li>Formats: excel, html, columnar, delimited</li>
-    </ul>
-    </li>
-    </ul>
-    </ul>
-    <li><b>Access to future projections derived from models in gridded form</b></li>
-    <ul>
-    <li>Source: </li>
-    <ul>
-    <li><a target="_blank" href="http://www.narccap.ucar.edu/data/model-info.html">NARCCAP</a> (2040 - 2070)
-    <ul>
-    <li>Regional Models: CRCM, HRM3, MM5I, RCM3, WRFG</li>
-    <li> Global Climate Models (GCM): CCSM, CGCM3, GFDL, HadCM3 </li>
-    </ul>
-    </li>
-    </ul>
-    <li>Temporal Resolution: Daily</li>
-    <li>Spatial Resolution: 50km</li>
-    <li>Domain: US</li>
-    <li>Download Options: 
-    <ul>
-    <li>Download individual grid point, by county, county warning area, climate division, state, drainage basin or custom shape</li>
-    <li>Formats: excel, html, columnar, delimited</li>
-    </ul>
-    </li>
-    </ul>
-    -->
+    <h2 align="center" id="data">Data</h2>
     <img align="center" src="/csc/media/img/SCENIC_Data.png">
-    <h2 align="center"><font color="#FF007F">Analysis Tools</font></h2>
-    <ul>
-    <li>Time Series, Averages, Records, Normals, ...</li>
-    <li>Composite and Probability(*not yet implemented) maps</li>
-    </ul>
+</td>
+</table>
 
-    <h2 align="center">Behind the scenes</h2>
-    <p align="left">We will routinely perform evaluations of the usefulness of the information and tools provided. 
-    We will look at the effectiveness of the mechanisms for access, dissemination, summarization and visualization. 
-    User feedback as well as internal and external expert advice will guide improvements and enhancements to the SCENIC.
+<table cellpadding="20" align="center">
+<td valign="top" width="600px">
+    <h2 align="center" id="analysis">Analysis Tools</h2>
+    <!--<div style="max-width:80%;word-wrap:break-word;">-->
+    <p align="center">
+    <b>Daily, Seasonal and Yearly Time Series</b></br />
+    <b>Averages, Records, Normals</b><br />
+    <b>Spatial (Time Series) and Temporal Summaries (Maps)</b>
     </p>
 
-    <h2 align="center">Publications</h2>
+    <h2 align="center" id="publications">Publications</h2>
     <p align="center">
     <a target="_blank" href="http://journals.ametsoc.org/doi/abs/10.1175/BAMS-D-14-00121.1?af=R">
     Establishing best practices to improve usefulness and usability<br />
@@ -114,87 +31,21 @@
     </a>
     </p>
    
-    <!-- 
-    <h2 id="who_we_are" name="who_we_are">who_we_are</h2>
-        <h3><font color="#FF007F">Host Institutions and Principal Investigators</font></h3>
-        <table cellspacing="5">
-        <tr><td>
-            <a href="http://www.arizona.edu/" target="_blank"><img title="UA" alt="UA" src="/csc/media/img/UA_LOGO.png"></a><br />
-            <a href="http://www.arizona.edu/" target="_blank">University of Arizona</a><br />
-            <a href="http://www.southwestclimatechange.org" target="_blank">Southwest Climate Change Network</a>
-        </td><td>
-            <img alt="Peck" title="Peck" src="{{MEDIA_URL}}img/overpeck.jpg" class="person"><br />
-            <a href="http://www.environment.arizona.edu/jonathan-overpeck" target="_blank">Jonathan Overpeck</a>
-        </td></tr>
-        <tr><td>
-            <a href="http://www.dri.edu" target="_blank"><img alt="DRI" title="DRI" src="/csc/media/img/DRI_LOGO.png"</a>&nbsp;&nbsp;<a href="http://www.wrcc.dri.edu" target="_blank"><img alt="WRCC" title="WRCC" src="/csc/media/img/WRCC_LOGO.png"></a><br />
-            <a href="http://www.dri.edu" target="_blank">Desert Research Institute</a><br />
-            <a href="http://www.wrcc.dri.edu" target="_blank">Western Regional Climate Center</a><br />
-        </td><td>
-            <img alt="Kelly" title="Kelly" src="{{MEDIA_URL}}img/KellyR.jpg" width="70px" height="60px"><br />
-            <a href="http://www.dri.edu/kelly-redmond" target="_blank">Kelly Redmond</a>
-        </td></tr>
-        <tr><td>
-            <a href="http://sio.ucsd.edu/" target="_blank"><img alt="SCRIPPS" title="SCRIPPS" src="/csc/media/img/SCRIPPS_LOGO.png"></a><br />
-            <a href="http://sio.ucsd.edu/" target="_blank">Scripps Institute for Oceanography</a><br />
-            <a href="http://sio.ucsd.edu/cccc/" target="_blank">California Climate Change Center</a><br />
-        </td><td>
-            <img alt="Mike" title="Mike" src="{{MEDIA_URL}}img/MikeD.jpg" class="person">&nbsp;&nbsp;<img alt="Dan" title="Dan" src="{{MEDIA_URL}}img/DanC.jpg" class="person"><br />
-            <a href="http://tenaya.ucsd.edu/~dettinge/" target="_blank">Mike Dettinger</a>&nbsp;&nbsp;
-            <a href="http://tenaya.ucsd.edu/~cayan/index.html" target="_blank">Dan Cayan</a>
-        </td></tr>
-        <tr><td>
-            <a href="http://www.ucla.edu/" target="_blank"><img alt="UCLA" title="UCLA" src="/csc/media/img/UCLA_LOGO.png"></a><br />
-            <a href="http://www.ucla.edu/" target="_blank">UC Los Angeles</a><br />
-            <a href="http://www.environment.ucla.edu/research/southwest-climate-alliance.asp" target="_blank">UCLA Institute of the environment and Sustainability</a><br />
-        </td><td>
-            <img alt="Glen" title="Glen" src="{{MEDIA_URL}}img/GlenM.jpg" class="person"><br />
-            <a href="http://www.environment.ucla.edu/people/person.asp?Facultystaff_ID=48" target="_blank">Glen M. MacDonald</a>
-        </td></tr>
-        <tr><td>
-            <a href="http://www.ucdavis.edu/" target="_blank"><img alt="UCD" title="UCD" src="/csc/media/img/UCDavis_LOGO.png"></a><br />
-            <a href="http://www.ucdavis.edu/" target="_blank">UC Davis</a><br />
-            <a href="http://johnmuir.ucdavis.edu/" target="_blank">John Muir Institute of the Environment</a><br />            
-        </td><td>
-            <img alt="Mark" title="Mark" src="{{MEDIA_URL}}img/Schwartz.jpg" class="person">&nbsp;&nbsp;<br />
-            <a href="http://johnmuir.ucdavis.edu/people/faculty/595/mark-w-schwartz" target="_blank">Mark W. Schwartz</a>&nbsp;&nbsp;
-            <a href="http://johnmuir.ucdavis.edu/people/faculty/772/erica-fleishman" target="_blank">Erica Fleischman</a><br />
-        </td></tr>
-        <tr><td>
-            <a href="http://www.colorado.edu/" target="_blank"><img alt="Boulder" title="Boulder" src="/csc/media/img/UCBoulder_LOGO.png"></a><br />
-            <a href="http://www.colorado.edu/" target="_blank">CU Boulder</a><br />
-            <a href="http://revampclimate.colostate.edu/regional-climate-science-centers" target="_blank">North Central Climate Science Center</a><br />
-            <a href="http://wwa.colorado.edu/index.html" target="_blank">Western Water Assessment</a><br /> 
-        </td><td>
-            <img alt="Brad" title="Brad" src="{{MEDIA_URL}}img/BradU.jpg" class="person"><br />
-            <a href="http://sciencepolicy.colorado.edu/about_us/meet_us/brad_udall/" target="_blank">Brad Udall</a>
-        </td></tr>
-        </table>
+    <div align="center">
+    <h2 align="center" id="contact_us" name="contact_us">Contact Us</h2>
+    Mail questions and comments to <a href="mailto:scenic@dri.edu">scenic@dri.edu</a><br /><br /> 
 
-        <h3><font color="#FF007F">Sponsors</font></h3>
-        <p><a href="http://www.doi.gov/csc/" target="_blank"><img alt="DOI" title="DOI" src="{{MEDIA_URL}}img/DOILogo.jpg" width="70px" height="70px"></a>&nbsp;&nbsp;
-        <a href="http://www.doi.gov/csc/" target="_blank"></a>&nbsp;&nbsp;
-        <a href="http://www.swcsc.arizona.edu/" target="_blank"><img alt="SW-CSC" title="SW-CSC" src="{{MEDIA_URL}}img/SW-CSC-LOGO.png" width="150px" height="50px"></a>&nbsp;&nbsp;
-        <a href="https://nccwsc.usgs.gov/" target="_blank"><img alt="USGS" title="USGS" src="{{MEDIA_URL}}img/USGSLogo.png" class="logo"></a>
-       --> 
-
-        <div align="center">
-        <h2 align="center" id="contact_us" name="contact_us">Contact Us</h2>
-        <h3><font color="#FF007F">SCENIC</h3>
-        Mail questions and comments to <a href="mailto:scenic@dri.edu">scenic@dri.edu</a><br /><br /> 
-
-        <h3><font color="#FF007F">WRCC</font></h3>
-        <p><strong>Western Regional Climate Center</strong><br />
-            2215 Raggio Parkway<br />
-            Reno, NV  89512-1095<br />
-            Tel: 775-674-7010<br />
-            Fax: 775-674-7001<br />
-            Email: <a href="mailto:wrcc@dri.edu">wrcc@dri.edu</a><br />
-            Open Monday - Friday <br />
-            8am - 4pm Pacific Time <br />
-            <a target="_blank" href="http://www.facebook.com/pages/Western-Regional-Climate-Center-WRCC/330763610291776" rel="external"><img src="http://www.wrcc.dri.edu/media/img/facebook_16.png" alt="FB icon" title="FB Icon"></a>
-            <a  target="_blank" href="http://www.facebook.com/pages/Western-Regional-Climate-Center-WRCC/330763610291776" rel="external">WRCC on Facebook</a>
-        </div>
+    <p><strong>Western Regional Climate Center</strong><br />
+        2215 Raggio Parkway<br />
+        Reno, NV  89512-1095<br />
+        Tel: 775-674-7010<br />
+        Fax: 775-674-7001<br />
+        Email: <a href="mailto:wrcc@dri.edu">wrcc@dri.edu</a><br />
+        Open Monday - Friday <br />
+        8am - 4pm Pacific Time <br />
+        <a target="_blank" href="http://www.facebook.com/pages/Western-Regional-Climate-Center-WRCC/330763610291776" rel="external"><img src="http://www.wrcc.dri.edu/media/img/facebook_16.png" alt="FB icon" title="FB Icon"></a>
+        <a  target="_blank" href="http://www.facebook.com/pages/Western-Regional-Climate-Center-WRCC/330763610291776" rel="external">WRCC on Facebook</a>
+    </div>
 
     <div align="center">
     <h2 align="center" id="links" name="links">Links</h2>

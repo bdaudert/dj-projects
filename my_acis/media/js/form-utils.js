@@ -13,6 +13,28 @@ String.prototype.inList=function(list){
    return ( list.indexOf(this.toString()) != -1)
 }
 
+function showLargeRequestForm(){
+    if ($('#app_name').val() == 'multi_lister'){
+        if ($('#data_summary').val().inList(['none','windowed_data'])){
+            $('.out_format').css('display','table-row');
+        }
+        else{
+            $('.out_format').css('display','none');
+        }
+    }
+    else{
+        $('.out_format').css('display','none');
+    }
+    if ($('.data_format').val().inList(['xl','html'])){
+        $('.delim').css('display','none');
+
+    }
+    else{
+        $('.delim').css('display','table-row');
+    }
+    ShowPopupDocu('largeRequestForm');
+}
+
 // [client side code for showing/hiding content]
 function ShowHideTopOfPage(){
     /*
