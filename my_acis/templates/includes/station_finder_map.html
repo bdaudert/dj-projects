@@ -4,29 +4,32 @@
     {%if run_done%}<table width="100%">
     {%else%}<table>
     {%endif%}
-    {%if initial.display == "map"%}
-    <div id="sf_map_div" style="display:none">
-    {%else%}
-    <div id="sf_map_div" style="display:block">
-    {%endif%}
-    <tr><td align="center">
+    <tr class="sf_map"><td align="center">
         <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
     </td></tr>
-    <tr><td align="center">
+    <tr class="sf_map"><td align="center">
         <table id="map_legend" valign="top"></table>
     </td></tr>
-    <tr><td align="center" >
+    <tr class="sf_map"><td align="center" >
         <div id="map-station-finder"></div>
     </td></tr>
     </div>
-    <div id="sf_table_div">
     <tr><td align="center">
-        <!--Link to data portal-->
-        <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
+        <table cellpadding="20px">
+        <td>
+           <!--Link to data portal-->
+            <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
+        </td>
+        <td>
+            <a href="#" id="csvExport">Export Table</a>
+        </td>
+        </table>
     </td></tr>
     <tr><td align="center"> 
         <!--Station List-->
-        <p class="message">Stations found: {{number_of_stations}}</p>
+        <p class="message" id='number_of_stations'></p>
+        {%if run_done%}<div class="station_list" style="max-width:800px">
+        {%else%}<div class="station_list" style="max-width:600px">{%endif%}
         <table id="station_list" border=1>
         <thead>
         <tr>
@@ -36,24 +39,8 @@
         </tr>
         </thead>
         </table>
-        <!--
-        <div class="station_list">
-            <table id="station_list" border=1>
-            <thead>
-            <tr>
-            <th>Name</th>
-            <th>State</th>
-            <th>ID</th>
-            <th>Lat</th>
-            <th>Lon</th>
-            <th>Elev</th>
-            <th>Networks</th>
-            </tr>
-            </thead>
-            </table>
-        </div>-->
+        </div>
     </td></tr>
-    </div>
     </table>
     <!--Execute js script to generate map and station list-->
     <script type="text/javascript">

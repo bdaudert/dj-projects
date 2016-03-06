@@ -1236,10 +1236,9 @@ def station_finder(request):
         date_range = [initial['start_date'],initial['end_date']]
         el_date_constraints = initial['elements_constraints'] + '_' + initial['dates_constraints']
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=['1','2','4'],time_range=date_range, constraints=el_date_constraints)
-        #context['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
-        #context['number_of_stations'] = len(context['station_ids'].split(','))
         #Write json file for link to data lister
         json_dict = copy.deepcopy(initial)
+        #Need to get stations IDS for data download
         json_dict['station_ids'] = WRCCUtils.get_station_ids('/tmp/' + f_name)
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
         json_file_name = '%s_%s_params.json' %(time_stamp,app_name)
@@ -1249,9 +1248,34 @@ def station_finder(request):
             context['error'] = station_json['error']
         if 'stations' not in station_json.keys() or  station_json['stations'] == []:
             context['error'] = "No stations found for these search parameters."
-        station_ids = WRCCUtils.get_station_ids(f_name)
-        context['number_of_stations'] = len(station_ids.split(','))
         context['station_json'] = f_name
+        '''
+        #Check if user wants station list written to file
+        if initial['display'] == 'table' and initial['data_format']!='html':
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+            file_name = initial['output_file_name'] + '_' + time_stamp
+            table_data = WRCCUtils.write_station_list_table(initial['metadata_keys'],station_json)
+            f = copy.deepcopy(form_cleaned)
+            f['app_name']= 'sf_station_list'
+            req = {
+                'form':f,
+                'data':[],
+                'smry':table_data,
+                'meta':[]
+            }
+            if initial['data_format'] == 'xl':
+                file_extension = '.xls'
+                response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
+                Writer = WRCCClasses.ExcelWriter(req,response=response)
+            if initial['data_format'] in ['clm','dlm']:
+                if form['data_format'] == 'clm':file_extension = '.txt'
+                else:file_extension = '.dat'
+                response = HttpResponse(mimetype='text/csv')
+                response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
+                Writer = WRCCClasses.CsvWriter(req, f=None, response=response)
+            Writer.write_to_file()
+            return response
+        '''
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         #Turn request object into python dict
         form = DJANGOUtils.set_form(request,clean=False)
@@ -1278,6 +1302,7 @@ def station_finder(request):
         #Update hidden var that keeps track of stations
         initial['station_ids_string'] = station_ids
         context['initial'] = initial
+        #Write json file for link to data lister
         json_dict = copy.deepcopy(form_cleaned)
         json_dict['station_ids'] = station_ids
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
@@ -1290,7 +1315,35 @@ def station_finder(request):
             context['error'] = "No stations found for these search parameters."
         context['station_json'] = f_name
         context['run_done'] = True
+        '''
+        #Check if user wants station list written to file
+        if initial['display'] == 'table' and initial['data_format']!='html':
+            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
+            file_name = initial['output_file_name'] + '_' + time_stamp
+            table_data = WRCCUtils.write_station_list_table(initial['metadata_keys'],station_json)
+            f = copy.deepcopy(form_cleaned)
+            f['app_name']= 'sf_station_list'
+            req = {
+                'form':f,
+                'data':[],
+                'smry':table_data,
+                'meta':[]
+            }
+            if initial['data_format'] == 'xl':
+                file_extension = '.xls'
+                response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
+                response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
+                Writer = WRCCClasses.ExcelWriter(req,response=response)
 
+            if initial['data_format'] in ['clm','dlm']:
+                if form['data_format'] == 'clm':file_extension = '.txt'
+                else:file_extension = '.dat'
+                response = HttpResponse(mimetype='text/csv')
+                response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
+                Writer = WRCCClasses.CsvWriter(req, f=None, response=response)
+            Writer.write_to_file()
+            return response
+        '''
     #Shape file upload
     if 'formShapeFile' in request.POST:
         results = {}
@@ -1298,13 +1351,6 @@ def station_finder(request):
         #shape_file = request.FILES.get('file')
         files = request.FILES.getlist('files')
         feature_id = request.POST['feature_id']
-        '''
-        #Check that file format is correct
-        if str(shape_file).split('.')[-1] != 'shp':
-            results['error'] = 'File should have extension .shp'
-            context['results'] = results
-            return render_to_response(url, context, context_instance=RequestContext(request))
-        '''
 
         #Save shapefiles in tmp dir
         #shp_file = '/tmp/' + str(shape_file)
@@ -1334,27 +1380,6 @@ def station_finder(request):
         context['initial'] = initial
         context['need_polygon_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
-
-    '''
-    #Download data for all sations displayed
-    #Request will be processed offline
-    if 'formDownload' in request.POST:
-        initial = DJANGOUtils.set_initial(request,'sf_download')
-        context['initial'] = initial
-        form_cleaned = DJANGOUtils.set_form(initial, clean=True)
-        fields_to_check = ['user_email']
-        form_error = check_form(form_cleaned, fields_to_check)
-        if form_error:
-            context['form_error_download'] = form_error
-            return render_to_response(url, context, context_instance=RequestContext(request))
-        context['large_request'] = True
-        #Submit large request
-        #os.remove(settings.DATA_REQUEST_BASE_DIR + 'SFDownloadTest_params.json')
-        json_dict = copy.deepcopy(form_cleaned)
-        json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
-        WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, json_dict)
-        return render_to_response(url, context, context_instance=RequestContext(request))
-    '''
 
     return render_to_response(url, context, context_instance=RequestContext(request))
 
@@ -1499,6 +1524,7 @@ def monthly_summary(request):
         with open(settings.TEMP_DIR + '%s' %(json_file),'w+') as f:
             f.write(json.dumps(results))
         context['json_file'] = json_file
+
     #Downlaod Table Data
     if 'formDownload' in request.POST:
         time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')

@@ -93,7 +93,7 @@ $(document).ready(function ($) {
         }
     });
     /*
-    DISPLAY DISPLAY
+    STATION FINDER DISPLAY 
     */
     $('#display').on('change', function(){
         if ($(this).val() == 'map'){
@@ -101,11 +101,15 @@ $(document).ready(function ($) {
             $('.delim').css('display','none');
             $('.out_file').css('display','none');
             if ($('#station_json').val() !=''){
-                $('#sf_map_div').css('display','block');
+                $('.sf_map').css('display','table-row');
+            }
+            else{
+                $('.sf_map').css('display','none');
             }
         }
         if ($(this).val() == 'table'){
             $('#meta_keys').css('display','table-row');
+            $('#data_format').val('html');//Default is excel
             $('#dat_format').css('display','table-row');
             if ($('.data_format').val().inList(['dlm','clm'])){
                 $('.delim').css('display','table-row');
@@ -119,7 +123,7 @@ $(document).ready(function ($) {
             else{
                 $('.out_file').css('display','none');
             }
-            $('#sf_map_div').css('display','none');
+            $('.sf_map').css('display','none');
         }
     });
     /*
@@ -433,8 +437,30 @@ $(document).ready(function ($) {
     });
     
     $('#DataForm, #MapForm').on('change', 'input, select, textarea', function(){
+        if ($(this).attr('id')){
+            var form_field_id = $(this).attr('id');
+        }
+        else{
+            var form_field_id = $(this).attr('class');
+        }
         //Hide results
-        if ($(this).attr('id')!= 'display'){
+        if ($('#app_name').val() == 'station_finder'){
+            if ($('#display').val() == 'table'){
+                if (!form_field_id.inList(['display','data_format', 'delimiter','output_file_name'])){
+                    $('.results').each(function() {
+                        $(this).css('display','none');
+                    });
+                }
+            } 
+            else{
+                 if ($(this).attr('id') != 'display'){
+                    $('.results').each(function() {
+                        $(this).css('display','none');
+                    });
+                }
+            }
+        }
+        else{
             $('.results').each(function() {
                 $(this).css('display','none');
             });
@@ -1148,6 +1174,78 @@ $(document).ready(function ($) {
          $(this).css('backgroundColor',"#FFEFD5");
     });
 
+    /***************
+    EXPORTING TABLES (CSV, EXCEL)
+    ****************/
+    function exportTable($table, filename, type) {
+        /*
+        Download table data to csv or excel (type)
+        */
+        var $header = $table.find('tr:has(th)');
+        var $rows = $table.find('tr:has(td)');
+        
+        // Temporary delimiter characters unlikely to be typed by keyboard
+        // This is to avoid accidentally splitting the actual contents
+        var tmpColDelim = String.fromCharCode(11); // vertical tab character
+        var tmpRowDelim = String.fromCharCode(0); // null character
+        // actual delimiter characters for CSV format
+        if (type == 'csv'){
+            var colDelim = '","';
+            var rowDelim = '"\r\n"';
+        }
+        if (type == 'excel'){
+            var colDelim = '" "';
+            var rowDelim = '"\r\n"';
+        }
+        //Grab header        
+        var csv = '"' + $header.map(function (i, row) {
+            var $row = $(row),$cols = $row.find('th');
+
+            return $cols.map(function (j, col) {
+                var $col = $(col),text = $col.text();
+                return text.replace(/"/g, '""'); // escape double quotes
+
+            }).get().join(tmpColDelim);
+
+            }).get().join(tmpRowDelim)
+                .split(tmpRowDelim).join(rowDelim)
+                .split(tmpColDelim).join(colDelim) + rowDelim + '"';
+        // Grab text from table into CSV formatted string
+        //csv+= '"' + $rows.map(function (i, row) {
+        csv+= $rows.map(function (i, row) {
+            var $row = $(row),$cols = $row.find('td');
+
+            return $cols.map(function (j, col) {
+                var $col = $(col),text = $col.text();
+                return text.replace(/"/g, '""'); // escape double quotes
+
+            }).get().join(tmpColDelim);
+
+            }).get().join(tmpRowDelim)
+                .split(tmpRowDelim).join(rowDelim)
+                .split(tmpColDelim).join(colDelim) + '"';
+
+        // Data URI
+        if (type == 'csv'){
+            var Data = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
+        }
+        if (type == 'excel'){
+            var Data = 'data:application/vnd.ms-excel,' + encodeURIComponent(csv);
+        } 
+        $(this)
+            .attr({
+            'download': filename,
+                'href': Data,
+                'target': '_blank'
+        }); 
+    }   
+    $("#excelExport").on('click', function (event) {
+        exportTable.apply(this, [$('#station_list'), 'export.xls','excel']);
+    });
+     $("#csvExport").on('click', function (event) {
+        exportTable.apply(this, [$('#station_list'), 'export.csv','csv']);
+    });
+    
     /***************
     AJAX CALLS
     ****************/

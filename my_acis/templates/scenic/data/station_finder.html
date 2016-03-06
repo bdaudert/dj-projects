@@ -109,7 +109,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 {%else%}
     <table id="top_of_page" style="display:none">
 {%endif%}
-<td valign="top">
+<td valign="top" width="300px">
     <div id='formData'>
     <!--<form id="DataForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('DownloadForm', $(this).attr('id'))">{% csrf_token %}-->
     <form id="DataForm" method="post" action="" onsubmit="show_loading()">{% csrf_token %}
@@ -121,7 +121,8 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <tr style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
     <tr style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
     <tr style="display:table-row"  valign="bottom">{% include 'includes/date_constraints.html'%}</tr>
-    <tr style="display:table-row;">{% include 'includes/display.html'%}</tr>
+    <tr style="display:table-row;">{% include 'includes/metadata_keys.html'%}</tr>
+    <tr style="display:none;">{% include 'includes/display.html'%}</tr>
     {%if initial.display == "table"%}
         <tr id="meta_keys" style="display:table-row;">{% include 'includes/metadata_keys.html'%}</tr>
         <tr id="dat_format" style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
@@ -149,7 +150,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     </div><!--end form data div-->
 
 <!--Errors/down arrow/maps-->
-<td valign="top" align="center">
+<td valign="top" align="center" width="600px">
     <!--AJAX error-->
     <div style="display:none" class="ajax_error"></div>
     <!--Form Errors and search parameter section-->

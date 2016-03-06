@@ -1,7 +1,7 @@
         {%load my_scenic_filters%}
         <td>Metadata: </td>
         <td>
-        <select id="metadata_keys" name="metadata_keys" onchange="update_value(this.value);" multiple>
+        <select style="min-width:90%;" id="metadata_keys" name="metadata_keys" onchange="update_value(this.value);" multiple>
         {%for opt, name in initial.form_options.metadata_keys%}
             <option value="{{opt}}" {%if opt|is_in:initial.metadata_keys%}selected{%endif%}
             >{{name}}</option>
