@@ -237,30 +237,6 @@
     <div class="results">
 
 
-    {%if not results.error %}
-        {% if results.data or results.smry%}
-        <table>
-        <td valign="top">
-        <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
-        </td><td valign="top">
-        <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
-        </td>
-        <!--<td valign="top">
-        <p onClick="ShowHide('metadata')" align="center"><img alt="Metadata" title="Metadata" src="{{MEDIA_URL}}img/metadata_button.png"></p>-->
-        </td>
-        </table>
-        {% endif %}
-    {%endif%}
-
-    <!--Download form-->
-    <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
-
-    <!--Metadata-->
-    <!--
-    <p class="message">
-        <div id="metadata" style="display:none">results.metadata</div>
-    </p>
-    -->
     <!--Data-->
     <table id="printable_table" align="center">
     <td align="center">
@@ -292,10 +268,21 @@
            {%endfor%}
         </p>
         <p class="message"><b>DATA</b>:</p>
-        <table border="1">
+        <table class="dataTable nowrap" width="800px">
         {%for data in point_data%}
-        <tr>{%for d in data%}<td>{{d}}</td>{%endfor%}</tr>
+        {%if forloop.counter0 == 0%}
+            <thead>
+            <tr>{%for d in data%}<th>{{d}}</th>{%endfor%}</tr>
+            </thead>
+            <tfoot>
+            <tr>{%for d in data%}<th>{{d}}</th>{%endfor%}</tr>
+            </tfoot>
+            <tbody>
+        {%else%}
+            <tr>{%for d in data%}<td>{{d}}</td>{%endfor%}</tr>
+        {%endif%}
         {%endfor%}
+        </tbody>
         </table>
     {% endfor %}
 
@@ -303,14 +290,28 @@
 
     {%if not results.error and results.smry%}
         <p class="message"><b>DATA SUMMARY</b>:</p>
-        <table border="1">
+        <table class="dataTable" width="800px">
         {%for s_data in results.smry%}
+        {%if forloop.counter0 == 0%}
+             <thead><tr>
+            {%for s in s_data%}
+                <th>{{s}}</th>
+            {%endfor%}
+            </tr></thead>
+             <tfoot><tr>
+            {%for s in s_data%}
+                <th>{{s}}</th>
+            {%endfor%}
+            </tr></tfoot>
+        {%else%}
             <tr>
             {%for s in s_data%}
                 <td>{{s}}</td>
             {%endfor%}
             </tr>
+        {%endif%}
         {%endfor%}
+        </tbody>
         </table>
     {%endif%}
     <div><!--end results-->

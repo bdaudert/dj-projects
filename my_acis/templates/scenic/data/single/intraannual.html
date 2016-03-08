@@ -137,25 +137,33 @@
 <!--Results-->
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
+    {% if not results.error and results.data %}
     <div class="results">
-    {%if not results.error and results.data%}
-        <table>
-        <td valign="top">
-        <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
-        </td><td valign="top">
-        <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
-        </td>
-        <td>
-        <p class="pop_link" onClick="ShowHide('DataList')"><img alt="ShowHide" src ="{{MEDIA_URL}}img/show_hide_button.png"></p>
-        </td>
+    <table>
+    <td width="10%">
+        
+        <!--DATA-->
+        <div id="DataList">
+        <table id="textData" class="dataTable nowrap">
+        <thead>
+        <th>Date</th><th>{{results.element_short}}</th>
+        </thead>
+        <tfoot>
+        <th>Date</th><th>{{results.element_short}}</th>
+        </tfoot>
+        <tbody>
+        {%for date_data in results.data|lookup:results.target_year%}
+            <tr>
+            <td>{{date_data.0}}</td><td>{{date_data.1}}</td>
+            </tr>
+        {%endfor%}
+        </tbody>
         </table>
-    {%endif%}    
-
-    <!--Download form-->
-    <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
-    
-<!--RESULTS-->
-    <table id="printable_table">
+        </div> 
+    </td>
+    <td width="90%" valign="top">
+    <!--PARAMS-->
+    <table id="printable_table" align="center">
     <td>
     {% if results.data %}
     <p class="message" style="max-width:400px;word-wrap:break-word;"> YOUR PARAMETERS:<br />
@@ -164,26 +172,13 @@
     {%endfor%}
     </p>
     {%endif%}
-
-
-    <!--DATA-->
-    {% if not results.error and results.data %}
-        <div id="DataList" style="display:none;">
-        <table id="textData" border="1">
-        <th>Date</th><th>{{results.element_short}}</th>
-        {%for date_data in results.data|lookup:results.target_year%}
-            <tr>
-            <td>{{date_data.0}}</td><td>{{date_data.1}}</td>
-            </tr>
-        {%endfor%}
-        </table>
-        </div>
-
+    </td>
+    </table>
 
     <!--GRAPH-->
-    <div id="user_graph" width="800px">
+    <div id="user_graph">
         <!--Dynamic chart options-->
-        <table align="left" class='chart_options' border="1" width="800px">
+        <table align="left" class='chart_options' border="1">
             <tr>
             <td align="left" valign="top">
                 {% include 'includes/chart_type.html'%} &nbsp;&nbsp; {% include 'includes/show_hide_legend.html'%}
@@ -200,16 +195,18 @@
             </tr>
             <tr>
             <td colspan="2">
-        <div align="right" id="container" style="height:600px;width:800px;"></div>
+        <div align="right" id="container" style="height:550px;"></div>
         <script type="text/javascript">
             var graph_data = {{results.graph_data | safe_json}};
             var cp_data = {{results.cp_data | safe_json }};
             var data_indices = {{ results.data_indices |safe }};
             generateTS_individual(data_indices);
         </script>
-            </td></tr>
+        </td></tr>
         </table>
     </div>
+    </td>
+    </table>
 
     {%endif%}<!--end if not results.error-->
 

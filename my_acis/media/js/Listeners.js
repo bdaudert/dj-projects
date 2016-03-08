@@ -1,4 +1,53 @@
 $(document).ready(function ($) { 
+    
+    //Initialize Data Tables
+    var table = $('.dataTable').DataTable({
+        'dom': 'Bfrtip',
+        'paging': false,
+        'scrollY': 400,
+        'scrollCollapse': true,
+        'scrollX': 'auto',
+        'buttons': [
+            {
+                'extend':'csv',
+                'exportOptions': {
+                    'columns': ':visible'
+                }
+            },
+            {
+                'extend':'excel',
+                'exportOptions': {
+                    'columns': ':visible'
+                }
+            },
+            {
+                'extend':'pdf',
+                'exportOptions': {
+                    'columns': ':visible'
+                }
+            },
+            {
+                'extend':'print',
+                'exportOptions': {
+                    'columns': ':visible'
+                }
+            },
+            {
+                'extend':'copy',
+                'exportOptions': {
+                    'columns': ':visible'
+                }
+            },
+            'colvis'
+        ]
+    });
+
+    /*
+     $(window).bind('resize', function () {
+        table.fnAdjustColumnSizing();
+    });
+    */
+
     /*
     LINKED VARIABLE UPDATES
     */ 

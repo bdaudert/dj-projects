@@ -4,6 +4,9 @@ String.prototype.rsplit = function(sep, maxsplit) {
     return maxsplit ? [ split.slice(0, -maxsplit).join(sep) ].concat(split.slice(-maxsplit)) : split;
 }
 
+
+
+
 function get_ajax_error(ajax_status){
     if (ajax_status == 500) {
         return 'Internal Server Error [500].';

@@ -121,7 +121,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <tr style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
     <tr style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
     <tr style="display:table-row"  valign="bottom">{% include 'includes/date_constraints.html'%}</tr>
-    <tr style="display:table-row;">{% include 'includes/metadata_keys.html'%}</tr>
+    <tr style="display:none;">{% include 'includes/metadata_keys.html'%}</tr>
     <tr style="display:none;">{% include 'includes/display.html'%}</tr>
     {%if initial.display == "table"%}
         <tr id="meta_keys" style="display:table-row;">{% include 'includes/metadata_keys.html'%}</tr>

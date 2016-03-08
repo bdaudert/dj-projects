@@ -147,7 +147,7 @@
 </td>
 <!--Errors/down arrow/maps-->
 <td valign="top" width="60%" align="center">
-   <!--Form errors and search parameter section-->
+    <!--Form errors and search parameter section-->
     <div class="results">
     {%if form_error%}
         {% include 'includes/form_error.html'%}
@@ -191,33 +191,10 @@
 <table cellpadding="10" align="center">
 <td valign="top" width="97%" align="center">
     <div class="results">
-    {%if not results.error and results.data%}
-        <table>
-        <td valign="top">
-        <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
-        </td><td valign="top">
-        <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
-        </td>
-        <td>
-        <p onClick="ShowHide('metadata')" align="center"><img alt="Metadata" title="Metadata" src="{{MEDIA_URL}}img/metadata_button.png"></p>
-        </td>
-        </table>
-    {%endif%}    
-
-    <!--Download form-->
-    <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
+    
     <!--Data-->
     <table id="printable_table">
     <td>
-    <!--
-    {% if results.data or results.smry%}
-    <p class="message" style="max-width:400px;word-wrap:break-word;"> YOUR PARAMETERS:<br />
-    {%for key_val in params_display_list%}
-        <b>{{key_val.0}}</b>: {{key_val.1}}; 
-    {%endfor%}
-    </p>
-    {%endif%} -->
-
     {%if not results.error %}
         {% if results.smry or results.data %}
         <div id="metadata" align="left" style="display:none;max-width:600px">
@@ -260,15 +237,34 @@
                 <b>{{key_val.0}}</b>: {{key_val.1}}<br />
             {% endfor %}
         </p>
- 
-        <table border="1">
+
+        <table class="dataTable nowrap" cellspacing="0" width="100%">
         {%for date_data in results.data.0%}
+            {%if forloop.counter0 == 0%}
+            <thead>
+            <tr>
+            {%for data in date_data%}
+                <th>{{data}}</th>
+            {%endfor%}
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+            {%for data in date_data%}
+                <th>{{data}}</th>
+            {%endfor%}
+            </tr>
+            </tfoot>
+            <tbody>
+            {%else%}
             <tr>
             {%for data in date_data%}
                 <td>{{data}}</td>
             {%endfor%}
             </tr>
+            {%endif%}
         {%endfor%}
+        </tbody>
         </table>
     {%endif%}<!--end if not results.error-->
     <div><!--end results-->

@@ -37,9 +37,10 @@
 <table>
 <td valign="bottom" width="45%">
     <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/spatial_summary'"/>
+    <!--
     {%if results.graph_data or results.smry%}
         <input type="submit" value="Change Options" onclick="ShowHideTopOfPage()">
-    {%endif%} 
+    {%endif%} --> 
 </td>
 <td valign="top" width="55%" align="left">
     <table>
@@ -52,11 +53,13 @@
 </table>
 
 <!--Form-->
+<!--
 {% if not results.graph_data and not results.smry%}
     <table id="top_of_page">
 {%else%}
     <table id="top_of_page" style="display:none">
-{%endif%}
+{%endif%}-->
+<table id="top_of_page">
 <td valign="top"  width="40%">
     <div id='formData'>
         <form method="post" id="DataForm" action="" onsubmit="show_loading()">{% csrf_token %}
@@ -100,6 +103,48 @@
 </td>
 <!--Large Request Form/Errors/Down Arrow/Maps-->
 <td valign="top" width="60%">
+    {%if results.data or results.smry %}
+        
+        <!--Paramaters and Data list-->
+        <table cellpadding="5px">
+        <td valign="top" style="max-width:400px">
+        <p class="message" style="max-width:400px;word-wrap:break-word;"> YOUR PARAMETERS:<br />
+        {%for key_val in params_display_list%}
+        <b>{{key_val.0}}</b>: {{key_val.1}};
+        {%endfor%}
+        </p>
+        </td>
+        </table>
+
+       <!--Buttons-->
+       <table>
+       <td><img src="{{MEDIA_URL}}img/show_hide_graph_button.png" alt="Show Graph" id="show_hide_graph">
+       </td>
+       <td>
+       <img src="{{MEDIA_URL}}img/show_hide_button.png" alt="Show Data" id="show_hide_data">
+       </td>
+       </table>
+
+        <div id="printable_table">
+        <!--Data List-->
+        <table class="dataTable nowrap" height="200px" width="600px">
+        {%for data in results.smry%}
+        {%if forloop.counter0 == 0%}
+            <thead>
+            <tr>{%for d in data%}<th>{{d}}</th>{%endfor%}</tr>
+            </thead>
+            <tfoot>
+            <tr>{%for d in data%}<th>{{d}}</th>{%endfor%}</tr>
+            </tfoot>
+            <tbody>
+        {%else%}
+            <tr>{%for d in data%}<td>{{d}}</td>{%endfor%}</tr>
+        {%endif%}
+        {%endfor%}
+        </tbody>
+        </table>
+        </div>
+    {%endif%}
 
     <!--Large Request Form-->
     <div id="largeRequestForm" style="display:none">
@@ -110,10 +155,10 @@
        <script type="text/javascript">
             ShowPopupDocu('largeRequestForm');
         </script>
-    {%endif%}    
+    {%endif%}
 
     <!--AJAX error-->
-    <div style="display:none" class="ajax_error"></div> 
+    <div style="display:none" class="ajax_error"></div>
     <!--Form errors and search parameter section-->
     <div class="results">
     {%if form_error%}
@@ -126,12 +171,8 @@
     {%if  run_done and  not results.graph_data and not results.smry %}
         {% include 'includes/no_results.html'%}
     {%endif%}
-    <!--Request errors or results arrow-->
-    {%if results.data or results.smry %}
-        {%if initial.state%}
-            {% include 'includes/arrow.html'%}
-        {%endif%}
-    {%endif%}
+
+
     </div>
 
     <!--Shape file upload form-->
@@ -188,20 +229,6 @@
         {% include 'includes/no_results.html'%}
     {%endif%}
 
-    <!--Buttons: print, download, show/hide data-->
-    {%if not results.error and results.smry%}
-        <table>
-        <td valign="top">
-        <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
-        </td><td valign="top">
-        <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
-        </td>
-        <td>
-        <p class="pop_link" onClick="ShowHide('DataList')"><img alt="ShowHide" src ="{{MEDIA_URL}}img/show_hide_button.png"></p>
-        </td>
-        </table>
-    {%endif%}
-
     <!--Download form-->
     <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
 
@@ -212,34 +239,11 @@
     <td>
     
 
-    <!--Paramaters and Data list-->
-    <table cellpadding="5px">
-    <td valign="top" style="max-width:400px">
-        <p class="message" style="max-width:400px;word-wrap:break-word;"> YOUR PARAMETERS:<br />
-        {%for key_val in params_display_list%}
-        <b>{{key_val.0}}</b>: {{key_val.1}}; 
-        {%endfor%}
-        </p>
-    </td>
-    <td valign="top" align="left">
-        <!--Data List-->
-        <table id="DataList" border=1 style="display:none;border-collapse:collapse">
-        {%for data in results.smry%}
-        <tr>
-        {%for d in data%}
-        <td>{{d}}</td>
-        {%endfor%}
-        </tr>                               
-        {%endfor%}                                  
-        </table> 
-    </td>
-    </table>
-
     {%if results.graph_data%}
     <table>
     <td>
         <!--Plot-->
-        <div id="user_graph" width="800px">
+        <div id="user_graph" width="800px" style="display:block">
             <!--Dynamic chart options-->
             <table align="left" class='chart_options' border="1" width="800px">
                 <tr>

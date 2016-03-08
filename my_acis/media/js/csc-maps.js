@@ -471,7 +471,7 @@ function initialize_station_finder() {
             window.markers = markers;
             if (c.name != name_unique){
                 name_unique = c.name;
-                $('#station_list').append(tbl_row);
+                $('#station_list tbody').append(tbl_row);
             }
         }); //end each
         $('#number_of_stations').html('Stations found: ' + String(tbl_rows_showing.length));

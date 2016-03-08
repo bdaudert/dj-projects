@@ -223,36 +223,31 @@
             </script>
             {%endif%}
         </div>
-        </div>
         {%endif%}
 
-        <div align="center" id="data_summary_table" style="display:none;width:940px">
-        <table class="right_aligned">
+        <div align="center" id="data_summary_table" style="display:block;width:940px;">
+        <table class="dataTable nowrap">
         {%for s_data in results.data_summary%}
-            <tr>
-            {%for s in s_data%}
-            {%if forloop.first%}
-            <td align="left">{{s}}</td>
+            {%if forloop.counter0 <= 6%}
+            {%if forloop.counter0 == 0%}
+                <thead><tr>
+                {%for s in s_data%}
+                <th>{{s}}</th>
+                {%endfor%}
+                </tr></thead>
+                <tbody>
             {%else%}
-            <td>{{s}}</td>
+                <tr>
+                {%for s in s_data%}
+                <td>{{s}}</td>
+                {%endfor%}
+                </tr>
             {%endif%}
-            {%endfor%}
-            </tr>
+            {%endif%}
         {%endfor%}
+        </tbody>
         </table>
         </div><!--End data summary-->
-
-        <!--Download/print buttons--> 
-        <table align="center">
-            <td valign="top">
-            <p onClick="printNode('printable_table')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
-            </td><td valign="top">
-            <p onClick="ShowHide('formDownload')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
-            </td>
-        </table><!--End table about/howto/download form-->       
-
-        <!--Download form-->
-        <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
 
         
         <div id="printable_table" align="center" style="display:block;width:940px;">
@@ -274,33 +269,29 @@
             Value is displayed but not used in calculations if user-specified missing day criterion exceeded.<br />
             (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
 
-            <table class="right_aligned" cellpadding="none" style="color:black">
+            <table class="dataTable nowrap">
             {%for yr_data in results.data%}
-            {%if yr_data.0 == "MEAN"%}
-            <tr><td></td><td></td></tr>
-            <tr><td></td><td></td></tr>
-            <tr><td></td><td></td></tr>
-            <tr><td></td><td></td></tr>
-            <tr><td></td><td></td></tr>
-            <tr><td></td><td></td></tr>
-            {%endif%}
-            {%for dat in yr_data%}
-            {%if forloop.revcounter0 == 1%}
-            <td></td><td></td>
-            <td></td><td></td>
-            <td></td><td></td>
-            {%endif%}
-            {%if forloop.counter0 == 1%}
-            <td></td>
-            {%endif%}
             {%if forloop.counter0 == 0%}
-            <td align="left">{{dat}}&nbsp;&nbsp;</td>
+                <thead><tr>
+                {%for dat in yr_data%}
+                <td>{{dat}}</td>
+                {%endfor%}
+                </tr></thead>
+                <tfoot><tr>
+                {%for dat in yr_data%}
+                <td>{{dat}}</td>
+                {%endfor%}
+                </tr></tfoot> 
+                <tbody>
             {%else%}
-            <td>{{dat}}</td>
+                <tr>
+                {%for dat in yr_data%}
+                <td>{{dat}}</td>
+                {%endfor%}
+                </tr>
             {%endif%}
             {%endfor%}
-            </tr>
-            {%endfor%}
+            </tbody>
             </table>
         </div><!--End div="printable_table"-->
     </div><!--end div results-->

@@ -32,6 +32,18 @@ var grid_vd = {
 for (var grid_id=22;grid_id<=41;grid_id++) {
     grid_vd[String(grid_id)] = [['1950-01-01','2005-12-31'],['2006-01-01','2099-12-31']];
 }
+
+var station_finder_metadata ={
+    'name':'Name',
+    'state':'State',
+    'll': 'Longitude, Latitude',
+    'elev':'Elevation',
+    'ids':'IDs',
+    'sids':'IDs',
+    'networks':'Networks',
+    'valid_daterange':'Valid Daterange'
+}
+
 var state_choices = ['ak', 'al', 'ar', 'as', 'az', 'ca', 'co', 'ct', 'dc', 'de', 'fl', 'ga', 'gu', 'hi', 'ia', 'id', 'il', 'in', 'ks', 'ky', 'la', 'ma', 'md', 'me', 'mi', 'mn', 'mo', 'ms', 'mt', 'nc', 'nd', 'ne', 'nh', 'nj', 'nm', 'nv', 'ny', 'oh', 'ok', 'or', 'pa', 'ri', 'sc', 'sd', 'tn', 'tx', 'ut', 'va', 'vt', 'wa', 'wi', 'wv', 'wy', 'as']
 
 var state_names = {
