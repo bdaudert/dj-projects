@@ -1,7 +1,7 @@
 $(document).ready(function ($) { 
     
     //Initialize Data Tables
-    var table = $('.dataTable').DataTable({
+     var dataTable = $('.dataTable').DataTable({
         'dom': 'Bfrtip',
         'paging': false,
         'scrollY': 400,
@@ -44,7 +44,7 @@ $(document).ready(function ($) {
 
     /*
      $(window).bind('resize', function () {
-        table.fnAdjustColumnSizing();
+        dataTable.fnAdjustColumnSizing();
     });
     */
 
@@ -1209,13 +1209,13 @@ $(document).ready(function ($) {
 
 
     //MAPS
-    $('#station_list').on('click', 'tr', function(){
+    $('#station_list tbody').on('click', 'tr', function(){
         infowindow.close();
         infowindow.setContent($(this).attr('cString'));
-        infowindow.open(window.map, window.markers[$(this).attr('id')]);
+        infowindow.open(window.map, window.markers[parseInt($(this).attr('id'))]);
         var bounds = window.map.getBounds();
-        bounds.extend(new google.maps.LatLng($(this).attr('lat'), $(this).attr('lon')));
-    }); 
+        bounds.extend(new google.maps.LatLng(parseFloat($(this).attr('lat')), parseFloat($(this).attr('lon'))));
+    });
     $('#station_list').on('mouseover', 'tr', function(){
         $(this).css('backgroundColor', "#8FBC8F");
     });
