@@ -264,7 +264,7 @@
                 <b>{{meta_list.0}}</b>: {{meta_list.1}}
            {%endfor%}
         </p>
-        <table class="dataTable nowrap" width="800px">
+        <table class="dataTable nowrap"  border="1" width="800px">
         {%for data in point_data%}
         {%if forloop.counter0 == 0%}
             <thead>
@@ -285,7 +285,7 @@
     {%endif%}<!--end if not results.error-->
 
     {%if not results.error and results.smry%}
-        <table class="dataTable" width="800px">
+        <table class="dataTable" border="1"  width="800px">
         {%for s_data in results.smry%}
         {%if forloop.counter0 == 0%}
              <thead><tr>

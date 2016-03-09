@@ -175,6 +175,7 @@
             </div>
 
             
+            
             <div id="printable_table{{forloop.counter0}}">
                 <table cellspacing="2">
                 {%if tab != 'pcpn'%}
@@ -188,6 +189,23 @@
                 {%endif%}<!--end if tab != 'pcpn'-->
                 </table>
                 </br>
+                <!--
+                <table class="dataTable" border="1" width="90%">
+                {%for row in results|lookup:tab%}
+                {%if forloop.counter0 == 0%}
+                <thead>
+                    <tr>{%for val in row%}<th>{{val}}</th>{%endfor%}</tr>
+                </thead>
+                <tfoot>
+                    <tr>{%for val in row%}<th>{{val}}</th>{%endfor%}</tr>
+                </tfoot>
+                <tbody>
+                {%else%}
+                    <tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr>
+                {%endif%}
+                {%endfor%}
+                </tbody>
+                </table> -->
 
                 <table cellspacing="2">
                 {%if tab != 'pcpn'%}
