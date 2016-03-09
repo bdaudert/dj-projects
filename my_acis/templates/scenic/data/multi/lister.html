@@ -170,12 +170,9 @@
     <div>{% include 'includes/upload_shape_file.html'%}</div>
 
     <!--Request errors or results arrow-->
-    <div class="results">
+    <div class="results" align="center">
     {%if form_error%}
         {% include 'includes/form_error.html'%}
-    {%endif%}
-    {%if results.error%}
-        <p class="error">ERROR: {{results.error}}</p>
     {%endif%}
 
     {%if  run_done and not results.data and not results.smry %}
@@ -267,7 +264,6 @@
                 <b>{{meta_list.0}}</b>: {{meta_list.1}}
            {%endfor%}
         </p>
-        <p class="message"><b>DATA</b>:</p>
         <table class="dataTable nowrap" width="800px">
         {%for data in point_data%}
         {%if forloop.counter0 == 0%}
@@ -289,7 +285,6 @@
     {%endif%}<!--end if not results.error-->
 
     {%if not results.error and results.smry%}
-        <p class="message"><b>DATA SUMMARY</b>:</p>
         <table class="dataTable" width="800px">
         {%for s_data in results.smry%}
         {%if forloop.counter0 == 0%}

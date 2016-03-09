@@ -1,53 +1,49 @@
 $(document).ready(function ($) { 
-    
-    //Initialize Data Tables
-     var dataTable = $('.dataTable').DataTable({
-        'dom': 'Bfrtip',
-        'paging': false,
-        'scrollY': 400,
-        'scrollCollapse': true,
-        'scrollX': 'auto',
-        'buttons': [
-            {
-                'extend':'csv',
-                'exportOptions': {
-                    'columns': ':visible'
-                }
-            },
-            {
-                'extend':'excel',
-                'exportOptions': {
-                    'columns': ':visible'
-                }
-            },
-            {
-                'extend':'pdf',
-                'exportOptions': {
-                    'columns': ':visible'
-                }
-            },
-            {
-                'extend':'print',
-                'exportOptions': {
-                    'columns': ':visible'
-                }
-            },
-            {
-                'extend':'copy',
-                'exportOptions': {
-                    'columns': ':visible'
-                }
-            },
-            'colvis'
-        ]
-    });
-
-    /*
-     $(window).bind('resize', function () {
-        dataTable.fnAdjustColumnSizing();
-    });
-    */
-
+    //Note, this interferes when station finder 
+    if ( !$.fn.dataTable.isDataTable( '#station_list' ) ) {
+        //Initialize Data Tables
+        $('.dataTable').DataTable({
+            'dom': 'Bfrtip',
+            'paging': false,
+            'scrollY': 400,
+            'scrollCollapse': true,
+            'scrollX': 'auto',
+            'autoWidth':false,
+            'buttons': [
+                {
+                    'extend':'csv',
+                    'exportOptions': {
+                        'columns': ':visible'
+                    }
+                },
+                {
+                    'extend':'excel',
+                    'exportOptions': {
+                        'columns': ':visible'
+                    }
+                },
+                {
+                    'extend':'pdf',
+                    'exportOptions': {
+                        'columns': ':visible'
+                    }
+                },
+                {
+                    'extend':'print',
+                    'exportOptions': {
+                        'columns': ':visible'
+                    }
+                },
+                {
+                    'extend':'copy',
+                    'exportOptions': {
+                        'columns': ':visible'
+                    }
+                },
+                'colvis'
+            ]
+        });
+    }
     /*
     LINKED VARIABLE UPDATES
     */ 
@@ -1211,6 +1207,7 @@ $(document).ready(function ($) {
     //MAPS
     $('#station_list tbody').on('click', 'tr', function(){
         infowindow.close();
+        console.log($(this));
         infowindow.setContent($(this).attr('cString'));
         infowindow.open(window.map, window.markers[parseInt($(this).attr('id'))]);
         var bounds = window.map.getBounds();
@@ -1287,14 +1284,16 @@ $(document).ready(function ($) {
                 'href': Data,
                 'target': '_blank'
         }); 
-    }   
+    }  
+
+    /*
     $("#excelExport").on('click', function (event) {
         exportTable.apply(this, [$('#station_list'), 'export.xls','excel']);
     });
      $("#csvExport").on('click', function (event) {
         exportTable.apply(this, [$('#station_list'), 'export.csv','csv']);
     });
-    
+    */
     /***************
     AJAX CALLS
     ****************/

@@ -271,46 +271,51 @@ function initialize_station_finder() {
     var start_date = $('#start_date').val();
     var end_date = $('#end_date').val();
     var el_string = $('#elements').val().join(',');
-    var dataTable = $('#station_list').DataTable({
-        'dom': 'Bfrtip',
-        'paging': false,
-        'scrollY': 400,
-        'scrollCollapse': true,
-        'scrollX': 'auto',
-        'buttons': [
-            {
-                'extend':'csv',
-                'exportOptions': {
-                    'columns': ':visible'
-                }
-            },
-            {
-                'extend':'excel',
-                'exportOptions': {
-                    'columns': ':visible'
-                }
-            },
-            {
-                'extend':'pdf',
-                'exportOptions': {
-                    'columns': ':visible'
-                }
-            },
-            {
-                'extend':'print',
-                'exportOptions': {
-                    'columns': ':visible'
-                }
-            },
-            {
-                'extend':'copy',
-                'exportOptions': {
-                    'columns': ':visible'
-                }
-            },
-            'colvis'
-        ]
-    });
+    if ( $.fn.dataTable.isDataTable( '#station_list' ) ) {
+            dataTable = $('#station_list').DataTable();
+    }
+    else {
+        var dataTable = $('#station_list').DataTable({
+            'dom': 'Bfrtip',
+            'paging': false,
+            'scrollY': 400,
+            'scrollCollapse': true,
+            'scrollX': 'auto',
+            'buttons': [
+                {
+                    'extend':'csv',
+                    'exportOptions': {
+                        'columns': ':visible'
+                    }
+                },
+                {
+                    'extend':'excel',
+                    'exportOptions': {
+                        'columns': ':visible'
+                    }
+                },
+                {
+                    'extend':'pdf',
+                    'exportOptions': {
+                        'columns': ':visible'
+                    }
+                },
+                {
+                    'extend':'print',
+                    'exportOptions': {
+                        'columns': ':visible'
+                    }
+                },
+                {
+                    'extend':'copy',
+                    'exportOptions': {
+                        'columns': ':visible'
+                    }
+                },
+                'colvis'
+            ]
+        });
+    }
     //Read in stn data json file
     $.getJSON(station_json, function(data) {
 
@@ -386,13 +391,13 @@ function initialize_station_finder() {
             content: 'oi'
         });
         var markers = [], markers_showing = [];
-        var tbl_rows = [], tbl_rows_showing = [];
-        var tableDataRows = [],tableDataRows_showing = [];
+        var tbl_rows = [];
+        //tbl_rows_showing = [];
+        var tableDataRows = [], tableDataAttrs = [];
         //for bounds_changed function
         //we need to keep track what markers/stations appear
         //Define markers and table rows
-        var name_unique = '';
-        var marker_count =0;
+        var name_unique = '', marker_count =0;
         $.each(data.stations, function(index, c) {
             //Define markers
             marker_count+=1;
@@ -480,8 +485,7 @@ function initialize_station_finder() {
             tbl_row.attr('id', marker_count - 1);
             tbl_row.attr('lat',c.lat);
             tbl_row.attr('lat',c.lon);
-            var td, tdArray=[], rowNode,row_attrs;
-            tableDataRow = [], tableDataAttrs = [];
+            var td, tdArray=[], rowNode,row_attrs; tableDataRow = [];
             //tableDataRow = {};
             if ( metadata_keys && metadata_keys.length >0){
                 for (var m=0;m<metadata_keys.length;m++){
@@ -504,9 +508,9 @@ function initialize_station_finder() {
             }
             //Complete table row list for on and off switch
             tbl_rows.push(tbl_row);
-            tbl_rows_showing.push(tbl_row);
+            //tbl_rows_showing.push(tbl_row);
             tableDataRows.push(tableDataRow);
-            tableDataRows_showing.push(tableDataRow);
+            //tableDataRows_showing.push(tableDataRow);
             row_attrs = {
                 'cString':contentString,
                 'name':c.name,
@@ -524,7 +528,6 @@ function initialize_station_finder() {
             window.markers = markers;
             if (c.name != name_unique){
                 name_unique = c.name;
-                //$('#station_list tbody').append(tbl_row);
                 rowNode = dataTable.row.add(tableDataRow).node();
                 //Set necessary attributes
                 for (var key in row_attrs){
@@ -533,7 +536,6 @@ function initialize_station_finder() {
             }
         }); //end each
         dataTable.draw();
-        $('#number_of_stations').html('Stations found: ' + String(tbl_rows_showing.length));
         /*
         On zoom change reset the markers
         Note: zoom_changed event fires before the bounds have been recalculated. 
@@ -598,18 +600,13 @@ function initialize_station_finder() {
             var station_ids_str = '';
             var name_unique = '';
             markers_showing = [];
-            tbl_rows_showing = [];
-            tableDataRows_showing = [];
             var mapBounds = map.getBounds();
             for (var i=0; i<markers.length; i++) {
                 if (category == 'all') {
                     markers[i].setVisible(true);
                     if (mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))){
                     markers_showing.push(markers[i]);
-                    tbl_rows_showing.push(tbl_rows[i]);
-                    tableDataRows_showing.push(tableDataRows[i]);
                     if (markers[i].name != name_unique){
-                        //$('#station_list tbody').append(tbl_rows[i]);
                         rowNode = dataTable.row.add(tableDataRows[i]).node();
                         //Set necessary attributes
                         for (var key in tableDataAttrs[i]){
@@ -627,9 +624,6 @@ function initialize_station_finder() {
                 else if (markers[i].category == category) {
                     markers[i].setVisible(true);
                     markers_showing.push(markers[i]);
-                    tbl_rows_showing.push(tbl_rows[i]);
-                    tableDataRows_showing.push(tableDataRows[i]);
-                    //$('#station_list tody').append(tbl_rows[i]);
                     rowNode = dataTable.row.add(tableDataRows[i]).node();
                     //Set necessary attributes
                     for (var key in tableDataAttrs[i]){
@@ -651,11 +645,7 @@ function initialize_station_finder() {
                     markers[i].setVisible(true);
                     if (markers[i].name != name_unique){
                         markers_showing.push(markers[i]);
-                        tbl_rows_showing.push(tbl_rows[i]);
-                        tableDataRows_showing.push(tableDataRows[i]);
-
                         if (mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))) {
-                            //$('#station_list tbody').append(tbl_rows[i]);
                             rowNode = dataTable.row.add(tableDataRows[i]).node();
                             //Set necessary attributes
                             for (var key in tableDataAttrs[i]){
@@ -670,7 +660,6 @@ function initialize_station_finder() {
             //Remove trailing comma and set html element
             station_ids_str = station_ids_str.substring(0,station_ids_str.length - 1);
             $('#station_ids').val(station_ids_str);
-            $('#number_of_stations').html('Stations found: ' + String(tbl_rows_showing.length));
         };
 
         // == hides all markers of a particular category, and ensures the checkbox is cleared and delete station_list ==
@@ -679,8 +668,6 @@ function initialize_station_finder() {
             var station_ids_str = '';
             name_unique = '';
             markers_showing = [];
-            tbl_rows_showing = [];
-            tableDataRows_showing =[];
             var mapBounds = map.getBounds();
             for (var i=0; i<markers.length; i++){
                 var name = markers[i].name;
@@ -707,9 +694,6 @@ function initialize_station_finder() {
                 else if (cat != category && mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))) {
                     if ($('#' + cat).prop('checked')){
                         markers_showing.push(markers[i]);
-                        tbl_rows_showing.push(tbl_rows[i]);
-                        tableDataRows_showing.push(tableDataRows[i])
-                        //$('#station_list tbody').append(tbl_rows[i]);
                         rowNode = dataTable.row.add(tableDataRows[i]).node();
                         //Set necessary attributes
                         for (var key in tableDataAttrs[i]){
@@ -725,7 +709,6 @@ function initialize_station_finder() {
                 station_ids_str = station_ids_str.substring(0,station_ids_str.length - 1);
             }
             $('#station_ids').val(station_ids_str);
-            $('#number_of_stations').html('Stations found: ' + String(tbl_rows_showing.length));
         };
 
         boxclick = function(box, category){
