@@ -200,7 +200,7 @@
         <div id="metadata" align="left" style="display:none;max-width:600px">
         {%for key_val in meta_display_list%}
             <b>{{key_val.0}}</b>:
-            {%if key_val.0 == "Station ID/Network List" or key_val.0 == "Valid Date Range (by Element)"%}
+            {%if key_val.0 == "Station ID/Network List" or key_val.0 == "Valid Date Range" %}
                 <br />
             {%endif%}
             {{key_val.1}}

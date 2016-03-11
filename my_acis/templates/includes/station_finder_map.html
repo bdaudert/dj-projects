@@ -20,15 +20,10 @@
            <!--Link to data portal-->
             <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
         </td>
-        <!--
-        <td>
-            <a href="#" id="csvExport">Export Table</a>
-        </td>-->
         </table>
     </td></tr>
     <tr><td align="center"> 
         <!--Station List-->
-        <p class="message" id='number_of_stations'></p>
         {%if run_done%}<div class="station_list" style="max-width:800px">
         {%else%}<div class="station_list" style="max-width:600px">{%endif%}
         <table id="station_list" border=1>

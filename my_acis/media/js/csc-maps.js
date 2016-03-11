@@ -589,7 +589,6 @@ function initialize_station_finder() {
             }
             //Update hidden var inf formDownload of sttaion_finder.html
             $('#station_ids_string').val(station_ids_str);
-            $('#number_of_stations').html('Stations found: ' + String(count_stns));
             dataTable.draw();
         });  
         // == shows all markers of a particular category, and ensures the checkbox is checked and write station_list==

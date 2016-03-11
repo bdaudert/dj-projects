@@ -2,7 +2,7 @@
     <td>
         <select id="dates_constraints" name="dates_constraints" onchange="update_value(this.value)">
         {%for c, name in initial.form_options.dates_constraints%}
-            <option value="{{c}}" {%if initial.elements_constraints == c%}selected{%endif%}>{{name}}</option>
+            <option value="{{c}}" {%if initial.dates_constraints == c%}selected{%endif%}>{{name}}</option>
         {%endfor%}
         </select>
     </td>

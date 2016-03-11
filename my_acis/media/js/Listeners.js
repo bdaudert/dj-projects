@@ -1,4 +1,6 @@
-$(document).ready(function ($) { 
+$(document).ready(function ($) {
+    //var dataTableInfo = $('.dataTableInfo').html();
+    //console.log(dataTableInfo);
     //Note, this interferes when station finder 
     if ( !$.fn.dataTable.isDataTable( '#station_list' ) ) {
         //Initialize Data Tables
@@ -9,21 +11,31 @@ $(document).ready(function ($) {
             'scrollCollapse': true,
             'scrollX': 'auto',
             'autoWidth':false,
+            /*
+            'oLanguage': {
+                'sInfo': dataTableInfo
+            },
+            */
             'buttons': [
                 {
                     'extend':'csv',
+                    'title':'Csv Export',
                     'exportOptions': {
                         'columns': ':visible'
                     }
                 },
                 {
-                    'extend':'excel',
+                    'extend':'excelHtml5',
+                    'title':'Excel Export',
                     'exportOptions': {
                         'columns': ':visible'
                     }
                 },
                 {
-                    'extend':'pdf',
+                    'extend':'pdfHtml5',
+                    'title': 'PDF Export',
+                    'orientation': 'landscape',
+                    'pageSize':'A4',
                     'exportOptions': {
                         'columns': ':visible'
                     }
