@@ -232,11 +232,11 @@
 
     {% if not results.error and not results.smry and results.data %}
         <p>ACIS Data Flags: M,-9999 = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
-        <p align="left">
+        <div align="left" class="dataTableInfo" style="max-width:400px;word-wrap:break-word;">
             {% for key_val in params_display_list %}
-                <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+                <b>{{key_val.0}}</b>: {{key_val.1}};
             {% endfor %}
-        </p>
+        </div><br />
 
         <table class="dataTable nowrap" cellspacing="0" width="100%" border="1">
         {%for date_data in results.data.0%}

@@ -271,11 +271,18 @@ function initialize_station_finder() {
     var start_date = $('#start_date').val();
     var end_date = $('#end_date').val();
     var el_string = $('#elements').val().join(',');
+    var dataTable; 
     if ( $.fn.dataTable.isDataTable( '#station_list' ) ) {
-            dataTable = $('#station_list').DataTable();
+        dataTable = $('#station_list').DataTable();
     }
     else {
-        var dataTable = $('#station_list').DataTable({
+        var dataTableInfo = $.trim(String($('.dataTableInfo').text()).replace('/^\s*\n/gm', ''));
+        var L = dataTableInfo.split('\n'), newL = [];
+        for (var k =0;k<L.length;k++){
+            newL.push($.trim(L[k]));
+        }
+        dataTableInfo = newL.join(' ');
+        dataTable = $('#station_list').DataTable({
             'dom': 'Bfrtip',
             'paging': false,
             'scrollY': 400,
@@ -284,30 +291,35 @@ function initialize_station_finder() {
             'buttons': [
                 {
                     'extend':'csv',
+                    'title':dataTableInfo,
                     'exportOptions': {
                         'columns': ':visible'
                     }
                 },
                 {
                     'extend':'excel',
+                    'title':dataTableInfo,
                     'exportOptions': {
                         'columns': ':visible'
                     }
                 },
                 {
                     'extend':'pdf',
+                    'title':dataTableInfo,
                     'exportOptions': {
                         'columns': ':visible'
                     }
                 },
                 {
                     'extend':'print',
+                    'title':dataTableInfo,
                     'exportOptions': {
                         'columns': ':visible'
                     }
                 },
                 {
                     'extend':'copy',
+                    'title':dataTableInfo,
                     'exportOptions': {
                         'columns': ':visible'
                     }

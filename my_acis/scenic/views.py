@@ -403,7 +403,6 @@ def single_lister(request):
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
         form = DJANGOUtils.set_form(initial, clean = False)
-        context['xx']  = form_cleaned
         #Check form fields
         fields_to_check = [form_cleaned['area_type'],'start_date','end_date','start_window','end_window','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -1249,33 +1248,9 @@ def station_finder(request):
         if 'stations' not in station_json.keys() or  station_json['stations'] == []:
             context['error'] = "No stations found for these search parameters."
         context['station_json'] = f_name
-        '''
-        #Check if user wants station list written to file
-        if initial['display'] == 'table' and initial['data_format']!='html':
-            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-            file_name = initial['output_file_name'] + '_' + time_stamp
-            table_data = WRCCUtils.write_station_list_table(initial['metadata_keys'],station_json)
-            f = copy.deepcopy(form_cleaned)
-            f['app_name']= 'sf_station_list'
-            req = {
-                'form':f,
-                'data':[],
-                'smry':table_data,
-                'meta':[]
-            }
-            if initial['data_format'] == 'xl':
-                file_extension = '.xls'
-                response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-                Writer = WRCCClasses.ExcelWriter(req,response=response)
-            if initial['data_format'] in ['clm','dlm']:
-                if form['data_format'] == 'clm':file_extension = '.txt'
-                else:file_extension = '.dat'
-                response = HttpResponse(mimetype='text/csv')
-                response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-                Writer = WRCCClasses.CsvWriter(req, f=None, response=response)
-            Writer.write_to_file()
-            return response
-        '''
+        header_keys = WRCCUtils.set_display_keys(app_name, initial)
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,initial)
+
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         #Turn request object into python dict
         form = DJANGOUtils.set_form(request,clean=False)
@@ -1315,35 +1290,9 @@ def station_finder(request):
             context['error'] = "No stations found for these search parameters."
         context['station_json'] = f_name
         context['run_done'] = True
-        '''
-        #Check if user wants station list written to file
-        if initial['display'] == 'table' and initial['data_format']!='html':
-            time_stamp = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-            file_name = initial['output_file_name'] + '_' + time_stamp
-            table_data = WRCCUtils.write_station_list_table(initial['metadata_keys'],station_json)
-            f = copy.deepcopy(form_cleaned)
-            f['app_name']= 'sf_station_list'
-            req = {
-                'form':f,
-                'data':[],
-                'smry':table_data,
-                'meta':[]
-            }
-            if initial['data_format'] == 'xl':
-                file_extension = '.xls'
-                response = HttpResponse(content_type='application/vnd.ms-excel;charset=UTF-8')
-                response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
-                Writer = WRCCClasses.ExcelWriter(req,response=response)
-
-            if initial['data_format'] in ['clm','dlm']:
-                if form['data_format'] == 'clm':file_extension = '.txt'
-                else:file_extension = '.dat'
-                response = HttpResponse(mimetype='text/csv')
-                response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name,file_extension)
-                Writer = WRCCClasses.CsvWriter(req, f=None, response=response)
-            Writer.write_to_file()
-            return response
-        '''
+        header_keys = WRCCUtils.set_display_keys(app_name, initial)
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,initial)
+        context['form_cleaned']= form_cleaned
     #Shape file upload
     if 'formShapeFile' in request.POST:
         results = {}
@@ -1471,10 +1420,14 @@ def monthly_summary(request):
         App = WRCCClasses.SODApplication('SodxtrmtsSCENIC', data, app_specific_params=app_params)
         data = App.run_app()
         #Set header
+        dataTableInfo = ''
         header = set_sodxtrmts_head(form_cleaned)
+        for head in header:
+            dataTableInfo+=head[0] + ': '+ head[1] + '\n'
         if not data or len(data[0]) <=1:
             results = {
-                'header':'',
+                'header':[],
+                'dataTableInfo':'',
                 'data':[],
                 'data_summary':[],
                 'errors': 'No Data found for these parameters'
@@ -1483,6 +1436,7 @@ def monthly_summary(request):
             return render_to_response(url, context, context_instance=RequestContext(request))
         else:
             header_list = []
+            dataTableInfo = ''
             if app_params['statistic_period'] == 'monthly':
                 p =  copy.deepcopy(WRCCData.MONTH_NAMES_SHORT_CAP)
             if app_params['statistic_period'] == 'weekly':
@@ -1492,8 +1446,10 @@ def monthly_summary(request):
                 header_list.append(str(m))
                 #space for data flag slots
                 header_list.append(' ')
+
             results = {
                 'header':header,
+                'dataTableInfo':dataTableInfo,
                 'chart_indices':'0',
                 'smry':'individual',
                 'running_mean_years':'5',

@@ -103,7 +103,6 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 
 </td>
 </table>
-
 {% if not run_done%}
     <table id="top_of_page">
 {%else%}
@@ -111,7 +110,6 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 {%endif%}
 <td valign="top" width="300px">
     <div id='formData'>
-    <!--<form id="DataForm" method="post" action="" onsubmit="show_loading() & setHiddenFields('DownloadForm', $(this).attr('id'))">{% csrf_token %}-->
     <form id="DataForm" method="post" action="" onsubmit="show_loading()">{% csrf_token %}
     <table class="form" id="tableData" >
     <tr style="display:table-row">{% include 'includes/area_select.html'%}</tr>
@@ -121,30 +119,10 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <tr style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
     <tr style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
     <tr style="display:table-row"  valign="bottom">{% include 'includes/date_constraints.html'%}</tr>
-    <tr style="display:none;">{% include 'includes/metadata_keys.html'%}</tr>
-    <tr style="display:none;">{% include 'includes/display.html'%}</tr>
-    {%if initial.display == "table"%}
-        <tr id="meta_keys" style="display:table-row;">{% include 'includes/metadata_keys.html'%}</tr>
-        <tr id="dat_format" style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
-        {%if initial.data_format == "dlm" or initial.data_format == "clm"%}
-        <tr id="delim" class="delim" style="display:table-row;">{% include 'includes/delimiter.html'%}</tr>
-        {%else%}
-        <tr id="delim" class="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
-        {%endif%}
-        {%if initial.data_format != "html"%}
-            <tr id="out_file" class="out_file" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
-        {%else%}
-            <tr id="out_file" class="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
-        {%endif%} 
-    {%else%}
-        <tr id="dat_format" style="display:none;">{% include 'includes/data_format.html'%}</tr>
-        <tr id="delim" class="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
-        <tr id="out_file" class="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
-    {%endif%}
     </table>
     <input type="hidden" class="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
     <input type="hidden" name="app_name" value="station_finder">
-    <input class="mainFormSubmit" style="margin:5px" type="submit" value="Show me stations" name="formData"/>
+    <input style="margin:5px" type="submit" value="Show me stations" name="formData"/>
     <input type="hidden" name="checked_categories" id="checked_categories" value="all">
     </form>
     </div><!--end form data div-->
@@ -223,7 +201,6 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 </td>
 </table><!--End table top_of_page-->
 
-
 <!--Results-->
 <table cellpadding="10" align="center">
 <td valign="top" align="center">
@@ -234,6 +211,11 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     
     <!--Map and Station List-->
     {% if station_json and run_done%}
+    <div class="dataTableInfo"  align="left" style="max-width:100%;word-wrap:break-word;">
+    {%for key_val in params_display_list%}
+        <b>{{key_val.0}}</b>: {{key_val.1}};
+    {%endfor%}
+    </div><br />
     <div class="results">
          {% include 'includes/station_finder_map.html'%}
     </div>

@@ -1,6 +1,11 @@
-$(document).ready(function ($) {
-    //var dataTableInfo = $('.dataTableInfo').html();
-    //console.log(dataTableInfo);
+$(document).ready(function () {
+    var dataTableInfo = $.trim(String($('.dataTableInfo').text()).replace('/^\s*\n/gm', ''));
+    var L = dataTableInfo.split('\n'), newL = [];
+    for (var k =0;k<L.length;k++){
+        newL.push($.trim(L[k]));
+    }
+    dataTableInfo = newL.join(' ');
+
     //Note, this interferes when station finder 
     if ( !$.fn.dataTable.isDataTable( '#station_list' ) ) {
         //Initialize Data Tables
@@ -11,29 +16,24 @@ $(document).ready(function ($) {
             'scrollCollapse': true,
             'scrollX': 'auto',
             'autoWidth':false,
-            /*
-            'oLanguage': {
-                'sInfo': dataTableInfo
-            },
-            */
             'buttons': [
                 {
                     'extend':'csv',
-                    'title':'Csv Export',
+                    'title':dataTableInfo,
                     'exportOptions': {
                         'columns': ':visible'
                     }
                 },
                 {
                     'extend':'excelHtml5',
-                    'title':'Excel Export',
+                    'title':dataTableInfo,
                     'exportOptions': {
                         'columns': ':visible'
                     }
                 },
                 {
                     'extend':'pdfHtml5',
-                    'title': 'PDF Export',
+                    'title': dataTableInfo,
                     'orientation': 'landscape',
                     'pageSize':'A4',
                     'exportOptions': {
@@ -42,12 +42,14 @@ $(document).ready(function ($) {
                 },
                 {
                     'extend':'print',
+                    'title': dataTableInfo,
                     'exportOptions': {
                         'columns': ':visible'
                     }
                 },
                 {
-                    'extend':'copy',
+                    'extend':'copyHtml5',
+                    'title': dataTableInfo,
                     'exportOptions': {
                         'columns': ':visible'
                     }
@@ -1367,7 +1369,6 @@ $(document).ready(function ($) {
             $('.ajax_error').html(get_ajax_error(jqXHR.status));
        })
     });
-
     //Large requests
     $('#LargeRequestForm').on('submit', function(event){
         show_loading_gif();

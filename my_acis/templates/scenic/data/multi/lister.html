@@ -240,12 +240,11 @@
     
     {%if results %}
     {%if results.data or results.smry %}
-    <p class="message"  align="left" style="max-width:70%;word-wrap:break-word;">
-    <b>PARAMETERS</b>:<br />
+    <div class="dataTableInfo"  align="left" style="max-width:100%;word-wrap:break-word;">
     {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>: {{key_val.1}}; 
     {%endfor%}
-    </p>
+    </div><br />
     {%endif%}
     {%endif%}
     

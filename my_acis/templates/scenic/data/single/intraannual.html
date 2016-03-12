@@ -166,11 +166,11 @@
     <table id="printable_table" align="center">
     <td>
     {% if results.data %}
-    <p class="message" style="max-width:400px;word-wrap:break-word;"> YOUR PARAMETERS:<br />
+    <div class="dataTableInfo" style="max-width:100%;word-wrap:break-word;">
     {%for key_val in params_display_list%}
-        <b>{{key_val.0}}</b>: {{key_val.1}};  
+        <b>{{key_val.0}}</b>: {{key_val.1}};
     {%endfor%}
-    </p>
+    </div><br />
     {%endif%}
     </td>
     </table>

@@ -522,13 +522,17 @@ a#warning {
     transform-origin: 0 0;
 }
 
-table.dataTable th {
-    font-size:8px;
+table.dataTable {
+    vertical-align:top;
+    text-align:center;
+}
 
+
+table.smallFont td, th{
+    font-size:10px;
+    font-style:bold;
 }
-table.dataTable td {
- font-size:8px;
-}
+
 
 table.chart_options {
     border:1px solid #006666;

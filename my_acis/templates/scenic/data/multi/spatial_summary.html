@@ -104,15 +104,15 @@
 <!--Large Request Form/Errors/Down Arrow/Maps-->
 <td valign="top" width="60%">
     {%if results.data or results.smry %}
-        
+        <div class="results"> 
         <!--Paramaters and Data list-->
         <table cellpadding="5px">
         <td valign="top" style="max-width:400px">
-        <p class="message" style="max-width:400px;word-wrap:break-word;"> YOUR PARAMETERS:<br />
+        <div class="dataTableInfo" style="max-width:100%;word-wrap:break-word;"> 
         {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>: {{key_val.1}};
         {%endfor%}
-        </p>
+        </div><br />
         </td>
         </table>
 
@@ -144,6 +144,7 @@
         </tbody>
         </table>
         </div>
+    </div><!--end results div-->
     {%endif%}
 
     <!--Large Request Form-->

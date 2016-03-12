@@ -733,28 +733,6 @@ function setHiddenFields(fromFormID, toFormID) {
     });
 };   
 
-/*
-function set_hidden_fields(theForm, mainForm) {
-    $('#' + mainForm + ' input, #' + mainForm + ' select').each(
-    function(index){
-        var input = $(this);
-        var name = input.attr('name');
-        if (name != "csrfmiddlewaretoken" && input.attr('type')!="submit"){
-            //Only add visible fields and hidden inputs, omit display:none elements
-            if ($(this).is(':visible') || input.attr('type')=="hidden") {
-                if (input.attr('name') == 'elements'){
-                    //all vars need to be passed as strings
-                    addHidden(theForm, input.attr('name'),input.val().join());
-                }
-                else {
-                    addHidden(theForm, input.attr('name'), input.val());
-                }
-            }
-        }
-    });
-    theForm.submit()
-}
-*/
 
 //Old functions (need cleanup)
 function save_form_options(formID,hiddenID){
