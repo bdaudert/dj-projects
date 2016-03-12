@@ -119,6 +119,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <tr style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
     <tr style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
     <tr style="display:table-row"  valign="bottom">{% include 'includes/date_constraints.html'%}</tr>
+    <tr id="meta_keys" style="display:none;">{% include 'includes/metadata_keys.html'%}</tr>
     </table>
     <input type="hidden" class="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
     <input type="hidden" name="app_name" value="station_finder">
