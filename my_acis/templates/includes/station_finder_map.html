@@ -1,6 +1,6 @@
     {%if station_json and not error and not form_error and not need_overlay_map%}
     <input type="hidden" id="station_json" name="variable" value="{{station_json}}">
-    <input type="hidden" id="metadata_keys" name="metadata_keys" value="{{initial.metadata_keys_str}}">
+    <input type="hidden" id="metadata_keys_str" name="metadata_keys_str" value="{{initial.metadata_keys_str}}">
     {%if run_done%}<table width="100%">
     {%else%}<table>
     {%endif%}

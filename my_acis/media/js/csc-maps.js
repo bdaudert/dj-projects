@@ -266,7 +266,8 @@ function initialize_station_finder() {
     var JSON_URL = $("#JSON_URL").val();
     var TMP_URL = $("#TMP_URL").val();
     var j_f = $("#station_json").val();
-    var metadata_keys = $('#metadata_keys').val();
+    var metadata_keys_str = $('#metadata_keys_str').val();
+    var metadata_keys = String(metadata_keys_str).split(',');
     var station_json = TMP_URL + j_f;
     var start_date = $('#start_date').val();
     var end_date = $('#end_date').val();
