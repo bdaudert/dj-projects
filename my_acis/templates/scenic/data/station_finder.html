@@ -211,7 +211,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     
     <!--Map and Station List-->
     {% if station_json and run_done%}
-    <div class="dataTableInfo"  align="left" style="max-width:100%;word-wrap:break-word;">
+    <div class="dataTableInfo results"  align="left" style="max-width:100%;word-wrap:break-word;">
     {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>: {{key_val.1}};
     {%endfor%}

@@ -142,7 +142,7 @@
     <td width="10%">
     <!--DATA-->
     {% if not results.error and results.data %}
-        <div id="DataList" style="display:block;">
+        <div id="DataList" class="results" style="display:block;">
         <table border="1" class="dataTable nowrap">
         <thead>
         <th>Year</th><th>{{results.element_short}}</th>
@@ -165,6 +165,7 @@
     <table id="printable_table">
     <td>
     {% if results.data %}
+    <div class="results">
     <table align="center">
     <td>
     <div class="dataTableInfo" style="max-width:100%;word-wrap:break-word;">
@@ -174,9 +175,10 @@
     </div><br />
     </td>
     </table>
+    </div>
     {%endif%} 
     <!--GRAPH-->
-    <div id="user_graph">
+    <div id="user_graph" class="results">
         <!--Dynamic chart options-->
         <table align="left" class='chart_options' border="1">
             <tr>

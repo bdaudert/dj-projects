@@ -528,9 +528,14 @@ table.dataTable {
 }
 
 
+table.smallFont{
+    table-layout: auto;
+    border-collapse: collapse;
+}
 table.smallFont td, th{
     font-size:10px;
     font-style:bold;
+    white-space: nowrap;
 }
 
 
@@ -810,9 +815,9 @@ table #map_legend {
     background: #FFEFD5;
     border:2px solid #006666;
     font-size:12px;
-    width:99%;
-    min-width:99%;
-    max-width:99%;
+    width:98.5%;
+    min-width:98.5%;
+    max-width:98.5%;
 }
 
 .station_list   {
