@@ -291,21 +291,21 @@ function initialize_station_finder() {
             'scrollX': 'auto',
             'buttons': [
                 {
-                    'extend':'csv',
+                    'extend':'csvHtml5',
                     'title':dataTableInfo,
                     'exportOptions': {
                         'columns': ':visible'
                     }
                 },
                 {
-                    'extend':'excel',
+                    'extend':'excelHtml5',
                     'title':dataTableInfo,
                     'exportOptions': {
                         'columns': ':visible'
                     }
                 },
                 {
-                    'extend':'pdf',
+                    'extend':'pdfHtml5',
                     'title':dataTableInfo,
                     'exportOptions': {
                         'columns': ':visible'
@@ -375,8 +375,9 @@ function initialize_station_finder() {
             td = $('<td>');
             //Omit RCC/Misc/Threadex
             if (['RCC','Misc'].indexOf(data.network_codes[key]) >= 0){
-                //div.setAttribute("style", "display:none");
-                continue
+                //tr.setAttribute("style", "display:none");
+                td.css('display','none');
+                //continue;
             }
             var html_text = '<input type="checkbox" id="' + name + '"' +
             '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' +
@@ -385,7 +386,7 @@ function initialize_station_finder() {
             name + '</div>';
             td.html(html_text)
             tr.append(td);
-            if (count == 9){
+            if (count == 11){
                 name = 'All';
                 icon = 'http://thydzik.com/thydzikGoogleMap/markerlink.php?text=A&color=FC6355';
                 td = $('<td>');
@@ -395,6 +396,7 @@ function initialize_station_finder() {
                 tr.append(td);
             }
         }
+
         $('#map_legend').append(tr);
         //Adjust map bounds
         var bounds=new google.maps.LatLngBounds();
@@ -410,9 +412,24 @@ function initialize_station_finder() {
         //for bounds_changed function
         //we need to keep track what markers/stations appear
         //Define markers and table rows
-        var name_unique = '', marker_count =0;
+        var name_unique = '', marker_count = 0;
         $.each(data.stations, function(index, c) {
-            //Define markers
+            //Sanity check on coords
+            try{
+                var latF = parseFloat(c.lat);
+                var lonF = parseFloat(c.lon);
+                if (!inrange(-90,latF,90) || !inrange(-180,lonF,180)) {
+                    return;
+                }
+            }
+            catch(e){return;}
+            /*
+            //Omit Misc stations
+            if (['RCC','Misc'].indexOf(c.stn_network) >= 0){
+                return;
+            }
+            */
+            //Define marker
             marker_count+=1;
             var latlon = new google.maps.LatLng(c.lat,c.lon);
             var marker = new google.maps.Marker({
@@ -428,6 +445,7 @@ function initialize_station_finder() {
                 new google.maps.Size(20,20)
                 )
             });
+            if (!marker){return;}
             marker.category = c.marker_category;
             marker.name = c.name;
             marker.state = c.state;
@@ -453,14 +471,14 @@ function initialize_station_finder() {
                 avbl_elements += c.available_elements[i][0] + '<br />'     
             }
             var metadict = {
-                'name':c.name,
-                'state':c.state,
-                'ids':c.sids,
-                'sids':c.sids,
-                'networks':c.stn_networks,
-                'll':c.ll,
+                'name':String(c.name),
+                'state':String(c.state),
+                'ids':String(c.sids),
+                'sids':String(c.sids),
+                'networks':String(c.stn_networks),
+                'll':String(c.ll),
                 'elev':String(c.elevation),
-                'valid_daterange':avbl_elements
+                'valid_daterange':String(avbl_elements)
             }
             var data_portal_link = '<a target="_blank" href=/csc/scenic/data/single/lister/'+
             '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid; 
@@ -509,7 +527,11 @@ function initialize_station_finder() {
                 }
             }
             else{
-                tdArray = [c.name, c.state, c.sid, c.lat, c.lon, c.elevation, c.stn_network];
+                tdArray = [
+                String(c.name), String(c.state), 
+                String(c.sid), String(c.lat), String(c.lon), 
+                String(c.elevation), String(c.stn_network)
+                ];
             }
             for (var k=0;k<tdArray.length;k++){
                 td = $('<td>');
@@ -538,7 +560,6 @@ function initialize_station_finder() {
             //Push markers
             markers.push(marker);
             markers_showing.push(marker);
-            window.markers = markers;
             if (c.name != name_unique){
                 name_unique = c.name;
                 rowNode = dataTable.row.add(tableDataRow).node();
@@ -548,6 +569,7 @@ function initialize_station_finder() {
                 }
             }
         }); //end each
+        window.markers = markers;
         dataTable.draw();
         /*
         On zoom change reset the markers
@@ -608,7 +630,7 @@ function initialize_station_finder() {
         show = function(category) {
             //Delete old station_list table rows except header (th)
             //$('#station_list tr').has('td').remove();
-            dataTable.rows.remove();
+            dataTable.rows().remove();
             var station_ids_str = '';
             var name_unique = '';
             markers_showing = [];

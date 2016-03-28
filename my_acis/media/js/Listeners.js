@@ -18,7 +18,7 @@ $(document).ready(function () {
             'autoWidth':false,
             'buttons': [
                 {
-                    'extend':'csv',
+                    'extend':'csvHtml5',
                     'title':dataTableInfo,
                     'exportOptions': {
                         'columns': ':visible'
@@ -48,7 +48,7 @@ $(document).ready(function () {
                     }
                 },
                 {
-                    'extend':'copyHtml5',
+                    'extend':'copy',
                     'title': dataTableInfo,
                     'exportOptions': {
                         'columns': ':visible'

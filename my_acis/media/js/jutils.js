@@ -4,7 +4,13 @@ String.prototype.rsplit = function(sep, maxsplit) {
     return maxsplit ? [ split.slice(0, -maxsplit).join(sep) ].concat(split.slice(-maxsplit)) : split;
 }
 
-
+function inrange(min,number,max){
+    if ( !isNaN(number) && (number >= min) && (number <= max) ){
+        return true;
+    } else {
+        return false;
+    };
+}
 
 
 function get_ajax_error(ajax_status){

@@ -956,6 +956,17 @@ def temporal_summary(request):
         context['run_done'] = True
     return render_to_response(url, context, context_instance=RequestContext(request))
 
+def new_spatial_summary(request):
+    app_name = 'new_spatial_summary'
+    context = {
+        'title': settings.APPLICATIONS[app_name][0]
+    }
+    url = settings.APPLICATIONS[app_name][2]
+    initial  = DJANGOUtils.set_initial(request,app_name)
+    context['initial'] = initial
+    return render_to_response(url, context, context_instance=RequestContext(request))
+
+
 def spatial_summary(request):
     app_name = 'spatial_summary'
     context = {
@@ -1382,6 +1393,7 @@ def monthly_summary(request):
         #Form sanity check
         fields_to_check = ['start_year', 'end_year','max_missing_days']
         form_error = check_form(form_cleaned, fields_to_check)
+        context['xx'] = form_cleaned
         if form_error:
             context['form_error'] = form_error
             return render_to_response(url, context, context_instance=RequestContext(request))
@@ -1666,7 +1678,13 @@ def check_form(form, fields_to_check):
         checker = getattr(WRCCFormCheck, 'check_' + field)
         err = checker(form)
         if err:
-            form_error[WRCCData.DISPLAY_PARAMS[field]] = err
+            if field in ['start_year','end_year']:
+                if form['app_name'] in ['intraannual','yearly_summary','monthly_summary','climatology']:
+                    form_error['Year Range'] = err
+                else:
+                    form_error[WRCCData.DISPLAY_PARAMS[field]] = err
+            else:
+                form_error[WRCCData.DISPLAY_PARAMS[field]] = err
             #Stop at first error
             break
     return form_error

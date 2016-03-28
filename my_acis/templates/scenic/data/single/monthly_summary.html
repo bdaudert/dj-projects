@@ -249,19 +249,39 @@
                 <thead>
                 <tr>
                 {%for dat in yr_data%}
-                <td>{{dat}}</td>
+                {%if forloop.counter == 1%}
+                    <td>{{dat}}</td>
+                {%else%}
+                    {%if forloop.counter|divisibleby:2%}
+                    <td>{{dat}}
+                    {%endif%}
+                    {%if not forloop.counter|divisibleby:2%}{{dat}}</td>{%endif%}
+                {%endif%}
                 {%endfor%}
                 </tr></thead>
-                <tfoot><tr>
+                <tfoot>
+                <tr>
                 {%for dat in yr_data%}
-                <td>{{dat}}</td>
+                {%if forloop.counter == 1%}
+                    <td>{{dat}}</td>
+                {%else%}
+                    {%if forloop.counter|divisibleby:2%}
+                    <td>{{dat}}
+                    {%endif%}
+                    {%if not forloop.counter|divisibleby:2%}{{dat}}</td>{%endif%}
+                {%endif%}
                 {%endfor%}
-                </tr></tfoot> 
+                </tr></tfoot>
                 <tbody>
             {%else%}
                 <tr>
                 {%for dat in yr_data%}
-                <td>{{dat}}</td>
+                {%if forloop.counter == 1%}
+                    <td>{{dat}}</td>
+                {%else%}
+                    {%if forloop.counter|divisibleby:2%}<td>{{dat}}{%endif%}
+                    {%if not forloop.counter|divisibleby:2%}{{dat}}</td>{%endif%}
+                {%endif%}
                 {%endfor%}
                 </tr>
             {%endif%}
@@ -278,14 +298,24 @@
             {%if forloop.counter0 == 0%}
                 <thead><tr>
                 {%for s in s_data%}
-                <th>{{s}}</th>
+                {%if forloop.counter == 1%}
+                    <th>{{s}}</th>
+                {%else%}
+                    {%if forloop.counter|divisibleby:2%}<th>{{s}}{%endif%}
+                    {%if not forloop.counter|divisibleby:2%}{{s}}</th>{%endif%}
+                {%endif%}
                 {%endfor%}
                 </tr></thead>
                 <tbody>
             {%else%}
                 <tr>
                 {%for s in s_data%}
-                <td>{{s}}</td>
+                {%if forloop.counter == 1%}
+                    <td>{{s}}</td>
+                {%else%}
+                    {%if forloop.counter|divisibleby:2%}<td>{{s}}{%endif%}
+                    {%if not forloop.counter|divisibleby:2%}{{s}}</td>{%endif%}
+                {%endif%}
                 {%endfor%}
                 </tr>
             {%endif%}

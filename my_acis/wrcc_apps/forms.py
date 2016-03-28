@@ -280,11 +280,13 @@ class MultiStnField(forms.CharField):
         return stn_list.split(',')
 
     def validate(self, stn_list):
+        pass
+        '''
         "Check if value consists only of valid station_ids."
         for stn in stn_list:
             if len(str(stn))!=6:
                 raise forms.ValidationError("station_ids should be a comma separated list of valid 6 digit station_ids %s!" % str(stn))
-
+        '''
 
 class SodrunForm(forms.Form):
     station_id = forms.CharField(initial='266779')

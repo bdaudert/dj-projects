@@ -25,7 +25,11 @@ def sorted(value):
 
 @register.filter(name='make_range')
 def make_range(start,end):
-    return range(int(start),int(end) + 1)
+    try:
+        rnge = range(int(start),int(end) + 1)
+    except:
+        rnge = range(9999,9999)
+    return rnge
 
 @register.filter(name='make_range_reversed')
 def make_range_reversed(start, end):

@@ -529,13 +529,15 @@ table.dataTable {
 
 
 table.smallFont{
-    table-layout: auto;
+    table-layout: fixed;
     border-collapse: collapse;
+    border-spacing: 0px;
 }
 table.smallFont td, th{
     font-size:10px;
     font-style:bold;
     white-space: nowrap;
+    padding:0px;
 }
 
 
