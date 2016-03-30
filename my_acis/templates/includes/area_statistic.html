@@ -1,19 +1,19 @@
     {%load my_scenic_filters%}
     <td>Spatial Summary: </td>
         <td>
-            <select id="spatial_summary" name="spatial_summary" onchange="update_value(this.value)">
-            {% for opt, name in initial.form_options.spatial_summary%}
+            <select id="area_statistic" name="area_statistic" onchange="update_value(this.value)">
+            {% for opt, name in initial.form_options.area_statistic%}
                 <option value="{{opt}}" 
-                {%if initial.spatial_summary == opt%} selected{%endif%}
+                {%if initial.area_statistic == opt%} selected{%endif%}
                 {%if opt == "median"%}disabled{%endif%}>{{name}}</option>
             {%endfor%} 
             </select>
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
         <div class="pop-up">
-            <div id="ht_spatial_summary"></div>
+            <div id="ht_area_statistic"></div>
             <script type="text/javascript">                        
-            $("#ht_spatial_summary").load("{{HTML_URL}}/Docu_help_texts.html #ht_spatial_summary");
+            $("#ht_area_statistic").load("{{HTML_URL}}/Docu_help_texts.html #ht_area_statistic");
             </script>
         </div>
         </td>

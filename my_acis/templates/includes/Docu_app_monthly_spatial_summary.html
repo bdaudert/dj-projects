@@ -1,15 +1,18 @@
 <div autofocus></div>
-<div id="app_temporal_summary" title="Temporal Summary Map">
+<div id="Docu_app_monthly_spatial_summary" title="Spatial Summary">
     <p class="error">What is this tool?</p>
-    <p>An interactive tool to generate temporal composite maps<br />
-    for a variety of climate elements.<br />
-    Maps can be generated for individual US states or a custom bounding box.</p>
+    <p>An interactive tool to generate  time series of basic statistics <br />
+    (max, min, sum, mean) over custom search areas<br />
+    (counties, climate divisions, basins, county warning areas).<br />
+    that lie within a US state.
+    </p>
     <p class="error">What datasets can be used?</p>
+    
     <p>This tool works with gridded datasets.<br />
 
     <p class="pop_link" onClick="ShowHide('Docu_GRIDS')"><u>SEE GRIDDED DATASETS</u></p>
-    <div id="Docu_GRIDS" style="display:none;">{% include 'includes/Docu_all_grids.html'%}</div>
-    
+    <div id="Docu_GRIDS" style="display:none;">{% include 'includes/Docu_historic_grids.html'%}</div>
+
     <p><b>Temporal Resolution</b><br />
     Daily<br />
     <b>Observed Quantities </b><br />
@@ -22,7 +25,10 @@
     All data sets are made available through the ACIS system.<br />
 
     <a class="pop_link" target="_blank" href="http://www.rcc-acis.org/"><font color="#0000FF">ACIS Home Page</font></a></p>
+
+
     <p class="error">What can you do with this tool?</p>
-    <p>Generate Maps, download data and maps</p>
-    <img alt="ClimSumMap" title="ClimSumMap" width="400px" height="400px" src="/csc/media/img/ClimSumMap.png">
+    <p>Generate monthly data tables.</p>
+    <img alt="MonthlySumm" title="MonthlySumm" width="400px"  height="300px" src="/csc/media/img/MonthlySpatialSummary.png">
+    <p>Download Data, Graphs</p>
 </div>

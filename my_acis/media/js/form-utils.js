@@ -447,25 +447,6 @@ function set_autofill(datalist){
     document.body.appendChild(dl);
 }
 
-function set_elements(data_type){
-    //if data type == grid, disable snow, obst
-    //if data type station --> leav all elements enabled
-    if (data_type == 'grid' || data_type == 'location' || data_type == 'locations'){
-        $("#elements option").each(function(){
-            if ($(this).val() == 'obst' || $(this).val() == 'snow' || $(this).val() == 'snwd' || $(this).val() == 'evap'){
-                $(this).attr('disabled',true);
-            }
-        });
-    }
-    if (data_type == 'station' || data_type == 'station_id' || data_type == 'station_ids'){
-        $("#elements option").each(function(){
-            if ($(this).val() == 'obst' || $(this).val() == 'snow' || $(this).val() == 'snwd' || $(this).val() == 'evap'){
-                $(this).attr('disabled',false);
-            }
-        });
-
-    }
-}
 
 function set_area(row_id, node){
     var lv, html_text, cell0,cell1,div;
@@ -525,7 +506,18 @@ function set_area(row_id, node){
 function set_elements(){
     var non_prism_els = ['gdd','hdd','cdd'];
     var station_only_els = ['obst','snow','snwd','evap','wdmv'];
-    $("#elements option").each(function(){
+    var el_opts,el;
+    if ($('#elements').length){
+        el = $("#elements");
+        el_opts = $("#elements option");
+    }
+    if ($('#element').length){
+        el = $("#element");
+        el_opts = $("#element option");
+    }
+
+    //$("#elements option").each(function(){
+    el_opts.each(function(){
         //Check if prism data, disable degree days
         if ($('#data_type').val() == 'station'){
             $(this).attr('disabled',false);
@@ -534,15 +526,26 @@ function set_elements(){
         if ($('#data_type').val() == 'grid'){    
             if ($('#grid').val() == '21' && $(this).val().inList(non_prism_els)){
                 $(this).attr('disabled',true);
+                /*FIXME
+                if (el.val() == $(this).val()){
+                    el.val('pcpn');
+                }
+                */
             }
             else{
                 if ($(this).val().inList(station_only_els)){
                     $(this).attr('disabled',true);
+                    /*FIXME
+                    if (el.val() == $(this).val()){
+                        el.val('pcpn');
+                    }
+                    */
                 }
             }
         }
     });
 }
+
 
 //Functions to hide and show maps
 //Used in set_map function

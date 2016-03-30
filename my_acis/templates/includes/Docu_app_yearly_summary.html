@@ -4,25 +4,28 @@
     data is temporally summarized over a custom time period specified by Start/End Month/Day.</p>
     <p class="error">What datasets are available?</p>
     <p>This tool works with historic station data as well as interpolated gridded datasets.</p>
+
+    <p class="pop_link" onClick="ShowHide('Docu_STATION_NETWORKS')"><u>SEE STATION_NETWORKS</u></p>
+    <div id="Docu_STATION_NETWORKS" style="display:none;">{% include 'includes/Docu_STATION_NETWORKS.html'%}    </div>
+    <p class="pop_link" onClick="ShowHide('Docu_GRIDS')"><u>SEE GRIDDED DATASETS</u></p>
+    <div id="Docu_GRIDS" style="display:none;">{% include 'includes/Docu_historic_grids.html'%}</div>
+    <br />   
+ 
     <p><b>Temporal Resolution</b><br />
-    Daily for station data.<br />
-    Daily (NRCC-Int, PRISM), monthly/yearly (PRISM)<br />
+    Daily<br />
     <b>Observed Quantities </b><br />
-    Station/Gridded:<br /> 
+    <i class="message">Station/Gridded</i>:<br />
+    Precipitation (in/mm)<br />
     Maximum Temperature (F/C), Minimum Temperature (F/C)<br />
-    Station only: <br />
+    <i class="message">Station only</i>: <br />
     Observation Time Temperature (F/C)<br />
     Snowfall (in/mm), Snow Depth (in/mm)<br />
     <b>Derived Quantities </b><br />
-    Station/Gridded:<br />
+    <i class="message">Station/Gridded</i>:<br />
     Heating/Cooling/Growing Degree Days (F/C)<br />
-    Station only: <br />
-    Average Temperature (F/C)<br /> 
-    <p class="pop_link" onClick="ShowHide('Docu_STATION_NETWORKS')"><u>SEE STATION_NETWORKS</u></p>
-        <div id="Docu_STATION_NETWORKS" style="display:none;">{% include 'includes/Docu_STATION_NETWORKS.html'%}</div>
-    <p class="pop_link" onClick="ShowHide('Docu_GRIDS')"><u>SEE GRIDDED DATASETS</u></p>
-        <div id="Docu_GRIDS" style="display:none;">{% include 'includes/Docu_GRIDS_HISTORIC.html'%}</div>
-    All data sets are made available through the ACIS system.<br /> 
+    Average Temperature (F/C)<br /><br />
+
+    All data sets are made available through the ACIS system.<br />
 
     <a class="pop_link" target="_blank" href="http://www.rcc-acis.org/"><font color="#0000FF">ACIS Home Page</font></a></p>
     <p class="error">What can you do with this tool?</p>

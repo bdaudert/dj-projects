@@ -956,14 +956,31 @@ def temporal_summary(request):
         context['run_done'] = True
     return render_to_response(url, context, context_instance=RequestContext(request))
 
-def new_spatial_summary(request):
-    app_name = 'new_spatial_summary'
+def monthly_spatial_summary(request):
+    app_name = 'monthly_spatial_summary'
     context = {
         'title': settings.APPLICATIONS[app_name][0]
     }
     url = settings.APPLICATIONS[app_name][2]
     initial  = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
+
+    if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
+        #Set form and initial
+        form = DJANGOUtils.set_form(initial, clean=False)
+        form_cleaned = DJANGOUtils.set_form(initial)
+        #Form Check
+        fields_to_check = []
+        form_error = check_form(form_cleaned, fields_to_check)
+        if form_error:
+            context['form_error'] = form_error
+            return render_to_response(url, context, context_instance=RequestContext(request))
+
+        #Display parameters
+        header_keys = WRCCUtils.set_display_keys(app_name, form_cleaned)
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
+        results = WRCCUtils.monthly_spatial_summary(form_cleaned)
+        context['results'] = results
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 

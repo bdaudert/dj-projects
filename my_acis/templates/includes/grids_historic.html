@@ -1,9 +1,26 @@
+        {%load my_scenic_filters%}
         <td>Grid: </td>
         <td>
             <select class="grid" id="grid" name="grid">
-                <option value="1" {%if initial.grid == "1"%}selected{%endif%}>NRCC Interpolated(1950-Present)</option>
-                <option value="3" {%if initial.grid == "3"%}selected{%endif%}>NRCC Int. Hi-Res(2007-Present)</option>
-                <option value="21"{%if initial.grid == "21"%}selected{%endif%}>PRISM(1981-Present)</option>
+            {% for opt, name in initial.form_options.grid%}
+            {%if opt|is_in:'1,3,21'%}
+                {%if opt == "1"%}
+                    <optgroup label="Gridded datasets interpolated from historic station data">
+                {%endif%}
+                {%if opt == "22"%}
+                    <optgroup label="LOCA CMIP5 datasets">
+                {%endif%}
+                {%if opt == "4"%}
+                    <optgroup label="NARCAPP datasets">
+                {%endif%}
+
+                <option value="{{opt}}" {%if initial.grid == opt%} selected{%endif%}>{{name}}</option>
+
+                {%if opt|is_in:'21,41,16'%}
+                </optgroup>
+                {%endif%}
+            {%endif%}
+            {%endfor%}
             </select>
         </td>
         <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">

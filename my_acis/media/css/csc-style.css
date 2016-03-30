@@ -381,6 +381,13 @@ input[value="Merge"] {
     margin:5px;
 }
 
+input[value="Generate Monthly Data"] {
+    background-color:#006666;
+    color:#FFEFD5;
+    margin:5px;
+}
+
+
 input[value="Generate graphics"] {
     background-color:#006666;
     color:#FFEFD5;

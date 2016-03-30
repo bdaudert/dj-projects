@@ -1,0 +1,33 @@
+{%load my_scenic_filters%}
+        <td id="Year">Analysis Year:</td>
+        <td>
+            <input type="hidden" id="min_year" value="{{initial.min_year}}">
+            <input type="hidden" id="max_year" value="{{initial.max_year}}">
+            <input type="hidden" id="min_year_fut" value="{{initial.min_year_fut}}">
+            <input type="hidden" id="max_year_fut" value="{{initial.max_year_fut}}">
+            <select class="year" id="year" name="year">
+                <!--Future dates for grids-->
+                {%if initial.station_id%}
+                    <option value="POR"{% if initial.year == "POR"%}selected{%endif%}>POR</option>
+                {%endif%}
+                {%for yr in initial.min_year_fut|make_range:initial.max_year_fut%}
+                    <option value="{{yr}}" 
+                    {% if initial.location%} 
+                        {%if initial.grid|is_in:'5,6,8,10,12,13,15,16'%}
+                            style="display:none;"
+                        {%endif%}
+                    {%endif%}
+                    {% if initial.year == yr|to_string %}selected{%endif%}>{{yr}}</option>
+                {%endfor%}
+                <!--past dates-->
+                {%for yr in initial.min_year|make_range:initial.max_year%} 
+                    <option value="{{yr}}" {% if initial.year == yr|to_string %}selected{%endif%}>{{yr}}</option>
+                {%endfor%}
+            </select>
+        </td>
+        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+        <div id="Docu_year" class="pop-up"></div>
+        <script type="text/javascript">                        
+            $("#Docu_year").load("{{HTML_URL}}Docu_help_texts.html #ht_year.html");
+        </script>
+        </td>

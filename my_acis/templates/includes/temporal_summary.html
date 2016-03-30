@@ -5,10 +5,7 @@
             {% for opt, name in initial.form_options.temporal_summary%}
                 <option value="{{opt}}" 
                 {%if initial.temporal_summary == opt%} selected{%endif%}
-                {%if opt == "median"%}
-                    {%if initial.app_name|is_in:'single_lister,multi_lister,temporal_summary'%} disabled{%endif%}
-                {%endif%}
-                >{{name}}</option>
+                {%if opt == "median"%}disabled{%endif%}>{{name}}</option>
             {%endfor%}
             </select>
         </td>
