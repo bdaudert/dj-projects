@@ -44,41 +44,26 @@ function ShowHideTopOfPage(){
     If div is shown and contains map, 
     the map needs to be re-initialized
     */
-    //$('#top_of_page').toggle();
     if ($('#top_of_page').is(':hidden')){
-    //if ($('#top_of_page').is(':visible')){
         if ($('#shape').length){
-             $('#PolyMap').css('display','block');
             update_maps(document.getElementById('shape'));
         }
         if ($('#location').length ){
-            $('#GridpointMap').css('display','block');
-            $('#map-gridpoint').css('display','block');
             update_maps(document.getElementById('location'));
         }
         if ($('#basin').length ){
-            $('#OverlayMap').css('display','block');
-            $('#map-overlay').css('display','block');
             update_maps(document.getElementById('basin'));
         }
         if ($('#county_warning_area').length ){
-            $('#OverlayMap').css('display','block');
-            $('#map-overlay').css('display','block');
             update_maps(document.getElementById('county_warning_area'));
         }
         if ($('#county').length ){
-            $('#OverlayMap').css('display','block');
-            $('#map-overlay').css('display','block');
             update_maps(document.getElementById('county'));
         }
         if ($('#climate_division').length ){
-            $('#OverlayMap').css('display','block');
-            $('#map-overlay').css('display','block');
             update_maps(document.getElementById('climate_division'));
         }
         if ($('#bounding_box').length ){
-            $('#BBoxMap').css('display','block');
-            $('#map-bbox').css('display','block');
             update_maps(document.getElementById('bounding_box'));
         }
     }
@@ -1168,11 +1153,6 @@ function update_maps(area_field){
         $('#map-bbox').css('display','block');
         initialize_bbox_map(val);
     }
-    /*
-    else if (id == 'state'){
-        $('#overlay_state').val(val);
-    }
-    */
     else if (id == 'county' || id == 'county_warning_area' || id == 'climate_division' || id == 'basin'){ 
         $('#OverlayMap').css('display','block');
         $('#map-overlay').css('display','block');
@@ -1188,7 +1168,13 @@ function update_maps(area_field){
         }
         else if (id == 'county_warning_area' && val_list.length == "2"){
             idx = 1;
-            name = val_list[0].split('  ').join(', ');
+            var vl = val_list[0].split(' ')
+            name = vl.slice(0,vl.length - 1).join(' ') +  ', ' +vl.slice(vl.length - 1,vl.length);
+            //name = val_list[0].split(' ').join(', ');
+        }
+        else if (id == 'county'){
+            name = val_list[0].replace(' County','');
+            idx = 1;
         }
         else{
             name = val_list[0];
@@ -1200,10 +1186,9 @@ function update_maps(area_field){
         }
         catch(e){var ol_id = 'none'}
         $.getJSON(json_file, function(metadata) {
-            for (var i = 0,item; item = metadata[i]; i++){
-            
+            for (var i = 0,item; item = metadata[i]; i++){   
                 if (item.name.toLowerCase() != name.toLowerCase() || item.id != ol_id){
-                    continue
+                    continue;
                 }
                 else {
                     //Generate polygon overlay

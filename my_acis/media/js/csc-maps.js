@@ -199,7 +199,7 @@ function initialize_grid_point_map(loc) {
         infowindow.open(map, marker);
         map.panTo(myLatlng);
     });
-
+    google.maps.event.trigger(map, 'resize');
 }//close initialize_grid_point_map
 
 /*
@@ -771,162 +771,6 @@ function my_boxclick(box, category){
     boxclick(box, category);
 }
 
-
-
-function initialize_network_map() {
-
-    var MEDIA_URL = document.getElementById("MEDIA_URL").value;
-    var json_file = document.getElementById("json_file").value;
-    var marker_type='all';
-    $.getJSON(MEDIA_URL + 'json/' + json_file, function(data) {
-        //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
-        //var Center = new google.maps.LatLng(39.5, -98.35);
-        var Center =new google.maps.LatLng(37.0, -114.05);
-        var mapOptions = {
-        center: Center,
-        zoom: 5,
-        mapTypeId: google.maps.MapTypeId.HYBRID
-        };
-
-        map = new google.maps.Map(document.getElementById("map"),mapOptions);
-
-        var legend = document.getElementById('resource_legend');
-        var type;
-        var icon;
-        var div;
-        for (var i=0; i<data.Types.length; i++) {
-            type = data.Types[i].type;
-            icon = MEDIA_URL + 'img/' + data.Types[i].icon;
-            div = document.createElement('div');
-            div.innerHTML = '<p><img alt="Icon" title="Icon" class="icon" src="' + icon + '"> ' + type +'<input type="checkbox" id="'+ type + '" onclick="my_networkclick(this,\''+ type +'\')" checked /></p>';
-            legend.appendChild(div);
-        }
-        //Create show all
-        type = 'All';
-        icon = MEDIA_URL + 'img/ALLIcon.png'
-        div = document.createElement('div');
-        div.innerHTML = '<p><img alt="Icon" title="Icon" class="icon" src="' + icon + '"> ' + type +'<input type="checkbox" id="all" onclick="my_networkclick(this,\''+ 'all' +'\')" checked /></p>';
-        legend.appendChild(div);
-
-        var bounds=new google.maps.LatLngBounds();
-        infowindow = new google.maps.InfoWindow({
-            content: 'oi'
-        });
-        var markers = [];
-        //var checked_categories = document.getElementById('checked_categories').split(',');
-        $.each(data.OverLays, function(index, c) {
-            if (c.type == marker_type || marker_type == 'all') {
-                var image = new google.maps.MarkerImage(MEDIA_URL + 'img/' + c.icon,
-                    // This marker is 20 pixels wide by 32 pixels tall.
-                    new google.maps.Size(30, 30)
-                    // The origin for this image is 0,0.
-                    //new google.maps.Point(0,0),
-                    // The anchor for this image is the base of the flagpole at 0,32.
-                    //new google.maps.Point(0, 30)
-                );
-                var latlon = new google.maps.LatLng(c.lat,c.lon);
-                var marker = new google.maps.Marker({
-                    map: map,
-                    icon: image,
-                    position: latlon,
-                    title:'Name:'+c.name
-                });
-                marker.type = c.type;
-                markers.push(marker);
-                bounds.extend(latlon);
-            };//endif
-
-            google.maps.event.addListener(marker, 'click', function() {
-                infowindow.close();
-                var contentString = '<div id="MarkerWindow">'+
-                '<p class="error"><b>' + c.type + 
-                ' <img alt="Icon" title="Icon" class="icon" src=' + MEDIA_URL + 'img/' + c.icon + '>' +
-                '</p><p>' + c.name + '</b><br/>'+
-                c.name_long + '<br/>' +
-                '<b>Location</b>: ' + c.location +
-                '</p>' +'</div>';
-                infowindow.setContent(contentString);
-                infowindow.open(map, marker);
-                //Load longer documentation on right of page
-                $("#network_docu").load(MEDIA_URL + "html/Docu_External_Resources.html #" + c.docu_long);
-            });
-        });//close each
-
-        //var markerCluster = new MarkerClusterer(map, markers);
-        map.fitBounds(bounds);
-
-        // == shows all markers of a particular category, and ensures the checkbox is checked and write station_list==
-        show = function(category) {
-            for (var i=0; i<markers.length; i++) {
-                if (category == 'all'){
-                    markers[i].setVisible(true);
-                }
-                else{
-                    if (markers[i].type == category) {
-                        markers[i].setVisible(true);
-                    }
-                }
-            }
-            // == check the checkbox ==
-            if (category == 'all'){
-                for (var i=0; i<data.Types.length; i++) {
-                    document.getElementById(data.Types[i].type).checked = true;
-                }
-            }
-            else {
-                document.getElementById(category).checked = true;
-            }
-        };
-
-        // == hides all markers of a particular category, and ensures the checkbox is cleared and delete station_list ==
-        hide = function(category) {
-            for (var i=0; i<markers.length; i++) {
-                if (category == 'all'){
-                     markers[i].setVisible(false);
-                }
-                else {
-                    if (markers[i].type == category) {
-                        markers[i].setVisible(false);
-                    }
-                }
-            }
-            // == clear the checkbox ==
-            if (category == 'all'){
-                for (var i=0; i<data.Types.length; i++) {
-                    document.getElementById(data.Types[i].type).checked = false;
-                }
-            }
-            else {
-                document.getElementById(category).checked = false;
-            }
-        };
-
-        networkclick = function(box, category){
-            if (box.checked){
-                //checked_categories.push(category);
-                //document.getElementById('checked_categories').value = checked_categories.join();
-                show(category);
-            }
-            else {
-                //remove category form checked list
-                /*
-                for(var i =0;i<checked_categories.length;i++) {
-                    if (checked_categories[i] == category){
-                        checked_categories.splice(i,1);
-                    }
-                }
-                document.getElementById('checked_categories').value = checked_categories.join();
-                */
-                hide(category);
-            }
-        };
-    });//close getjson
-}//close initialize_info_map
-
-function my_networkclick(box, category){
-    networkclick(box, category);
-}
-
 function initialize_bbox_map(bbox) {
     //optional argument location
     switch (arguments.length - 0) { // <-- 0 is number of required arguments
@@ -1279,7 +1123,8 @@ function initialize_map_overlay(map_id,poly) {
         infowindow.close();
         infowindow.setContent(poly.area_type + ': ' + poly.id);
         infowindow.open(map);
-    });    
+    });
+    google.maps.event.trigger(map, 'resize');
 }
 
 
@@ -1342,6 +1187,7 @@ function initialize_map_overlays() {
         }
         map.fitBounds(bounds);
     };
+    google.maps.event.trigger(map, 'resize');
 }
 
 function add_polygon_to_map(map, ll_coords){
@@ -1386,7 +1232,9 @@ function add_polygon_to_map(map, ll_coords){
         poly.setMap(map);
     } 
     map.fitBounds(bounds);
+    google.maps.event.trigger(map, 'resize');
 }
+
 function add_state_to_map(map,val) {
     var json_file =  '/csc/media/json/US_states.json';
     var bounds=new google.maps.LatLngBounds();
@@ -1479,7 +1327,7 @@ function add_kml_layer_to_map(map, id, val){
                         state = item.name.split(', ')[1].toLowerCase();
                     }
                     if (id == 'basin'){ 
-                        state = $('#overlay_state').val();
+                        state = $('#overlay_state').val().toLowerCase();
                     }
                     if (state != 'none'){
                         $('#overlay_state').val(state);
