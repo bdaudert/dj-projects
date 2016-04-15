@@ -1360,7 +1360,9 @@ $(document).ready(function () {
             else{
                 $("#formDownload").dialog('close');
                 $('#formErrorDownload').css('display','none');
-                $('#offlineMessage').css('display','block'); 
+                //$('#offlineMessage').css('display','block');
+                //alert($('#offlineMessage').html());
+                ShowPopupDocu('offlineMessage');
             }
             hide_loading_gif();
         })
@@ -1391,7 +1393,9 @@ $(document).ready(function () {
             else{
                 $("#largeRequestForm").dialog('close');
                 $('#formErrorLargeRequest').css('display','none');
-                $('#offlineMessage').css('display','block');
+                //$('#offlineMessage').css('display','block');
+                ShowPopupDocu('offlineMessage');
+
             }
         })
         .fail(function(jqXHR) {

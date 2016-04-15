@@ -619,9 +619,12 @@ function initialize_station_finder() {
                 }
             }
             //Remove trailing comma and set html element
+            station_ids_str = station_ids_str.replace(/,\s*$/, "");
+            /*
             if (station_ids_str){
                 station_ids_str = station_ids_str.substring(0,station_ids_str.length - 2);
             }
+            */
             //Update hidden var inf formDownload of sttaion_finder.html
             $('#station_ids_string').val(station_ids_str);
             dataTable.draw();
@@ -692,7 +695,8 @@ function initialize_station_finder() {
                 dataTable.draw();
             }
             //Remove trailing comma and set html element
-            station_ids_str = station_ids_str.substring(0,station_ids_str.length - 1);
+            station_ids_str = station_ids_str.replace(/,\s*$/, "");
+            //station_ids_str = station_ids_str.substring(0,station_ids_str.length - 1);
             $('#station_ids').val(station_ids_str);
         };
 
@@ -739,9 +743,12 @@ function initialize_station_finder() {
             }
             dataTable.draw();
             //Remove trailing comma and set html element
+            /*
             if (station_ids_str){
                 station_ids_str = station_ids_str.substring(0,station_ids_str.length - 1);
             }
+            */
+            station_ids_str = station_ids_str.replace(/,\s*$/, "");
             $('#station_ids').val(station_ids_str);
         };
 
