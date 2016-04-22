@@ -490,7 +490,7 @@ function set_area(row_id, node){
 
 function set_elements(){
     var non_prism_els = ['gdd','hdd','cdd'];
-    var station_only_els = ['obst','snow','snwd','evap','wdmv'];
+    var station_only_els = ['obst','snow','snwd','evap','wdmv','dtr','pet'];
     var el_opts,el;
     if ($('#elements').length){
         el = $("#elements");
@@ -501,30 +501,26 @@ function set_elements(){
         el_opts = $("#element option");
     }
 
-    //$("#elements option").each(function(){
     el_opts.each(function(){
         //Check if prism data, disable degree days
-        if ($('#data_type').val() == 'station'){
+        if ($('#data_type').val() == 'station' || $('#area_type').val().inList['station_id','station_ids']){
             $(this).attr('disabled',false);
         }
     
-        if ($('#data_type').val() == 'grid'){    
+        if ($('#data_type').val() == 'grid' || $('#area_type').val().inList(['location','locations'])){
+            console.log(el.val());
             if ($('#grid').val() == '21' && $(this).val().inList(non_prism_els)){
                 $(this).attr('disabled',true);
-                /*FIXME
                 if (el.val() == $(this).val()){
                     el.val('pcpn');
                 }
-                */
             }
             else{
                 if ($(this).val().inList(station_only_els)){
                     $(this).attr('disabled',true);
-                    /*FIXME
                     if (el.val() == $(this).val()){
                         el.val('pcpn');
                     }
-                    */
                 }
             }
         }

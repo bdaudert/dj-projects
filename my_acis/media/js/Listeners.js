@@ -151,6 +151,17 @@ $(document).ready(function () {
             }
         }
     });
+    $('#season').on('change', function(){
+        today_year == String((new Date()).getFullYear());
+        if ($('#season').val().inList(['winter','water_year'])){
+            //Disable this year
+            if ($('#year').val() == today_year){
+                $('#year').val(String(parseInt(today_year) - 1));
+            }
+            $('#year option[value="'+ today_year + '"]').attr('disabled', true);
+        }
+    });
+
     /*
     STATION FINDER DISPLAY 
     */
@@ -304,7 +315,7 @@ $(document).ready(function () {
         var sum_els = ['pcpn','snow','evap','pet'];
         if ($(this).val().inList(sum_els)){
             if ($('#statistic').length){
-                $('#statistic').children('option[value="msum"]').attr('disabled', false);                
+                $('#statistic option[value="msum"]').attr('disabled', false);                
                 $('#statistic').val('msum');
             }
         }
@@ -312,42 +323,42 @@ $(document).ready(function () {
             if ($('#statistic').length){
                 $('#statistic').val('mave');
                 if ($(this).val() == 'snwd'){
-                    $('#statistic').children('option[value="msum"]').attr('disabled', true);
+                    $('#statistic option[value="msum"]').attr('disabled', true);
                 }
             }
         }
         if ($('#calculation').length){
             if ($(this).val().inList(sum_els)){
-                $('#calculation').children('option[value="cumulative"]').attr('disabled', false);
+                $('#calculation option[value="cumulative"]').attr('disabled', false);
                 $('#calculation').val('cumulative');
             }
             else{
                 $('#calculation').val('values');
-                $('#calculation').children('option[value="cumulative"]').attr('disabled', true);
+                $('#calculation option[value="cumulative"]').attr('disabled', true);
 
             }
         }
         if ($('#temporal_summary').length){
             if ($(this).val().inList(sum_els)){
-                $('#temporal_summary').children('option[value="sum"]').attr('disabled', false);
+                $('#temporal_summary option[value="sum"]').attr('disabled', false);
                 $('#temporal_summary').val('sum');
             }
             else{
                 $('#temporal_summary').val('mean');
                 if ($(this).val() == 'snwd'){
-                    $('#temporal_summary').children('option[value="sum"]').attr('disabled', true);
+                    $('#temporal_summary option[value="sum"]').attr('disabled', true);
                 }
             }
         }
         if ($('#spatial_summary').length){
             if ($(this).val().inList(sum_els)){
-                $('#spatial_summary').children('option[value="sum"]').attr('disabled', false);
+                $('#spatial_summary option[value="sum"]').attr('disabled', false);
                 $('#spatial_summary').val('sum');
             }
             else{
                 $('#spatial_summary').val('mean');
                 if ($(this).val() == 'snwd'){
-                    $('#spatial_summary').children('option[value="sum"]').attr('disabled', true);
+                    $('#spatial_summary option[value="sum"]').attr('disabled', true);
                 }
             }
         }
@@ -415,7 +426,64 @@ $(document).ready(function () {
             $('.target_year').val($('#start_year').val());
             $('#min_year').val($('#start_year').val());
             $('#max_year').val($('#end_year').val());
-        }   
+        }
+        if ($('#season').length){
+            var d = new Date();
+            var today_year = String(d.getFullYear());
+            var today_month = String(parseInt(d.getMonth() + 1));
+            if (String($(this).val()) == today_year){
+                $('#season option[value="year_to_date"]').attr('disabled', false);
+                $('#season option[value="water_year"]').attr('disabled', true); 
+                $('#season option[value="winter"]').attr('disabled', true);
+                if (parseInt(today_month) < 5){
+                    $('#season option[value="spring"]').attr('disabled', true);
+                }
+                if (parseInt(today_month) < 8){
+                    $('#season option[value="summer"]').attr('disabled', true);
+                }  
+                if (parseInt(today_month) < 11){
+                    $('#season option[value="fall"]').attr('disabled', true);
+                }  
+                for (var mon_idx = parseInt(today_month);mon_idx <= 12; mon_idx++){
+                    $('#season option[value="' + String(mon_idx) + '"]').attr('disabled', true);
+                }
+                $('#season option[value="ann"]').attr('disabled', true);
+            }
+            else if (String($(this).val()) == String(parseInt(today_year) - 1)){
+                if (parseInt(today_month) < 11){
+                    $('#season option[value="water_year"]').attr('disabled', true);
+                }
+                else{
+                    $('#season option[value="water_year"]').attr('disabled', false);
+                }
+                for (var mon_idx = 1;mon_idx <= 12; mon_idx++){
+                    $('#season option[value="' + String(mon_idx) + '"]').attr('disabled', false);
+                }
+                $('#season option[value="ann"]').attr('disabled', false);
+                if (parseInt(today_month) < 2){
+                    $('#season option[value="winter"]').attr('disabled', true);
+                }
+                else{
+                    $('#season option[value="winter"]').attr('disabled', false);
+                }
+                $('#season option[value="spring"]').attr('disabled', false);
+                $('#season option[value="summer"]').attr('disabled', false);
+                $('#season option[value="fall"]').attr('disabled', false);
+                $('#season option[value="year_to_date"]').attr('disabled', true);
+            }
+            else {
+                for (var mon_idx = 1;mon_idx <= 12; mon_idx++){
+                    $('#season option[value="' + String(mon_idx) + '"]').attr('disabled', false);
+                }
+                $('#season option[value="water_year"]').attr('disabled', false);
+                $('#season option[value="ann"]').attr('disabled', false);
+                $('#season option[value="winter"]').attr('disabled', false);
+                $('#season option[value="spring"]').attr('disabled', false);
+                $('#season option[value="summer"]').attr('disabled', false);
+                $('#season option[value="fall"]').attr('disabled', false);
+                $('#season option[value="year_to_date"]').attr('disabled', true);
+            }
+        }
     });
 
     $('.month').on('change', function(){
@@ -576,15 +644,15 @@ $(document).ready(function () {
     $('.obtain_sf_data').on('click', function(){
         ShowPopupDocu('formDownload');
         //$('#formDownload').css('display','block');
-        $(".data_format").children('option[value="html"]').attr('disabled', true);
+        $('.data_format option[value="html"]').attr('disabled', true);
         /*
         if ($('#formDownload').css('display') == 'none'){
-            $(".data_format").children('option[value="html"]').attr('disabled', true);
+            $('.data_format option[value="html"]').attr('disabled', true);
             $('#formDownload').css('display','block');
         }
         else{
             $('#formDownload').css('display','none');
-            $(".data_format").children('option[value="html"]').attr('disabled', false);
+            $('.data_format option[value="html"]').attr('disabled', false);
         }
         */
     });
@@ -607,6 +675,10 @@ $(document).ready(function () {
             if ($('#temp_res').length){
                 $('#temp_res').css('display','none');
             }
+             $('#add').css('display','table-row');
+            if ($('#add_degree_days').val() == 'T'){
+                $('#dd').css('display','table-row');
+            }
         }
         //Disable elements if prism
         var non_prism_els = ['gdd','hdd','cdd'];
@@ -624,7 +696,7 @@ $(document).ready(function () {
         });
         var new_dates, ds, de, start_div, end_div;
         //Change start/end dates/years according to grid
-        var start=null, end=null,new_dates;
+        var start=null, end=null,new_dates,p='year';
         if ($('#start_year').length && $('#end_year').length){
             start = $('#start_year').val();
             end = $('#end_year').val();
@@ -638,13 +710,21 @@ $(document).ready(function () {
         if ($('#start_date').length && $('#end_date').length){
             start = $('#start_date').val();
             end = $('#end_date').val();
-            p ='date';
+            p = 'date';
             new_dates = set_dates_for_grid($(this).val(),start,end,p);
+        }
+        if ($('#year').length){
+            start = $('#year').val();
+            end = $('#year').val();
+            p = 'year';
         }
         //Set date values
         var date_vals = set_dates_for_grid($(this).val(),start,end,p);
         $('#start_' + p).val(date_vals.start);
-        $('#end_' + p).val(date_vals.end); 
+        $('#end_' + p).val(date_vals.end);
+        if ($('#year').length){
+            $('#year').val(date_vals.start);
+        } 
     });
     /*
     GRID 
@@ -678,33 +758,18 @@ $(document).ready(function () {
             }
         }
         update_value($(this).val()); //form_utils function
-
-        var station_only_els = ['obst','snow','snwd','evap','wdmv'];
-        var non_prism_els = ['gdd','hdd','cdd'];
+        //Set the elements
+        set_elements();
+        
+        //var station_only_els = ['obst','snow','snwd','evap','wdmv'];
+        //var non_prism_els = ['gdd','hdd','cdd'];
+        
         //Set grid form fields
-        var opts = null;
+        //var opts = null;
         if (data_type == 'grid' || data_type == 'location' || data_type == 'locations'){
             //Disable station_ids option
             $('#area_type option[value="station_ids"]').attr('disabled',true);
             $('#area_type option[value="locations"]').attr('disabled',false);
-            if ($('#elements').length){
-                var opts = $("#elements option");
-            }
-            if ($('#element').length){
-                var opts = $("#element option")
-            } 
-            if (opts){
-                opts.each(function(){
-                    //Disable station elements
-                    if ($(this).val().inList(station_only_els)){
-                        $(this).attr('disabled',true);
-                    }
-                    //Check if prism data, disable degree days
-                    if ($('#grid').val() == '21' && $(this).val().inList(non_prism_els)){
-                        $(this).attr('disabled',true);
-                    }
-                });
-            }
             //If prism hide special degree days
             if ($('#grid').val() == '21'){
                 $('#add').css('display','none');
@@ -712,6 +777,9 @@ $(document).ready(function () {
             }
             else {
                 $('#add').css('display','table-row');
+                if ($('#add_degree_days').val() == 'T'){
+                    $('#dd').css('display','table-row');
+                }
             }
             //Hide flags/obs time
             $('#flags').css('display','none');
