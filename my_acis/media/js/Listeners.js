@@ -1289,7 +1289,6 @@ $(document).ready(function () {
     //MAPS
     $('#station_list tbody').on('click', 'tr', function(){
         infowindow.close();
-        console.log($(this));
         infowindow.setContent($(this).attr('cString'));
         infowindow.open(window.map, window.markers[parseInt($(this).attr('id'))]);
         var bounds = window.map.getBounds();
@@ -1408,6 +1407,156 @@ $(document).ready(function () {
             $('.ajax_error').html(get_ajax_error(jqXHR.status));
        }) 
     });
+    /* 
+    //MonthlySpatialSummary
+    $('#MonthlySpatialSummaryDataForm').on('submit', function(event){
+        show_loading_gif()
+        event.preventDefault();
+        var form_data = $('#MonthlySpatialSummaryDataForm :input').serialize();
+        var jqxhr = $.ajax({
+            url:'',
+            method: "POST",
+            data: form_data,
+        })
+        .done(function(response) {
+            response = JSON.parse(response);
+            //Errror Handling
+            if ('form_error' in response){
+                err = 'ERROR: Please correct the form error(s) highlighted in red!';
+                $('#formError').html(err);
+                $('#formError').css('display','block');
+                for (var key in response['form_error']){
+                    highlight_form_field(key,response[key]);
+                }
+            }
+            else{
+                $('#formError').css('display','none');
+            }
+            if ('results' in response && 'error' in response['results']){
+                $('#resultsError').html(response['results']['error']);
+                $('#resultsError').css('display','block');
+            }
+            else{
+                $('#resultsError').css('display','none');
+            }
+            if ('results' in response && !'data' in response['results'] && !'smry' in response['results']){
+                $('#noResultsError').css('display','block');
+            }
+            else{
+                $('#noResultsError').css('display','none');
+            }
+            //Display data
+            if ('results' in response && 'smry' in response['results']){
+                hide_loading_gif();
+                //Header
+                var h_idx, header = '';
+                if ('params_display_list' in response){
+                    for (h_idx=0; h_idx < response['params_display_list'].length;h_idx++){
+                        header+='<b>' + response['params_display_list'][h_idx][0] + '</b>: ';
+                        header+=response['params_display_list'][h_idx][1] + ';'
+                    }
+                    $('#TableHeader').html(header);
+                    $('#TableHeader').css('display','block');
+                }
+                //Data Table
+                if ($('#DataTable').length){
+                    $('#DataTable').remove();
+                }
+                //Write new table
+                var dataTable = $('<table/>');
+                dataTable.addClass('smallFont').addClass('nowrap');
+                dataTable.attr('border','1');
+                dataTable.attr('width','100%');
+                dataTable.attr('id','DataTable');
+                
+                var row, row_idx, td, td_idx;
+                for (row_idx = 0;row_idx < response['results']['smry'].length;row_idx++){
+                    row = '<tr>';
+                    for (td_idx = 0;td_idx< response['results']['smry'][row_idx].length;td_idx++){
+                        row+='<td>' + response['results']['smry'][row_idx][td_idx]+ '</td>'
+                    }
+                    row+='</tr>'
+                    if (row_idx == 0){
+                        dataTable.append('<thead>');
+                        dataTable.append(row);
+                        dataTable.append('</thead>');
+                        dataTable.append('<tbody>');
+                    }
+                    else if (row_idx == response['results']['smry'].length - 1){
+                        dataTable.append('<tfoot>');
+                        dataTable.append(row);
+                        dataTable.append('</tfoot>');
+                    }
+                    else {
+                        dataTable.append(row);
+                    }
+                }
+                dataTable.append('</tbody>')
+                //Make visible
+                $('#tableContainer').append(dataTable);
+                $('#tableContainer').css('display','block'); 
+                //Make it a dataTable
+                //$('#DataTable').DataTable({
+                dataTable.DataTable({
+                    'dom': 'Bfrtip',
+                    'paging': false,
+                    'scrollY': 400,
+                    'scrollCollapse': true,
+                    'scrollX': 'auto',
+                    'autoWidth':false,
+                    'buttons': [
+                        {
+                            'extend':'csvHtml5',
+                            'title':dataTableInfo,
+                            'exportOptions': {
+                                'columns': ':visible'
+                            }
+                        },
+                        {
+                            'extend':'excelHtml5',
+                            'title':dataTableInfo,
+                            'exportOptions': {
+                                'columns': ':visible'
+                            }
+                        },
+                        {
+                            'extend':'pdfHtml5',
+                            'title': dataTableInfo,
+                            'orientation': 'landscape',
+                            'pageSize':'A4',
+                            'exportOptions': {
+                                'columns': ':visible'
+                            }
+                        },
+                        {
+                            'extend':'print',
+                            'title': dataTableInfo,
+                            'exportOptions': {
+                                'columns': ':visible'
+                            }
+                        },
+                        {
+                            'extend':'copy',
+                            'title': dataTableInfo,
+                            'exportOptions': {
+                                'columns': ':visible'
+                            }
+                        },
+                        'colvis'
+                    ]
+                });
+            }
+            else{
+                $('#TableHeader').css('display','none');
+                $('#tableContainer').css('display','none');
+            }
+        })
+        .fail(function(jqXHR) {
+            hide_loading_gif();
+            $('.ajax_error').html(get_ajax_error(jqXHR.status));
+       })  
+    });
+    */
 
     //Station Finder data download
     $('#StationFinderDownloadForm').on('submit', function(event){
@@ -1522,13 +1671,11 @@ $(document).ready(function () {
             
             if ('submitForm' in response){
                 $('#DataForm').removeClass('DataForm');
-                console.log($('DataForm').attr('class'));
                 $('<input>').attr({
                     type: 'hidden',
                     id: 'submitFormToDjango',
                     name: 'submitFormToDjango'
                 }).appendTo($('#DataForm'));
-                console.log($('#DataForm :input').serialize());
                 //$('#DataForm').submit();
                 
             }    

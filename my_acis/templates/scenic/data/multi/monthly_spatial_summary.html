@@ -62,7 +62,7 @@
 <table id="top_of_page">
 <td valign="top"  width="40%">
     <div id='formData'>
-        <form method="post" id="DataForm" action="" onsubmit="show_loading()">{% csrf_token %}
+        <form method="post" id="MonthlySpatialSummaryDataForm" action="" onsubmit="show_loading();">{% csrf_token %}
         <table class="form" id="tableData" >
         <tr class="grid" id="grid_type" style="display:table-row;">{% include 'includes/grids_historic.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/year.html'%}</tr>

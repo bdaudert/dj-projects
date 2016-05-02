@@ -981,6 +981,22 @@ def monthly_spatial_summary(request):
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
         results = WRCCUtils.monthly_spatial_summary(form_cleaned)
         context['results'] = results
+        '''
+        #AJAX
+        if form_error:
+            response_data = json.dumps({'form_error':form_error})
+            response = set_ajax_response(response_data)
+            return response
+        header_keys = WRCCUtils.set_display_keys(app_name, form_cleaned)
+        params_display_list = WRCCUtils.form_to_display_list(header_keys,form)
+        results = WRCCUtils.monthly_spatial_summary(form_cleaned)
+        response_data = json.dumps({
+            'params_display_list':params_display_list,
+            'results':results
+        })
+        response = set_ajax_response(response_data)
+        return response
+        '''
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 
@@ -1410,7 +1426,6 @@ def monthly_summary(request):
         #Form sanity check
         fields_to_check = ['start_year', 'end_year','max_missing_days']
         form_error = check_form(form_cleaned, fields_to_check)
-        context['xx'] = form_cleaned
         if form_error:
             context['form_error'] = form_error
             return render_to_response(url, context, context_instance=RequestContext(request))

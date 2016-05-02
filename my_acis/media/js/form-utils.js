@@ -508,7 +508,6 @@ function set_elements(){
         }
     
         if ($('#data_type').val() == 'grid' || $('#area_type').val().inList(['location','locations'])){
-            console.log(el.val());
             if ($('#grid').val() == '21' && $(this).val().inList(non_prism_els)){
                 $(this).attr('disabled',true);
                 if (el.val() == $(this).val()){
