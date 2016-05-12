@@ -1,0 +1,352 @@
+/* CEMP */
+/* Author: Grant Kelly */
+
+/* This file contains CSS information for the main CEMP website */
+
+/* the entire page body */
+body {
+    margin:0px 10px 0px 10px;
+    background: white url('/cemp/images/grad2.jpg') repeat-x top left;
+    color: black;
+}
+	
+/* Generic container for head and body. */
+#container {
+    background: #487648;
+    color:white;
+}
+
+/* Main content head (logo etc) */
+#contentHead {
+    background: url('/cemp/images/top_logo_bkg4.jpg') repeat-x top left;
+    color: black;
+    position:relative;
+    z-index:2;
+}
+
+/* Main content body (split into two columns) */
+#contentBody {
+    background: white url('/cemp/images/grad1.jpg') repeat-x top left;
+    color: black;
+    position: relative;
+    top: -4px;
+    z-index:1;
+    min-height: 800px;
+}
+
+/* Left content column (nav)*/
+#col1 {
+    padding-left:6px;
+    margin-right: 10px;
+    width: 200px;
+    float: left;
+    position: absolute;
+    top: 4px;
+}
+
+/* Right content column*/
+#col2{
+    margin-left: 210px;
+    margin-right: 20px;
+    position:relative;
+    top: 20px;
+}
+
+/* Paragraph Block class */
+.para{
+    background: #e8f6e8 url('/cemp/images/paragrad.jpg') repeat-x bottom left;
+    color: black;
+    border:1px solid;
+    padding: 5px 15px 10px 15px;
+    margin: 0px 5px 20px 0px;
+    font-family: Arial, sans-serif ;
+    font-size: .8em;
+    text-align: left;
+    position:relative;
+    /*-moz-border-radius: 10px ;*/
+}
+
+.parah3 {
+    font-family: serif;
+    border-bottom: 1px solid #384638;
+}
+.para h2{ font-size: 1.8em; }
+.para h3{ font-size: 1.5em; }
+
+.hidden .cfs {
+    display: none;
+}
+
+.smaller {
+    font-size: .9em;
+}
+
+.date {
+    font-family: monospace;
+    font-size: 14px;
+    color: #575;
+    padding: 0 5px 0 0;
+    font-weight: bold;
+}
+
+.status_message {
+    margin: 0; 
+    padding: 0 0 0 1em;
+}
+/* Horizontal Navigation Class */
+.Hnav {
+    color:white;
+    text-align:left;
+    background: #303030;
+    padding: 2px 0px 0px 20px;
+    margin-top: 2px;
+    font-size: 9pt;
+    line-height:14pt;
+    position:relative;
+    z-index:4;
+    top: -2px;
+}
+.Hnav a:link {
+    color:white;
+    font-weight:normal;
+    text-decoration:none;
+    font-family: Arial, sans-serif;
+}
+.Hnav a:visited {
+    color:#DADADA;
+    font-weight:normal;
+}
+.Hnav a:hover {
+    text-decoration:underline;
+}
+
+.Hnav a:active {
+    color:white;
+}
+
+
+a {
+    color:#285628;
+    text-decoration:none;
+    font-weight: 800;
+    font-family: Arial, sans-serif;
+}
+a:link {color:#285628;}
+a:visited {color:#08B668;}
+a:hover {text-decoration:underline;}
+a:active {color:#487648;}
+
+
+img {
+    border:0;
+}
+
+ul.links {
+    padding-left: 0px;
+    margin-left: 6px;
+}
+ul.links li {
+    padding: 6px 0px;
+
+}
+
+li {
+    list-style-image: url(/cemp/images/bullet.png);
+}
+
+#provisional {
+    font-size: .70em;
+    line-height: 1.2em;
+}
+
+tr.data {
+    background: white;
+}
+tr.header1 {
+    background: #c8d6c8;
+}
+tr.header2 {
+    background: #cddfcd;
+}
+
+.row0 {
+}
+.row1 {
+    background: #d8e6d8 ;
+}
+
+.nav {
+/* This is the select station drop-down */
+    background: #e8f6e8 url('/cemp/images/paragrad.jpg') repeat-x bottom left;
+    color: black;
+    width: 185px;
+    padding: 10px 5px 10px 5px;
+    margin-bottom: 20px;
+    border: 1px solid;
+}
+
+#quarterly-reports { /* the div container */
+    margin: 0;
+    padding: 0;
+    position: relative;
+    float: left;
+    width: 120px;
+}
+#quarterly-reports ul { /* list of years */
+    margin: 0;
+    padding: 1px;
+}
+#quarterly-reports ul li { /* A year with a sublist of reports */
+    margin: 0 0 1em 0;
+    padding: 0;
+    list-style-image: none; list-style: none;
+}
+#quarterly-reports ul li span.year { /* The year label */
+    font-size: 1.5em;
+}
+#quarterly-reports ul li ul { /* The sublist of reports */
+    margin: 1px;
+}
+#quarterly-reports ul li ul li{ /* A report li */
+    float: none;
+    clear: left;
+    display: block;
+    margin: 0 1em;
+    padding: 0;
+}
+
+/******* BEGIN TABS ******************/
+/*--------------------------------------------------
+  REQUIRED to hide the non-active tab content.
+  But do not hide them in the print stylesheet!
+  --------------------------------------------------*/
+.tabberlive .tabbertabhide {
+ display:none;
+}
+
+/*--------------------------------------------------
+  .tabber = before the tabber interface is set up
+  .tabberlive = after the tabber interface is set up
+  --------------------------------------------------*/
+.tabber {
+    display:none;
+}
+.tabberlive {
+    margin-top:1em;
+    margin-bottom: 10px;
+}
+
+/*--------------------------------------------------
+  .tabbertab = the tab content
+  Add style only after the tabber interface is set up (.tabberlive)
+  --------------------------------------------------*/
+.tabberlive .tabbertab {
+    padding:5px;
+    border:1px solid black;
+    border-top:0;
+    /* old nav */
+    background: #e8f6e8 url('/cemp/images/paragrad.jpg') repeat-x bottom left;
+    color: black;
+    font-size: .81em;
+}
+
+.tabbertab li {
+    position: relative;
+    left: -20px;
+    padding-bottom: .50em;
+}
+
+
+/*--------------------------------------------------
+  ul.tabbernav = the tab navigation list
+  li.tabberactive = the active tab
+  --------------------------------------------------*/
+ul.tabbernav {
+    margin:0;
+    padding: 3px 0;
+    border-bottom: 1px solid black;
+    font-family: Arial, sans-serif;
+    font-size: .86em;
+}
+
+ul.tabbernav li
+{
+    list-style: none;
+    margin: 0;
+    display: inline;
+    position: relative;
+    left: 0px;
+}
+
+ul.tabbernav li a
+{
+    padding: 3px 0.5em;
+    margin-left: 3px;
+    border: 1px solid black;
+    border-bottom: none;
+    background: #c8d6c8;
+    text-decoration: none;
+}
+
+ul.tabbernav li a:link { color: #285628; }
+ul.tabbernav li a:visited { color: #285628; }
+
+ul.tabbernav li a:hover
+{
+ text-decoration:underline;
+ background: #e8f6e7;
+ border-color: black;
+}
+
+ul.tabbernav li.tabberactive a
+{
+ background-color: #e8f6e7;
+ border-bottom: 1px solid #e8f6e7;
+}
+
+ul.tabbernav li.tabberactive a:hover
+{
+ background: #e8f6e7;
+ border-bottom: 1px solid #e8f6e7;
+ border-top: 1px solid black;
+ text-decoration:underline;
+}
+/******* END TABS ******************/
+
+table.datatable {
+    font-family: sans-serif;
+    width: 100%;
+}
+table.datatable tr, 
+table.datatable th, 
+table.datatable td {
+    margin: 0;
+    border-bottom: 1px solid #aaa;
+}
+table.datatable th {
+    text-align: center;
+    border-bottom: 2px solid black;
+}
+table.datatable td {
+    font-family: serif;
+    padding: 10px 1px;
+    text-align: center;
+}
+
+/* For CEM Profile pages */
+p.cem_profile {
+    width: 450px;
+}
+p.cem_profile img {
+    border: 1px solid #aaa;
+    padding: 3px;
+}
+
+.community_info h4 {
+    padding: 0 0 2px 2px;
+    margin: 8px 0 0 0;
+}
+.community_info img {
+    border: 1px solid #ccc;
+    padding: 3px;
+}

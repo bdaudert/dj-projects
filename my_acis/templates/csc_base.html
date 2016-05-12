@@ -62,22 +62,29 @@
         src="http://maps.googleapis.com/maps/api/js?sensor=true&libraries=drawing">
     </script>
     <script type="text/javascript" src="{{MEDIA_URL}}js/polygon.min.js"></script>
-    <script type="text/javascript" src="http://geoxml3.googlecode.com/svn/branches/polys/geoxml3.js"></script>
-    <script type="text/javascript" src="http://geoxml3.googlecode.com/svn/trunk/ProjectedOverlay.js"></script>
+    <!--<script type="text/javascript" src="http://geoxml3.googlecode.com/svn/branches/polys/geoxml3.js"></script>
+    <script type="text/javascript" src="http://geoxml3.googlecode.com/svn/trunk/ProjectedOverlay.js"></script>-->
+    <script type="text/javascript" src="{{MEDIA_URL}}js/geoxml3.js"></script>
+    <script type="text/javascript" src="{{MEDIA_URL}}js/ProjectedOverlay.js"></script>
 
     <!-- Highcharts graphics -->
-    <!--<script type="text/javascript" src="{{ MEDIA_URL }}js/highcharts-4.1.5.js"></script>-->
-    <script src="http://code.highcharts.com/highcharts.js"></script>
-    <script src="https://rawgithub.com/highslide-software/draggable-legend/master/draggable-legend.js"></script>
-    <script src="http://code.highcharts.com/highcharts-more.js"></script>
-    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/highcharts-4.2.5.js"></script>
+    <!--<script src="http://code.highcharts.com/highcharts.js"></script>-->
+    <!--<script src="https://rawgithub.com/highslide-software/draggable-legend/master/draggable-legend.js"></script>-->
+    <script src="{{ MEDIA_URL }}js/draggable-legend.js"></script>
+    <!--<script src="http://code.highcharts.com/highcharts-more.js"></script>-->
+    <script src="{{ MEDIA_URL }}js/highcharts-more.js"></script>
+    <!--<script src="http://code.highcharts.com/modules/exporting.js"></script>-->
+    <script src="{{ MEDIA_URL }}js/exporting.js"></script>
     <!--<script src="http://highslide-software.github.io/export-csv/export-csv.js"></script>-->
     <script type="text/javascript" src="{{MEDIA_URL}}js/regression.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}js/HighChartsFunctions.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}js/generateHighChartsFigure.js"></script>
     <!-- include greybox media for pop-up windows: WRCC links to anomaly maps -->
-    <script type="text/javascript" src="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.js"></script>
-    <link href="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.css" rel="stylesheet" type="text/css" media="all">
+    <!--<script type="text/javascript" src="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.js"></script>-->
+    <script type="text/javascript" src="{{MEDIA_URL}}jsgreybox.js"></script>
+    <!--<link href="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.css" rel="stylesheet" type="text/css" media="all">-->
+    <link href="{{MEDIA_URL}}css/greybox.css" rel="stylesheet" type="text/css" media="all">
 
 
     <!--Backbutton issue-->
