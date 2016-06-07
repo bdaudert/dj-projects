@@ -1223,7 +1223,7 @@ def climate_engine(request):
         'title': ''
     }
     context['initial'] = {'app_name':'climate_engine'}
-    return render_to_response('scenic/data/multi/climate_engine.html', context, context_instance=RequestContext(request))
+    return render_to_response('scenic/data/climate_engine.html', context, context_instance=RequestContext(request))
 
 
 def station_finder(request):

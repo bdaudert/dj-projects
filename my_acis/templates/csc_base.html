@@ -33,7 +33,20 @@
     <!--jQuery datatables-->
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/jquery.dataTables.css" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/buttons.dataTables.css" />
-    <!--<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.css" />-->
+    <script src="{{ MEDIA_URL }}js/jquery.dataTables.min.js"></script>
+    <script src="{{ MEDIA_URL }}js/dataTables.buttons.min.js"></script>
+    <script src="{{ MEDIA_URL }}js/buttons.flash.min.js"></script>
+    <!--
+    <script src="{{ MEDIA_URL }}js/jszip.min.js"></script>
+    <script src="{{ MEDIA_URL }}js/pdfmake.min.js"></script>
+    <script src="{{ MEDIA_URL }}js/vfs_fonts.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script src="{{ MEDIA_URL }}js/buttons.html5.min.js"></script>
+    <script src="{{ MEDIA_URL }}js/buttons.print.min.js"></script>
+    <script src="{{ MEDIA_URL }}js/buttons.colVis.min.js"></script>
+    <!-- 
     <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.flash.min.js"></script>
@@ -43,6 +56,7 @@
     <script src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.colVis.min.js"></script>
+    -->
     <!-- Britta's Javascript utilities -->
     <script type="text/javascript" src="{{ MEDIA_URL }}js/dataStore.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>
@@ -82,7 +96,7 @@
     <script type="text/javascript" src="{{MEDIA_URL}}js/generateHighChartsFigure.js"></script>
     <!-- include greybox media for pop-up windows: WRCC links to anomaly maps -->
     <!--<script type="text/javascript" src="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.js"></script>-->
-    <script type="text/javascript" src="{{MEDIA_URL}}jsgreybox.js"></script>
+    <script type="text/javascript" src="{{MEDIA_URL}}js/greybox.js"></script>
     <!--<link href="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.css" rel="stylesheet" type="text/css" media="all">-->
     <link href="{{MEDIA_URL}}css/greybox.css" rel="stylesheet" type="text/css" media="all">
 
@@ -195,9 +209,9 @@
                 <li><a href="{{DATA_URL}}multi/lister/">Data Lister</a></li>
                 <li><a href="{{DATA_URL}}multi/spatial_summary/">Spatial Summary</a></li>
                 <li><a href="{{DATA_URL}}multi/temporal_summary/">Temporal Summary</a></li>
-                <li><a href="{{DATA_URL}}multi/climate_engine/">Climate Engine</a></li>
                 </ul>
             </li>
+            <li><a href="{{DATA_URL}}climate_engine/">Remote Sensing - Climate Engine</a></li>
             </ul>
         </li>
         <li><a href="{{SCENIC_URL}}dashboard/"><font size="3">CLIMATE DASHBOARD</font></a>

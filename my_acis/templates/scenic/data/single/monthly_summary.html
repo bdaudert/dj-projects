@@ -253,9 +253,7 @@
                     <td>{{dat}}</td>
                 {%else%}
                     {%if forloop.counter|divisibleby:2%}
-                    <td>{{dat}}
-                    {%endif%}
-                    {%if not forloop.counter|divisibleby:2%}{{dat}}</td>{%endif%}
+                    <td>{{dat}}{%endif%}{%if not forloop.counter|divisibleby:2%}{{dat}}</td>{%endif%}
                 {%endif%}
                 {%endfor%}
                 </tr></thead>
@@ -266,9 +264,7 @@
                     <td>{{dat}}</td>
                 {%else%}
                     {%if forloop.counter|divisibleby:2%}
-                    <td>{{dat}}
-                    {%endif%}
-                    {%if not forloop.counter|divisibleby:2%}{{dat}}</td>{%endif%}
+                    <td>{{dat}}{%endif%}{%if not forloop.counter|divisibleby:2%}{{dat}}</td>{%endif%}
                 {%endif%}
                 {%endfor%}
                 </tr></tfoot>
@@ -279,8 +275,7 @@
                 {%if forloop.counter == 1%}
                     <td>{{dat}}</td>
                 {%else%}
-                    {%if forloop.counter|divisibleby:2%}<td>{{dat}}{%endif%}
-                    {%if not forloop.counter|divisibleby:2%}{{dat}}</td>{%endif%}
+                    {%if forloop.counter|divisibleby:2%}<td>{{dat}}{%endif%}{%if not forloop.counter|divisibleby:2%}{{dat}}</td>{%endif%}
                 {%endif%}
                 {%endfor%}
                 </tr>

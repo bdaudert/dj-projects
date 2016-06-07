@@ -259,9 +259,10 @@ function popup_window(mylink, windowname)
     {
         href=mylink.href;
     }
-    var height = window.height - 50;
-    var width = window.width - 50;
-    window.open(href, windowname, 'width=' + width + ',height=' + height + ',scrollbars=yes');
+    var height = String(window.innerHeight);
+    var width = String(window.innerWidth - 400);
+    var attrs = "width=" + width + ",height=" + height + ",scrollbars=yes,toolbar=yes,top=500,left=500";
+    window.open(href, windowname, "width=" + width + ",height=" + height,"scrollbars=yes");
     return false;
 }
 

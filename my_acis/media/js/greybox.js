@@ -10,7 +10,7 @@ var GB_HEIGHT = 400;
 var GB_WIDTH = 400;
 var GB_ANIMATION = false;
 var GB_CLOSE_ON_ESC = true;
-var GB_CLOSE_URL = "close.gif";
+var GB_CLOSE_URL = "/csc/media/img/close.gif";
 
 function GB_show(caption, url, height, width) {
   GB_HEIGHT = height || 400;
