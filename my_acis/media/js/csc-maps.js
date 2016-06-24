@@ -1160,9 +1160,9 @@ function initialize_map_overlays() {
         for (var i = 0; i < geoXmlDoc.placemarks.length; i++) {
             //get first layer and display in area form filed
             var layer =  geoXmlDoc.placemarks[i];
-            var latLng = new google.maps.LatLng(parseFloat(layer.polygon.bounds.H.H),parseFloat(layer.polygon.bounds.j.H));
+            var latLng = new google.maps.LatLng(parseFloat(layer.polygon.bounds.f.f),parseFloat(layer.polygon.bounds.b.f));
             bounds.extend(latLng);
-            latLng = new google.maps.LatLng(parseFloat(layer.polygon.bounds.H.j),parseFloat(layer.polygon.bounds.j.j));
+            latLng = new google.maps.LatLng(parseFloat(layer.polygon.bounds.f.b),parseFloat(layer.polygon.bounds.b.b));
             bounds.extend(latLng);
             if (i == 0){
                 $('#' + area_type).val(layer.description);
