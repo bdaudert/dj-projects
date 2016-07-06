@@ -30,7 +30,8 @@ var grid_vd = {
     '16':[['1970-01-01','1999-12-31'],['2040-01-01','2069-12-31']]
 };
 for (var grid_id=22;grid_id<=41;grid_id++) {
-    grid_vd[String(grid_id)] = [['1950-01-01','2005-12-31'],['2006-01-01','2099-12-31']];
+    //grid_vd[String(grid_id)] = [['1950-01-01','2005-12-31'],['2006-01-01','2099-12-31']];
+    grid_vd[String(grid_id)] = [['1950-01-01','2099-12-31'],[]];
 }
 
 var station_finder_metadata ={
@@ -44,7 +45,24 @@ var station_finder_metadata ={
     'valid_daterange':'Valid Daterange'
 }
 
-var state_choices = ['ak', 'al', 'ar', 'as', 'az', 'ca', 'co', 'ct', 'dc', 'de', 'fl', 'ga', 'gu', 'hi', 'ia', 'id', 'il', 'in', 'ks', 'ky', 'la', 'ma', 'md', 'me', 'mi', 'mn', 'mo', 'ms', 'mt', 'nc', 'nd', 'ne', 'nh', 'nj', 'nm', 'nv', 'ny', 'oh', 'ok', 'or', 'pa', 'ri', 'sc', 'sd', 'tn', 'tx', 'ut', 'va', 'vt', 'wa', 'wi', 'wv', 'wy', 'as']
+var area_defaults = {
+    'station_id':['Station ID','RENO TAHOE INTL AP, 266779'],
+    'station_ids':['Station IDs','266779,050848'],
+    'location':['Location (lon,lat)','-119,39'],
+    'locations':['Locations (lon,lat pairs)','-119,39,-119.1,39.1'],
+    'county':['County','Churchill County, 32001'],
+    'climate_division':['Climate Division','Northwestern, NV01'],
+    'county_warning_area':['County Warning Area','Las Vegas, NV, VEF'],
+    'basin':['Basin','Hot Creek-Railroad Valleys, 16060012'],
+    'state':['State','nv'],
+    'bounding_box':['Bounding Box','-120.3,38.89,-118.89,40.21'],
+    'shape':['Custom Shape','-120.3,38.89,-120.3,40.12,-118.89,40.21,-118.89,38.89'],
+    'shape_file':['Custom Shape',''],
+}
+
+
+
+var state_choices = ['ak', 'al', 'ar', 'as', 'az', 'ca', 'co', 'ct', 'dc', 'de', 'fl', 'fm', 'ga', 'gu', 'hi', 'ia', 'id', 'il', 'in', 'ks', 'ky', 'la', 'ma', 'md', 'me', 'mh', 'mi', 'mn', 'mo', 'mp', 'ms', 'mt', 'nc', 'nd', 'ne', 'nh', 'nj', 'nm', 'nv', 'ny', 'oh', 'ok', 'or', 'pa', 'pr', 'pw', 'ri', 'sc', 'sd', 'tn', 'tx', 'ut', 'va', 'vt', 'wa', 'wi', 'wv', 'wy', 'as']
 
 var state_names = {
  'ak':'Alabama', 
@@ -58,6 +76,7 @@ var state_names = {
  'de':'Delaware',
  'dc':'District of Columbia', 
  'fl':'Florida', 
+ 'fm':'Federated States of Micronesia',
  'ga':'Georgia',
  'gu':'Guam',
  'hi':'Hawaii', 
@@ -71,10 +90,12 @@ var state_names = {
  'ma':'Massachusetts', 
  'md':'Maryland', 
  'me':'Maine', 
+ 'mh':'Marshall Islands',
  'mi':'Michigan', 
  'mn':'Minnesota',
  'ms':'Mississippi',
  'mo':'Missouri', 
+ 'mp':'Northern Mariana Islands',
  'mt':'Montana',
  'ne':'Nebraska',
  'nv':'Nevada',
@@ -89,6 +110,7 @@ var state_names = {
  'or':'Oregon', 
  'pa':'Pennsylvania', 
  'pr':'Puerto Rico',
+ 'pw':'Palau',
  'ri':'Rhode Island', 
  'sc':'South Carolina', 
  'sd':'South Dakota', 

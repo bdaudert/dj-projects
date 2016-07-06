@@ -1032,6 +1032,8 @@ $(document).ready(function () {
             myChart.legend.group.hide();
             myChart.legend.box.hide();
             myChart.legend.display = false;
+            //Disable legend in exporting
+            myChart.options.exporting.chartOptions.legend.enabled = false;
         }
         else{
             //Show Legend
@@ -1040,6 +1042,8 @@ $(document).ready(function () {
             myChart.legend.group.show();
             myChart.legend.box.show();
             myChart.legend.display = true;
+            //Enable legend in exporting
+            myChart.options.exporting.chartOptions.legend.enabled = true;
         }
     });
     
@@ -1065,6 +1069,12 @@ $(document).ready(function () {
                 if ($(this).is( ":checked" )){
                     myChart.series[i].setVisible(true, true);
                     myChart.series[i].update({showInLegend: true});
+                    if ($('#legend_button').val() == 'Show Legend'){
+                       myChart.legend.enabled = false;
+                       myChart.legend.group.hide();
+                       myChart.legend.box.hide();
+                       myChart.legend.display = false; 
+                    }
                 }
                 else{
                     myChart.series[i].setVisible(false, false);

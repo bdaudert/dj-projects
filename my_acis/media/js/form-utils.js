@@ -342,6 +342,9 @@ function set_area_defaults(area_type, kml_file_path){
         }
     }
     */
+    lv.label = area_defaults[area_type][0]
+    lv.value = area_defaults[area_type][1]
+    /*
     if (area_type == 'station_id'){
         lv.label = 'Station ID';
         lv.value ='RENO TAHOE INTL AP, 266779';
@@ -398,6 +401,7 @@ function set_area_defaults(area_type, kml_file_path){
         lv.label ='Custom Shape';
         lv.value ='';
     }
+    */
     return lv;
 }
 

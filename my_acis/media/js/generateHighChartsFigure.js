@@ -658,6 +658,11 @@ function generateTS_smry(chart_indices) {
             csv: {
                 dateFormat: date_format
             },
+            chartOptions:{
+                legend:{
+                    enabled:true
+                }
+            },
             buttons: {
                 contextButton: {
                     enabled: false
