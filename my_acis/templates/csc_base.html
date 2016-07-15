@@ -30,6 +30,10 @@
     <script src="http://code.jquery.com/jquery-2.2.1.js"></script>
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <!--<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>-->
+    
+    <!--Bootstrap-->
+    <!--<link rel="stylesheet" href="{{MEDIA_URL}}css/bootstrap.css">
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
     <!--jQuery datatables-->
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/jquery.dataTables.css" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/buttons.dataTables.css" />
@@ -67,7 +71,7 @@
     <script type="text/javascript" src="{{MEDIA_URL}}js/csc-maps.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}js/Listeners.js"></script>
     <!-- Map API scripts and properties-->
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes, width=device-width" />
     <!--
     <script type="text/javascript"
         src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true&libraries=drawing">
@@ -174,14 +178,12 @@
 
 <div class="container">
     <!-- Header -->
-   <div id="wrap">
-        <img width="100%" src="{{ MEDIA_URL }}img/SCENIC.png">
+   <div>
+        <img width="100%" style="padding:0;margin:0;" src="{{ MEDIA_URL }}img/SCENIC.png">
    </div><!--End id wrap-->
 
-
     <!-- Nav bar at top of page-->
-    <div id="menu">
-    <div id="nav">
+    <div id="nav-top">
         <li><a href="{{HOME_URL}}"><font size="3">HOME</font></a></li>
         <li><a href="{{ABOUT_URL}}"><font size="3">ABOUT US</font></a>
             <ul class="l1">
@@ -211,10 +213,10 @@
                 <li><a href="{{DATA_URL}}multi/temporal_summary/">Temporal Summary</a></li>
                 </ul>
             </li>
-            <li><a href="{{DATA_URL}}climate_engine/">Remote Sensing - Climate Engine</a></li>
+            <li><a href="{{DATA_URL}}climate_engine/">Climate Engine</a></li>
             </ul>
         </li>
-        <li><a href="{{SCENIC_URL}}dashboard/"><font size="3">CLIMATE DASHBOARD</font></a>
+        <li><a href="{{SCENIC_URL}}dashboard/"><font size="3">DASHBOARD</font></a>
             <ul>
             <li><a href="{{SCENIC_URL}}dashboard#weather">Weather</a></li>
             <li><a href="{{SCENIC_URL}}dashboard#anomaly">Anomaly</a></li>
@@ -226,8 +228,6 @@
         <li><a href="{{SCENIC_URL}}howto"><font size="3">HOW TO</font></a></li>
         <li><a href="{{SCENIC_URL}}resources"><font size="3">RESOURCES</font></a></li>
     </div>
-    </div>
-   
     <div class="content">
         <table width="960px">
         <td width="300px" valign="top">

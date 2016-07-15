@@ -480,18 +480,20 @@ function initialize_station_finder() {
                 'elev':String(c.elevation),
                 'valid_daterange':String(avbl_elements)
             }
-            var data_portal_link = '<a target="_blank" href=/csc/scenic/data/single/lister/'+
+            var data_portal_href = '/csc/scenic/data/single/lister/'+
             '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid; 
-            var app_portal_link = '<a target="_blank" href=/csc/scenic/data/single/?'+
-            'area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid;
-            data_portal_link = data_portal_link + '&elements=' + el_string;
-            app_portal_link = app_portal_link + '&elements=' + el_string;
-            data_portal_link = data_portal_link + '&start_date=' + start_date;
-            app_portal_link = app_portal_link + '&start_date=' + start_date; 
-            data_portal_link = data_portal_link + '&end_date=' + end_date;
-            app_portal_link = app_portal_link + '&end_date=' + end_date; 
-            data_portal_link = data_portal_link + '>Obtain data for this station </a>'
-            app_portal_link = app_portal_link + '>Run custom data analysis</a>'
+            var app_portal_href = '/csc/scenic/data/single/'+
+            '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid;
+            data_portal_href = data_portal_href + '&elements=' + el_string;
+            app_portal_href = app_portal_href + '&elements=' + el_string;
+            data_portal_href = data_portal_href + '&start_date=' + start_date;
+            app_portal_href = app_portal_href + '&start_date=' + start_date; 
+            data_portal_href = data_portal_href + '&end_date=' + end_date;
+            app_portal_href = app_portal_href + '&end_date=' + end_date; 
+            var data_portal_link = '<button onclick="window.open(\'' + data_portal_href + '\')">Get Data</button>';
+            var app_portal_link = '<button onclick="window.open(\'' + app_portal_href + '\')">Run Analysis</button>';
+            //var data_portal_link = '<button onclick="window.location.href=\'' + data_portal_href +'\'">Get Data</button>';
+            //var app_portal_link = '<button onclick="window.location.href=\'' + app_portal_href +'\'">Run Analysis</button>';
             var contentString = '<div id="MarkerWindow">'+
                 data_portal_link + '<br />' +
                 app_portal_link + '<br />' +
