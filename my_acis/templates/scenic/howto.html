@@ -15,6 +15,12 @@
 <div class="docu" id="Docu_howto_climate_primer" style="display:none;">
     <iframe src={{MEDIA_URL}}img/Docu_howto_climate_primer.pdf width="650px" height="900px"></iframe>
 </div>
+<div class="docu" id="Docu_howto_scenic_data" style="display:none;">
+    {% include 'includes/Docu_howto_scenic_data.html'%}
+</div>
+<div class="docu" id="Docu_howto_climate_engine_data" style="display:none;">
+    {% include 'includes/Docu_howto_climate_engine_data.html'%}
+</div>
 
 <table align="center" width="95%">
 <td valign="top" width="100%" align="left">
@@ -28,6 +34,26 @@
     </td>
     <td>
     <p class="link" onclick="ShowHowtoDocu('Docu_howto_climate_primer')">GO</p>
+    </td>
+</tr>
+<tr>
+    <td>
+    <p class="dark_blue">
+    What datasets are available in SCENIC?
+    </p>
+    </td>
+    <td>
+    <p class="link" onclick="ShowHowtoDocu('Docu_howto_scenic_data')">GO</p>
+    </td>
+</tr>
+<tr>
+    <td>
+    <p class="dark_blue">
+    What datasets are available in Climate Engine?
+    </p>
+    </td>
+    <td>
+    <p class="link" onclick="ShowHowtoDocu('Docu_howto_climate_engine_data')">GO</p>
     </td>
 </tr>
 <tr>
