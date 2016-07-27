@@ -2,7 +2,7 @@
     <p class="message">Only shape files of simple polygons without holes are supported.<br />
     Analysis is performed one polygon at the time.<br />
     Upload all shape files (.shp, .prj, etc.) and choose the polygon ID.<br />
-    e.g.if polyon ID = 1, the fist polygon in the file will be uploaded.
+    e.g., if polygon ID = 1, the first polygon in the file will be uploaded.
     </p>
     <form id="formShapeFile" method="post" action="" enctype="multipart/form-data" onsubmit="show_loading() & setHiddenFields('DataForm', $(this).attr('id'));">{% csrf_token %}
     <table class="form" align="left">
