@@ -129,7 +129,15 @@ def dashboard(request):
         context['month_nadm'] = str(int(month.lstrip('0')) - 1)
     context['year'] = year
     context['year_short'] = '%s%s' % (year[-2], year[-1])
-
+    year_wy = year
+    year_short_wy = year
+    month_wy = month
+    if int(month) > 5:
+        month_wy = '05'
+    context['month_wy'] = month_wy
+    year_short_wy = '%s%s' % (year_wy[-2], year_wy[-1])
+    context['year_wy'] = year_wy
+    context['year_short_wy'] = '%s%s' % (year_wy[-2], year_wy[-1])
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def gallery(request):

@@ -3,7 +3,7 @@
             <select class="area_type" id="area_type" name="area_type">
             {%for opt, name in initial.form_options.area_type%}
             <option value="{{opt}}" {%if initial.area_type == opt%}selected{%endif%}
-            {%if opt == "locations"%}disabled {%endif%}
+            {%if opt == "locations"%} disabled{%endif%}
             >{{name}}</option>
             {%endfor%}
             </select>

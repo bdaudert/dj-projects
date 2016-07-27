@@ -750,7 +750,7 @@ $(document).ready(function () {
         $('#data_type').val(data_type);
         //Hide station finder link
         if ($('#stn_finder').length ){
-            if (data_type == 'grid' || $(this).val() == "location"){
+            if (data_type == 'grid' || $(this).val().inList(['location','locations'])){
                 $('#stn_finder').css('display','none');
             }
             else{
@@ -766,10 +766,11 @@ $(document).ready(function () {
         
         //Set grid form fields
         //var opts = null;
-        if (data_type == 'grid' || data_type == 'location' || data_type == 'locations'){
+        if (data_type == 'grid' || data_type.inList(['location','locations'])){
             //Disable station_ids option
             $('#area_type option[value="station_ids"]').attr('disabled',true);
-            $('#area_type option[value="locations"]').attr('disabled',false);
+            $('#area_type option[value="location"]').attr('disabled',false);
+            $('#area_type option[value="locations"]').attr('disabled',true);
             //If prism hide special degree days
             if ($('#grid').val() == '21'){
                 $('#add').css('display','none');
@@ -807,10 +808,11 @@ $(document).ready(function () {
 
         }
         //Set station form fields
-        if (data_type == 'station' || data_type == 'station_id' || data_type == 'station_ids'){
+        if (data_type == 'station' || data_type.inList(['station_id','station_ids'])){
             //Enable station_ids option
             $('#area_type option[value="station_ids"]').attr('disabled',false); 
             $('#area_type option[value="locations"]').attr('disabled',true);
+            $('#area_type option[value="location"]').attr('disabled',true);
             //Show add degree day option    
             $('#add').css('display','table-row');
             $("#elements option").each(function(){
@@ -945,7 +947,7 @@ $(document).ready(function () {
         //Set area form field
         set_area('area',$(this)); //form_utils function
         /*need to change data type for single apps*/
-        if ($(this).val()== 'location'){
+        if ($(this).val().inList(['location','locations'])){
             $('#data_type').val('grid');
         }
         else if ($(this).val()== 'station_id'){
@@ -992,7 +994,7 @@ $(document).ready(function () {
             }
         }
         //Hide or show obs time and flags options
-        if ($('#data_type').val() == 'grid' || $('#area_type').val() == 'location'){
+        if ($('#data_type').val() == 'grid' || $('#area_type').val().inList(['location','locations'])){
             $('#obs_time').css('display','none');
             $('#flags').css('display','none');
         }
@@ -1008,7 +1010,7 @@ $(document).ready(function () {
             $('#stn_finder').css('station_finder','table-row');
             date_vals = set_dates_for_station('station_id', start, end,p);
         }
-        if ($(this).val() == 'location'){
+        if ($(this).val().inList(['location','locations'])){
             $('#grid_type').css('display','table-row');
             date_vals = set_dates_for_grid($('#grid').val(),start, end,p);
         }
