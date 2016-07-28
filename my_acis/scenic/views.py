@@ -750,6 +750,7 @@ def multi_lister(request):
         #Deal with large requests
         num_points, num_days = WRCCUtils.check_request_size(form_cleaned)
         large_request =  WRCCUtils.check_if_large_request(num_points, num_days)
+        #large_request = True
         if large_request:
             #check if we need extra download form field
             if form_cleaned['data_format'] == 'html':
@@ -759,7 +760,10 @@ def multi_lister(request):
 
         #Small Data request
         req = {}
-        req = WRCCUtils.request_and_format_data(form_cleaned)
+        if 'locations' in form_cleaned.keys():
+            req =  WRCCUtils.request_and_format_multiple_gridpoints(form_cleaned)
+        else:
+            req = WRCCUtils.request_and_format_data(form_cleaned)
         '''
         try:
             req = WRCCUtils.request_and_format_data(form_cleaned)
@@ -1132,7 +1136,10 @@ def spatial_summary(request):
             context['results'] = results
             return render_to_response(url, context, context_instance=RequestContext(request))
         '''
-        req = WRCCUtils.request_and_format_data(form_cleaned)
+        if 'locations' in form_cleaned.keys():
+            req = WRCCUtils.request_and_format_multiple_gridpoints(form_cleaned)
+        else:
+            req = WRCCUtils.request_and_format_data(form_cleaned)
         results['smry'] = req['smry']
         #Save to json file for downloading
 

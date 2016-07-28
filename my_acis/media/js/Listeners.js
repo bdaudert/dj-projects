@@ -770,7 +770,7 @@ $(document).ready(function () {
             //Disable station_ids option
             $('#area_type option[value="station_ids"]').attr('disabled',true);
             $('#area_type option[value="location"]').attr('disabled',false);
-            $('#area_type option[value="locations"]').attr('disabled',true);
+            $('#area_type option[value="locations"]').attr('disabled',false);
             //If prism hide special degree days
             if ($('#grid').val() == '21'){
                 $('#add').css('display','none');
