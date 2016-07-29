@@ -760,6 +760,7 @@ def multi_lister(request):
 
         #Small Data request
         req = {}
+        context['xx'] = form_cleaned
         if 'locations' in form_cleaned.keys():
             req =  WRCCUtils.request_and_format_multiple_gridpoints(form_cleaned)
         else:
@@ -1140,7 +1141,11 @@ def spatial_summary(request):
             req = WRCCUtils.request_and_format_multiple_gridpoints(form_cleaned)
         else:
             req = WRCCUtils.request_and_format_data(form_cleaned)
-        results['smry'] = req['smry']
+        context['xx'] = form_cleaned
+        if not req['smry'] and req['data']:
+            results['smry'] = req['data']
+        else:
+            results['smry'] = req['smry']
         #Save to json file for downloading
 
         #format data for highcarts
