@@ -58,6 +58,16 @@ def is_in(var, args):
         arg_list = [str(arg.strip()) for arg in args]
     return str(var) in arg_list
 
+@register.filter(name='not_in')
+def is_in(var, args):
+    if args is None and var is not None:
+        return True
+    if isinstance(args, basestring):
+        arg_list = [str(arg.strip()) for arg in args.split(',')]
+    else:
+        arg_list = [str(arg.strip()) for arg in args]
+    return str(var) not in arg_list
+
 @register.filter(name='to_string')
 def to_string(number):
     return str(number)

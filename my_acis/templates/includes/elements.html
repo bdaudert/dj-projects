@@ -6,8 +6,8 @@
                 <option value="{{opt}}"
                     {%if opt|is_in:initial.elements%}selected{%endif%}
                     {%if initial.data_type == "grid" and opt|is_in:'obst,snow,snwd,evap,wdmv,pet'%}disabled{%endif%}
-                    {%if initial.app_name != "monthly_summary" and opt|is_in:'pet,dtr'%}disabled{%endif%}
-                    {%if app_name == "station_finder" and opt == "pet"%} disabled{%endif%}
+                    {%if initial.app_name|not_in:'monthly_summary,station_finder' and opt|is_in:'pet,dtr'%}disabled{%endif%}
+
                 >{{name}}</option>
             {%endfor%}
             </select>

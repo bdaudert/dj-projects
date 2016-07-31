@@ -1316,7 +1316,13 @@ def station_finder(request):
         el_vX_list = []
         for el_idx, element in enumerate(form_cleaned['elements']):
             el,base_temp = WRCCUtils.get_el_and_base_temp(element)
-            el_vX_list.append(str(WRCCData.ACIS_ELEMENTS_DICT[el]['vX']))
+            if element in ['pet','dtr']:
+                el_vX_list.append('1')
+                el_vX_list.append('2')
+            else:
+                el_vX_list.append(str(WRCCData.ACIS_ELEMENTS_DICT[el]['vX']))
+        #Make unique
+        el_vX_list = list(set(el_vX_list))
         #Set up params for station_json generation
         by_type = WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['area_type']]
         val = form_cleaned[by_type]

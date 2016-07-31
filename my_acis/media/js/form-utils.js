@@ -467,7 +467,7 @@ function set_area(row_id, node){
     }
     else{
         var st, state, selected = ' ';
-        html_text = '<select id="' + node.val() + '" name="'+node.val() + '>';
+        html_text = '<select id="' + node.val() + '" name="'+ node.val() + '">';
         for (var i=0;i< state_choices.length;i++){  
             st = state_choices[i];
             state = state_names[st];
@@ -479,9 +479,9 @@ function set_area(row_id, node){
                 if (st == 'nv'){selected = ' selected';}
                 else {selected = ' ';}
             } 
-            html_text+='<option' + selected + ' value="' + st +'">' + state + '</option>';
+            html_text= html_text + '<option' + selected + ' value="' + st +'">' + state + '</option>';
         }
-        html_text+='</select>'
+        html_text = html_text + '</select>'
     }
     cell1.html(html_text) ;   
     pop_id = $('#area-pop-up');
@@ -508,7 +508,17 @@ function set_elements(){
     el_opts.each(function(){
         //Check if prism data, disable degree days
         if ($('#data_type').val() == 'station' || $('#area_type').val().inList['station_id','station_ids']){
-            $(this).attr('disabled',false);
+            if ($(this).val() == 'pet'  || $(this).val() == 'dtr'){
+                if ($('#app_name').val().inList(['monthly_summary','station_finder'])){
+                     $(this).attr('disabled',false);
+                }
+                else{
+                    $(this).attr('disabled',true);
+                }
+            }
+            else{
+                $(this).attr('disabled',false);
+            }
         }
     
         if ($('#data_type').val() == 'grid' || $('#area_type').val().inList(['location','locations'])){
