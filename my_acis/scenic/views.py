@@ -750,6 +750,7 @@ def multi_lister(request):
         #Deal with large requests
         num_points, num_days = WRCCUtils.check_request_size(form_cleaned)
         large_request =  WRCCUtils.check_if_large_request(num_points, num_days)
+        #large_request = True
         if large_request:
             #check if we need extra download form field
             if form_cleaned['data_format'] == 'html':
@@ -759,19 +760,11 @@ def multi_lister(request):
 
         #Small Data request
         req = {}
-        req = WRCCUtils.request_and_format_data(form_cleaned)
-        '''
-        try:
+        context['xx'] = form_cleaned
+        if 'locations' in form_cleaned.keys():
+            req =  WRCCUtils.request_and_format_multiple_gridpoints(form_cleaned)
+        else:
             req = WRCCUtils.request_and_format_data(form_cleaned)
-            if 'smry' not in req.keys() and 'data' not in  req.keys():
-                req['error'] = 'No data found for these parameters!'
-                context['results'] = req
-                return render_to_response(url, context, context_instance=RequestContext(request))
-        except Exception, e:
-            req['error'] = 'Data request error: %s' %str(e)
-            context['results'] = req
-            return render_to_response(url, context, context_instance=RequestContext(request))
-        '''
         context['results'] = req
         context['run_done'] = True
         #Format Data for display and/or download
@@ -811,7 +804,6 @@ def multi_lister(request):
             with open(settings.TEMP_DIR + json_file,'w+') as f:
                 f.write(results_json)
             context['json_file'] = json_file
-
     #Shape file upload
     if 'formShapeFile' in request.POST:
         results = {}
@@ -1132,8 +1124,15 @@ def spatial_summary(request):
             context['results'] = results
             return render_to_response(url, context, context_instance=RequestContext(request))
         '''
-        req = WRCCUtils.request_and_format_data(form_cleaned)
-        results['smry'] = req['smry']
+        if 'locations' in form_cleaned.keys():
+            req = WRCCUtils.request_and_format_multiple_gridpoints(form_cleaned)
+        else:
+            req = WRCCUtils.request_and_format_data(form_cleaned)
+        context['xx'] = form_cleaned
+        if not req['smry'] and req['data']:
+            results['smry'] = req['data']
+        else:
+            results['smry'] = req['smry']
         #Save to json file for downloading
 
         #format data for highcarts
