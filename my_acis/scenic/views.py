@@ -765,18 +765,6 @@ def multi_lister(request):
             req =  WRCCUtils.request_and_format_multiple_gridpoints(form_cleaned)
         else:
             req = WRCCUtils.request_and_format_data(form_cleaned)
-        '''
-        try:
-            req = WRCCUtils.request_and_format_data(form_cleaned)
-            if 'smry' not in req.keys() and 'data' not in  req.keys():
-                req['error'] = 'No data found for these parameters!'
-                context['results'] = req
-                return render_to_response(url, context, context_instance=RequestContext(request))
-        except Exception, e:
-            req['error'] = 'Data request error: %s' %str(e)
-            context['results'] = req
-            return render_to_response(url, context, context_instance=RequestContext(request))
-        '''
         context['results'] = req
         context['run_done'] = True
         #Format Data for display and/or download
@@ -816,7 +804,6 @@ def multi_lister(request):
             with open(settings.TEMP_DIR + json_file,'w+') as f:
                 f.write(results_json)
             context['json_file'] = json_file
-
     #Shape file upload
     if 'formShapeFile' in request.POST:
         results = {}
