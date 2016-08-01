@@ -1502,7 +1502,7 @@ def monthly_summary(request):
             for m in p:
                 header_list.append(str(m))
                 #space for data flag slots
-                header_list.append(' ')
+                header_list.append('F')
 
             results = {
                 'header':header,
@@ -1511,7 +1511,7 @@ def monthly_summary(request):
                 'smry':'individual',
                 'running_mean_years':'5',
                 'show_range': False,
-                'data': [['YEAR'] + header_list + ['ANN', ' ']] + data[0],
+                'data': [['YEAR'] + header_list + ['ANN', 'F']] + data[0][0:-6],
                 'data_summary':[[' '] + header_list + ['ANN', ' ']] + data[0][-6:]
             }
         #Write data to file for highcharts
