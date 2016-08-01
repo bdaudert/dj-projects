@@ -243,11 +243,11 @@
             Value is displayed but not used in calculations if user-specified missing day criterion exceeded.<br />
             (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
 
-            <table border="1" class="dataTable smallFont nowrap" width="100%">
+            <table border="1" class="dataTable smallFont nowrap">
             {%for yr_data in results.data%}
             {%if forloop.counter0 == 0%}
                 <thead><tr align="left">{%for dat in yr_data %}<td>{{dat}}</td>{%endfor%}</tr></thead>
-                <tfoot><tr>{%for dat in yr_data%}<td>{{dat}}</td>{%endfor%}</tr></tfoot>
+                <tfoot><tr align="left">{%for dat in yr_data%}<td>{{dat}}</td>{%endfor%}</tr></tfoot>
                 <tbody>
             {%else%}
                 <tr>
