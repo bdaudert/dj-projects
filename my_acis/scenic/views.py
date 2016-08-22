@@ -568,7 +568,6 @@ def intraannual(request):
             graph_data.append(graph_dict)
         results['graph_data'] = graph_data
         context['results'] = results
-
         #Save results for downloading
         yr_range = range(int(form_cleaned['start_year']),int(form_cleaned['end_year']) + 1)
         json_dict = {
