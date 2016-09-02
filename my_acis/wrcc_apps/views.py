@@ -116,6 +116,38 @@ def sodlist_new(request):
         context['station_name'] = results[0]['meta']['name']
     return render_to_response('wrcc_apps/Sodlist.html', context, context_instance=RequestContext(request))
 
+def sodmonline_new(request):
+    context = {
+    'title': 'Sodmonline'
+    }
+    form = set_as_form(request, 'Sodmonline')
+    context['form'] = form
+    if form.is_valid():
+        kwargs = {}
+        for key, val in form.cleaned_data.iteritems():
+            kwargs[str(key)] = str(val)
+        results = WRCCDataApps.Sodmonline_new(kwargs)
+        context['results'] = results
+        context['params'] = kwargs
+        #context['station_name'] = results['meta']['name']
+    return render_to_response('wrcc_apps/Sodmonline.html', context, context_instance=RequestContext(request))
+
+def sodmonlinemy_new(request):
+    context = {
+    'title': 'Sodmonlinemy'
+    }
+    form = set_as_form(request, 'Sodmonlinemy')
+    context['form'] = form
+    if form.is_valid():
+        kwargs = {}
+        for key, val in form.cleaned_data.iteritems():
+            kwargs[str(key)] = str(val)
+        results = WRCCDataApps.Sodmonlinemy_new(kwargs)
+        context['results'] = results
+        context['params'] = kwargs
+        #context['station_name'] = results['meta']['name']
+    return render_to_response('wrcc_apps/Sodmonlinemy.html', context, context_instance=RequestContext(request))
+
 def sodsum(request, app_name):
     context = {
     'title': '%s' % app_name,

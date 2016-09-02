@@ -63,3 +63,19 @@ def is_true(arg):
 @stringfilter
 def string_sub(arg):
     return '%s' % arg
+
+@register.filter(name='make_range')
+def make_range(start,end):
+    try:
+        rnge = range(int(start),int(end) + 1)
+    except:
+        rnge = range(9999,9999)
+    return rnge
+
+@register.filter(name='make_range_reversed')
+def make_range_reversed(start, end):
+    try:
+        l = list(reversed(range(int(start), int(end) + 1)))
+    except:
+        l = []
+    return l

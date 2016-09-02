@@ -95,9 +95,8 @@ SM_TEMP_PRECISION_CHOICES = (
 )
 
 TMP_UNIT_CHOICE = (
-        ('F', 'Fahrenheit'),
-        ('C', 'Celsius'),
-        (' ', 'Not applicable'),
+        ('english', 'English'),
+        ('metric', 'Metric'),
         )
 DIGIT_CHOICES = (
         ('3', 'Values take three spaces'),
@@ -324,15 +323,11 @@ class SodcnvForm(forms.Form):
 
 class SodmonlineForm(forms.Form):
     station_id = forms.CharField(initial='266779')
-    #station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
     start_date = MyDateField(max_length=4, initial='2012', help_text="yyyy")
     end_date = forms.CharField(max_length=4, initial='2012', help_text="yyyy")
     element = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
-    temperature_precision = forms.ChoiceField(choices=SM_TEMP_PRECISION_CHOICES, initial=' ')
-    output_format = forms.ChoiceField(choices=SM_FRMT_CHOICES, initial='kr')
-    #output_file = forms.CharField(max_length=256, required=False)
-    temp_unit = forms.ChoiceField(choices=TMP_UNIT_CHOICE, initial=' ')
-    number_of_characters = forms.ChoiceField(choices=DIGIT_CHOICES, initial='3')
+    units = forms.ChoiceField(choices=TMP_UNIT_CHOICE, initial='english')
+    #number_of_characters = forms.ChoiceField(choices=DIGIT_CHOICES, initial='3')
 
 class SodmonlinemyForm(forms.Form):
     station_id = forms.CharField(initial='266779')
@@ -340,11 +335,8 @@ class SodmonlinemyForm(forms.Form):
     start_date = MyDateField(max_length=4, min_length=4, initial='2012', help_text="yyyymmdd")
     end_date = MyDateField(max_length=4, min_length=4, initial='2012', help_text="yyyymmdd")
     element = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
-    temperature_precision = forms.ChoiceField(choices=SM_TEMP_PRECISION_CHOICES, initial=' ')
-    output_format = forms.ChoiceField(choices=SM_FRMT_CHOICES, initial='kr')
     #output_file = forms.CharField(max_length=256, required=False)
-    temp_unit = forms.ChoiceField(choices=TMP_UNIT_CHOICE, initial=' ')
-    number_of_characters = forms.ChoiceField(choices=DIGIT_CHOICES, initial='4')
+    units = forms.ChoiceField(choices=TMP_UNIT_CHOICE, initial=' ')
 
 class SodsumForm(forms.Form):
     #station_ids = forms.CharField(initial='266779')
@@ -481,10 +473,7 @@ class SodForm(forms.Form):
             self.fields['end_window'] = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
         elif app_name in ['Sodmonline', 'Sodmonlinemy']:
             self.fields['element'] = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
-            self.fields['temperature_precision'] = forms.ChoiceField(choices=SM_TEMP_PRECISION_CHOICES, initial=' ')
-            self.fields['output_format'] = forms.ChoiceField(choices=SM_FRMT_CHOICES, initial='kr')
-            self.fields['temp_unit'] = forms.ChoiceField(choices=TMP_UNIT_CHOICE, initial=' ')
-            self.fields['number_of_characters'] = forms.ChoiceField(choices=DIGIT_CHOICES, initial='3')
+            self.fields['units'] = forms.ChoiceField(choices=TMP_UNIT_CHOICE, initial=' ')
         elif app_name in ['Sodrun', 'Sodrunr']:
             self.fields['element'] = forms.ChoiceField(choices=SR_ELEMENT_CHOICES, initial='pcpn')
             self.fields['aeb'] = forms.ChoiceField(choices=AEB_CHOICES, initial ='A' )

@@ -644,16 +644,16 @@ function initialize_station_finder() {
                 if (category == 'all') {
                     markers[i].setVisible(true);
                     if (mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))){
-                    markers_showing.push(markers[i]);
-                    if (markers[i].name != name_unique){
-                        rowNode = dataTable.row.add(tableDataRows[i]).node();
-                        //Set necessary attributes
-                        for (var key in tableDataAttrs[i]){
-                            $(rowNode).attr(key,tableDataAttrs[i][key]);
-                        } 
-                        name_unique = markers[i].name;
-                        station_ids_str+=markers[i].name + ',';
-                    }
+                        markers_showing.push(markers[i]);
+                        if (markers[i].name != name_unique){
+                            rowNode = dataTable.row.add(tableDataRows[i]).node();
+                            //Set necessary attributes
+                            for (var key in tableDataAttrs[i]){
+                                $(rowNode).attr(key,tableDataAttrs[i][key]);
+                            } 
+                            name_unique = markers[i].name;
+                            station_ids_str+=markers[i].name + ',';
+                        }
                     }
                     for (var key in data.network_codes) {
                         // == check all the checkboxes ==
@@ -662,21 +662,26 @@ function initialize_station_finder() {
                 }
                 else if (markers[i].category == category) {
                     markers[i].setVisible(true);
-                    markers_showing.push(markers[i]);
-                    rowNode = dataTable.row.add(tableDataRows[i]).node();
+                    //markers_showing.push(markers[i]);
+                    //rowNode = dataTable.row.add(tableDataRows[i]).node();
                     //Set necessary attributes
                     for (var key in tableDataAttrs[i]){
                         $(rowNode).attr(key,tableDataAttrs[i][key]);
                     }
-                    name_unique = markers[i].name;
+                    //name_unique = markers[i].name;
                     if (mapBounds.contains(new google.maps.LatLng(markers[i].lat, markers[i].lon))){
                         //$('#station_list tbody').append(tbl_rows[i]);
-                        rowNode = dataTable.row.add(tableDataRows[i]).node();
-                        //Set necessary attributes
-                        for (var key in tableDataAttrs[i]){
-                            $(rowNode).attr(key,tableDataAttrs[i][key]);
-                        }  
-                        station_ids_str+=markers[i].name + ',';
+                        markers_showing.push(markers[i]);
+                        if (markers[i].name != name_unique){
+                            rowNode = dataTable.row.add(tableDataRows[i]).node();
+                            //Set necessary attributes
+                            for (var key in tableDataAttrs[i]){
+                                $(rowNode).attr(key,tableDataAttrs[i][key]);
+                            }
+                            //console.log(name_unique);
+                            name_unique = markers[i].name;
+                            station_ids_str+=markers[i].name + ',';
+                        }
                     }
                     $('#' + category).prop('checked',true);
                 }
@@ -704,6 +709,8 @@ function initialize_station_finder() {
 
         // == hides all markers of a particular category, and ensures the checkbox is cleared and delete station_list ==
         hide = function(category) {
+            //clear station list
+            dataTable.rows().remove();
             //remove all rows that belong to category
             var station_ids_str = '';
             name_unique = '';
