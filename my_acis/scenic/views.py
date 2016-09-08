@@ -56,7 +56,28 @@ def test(request):
     context = {
         'title': 'Southwest Climate and ENvironmental Information Collaborative',
     }
-    return render_to_response('scenic/index.html', context, context_instance=RequestContext(request))
+    import ee
+    #from oauth2client.service_account import AppAssertionCredentials
+    from oauth2client.contrib.appengine import AppAssertionCredentials
+    #from oauth2client.service_account import ServiceAccountCredentials
+    EE_URL = 'https://earthengine.googleapis.com'
+
+    # The service account email address authorized by your Google contact.
+    # Set up a service account as described here:
+    # https://sites.google.com/site/earthengineapidocs/creating-oauth2-service-account
+    EE_ACCOUNT = '386022915265-jmvio1gv6v8g8ractm946thtcvbpfnuf@developer.gserviceaccount.com'
+
+    # The private key associated with your service account in Privacy Enhanced
+    # Email format (.pem suffix).  To convert a private key from the RSA format
+    # (.p12 suffix) to .pem, run the openssl command like this:
+    # openssl pkcs12 -in downloaded-privatekey.p12 -nodes -nocerts > privatekey.pem
+    EE_PRIVATE_KEY_FILE = '/www/apps/csc/dj-projects/my_acis/ee-lib/EE.pem'
+    EE_CREDENTIALS = ee.ServiceAccountCredentials(EE_ACCOUNT, EE_PRIVATE_KEY_FILE)
+    ee.Initialize(EE_CREDENTIALS, EE_URL)
+    #ee.Initialize()
+    image = ee.Image('srtm90_v4')
+    request['ee_img_info'] = image.getInfo()
+    return render_to_response('scenic/ee-test.html', context, context_instance=RequestContext(request))
 
 def download_map(request):
     context = {

@@ -15,62 +15,68 @@
          <input type="submit" value="Select" name="{{app_name}}"/>
          </form>
      </table>
-
+</br>
+</br>
 
 {%if elements %}
-<p align='left'>
-<b>Summary of daily observations by element.  Last date considered : {{results.0.end}}</b>
-</br>
-</br>
-<table>
-  <tr>
-	<th colspan=2 align="right">STATION</th><th colspan=2 align="right">START</th><th colspan=2 align="right">END</th>
-    {%for el in elements%}
-    <th colspan=2 align="right">{{el}}</th>
-    {%endfor%}
-  </tr>	
-  {%for stn, stn_vals in results.items %}
-  <tr>
-	<td></td><td align="right">{{stn_vals.station_id}}</td><td></td><td align="right">{{stn_vals.start}}</td><td></td><td align="right">{{stn_vals.end}}</td>
-    {%for el in elements %}
-	  <td></td><td align="right">{{stn_vals|lookup:el|safe}}</td>
-	{%endfor%}
-  </tr>
-  {%endfor%}
-</table>
-</p>
-
-</ br>
-</ br>
-</ br>
-
-<p>
-<b>SUMMARY-OF-THE-DAY STATISTICS</b></br>
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last date considered for this listing : 20120101</br>
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;START - First date in record (YYMMDD)</br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;END   - Last  date in record (YYMMDD)</br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;POSBL - Possible number of observations</br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PRSNT - Total number of days present in the record</br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LNGPR - Largest number of consecutive observations</br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MISSG - Total number of missing days</br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LNGMS - Most consecutive missing observations</br>
+<!--<p align='left'>-->
+<div class="dataTableInfo"  align="left" style="max-width:95%;word-wrap:break-word;">
+<b>SUMMARY-OF-THE-DAY STATISTICS: Last date considered : {{results.0.end}}</b>
+START - First date in record (YYMMDD)</br>
+END   - Last  date in record (YYMMDD)</br>
+POSBL - Possible number of observations</br>
+PRSNT - Total number of days present in the record</br>
+LNGPR - Largest number of consecutive observations</br>
+MISSG - Total number of missing days</br>
+LNGMS - Most consecutive missing observations</br>
 A day is considered present if any element is reported.</br>
 NAME is the latest name of the station in the history file.</br>
+</div>
+</br>
 </br>
 
-<table>
-  <tr>
-    <th colspan=2 align="right">NUMBER</th><th colspan=2 align="right">NAME</th><th colspan=2 align="right">START</th><th colspan=2 align="right">END</th><th colspan=2 align="right">POSBL</th><th colspan=2 align="right">PRSNT</th><th colspan=2 align="right">LNGPR</th><th colspan=2 align="right">MISSG</th><th colspan=2 align="right">LNGMS</th>
-   <tr>
-  {%for stn, stn_vals in results.items %}
-  <tr>
-    <td></td><td align="right">{{stn_vals.station_id}}</td><td></td><td align="right">{{stn_vals.station_name}}</td><td></td><td align="right">{{stn_vals.start}}</td><td></td><td align="right">{{stn_vals.end}}</td><td></td><td align="right">{{stn_vals.PSBL}}</td><td></td><td align="right">{{stn_vals.PRSNT}}</td><td></td><td align="right">{{stn_vals.LNGPR}}</td><td></td><td align="right">{{stn_vals.MISSG}}</td><td></td><td align="right">{{stn_vals.LNGMS}}</td>
-  </tr>
-  {%endfor%}
+<table class="dataTable nowrap"  border="1" width="760px" cellspacing="0" cellpadding="0">
+<thead><tr>
+   <th>STATION</th><th>START</th><th>END</th>
+    {%for el in elements%}
+    <th>{{el}}</th>
+    {%endfor%} 
+</tr></thead>
+<tfoot><tr>
+   <th>STATION</th><th>START</th><th>END</th>
+    {%for el in elements%}
+    <th>{{el}}</th>
+    {%endfor%} 
+</tr></tfoot>
+<tbody>
+    {%for stn, stn_vals in results.items %}
+        <tr>
+        <td>{{stn_vals.station_id}}</td><td>{{stn_vals.start}}</td><td>{{stn_vals.end}}</td>
+        {%for el in elements %}
+            <td>{{stn_vals|lookup:el|safe}}</td>
+        {%endfor%}
+        </tr>
+    {%endfor%}
+</tbody>
 </table>
-</p>
+</ br>
+</ br>
+
+<table class="dataTable nowrap"  border="1" width="760px" cellspacing="0" cellpadding="0">
+<thead><tr>
+    <th>NUMBER</th><th>NAME</th><th>START</th><th>END</th><th>POSBL</th><th>PRSNT</th><th>LNGPR</th><th>MISSG</th><th>LNGMS</th>
+</tr></thead>
+<tfoot><tr>
+    <th>NUMBER</th><th>NAME</th><th>START</th><th>END</th><th>POSBL</th><th>PRSNT</th><th>LNGPR</th><th>MISSG</th><th>LNGMS</th>
+</tr></tfoot>
+<tbody>
+{%for stn, stn_vals in results.items %}
+<tr>
+<td>{{stn_vals.station_id}}</td><td>{{stn_vals.station_name}}</td><td>{{stn_vals.start}}</td><td>{{stn_vals.end}}</td><td>{{stn_vals.PSBL}}</td><td>{{stn_vals.PRSNT}}</td><td>{{stn_vals.LNGPR}}</td><td>{{stn_vals.MISSG}}</td><td>{{stn_vals.LNGMS}}</td>
+</tr>
+{%endfor%}
+</tbody>
+</table>
 
 {%endif%}
 

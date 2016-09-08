@@ -32,7 +32,7 @@
 
 
 {%if results%}
-<p>
+<div class="dataTableInfo"  align="left" style="max-width:95%;word-wrap:break-word;">
 Cooling degree threshold =   65.00  Heating degree threshold =   65.00</br>
 </br>
 Mon         Month</br>
@@ -42,35 +42,52 @@ Extrm       Extreme value of indicated quantity for this day of year (LOW for mi
 Year l      Latest year of occurrence of the extreme value</br>
 No          Number of years with data for this day of year.</br>
 Units       English (inches and degrees F)</br>
-<p>
+</div>
 
 </br>
-  {%for stn, stn_data in results.items %}
+<br />
+
+{%for stn, stn_data in results.items %}
     <h2>Station_name: {{station_names|lookup:stn|safe}}  Coop_station_id: {{station_ids|lookup:stn|safe}}</h2>
     {%if not stn_data%}
     <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}
-    <table border="0"><tr>
     {%for el, el_data in stn_data.items%}
-      <td><table border="1">
-      <tr><td colspan="2"></td><td class="stronger" colspan=6 align="left">{{elements|lookup:el|safe}}</td></tr>
-      {%if elements|lookup:el == "pcpn" or elements|lookup:el == "snow" or elements|lookup:el == "snwd"%}
-      <tr><td class="stronger">Mon</td><td class="stronger">Day</td><td class="stronger">Avgt</td><td></td><td></td><td class="stronger">No</td><td class="stronger">HI</td><td></td><td></td><td class="stronger">Year</td></tr>
-      {%for vals in el_data %}
-        <tr><td style="text-align:right">{{vals.0}}</td><td style="text-align:right">{{vals.1}}</td><td style="text-align:right">{{vals.2}}</td><td></td><td></td><td style="text-align:right">{{vals.3}}</td><td style="text-align:right">{{vals.4}} </td><td></td><td></td><td style="text-align:right">{{vals.5}}</td></tr>
-      {%endfor%}
-      {%else%}
-      <tr><td class="stronger">Mon</td><td class="stronger">Day</td><td class="stronger">Avgt</td><td></td><td></td><td class="stronger">No</td><td class="stronger">HI</td><td></td><td></td><td class="stronger">Year</td><td class="stronger">LO</td><td></td><td></td><td class="stronger">Year</td></tr>
-      {%for vals in el_data %}
-        <tr><td style="text-align:right">{{vals.0}}</td><td style="text-align:right">{{vals.1}}</td><td style="text-align:right">{{vals.2}}</td><td></td><td></td><td style="text-align:right">{{vals.3}}</td><td style="text-align:right">{{vals.4}} </td><td></td><td></td><td style="text-align:right">{{vals.5}}</td><td style="text-align:right">{{vals.6}} </td><td></td><td></td><td style="text-align:right">{{vals.7}}<td></tr>
-      {%endfor%}
-      {%endif%}
-      </td>
-      </table>
-   {%endfor%}
-   </tr></table>
-   {%endif%}
- {%endfor%}
-{%endif%}
+        <table class="dataTable nowrap"  border="1" width="760px" cellspacing="0" cellpadding="0">
+        <thead>
+        <tr><th colspan=8>{{elements|lookup:el|safe}}</th></tr>
+        <tr>
+        {%if elements|lookup:el == "pcpn" or elements|lookup:el == "snow" or elements|lookup:el == "snwd"%}
+        <th>Mon</th><th>Day</th><th>Avgt</th><th>No</th><th>HI</th><th>Year</th>
+        {%else%}
+        <th>Mon</th><th>Day</th><th>Avgt</th><th>No</th><th>HI</th><th>Year</th><th>LO</th><th>Year</th>
+        {%endif%}
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+        {%if elements|lookup:el == "pcpn" or elements|lookup:el == "snow" or elements|lookup:el == "snwd"%}
+        <th>Mon</th><th>Day</th><th>Avgt</th><th>No</th><th>HI</th><th>Year</th>
+        {%else%}
+        <th>Mon</th><th>Day</th><th>Avgt</th><th>No</th><th>HI</th><th>Year</th><th>LO</th><th>Year</th>
+        {%endif%}
+        </tr>
+        </tfoot>  
+        <tbody>
+        {%for vals in el_data %}
+            <tr>
+            {%if elements|lookup:el == "pcpn" or elements|lookup:el == "snow" or elements|lookup:el == "snwd"%}
+                <td>{{vals.0}}</td><td>{{vals.1}}</td><td>{{vals.2}}</td><td>{{vals.3}}</td><td>{{vals.4}}</td><td>{{vals.5}}</td>
+            {%else%}
+                <td>{{vals.0}}</td><td>{{vals.1}}</td><td>{{vals.2}}</td><td>{{vals.3}}</td><td>{{vals.4}}</td><td>{{vals.5}}</td><td>{{vals.6}}</td><td>{{vals.7}}</td>
+            {%endif%}
+            </tr>
+        {%endfor%}
+        </tbody>
+        </table>
+    {%endfor%}
+    {%endif%}
+{%endfor%}<!--End station loop-->
+{%endif%}<!--end if results-->
 
 {% endblock %}

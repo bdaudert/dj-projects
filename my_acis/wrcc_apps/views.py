@@ -136,7 +136,7 @@ def sodmonlinemy_new(request):
     context = {
     'title': 'Sodmonlinemy'
     }
-    form = set_as_form(request, 'Sodmonlinemy')
+    form = set_as_form(request, 'Sodmonline')
     context['form'] = form
     if form.is_valid():
         kwargs = {}

@@ -16,48 +16,48 @@
          </form>
      </table>
 
-
+<br /><br />
 {%if results%}
 <div class="dataTableInfo"  align="left" style="max-width:95%;word-wrap:break-word;">
-:STATION NUMBER {{params.station_id}} &nbsp;&nbsp;&nbsp; {{station_name}}<br />
-:OVERALL PERIOD CONSIDERED: {{params.start_date}}-{{params.end_date}}<br />
-:WINDOW: {{params.start_window}}-{{params.end_window}}<br />
-<!--:F1 AND F2 ARE ABBREVIATIONS FOR FLAG1, FLAG2<br />-->
-:F = FLAG, T = OBSERVATION TIME, T=-1 --> NO OBSERVATION TIME REPORTED
-</div>
-<br /><br />
+    <b>:LOCATION</b> {{params.station_id}} &nbsp;&nbsp;&nbsp; {{station_name}}<br />
+    <b>:START YEAR</b> {{params.start_date}} &nbsp;&nbsp;&nbsp; <b>END YEAR</b> {{params.start_date}}<br /> 
+    <b>:ELEMENT</b> {{params.element}}<br />
+    <b>:UNITS</b> {{params.units}} <br/>
+</div><br /><br />
 
-
+<!--<table style="text-align:right;cell-padding:none;">-->
+<!--<table cellspacing="0" cellpadding="0" style="border-collapse:collapse;">-->
 <table class="dataTable nowrap"  border="1" width="760px" cellspacing="0" cellpadding="0">
-{%for date_data in results.data %}
-{%if forloop.counter == 1%}
 <thead><tr>
-{%for val in date_data%}
-<th>{{val}}</th>
+<th>YR</th><th>MO</th>
+{%for day in 1|make_range:31%}
+    <th>{{day}}</th>
 {%endfor%}
 </tr></thead>
 <tfoot><tr>
-{%for val in date_data%}
-<th>{{val}}</th>
+<th>YR</th><th>MO</th>
+{%for day in 1|make_range:31%}
+    <th>{{day}}</th>
 {%endfor%}
 </tr></tfoot>
 <tbody>
-{%else%}
+{%for date_data in results.data %}
 <tr>
 {%for val in date_data%}
+<!--<td align="right" width="char">&nbsp;&nbsp;{{val}}</td>-->
+<!--<td align="left" width="6em">{{val}}</td>-->
 <td>{{val}}</td>
 {%endfor%}
 </tr>
-{%endif%}
 {%endfor%}
 </tbody>
 </table>
 
-{%if not results.data %}
-<p class="error">No data were found for these parameters!</p>
+{%if results.error %}
+<p class="error">{{results.error}}</p>
 {%endif%}
-{%endif%}<!--end if results-->
 
+{%endif%}<!--end if results-->
 
 
 {% endblock %}

@@ -305,11 +305,11 @@ class SodlistForm(forms.Form):
     #station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
     start_date = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
     end_date = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
-    output_format = forms.ChoiceField(choices=SL_FRMT_CHOICES, initial='kr')
+    output_format = forms.ChoiceField(choices=SL_FRMT_CHOICES, initial='kr',widget=forms.HiddenInput())
     #output_file = forms.CharField(max_length=256, required=False)
     start_window = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
     end_window = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
-    minimize = forms.BooleanField(required=False, initial = False)
+    minimize = forms.BooleanField(required=False, initial = False,widget=forms.HiddenInput())
     include_tobs_evap = forms.BooleanField(required=False, initial = False)
 
 class SodcnvForm(forms.Form):
@@ -411,7 +411,7 @@ class SodForm(forms.Form):
         if app_name is None:
             app_name = self.data.get('app_name')
 
-        if app_name in ['Soddyrec', 'Sodcnv', 'Sodlist', 'Sodrun', 'Sodrunr']:
+        if app_name in ['Soddyrec', 'Sodcnv', 'Sodrun', 'Sodrunr']:
             self.fields['start_date'] = MyDateField(max_length=8, initial='19400101', help_text="yyyymmdd")
             self.fields['end_date'] = MyDateField(max_length=8, initial=19491231, help_text="yyyymmdd")
             #self.fields['end_date'] = forms.CharField(max_length=8, initial='20091231')
@@ -462,12 +462,6 @@ class SodForm(forms.Form):
         elif app_name == 'Sodsumm':
             self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False)
             self.fields['element'] = forms.ChoiceField(choices=SDMM_ELEMENT_CHOICES, initial='all')
-        elif app_name == 'Sodlist':
-            self.fields['output_format'] = forms.ChoiceField(choices=SL_FRMT_CHOICES, initial='kr')
-            self.fields['start_window'] = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
-            self.fields['end_window'] = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
-            self.fields['minimize'] = forms.BooleanField(required=False, initial = False)
-            self.fields['include_tobs_evap'] = forms.BooleanField(required=False, initial = False)
         elif app_name == 'Sodcnv':
             self.fields['start_window'] = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
             self.fields['end_window'] = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
