@@ -20,38 +20,82 @@
     #Google Earth Engine env
     export EE_SERVICE_ACCOUNT=xxxxxxx.apps.googleusercontent.com
     export EE_SERVICE_EMAIL= xxxxxxx@developer.gserviceaccount.com
-    export EE_PRIVATE_KEY_FILE=/path_to_.p12_file
+    export EE_PRIVATE_KEY_FILE=/path_to_.pem_file
     </code></pre>
     </p>
-    <h3>2. Python API Installation</h3>
-    <p>
-    Follow the instructions below to set install the Earth Engine python API.<br />
-    <a target="_blank" href="https://developers.google.com/earth-engine/python_install">EE python API installation</a>
-    </p> 
-    <h3>3. Start playing</h3>
-        <p>I recommend you start with these two examples:<br />
-        <a target="_blank" href="https://cloud.google.com/appengine/docs/python/gettingstartedpython27/helloworld">Hello World (Easy)</a><br />
-        <a href="http://cyclone1.dri.edu/csc/documentation/ee/hello_world/">Hello World (Hard)</a>
-    <h4>General guidelines and tips from Dr. Britta</h4>
-    <div>
-    <h5>localhost versus appspot</h5>
-    <p>
-    Just because your code runs on your localhost does not mean it will run on appspot 
-    This may be due to appspot not being able to locate one or more of the packages you are using.</p>
-    <h5>Error messages and logs</h5>
-    <p>
-    If your browser and your developer console do not give you constructive error message, go to the <a target="_blank" href="https://console.developers.google.com/">Console</a> and check the logs under the projects <b>Monitoring</b> tab on the left.
-    </p>
-    <h5>Effect of code changes</h5>
-    <p>
-    On localhost it is sufficient to reload your browser for code changes to take effect.
-    For code changes to take effect on appspot, you will need to redeploy your code.
-    </p>
-    <p>Have fun!<br />
-    <a target="_blank" href="https://cloud.google.com/appengine/docs/python/gettingstartedpython27/helloworld">Hello World (Easy)</a><br />
-    <a href="http://cyclone1.dri.edu/csc/documentation/ee/hello_world/">Hello World (Hard)</p>
-    </div>
+    <h3>2.Installing the Earthengine API (Python)</h3>
+        <h4>2.1 Install anaconda</h4>
+        <p class="info">Anaconda helps you install and manage python and other packages. Anaconda is cool and helps manage dependencies between packages!</p>
+        <a target="_blank" href="https://www.continuum.io/downloads">Get the latest anaconda version</a></p>
+        <h4>2.2 Configure conda to use conda-forge</h4>
+        <pre class="code">
+            conda update conda
+            conda config --add channels conda-forge
+        </pre>
+        
+        <h4>2.3 Install the pip package manager </h4>
+        <p class="info">The earthengine api can only be installed with pip (and not with anaconda). That's why we need pip on top of anaconda</p>
+        <pre class="code">conda install pip</pre>
+
+        <h4>2.4 Install the earthengine api</h4>
+        <pre class="code">pip install earthengine-api</pre>
+
+        <h4>2.5 Test the installation</h4>
+        <pre class="code">
+            python
+            import ee
+            ee.Initialize()
+        </pre>
+
+    <h3>Install the Google App Engine SDK</h3>
+    <a target="_blank" href="https://cloud.google.com/appengine/downloads">App Engine SDK Downloads</a>
+    <p class="info">Note: The Python SDK does not contain the Launcher anymore. You will need to dev_appserver.py run on localhost and deploy to the appsot server. If you are on MAC, you get install the App Engine SDK via the PHP SDK instead. That will give you the launcher as well as the dev_appserver commandline utility.</p>
+
+    <h3>Creating a conda environment for Earthengine API</h3>
+    <p class="info">This will allow you to create your own python environment with versions of
+    python packages that match  the versions on the app engine server. in the example below we creat the env ee-python. It will be installed by conda in $(PATH_TO_ANACONDA_INSTALLATION)/envs</p>
+
+    <pre class="code">
+    conda create -n ee-python python=2.7
+    source activate ee-python
+    </pre>
+
+    <p class="info">Now that you have set up this basic python env, you will need to install some packages there that Earthengine needs in this environment</p>
+
+    <pre class="code">
+    conda install httplib2 oauth2client jinja2 webapp2  cryptography numpy=1.6.2 
+    pip install earthengine-api
+    </pre>
+
+    <p class="info">To use the Launcher with this environment, make sure the python path in the lunacher is set correctly: go to GoogleAppEngineLauncher--> Preferences --> Python Path. Enter $(PATH_TO_ANACONDA_INSTALLATION)/envs/ee-python/bin/python2.7. <b>Make sure to hit Enter for the changes to take effect</b> If you are using dev_appserver.py from the commandline, make sure that you sourced the environment before running it: <pre class="code">source ee-python</pre></p>
+
+
+    <h3>Set up the Hello World project</h3>
+    <a target="_blank" href="https://cloud.google.com/appengine/docs/python/quickstart">Quickstart for Python App Engine Standard Environment</a>
+
+    <h3>Setting up project libraries</h3>
+    <p class="info">Alternatively, you can set up your own library ($(PROJECT_DIR)/lib) directly in the project directory and install earthengine-api there.
+    This should help you avoid version differences between your local machine and the appengine server. It also was the only way I could take care of the oauth2client issue I ran into the last time I installed the EE software. This issue is described <a target="_blank" href="https://github.com/google/oauth2client/issues/401">here</a> and also <a target="_blank" href="https://github.com/google/earthengine-api/issues/5">here</a></p>
+    
+    <pre class="code">
+    cd $(PROJECT_DIR)
+    pip install earthengine-api -t ./lib
+    </pre>
+    
+    <p class="info">Create or modify the appengine_config.py and add these lines:</p>
+    
+    <pre class="code">
+    from google.appengine.ext import vendor
+
+    vendor.add('lib')
+    </pre>
+
+    <p class="info">You may need to install pycrypto again and you may need to revert back to an earlier version of oauth2client.</p>
+
+    <pre class="code">
+    pip install pycrypto -t ./lib 
+    pip install oauth2client==1.5.2 -t ./lib   
+    </pre>
 </td>
-<td width="10%"></td>
 </table>
 {% endblock %}

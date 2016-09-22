@@ -45,6 +45,10 @@ p, li{
     margin-bottom: .5em;
 }
 
+p.info {
+    max-width:600px;
+}
+
 p.intro {
     position:absolute;
     top: 8em;

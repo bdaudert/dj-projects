@@ -26,61 +26,59 @@
 </br>
 {% endif %}
 
+
+
 {%if results %}
-<p>DEGREE DAYS {{a_b}} BASE TEMPERATURE {{base_temp}}</br>
-SKIP DAYS WITH MAXIMUM ABOVE: {{skip_max_above}}</br>
-SKIP DAYS MINIMUM BELOW :{{skip_min_below}}</br>
-TRUNCATES MAXIMUMS ABOVE: {{trunc_high}}</br>
-TRUNCATES MINIMUMS BELOW: {{trunc_low}}</br>
-UP TO {{max_miss}} DAYS MAY BE ESTIMATED FROM MEAN DAILY NORMALS</br>
-NCDC ROUND-OFF PROCEDURE IS {%if not ncdc_round%}NOT{%endif%} SIMULATED{%if not ncdc_round%}, EXACT ROUND-OFF USED{%endif%}</br>
-STARTING YEAR : {{start_year}}  ENDING YEAR : {{end_year}}</br>
-</p>
-  {%if monthly%}
-  <p>FLAG FOLLOWING VALUE GIVES NUMBER OF MISSING DAYS :</br> 
-     a = 1 DAY, b = 2 DAYS, ..., z = 26+ DAYS MISSING</br>
-  </p>
-    {%for stn, stn_data in results.items %}
-    <h2>STATION: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;NUMBER: {{station_ids|lookup:stn|safe}}</h2>
-    <table>
-    <th colspan="2">YEAR</th><th colspan="2">JAN</th><th colspan="2">FEB</th><th colspan="2">MAR</th><th colspan="2">APR</th><th colspan="2">MAY<th colspan="2">JUN</th><th colspan="2">JUL</th><th colspan="2">AUG</th><th colspan="2">SEP</th><th colspan="2">OCT</th><th colspan="2">NOV</th><th colspan="2">DEC</th><th colspan="2">ANN</th>
-    {%for year_val in stn_data%}
-     <tr>
-     {%for mon_val in year_val%}
-     <td></td><td>{{mon_val}}</td>
-     {%endfor%}
-     </tr> 
-     {%endfor%}  
-     </table>
-   {%endfor%}
-  {%endif%}
-  </br>
-  </br>
-
-  {%if daily%}
-    <p>
-    -99 = MISSING DATA OR NON-EXISTENT DAYS </br>
-     AV = DAILY AVERAGE.  YR = NUMBER OF YEARS FOR THIS DAY.</br>
+    <p>DEGREE DAYS {{a_b}} BASE TEMPERATURE {{base_temp}}</br>
+    SKIP DAYS WITH MAXIMUM ABOVE: {{skip_max_above}}</br>
+    SKIP DAYS MINIMUM BELOW :{{skip_min_below}}</br>
+    TRUNCATES MAXIMUMS ABOVE: {{trunc_high}}</br>
+    TRUNCATES MINIMUMS BELOW: {{trunc_low}}</br>
+    UP TO {{max_miss}} DAYS MAY BE ESTIMATED FROM MEAN DAILY NORMALS</br>
+    NCDC ROUND-OFF PROCEDURE IS {%if not ncdc_round%}NOT{%endif%} SIMULATED{%if not ncdc_round%}, EXACT ROUND-OFF USED{%endif%}</br>
+    STARTING YEAR : {{start_year}}  ENDING YEAR : {{end_year}}</br>
     </p>
-  {%for stn, stn_data in results.items %}
-    <h2> STATION: {{station_names.stn|safe}}&nbsp;&nbsp;&nbsp;NUMBER: {{station_ids.stn|safe}}</h2>
-   <table border="1">
-    <th>DAY</th><th colspan="2">JAN</th><th colspan="2">FEB</th><th colspan="2">MAR</th><th colspan="2">APR</th><th colspan="2">MAY<th colspan="2">JUN</th><th colspan="2">JUL</th><th colspan="2">AUG</th><th colspan="2">SEP</th><th colspan="2">OCT</th><th colspan="2">NOV</th><th colspan="2">DEC</th>
-    <tr>
-      <td></td><td>AV</td><td>YR</td><td>AV</td><td>YR</td><td>AV</td><td>YR</td><td>AV</td><td>YR</td><td>AV</td><td>YR</td><td>AV</td><td>YR</td><td>AV</td><td>YR</td><td>AV</td><td>YR</td><td>AV</td><td>YR</td><td>AV</td><td>YR</td><td>AV</td><td>YR</td><td>AV</td><td>YR</td>
-    </tr>
-    {%for day_val in stn_data%}
-     <tr>
-     {%for val in day_val%}
-     <td style="text-align:right">{{val}}</td>
-     {%endfor%}
-     </tr>
-     {%endfor%}
-     </table>
-   {%endfor%}                            
-  {%endif%}
+
+    {%if monthly%}
+        <p>FLAG FOLLOWING VALUE GIVES NUMBER OF MISSING DAYS :</br> 
+        a = 1 DAY, b = 2 DAYS, ..., z = 26+ DAYS MISSING</br>
+        </p>
+    {%else%}
+        <p>
+        -99 = MISSING DATA OR NON-EXISTENT DAYS </br>
+        AV = DAILY AVERAGE.  YR = NUMBER OF YEARS FOR THIS DAY.</br>
+        </p>
+    {%endif%}
+    
+    {%for stn, stn_data in results.items %}
+        <div class="dataTableInfo" align="left" style="max-width:95%;word-wrap:break-word;">
+        <h2>STATION: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;NUMBER: {{station_ids|lookup:stn|safe}}</h2>
+        </div>
+
+        <table class="dataTable nowrap" border="1" width="760px" cellspacing="0" cellpadding="0">
+        {%for row_data in stn_data%}
+            {%if forloop.counter == 1%}
+                <thead><tr>
+                {%for val in row_data%}
+                    <th>{{val}}</th>
+                {%endfor%}
+                </tr></thead>
+                <tfoot><tr>
+                {%for val in row_data%}
+                    <th>{{val}}</th>
+                {%endfor%}
+                </tr></tfoot>
+                <tbody>
+            {%else%}
+                <tr>
+                {%for val in row_data%}
+                    <td>{{val}}</td>
+                {%endfor%}
+                </tr>
+            {%endif%} 
+        {%endfor%}
+        </table>
+    {%endfor%}  
 {%endif%}
-
-
 
 {% endblock %}

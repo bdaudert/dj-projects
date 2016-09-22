@@ -56,10 +56,18 @@ def test(request):
     context = {
         'title': 'Southwest Climate and ENvironmental Information Collaborative',
     }
-    import ee
-    #from oauth2client.service_account import AppAssertionCredentials
-    from oauth2client.contrib.appengine import AppAssertionCredentials
     #from oauth2client.service_account import ServiceAccountCredentials
+
+    import sys
+    sys.path.insert(0, '/usr/local/google_appengine')
+    context['xx'] = sys.path
+    import ee
+    from oauth2client.contrib.appengine import AppAssertionCredentials
+    from oauth2client.service_account import ServiceAccountCredentials
+
+    EE_CREDENTIALS = ServiceAccountCredentials(settings.EE_ACCOUNT, settings.EE_PRIVATE_KEY_FILE)
+    ee.Initialize(EE_CREDENTIALS, settings.EE_URL)
+    '''
     EE_URL = 'https://earthengine.googleapis.com'
 
     # The service account email address authorized by your Google contact.
@@ -77,6 +85,7 @@ def test(request):
     #ee.Initialize()
     image = ee.Image('srtm90_v4')
     request['ee_img_info'] = image.getInfo()
+    '''
     return render_to_response('scenic/ee-test.html', context, context_instance=RequestContext(request))
 
 def download_map(request):

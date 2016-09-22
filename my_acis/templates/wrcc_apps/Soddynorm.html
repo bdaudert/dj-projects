@@ -28,20 +28,36 @@
 
 {%if results %}
   {%for stn, stn_data in results.items %}
-  <h2>Station_name: {{station_names|lookup:stn|safe}}  Coop_station_id: {{station_ids|lookup:stn|safe}}</h2>
-  {%if not stn_data%}
-    <p style="color:red">NO STATION DATA FOUND!</p></br>
+    {%if not stn_data%}
+        <p style="color:red">NO STATION DATA FOUND!</p></br>
   {%else%}
-  <table cellpadding="5">
-  <th>DOY</th><th>MON</th><th>DAY</th><th>MAXT AVE</th><th>MAXT STD</th><th>MAXT YRS<th>MINT AVE</th><th>MINT STD</th><th>MINT YRS</th><th>PCPN AVE</th><th>PCPN YRS</th>
-  {%for day_data in stn_data%}
-   <tr>
-    {%for val in day_data%}
-    <td style="text-align:right">{{val}}</td>
+    <div class="dataTableInfo" align="left" style="max-width:95%;word-wrap:break-word;">
+        <h2>Station: {{station_names|lookup:stn|safe}}, {{station_ids|lookup:stn|safe}}</h2>
+        </div>
+    <table class="dataTable nowrap" border="1" width="760px" cellspacing="0" cellpadding="0">
+    {%for day_data in stn_data%}
+        {%if forloop.counter == 1%}
+            <thead><tr>
+                {%for val in day_data%}
+                    <th>{{val}}</th>
+                {%endfor%}
+            </tr></thead>
+            <tfoot><tr>
+                {%for val in day_data%}
+                    <th>{{val}}</th>
+                {%endfor%}
+            </tr></tfoot>
+            <tbody>
+        {%else%}
+            <tr>
+            {%for val in day_data%}
+                <td>{{val}}</td>
+            {%endfor%}
+            </tr>
+        {%endif%}
     {%endfor%}
-   </tr> 
-  {%endfor%}  
-  </table>
+    </tbody>  
+    </table>
   {%endif%}
  {%endfor%}
 {%endif%}
