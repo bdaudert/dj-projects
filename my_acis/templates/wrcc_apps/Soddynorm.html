@@ -2,8 +2,10 @@
 
 {% block content %}
 {%load my_wrcc_meta_filters%}
-
-<h1 align='center'>{{title}}</h1>
+<div class="docu" id="Docu_Soddynorm" style="display:none;">{% include 'includes/Docu_soddynorm.html'%}</div>
+<h1 align='center'>{{title}}
+<img onclick="ShowPopupDocu('Docu_Soddynorm')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
+</h1>
 <div id='stn_selection'>
      <table border=0 align="right">
 	  <form id="form1" method="post" action="">{% csrf_token %}

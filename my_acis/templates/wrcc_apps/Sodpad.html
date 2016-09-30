@@ -2,8 +2,10 @@
 
 {% block content %}
 {%load my_wrcc_meta_filters%}
-
-<h1 align='center'>{{title}}</h1>
+<div class="docu" id="Docu_Sodpad" style="display:none;">{% include 'includes/Docu_sodpad.html'%}</div>
+<h1 align='center'>{{title}}
+<img onclick="ShowPopupDocu('Docu_Sodpad')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
+</h1>
 <div id='stn_selection'>
      <table border=0 align="right">
 	  <form id="form1" method="post" action="">{% csrf_token %}
@@ -28,25 +30,40 @@
 
 {%if results %}
   {%for stn, stn_data in results.items %}
-    <p>PRECIPITATION-DURATION-FREQUENCY TABLES FOR STATION: {{station_ids|lookup:stn|safe}} {{station_names|lookup:stn|safe}}</br>
+    <div class="dataTableInfo" align="left" style="max-width:95%;word-wrap:break-word;">
+    PRECIPITATION-DURATION-FREQUENCY TABLES FOR STATION: {{station_ids|lookup:stn|safe}} {{station_names|lookup:stn|safe}}</br>
     BASED ON PERIOD {{start_year}} TO {{end_year}}</br>
-    </p></br>
+    NUMBER OF YEARS: {{num_yrs}}
+    </div>
+    </br>
+
     {%if not stn_data%}
-    <p style="color:red">NO STATION DATA FOUND!</p></br>
+        <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}
-      {%for doy, doy_data in stn_data.items %}
-      <p>STN={{station_ids|lookup:stn|safe}} MON={{mon|lookup:doy|safe}} DAY={{day|lookup:doy|safe}}</p></br>
-      <table>
-      <th>THRESHOLD:</th><th colspan="3">01</th><th colspan="4">10</th><th colspan="4">15</th><th colspan="4">20</th><th colspan="4">25<th colspan="4">30</th><th colspan="4">40</th><th colspan="4">50</th><th colspan="4">75</th><th colspan="4">100</th><th colspan="4">150</th><th colspan="4">200</th><th colspan="4">250</th><th colspan="4">300</th><th colspan="4">400</th><th colspan="4">500</th><th colspan="4">600</th><th colspan="4">800</th><th colspan="4">1000</th><th colspan="4">AVE PRECIP</th>
-       {%for dur in doy_data %}
-        <tr><td style="text-align:right">DURATION = {{durations|lookup:forloop.counter|safe}}</td><td>#</td><td>{{num_yrs}}</td>
-        {% for val in dur%}
-        <td style="text-align:right">{{val}}</td><td></td><td></td><td></td>
+        {%for doy, doy_data in stn_data.items %}
+            <table class="dataTable nowrap" border="1" width="760px" cellspacing="0" cellpadding="0">
+            {%for dur in doy_data %}
+                {% if forloop.counter == 1 %}
+                    <thead>
+                        <tr>
+                            {% for val in dur%}<th>{{val}}</th>{%endfor%}
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            {% for val in dur%}<th>{{val}}</th>{%endfor%}
+                        </tr>
+                    </tfoot>
+                    </tbody>
+                {% else %}
+                    <tr>
+                        {% for val in dur%}<td>{{val}}</td>{%endfor%}
+                    </tr>
+                {% endif %}
+            {%endfor%}
+            </tbody>
+            </table><br />
         {%endfor%}
-        </tr>
-       {%endfor%}
-      </table>
-      {%endfor%}
     {%endif%}
   {%endfor%}
 {%endif%}

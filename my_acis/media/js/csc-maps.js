@@ -34,6 +34,22 @@ function zoomToLocation() {
   });
 }
 
+/*
+Zoom To Location on map
+*/
+/*
+$('#address').on('keypress', function (e) {
+    console.log('YO');
+    if(e.which === 13){
+        //Disable textbox to prevent multiple submit
+        $(this).attr("disabled", "disabled");    
+        zoomToLocation(); 
+    }  
+    else{
+        $(this).attr("disabled", "false");
+     }
+});
+*/
 function printMapControl(controlDiv,map_div){
   // Set CSS for the control border.
   var controlUI = document.createElement('div');

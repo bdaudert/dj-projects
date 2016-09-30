@@ -4,6 +4,15 @@
 <meta name="description" content="SCENIC Home">
 
 {%block content %}
+   <div class="docu" id="Docu_about_SCENIC" style="display:none;">
+    {% include 'includes/Docu_about_SCENIC.html'%}
+    </div> 
+
+    <div align="center">
+    <h1><img class="qmarkLarge" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_about_SCENIC')"></h1>
+    </div>
+    <!--<h1 class="link title" align="center" onclick="ShowHowtoDocu('Docu_about_SCENIC')">or read more</h1>-->
+    
     <table class="dash" cellspacing="10px" align="center">
         <tr>
         <td><a class="trigger_hover" href="{{DATA_URL}}"><b><font size="3">DATA ACCESS</font></b></a>
@@ -24,19 +33,19 @@
         </tr>
         <tr>
             <td>
-                <a href="{{DATA_URL}}"><img alt="DataPortal" title="DataPortal" class="front_dash_img" src="{{MEDIA_URL}}img/DataPortal.png"></a>
+                <a href="{{DATA_URL}}" class="trigger_hover"><img alt="DataAccess" title="DataAccess" class="front_dash_img" src="{{MEDIA_URL}}img/DataAccess2.png"></a>
                 <div class="pop-up" style="display:none;" align="left">
                     {% include 'includes/Docu_popup_data_access.html'%}
                 </div> 
             </td>
             <td>
-                <a href="{{SCENIC_URL}}dashboard/"><img alt="Dashboard" title="Dashboard" class="front_dash_img" src="{{MEDIA_URL}}img/Dashboard.png"></a>
+                <a href="{{SCENIC_URL}}dashboard/" class="trigger_hover"><img alt="Dashboard" title="Dashboard" class="front_dash_img" src="{{MEDIA_URL}}img/Dashboard2.png"></a>
                 <div class="pop-up" style="display:none;" align="left">
                     {% include 'includes/Docu_popup_dashboard.html'%}
                 </div>
             </td>
             <td>
-                <a href="{{SCENIC_URL}}howto/"><img alt="Gallery" title="Gallery" class="front_dash_img" src="{{MEDIA_URL}}img/Gallery.png"></a>
+                <a href="{{SCENIC_URL}}howto/" class="trigger_hover"><img alt="Info" title="Info" class="front_dash_img" src="{{MEDIA_URL}}img/HowTo2.png"></a>
                 <div class="pop-up" style="display:none;" align="left">
                     {% include 'includes/Docu_popup_howto.html'%}
                 </div>

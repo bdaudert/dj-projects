@@ -251,7 +251,9 @@ a:active { color:#FF0000;}
 
 /*OLD NAV WORKS ON FF*/
 #nav-top {
-  float: left;
+  /*float: left;*/
+  position:absolute;
+  top:260px;
   width: 960px;
   margin: 0;
   padding: 0;
@@ -293,7 +295,7 @@ a:active { color:#FF0000;}
   clear:both;
   position:relative;
   left:70px;
-  text-align:left;
+  text-align:center;
   width:200px;
 }
 
@@ -303,8 +305,7 @@ a:active { color:#FF0000;}
   color:#FFEFD5;
   text-decoration: none;
   text-shadow: 1px 1px 1px #006666;
-  /*background: #00906E;*/
-  background:#4c9393;
+  background: #00906E;
   /*
   -moz-border-radius-topright: 10px;
   -webkit-border-top-right-radius: 10px;
@@ -332,9 +333,112 @@ a:active { color:#FF0000;}
   -webkit-border-top-left-radius: 10px;
   */
 }
-} 
 
 #nav-top li:hover > ul li a {
+  display:block;
+  float:left;
+  line-height: 45px;
+  color:#FFEFD5;
+  text-decoration: none;
+  text-shadow: 1px 1px 1px #006666;
+  margin: 0;
+  padding: 0 0 0 0;
+  /*background:#00B98F repeat-x;*/
+}
+
+#nav-top li:hover > ul li a:hover {
+  color: #FFEFD5;
+  text-decoration: none;
+  text-shadow: none;
+}
+/*END TAB navigation bar*/
+
+/*Nav for WRCC pages */
+#nav-wrcc {
+  float: left;
+  width: 960px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background:#006666 repeat-x;
+  /*
+  -moz-border-radius-topright: 10px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -webkit-border-top-left-radius: 10px;
+  */
+}
+ 
+#nav-wrcc li {
+  display: inline;
+}
+ 
+#nav-wrcc li a {
+  float: left;
+  display:block;
+  font: bold 1em arial,verdana,tahoma,sans-serif;
+  line-height: 40px;
+  color:#FFEFD5;
+  text-decoration: none;
+  text-shadow: 1px 1px 1px #006666;
+  margin: 0;
+  padding: 0 20px;
+  background:#006666 repeat-x;
+  /* 
+  -moz-border-radius-topright: 10px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -webkit-border-top-left-radius: 10px;
+  */
+}
+
+
+#nav-wrcc li ul li a {
+  clear:both;
+  position:relative;
+  left:70px;
+  text-align:left;
+  width:200px;
+}
+
+
+/* APPLIES THE ACTIVE STATE */
+#nav-wrcc .current a, #nav-wrcc li:hover > a  {
+  color:#FFEFD5;
+  text-decoration: none;
+  text-shadow: 1px 1px 1px #006666;
+  /*background: #00906E;*/
+  background:#4c9393;
+  /*
+  -moz-border-radius-topright: 10px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -webkit-border-top-left-radius: 10px;
+  */
+}
+/* THE SUBMENU LIST HIDDEN BY DEFAULT */
+#nav-wrcc  ul {
+  display: none;
+}
+
+/* WHEN THE FIRST LEVEL MENU ITEM IS HOVERED, THE CHILD MENU APPEARS */
+#nav-wrcc li:hover > ul {
+  position: absolute;
+  display: block;
+  width: 960px;
+  height: 45px;
+  margin: 40px 0 0 100px;
+  z-index:1;
+  /*
+  -moz-border-radius-topright: 10px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -webkit-border-top-left-radius: 10px;
+  */
+}
+} 
+
+#nav-wrcc li:hover > ul li a {
   display:block;
   float:left;
   line-height: 45px;
@@ -346,17 +450,17 @@ a:active { color:#FF0000;}
   background:#00B98F repeat-x;
 }
 
-#nav-top li:hover > ul li a:hover {
+#nav-wrcc li:hover > ul li a:hover {
   color: #FFEFD5;
   text-decoration: none;
   text-shadow: none;
 }
-/*END TAB navigation bar*/
 
 /*Submit and Select buttons*/
 select {
     max-width:180px;
 }
+
 
 /*
 select option {
@@ -740,6 +844,14 @@ table.form td {
  width:25px;
  height:25px;
 }
+
+.qmarkLarge {
+ text-align="center"
+ width:40px;
+ height:40px;
+}
+
+
 #docu_long {
     display:none;
     float:center;
@@ -801,7 +913,8 @@ img.map_2 {
 }
 
 img.front_dash_img {
-    border: 2px solid #000000;
+    /*border: 2px solid #000000;*/
+    border:none;
     width: 200px;
     height:200px;
 }
