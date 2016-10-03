@@ -23,7 +23,6 @@
 
     <meta name="keywords" content="climate,climate change,Southwest US,Soutwest CSC,Climate Science Center, Climate Knowledge">
     <meta name="description" content="Southwest Climate and ENvironmental Information Collaborative">
-    <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
     <!-- jquery -->
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
     <!--<script src="http://code.jquery.com/jquery-1.11.1.js"></script>-->
@@ -32,8 +31,11 @@
     <!--<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>-->
     
     <!--Bootstrap-->
-    <!--<link rel="stylesheet" href="{{MEDIA_URL}}css/bootstrap.css">
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
+    <script src="{{ MEDIA_URL }}js/bootstrap-3.3.7.min.js"></script>
+    <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+    <link rel="stylesheet" href="{{MEDIA_URL}}css/bootstrap-3.3.7.css">
+    <!--scenic css overrides-->
+    <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
     <!--jQuery datatables-->
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/jquery.dataTables.css" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/buttons.dataTables.css" />
@@ -174,9 +176,9 @@
 <!--deals with back button issue... only works in Chrome and badly at that--> 
 <!--<body onbeforeunload="reset_options()">-->
 
-<body>
+<body >
 
-<div class="container">
+<div class="scenic-container">
     <!-- Header -->
    <div>
         <img width="100%" style="padding:0;margin:0;" src="{{ MEDIA_URL }}img/SCENIC_NEW.png">
@@ -271,6 +273,6 @@
         <div id="footer" align="center">{% include 'includes/Footer_SCENIC.html'%}</div>
         {% endblock footer %}
     </div><!-- END content --> 
-</div><!-- END container -->
+</div><!-- END scenic-container -->
 </body>
 </html>

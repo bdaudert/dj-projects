@@ -78,7 +78,7 @@ $(document).ready(function() {
 </head>
 
 <body {% if bodyclass %}class="{% block bodyclass %}{% endblock %}" {% endif %} {% if bodyid %} id="{% block bodyid %}{% endblock %}"{% endif %}>
-<div class="container">
+<div class="scenic-container">
     <!-- Header -->
 	<h1 align="center">BRITTA'S WRCC-CSC PAGES</h1>
 
@@ -124,6 +124,6 @@ $(document).ready(function() {
     {% block footer %}
         <div id="footer" align="center">{% include 'includes/Footer_WRCC.html'%}</div>
     {% endblock footer%}
-</div><!-- END container -->
+</div><!-- END scenic-container -->
 </body>
 </html>

@@ -139,6 +139,8 @@ def contact_us(request):
     url = settings.APPLICATIONS['contact_us'][2]
     return render_to_response(url, context, context_instance=RequestContext(request))
 
+
+
 def dashboard(request):
     context = {
         'title': settings.APPLICATIONS['dashboard'][0],
@@ -264,6 +266,13 @@ def howto(request):
     context['app_urls'] = app_urls
     context['app_names'] = app_names
     context['param_urls'] = param_urls
+    return render_to_response(url, context, context_instance=RequestContext(request))
+
+def projections(request):
+    context = {
+        'title': settings.APPLICATIONS['projections'][0]
+    }
+    url = settings.APPLICATIONS['projections'][2]
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def resources(request):

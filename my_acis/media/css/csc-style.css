@@ -3,26 +3,22 @@
 Theme Name: SWCSC
 */
 
-/*
 html {
     height: 100%;
 }
-*/
+
 body {
-    font:Verdana,"Lucida Grande", Lucida, sans-serif;
-    /*font:"Arial Black",Gadget,sans-serif;*/
-    /*font:"DejaVu Serif";*/
+    /*font:Verdana,"Lucida Grande", Lucida, sans-serif;*/
+    font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
     background-color: #006666;
     margin: 0;
     padding: 0;
     font-size: 14px;
 }
 
-
-
-.container {
+.scenic-container {
+    width:970px;
     margin: 0 auto;
-    width: 960px;
     min-height:1000px;
     color:#000000;
     background-color: #FFEFD5;
@@ -36,67 +32,6 @@ body {
     position:relative;
     left:0;
     clear:both;
-}
-
-
-.center {
-    position:relative;
-    float:left;
-    padding: 10px 10px 10px 10px;
-    text-align:center;
-    width:450px;
-    background-color:#FFEFD5;
-}
-
-.center-left {
-    position:relative;
-    float: left;
-    padding: 10px 10px 10px 10px;
-    width:225px;
-    background-color:#FFEFD5;
-}
-
-.center-right {
-    position:relative;
-    float: right;
-    padding: 10px 20px 10px 10px;
-    width:225px;
-    background-color:#FFEFD5;
-}
-
-.major-left {
-    position:relative;
-    float:left;
-    padding: 10px 10px 10px 10px;
-    width:400px;
-}
-
-.major-right{
-    position:relative;
-    float:left;
-    padding: 10px 10px 10px 50px;
-    width:400px;
-}
-
-.wide-left {
-    position:relative;
-    float: left;
-    padding: 10px 0px 10px 50px;
-    width:600px;
-}
-
-.wide-right {
-    position:relative;
-    float: right;
-    padding: 10px 20px 10px 10px;
-    width:600px;
-}
-
-.frame {
-    margin:auto;
-    width:940px;
-    height:700px;
-    text-align:center;
 }
 
 
@@ -175,7 +110,7 @@ a:visited {color: #800080;}
 a:active { color:#FF0000;}
 
 #menu-top {
-  width: 960px;
+  width: 970px;
   height: 40px;
   clear: both;
 }
@@ -185,7 +120,7 @@ a:active { color:#FF0000;}
 /*
 #nav-top {
   float: left;
-  width: 960px;
+  width: 970px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -253,8 +188,8 @@ a:active { color:#FF0000;}
 #nav-top {
   /*float: left;*/
   position:absolute;
-  top:260px;
-  width: 960px;
+  top:263px;
+  width: 970px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -305,7 +240,7 @@ a:active { color:#FF0000;}
   color:#FFEFD5;
   text-decoration: none;
   text-shadow: 1px 1px 1px #006666;
-  background: #00906E;
+  background: #4c9393;
   /*
   -moz-border-radius-topright: 10px;
   -webkit-border-top-right-radius: 10px;
@@ -322,7 +257,7 @@ a:active { color:#FF0000;}
 #nav-top li:hover > ul {
   position: absolute;
   display: block;
-  width: 960px;
+  width: 970px;
   height: 45px;
   margin: 40px 0 0 100px;
   z-index:1;
@@ -356,11 +291,11 @@ a:active { color:#FF0000;}
 /*Nav for WRCC pages */
 #nav-wrcc {
   float: left;
-  width: 960px;
+  width: 970px;
   margin: 0;
   padding: 0;
   list-style: none;
-  background:#006666 repeat-x;
+  background:#4c9393 repeat-x;
   /*
   -moz-border-radius-topright: 10px;
   -webkit-border-top-right-radius: 10px;
@@ -380,10 +315,10 @@ a:active { color:#FF0000;}
   line-height: 40px;
   color:#FFEFD5;
   text-decoration: none;
-  text-shadow: 1px 1px 1px #006666;
+  text-shadow: 1px 1px 1px #4c9393;
   margin: 0;
   padding: 0 20px;
-  background:#006666 repeat-x;
+  background:#4c9393 repeat-x;
   /* 
   -moz-border-radius-topright: 10px;
   -webkit-border-top-right-radius: 10px;
@@ -406,9 +341,8 @@ a:active { color:#FF0000;}
 #nav-wrcc .current a, #nav-wrcc li:hover > a  {
   color:#FFEFD5;
   text-decoration: none;
-  text-shadow: 1px 1px 1px #006666;
-  /*background: #00906E;*/
-  background:#4c9393;
+  text-shadow: 1px 1px 1px #4c9393;
+  background:#a5c9c9;
   /*
   -moz-border-radius-topright: 10px;
   -webkit-border-top-right-radius: 10px;
@@ -425,7 +359,7 @@ a:active { color:#FF0000;}
 #nav-wrcc li:hover > ul {
   position: absolute;
   display: block;
-  width: 960px;
+  width: 970px;
   height: 45px;
   margin: 40px 0 0 100px;
   z-index:1;
@@ -444,7 +378,7 @@ a:active { color:#FF0000;}
   line-height: 45px;
   color:#FFEFD5;
   text-decoration: none;
-  text-shadow: 1px 1px 1px #006666;
+  text-shadow: 1px 1px 1px #4c9393;
   margin: 0;
   padding: 0 0 0 0;
   background:#00B98F repeat-x;
@@ -787,8 +721,12 @@ table.form tr td{
 
 table.form td {
     margin: 0px 0px;
+    padding:5px;
 }
 
+table.padded td{
+    padding:5px;
+}
 .navbar {
   width:200px;
   list-style-type: none;
@@ -1181,4 +1119,7 @@ color:#FFEFD5;
   padding: 10px;
 }
 
+.col-bordered{
+    border:2px solid #006666;
+}
 
