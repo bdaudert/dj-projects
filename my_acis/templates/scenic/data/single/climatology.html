@@ -134,7 +134,7 @@
         Dataset: {{ grid_name }}<br />
         {%endif%}
         {% if initial.station_id%}
-        <p class="stronger">Station: {{station_name}}</br>
+        <p class="stronger">Station: {{station_name.0}}</br>
         {%endif%}
         From Year {{start_year}} To Year {{end_year}}</br>
         </p></br>
@@ -158,7 +158,7 @@
         {%endif%}
         <label for={{tab}}>{{tab_names|lookup:forloop.counter0}}</label>
         <div class="tab_content" id={{tab}}>
-            <div id="scenic-container{{forloop.counter0}}"style="height:350px;width:90%;"></div>
+            <div id="hc-container{{forloop.counter0}}"style="height:350px;width:90%;"></div>
             <script type="text/javascript" src="{{ MEDIA_URL }}js/hc-sodsumm.js"></script>
             <br />
             <table>

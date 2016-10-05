@@ -145,7 +145,7 @@ $(function () {
             }; // end var defaultChart
             
             //Define table_name dependent vars like y-axis max, min, plot-color
-            var cntr = 'container' + i;
+            var cntr = 'hc-container' + i;
             var Chart;
             var series = [];
             var max = -9999.0;

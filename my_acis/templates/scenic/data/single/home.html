@@ -38,88 +38,63 @@
 </p>
 {%endif%}
 
-<table cellpadding="40" align="center">
-<td valign="top">
-    <table cellspacing="10">
-    <tr>
-        <td valign="top"><a class="trigger_hover" 
-        href="{{DATA_URL}}single/lister/{{url_params_single_lister}}">
-        <b>Data Lister</b></a>
+<div class="scenic-container" style="padding:10px;">
+    <div class="row" id="row1">
+        <div class="col-sm-3" id="column1">
+            <a class="trigger_hover" href="{{DATA_URL}}single/lister/{{url_params_single_lister}}"><b>Data Lister</b></a>
             <div class="pop-up">{% include 'includes/Docu_popup_single_lister.html'%}</div>
-        </td>
-        <td>
             <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_single_lister')">
-        </td>
-        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}single/monthly_summary/{{url_params_monthly_summary}}"><b>Monthly Summary</b></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_sodxtrmts.html'%}</div>
-        </td>
-        <td>
-            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_monthly_summary')">
-        </td>
-        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}single/yearly_summary/{{url_params_yearly_summary}}"><b>Yearly Summary</b></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_yearly_summary.html'%}</div>
-        </td>
-        <td>
-            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_yearly_summary')">
-        </td>
-       <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}single/intraannual/{{url_params_intraannual}}"><b>Intra-Year Comparison</b></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_intraannual.html'%}</div>
-       </td>
-        <td>
-            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_intraannual')">
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
+            <br />
             <a  href="{{DATA_URL}}single/lister/{{url_params_single_lister}}">
             <img class="app_img" alt="DataLister" title="DataLister" src="{{MEDIA_URL}}img/Stn.png"></a>
             <div class="pop-up">{% include 'includes/Docu_popup_single_lister.html'%}</div>
-        </td>
-        <td colspan="2">
+        </div><!--END column1-->
+        <div class="col-sm-3" id="column2">
+            <a class="trigger_hover" href="{{DATA_URL}}single/monthly_summary/{{url_params_monthly_summary}}"><b>Monthly Summary</b></a>
+            <div class="pop-up">{% include 'includes/Docu_popup_sodxtrmts.html'%}</div>
+            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_monthly_summary')">
+            <br />
             <a  href="{{DATA_URL}}single/monthly_summary/{{url_params_monthly_summary}}">
             <img class="app_img" alt="Sodxtrmts" title="Sodxtrmts" src="{{MEDIA_URL}}img/Sodxtrmts.png"></a> 
             <div class="pop-up">{% include 'includes/Docu_popup_sodxtrmts.html'%}</div>
-        </td>
-        <td colspan="2">
+        </div><!--END column2-->
+        <div class="col-sm-3" id="column3">
+            <a class="trigger_hover" href="{{DATA_URL}}single/yearly_summary/{{url_params_yearly_summary}}"><b>Yearly Summary</b></a>
+            <div class="pop-up">{% include 'includes/Docu_popup_yearly_summary.html'%}</div>        
+            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_yearly_summary')">
+            <br />
             <a  href="{{DATA_URL}}single/yearly_summary/{{url_params_yearly_summary}}">
             <img class="app_img" alt="yearly_summary" title="yearly_summary" src="{{MEDIA_URL}}img/yearly_summary.png"></a>
             <div class="pop-up">{% include 'includes/Docu_popup_yearly_summary.html'%}</div>
-        </td>
-        <td colspan="2">
+        </div><!--END column3-->
+        <div class="col-sm-3" id="column">
+        <a class="trigger_hover" href="{{DATA_URL}}single/intraannual/{{url_params_intraannual}}"><b>Intra-Year</b></a>
+            <div class="pop-up">{% include 'includes/Docu_popup_intraannual.html'%}</div>
+            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_intraannual')">
+            <br />
             <a  href="{{DATA_URL}}single/intraannual/{{url_params_intraannual}}">
             <img class="app_img" alt="Compare" title="Compare" src="{{MEDIA_URL}}img/Intraannual.png"></a>
             <div class="pop-up">{% include 'includes/Docu_popup_intraannual.html'%}</div>
-        </td>
-   </tr>
-   <!--Second row-->
-   <tr>
-        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}single/climatology/{{url_params_climatology}}"><b>Climatology</b></a>
+        </div><!--END column4-->
+    </div><!--END row1--><br />
+    <div class="row" id="row2">
+        <div class="col-sm-3" id="column1">
+            <a class="trigger_hover" href="{{DATA_URL}}single/climatology/{{url_params_climatology}}"><b>Climatology</b></a>
             <div class="pop-up">{% include 'includes/Docu_popup_sodsumm.html'%}</div>
-        </td>
-        <td>
             <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_climatology')">
-        </td>
-       <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}single/data_comparison/{{url_params_data_comparison}}"><b>Data comparison</b></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_data_comparison.html'%}</div>
-       </td>
-        <td>
-            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_data_comparison')">
-        </td>
-   </tr>
-   <tr>
-        <td colspan="2">
+            <br />
             <a  href="{{DATA_URL}}single/climatology/{{url_params_climatology}}">
             <img class="app_img" alt="Sodsumm" title="Sodsumm" src="{{MEDIA_URL}}img/SodsummGraph.png"></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_sodsumm.html'%}</div>
-        </td>
-        <td colspan="2">
+        </div><!--END column1-->
+        <div class="col-sm-3" id="column2">
+            <a class="trigger_hover" href="{{DATA_URL}}single/data_comparison/{{url_params_data_comparison}}"><b>Data comparison</b></a>
+            <div class="pop-up">{% include 'includes/Docu_popup_data_comparison.html'%}</div>        
+            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_data_comparison')">
+            <br />
             <a  href="{{DATA_URL}}single/data_comparison/{{url_params_data_comparison}}">
             <img class="app_img" alt="Compare" title="Compare" src="{{MEDIA_URL}}img/DataComparison.png"></a>
             <div class="pop-up">{% include 'includes/Docu_popup_data_comparison.html'%}</div>
-        </td>
-    </tr>
-   </table>
-</td>
-</table>
-
+        </div><!--END column2-->
+    </div><!--END row2-->
+</div><!--END senic-container-->
 {%endblock%}

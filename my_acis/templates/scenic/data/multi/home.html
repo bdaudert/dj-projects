@@ -20,65 +20,35 @@
     {% include 'includes/Docu_app_climate_engine.html'%}
 </div>
 
-<table cellpadding="20" align="center">
-<td valign="top">
-    <table cellspacing="10">
-    <tr>
-        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}multi/lister/{{url_params_multi_lister}}">
-        <b>Data Lister</b></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_multi_lister.html' %}</div>
-        </td>
-        <td>
-            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_multi_lister')">
-        </td>
-        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}multi/spatial_summary/{{url_params_spatial_summary}}">
-        <b>Spatial Summaries</b></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_spatial_summary.html' %}</div>
-        </td>
-        <td>
-            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_spatial_summary')">
-        </td>
-        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}multi/temporal_summary/{{url_params_temporal_summary}}">
-        <b>Temporal Summaries</b></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_temporal_summary.html' %}</div>
-        </td>
-        <td>
-            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_temporal_summary')">
-        </td>
-        <!--
-        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}multi/climate_engine/">
-        <b>Climate Engine</b></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_climate_engine.html' %}</div>
-        </td>
-        <td>
-            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_climate_engine')">
-        </td>-->
-    </tr>
-    <tr>
-        <td colspan="2">
-            <a  href="{{DATA_URL}}multi/lister/{{url_params_multi_lister}}">
-            <img class="app_img" alt="DataLister" title="DataLister" src="{{MEDIA_URL}}img/ClimateModel2.png"></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_multi_lister.html' %}</div>
-        </td>
-        <td colspan="2">
-            <a  href="{{DATA_URL}}multi/spatial_summary/{{url_params_spatial_summary}}">
-            <img class="app_img" alt="SpatialSummary" title="SpatialSummary" src="{{MEDIA_URL}}img/Area_TS.png"></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_spatial_summary.html' %}</div>
-        </td>
-        <td colspan="2">
-            <a  href="{{DATA_URL}}multi/temporal_summary/{{url_params_temporal_summary}}">
-            <img class="app_img" alt="TemporalSummary" title="TemporalSummary" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_temporal_summary.html' %}</div>
-        </td>
-        <!--
-        <td colspan="2">
-            <a  href="{{DATA_URL}}multi/climate_engine/">
-            <img class="app_img" alt="ClimateEngine" title="ClimateEngine" src="{{MEDIA_URL}}img/ClimateEngine.png"></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_climate_engine.html' %}</div>
-        </td>-->
-    </tr>
-    </table>
-</td>
-</table>
+<div class="scenic-container" style="padding:20px;">
+    <div class="row" align="center">
+    <div class="col-sm-4" id="column1">
+        <a class="trigger_hover" href="{{DATA_URL}}multi/lister/{{url_params_multi_lister}}"><b>Data Lister</b></a>
+        <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_multi_lister')">
+        <br /><br />
+        <div class="pop-up">{% include 'includes/Docu_popup_multi_lister.html' %}</div>
+        <a  href="{{DATA_URL}}multi/lister/{{url_params_multi_lister}}"><img class="app_img" alt="DataLister" title="DataLister" src="{{MEDIA_URL}}img/DataAccess.png"></a>
+        <div class="pop-up">{% include 'includes/Docu_popup_multi_lister.html' %}</div>
+    </div><!--END column1-->
+    <div class="col-sm-4" id="column2">
+        <a class="trigger_hover" href="{{DATA_URL}}multi/spatial_summary/{{url_params_spatial_summary}}"><b>Spatial Summaries</b></a>
+        <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_spatial_summary')">
+        <br /><br />
+        <div class="pop-up">{% include 'includes/Docu_popup_spatial_summary.html' %}</div>
+        <a  href="{{DATA_URL}}multi/spatial_summary/{{url_params_spatial_summary}}">
+        <img class="app_img" alt="SpatialSummary" title="SpatialSummary" src="{{MEDIA_URL}}img/Area_TS.png"></a>
+        <div class="pop-up">{% include 'includes/Docu_popup_spatial_summary.html' %}</div> 
+    </div><!--END column2-->
+    <div class="col-sm-4" id="column3">
+        <a class="trigger_hover" href="{{DATA_URL}}multi/temporal_summary/{{url_params_temporal_summary}}"><b>Temporal Summaries</b></a>
+        <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_temporal_summary')">
+        <br /><br />
+        <div class="pop-up">{% include 'includes/Docu_popup_temporal_summary.html' %}</div> 
+        <a  href="{{DATA_URL}}multi/temporal_summary/{{url_params_temporal_summary}}">
+        <img class="app_img" alt="TemporalSummary" title="TemporalSummary" src="{{MEDIA_URL}}img/ClimSumMap.png"></a>
+        <div class="pop-up">{% include 'includes/Docu_popup_temporal_summary.html' %}</div>
+    </div><!--END column3-->
+    </div><!--END row-->
+</div><!--END senic-container-->
 
 {%endblock content%}

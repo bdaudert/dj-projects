@@ -317,14 +317,14 @@ function generateTS_individual(chart_indices) {
     }
     
     //Clear old plot
-    //$('#container').contents().remove();
+    //$('#hc-container').contents().remove();
     //CHART
     var basicOptions = {
         //------------------------
         //  CHART PROPERTIES
         //------------------------
         chart: {
-            renderTo: 'container',
+            renderTo: 'hc-container',
             type:  chartType,
             marginTop: 100,
             zoomType: 'x',
@@ -613,7 +613,7 @@ function generateTS_smry(chart_indices) {
         series_data.push(r);
     }
     //Clear old plot
-    $('#container').contents().remove();
+    $('#hc-container').contents().remove();
     //CHART
     
     var basicOptions = {
@@ -621,7 +621,7 @@ function generateTS_smry(chart_indices) {
         //  CHART PROPERTIES
         //------------------------
         chart: {
-            renderTo: 'container',
+            renderTo: 'hc-container',
             type:  chartType,
             zoomType: 'x',
             spacingBottom: 30,

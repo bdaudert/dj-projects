@@ -36,30 +36,41 @@
   Years with one or more missing months are not considered</br>
   Two-digit years are departures from 1900: -20 = 1880, 102 = 2002</br>
   </p>
+  
   {%for stn, stn_data in results.items %}
-    <p class="stronger" style="color:darkblue">Station: ({{station_ids|lookup:stn|safe}}) {{station_names|lookup:stn|safe}}</br>
-    From Year {{start_year}} To Year {{end_year}}</br>
-    </p></br>
+    <div class="dataTableInfo" align="left" style="max-width:95%;word-wrap:break-word;">
+    Station: ({{station_ids|lookup:stn|safe}}) {{station_names|lookup:stn|safe}}</br>
+    From Year {{start_year}} To Year {{end_year}}<br /><br />
+    </div>
     {%if not stn_data%}
-    <p style="color:red">NO STATION DATA FOUND!</p></br>
+        <p style="color:red">NO STATION DATA FOUND!</p>
     {%else%}
         {%for type_idx, table_type in stn_data.items %}
-        {% if table_type.0 %}
-        <table>
-        {{headers|lookup:type_idx|safe}}
-        </table>
-        </br>
-        {%endif%}
-        <table>
-        <tr text-align="right">
-        {%for row in table_type %}
-          <tr text-align="right">{%for val in row%}<td>{{val}}<td>{%endfor%}</tr>
+            {% if table_type.0 %}
+                <h3 align="center">{{headers|lookup:type_idx|safe}}</h3>
+                <!--
+                <table border="1" width="99%" cellspacing="0" cellpadding="0">
+                {{headers|lookup:type_idx|safe}}
+                </table>-->
+                <br /><br />
+            {%endif%}
+
+            <table class="dataTable nowrap" border="1" width="760px" cellspacing="0" cellpadding="0">
+            {%for row in table_type %}
+                {% if forloop.counter == 1%}
+                    <thead><tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr></thead>
+                    <tfoot><tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr></tfoot>
+                    <tbody>
+                {% else %}
+                    <tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr>
+                {%endif%}
+            {%endfor%}
+            </tbody>
+            </table>
+            </br>
         {%endfor%}
-        </td>
-        </table>
-        </br>
-        {%endfor%}
-   {%endif%}     
+   {%endif%}<!--END if not stn_data-->     
   {%endfor%}
-{%endif%}
+{%endif%}<!--END results -->
+
 {% endblock %}
