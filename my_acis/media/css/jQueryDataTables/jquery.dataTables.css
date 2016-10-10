@@ -5,7 +5,7 @@ table.dataTable {
   width: 100%;
   margin: 0 auto;
   clear: both;
-  border:1px solid #006666;
+  border:1px solid #989898;
   /*border-collapse: separate;*/
   border-spacing: 0;
   /*
@@ -63,7 +63,7 @@ table.dataTable thead .sorting_desc_disabled {
   background-image: url("https://cdn.datatables.net/1.10.11/images/sort_desc_disabled.png");
 }
 table.dataTable tbody tr {
-  background-color: #FFEFD5;
+  background-color: #282828;
 }
 table.dataTable tbody tr.selected {
   background-color: #B0BED9;
