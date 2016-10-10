@@ -279,8 +279,11 @@ function initialize_station_finder() {
     else {
         var dataTableInfo = $.trim(String($('.dataTableInfo').text()).replace('/^\s*\n/gm', ''));
         var L = dataTableInfo.split('\n'), newL = [];
+        var header = '';
         for (var k =0;k<L.length;k++){
-            newL.push($.trim(L[k]));
+            var l_short = $.trim(L[k]).replace(/;/g, ' ');
+            newL.push(l_short);
+            header += l_short; 
         }
         dataTableInfo = newL.join(' ');
         dataTable = $('#station_list').DataTable({
@@ -295,6 +298,9 @@ function initialize_station_finder() {
                     'title':dataTableInfo,
                     'exportOptions': {
                         'columns': ':visible'
+                    }, 
+                    'customize': function(doc){
+                        return dataTableInfo + '\n' + doc;
                     }
                 },
                 {
@@ -302,6 +308,11 @@ function initialize_station_finder() {
                     'title':dataTableInfo,
                     'exportOptions': {
                         'columns': ':visible'
+                    },
+                    'customize': function(xlsx){
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                        var first_row = $('c[r=A1] t', sheet).text();
+                        $('c[r=A1] t', sheet).text(header);
                     }
                 },
                 {
