@@ -29,14 +29,15 @@
     <script src="http://code.jquery.com/jquery-2.2.1.js"></script>
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <!--<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>-->
+
     
     <!--Bootstrap-->
+    <link rel="stylesheet" href="{{MEDIA_URL}}css/font-awesome.css">
     <script src="{{ MEDIA_URL }}js/bootstrap-3.3.7.min.js"></script>
     <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
     <link rel="stylesheet" href="{{MEDIA_URL}}css/bootstrap-3.3.7.css">
     <!--scenic css overrides-->
     <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
-    
     <!--jQuery datatables-->
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/jquery.dataTables.css" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/buttons.dataTables.css" />
@@ -186,6 +187,7 @@
    <!--End id wrap-->
 
     <!-- Nav bar at top of page-->
+    <!--
     <div id="nav-top">
         <li><a href="{{HOME_URL}}"><font size="3">HOME</font></a></li>
         <li><a href="{{ABOUT_URL}}"><font size="3">ABOUT</font></a>
@@ -231,8 +233,68 @@
             </ul>
         </li>
         <li><a href="{{SCENIC_URL}}howto"><font size="3">HOW TO</font></a></li>
-        <!--<li><a href="{{SCENIC_URL}}resources"><font size="3">RESOURCES</font></a></li>-->
-    </div>
+    </div>-->
+
+    <!--nav bootstrap-->
+    <nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+
+         <!-- <a class="navbar-brand active" href="">Brand </a>-->
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+            <li><a href="{{HOME_URL}}">HOME</a></li>
+            <li class="dropdown">
+            <a href="{{ABOUT_URL}}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">ABOUT US<i class="fa fa-caret-down"></i></a> 
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="{{ABOUT_URL}}#overview">Overview</a></li>
+                <li><a href="{{ABOUT_URL}}#data">Available Datasets</a></li>
+                <li><a href="{{ABOUT_URL}}#contact_us">Contact Us</a></li>
+                <li><a href="{{ABOUT_URL}}#links">Links</a></li>
+            </ul>
+            </li>
+            <li class="dropdown">
+               <a href="{{DATA_URL}}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">DATA ACCESS<i class="fa fa-caret-down"></i></a>
+                <ul class="dropdown-menu" role="menu">
+                <li><a href="{{DATA_URL}}station_finder/">Station Finder</a></li>
+                <li class="dropdown-submenu">
+                    <a tabindex="0" href="">Single Point Products <i class="fa fa-caret-right"></i></a>
+                    <ul class="dropdown-menu">
+                      <li><a tabindex="0" href="{{DATA_URL}}single/lister/">Data Lister</a></li>
+                      <li><a tabindex="0" href="{{DATA_URL}}single/monthly_summary/">Monthly Summary</a></li>
+                      <li><a tabindex="0" href="{{DATA_URL}}single/yearly_summary/">Yearly Summary</a></li>
+                      <li><a tabindex="0" href="{{DATA_URL}}single/intraannual/">Single-Year Time Series</a></li>
+                      <li><a tabindex="0" href="{{DATA_URL}}single/data_comparison/">Grid/Station Data Comparison</a></li>
+                      <li><a tabindex="0" href="{{DATA_URL}}single/climatology/">Climatology</a></li>    
+                    </ul>
+                </li>
+                
+                <li class="dropdown-submenu">
+                    <a tabindex="-1" href="{{DATA_URL}}multi/">Multi Point Products <i class="fa fa-caret-right"></i></a>
+                    <ul class="dropdown-menu">
+                      <li><a tabindex="-1" href="{{DATA_URL}}multi/lister/">Data Lister</a></li>
+                      <li><a href="{{DATA_URL}}multi/spatial_summary/">Spatial Summary</a></li>
+                      <li><a href="{{DATA_URL}}multi/temporal_summary/">Temporal Summary</a></li>
+                    </ul>
+                </li>
+              </ul><!--ul dorpdown menu-->
+            </li> <!-- .dropdown -->
+          </ul> <!-- .nav .navbar-nav -->
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+    </nav> 
+
     <div class="content">
         <table width="960px">
         <td width="300px" valign="top">
