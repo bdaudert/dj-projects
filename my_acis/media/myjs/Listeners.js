@@ -1,4 +1,7 @@
 $(document).ready(function () {
+
+    $('[data-submenu]').submenupicker();
+
     var dataTableInfo = $.trim(String($('.dataTableInfo').text()).replace('/^\s*\n/gm', ''));
     var L = dataTableInfo.split('\n'), newL = [];
     var header = '';

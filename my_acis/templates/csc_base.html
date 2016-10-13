@@ -23,25 +23,19 @@
 
     <meta name="keywords" content="climate,climate change,Southwest US,Soutwest CSC,Climate Science Center, Climate Knowledge">
     <meta name="description" content="Southwest Climate and ENvironmental Information Collaborative">
-    <!-- jquery -->
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-    <!--<script src="http://code.jquery.com/jquery-1.11.1.js"></script>-->
-    <script src="http://code.jquery.com/jquery-2.2.1.js"></script>
-    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <!--<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>-->
-
+    
+    <!--jquery-->
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
     
     <!--Bootstrap-->
-    <link rel="stylesheet" href="{{MEDIA_URL}}css/font-awesome.css">
-    <script src="{{ MEDIA_URL }}js/bootstrap-3.3.7.min.js"></script>
-    <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
-    <link rel="stylesheet" href="{{MEDIA_URL}}css/bootstrap-3.3.7.css">
-    <!--scenic css overrides-->
-    <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
-    <!--jQuery datatables-->
-    <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/jquery.dataTables.css" />
-    <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/buttons.dataTables.css" />
-    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{{MEDIA_URL}}dist/css/bootstrap-submenu.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" defer></script>
+    <script src="{{MEDIA_URL}}dist/js/bootstrap-submenu.min.js" defer></script>
+
+
     <script src="{{ MEDIA_URL }}js/jquery.dataTables.min.js"></script>
     <script src="{{ MEDIA_URL }}js/dataTables.buttons.min.js"></script>
     <script src="{{ MEDIA_URL }}js/buttons.flash.min.js"></script> 
@@ -63,6 +57,7 @@
     <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
     <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
     -->
+
 
     <!-- Britta's Javascript utilities -->
     <script type="text/javascript" src="{{ MEDIA_URL }}myjs/dataStore.js"></script>
@@ -178,7 +173,6 @@
 <!--<body onbeforeunload="reset_options()">-->
 
 <body >
-
 <div class="scenic-container">
     <!-- Header -->
    <div>
@@ -236,64 +230,62 @@
     </div>-->
 
     <!--nav bootstrap-->
-    <nav class="navbar navbar-default" role="navigation">
-    <div class="container-fluid">
-
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-
-         <!-- <a class="navbar-brand active" href="">Brand </a>-->
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <nav class="navbar navbar-default">
+        <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
             <li><a href="{{HOME_URL}}">HOME</a></li>
             <li class="dropdown">
-            <a href="{{ABOUT_URL}}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">ABOUT US<i class="fa fa-caret-down"></i></a> 
-            <ul class="dropdown-menu" role="menu">
-                <li><a href="{{ABOUT_URL}}#overview">Overview</a></li>
-                <li><a href="{{ABOUT_URL}}#data">Available Datasets</a></li>
-                <li><a href="{{ABOUT_URL}}#contact_us">Contact Us</a></li>
-                <li><a href="{{ABOUT_URL}}#links">Links</a></li>
-            </ul>
+                <a href="{{ABOUT_URL}}" tabindex="0" data-toggle="dropdown" data-submenu>ABOUT US <span class="caret"></span></i></a> 
+                <ul class="dropdown-menu">
+                    <li><a href="{{ABOUT_URL}}#overview">Overview</a></li>
+                    <li><a href="{{ABOUT_URL}}#data">Available Datasets</a></li>
+                    <li><a href="{{ABOUT_URL}}#contact_us">Contact Us</a></li>
+                    <li><a href="{{ABOUT_URL}}#links">Links</a></li>
+                </ul>
             </li>
             <li class="dropdown">
-               <a href="{{DATA_URL}}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">DATA ACCESS<i class="fa fa-caret-down"></i></a>
-                <ul class="dropdown-menu" role="menu">
-                <li><a href="{{DATA_URL}}station_finder/">Station Finder</a></li>
+                <a href="{{DATA_URL}}" tabindex="0" data-toggle="dropdown" data-submenu>DATA ACCESS <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{{DATA_URL}}station_finder/">Station Finder</a></li>
+                    <li class="dropdown-submenu">
+                        <a tabindex="0" href="">Single Point Products</a>
+                        <ul class="dropdown-menu">
+                            <li><a tabindex="0" href="{{DATA_URL}}single/lister/">Data Lister</a></li>
+                            <li><a tabindex="0" href="{{DATA_URL}}single/monthly_summary/">Monthly Summary</a></li>
+                            <li><a tabindex="0" href="{{DATA_URL}}single/yearly_summary/">Yearly Summary</a></li>
+                            <li><a tabindex="0" href="{{DATA_URL}}single/intraannual/">Single-Year Time Series</a></li>
+                            <li><a tabindex="0" href="{{DATA_URL}}single/data_comparison/">Grid/Station Data Comparison</a></li>
+                            <li><a tabindex="0" href="{{DATA_URL}}single/climatology/">Climatology</a></li>
+                        </ul>
+                    </li>
                 <li class="dropdown-submenu">
-                    <a tabindex="0" href="">Single Point Products <i class="fa fa-caret-right"></i></a>
+                    <a tabindex="-1" href="{{DATA_URL}}multi/">Multi Point Products </a>
                     <ul class="dropdown-menu">
-                      <li><a tabindex="0" href="{{DATA_URL}}single/lister/">Data Lister</a></li>
-                      <li><a tabindex="0" href="{{DATA_URL}}single/monthly_summary/">Monthly Summary</a></li>
-                      <li><a tabindex="0" href="{{DATA_URL}}single/yearly_summary/">Yearly Summary</a></li>
-                      <li><a tabindex="0" href="{{DATA_URL}}single/intraannual/">Single-Year Time Series</a></li>
-                      <li><a tabindex="0" href="{{DATA_URL}}single/data_comparison/">Grid/Station Data Comparison</a></li>
-                      <li><a tabindex="0" href="{{DATA_URL}}single/climatology/">Climatology</a></li>    
-                    </ul>
-                </li>
-                
-                <li class="dropdown-submenu">
-                    <a tabindex="-1" href="{{DATA_URL}}multi/">Multi Point Products <i class="fa fa-caret-right"></i></a>
-                    <ul class="dropdown-menu">
-                      <li><a tabindex="-1" href="{{DATA_URL}}multi/lister/">Data Lister</a></li>
+                      <li><a tabindex="0" href="{{DATA_URL}}multi/lister/">Data Lister</a></li>
                       <li><a href="{{DATA_URL}}multi/spatial_summary/">Spatial Summary</a></li>
                       <li><a href="{{DATA_URL}}multi/temporal_summary/">Temporal Summary</a></li>
                     </ul>
                 </li>
-              </ul><!--ul dorpdown menu-->
+                <li><a href="{{DATA_URL}}climate_engine/">Climate Engine</a></li>
+              </ul><!--ul dropdown menu-->
             </li> <!-- .dropdown -->
+            <li class="dropdown">
+                <a href="{{SCENIC_URL}}dashboard/" tabindex="0" data-toggle="dropdown" data-submenu>DASHBOARD <span class="caret"></span></i></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{{SCENIC_URL}}dashboard#weather">Weather</a></li>
+                    <li><a href="{{SCENIC_URL}}dashboard#temperatures">Temperatures</a></li>
+                    <li><a href="{{SCENIC_URL}}dashboard#precipitation">Precipitation</a></li>
+                    <li><a href="{{SCENIC_URL}}dashboard#drought">Drought</a></li>
+                    <li><a href="{{SCENIC_URL}}dashboard#water">Water</a></li>
+                    <li><a href="{{SCENIC_URL}}dashboard#snow">Snow</a></li>
+                    <li><a href="{{SCENIC_URL}}dashboard#projections">Projections</a></li>
+                </ul>
+            </li>
+            <li><a href="{{SCENIC_URL}}howto">HOW TO</a></li>
           </ul> <!-- .nav .navbar-nav -->
         </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-    </nav> 
+    </nav>
+
 
     <div class="content">
         <table width="960px">
