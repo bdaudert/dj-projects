@@ -43,6 +43,8 @@ Mon - Month</br>
 
   </p>
   {%for stn, stn_data in results.items %}
+    
+    <div class="dataTableInfo"  align="left" style="max-width:95%;word-wrap:break-word;">
     <p class="stronger" style="color:darkblue">Station: ({{station_ids|lookup:stn|safe}}) {{station_names|lookup:stn|safe}}</br>
     START YEAR {{start_year}} END YEAR {{end_year}}</br>
     ELEMENT {{element}} UNITS {{units}}</br>
@@ -50,24 +52,42 @@ Mon - Month</br>
     {%if threshold%}
     VALUES {{op}} THAN {{threshold}} ONLY.</br>
     {%endif%}
-    </p></br>
+    </div></br>
+
     {%if not stn_data%}
-    <p style="color:red">NO STATION DATA FOUND!</p></br>
+        <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}
-    <table>
-      <tr>
-      <td />Mon</td><td >Dy</td><td >Nd</td><td>M</td><td >Num</td><td>Low</td><td >5%</td><td >10%</td><td >20%</td><td >25%</td><td >30%<td >33.3%</td><td >40%</td><td >50</td><td >60%</td><td >67.7%</td><td >70%</td><td >75%</td><td >80%</td><td >90%</td><td >95%</td><td >High</td>
-      </tr>
-      {%for doy_data in stn_data %}
-       <tr>
-        {%for dat in doy_data %}
-        <td style="text-align:right">{{dat}}</td>
-        {%endfor%}
-       </tr>
-      {%endfor%}
+    
+    <table class="dataTable nowrap"  border="1" width="760px" cellspacing="0" cellpadding="0">
+    {%for doy_data in stn_data %}
+        {%if forloop.counter == 1%}
+            <thead>
+                <tr>
+                {%for dat in doy_data %}
+                    <th>{{dat}}</th>
+                {%endfor%}
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                {%for dat in doy_data %}
+                    <th>{{dat}}</th>
+                {%endfor%}
+                </tr>
+            </tfoot>
+            <tbody>
+        {%else%}
+            <tr>
+            {%for dat in doy_data %}
+                <td>{{dat}}</td>
+            {%endfor%}
+            </tr>
+        {%endif%}
+    {%endfor%}
+    </tbody>
     </table>
-    {%endif%}     
-  {%endfor%}
-{%endif%}
+    {%endif%}<!--end if not stn_data-->   
+  {%endfor%}<!--end for stn-->
+{%endif%} <!--end if results-->
 
 {% endblock %}

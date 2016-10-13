@@ -53,11 +53,11 @@
 
     <h3>Creating a conda environment for Earthengine API</h3>
     <p class="info">This will allow you to create your own python environment with versions of
-    python packages that match  the versions on the app engine server. in the example below we creat the env ee-python. It will be installed by conda in $(PATH_TO_ANACONDA_INSTALLATION)/envs</p>
+    python packages that match  the versions on the app engine server. in the example below we creat the env ee-env. It will be installed by conda in $(PATH_TO_ANACONDA_INSTALLATION)/envs</p>
 
     <pre class="code">
-    conda create -n ee-python python=2.7
-    source activate ee-python
+    conda create -n ee-env python=2.7
+    source activate ee-env
     </pre>
 
     <p class="info">Now that you have set up this basic python env, you will need to install some packages there that Earthengine needs in this environment</p>
@@ -67,7 +67,7 @@
     pip install earthengine-api
     </pre>
 
-    <p class="info">To use the Launcher with this environment, make sure the python path in the lunacher is set correctly: go to GoogleAppEngineLauncher--> Preferences --> Python Path. Enter $(PATH_TO_ANACONDA_INSTALLATION)/envs/ee-python/bin/python2.7. <b>Make sure to hit Enter for the changes to take effect</b> If you are using dev_appserver.py from the commandline, make sure that you sourced the environment before running it: <pre class="code">source ee-python</pre></p>
+    <p class="info">To use the Launcher with this environment, make sure the python path in the lunacher is set correctly: go to GoogleAppEngineLauncher--> Preferences --> Python Path. Enter $(PATH_TO_ANACONDA_INSTALLATION)/envs/ee-env/bin/python2.7. <b>Make sure to hit Enter for the changes to take effect</b> If you are using dev_appserver.py from the commandline, make sure that you sourced the environment before running it: <pre class="code">source ee-env</pre></p>
 
 
     <h3>Set up the Hello World project</h3>
