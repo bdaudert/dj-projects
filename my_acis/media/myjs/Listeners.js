@@ -125,17 +125,22 @@ $(document).ready(function () {
     /*  
     Zoom To Location on map
     */
-    $('#address').on('keypress', function (e) {
-        if(e.which === 13){
-            //Disable textbox to prevent multiple submit
-            $(this).attr("disabled", true);    
-            zoomToLocation();
-            $(this).attr("disabled", false);
-        }   
-        else{
-            $(this).attr("disabled", false);
-         }   
+    $("#address").focus(function(){
+        if ($(this).val() == 'Place/Location'){
+            $(this).val('');
+        }
     });
+
+    $('#address').bind("enterKey",function(e){
+        zoomToLocation();
+    });
+    $('#address').keyup(function(e){
+        if(e.keyCode == 13)
+        {
+            $(this).trigger("enterKey");
+         }
+    });
+    
 
     /*
     DATE CHANGES

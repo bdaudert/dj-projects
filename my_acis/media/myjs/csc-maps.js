@@ -15,8 +15,8 @@ function zoomToLocation() {
            window.map.setZoom(7);
            if (window.marker){
                 window.marker.setPosition(results[0].geometry.location);
-                var lat = results[0].geometry.location.lat();
-                var lon = results[0].geometry.location.lng();
+                var lat = results[0].geometry.location.lat().toFixed(4);
+                var lon = results[0].geometry.location.lng().toFixed(4);
                 var infowindow = infowindow = new google.maps.InfoWindow({
                     content: '<div id="MarkerWindow" ' + 
                     'style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
@@ -26,6 +26,9 @@ function zoomToLocation() {
                     maxWidth: 100
                 });
                 infowindow.open(window.map, window.marker);
+                if ($('#location').length) {
+                    $('#location').val(String(lon) + ',' + String(lat));
+                }
             }
         } 
         else {
@@ -34,22 +37,6 @@ function zoomToLocation() {
   });
 }
 
-/*
-Zoom To Location on map
-*/
-/*
-$('#address').on('keypress', function (e) {
-    console.log('YO');
-    if(e.which === 13){
-        //Disable textbox to prevent multiple submit
-        $(this).attr("disabled", "disabled");    
-        zoomToLocation(); 
-    }  
-    else{
-        $(this).attr("disabled", "false");
-     }
-});
-*/
 function printMapControl(controlDiv,map_div){
   // Set CSS for the control border.
   var controlUI = document.createElement('div');
