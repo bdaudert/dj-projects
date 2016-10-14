@@ -26,6 +26,9 @@ function zoomToLocation() {
                     maxWidth: 100
                 });
                 infowindow.open(window.map, window.marker);
+                if ($('#location').length) {
+                    $('#location').val(String(lon) + ',' + String(lat));
+                }
             }
         } 
         else {
