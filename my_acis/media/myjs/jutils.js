@@ -171,9 +171,9 @@ function ShowPopupDocu(DivId){
             $(this).scrollTop(0);
         }
     });
-    $(".ui-widget-content").css("background-color", "#282828");
-    $(".ui-widget-content").css("border", "1px solid #989898");
-    $(".ui-widget-header").css("color", "#989898");
+    $(".ui-widget-content").css("background-color", "#ececec");
+    $(".ui-widget-content").css("border", "1px solid #d0d0d0");
+    $(".ui-widget-header").css("color", "#000000");
 }
 
 function ShowHowtoDocu(DivId){
@@ -186,10 +186,9 @@ function ShowHowtoDocu(DivId){
             $(this).scrollTop(0);
         }
     });
-    $(".ui-widget-content").css("background-color", "#282828");
-    //$(".ui-widget-content").css("border", "1px solid #989898");
-    $(".ui-widget-header").css("color", "#989898");
-    $(".ui-icon").css("background-color", "#282828");
+    $(".ui-widget-content").css("background-color", "#ececec");
+    $(".ui-widget-header").css("color", "#d0d0d0");
+    $(".ui-icon").css("background-color", "#ececec");
 }
 
 
