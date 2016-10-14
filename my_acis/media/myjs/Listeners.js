@@ -122,6 +122,8 @@ $(document).ready(function () {
         return false;
     });
 
+
+
     /*  
     Zoom To Location on map
     */
@@ -132,7 +134,7 @@ $(document).ready(function () {
     });
 
     $('#address').bind("enterKey",function(e){
-        zoomToLocation();
+        zoomToLocation();//in csc-maps
     });
     $('#address').keyup(function(e){
         if(e.keyCode == 13)

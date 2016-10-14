@@ -6,6 +6,7 @@ String.prototype.inList=function(list){
 //function precise_round(num,decimals){
 //return Math.round(num*Math.pow(10,decimals))/Math.pow(10,decimals);
 //}
+
 function zoomToLocation() {
     var address = document.getElementById('address').value;
     var geocoder = new google.maps.Geocoder(); 
