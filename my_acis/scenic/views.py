@@ -107,12 +107,12 @@ def swcke_home(request):
     }
     return render_to_response('scenic/swcke_home.html', context, context_instance=RequestContext(request))
 
-def about_us(request):
+def about(request):
     context = {
-        'title': settings.APPLICATIONS['about_us'][0],
+        'title': settings.APPLICATIONS['about'][0],
         'icon':'AboutUs.png'
     }
-    url = settings.APPLICATIONS['about_us'][2]
+    url = settings.APPLICATIONS['about'][2]
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def who_we_are(request):

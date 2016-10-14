@@ -11,7 +11,7 @@
 </div>
 <div id="how_to" style="display:none;">
     <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
-    <div id="Docu_grids">{% include 'includes/Docu_grids_historic.html'%}</div>
+    <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
     <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
     <div id="Docu_cumulative_or_values">{% include 'includes/Docu_cumulative_or_values.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
@@ -68,9 +68,9 @@
             <tr id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</tr>
         {%endif%}
         {%if initial.location%}        
-        <tr id="grid_type" style="display:table-row">{% include 'includes/grids_historic.html'%}</tr>
+        <tr id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr>
         {%else%}
-        <tr id="grid_type" style="display:none">{% include 'includes/grids_historic.html'%}</tr>
+        <tr id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
         {%endif%}
         <tr style="display:table-row">{% include 'includes/element.html'%}</tr>
         <tr style="display:table-row;">{% include 'includes/calculation.html'%}</tr>
