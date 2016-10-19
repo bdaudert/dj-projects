@@ -1365,7 +1365,7 @@ $(document).ready(function () {
         $(this).css('backgroundColor', "#8FBC8F");
     });
     $('#station_list').on('mouseout', 'tr', function(){
-         $(this).css('backgroundColor',"#282828");
+         $(this).css('backgroundColor',"#FFEFD5");
     });
 
     /***************
@@ -1434,14 +1434,6 @@ $(document).ready(function () {
         }); 
     }  
 
-    /*
-    $("#excelExport").on('click', function (event) {
-        exportTable.apply(this, [$('#station_list'), 'export.xls','excel']);
-    });
-     $("#csvExport").on('click', function (event) {
-        exportTable.apply(this, [$('#station_list'), 'export.csv','csv']);
-    });
-    */
     /***************
     AJAX CALLS
     ****************/
