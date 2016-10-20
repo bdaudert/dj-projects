@@ -26,10 +26,7 @@ def get_urls(request):
             'HOME_URL':settings.HOME_URL,
             'SCENIC_URL':settings.SCENIC_URL,
             'ABOUT_URL':settings.ABOUT_URL,
-            'WHO_URL':settings.WHO_URL,
-            'WHAT_URL':settings.WHAT_URL ,
-            'CONTACT_URL':settings.CONTACT_URL,
-            'DASH_URL':settings.DASH_URL,
             'DATA_URL':settings.DATA_URL,
+            'DASHBOARD_URL':settings.DASHBOARD_URL
             }
 

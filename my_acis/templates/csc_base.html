@@ -1,6 +1,9 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <!DOCTYPE HTML>
-<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">-->
-<html xmlns="http://www.w3.org/1999/xhtml" lang="{% if LANGUAGE_CODE %}{{ LANGUAGE_CODE }}{% else %}en-US{% endif %}" xml:lang="{% if LANGUAGE_CODE %}{{ LANGUAGE_CODE }}{% else %}en-US{% endif %}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<!--<html xmlns="http://www.w3.org/1999/xhtml" lang="{% if LANGUAGE_CODE %}{{ LANGUAGE_CODE }}{% else %}en-US{% endif %}" xml:lang="{% if LANGUAGE_CODE %}{{ LANGUAGE_CODE }}{% else %}en-US{% endif %}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+-->
 
 <head>
     <title>SCENIC
@@ -21,6 +24,9 @@
     ga('send', 'pageview');
     </script>
 
+    <!-- meta-->
+    <!--<meta name="viewport" content="initial-scale=1.0, user-scalable=yes, width=device-width" />-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="keywords" content="climate,climate change,Southwest US,Soutwest CSC,Climate Science Center, Climate Knowledge">
     <meta name="description" content="Southwest Climate and ENvironmental Information Collaborative">
     
@@ -30,10 +36,6 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script> 
 
-    <!-- 
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>-->
-
     <!--Bootstrap-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
@@ -41,6 +43,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" defer></script>
     <script src="{{MEDIA_URL}}dist/js/bootstrap-submenu.min.js" defer></script>
 
+     <!--jQuery datatables-->
+    <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/jquery.dataTables.css" />
+    <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/buttons.dataTables.css" />
 
     <script src="{{ MEDIA_URL }}js/jquery.dataTables.min.js"></script>
     <script src="{{ MEDIA_URL }}js/dataTables.buttons.min.js"></script>
@@ -64,7 +69,6 @@
     <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
     -->
 
-
     <!-- Britta's Javascript utilities -->
     <script type="text/javascript" src="{{ MEDIA_URL }}myjs/dataStore.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}myjs/jutils.js"></script>
@@ -74,8 +78,7 @@
     <script type="text/javascript" src="{{ MEDIA_URL }}myjs/data-utils.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}myjs/csc-maps.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}myjs/Listeners.js"></script>
-    <!-- Map API scripts and properties-->
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes, width=device-width" />
+    
     <!--
     <script type="text/javascript"
         src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true&libraries=drawing">
@@ -105,32 +108,9 @@
     <!-- include greybox media for pop-up windows: WRCC links to anomaly maps -->
     <!--<script type="text/javascript" src="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.js"></script>-->
     <script type="text/javascript" src="{{MEDIA_URL}}myjs/greybox.js"></script>
-    <!--<link href="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.css" rel="stylesheet" type="text/css" media="all">-->
     <link href="{{MEDIA_URL}}css/greybox.css" rel="stylesheet" type="text/css" media="all">
 
 
-    <!--Backbutton issue-->
-    <script type="text/javascript">
-    //$(document).ready(function () {
-    //This causes select options to go to default during processing.
-    //$(window).bind('beforeunload', function(e) {
-    $(window).bind('pageshow', function(e) { 
-        $("select").each(function () {
-            //var sel = $(this).find('option[selected]').val();
-            var sel = $(this).val();
-            if ($.isArray(sel)){
-                $.each(sel, function(i,val){
-                    $('option[value=' + val + ']').prop("selected", true);
-                });
-            }
-            else{
-                $(this).val($(this).find('option[selected]').val());
-            }
-        }); 
-        //$(this).val($(this).find('option[selected]').val()); 
-    });
-    </script>
-    
     <!--Hide loading icon iupon page load-->
     <script language="javascript" type="text/javascript">
         //$(window).load(function() {
@@ -156,38 +136,18 @@
     <input type="hidden" id="TMP_DIR" name="variable" value="{{ TMP_DIR }}">
     <input type="hidden" id="TEMP" name="variable" value="{{ TEMP }}">
     <input type="hidden" id="LIB_PREFIX" name="variable" value="{{ LIB_PREFIX }}">
-    <!--SCENIC SERVER DIRS -->
-    <input type="hidden" id="STATIC_URL" name="variable" value="{{ STATIC_URL }}">
-    <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-    <input type="hidden" id="JSON_URL" name="variable" value="{{ JSON_URL }}">
-    <input type="hidden" id="HTML_URL" name="variable" value="{{ HTML_URL }}">
-    <input type="hidden" id="KML_URL" name="variable" value="{{ KML_URL }}">
-    <input type="hidden" id="TMP_URL" name="variable" value="{{ TMP_URL }}">
-    <input type="hidden" id="IMG_URL" name="variable" value="{{ IMG_URL }}">
-    <input type="hidden" id="URL_PREFIX" name="variable" value="{{ URL_PREFIX }}">
-    <input type="hidden" id="HOME_URL" name="variable" value="{{ HOME_URL }}">
-    <input type="hidden" id="SCENIC_URL" name="variable" value="{{ SCENIC_URL }}">
-    <input type="hidden" id="ABOUT_URL" name="variable" value="{{ ABOUT_URL }}">
-    <input type="hidden" id="WHAT_URL" name="variable" value="{{ WHAT_URL }}">
-    <input type="hidden" id="WHO_URL" name="variable" value="{{ WHO_URL }}">
-    <input type="hidden" id="CONTACT_URL" name="variable" value="{{ CONTACT_URL }}">
-    <input type="hidden" id="DASH_URL" name="variable" value="{{ DASH_URL }}">
-    <input type="hidden" id="DATA_URL" name="variable" value="{{ DATA_URL }}">
 </head>
 
-<!--deals with back button issue... only works in Chrome and badly at that--> 
-<!--<body onbeforeunload="reset_options()">-->
 
-<body >
-<div class="scenic-container">
-    <!-- Header -->
-   <div>
-        <img width="100%" style="padding:0;margin:0;" src="{{ MEDIA_URL }}img/SCENIC_NEW.png">
-   </div>
-
+<body>
+<div class="container">
     <!--nav bootstrap-->
     <nav class="navbar navbar-default">
         <div class="collapse navbar-collapse">
+            <div class="header-banner nav-header">
+                <img class="img-responsive banner" width="100%" height="5%" src="{{ MEDIA_URL }}img/SCENIC_NEW.png">
+            </div>
+            
             <ul class="nav navbar-nav">
             <li><a href="{{HOME_URL}}">HOME</a></li>
             <li class="dropdown">
@@ -242,47 +202,35 @@
         </div><!-- /.navbar-collapse -->
     </nav>
 
+    <!--Loading image-->
+    <div id="loading">
+    <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />
+    </div>
 
-    <div class="content">
-        <table width="960px">
-        <td width="300px" valign="top">
-            <p class="message">Recommended browsers: Chrome, FF, IE9+</p>
-        </td>
-        <td width="440px" align="center">
-            <h1 align="center" class="title">{{title}}</h1>
-        </td>
-        <td width="230px" valign="top" align="right">
-            <div class="searchbox">
+    <div class="row" align="center">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
             <!-- Search Box -->
             <form target="_blank"  method="get" action="http://www.google.com/search">
-            <div id="searchbox">
-            <table border="0">
-            <tr>
-            <td colspan="2"><input type="text"   name="q" size="25" maxlength="255"/></td>
-            <td><input type="submit" value="Search" /></td>
-            </tr>
-            <tr>
-            <td><input type="radio"  name="sitesearch" value="http://wrcc.dri.edu/csc/scenic/" checked />This Site</td>
-            <td><input type="radio"  name="sitesearch" value="" />The Web</td>
-            <td></td>
-            </tr>
-            </table>
-            </div><!--End id searchbox-->
+                <input type="text"   name="q" size="25" maxlength="255"/>
+                <input type="submit" value="Search" /><br />
+                <input type="radio"  name="sitesearch" value="http://wrcc.dri.edu/csc/scenic/" checked />This Site
+                <input type="radio"  name="sitesearch" value="" />The Web
             </form>
-            </div><!--End class searchbox--> 
-        </td>
-        </table>
-        <!--Loading image-->
-        <div id="loading">
-        <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />
         </div>
-        {% block content %}
-        {% endblock content%}
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
+            <a class="btn btn-primary" href="mailto:scenic@dri.edu" target="_top">Send Feedback</a>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
+            <a class="btn btn-primary" href="{{ABOUT_URL}}#contact_us">Contact Us</a>
+        </div>
+    </div><br />
 
-        {% block footer %}
+    {% block content %}
+    {% endblock content%}
+
+    {% block footer %}
         <div id="footer" align="center">{% include 'includes/Footer_SCENIC.html'%}</div>
-        {% endblock footer %}
-    </div><!-- END content --> 
-</div><!-- END scenic-container -->
+    {% endblock footer %}
+</div><!--end container-->
 </body>
 </html>
