@@ -4,26 +4,38 @@
 <meta name="description" content="SCENIC Home">
 
 {%block content %}
-   <div class="docu" id="Docu_about_SCENIC" style="display:none;">
-    {% include 'includes/Docu_about_SCENIC.html'%}
+    <!--Documentation-->
+    <div class="docu" id="Docu_networks" style="display:none;">
+        {% include 'includes/Docu_networks.html'%}
+    </div>
+    <div class="docu" id="Docu_PRISM" style="display:none;">
+        {% include 'includes/Docu_PRISM.html'%}
+    </div> 
+    <div class="docu" id="Docu_NRCC_INT" style="display:none;">
+        {% include 'includes/Docu_NRCC_INT.html'%}
+    </div>  
+    <div class="docu" id="Docu_LOCA" style="display:none;">
+        {% include 'includes/Docu_LOCA.html'%}
+    </div>
+    <div class="docu" id="Docu_NARCCAP" style="display:none;">
+        {% include 'includes/Docu_NARCCAP.html'%}
     </div> 
 
-    <div class="bg-success" style="width:100%;padding:10px;text-align:center;">
+    <div class="bg-success full-col">
         {% include 'includes/SCENIC_mission_statement.html'%}
     </div><br />
-    <!--<h1 class="link title" align="center" onclick="ShowHowtoDocu('Docu_about_SCENIC')">or read more</h1>-->
    
     <div class="row">
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            <div class="bg-info" style="width:100%;padding:5px;">
+            <div class="bg-info main-col">
             <h1>
-                <a href="{{DATA_URL}}">Data</a><br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{DATA_URL}}">Data</a><br />
                 <small>{% include 'includes/Docu_popup_data_access.html'%}</small>
             </h1>
             </div>
         </div>
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            <div class="bg-info" style="width:100%;padding:5px;">
+            <div class="bg-info main-col">
             <h1>
                 <a href="{{DATA_URL}}">Analysis Tools</a><br />
                 <small>{% include 'includes/Docu_popup_analysis_tools.html'%}</small>
@@ -31,7 +43,7 @@
             </div>
         </div>
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            <div class="bg-info" style="width:100%;padding:5px;">
+            <div class="bg-info main-col">
             <h1>
                 <a href="{{DASHBOARD_URL}}">Monitoring Tools</a><br />
                 <small>{% include 'includes/Docu_popup_dashboard.html'%}</small>

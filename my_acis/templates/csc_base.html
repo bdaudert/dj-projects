@@ -29,24 +29,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="keywords" content="climate,climate change,Southwest US,Soutwest CSC,Climate Science Center, Climate Knowledge">
     <meta name="description" content="Southwest Climate and ENvironmental Information Collaborative">
-    
+
     <!--jquery-->
     <script src="http://code.jquery.com/jquery-3.1.0.min.js"></script>
-    <!--<script src="http://code.jquery.com/jquery-2.2.1.js"></script>-->
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script> 
 
-    <!--Bootstrap-->
+    <!--Style sheets-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="{{MEDIA_URL}}dist/css/bootstrap-submenu.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" defer></script>
-    <script src="{{MEDIA_URL}}dist/js/bootstrap-submenu.min.js" defer></script>
-
-     <!--jQuery datatables-->
+    <!--csc style sheet-->
+    <link rel="stylesheet" href="{{ MEDIA_URL }}css/csc-style.css" />    
+    <!--jQuery datatables style sheet-->
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/jquery.dataTables.css" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/buttons.dataTables.css" />
 
+
+    <!--Bootstrap-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" defer></script>
+    <script src="{{MEDIA_URL}}dist/js/bootstrap-submenu.min.js" defer></script>
+    
+    <!--jquery-ui NEEDS TO BE AFTER BOOTSTRAP-->
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>     
+
+
+    <!--jQuery datatables-->
     <script src="{{ MEDIA_URL }}js/jquery.dataTables.min.js"></script>
     <script src="{{ MEDIA_URL }}js/dataTables.buttons.min.js"></script>
     <script src="{{ MEDIA_URL }}js/buttons.flash.min.js"></script> 
@@ -145,7 +152,7 @@
     <nav class="navbar navbar-default">
         <div class="collapse navbar-collapse">
             <div class="header-banner nav-header">
-                <img class="img-responsive banner" width="100%" height="5%" src="{{ MEDIA_URL }}img/SCENIC_NEW.png">
+                <img class="img-responsive" width="100%" height="5%" src="{{ MEDIA_URL }}img/SCENIC_NEW.png">
             </div>
             
             <ul class="nav navbar-nav">
