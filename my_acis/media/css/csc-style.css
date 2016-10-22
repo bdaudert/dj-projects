@@ -1,8 +1,3 @@
-/*
-            }
-Theme Name: SWCSC
-*/
-
 html {
     height: 100%;
 }
@@ -17,7 +12,22 @@ body {
     background: #dedede; /* For browsers that do not support gradients */
 }
 
-/*Classes*/
+/* Tables */
+table.dashboard {
+    width:100%;
+    border-spacing: 10px;
+    border-collapse: separate;
+    text-align:center;
+    border: 2px solid grey;
+}
+
+/* Images */
+img.sidebar {
+    width: 100%;
+    height:auto;
+}
+
+/* Classes */
 .main-col {
     /*width:100%;*/
     padding:5px;
@@ -38,3 +48,6 @@ body {
 }
 
 .link:hover { color:#800080;}
+
+
+
