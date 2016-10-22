@@ -244,7 +244,20 @@
         </div>
     </div><br />
 
+    <div class="row lead" align="center">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
+            <div class="bg-danger full-col page-header">
+            {%if title%}
+                {{title}}
+            {%else%}
+                {% include 'includes/SCENIC_mission_statement.html'%}
+            {%endif%}
+            </div>
+        </div>
+    </div>
+
     {% block content %}
+
     {% endblock content%}
 
     {% block footer %}

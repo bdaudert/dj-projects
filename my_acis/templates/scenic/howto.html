@@ -2,112 +2,62 @@
 
 {% block content %}
 
-<!--Documentation-->
-<div class="docu" id="Docu_howto_station_finder" style="display:none;">
-    {% include 'includes/Docu_howto_station_finder.html'%}
-</div>
-<div class="docu" id="Docu_howto_multi_lister" style="display:none;">
-    {% include 'includes/Docu_howto_multi_lister.html'%}
-</div>
-<div class="docu" id="Docu_howto_monthly_summary" style="display:none;">
-    {% include 'includes/Docu_howto_monthly_summary.html'%}
-</div>
-<div class="docu" id="Docu_howto_climate_primer" style="display:none;">
-    <iframe src={{MEDIA_URL}}img/Docu_howto_climate_primer.pdf width="650px" height="900px"></iframe>
-</div>
-<div class="docu" id="Docu_howto_scenic_data" style="display:none;">
-    {% include 'includes/Docu_howto_scenic_data.html'%}
-</div>
-<div class="docu" id="Docu_howto_climate_engine_data" style="display:none;">
-    {% include 'includes/Docu_howto_climate_engine_data.html'%}
-</div>
+    <!--Documentation-->
+    <div class="docu" id="Docu_howto_station_finder" style="display:none;">
+        {% include 'includes/Docu_howto_station_finder.html'%}
+    </div>
+    <div class="docu" id="Docu_howto_multi_lister" style="display:none;">
+        {% include 'includes/Docu_howto_multi_lister.html'%}
+    </div>
+    <div class="docu" id="Docu_howto_monthly_summary" style="display:none;">
+        {% include 'includes/Docu_howto_monthly_summary.html'%}
+    </div>
+    <div class="docu" id="Docu_howto_climate_primer" style="display:none;">
+        <iframe src={{MEDIA_URL}}img/Docu_howto_climate_primer.pdf width="650px" height="900px"></iframe>
+    </div>
+    <div class="docu" id="Docu_howto_scenic_data" style="display:none;">
+        {% include 'includes/Docu_howto_scenic_data.html'%}
+    </div>
+    <div class="docu" id="Docu_howto_climate_engine_data" style="display:none;">
+        {% include 'includes/Docu_howto_climate_engine_data.html'%}
+    </div>
 
-<div class="docu" id="Docu_howto_LOCA" style="display:none;">
-    {% include 'includes/Docu_howto_LOCA.html'%}
-</div>
+    <div class="docu" id="Docu_howto_LOCA" style="display:none;">
+        {% include 'includes/Docu_howto_LOCA.html'%}
+    </div>
 
-<table align="center" width="95%">
-<td valign="top" width="100%" align="left">
-
-<table align="center" cellpadding="5px">
-<tr>
-    <td colspan="2"><h2><u>Data Documentation</u></h2></td>
-</tr>
-<tr>
-    <td>
-    <p class="dark_blue">
-    What datasets are available in SCENIC?
-    </p>
-    </td>
-    <td>
-    <p class="link" onclick="ShowHowtoDocu('Docu_howto_scenic_data')">GO</p>
-    </td>
-</tr>
-<tr>
-    <td>
-    <p class="dark_blue">
-    What datasets are available in Climate Engine?
-    </p>
-    </td>
-    <td>
-    <p class="link" onclick="ShowHowtoDocu('Docu_howto_climate_engine_data')">GO</p>
-    </td>
-</tr>
-<tr>
-    <td>
-    <p class="dark_blue">
-    Understanding climate data (Primer on climate data and global climate models).
-    </p>
-    </td>
-    <td>
-    <p class="link" onclick="ShowHowtoDocu('Docu_howto_climate_primer')">GO</p>
-    </td>
-</tr>
-<tr>
-    <td>
-    <p class="dark_blue">
-    Working with projection data (LOCA)
-    </p>
-    </td>
-    <td>
-    <p class="link" onclick="ShowHowtoDocu('Docu_howto_LOCA')">GO</p>
-    </td>
-</tr>
-<tr>
-    <td colspan="2"><h2><u>Step by step examples</u></h2></td>
-</tr>
-<tr>
-    <td>
-    <p class="dark_blue">
-    Find stations in an area that have precipitation and minimum temperature data
-    between two dates.
-    </p>
-    </td>
-    <td>
-    <p class="link" onclick="ShowHowtoDocu('Docu_howto_station_finder')">GO</p>
-    </td>
-</tr>
-<tr>
-    <td>
-    <p class="dark_blue">
-    How to download temperature data for all stations in a region between two dates.
-    </p>
-    </td>
-    <td>
-    <p class="link" onclick="ShowHowtoDocu('Docu_howto_multi_lister')">GO</p>
-    </td>
-</tr>
-<tr>
-    <td>
-    <p class="dark_blue">
-    Find the highest monthly temperature ever recorded at a weather station.
-    </p>
-    </td>
-    <td>
-    <p class="link" onclick="ShowHowtoDocu('Docu_howto_monthly_summary')">GO</p>
-    </td>
-</tr>
-</table>
-</td>
-</table>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
+            <div class="bg-primary full-col">
+                <h2>Data Documentation</h2>
+            </div>
+             
+            <p class="lead link bg-info" onclick="ShowHowtoDocu('Docu_howto_scenic_data')">
+                What datasets are available in SCENIC?
+            </p>
+            <p class="lead link bg-info" onclick="ShowHowtoDocu('Docu_howto_climate_engine_data')">
+                What datasets are available in Climate Engine?
+            </p>
+            <p class="lead link bg-info" onclick="ShowHowtoDocu('Docu_howto_climate_primer')">
+                Understanding climate data (Primer on climate data and global climate models).
+            </p>
+            <p class="lead link bg-info" onclick="ShowHowtoDocu('Docu_howto_LOCA')">
+                Working with projection data (LOCA)
+            </p>
+    
+            <div class="bg-primary full-col">
+                <h2>Step by step examples</h2>
+            </div> 
+            <p class="lead link bg-info" onclick="ShowHowtoDocu('Docu_howto_station_finder')">
+                Find stations in an area that have precipitation and minimum temperature data
+                between two dates.
+            </p>
+            <p class="lead link bg-info" onclick="ShowHowtoDocu('Docu_howto_multi_lister')">
+                How to download temperature data for all stations in a region between two dates.
+            </p>
+            <p class="lead link bg-info" onclick="ShowHowtoDocu('Docu_howto_monthly_summary')">
+                Find the highest monthly temperature ever recorded at a weather station.
+            </p>
+        </div><!--end col...-12-->
+    </div><!--end row-->
 {% endblock %}
