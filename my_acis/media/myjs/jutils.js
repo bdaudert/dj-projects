@@ -303,23 +303,15 @@ $(function() {
         $(this).next('div.pop-up').show();
     }, function() {
         $(this).next('div.pop-up').hide();
-        //$(this).next('div.pop-up').css('top', e.pageY).css('left', e.pageX );
-        // $(this).next('div.pop-up').show().css('top', e.pageY - moveDown).css('left', e.pageX + moveLeft);
     });
 
     $('.trigger').click(function(e) {
         var pop_up = $(this).next('div.pop-up');
         var display = $(this).next('div.pop-up').css('display');
-        /*
-        if (display != 'none') {
-            $(this).next('div.pop-up').css('display','none');
-        }   
-        else {
-            $(this).next('div.pop-up').css('display','block');
-        }
-        */
         //Close all other pop-ups 
         $('.pop-up').each(function(i, pop) {
+            //$(this).css('top', e.pageY).css('right', e.pageX );
+            //$(this).css('top', e.pageY - moveDown).css('left', e.pageX + moveLeft);
             if ($(pop).is(pop_up)){
                 if (display == 'none') {      
                     pop.style.display = 'block';

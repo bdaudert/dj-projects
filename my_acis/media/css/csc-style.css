@@ -49,5 +49,19 @@ img.sidebar {
 
 .link:hover { color:#800080;}
 
+.pop-up {
+  display:none;
+  text-align:left;
+  /*position: absolute;*/
+  padding:5px;
+  background:#f2dede;
+  border:2px solid grey;
+  font-size:3;
+  z-index:10;
+}
 
-
+.form-group {
+    background-color:#aec6cf; 
+    /*width:auto;*/
+    padding:20px;
+}
