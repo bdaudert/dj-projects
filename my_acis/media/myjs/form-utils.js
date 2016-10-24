@@ -437,11 +437,18 @@ function set_autofill(datalist){
 }
 
 
-function set_area(row_id, node){
-    var lv, html_text, cell0,cell1,div;
-    //Update area default 
-    var area_type = node.val()
-    kml_file_path = null
+function set_area(area_type_node){
+    /*
+    UPDATED
+    Sets the label and form content
+    of the area form element
+    according to area_type
+    Also adjusts autofill list 
+    and area form element helptext
+    */
+    var lv, html_text, area_type = area_type_node.val(),i, pop_id,
+        st, state, selected = ' ', kml_file_path = null;
+
     if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
         TMP_URL = $('#TMP_URL').val();
         state = $('#overlay_state').val();
@@ -452,23 +459,21 @@ function set_area(row_id, node){
     if (area_type.inList(['basin','county','county_warning_area','climate_division','station_id'])) {
         set_autofill(lv.autofill_list);
     }
-    //Update row_id
-    cell0 = $('#' + row_id +  ' td:first-child');
-    html_text = lv.label + ': ';
-    cell0.html(html_text);
-    cell1 = cell0.next('td');
-    if (node.val() != 'state'){
-        html_text = '<input type="text" id="' + node.val() + '" name="'+
-        node.val() +'" value="' +  lv.value + '"';
+    //Set new area label
+    $('#area-type-label').html(lv.label);
+    //Set new area form input
+    if (area_type != 'state'){
+        html_text = '<input type="text" id="' + area_type + '" name="'+
+        area_type +'" value="' +  lv.value + ' class ="area form-control"';
         if (lv.autofill_list != '') {
             html_text+=' list="' + lv.autofill_list + '"';
         }
         html_text+=' onchange="update_value(this.value) & update_maps(this)" >';
     }
     else{
-        var st, state, selected = ' ';
-        html_text = '<select id="' + node.val() + '" name="'+ node.val() + '">';
-        for (var i=0;i< state_choices.length;i++){  
+        html_text = '<select id="' + area_type + '" name="'+ area_type + 
+        ' class = "area form-control">';
+        for (i=0;i< state_choices.length;i++){  
             st = state_choices[i];
             state = state_names[st];
             if ($('#overlay_state').length){
@@ -483,12 +488,13 @@ function set_area(row_id, node){
         }
         html_text = html_text + '</select>'
     }
-    cell1.html(html_text) ;   
+    $('#area-type-form-input').html(html_text) ;   
+    //Set newq help text
     pop_id = $('#area-pop-up');
     pop_id.html('');
     div = $("<div>");
-    div.attr('id','ht_' + node.val());
-    $(div).load('/csc/media/html/Docu_help_texts.html #ht_' + node.val());
+    div.attr('id','ht_' + area_type);
+    $(div).load('/csc/media/html/Docu_help_texts.html #ht_' + area_type);
     pop_id.append(div);
 }
 

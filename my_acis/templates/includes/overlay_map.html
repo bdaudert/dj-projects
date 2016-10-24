@@ -1,19 +1,16 @@
-         <div align="left" id="formOverlay" style="display:inherit;">
-            <form method="POST"  id="overlayForm" action="">{% csrf_token %}
-            <table class="form_overlay" style="margin:0px;">
-            <td>State:</td>
-            <td>
-                <select class="overlay_state" name="overlay_state" id="overlay_state">
-                {%for opt, name in initial.form_options.state%}
-                    <option value="{{opt}}" {%if initial.overlay_state == opt%} selected{%endif%}>
-                    {{name}}</option>
-                {%endfor%}
-                </select>
-            </td>
-            </tr>
-            </table>
+ <div align="left" id="formOverlay">
+    <form id="overlayForm" class="overlay-form" role="form" class="inline" action="" method="post" onsubmit="show_loading()">{% csrf_token %}
+        <div class="form-group">
+            <label for="overlay_state">State</label>
+            <select class="overlay_state form-control" name="overlay_state" id="overlay_state">
+            {%for opt, name in initial.form_options.state%}
+                <option value="{{opt}}" {%if initial.overlay_state == opt%} selected{%endif%}>
+                {{name}}</option>
+            {%endfor%}
+            </select>
             <input type="hidden" name="formOverlay" value="">
             <input type="hidden" id="host" name="host" value="{{initial.host}}">
             <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
-            </form>
-        </div>
+        </div>        
+    </form>
+</div>

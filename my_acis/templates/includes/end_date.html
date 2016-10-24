@@ -1,10 +1,13 @@
-        <td id="End Date">End Date: </td>
-        <td><input type="text" id="end_date" name="end_date" value="{{initial.end_date}}" onchange="update_value(this.value)"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_end_date"></div>
-            <script type="text/javascript">                        
+<div class="form-group">
+    <label for="end_date">Start Date</label>
+    <img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_end_date"></div>
+        <script type="text/javascript">                        
             $("#ht_end_date").load("{{HTML_URL}}/Docu_help_texts.html #ht_end_date");
-            </script>
-        </div>
-        </td>
+        </script>
+    </div>
+
+    <input class="form-control" type="text" id="end_date" name="end_date" 
+    value="{{initial.end_date}}" onchange="update_value(this.value);">
+</div>

@@ -310,8 +310,6 @@ $(function() {
         var display = $(this).next('div.pop-up').css('display');
         //Close all other pop-ups 
         $('.pop-up').each(function(i, pop) {
-            //$(this).css('top', e.pageY).css('right', e.pageX );
-            //$(this).css('top', e.pageY - moveDown).css('left', e.pageX + moveLeft);
             if ($(pop).is(pop_up)){
                 if (display == 'none') {      
                     pop.style.display = 'block';

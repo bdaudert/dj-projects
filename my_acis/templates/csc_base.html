@@ -86,12 +86,8 @@
     <script type="text/javascript" src="{{MEDIA_URL}}myjs/csc-maps.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}myjs/Listeners.js"></script>
     
-    <!--
     <script type="text/javascript"
-        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true&libraries=drawing">
-    </script>-->
-    <script type="text/javascript"
-        src="http://maps.googleapis.com/maps/api/js?sensor=true&libraries=drawing">
+        src="http://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAP_API_KEY}}&sensor=true&libraries=drawing">
     </script>
     <script type="text/javascript" src="{{MEDIA_URL}}js/polygon.min.js"></script>
     <!--<script type="text/javascript" src="http://geoxml3.googlecode.com/svn/branches/polys/geoxml3.js"></script>
@@ -250,7 +246,7 @@
 
     <div class="row lead" align="center">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
-            <div class="bg-danger full-col page-header">
+            <div class="bg-successfull-col page-header">
             {%if title%}
                 {{title}}
             {%else%}

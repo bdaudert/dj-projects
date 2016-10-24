@@ -14,6 +14,7 @@ def get_urls(request):
             'HTML_DIR':settings.HTML_DIR,
             'TMP_DIR':settings.TMP_DIR,
             'TEMP_DIR':settings.TEMP_DIR,
+            'GOOGLE_MAP_API_KEY':settings.GOOGLE_MAP_API_KEY,
             #SCENIC SERVER DIRS
             'STATIC_URL':settings.STATIC_URL,
             'MEDIA_URL':settings.MEDIA_URL,

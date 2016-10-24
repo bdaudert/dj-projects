@@ -5,10 +5,9 @@
     <script type="text/javascript">                        
         $("#Docu_select_area").load("{{HTML_URL}}/Docu_help_texts.html #ht_select_area");
     </script>
-    <select id="area_type" name="area_type" class="form-control">
+    <select id="area_type" name="area_type" class="area_type form-control">
         {% for x,y in initial.form_options.area_type %}
         <option value="{{ x }}" {% if x == initial.area_type  %} selected {% endif %}>{{ y }}</option>
         {% endfor %}
     </select>
 </div>
-

@@ -91,10 +91,10 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     </div>
     
     <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
             <div id=tool_info_head>{% include 'includes/Button_tool_info.html'%}</div>
         </div>
-        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
             <div id="how_to_head">{% include 'includes/Button_how_to.html'%}</div>
         </div>
     </div>
@@ -119,19 +119,17 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 {%endif%}
 
     <!--FORM/MAP/ERRORS-->
-    <div class="row">
+    <div class="row" height="100%">
         <!--Form-->
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 form-field-group"> 
-            <form id="DataForm" role="form" class="form-horizontal" action="" method="post" onsubmit="show_loading()">{% csrf_token %}
+            <form id="DataForm" class="main-form" role="form" class="form-horizontal" action="" method="post" onsubmit="show_loading()">{% csrf_token %}
                 {% include 'includes/area_select.html'%}
-                <!--
-                <div id="area">{% include 'includes/area.html'%}</div>
+                {% include 'includes/area.html'%}
                 {% include 'includes/elements.html'%}
                 {% include 'includes/element_constraints.html'%}
                 {% include 'includes/start_date.html'%}
                 {% include 'includes/end_date.html'%}
                 {% include 'includes/date_constraints.html'%}
-                -->
                 <input type="hidden" class="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
                 <input type="hidden" name="app_name" value="station_finder">
                 <input type="hidden" name="checked_categories" id="checked_categories" value="all">
@@ -141,7 +139,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
             </form>
         </div>
         <!--Main-->
-        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 form-field-group">
+        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
             <!--Shape file upload form-->
             <div>{% include 'includes/upload_shape_file.html'%}</div>
 
@@ -184,7 +182,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 
             <!--Overlay maps-->
             {%if need_overlay_map%}
-                <div id="OverlayMap" style="display:block;">{% include 'includes/overlay_map.html'%}</div>
+                <div id="OverlayMap">{% include 'includes/overlay_map.html'%}</div>
                 <div id="map-overlay"></div>
                 <div id="content-window"></div>
                 <script type="text/javascript">initialize_map_overlays()</script>

@@ -229,7 +229,7 @@ $(document).ready(function () {
             $('.delim').css('display','none');
             $('.out_file').css('display','none');
             if ($('#station_json').val() !=''){
-                $('.sf_map').css('display','table-row');
+                $('.sf_map').css('display','block');
             }
             else{
                 $('.sf_map').css('display','none');
@@ -1003,7 +1003,7 @@ $(document).ready(function () {
     */
     $('.area_type').on('keydown change', function(){
         //Set area form field
-        set_area('area',$(this)); //form_utils function
+        set_area($(this)); //form_utils function
         /*need to change data type for single apps*/
         if ($(this).val().inList(['location','locations'])){
             $('#data_type').val('grid');
@@ -1364,13 +1364,14 @@ $(document).ready(function () {
         var bounds = window.map.getBounds();
         bounds.extend(new google.maps.LatLng(parseFloat($(this).attr('lat')), parseFloat($(this).attr('lon'))));
     });
+    /*
     $('#station_list').on('mouseover', 'tr', function(){
         $(this).css('backgroundColor', "#8FBC8F");
     });
     $('#station_list').on('mouseout', 'tr', function(){
          $(this).css('backgroundColor',"#282828");
     });
-
+    */
     /***************
     AJAX CALLS
     ****************/

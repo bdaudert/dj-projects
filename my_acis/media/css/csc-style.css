@@ -1,14 +1,13 @@
-html {
-    height: 100%;
-}
 
-body {
+
+html, body {
     /*font-family: Verdana, Geneva, sans-serif;*/
     /*font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;*/
     font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
+    height:100%;
+    width:100%;
     margin: 0;
     padding: 0;
-    /*background-color:#dedede;*/
     background: #dedede; /* For browsers that do not support gradients */
 }
 
@@ -20,6 +19,19 @@ table.dashboard {
     text-align:center;
     border: 2px solid grey;
 }
+
+
+table#map_legend {
+    position:relative;
+    left:0px;
+    float:left;
+    background:#dedede;
+    border:2px solid grey;
+    width:100%;
+    min-width:100%;
+    max-width:100%;
+}
+
 
 /* Images */
 img.sidebar {
@@ -50,18 +62,178 @@ img.sidebar {
 .link:hover { color:#800080;}
 
 .pop-up {
+  /*
+  position:relative;
+  top:50%;
+  left:50%;
+  */
   display:none;
   text-align:left;
-  /*position: absolute;*/
   padding:5px;
   background:#f2dede;
   border:2px solid grey;
-  font-size:3;
+  /*font-size:3;*/
   z-index:10;
 }
 
 .form-group {
-    background-color:#aec6cf; 
-    /*width:auto;*/
-    padding:20px;
+    padding:5px;
 }
+
+.main-form {
+    background-color:#aec6cf;
+    /*width:auto;*/
+}
+
+.overlay-form {
+    width:100%;
+    background-color:#aec6cf;
+}
+
+
+.station_list   {
+    white-space:nowrap;
+    background:#dedede;
+    border:2px solid grey;
+}
+.station_list tr.inactive:{ background:#dedede;}
+.station_list tr:hover { background:#aec6cf;}
+
+
+/*MAPS*/
+#map-gridpoint, #map-overlay, #map-polygon {
+    width:100%;
+    height:400px;
+    min-width:100%;
+    max-width:100%;
+    border:2px solid grey;
+}
+
+#map-station-finder {
+    position:relative;
+    border:2px solid grey;
+    height:400px;
+    min-width:100%;
+    max-width:100%;
+    max-height:80%;
+    min-height:50%;
+}
+
+/*OLD stuff to be replaced*/
+.wrcc-container {
+    margin: 0 auto;
+    width: 960px;
+    min-height:1000px;
+    color:#000000;
+    background-color:#ebebeb;
+    border:2px solid grey;
+    padding: 0px;
+    /*
+    display:table-cell;
+    height:auto;*/
+}
+
+
+/*OLD NAV WORKS ON FF*/
+#nav-wrcc {
+  float: left;
+  width: 960px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background:#006666 repeat-x;
+  /*
+  -moz-border-radius-topright: 10px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -webkit-border-top-left-radius: 10px;
+  */
+}
+ 
+#nav-wrcc li {
+  display: inline;
+}
+ 
+#nav-wrcc li a {
+  float: left;
+  display:block;
+  font: bold 1em arial,verdana,tahoma,sans-serif;
+  line-height: 40px;
+  color:#FFEFD5;
+  text-decoration: none;
+  text-shadow: 1px 1px 1px #006666;
+  margin: 0;
+  padding: 0 20px;
+  background:#006666 repeat-x;
+  /* 
+  -moz-border-radius-topright: 10px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -webkit-border-top-left-radius: 10px;
+  */
+}
+
+
+#nav-wrcc li ul li a {
+  clear:both;
+  position:relative;
+  left:70px;
+  text-align:left;
+  width:200px;
+}
+
+
+/* APPLIES THE ACTIVE STATE */
+#nav-wrcc .current a, #nav-wrcc li:hover > a  {
+  color:#FFEFD5;
+  text-decoration: none;
+  text-shadow: 1px 1px 1px #006666;
+  /*background: #00906E;*/
+  background:#4c9393;
+  /*
+  -moz-border-radius-topright: 10px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -webkit-border-top-left-radius: 10px;
+  */
+}
+/* THE SUBMENU LIST HIDDEN BY DEFAULT */
+#nav-wrcc  ul {
+  display: none;
+}
+
+/* WHEN THE FIRST LEVEL MENU ITEM IS HOVERED, THE CHILD MENU APPEARS */
+#nav-wrcc li:hover > ul {
+  position: absolute;
+  display: block;
+  width: 960px;
+  height: 45px;
+  margin: 40px 0 0 100px;
+  z-index:1;
+  /*
+  -moz-border-radius-topright: 10px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -webkit-border-top-left-radius: 10px;
+  */
+}
+} 
+
+#nav-wrcc li:hover > ul li a {
+  display:block;
+  float:left;
+  line-height: 45px;
+  color:#FFEFD5;
+  text-decoration: none;
+  text-shadow: 1px 1px 1px #006666;
+  margin: 0;
+  padding: 0 0 0 0;
+  background:#00B98F repeat-x;
+}
+
+#nav-wrcc li:hover > ul li a:hover {
+  color: #FFEFD5;
+  text-decoration: none;
+  text-shadow: none;
+}
+/*END TAB navigation bar*/

@@ -328,7 +328,6 @@ function initialize_station_finder() {
                     },
                     'customize': function(xlsx){
                         var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                        //console.log(sheet);
                         var first_row = $('c[r=A1] t', sheet).text();
                         $('c[r=A1] t', sheet).text(header);
                     }
@@ -357,10 +356,9 @@ function initialize_station_finder() {
                 'colvis'
             ]
         });
-    }
+    };
     //Read in stn data json file
     $.getJSON(station_json, function(data) {
-
         //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
         var ll = new google.maps.LatLng(data.stations[0].lat, data.stations[0].lon);
         var mapOptions = {

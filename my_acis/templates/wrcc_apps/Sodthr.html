@@ -29,31 +29,37 @@
 
 
 {%if results %}
-  {%for stn, stn_data in results.items %}
-    <p class="stronger" style="color:darkblue; font-size:large">LOCATION:{{station_names|lookup:stn|safe}}&nbsp;&nbsp;STATION: {{station_ids|lookup:stn|safe}}</br>
-    </p></br>
-    {%for tbl_idx, tbl_data in stn_data.items %}
-    <p>{{header|lookup:tbl_idx|safe}}</p></br>
-    {%if not tbl_data%}
-    <p style="color:red">NO STATION DATA FOUND!</p></br>
-    {%else%}
-    <table>
-      <tr>
-      <td />TEMP F</td><td>LOW</td><td >10%</td><td >20%</td><td >30%</td><td >40%<td >50%</td><td >60%</td><td >70%</td><td >80%</td><td >90%</td><td >HIGH</td>
-      </tr>
-      {%for temp_data in tbl_data %}
-       <tr>
-        {%for dat in temp_data %}
-        <td style="text-align:right">{{dat}}</td>
-        {%endfor%}
-       </tr>
-      {%endfor%}
-     </table>
-     </br>
-    {%endif%}
-    {%endfor%}
-    </br>
-  {%endfor%}
-{%endif%}
+    {%for stn, stn_data in results.items %}
+         <div class="dataTableInfo"  align="left" style="max-wid0th:95%;word-wrap:break-word;">
+            LOCATION:{{station_names|lookup:stn|safe}}&nbsp;&nbsp;STATION: {{station_ids|lookup:stn|safe}}</br>
+        </div><br />
+                
+
+        {%if not stn_data%}
+            <p style="color:red">NO STATION DATA FOUND!</p></br>
+        {%else%}
+            {%for tbl_idx, tbl_data in stn_data.items %}
+                {{header|lookup:tbl_idx|safe}}<br />
+                <table class="dataTable nowrap"  border="1" width="760px" cellspacing="0" cellpadding="0">
+                    <thead><tr>
+                        <td />TEMP F</td><td>LOW</td><td >10%</td><td >20%</td><td >30%</td><td >40%<td >50%</td><td >60%</td><td >70%</td><td >80%</td><td >90%</td><td >HIGH</td>
+                    </tr></thead>
+                    <tfoot><tr>
+                        <td />TEMP F</td><td>LOW</td><td >10%</td><td >20%</td><td >30%</td><td >40%<td >50%</td><td >60%</td><td >70%</td><td >80%</td><td >90%</td><td >HIGH</td>
+                    </tr></tfoot> 
+                    <tbody>
+                    {%for temp_data in tbl_data %}
+                        <tr>
+                        {%for dat in temp_data %}
+                            <td style="text-align:right">{{dat}}</td>
+                        {%endfor%}
+                        </tr> 
+                    {%endfor%}
+                    </tbody>
+                </table><br />
+            {%endfor%} <!--end for tbl_idx, tbl_data in stn_data.items -->
+        {%endif%}<!--end if not tbl_data-->
+  {%endfor%}<!--end for stn, stn_data in results.items-->
+{%endif%}<!--en if results-->
 
 {% endblock %}
