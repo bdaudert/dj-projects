@@ -1344,7 +1344,7 @@ def station_finder(request):
         #Turn request object into python dict
         form = DJANGOUtils.set_form(request,clean=False)
         form_cleaned = DJANGOUtils.set_form(request,clean=True)
-        fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date', 'elements']
+        fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -1765,9 +1765,9 @@ def check_form(form, fields_to_check):
                 if form['app_name'] in ['intraannual','yearly_summary','monthly_summary','climatology']:
                     form_error['Year Range'] = err
                 else:
-                    form_error[WRCCData.DISPLAY_PARAMS[field]] = err
+                    form_error[field] = err
             else:
-                form_error[WRCCData.DISPLAY_PARAMS[field]] = err
+                form_error[field] = err
             #Stop at first error
             break
     return form_error

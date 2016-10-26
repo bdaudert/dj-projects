@@ -70,23 +70,9 @@ function poll(url_str) {
 function form_change(formID){ 
     $('#' + formID).find('input,select').change(function(){
         //Hide results
-        $('.results').each(function() {
-            $(this).css('display','none');
-        });
-        //Hide appropriate form errors
-        if ($(this).parent().parent().next().attr('class') == 'form_error'){
-            $(this).parent().parent().next().css('display','none');
-        }
-        if ($(this).attr('id') == 'start_date'){
-            if ($('#end_date').parent().parent().next().attr('class') == 'form_error'){
-                $('#end_date').parent().parent().next().css('display','none');
-            }
-        }
-        if ($(this).attr('id') == 'end_date'){
-            if ($('#start_date').parent().parent().next().attr('class') == 'form_error'){
-                $('#start_date').parent().parent().next().css('display','none');
-            }
-        }
+        $('.results').css('display','none');
+        //Hide form errors
+        $('.form_error').css('display','none');
     });
 }
 

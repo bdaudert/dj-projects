@@ -67,10 +67,15 @@ function ShowHideTopOfPage(){
             update_maps(document.getElementById('bounding_box'));
         }
     }
-     $('#top_of_page').toggle();
-     if (window.map){
-        google.maps.event.trigger(window.map, 'resize');
-     }
+    /*
+    if (window.map){
+        google.maps.event.addListenerOnce(window.map, 'idle', function() {
+            $('#top_of_page').hide();
+            google.maps.event.trigger(window.map, 'resize');
+        });
+    }
+    */
+    $('#top_of_page').toggle();
 }
 
 function set_back_date(date_string,number){
@@ -344,64 +349,6 @@ function set_area_defaults(area_type, kml_file_path){
     */
     lv.label = area_defaults[area_type][0]
     lv.value = area_defaults[area_type][1]
-    /*
-    if (area_type == 'station_id'){
-        lv.label = 'Station ID';
-        lv.value ='RENO TAHOE INTL AP, 266779';
-    }
-    if (area_type == 'station_ids'){
-        lv.label = 'Station IDs';
-        lv.value ='266779,050848';
-    }
-    if (area_type == 'location'){
-        lv.label = 'Location (lon,lat)';
-        lv.value = '-119,39';
-    }
-    if (area_type == 'locations'){
-        lv.label = 'Locations (lon,lat pairs)';
-        lv.value = '-119,39,-119.1,39.1';
-    }
-    if (area_type == 'county'){
-        lv.label ='County';
-        if (lv.value == null){
-            lv.value ='Churchill County, 32001';
-        }
-    }
-    if (area_type == 'climate_division'){
-        lv.label ='Climate Division';
-        if (lv.value == null){
-            lv.value ='Northwestern, NV01';
-        }
-    }
-    if (area_type == 'county_warning_area'){
-        lv.label ='County Warning Area';
-        if (lv.value == null){
-            lv.value ='Las Vegas, NV, VEF';
-        }
-    }
-    if (area_type == 'basin'){
-        lv.label ='Basin';
-        if (lv.value == null){
-            lv.value ='Hot Creek-Railroad Valleys, 16060012';
-        }
-    }
-    if (area_type == 'state'){
-        lv.label ='State';
-        lv.value ='nv';
-    }
-    if (area_type == 'bounding_box'){
-        lv.label ='Bounding Box';
-        lv.value ='-115,34,-114,35';
-    }
-    if (area_type == 'shape'){
-        lv.label ='Custom Shape';
-        lv.value ='-115,34, -115, 35,-114,35, -114, 34';
-    }
-    if (area_type == 'shape_file'){
-        lv.label ='Custom Shape';
-        lv.value ='';
-    }
-    */
     return lv;
 }
 
@@ -464,7 +411,7 @@ function set_area(area_type_node){
     //Set new area form input
     if (area_type != 'state'){
         html_text = '<input type="text" id="' + area_type + '" name="'+
-        area_type +'" value="' +  lv.value + ' class ="area form-control"';
+        area_type +'" value="' +  lv.value + '" class ="area form-control"';
         if (lv.autofill_list != '') {
             html_text+=' list="' + lv.autofill_list + '"';
         }
@@ -970,16 +917,14 @@ function hide_opts(rowClass){
 }
 
 
-function highlight_form_field(td_id, err){
-
+function highlight_form_field(field_id, err){
     // Highlights form field and displays error message err
     //if user fills out form incorrectly
-    var td = document.getElementById(td_id);
-    var tr = td.parentNode;
-    var new_tr = document.createElement('tr');
-    new_tr.setAttribute('class','form_error');
-    new_tr.innerHTML = '<td></td><font color="red">' + err + '</font><td></td><td></td>';
-    tr.parentNode.insertBefore(new_tr, tr.nextSibling);
+    var err_div = $('<div />', {
+        class: 'form_error',
+        html: '<font color="red">' + err + '</font>'
+    });
+    $('#' + field_id).parents('div[class^="form-group"]').append(err_div);
 }
 
 function set_threshes(element){
@@ -1244,12 +1189,19 @@ function update_maps(area_field){
                             catch(e){}
                         }
                     }
+                    console.log(poly);
                     //Update new map
                     initialize_map_overlay('map-overlay', poly); 
                     break
                 }
             }
         });
+        if (window.map){
+            google.maps.event.addListenerOnce(window.map, 'idle', function() {
+                google.maps.event.trigger(window.map, 'resize');
+            });
+            //google.maps.event.trigger(window.map, 'resize');
+        };
     }
     else{
         //Hide all maps

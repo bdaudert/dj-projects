@@ -119,7 +119,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 {%endif%}
 
     <!--FORM/MAP/ERRORS-->
-    <div class="row" height="100%">
+    <div class="row full-height">
         <!--Form-->
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> 
             <form id="DataForm" class="main-form" role="form" class="form-horizontal" action="" method="post" onsubmit="show_loading()">{% csrf_token %}
@@ -157,38 +157,33 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
             <div style="display:none" class="ajax_error"></div>
             <!--Form Errors and search parameter section-->
             {%if form_error%}
-            <div id="form_error" class="results">
-                <p class="error">ERROR: Please correct the form error(s) highlighted in red!</p>
-                {%for key, val in form_error.items%}
-                    <script type="text/javascript">highlight_form_field("{{key}}","{{val}}")</script>
+
+            <div class="form_error" class="results">
+                <p class="bg-error">ERROR: Please correct the form error(s) highlighted in red!</p>
+                {%for field_id, err  in form_error.items%}
+                    <script type="text/javascript">highlight_form_field("{{field_id}}","{{err}}")</script>
                 {%endfor%}
             </div>
             {%endif%} 
 
             <!--Maps-->
             {%if need_polygon_map%}
-            <input style="display:inline;" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
-            <input style="display:inline;" id="address" type="textbox" value="Enter Place or Location" style="height:15px;width:150px;">
-            <div id="PolyMap" style="display:block;">
-            <div id="map-polygon" style="display:block;"></div>
-            {%if initial.shape%}
-                <script type="text/javascript">initialize_polygon_map("{{initial.shape}}");</script>
+                <input style="display:inline;" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
+                <input style="display:inline;" id="address" type="textbox" value="Enter Place or Location" style="height:15px;width:150px;">
+                <div id="PolyMap" style="display:block;">
+                    <div id="map-polygon" style="display:block;"></div>
+                    {%if initial.shape%}
+                        <script type="text/javascript">initialize_polygon_map("{{initial.shape}}");</script>
+                    {%else%}
+                        <script type="text/javascript">initialize_polygon_map();</script>
+                    {%endif%}
             {%else%}
-                <script type="text/javascript">initialize_polygon_map();</script>
+                <input style="display:none;" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
+                <input style="display:none;" id="address" type="textbox" value="Enter Place or Location" style="height:15px;width:150px;">
+                <div id="PolyMap" style="display:none;">
+                <div id="map-polygon" style="display:none;"></div>
             {%endif%}
-            {%else%}
-            <input style="display:none;" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
-            <input style="display:none;" id="address" type="textbox" value="Enter Place or Location" style="height:15px;width:150px;">
-            <div id="PolyMap" style="display:none;">
-            <div id="map-polygon" style="display:none;"></div>
-            {%endif%}
-                <div id="panel">
-                <div id="color-palette"></div>
-                    <div>
-                        <button id="delete-button">Delete Selected Shape</button>
-                    </div>
-                </div>
-            </div>
+            </div><!--end PolyMap-->
 
             <!--Overlay maps-->
             {%if need_overlay_map%}
@@ -206,16 +201,15 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
             <!-- Main Map-->
             {%if station_json and not run_done%}
                 <div class="results">
-                    {% include 'includes/station_finder_map.html'%}
+                    {% include 'includes/station_finder_map.html'%} 
                 </div>
             {%endif%}
         </div><!--end col...-9-->
     </div><!--end row FORM/MAP-->
 </div><!--end top_of_page-->
 
-
 <!--Main Results-->
-<div class="row">
+<div class="row results">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
         <!--Map error-->
         {% if error %}
@@ -236,4 +230,5 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
         {%endif%} 
     </div>
 </div>
+
 {%endblock%}

@@ -53,6 +53,39 @@ $('#address').on('keypress', function (e) {
      }
 });
 */
+
+function CustoomDeleteButton(controlDiv, map) {
+
+        // Set CSS for the control border.
+        var controlUI = document.createElement('div');
+        controlUI.style.backgroundColor = 'grey';
+        controlUI.style.border = '2px solid grey';
+        controlUI.style.borderRadius = '3px';
+        controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+        controlUI.style.cursor = 'pointer';
+        controlUI.style.marginBottom = '22px';
+        controlUI.style.textAlign = 'center';
+        controlUI.title = 'Delete the shape from map';
+        controlDiv.appendChild(controlUI);
+
+        // Set CSS for the control interior.
+        var controlText = document.createElement('div');
+        controlText.style.color = 'rgb(25,25,25)';
+        controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+        controlText.style.fontSize = '16px';
+        controlText.style.lineHeight = '38px';
+        controlText.style.paddingLeft = '5px';
+        controlText.style.paddingRight = '5px';
+        controlText.innerHTML = 'Delete slected shape from map';
+        controlUI.appendChild(controlText);
+
+        // Setup the click event listeners: simply set the map to Chicago.
+        controlUI.addEventListener('click', function() {
+            deleteSelectedShape();
+        });
+
+}
+
 function printMapControl(controlDiv,map_div){
   // Set CSS for the control border.
   var controlUI = document.createElement('div');
@@ -218,6 +251,9 @@ function initialize_grid_point_map(loc) {
         infowindow.open(map, marker);
         map.panTo(myLatlng);
     });
+    //Resize to show map
+    var h = $(window).height();
+    $('#map-gridpoint').css('height', (h / 2));
     google.maps.event.trigger(map, 'resize');
 }//close initialize_grid_point_map
 
@@ -795,9 +831,11 @@ function initialize_station_finder() {
         };
         //var markerCluster = new MarkerClusterer(map, markers);
         map.fitBounds(bounds);
+        //google.maps.event.trigger(window.map, 'resize');
     });//close getjson
-
-
+    //Resize to show map
+     var h = $(window).height(); 
+     $('#map-station-finder').css('height', (h / 2));
 }//close initialize_station_finder
 
 function my_boxclick(box, category){
@@ -962,16 +1000,6 @@ function initialize_polygon_map(poly) {
         //If a point is dragged, update the form fiels
         if (ev.type == google.maps.drawing.OverlayType.POLYGON || ev.type == google.maps.drawing.OverlayType.POLYLINE) {
             ev.overlay.getPaths().forEach(function(path, index){
-                /*
-                google.maps.event.addListener(path, 'insert_at', function(){
-                    // New point
-                    set_form_field(e);
-                });
-                google.maps.event.addListener(path, 'remove_at', function(){
-                    // Point was removed
-                    set_form_field(ev);
-                });
-                */
                 google.maps.event.addListener(path, 'set_at', function(){
                     // Point was moved
                     set_form_field(ev);
@@ -1002,6 +1030,33 @@ function initialize_polygon_map(poly) {
             });
         }
     }
+    function CustomDeleteButton(controlDiv, map) {
+
+        // Set CSS for the control border.
+        var controlUI = document.createElement('div');
+        controlUI.style.backgroundColor = '#fff';
+        controlUI.style.cursor = 'pointer';
+        controlUI.style.marginTop = '6px'; 
+        controlUI.title = 'Delete the shape from map';
+        controlDiv.appendChild(controlUI);
+  
+        // Set CSS for the control interior.
+        var controlText = document.createElement('div');
+        /*
+        controlText.style.color = 'rgb(25,25,25)';
+        controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+        */
+        controlText.style.fontSize = '16px';
+        controlText.style.paddingLeft = '5px';
+        controlText.style.paddingRight = '5px';
+        controlText.innerHTML = '<b><font size="large">X</font></b>';
+        controlUI.appendChild(controlText);
+
+        // Setup the click event listeners: simply set the map to Chicago.
+        controlUI.addEventListener('click', function() {
+            deleteSelectedShape()
+        });
+    }  
     //MAP
     var myLatlng = new google.maps.LatLng(parseFloat(poly_list[1]),parseFloat(poly_list[0]));
     var map = new google.maps.Map(document.getElementById('map-polygon'), {
@@ -1011,6 +1066,14 @@ function initialize_polygon_map(poly) {
         disableDefaultUI: true,
         zoomControl: true
     });
+    // Create the DIV to hold the control and call the CenterControl()
+    // constructor passing in this DIV.
+    var centerControlDiv = document.createElement('div');
+    var centerControl = new CustomDeleteButton(centerControlDiv, map);
+
+    centerControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(centerControlDiv);
+    
     var polyOptions = {
       strokeWeight: 0,
       fillOpacity: 0.45,
@@ -1061,10 +1124,7 @@ function initialize_polygon_map(poly) {
         } 
         shape_init = new google.maps.Polygon($.extend({},polyOptions,shape_init_opts));
     }
-    shape_init.setMap(map);
-    map.fitBounds(bounds);
-    setSelection(shape_init);
-
+    
     google.maps.event.addListener(shape_init, "dragend", function(){
         var len=selectedShape.getPath().getLength();
         var htmlStr = '';
@@ -1077,18 +1137,6 @@ function initialize_polygon_map(poly) {
         }
         document.getElementById('shape').value = htmlStr;
     });
-    /*
-    shape_init.getPaths().forEach(function(path, index){
-        google.maps.event.addListener(path, 'remove_at', function(){
-            // Point was removed
-            set_form_field(shape_init);
-        });
-        google.maps.event.addListener(path, 'set_at', function(){
-            // Point was moved
-            set_form_field(shape_init);
-        });
-    });
-    */
     // Creates a drawing manager attached to the map that allows the user to draw
     // markers, lines, and shapes.
     drawingManager = new google.maps.drawing.DrawingManager({
@@ -1126,9 +1174,15 @@ function initialize_polygon_map(poly) {
     //General event handlers
     google.maps.event.addListener(drawingManager, 'drawingmode_changed', deleteSelectedShape);
     //google.maps.event.addListener(map,'click',clearSelection);
-    if ($('#delete-button').length){
-        google.maps.event.addDomListener(document.getElementById('delete-button'), 'click', deleteSelectedShape);
-    }
+   
+    //Resize to show map
+    var h = $(window).height();
+    $('#map-polygon').css('height', (h / 2));
+    google.maps.event.trigger(map, 'resize');
+    map.setCenter(myLatlng);
+    shape_init.setMap(map);
+    setSelection(shape_init);
+    map.fitBounds(bounds);
 }
 
 function initialize_map_overlay(map_id,poly) {
@@ -1147,7 +1201,7 @@ function initialize_map_overlay(map_id,poly) {
         points = new google.maps.LatLng(paths.getAt(i).lat(), paths.getAt(i).lng());
         bounds.extend(points);                  
     }
-    map.fitBounds(bounds);
+    //map.fitBounds(bounds);
     poly.setMap(map);
     var infowindow = new google.maps.InfoWindow({
         content: 'oi'
@@ -1157,7 +1211,12 @@ function initialize_map_overlay(map_id,poly) {
         infowindow.setContent(poly.area_type + ': ' + poly.id);
         infowindow.open(map);
     });
+    //Resize to show map
+    var h = $(window).height();
+    $('#' + map_id).css('height', (h / 2));
     google.maps.event.trigger(map, 'resize');
+    map.setCenter(center);
+    map.fitBounds(bounds);
 }
 
 
@@ -1220,6 +1279,9 @@ function initialize_map_overlays() {
         }
         map.fitBounds(bounds);
     };
+    //Resize to show map
+    var h = $(window).height();
+    $('#map-overlay').css('height', (h / 2));
     google.maps.event.trigger(map, 'resize');
 }
 

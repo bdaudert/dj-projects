@@ -45,7 +45,6 @@ $(document).ready(function () {
                     },
                     'customize': function(xlsx){
                         var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                        //console.log(sheet);
                         var first_row = $('c[r=A1] t', sheet).text();
                         $('c[r=A1] t', sheet).text(header);
                         //Move each row down to make room for header
@@ -632,52 +631,23 @@ $(document).ready(function () {
         if ($('#app_name').val() == 'station_finder'){
             if ($('#display').val() == 'table'){
                 if (!form_field_id.inList(['display','data_format', 'delimiter','output_file_name'])){
-                    $('.results').each(function() {
-                        $(this).css('display','none');
-                    });
+                    $('.results').css('display','none');
                 }
             } 
             else{
                  if ($(this).attr('id') != 'display'){
-                    $('.results').each(function() {
-                        $(this).css('display','none');
-                    });
+                    $('.results').css('display','none');
                 }
             }
         }
         else{
-            $('.results').each(function() {
-                $(this).css('display','none');
-            });
+            $('.results').css('display','none');
         }
         //Hide appropriate form errors
         //Start and end date may have correlated errors
-        $('#form_error').css('display','none');
+        $('.form_error').css('display','none');
         if ($('#back_button_error').length){
             $('#back_button_error').css('display','none');
-        }
-        if ($(this).parent().parent().next().attr('class') == 'form_error'){
-            $(this).parent().parent().next().css('display','none');
-        }
-        if ($(this).attr('id') == 'start_date'){
-            if ($('#end_date').parent().parent().next().attr('class') == 'form_error'){
-                $('#end_date').parent().parent().next().css('display','none');
-            }
-        }
-        if ($(this).attr('id') == 'end_date'){
-            if ($('#start_date').parent().parent().next().attr('class') == 'form_error'){
-                $('#start_date').parent().parent().next().css('display','none');
-            }
-        }
-        if ($(this).attr('id') == 'start_year'){
-            if ($('#end_year').parent().parent().next().attr('class') == 'form_error'){
-                $('#end_year').parent().parent().next().css('display','none');
-            }
-        }
-        if ($(this).attr('id') == 'end_date'){
-            if ($('#start_year').parent().parent().next().attr('class') == 'form_error'){
-                $('#start_year').parent().parent().next().css('display','none');
-            }
         }
     });
     
