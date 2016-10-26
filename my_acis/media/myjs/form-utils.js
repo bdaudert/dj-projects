@@ -895,8 +895,7 @@ function show_loading(){
     /*
     Shows moving loading gif after form submit
     */
-    var IMG_URL = document.getElementById('IMG_URL').value;
-    $("#loading-image").attr("src",IMG_URL +"LoadingGreen.gif");
+    $("#loading-image").attr("src","/csc/media/img/LoadingGreen.gif");
     $("#loading").show("fast");
     //this.preventDefault();
     var form = $(this).unbind('submit');

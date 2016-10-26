@@ -221,11 +221,6 @@
         </div><!--container-fluid-->
     </nav>
 
-    <!--Loading image-->
-    <div id="loading">
-    <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />
-    </div>
-
     <div class="row" align="center">
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
             <!-- Search Box -->
@@ -252,6 +247,10 @@
             {%else%}
                 {% include 'includes/SCENIC_mission_statement.html'%}
             {%endif%}
+            </div>
+            <!--Loading image-->
+            <div id="loading" style="align:center;vertical-align:center;">
+                <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />
             </div>
         </div>
     </div>

@@ -109,7 +109,7 @@ img.sidebar {
     border:2px solid grey;
 }
 
-#map-station-finder {
+.map-station-finder {
     position:relative;
     border:2px solid grey;
     height:400px;
@@ -118,6 +118,7 @@ img.sidebar {
     max-height:80%;
     min-height:50%;
 }
+
 
 /*OLD stuff to be replaced*/
 .wrcc-container {

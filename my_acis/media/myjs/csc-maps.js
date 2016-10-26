@@ -369,7 +369,6 @@ function initialize_station_finder() {
         var map_div = 'map-station-finder';
         var map = new google.maps.Map(document.getElementById(map_div),mapOptions);
         window.map = map;
-        
 
         /*
         //Add control to print the map
