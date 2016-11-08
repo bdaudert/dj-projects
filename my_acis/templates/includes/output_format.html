@@ -1,18 +1,17 @@
-        {%load my_scenic_filters%}
-        <td>Output Format: </td>
-        <td>
-        <select id="output_format" name="output_format" onchange="update_value(this.value);">
-        {%for opt, name in initial.form_options.output_format%}
-            <option value="{{opt}}" {%if initial.output_format == opt%}selected{%endif%}
-            >{{name}}</option>
-        {%endfor%}
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
+{%load my_scenic_filters%}
+<div class="form-group">
+    <label for="output_format">Output Format</label>
+    <img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
         <div id="ht_output_format"></div>
         <script type="text/javascript">                        
             $("#ht_output_format").load("{{HTML_URL}}/Docu_help_texts.html #ht_output_format");
         </script>
-        </div>
-        </td>
+    </div>    
+    <select id="output_format" class="form-control" name="output_format" onchange="update_value(this.value);">
+        {%for opt, name in initial.form_options.output_format%}
+            <option value="{{opt}}" {%if initial.output_format == opt%}selected{%endif%}
+            >{{name}}</option>
+        {%endfor%}
+    </select>
+</div>

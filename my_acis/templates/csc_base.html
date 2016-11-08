@@ -237,13 +237,12 @@
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
             <a class="btn btn-primary" href="{{ABOUT_URL}}#contact_us">Contact Us</a>
         </div>
-    </div><br />
-
-    <div class="row lead" align="center">
+    </div>
+    <div class="row" align="center">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
-            <div class="bg-successfull-col page-header">
+            <div class="bg-danger">
             {%if title%}
-                {{title}}
+                <h1 class="lead">{{title}}</h1>
             {%else%}
                 {% include 'includes/SCENIC_mission_statement.html'%}
             {%endif%}

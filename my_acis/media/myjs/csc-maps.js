@@ -37,22 +37,6 @@ function zoomToLocation() {
   });
 }
 
-/*
-Zoom To Location on map
-*/
-/*
-$('#address').on('keypress', function (e) {
-    console.log('YO');
-    if(e.which === 13){
-        //Disable textbox to prevent multiple submit
-        $(this).attr("disabled", "disabled");    
-        zoomToLocation(); 
-    }  
-    else{
-        $(this).attr("disabled", "false");
-     }
-});
-*/
 
 function CustoomDeleteButton(controlDiv, map) {
 
@@ -1039,13 +1023,8 @@ function initialize_polygon_map(poly) {
         controlUI.style.marginTop = '6px'; 
         controlUI.title = 'Delete the shape from map';
         controlDiv.appendChild(controlUI);
-  
         // Set CSS for the control interior.
         var controlText = document.createElement('div');
-        /*
-        controlText.style.color = 'rgb(25,25,25)';
-        controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
-        */
         controlText.style.fontSize = '16px';
         controlText.style.paddingLeft = '5px';
         controlText.style.paddingRight = '5px';
@@ -1063,7 +1042,7 @@ function initialize_polygon_map(poly) {
         zoom: 6,
         center: myLatlng,
         mapTypeId: google.maps.MapTypeId.HYBRID,
-        disableDefaultUI: true,
+        //disableDefaultUI: true,
         zoomControl: true
     });
     // Create the DIV to hold the control and call the CenterControl()
@@ -1072,7 +1051,7 @@ function initialize_polygon_map(poly) {
     var centerControl = new CustomDeleteButton(centerControlDiv, map);
 
     centerControlDiv.index = 1;
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(centerControlDiv);
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
     
     var polyOptions = {
       strokeWeight: 0,
@@ -1124,7 +1103,7 @@ function initialize_polygon_map(poly) {
         } 
         shape_init = new google.maps.Polygon($.extend({},polyOptions,shape_init_opts));
     }
-    
+
     google.maps.event.addListener(shape_init, "dragend", function(){
         var len=selectedShape.getPath().getLength();
         var htmlStr = '';
@@ -1147,7 +1126,7 @@ function initialize_polygon_map(poly) {
             google.maps.drawing.OverlayType.RECTANGLE
         ],
         drawingControlOptions: {
-            position: google.maps.ControlPosition.TOP_LEFT,
+            position: google.maps.ControlPosition.TOP_CENTER,
             drawingModes: [
                 google.maps.drawing.OverlayType.POLYGON,
                 //google.maps.drawing.OverlayType.MARKER,
@@ -1160,7 +1139,7 @@ function initialize_polygon_map(poly) {
         circleOptions: polyOptions,
         polygonOptions: polyOptions
     });
-    drawingManager.setMap(map);
+    //drawingManager.setMap(map);
     //Event handlers
     google.maps.event.addListener(drawingManager, 'overlaycomplete', function(e) {
         deleteSelectedShape();
@@ -1183,6 +1162,7 @@ function initialize_polygon_map(poly) {
     shape_init.setMap(map);
     setSelection(shape_init);
     map.fitBounds(bounds);
+    drawingManager.setMap(map);
 }
 
 function initialize_map_overlay(map_id,poly) {

@@ -14,6 +14,10 @@ body {
     background: #dedede; /* For browsers that do not support gradients */
 }
 
+p.error {
+    color:#FF007F;
+}
+
 /* Tables */
 table.dashboard {
     width:100%;
@@ -130,6 +134,9 @@ img.sidebar {
     min-height:50%;
 }
 
+#loading, #load, #loading-image, #load-image {
+    z-index: 1000;
+}
 
 /*OLD stuff to be replaced*/
 .wrcc-container {

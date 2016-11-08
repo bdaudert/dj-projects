@@ -20,58 +20,46 @@
     {% include 'includes/Docu_app_climate_engine.html'%}
 </div>
 
-
-<table cellpadding="40" align="center">
-<td valign="top">
-    <table cellspacing="10">
-    <tr>
-       <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}station_finder/"><b>Station Finder</b></a>
-           <div class="pop-up">{% include 'includes/Docu_popup_station_finder.html'%}</div>
-       </td>
-       <td>
-            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_station_finder')">
-       </td>
-       <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}single/"><b>Single-Point Products</b></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_single_point_prods.html'%}</div>   
-       </td>
-       <td>
+<div class="row">
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div class="bg-info main-col">
+        <h3>
+            <a href="{{DATA_URL}}station_finder/">Station Finder</a>
+            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_station_finder')"><br />
+            <small>{% include 'includes/Docu_popup_station_finder.html'%}</small>
+        </h3>
+        </div>
+    </div>
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div class="bg-info main-col">
+        <h3>
+            <a href="{{DATA_URL}}single/">Single Point<br />Products</a>
             <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_single_point_prods')">
-       </td>
-       <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}multi/"><b>Multi-Point Products</b></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_multi_prods.html'%}</div>    
-       </td>
-       <td>
+            <br />
+            <small>{% include 'includes/Docu_popup_single_point_prods.html'%}</small>
+        </h3>
+        </div>
+    </div>
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div class="bg-info main-col">
+        <h3>
+            <a href="{{DATA_URL}}multi/">Multi Point<br />Products</a>
             <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_multi_point_prods')">
-       </td>
-        <td valign="top"><a class="trigger_hover" href="{{DATA_URL}}multi/climate_engine/">
-        <b>Climate Engine</b></a>
-            <div class="pop-up">{% include 'includes/Docu_popup_climate_engine.html' %}</div>
-        </td>
-        <td>
+            <br />
+            <small>{% include 'includes/Docu_popup_multi_point_prods.html'%}</small>
+        </h3>
+        </div>
+    </div>
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div class="bg-info main-col">
+        <h3>
+            <a href="{{DATA_URL}}climate_engine/">Climate Engine</a>
             <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_climate_engine')">
-        </td>
-    </tr>
-    <tr>
-    <td colspan="2">
-        <a  href="{{DATA_URL}}station_finder/"><img class="app_img" alt="StationFinder" title="StationFinder" src="{{MEDIA_URL}}img/StationFinder.png"></a> 
-        <div class="pop-up">{% include 'includes/Docu_popup_station_finder.html'%}</div>   
-    </td>
-    <td colspan="2">
-        <a  href="{{DATA_URL}}single/"><img class="app_img" alt="SinglePoint" title="SinglePoint" src="{{MEDIA_URL}}img/SinglePointProducts2.png"></a>
-        <div class="pop-up">{% include 'includes/Docu_popup_single_point_prods.html'%}</div>
-    </td>
-    <td colspan="2">
-        <a  href="{{DATA_URL}}multi/"><img class="app_img" alt="multi" title="multi" src="{{MEDIA_URL}}img/MultiPointProducts.png"></a>
-        <div class="pop-up">{% include 'includes/Docu_popup_multi_prods.html'%}</div> 
-    </td>
-    <td colspan="2">
-        <a  href="{{DATA_URL}}multi/climate_engine/">
-        <img class="app_img" alt="ClimateEngine" title="ClimateEngine" src="{{MEDIA_URL}}img/ClimateEngine.png"></a>
-        <div class="pop-up">{% include 'includes/Docu_popup_climate_engine.html' %}</div>
-    </td> 
-    </tr>
-    </table>
-</td>
-</table>
+            <br />
+            <small>{% include 'includes/Docu_popup_climate_engine.html' %}</small>
+        </h3>
+        </div>
+    </div>
+</div>
 
 {%endblock content%}

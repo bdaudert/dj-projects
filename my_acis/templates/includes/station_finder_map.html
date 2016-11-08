@@ -3,8 +3,10 @@
         <input type="hidden" id="station_json" name="variable" value="{{station_json}}">
         <input type="hidden" id="metadata_keys_str" name="metadata_keys_str" value="{{initial.metadata_keys_str}}">
         <div class="sf_map" align="center">
-            <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
-        </div>
+            <button class="btn btn-primary obtain_sf_data">
+                Obtain Data for stations displayed
+            </button>
+        </div> 
         <div class="sf_map">
             <table id="map_legend"></table>
         </div>
@@ -12,7 +14,9 @@
             <div class="map-station-finder" id="map-station-finder"></div>
         </div><br /><br />
         <div class="sf_map" align="center">
-            <p><img class="obtain_sf_data" src="{{MEDIA_URL}}img/access_data_button.png"></p>
+            <button class="btn btn-primary obtain_sf_data">
+                Obtain Data for stations displayed
+            </button> 
         </div><br />
         <div class="station_list">
             <table id="station_list" border=1>

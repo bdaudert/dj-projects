@@ -1,16 +1,15 @@
-        <td>Units: </td>
-        <td>
-        <select id="units" name="units" onchange="update_value(this.value)"> 
-        {%for u, name in initial.form_options.units%}
-            <option value="{{u}}" {%if initial.units == u%} selected{%endif%}>{{name}}</option>
-        {%endfor%}
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
+<div class="form-group">
+    <label for="units">Units</label> 
+    <img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
         <div id="ht_units"></div>
         <script type="text/javascript">                        
             $("#ht_units").load("{{HTML_URL}}/Docu_help_texts.html #ht_units");
-        </script>    
-        </div>
-        </td>
+        </script>
+    </div>
+    <select id="units" class="form-control" name="units" onchange="update_value(this.value)"> 
+        {%for u, name in initial.form_options.units%}
+            <option value="{{u}}" {%if initial.units == u%} selected{%endif%}>{{name}}</option>
+        {%endfor%}
+    </select>
+</div>
