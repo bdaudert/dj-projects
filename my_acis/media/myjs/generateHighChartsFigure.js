@@ -53,7 +53,7 @@ function generateTS_individual(chart_indices) {
     var axisFontSize = '16px';
     var labelsFontSize = '16px';
     //Set params according to application 
-    if (app_name == 'monthly_summary' || app_name =='yearly_summary'){
+    if (app_name == 'monthly_summary' || app_name =='seasonal_summary'){
         var date_format = '%Y';
         if ( $('#statistic').length && $('#statistic').val() == 'ndays'){
             var yLabelmain = 'days';
@@ -194,11 +194,11 @@ function generateTS_individual(chart_indices) {
         if (app_name == 'spatial_summary' && idx > 0) {
             s['yAxis'] = i;
         }
-        //Set threshold for yearly_summary
+        //Set threshold for seasonal_summary
         if (app_name != 'intraannual'){
             var ave_data = compute_average(datadict[idx].data);
         }
-        if (app_name == 'yearly_summary'){
+        if (app_name == 'seasonal_summary'){
             //Precip/Snow/Evap colors
             s['threshold'] = ave_data[0][1].toFixed(2);
             s['color'] = 'blue';
@@ -231,7 +231,7 @@ function generateTS_individual(chart_indices) {
         //Deal with skinny bar bug
         if (chartType == 'column'){
             s['stacking'] = null;
-            if (app_name == 'monthly_summary' || app_name =='yearly_summary'){
+            if (app_name == 'monthly_summary' || app_name =='seasonal_summary'){
                 s['pointRange'] = 1 * 24 * 3600*1000*365;
             }
             else{
@@ -252,7 +252,7 @@ function generateTS_individual(chart_indices) {
         if (running_mean_period != '0'){
             var rm_data =compute_running_mean(datadict[idx].data, parseInt(running_mean_period));
             var r_name = running_mean_period + '-';
-            if (app_name == 'monthly_summary' || app_name == 'yearly_summary'){
+            if (app_name == 'monthly_summary' || app_name == 'seasonal_summary'){
                     r_name+='year Running Mean ';
             }
             else{
@@ -290,8 +290,8 @@ function generateTS_individual(chart_indices) {
             };
             series_data.push(a);
         }
-        //Set average as initial threshold for yearly_summary
-        if (app_name == 'yearly_summary'){
+        //Set average as initial threshold for seasonal_summary
+        if (app_name == 'seasonal_summary'){
             $('#chart_threshold').val(ave_data[0][1].toFixed(2));
         }
         //Range

@@ -14,6 +14,8 @@ body {
     background: #dedede; /* For browsers that do not support gradients */
 }
 
+
+
 p.error {
     color:#FF007F;
 }
@@ -44,6 +46,10 @@ table#map_legend {
 img.sidebar {
     width: 100%;
     height:auto;
+}
+
+img.app_img {
+    width:90%;
 }
 
 /* Classes */

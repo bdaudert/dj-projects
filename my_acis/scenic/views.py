@@ -333,7 +333,7 @@ def single_point_prods(request):
                 get_params.append(str(item))
         user_params = WRCCUtils.form_to_display_list(get_params,request.GET)
         context['user_params'] = user_params
-        for app in ['single_lister', 'monthly_summary', 'climatology','data_comparison', 'yearly_summary', 'intraannual']:
+        for app in ['single_lister', 'monthly_summary', 'climatology','data_comparison', 'seasonal_summary', 'intraannual']:
             initial= DJANGOUtils.set_initial(request, app)
             p_str = WRCCUtils.set_url_params(initial)
             context['url_params_' + app] =  p_str
@@ -622,8 +622,8 @@ def intraannual(request):
 
     return render_to_response(url, context, context_instance=RequestContext(request))
 
-def yearly_summary(request):
-    app_name = 'yearly_summary'
+def seasonal_summary(request):
+    app_name = 'seasonal_summary'
     context = {
         'title': settings.APPLICATIONS[app_name][0]
     }
@@ -674,7 +674,7 @@ def yearly_summary(request):
             'error':''
         }
         #Data request
-        year_data, hc_data = WRCCUtils.get_single_yearly_summary_data(form_cleaned)
+        year_data, hc_data = WRCCUtils.get_single_seasonal_summary_data(form_cleaned)
         context['run_done'] = True
         header_keys = WRCCUtils.set_display_keys(app_name, form)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
@@ -1762,7 +1762,7 @@ def check_form(form, fields_to_check):
         err = checker(form)
         if err:
             if field in ['start_year','end_year']:
-                if form['app_name'] in ['intraannual','yearly_summary','monthly_summary','climatology']:
+                if form['app_name'] in ['intraannual','seasonal_summary','monthly_summary','climatology']:
                     form_error['Year Range'] = err
                 else:
                     form_error[field] = err

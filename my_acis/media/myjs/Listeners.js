@@ -1000,7 +1000,7 @@ $(document).ready(function () {
         }
         //Change start/end years
         var app_name = $('#app_name').val();
-        if (app_name.inList(['yearly_summary','intraannual','monthly_summary','climatology'])){
+        if (app_name.inList(['seasonal_summary','intraannual','monthly_summary','climatology'])){
             //Set range dropdown values
             set_year_range()
             //Update target year for intra
@@ -1186,7 +1186,7 @@ $(document).ready(function () {
 
     });
 
-    //Threshold for yearly_summary
+    //Threshold for seasonal_summary
     $('#chart_threshold').on('change keyup', function(){
         var thresh = $(this).val();
         for (var i = 0; i < myChart.series.length; i++) {
