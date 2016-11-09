@@ -1,0 +1,57 @@
+<div id="content">
+<textarea rows="50" cols="100" style="background-color: LightBlue;color:DarkBlue;border:1px solid Blue;font-size:20px;">
+###########
+Sodpct
+###########
+This program computes precentiles for each day based on empirical
+distributions. Elements include max, min and
+mean temperature, degree days, daily temperature range,
+precipitation, snowfall and snowdepth.  The user selects 
+the starting and ending year.  Distributions are         
+empirical rather than fitted to theoretical distributions.
+Separate values are calculated for each day of the year. 
+The values for any given day are determined from the next
+1 to 30 days, starting on that day (a user-selectable    
+quantity).  (The use of additional days increases the    
+sample size, and smooths the day-to-day variations.)     
+Furthermore, these values can be based on individual     
+daily values, or on averages (or sums, for some elements)
+for the next (n) days.
+
+
+Input:
+    Coop Station Id(s)                  dddddd, dddddd
+    Start date                          yyyy
+    End date                            yyyy
+    Individual Values or Averages?             
+    Element                             e.g. pcpn
+    Threshold
+    Above or Below Threshold
+    Accumulate over season?             True or False
+    Begin month (of season)
+    Number of days to look ahead
+
+Sample Output:
+
+Mon - Month
+ Dy - Day
+ Nd - Number of days lumped together, commencing on this date
+ M - Method of aggregation:
+  I - Individual Days
+  A - Averages or sums over the period
+ Low - Lowest in sample
+ Num - Number of years used in this day's sample
+ High- Highest in sample
+Station: (266779) RENO TAHOE INTL AP
+START YEAR 2000 END YEAR 2011
+ELEMENT pcpn UNITS Hundredths of Inches
+INDIVIDUAL OBSERVATIONS FOR THE DAY(S) STARTING ON THE LISTED DATE
+
+Mon Dy  Nd  M   Num  Low    5%   10%     20%     25%     30%    33.3%    40%   50%    60%   67.7%    70%     75%     80%     90%  95%   High
+1   1   1   I   11  0.00    *   0.00    0.00    0.00    0.00        T      T     T      T       T   0.01    0.03    0.12    0.32    *   0.36
+1   2   1   I   11  0.00    *   0.00    0.00    0.00    0.00        T      T     T   0.04    0.04   0.07    0.16    0.25    0.75    *   1.33
+1   3   1   I   11  0.00    *   0.00    0.00    0.00    0.00        T      T     T   0.04    0.07   0.10    0.17    0.25    0.75    *   1.33
+
+
+Notes:
+</div>
