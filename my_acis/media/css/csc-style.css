@@ -14,8 +14,6 @@ body {
     background: #dedede; /* For browsers that do not support gradients */
 }
 
-
-
 p.error {
     color:#FF007F;
 }
@@ -57,11 +55,12 @@ img.app_img {
     height:100%;
 }
 
+
 .main-col {
-    /*width:100%;*/
     padding:5px;
     box-shadow:5px 5px grey;
-    border:2px solid grey;
+    /*border:2px solid grey;*/
+    height:100%;
 }
 .full-col {
     width:100%;

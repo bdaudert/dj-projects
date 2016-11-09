@@ -172,46 +172,6 @@ def dashboard(request):
     context['year_short_wy'] = '%s%s' % (year_wy[-2], year_wy[-1])
     return render_to_response(url, context, context_instance=RequestContext(request))
 
-def gallery(request):
-    context = {
-        'title': settings.APPLICATIONS['gallery'][0],
-    }
-    url = settings.APPLICATIONS['gallery'][2]
-    app_urls = {};app_names = {};param_urls = {}
-
-    #Gallery: FINDING A POINT/AREA OF INETREST
-    app_url = settings.APPLICATIONS['station_finder'][1]
-    p_url = app_url + '?'
-    p_url+='area_type=county&county=Sierra,%2006091'
-    p_url+='&elements=mint,pcpn&elements_constraints=all'
-    p_url+='&start_date=19300101&end_date=20141231&dates_constraints=all'
-    app_urls['station_finder'] = app_url
-    param_urls['station_finder'] = p_url
-    app_names['station_finder'] = settings.APPLICATIONS['station_finder'][0]
-    #Gallery: EXTREMES (monthly_summary ndays)
-    app_url = settings.APPLICATIONS['monthly_summary'][1]
-    p_url = app_url + '?'
-    #p_url+='area_type=location&location=-120.44,39.32&element=mint&grid=1&start_year=1970&end_year=2000'
-    p_url+='area_type=station_id&station_id=048218&element=mint&start_year=POR&end_year=POR'
-    p_url+='&statistic=ndays&less_greater_or_between=l&threshold_for_less_than=32&chart_indices_string=3,4,5'
-    app_urls['extremes'] = app_url
-    param_urls['extremes'] = p_url
-    app_names['extremes'] = settings.APPLICATIONS['monthly_summary'][0]
-    #Gallery: SUMMARIZING SPATIAL DATA (spatial_summary)
-    app_url = settings.APPLICATIONS['spatial_summary'][1]
-    p_url = app_url + '?'
-    p_url+='area_type=shape&shape=-120.77,36.84,-120.6,36.78,-120.54,36.71,-120.63,36.63,-120.76,36.77'
-    p_url+='&spatial_summary=mean&elements=maxt,mint,avgt&grid=1&start_date=20150301&end_date=20150331'
-    p_url+='&data_type=grid&grid=1'
-    app_urls['spatial_summary'] = app_url
-    param_urls['spatial_summary'] = p_url
-    app_names['spatial_summary'] = settings.APPLICATIONS['spatial_summary'][0]
-    #Set context variables
-    context['app_urls'] = app_urls
-    context['app_names'] = app_names
-    context['param_urls'] = param_urls
-    return render_to_response(url, context, context_instance=RequestContext(request))
-
 def howto(request):
     context = {
         'title': settings.APPLICATIONS['howto'][0],
