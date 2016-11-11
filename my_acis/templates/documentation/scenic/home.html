@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "wrcc_base.html" %}
 
 {% block content %}
 
@@ -7,19 +7,15 @@
 <a href="/csc/documentation/scenic/">SCENIC</a>
 </p>
 
-
-<table>
-<td valign="top" width="20%">
-<table class="doc-navbar">
-<tr><td valign="top">
-    <a href="{{URL_PREFIX}}documentation/scenic/large_data_requests/" class="trigger_hover">Large Data Requests</a>
-    <div class="pop-up" id="LG">
-    <p><font size="4">Large Data Request Methodology (Internal)</font></p>
+<div class="row">
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div class="bg-info main-col">
+        <h1>
+            <a href="{{URL_PREFIX}}documentation/scenic/large_data_requests/">Large Data Requests</a>
+            <small>Large Data Request Methodology (Internal)</small>
+        </h1>
+        </div>
     </div>
-</td></tr>
-</table>
-</td>
-<td valign="top" width="80%">
-<a target="_blank" href="http://wrcc.dri.edu/csc/scenic/"><img src="/csc/media/img/SCENIC_BIG.png"></a>
-</td>
+</div>
+
 {% endblock content%}

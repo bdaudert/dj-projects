@@ -1,39 +1,42 @@
-{% extends "base.html" %}
+{% extends "wrcc_base.html" %}
 
 {% block content %}
 
 <h1 align="center">{{title}}</h1>
-<table align="center">
-<td valign="top" width="20%">
-    <table align="left" class="doc-navbar">
-    <tr><td>
-    <a href="/csc/documentation/ee/set_up/" class="trigger_hover">Set up</a>
-    <div class="pop-up" id="EESetUp">
-    <p><font size="4">Installation Instructions and other set up required for EE</font></p>
+
+<div class="row">
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div class="bg-info main-col">
+        <h1>
+            <a href="/csc/documentation/ee/set_up/">Set up</a><br />
+            <small>Installation Instructions and other set up required for EE</small>
+        </h1>
+        </div>
     </div>
-    </td></tr>
-    <tr><td>
-    <a href="/csc/documentation/ee/hello_world/" class="trigger_hover">Hello World</a>
-    <div class="pop-up" id="EESetUp">
-    <p><font size="4">Hello World example</font></p>
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div class="bg-info main-col">
+        <h1>
+            <a href="/csc/documentation/ee/hello_world/">Hello World</a><br />
+            <small>Hello World example</small>
+        </h1>
+        </div>
     </div>
-    </td></tr>
-    <tr><td>
-    <a href="/csc/documentation/ee/organizing_code/" class="trigger_hover">Organizing your code</a>
-    <div class="pop-up" id="OrgCode">
-    <p><font size="4">Instructions on to organize your app-engine code.</font></p>
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div class="bg-info main-col">
+        <h1>
+            <a href="/csc/documentation/ee/organizing_code/">Organizing your code</a><br />
+            <small>Instructions on to organize your app-engine code.</small>
+        </h1>
+        </div>
     </div>
-    </td></tr>
-    <tr><td>
-    <a href="/csc/documentation/ee/ipython_notebooks/" class="trigger_hover">Utilizing IPython notebooks</a>
-    <div class="pop-up" id="Notebooks">
-    <p><font size="4">How to utilize IPython notebooks to share code and documentation</font></p>
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div class="bg-info main-col">
+        <h1>
+            <a href="/csc/documentation/ee/ipython_notebooks/">Utilizing IPython notebooks</a><br />
+            <small>How to utilize IPython notebooks to share code and documentation</small>
+        </h1>
+        </div>
     </div>
-    </td></tr> 
-    </table>
-</td>
-<td valign="top" width="70%">
-    <a target="_blank" href="https://earthengine.google.org/#intro"><img src="/csc/media/img/EE.png" width="600px"></a>
-</td>
-</table>
+</div>
+
 {% endblock %}

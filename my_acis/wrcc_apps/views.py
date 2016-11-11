@@ -405,6 +405,7 @@ def sods(request, app_name):
                 results = run_data_app(**app_args)
             elif app_name == 'Sodthr':
                 header = {}
+                header_short = {}
                 el_type = form2.cleaned_data['element']
                 start_year = dates[0][0:4]
                 end_year = dates[-1][0:4]
@@ -416,6 +417,11 @@ def sods(request, app_name):
                     #set headers
                     for k in range(3):
                         header[k] = set_sodthr_headers(k, el_type, str(form2.cleaned_data['interval_start']), \
+                        str(form2.cleaned_data['midpoint']),str(form2.cleaned_data['interval_end']), start_year, end_year, \
+                        int(form2.cleaned_data['max_missing_days_first_and_last']), int(form2.cleaned_data['max_missing_days_differences']), \
+                        str(form2.cleaned_data['above_or_below']), str(form2.cleaned_data['latest_or_earliest_for_period_1']), \
+                        str(form2.cleaned_data['latest_or_earliest_for_period_2']))
+                        header_short[k] = set_sodthr_headers(k, el_type, str(form2.cleaned_data['interval_start']), \
                         str(form2.cleaned_data['midpoint']),str(form2.cleaned_data['interval_end']), start_year, end_year, \
                         int(form2.cleaned_data['max_missing_days_first_and_last']), int(form2.cleaned_data['max_missing_days_differences']), \
                         str(form2.cleaned_data['above_or_below']), str(form2.cleaned_data['latest_or_earliest_for_period_1']), \
@@ -436,10 +442,13 @@ def sods(request, app_name):
                     #set headers
                     for k in range(3):
                         header[k] = set_sodthr_headers(k, el_type, '0101', '0731',  '1231', start_year, \
-                        end_year, 10, 10, 'BELOW', 'latest','earliest')
+                            end_year, 10, 10, 'BELOW', 'latest','earliest')
+                        header_short[k] = set_sodthr_headers_short(k, el_type, '0101', '0731',  '1231', start_year, \
+                            end_year, 10, 10, 'BELOW', 'latest','earliest')
                     app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
                     'station_ids':station_ids,'station_names':station_names,'el_type':el_type, 'custom_tables':False}
                 context['header'] = header
+                context['header_short'] = header_short
                 results = run_data_app(**app_args)
             elif app_name == 'Sodxtrmts':
                 context['element'] = form2.cleaned_data['element']
@@ -609,6 +618,20 @@ def set_sodthr_headers(tbl_idx, el, int_start, midpoint,  int_end, start_year, e
         lines.append('THE  SECOND INTERVAL ---      START MONTH-DAY: <b>%s</b> END MONTH-DAY:  <b>%s</b> </br>'  % (midpoint, int_end))
         lines.append('YEARS USED:  <b>%s -  %s</b> </br>' % (start_year, end_year))
     return "\n".join(lines)
+
+def set_sodthr_headers_short(tbl_idx, el, int_start, midpoint,  int_end, start_year, end_year, days_miss_1, days_miss_2, ab, le_1, le_2):
+    lines = []
+    if tbl_idx == 0:
+        lines.append('perc_of_%s_date_of_%s_%s' % (le_1, el, ab))
+        lines.append(start_year + int_start + '-' + end_year + midpoint)
+    elif tbl_idx == 1:
+        lines.append('perc_of_%s_date_of_%s_%s' % (le_2, el, ab))
+        lines.append(start_year + int_start + '-' + end_year + midpoint)
+    elif tbl_idx == 2:
+        lines.append('perc_of_numdays_between_%s_and_%s_date_of_%s_%s' % (le_1,le_2, el, ab))
+        lines.append(start_year + int_start + '-' + end_year + midpoint)
+    return "_".join(lines)
+
 '''
 def set_sodsumm_headers(table_list):
     headers = {}

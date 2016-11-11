@@ -225,7 +225,7 @@
         </div>
         {%endif%}
         <div id="printable_table" align="center" style="display:block;width:940px;">
-           <div class="black dataTableInfo">
+           <div class="black dataTableInfo" id="dataTableInfo_0">
             {%for key_val in results.header%}
             {%if key_val%}
             <b>{{key_val.0}}</b>: {{key_val.1}}
@@ -243,7 +243,7 @@
             Value is displayed but not used in calculations if user-specified missing day criterion exceeded.<br />
             (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
 
-            <table border="1" class="dataTable smallFont nowrap">
+            <table border="1" class="dataTable smallFont nowrap" id="dataTable_0">
             {%for yr_data in results.data%}
             {%if forloop.counter0 == 0%}
                 <thead><tr align="left">{%for dat in yr_data %}<td>{{dat}}</td>{%endfor%}</tr></thead>
@@ -262,10 +262,22 @@
         </div><!--End div="printable_table"-->
     </div><!--end div results-->
 
-    
+    <div class="black dataTableInfo" id="dataTableInfo_1">
+        {%for key_val in results.header%}
+        {%if key_val%}
+        <b>{{key_val.0}}</b>: {{key_val.1}}
+        {%if forloop.counter|divisibleby:2%}
+        <br />
+        {%endif%}
+        {%else%}
+        <br />
+        {%endif%}
+        {%endfor%}
+    </div>  
+
     <div align="center" id="data_summary_table" style="display:block;width:940px;">
         <h3>Summary:</h3>
-        <table border="1" class="dataTable smallFont nowrap">
+        <table border="1" class="dataTable smallFont nowrap" id="dataTable_1">
         {%for s_data in results.data_summary%}
             {%if forloop.counter0 <= 6%}
             {%if forloop.counter0 == 0%}
