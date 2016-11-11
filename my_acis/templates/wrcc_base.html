@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{% if LANGUAGE_CODE %}{{ LANGUAGE_CODE }}{% else %}en-US{% endif %}" xml:lang="{% if LANGUAGE_CODE %}{{ LANGUAGE_CODE }}{% else %}en-US{% endif %}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<head>
+<title>BRITTA's ACIS
+{% if title %} [ {% endif %} 
+{{ title|escape }}
+{% if title %} ] {% endif %}
+</title>
+{%load my_wrcc_apps_filters%}
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/wrcc-style.css"></link>
+<input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+<!-- jquery -->
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+<!--Bootstrap-->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="{{MEDIA_URL}}dist/css/bootstrap-submenu.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" defer></script>
+<script src="{{MEDIA_URL}}dist/js/bootstrap-submenu.min.js" defer></script>
+
+<!--My js-->
+<script type="text/javascript" src="{{ MEDIA_URL }}myjs/jutils.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}myjs/wrcc_appsListeners.js"></script>
+<!--jQuery datatables-->
+<link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/jquery.dataTables.css" />
+<link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/buttons.dataTables.css" />
+<script src="{{ MEDIA_URL }}js/jquery.dataTables.min.js"></script>
+<script src="{{ MEDIA_URL }}js/dataTables.buttons.min.js"></script>
+<script src="{{ MEDIA_URL }}js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+<script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+<script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+<script src="{{ MEDIA_URL }}js/buttons.html5.min.js"></script>
+<script src="{{ MEDIA_URL }}js/buttons.print.min.js"></script>
+<script src="{{ MEDIA_URL }}js/buttons.colVis.min.js"></script>
+
+
+{% block extrahead %}{% endblock %}
+{% block extrastyle %}{% endblock %}
+<script type="text/javascript">
+$(document).ready(function() {
+  // select all the links with class="docu_long", when one of them is clicked, get its "href" value
+  // load the content from that URL and place it into the tag with id="content"
+  $('a.docu_long').click(function() {
+    var url = $(this).attr('href');
+    $('#content').html('<p>Loading...</p>').load(url);
+    return false;
+  });
+});
+</script>
+    <!--Django env variables from settings -->
+    <!--  DIRS-->
+    <input type="hidden" id="HOST" name="variable" value="{{ HOST }}">
+    <input type="hidden" id="BASE_DIR" name="variable" value="{{ BASE_DIR }}">
+    <input type="hidden" id="SRC_BASE" name="variable" value="{{ SRC_BASE }}">
+    <input type="hidden" id="JSON_DIR" name="variable" value="{{ JSON_DIR }}">
+    <input type="hidden" id="HTML_DIR" name="variable" value="{{ HTML_DIR }}">
+    <input type="hidden" id="KML_DIR" name="variable" value="{{ KML_DIR }}">
+    <input type="hidden" id="TMP_DIR" name="variable" value="{{ TMP_DIR }}">
+    <input type="hidden" id="TMP_DIR" name="variable" value="{{ TMP_DIR }}">
+    <input type="hidden" id="TEMP" name="variable" value="{{ TEMP }}">
+    <input type="hidden" id="LIB_PREFIX" name="variable" value="{{ LIB_PREFIX }}">
+    <!--SERVER DIRS -->
+    <input type="hidden" id="STATIC_URL" name="variable" value="{{ STATIC_URL }}">
+    <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
+    <input type="hidden" id="JSON_URL" name="variable" value="{{ JSON_URL }}">
+    <input type="hidden" id="HTML_URL" name="variable" value="{{ HTML_URL }}">
+    <input type="hidden" id="KML_URL" name="variable" value="{{ KML_URL }}">
+    <input type="hidden" id="TMP_URL" name="variable" value="{{ TMP_URL }}">
+    <input type="hidden" id="IMG_URL" name="variable" value="{{ IMG_URL }}">
+    <input type="hidden" id="URL_PREFIX" name="variable" value="{{ URL_PREFIX }}">
+    <input type="hidden" id="HOME_URL" name="variable" value="{{ HOME_URL }}">
+    <input type="hidden" id="SCENIC_URL" name="variable" value="{{ SCENIC_URL }}">
+    <input type="hidden" id="ABOUT_URL" name="variable" value="{{ ABOUT_URL }}">
+    <input type="hidden" id="WHAT_URL" name="variable" value="{{ WHAT_URL }}">
+    <input type="hidden" id="WHO_URL" name="variable" value="{{ WHO_URL }}">
+    <input type="hidden" id="CONTACT_URL" name="variable" value="{{ CONTACT_URL }}">
+    <input type="hidden" id="DASH_URL" name="variable" value="{{ DASH_URL }}">
+    <input type="hidden" id="DATA_URL" name="variable" value="{{ DATA_URL }}">
+
+</head>
+
+<body {% if bodyclass %}class="{% block bodyclass %}{% endblock %}" {% endif %} {% if bodyid %} id="{% block bodyid %}{% endblock %}"{% endif %}>
+<div class="container">
+    <!--nav bootstrap-->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type='button' class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="sr-only">Toggle Navigation</span> 
+                </button>
+            </div><!--navbar-header-->
+
+            <div class="collapse navbar-collapse">
+                <div class="header-banner nav-header">
+                    <h1 class="bg-info" align="center">WRCC Internal Pages</h1>
+                </div>
+                
+                <ul class="nav navbar-nav">
+                <li><a href="/csc/">HOME</a></li>
+                <li><a href="/csc/scenic/">SCENIC</a></li>
+                <li><a href="/csc/wrcc_meta/">WRCC-METADATA</a></li>
+                
+                <li class="dropdown">
+                    <a href="/csc/wrcc_apps/" tabindex="0" data-toggle="dropdown" data-submenu>WRCC-APPLICATIONS <span class="caret"></span></i></a> 
+                    <ul class="dropdown-menu">
+                        <li><a href="/csc/wrcc_apps/Sodrun/">Sodrun</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodrunr/">Sodrunr</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodlist/">Sodlist</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodmonline/">Sodmonline</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodmonlinemy/">Sodmonlinemy</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodsum/">Sodsum</a></li>
+                        <li><a href="/csc/wrcc_apps/Soddyrec/">Soddyrec</a></li>
+                        <li><a href="/csc/wrcc_apps/Soddynorm/">Soddynorm</a></li>
+                        <li><a href="/csc/wrcc_apps/Soddd/">Soddd</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodpad/">Sodpad</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodsumm/">Sodsumm</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodpct/">Sodpct</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodthr/">Sodthr</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodxtrmts/">Sodxtrmts</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodpiii/">Sodpiii</a></li>
+                    </ul>
+                </li>
+                </ul> <!-- .nav .navbar-nav -->
+            </div><!-- /.navbar-collapse -->
+        </div><!--container-fluid-->
+    </nav>
+
+    {% block content %}
+        <br /><br /><br />
+        <p style="color:red;font-size:20px;" align="center"><b>PROVIDING EASY ACCESS TO CLIMATE DATA AND PRODUCTS</b>
+        <img style="width:80%; height:80%;" alt="DataDriven" title="DataDriven" src="{{MEDIA_URL}}img/DataDriven.png">
+        </p>
+
+        
+    {% endblock content %}
+
+    {% block footer %}
+        <div id="footer" align="center">{% include 'includes/Footer_WRCC.html'%}</div>
+    {% endblock footer%}
+</div><!-- END scenic-container -->
+</body>
+</html>
