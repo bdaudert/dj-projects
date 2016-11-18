@@ -34,13 +34,13 @@
     <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}
     {%for tbl_idx, table in stn_data.items%}
-    <div class="stronger dataTableInfo" style="color:darkblue; font-size:large">
+    <div class="stronger dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" style="color:darkblue; font-size:large">
         STATION NUMBER: {{station_ids|lookup:stn|safe}}&nbsp;&nbsp;LOCATION:{{station_names|lookup:stn|safe}}</br>
         START MONTH {{start_month}} END MONTH {{end_month}}</br>
         ELEMENT {{el_type}} UNITS {{units}}</br>
         DURATION {{duration|lookup:forloop.counter0}}</br>
     </div></br>
-    <table class="dataTable nowrap"  border="1" width="760px" cellspacing="0" cellpadding="0">
+    <table class="dataTable nowrap" id="dataTable-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
         <thead><tr>
                 <td>Year</td><td>Value</td><td>Start Date(mmdd)</td><td>Days Missing</td>
             </tr></thead>
@@ -65,7 +65,7 @@
     {%else%}
 
     {%for tbl_idx, table in stn_data.items%}
-        <table class="dataTable nowrap"  border="1" width="760px" cellspacing="0" cellpadding="0">
+        <table class="dataTable nowrap" id="dataTable-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
             <thead><tr>
                 <td>Prob of non-exceedance</td><td>Prob of exceedance</td><td>Return Interval</td><td>Value in Std. Dev.</td><td>Value in Absolute Units</td>
             </tr></thead>

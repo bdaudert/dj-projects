@@ -2,12 +2,15 @@ $(document).ready(function () {
     //Bootstrap nav menue
     $('[data-submenu]').submenupicker();
     
-    var dataTables = $('.dataTable');
+    var dataTables = $('.dataTable'), id;
+    console.log(dataTables);
     dataTables.each(function(index, dT){
         //Get table info = file name
         var dataTableInfo = 'dataTable';
-        if ($('#dataTableInfo_' + String(index)).length){
-            dataTableInfo = $.trim(String($('#dataTableInfo_' + String(index)).text()).replace('/^\s*\n/gm', ''));
+        id = $(this).attr('id').split('-')[1];
+        console.log(id);
+        if ($('#dataTableInfo-' + id).length){
+            dataTableInfo = $.trim(String($('#dataTableInfo-' + id).text()).replace('/^\s*\n/gm', ''));
             var L = dataTableInfo.split('\n'), newL = [];
             var header = '';
             for (var k =0;k<L.length;k++){
@@ -18,6 +21,7 @@ $(document).ready(function () {
             }
             dataTableInfo = newL.join(' ');
         }
+        console.log(dataTableInfo);
         //Create dataTable
         if ( !$.fn.dataTable.isDataTable( '#station_list' ) ) {
             $(dT).DataTable({

@@ -144,7 +144,7 @@
         
         <!--DATA-->
         <div id="DataList">
-        <table id="textData" border="1" class="dataTable nowrap">
+        <table id="textData" border="1" class="dataTable nowrap" id="dataTable">
         <thead>
         <th>Date</th><th>{{results.element_short}}</th>
         </thead>
@@ -166,7 +166,7 @@
     <table id="printable_table" align="center">
     <td>
     {% if results.data %}
-    <div class="dataTableInfo" style="max-width:100%;word-wrap:break-word;">
+    <div class="dataTableInfo" id="dataTableInfo" style="max-width:100%;word-wrap:break-word;">
     {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>: {{key_val.1}};
     {%endfor%}

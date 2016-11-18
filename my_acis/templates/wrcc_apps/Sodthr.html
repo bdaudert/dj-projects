@@ -39,10 +39,11 @@
                     {{header|lookup:tbl_idx|safe}}
                 </div><br /> 
                  
-                <div class="dataTableInfo" id="dataTableInfo_{{forloop.counter0}}"  align="left" style="display:none;max-wid0th:95%;word-wrap:break-word;">
+                <div class="dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}"  align="left" style="display:none;max-wid0th:95%;word-wrap:break-word;">
+    
                     {{station_names|lookup:stn|safe}}_{{station_ids|lookup:stn|safe}}_{{header_short|lookup:tbl_idx|safe}}
                 </div><br />
-                <table class="dataTable nowrap" id="dataTable_{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
+                <table class="dataTable nowrap" id="dataTable-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
                     <thead><tr>
                         <td />TEMP F</td><td>LOW</td><td >10%</td><td >20%</td><td >30%</td><td >40%<td >50%</td><td >60%</td><td >70%</td><td >80%</td><td >90%</td><td >HIGH</td>
                     </tr></thead>

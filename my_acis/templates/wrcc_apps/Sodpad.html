@@ -30,18 +30,15 @@
 
 {%if results %}
   {%for stn, stn_data in results.items %}
-    <div class="dataTableInfo" align="left" style="max-width:95%;word-wrap:break-word;">
-    PRECIPITATION-DURATION-FREQUENCY TABLES FOR STATION: {{station_ids|lookup:stn|safe}} {{station_names|lookup:stn|safe}}</br>
-    BASED ON PERIOD {{start_year}} TO {{end_year}}</br>
-    NUMBER OF YEARS: {{num_yrs}}
-    </div>
-    </br>
-
     {%if not stn_data%}
         <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}
         {%for doy, doy_data in stn_data.items %}
-            <table class="dataTable nowrap" border="1" width="760px" cellspacing="0" cellpadding="0">
+            <div class="dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" align="left" style="max-width:95%;word-wrap:break-word;">
+                PRECIPITATION-DURATION-FREQUENCY TABLES FOR STATION: {{station_ids|lookup:stn|safe}} {{station_names|lookup:stn|safe}}</br>
+                BASED ON PERIOD {{start_year}} TO {{end_year}}, {{num_yrs}} YEARS</br>
+            </div> 
+            <table class="dataTable nowrap" id="dataTable-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
             {%for dur in doy_data %}
                 {% if forloop.counter == 1 %}
                     <thead>

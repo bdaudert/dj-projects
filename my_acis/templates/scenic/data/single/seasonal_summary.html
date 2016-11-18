@@ -143,7 +143,7 @@
     <!--DATA-->
     {% if not results.error and results.data %}
         <div id="DataList" class="results" style="display:block;">
-        <table border="1" class="dataTable nowrap">
+        <table border="1" class="dataTable nowrap" id="dataTable">
         <thead>
         <th>Year</th><th>{{results.element_short}}</th>
         </thead>
@@ -168,7 +168,7 @@
     <div class="results">
     <table align="center">
     <td>
-    <div class="dataTableInfo" style="max-width:100%;word-wrap:break-word;">
+    <div class="dataTableInfo" id="dataTableInfo" style="max-width:100%;word-wrap:break-word;">
     {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>: {{key_val.1}}; 
     {%endfor%}

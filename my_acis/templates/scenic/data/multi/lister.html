@@ -238,7 +238,7 @@
     
     {%if results %}
     {%if results.data or results.smry %}
-    <div class="dataTableInfo"  align="left" style="max-width:100%;word-wrap:break-word;">
+    <div align="left" style="max-width:100%;word-wrap:break-word;">
     {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>: {{key_val.1}}; 
     {%endfor%}
@@ -256,12 +256,12 @@
 
     <!--lOOP over results-->
     {% for point_data in results.data %}
-        <p class="message" align="left" style="max-width:70%;word-wrap:break-word;"><b>METADATA</b>:<br />
+        <p class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" align="left" style="max-width:70%;word-wrap:break-word;"><b>METADATA</b>:<br />
            {% for meta_list in results.meta|lookup:forloop.counter0 %}
                 <b>{{meta_list.0}}</b>: {{meta_list.1}}
            {%endfor%}
         </p>
-        <table class="dataTable nowrap"  border="1" width="800px">
+        <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}" border="1" width="800px">
         {%for data in point_data%}
         {%if forloop.counter0 == 0%}
             <thead>

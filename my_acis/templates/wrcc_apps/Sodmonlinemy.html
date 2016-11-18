@@ -20,32 +20,28 @@
 
 <br /><br />
 {%if results%}
-<div class="dataTableInfo"  align="left" style="max-width:95%;word-wrap:break-word;">
+<div class="dataTableInfo" id="dataTableInfo" align="left" style="max-width:95%;word-wrap:break-word;">
     <b>:LOCATION</b> {{params.station_id}} &nbsp;&nbsp;&nbsp; {{station_name}}<br />
     <b>:START YEAR</b> {{params.start_date}} &nbsp;&nbsp;&nbsp; <b>END YEAR</b> {{params.start_date}}<br /> 
     <b>:ELEMENT</b> {{params.element}}<br />
     <b>:UNITS</b> {{params.units}} <br/>
 </div><br /><br />
 
-<table style="text-align:right;cell-padding:none;" border=1>
-<!--<table class="dataTable nowrap"  border="1" width="760px" cellspacing="0" cellpadding="0">-->
-<thead><tr>
-<th>YR</th><th>MO</th>
-{%for day in 1|make_range:31%}
-    <th>{{day}}</th>
-{%endfor%}
-</tr></thead>
-<tfoot><tr>
-<th>YR</th><th>MO</th>
-{%for day in 1|make_range:31%}
-    <th>{{day}}</th>
-{%endfor%}
-</tr></tfoot>
-<tbody>
-{% for mon, mon_vals in results.data.items %}
-    <!--<tr><td colspan="33">MO = {{mon}}</td></tr>-->
-    <!--<tr>{%for day in 1|make_range:33%}<td></td>{%endfor%}</tr>-->
-    <!--<tr><td>MONTH</td><td>{{mon}}</td>{%for day in 1|make_range:31%}<td></td>{%endfor%}</tr>-->
+<table class="dataTable nowrap" id="dataTable" border="1" width="760px" cellspacing="0" cellpadding="0">
+    <thead><tr>
+        <th>YR</th><th>MO</th>
+        {%for day in 1|make_range:31%}
+        <th>{{day}}</th>
+        {%endfor%}
+    </tr></thead>
+    <tfoot><tr>
+        <th>YR</th><th>MO</th>
+        {%for day in 1|make_range:31%}
+            <th>{{day}}</th>
+        {%endfor%}
+        </tr></tfoot>
+    <tbody>
+    {% for mon, mon_vals in results.data.items %}
     {%for yr_data in mon_vals %}
         <tr>
         {%for val in yr_data%}
@@ -53,8 +49,8 @@
         {%endfor%}
         </tr>
     {%endfor%}
-{%endfor%}
-</tbody>
+    {%endfor%}
+    </tbody>
 </table>
 
 {%if results.error %}

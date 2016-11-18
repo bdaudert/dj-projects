@@ -38,7 +38,7 @@
   </p>
   
   {%for stn, stn_data in results.items %}
-    <div class="dataTableInfo" align="left" style="max-width:95%;word-wrap:break-word;">
+    <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" align="left" style="max-width:95%;word-wrap:break-word;">
     Station: ({{station_ids|lookup:stn|safe}}) {{station_names|lookup:stn|safe}}</br>
     From Year {{start_year}} To Year {{end_year}}<br /><br />
     </div>
@@ -55,7 +55,7 @@
                 <br /><br />
             {%endif%}
 
-            <table class="dataTable nowrap" border="1" width="760px" cellspacing="0" cellpadding="0">
+            <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
             {%for row in table_type %}
                 {% if forloop.counter == 1%}
                     <thead><tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr></thead>

@@ -20,16 +20,14 @@
 
 <br /><br />
 {%if results%}
-<div class="dataTableInfo"  align="left" style="max-width:95%;word-wrap:break-word;">
+<div class="dataTableInfo"  id="dataTableInfo" align="left" style="max-width:95%;word-wrap:break-word;">
     <b>:LOCATION</b> {{params.station_id}} &nbsp;&nbsp;&nbsp; {{station_name}}<br />
     <b>:START YEAR</b> {{params.start_date}} &nbsp;&nbsp;&nbsp; <b>END YEAR</b> {{params.start_date}}<br /> 
     <b>:ELEMENT</b> {{params.element}}<br />
     <b>:UNITS</b> {{params.units}} <br/>
 </div><br /><br />
 
-<!--<table style="text-align:right;cell-padding:none;">-->
-<!--<table cellspacing="0" cellpadding="0" style="border-collapse:collapse;">-->
-<table class="dataTable nowrap"  border="1" width="760px" cellspacing="0" cellpadding="0">
+<table class="dataTable nowrap" id="dataTable" border="1" width="760px" cellspacing="0" cellpadding="0">
 <thead><tr>
 <th>YR</th><th>MO</th>
 {%for day in 1|make_range:31%}

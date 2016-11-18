@@ -20,24 +20,12 @@
 </br>
 </br>
 
-{%if elements %}
-<!--<p align='left'>-->
-<div class="dataTableInfo"  align="left" style="max-width:95%;word-wrap:break-word;">
-<b>SUMMARY-OF-THE-DAY STATISTICS: Last date considered : {{results.0.end}}</b>
-START - First date in record (YYMMDD)</br>
-END   - Last  date in record (YYMMDD)</br>
-POSBL - Possible number of observations</br>
-PRSNT - Total number of days present in the record</br>
-LNGPR - Largest number of consecutive observations</br>
-MISSG - Total number of missing days</br>
-LNGMS - Most consecutive missing observations</br>
-A day is considered present if any element is reported.</br>
-NAME is the latest name of the station in the history file.</br>
+<div class="dataTableInfo" id="dataTableInfo-0" align="left" style="max-width:95%;word-wrap:break-word;">
+    <b>SUMMARY-OF-THE-DAY STATISTICS: Last date considered : {{results.0.end}}</b>
+    START - First date in record (YYMMDD)</br>
+    END   - Last  date in record (YYMMDD)</br>
 </div>
-</br>
-</br>
-
-<table class="dataTable nowrap"  border="1" width="760px" cellspacing="0" cellpadding="0">
+<table class="dataTable nowrap" id="dataTable-0" border="1" width="760px" cellspacing="0" cellpadding="0">
 <thead><tr>
    <th>STATION</th><th>START</th><th>END</th>
     {%for el in elements%}
@@ -64,7 +52,14 @@ NAME is the latest name of the station in the history file.</br>
 </ br>
 </ br>
 
-<table class="dataTable nowrap"  border="1" width="760px" cellspacing="0" cellpadding="0">
+<div class="dataTableInfo" id="dataTableInfo-1" align="left" style="max-width:95%;word-wrap:break-word;">
+    POSBL - Possible number of observations</br>
+    PRSNT - Total number of days present in the record</br>
+    LNGPR - Largest number of consecutive observations</br>
+    MISSG - Total number of missing days</br>
+    LNGMS - Most consecutive missing observations</br>
+</div>
+<table class="dataTable nowrap" id="dataTable-1" border="1" width="760px" cellspacing="0" cellpadding="0">
 <thead><tr>
     <th>NUMBER</th><th>NAME</th><th>START</th><th>END</th><th>POSBL</th><th>PRSNT</th><th>LNGPR</th><th>MISSG</th><th>LNGMS</th>
 </tr></thead>

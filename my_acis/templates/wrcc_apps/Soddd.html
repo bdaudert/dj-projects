@@ -53,11 +53,11 @@
     {%endif%}
     
     {%for stn, stn_data in results.items %}
-        <div class="dataTableInfo" align="left" style="max-width:95%;word-wrap:break-word;">
+        <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" align="left" style="max-width:95%;word-wrap:break-word;">
         <h2>STATION: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;NUMBER: {{station_ids|lookup:stn|safe}}</h2>
         </div>
 
-        <table class="dataTable nowrap" border="1" width="760px" cellspacing="0" cellpadding="0">
+        <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
         {%for row_data in stn_data%}
             {%if forloop.counter == 1%}
                 <thead><tr>
