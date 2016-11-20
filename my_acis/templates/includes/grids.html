@@ -1,31 +1,28 @@
-        {%load my_scenic_filters%}
-        <td>Grid: </td>
-        <td>
-            <select class="grid" id="grid" name="grid">
-            {% for opt, name in initial.form_options.grid%}
-                {%if opt == "1"%}
-                    <optgroup label="Gridded datasets interpolated from historic station data">
-                {%endif%}
-                {%if opt == "22"%}
-                    <optgroup label="LOCA CMIP5 datasets">
-                {%endif%}
-                {%if opt == "4"%}
-                    <optgroup label="NARCCAP datasets">
-                {%endif%}
-
-                <option value="{{opt}}" {%if initial.grid == opt%} selected{%endif%}>{{name}}</option>
-            
-                {%if opt|is_in:'21,41,16'%}
-                </optgroup>
-                {%endif%}
-            {%endfor%}
-            </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_grid"></div>
-            <script type="text/javascript">                        
+{%load my_scenic_filters%}
+<div class="form-group">
+    <label for="grid">Grid</label>
+    <img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_grid"></div>
+        <script type="text/javascript">                        
             $("#ht_grid").load("{{HTML_URL}}/Docu_help_texts.html #ht_grid");
-            </script>
-        </div>
-        </td>
+        </script>
+    </div>
+    <select class="grid form-control" id="grid" name="grid">
+    {% for opt, name in initial.form_options.grid%}
+    {%if opt == "1"%}
+        <optgroup label="Gridded datasets interpolated from historic station data">
+    {%endif%}
+    {%if opt == "22"%}
+        <optgroup label="LOCA CMIP5 datasets">
+    {%endif%}
+    {%if opt == "4"%}
+        <optgroup label="NARCCAP datasets">
+    {%endif%}
+    <option value="{{opt}}" {%if initial.grid == opt%} selected{%endif%}>{{name}}</option>
+    {%if opt|is_in:'21,41,16'%}
+    </optgroup>
+    {%endif%}
+    {%endfor%}
+    </select>
+</div>

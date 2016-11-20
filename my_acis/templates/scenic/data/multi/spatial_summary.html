@@ -108,7 +108,7 @@
         <!--Paramaters and Data list-->
         <table cellpadding="5px">
         <td valign="top" style="max-width:400px">
-        <div class="dataTableInfo" id="dataTableInfo" style="max-width:100%;word-wrap:break-word;"> 
+        <div class="dataTableInfo" id="dataTableInfo-0" style="max-width:100%;word-wrap:break-word;"> 
         {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>: {{key_val.1}};
         {%endfor%}
@@ -127,7 +127,7 @@
 
         <div id="printable_table">
         <!--Data List-->
-        <table class="dataTable nowrap" id="dataTable" border="1" height="200px" width="600px">
+        <table class="dataTable nowrap" id="dataTable-0" border="1" height="200px" width="600px">
         {%for data in results.smry%}
         {%if forloop.counter0 == 0%}
             <thead>

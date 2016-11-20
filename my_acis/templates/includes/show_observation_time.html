@@ -1,16 +1,15 @@
-        <td>Show Observation Time: </td>
-        <td>
-            <select id="show_observation_time" name="show_observation_time" onchange="update_value(this.value)">
-            {%for b, name in initial.form_options.show_observation_time%}
-                <option value="{{b}}" {%if initial.show_observation_time == b%}selected{%endif%}>{{name}}</option>
-            {%endfor%}
-            </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_show_observation_time"></div>
-            <script type="text/javascript">                        
+<div class="form-group">
+    <label for="show_observation_time">Show Observation Time</label>       
+    <img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_show_observation_time"></div>
+        <script type="text/javascript">                        
             $("#ht_show_observation_time").load("{{HTML_URL}}/Docu_help_texts.html #ht_show_observation_time");
-            </script>
-        </div>
-        </td>
+        </script>
+    </div>
+    <select id="show_observation_time" class="form-control" name="show_observation_time" onchange="update_value(this.value)">
+    {%for b, name in initial.form_options.show_observation_time%}
+        <option value="{{b}}" {%if initial.show_observation_time == b%}selected{%endif%}>{{name}}</option>
+    {%endfor%}
+    </select>
+</div>

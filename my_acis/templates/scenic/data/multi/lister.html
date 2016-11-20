@@ -149,7 +149,7 @@
         </form>
     </div>
 </td>
-<!--Large Request Form/Errors/Down arrow/Maps-->
+<!--Large Request Form/Errors/Maps-->
 <td valign="top" width="60%">
     <!--Large Request Form-->
     <div id="largeRequestForm" style="display:none">
@@ -169,7 +169,7 @@
     <!--Shape file upload form-->
     <div>{% include 'includes/upload_shape_file.html'%}</div>
 
-    <!--Request errors or results arrow-->
+    <!--Request errors-->
     <div class="results" align="center">
     {%if form_error%}
         {% include 'includes/form_error.html'%}
@@ -177,12 +177,6 @@
 
     {%if  run_done and not results.data and not results.smry %}
         {% include 'includes/no_results.html'%}
-    {%endif%}
-    <!--Request errors or results arrow-->
-    {%if results.data or results.smry %}
-        {%if initial.state %}
-            {% include 'includes/arrow.html'%}
-        {% endif%}
     {%endif%}
     </div> 
     

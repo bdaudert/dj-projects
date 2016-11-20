@@ -233,18 +233,24 @@
     </nav>
 
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bg-success" style="border:1px solid black">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bg-success" style="border:1px solid black;text-align:center;">
             {%if title%}
             <h1 class="lead display-1" align="center">{{title}}</h1>
             {%else%}
-                {% include 'includes/SCENIC_mission_statement.html'%}
+                <h4 class="lead display-1">
+                    {% include 'includes/SCENIC_mission_statement.html'%}
+                </h4>
             {%endif%}
-            <!--Loading image-->
-            <div id="loading" style="align:center;vertical-align:center;">
-                <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />
-            </div>
         </div>
     </div><br />
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="text-align:center;">
+           <!--Loading image-->
+            <div id="loading" style="align:center;vertical-align:center;">
+                <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />
+            </div> 
+        </div>
+    </div>
 
     {% block content %}
 

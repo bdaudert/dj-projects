@@ -81,16 +81,12 @@
     </form>
     </div>
 </td>
-<!--Errors/down arrow/maps-->
+<!--Errors/maps-->
 <td valign="top" width="60%" align="center">
     <!--Form errors and search parameter section-->
     <div class="results">
     {%if form_error%}
         {% include 'includes/form_error.html'%}
-    {%endif%}
-
-    {%if results.graph_data and not initial.location%}
-        {% include 'includes/arrow.html'%}
     {%endif%}
 
     {%if run_done and not results.graph_data%}

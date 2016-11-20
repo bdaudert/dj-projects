@@ -114,16 +114,15 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 </div>
 
 {% if not run_done%}
-    <div id="top_of_page">
+<div id="top_of_page">
 {%else%}
-    <div id="top_of_page" style="display:none">
+<div id="top_of_page" style="display:none">
 {%endif%}
-
     <!--FORM/MAP/ERRORS-->
     <div class="row full-height">
         <!--Form-->
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> 
-            <form id="DataForm" class="main-form" role="form" class="form-horizontal" action="" method="post" onsubmit="show_loading()">{% csrf_token %}
+            <form id="DataForm" class="main-form" role="form" action="" method="post" onsubmit="show_loading()">{% csrf_token %}
                 <div class="form-group">
                     <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formData" style="width:100%">
                     Show me stations
@@ -149,7 +148,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
                 <div class="form-group"></div>
             </form>
         </div>
-        <!--Main-->
+        <!--Maps/errors and other forms-->
         <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
             <!--Shape file upload form-->
             <div>{% include 'includes/upload_shape_file.html'%}</div>
@@ -218,7 +217,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
         {%endif%} 
         <!--Map and Station List-->
         {% if station_json and run_done%}
-            <div class="dataTableInfo results"  align="center" style="max-width:95%;">
+            <div class="dataTableInfo results" id="dataTableInfo-0"  align="center" style="max-width:95%;">
             {%for key_val in params_display_list%}
                 <b>{{key_val.0}}</b>: {{key_val.1}};
                 {%if key_val.0 == "Variables"%}<br />{%endif%}

@@ -91,7 +91,7 @@
         </form>
     </div>
 </td>
-<!--Errors/down arrow/maps-->
+<!--Errors/maps-->
 <td valign="top" width="60%" align="center">
    <br />
    <!--Form errors and search parameter section-->
@@ -105,12 +105,6 @@
 
     {%if  run_done and  not results.data %}
         {% include 'includes/no_results.html'%}
-    {%endif%}
-    <!--Request errors or results arrow-->
-    {%if results.data %}
-        {%if not initial.location%}
-            {% include 'includes/arrow.html'%}
-        {%endif%}
     {%endif%}
     </div>
     <!--Maps-->
@@ -144,7 +138,7 @@
         
         <!--DATA-->
         <div id="DataList">
-        <table id="textData" border="1" class="dataTable nowrap" id="dataTable">
+        <table id="textData" border="1" class="dataTable nowrap" id="dataTable-0">
         <thead>
         <th>Date</th><th>{{results.element_short}}</th>
         </thead>
@@ -166,7 +160,7 @@
     <table id="printable_table" align="center">
     <td>
     {% if results.data %}
-    <div class="dataTableInfo" id="dataTableInfo" style="max-width:100%;word-wrap:break-word;">
+    <div class="dataTableInfo" id="dataTableInfo-0" style="max-width:100%;word-wrap:break-word;">
     {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>: {{key_val.1}};
     {%endfor%}

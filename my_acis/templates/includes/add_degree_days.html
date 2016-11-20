@@ -1,17 +1,15 @@
-        <td>Add special degree days: </td>
-
-        <td>
-        <select id="add_degree_days" name="add_degree_days" onchange="show_div_if_true(this,'dd') & update_value(this.value)">
-            {%for b, name in initial.form_options.add_degree_days%}
-                <option value="{{b}}" {%if initial.add_degree_days == b%}selected{%endif%}>{{name}}</option>
-            {%endfor%}
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
+<div class="form-group">
+    <label for="add_degree_days">Add Degree Days</label>
+    <img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
         <div id="ht_add_degree_days"></div>
         <script type="text/javascript">                        
             $("#ht_add_degree_days").load("{{HTML_URL}}/Docu_help_texts.html #ht_add_degree_days");
         </script>
-        </div>
-        </td>
+    </div>
+    <select id="add_degree_days" class="form-control" name="add_degree_days" onchange="show_div_if_true(this,'dd') & update_value(this.value)">
+        {%for b, name in initial.form_options.add_degree_days%}
+            <option value="{{b}}" {%if initial.add_degree_days == b%}selected{%endif%}>{{name}}</option>
+        {%endfor%}
+    </select>
+</div>

@@ -118,10 +118,6 @@
         {% include 'includes/form_error.html'%}
     {%endif%}
 
-    {%if figure_files and initial.state %}
-        {% include 'includes/arrow.html'%}
-    {%endif%}
-
     {%if run_done and not figure_files %}
            {% include 'includes/no_results.html'%}
     {%endif%}

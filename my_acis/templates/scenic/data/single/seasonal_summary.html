@@ -92,7 +92,7 @@
         </form>
     </div>
 </td>
-<!--Errors/dowm arrow/maps-->
+<!--Errors/maps-->
 <td valign="top" width="60%" align="center">
    <br />
    <!--Form errors and search parameter section-->
@@ -106,12 +106,6 @@
 
     {%if  run_done and  not results.data %}
         {% include 'includes/no_results.html'%}
-    {%endif%}
-    <!--Request errors or results arrow-->
-    {%if results.data %}
-        {%if not initial.location%}
-            {% include 'includes/arrow.html'%}
-        {%endif%}
     {%endif%}
     </div>
     <!--Maps-->

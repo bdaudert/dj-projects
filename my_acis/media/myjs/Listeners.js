@@ -3,27 +3,24 @@ $(document).ready(function () {
     $('[data-submenu]').submenupicker();
     
     var dataTables = $('.dataTable'), id;
-    console.log(dataTables);
     dataTables.each(function(index, dT){
-        //Get table info = file name
-        var dataTableInfo = 'dataTable';
-        id = $(this).attr('id').split('-')[1];
-        console.log(id);
-        if ($('#dataTableInfo-' + id).length){
-            dataTableInfo = $.trim(String($('#dataTableInfo-' + id).text()).replace('/^\s*\n/gm', ''));
-            var L = dataTableInfo.split('\n'), newL = [];
-            var header = '';
-            for (var k =0;k<L.length;k++){
-                //remove spaces
-                var l_short = $.trim(L[k]).replace(/;/g, ' ');
-                newL.push(l_short);
-                header += l_short;
-            }
-            dataTableInfo = newL.join(' ');
-        }
-        console.log(dataTableInfo);
-        //Create dataTable
         if ( !$.fn.dataTable.isDataTable( '#station_list' ) ) {
+            //Get table info = file name
+            var dataTableInfo = 'dataTable';
+            id = $(this).attr('id').split('-')[1];
+            if ($('#dataTableInfo-' + id).length){
+                dataTableInfo = $.trim(String($('#dataTableInfo-' + id).text()).replace('/^\s*\n/gm', ''));
+                var L = dataTableInfo.split('\n'), newL = [];
+                var header = '';
+                for (var k =0;k<L.length;k++){
+                    //remove spaces
+                    var l_short = $.trim(L[k]).replace(/;/g, ' ');
+                    newL.push(l_short);
+                    header += l_short;
+                }
+                dataTableInfo = newL.join(' ');
+            }
+            //Create dataTable
             $(dT).DataTable({
                 'dom': 'Bfrtip',
                 'paging': false,
@@ -681,18 +678,7 @@ $(document).ready(function () {
     */
     $('.obtain_sf_data').on('click', function(){
         ShowPopupDocu('formDownload');
-        //$('#formDownload').css('display','block');
         $('.data_format option[value="html"]').attr('disabled', true);
-        /*
-        if ($('#formDownload').css('display') == 'none'){
-            $('.data_format option[value="html"]').attr('disabled', true);
-            $('#formDownload').css('display','block');
-        }
-        else{
-            $('#formDownload').css('display','none');
-            $('.data_format option[value="html"]').attr('disabled', false);
-        }
-        */
     });
     
     /*
@@ -792,7 +778,7 @@ $(document).ready(function () {
                 $('#stn_finder').css('display','none');
             }
             else{
-                $('#stn_finder').css('display','table-row'); 
+                $('#stn_finder').css('display','block'); 
             }
         }
         update_value($(this).val()); //form_utils function
@@ -987,9 +973,15 @@ $(document).ready(function () {
         /*need to change data type for single apps*/
         if ($(this).val().inList(['location','locations'])){
             $('#data_type').val('grid');
+            if ($('#stn_finder').length){
+                $('#stn_finder').css('display','none');
+            }
         }
         else if ($(this).val()== 'station_id'){
             $('#data_type').val('station');
+            if ($('#stn_finder').length){
+                $('#stn_finder').css('display','block');
+            }
         }
         set_elements();
         set_map($(this)); //form_utils function

@@ -1,21 +1,21 @@
-    {%load my_scenic_filters%}
-    <td>Climate Variable: </td>
-    <td>
-        <select id="element" name="element">
-        {%for opt, name in initial.form_options.element%}
-            <option value="{{opt}}" 
-                {%if initial.element == opt%}selected{%endif%}
-                {%if initial.data_type == "grid" and opt|is_in:'obst,snow,snwd,evap,wdmv,pet,dtr'%}disabled{%endif%}
-                {%if initial.app_name == "data_comparison" and opt|is_in:'obst,snow,snwd,evap,wdmv,pet,dtr'%}disabled{%endif%}
-                {%if initial.app_name != "monthly_summary" and opt|is_in:'pet,dtr'%}disabled{%endif%}
-            >{{name}}</option> 
-        {%endfor%}
-    </td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+{%load my_scenic_filters%}
+<div class="form-group">
+    <label for="element">Variable</label>
+    <img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_element"></div>
         <script type="text/javascript">                        
         $("#ht_element").load("{{HTML_URL}}Docu_help_texts.html #ht_element");
         </script>
     </div>
-    </td>
+    <select id="element" name="element">
+    {%for opt, name in initial.form_options.element%}
+        <option value="{{opt}}" 
+        {%if initial.element == opt%}selected{%endif%}
+        {%if initial.data_type == "grid" and opt|is_in:'obst,snow,snwd,evap,wdmv,pet,dtr'%}disabled{%endif%}
+        {%if initial.app_name == "data_comparison" and opt|is_in:'obst,snow,snwd,evap,wdmv,pet,dtr'%}disabled{%endif%}
+        {%if initial.app_name != "monthly_summary" and opt|is_in:'pet,dtr'%}disabled{%endif%}
+        >{{name}}</option> 
+    {%endfor%}
+    </select>
+</div>

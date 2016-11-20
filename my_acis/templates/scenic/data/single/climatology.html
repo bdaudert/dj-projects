@@ -80,16 +80,12 @@
     </form>
     </div><!--End formData-->
 </td>
-<!--Errors/dowm arrow/maps-->
+<!--Errors/maps-->
 <td valign="top" width="60%" align="center">
     <div class="results">
     {%if form_error%}
         {% include 'includes/form_error.html'%}
     {%endif%} 
-
-    {%if results and not initial.location %}
-        {% include 'includes/arrow.html'%}
-    {%endif%}
 
     {%if run_done and not results and not results.error%}
            {% include 'includes/no_results.html'%}
@@ -190,7 +186,7 @@
                 </table>
                 </br>
                 <!--
-                <table class="dataTable" id="dataTable" border="1" width="90%">
+                <table class="dataTable" id="dataTable-0" border="1" width="90%">
                 {%for row in results|lookup:tab%}
                 {%if forloop.counter0 == 0%}
                 <thead>

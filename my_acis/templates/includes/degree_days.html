@@ -1,10 +1,11 @@
-        <td id="Degree Days">Degree Days: </td>
-        <td><input type="text" id="degree_days" name="degree_days" value="{{initial.degree_days}}" onchange="update_value(this.value)"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_degree_days"></div>
+<div class="form-group">
+    <label for="degree_days">Degree Days</label>
+    <img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_degree_days"></div>
         <script type="text/javascript">                        
             $("#ht_degree_days").load("{{HTML_URL}}/Docu_help_texts.html #ht_degree_days");
             </script>
-        </div>
-        </td>
+    </div>
+    <input type="text" class="form-control" id="degree_days" name="degree_days" value="{{initial.degree_days}}" onchange="update_value(this.value)">
+</div>

@@ -133,9 +133,6 @@
         {% include 'includes/form_error.html'%}
     {%endif%}
 
-    {%if results.data and not initial.location %}
-        {% include 'includes/arrow.html'%}
-    {%endif%}
     </div>
 
     <!--Maps-->
@@ -168,7 +165,7 @@
         {% include 'includes/no_results.html'%}
     {% endif %}
 
-    <!--Request errors or results arrow-->
+    <!--Request errors-->
     {%if results.errors%}
         <p class="error">{{results.errors}}</p>
     {%endif%}

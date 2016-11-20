@@ -34,240 +34,266 @@
     <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 {%endif%}
 
-<!--Toolinfo/Howto-->
-<table>
-<td valign="bottom" width="45%">
-    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/lister/'">
-    {%if results.data or results.smry%}
-    <input type="submit" value="Change Options" onclick="ShowHideTopOfPage()">
-    {%endif%}
-</td>
-<td valign="top" width="55%" align="left">
-    <table>
-    <tr>
-    <td><div id=tool_info_head>{% include 'includes/Button_tool_info.html'%}</div></td>
-    <td><div id="how_to_head">{% include 'includes/Button_how_to.html'%}</div></td>
-    </tr>
-    </table>
-</td>
-</table>
+<!--Button row-->
+<div class="row">
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> 
+        <!--Tool Info/Howto-->
+        <button type="submit" class="btn btn-primary" onclick="window.location='{{DATA_URL}}station_finder/'">
+            Start Over
+        </button>
+        {%if results and not form_error%}
+            <button type="submit" class="btn btn-primary" onclick="ShowHideTopOfPage()">
+                Change Options
+            </button>
+        {%endif%}
+    </div>
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" align="center">
+    </div>
+    <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7" align="center">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div id=tool_info_head>{% include 'includes/Button_tool_info.html'%}</div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div id="how_to_head">{% include 'includes/Button_how_to.html'%}</div>
+        </div>
+    </div>
+</div><br />
 
-<!--Form-->
+ <!--FORM/MAP/ERRORS-->
 {% if not results.data and not results.smry%}
-    <table id="top_of_page">
+<div id="top_of_page">
 {%else%}
-    <table id="top_of_page" style="display:none">
+<div id="top_of_page" style="display:none">
 {%endif%}
-<td valign="top" width="40%">
-    <div id='formData'>
-        <form method="post" id="DataForm" action="" onsubmit="show_loading();">{% csrf_token %}
-        <input type="hidden" name="data_type" id="data_type" class="data_type" value="{{initial.data_type}}">
-        <table class="form" id="tableData" >
-        <tr  style="display:table-row" valign="bottom">{% include 'includes/area_select.html'%}</tr>
-        <tr  style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
-        <tr  id="stn_finder" style="display:table-row">{% include 'includes/station_finder.html'%}</tr>
-        {%if initial.data_type == "grid"%}        
-        <tr  id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr>
-        {% if initial.grid == "21"%}
-        <tr  id="temp_res" style="display:table-row">{% include 'includes/temporal_resolution.html'%}</tr>
-        {%else%}
-        <tr  id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</tr>
-        {%endif%}
-        {%else%}
-        <tr  id="grid_type" style="display:none">{% include 'includes/grids.html'%}</tr>
-        <tr  id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</tr>
-        {%endif%}
-        <tr  style="display:table-row">{% include 'includes/elements.html'%}</tr>
-        <tr  id="add" valign="top" style="display:table-row">{% include 'includes/add_degree_days.html'%}</tr>
-        {%if initial.add_degree_days == "T"%}
-            <tr id="dd" valign="top" style="display:table-row">{% include 'includes/degree_days.html'%}</tr>
-        {%else%}
-            <tr id="dd" valign="top" style="display:none">{% include 'includes/degree_days.html'%}</tr>
-        {%endif%}
-        <tr  style="display:table-row;">{% include 'includes/units.html'%}</tr>
-        <tr  style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
-        <tr  style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
-        <tr  id="data_summ" style="display:table-row;">{% include 'includes/data_summary.html'%}</tr>
-        {%if initial.data_summary == "none"%}
-        <tr id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
-        <tr id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
-        <tr  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
-        <tr  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</tr>
-        {%endif%}
-        {%if initial.data_summary == "temporal_summary"%}
-        <tr id="temp_summary" style="display:table-row">{% include 'includes/temporal_summary.html'%}</tr>
-        <tr id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
-        <tr  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
-        <tr  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</tr>
-        {%endif%}
-        {%if initial.data_summary == "spatial_summary"%}
-        <tr id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
-        <tr id="spat_summary" style="display:table-row">{% include 'includes/spatial_summary.html'%}</tr>
-        <tr  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</tr>
-        <tr  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</tr>
-        {%endif%}
-        {%if initial.data_summary == "windowed_data"%}
-        <tr  id="start_wind" style="display:table-row;">{% include 'includes/start_window.html'%}</tr>
-        <tr  id="end_wind" style="display:table-row;">{% include 'includes/end_window.html'%}</tr>
-        <tr id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</tr>
-        <tr id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</tr>
-        {%endif%}
-        {%if initial.data_type == "station" and initial.data_summary == "none"%}
-        <tr  id="flags" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
-        <tr  id="obs_time" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
-        {%elif initial.data_type == "station" and initial.data_summary == "windowed_data"%}
-        <tr  id="flags" style="display:table-row">{% include 'includes/show_flags.html'%}</tr>
-        <tr  id="obs_time" style="display:table-row">{% include 'includes/show_observation_time.html'%}</tr>
-        {%else%}
-        <tr  id="flags" style="display:none">{% include 'includes/show_flags.html'%}</tr>
-        <tr  id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</tr>
-        {%endif%}
-        <tr  style="display:table-row;">{% include 'includes/data_format.html'%}</tr>
-        {%if initial.data_format == "html"%}
-        <tr id="out_format" class="out_format" style="display:none;">{% include 'includes/output_format.html'%}</tr>
-        {%else%}
-        <tr id="out_format" class="out_format" style="display:table-row;">{% include 'includes/output_format.html'%}</tr>
-        {%endif%}
-        {%if initial.data_format == "dlm" or initial.data_format == "clm"%}
-        <tr id="delim" class="delim" style="display:table-row;">{% include 'includes/delimiter.html'%}</tr>
-        {%else%}
-        <tr id="delim" class="delim" style="display:none;">{% include 'includes/delimiter.html'%}</tr>
-        {%endif%}
-        {%if initial.data_format != "html"%}
-            <tr id="out_file" class="out_file" style="display:table-row;">{% include 'includes/out_file.html'%}</tr>
-        {%else%}
-            <tr id="out_file" class="out_file" style="display:none;">{% include 'includes/out_file.html'%}</tr>
-        {%endif%}
-        </table>
-        <input type="hidden" name="app_name" value="single_lister">
-        <input type="hidden" id="data_type" name="data_type" value="{{initial.data_type}}">
-        <input class="mainFormSubmit" style="margin:5px" type="submit" value="Get data" name="formData"/>
-        </form>
-    </div>
-</td>
-<!--Errors/down arrow/maps-->
-<td valign="top" width="60%" align="center">
-    <!--Form errors and search parameter section-->
-    <div class="results">
-    {%if form_error%}
-        {% include 'includes/form_error.html'%}
-    {%endif%}
-    {%if results.error%}
-        <p class="error">ERROR: {{results.error}}</p>
-    {%endif%}
 
-    {%if  run_done and  not results.data and not results.smry %}
-        {% include 'includes/no_results.html'%}
-    {%endif%}
-    <!--Request errors or results arrow-->
-    {%if results.data or results.smry %}
-        {%if not initial.location%}
-            {% include 'includes/arrow.html'%}
-        {%endif%}
-    {%endif%}
-    </div>
-    <!--Maps-->
-    {%if need_gridpoint_map%}
+    <div class="row full-height">
+        <!--Form-->
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
+            <form class="main-form" method="post" id="DataForm" action="" onsubmit="show_loading();">{% csrf_token %}
+            <div class="form-group">
+                <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formData" style="width:100%">
+                Get Data
+                </button>
+            </div>
+            <input type="hidden" name="app_name" value="single_lister">
+            <input type="hidden" name="data_type" value="{{initial.data_type}}">
+            {% include 'includes/area_select.html'%}
+            <span id="area" valign="bottom">{% include 'includes/area.html'%}</span>
+            {%if initial.data_type == "station"%}
+            <span  id="stn_finder">{% include 'includes/station_finder.html'%}</span>
+            {%else%}
+            <span  id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</span>
+            {%endif%}
+            {%if initial.data_type == "grid"%}        
+            <span  id="grid_type">{% include 'includes/grids.html'%}</span>
+            {% if initial.grid == "21"%}
+            <span  id="temp_res">{% include 'includes/temporal_resolution.html'%}</span>
+            {%else%}
+            <span  id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</span>
+            {%endif%}
+            {%else%}
+            <span  id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
+            <span  id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</span>
+            {%endif%}
+            {% include 'includes/elements.html'%}
+            <span  id="add">{% include 'includes/add_degree_days.html'%}</span>
+            {%if initial.add_degree_days == "T"%}
+            <span id="dd">{% include 'includes/degree_days.html'%}</span>
+            {%else%}
+            <span id="dd" style="display:none">{% include 'includes/degree_days.html'%}</span>
+            {%endif%}
+            <span>{% include 'includes/units.html'%}</span>
+            <span>{% include 'includes/start_date.html'%}</span>
+            <span>{% include 'includes/end_date.html'%}</span>
+            <span  id="data_summ">{% include 'includes/data_summary.html'%}</span>
+            {%if initial.data_summary == "none"%}
+            <span id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</span>
+            <span id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</span>
+            <span  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</span>
+            <span  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</span>
+            {%endif%}
+            {%if initial.data_summary == "temporal_summary"%}
+            <span id="temp_summary">{% include 'includes/temporal_summary.html'%}</span>
+            <span id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</span>
+            <span  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</span>
+            <span  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</span>
+            {%endif%}
+            {%if initial.data_summary == "spatial_summary"%}
+            <span id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</span>
+            <span id="spat_summary" style="display:block">{% include 'includes/spatial_summary.html'%}</span>
+            <span  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</span>
+            <span  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</span>
+            {%endif%}
+            {%if initial.data_summary == "windowed_data"%}
+            <span  id="start_wind" style="display:block;">{% include 'includes/start_window.html'%}</span>
+            <span  id="end_wind" style="display:block;">{% include 'includes/end_window.html'%}</span>
+            <span id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</span>
+            <span id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</span>
+            {%endif%}
+            {%if initial.data_type == "station" and initial.data_summary == "none"%}
+            <span  id="flags" style="display:block">{% include 'includes/show_flags.html'%}</span>
+            <span  id="obs_time" style="display:block">{% include 'includes/show_observation_time.html'%}</span>
+            {%elif initial.data_type == "station" and initial.data_summary == "windowed_data"%}
+            <span  id="flags" style="display:block">{% include 'includes/show_flags.html'%}</span>
+            <span  id="obs_time" style="display:block">{% include 'includes/show_observation_time.html'%}</span>
+            {%else%}
+            <span  id="flags" style="display:none">{% include 'includes/show_flags.html'%}</span>
+            <span  id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</span>
+            {%endif%}
+            <span  style="display:block;">{% include 'includes/data_format.html'%}</span>
+            {%if initial.data_format == "html"%}
+            <span id="out_format" class="out_format" style="display:none;">{% include 'includes/output_format.html'%}</span>
+            {%else%}
+            <span id="out_format" class="out_format" style="display:block;">{% include 'includes/output_format.html'%}</span>
+            {%endif%}
+            {%if initial.data_format == "dlm" or initial.data_format == "clm"%}
+            <span id="delim" class="delim" style="display:block;">{% include 'includes/delimiter.html'%}</span>
+            {%else%}
+            <span id="delim" class="delim" style="display:none;">{% include 'includes/delimiter.html'%}</span>
+            {%endif%}
+            {%if initial.data_format != "html"%}
+                <span id="out_file" class="out_file" style="display:block;">{% include 'includes/out_file.html'%}</span>
+            {%else%}
+                <span id="out_file" class="out_file" style="display:none;">{% include 'includes/out_file.html'%}</span>
+            {%endif%}
+            <div class="form-group">
+                <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formData" style="width:100%">
+                Get Data
+                </button>
+            </div>
+        </form>
+    </div><!--col-sm-4-->
+    <!--Main: Errors/maps-->
+    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+        <!--Form errors and search parameter section-->
+        <div class="results">
+            {%if form_error%}
+                {% include 'includes/form_error.html'%}
+            {%endif%}
+            {%if results.error%}
+                <p class="error">ERROR: {{results.error}}</p>
+            {%endif%}
+            {%if  run_done and  not results.data and not results.smry %}
+                {% include 'includes/no_results.html'%}
+            {%endif%}
+        </div>
+        <!--Maps-->
+        {%if need_gridpoint_map%}
+        
         <div id="GridpointMap" style="display:block">
-        <input type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
-        <input id="address" type="textbox" value="Place/Location" style="height:15px;width:150px;">
-        <div id="map-gridpoint"></div>
+            <input type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
+            <input id="address" type="textbox" value="Place/Location" style="height:15px;width:150px;">
+            <div id="map-gridpoint"></div>
         </div>
         {%if initial.location %}
             <script type="text/javascript">initialize_grid_point_map("{{initial.location}}");</script>
         {% else %}
             <script type="text/javascript">initialize_grid_point_map();</script>
         {% endif %}
-    {%else%}
-        <div id="GridpointMap" style="display:none">
-        <input type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
-        <input id="address" type="textbox" value="Place/Location" style="height:19px;width:150px;">
-        <div id="map-gridpoint"></div>
-        </div>
-    {%endif%}
-</td></table>
-
-<!--Results-->
-<table cellpadding="10" align="center">
-<td valign="top" width="97%" align="center">
-    <div class="results">
-    
-    <!--Data-->
-    <table id="printable_table">
-    <td>
-    {%if not results.error %}
-        {% if results.smry or results.data %}
-        <div id="metadata" align="left" style="display:none;max-width:600px">
-        {%for key_val in meta_display_list%}
-            <b>{{key_val.0}}</b>:
-            {%if key_val.0 == "Station ID/Network List" or key_val.0 == "Valid Date Range" %}
-                <br />
-            {%endif%}
-            {{key_val.1}}
-            {% if forloop.counter|divisibleby:2 %}<br />{%endif%}
-
-        {%endfor%}
-
         
+        {%else%}
+        
+        <div id="GridpointMap" style="display:none">
+            <input type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
+            <input id="address" type="textbox" value="Place/Location" style="height:19px;width:150px;">
+            <div id="map-gridpoint"></div>
         </div>
-        {% endif %}
-    {%endif%}
 
-    {%if not results.error and results.smry %}
-        <p align="left">
+        {%endif%}
+        </div><!--end col...-8-->
+    </div><!--end row-->
+</div><!--end top_of_page--> 
+<br />
+<!--Main Results-->
+<div class="row results">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
+    <div class="results" align="center">    
+    <!--Data-->
+    <table id="printable_table"><td>
+        {%if not results.error %}
+        {% if results.smry or results.data %}
+            <div id="metadata" align="left" style="display:none;max-width:600px">
+            {%for key_val in meta_display_list%}
+                <b>{{key_val.0}}</b>:
+                {%if key_val.0 == "Station ID/Network List" or key_val.0 == "Valid Date Range" %}
+                    <br />
+                {%endif%}
+                {{key_val.1}}
+                {% if forloop.counter|divisibleby:2 %}<br />{%endif%}
+            {%endfor%}
+            </div>
+        {% endif %}
+        {%endif%}
+
+        {%if not results.error and results.smry %}
+            <div align="left" class="dataTableInfo" id="dataTableInfo-1" style="max-width:400px;word-wrap:break-word;">
             {% for key_val in params_display_list %}
                 <b>{{key_val.0}}</b>: {{key_val.1}}<br />
             {% endfor %}
-        </p>
-        <table border="1">
-        {%for s_data in results.smry%}
-            <tr>
-            {%for s in s_data%}
-                <td>{{s}}</td>
-            {%endfor%}
-            </tr>
-        {%endfor%}
-        </table><br />
-    {%endif%} 
-
-    {% if not results.error and not results.smry and results.data %}
-        <p>ACIS Data Flags: M,-9999 = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
-        <div align="left" class="dataTableInfo" id="dataTableInfo" style="max-width:400px;word-wrap:break-word;">
-            {% for key_val in params_display_list %}
-                <b>{{key_val.0}}</b>: {{key_val.1}};
-            {% endfor %}
-        </div><br />
-        <table class="dataTable nowrap" id="dataTable" cellspacing="0" width="100%" border="1">
-        {%for date_data in results.data.0%}
-            {%if forloop.counter0 == 0%}
-            <thead>
-            <tr>
-            {%for data in date_data%}
-                <th>{{data}}</th>
-            {%endfor%}
-            </tr>
-            </thead>
-            <tfoot>
-            <tr>
-            {%for data in date_data%}
-                <th>{{data}}</th>
-            {%endfor%}
-            </tr>
-            </tfoot>
-            <tbody>
+            </div><br />
+            <table class="dataTable nowrap" id="dataTable-1" cellspacing="0" width="100%" border="1">
+            {%for s_data in results.smry%}
+            {%if forloop.counter == 1%}
+                <thead><tr>
+                {%for s in s_data%}
+                    <th>{{s}}</th>
+                {%endfor%}
+                </tr></thead> 
+                <tfoot><tr>
+                {%for s in s_data%}
+                    <th>{{s}}</th>
+                {%endfor%}
+                </tr></tfoot>
+                <tbody>
             {%else%}
-            <tr>
-            {%for data in date_data%}
-                <td>{{data}}</td>
+                <tr>
+                {%for s in s_data%}
+                    <td>{{s}}</td>
+                {%endfor%}
+                </tr>
+                {%endif%}
             {%endfor%}
-            </tr>
-            {%endif%}
-        {%endfor%}
-        </tbody>
-        </table>
-    {%endif%}<!--end if not results.error-->
-    <div><!--end results-->
+            </tbody>
+            </table><br />
+        {%endif%} 
+
+        {% if not results.error and not results.smry and results.data %}
+            <p>ACIS Data Flags: M,-9999 = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
+            <div align="left" class="dataTableInfo" id="dataTableInfo-0" style="max-width:400px;word-wrap:break-word;">
+                {% for key_val in params_display_list %}
+                    <b>{{key_val.0}}</b>: {{key_val.1}};
+                {% endfor %}
+            </div><br />
+            <table class="dataTable nowrap" id="dataTable-0" cellspacing="0" width="100%" border="1">
+            {%for date_data in results.data.0%}
+                {%if forloop.counter0 == 0%}
+                <thead>
+                <tr>
+                {%for data in date_data%}
+                    <th>{{data}}</th>
+                {%endfor%}
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                {%for data in date_data%}
+                    <th>{{data}}</th>
+                {%endfor%}
+                </tr>
+                </tfoot>
+                <tbody>
+                {%else%}
+                <tr>
+                {%for data in date_data%}
+                    <td>{{data}}</td>
+                {%endfor%}
+                </tr>
+                {%endif%}
+            {%endfor%}
+            </tbody>
+            </table>
+        {%endif%}<!--end if not results.error-->
+        <div><!--end results-->
     </td></table><!--End printable table-->
     </div><!--end div class=results-->
-</td></table>
 {%endblock%}
