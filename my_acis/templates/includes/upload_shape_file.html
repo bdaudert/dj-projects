@@ -1,11 +1,11 @@
 <div id="uploadShapeFile" style="display:none;">
-    <p class="bg-info">Only shape files of simple polygons without holes are supported.<br />
+    <p class="bg-info" style="border:1px solid black;padding:5px;">Only shape files of simple polygons without holes are supported.<br />
         Analysis is performed one polygon at the time.<br />
         Upload all shape files (.shp, .prj, etc.) and choose the polygon ID.<br />
         e.g., if polygon ID = 1, the first polygon in the file will be uploaded.
     </p>
     <form id="formShapeFile" method="post" action="" enctype="multipart/form-data" 
-    role="form" class="form-horizontal"
+    role="form"
     onsubmit="show_loading() & setHiddenFields('DataForm', $(this).attr('id'));">{% csrf_token %}
     <div class="form-group">
         <label for="files">Select shapefiles</label>

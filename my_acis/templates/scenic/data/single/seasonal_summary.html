@@ -109,24 +109,8 @@
     {%endif%}
     </div>
     <!--Maps-->
-    {%if need_gridpoint_map%}
-        <div id="GridpointMap" style="display:block">
-        <input type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
-        <input id="address" type="textbox" value="Place/Location" style="height:15px;width:150px;">
-            <div id="map-gridpoint"></div>
-        </div>
-        {%if initial.location %}
-            <script type="text/javascript">initialize_grid_point_map("{{initial.location}}");</script>
-        {% else %}
-            <script type="text/javascript">initialize_grid_point_map();</script>
-        {% endif %}
-    {%else%}
-        <div id="GridpointMap" style="display:none">
-        <input type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
-        <input id="address" type="textbox" value="Place/Location" style="height:15px;width:150px;">
-            <div id="map-gridpoint"></div>
-        </div>
-    {%endif%}
+    <!--Gridpoint map-->
+    {% include 'includes/map-gridpoint.html'%}
 </td></table>
 
 <!--Results-->
@@ -162,7 +146,7 @@
     <div class="results">
     <table align="center">
     <td>
-    <div class="dataTableInfo" id="dataTableInfo" style="max-width:100%;word-wrap:break-word;">
+    <div class="dataTableInfo" id="dataTableInfo">
     {%for key_val in params_display_list%}
         <b>{{key_val.0}}</b>: {{key_val.1}}; 
     {%endfor%}

@@ -53,7 +53,7 @@
     {%endif%}
     
     {%for stn, stn_data in results.items %}
-        <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" align="left" style="max-width:95%;word-wrap:break-word;">
+        <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}">
         <h2>STATION: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;NUMBER: {{station_ids|lookup:stn|safe}}</h2>
         </div>
 

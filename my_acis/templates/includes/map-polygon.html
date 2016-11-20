@@ -1,0 +1,17 @@
+{%if need_polygon_map%}
+<input style="display:inline;" class="btn btn-info pull-left" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
+<input style="display:inline;" id="address" type="textbox" value="Enter Place or Location" style="height:15px;width:150px;">
+<div id="PolyMap" style="display:block;">
+    <div id="map-polygon" style="display:block;"></div>
+    {%if initial.shape%}
+        <script type="text/javascript">initialize_polygon_map("{{initial.shape}}");</script>
+    {%else%}
+        <script type="text/javascript">initialize_polygon_map();</script>
+    {%endif%}
+    {%else%}
+        <input style="display:none;" class="btn btn-info pull-left" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
+        <input style="display:none;" id="address" type="textbox" value="Enter Place or Location" style="height:15px;width:150px;">
+        <div id="PolyMap" style="display:none;">
+        <div id="map-polygon" style="display:none;"></div>
+{%endif%}
+</div><!--end poly map-->

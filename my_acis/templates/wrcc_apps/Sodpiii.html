@@ -34,7 +34,7 @@
     <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}
     {%for tbl_idx, table in stn_data.items%}
-    <div class="stronger dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" style="color:darkblue; font-size:large">
+    <div class="stronger dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}">
         STATION NUMBER: {{station_ids|lookup:stn|safe}}&nbsp;&nbsp;LOCATION:{{station_names|lookup:stn|safe}}</br>
         START MONTH {{start_month}} END MONTH {{end_month}}</br>
         ELEMENT {{el_type}} UNITS {{units}}</br>

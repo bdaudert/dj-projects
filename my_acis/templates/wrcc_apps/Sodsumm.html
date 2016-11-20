@@ -38,7 +38,7 @@
   </p>
   
   {%for stn, stn_data in results.items %}
-    <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" align="left" style="max-width:95%;word-wrap:break-word;">
+    <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}">
     Station: ({{station_ids|lookup:stn|safe}}) {{station_names|lookup:stn|safe}}</br>
     From Year {{start_year}} To Year {{end_year}}<br /><br />
     </div>

@@ -33,7 +33,7 @@
     {%if not stn_data%}
         <p style="color:red">NO STATION DATA FOUND!</p></br>
   {%else%}
-    <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" align="left" style="max-width:95%;word-wrap:break-word;">
+    <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}">
         <h2>Station: {{station_names|lookup:stn|safe}}, {{station_ids|lookup:stn|safe}}</h2>
         </div>
     <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">

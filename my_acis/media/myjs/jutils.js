@@ -147,6 +147,8 @@ function HighLight(node,DivClass,DivId) {
 }
 
 function ShowPopupDocu(DivId){
+    var bootstrapButton = $.fn.button.noConflict();
+    $.fn.bootstrapBtn = bootstrapButton;
     $( '#' + DivId ).dialog({
         title:'You can move and resize me!',
         resizable: true,
@@ -161,7 +163,8 @@ function ShowPopupDocu(DivId){
     $(".ui-widget-content").css("border", "2px solid #292929");
     $(".ui-widget-header").css("color", "#000000");
     $(".ui-widget-header").css("background-color", "#ffffff");
-    //$(".ui-icon").css("background-color", "#ffffff");
+    $(".ui-icon").css("background-color", "#000000");
+    $(".ui-icon").css("background-color", "#ffffff");
 }
 
 function ShowHowtoDocu(DivId){

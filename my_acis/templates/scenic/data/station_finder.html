@@ -119,7 +119,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 <div id="top_of_page" style="display:none">
 {%endif%}
     <!--FORM/MAP/ERRORS-->
-    <div class="row full-height">
+    <div class="row" height="100%">
         <!--Form-->
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> 
             <form id="DataForm" class="main-form" role="form" action="" method="post" onsubmit="show_loading()">{% csrf_token %}
@@ -168,7 +168,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 
             <!--Maps-->
             {%if need_polygon_map%}
-                <input style="display:inline;" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
+                <input style="display:inline;" class="btn btn-info pull-left" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
                 <input style="display:inline;" id="address" type="textbox" value="Enter Place or Location" style="height:15px;width:150px;">
                 <div id="PolyMap" style="display:block;">
                     <div id="map-polygon" style="display:block;"></div>
@@ -178,7 +178,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
                         <script type="text/javascript">initialize_polygon_map();</script>
                     {%endif%}
             {%else%}
-                <input style="display:none;" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
+                <input style="display:none;" class="btn btn-info pull-left" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
                 <input style="display:none;" id="address" type="textbox" value="Enter Place or Location" style="height:15px;width:150px;">
                 <div id="PolyMap" style="display:none;">
                 <div id="map-polygon" style="display:none;"></div>

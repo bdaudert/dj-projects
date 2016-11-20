@@ -1,0 +1,10 @@
+{%if need_overlay_map%}
+<div id="OverlayMap" style="display:block;">{% include 'includes/overlay_map.html'%}</div>
+<div id="map-overlay"></div>
+<div id="content-window"></div>
+<script type="text/javascript">initialize_map_overlays()</script>
+{%else%}
+<div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>
+<div id="map-overlay" style="display:none;"></div>
+<div id="content-window" style="display:none;"></div>
+{%endif%}

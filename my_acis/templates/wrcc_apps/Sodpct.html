@@ -44,7 +44,7 @@ Mon - Month</br>
   </p>
   {%for stn, stn_data in results.items %}
     
-    <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" align="left" style="max-width:95%;word-wrap:break-word;">
+    <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}">
     <p class="stronger" style="color:darkblue">Station: ({{station_ids|lookup:stn|safe}}) {{station_names|lookup:stn|safe}}</br>
     START YEAR {{start_year}} END YEAR {{end_year}}</br>
     ELEMENT {{element}} UNITS {{units}}</br>

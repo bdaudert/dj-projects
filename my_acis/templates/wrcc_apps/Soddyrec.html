@@ -55,7 +55,7 @@ Units       English (inches and degrees F)</br>
     <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}
     {%for el, el_data in stn_data.items%}
-        <div class="dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" align="left" style="max-width:95%;word-wrap:break-word;">
+        <div class="dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}">
         </div>
         <table class="dataTable nowrap" id="dataTable-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
         <thead>

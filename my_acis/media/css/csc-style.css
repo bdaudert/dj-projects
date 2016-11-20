@@ -51,11 +51,6 @@ img.app_img {
 }
 
 /* Classes */
-.full-height {
-    height:100%;
-}
-
-
 .main-col {
     padding:5px;
     box-shadow:5px 5px grey;
@@ -69,6 +64,11 @@ img.app_img {
     border:2px solid grey;
 }
 
+.dataTableInfo {
+    max-width:70%;
+    word-wrap:break-word;
+    text-align:left;
+}
 .link {
     color:#337ab7;
     font-weight: bold;

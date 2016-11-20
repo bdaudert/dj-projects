@@ -30,7 +30,7 @@
 
 {%if results %}
   {%for stn, stn_data in results.items %}
-    <div class="stronger dataTableInfo" id="dataTableInfo-{{forloop.counter0}}"  style="color:darkblue; font-size:large">
+    <div class="stronger dataTableInfo" id="dataTableInfo-{{forloop.counter0}}">
         LOCATION:{{station_names|lookup:stn|safe}}&nbsp;&nbsp;STATION: {{station_ids|lookup:stn|safe}}</br>
         ELEMENT {{element}} UNITS {{units}}</br>
         ANALYSIS TYPE {{statistic}} {%if departure_from_averages == "Yes"%}, DEPARTURES FROM AVERAGES{%endif%}</br>

@@ -1396,6 +1396,7 @@ def data_comparison(request):
 
     initial = DJANGOUtils.set_initial(request,'data_comparison')
     context['initial'] = initial
+    context['need_gridpoint_map'] = True
     if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
         context['form_message'] = True
         form = DJANGOUtils.set_form(request, clean=False)
@@ -1411,6 +1412,7 @@ def data_comparison(request):
             'distance':dist
         }
         results['graph_data'] = DC.get_graph_data(gdata,sdata)
+        context['need_gridpoint_map'] = False
         results['stats'] = DC.get_statistics(results['graph_data'][0],results['graph_data'][1])
         context['results'] = results
     return render_to_response(url, context, context_instance=RequestContext(request))
