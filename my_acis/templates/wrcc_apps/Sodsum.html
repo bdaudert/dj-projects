@@ -20,6 +20,8 @@
 </br>
 </br>
 
+{%if results%}
+<div class="results">
 <div class="dataTableInfo" id="dataTableInfo-0">
     <b>SUMMARY-OF-THE-DAY STATISTICS: Last date considered : {{results.0.end}}</b>
     START - First date in record (YYMMDD)</br>
@@ -74,7 +76,6 @@
 {%endfor%}
 </tbody>
 </table>
-
-{%endif%}
-
+</div><!--results-->
+{%endif%}<!--end results-->
 {% endblock %}

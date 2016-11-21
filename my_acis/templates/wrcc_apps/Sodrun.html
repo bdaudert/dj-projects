@@ -30,6 +30,7 @@
 {%endif%}
 
 {%if results %}
+    <div class="results">
     {%for stn, stn_data in results.items %}
     <!--Header-->
     <p>STATION: ({{station_ids|lookup:stn|safe}})&nbsp;NAME:{{station_names|lookup:stn|safe}}</br>
@@ -45,13 +46,13 @@
             {{station_ids|lookup:stn|safe}}_{{station_names|lookup:stn|safe}},
             runs_of_{{el}}_{{op}}_{{thresh}},{{start_year}}_{{end_year}}, min_dur_{{dur}}
         </div>
-        <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}">
+        <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}" border=1>
             {%if verbose%}
                 <thead><tr>
-                <th>Threshold Start End Days</th>
+                <th>Threshold Start End Days, Days threshold not met, Missing days</th>
                 </tr></thead>
                 <tfoot><tr>
-                <th>Threshold Start End Days</th>
+                <th>Threshold Start End Days, Days threshold not met, Missing days</th>
                 </tr></tfoot>
                 <tbody>
                 {%for run in stn_data %}
@@ -67,19 +68,18 @@
                 </tr></tfoot>
                 <tbody>
                 {%for run in stn_data %}
-                {%if not forloop.last%}
                 <tr>
                 {%for d in run%}
                 <td>{{d}}</td>
                 {%endfor%}
                 </tr>
-                {%endif%}
                 {%endfor%}
                 </tbody> 
             {%endif%}   
         </table>
     {%endif%}  <!--if not stn_data-->
     {%endfor%}<!--stn_data loop-->
+    </div>
 {%endif%}<!--if results-->
 
 {% endblock %}

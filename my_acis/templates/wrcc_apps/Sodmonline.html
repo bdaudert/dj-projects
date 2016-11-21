@@ -20,6 +20,7 @@
 
 <br /><br />
 {%if results%}
+<div class="results">
 <div class="dataTableInfo">
     <b>:LOCATION</b> {{params.station_id}} &nbsp;&nbsp;&nbsp; {{station_name}}<br />
     <b>:START YEAR</b> {{params.start_date}} &nbsp;&nbsp;&nbsp; <b>END YEAR</b> {{params.start_date}}<br /> 
@@ -56,7 +57,7 @@
 {%if results.error %}
 <p class="error">{{results.error}}</p>
 {%endif%}
-
+</div><!--results-->
 {%endif%}<!--end if results-->
 
 

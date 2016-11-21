@@ -23,6 +23,7 @@
 
 
 {%if results%}
+<div class="results">
 <div class="dataTableInfo" id="dataTableInfo">
 :STATION NUMBER {{params.station_id}} &nbsp;&nbsp;&nbsp; {{station_name}}<br />
 :OVERALL PERIOD CONSIDERED: {{params.start_date}}-{{params.end_date}}<br />
@@ -61,8 +62,7 @@
 {%if not results.data %}
 <p class="error">No data were found for these parameters!</p>
 {%endif%}
+</div><!--results-->
 {%endif%}<!--end if results-->
-
-
 
 {% endblock %}

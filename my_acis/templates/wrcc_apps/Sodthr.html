@@ -29,6 +29,7 @@
 
 
 {%if results %}
+<div class="results">
     {%for stn, stn_data in results.items %}
         {%if not stn_data%}
             <p style="color:red">NO STATION DATA FOUND!</p></br>
@@ -63,6 +64,7 @@
             {%endfor%} <!--end for tbl_idx, tbl_data in stn_data.items -->
         {%endif%}<!--end if not tbl_data-->
   {%endfor%}<!--end for stn, stn_data in results.items-->
-{%endif%}<!--en if results-->
+</div><!--results-->
+{%endif%}<!--end if results-->
 
 {% endblock %}

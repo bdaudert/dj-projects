@@ -266,9 +266,13 @@ def sods(request, app_name):
                 results = WRCCDataApps.Sodrun(**app_args)
                 summary = []
                 new_results = {}
-                for key,stn_data in sorted(results.iteritems()):
-                    summary.append(stn_data[-1])
-                    new_results[key] = stn_data[0:len(stn_data) - 1]
+                for key in range(len(results.keys())):
+                    if results[key]:
+                        summary.append(results[key][-1])
+                        new_results[key] = results[key][0:len(results[key]) - 1]
+                    else:
+                        summary.append([])
+                        new_results[key] = []
                 context['summary'] = summary
                 results = new_results
             elif app_name == 'Soddynorm':

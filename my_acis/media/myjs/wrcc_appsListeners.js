@@ -3,12 +3,12 @@ $(document).ready(function ($) {
     $('[data-submenu]').submenupicker();
 
     //dataTables
-        var dataTables = $('.dataTable');
+    var dataTables = $('.dataTable');
     dataTables.each(function(index, dT){
         //Get table info = file name
         var dataTableInfo = 'dataTable';
-        if ($('#dataTableInfo_' + String(index)).length){
-            dataTableInfo = $.trim(String($('#dataTableInfo_' + String(index)).text()).replace('/^\s*\n/gm', ''));
+        if ($('#dataTableInfo-' + String(index)).length){
+            dataTableInfo = $.trim(String($('#dataTableInfo-' + String(index)).text()).replace('/^\s*\n/gm', ''));
             var L = dataTableInfo.split('\n'), newL = [];
             var header = '';
             for (var k =0;k<L.length;k++){
@@ -23,6 +23,7 @@ $(document).ready(function ($) {
         if ( !$.fn.dataTable.isDataTable( '#station_list' ) ) {
             $(dT).DataTable({
                 'dom': 'Bfrtip',
+                'order':[],
                 'paging': false,
                 'scrollY': 400,
                 'scrollCollapse': true,
@@ -52,22 +53,6 @@ $(document).ready(function ($) {
                             var sheet = xlsx.xl.worksheets['sheet1.xml'];
                             var first_row = $('c[r=A1] t', sheet).text();
                             $('c[r=A1] t', sheet).text(header);
-                            //Move each row down to make room for header
-                            /*
-                            var clRows = $('row', sheet);
-                            clRows.each(function () {
-                                var attr = $(this).attr('r');
-                                var ind = parseInt(attr);
-                                ind = ind + 1;
-                                $(this).attr('r',ind);
-                            });
-                            //Insert header
-                            var h_row = '<row r="1">';
-                            h_row += '<c t="inlineStr" r="A1" s="42"><is><t>';
-                            h_row += header + '</t></is></c>';
-                            //sheet.childNodes[0].childNodes[1].innerHTML = h_row + sheet.childNodes[0].childNodes[1].innerHTML; 
-                            $('c[r=A1] t', sheet).text(' C OO aS');
-                            */
                         }
                     },
                     {
@@ -105,5 +90,7 @@ $(document).ready(function ($) {
             $('#form2div').css('display','none');
         }
     });
-
+    $('#form2div, #stn_selection').on('change', function(){
+        $('.results').css('display','none');
+    });
 });

@@ -29,7 +29,8 @@
 {%endif%}
 
 {%if results %}
-  <p>
+<div class="results">
+<p>
 Mon - Month</br>
 &nbsp;Dy  - Day</br>
 &nbsp;Nd  - Number of days lumped together, commencing on this date</br>
@@ -88,6 +89,7 @@ Mon - Month</br>
     </table>
     {%endif%}<!--end if not stn_data-->   
   {%endfor%}<!--end for stn-->
+</div><!--results-->
 {%endif%} <!--end if results-->
 
 {% endblock %}

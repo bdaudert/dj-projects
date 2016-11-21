@@ -29,6 +29,7 @@
 
 
 {%if results %}
+<div class="results">
   {%for stn, stn_data in results.items %}
     <div class="stronger dataTableInfo" id="dataTableInfo-{{forloop.counter0}}">
         LOCATION:{{station_names|lookup:stn|safe}}&nbsp;&nbsp;STATION: {{station_ids|lookup:stn|safe}}</br>
@@ -91,6 +92,7 @@
     {%endif%}
     </br>
   {%endfor%}
-{%endif%}
+</div><!--results-->
+{%endif%}<!--end if results-->
 
 {% endblock %}

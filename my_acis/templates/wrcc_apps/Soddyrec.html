@@ -34,6 +34,8 @@
 
 
 {%if results%}
+<div class="results">
+
 <div align="left" style="max-width:95%;word-wrap:break-word;">
 Cooling degree threshold =   65.00  Heating degree threshold =   65.00</br>
 </br>
@@ -92,6 +94,7 @@ Units       English (inches and degrees F)</br>
     {%endfor%}
     {%endif%}
 {%endfor%}<!--End station loop-->
+    </div><!--results-->
 {%endif%}<!--end if results-->
 
 {% endblock %}
