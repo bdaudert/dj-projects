@@ -261,7 +261,16 @@ def sods(request, app_name):
                 app_args = {'app_name': app_name, 'data':data,'dates':dates,'elements':elements,\
                 'station_ids':station_ids,'station_names':station_names,'op':context['op'],\
                 'thresh':context['thresh'], 'verbose': form2.cleaned_data['verbose'], 'minimum_run': form2.cleaned_data['minimum_run']}
+                #if form2.cleaned_data['verbose']:
+                context['verbose'] = form2.cleaned_data['verbose']
                 results = WRCCDataApps.Sodrun(**app_args)
+                summary = []
+                new_results = {}
+                for key,stn_data in sorted(results.iteritems()):
+                    summary.append(stn_data[-1])
+                    new_results[key] = stn_data[0:len(stn_data) - 1]
+                context['summary'] = summary
+                results = new_results
             elif app_name == 'Soddynorm':
                 app_args = {'app_name': app_name, 'data':data,'dates':dates,'elements':elements,\
                 'station_ids':station_ids,'station_names':station_names,\

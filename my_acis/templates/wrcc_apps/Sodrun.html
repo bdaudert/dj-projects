@@ -30,19 +30,56 @@
 {%endif%}
 
 {%if results %}
-  {%for stn, stn_data in results.items %}
+    {%for stn, stn_data in results.items %}
+    <!--Header-->
     <p>STATION: ({{station_ids|lookup:stn|safe}})&nbsp;NAME:{{station_names|lookup:stn|safe}}</br>
-     RUNS OF {{el}}&nbsp;{{op}}&nbsp;{{thresh}}</br>
-     START: {{start_year}} END {{end_year}}</br>
-     MINIMUM DURATION {{dur}}
+        RUNS OF {{el}}&nbsp;{{op}}&nbsp;{{thresh}}</br>
+        START: {{start_year}} END {{end_year}}</br>
+        MINIMUM DURATION {{dur}}<br />
+        SUMMARY: {{summary|lookup:stn|safe}}
     </p>
     {%if not stn_data%}
-    <p style="color:red">NO STATION DATA FOUND!</p></br>
+        <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}
-        {%for run in stn_data %}
-          {{run}}</br>
-        {%endfor%}
-    {%endif%}
-  {%endfor%}
-{%endif%}
+        <div class="dataTableInfo" style="display:none" id="dataTableInfo-{{forloop.counter0}}">
+            {{station_ids|lookup:stn|safe}}_{{station_names|lookup:stn|safe}},
+            runs_of_{{el}}_{{op}}_{{thresh}},{{start_year}}_{{end_year}}, min_dur_{{dur}}
+        </div>
+        <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}">
+            {%if verbose%}
+                <thead><tr>
+                <th>Threshold Start End Days</th>
+                </tr></thead>
+                <tfoot><tr>
+                <th>Threshold Start End Days</th>
+                </tr></tfoot>
+                <tbody>
+                {%for run in stn_data %}
+                <tr><td>{{run}}</td></tr>
+                {%endfor%}
+                </tbody>
+            {%else%}
+                <thead><tr>
+                <th>Threshold</th><th>Start</th><th>End</th><th>Days</th>
+                </tr></thead>
+                <tfoot><tr>
+                <th>Threshold</th><th>Start</th><th>End</th><th>Days</th>
+                </tr></tfoot>
+                <tbody>
+                {%for run in stn_data %}
+                {%if not forloop.last%}
+                <tr>
+                {%for d in run%}
+                <td>{{d}}</td>
+                {%endfor%}
+                </tr>
+                {%endif%}
+                {%endfor%}
+                </tbody> 
+            {%endif%}   
+        </table>
+    {%endif%}  <!--if not stn_data-->
+    {%endfor%}<!--stn_data loop-->
+{%endif%}<!--if results-->
+
 {% endblock %}
