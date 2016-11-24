@@ -16,7 +16,7 @@ String.prototype.inList=function(list){
 function showLargeRequestForm(){
     if ($('#app_name').val() == 'multi_lister'){
         if ($('#data_summary').val().inList(['none','windowed_data'])){
-            $('.out_format').css('display','table-row');
+            $('.out_format').css('display','block');
         }
         else{
             $('.out_format').css('display','none');
@@ -30,7 +30,7 @@ function showLargeRequestForm(){
 
     }
     else{
-        $('.delim').css('display','table-row');
+        $('.delim').css('display','block');
     }
     ShowPopupDocu('largeRequestForm');
 }
@@ -290,26 +290,6 @@ function set_year_range(){
     }
 }
 
-function showHideTableRowClass(class_name, show_or_hide){
-    $('.' + class_name).each(function(){
-        if (show_or_hide == 'hide'){
-            $(this).css('display','none');
-        }
-        if (show_or_hide == 'show'){
-            $(this).css('display','table-row');
-        }
-    });
-}
-
-function showHideTableRowId(id_name,show_or_hide){
-    if (show_or_hide == 'hide'){
-        $('#' + id_name).css('display','none');
-    }
-    if (show_or_hide == 'show'){
-            $('#' + id_name).css('display','table-row');
-    }
-}
-
 function update_value(val){
     /*
     Dynamic forms are not updated in browser cache
@@ -496,7 +476,7 @@ function set_elements(){
 
 //Functions to hide and show maps
 //Used in set_map function
-function hide_grid_point_map(){
+function hide_gridpoint_map(){
     if ($('#GridpointMap').length){
         $('#GridpointMap').css('display','none');
     }
@@ -524,6 +504,35 @@ function show_gridpoint_map(){
         initialize_grid_point_map();
     }
 
+}
+
+function hide_gridpoints_map(){
+    if ($('#GridpointsMap').length){
+        $('#GridpointsMap').css('display','none');
+    }
+    if ($('#map-gridpoints').length){
+        $('#map-gridpoints').css('display','none');
+    }
+    if ($('#address').length){
+        $('#address').css('display','none');
+    }
+    if ($('#zoombutton').length){
+        $('#zoombutton').css('display','none');
+    }
+}
+
+function show_gridpoints_map(){
+    //Show gridpoint map
+    $('#GridpointsMap').css('display','block');
+    $('#map-gridpoints').css('display','block');
+    $('#address').css('display','inline');
+    $('#zoombutton').css('display','inline');
+    if ($('#locations').length){
+        initialize_grid_points_map($('#locations').val());
+    }
+    else{
+        initialize_grid_points_map();
+    }
 }
 
 function show_bbox_map() {
@@ -615,29 +624,40 @@ function set_map(node){
     //Set up maps for display
     if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
         hide_polygon_map();
-        hide_grid_point_map();
+        hide_gridpoint_map();
+        hide_gridpoints_map();
         show_overlay_map();
     } 
     else if (area_type == 'shape') {
         hide_overlay_map();
-        hide_grid_point_map();
+        hide_gridpoint_map();
+        hide_gridpoints_map();
         show_polygon_map();
     }
     else if (area_type.inList(['location'])){
         hide_overlay_map();
         hide_polygon_map();
         show_gridpoint_map();
+        hide_gridpoints_map();
+    }
+    else if (area_type.inList(['locations'])){
+        hide_overlay_map();
+        hide_polygon_map();
+        hide_gridpoint_map();
+        show_gridpoints_map();
     }
     else if (area_type == 'bounding_box'){
         hide_overlay_map();
         hide_polygon_map();
-        hide_grid_point_map();
+        hide_gridpoint_map();
+        hide_gridpoints_map();
         show_bbox_map();
     }
     else {
         hide_overlay_map();
         hide_polygon_map();
-        hide_grid_point_map();
+        hide_gridpoint_map();
+        hide_gridpoints_map();
         hide_bbox_map();
     }
 }
@@ -776,32 +796,6 @@ function reset_options(){
     }  
 }
 
-
-function set_likelihood_thresholds(node){
-    var options = node.options;
-    var threshes, thresh_low, thresh_high, thresh_id, el, html_el,html_tr;
-    for (var idx=0;idx<options.length;idx++) {
-        el = options[idx].value;
-        threshes = set_threshes(el).split(',');
-        thresh_low = threshes[2];
-        thresh_high = threshes[3];
-        thresh_id = el + '_threshold';
-        html_tr = document.getElementById(thresh_id);
-        if (options[idx].selected) {
-            html_tr.style.display="table-row";
-            thresh_id = el + '_threshold_low';
-            html_el = document.getElementById(thresh_id);
-            html_el.value = thresh_low;
-            thresh_id = el + '_threshold_high';
-            html_el = document.getElementById(thresh_id);
-            html_el.value = thresh_high;
-        }
-        else {
-            html_tr.style.display="none";
-        }
-    } 
-}
-
 function update_elements(node){
     /*
     Dynamic forms are not updated in browser cache
@@ -861,61 +855,6 @@ function hide_loading_gif() {
     $("#loading-image").attr("src","/csc/media/img/LoadingGreen.gif");
    $("#loading").hide();
 }
-
-function show_hide_opts(rowClass){
-    /*
-    displays all rowClass table rows
-    */
-    var trs = document.getElementsByClassName(rowClass);
-    //Show all or none
-    if (trs[0].style.display == 'none'){
-        var disp = "table-row";
-        if ($('#show_plot_opts').length){
-            document.getElementById('show_plot_opts').value = 'T';
-        }
-    }
-    else{
-        var disp = "none";
-        if ($('#show_plot_opts').length){
-            document.getElementById('show_plot_opts').value = 'F';
-        }
-    }
-    for (idx=0;idx<trs.length;idx++){
-        trs[idx].style.display = disp;
-    }
-}
-
-function show_opts(rowClass){
-    /*
-    displays all rowClass table rows
-    */
-    var trs = document.getElementsByClassName(rowClass);
-    if ($('#show_plot_opts').length){
-        document.getElementById('show_plot_opts').value = 'T';
-    }
-    //Show all or none
-    for (idx=0;idx<trs.length;idx++){
-        trs[idx].style.display = 'table-row';
-    }
-}
-
-function hide_opts(rowClass){
-    /*
-    hide all rowClass table rows
-    */
-    var trs = document.getElementsByClassName(rowClass);
-    if ($('#show_plot_opts').length){
-        document.getElementById('show_plot_opts').value = 'T';
-    }
-    //Show all or none
-    for (idx=0;idx<trs.length;idx++){
-        trs[idx].style.display = 'none';
-        if ($('#show_plot_opts').length){
-            document.getElementById('show_plot_opts').value = 'T';
-        }
-    }
-}
-
 
 function highlight_form_field(field_id, err){
     // Highlights form field and displays error message err
@@ -991,7 +930,7 @@ function set_BaseTemp(element){
     sets sodxtrmts base temperatures for degree day calculations.
     */
     if (element =='hdd' || element =='cdd' || element=='gdd'){
-        $('#base_temp').css('display', 'table-row');
+        $('#base_temp').css('display', 'block');
         if (element == 'hdd' || element == 'cdd'){
             $('#base_temperature').val('65');
         }
@@ -1004,85 +943,35 @@ function set_BaseTemp(element){
 
 function set_delimiter(data_format_node, divId){
     if (data_format_node.value == 'clm' ||  data_format_node.value == 'dlm' || data_format_node.value == 'html'){ 
-        document.getElementById(divId).style.display = "table-row";
+        $('#' + divId).css('display', 'block');
     }
     else if (data_format_node.value == 'xl'){
-        document.getElementById(divId).style.display = "none";
+        $('#' + divId).css('display', 'none');
     }
 }
 
 function set_delimiter_and_output_file(data_format_node, delim_divId, out_file_divId){
     if (data_format_node.value == 'clm' ||  data_format_node.value == 'dlm'){
-        document.getElementById(delim_divId).style.display = "table-row";
+        $('#' + delim_divId).css('display', 'block');
     }
     else if (data_format_node.value == 'xl' || data_format_node.value == 'html'){
-        document.getElementById(delim_divId).style.display = "none";
+        $('#' + delim_divId).css('display', 'none');
     }
     if (data_format_node.value == 'clm' ||  data_format_node.value == 'dlm' || data_format_node.value == 'xl'){
-        document.getElementById(out_file_divId).style.display = "table-row";
+        $('#' + out_file_divId).css('display', 'block');
     }
     else if (data_format_node.value == 'html'){
-        document.getElementById(out_file_divId).style.display = "none";
+        $('#' + out_file_divId).css('display', 'none');
     }
 }
 
-function show_if_true(node, rowClass){
-    /*
-    if node.value=true, shows all table rows of class name rowClass
-    if node.value=fals, hides all table rows of class name rowClass
-    */
-    var trs = document.getElementsByClassName(rowClass);
+
+function show_div_if_true(node, divId){
     if (node.value == 'T'){
-        var disp = "table-row";
-        if ($('#Arrow').length){ 
-            //Hide Sodxtrmts downarrow
-            document.getElementById('Arrow').style.display="none"; 
-        }      
+        $('#' + divId).css('display', 'block');
     }
     else{
-        var disp = "none";
-        //Show Sodxtrmts downarrow
-        if ($('#Arrow').length){       
-            document.getElementById('Arrow').style.display="block";
-        }
-    }
-    for (idx=0;idx<trs.length;idx++){
-        trs[idx].style.display = disp;
-    }
-}
-
-
-function show_div_if_true(node, divID){
-    if (node.value == 'T'){
-        document.getElementById(divID).style.display = "table-row";
-    }
-    else{
-        document.getElementById(divID).style.display = "none";
-    }
-}
-
-//Sodxtrmts util hide or show formGraph
-function show_formGraph(TF, rowClass) {
-    var trs = document.getElementsByClassName(rowClass);
-    if (TF == 'T'){
-        var disp = "table-row";
-    }
-    else{
-        var disp = "none";
-    }
-    for (idx=0;idx<trs.length;idx++){
-        trs[idx].style.display = disp;
-    }
-}
-
-//Sodxtrmts util hide or show formGraph
-function hide_formGraph(rowClass) {
-    var trs = document.getElementsByClassName(rowClass);
-    for (idx=0;idx<trs.length;idx++){
-        trs[idx].style.display = "none";
-    }
-    if ($('#generate_graph_row').length){
-        document.getElementById('generate_graph_row').style.display = "none";
+        $('#' + divId).css('display', 'none');
     }
 }
 
@@ -1105,6 +994,11 @@ function update_maps(area_field){
     else if (id == 'location'){
         $('#GridointMap').css('display','block');
         $('#map-gridpoint').css('display','block');
+        initialize_grid_point_map(val);
+    }
+    else if (id == 'locations'){
+        $('#GridointsMap').css('display','block');
+        $('#map-gridpoints').css('display','block');
         initialize_grid_point_map(val);
     }
     else if (id == 'bounding_box'){
@@ -1189,7 +1083,6 @@ function update_maps(area_field){
                             catch(e){}
                         }
                     }
-                    console.log(poly);
                     //Update new map
                     initialize_map_overlay('map-overlay', poly); 
                     break
@@ -1208,6 +1101,10 @@ function update_maps(area_field){
         if ($('#GridpointMap').length && $('#GridpointMap').css('display')!='none'){
             $('#GridpointMap').css('display','none');
             $('#map-gridpoint').css('display','none');
+        }
+        if ($('#GridpointsMap').length && $('#GridpointsMap').css('display')!='none'){
+            $('#GridpointsMap').css('display','none');
+            $('#map-gridpoints').css('display','none');
         }
         if ($('#PolyMap').length && $('#PolyMap').css('display')!='none'){
             $('#PolytMap').css('display','none');
@@ -1296,21 +1193,21 @@ function set_grid_and_els(node, gridRowId){
         '<option value="gdd">Growing Degree Days(50F/10C)</option>' +
         '</select>';
         //Show degree day row
-        document.getElementById('add').style.display = "table-row";
+        $('#add').css('display','block');
     }
 }
 //Delete? replaced by set_smry
 function set_data_summary(node, rowId_t, rowId_s){
     if (node.value == 'spatial_summary'){
-        document.getElementById(rowId_s).style.display = 'table-row';
-        document.getElementById(rowId_t).style.display = 'none';
+        $('#' + rowId_s).css('display','block');
+        $('#' + rowId_t).css('display','none');
     }
     else if (node.value =='temporal_summary'){
-        document.getElementById(rowId_s).style.display = 'none';
-        document.getElementById(rowId_t).style.display = 'table-row';
+        $('#' + rowId_s).css('display','none');
+        $('#' + rowId_t).css('display','block');
     }
     else{
-        document.getElementById(rowId_s).style.display = 'none';
-        document.getElementById(rowId_t).style.display = 'none';
+        $('#' + rowId_s).css('display','none');
+        $('#' + rowId_t).css('display','none');
     }
 }

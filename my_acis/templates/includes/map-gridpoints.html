@@ -1,0 +1,18 @@
+{%if need_gridpoint_map%}
+    <div id="GridpointsMap" style="display:block">
+    <input style="display:inline;" class="btn btn-info pull-left" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()">
+    <input id="address" type="textbox" value="Place/Location" style="height:100%">
+    <div id="map-gridpoints"></div>
+    </div>
+    {%if initial.locations %}
+        <script type="text/javascript">initialize_grid_points_map("{{initial.locations}}");</script>
+    {% else %}
+        <script type="text/javascript">initialize_grid_points_map();</script>
+    {% endif %}
+{%else%}
+    <div id="GridpointsMap" style="display:none">
+    <input style="display:none;" class="btn btn-info pull-left" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()">
+    <input id="address" type="textbox" value="Place/Location" style="height:100%">
+        <div id="map-gridpoints"></div>
+    </div>
+{%endif%}

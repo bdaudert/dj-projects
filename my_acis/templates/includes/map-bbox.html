@@ -1,7 +1,7 @@
 {%if not hide_bbox_map%}
     <div id="BBoxMap" style="display:block;">
-        <input style="display:inline;" class="btn btn-info pull-left" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
-        <input id="address" type="textbox" value="Place/Location" style="height:15px;width:150px;">
+        <input style="display:inline;" class="btn btn-info pull-left" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()">
+        <input id="address" type="textbox" value="Place/Location">
         <div id="map-bbox"></div>
         {%if initial.bounding_box%}
             <script type="text/javascript">initialize_bbox_map("{{initial.bounding_box}}");</script>
@@ -11,8 +11,8 @@
     </div>
 {%else%}
     <div id="BBoxMap" style="display:none;">
-        <input style="display:none;" class="btn btn-info pull-left" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()" style="height:21px;">
-        <input style="display:none;" id="address" type="textbox" value="Place/Location" style="height:15px;width:150px;">
-        <div id="map-bbox" style="display:none;"></div>
+        <input style="display:none;" class="btn btn-info pull-left" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()">
+        <input style="display:none;" id="address" type="textbox" value="Place/Location">
+        <div id="map-bbox"></div>
     </div>
 {%endif%}

@@ -74,6 +74,10 @@ img.app_img {
     border:1px solid black;
 }
 
+.results{
+    text-align:center;"
+}
+
 .link {
     color:#337ab7;
     font-weight: bold;
@@ -124,9 +128,9 @@ img.app_img {
 
 
 /*MAPS*/
-#map-gridpoint, #map-overlay, #map-polygon {
+#map-gridpoint, #map-overlay, #map-polygon, #map-bbox {
     width:100%;
-    height:100;;
+    height:100%;
     min-width:100%;
     max-width:none;
     border:2px solid grey;

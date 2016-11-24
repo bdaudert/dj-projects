@@ -147,8 +147,10 @@ function HighLight(node,DivClass,DivId) {
 }
 
 function ShowPopupDocu(DivId){
-    var bootstrapButton = $.fn.button.noConflict();
-    $.fn.bootstrapBtn = bootstrapButton;
+    try {
+        var bootstrapButton = $.fn.button.noConflict();
+        $.fn.bootstrapBtn = bootstrapButton;
+    }catch(e){};
     $( '#' + DivId ).dialog({
         title:'You can move and resize me!',
         resizable: true,

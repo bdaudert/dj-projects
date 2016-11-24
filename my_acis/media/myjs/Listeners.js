@@ -242,17 +242,17 @@ $(document).ready(function () {
             }
         }
         if ($(this).val() == 'table'){
-            $('#meta_keys').css('display','table-row');
+            $('#meta_keys').css('display','block');
             $('#data_format').val('html');//Default is excel
-            $('#dat_format').css('display','table-row');
+            $('#dat_format').css('display','block');
             if ($('.data_format').val().inList(['dlm','clm'])){
-                $('.delim').css('display','table-row');
+                $('.delim').css('display','block');
             }
             else{
                 $('.delim').css('display','none');
             }
             if ($('#data_format').val() != 'html'){
-                $('.out_file').css('display','table-row');
+                $('.out_file').css('display','block');
             }
             else{
                 $('.out_file').css('display','none');
@@ -265,16 +265,16 @@ $(document).ready(function () {
     */
     $('.data_format').on('change', function(){
         if ($(this).val().inList(['clm','dlm'])){
-            $('.delim').css('display','table-row');
+            $('.delim').css('display','block');
          }
          else{
             $('.delim').css('display','none');
 
          }
          if ($(this).val().inList(['clm','dlm','xl'])){
-            $('.out_file').css('display','table-row'); 
+            $('.out_file').css('display','block'); 
             if ($('#data_summary').val() == 'none' || $('#data_summary').val() == 'windowed_data'){
-                $('.out_format').css('display','table-row');
+                $('.out_format').css('display','block');
             }
             else{
                 $('.out_format').css('display','none');
@@ -298,7 +298,7 @@ $(document).ready(function () {
         //Set output_format if data_format not html and no data summary
         if ($(this).val() == 'none' || $(this).val() == 'windowed_data'){
             if ($('.data_format').val() != 'html'){
-                $('.out_format').css('display','table-row');
+                $('.out_format').css('display','block');
             }
             else{
                 $('.out_format').css('display','none');
@@ -311,12 +311,12 @@ $(document).ready(function () {
         if ($(this).val() == 'windowed_data'){
             $('#spat_summary').css('display','none');
             $('#temp_summary').css('display','none');
-            $('#start_wind').css('display','table-row');
-            $('#end_wind').css('display','table-row');
+            $('#start_wind').css('display','block');
+            $('#end_wind').css('display','block');
             //If data_type is station show flags/obs_time
             if ($('#data_type').length && $('#data_type').val() == 'station'){
-                $('#flags').css('display','table-row');
-                $('#obs_time').css('display','table-row');
+                $('#flags').css('display','block');
+                $('#obs_time').css('display','block');
             }
             else{
                 $('#flags').css('display','none');
@@ -325,12 +325,12 @@ $(document).ready(function () {
         }
         else if ($(this).val() == 'spatial_summary' || $(this).val() == 'temporal_summary'){
             if ($(this).val() == 'spatial_summary'){
-                $('#spat_summary').css('display','table-row');
+                $('#spat_summary').css('display','block');
                 $('#temp_summary').css('display','none');
             }
             else{
                 $('#spat_summary').css('display','none');
-                $('#temp_summary').css('display','table-row');
+                $('#temp_summary').css('display','block');
             }
             
             //Hide windowed data options
@@ -347,8 +347,8 @@ $(document).ready(function () {
             $('#end_wind').css('display','none');
             //If data_type is station show flags/obs_time
             if ($('#data_type').length && $('#data_type').val() == 'station'){
-                $('#flags').css('display','table-row');
-                $('#obs_time').css('display','table-row');
+                $('#flags').css('display','block');
+                $('#obs_time').css('display','block');
             }
             else{
                 $('#flags').css('display','none');
@@ -663,7 +663,12 @@ $(document).ready(function () {
     */    
     $('#plot_opts_button').on('click', function(){
         if ($('.plOpts:first').css('display') == 'none'){ 
-            $('.plOpts').css('display','table-row');
+            if ($(this).val().inList(['image_size','cmap'])){
+                $('.plOpts').css('display','inline-block');
+            }
+            else{
+                $('.plOpts').css('display','block');
+            }
             
         }
         else {   
@@ -689,7 +694,7 @@ $(document).ready(function () {
     $('#grid').on('change keyup', function(){
         if ($(this).val() == '21'){
             if ($('#temp_res').length){
-                $('#temp_res').css('display','table-row');
+                $('#temp_res').css('display','block');
             }
             //Hide special degree day options
             $('#add').css('display','none');
@@ -699,9 +704,9 @@ $(document).ready(function () {
             if ($('#temp_res').length){
                 $('#temp_res').css('display','none');
             }
-             $('#add').css('display','table-row');
+             $('#add').css('display','block');
             if ($('#add_degree_days').val() == 'T'){
-                $('#dd').css('display','table-row');
+                $('#dd').css('display','block');
             }
         }
         //Disable elements if prism
@@ -801,16 +806,16 @@ $(document).ready(function () {
                 $('#dd').css('display','none');
             }
             else {
-                $('#add').css('display','table-row');
+                $('#add').css('display','block');
                 if ($('#add_degree_days').val() == 'T'){
-                    $('#dd').css('display','table-row');
+                    $('#dd').css('display','block');
                 }
             }
             //Hide flags/obs time
             $('#flags').css('display','none');
             $('#obs_time').css('display','none')
             //Show grid
-            $('#grid_type').css('display','table-row');
+            $('#grid_type').css('display','block');
             //Change POR to date or vice versa
             if ($('#start_year').length){
                 if ($('#start_year').val().toUpperCase() == 'POR'){
@@ -838,14 +843,14 @@ $(document).ready(function () {
             $('#area_type option[value="locations"]').attr('disabled',true);
             $('#area_type option[value="location"]').attr('disabled',true);
             //Show add degree day option    
-            $('#add').css('display','table-row');
+            $('#add').css('display','block');
             $("#elements option").each(function(){
                 //Enable all elements
                 $(this).attr('disabled',false);
             });
             //Hide flags/obs time
-            $('#flags').css('display','table-row');
-            //$('#obs_time').css('display','table-row')
+            $('#flags').css('display','block');
+            //$('#obs_time').css('display','block')
             //Show grid
             $('#grid_type').css('display','none');
             //Enable snow from climatology summary type
@@ -861,7 +866,7 @@ $(document).ready(function () {
     /*
     MONTHLY SUMMARIES LISTENERS
     */
-    $('img#show_hide_graph, img#show_hide_summary, img#show_hide_data').on('click', function(){
+    $('#show_hide_graph, #show_hide_summary, #show_hide_data').on('click', function(){
         var id = $(this).attr('id');
         if (id == 'show_hide_graph'){
             if ($('#user_graph').css('display') == 'none'){
@@ -920,11 +925,11 @@ $(document).ready(function () {
     });
     $('#statistic').on('change', function(){
         if ($(this).val() == 'ndays'){ 
-            $('#threshold_type').css('display','table-row');
+            $('#threshold_type').css('display','block');
             var lgb = $('#less_greater_or_between').val();
-            if (lgb == 'b'){$('#threshold_between').css('display','table-row');}
-            if (lgb == 'l'){$('#threshold_below').css('display','table-row');}
-            if (lgb == 'g'){$('#threshold_above').css('display','table-row');}
+            if (lgb == 'b'){$('#threshold_between').css('display','block');}
+            if (lgb == 'l'){$('#threshold_below').css('display','block');}
+            if (lgb == 'g'){$('#threshold_above').css('display','block');}
         }
         else{
             $('#threshold_type').css('display','none');
@@ -939,19 +944,19 @@ $(document).ready(function () {
         if (lgb == 'b'){ 
             $('#threshold_low_for_between').val(threshes[2]);
             $('#threshold_high_for_between').val(threshes[3]);
-            $('#threshold_between').css('display','table-row');
+            $('#threshold_between').css('display','block');
             $('#threshold_below').css('display','none');
             $('#threshold_above').css('display','none');
         }   
         if (lgb == 'l'){ 
             $('#threshold_for_less_than').val(threshes[0]);
-            $('#threshold_below').css('display','table-row');
+            $('#threshold_below').css('display','block');
             $('#threshold_between').css('display','none');
             $('#threshold_above').css('display','none');
         }
         if (lgb == 'g'){
             $('#threshold_for_greater_than').val(threshes[1]);
-            $('#threshold_above').css('display','table-row');
+            $('#threshold_above').css('display','block');
             $('#threshold_between').css('display','none');
             $('#threshold_below').css('display','none');
         }
@@ -1029,19 +1034,19 @@ $(document).ready(function () {
             $('#flags').css('display','none');
         }
         else{
-            $('#obs_time').css('display','table-row');
-            $('#flags').css('display','table-row'); 
+            $('#obs_time').css('display','block');
+            $('#flags').css('display','block'); 
         }
         //Single app specific
         //Show/Hide grid form field and station finder form_field
         var date_vals = null;
         if ($(this).val() == 'station_id'){
             $('#grid_type').css('display','none');
-            $('#stn_finder').css('station_finder','table-row');
+            $('#stn_finder').css('station_finder','block');
             date_vals = set_dates_for_station('station_id', start, end,p);
         }
         if ($(this).val().inList(['location','locations'])){
-            $('#grid_type').css('display','table-row');
+            $('#grid_type').css('display','block');
             date_vals = set_dates_for_grid($('#grid').val(),start, end,p);
         }
         if ($('#app_name').val() == 'station_finder' && $(this).val() != 'station_id'){

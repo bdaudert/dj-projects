@@ -1,60 +1,16 @@
 <!--Download form-->
-<form method="post" action="" onsubmit="show_loading()">
-{% csrf_token %}
-<table id="tableDownload" >
-<tr valign="top">
-<td>Data Format: </td>
-<td>
-<select id="data_format" name="data_format" onchange="set_delimiter(this, 'delim{{forloop.counter0}}');">
-<option value="clm">Columnar, .txt</option>
-<option value="dlm">Delimited, .dat</option>
-<option value="xl" selected>Excel, .xls</option>
-</select>
-</td>
-<td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-<div class="pop-up">
-<div id="ht_data_format"></div>
-<script type="text/javascript">                        
-    $("#ht_data_format").load("{{HTML_URL}}/Docu_help_texts.html #ht_data_format");
-</script>
-</div>
-</td>
-</tr>
-<!--Only show when format is clm or dlm, don't show if xl-->
-<tr valign="top" id="delim{{forloop.counter0}}" style="display:none;">
-<td>Delimiter:</td>
-<td>
-<select id="delimiter" name="delimiter">
-<option value="comma" selected>Comma (,)</option>
-<option value="tab">Tab (    )</option>
-<option value="space">Space ( )</option>
-<option value="colon">Colon (:)</option>
-<option value="pipe">pipe(|)</option>
-</select>
-</td>
-<td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-<div class="pop-up">
-<div id="ht_delimiter"></div>
-<script type="text/javascript">                        
-    $("#ht_delimiter").load("{{HTML_URL}}/Docu_help_texts.html #ht_delimiter");
-</script>
-</div>
-</td>
-</tr>
-<tr valign="top">
-<td>Output file name: </td>
-<td><input type="text" id="output_file_name" name="output_file_name" value="Output"></td>
-<td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-<div class="pop-up">
-<div id="ht_output_file_name"></div>
-<script type="text/javascript">                        
-    $("#ht_output_file_name").load("{{HTML_URL}}/Docu_help_texts.html #ht_output_file_name");
-</script>
-</div>
-</td>
-</tr>
-</table>
-<input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-<input type="hidden" id=tab" name="tab" value="{{tab}}">
-<input type="submit" value="Download" name="formDownload{{forloop.counter0}}">
+<form method="post" action="" onsubmit="show_loading()">{% csrf_token %}
+    {% include 'includes/data_format.html'%}
+    <!--Only show when format is clm or dlm, don't show if xl-->
+    <span id="delim{{forloop.counter0}}" style="display:none;">
+    {% include 'includes/delimiter.html'%}
+    </span>
+    {% include 'includes/out_file.html'%}
+    <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+    <input type="hidden" id=tab" name="tab" value="{{tab}}">
+    <div class="form-group">
+        <button type="submit" class="btn btn-sm btn-primary" name="formDownload{{forloop.counter0}}" style="width:100%">
+        Download
+    </button>
+    </div>
 </form>

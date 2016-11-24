@@ -1,16 +1,15 @@
-        <td>Interpolation:</td>
-        <td>
-            <select id="interpolation" name="interpolation" onchange="update_value(this.value)">
-            {%for opt, name in initial.form_options.interpolation%}
-                <option value="{{opt}}" {%if initial.interpolation == opt%}selected{%endif%}>{{name}}</option>
-            {%endfor%}
-            </select>
-        </td>
-        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_interpolation"></div>
-            <script type="text/javascript">                        
-            $("#ht_interpolation").load("{{HTML_URL}}/Docu_help_texts.html #ht_interpolation");
-            </script>
-        </div>
-        </td>
+<div class="form-group">
+    <label for="interpolation">Interpolation</label>
+    <img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_interpolation"></div>
+        <script type="text/javascript">                        
+        $("#ht_interpolation").load("{{HTML_URL}}/Docu_help_texts.html #ht_interpolation");
+        </script>
+    </div>
+    <select class="form-control" id="interpolation" name="interpolation" onchange="update_value(this.value)">
+    {%for opt, name in initial.form_options.interpolation%}
+        <option value="{{opt}}" {%if initial.interpolation == opt%}selected{%endif%}>{{name}}</option>
+    {%endfor%}
+    </select>
+</div>

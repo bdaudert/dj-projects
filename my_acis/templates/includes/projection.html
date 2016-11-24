@@ -1,14 +1,13 @@
-        <td>Projection:</td>
-        <td>
-            <select id="projection" name="projection" onchange="update_value(this.value)">
-            <option value="lcc" selected>Lambert Conformal Conic</option>
-            </select>
-        </td>
-        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_projection"></div>
-            <script type="text/javascript">                        
-            $("#ht_projection").load("{{HTML_URL}}/Docu_help_texts.html #ht_projection");
-            </script>
-        </div>
-        </td>
+<div class="form-group">
+    <label for="projection">Projection</label>
+    <img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_projection"></div>
+        <script type="text/javascript">                        
+        $("#ht_projection").load("{{HTML_URL}}/Docu_help_texts.html #ht_projection");
+        </script>
+    </div>
+    <select class="form-control" id="projection" name="projection" onchange="update_value(this.value)">
+        <option value="lcc" selected>Lambert Conformal Conic</option>
+    </select>
+</div>

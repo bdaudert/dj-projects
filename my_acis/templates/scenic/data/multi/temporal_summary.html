@@ -29,112 +29,118 @@
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
 <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
 
-
-<!--Toolinfo/Howto-->
-<table>
-<td valign="bottom" width="45%">
-    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/temporal_summary/'"/>
-    {%if figure_files%}
-    <input type="submit" value="Change Options" onclick="ShowHideTopOfPage()">
-    {%endif%}
-</td>
-<td valign="top" width="55%" align="left">
-    <table>
-    <tr>
-    <td><div id=tool_info_head>{% include 'includes/Button_tool_info.html'%}</div></td>
-    <td><div id="how_to_head">{% include 'includes/Button_how_to.html'%}</div></td>
-    </tr>
-    </table>
-</td>
-</table>
+<!--Button row-->
+<div class="row">
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> 
+        <!--Tool Info/Howto-->
+        <button type="submit" class="btn btn-primary" onclick="window.location='{{DATA_URL}}multi/temporal_summary/'">
+            Start Over
+        </button>
+        {%if figure_files and not form_error%}
+        <button type="submit" class="btn btn-primary" onclick="ShowHideTopOfPage()">
+            Change Options
+        </button>
+        {%endif%}
+    </div>
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" align="center">
+    </div>
+    <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7" align="center">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div id=tool_info_head>{% include 'includes/Button_tool_info.html'%}</div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div id="how_to_head">{% include 'includes/Button_how_to.html'%}</div>
+        </div>
+    </div>
+</div><br />
 
 
 <!--Form-->
 {% if not figure_files%}
-<table id="top_of_page">
+<div id="top_of_page">
 {%else%}
-<table id="top_of_page" style="display:none">
+<div id="top_of_page" style="display:none">
 {%endif%}
+    <div class="row" height="100%">
+        <!--Form-->
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
+            <form method="post" class="main-form" id="MapForm" action="" onsubmit="show_loading()">{% csrf_token %}
+            <div class="form-group">
+                <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formMap" style="width:100%">
+                Generate maps
+                </button>
+            </div>
+            <input type="hidden" name="app_name" value="temporal_summary">
+            <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
+            {% include 'includes/area_select.html'%}
+            <span id="area">{% include 'includes/area.html'%}</span>
+            {% include 'includes/elements.html'%}
+            <span id="add">{% include 'includes/add_degree_days.html'%}</span>
+            {%if initial.add_degree_days == "T"%}
+            <span id="dd">{% include 'includes/degree_days.html'%}</span>
+            {%else%}
+            <span id="dd" style="display:none">{% include 'includes/degree_days.html'%}</span>
+            {%endif%}
+            <span style="display:none;">{% include 'includes/units.html'%}</span>
+            {% include 'includes/start_date.html'%}
+            {% include 'includes/end_date.html'%}
+            <span id="temp_summary">{% include 'includes/temporal_summary.html'%}</span>
+            <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span>
+            <hr>
+            <span align="center" colspan="3" class="message" id="plot_opts_button"><b>PLOT OPTIONS &darr;</b></span>
+            <span valign="top" class="plOpts" style="display:none;">{% include 'includes/image_size.html'%}</span>
+            <span valign="top" class="NotPlot" style="display:none;">{% include 'includes/num_levels.html'%}</span>
+            <span valign="top" class="plOpts" style="display:none;">{% include 'includes/colormap.html'%}</span>
+            <span valign="top" class="NotPlot" style="display:none;">{% include 'includes/map_overlay.html'%}</span> 
+            <span valign="top" class="NotPolt" style="display:none;">{% include 'includes/interpolation.html'%}</span>
+            <span valign="top" class="NotPlot" style="display:none;">{% include 'includes/projection.html'%}</span><br />
+            <div class="form-group">
+                <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formMap" style="width:100%">
+                Generate maps
+                </button>
+            </div>
+            </form>
+        </div><!--col-sm-4-->
+        <!--Main: Errors/maps-->
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">        
+            <!--MAPS-->
+            <!--Bbox map-->
+            {% include 'includes/map-bbox.html'%}</tr>
 
-<td valign="top" width="40%">
-    <div id='formMap'>
-        <form method="post" id="MapForm" action="" onsubmit="show_loading()">{% csrf_token %}
-        <table class="form" id="tableMap" >
-        <tr class="station_grid" style="display:table-row">{% include 'includes/area_select.html'%}</tr>
-        <tr class="station_grid" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
-        <tr class="station_grid" style="display:table-row">{% include 'includes/elements.html'%}</tr>
-        <tr class="station_grid" id="add" valign="top" style="display:table-row">{% include 'includes/add_degree_days.html'%}</tr>
-        {%if initial.add_degree_days == "T"%}
-            <tr id="dd" valign="top" style="display:table-row">{% include 'includes/degree_days.html'%}</tr>
-        {%else%}
-            <tr id="dd" valign="top" style="display:none">{% include 'includes/degree_days.html'%}</tr>
-        {%endif%}
-        <tr class="station_grid" style="display:none;">{% include 'includes/units.html'%}</tr>
-        <tr class="station_grid" style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
-        <tr class="station_grid" style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
-        <tr id="temp_summary" style="display:table-row">{% include 'includes/temporal_summary.html'%}</tr>
-        <tr class="grid" id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr>
-        <tr><hr></tr>
-        <tr><td align="center" colspan="3" class="message" id="plot_opts_button"><b>PLOT OPTIONS &darr;</b></td></tr>
-        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/image_size.html'%}</tr>
-        <tr valign="top" class="NotPlot" style="display:none;">{% include 'includes/num_levels.html'%}</tr>
-        <tr valign="top" class="plOpts" style="display:none;">{% include 'includes/colormap.html'%}</tr>
-        <tr valign="top" class="NotPlot" style="display:none;">{% include 'includes/map_overlay.html'%}</tr> 
-        <tr valign="top" class="NotPolt" style="display:none;">{% include 'includes/interpolation.html'%}</tr>
-        <tr valign="top" class="NotPlot" style="display:none;">{% include 'includes/projection.html'%}</tr>
-        </table>
-        <input type="hidden" name="app_name" value="temporal_summary">
-        <input class="mainFormSubmit" type="submit" value="Generate maps" name="formMap">
-        <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
-        </form>
-    </div>
-    <br /><br />
-<!--RIGHT-->
-</td>
-<td valign="top" width="60%">
-    
-    <!--MAPS-->
-    <!--Bbox map-->
-    {% include 'includes/map-bbox.html'%}</tr>
-    
-    <div class="results">
-    {%if form_error%}
-        {% include 'includes/form_error.html'%}
-    {%endif%}
+            <div class="results">
+            {%if form_error%}
+                {% include 'includes/form_error.html'%}
+            {%endif%}
+            {%if error%}
+                <p class="error">{{ error }}</p>
+            {%endif%}
+            {%if run_done and not figure_files %}
+                {% include 'includes/no_results.html'%}
+            {%endif%}
+            </div><!--results-->
+        </div><!--col-sm-8-->
+    </div><!--row-->
+</div><!--top_of_page-->
 
-    {%if run_done and not figure_files %}
-           {% include 'includes/no_results.html'%}
-    {%endif%}
-    </div>
-</td></table><!--End table top_of_page-->
-
-
-<!--Results section-->
-<table cellpadding="10" align="center">
-<td valign="top" width="97%" align="center">
-    <div class="results">
-
-    {%if run_done and not figure_files%}
-           {% include 'includes/no_results.html'%}
-    {%endif%}
-
-    {%if error%}
-        <p class="error">{{ error }}</p>
-    {%endif%} 
-
+<!--Results-->
+<!--Main Results-->
+<div class="row results">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
     {%if figure_files%}
+    <div class="results" align="center"> 
+        <p class="message" align="center" style="text-align:left;max-width:400px;word-wrap:break-word;">
+            <b>PARAMETERS</b>:<br />
+            {%for key_val in params_display_list%}
+            <b>{{key_val.0}}</b>: {{key_val.1}}; 
+            {%endfor%}
+        </p>
 
-    <p class="message"  align="left" style="max-width:400px;word-wrap:break-word;">
-    <b>PARAMETERS</b>:<br />
-    {%for key_val in params_display_list%}
-        <b>{{key_val.0}}</b>: {{key_val.1}}; 
-    {%endfor%}
-    </p>
+        {%for fig in figure_files%}
+            <img alt="FigureFile" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br /><br /><br /><br /><br />
+        {%endfor%}
+        </div><!--results-->
+    {%endif%}<!--end if figure_files-->
+    </div><!--col-sm-12-->
+</div><!--row-->
 
-    {%for fig in figure_files%}
-        <img alt="FigureFile" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br /><br /><br /><br /><br />
-    {%endfor%}
-    {%endif%}
-    </div><!--end results div-->
-</td></table>
 {%endblock%}

@@ -1,13 +1,12 @@
-        <td id="Color Map">Color Map:</td>
-        <td>
-        <select id="cmap" name="cmap" onchange="update_value(this.value);">
-            {% for opt, name in initial.form_options.cmap %}
-            <option value="{{opt}}" {%if initial.cmap == opt %}selected {%endif%}>{{name}}</option>
-            {%endfor%}
-        </select>
-        </td>
-        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_cmap"><img src='/csc/media/img/cmaps.png'></div>
-        </div>
-        </td>
+<div class="form-group">
+    <label for="cmap">Color Map</label>
+    <img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_cmap"><img src='/csc/media/img/cmaps.png'></div>
+    </div> 
+    <select class="form-control" id="cmap" name="cmap" onchange="update_value(this.value);">
+    {% for opt, name in initial.form_options.cmap %}
+        <option value="{{opt}}" {%if initial.cmap == opt %}selected {%endif%}>{{name}}</option>
+    {%endfor%}
+    </select>
+</div>

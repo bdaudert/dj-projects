@@ -241,59 +241,56 @@ function initialize_grid_point_map(loc) {
     google.maps.event.trigger(map, 'resize');
 }//close initialize_grid_point_map
 
-/*
 //Multiple gridpoints
 function initialize_grid_points_map(locs) {
     //optional argument location
     switch (arguments.length - 0) { // <-- 0 is number of required arguments
         case 0:  locs = '-111,40,-111.1,40.5';
     }
-    var map,mapOptions,zoom_level = '5';
-    var lons = [],lats = [],locs_list, myLatlng;
-    locs_list = locs.replace(' ','').split(',');
-    for (idx=0;idx<locs;idx++){
-        if (idx % 2 == 0){
-            lons.push(locs[idx]);
-        }
-        else {
-            lats.push(locs[idx]);
-        }
-    }
-    myLatLng = new google.maps.LatLng(parseFloat(lats[0]),parseFloat(lons[0]));
+    var map,mapOptions,zoom_level = '5',
+        lons = [],lats = [],locs_list, myLatLng,
+        locs_list = locs.replace(' ','').split(','), idx, mkrLatLng;
+    myLatLng = new google.maps.LatLng(parseFloat(locs_list[1]),parseFloat(locs_list[0]));
     mapOptions = {
-        center: myLatlng,
+        center: myLatLng,
         zoom: 4,
         mapTypeId: google.maps.MapTypeId.HYBRID
     };
-    map = new google.maps.Map(document.getElementById("map-gridpoint"),mapOptions);
-    for (idx=0;idx<lons;idx++){
-        myLatlng = new google.maps.LatLng(parseFloat(lat),parseFloat(lon));
+    map = new google.maps.Map(document.getElementById("map-gridpoints"),mapOptions);
+    window.markers = [];
+    for (idx=0;idx<locs_list;idx+=2){
+        mkrLatLng = new google.maps.LatLng(parseFloat(locs_list[idx+1]),parseFloat(locs_list[idx]));
         infowindow = new google.maps.InfoWindow({
             content: 'oi'
         });
         var marker = new google.maps.Marker({
             draggable: true,
-            position: myLatlng,
+            id:idx + 1,
+            name: 'marker_' + String(idx + 1),
+            position: mkrLatLng,
             map: map,
-            title: "Your locations"
+            title: 'Marker_' + String(idx + 1)
         });
-    }
-    google.maps.event.addListener(marker, 'dragend', function (event) {
-        infowindow.close();
-        var new_lat = precise_round(event.latLng.lat(),2).toString();
-        var new_lon = precise_round(event.latLng.lng(),2).toString();
-        var locs = new_lon + ',' + new_lat
-        document.getElementById("location").value = loc;
-        var contentString = '<div id="MarkerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
+        google.maps.event.addListener(marker, 'dragend', function (event) {
+            infowindow.close();
+            var new_lat = precise_round(event.latLng.lat(),2).toString(),
+                new_lon = precise_round(event.latLng.lng(),2).toString(),
+                ll_list =  $('locations').val().replace(', ',',').split(',');
+            //Replace old lat, lon with new
+            ll_list[(marker.id - 1)*2] = new_lon;
+            ll_list[(marker.id - 1)*2 + 1] = new_lat;
+            $("locations").val(ll_list.join());
+            var contentString = '<div id="MarkerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
             '<p><b>Lat: </b>' + new_lat + '<br/>'+
             '<b>Lon: </b>' + new_lon + '<br/>' +
             '</div>';
-        infowindow.setContent(contentString);
-        infowindow.open(map, marker);
-        myLatlng = google.maps.LatLng(parseFloat(new_lat),parseFloat(new_lon));
-    });
+            infowindow.setContent(contentString);
+            infowindow.open(map, marker);
+            myLatlng = google.maps.LatLng(parseFloat(new_lat),parseFloat(new_lon));
+            window.markers.push(marker);
+        });
+    }//marker loop
 }//close initialize_grid_points_map
-*/
 var stnclick;
 var boxclick;
 var show;
