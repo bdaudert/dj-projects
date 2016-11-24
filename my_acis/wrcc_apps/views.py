@@ -252,10 +252,13 @@ def sods(request, app_name):
                     context['el'] = str(elements[0])
                 if form2.cleaned_data['aeb'] == 'A':
                     context['op'] = '>'
+                    context['op_name'] = 'gt'
                 elif form2.cleaned_data['aeb'] == 'B':
                     context['op'] = '<'
+                    context['op_name'] = 'lt'
                 else:
                     context['op'] = '='
+                    context['op_name'] = 'eq'
                 context['thresh'] = form2.cleaned_data['threshold']
                 context['dur'] = form2.cleaned_data['minimum_run']
                 app_args = {'app_name': app_name, 'data':data,'dates':dates,'elements':elements,\
@@ -289,7 +292,8 @@ def sods(request, app_name):
                 app_args = {'app_name': app_name, 'data':data,'dates':dates,'elements':elements,\
                     'station_ids':station_ids,'station_names':station_names}
                 results = WRCCDataApps.Soddyrec(**app_args)
-                #context['data'] =results
+                context['start_date'] = form2.cleaned_data['start_date']
+                context['end_date'] = form2.cleaned_data['end_date']
             elif app_name == 'Soddd':
                 base_temp = form2.cleaned_data['base_temperature']
                 output_type = form2.cleaned_data['output_type']

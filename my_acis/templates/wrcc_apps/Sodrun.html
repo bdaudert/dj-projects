@@ -33,18 +33,19 @@
     <div class="results">
     {%for stn, stn_data in results.items %}
     <!--Header-->
-    <p>STATION: ({{station_ids|lookup:stn|safe}})&nbsp;NAME:{{station_names|lookup:stn|safe}}</br>
-        RUNS OF {{el}}&nbsp;{{op}}&nbsp;{{thresh}}</br>
-        START: {{start_year}} END {{end_year}}</br>
-        MINIMUM DURATION {{dur}}<br />
-        SUMMARY: {{summary|lookup:stn|safe}}
-    </p>
+    <p><b>STATION</b>: ({{station_ids|lookup:stn|safe}})&nbsp;NAME:{{station_names|lookup:stn|safe}}</br>
+       <b>RUNS OF</b>: {{el}}&nbsp;{{op}}&nbsp;{{thresh}}</br>
+       <b>START YEAR - END YEAR</b>: {{start_year}} - {{end_year}}</br>
+       <b>MINIMUM DURATION</b>: {{dur}}<br />
+       <b>SUMMARY</b>: {{summary|lookup:stn|safe}}
+    </p> 
     {%if not stn_data%}
         <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}
         <div class="dataTableInfo" style="display:none" id="dataTableInfo-{{forloop.counter0}}">
-            {{station_ids|lookup:stn|safe}}_{{station_names|lookup:stn|safe}},
-            runs_of_{{el}}_{{op}}_{{thresh}},{{start_year}}_{{end_year}}, min_dur_{{dur}}
+            {{station_names|lookup:stn|safe}}({{station_ids|lookup:stn|safe}}),
+            {{start_year}}-{{end_year}},
+            runs of {{el}}_{{op_name}}_{{thresh}}, min_dur {{dur}}
         </div>
         <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}" border=1>
             {%if verbose%}

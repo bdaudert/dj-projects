@@ -20,21 +20,25 @@
      <input type="submit" value="Submit" name="Sodlist"/>
      </form>
  </table>
-
+    <br />
 
 {%if results%}
 <div class="results">
-<div class="dataTableInfo" id="dataTableInfo">
-:STATION NUMBER {{params.station_id}} &nbsp;&nbsp;&nbsp; {{station_name}}<br />
-:OVERALL PERIOD CONSIDERED: {{params.start_date}}-{{params.end_date}}<br />
-:WINDOW: {{params.start_window}}-{{params.end_window}}<br />
-<!--:F1 AND F2 ARE ABBREVIATIONS FOR FLAG1, FLAG2<br />-->
-:F = FLAG, T = OBSERVATION TIME, T=-1 --> NO OBSERVATION TIME REPORTED
-</div>
+<p>
+    <b>STATION</b>: {{params.station_id}} &nbsp;&nbsp;&nbsp; {{station_name}}<br />
+    <b>START DATE - END DATE</b>: {{params.start_date}}-{{params.end_date}}<br />
+    <b>WINDOW</b>: {{params.start_window}}-{{params.end_window}}<br />
+    <b>F = FLAG, T = OBSERVATION TIME, T=-1 --> NO OBSERVATION TIME REPORTED</b>
+</p>
 <br /><br />
 
 
-<table class="dataTable nowrap" id="dataTable" border="1" width="760px" cellspacing="0" cellpadding="0">
+<div class="dataTableInfo" id="dataTableInfo-0" style="display:none">
+    {{station_name}}({{params.station_id}}),
+    {{params.start_date}}-{{params.end_date}},
+    window {{params.start_window}}-{{params.end_window}}
+</div>
+<table class="dataTable nowrap" id="dataTable-0" border="1">
     {%for date_data in results.data %}
     {%if forloop.counter == 1%}
     <thead><tr>

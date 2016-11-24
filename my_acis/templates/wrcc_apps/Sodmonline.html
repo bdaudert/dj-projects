@@ -21,37 +21,39 @@
 <br /><br />
 {%if results%}
 <div class="results">
-<div class="dataTableInfo">
-    <b>:LOCATION</b> {{params.station_id}} &nbsp;&nbsp;&nbsp; {{station_name}}<br />
-    <b>:START YEAR</b> {{params.start_date}} &nbsp;&nbsp;&nbsp; <b>END YEAR</b> {{params.start_date}}<br /> 
-    <b>:ELEMENT</b> {{params.element}}<br />
-    <b>:UNITS</b> {{params.units}} <br/>
-</div><br /><br />
+<p>
+    <b>STATION</b>: {{params.station_id}} {{station_name}}<br />
+    <b>ELEMENT (UNITS)</b>: {{params.element}} ({{params.units}}) <br/>
+    <b>START YEAR - END YEAR</b>: {{params.start_date}} - {{params.end_date}}<br /> 
+</p><br /><br />
 
-<table class="dataTable nowrap" id="dataTable" border="1" width="760px" cellspacing="0" cellpadding="0">
-<thead><tr>
-<th>YR</th><th>MO</th>
-{%for day in 1|make_range:31%}
-    <th>{{day}}</th>
-{%endfor%}
-</tr></thead>
-<tfoot><tr>
-<th>YR</th><th>MO</th>
-{%for day in 1|make_range:31%}
-    <th>{{day}}</th>
-{%endfor%}
-</tr></tfoot>
-<tbody>
-{%for date_data in results.data %}
-<tr>
-{%for val in date_data%}
-<!--<td align="right" width="char">&nbsp;&nbsp;{{val}}</td>-->
-<!--<td align="left" width="6em">{{val}}</td>-->
-<td>{{val}}</td>
-{%endfor%}
-</tr>
-{%endfor%}
-</tbody>
+<div class="dataTableInfo" id="dataTableInfo-0" style="display:none">
+    {{station_name}}({{params.station_id}}),
+    {{params.element}}({{params.units}})
+    {{params.start_date}}-{{params.end_date}},
+</div>
+<table class="dataTable nowrap" id="dataTable-0" border="1">
+    <thead><tr>
+    <th>YR</th><th>MO</th>
+    {%for day in 1|make_range:31%}
+        <th>{{day}}</th>
+    {%endfor%}
+    </tr></thead>
+    <tfoot><tr>
+    <th>YR</th><th>MO</th>
+    {%for day in 1|make_range:31%}
+        <th>{{day}}</th>
+    {%endfor%}
+    </tr></tfoot>
+    <tbody>
+    {%for date_data in results.data %}
+    <tr>
+    {%for val in date_data%}
+    <td>{{val}}</td>
+    {%endfor%}
+    </tr>
+    {%endfor%}
+    </tbody>
 </table>
 
 {%if results.error %}
