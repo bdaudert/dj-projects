@@ -66,6 +66,7 @@ function ShowHideTopOfPage(){
         if ($('#bounding_box').length ){
             update_maps(document.getElementById('bounding_box'));
         }
+        $(window).resize();
     }
     /*
     if (window.map){

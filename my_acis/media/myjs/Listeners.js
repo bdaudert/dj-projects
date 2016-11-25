@@ -904,6 +904,7 @@ $(document).ready(function () {
                 }
             }
         }
+        $(window).resize();
     });
     /*
     MONTHLY SUMMARIES THRESHOLDS FOR NDAYS

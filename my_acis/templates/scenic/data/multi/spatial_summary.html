@@ -179,7 +179,7 @@
             </div>
         </div><br /><br />
 
-        <div id="printable_table">
+        <div id="printable_table" align="center">
             <!--Data List-->
             <table class="dataTable nowrap" id="dataTable-0" border=1>
             {%for data in results.smry%}
@@ -201,9 +201,9 @@
 
         {%if results.graph_data%}
         <!--Plot-->
-        <div id="user_graph" style="display:none">
+        <div id="user_graph" style="display:none" width="90%" height="80%">
             <!--Dynamic chart options-->
-            <table align="left" class='chart_options' border="1" width="800px">
+            <table align="left" class='chart' border=1 width="100%" height="100%">
                 <tr>
                 <td align="left" valign="top">
                 {% include 'includes/chart_type.html'%} &nbsp;&nbsp; {% include 'includes/show_hide_legend.html'%}
@@ -215,13 +215,13 @@
                 <td align="left" valign="top">
                 {% include 'includes/chart_layers_daily.html'%}
                 </td></tr>
-                <tr>
-                <td colspan="2">
-                <div align="right" id="hc-container" style="height:600px;width:800px;"></div>
-                <script type="text/javascript">
-                var graph_data = {{results.graph_data | safe_json}};
-                generateTS_individual();
-                </script>
+                <tr><td colspan="2">
+                    <div id="hc-container" width="100%" height="100%"></div>
+                        <script type="text/javascript">
+                            var graph_data = {{results.graph_data | safe_json}};
+                            generateTS_individual();
+                        </script>
+ 
                 </td></tr>
             </table>
         </div>

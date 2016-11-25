@@ -9,6 +9,7 @@ String.prototype.inList=function(list){
 var myChart;
 var downloadMenu = $.extend(true,[],Highcharts.getOptions().exporting.buttons.contextButton.menuItems.splice(2));
 
+
 function generateTS_individual(chart_indices) {
     /*
     Generates highcarts figure
@@ -16,8 +17,8 @@ function generateTS_individual(chart_indices) {
         chart_indices: indices of data to be plotted,
         if not given, we pick it up from html element chart_indices
     */
-    var args = arguments;
-    var datadict = graph_data; //template_variable
+    var args = arguments,
+        datadict = graph_data; //template_variable
     try{
         var climoData = cp_data.climoData;
         var percentileData = cp_data.percentileData;
@@ -496,7 +497,7 @@ function generateTS_individual(chart_indices) {
             //------------------------
             series: series_data
     } //end basicOptions
-    myChart = new Highcharts.Chart(basicOptions); 
+    myChart = new Highcharts.Chart(basicOptions);
 }
 
 function generateTS_smry(chart_indices) {
@@ -506,8 +507,8 @@ function generateTS_smry(chart_indices) {
         chart_indices: indices of data to be plotted,
             if not given, we pick it up from html element chart_indices 
     */
-    var args = arguments;
-    var datadict = graph_data; //template_variable
+    var args = arguments,
+        datadict = graph_data; //template_variable
     switch (arguments.length) { // <-- 0 is number of required arguments
         case 0: var chart_indices = $('#chart_indices').val();
     }
