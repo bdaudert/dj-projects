@@ -35,11 +35,18 @@
         <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}
         {%for doy, doy_data in stn_data.items %}
-            <div class="dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}">
-                PRECIPITATION-DURATION-FREQUENCY TABLES FOR STATION: {{station_ids|lookup:stn|safe}} {{station_names|lookup:stn|safe}}</br>
-                BASED ON PERIOD {{start_year}} TO {{end_year}}, {{num_yrs}} YEARS</br>
+            <p>
+                <b>PRECIPITATION-DURATION-FREQUENCY TABLES FOR STATION</b>:
+                {{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}})</br>
+                <b>START YEAR - END YEAR</b>: {{start_year}}-{{end_year}}<br />
+                <b>NUMBER OF YEARS</b>: {{num_yrs}}</br>
+            </p>
+            <div class="dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" style="display:none">
+                {{station_names|lookup:stn|safe}}({{station_ids|lookup:stn|safe}}),
+                precipitation_duration_frequency {{start_year}}-{{end_year}},
+                {{doy_data.0.0}}
             </div> 
-            <table class="dataTable nowrap" id="dataTable-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
+            <table class="dataTable nowrap" id="dataTable-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" border=1>
             {%for dur in doy_data %}
                 {% if forloop.counter == 1 %}
                     <thead>

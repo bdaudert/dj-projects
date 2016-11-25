@@ -30,24 +30,31 @@
 
 {%if results %}
 <div class="results">
-  {%for stn, stn_data in results.items %}
-    <div class="stronger dataTableInfo" id="dataTableInfo-{{forloop.counter0}}">
-        LOCATION:{{station_names|lookup:stn|safe}}&nbsp;&nbsp;STATION: {{station_ids|lookup:stn|safe}}</br>
-        ELEMENT {{element}} UNITS {{units}}</br>
-        ANALYSIS TYPE {{statistic}} {%if departure_from_averages == "Yes"%}, DEPARTURES FROM AVERAGES{%endif%}</br>
-        MAXIMUM NUMBER OF DAYS ALLOWED MISSING {{max_missing_days}}</br>
-    </div></br>
+{%for stn, stn_data in results.items %}
+    <p>
+        <b>STATION</b>:{{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}})</br>
+        <b>ELEMENT</b>: {{element}} ({{units}})</br>
+        <b>STATISTIC</b>: {{statistic}}<br />
+        {%if departure_from_averages == "Yes"%}<br />
+        <b>DEPARTURES FROM AVERAGES</b>{%endif%}</br>
+        <b>MAXIMUM NUMBER OF DAYS ALLOWED MISSING</b> {{max_missing_days}}
+    </p>
     {%if not stn_data%}
         <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}
-      <p>
+    <p>
         a = 1 day missing, b = 2 days missing, c = 3 days, ..etc..,</br> 
         z = 26 or more days missing, A = Accumulations present </br>
         Long-term means based on columns; thus, the monthly row may not</br> 
         sum (or average) to the long-term annual value.</br>
-      </p></br>
-        
-        <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
+    </p></br>
+    <div class="stronger dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" style="display:none;">
+        {{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}}),
+        {{element}} ({{units}}),
+        {{statistic}},{%if departure_from_averages == "Yes"%}, DEPARTURES FROM AVERAGES{%endif%},
+        max_missing_days_{{max_missing_days}}
+    </div>            
+    <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
             <thead><tr>
                 <td>Year</td>{%for mon in month_list%}<td>{{mon}}</td><td>Flag</td>{%endfor%}
             </tr></thead>

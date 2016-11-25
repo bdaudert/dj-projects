@@ -31,39 +31,37 @@
 {%if results %}
 <div class="results">
     {%for stn, stn_data in results.items %}
-        {%if not stn_data%}
-            <p style="color:red">NO STATION DATA FOUND!</p></br>
-        {%else%}
-            {%for tbl_idx, tbl_data in stn_data.items %}
-                <div align="left" style="max-wid0th:95%;word-wrap:break-word;">
-                    LOCATION:{{station_names|lookup:stn|safe}}&nbsp;&nbsp;STATION: {{station_ids|lookup:stn|safe}}</br>
-                    {{header|lookup:tbl_idx|safe}}
-                </div><br /> 
+    {%if not stn_data%}
+    <p style="color:red">NO STATION DATA FOUND!</p></br>
+    {%else%}
+    {%for tbl_idx, tbl_data in stn_data.items %}
+    <p>
+        <b>STATION: {{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}})</b></br>
+        <b>{{header|lookup:tbl_idx|safe}}</b>
+    </p><br /> 
                  
-                <div class="dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}">
-    
-                    {{station_names|lookup:stn|safe}}_{{station_ids|lookup:stn|safe}}_{{header_short|lookup:tbl_idx|safe}}
-                </div><br />
-                <table class="dataTable nowrap" id="dataTable-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
-                    <thead><tr>
-                        <td />TEMP F</td><td>LOW</td><td >10%</td><td >20%</td><td >30%</td><td >40%<td >50%</td><td >60%</td><td >70%</td><td >80%</td><td >90%</td><td >HIGH</td>
-                    </tr></thead>
-                    <tfoot><tr>
-                        <td />TEMP F</td><td>LOW</td><td >10%</td><td >20%</td><td >30%</td><td >40%<td >50%</td><td >60%</td><td >70%</td><td >80%</td><td >90%</td><td >HIGH</td>
-                    </tr></tfoot> 
-                    <tbody>
-                    {%for temp_data in tbl_data %}
-                        <tr>
-                        {%for dat in temp_data %}
-                            <td style="text-align:right">{{dat}}</td>
-                        {%endfor%}
-                        </tr> 
-                    {%endfor%}
-                    </tbody>
-                </table><br />
-            {%endfor%} <!--end for tbl_idx, tbl_data in stn_data.items -->
-        {%endif%}<!--end if not tbl_data-->
-  {%endfor%}<!--end for stn, stn_data in results.items-->
+    <div class="dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" style="display:none;">
+        {{station_names|lookup:stn|safe}}({{station_ids|lookup:stn|safe}}),
+        {{header_short|lookup:tbl_idx|safe}}
+    </div>
+    <table class="dataTable nowrap" id="dataTable-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
+        <thead><tr>
+        <td />TEMP F</td><td>LOW</td><td >10%</td><td >20%</td><td >30%</td><td >40%<td >50%</td><td >60%</td><td >70%</td><td >80%</td><td >90%</td><td >HIGH</td>
+        </tr></thead>
+        <tfoot><tr>
+        <td />TEMP F</td><td>LOW</td><td >10%</td><td >20%</td><td >30%</td><td >40%<td >50%</td><td >60%</td><td >70%</td><td >80%</td><td >90%</td><td >HIGH</td>
+        </tr></tfoot> 
+        <tbody>
+        {%for temp_data in tbl_data %}
+        <tr>{%for dat in temp_data %}
+            <td style="text-align:right">{{dat}}</td>
+        {%endfor%}</tr> 
+        {%endfor%}
+        </tbody>
+    </table><br />
+    {%endfor%} <!--end for tbl_idx, tbl_data in stn_data.items -->
+    {%endif%}<!--end if not tbl_data-->
+    {%endfor%}<!--end for stn, stn_data in results.items-->
 </div><!--results-->
 {%endif%}<!--end if results-->
 

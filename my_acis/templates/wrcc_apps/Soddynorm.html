@@ -29,41 +29,45 @@
 {%endif %}
 
 {%if results %}
-    <div class="results">
-  {%for stn, stn_data in results.items %}
-    {%if not stn_data%}
-        <p style="color:red">NO STATION DATA FOUND!</p></br>
-  {%else%}
-    <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}">
-        <h2>Station: {{station_names|lookup:stn|safe}}, {{station_ids|lookup:stn|safe}}</h2>
-        </div>
-    <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
+<div class="results">
+{%for stn, stn_data in results.items %}
+{%if not stn_data%}
+    <p style="color:red">NO STATION DATA FOUND!</p></br>
+{%else%}
+    <h3><b>Station</b>: {{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}})</h3>
+    <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" style="display:none;">
+        {{station_names|lookup:stn|safe}}({{station_ids|lookup:stn|safe}}),
+        normals {{start_date}}-{{end_date}},
+        filter {{filter_type}},number_of_days {{filter_days}}
+        
+    </div>
+    <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}" border="1">
     {%for day_data in stn_data%}
-        {%if forloop.counter == 1%}
-            <thead><tr>
-                {%for val in day_data%}
-                    <th>{{val}}</th>
-                {%endfor%}
-            </tr></thead>
-            <tfoot><tr>
-                {%for val in day_data%}
-                    <th>{{val}}</th>
-                {%endfor%}
-            </tr></tfoot>
-            <tbody>
-        {%else%}
-            <tr>
-            {%for val in day_data%}
-                <td>{{val}}</td>
-            {%endfor%}
-            </tr>
-        {%endif%}
+    {%if forloop.counter == 1%}
+        <thead><tr>
+        {%for val in day_data%}
+            <th>{{val}}</th>
+        {%endfor%}
+        </tr></thead>
+        <tfoot><tr>
+        {%for val in day_data%}
+            <th>{{val}}</th>
+        {%endfor%}
+        </tr></tfoot>
+        <tbody>
+    {%else%}
+        <tr>
+        {%for val in day_data%}
+            <td>{{val}}</td>
+        {%endfor%}
+        </tr>
+    {%endif%}
     {%endfor%}
-    </tbody>  
+        </tbody>  
     </table>
-  {%endif%}
- {%endfor%}
-    </div><!--results-->
+    {%endif%}
+    {%endfor%}
+</div><!--results-->
 {%endif%}
 
 {% endblock %}

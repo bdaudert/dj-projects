@@ -32,30 +32,35 @@
 
 {%if results %}
     <div class="results">
-    <p>DEGREE DAYS {{a_b}} BASE TEMPERATURE {{base_temp}}</br>
-    SKIP DAYS WITH MAXIMUM ABOVE: {{skip_max_above}}</br>
-    SKIP DAYS MINIMUM BELOW :{{skip_min_below}}</br>
-    TRUNCATES MAXIMUMS ABOVE: {{trunc_high}}</br>
-    TRUNCATES MINIMUMS BELOW: {{trunc_low}}</br>
-    UP TO {{max_miss}} DAYS MAY BE ESTIMATED FROM MEAN DAILY NORMALS</br>
-    NCDC ROUND-OFF PROCEDURE IS {%if not ncdc_round%}NOT{%endif%} SIMULATED{%if not ncdc_round%}, EXACT ROUND-OFF USED{%endif%}</br>
-    STARTING YEAR : {{start_year}}  ENDING YEAR : {{end_year}}</br>
+    <p>
+        <b>DEGREE DAYS</b>: {{a_b}} <b>BASE TEMPERATURE</b>: {{base_temp}}</br>
+        <b>SKIP DAYS WITH MAXIMUM ABOVE</b>: {{skip_max_above}}</br>
+        <b>SKIP DAYS MINIMUM BELOW</b>:{{skip_min_below}}</br>
+        <b>TRUNCATES MAXIMUMS ABOVE</b>: {{trunc_high}}</br>
+        <b>TRUNCATES MINIMUMS BELOW</b>: {{trunc_low}}</br>
+        <b>UP TO {{max_miss}} DAYS MAY BE ESTIMATED FROM MEAN DAILY NORMALS</b></br>
+        <b>NCDC ROUND-OFF PROCEDURE IS {%if not ncdc_round%}NOT{%endif%} SIMULATED{%if not ncdc_round%}, EXACT ROUND-OFF USED{%endif%}</b></br>
+        <b>START YEAR - END YEAR</b>: {{start_year}} - {{end_year}}</br>
     </p>
-
     {%if monthly%}
-        <p>FLAG FOLLOWING VALUE GIVES NUMBER OF MISSING DAYS :</br> 
+        <p><b>FLAG FOLLOWING VALUE GIVES NUMBER OF MISSING DAYS</b>:</br> 
         a = 1 DAY, b = 2 DAYS, ..., z = 26+ DAYS MISSING</br>
         </p>
     {%else%}
         <p>
-        -99 = MISSING DATA OR NON-EXISTENT DAYS </br>
-        AV = DAILY AVERAGE.  YR = NUMBER OF YEARS FOR THIS DAY.</br>
+        <b>-99 = MISSING DATA OR NON-EXISTENT DAYS </br>
+        AV = DAILY AVERAGE.  YR = NUMBER OF YEARS FOR THIS DAY.</b></br>
         </p>
     {%endif%}
     
     {%for stn, stn_data in results.items %}
-        <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}">
-        <h2>STATION: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;NUMBER: {{station_ids|lookup:stn|safe}}</h2>
+        <h3>STATION: {{station_names|lookup:stn|safe}}&nbsp;&nbsp;&nbsp;NUMBER: {{station_ids|lookup:stn|safe}}</h3>
+
+        <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" style="display:none;">
+        {{station_names|lookup:stn|safe}}({{station_ids|lookup:stn|safe}}),
+        degree_days_{{a_b}} base_temp_{{base_temp}},
+        skip_above_below_{{skip_max_above}}_{{skip_min_below}}
+        truncate_above_below_{{trunc_high}}_{{trunc_low}}
         </div>
 
         <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">

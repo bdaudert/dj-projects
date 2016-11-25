@@ -35,13 +35,20 @@
     <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}
     {%for tbl_idx, table in stn_data.items%}
-    <div class="stronger dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}">
-        STATION NUMBER: {{station_ids|lookup:stn|safe}}&nbsp;&nbsp;LOCATION:{{station_names|lookup:stn|safe}}</br>
-        START MONTH {{start_month}} END MONTH {{end_month}}</br>
-        ELEMENT {{el_type}} UNITS {{units}}</br>
-        DURATION {{duration|lookup:forloop.counter0}}</br>
-    </div></br>
-    <table class="dataTable nowrap" id="dataTable-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
+    <p>
+        <b>STATION</b>: {{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}})<br />
+        <b>ELEMENT</b>: {{el_type}} ({{units}})<br />
+        <b>START DATE - END DATE</b>: {{start_date}} - {{end_date}}<br />
+        <b>START MONTH - END MONTH</b>: {{start_month}} - {{end_month}}<br />
+        <b>DURATION</b>: {{duration|lookup:forloop.counter0}} 
+    </p>
+    <div class="stronger dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" style="display:none">
+        {{station_names|lookup:stn|safe}}({{station_ids|lookup:stn|safe}}),
+        {{el_type}} ({{units}}),
+        probablilities {{start_date}}-{{end_date}},
+        duration_{{duration|lookup:forloop.counter0}}_days
+    </div>
+    <table class="dataTable nowrap" id="dataTable-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" border=1>
         <thead><tr>
                 <td>Year</td><td>Value</td><td>Start Date(mmdd)</td><td>Days Missing</td>
             </tr></thead>
@@ -54,37 +61,30 @@
             {%endfor%}
         </tbody>
     </table>
-    {%endfor%}
-    {%endif%}
-  {%endfor%}
-{%endif%}
-
-{%if results %}
-  {%for stn, stn_data in results.items %}
-    {%if not stn_data%}
-    <p style="color:red">NO STATION DATA FOUND!</p></br>
-    {%else%}
-
-    {%for tbl_idx, table in stn_data.items%}
-        <table class="dataTable nowrap" id="dataTable-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
-            <thead><tr>
-                <td>Prob of non-exceedance</td><td>Prob of exceedance</td><td>Return Interval</td><td>Value in Std. Dev.</td><td>Value in Absolute Units</td>
-            </tr></thead>
-            <tfoot><tr>
-                <td>Prob of non-exceedance</td><td>Prob of exceedance</td><td>Return Interval</td><td>Value in Std. Dev.</td><td>Value in Absolute Units</td>
-            </tr></tfoot>
-            <tbody>
-            {%for row in table %}
-                <tr>
-                {%for val in row%}<td>{{val}}</td>{%endfor%}
-                </tr>
-            {%endfor%}
-            </tbody>
-       </table>
+    <div class="stronger dataTableInfo" id="dataTableInfo-Second{{forloop.parentloop.counter0}}_{{forloop.counter0}}" style="display:none">
+        {{station_names|lookup:stn|safe}}({{station_ids|lookup:stn|safe}}),
+        {{el_type}} ({{units}}),
+        exceedance_probablilities {{start_date}}-{{end_date}},
+        duration_{{duration|lookup:forloop.counter0}}_days
+    </div>
+    <table class="dataTable nowrap" id="dataTable-Second{{forloop.parentloop.counter0}}_{{forloop.counter0}}" border=1>
+        <thead><tr>
+            <td>Prob of non-exceedance</td><td>Prob of exceedance</td><td>Return Interval</td><td>Value in Std. Dev.</td><td>Value in Absolute Units</td>
+        </tr></thead>
+        <tfoot><tr>
+            <td>Prob of non-exceedance</td><td>Prob of exceedance</td><td>Return Interval</td><td>Value in Std. Dev.</td><td>Value in Absolute Units</td>
+        </tr></tfoot>
+        <tbody>
+        {% for row in results|lookup:stn|lookup:tbl_idx %}
+            <tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr>
+        {%endfor%}
+        </tbody>
+    </table>
     {%endfor%}
     {%endif%}
   {%endfor%}
 </div><!--results-->
 {%endif%}
+
 
 {% endblock %}

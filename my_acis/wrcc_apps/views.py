@@ -177,8 +177,8 @@ def sodsum(request, app_name):
     return render_to_response('wrcc_apps/Sodsum.html', context, context_instance=RequestContext(request))
 
 def sods(request, app_name):
-    units = {'pcpn':'Hundredths of Inches', 'snow':'Tenths of Inches', 'snwd': 'Inches', 'maxt':'Whole Degrees', 'mint':'Whole Degrees',\
-             'avgt':'Whole Degrees', 'dtr':'Whole Degrees', 'hdd':'Days', 'cdd':'Days','gdd':'Days'}
+    units = {'pcpn':'Hundredths of Inches', 'snow':'Tenths of Inches', 'snwd': 'Inches', 'maxt':'F', 'mint':'F',\
+             'avgt':'F', 'dtr':'F', 'hdd':'-', 'cdd':'-','gdd':'-'}
     months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
     context = {
     'title': '%s' % app_name,
@@ -284,6 +284,12 @@ def sods(request, app_name):
                 'filter_type':form2.cleaned_data['filter_type'],\
                 'filter_days':form2.cleaned_data['number_of_days']}
                 results = WRCCDataApps.Soddynorm(**app_args)
+                context['start_date'] = form2.cleaned_data['start_date']
+                context['end_date'] = form2.cleaned_data['end_date']
+                context['filter_type'] = form2.cleaned_data['filter_type']
+                if context['filter_type'] == 'rm':
+                    context['filter_type'] = 'running_mean'
+                context['filter_days'] = app_args['filter_days']
                 '''
                 results = run_data_app(app_name, data, dates, elements, station_ids, station_names, \
                 form2.cleaned_data['filter_type'], form2.cleaned_data['number_of_days'])
@@ -469,6 +475,8 @@ def sods(request, app_name):
                 results = run_data_app(**app_args)
             elif app_name == 'Sodxtrmts':
                 context['element'] = form2.cleaned_data['element']
+                context['units'] = units[form2.cleaned_data['element']]
+                if form2.cleaned_data['element'] in ['pcpn','snow','snwd']:context['units'] = 'Inches'
                 context['max_missing_days'] = form2.cleaned_data['max_missing_days']
                 context['start_month'] = WRCCData.NUMBER_TO_MONTH_NAME[form2.cleaned_data['start_month']]
                 mon_start = int(form2.cleaned_data['start_month'].lstrip('0'))
@@ -521,6 +529,8 @@ def sods(request, app_name):
                 context['start_year'] = form2.cleaned_data['start_date'][0:4]
                 context['end_year'] = str(int(form2.cleaned_data['end_date'][0:4]) - 1)
                 context['start_month'] = form2.cleaned_data['start_date'][4:6]
+                context['start_date'] = form2.cleaned_data['start_date']
+                context['end_date'] = form2.cleaned_data['end_date']
                 context['end_month'] = form2.cleaned_data['end_date'][4:6]
                 app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
                 'station_ids':station_ids,'station_names':station_names, \
@@ -687,24 +697,24 @@ def set_sodsumm_headers(table_list):
     def set_header(table):
         rows = []
         if table == 'temp':
-            rows.append('Temperature Statistics:')
+            rows.append('Temperatures:')
             rows.append('Averages (Max/Min/Mean), Daily Extremes, Mean Extremes, >= =<  =<  =<')
         elif table == 'prsn':
-            rows.append('Precipitation/Snow Statistics:')
+            rows.append('Precipitation, Snow:')
             rows.append('Total Precipitation, Precipitation, Total Snowfall, #Days Precip')
 
         elif table == 'hdd':
             rows.append('Heating degree days:')
-            rows.append('Output is rounded, unlike NCDC values, which round input.')
-            rows.append('Degree Days to selected Base Temperatures(F)')
+            #rows.append('Output is rounded, unlike NCDC values, which round input.')
+            #rows.append('Degree Days to selected Base Temperatures(F)')
         elif table == 'cdd':
             rows.append('Cooling degree days:')
-            rows.append('Output is rounded, unlike NCDC values, which round input.')
-            rows.append('Degree Days to selected Base Temperatures(F)')
+            #rows.append('Output is rounded, unlike NCDC values, which round input.')
+            #rows.append('Degree Days to selected Base Temperatures(F)')
         elif table == 'gdd':
             rows.append('Growing degree days:')
-            rows.append('Output is rounded, unlike NCDC values, which round input.')
-            rows.append('Growing Degree Days to selected Base Temperatures(F)')
+            #rows.append('Output is rounded, unlike NCDC values, which round input.')
+            #rows.append('Growing Degree Days to selected Base Temperatures(F)')
         elif table == 'corn':
             rows.append('Corn growing degree days:')
         return "\n".join(rows)

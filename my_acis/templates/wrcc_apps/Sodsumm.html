@@ -31,32 +31,32 @@
 
 {%if results %}
 <div class="results">
-  <p>
+  <p><b>
   For monthly and annual mean, thresholds and sums:</br>
   Month with {{max_missing_days}} or more missing days are not considered</br>
   Years with one or more missing months are not considered</br>
   Two-digit years are departures from 1900: -20 = 1880, 102 = 2002</br>
-  </p>
+  </b></p>
   
   {%for stn, stn_data in results.items %}
-    <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}">
-    Station: ({{station_ids|lookup:stn|safe}}) {{station_names|lookup:stn|safe}}</br>
-    From Year {{start_year}} To Year {{end_year}}<br /><br />
-    </div>
     {%if not stn_data%}
         <p style="color:red">NO STATION DATA FOUND!</p>
     {%else%}
         {%for type_idx, table_type in stn_data.items %}
             {% if table_type.0 %}
-                <h3 align="center">{{headers|lookup:type_idx|safe}}</h3>
-                <!--
-                <table border="1" width="99%" cellspacing="0" cellpadding="0">
-                {{headers|lookup:type_idx|safe}}
-                </table>-->
-                <br /><br />
+                <h3 align="center">
+                    <b>STATION</b>: {{station_names|lookup:stn|safe}}({{station_ids|lookup:stn|safe}})<br />
+                    <b>START YEAR - END YEAR</b>: {{start_year}} - {{end_year}}<br /> 
+                    {{headers|lookup:type_idx|safe}}
+                </h3>
+                <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" style="display:none;">
+                    {{station_names|lookup:stn|safe}}({{station_ids|lookup:stn|safe}}),
+                    {{headers|lookup:type_idx|safe}}
+                    {{start_year}}-{{end_year}}
+                </div> 
             {%endif%}
 
-            <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
+            <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}">
             {%for row in table_type %}
                 {% if forloop.counter == 1%}
                     <thead><tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr></thead>

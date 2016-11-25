@@ -58,7 +58,7 @@
         <div style="display:none" class="dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}">
             {{station_names|lookup:stn|safe}}({{station_ids|lookup:stn|safe}}),
             {{elements|lookup:el|safe}},
-            {{start_date}}-{{end_date}}
+            averages_and_extremes {{start_date}}-{{end_date}}
         </div>
         <table class="dataTable nowrap" id="dataTable-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" border=1>
         <thead>
