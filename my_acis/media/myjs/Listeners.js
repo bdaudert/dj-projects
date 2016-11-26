@@ -869,38 +869,38 @@ $(document).ready(function () {
     $('#show_hide_graph, #show_hide_summary, #show_hide_data').on('click', function(){
         var id = $(this).attr('id');
         if (id == 'show_hide_graph'){
-            if ($('#user_graph').css('display') == 'none'){
-                $('#user_graph').css('display', 'block');
-                $('#printable_table').css('display', 'none');
-                $('#data_summary_table').css('display', 'none');
+            if ($('#user-graph').css('display') == 'none'){
+                $('#user-graph').css('display', 'block');
+                $('#main-table').css('display', 'none');
+                $('#summary-table').css('display', 'none');
             }
             else{
-                $('#user_graph').css('display', 'none');
+                $('#user-graph').css('display', 'none');
             }
         }
         if (id == 'show_hide_summary'){
-            if ($('#data_summary_table').css('display') == 'none'){
-                $('#user_graph').css('display', 'none');
-                $('#printable_table').css('display', 'none');
-                $('#data_summary_table').css('display', 'block');
+            if ($('#summary-table').css('display') == 'none'){
+                $('#user-graph').css('display', 'none');
+                $('#main-table').css('display', 'none');
+                $('#summary-table').css('display', 'block');
             }
             else{
-                $('#data_summary_table').css('display', 'none');
+                $('#summary-table').css('display', 'none');
             }
         }
         if (id == 'show_hide_data'){
-            if ($('#printable_table').css('display') == 'none'){
-                $('#user_graph').css('display', 'none');
-                $('#printable_table').css('display', 'block');
-                $('#data_summary_table').css('display', 'none');
+            if ($('#main-table').css('display') == 'none'){
+                $('#user-graph').css('display', 'none');
+                $('#main-table').css('display', 'block');
+                $('#summary-table').css('display', 'none');
             }
             else{
-                if ($('#user_graph').css('display') == 'none') {
-                    $('#printable_table').css('display', 'none');
+                if ($('#user-graph').css('display') == 'none') {
+                    $('#main-table').css('display', 'none');
                 }
                 else {
-                    $('#printable_table').css('display', 'block');
-                    $('#user_graph').css('display', 'none');
+                    $('#main-table').css('display', 'block');
+                    $('#user-graph').css('display', 'none');
                 }
             }
         }
