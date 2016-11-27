@@ -77,85 +77,143 @@
             </div>
             <input type="hidden" name="app_name" value="single_lister">
             <input type="hidden" name="data_type" value="{{initial.data_type}}">
-            {% include 'includes/area_select.html'%}
-            <span id="area" valign="bottom">{% include 'includes/area.html'%}</span>
-            {%if initial.data_type == "station"%}
-            <span  id="stn_finder">{% include 'includes/station_finder.html'%}</span>
-            {%else%}
-            <span  id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</span>
-            {%endif%}
-            {%if initial.data_type == "grid"%}        
-            <span  id="grid_type">{% include 'includes/grids.html'%}</span>
-            {% if initial.grid == "21"%}
-            <span  id="temp_res">{% include 'includes/temporal_resolution.html'%}</span>
-            {%else%}
-            <span  id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</span>
-            {%endif%}
-            {%else%}
-            <span  id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
-            <span  id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</span>
-            {%endif%}
-            {% include 'includes/elements.html'%}
-            <span  id="add">{% include 'includes/add_degree_days.html'%}</span>
-            {%if initial.add_degree_days == "T"%}
-            <span id="dd">{% include 'includes/degree_days.html'%}</span>
-            {%else%}
-            <span id="dd" style="display:none">{% include 'includes/degree_days.html'%}</span>
-            {%endif%}
-            <span>{% include 'includes/units.html'%}</span>
-            <span>{% include 'includes/start_date.html'%}</span>
-            <span>{% include 'includes/end_date.html'%}</span>
-            <span  id="data_summ">{% include 'includes/data_summary.html'%}</span>
-            {%if initial.data_summary == "none"%}
-            <span id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</span>
-            <span id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</span>
-            <span  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</span>
-            <span  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</span>
-            {%endif%}
-            {%if initial.data_summary == "temporal_summary"%}
-            <span id="temp_summary">{% include 'includes/temporal_summary.html'%}</span>
-            <span id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</span>
-            <span  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</span>
-            <span  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</span>
-            {%endif%}
-            {%if initial.data_summary == "spatial_summary"%}
-            <span id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</span>
-            <span id="spat_summary" style="display:block">{% include 'includes/spatial_summary.html'%}</span>
-            <span  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</span>
-            <span  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</span>
-            {%endif%}
-            {%if initial.data_summary == "windowed_data"%}
-            <span  id="start_wind" style="display:block;">{% include 'includes/start_window.html'%}</span>
-            <span  id="end_wind" style="display:block;">{% include 'includes/end_window.html'%}</span>
-            <span id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</span>
-            <span id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</span>
-            {%endif%}
-            {%if initial.data_type == "station" and initial.data_summary == "none"%}
-            <span  id="flags" style="display:block">{% include 'includes/show_flags.html'%}</span>
-            <span  id="obs_time" style="display:block">{% include 'includes/show_observation_time.html'%}</span>
-            {%elif initial.data_type == "station" and initial.data_summary == "windowed_data"%}
-            <span  id="flags" style="display:block">{% include 'includes/show_flags.html'%}</span>
-            <span  id="obs_time" style="display:block">{% include 'includes/show_observation_time.html'%}</span>
-            {%else%}
-            <span  id="flags" style="display:none">{% include 'includes/show_flags.html'%}</span>
-            <span  id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</span>
-            {%endif%}
-            <span  style="display:block;">{% include 'includes/data_format.html'%}</span>
-            {%if initial.data_format == "html"%}
-            <span id="out_format" class="out_format" style="display:none;">{% include 'includes/output_format.html'%}</span>
-            {%else%}
-            <span id="out_format" class="out_format" style="display:block;">{% include 'includes/output_format.html'%}</span>
-            {%endif%}
-            {%if initial.data_format == "dlm" or initial.data_format == "clm"%}
-            <span id="delim" class="delim" style="display:block;">{% include 'includes/delimiter.html'%}</span>
-            {%else%}
-            <span id="delim" class="delim" style="display:none;">{% include 'includes/delimiter.html'%}</span>
-            {%endif%}
-            {%if initial.data_format != "html"%}
-                <span id="out_file" class="out_file" style="display:block;">{% include 'includes/out_file.html'%}</span>
-            {%else%}
-                <span id="out_file" class="out_file" style="display:none;">{% include 'includes/out_file.html'%}</span>
-            {%endif%}
+            <div class="form-input-group form-group" align="center">
+                <label class="form-group-header">1. Define your region!</label> 
+                <div class="input-group">
+                    {% include 'includes/area_select.html'%}
+                    <span class="input-group-addon"></span>
+                    <span id="area" valign="bottom">{% include 'includes/area.html'%}</span>
+                </div>
+                {%if initial.data_type == "station"%}
+                <span  id="stn_finder">{% include 'includes/station_finder.html'%}</span>
+                {%else%}
+                <span  id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</span>
+                {%endif%}
+            </div>
+            <div class="form-input-group form-group" align="center">
+                <label class="form-group-header">2. Choose your dataset!</label>
+                <div class="input-group">
+                    {%if initial.data_type == "grid"%}        
+                    <span  id="grid_type">{% include 'includes/grids.html'%}</span>
+                    <span class="input-group-addon"></span>
+                    {% if initial.grid == "21"%}
+                    <span  id="temp_res">{% include 'includes/temporal_resolution.html'%}</span>
+                    {%else%}
+                    <span  id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</span>
+                    {%endif%}
+                    {%else%}
+                    <span  id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
+                    <span  id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</span>
+                    {%endif%}
+                </div>
+                <div class="input-group">
+                    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8"> 
+                        {% include 'includes/elements.html'%}
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <span class="input-group-addon"></span>
+                        {% include 'includes/units.html'%}
+                    </div>
+                </div>
+                <div class="input-group">
+                    <span  id="add">{% include 'includes/add_degree_days.html'%}</span>
+                    <span class="input-group-addon"></span>
+                    {%if initial.add_degree_days == "T"%}
+                    <span id="dd">{% include 'includes/degree_days.html'%}</span>
+                    {%else%}
+                    <span id="dd" style="display:none">{% include 'includes/degree_days.html'%}</span>
+                    {%endif%}
+                </div>
+            </div>
+            <div class="form-input-group form-group" align="center">
+                <label class="form-group-header">3. What analysis do you want to run?</label>
+                <span  id="data_summ">{% include 'includes/data_summary.html'%}</span>
+                {%if initial.data_summary == "none"%}
+                <span id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</span>
+                <span id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</span>
+                <div class="input-group">
+                    <span  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</span>
+                    <span class="input-group-addon"></span>
+                    <span  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</span>
+                </div>
+                {%endif%}
+                {%if initial.data_summary == "temporal_summary"%}
+                <span id="temp_summary">{% include 'includes/temporal_summary.html'%}</span>
+                <span id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</span>
+                <div class="input-group">
+                    <span  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</span>
+                    <span class="input-group-addon"></span>
+                    <span  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</span>
+                </div>
+                {%endif%}
+                {%if initial.data_summary == "spatial_summary"%}
+                <span id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</span>
+                <span id="spat_summary" style="display:block">{% include 'includes/spatial_summary.html'%}</span>
+                <div class="input-group">
+                    <span  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</span>
+                    <span class="input-group-addon"></span>
+                    <span  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</span>
+                </div>
+                {%endif%}
+                {%if initial.data_summary == "windowed_data"%}
+                <div class="input-group">
+                    <span  id="start_wind" style="display:block;">{% include 'includes/start_window.html'%}</span>
+                    <span class="input-group-addon"></span>
+                    <span  id="end_wind" style="display:block;">{% include 'includes/end_window.html'%}</span>
+                </div>
+                <span id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</span>
+                <span id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</span>
+                {%endif%}
+                <div class="input-group">
+                {%if initial.data_type == "station" and initial.data_summary == "none"%}
+                    <span  id="flags" style="display:block">{% include 'includes/show_flags.html'%}</span>
+                    <span class="input-group-addon"></span>
+                    <span  id="obs_time" style="display:block">{% include 'includes/show_observation_time.html'%}</span>
+                    
+                {%elif initial.data_type == "station" and initial.data_summary == "windowed_data"%}
+                    <span  id="flags" style="display:block">{% include 'includes/show_flags.html'%}</span>
+                    <span class="input-group-addon"></span>
+                    <span  id="obs_time" style="display:block">{% include 'includes/show_observation_time.html'%}</span>
+                {%else%}
+                    <span  id="flags" style="display:none">{% include 'includes/show_flags.html'%}</span>
+                    <span class="input-group-addon"></span>
+                    <span  id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</span>
+                {%endif%}
+                </div>
+            </div>
+            <div class="form-input-group form-group" align="center">
+                <label class="form-group-header">4. Define your date ranges! </label>
+                <div class="input-group">
+                    {% include 'includes/start_date.html'%}
+                    <span class="input-group-addon"></span>
+                    {% include 'includes/end_date.html'%}
+                </div>
+            </div>
+            <div class="form-input-group form-group" align="center">
+                <label class="form-group-header">5. Output</label>
+                <div class="input-group">
+                    <span  style="display:block;">{% include 'includes/data_format.html'%}</span>
+                    {%if initial.data_format == "html"%}
+                    <span class="input-group-addon"></span>
+                    <span id="out_format" class="out_format" style="display:none;">{% include 'includes/output_format.html'%}</span>
+                    {%else%}
+                    <span id="out_format" class="out_format" style="display:block;">{% include 'includes/output_format.html'%}</span>
+                    {%endif%}
+                </div>
+                <div class="input-group">
+                    {%if initial.data_format == "dlm" or initial.data_format == "clm"%}
+                    <span id="delim" class="delim" style="display:block;">{% include 'includes/delimiter.html'%}</span>
+                    {%else%}
+                    <span id="delim" class="delim" style="display:none;">{% include 'includes/delimiter.html'%}</span>
+                    {%endif%}
+                    <span class="input-group-addon"></span>
+                    {%if initial.data_format != "html"%}
+                    <span id="out_file" class="out_file" style="display:block;">{% include 'includes/out_file.html'%}</span>
+                    {%else%}
+                    <span id="out_file" class="out_file" style="display:none;">{% include 'includes/out_file.html'%}</span>
+                    {%endif%}
+                </div>
+            </div>
             <div class="form-group">
                 <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formData" style="width:100%">
                 Get Data

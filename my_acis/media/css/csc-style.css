@@ -105,13 +105,18 @@ img.app_img {
 
 .link:hover { color:#800080;}
 
+.trigger {
+    white-space: nowrap;
+}
+
 .pop-up {
   display:none;
   text-align:left;
-  padding:5px;
+  padding:1%;
   background:#f2dede;
   border:2px solid grey;
   z-index:10;
+  max-width:80%
 }
 
 .main-form {
@@ -154,11 +159,15 @@ img.app_img {
     */
 }
 
+.input-group {
+    padding:0;
+}
+
 .sub-input-group{
     border:1px solid #3b5998;
     background-color:#aec6cf;
     max-width:90%;
-    padding:1%;
+    padding:0.5%;
 }
 
 .input-group-addon {
