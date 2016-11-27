@@ -48,8 +48,8 @@ var station_finder_metadata ={
 var area_defaults = {
     'station_id':['Station ID','RENO TAHOE INTL AP, 266779'],
     'station_ids':['Station IDs','266779,050848'],
-    'location':['Location (lon,lat)','-119,39'],
-    'locations':['Locations (lon,lat pairs)','-119,39,-119.1,39.1'],
+    'location':['Gridpoint','-119,39'],
+    'locations':['Gridpoints','-119,39,-119.1,39.1'],
     'county':['County','Churchill County, 32001'],
     'climate_division':['Climate Division','Northwestern, NV01'],
     'county_warning_area':['County Warning Area','Las Vegas, NV, VEF'],

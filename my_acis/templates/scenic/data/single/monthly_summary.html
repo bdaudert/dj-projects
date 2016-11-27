@@ -73,62 +73,78 @@
                     </button>
                 </div>
                 <input type="hidden" name="app_name" value="monthly_summary">
-                <input type="hidden" class="chart_indices_string" 
-                    id="chart_indices_string" value="{{initial.chart_indices_string}}" 
-                    name="chart_indices_string">
+                <input type="hidden" class="chart_indices_string" id="chart_indices_string" 
+                    value="{{initial.chart_indices_string}}" name="chart_indices_string">
                 <input type="hidden" value="{{initial.chart_type}}" name="chart_type" class="chart_type">
                 <input type="hidden" value="{{initial.show_running_mean}}" name="show_running_mean" class="show_running_mean">
                 <input type="hidden" value="{{initial.running_mean_years}}" name="running_mean_days" class="running_mean_days">
                 <input type="hidden" value="{{initial.show_range}}" name="show_range" class="show_range">
                 <input type="hidden" value="{{initial.chart_summary}}" name="chart_summary" class="chart_summary">
-                {% include 'includes/area_select.html'%}
-                <span id="area">{% include 'includes/area.html'%}</span>
-                {%if initial.area_type == "location"%}        
-                <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span> 
-                <span  id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</span>
-                {% else%}
-                <span class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
-                <span  id="stn_finder">{% include 'includes/station_finder.html'%}</span>
-                {%endif%}
-                {% include 'includes/start_end_year.html'%}
-                <div class="input-group" align="center">
-                    {% include 'includes/element.html'%}
-                    <span class="input-group-addon"></span>
-                    {% include 'includes/units.html'%}
+                <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">1. Define your region!</label> 
+                    <div class="input-group">
+                        {% include 'includes/area_select.html'%}
+                        <span class="input-group-addon"></span>
+                        <span id="area">{% include 'includes/area.html'%}</span>
+                    </div>
+                    {%if initial.area_type == "location"%} 
+                    <span  id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</span>
+                    {%else%}
+                    <span  id="stn_finder">{% include 'includes/station_finder.html'%}</span>
+                    {%endif%}
                 </div>
-                {%if initial.element == "gdd" or initial.element == "hdd" or initial.element == "gdd"%}
-                <span id="base_temp" >{% include 'includes/base_temperature.html'%}</span>
-                {%else%}
-                <span id="base_temp"  style="display:none">{% include 'includes/base_temperature.html'%}</span>
-                {%endif%}
-                <span style="display:none" >{% include 'includes/statistic_period.html'%}</span>
-                <span >{% include 'includes/monthly_summary_statistic.html'%}</span>
-                {%if initial.statistic == "ndays"%}
-                <span id="threshold_type" >{% include 'includes/number_of_days.html'%}</span>
-                {%if initial.less_greater_or_between == "b"%}
-                <span id="threshold_between" >{% include 'includes/num_days_thresholds_between.html'%}</span>
-                {%else%}
-                <span id="threshold_between"  style="display:none">{% include 'includes/num_days_thresholds_between.html'%}</span>
-                {%endif%}
-                {%if initial.less_greater_or_between == "g"%}
-                <span id="threshold_above" >{% include 'includes/num_days_thresholds_above.html'%}</span>
-                {%else%}
-                <span id="threshold_above"  style="display:none">{% include 'includes/num_days_thresholds_above.html'%}</span>
-                {%endif%}
-                {%if initial.less_greater_or_between == "l"%}
-                <span id="threshold_below" >{% include 'includes/num_days_thresholds_below.html'%}</span>
-                {%else%}
-                 <span id="threshold_below"  style="display:none">{% include 'includes/num_days_thresholds_below.html'%}</span>
-                {%endif%}
-                {%else%}
-                <span id="threshold_type"  style="display:none">{% include 'includes/number_of_days.html'%}</span>
-                <span id="threshold_between"  style="display:none">{% include 'includes/num_days_thresholds_between.html'%}</span>
-                <span id="threshold_above"  style="display:none">{% include 'includes/num_days_thresholds_above.html'%}</span>
-                <span id="threshold_below"  style="display:none">{% include 'includes/num_days_thresholds_below.html'%}</span>
-                {%endif%}
+                <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">2. Choose your dataset!</label>
+                    {%if initial.area_type == "location"%}        
+                    <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span> 
+                    {% else%}
+                    <span class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
+                    {%endif%}
+                    <div class="input-group">
+                        {% include 'includes/element.html'%}
+                        <span class="input-group-addon"></span>
+                        {% include 'includes/units.html'%}
+                    </div>
+                    {%if initial.element == "gdd" or initial.element == "hdd" or initial.element == "gdd"%}
+                    <span id="base_temp" >{% include 'includes/base_temperature.html'%}</span>
+                    {%else%}
+                    <span id="base_temp"  style="display:none">{% include 'includes/base_temperature.html'%}</span>
+                    {%endif%}
+                </div>
+                <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">3. What analysis do you want to run?</label>
+                    <div class="input-group">
+                        <span style="display:none" >{% include 'includes/statistic_period.html'%}</span>
+                        <span >{% include 'includes/monthly_summary_statistic.html'%}</span>
+                        {%if initial.statistic == "ndays"%}
+                        <span id="threshold_type" >{% include 'includes/number_of_days.html'%}</span>
+                        {%if initial.less_greater_or_between == "b"%}
+                        <span id="threshold_between" >{% include 'includes/num_days_thresholds_between.html'%}</span>
+                        {%else%}
+                        <span id="threshold_between"  style="display:none">{% include 'includes/num_days_thresholds_between.html'%}</span>
+                        {%endif%}
+                        {%if initial.less_greater_or_between == "g"%}
+                        <span id="threshold_above" >{% include 'includes/num_days_thresholds_above.html'%}</span>
+                        {%else%}
+                        <span id="threshold_above"  style="display:none">{% include 'includes/num_days_thresholds_above.html'%}</span>
+                        {%endif%}
+                        {%if initial.less_greater_or_between == "l"%}
+                        <span id="threshold_below" >{% include 'includes/num_days_thresholds_below.html'%}</span>
+                        {%else%}
+                         <span id="threshold_below"  style="display:none">{% include 'includes/num_days_thresholds_below.html'%}</span>
+                        {%endif%}
+                        {%else%}
+                        <span id="threshold_type"  style="display:none">{% include 'includes/number_of_days.html'%}</span>
+                        <span id="threshold_between"  style="display:none">{% include 'includes/num_days_thresholds_between.html'%}</span>
+                        <span id="threshold_above"  style="display:none">{% include 'includes/num_days_thresholds_above.html'%}</span>
+                        <span id="threshold_below"  style="display:none">{% include 'includes/num_days_thresholds_below.html'%}</span>
+                        {%endif%}
+                    </div>
+                </div>
+                {% include 'includes/start_end_year.html'%}
                 <div class="input-group">
                     {% include 'includes/max_missing_days.html'%}
-                    <span class="input-group-addon"></span>
+                    <span class="input-group-addon" id="addon-2"></span>
                     {% include 'includes/departures_from_averages.html'%}
                 </div>
                 <div class="form-group">
@@ -160,7 +176,6 @@
         </div><!--col-sm-8-->
     </div><!--row-->
 </div><!--top_of_page-->
-<!--Results-->
 <!--Main Results-->
 <div class="row results">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 

@@ -417,7 +417,7 @@ def single_lister(request):
             context['form_error'] = form_error
             if form_cleaned['area_type'] == 'location':
                 #Only show gridpoint map if area caused form_error
-                if 'Location (lon,lat)' in form_error.keys():
+                if 'Gridpoint' in form_error.keys():
                     context['need_gridpoint_map'] = True
             return render_to_response(url, context, context_instance=RequestContext(request))
         #Data requests
