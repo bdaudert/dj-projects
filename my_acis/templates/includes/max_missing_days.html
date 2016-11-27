@@ -1,10 +1,11 @@
-    <td id="Maximum Number of Missing Days">Max Missing Days: </td>
-    <td><input type="text" name="max_missing_days" value="{{initial.max_missing_days}}"></td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+<div class="form-group">
+    <label for="max_missing_days">Max Miss. Days</label>
+    <img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_max_missing_days"></div>
         <script type="text/javascript">                        
         $("#ht_max_missing_days").load("{{HTML_URL}}Docu_help_texts.html #ht_max_missing_days");
         </script>
     </div>
-    </td>
+    <input class="form-control" type="text" name="max_missing_days" value="{{initial.max_missing_days}}">
+</div>

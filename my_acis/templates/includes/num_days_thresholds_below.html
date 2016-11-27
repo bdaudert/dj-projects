@@ -1,10 +1,13 @@
-    <td>Less Than</td>
-    <td><input type="text" id="threshold_for_less_than" name="threshold_for_less_than" value={{initial.threshold_for_less_than}}></td>
-    <td><img alt="Click me!" title="Help" src="/csc/media/img/QMark.png" class="trigger">
+<div class="form-group">
+    <label for="threshold_for_less_than">Less Than</label>
+    <img alt="Click me!" title="Help" src="/csc/media/img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_l"></div>
         <script type="text/javascript">                        
         $("#ht_l").load("{{HTML_URL}}Docu_help_texts.html #ht_l");
         </script>
     </div>
-    </td>
+    <input class="form-control" type="text" 
+    id="threshold_for_less_than" name="threshold_for_less_than" 
+    value={{initial.threshold_for_less_than}}>
+</div>

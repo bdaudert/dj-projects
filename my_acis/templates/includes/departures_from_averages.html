@@ -1,18 +1,17 @@
-    <td>Departures from Averages: </td>
-    <td>
-        <select id="departures_from_averages" name="departures_from_averages">
-        {%for opt, name in initial.form_options.departures_from_averages%}
-            <option value="{{opt}}" 
-                {%if initial.departures_from_averages == opt%}selected{%endif%}
-            >{{name}}</option>
-        {%endfor%}
-        </select>
-    </td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+<div class="form-group">
+    <label for="departures_from_averages">Diff from Ave?</label>
+    <img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_departures_from_averages"></div>
         <script type="text/javascript">                        
         $("#ht_departures_from_averages").load("{{HTML_URL}}Docu_help_texts.html #ht_departures_from_averages");
         </script>
-    </div>
-    </td>
+    </div>    
+    <select class="form-control" id="departures_from_averages" name="departures_from_averages">
+    {%for opt, name in initial.form_options.departures_from_averages%}
+        <option value="{{opt}}" 
+        {%if initial.departures_from_averages == opt%}selected{%endif%}
+        >{{name}}</option>
+    {%endfor%}
+    </select>
+</div>

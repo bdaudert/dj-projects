@@ -8,7 +8,7 @@
         $("#ht_element").load("{{HTML_URL}}Docu_help_texts.html #ht_element");
         </script>
     </div>
-    <select id="element" name="element">
+    <select class="form-control" id="element" name="element">
     {%for opt, name in initial.form_options.element%}
         <option value="{{opt}}" 
         {%if initial.element == opt%}selected{%endif%}

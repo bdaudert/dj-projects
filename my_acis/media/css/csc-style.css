@@ -101,12 +101,6 @@ img.app_img {
   z-index:10;
 }
 
-/*
-.form-group {
-    padding:5px;
-}
-*/
-
 .main-form {
     background-color:#aec6cf;
     width:auto;
@@ -115,6 +109,28 @@ img.app_img {
 .overlay-form {
     width:100%;
     background-color:#aec6cf;
+}
+
+.form-group {
+    padding:0% 5%;
+}
+.form-input-group {
+    background-color:#aec6cf;
+    width:100%;
+    position:relative;
+    left:4%;
+}
+
+.sub-input-group{
+    border:1px solid #3b5998;
+    background-color:#aec6cf;
+    max-width:90%;
+    padding:1%;
+}
+
+.input-group-addon {
+    background-color:#aec6cf;
+    border:none;
 }
 
 

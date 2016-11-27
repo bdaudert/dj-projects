@@ -1,12 +1,21 @@
-    <td>Between <br/> And</td>
-    <td><input type="text" id="threshold_low_for_between" name="threshold_low_for_between" value={{initial.threshold_low_for_between}}><br />
-        <input type="text" id="threshold_high_for_between" name="threshold_high_for_between" value={{initial.threshold_high_for_between}}>
-    </td>
-    <td><img alt="Click me!" title="Help" src="/csc/media/img/QMark.png" class="trigger">
+<div class="form-group">
+    <span><b>Between</b></span>&nbsp; &nbsp;
+    <img alt="Click me!" title="Help" src="/csc/media/img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_b"></div>
         <script type="text/javascript">                        
-        $("#ht_b").load("{{HTML_URL}}Docu_help_texts.html #ht_b");
+            $("#ht_b").load("{{HTML_URL}}Docu_help_texts.html #ht_b");
         </script>
     </div>
-    </td>
+    <div class="input-group">
+        <label for="threshold_low_for_between">Lower threshold</label>
+        <input class="form-control" type="text" 
+            id="threshold_low_for_between" name="threshold_low_for_between" 
+            value={{initial.threshold_low_for_between}}>
+        <span class="input-group-addon"></span>
+        <label for="threshold_high_for_between">Upper threshold</label>
+        <input class="form-control" type="text" 
+            id="threshold_high_for_between" name="threshold_high_for_between" 
+            value={{initial.threshold_high_for_between}}>
+    </div>
+</div>

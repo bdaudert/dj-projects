@@ -1,10 +1,11 @@
-<td>Base Temperature: </td>
-<td><input type="text" id="base_temperature" name="base_temperature" value="{{initial.base_temperature}}"></td>
-<td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-<div class="pop-up">
-    <div id="ht_base_temperature"></div>
-    <script type="text/javascript">                        
-    $("#ht_base_temperature").load("{{HTML_URL}}Docu_help_texts.html #ht_base_temperature");
-    </script>
+<div class="form-group">
+    <label for="base_temperature">Base Temperature</label>
+    <img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_base_temperature"></div>
+        <script type="text/javascript">                        
+            $("#ht_base_temperature").load("{{HTML_URL}}Docu_help_texts.html #ht_base_temperature");
+        </script>
+    </div>
+    <input class="form-control" type="text" id="base_temperature" name="base_temperature" value="{{initial.base_temperature}}"><
 </div>
-</td>
