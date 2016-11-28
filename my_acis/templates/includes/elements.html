@@ -8,7 +8,7 @@
             $("#ht_elements").load("{{HTML_URL}}Docu_help_texts.html #ht_elements");
         </script>
     </div>
-    <select class="form-control" id="elements" name="elements" multiple>
+    <select class="form-control" id="elements" name="elements" multiple style="min-width:100%;">
     {%for opt, name in initial.form_options.elements%}
         <option value="{{opt}}"
         {%if opt|is_in:initial.elements%}selected{%endif%}

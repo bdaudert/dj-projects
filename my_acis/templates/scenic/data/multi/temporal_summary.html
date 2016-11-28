@@ -13,12 +13,12 @@
 <div id="how_to" style="display:none;">
     <div id="Docu_area_of_interest">{% include 'includes/Docu_area_of_interest.html'%}</div>
     <div id="Docu_elements">{% include 'includes/Docu_elements.html'%}</div>
+    <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div> 
     <div id="Docu_add_degree_days">{% include 'includes/Docu_add_degree_days.html'%}</div>
     <div id="Docu_degree_days">{% include 'includes/Docu_degree_days.html'%}</div>
-    <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
-    <div id="Docu_start_end_date">{% include 'includes/Docu_start_end_date.html'%}</div>
-    <div id="Docu_temporal_summary">{% include 'includes/Docu_temporal_summary.html'%}</div>
     <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
+    <div id="Docu_temporal_summary">{% include 'includes/Docu_temporal_summary.html'%}</div>
+    <div id="Docu_start_end_date">{% include 'includes/Docu_start_end_date.html'%}</div>
 </div><!--End how_to-->
 
 <!--Hidden variables-->
@@ -72,28 +72,99 @@
             </div>
             <input type="hidden" name="app_name" value="temporal_summary">
             <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
-            {% include 'includes/area_select.html'%}
-            <span id="area">{% include 'includes/area.html'%}</span>
-            {% include 'includes/elements.html'%}
-            <span id="add">{% include 'includes/add_degree_days.html'%}</span>
-            {%if initial.add_degree_days == "T"%}
-            <span id="dd">{% include 'includes/degree_days.html'%}</span>
-            {%else%}
-            <span id="dd" style="display:none">{% include 'includes/degree_days.html'%}</span>
-            {%endif%}
-            <span style="display:none;">{% include 'includes/units.html'%}</span>
-            {% include 'includes/start_date.html'%}
-            {% include 'includes/end_date.html'%}
-            <span id="temp_summary">{% include 'includes/temporal_summary.html'%}</span>
-            <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span>
+            <div class="form-input-group form-group" align="center">
+                <label class="form-group-header">1. Define your region!</label> 
+                <div class="input-group">
+                    {% include 'includes/area_select.html'%}
+                    <span class="input-group-addon"></span>
+                    <span id="area" valign="bottom">{% include 'includes/area.html'%}</span>
+                </div>
+            </div>
+            <div class="form-input-group form-group" align="center">
+                <label class="form-group-header">2. Choose your dataset!</label>
+                <div class="input-group">
+                    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8"> 
+                        {% include 'includes/elements.html'%}
+                    </div>
+                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                        <span class="input-group-addon"></span>
+                    </div>
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        {% include 'includes/units.html'%}
+                    </div>
+                </div>
+                <div class="input-group">
+                    <span  id="add">{% include 'includes/add_degree_days.html'%}</span>
+                    <span class="input-group-addon"></span>
+                    {%if initial.add_degree_days == "T"%}
+                    <span id="dd">{% include 'includes/degree_days.html'%}</span>
+                    {%else%}
+                    <span id="dd" style="display:none">{% include 'includes/degree_days.html'%}</span>
+                    {%endif%}
+                </div>
+                <div class="input-group">
+                    <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span>
+                    <span id="temp_summary">{% include 'includes/temporal_summary.html'%}</span>
+                    <!--<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                    </div>
+                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                        <span class="input-group-addon"></span>
+                    </div>
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    </div>-->
+                </div>
+            </div>
+            <div class="form-input-group form-group" align="center">
+                <label class="form-group-header">3. Define your date ranges! </label>
+                <div class="input-group">
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                        {% include 'includes/start_date.html'%}
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <span class="input-group-addon"></span>
+                    </div>
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                        {% include 'includes/end_date.html'%}
+                    </div>
+                </div>
+            </div>
             <hr>
-            <span align="center" colspan="3" class="message" id="plot_opts_button"><b>PLOT OPTIONS &darr;</b></span>
-            <span valign="top" class="plOpts" style="display:none;">{% include 'includes/image_size.html'%}</span>
-            <span valign="top" class="NotPlot" style="display:none;">{% include 'includes/num_levels.html'%}</span>
-            <span valign="top" class="plOpts" style="display:none;">{% include 'includes/colormap.html'%}</span>
-            <span valign="top" class="NotPlot" style="display:none;">{% include 'includes/map_overlay.html'%}</span> 
-            <span valign="top" class="NotPolt" style="display:none;">{% include 'includes/interpolation.html'%}</span>
-            <span valign="top" class="NotPlot" style="display:none;">{% include 'includes/projection.html'%}</span><br />
+            <div class="form-input-group form-group" align="center">
+                <label class="form-group-header" id="plot_opts_button">6. Choose plot options! &darr;</label>
+                <div class="input-group">
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                        <span valign="top" class="plOpts" style="display:none;">{% include 'includes/image_size.html'%}</span> 
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <span class="input-group-addon"></span>
+                    </div>
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                        <span valign="top" class="plOpts" style="display:none;">{% include 'includes/colormap.html'%}</span>
+                    </div>
+                </div>
+                <div class="input-group" style="display:none;">
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                        <span valign="top" class="plOpts" style="display:none;">{% include 'includes/num_levels.html'%}</span>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <span class="input-group-addon"></span>
+                    </div>
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                        <span valign="top" class="plOpts" style="display:none;">{% include 'includes/map_overlay.html'%}</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                        <span valign="top" class="NotPolt" style="display:none;">{% include 'includes/interpolation.html'%}</span>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <span class="input-group-addon"></span>
+                    </div>
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                        <span valign="top" class="NotPlot" style="display:none;">{% include 'includes/projection.html'%}</span>
+                    </div>
+                </div>
+            </div>
             <div class="form-group">
                 <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formMap" style="width:100%">
                 Generate maps
