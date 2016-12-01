@@ -869,18 +869,18 @@ $(document).ready(function () {
     $('#show_hide_graph, #show_hide_summary, #show_hide_data').on('click', function(){
         var id = $(this).attr('id');
         if (id == 'show_hide_graph'){
-            if ($('#user-graph').css('display') == 'none'){
-                $('#user-graph').css('display', 'block');
+            if ($('#main-graph').css('display') == 'none'){
+                $('#main-graph').css('display', 'block');
                 $('#main-table').css('display', 'none');
                 $('#summary-table').css('display', 'none');
             }
             else{
-                $('#user-graph').css('display', 'none');
+                $('#main-graph').css('display', 'none');
             }
         }
         if (id == 'show_hide_summary'){
             if ($('#summary-table').css('display') == 'none'){
-                $('#user-graph').css('display', 'none');
+                $('#main-graph').css('display', 'none');
                 $('#main-table').css('display', 'none');
                 $('#summary-table').css('display', 'block');
             }
@@ -890,17 +890,17 @@ $(document).ready(function () {
         }
         if (id == 'show_hide_data'){
             if ($('#main-table').css('display') == 'none'){
-                $('#user-graph').css('display', 'none');
+                $('#main-graph').css('display', 'none');
                 $('#main-table').css('display', 'block');
                 $('#summary-table').css('display', 'none');
             }
             else{
-                if ($('#user-graph').css('display') == 'none') {
+                if ($('#main-graph').css('display') == 'none') {
                     $('#main-table').css('display', 'none');
                 }
                 else {
                     $('#main-table').css('display', 'block');
-                    $('#user-graph').css('display', 'none');
+                    $('#main-graph').css('display', 'none');
                 }
             }
         }

@@ -93,6 +93,18 @@ img.app_img {
     border:1px solid black;
 }
 
+.chart-layers {
+    border:2px solid black;
+    background-color:#aec6cf;
+    font-size:small;
+}
+
+.chart-layer {
+    border:1px solid grey;
+    background-color:#aec6cf;
+    font-size:small;
+}
+
 .results{
     text-align:center;
 }

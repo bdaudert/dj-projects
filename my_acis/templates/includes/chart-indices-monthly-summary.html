@@ -1,0 +1,31 @@
+{%load my_scenic_filters%}
+<div class="form-group">
+{%if initial.statistic_period == "monthly"%}
+    <label for="chart_indices">Months</label>
+    <font class="message">Months: </font>
+    <select style="max-height:20%;width:100%" multiple id='chart_indices' name="chart_selector">
+        <option value=0 {%if 0|is_in:initial.chart_indices_string %} selected{%endif%}>January</option>
+        <option value=1 {%if 1|is_in:initial.chart_indices_string %} selected{%endif%}>February</option>
+        <option value=2 {%if 2|is_in:initial.chart_indices_string %} selected{%endif%}>March</option>
+        <option value=3 {%if 3|is_in:initial.chart_indices_string %} selected{%endif%}>April</option>
+        <option value=4 {%if 4|is_in:initial.chart_indices_string %} selected{%endif%}>May</option>
+        <option value=5 {%if 5|is_in:initial.chart_indices_string %} selected{%endif%}>June</option>
+        <option value=6 {%if 6|is_in:initial.chart_indices_string %} selected{%endif%}>July</option>
+        <option value=7 {%if 7|is_in:initial.chart_indices_string %} selected{%endif%}>August</option>
+        <option value=8 {%if 8|is_in:initial.chart_indices_string %} selected{%endif%}>September</option>
+        <option value=9 {%if 9|is_in:initial.chart_indices_string %} selected{%endif%}>October</option>
+        <option value=10 {%if 10|is_in:initial.chart_indices_string %} selected{%endif%}>November</option>
+        <option value=11 {%if 11|is_in:initial.chart_indices_string %} selected{%endif%}>December</option>
+    </select>
+{%endif%}
+
+{%if initial.statistic_period == "weekly"%}
+    <label for="chart_indices">Weeks</label>
+    <select style="max-height:20%;width:100%" multiple id='chart_indices' name="chart_selector">
+    {% for week in weeks %}
+        <option value={{forloop.counter0}} 
+        {%if forloop.counter0|is_in:initial.chart_indices_string %}selected{%endif%}>Week {{forloop.counter0}}</option>
+    {% endfor %}
+    </select>
+{%endif%}
+</div>

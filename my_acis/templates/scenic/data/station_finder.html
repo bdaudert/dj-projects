@@ -134,9 +134,13 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
                 <div class="form-input-group form-group" align="center">
                     <label class="form-group-header">1. Define your region!</label> 
                     <div class="input-group">
-                        {% include 'includes/area_select.html'%}
-                        <span class="input-group-addon"></span>
-                        <span id="area">{% include 'includes/area.html'%}</span>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            {% include 'includes/area_select.html'%}
+                            <span class="input-group-addon"></span>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <span id="area">{% include 'includes/area.html'%}</span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-input-group form-group" align="center">
@@ -229,13 +233,17 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
         {%endif%} 
         <!--Map and Station List-->
         {% if station_json and run_done%}
-            <div class="dataTableInfo results" id="dataTableInfo-0"  align="center" style="max-width:95%;">
+            <h3 align="center" style="max-width:95%;">
             {%for key_val in params_display_list%}
                 <b>{{key_val.0}}</b>: {{key_val.1}};
                 {%if key_val.0 == "Variables"%}<br />{%endif%}
             {%endfor%}
-            </div><br />
-        
+            </h3><br />
+            <div class="dataTableInfo" id="dataTableInfo-0" style="display:none">
+            {%for key_val in params_display_list%}
+                {{key_val.0}} {{key_val.1}},
+            {%endfor%}
+            </div>
             <div class="results">
                 {% include 'includes/station_finder_map.html'%}
             </div>

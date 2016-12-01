@@ -7,7 +7,7 @@
             $("#ht_{{initial.area_type}}").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_{{initial.area_type}}");
         </script>
     </div>
-    <div id="area-type-form-input"> 
+    <span id="area-type-form-input"> 
     {%if initial.area_type == "state"%}
         <select class="area form-control" name="{{initial.area_type}}" id="{{initial.area_type}}" 
         onchange="update_value(this.value) &update_maps(this)">
@@ -21,5 +21,5 @@
             value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" 
             onchange="update_value(this.value) &update_maps(this)">
     {%endif%} 
-    </div>      
+    </span>      
 </div> 

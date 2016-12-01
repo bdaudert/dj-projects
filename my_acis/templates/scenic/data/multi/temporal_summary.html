@@ -73,12 +73,16 @@
             <input type="hidden" name="app_name" value="temporal_summary">
             <input type="hidden" id="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
             <div class="form-input-group form-group" align="center">
-                <label class="form-group-header">1. Define your region!</label> 
+                <label class="form-group-header">1. Define your region!</label>
                 <div class="input-group">
-                    {% include 'includes/area_select.html'%}
-                    <span class="input-group-addon"></span>
-                    <span id="area" valign="bottom">{% include 'includes/area.html'%}</span>
-                </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        {% include 'includes/area_select.html'%}
+                        <span class="input-group-addon"></span>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <span id="area">{% include 'includes/area.html'%}</span>
+                    </div>
+                </div> 
             </div>
             <div class="form-input-group form-group" align="center">
                 <label class="form-group-header">2. Choose your dataset!</label>

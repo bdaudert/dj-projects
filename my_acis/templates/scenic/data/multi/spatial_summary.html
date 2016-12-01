@@ -212,11 +212,11 @@
         {%if results.data or results.smry %}
         {%if not results.error%}
         <!--Paramaters and Data list-->
-        <div class="dataTableInfo" id="dataTableInfo-0"> 
+        <h3> 
         {%for key_val in params_display_list%}
             <b>{{key_val.0}}</b>: {{key_val.1}};
         {%endfor%}
-        </div><br />
+        </h3><br />
 
         <!--Buttons-->
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 results">
@@ -230,6 +230,11 @@
 
         <div id="main-table" align="center">
             <!--Data List-->
+            <div class="dataTableInfo" id="dataTableInfo-0" style="display:none;">
+            {%for key_val in params_display_list%}
+                {{key_val.0}} {{key_val.1}},
+            {%endfor%}
+            </div>
             <table class="dataTable nowrap" id="dataTable-0" border=1>
             {%for data in results.smry%}
             {%if forloop.counter0 == 0%}
@@ -250,19 +255,19 @@
 
         {%if results.graph_data%}
         <!--Plot-->
-        <div id="user-graph" style="display:none" width="90%" height="80%">
+        <div id="main-graph" style="display:none" width="90%" height="80%">
             <!--Dynamic chart options-->
             <table align="left" class='chart' border=1 width="100%" height="100%">
                 <tr>
                 <td align="left" valign="top">
-                {% include 'includes/chart_type.html'%} &nbsp;&nbsp; {% include 'includes/show_hide_legend.html'%}
+                {% include 'includes/chart-type.html'%} &nbsp;&nbsp; {% include 'includes/show-hide-legend.html'%}
                 </td>
                 <td align="left" rowspan="2" valign="top">
-                {% include 'includes/chart_indices_spatial_summary.html'%}
+                {% include 'includes/chart-indices-spatial-summary.html'%}
                 </td></tr>
                 <tr>
                 <td align="left" valign="top">
-                {% include 'includes/chart_layers_daily.html'%}
+                {% include 'includes/chart-layers-daily.html'%}
                 </td></tr>
                 <tr><td colspan="2">
                     <div id="hc-container" width="100%" height="100%"></div>

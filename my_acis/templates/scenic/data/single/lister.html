@@ -264,11 +264,16 @@
         {%endif%}
 
         {%if not results.error and results.smry %}
-            <div align="left" class="dataTableInfo" id="dataTableInfo-1">
+            <h3 align="left">
             {% for key_val in params_display_list %}
                 <b>{{key_val.0}}</b>: {{key_val.1}}<br />
             {% endfor %}
-            </div><br />
+            </h3><br />
+            <div align="left" class="dataTableInfo" id="dataTableInfo-1" style="display:none;">
+            {% for key_val in params_display_list %}
+                {{key_val.0}} {{key_val.1}},
+            {% endfor %}
+            </div> 
             <table class="dataTable nowrap" id="dataTable-1" cellspacing="0" width="100%" border="1">
             {%for s_data in results.smry%}
             {%if forloop.counter == 1%}
@@ -297,11 +302,16 @@
 
         {% if not results.error and not results.smry and results.data %}
             <p>ACIS Data Flags: M,-9999 = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
-            <div align="left" class="dataTableInfo" id="dataTableInfo-0" style="max-width:400px;word-wrap:break-word;">
+            <h3 align="left" style="max-width:60%;word-wrap:break-word;">
                 {% for key_val in params_display_list %}
                     <b>{{key_val.0}}</b>: {{key_val.1}};
                 {% endfor %}
-            </div><br />
+            </h3><br />
+            <div class="dataTableInfo" id="dataTableInfo-0" style="display:none;">
+                {% for key_val in params_display_list %}
+                    {{key_val.0}} {{key_val.1}},
+                {% endfor%}
+            </div>
             <table class="dataTable nowrap" id="dataTable-0" cellspacing="0" width="100%" border="1">
             {%for date_data in results.data.0%}
                 {%if forloop.counter0 == 0%}

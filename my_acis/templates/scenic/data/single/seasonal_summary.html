@@ -23,173 +23,213 @@
 <!---Hidden variables-->
 <input type="hidden" id="app_name" name="app_name" value="seasonal_summary">
 
-<p align="center" class="error">
-    <b>*(BETA) THIS PAGE IS UNDER DEVELOPMENT!</b><br /><br />
-</p>
-
 <!--Set up autofill-->
 {%if initial.autofill_list %}
     <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 {%endif%}
 
-<!--Toolinfo/Howto-->
-<table>
-<td valign="bottom" width="45%">
-    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/seasonal_summary/'">
-    {%if results.data %}
-    <input type="submit" value="Change Options" onclick="ShowHideTopOfPage()">
-    {%endif%}
-</td>
-<td valign="top" width="55%" align="left">
-    <table>
-    <tr>
-    <td><div id=tool_info_head>{% include 'includes/Button_tool_info.html'%}</div></td>
-    <td><div id="how_to_head">{% include 'includes/Button_how_to.html'%}</div></td>
-    </tr>
-    </table>
-</td>
-</table>
+<!--Button row-->
+<div class="row">
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> 
+        <!--Tool Info/Howto-->
+        <button type="submit" class="btn btn-primary" onclick="window.location='{{DATA_URL}}single/seasonal_summary/'">
+            Start Over
+        </button>
+        {%if results and not form_error%}
+        <button type="submit" class="btn btn-primary" onclick="ShowHideTopOfPage()">
+            Change Options
+        </button>
+        {%endif%}
+    </div>
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" align="center">
+    </div>
+    <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7" align="center">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div id=tool_info_head>{% include 'includes/Button_tool_info.html'%}</div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div id="how_to_head">{% include 'includes/Button_how_to.html'%}</div>
+        </div>
+    </div>
+</div><br />
 
 <!--Form-->
 {% if not results.data %}
-    <table id="top_of_page">
+<div id="top_of_page">
 {%else%}
-    <table id="top_of_page" style="display:none">
+<div id="top_of_page" style="display:none">
 {%endif%}
-<td valign="top" width="40%">
-    <div id='formData'>
-        <form method="post" id="DataForm" action="" onsubmit="show_loading();">{% csrf_token %}
-        <input type="hidden" name="data_type" id="data_type" class="data_type" value="{{initial.data_type}}">
-        <table class="form" id="tableData" >
-        <tr style="display:table-row" valign="bottom">{% include 'includes/area_select.html'%}</tr>
-        <tr style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
-        {%if initial.station_id%}
-            <tr id="stn_finder" style="display:table-row">{% include 'includes/station_finder.html'%}</tr>
-        {%else%}
-            <tr id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</tr>
-        {%endif%} 
-        {%if initial.location%}        
-        <tr id="grid_type" style="display:table-row">{% include 'includes/grids_historic.html'%}</tr>
-        {%else%}
-        <tr id="grid_type" style="display:none">{% include 'includes/grids_historic.html'%}</tr>
-        {%endif%}
-        <tr style="display:table-row">{% include 'includes/element.html'%}</tr>
-        <tr style="display:table-row;">{% include 'includes/units.html'%}</tr>
-        <tr style="display:table-row;">{% include 'includes/start_month_day.html'%}</tr>
-        <tr style="display:table-row;">{% include 'includes/end_month_day.html'%}</tr>
-        <tr id="temp_summary" style="display:table-row;">{% include 'includes/temporal_summary.html'%}</tr>
-        <tr style="display:table-row">{% include 'includes/start_end_year.html'%}</tr>
-        </table>
-        <input type="hidden" name="app_name" value="seasonal_summary">
-        <input type="hidden" id="data_type" name="data_type" value="{{initial.data_type}}">
+    <div class="row" height="100%">
+        <!--Form-->
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
+            <form method="post" class="main-form" id="DataForm" action="" onsubmit="show_loading()">{% csrf_token %}
+                <div class="form-group">
+                    <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formData" style="width:100%">
+                    Get Data
+                    </button>
+                </div>
+                <input type="hidden" name="data_type" id="data_type" class="data_type" value="{{initial.data_type}}">
+                <input type="hidden" name="app_name" value="seasonal_summary">
+                <!--Hidden chart vars-->
+                <input type="hidden" value="{{initial.chart_type}}" name="chart_type" class="chart_type">
+                <input type="hidden" value="{{initial.show_running_mean}}" name="show_running_mean" class="show_running_mean">
+                <input type="hidden" value="{{initial.running_mean_years}}" name="running_mean_years" class="running_mean_years">
+                <input type="hidden" value="{{initial.show_average}}" name="show_average" class="show_average">
         
-        <!--Hidden chart vars-->
-        <input type="hidden" value="{{initial.chart_type}}" name="chart_type" class="chart_type">
-        <input type="hidden" value="{{initial.show_running_mean}}" name="show_running_mean" class="show_running_mean">
-        <input type="hidden" value="{{initial.running_mean_years}}" name="running_mean_years" class="running_mean_years">
-        <input type="hidden" value="{{initial.show_average}}" name="show_average" class="show_average">
-        <input class="mainFormSubmit" style="margin:5px" type="submit" value="Generate time series" name="formData"/>
-        </form>
-    </div>
-</td>
-<!--Errors/maps-->
-<td valign="top" width="60%" align="center">
-   <br />
-   <!--Form errors and search parameter section-->
-    <div class="results">
-    {%if form_error%}
-        {% include 'includes/form_error.html'%}
-    {%endif%}
-    {%if results.error%}
-        <p class="error">ERROR: {{results.error}}</p>
-    {%endif%}
+                <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">1. Define your region!</label> 
+                    <div class="input-group">
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            {% include 'includes/area_select.html'%}
+                            <span class="input-group-addon"></span>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <span id="area">{% include 'includes/area.html'%}</span>
+                        </div>
+                    </div>
+                    {%if initial.area_type == "location"%}
+                    <span  id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</span>
+                    {%else%}
+                    <span  id="stn_finder">{% include 'includes/station_finder.html'%}</span>
+                    {%endif%}
+                </div>
+                <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">2. Choose your dataset!</label>
+                    {%if initial.area_type == "location"%}
+                    <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span>
+                    {% else%}
+                    <span class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
+                    {%endif%}
+                    <div class="input-group">
+                        {% include 'includes/element.html'%}
+                        <span class="input-group-addon"></span>
+                        {% include 'includes/units.html'%}
+                    </div>
+                    {%if initial.element == "gdd" or initial.element == "hdd" or initial.element == "gdd"%}
+                    <span id="base_temp" >{% include 'includes/base_temperature.html'%}</span>
+                    {%else%}
+                    <span id="base_temp"  style="display:none">{% include 'includes/base_temperature.html'%}</span>
+                    {%endif%}
+                    <span id="temp_summary">{% include 'includes/temporal_summary.html'%}<span>
+                </div>
+                <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">4. Define your date ranges! </label>
+                    <div class="input-group">
+                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5"> 
+                            {% include 'includes/start_month_day.html'%}
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <span class="input-group-addon"></span>
+                        </div>
+                        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                            {% include 'includes/end_month_day.html'%}
+                        </div>
+                    </div>
+                    {% include 'includes/start_end_year.html'%}
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formData" style="width:100%">
+                    Get Data
+                    </button>
+                </div>
+            </form>
+        </div><!--col-sm-4-->
+        <!--Main: Errors/maps-->
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+            <!--Form errors and search parameter section-->
+            <div class="results">
+            {%if form_error%}
+                {% include 'includes/form_error.html'%}
+            {%endif%}
+            {%if results.error%}
+                <p class="error">ERROR: {{results.error}}</p>
+            {%endif%}
+            {%if  run_done and  not results.data %}
+                 {% include 'includes/no_results.html'%}
+            {%endif%}
+            </div>
 
-    {%if  run_done and  not results.data %}
-        {% include 'includes/no_results.html'%}
-    {%endif%}
-    </div>
-    <!--Maps-->
-    <!--Gridpoint map-->
-    {% include 'includes/map-gridpoint.html'%}
-</td></table>
-
+            <!--Maps-->
+            <!--Gridpoint map-->
+            {% include 'includes/map-gridpoint.html'%}
+        </div><!--col-sm-8-->
+    </div><!--row-->
+</div><!--top_of_page-->
 <!--Results-->
-<table cellpadding="10" align="center">
-<td valign="top" width="97%" align="center">
-    <table>
-    <td width="10%">
-    <!--DATA-->
+<!--Main Results-->
+<div class="row results">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
     {% if not results.error and results.data %}
-        <div id="DataList" class="results" style="display:block;">
-        <table border="1" class="dataTable nowrap" id="dataTable">
-        <thead>
-        <th>Year</th><th>{{results.element_short}}</th>
-        </thead>
-        <tfoot>
-        <th>Year</th><th>{{results.element_short}}</th>
-        </tfoot>
-        <tbody>
-        {%for date_data in results.data%}
-            <tr>
-            <td>{{date_data.0}}</td><td>{{date_data.1}}</td>
-            </tr>
-        {%endfor%}
-        </tbody>
-        </table>
-        </div>
-    </td>
-    <td width="90%" valign="top">
-    <!--PARAMS-->
-    <table id="main-table">
-    <td>
-    {% if results.data %}
-    <div class="results">
-    <table align="center">
-    <td>
-    <div class="dataTableInfo" id="dataTableInfo">
-    {%for key_val in params_display_list%}
-        <b>{{key_val.0}}</b>: {{key_val.1}}; 
-    {%endfor%}
-    </div><br />
-    </td>
-    </table>
-    </div>
-    {%endif%} 
-    <!--GRAPH-->
-    <div id="user-graph" class="results">
-        <!--Dynamic chart options-->
-        <table align="left" class='chart' border="1">
-            <tr>
-            <td align="left" valign="top">
-                {% include 'includes/chart_type.html'%} &nbsp;&nbsp; {% include 'includes/show_hide_legend.html'%}
-            </td>
-             <td align="left" rowspan="2" valign="top">
-                {% include 'includes/chart_threshold.html'%}
-            </td>
-            </tr>
-            <tr>
-            <td align="left" valign="top">
-                {% include 'includes/chart_layers_seasonal_summary.html'%}
-            </td>
-            </tr>
-            <tr>
-            <td colspan="2">
-        <div align="right" id="hc-container" style="height:550px;"></div>
-        <script type="text/javascript">
-            var graph_data = {{results.graph_data | safe_json}};
-            var data_indices = {{ results.data_indices |safe }}
-            generateTS_individual(data_indices);
-        </script>
-            </td></tr>
-        </table>
-    </div>
-    </td>
-    </table>
+        <div class="results" align="center">    
+            <!--DATA-->
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                 <div class="dataTableInfo" id="dataTableInfo-0" style="display:none">
+                    {%for key_val in params_display_list%}
+                        {{key_val.0}} {{key_val.1}}, 
+                    {%endfor%}
+                </div>
+                <table border="1" class="dataTable nowrap" id="dataTable-0">
+                    <thead>
+                        <th>Year</th><th>{{results.element_short}}</th>
+                    </thead>
+                    <tfoot>
+                        <th>Year</th><th>{{results.element_short}}</th>
+                    </tfoot>
+                    <tbody>
+                    {%for date_data in results.data%}
+                        <tr><td>{{date_data.0}}</td><td>{{date_data.1}}</td></tr>
+                    {%endfor%}
+                    </tbody>
+                </table>
+            </div><!--col-sm-3-->
+            <!--CHART-->
+            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                <h3>
+                {%for key_val in params_display_list%}
+                    <b>{{key_val.0}}</b>: {{key_val.1}}; 
+                {%endfor%}
+                </h3<br />
+                <!--CHART-->
+                <div id="main-graph" class="chart">
+                    <!--Chart Layers-->
+                     <!--Chart Layers-->
+                        <div class="row chart-layers">
+                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                <div class="row">
+                                    {% include 'includes/chart-type.html'%}
+                                </div>
+                                <div class="row">
+                                    {% include 'includes/chart-threshold.html'%}
+                                </div>
+                            </div>
+                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                <div class="row">
+                                    {% include 'includes/chart-running-mean-years.html'%}
+                                </div>
+                                <div class="row">
+                                    {% include 'includes/chart-show-average.html'%}
+                                </div>
+                            </div>
+                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                {% include 'includes/show-hide-legend.html'%}
+                            </div>
+                        </div> 
+                    <!--Chart-->
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" width="100%" height="60%">
+                            <div align="center" id="hc-container" width="100%" height="70%"></div>
+                            <script type="text/javascript">
+                                var graph_data = {{results.graph_data | safe_json}};
+                                var data_indices = {{ results.data_indices |safe }}
+                                generateTS_individual(data_indices);
+                            </script>
+                        </div>
+                    </div>
+                </div><!--main-graph-->
+            </div><!--col-sm-9-->
+        </div><!--results-->
     {%endif%}<!--end if not results.error-->
+    </div><!--col-sm-12-->
+</div><!--row->
 
-
-    <div><!--end results-->    
-    </td></table><!--End printable table-->
-    </div><!--end div class=results-->
-</td></table>
 {%endblock%}

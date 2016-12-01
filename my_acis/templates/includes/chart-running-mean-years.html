@@ -1,0 +1,13 @@
+<div class="form-group">
+    <label>Running Mean</label>
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+        <input name="chart_selector" id="show_running_mean" value="runmean" type="checkbox" {%if initial.show_running_mean == "T"%}checked{%endif%}/>
+    </div>
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+        <input class="form-control" type="text" name="chart_selector" 
+        id="running_mean_period" value="{{initial.running_mean_years}}">
+    </div>
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+        <label>Years</label>
+    </div>
+</div>

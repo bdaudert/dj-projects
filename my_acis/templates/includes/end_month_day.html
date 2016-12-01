@@ -1,25 +1,24 @@
 {%load my_scenic_filters%}
-        <td id="EndMonthDay">End Month/Day: {{initial.end_month}}</td>
-        <td>
-            <select id="end_month" name="end_month" class="month">
-            {% for opt, name in initial.form_options.end_month%}
-                <option value="{{opt}}" {%if initial.end_month == opt%} selected{%endif%}>{{name}}</option>
-            {%endfor%} 
-            <select>
-            <select id="end_day" name="end_day" class="day">
-            {% for opt, name in initial.form_options.end_day%}
-                <option value="{{opt}}" {%if initial.end_day == opt%} selected{%endif%}
-                {%if initial.end_month|is_in:"04,09,11" and opt == "31"%} disabled{%endif%}
-                {%if initial.end_month == "02" and opt|is_in:"30,31"%} disabled{%endif%}
-                >{{name}}</option>
-            {%endfor%}
-            <select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_end_month_day"></div>
-            <script type="text/javascript">                        
-            $("#ht_end_date").load("{{HTML_URL}}/Docu_help_texts.html #ht_end_month_day");
-            </script>
-        </div>
-        </td>
+<div class="form-group">
+    <span><b>End Month/Day</b></span>&nbsp;&nbsp;
+    <img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up">
+        <div id="ht_end_month_day"></div>
+        <script type="text/javascript">                        
+            $("#ht_end_month_day").load("{{HTML_URL}}/Docu_help_texts.html #ht_end_month_day");
+        </script>
+    </div>   
+    <select id="end_month" name="end_month" class="month">
+    {% for opt, name in initial.form_options.end_month%}
+        <option value="{{opt}}" {%if initial.end_month == opt%} selected{%endif%}>{{name}}</option>
+    {%endfor%} 
+    <select>                    
+    <select id="end_day" name="end_day" class="day">
+    {% for opt, name in initial.form_options.end_day%}
+        <option value="{{opt}}" {%if initial.end_day == opt%} selected{%endif%}
+        {%if initial.end_month|is_in:"04,09,11" and opt == "31"%} disabled{%endif%}
+        {%if initial.end_month == "02" and opt|is_in:"30,31"%} disabled{%endif%}
+        >{{name}}</option>
+    {%endfor%}
+    <select>
+</div>
