@@ -1,9 +1,9 @@
 <div class="form-group">
     <label for="data_type">Data Type</label>
     <img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-    <div id="Docu_data_type" class="pop-up"></div>
+    <div id="ht_data_type" class="pop-up"></div>
     <script type="text/javascript"> 
-        $("#Docu_data_type").load("{{HTML_URL}}Docu_help_texts.html #ht_data_type");
+        $("#ht_data_type").load("{{HTML_URL}}Docu_help_texts.html #ht_data_type");
     </script>
     <select id="data_type" name="data_type" class="data_type form-control">
         {% for x,y in initial.form_options.data_type %}

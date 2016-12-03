@@ -1509,6 +1509,7 @@ def monthly_summary(request):
                 'dataTableInfo':dataTableInfo,
                 'chart_indices':'0',
                 'smry':'individual',
+                'element':data_params['element'],
                 'running_mean_years':'5',
                 'show_range': False,
                 'data': [['Yr'] + header_list + ['An', 'F']] + data[0][0:-6],

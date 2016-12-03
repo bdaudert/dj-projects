@@ -14,15 +14,15 @@
 <div id="how_to" style="display:none;">
     <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
     <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
-    <div id="Docu_start_end_year">{% include 'includes/Docu_start_end_year.html'%}</div>
     <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
-    <div id="Docu_base_temperature">{% include 'includes/Docu_base_temperature.html'%}</div>
+    <div id="Docu_base_temperature">{% include 'includes/Docu_base_temperature.html'%}</div> 
     <div id="Docu_statistic_period" style="display:none">{% include 'includes/Docu_statistic_period.html'%}</div>
     <div id="Docu_statistic">{% include 'includes/Docu_monthly_summary_statistic.html'%}</div>
     <div id="Docu_num_days_thresholds">{% include 'includes/Docu_num_days_thresholds.html'%}</div>
+    <div id="Docu_start_end_year">{% include 'includes/Docu_start_end_year.html'%}</div>
+    <div id="Docu_start_month" style="display:none;">{% include 'includes/Docu_start_month.html'%}</div>
     <div id="Docu_max_missing_days">{% include 'includes/Docu_max_missing_days.html'%}</div>
-    <div id="Docu_start_month">{% include 'includes/Docu_start_month.html'%}</div>
     <div id="Docu_departure_from_averages">{% include 'includes/Docu_departure_from_averages.html'%}</div>
 </div>
 <!--Hidden variables-->
@@ -114,9 +114,6 @@
                     {%else%}
                     <span id="base_temp"  style="display:none">{% include 'includes/base_temperature.html'%}</span>
                     {%endif%}
-                </div>
-                <div class="form-input-group form-group" align="center">
-                    <label class="form-group-header">3. What analysis do you want to run?</label>
                     <div class="input-group">
                         <span style="display:none" >{% include 'includes/statistic_period.html'%}</span>
                         <span >{% include 'includes/monthly_summary_statistic.html'%}</span>
@@ -145,11 +142,16 @@
                         {%endif%}
                     </div>
                 </div>
-                {% include 'includes/start_end_year.html'%}
-                <div class="input-group">
-                    {% include 'includes/max_missing_days.html'%}
-                    <span class="input-group-addon" id="addon-2"></span>
-                    {% include 'includes/departures_from_averages.html'%}
+                <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">2. Choose your year range!</label>
+                    {% include 'includes/start_end_year.html'%}
+                </div>
+                <div class="form-input-group form-group" align="center">
+                    <div class="input-group">
+                        {% include 'includes/max_missing_days.html'%}
+                        <span class="input-group-addon"></span>
+                        {% include 'includes/departures_from_averages.html'%}
+                    </div>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formData" style="width:100%">
@@ -192,10 +194,10 @@
                          <input class="btn btn-success" id="show_hide_data" type='button' value='Hide Data'>
                     </div> 
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        <input class="btn btn-success" id="show_hide_summary" type='button' value='Show Summary'>
+                        <input class="btn btn-success" id="show_hide_summary" type='button' value='Hide Summary'>
                     </div>
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        <input class="btn btn-success" id="show_hide_graph" type='button' value='Show Graph'>
+                        <input class="btn btn-success" id="show_hide_graph" type='button' value='Hide Graph'>
                     </div>
                 </div>
             </div><br /><br />
@@ -203,17 +205,20 @@
             <div id="main-table" align="center">
                 <h3>
                 {%for key_val in results.header%}
-                {%if key_val%}
                     <b>{{key_val.0}}</b>: {{key_val.1}}
-                {%if forloop.counter|divisibleby:2%}
-                    <br />        
-                {%endif%}
-                {%else%}
-                    <br />
-                {%endif%}
+                    {%if key_val.0 != "Start Year" and key_val.0 != "Variable"%}
+                        <br />
+                    {%endif%}
                 {%endfor%}
-                </h3> 
-
+                </h3>
+                
+                {% if results.element == "evap"%} 
+                <p><b>A note about Evaporation: </b><br />
+                    Standard daily pan evaporation is measured using the four-foot diameter Class A evaporation pan. The pan water level reading is adjusted when precipitation is measure to obtain the actual evaporation. Most Class A pans are installed above ground, allowing effects such as radiation on the side walls and heat exchanges with the pan material. These effects tend to increase the evaporation totals. The amounts can then be adjusted by multiplying the totals b 0.70 or 0.80 to more closely estimate the evaporation from naturally existing surfaces such as a shallow lake, wet soil or other moist natural surfaces.
+Many stations do not measure pan evaporation during winter months. A "0.00" total indicates no measurement is taken. 
+                </p>
+                {%endif%}               
+ 
                 <p><b>Missing values</b><br />
                  Letters after data values show number of missing days;after annual values show missing months.<br />  
                 Value is displayed but not used in calculations if user-specified missing day criterion exceeded.<br />
@@ -246,14 +251,10 @@
                 <!--Summary Table-->
                 <h3>
                 {%for key_val in results.header%}
-                {%if key_val%}
                     <b>{{key_val.0}}</b>: {{key_val.1}}
-                {%if forloop.counter|divisibleby:2%}
-                    <br />
-                {%endif%}
-                {%else%}
-                    <br />
-                {%endif%}
+                    {%if key_val.0 != "Start Year" and key_val.0 != "Variable"%}
+                        <br />
+                    {%endif%}
                 {%endfor%}
                 </h3>  
 
@@ -325,7 +326,7 @@
                         </div>
                         <!--Chart-->
                         <div class="row">
-                            <div align="center" id="hc-container" width="100%"></div>
+                            <div align="center" id="hc-container" width="100%" height="100%"></div>
                             {% if initial.chart_summary == "individual"%}
                             <script type="text/javascript">
                                 var graph_data = {{results.graph_data | safe_json}};

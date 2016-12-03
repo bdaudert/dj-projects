@@ -13,8 +13,8 @@
     <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
     <div id="Docu_grids">{% include 'includes/Docu_grids_historic.html'%}</div>
     <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
-    <div id="Docu_cumulative_or_values">{% include 'includes/Docu_cumulative_or_values.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
+    <div id="Docu_cumulative_or_values">{% include 'includes/Docu_cumulative_or_values.html'%}</div>
     <div id="Docu_start_month_day">{% include 'includes/Docu_start_month_day.html'%}</div>
     <div id="Docu_start_end_year">{% include 'includes/Docu_start_end_year.html'%}</div>
 </div><!--End how_to-->
@@ -198,9 +198,8 @@
                         </div>
                     </div> 
                     <!--Chart-->
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" width="100%" height="100%">
-                            <div align="right" id="hc-container" style="height:550px;"></div>
+                    <div class="row" height="100%">
+                            <div align="right" id="hc-container" width="100%"></div>
                             <script type="text/javascript">
                                 var graph_data = {{results.graph_data | safe_json}};
                                 var cp_data = {{results.cp_data | safe_json }};

@@ -18,9 +18,8 @@
     <p class="error">What datasets are available?</p>
     <p>This tool works with historic station data as well as gridded datasets.</p>
 
-    <p class="pop_link" onClick="ShowHide('Docu_STATION_NETWORKS')"><u>SEE STATION_NETWORKS</u></p>
-    <div id="Docu_STATION_NETWORKS" style="display:none;">{% include 'includes/Docu_STATION_NETWORKS.html'%}    </div>
-    <p class="pop_link" onClick="ShowHide('Docu_GRIDS')"><u>SEE GRIDDED DATASETS</u></p>
+    <div id="Docu_STATION_NETWORKS">{% include 'includes/Docu_STATION_NETWORKS.html'%}</div><br />
+    <p class="pop_link" onClick="ShowHide('Docu_GRIDS')"><u><font color="blue">About gridded datasets</font></u></p>
     <div id="Docu_GRIDS" style="display:none;">{% include 'includes/Docu_all_grids.html'%}</div>
 
     <p><b>Temporal Resolution</b><br />
