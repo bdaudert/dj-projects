@@ -327,15 +327,15 @@ function generateTS_individual(chart_indices) {
         chart: {
             renderTo: 'hc-container',
             type:  chartType,
-            marginTop: 100,
+            marginTop:100,
             zoomType: 'x',
             spacingBottom: 30,
             spacingTop: 10,
             spacingLeft: 10,
             spacingRight: 10,
             borderWidth:1,
-            borderColor: '#006666',
-            plotBorderColor: '#346691',
+            borderColor: '#000000',
+            plotBorderColor: '#000000',
             plotBorderWidth:1
         },
         credits: {
@@ -624,14 +624,15 @@ function generateTS_smry(chart_indices) {
         chart: {
             renderTo: 'hc-container',
             type:  chartType,
+            marginTop:100,
             zoomType: 'x',
             spacingBottom: 30,
             spacingTop: 10,
             spacingLeft: 10,
             spacingRight: 10,
             borderWidth:1,
-            borderColor: '#006666',
-            plotBorderColor: '#346691',
+            borderColor: '#000000',
+            plotBorderColor: '#000000',
             plotBorderWidth:1
         },
         credits: {

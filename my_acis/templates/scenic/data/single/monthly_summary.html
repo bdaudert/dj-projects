@@ -157,7 +157,7 @@
                     </button>
                 </div>
             </form>
-        </div><!--col-sm-4-->
+        </div><!--col-sm-4--><br />
         <!--Main: Errors/maps-->
         <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
             <div class="results" align="center">
@@ -189,13 +189,13 @@
                 <!--Buttons-->
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        <button class="btn btn-info" id="show_hide_data">Show/Hide Data</button>
+                         <input class="btn btn-success" id="show_hide_data" type='button' value='Hide Data'>
                     </div> 
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        <button class="btn btn-info" id="show_hide_summary">Show/Hide Summary</button>
+                        <input class="btn btn-success" id="show_hide_summary" type='button' value='Show Summary'>
                     </div>
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        <button class="btn btn-info" id="show_hide_graph">Show/Hide Graph</button>
+                        <input class="btn btn-success" id="show_hide_graph" type='button' value='Show Graph'>
                     </div>
                 </div>
             </div><br /><br />
@@ -298,39 +298,45 @@
 
             {%if results.graph_data%}
             <!--CHART-->
-            <div class="row">
+            <div class="row results">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div id="main-graph" style="display:none" width="90%" height="80%">
+                    <div id="main-graph" style="display:block" width="100%">
                         <!--Chart Layers-->
                         <div class="row chart-layers">
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 chart-layer">
-                                {% include 'includes/show-hide-legend.html'%}
-                                {% include 'includes/chart-type.html'%}
+                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                <div class="row">
+                                    {% include 'includes/chart-type.html'%}
+                                </div>
+                                <div class="row">
+                                    {% include 'includes/chart-indices-monthly-summary.html'%}
+                                </div>
                             </div>
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 chart-layer">
-                                {% include 'includes/chart-running-mean-years.html'%}
-                                {% include 'includes/chart-show-range.html'%}
+                            <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                                <div class="row" height="50%">
+                                    {% include 'includes/chart-running-mean-years.html'%}
+                                </div>
+                                <div class="row" height="50%">
+                                    {% include 'includes/chart-range.html'%}
+                                </div>
                             </div>
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 chart-layer">
-                                {% include 'includes/chart-indices-monthly-summary.html'%}
+                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                                {% include 'includes/chart-show-hide-legend.html'%}
                             </div>
                         </div>
                         <!--Chart-->
                         <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <div align="center" id="hc-container" width="100%"></div>
-                                {% if initial.chart_summary == "individual"%}
-                                <script type="text/javascript">
-                                    var graph_data = {{results.graph_data | safe_json}};
-                                    generateTS_individual();
-                                </script>
-                                {%else%}
-                                <script type="text/javascript">
+                            <div align="center" id="hc-container" width="100%"></div>
+                            {% if initial.chart_summary == "individual"%}
+                            <script type="text/javascript">
+                                var graph_data = {{results.graph_data | safe_json}};
+                                generateTS_individual();
+                            </script>
+                            {%else%}
+                            <script type="text/javascript">
                                 var graph_data = {{results.graph_data | safe_json}};
                                 generateTS_smry();
-                                </script>
-                                {%endif%}
-                            </div><!--col-sm-12-->
+                            </script>
+                            {%endif%}
                         </div><!--row-->
                     </div><!--main-graph-->
                 </div><!--col-sm-12-->

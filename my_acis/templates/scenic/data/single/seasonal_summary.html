@@ -192,38 +192,35 @@
                 <!--CHART-->
                 <div id="main-graph" class="chart">
                     <!--Chart Layers-->
-                     <!--Chart Layers-->
-                        <div class="row chart-layers">
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                <div class="row">
-                                    {% include 'includes/chart-type.html'%}
-                                </div>
-                                <div class="row">
-                                    {% include 'includes/chart-threshold.html'%}
-                                </div>
+                    <div class="row chart-layers">
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <div class="row">
+                                {% include 'includes/chart-type.html'%}
                             </div>
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                <div class="row">
-                                    {% include 'includes/chart-running-mean-years.html'%}
-                                </div>
-                                <div class="row">
-                                    {% include 'includes/chart-show-average.html'%}
-                                </div>
+                            <div class="row">
+                                {% include 'includes/chart-threshold.html'%}
                             </div>
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                {% include 'includes/show-hide-legend.html'%}
-                            </div>
-                        </div> 
-                    <!--Chart-->
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" width="100%" height="60%">
-                            <div align="center" id="hc-container" width="100%" height="70%"></div>
-                            <script type="text/javascript">
-                                var graph_data = {{results.graph_data | safe_json}};
-                                var data_indices = {{ results.data_indices |safe }}
-                                generateTS_individual(data_indices);
-                            </script>
                         </div>
+                        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                            <div class="row" height="50%">
+                                {% include 'includes/chart-running-mean-years.html'%}
+                            </div>
+                            <div class="row" height="50%">
+                                {% include 'includes/chart-average.html'%}
+                            </div>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            {% include 'includes/chart-show-hide-legend.html'%}
+                        </div>
+                    </div> 
+                    <!--Chart-->
+                    <div class="row" height="100%">
+                        <div align="center" id="hc-container" width="100%"></div>
+                        <script type="text/javascript">
+                            var graph_data = {{results.graph_data | safe_json}};
+                            var data_indices = {{ results.data_indices |safe }}
+                            generateTS_individual(data_indices);
+                        </script>
                     </div>
                 </div><!--main-graph-->
             </div><!--col-sm-9-->

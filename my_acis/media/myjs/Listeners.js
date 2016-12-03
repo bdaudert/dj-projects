@@ -866,46 +866,39 @@ $(document).ready(function () {
     /*
     MONTHLY SUMMARIES LISTENERS
     */
-    $('#show_hide_graph, #show_hide_summary, #show_hide_data').on('click', function(){
-        var id = $(this).attr('id');
-        if (id == 'show_hide_graph'){
-            if ($('#main-graph').css('display') == 'none'){
-                $('#main-graph').css('display', 'block');
-                $('#main-table').css('display', 'none');
-                $('#summary-table').css('display', 'none');
-            }
-            else{
-                $('#main-graph').css('display', 'none');
-            }
+    $('#show_hide_graph').on('click', function(){
+        if ($(this).val() == 'Show Graph'){
+            $('#main-graph').css('display','block');
+            setTimeout(function(){},1000);
+            $(window).resize();
+            $(this).val('Hide Graph');
         }
-        if (id == 'show_hide_summary'){
-            if ($('#summary-table').css('display') == 'none'){
-                $('#main-graph').css('display', 'none');
-                $('#main-table').css('display', 'none');
-                $('#summary-table').css('display', 'block');
-            }
-            else{
-                $('#summary-table').css('display', 'none');
-            }
+        else{
+            $('#main-graph').css('display','none');
+            $(this).val('Show Graph');
         }
-        if (id == 'show_hide_data'){
-            if ($('#main-table').css('display') == 'none'){
-                $('#main-graph').css('display', 'none');
-                $('#main-table').css('display', 'block');
-                $('#summary-table').css('display', 'none');
-            }
-            else{
-                if ($('#main-graph').css('display') == 'none') {
-                    $('#main-table').css('display', 'none');
-                }
-                else {
-                    $('#main-table').css('display', 'block');
-                    $('#main-graph').css('display', 'none');
-                }
-            }
-        }
-        $(window).resize();
     });
+    $('#show_hide_summary').on('click', function(){
+        if ($(this).val() == 'Show Summary'){
+            $('#summary-table').css('display', 'block');
+            $(this).val('Hide Summary');
+        }
+        else{
+            $('#summary-table').css('display', 'none');
+            $(this).val('Show Summary');
+        }
+    });
+    $('#show_hide_data').on('click', function(){
+        if ($(this).val() == 'Show Data'){
+            $('#main-table').css('display', 'block');
+            $(this).val('Hide Data');
+        }
+        else{
+            $('#main-table').css('display', 'none');
+            $(this).val('Show Data');
+        }
+    });
+
     /*
     MONTHLY SUMMARIES THRESHOLDS FOR NDAYS
     */
