@@ -202,15 +202,20 @@
     <!--Main: Errors/maps-->
     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
         <!--Form errors and search parameter section-->
-        <div class="results">
             {%if form_error%}
+            <div class="results">
                 {% include 'includes/form_error.html'%}
+            </div>
             {%endif%}
             {%if results.error%}
+            <div class="results">
                 <p class="error">ERROR: {{results.error}}</p>
+            </div>
             {%endif%}
             {%if  run_done and  not results.data and not results.smry %}
+            <div class="results">
                 {% include 'includes/no_results.html'%}
+            </div>
             {%endif%}
         </div>
         <!--Maps-->
@@ -221,14 +226,12 @@
 </div><!--end top_of_page--> 
 <br />
 <!--Main Results-->
-<div class="row results">
+<div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
-    <div class="results" align="center">    
-    <!--Data-->
-    <table id="main-table"><td>
-        {%if not results.error %}
-        {% if results.smry or results.data %}
-            <div id="metadata" align="left" style="display:none;max-width:600px">
+    {% if results.smry or results.data %} 
+        <div class="results" id="main-table" align="center">    
+        <!--Data-->
+            <div id="metadata" align="left" style="display:none;">
             {%for key_val in meta_display_list%}
                 <b>{{key_val.0}}</b>:
                 {%if key_val.0 == "Station ID/Network List" or key_val.0 == "Valid Date Range" %}
@@ -238,10 +241,8 @@
                 {% if forloop.counter|divisibleby:2 %}<br />{%endif%}
             {%endfor%}
             </div>
-        {% endif %}
-        {%endif%}
-
-        {%if not results.error and results.smry %}
+            <!--Summary-->
+            {%if not results.error and results.smry %}
             <h3 align="left">
             {% for key_val in params_display_list %}
                 <b>{{key_val.0}}</b>: {{key_val.1}}<br />
@@ -276,9 +277,9 @@
             {%endfor%}
             </tbody>
             </table><br />
-        {%endif%} 
-
-        {% if not results.error and not results.smry and results.data %}
+            {%endif%}<!--if not results.error and results.smry -->
+            <!--DATA-->
+            {% if not results.error and not results.smry and results.data %}
             <p>ACIS Data Flags: M,-9999 = Missing, T = Trace, S = Subsequent, A = Accumulated</p><br />
             <h3 align="left" style="max-width:60%;word-wrap:break-word;">
                 {% for key_val in params_display_list %}
@@ -318,8 +319,9 @@
             {%endfor%}
             </tbody>
             </table>
-        {%endif%}<!--end if not results.error-->
-        <div><!--end results-->
-    </td></table><!--End printable table-->
-    </div><!--end div class=results-->
+            {%endif%}<!--if not results.error and not results.smry and results.data-->
+        </div><!--end div class=results-->
+        {%endif%}<!--if results.smry or results.data-->
+    </div><!--col-sm-12-->
+</div><!--row-->
 {%endblock%}

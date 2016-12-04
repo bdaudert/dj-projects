@@ -140,20 +140,23 @@
         </div><!--col-sm-4--><br />
         <!--Main: Errors/maps-->
         <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-            <div class="results" align="center">
             {%if not results.data and run_done%}
+            <div class="results" align="center">
                 {% include 'includes/no_results.html'%}
+            </div>
             {% endif %}
             <!--Form errors-->
             {%if form_error%}
+            <div class="results" align="center">
                 {% include 'includes/form_error.html'%}
+            </div>
             {%endif%}
             <!--Request errors-->
             {%if results.errors%}
+            <div class="results" align="center">
                 <p class="error">{{results.errors}}</p>
+            </div>
             {%endif%}
-        </div>
-
         <!--Map section-->
         <!--Gridpoint map-->
         {% include 'includes/map-gridpoint.html'%}
@@ -161,7 +164,7 @@
     </div><!--row-->
 </div><!--top_of_page-->
 <!--Main Results-->
-<div class="row results">
+<div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
     {%if results.data%}
         <div class="results" align="center">

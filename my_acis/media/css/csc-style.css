@@ -219,7 +219,7 @@ img.app_img {
     min-width:100%;
     max-width:none;
     position:relative;
-    border:2px solid grey;
+    /*border:2px solid grey;*/
     min-width:100%;
     min-height:50%;
 }

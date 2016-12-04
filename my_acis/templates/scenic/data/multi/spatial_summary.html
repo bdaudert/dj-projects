@@ -150,28 +150,31 @@
             </div>
             <!--Shape file upload form-->
             <div>{% include 'includes/upload_shape_file.html'%}</div>
+            <!--Offline message--> 
+            <div id="offlineMessage" style="display:none">{% include 'includes/offline_message.html'%}</div>
+            {%if large_request%}
+                <script type="text/javascript">ShowPopupDocu('largeRequestForm')</script>
+            {%endif%}
+            <!--Download form-->
+            <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
+            <!--AJAX error-->
+            <div style="display:none" class="ajax_error"></div>
+            <!--Form errors and search parameter section-->
+            {%if form_error%}
             <div class="results">
-                <!--Offline message--> 
-                <div id="offlineMessage" style="display:none">{% include 'includes/offline_message.html'%}</div>
-                {%if large_request%}
-                    <script type="text/javascript">ShowPopupDocu('largeRequestForm')</script>
-                {%endif%}
-                <!--Download form-->
-                <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
-                <!--AJAX error-->
-                <div style="display:none" class="ajax_error"></div>
-                <!--Form errors and search parameter section-->
-                {%if form_error%}
-                    {% include 'includes/form_error.html'%}
-                {%endif%}
-                {%if results.error%}
-                    <p class="error">ERROR: {{results.error}}</p>
-                {%endif%}
-                {%if  run_done and  not results.graph_data and not results.smry %}
-                    {% include 'includes/no_results.html'%}
-                {%endif%}
-            </div><!--results-->
-
+                {% include 'includes/form_error.html'%}
+            </div>
+            {%endif%}
+            {%if results.error%}
+            <div class="results">
+                <p class="error">{{results.error}}</p>
+            </div>
+            {%endif%}
+            {%if  run_done and  not results.graph_data and not results.smry %}
+            <div class="results">
+                {% include 'includes/no_results.html'%}
+            </div>
+            {%endif%}
             <!--Map section-->
             <!--Gridpoints-->
             {% include 'includes/map-gridpoints.html'%}
@@ -185,81 +188,89 @@
 
 <!--Results-->
 <!--Main Results-->
-<div class="row results">
+<div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
         {%if results.data or results.smry %}
         {%if not results.error%}
-        <!--Paramaters and Data list-->
-        <h3> 
-        {%for key_val in params_display_list%}
-            <b>{{key_val.0}}</b>: {{key_val.1}};
-        {%endfor%}
-        </h3><br />
-
-        <!--Buttons-->
-        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 results">
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                <button class="btn btn-info" id="show_hide_data">Show/Hide Table</button>
-            </div>
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                <button class="btn btn-info" id="show_hide_graph">Show/Hide Graph</button>
-            </div>
-        </div><br /><br />
-
-        <div id="main-table" align="center">
-            <!--Data List-->
-            <div class="dataTableInfo" id="dataTableInfo-0" style="display:none;">
+        <div class="results">
+            <!--Paramaters and Data list-->
+            <h3> 
             {%for key_val in params_display_list%}
-                {{key_val.0}} {{key_val.1}},
+                <b>{{key_val.0}}</b>: {{key_val.1}};
             {%endfor%}
-            </div>
-            <table class="dataTable nowrap" id="dataTable-0" border=1>
-            {%for data in results.smry%}
-            {%if forloop.counter0 == 0%}
-                <thead>
-                <tr>{%for d in data%}<th>{{d}}</th>{%endfor%}</tr>
-                </thead>
-                <tfoot>
-                <tr>{%for d in data%}<th>{{d}}</th>{%endfor%}</tr>
-                </tfoot>
-                <tbody>
-            {%else%}
-                <tr>{%for d in data%}<td>{{d}}</td>{%endfor%}</tr>
-            {%endif%}
-            {%endfor%}
-                </tbody>
-            </table>
-        </div><!--printable table-->
+            </h3><br />
 
-        {%if results.graph_data%}
-        <!--Plot-->
-        <div id="main-graph" style="display:none" width="90%" height="80%">
-            <!--Dynamic chart options-->
-            <table align="left" class='chart' border=1 width="100%" height="100%">
-                <tr>
-                <td align="left" valign="top">
-                {% include 'includes/chart-type.html'%} &nbsp;&nbsp; {% include 'includes/chart-show-hide-legend.html'%}
-                </td>
-                <td align="left" rowspan="2" valign="top">
-                {% include 'includes/chart-indices-spatial-summary.html'%}
-                </td></tr>
-                <tr>
-                <td align="left" valign="top">
-                {% include 'includes/chart-layers-daily.html'%}
-                </td></tr>
-                <tr><td colspan="2">
-                    <div id="hc-container" width="100%" height="100%"></div>
-                        <script type="text/javascript">
-                            var graph_data = {{results.graph_data | safe_json}};
-                            generateTS_individual();
-                        </script>
- 
-                </td></tr>
-            </table>
-        </div>
+            <!--Buttons-->
+            <div class="row button-row">
+                <!--Buttons-->
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                         <input class="btn btn-success" id="show_hide_data" type='button' value='Hide Data'>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <input class="btn btn-success" id="show_hide_graph" type='button' value='Hide Graph'>
+                    </div>
+                </div>
+            </div><br /><br />
+            <div id="main-table" align="center">
+                <!--Data List-->
+                <div class="dataTableInfo" id="dataTableInfo-0" style="display:none;">
+                {%for key_val in params_display_list%}
+                    {{key_val.0}} {{key_val.1}},
+                {%endfor%}
+                </div>
+                <table class="dataTable nowrap" id="dataTable-0" border=1>
+                {%for data in results.smry%}
+                {%if forloop.counter0 == 0%}
+                    <thead>
+                    <tr>{%for d in data%}<th>{{d}}</th>{%endfor%}</tr>
+                    </thead>
+                    <tfoot>
+                    <tr>{%for d in data%}<th>{{d}}</th>{%endfor%}</tr>
+                    </tfoot>
+                    <tbody>
+                {%else%}
+                    <tr>{%for d in data%}<td>{{d}}</td>{%endfor%}</tr>
+                {%endif%}
+                {%endfor%}
+                    </tbody>
+                </table>
+            </div><!--main-table-->
+
+            {%if results.graph_data%}
+            <!--Plot-->
+            <div id="main-graph" style="display:block">
+               <!--Chart Layers-->
+                <div class="row chart-layers">
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        {% include 'includes/chart-indices-spatial-summary.html'%}
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            {% include 'includes/chart-type.html'%}
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            {% include 'includes/chart-running-mean-years.html'%}
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        {% include 'includes/chart-average.html'%}
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        {% include 'includes/chart-show-hide-legend.html'%}
+                    </div>
+                </div>
+                <!--Chart-->
+                <div class="row">                
+                    <div id="hc-container" height="100%"></div>
+                    <script type="text/javascript">
+                        var graph_data = {{results.graph_data | safe_json}};
+                        generateTS_individual();
+                    </script>
+                </div>
+            </div><!--main-graph-->
             {%endif%}<!--end if results.graph_data-->
-        {%endif%}<!--end if not results.error-->
-        {%endif%}<!--end if results.data or results.smry -->
+        </div><!--results-->
+    {%endif%}<!--end if not results.error-->
+    {%endif%}<!--end if results.data or results.smry -->
     </div><!--col-sm-12-->
 </div><!--row-->
 {%endblock%}

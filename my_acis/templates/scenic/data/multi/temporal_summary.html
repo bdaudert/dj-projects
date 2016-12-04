@@ -159,24 +159,28 @@
             <!--Bbox map-->
             {% include 'includes/map-bbox.html'%}</tr>
 
-            <div class="results">
             {%if form_error%}
+            <div class="results">
                 {% include 'includes/form_error.html'%}
+            </div>
             {%endif%}
             {%if error%}
+            <div class="results">
                 <p class="error">{{ error }}</p>
+            </div>
             {%endif%}
             {%if run_done and not figure_files %}
+            <div class="results">
                 {% include 'includes/no_results.html'%}
+            </div>
             {%endif%}
-            </div><!--results-->
         </div><!--col-sm-8-->
     </div><!--row-->
 </div><!--top_of_page-->
 
 <!--Results-->
 <!--Main Results-->
-<div class="row results">
+<div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
     {%if figure_files%}
     <div class="results" align="center"> 

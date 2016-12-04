@@ -216,17 +216,17 @@
             <!--Shape file upload form-->
             <div>{% include 'includes/upload_shape_file.html'%}</div>
             <!--Request errors or results arrow-->
-            <div class="results" align="center">
             {%if form_error%}
+            <div class="results" align="center">
                 {% include 'includes/form_error.html'%}
+            </div>
             {%endif%}
 
             {%if  run_done and not results.data and not results.smry %}
+            <div class="results" align="center">
             {% include 'includes/no_results.html'%}
+            </div>
             {%endif%}
-            </div> 
-            
-
             <!--Map section-->
             <!--Overlay maps-->
             {% include 'includes/map-overlay.html'%}
@@ -238,20 +238,19 @@
 
 <!--Results-->
 <!--Main Results-->
-<div class="row results">
+<div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
+        {%if results %}
         <div class="results" align="center">    
             <!--Data-->
             <table id="main-table" align="center">
                 <td align="center"> 
-                {%if results %}
                 {%if results.data or results.smry %}
                 <div align="left" style="max-width:100%;word-wrap:break-word;">
                 {%for key_val in params_display_list%}
                     <b>{{key_val.0}}</b>: {{key_val.1}}; 
                 {%endfor%}
                 </div><br />
-                {%endif%}
                 {%endif%}
                
                 <!--NO SUMMARY DATA--> 
@@ -322,6 +321,7 @@
             {%endif%}
             </td></table><!--End printable table-->
         </div><!--results-->
+    {%endif%}<!--if results-->
     </div><!--col-xs-12-->
 </div><!--row-->
 {%endblock%}

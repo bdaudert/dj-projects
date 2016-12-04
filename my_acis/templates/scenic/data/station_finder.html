@@ -77,29 +77,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 
 <!--Button row-->
-<div class="row">
-    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> 
-        <!--Tool Info/Howto-->
-        <button type="submit" class="btn btn-primary" onclick="window.location='{{DATA_URL}}station_finder/'">
-            Start Over
-        </button>
-        {%if station_json and not form_error%}
-            <button type="submit" class="btn btn-primary" onclick="ShowHideTopOfPage()">
-                Change Options
-            </button>
-        {%endif%}
-    </div>
-    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" align="center">
-    </div>
-    <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7" align="center">
-        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            <div id=tool_info_head>{% include 'includes/Button_tool_info.html'%}</div>
-        </div>
-        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            <div id="how_to_head">{% include 'includes/Button_how_to.html'%}</div>
-        </div>
-    </div>
-</div><br />
+{% include 'includes/button-row.html'%}
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
@@ -173,8 +151,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
             <div style="display:none" class="ajax_error"></div>
             <!--Form Errors and search parameter section-->
             {%if form_error%}
-
-            <div class="form_error" class="results">
+            <div class="form_error results">
                 <p class="bg-error">ERROR: Please correct the form error(s) highlighted in red!</p>
                 {%for field_id, err  in form_error.items%}
                     <script type="text/javascript">highlight_form_field("{{field_id}}","{{err}}")</script>
@@ -203,29 +180,29 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 
             <!--Overlay maps-->
             {%if need_overlay_map%}
-                <div id="OverlayMap">{% include 'includes/overlay_map.html'%}</div>
-                <div id="map-overlay"></div>
-                <div id="content-window"></div>
-                <script type="text/javascript">initialize_map_overlays()</script>
+            <div id="OverlayMap">{% include 'includes/overlay_map.html'%}</div>
+            <div id="map-overlay"></div>
+            <div id="content-window"></div>
+            <script type="text/javascript">initialize_map_overlays()</script>
             {%else%}
-                <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>
-                <div id="map-overlay" style="display:none;"></div>
-                <div id="content-window" style="display:none;"></div>
+            <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>
+            <div id="map-overlay" style="display:none;"></div>
+            <div id="content-window" style="display:none;"></div>
             {%endif%}
             <!--end map section-->
 
             <!-- Main Map-->
             {%if station_json and not run_done%}
-                <div class="results">
-                    {% include 'includes/station_finder_map.html'%} 
-                </div>
+            <div class="results">
+                {% include 'includes/station_finder_map.html'%} 
+            </div>
             {%endif%}
         </div><!--end col...-9-->
     </div><!--end row FORM/MAP-->
 </div><!--end top_of_page-->
 
 <!--Main Results-->
-<div class="row results">
+<div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
         <!--Map error-->
         {% if error %}
@@ -233,6 +210,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
         {%endif%} 
         <!--Map and Station List-->
         {% if station_json and run_done%}
+        <div class="results">
             <h3 align="center" style="max-width:95%;">
             {%for key_val in params_display_list%}
                 <b>{{key_val.0}}</b>: {{key_val.1}};
@@ -244,9 +222,8 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
                 {{key_val.0}} {{key_val.1}},
             {%endfor%}
             </div>
-            <div class="results">
-                {% include 'includes/station_finder_map.html'%}
-            </div>
+            {% include 'includes/station_finder_map.html'%}
+        </div><!--results-->
         {%endif%} 
     </div>
 </div>

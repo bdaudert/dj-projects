@@ -104,26 +104,30 @@
         <!--Main: Errors/maps-->
         <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
             <!--Form errors and search parameter section-->
-            <div class="results">
             {%if form_error%}
+            <div class="results">
                 {% include 'includes/form_error.html'%}
+            </div>
             {%endif%}
             {%if results.error%}
+            <div class="results">
                 <p class="error">ERROR: {{results.error}}</p>
+            </div>
             {%endif%}
             {%if  run_done and  not results.data %}
+            <div class="results">
                 {% include 'includes/no_results.html'%}
+            </div>
             {%endif%}
-        </div>
-        <!--Maps-->
-        <!--Gridpoint map-->
-        {% include 'includes/map-gridpoint.html'%}
+            <!--Maps-->
+            <!--Gridpoint map-->
+            {% include 'includes/map-gridpoint.html'%}
         </div><!--col-sm-8-->
     </div><!--row-->
 </div><!--top_of_page-->
 <!--Results-->
 <!--Main Results-->
-<div class="row results">
+<div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
     {% if not results.error and results.data %}
         <div class="row results" align="center">
