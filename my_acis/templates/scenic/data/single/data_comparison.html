@@ -25,156 +25,204 @@
 <!--Hidden variables-->
 <input type="hidden" id="app_name" name="app_name" value="data_comparison">
 
-<p align="center" class="error"><b>*(BETA) THIS PAGE IS UNDER DEVELOPMENT!</b></p>
-<!--Toolinfo/Howto-->
-<table>
-<td valign="bottom" width="45%">
-    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/data_comparison/'"/>
-    {%if results.graph_data%}
-        <input type="submit" value="Change Options" onclick="ShowHideTopOfPage()">
-    {%endif%} 
-</td>
-<td valign="top" width="55%" align="left">
-    <table>
-    <tr>
-    <td><div id=tool_info_head>{% include 'includes/Button_tool_info.html'%}</div></td>
-    <td><div id="how_to_head">{% include 'includes/Button_how_to.html'%}</div></td>
-    </tr>
-    </table>
-</td>
-</table>
 
+<!--Button row-->
+{% include 'includes/button-row.html'%}
 
 
 <!--Form-->
-{% if not results.graph_data%}
-<table id="top_of_page">
+{% if not results.graph_data %}
+<div id="top_of_page">
 {%else%}
-<table id="top_of_page" style="display:none">
+<div id="top_of_page" style="display:none">
 {%endif%}
-
-<td valign="top" width="40%">
-    <div id='formData'>
-    <form method="post" id="DataForm" action="" onsubmit="show_loading();">{% csrf_token %}
-    <table class="form" id="tableData" >  
-    <tr style="display:table-row">{% include 'includes/location.html'%}</tr>  
-    <tr class="grid" id="grid_type" style="display:table-row">{% include 'includes/grids.html'%}</tr>
-    <tr style="display:table-row">{% include 'includes/element.html'%}</tr>
-    <tr id="add" valign="top" style="display:none">{% include 'includes/add_degree_days.html'%}</tr>
-    {%if initial.add_degree_days == "T"%}
-    <tr id="dd" valign="top" style="display:none">{% include 'includes/degree_days.html'%}</tr>
-    {%else%}
-    <tr id="dd" valign="top" style="display:none">{% include 'includes/degree_days.html'%}</tr>
-    {%endif%}
-
-    <tr style="display:none;">{% include 'includes/units.html'%}</tr>
-    <tr style="display:table-row;">{% include 'includes/start_date.html'%}</tr>
-    <tr style="display:table-row;">{% include 'includes/end_date.html'%}</tr>
-    </table>    
-    <input type="hidden" name="app_name" value="data_comparison">
-    <!--Hidden chart vars-->
-    <input type="hidden" value="{{initial.chart_type}}" name="chart_type" class="chart_type">
-    <input type="hidden" value="{{initial.show_running_mean}}" name="show_running_mean" class="show_running_mean">
-    <input type="hidden" value="{{initial.running_mean_days}}" name="running_mean_days" class="running_mean_days">
-    <input type="hidden" value="{{initial.show_average}}" name="show_average" class="show_average">
-    <input class="mainFormSubmit" type="submit" value="Generate time series" name="formData"/>
-    </form>
-    </div>
-</td>
-<!--Errors/maps-->
-<td valign="top" width="60%" align="center">
-    <!--Form errors and search parameter section-->
-    <div class="results">
-    {%if form_error%}
-        {% include 'includes/form_error.html'%}
-    {%endif%}
-
-    {%if run_done and not results.graph_data%}
-           {% include 'includes/no_results.html'%}
-    {%endif%}
-    </div>
-    <!--Maps-->
-    <!--Gridpoint map-->
-    {% include 'includes/map-gridpoint.html'%}
-</td></table>
-
-
-<!--results-->
-<table cellpadding="10" align="center">
-<td valign="top" width="97%" align="center">
-    <div class="results">
+    <div class="row" height="100%">
+        <!--Form-->
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
+            <form method="post" class="main-form" id="DataForm" action="" onsubmit="show_loading()">{% csrf_token %}
+                <div class="form-group">
+                    <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formData" style="width:100%">
+                    Get Data
+                    </button>
+                </div>
+                <input type="hidden" name="app_name" value="data_comparison">
+                <!--Hidden chart vars-->
+                <input type="hidden" value="{{initial.chart_type}}" name="chart_type" class="chart_type">
+                <input type="hidden" value="{{initial.show_running_mean}}" name="show_running_mean" class="show_running_mean">
+                <input type="hidden" value="{{initial.running_mean_days}}" name="running_mean_days" class="running_mean_days">
+                <input type="hidden" value="{{initial.show_average}}" name="show_average" class="show_average">
+                <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">1. Define your region!</label> 
+                    <div class="input-group">
+                        {% include 'includes/location.html'%}
+                    </div>
+                </div>
+                <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">2. Choose your dataset!</label>
+                    {%if initial.area_type == "location"%}
+                    <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span>
+                    {% else%}
+                    <span class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
+                    {%endif%}
+                    <div class="input-group">
+                        {% include 'includes/element.html'%}
+                        <span class="input-group-addon"></span>
+                        {% include 'includes/units.html'%}
+                    </div>
+                    {%if initial.element == "gdd" or initial.element == "hdd" or initial.element == "gdd"%}
+                    <span id="base_temp" >{% include 'includes/base_temperature.html'%}</span>
+                    {%else%}
+                    <span id="base_temp"  style="display:none">{% include 'includes/base_temperature.html'%}</span>
+                    {%endif%}
+                </div>
+                <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">4. Define your date ranges! </label>
+                    <div class="input-group">
+                        {% include 'includes/start_date.html'%}
+                        <span class="input-group-addon"></span>
+                        {% include 'includes/end_date.html'%}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formData" style="width:100%">
+                    Get Data
+                    </button>
+                </div>
+            </form>
+        </div><!--col-sm-4-->
+        <!--Main: Errors/maps-->
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+            <!--Form errors and search parameter section-->
+            <div class="results">
+            {%if form_error%}
+                {% include 'includes/form_error.html'%}
+            {%endif%}
+            {%if run_done and not results.graph_data%}
+                {% include 'includes/no_results.html'%}
+            {%endif%}
+            </div>
+            <!--Maps-->
+            <!--Gridpoint map-->
+            {% include 'includes/map-gridpoint.html'%}
+        </div><!--col-sm-8-->
+    </div><!--row-->
+</div><!--top_of_page-->
+<!--Results-->
+<!--Main Results-->
+<div class="row results">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
     {% if results.graph_data %}
-    <!--Stats table-->
-    <table align="center">
-    <td>
-        <img src="{{MEDIA_URL}}img/show_summ_table_button.png" alt="Show Summary Table" onclick="ShowHide('data_summary')">
-
-        <table id="data_summary" style="display:none;" align="center" border=1 class="results">
-            <th>Statistic</th><th>Station</th><th>Grid</th>
-            <tr>
-            <td></td><td><b>{{results.graph_data.0.seriesName}}</b></td><td><b>{{results.graph_data.1.seriesName}}</b></td>
-            </tr>
-            <tr>
-                <td>Max</td><td>{{results.stats.max.0}}</td><td>{{results.stats.max.1}}</td>
-            </tr>
-            <tr>
-                <td>Min</td><td>{{results.stats.min.0}}</td><td>{{results.stats.min.1}}</td>
-            </tr>
-            <tr>
-                <td>Mean</td><td>{{results.stats.mean.0}}</td><td>{{results.stats.mean.1}}</td>
-            </tr>
-            <tr>
-                <td>Median</td><td>{{results.stats.median.0}}</td><td>{{results.stats.median.1}}</td>
-            </tr>
-            <tr>
-                <td>SD</td><td>{{results.stats.std.0}}</td><td>{{results.stats.std.1}}</td>
-            </tr>
-            <tr>
-                <td>Skew</td><td>{{results.stats.skew.0}}</td><td>{{results.stats.skew.1}}</td>
-            </tr>
-            <tr>
-                <td>Pearson correlation coeff</td><td colspan="2">{{results.stats.pearsonc}}</td>
-            </tr>
-            <tr>
-                <td>Pearson 2-tailed p-value</td><td colspan="2">{{results.stats.pearsonp}}</td>
-            </tr>
-            <tr>
-                <td>Kolmogorov-Smirnov</td><td colspan="2">{{results.stats.ksc}}</td>
-            </tr>
-            <tr>
-                <td>Kolmogorov-Smirnov p-value</td><td colspan="2">{{results.stats.ksp}}</td>
-            </tr>
-        </table>
-    </td>
-    </table>
-    <p class="message results"><b>CLICK AND DRAG TO ZOOM IN!</b></p>
-            <p>Distance between {{results.graph_data.1.seriesName}} and {{results.graph_data.0.seriesName}} is {{results.distance}} km.</p>
-            <table align="left" class='chart' border="1" width="800px">
-            <tr>
-            <td align="left" valign="top">
-                {% include 'includes/chart-type.html'%} &nbsp;&nbsp; {% include 'includes/chart-show-hide-legend.html'%}
-            </td>
-            </tr>
-            <tr>
-            <td align="left" valign="top">
-                {% include 'includes/chart-layers-daily.html'%}
-            </td>
-            </tr>
-            <tr>
-            <td>
-                <div align="center" id="hc-container" class="results" style="height:600px;width:800px;"></div>
-                <!--Declare global variable-->
+        <div class="row button-row">
+            <!--Buttons-->
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            </div>
+            <div class="col-xs- col-sm-7 col-md-7 col-lg-7">
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                    <input class="btn btn-success" id="show_hide_summary" type='button' value='Hide Summary'>
+                </div>
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                    <input class="btn btn-success" id="show_hide_graph" type='button' value='Hide Graph'>
+                </div>
+            </div> 
+        </div><br />
+        <!--CHART-->
+        <div id="main-graph" class="chart">
+            <p>Distance between {{results.graph_data.1.seriesName}} and
+            {{results.graph_data.0.seriesName}} is {{results.distance}} km.</p>
+            <!--Chart Layers-->
+            <div class="row chart-layers">
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    {% include 'includes/chart-type.html'%}
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    {% include 'includes/chart-running-mean-days.html'%}
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">        
+                    {% include 'includes/chart-average.html'%}
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    {% include 'includes/chart-show-hide-legend.html'%}
+                </div>
+            </div>
+            <!--Chart-->
+            <div class="row" height="100%">
+                <div align="center" id="hc-container" width="100%"></div>
                 <script type="text/javascript">
                     var graph_data = {{results.graph_data | safe_json}}
                     generateTS_individual([0,1]);
                 </script>
-            </td>
-            </tr>
+            </div>
+        </div><br /><!--main-graph-->
+        <!--TABLES-->
+        <div id="summary-table" align="center" style="display:block;">
+            <div class="dataTableInfo" id="dataTableInfo-0" style="display:none">
+            Statistics,
+            {%for key_val in params_display_list%}
+                {{key_val.0}} {{key_val.1}}, 
+            {%endfor%}
+            </div>
+            <table border="1" class="dataTable nowrap" id="dataTable-0" style="display_none">
+                <thead>
+                    <tr><th>Statistic</th><th>Station</th><th>Grid</th></tr>
+                </thead>
+                <tfoot>
+                    <tr><th>Statistic</th><th>Station</th><th>Grid</th></tr>
+                </tfoot>
+                <tbody>
+                    <tr>
+                    <td></td><td><b>{{results.graph_data.0.seriesName}}</b></td><td><b>{{results.graph_data.1.seriesName}}</b></td>
+                    </tr>
+                    <tr>
+                        <td>Max</td><td>{{results.stats.max.0}}</td><td>{{results.stats.max.1}}</td>
+                    </tr>
+                    <tr>
+                        <td>Min</td><td>{{results.stats.min.0}}</td><td>{{results.stats.min.1}}</td>
+                    </tr>
+                    <tr>
+                        <td>Mean</td><td>{{results.stats.mean.0}}</td><td>{{results.stats.mean.1}}</td>
+                    </tr>
+                    <tr>
+                        <td>Median</td><td>{{results.stats.median.0}}</td><td>{{results.stats.median.1}}</td>
+                    </tr>
+                    <tr>
+                        <td>SD</td><td>{{results.stats.std.0}}</td><td>{{results.stats.std.1}}</td>
+                    </tr>
+                    <tr>
+                        <td>Skew</td><td>{{results.stats.skew.0}}</td><td>{{results.stats.skew.1}}</td>
+                    </tr>
+                </tbody>
             </table>
-    
-    {% endif %}
-    </div><!--end results-->
-</td>
-</table>
+            <div class="dataTableInfo" id="dataTableInfo-1" style="display:none">
+            Correlation Coefficients,
+            {%for key_val in params_display_list%}
+                {{key_val.0}} {{key_val.1}},
+            {%endfor%}
+            </div>
+            <table border="1" class="dataTable nowrap" id="dataTable-1" style="display_none">
+                <thead>
+                    <tr><th>Coefficient</th><th>Value</th></tr>
+                </thead>
+                <tfoot>
+                    <tr><th>Coefficient</th><th>Value</th></tr>
+                </tfoot>
+                <tbody> 
+                    <tr>
+                        <td>Pearson correlation coeff</td><td colspan="2">{{results.stats.pearsonc}}</td>
+                    </tr>
+                    <tr>
+                        <td>Pearson 2-tailed p-value</td><td colspan="2">{{results.stats.pearsonp}}</td>
+                    </tr>
+                    <tr>
+                        <td>Kolmogorov-Smirnov</td><td colspan="2">{{results.stats.ksc}}</td>
+                    </tr>
+                    <tr>
+                        <td>Kolmogorov-Smirnov p-value</td><td colspan="2">{{results.stats.ksp}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div><!--summary-table-->
+    {% endif %}<!--if results.graph_data-->
+    </div><!--col-sm-12-->   
+</div><!--end results-->
 
 {%endblock%}

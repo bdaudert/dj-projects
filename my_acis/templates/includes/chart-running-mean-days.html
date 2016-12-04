@@ -1,11 +1,8 @@
 <div class="form-group">
-    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 chart-layer">
-        <input name="chart_selector" id="show_running_mean" class="chart-layer" value="runmean" type="checkbox"
-        {%if initial.show_running_mean == "T"%}checked{%endif%}/>
-    </div>
-    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 chart-layer">
-        <label for="running_mean_period">Running Mean Days</label>
-        <input class="form-control chart-layer" type="text" name="chart_selector" 
-        id="running_mean_period" size="1" value="{{initial.running_mean_days}}">
-    </div>
+    <input name="chart_selector" id="show_running_mean" value="runmean" 
+    type="checkbox" {%if initial.show_running_mean == "T"%}checked{%endif%}/>
+    <b>Running Mean</b>
+    <input type="text" class="input-sm col-sm" size="1" name="chart_selector" 
+        id="running_mean_period" value="{{initial.running_mean_days}}">
+    <b>Days</b>
 </div>

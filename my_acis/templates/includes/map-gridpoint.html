@@ -1,8 +1,7 @@
 {%if need_gridpoint_map%}
     <div id="GridpointMap" style="display:block">
-    <input style="display:inline;" class="btn btn-info pull-left" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()">
-    <input id="address" type="textbox" value="Place/Location" style="height:100%">
-    <div id="map-gridpoint"></div>
+        {% include 'includes/zoom-to-button.html'%}
+        <div id="map-gridpoint"></div>
     </div>
     {%if initial.location %}
         <script type="text/javascript">initialize_grid_point_map("{{initial.location}}");</script>
@@ -11,8 +10,7 @@
     {% endif %}
 {%else%}
     <div id="GridpointMap" style="display:none">
-    <input style="display:none;" class="btn btn-info pull-left" id="zoombutton" type="button" value="Zoom To" onclick="zoomToLocation()">
-    <input id="address" type="textbox" value="Place/Location" style="height:100%">
+        {% include 'includes/zoom-to-button.html'%}
         <div id="map-gridpoint"></div>
     </div>
 {%endif%}

@@ -142,11 +142,13 @@ def contact_us(request):
 
 
 def dashboard(request):
+    app_name = 'dashboard'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
     context = {
-        'title': settings.APPLICATIONS['dashboard'][0],
-        'icon':'Dashboard.png'
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_nurl
     }
-    url = settings.APPLICATIONS['dashboard'][2]
     #Find mon, year to locate snotel map
     year = str(datetime.datetime.today().year)
     month = str(datetime.datetime.today().month)
@@ -173,10 +175,13 @@ def dashboard(request):
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def howto(request):
+    app_name = 'howto'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
     context = {
-        'title': settings.APPLICATIONS['howto'][0],
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
     }
-    url = settings.APPLICATIONS['howto'][2]
     app_urls = {};app_names = {};param_urls = {}
 
     #HOWTO: STATION FINDER
@@ -229,17 +234,23 @@ def howto(request):
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def projections(request):
+    app_name = 'projections'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
     context = {
-        'title': settings.APPLICATIONS['projections'][0]
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
     }
-    url = settings.APPLICATIONS['projections'][2]
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def resources(request):
+    app_name = 'resources'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
     context = {
-        'title': settings.APPLICATIONS['resources'][0],
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
     }
-    url = settings.APPLICATIONS['resources'][2]
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def upload_test(request):
@@ -272,17 +283,23 @@ def upload_test(request):
     return render_to_response('scenic/upload_test.html', context, context_instance=RequestContext(request))
 
 def data_home(request):
+    app_name = 'data_home'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
     context = {
-        'title': settings.APPLICATIONS['data_home'][0],
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
     }
-    url = settings.APPLICATIONS['data_home'][2],
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def single_point_prods(request):
+    app_name = 'single_point_prods'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
     context = {
-        'title': settings.APPLICATIONS['single_point_prods'][0],
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
     }
-    url = settings.APPLICATIONS['single_point_prods'][2]
     #Link from other apps
     if request.method == 'GET' and ('elements' in request.GET or 'element' in request.GET):
         #set link params
@@ -301,10 +318,13 @@ def single_point_prods(request):
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def multi_point_prods(request):
+    app_name = 'multi_point_prods'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
     context = {
-        'title': settings.APPLICATIONS['multi_point_prods'][0],
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
     }
-    url = settings.APPLICATIONS['multi_point_prods'][2]
     #Link from other apps
     if request.method == 'GET' and ('elements' in request.GET or 'element' in request.GET):
         #set link params
@@ -363,10 +383,12 @@ def download(request):
 
 def single_lister(request):
     app_name = 'single_lister'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
+    }
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
 
@@ -495,10 +517,12 @@ def single_lister(request):
 
 def intraannual(request):
     app_name = 'intraannual'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
+    }
 
     #Download button pressed
     if 'formDownload' in request.POST:
@@ -584,11 +608,12 @@ def intraannual(request):
 
 def seasonal_summary(request):
     app_name = 'seasonal_summary'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
-
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
+    }
     #Download button pressed
     if 'formDownload' in request.POST:
         form = DJANGOUtils.set_form(request,clean=False)
@@ -665,11 +690,12 @@ def seasonal_summary(request):
 
 def multi_lister(request):
     app_name = 'multi_lister'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
-
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
+    }
     #Overlay maps
     if 'formOverlay' in request.POST:
         initial = DJANGOUtils.set_initial(request,'map_overlay')
@@ -850,10 +876,12 @@ def multi_lister(request):
 
 def temporal_summary(request):
     app_name = 'temporal_summary'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
+    }
     json_file = request.GET.get('json_file', None)
     #Check if we are coming in from other page, e.g. Gridded Data
     #Set initial accordingly
@@ -952,14 +980,17 @@ def temporal_summary(request):
         context['JSON_URL'] = settings.TMP_URL
         context['figure_files'] = figure_files
         context['run_done'] = True
+        context['results'] = True
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def monthly_spatial_summary(request):
     app_name = 'monthly_spatial_summary'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
+    }
     initial  = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
 
@@ -1000,12 +1031,12 @@ def monthly_spatial_summary(request):
 
 def spatial_summary(request):
     app_name = 'spatial_summary'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
-
-
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
+    }
     #Overlay maps
     if 'formOverlay' in request.POST:
         initial = DJANGOUtils.set_initial(request,'map_overlay')
@@ -1233,11 +1264,12 @@ def climate_engine(request):
 
 def station_finder(request):
     app_name = 'station_finder'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
-
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
+    }
     #Overlay maps
     if 'formOverlay' in request.POST:
         initial = DJANGOUtils.set_initial(request,'map_overlay')
@@ -1389,11 +1421,13 @@ def station_finder(request):
 
 
 def data_comparison(request):
+    app_name = 'data_comparison'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
     context = {
-        'title': settings.APPLICATIONS['data_comparison'][0]
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
     }
-    url = settings.APPLICATIONS['data_comparison'][2]
-
     initial = DJANGOUtils.set_initial(request,'data_comparison')
     context['initial'] = initial
     context['need_gridpoint_map'] = True
@@ -1415,6 +1449,8 @@ def data_comparison(request):
         context['need_gridpoint_map'] = False
         results['stats'] = DC.get_statistics(results['graph_data'][0],results['graph_data'][1])
         context['results'] = results
+        header_keys = WRCCUtils.set_display_keys(app_name, form_cleaned)
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 #######################
@@ -1423,11 +1459,12 @@ def data_comparison(request):
 
 def monthly_summary(request):
     app_name = 'monthly_summary'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
-
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
+    }
     initial = DJANGOUtils.set_initial(request, app_name)
     context['initial'] = initial
 
@@ -1558,11 +1595,12 @@ def monthly_summary(request):
 
 def climatology(request):
     app_name = 'climatology'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
-
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_url': app_url
+    }
     initial= DJANGOUtils.set_initial(request, app_name)
     context['initial'] = initial
     if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
