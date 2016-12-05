@@ -74,7 +74,6 @@ img.app_img {
 .main-col {
     padding:5px;
     box-shadow:5px 5px grey;
-    /*border:2px solid grey;*/
     height:100%;
 }
 .full-col {
@@ -82,6 +81,20 @@ img.app_img {
     padding:10px;
     text-align:center;
     border:2px solid grey;
+}
+.page-title {
+    text-align:center;
+    box-shadow:5px 5px #828e94;
+    background: #d9edf7;
+    background: -webkit-gradient(linear, left top, left bottom,color-stop(0%, #eef7fb), color-stop(100%, #ededed));
+    background: -moz-linear-gradient(top, #eef7fb 0%, #ededed 100%);
+    background: -ms-linear-gradient(top, #eef7fb 0%, #ededed 100%);
+    /* 
+    background-image: -webkit-linear-gradient(top, #d9edf7 0%, #6c767b 100%);
+    background-image: linear-gradient(to bottom, #d9edf7 0%, #6c767b 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d9edf7', endColorstr='#6c767b', GradientType=0);
+    */
 }
 
 .dataTableInfo {
@@ -100,11 +113,8 @@ img.app_img {
     padding: 1% 0%;
 }
 
-.results{
-    text-align:center;
-}
-
 .results {
+    text-align:center;
     background-color:#c7c7c7;
     padding:1%;
     border:1px solid black;
@@ -247,11 +257,22 @@ img.app_img {
 .inside {
   margin-top: 20px;
   margin-bottom: 20px;
+  background: :#c7c7c7;
+  background: -webkit-gradient(linear, left top, left bottom,color-stop(0%, #eef7fb), color-stop(100%, #ededed));
+  background: -moz-linear-gradient(top, #eef7fb 0%, #ededed 100%);
+  background: -ms-linear-gradient(top, #eef7fb 0%, #ededed 100%);
+}
+
+/*
+.inside {
+  margin-top: 20px;
+  margin-bottom: 20px;
   background: #d9edf7;
   background: -webkit-gradient(linear, left top, left bottom,color-stop(0%, #eef7fb), color-stop(100%, #ededed));
   background: -moz-linear-gradient(top, #eef7fb 0%, #ededed 100%);
   background: -ms-linear-gradient(top, #eef7fb 0%, #ededed 100%);
 }
+*/
 .inside-full-height {
   /*
   // if you want to give content full height give him height: 100%;

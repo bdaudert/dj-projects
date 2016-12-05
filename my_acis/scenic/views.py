@@ -1377,6 +1377,7 @@ def station_finder(request):
             context['error'] = "No stations found for these search parameters."
         context['station_json'] = f_name
         context['run_done'] = True
+        context['results'] = True
         header_keys = WRCCUtils.set_display_keys(app_name, initial)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,initial)
         context['form_cleaned']= form_cleaned

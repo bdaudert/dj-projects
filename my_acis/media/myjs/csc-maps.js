@@ -379,13 +379,12 @@ function initialize_station_finder() {
         //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
         var ll = new google.maps.LatLng(data.stations[0].lat, data.stations[0].lon);
         var mapOptions = {
-        center:ll,
-        zoom:7,
-        mapTypeId:google.maps.MapTypeId.HYBRID
+            center:ll,
+            zoom:7,
+            mapTypeId:google.maps.MapTypeId.HYBRID
         };
         var map_div = 'map-station-finder';
-        var map = new google.maps.Map(document.getElementById(map_div),mapOptions);
-        window.map = map;
+        var sf_map = new google.maps.Map(document.getElementById(map_div),mapOptions);
 
         /*
         //Add control to print the map
@@ -405,7 +404,7 @@ function initialize_station_finder() {
         
         //Add overlay to map
         var area_type = $('#area_type').val();
-        add_overlay_to_map(window.map, $('#' + area_type)); 
+        add_overlay_to_map(sf_map, $('#' + area_type)); 
         //Sort network_codes according to Kelly's preference and append to legend:
         count = 0;
         var tr = $('<tr>'), td;
@@ -440,7 +439,7 @@ function initialize_station_finder() {
 
         $('#map_legend').append(tr);
         //Adjust map bounds
-        var bounds=new google.maps.LatLngBounds();
+        var bounds = new google.maps.LatLngBounds();
 
         //Create info window
         infowindow = new google.maps.InfoWindow({
@@ -474,7 +473,7 @@ function initialize_station_finder() {
             marker_count+=1;
             var latlon = new google.maps.LatLng(c.lat,c.lon);
             var marker = new google.maps.Marker({
-                map: map,
+                map: sf_map,
                 position: latlon,
                 title:'Name:'+c.name,
                 icon: new google.maps.MarkerImage(
@@ -550,7 +549,7 @@ function initialize_station_finder() {
             google.maps.event.addListener(marker, 'click', function() {
                 infowindow.close();
                 infowindow.setContent(contentString);
-                infowindow.open(map, marker);
+                infowindow.open(sf_map, marker);
             });
             //Define table row, one entry per station
             var tbl_row = $('<tr>');
@@ -613,6 +612,7 @@ function initialize_station_finder() {
             }
         }); //end each
         window.markers = markers;
+        window.sf_map = sf_map;
         dataTable.draw();
         /*
         On zoom change reset the markers
@@ -620,10 +620,10 @@ function initialize_station_finder() {
         To bind bounds_changed and work with markers/map stuff we need to work with both, 
         zoom_changed and bounds_changed  
         */
-        google.maps.event.addListener(map,"zoom_changed",function() {
+        google.maps.event.addListener(sf_map,"zoom_changed",function() {
             this.zoomChanged = true;
         });
-        google.maps.event.addListener(map,"bounds_changed",function() {
+        google.maps.event.addListener(sf_map,"bounds_changed",function() {
             if (this.zoomChanged) {
                 this.zoomChanged = false;
             }
@@ -636,7 +636,7 @@ function initialize_station_finder() {
             //Delete old station_list table rows except header (th)
             //$('#station_list tr').has('td').remove();
             dataTable.rows().remove();
-            var mapBounds = map.getBounds();
+            var mapBounds = sf_map.getBounds();
             var name_unique = '', count_stns = 0;
             for (var i=0; i<markers.length; i++) {
                 markers[i].setVisible(false);
@@ -680,7 +680,7 @@ function initialize_station_finder() {
             var station_ids_str = '';
             var name_unique = '';
             markers_showing = [];
-            var mapBounds = map.getBounds();
+            var mapBounds = sf_map.getBounds();
             for (var i=0; i<markers.length; i++) {
                 if (category == 'all') {
                     markers[i].setVisible(true);
@@ -756,7 +756,7 @@ function initialize_station_finder() {
             var station_ids_str = '';
             name_unique = '';
             markers_showing = [];
-            var mapBounds = map.getBounds();
+            var mapBounds = sf_map.getBounds();
             for (var i=0; i<markers.length; i++){
                 var name = markers[i].name;
                 var cat =markers[i].category;
@@ -810,13 +810,13 @@ function initialize_station_finder() {
                 hide(category);
             }
         };
-        //var markerCluster = new MarkerClusterer(map, markers);
-        map.fitBounds(bounds);
-        //google.maps.event.trigger(window.map, 'resize');
+        //var markerCluster = new MarkerClusterer(sf_map, markers);
+        sf_map.fitBounds(bounds);
+        //google.maps.event.trigger(window.sf_map, 'resize');
     });//close getjson
     //Resize to show map
-     var h = $(window).height(); 
-     $('#map-station-finder').css('height', (h / 2));
+    var h = $(window).height(); 
+    $('#map-station-finder').css('height', (h / 2));
 }//close initialize_station_finder
 
 function my_boxclick(box, category){
@@ -836,7 +836,7 @@ function initialize_bbox_map(bbox) {
           rect = null;
         }
     }
-    var Center=new google.maps.LatLng(parseFloat(bbox_list[1]),parseFloat(bbox_list[0]));
+    var Center = new google.maps.LatLng(parseFloat(bbox_list[1]),parseFloat(bbox_list[0]));
     var mapOptions = {
         zoom: 7,
         center: Center,
@@ -907,11 +907,9 @@ function initialize_polygon_map(poly) {
     //optional argument location
     switch (arguments.length - 0) { // <-- 0 is number of required arguments
         case 0:  poly = '-115,34,-115,35,-114,35,-114,34';
-        //case 0: poly = '-120.48,40.46,-118.86,40.04,-119.3,38.77,-121.03,38.94,-120.31,39.96';
     }
     var poly_list = poly.replace(' ','').split(','); 
-    var drawingManager;
-    var selectedShape;
+    var drawingManager, selectedShape;
     color = '#1E90FF';
     //var selectedColor;
     //var colorButtons = {};
@@ -951,12 +949,12 @@ function initialize_polygon_map(poly) {
                 document.getElementById("shape").value = polCoords;
             }
             if (ev.type == google.maps.drawing.OverlayType.RECTANGLE){
-                var bounds = ev.overlay.getBounds();
+                var r_bounds = ev.overlay.getBounds();
                 //set new bounding box
-                var w = precise_round(bounds.getSouthWest().lng(),2);
-                var s = precise_round(bounds.getSouthWest().lat(),2);
-                var e = precise_round(bounds.getNorthEast().lng(),2);
-                var n = precise_round(bounds.getNorthEast().lat(),2);
+                var w = precise_round(r_bounds.getSouthWest().lng(),2);
+                var s = precise_round(r_bounds.getSouthWest().lat(),2);
+                var e = precise_round(r_bounds.getNorthEast().lng(),2);
+                var n = precise_round(r_bounds.getNorthEast().lat(),2);
                 document.getElementById("shape").value = w + ',' + s + ',' + e + ',' + n;
             }
             if (ev.type == google.maps.drawing.OverlayType.CIRCLE){
@@ -1046,7 +1044,6 @@ function initialize_polygon_map(poly) {
     // constructor passing in this DIV.
     var centerControlDiv = document.createElement('div');
     var centerControl = new CustomDeleteButton(centerControlDiv, map);
-
     centerControlDiv.index = 1;
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
     
@@ -1058,30 +1055,29 @@ function initialize_polygon_map(poly) {
       fillColor: "#1E90FF",
       strokeColor: "#1E90FF"
     };
-    window.map = map;
     var mkrOptions = {draggable: true};
     //Set initial polygon
-    var bounds = new google.maps.LatLngBounds();
+    var shape_bounds = new google.maps.LatLngBounds();
     var poly_initial = [], point, shape_init_opts, shape_init;
     //Set up initial polygon
     if (poly_list.length == 3  && poly_list[2][1]!= '-'){
         //Circle
-        var center = new google.maps.LatLng(parseFloat(poly_list[1]), parseFloat(poly_list[0]));
+        var c_center = new google.maps.LatLng(parseFloat(poly_list[1]), parseFloat(poly_list[0]));
         shape_init_opts = {
-            center: center,
+            center: c_center,
             radius:parseFloat(poly_list[2])
         }
         shape_init = new google.maps.Circle($.extend({},polyOptions,shape_init_opts));
-        bounds = shape_init.getBounds();
+        shape_bounds = shape_init.getBounds();
     }
     else if (poly_list.length == 4){
         //Rectangle
-        var bounds = new google.maps.LatLngBounds(
+        shape_bounds = new google.maps.LatLngBounds(
              new google.maps.LatLng(parseFloat(poly_list[1]),parseFloat(poly_list[0])),
              new google.maps.LatLng(parseFloat(poly_list[3]),parseFloat(poly_list[2]))
         );
         shape_init_opts = {
-            bounds:bounds
+            bounds:shape_bounds
         }
         shape_init = new google.maps.Rectangle($.extend({},polyOptions,shape_init_opts));
     }
@@ -1090,7 +1086,7 @@ function initialize_polygon_map(poly) {
         for (var idx=0;idx < poly_list.length ; idx+=2 ){
             poly_initial.push(new google.maps.LatLng(parseFloat(poly_list[idx+1]),parseFloat(poly_list[idx])))
             point = new google.maps.LatLng(parseFloat(poly_list[idx+1]), parseFloat(poly_list[idx]));
-            bounds.extend(point);
+            shape_bounds.extend(point);
         }
         shape_init_opts = {
             path:poly_initial,
@@ -1102,7 +1098,7 @@ function initialize_polygon_map(poly) {
     }
 
     google.maps.event.addListener(shape_init, "dragend", function(){
-        var len=selectedShape.getPath().getLength();
+        var len = selectedShape.getPath().getLength();
         var htmlStr = '';
         for (var i=0; i<len; i++) {
             htmlStr+= precise_round(shape_init.getPath().getAt(i).lng(),4);
@@ -1150,16 +1146,16 @@ function initialize_polygon_map(poly) {
     //General event handlers
     google.maps.event.addListener(drawingManager, 'drawingmode_changed', deleteSelectedShape);
     //google.maps.event.addListener(map,'click',clearSelection);
-   
     //Resize to show map
     var h = $(window).height();
     $('#map-polygon').css('height', (h / 2));
     google.maps.event.trigger(map, 'resize');
-    map.setCenter(myLatlng);
-    shape_init.setMap(map);
-    setSelection(shape_init);
-    map.fitBounds(bounds);
     drawingManager.setMap(map);
+    setSelection(shape_init);
+    map.fitBounds(shape_bounds);
+    setSelection(shape_init);
+    shape_init.setMap(map);
+    window.map = map;
 }
 
 function initialize_map_overlay(map_id,poly) {
@@ -1265,7 +1261,7 @@ function initialize_map_overlays() {
 function add_polygon_to_map(map, ll_coords){
     var poly_path = [];
     var coords = ll_coords.replace(' ','').split(',');
-    var bounds=new google.maps.LatLngBounds();
+    var bounds = new google.maps.LatLngBounds();
     //Check for circle
     if (coords.length == 3){
         var circle = new google.maps.Circle({

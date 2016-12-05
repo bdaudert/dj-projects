@@ -966,6 +966,24 @@ $(document).ready(function () {
     Sets maps and area form field
     depending on area type
     */
+    $('.area_type').on('mouseup', function() {
+        if ($(this).val().inList(['basin','county_warning_area', 'county','climate_division'])){
+            $('.area_type').trigger("change");
+        } 
+        /*
+        if (!$(this).data.length){
+            var open = true;
+        }
+        else{
+            var open = $(this).data("isopen");
+        }
+        console.log(open);
+        if(open) {
+            $('.area_type').trigger("change");    
+        }
+        $(this).data("isopen", !open);
+        */
+    });
     $('.area_type').on('keydown change', function(){
         //Set area form field
         set_area($(this)); //form_utils function
@@ -1331,8 +1349,8 @@ $(document).ready(function () {
     $('#station_list tbody').on('click', 'tr', function(){
         infowindow.close();
         infowindow.setContent($(this).attr('cString'));
-        infowindow.open(window.map, window.markers[parseInt($(this).attr('id'))]);
-        var bounds = window.map.getBounds();
+        infowindow.open(window.sf_map, window.markers[parseInt($(this).attr('id'))]);
+        var bounds = window.sf_map.getBounds();
         bounds.extend(new google.maps.LatLng(parseFloat($(this).attr('lat')), parseFloat($(this).attr('lon'))));
     });
     /*

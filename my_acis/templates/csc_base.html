@@ -86,7 +86,7 @@
     <script type="text/javascript" src="{{MEDIA_URL}}myjs/Listeners.js"></script>
     
     <script type="text/javascript"
-        src="http://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAP_API_KEY}}&sensor=true&libraries=drawing">
+        src="http://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAP_API_KEY}}&libraries=drawing">
     </script>
     <script type="text/javascript" src="{{MEDIA_URL}}js/polygon.min.js"></script>
     <!--<script type="text/javascript" src="http://geoxml3.googlecode.com/svn/branches/polys/geoxml3.js"></script>
@@ -233,9 +233,9 @@
     </nav>
 
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bg-info" style="border:1px solid black;text-align:center;">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bg-info img-rounded page-title">
             {%if title%}
-            <h1 class="lead display-1" align="center">{{title}}</h1>
+            <h1 class="lead display-1">{{title}}</h1>
             {%else%}
                 <h4 class="lead display-1">
                     {% include 'includes/SCENIC_mission_statement.html'%}

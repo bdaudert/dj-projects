@@ -141,7 +141,7 @@ STN_FIND_CHOICES = (
         ('stnids', 'Comma separated list of stations '),
         ('county', 'County FIPS code'),
         ('climdiv', 'Climate Division'),
-        ('cwa', 'County Warning Area (CWA)'),
+        ('cwa', 'Cnty Warn. Area (CWA)'),
         ('basin', 'Basin'),
         ('state', 'State'),
         ('bbox', 'Bounding Box'),

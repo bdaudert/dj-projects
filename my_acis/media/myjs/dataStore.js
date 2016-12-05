@@ -52,7 +52,7 @@ var area_defaults = {
     'locations':['Gridpoints','-119,39,-119.1,39.1'],
     'county':['County','Churchill County, 32001'],
     'climate_division':['Climate Division','Northwestern, NV01'],
-    'county_warning_area':['County Warning Area','Las Vegas, NV, VEF'],
+    'county_warning_area':['Cnty Warn. Area','Las Vegas, NV, VEF'],
     'basin':['Basin','Hot Creek-Railroad Valleys, 16060012'],
     'state':['State','nv'],
     'bounding_box':['Bounding Box','-120.3,38.89,-118.89,40.21'],
