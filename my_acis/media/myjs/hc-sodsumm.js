@@ -1,5 +1,5 @@
 $(function () {
-//$(document).ready(function() {
+    var downloadMenu = $.extend(true,[],Highcharts.getOptions().exporting.buttons.contextButton.menuItems.splice(2));
     var HOST = document.getElementById('HOST').value;
     var HOST_URL = 'http://' + HOST + '/';
     var json_file = document.getElementById("json_file").value;
@@ -108,6 +108,50 @@ $(function () {
                     credits: {
                         href: HOST_URL,
                         text: HOST 
+                    },
+                    //------------------------
+                    //    EXPORTING (CSV/EXCEL)
+                    //------------------------ 
+                   navigation: {
+                        buttonOptions: {
+                            y:15,
+                            theme: {
+                                // Good old text links
+                                style: {
+                                    color: '#039',
+                                    border:'1px solid #039',
+                                    textDecoration: 'underline',
+                                    fontWeight: 'bold',
+                                    fontSize: '14px'
+                                }
+                            }
+                        }
+                    },
+                    exporting: {
+                        csv: {
+                            dateFormat:'%Y-%m-%d'
+                        },
+                        chartOptions:{
+                            legend:{
+                                enabled:true
+                            }
+                        },
+                        buttons: {
+                            contextButton: {
+                                enabled: false
+                            },
+                            exportButton: {
+                                text: 'Download',
+                                // Use only the download related menu items from the default context button
+                                menuItems: downloadMenu
+                            },
+                            printButton: {
+                                text: 'Print',
+                                onclick: function () {
+                                    this.print();
+                                }
+                            }
+                        }
                     },
                     legend: {
                         enabled: enable_legend

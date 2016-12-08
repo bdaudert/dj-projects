@@ -25,217 +25,177 @@
 
 <!--Hidden variables-->
 <input type="hidden" id="app_name" name="app_name" value="climatology">
-
+<input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+<input type="hidden" id="JSON_DIR" name="JSON_DIR" value="{{JSON_DIR}}">
 <!--Set up autofill-->
 {%if initial.autofill_list %}
     <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 {%endif%}
 
-<!--Toolinfo/Howto-->
-<table>
-<td valign="bottom" width="45%">
-    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}single/climatology/'">
-    {%if results%}
-    <input type="submit" value="Change Options" onclick="ShowHideTopOfPage()">
-    {%endif%}
-</td>
-<td valign="top" width="55%" align="left">
-    <table>
-    <tr>
-    <td><div id=tool_info_head>{% include 'includes/Button_tool_info.html'%}</div></td>
-    <td><div id="how_to_head">{% include 'includes/Button_how_to.html'%}</div></td>
-    </tr>
-    </table>
-</td>
-</table>
-
-
+<!--Button row-->
+{% include 'includes/button-row.html'%}
 
 <!--Form-->
-{% if not results%}
-<table id="top_of_page">
+{% if not results %}
+<div id="top_of_page">
 {%else%}
-<table id="top_of_page" style="display:none">
+<div id="top_of_page" style="display:none">
 {%endif%}
-<td valign="top" width="40%">
-    <div id="formData" class="form" style="border:none;">
-    <form method="post" id="DataForm" action="" onsubmit="show_loading()">{% csrf_token %}
-    <table id="tableData" class="form">
-    <tr class="station_grid" style="display:table-row" valign="bottom">{% include 'includes/area_select.html'%}</tr>
-    <tr class="station_grid" style="display:table-row" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
-    {%if initial.data_type == "grid"%}    
-    <tr class="grid" id="grid_type" style="display:table-row">{% include 'includes/grids_historic.html'%}</tr> 
-    <tr valign="top" id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</tr>
-    {% else%}
-    <tr class="grid" id="grid_type" style="display:none">{% include 'includes/grids_historic.html'%}</tr>
-    <tr valign="top" id="stn_finder">{% include 'includes/station_finder.html'%}</tr>
-    {%endif%}
-    <tr style="display:table-row">{% include 'includes/start_end_year.html'%}</tr>
-    <tr valign="top">{% include 'includes/climatology_summary_type.html'%}</tr>
-    <tr valign="top">{% include 'includes/units.html'%}</tr>
-    <tr valign="top">{% include 'includes/max_missing_days.html'%}</tr>
-    </table>
-    <input type="hidden" name="app_name" value="climatology">
-    <input class="mainFormSubmit" type="submit" value="Analyze" name="formData"/>
-    </form>
-    </div><!--End formData-->
-</td>
-<!--Errors/maps-->
-<td valign="top" width="60%" align="center">
-    <div class="results">
-    {%if form_error%}
-        {% include 'includes/form_error.html'%}
-    {%endif%} 
+    <div class="row" height="100%">
+        <!--Form-->
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
+            <form method="post" class="main-form" id="DataForm" action="" onsubmit="show_loading()">{% csrf_token %}
+                <div class="form-group">
+                    <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formData" style="width:100%">
+                    Get Data
+                    </button>
+                </div>
+                <input type="hidden" name="app_name" value="climatology">
+                <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">1. Define your region!</label> 
+                    <div class="input-group">
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            {% include 'includes/area_select.html'%}
+                            <span class="input-group-addon"></span>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <span id="area">{% include 'includes/area.html'%}</span>
+                        </div>
+                    </div>
+                    {%if initial.area_type == "location"%}
+                    <span  id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</span>
+                    {%else%}
+                    <span  id="stn_finder">{% include 'includes/station_finder.html'%}</span>
+                    {%endif%}
+                </div>
+               <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">2. Choose your dataset!</label>
+                    {%if initial.area_type == "location"%}
+                    <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span>
+                    {% else%}
+                    <span class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
+                    {%endif%}
+                    <div class="input-group">
+                        {% include 'includes/climatology_summary_type.html'%}
+                        <span class="input-group-addon"></span>
+                        {% include 'includes/units.html'%}
+                    </div>
+                </div>
+                <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">4. Define your date ranges! </label>
+                    {% include 'includes/start_end_year.html'%}
+                </div>
+                <div class="form-input-group form-group" align="center">
+                    {% include 'includes/max_missing_days.html'%}
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formData" style="width:100%">
+                    Get Data
+                    </button>
+                </div>
+            </form>
+        </div><br /><!--col-sm-4-->
+        <!--Main: Errors/maps-->
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">    
+        {%if form_error%}
+        <div class="results">
+            {% include 'includes/form_error.html'%}
+        </div>
+        {%endif%} 
 
-    {%if run_done and not results and not results.error%}
+        {%if run_done and not results and not results.error%}
+        <div class="results">
            {% include 'includes/no_results.html'%}
-    {%endif%}
-    </div>
-
-    <!--Maps-->
-    <!--Gridpoint map-->
-    {% include 'includes/map-gridpoint.html'%}
-</td><!-- end center-->
-</table>
-
+        </div>
+        {%endif%}
+        <!--Maps-->
+        <!--Gridpoint map-->
+        {% include 'includes/map-gridpoint.html'%}
+        </div><!--col-sm-8-->
+    </div><!--row-->
+</div><!--top_of_page-->
 <!--Results-->
-<table cellpadding="10" align="center">
-<td valign="top" width="97%" align="center">
-    <div class="results">
-
-    {%if results%}
-        <p>
-        For monthly and annual mean, thresholds and sums:</br>
-        Months with {{initial.max_missing_days}} or more missing days are not considered.</br>
-        </p>
-        {% if initial.location%}
-        <p class="stronger">Location: {{initial.location}}</br>
-        Dataset: {{ grid_name }}<br />
-        {%endif%}
-        {% if initial.station_id%}
-        <p class="stronger">Station: {{station_name.0}}</br>
-        {%endif%}
-        From Year {{start_year}} To Year {{end_year}}</br>
-        </p></br>
-    </div>
-    {%endif%}
-      
-  
-    <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-    <input type="hidden" id="JSON_DIR" name="JSON_DIR" value="{{JSON_DIR}}">
-        
-    <!-- TAB results -->
-    {%if results%}
-    <div class="results">
-    <div class="tabs">
-    {%for tab in tab_list%}
-        <div class="tab">
-        {%if forloop.counter0 == 0%}
-        <input type="radio" id={{tab}} name="graphs" checked>
-        {%else%}
-        <input type="radio" id={{tab}} name="graphs">
-        {%endif%}
-        <label for={{tab}}>{{tab_names|lookup:forloop.counter0}}</label>
-        <div class="tab_content" id={{tab}}>
-            <div id="hc-container{{forloop.counter0}}"style="height:350px;width:90%;"></div>
-            <script type="text/javascript" src="{{ MEDIA_URL }}myjs/hc-sodsumm.js"></script>
-            <br />
-            <table>
-            </td><td>
-            <p onClick="printNode('main-table{{forloop.counter0}}')"><img alt="Print" title="Print" src="{{MEDIA_URL}}img/print_button.png"></p>
-            </td><td>
-            <p onClick="ShowHide('formDownload{{forloop.counter0}}')"><img alt="Download" title="Download" src="{{MEDIA_URL}}img/download_button.png"></p>
-            </td>
-            </table><!--End table download/print buttons-->
-            
-            <!--Download form-->
-            <div id="formDownload{{forloop.counter0}}" class="form" style="display:none;">
-                {% include 'includes/climatology_download_form.html'%}
-            </div>
-
-            
-            
-            <div id="main-table{{forloop.counter0}}">
-                <table cellspacing="2">
-                {%if tab != 'pcpn'%}
-                {%if tab != 'snow'%}
+<!--Main Results-->
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
+    {% if not results.error and results %}
+        <div class="results row">  
+            <p>
+                For monthly and annual mean, thresholds and sums:</br>
+                Months with {{initial.max_missing_days}} or more missing days are not considered.</br>
+            </p>
+            {% if initial.location%}
+            <p class="stronger">Location: {{initial.location}}</br>
+            Dataset: {{ grid_name }}<br />
+            {%endif%}
+            {% if initial.station_id%}
+            <p class="stronger">Station: {{station_name.0}}</br>
+            {%endif%}
+            From Year {{start_year}} To Year {{end_year}}</br>
+            </p></br>
+            <ul class="nav nav-tabs">
+            {%for tab in tab_list%}
+                <li id="nav-{{tab}}" {%if forloop.counter == 1%}class="active"{%endif%}>
+                    <a onClick="ShowSodsummTab('{{tab}}');">{{tab_names|lookup:forloop.counter0}}</a>
+                </li>
+            {%endfor%}
+            </ul> 
+            <!-- TAB results -->
+            {%for tab in tab_list%} 
+            <div class="sodsumm-tab" id={{tab}} {%if forloop.counter != 1%}style="display:none"{%endif%}>
+                <div id="hc-container{{forloop.counter0}}" style="height:50%;" align="center"></div>
+                <script type="text/javascript" src="{{ MEDIA_URL }}myjs/hc-sodsumm.js"></script>
+                
+                <h3>
+                {%if tab != 'pcpn' and tab != 'snow'%}
                 <p>{{headers|lookup:tab|safe}}&nbsp;&nbsp;</p>
                 {%else%}
                 <p>{{headers.prsn|safe}}&nbsp;&nbsp;</p>
                 {%endif%}<!--end if tab != 'snow'-->
-                {%else%}
-                {{headers.prsn|safe}}
-                {%endif%}<!--end if tab != 'pcpn'-->
-                </table>
+                </h3>
                 </br>
-                <!--
-                <table class="dataTable" id="dataTable-0" border="1" width="90%">
-                {%for row in results|lookup:tab%}
-                {%if forloop.counter0 == 0%}
-                <thead>
-                    <tr>{%for val in row%}<th>{{val}}</th>{%endfor%}</tr>
-                </thead>
-                <tfoot>
-                    <tr>{%for val in row%}<th>{{val}}</th>{%endfor%}</tr>
-                </tfoot>
-                <tbody>
-                {%else%}
-                    <tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr>
-                {%endif%}
-                {%endfor%}
-                </tbody>
-                </table> -->
-
-                <table cellspacing="2">
-                {%if tab != 'pcpn'%}
-                {%if tab != 'snow'%}
-                {%for row in results|lookup:tab%}
-                {%if row.0 == "An"%}
-                <tr><td></td></tr>
-                {%endif%}<!--end if row.0 == "An"-->
-                <tr>{%for val in row%}
-                {%if forloop.counter0 == 0%}
-                <td align="left">{{val}}</td>
-                {%else%}
-                <td align="right">{{val}}</td>
-                {%endif%}
-                {%endfor%}</tr>
-                {%endfor%} <!--end for row in results|lookup:tab-->
-                {%else%}
-                {%for row in results.prsn%}
-                {%if row.0 == "An"%}
-                <tr><td></td></tr>
-                {%endif%}<!--end if row.0 == "An"-->
-                <tr>{%for val in row%}
-                {%if forloop.counter0 == 0%}
-                <td align="left">{{val}}</td>
-                {%else%}
-                <td align="right">{{val}}</td>
-                {%endif%}
-                {%endfor%}</tr>
-                {%endfor%}<!--end for row in results.prsn-->
-                {%endif%}<!--end if tab != 'snow'-->
-                {%else%}
-                {%for row in results.prsn%}
-                {%if row.0 == "An"%}
-                <tr><td></td></tr>
-                {%endif%}
-                <tr>{%for val in row%}
-                {%if forloop.counter0 == 0%}
-                <td align="left">{{val}}</td>
-                {%else%}
-                <td align="right">{{val}}</td>
-                {%endif%}
-                {%endfor%}</tr>
-                {%endfor%}
-                {%endif%} <!--end if tab != 'pcpn'-->
+                <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" style="display:none;">
+                {% for key_val in params_display_list %}
+                    {{key_val.0}} {{key_val.1}},
+                {% endfor %}
+                </div>  
+                <table class="dataTable" id="dataTable-{{forloop.counter0}}" width="90%">
+                    {%if tab != "snow" and tab != "pcpn"%}
+                    {%for row in results|lookup:tab%}
+                    {%if forloop.counter0 == 0%}
+                    <thead>
+                        <tr>{%for val in row%}<th>{{val}}</th>{%endfor%}</tr>
+                    </thead>
+                    <tfoot>
+                        <tr>{%for val in row%}<th>{{val}}</th>{%endfor%}</tr>
+                    </tfoot>
+                    <tbody>
+                    {%else%}
+                        <tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr>
+                    {%endif%}
+                    {%endfor%}
+                    </tbody>
+                    {%else%}
+                    {%for row in results.prsn%}
+                    {%if forloop.counter0 == 0%}
+                    <thead>
+                        <tr>{%for val in row%}<th>{{val}}</th>{%endfor%}</tr>
+                    </thead>
+                    <tfoot>
+                        <tr>{%for val in row%}<th>{{val}}</th>{%endfor%}</tr>
+                    </tfoot>
+                    <tbody>
+                    {%else%}
+                        <tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr>
+                    {%endif%}
+                    {%endfor%}
+                    </tbody>
+                    {%endif%}
                 </table>
-            </div><!--printable table -->
-        </div><!--End Tab content-->
-    </div><!--End Tab-->
-    {%endfor%} <!--end for tab in tab_list-->
-    </div><!--end tabs -->
-    </div><!--end div results-->
-{%endif%}<!--if results or graphics-->
-</td></table>
+            </div><!--sodsumm-tab-->
+            {%endfor%} <!--end for tab in tab_list-->
+        </div><!--end div results-->
+    {%endif%}<!--if results or graphics-->
+    </div><!--col-sm-12-->
+</div><!--row-->
 {%endblock%}

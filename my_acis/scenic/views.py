@@ -1654,6 +1654,8 @@ def climatology(request):
         if not data or not dates_list:
             results = {}
             context['run_done']= True
+            header_keys = WRCCUtils.set_display_keys(app_name, form_cleaned)
+            context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
             return render_to_response(url, context, context_instance=RequestContext(request))
         #Run application
         App = WRCCClasses.SODApplication('Sodsumm', data, app_specific_params=app_params)
@@ -1847,13 +1849,36 @@ def set_sodxtrmts_head(form):
         header.insert(1,['Grid', WRCCData.GRID_CHOICES[form['grid']][0]])
     return header
 
-
 def set_sodsumm_headers(table_list):
     headers = {}
     def set_header(table):
         rows = []
         if table == 'temp':
-            rows.append('<th colspan="16"> <b>Tempearture Statistics</b></th>')
+            rows.append('<b>Temperature Statistics</b>')
+            rows.append('Averages -- Daily Extremes -- Mean Extremes -- Number of Days')
+        if table == 'prsn':
+            rows.append('<b>Precipitation/Snow Statistics</b>')
+            rows.append('Total Precipitation -- Number of Days -- Total Snowfall')
+        if table == 'hdd':
+            rows.append('<b>Heating Degree Days</b>')
+            rows.append('Degree Days to selected Base Temperatures')
+        if table == 'cdd':
+            rows.append('<b>Cooling Degree Days</b>')
+            rows.append('Degree Days to selected Base Temperatures')
+        if table == 'corn':
+            rows.append('<b>Corn Growing Degree Days</b>')
+        return "\n".join(rows)
+
+    for table in table_list:
+         headers[table] = set_header(table)
+    return headers
+'''
+def set_sodsumm_headers(table_list):
+    headers = {}
+    def set_header(table):
+        rows = []
+        if table == 'temp':
+            rows.append('<th colspan="16"> <b>Temperature Statistics</b></th>')
             rows.append('<tr><td colspan="5">-------</td><td colspan="5">Averages</td><td colspan="4">-----------Daily Extremes </td><td colspan="4">----------------Mean Extremes </td><td colspan="4">-----------Number of Days</td></tr>')
         elif table == 'prsn':
             rows.append('<th colspan="15"><b>Precipitation/Snow Statistics</b></th>')
@@ -1878,7 +1903,7 @@ def set_sodsumm_headers(table_list):
     for table in table_list:
          headers[table] = set_header(table)
     return headers
-
+'''
 ######################
 #Data
 #####################

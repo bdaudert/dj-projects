@@ -1,20 +1,19 @@
-    {%load my_scenic_filters%}
-    <td>Summary Type: {{initial.summary_type}}</td>
-    <td>
-        <select id="summary_type" name="summary_type">
-         {%for opt, name in initial.form_options.summary_type%}
-            <option value="{{opt}}" 
-            {%if initial.summary_type == opt%}selected{%endif%}
-            {%if initial.location and opt|is_in:'both,all'%}disabled{%endif%}
-            >{{name}}</option>
-        {%endfor%} 
-        </select>
-    </td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+{%load my_scenic_filters%}
+<div class="form-group">
+    <label for="summary_type">{{initial.summary_type}}</label>
+    <img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
     <div class="pop-up">
         <div id="ht_summary_type"></div>
         <script type="text/javascript">                        
         $("#ht_summary_type").load("{{HTML_URL}}Docu_help_texts.html #ht_sodsumm_summary_type");
         </script>
     </div>
-    </td>
+    <select class="form-control" id="summary_type" name="summary_type">
+    {%for opt, name in initial.form_options.summary_type%}
+        <option value="{{opt}}" 
+        {%if initial.summary_type == opt%}selected{%endif%}
+        {%if initial.location and opt|is_in:'both,all'%}disabled{%endif%}
+        >{{name}}</option>
+    {%endfor%} 
+    </select>
+</div>

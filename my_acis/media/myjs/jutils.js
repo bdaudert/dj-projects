@@ -263,22 +263,28 @@ function popup_window(mylink, windowname)
 
 // [client side code for showing/hiding content]
 function ShowHide(divId){
-    obj = document.getElementById(divId);
-    if (obj.style.display == 'none')
-    {
-        obj.style.display = 'block';
-        //Show print button if divId is printable table
-        if (divId == 'main-table' && $('#print_button').length){
-            document.getElementById('print_button').style.display = 'block';
-        }
-    } 
-    else 
-    {
-        obj.style.display = 'none';
-        if (divId == 'main-table' && $('#print_button').length){
-            document.getElementById('print_button').style.display = 'none';
-        }
+    if ($(this).css('display') == 'none'){
+        $(this).css('display','block');
     }
+    else{
+        $(this).css('display','none');
+    }
+}
+
+function ShowSodsummTab(divId){
+    var id;
+    $('.sodsumm-tab').each(function(){
+        id = $(this).attr('id');
+        if (id == divId){
+            $(this).css('display','block');
+            $('#nav-' + id).addClass('active');
+            setTimeout(function(){$(window).resize();},1000);
+        }
+        else{
+            $(this).css('display','none');
+            $('#nav-' + id).removeClass('active');
+        }
+    });
 }
 
 //Hide all pop-ups if user clicks anywhere but a trigger/help title

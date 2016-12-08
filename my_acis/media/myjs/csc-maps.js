@@ -38,37 +38,6 @@ function zoomToLocation() {
 }
 
 
-function CustoomDeleteButton(controlDiv, map) {
-
-        // Set CSS for the control border.
-        var controlUI = document.createElement('div');
-        controlUI.style.backgroundColor = 'grey';
-        controlUI.style.border = '2px solid grey';
-        controlUI.style.borderRadius = '3px';
-        controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
-        controlUI.style.cursor = 'pointer';
-        controlUI.style.marginBottom = '22px';
-        controlUI.style.textAlign = 'center';
-        controlUI.title = 'Delete the shape from map';
-        controlDiv.appendChild(controlUI);
-
-        // Set CSS for the control interior.
-        var controlText = document.createElement('div');
-        controlText.style.color = 'rgb(25,25,25)';
-        controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
-        controlText.style.fontSize = '16px';
-        controlText.style.lineHeight = '38px';
-        controlText.style.paddingLeft = '5px';
-        controlText.style.paddingRight = '5px';
-        controlText.innerHTML = 'Delete slected shape from map';
-        controlUI.appendChild(controlText);
-
-        // Setup the click event listeners: simply set the map to Chicago.
-        controlUI.addEventListener('click', function() {
-            deleteSelectedShape();
-        });
-
-}
 
 function printMapControl(controlDiv,map_div){
   // Set CSS for the control border.
@@ -719,7 +688,6 @@ function initialize_station_finder() {
                             for (var key in tableDataAttrs[i]){
                                 $(rowNode).attr(key,tableDataAttrs[i][key]);
                             }
-                            //console.log(name_unique);
                             name_unique = markers[i].name;
                             station_ids_str+=markers[i].name + ',';
                         }
@@ -1023,6 +991,7 @@ function initialize_polygon_map(poly) {
         controlText.style.fontSize = '16px';
         controlText.style.paddingLeft = '5px';
         controlText.style.paddingRight = '5px';
+        //controlText.innerHTML ='<span class="glyphicon glyphicon-remove-circle"style="font-size:1.5em;" title="Delete from Map"></span>'
         controlText.innerHTML = '<b><font size="large">X</font></b>';
         controlUI.appendChild(controlText);
 
@@ -1084,8 +1053,8 @@ function initialize_polygon_map(poly) {
     else {
         //Polgygon
         for (var idx=0;idx < poly_list.length ; idx+=2 ){
-            poly_initial.push(new google.maps.LatLng(parseFloat(poly_list[idx+1]),parseFloat(poly_list[idx])))
             point = new google.maps.LatLng(parseFloat(poly_list[idx+1]), parseFloat(poly_list[idx]));
+            poly_initial.push(point);
             shape_bounds.extend(point);
         }
         shape_init_opts = {
@@ -1142,20 +1111,20 @@ function initialize_polygon_map(poly) {
         set_event_handlers(e)
         setSelection(e.overlay);
     });
-
-    //General event handlers
     google.maps.event.addListener(drawingManager, 'drawingmode_changed', deleteSelectedShape);
-    //google.maps.event.addListener(map,'click',clearSelection);
+
+    //setSelection(shape_init);
+    shape_init.setMap(map);
+    map.fitBounds(shape_bounds);
+    map.panToBounds(shape_bounds);
+    //FIX ME NOT SURE WHY MAP ZOOM --) on stn finder
+    if (map.getZoom() == 0){map.setZoom(6);};
+    drawingManager.setMap(map);
+    window.map = map;
     //Resize to show map
     var h = $(window).height();
     $('#map-polygon').css('height', (h / 2));
-    google.maps.event.trigger(map, 'resize');
-    drawingManager.setMap(map);
-    setSelection(shape_init);
-    map.fitBounds(shape_bounds);
-    setSelection(shape_init);
-    shape_init.setMap(map);
-    window.map = map;
+    setTimeout(function(){google.maps.event.trigger(map, 'resize');},500);
 }
 
 function initialize_map_overlay(map_id,poly) {
