@@ -516,7 +516,6 @@ function show_gridpoints_map(){
 
 function show_bbox_map() {
     $('#BBoxMap').css('display','block');
-    $('#map-bbox').css('display','block');
     if ($('#bounding_box').length){
         initialize_bbox_map($('#bounding_box').val());
     }
@@ -528,9 +527,6 @@ function show_bbox_map() {
 function hide_bbox_map(){
     if ($('#BBoxMap').length){
         $('#BBoxMap').css('display','none');
-    }
-    if ($('#map-bbox').length){
-        $('#map-bbox').css('display','none');
     }
 }
 
@@ -976,7 +972,6 @@ function update_maps(area_field){
     }
     else if (id == 'bounding_box'){
         $('#BBoxMap').css('display','block');
-        $('#map-bbox').css('display','block');
         initialize_bbox_map(val);
     }
     else if (id == 'county' || id == 'county_warning_area' || id == 'climate_division' || id == 'basin'){ 
@@ -1090,7 +1085,6 @@ function update_maps(area_field){
         }
         if ($('#BBoxMap').length && $('#BBoxMap').css('display')!='none'){
             $('#BBoxMap').css('display','none');
-            $('#map-bbox').css('display','none');
         }
     }
 }

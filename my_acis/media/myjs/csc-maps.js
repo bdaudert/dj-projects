@@ -842,9 +842,6 @@ function initialize_bbox_map(bbox) {
         },
         rectangleOptions: rectangleOptions
     });
-    drawingManager.setMap(map);
-    var bounds = rect.getBounds();
-    map.fitBounds(bounds);      
     //Event handlers
     google.maps.event.addListener(map, 'click', clearRect);
     google.maps.event.addListener(drawingManager, 'drawingmode_changed', clearRect);
@@ -871,6 +868,14 @@ function initialize_bbox_map(bbox) {
         var n = precise_round(bounds.getNorthEast().lat(),2);
         document.getElementById("bounding_box").value = w + ',' + s + ',' + e + ',' + n;
     });
+    drawingManager.setMap(map);
+    var bounds = rect.getBounds();
+    map.fitBounds(bounds);
+    $('#BBoxMap').css('display','block');
+    //Resize to show map
+    var h = $(window).height();
+    $('#map-bbox').css('height', (h / 2));
+    setTimeout(function(){google.maps.event.trigger(map, 'resize');},500);
 }   
 
 function initialize_polygon_map(poly) {
