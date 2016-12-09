@@ -206,6 +206,8 @@ function initialize_grid_point_map(loc) {
     });
     //Resize to show map
     var h = $(window).height();
+    $('#GridpointMap').css('display','block');
+    $('#GridpointMap').css('height', (h / 2));
     $('#map-gridpoint').css('height', (h / 2));
     google.maps.event.trigger(map, 'resize');
 }//close initialize_grid_point_map
@@ -1115,10 +1117,10 @@ function initialize_polygon_map(poly) {
 
     //setSelection(shape_init);
     shape_init.setMap(map);
-    map.fitBounds(shape_bounds);
-    map.panToBounds(shape_bounds);
     //FIX ME NOT SURE WHY MAP ZOOM --) on stn finder
     if (map.getZoom() == 0){map.setZoom(6);};
+    map.fitBounds(shape_bounds);
+    //map.panToBounds(shape_bounds); 
     drawingManager.setMap(map);
     window.map = map;
     //Resize to show map

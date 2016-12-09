@@ -201,23 +201,22 @@
     </div><!--col-sm-4-->
     <!--Main: Errors/maps-->
     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-        <!--Form errors and search parameter section-->
-            {%if form_error%}
-            <div class="results">
-                {% include 'includes/form_error.html'%}
-            </div>
-            {%endif%}
-            {%if results.error%}
-            <div class="results">
-                <p class="error">ERROR: {{results.error}}</p>
-            </div>
-            {%endif%}
-            {%if  run_done and  not results.data and not results.smry %}
-            <div class="results">
-                {% include 'includes/no_results.html'%}
-            </div>
-            {%endif%}
+    <!--Form errors and search parameter section-->
+    {%if form_error%}
+        <div class="results">
+            {% include 'includes/form_error.html'%}
         </div>
+        {%endif%}
+        {%if results.error%}
+        <div class="results">
+            <p class="error">ERROR: {{results.error}}</p>
+        </div>
+        {%endif%}
+        {%if  run_done and  not results.data and not results.smry %}
+        <div class="results">
+            {% include 'includes/no_results.html'%}
+        </div>
+        {%endif%}
         <!--Maps-->
         <!--Gridpoint map-->
         {% include 'includes/map-gridpoint.html'%}

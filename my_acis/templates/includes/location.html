@@ -1,14 +1,11 @@
-        
-        <td>Lon/Lat: </td>
-        <td>
-            <input type="text" size="20" id="location" name="location" value="{{initial.location}}" list="{{initial.autofill_list}}" onchange="update_value(this.value)">
-        </td>
-        <td>
-            <img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-            <div class="pop-up" id="area-pop-up">
-            <div id="ht_station_id"></div>
-            <script type="text/javascript">                        
+<div class="form-group">
+    <label for="gridpoint">Gridpoint</label>
+    <img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+    <div class="pop-up" id="area-pop-up">
+        <div id="ht_station_id"></div>
+        <script type="text/javascript">                        
             $("#ht_location").load("{{HTML_URL}}Docu_help_texts.html #ht_location");
-            </script>
-            </div>
-        </td>
+        </script>
+    </div>        
+    <input class="form-control" id="location" name="location" value="{{initial.location}}" onchange="update_value(this.value)">
+</div>

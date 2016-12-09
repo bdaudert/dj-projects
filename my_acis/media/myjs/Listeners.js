@@ -1,7 +1,6 @@
 $(document).ready(function () {
     //Bootstrap nav menue
     $('[data-submenu]').submenupicker();
-    
     var dataTables = $('.dataTable'), id;
     dataTables.each(function(index, dT){
         if ( !$.fn.dataTable.isDataTable( '#station_list' ) ) {
@@ -53,21 +52,6 @@ $(document).ready(function () {
                             var first_row = $('c[r=A1] t', sheet).text();
                             $('c[r=A1] t', sheet).text(header);
                             //Move each row down to make room for header
-                            /*
-                            var clRows = $('row', sheet);
-                            clRows.each(function () {
-                                var attr = $(this).attr('r');
-                                var ind = parseInt(attr);
-                                ind = ind + 1;
-                                $(this).attr('r',ind);
-                            });
-                            //Insert header
-                            var h_row = '<row r="1">';
-                            h_row += '<c t="inlineStr" r="A1" s="42"><is><t>';
-                            h_row += header + '</t></is></c>';
-                            //sheet.childNodes[0].childNodes[1].innerHTML = h_row + sheet.childNodes[0].childNodes[1].innerHTML; 
-                            $('c[r=A1] t', sheet).text(' C OO aS');
-                            */
                         }
                     },
                     {
@@ -98,7 +82,6 @@ $(document).ready(function () {
             }); //end dataTabel    
         }//end if not station_list
     });//end each
-    
     /*
     LINKED VARIABLE UPDATES
     */ 
@@ -966,23 +949,11 @@ $(document).ready(function () {
     Sets maps and area form field
     depending on area type
     */
+    //resets overlay map if same region is chosen
     $('.area_type').on('mouseup', function() {
         if ($(this).val().inList(['basin','county_warning_area', 'county','climate_division'])){
             $('.area_type').trigger("change");
         } 
-        /*
-        if (!$(this).data.length){
-            var open = true;
-        }
-        else{
-            var open = $(this).data("isopen");
-        }
-        console.log(open);
-        if(open) {
-            $('.area_type').trigger("change");    
-        }
-        $(this).data("isopen", !open);
-        */
     });
     $('.area_type').on('keydown change', function(){
         //Set area form field
@@ -1069,7 +1040,10 @@ $(document).ready(function () {
             $('#end_' + p).val(date_vals.end);
         }
     });
-  
+    $('#location').on('change', function(){
+        MAP_APP.Utils.update_marker_on_map($(this).val());
+    });
+
     /*
     DYNAMIC HIGHCHARTS
     */

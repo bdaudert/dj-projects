@@ -16,9 +16,7 @@
     <div id="Docu_location">{% include 'includes/Docu_location.html'%}</div>
     <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
     <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
-    <!--<div id="Docu_units">{% include 'includes/Docu_units.html'%}</div> 
-    <div id="Docu_add_degree_days">{% include 'includes/Docu_add_degree_days.html'%}</div>
-    <div id="Docu_degree_days">{% include 'includes/Docu_degree_days.html'%}</div>-->
+    <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div> 
     <div id="Docu_start_end_date">{% include 'includes/Docu_start_end_date.html'%}</div>
 </div>
 
@@ -114,119 +112,107 @@
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
     {% if results.graph_data %}
-    <div class="results">
-        <div class="row button-row">
-            <!--Buttons-->
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            </div>
-            <div class="col-xs- col-sm-7 col-md-7 col-lg-7">
+        <div class="results">
+            <div class="row button-row">
+                <!--Buttons-->
                 <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                    <input class="btn btn-success" id="show_hide_summary" type='button' value='Hide Summary'>
                 </div>
-                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                    <input class="btn btn-success" id="show_hide_graph" type='button' value='Hide Graph'>
+                <div class="col-xs- col-sm-7 col-md-7 col-lg-7">
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <input class="btn btn-success" id="show_hide_summary" type='button' value='Hide Summary'>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <input class="btn btn-success" id="show_hide_graph" type='button' value='Hide Graph'>
+                    </div>
+                </div> 
+            </div><br />
+            <!--CHART-->
+            <div id="main-graph" class="chart">
+                <p>Distance between {{results.graph_data.1.seriesName}} and
+                {{results.graph_data.0.seriesName}} is {{results.distance}} km.</p>
+                <!--Chart Layers-->
+                <div class="row chart-layers">
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        {% include 'includes/chart-type.html'%}
+                    </div>
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        {% include 'includes/chart-running-mean-days.html'%}
+                    </div>
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">        
+                        {% include 'includes/chart-average.html'%}
+                    </div>
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        {% include 'includes/chart-show-hide-legend.html'%}
+                    </div>
                 </div>
-            </div> 
-        </div><br />
-        <!--CHART-->
-        <div id="main-graph" class="chart">
-            <p>Distance between {{results.graph_data.1.seriesName}} and
-            {{results.graph_data.0.seriesName}} is {{results.distance}} km.</p>
-            <!--Chart Layers-->
-            <div class="row chart-layers">
-                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    {% include 'includes/chart-type.html'%}
+                <!--Chart-->
+                <div class="row" height="100%">
+                    <div align="center" id="hc-container" width="100%"></div>
+                    <script type="text/javascript">
+                        var graph_data = {{results.graph_data | safe_json}}
+                        generateTS_individual([0,1]);
+                    </script>
                 </div>
-                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    {% include 'includes/chart-running-mean-days.html'%}
+            </div><br /><!--main-graph-->
+            <!--TABLES-->
+            <div id="summary-table" align="center" style="display:block;">
+                <div class="dataTableInfo" id="dataTableInfo-0" style="display:none">
+                    Statistics,
+                    {%for key_val in params_display_list%}
+                    {{key_val.0}} {{key_val.1}}, 
+                    {%endfor%}
                 </div>
-                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">        
-                    {% include 'includes/chart-average.html'%}
+                <table border="1" class="dataTable nowrap" id="dataTable-0" style="display_none">
+                    <thead>
+                        <tr><th>Statistic</th><th>Station</th><th>Grid</th></tr>
+                    </thead>
+                    <tfoot>
+                        <tr><th>Statistic</th><th>Station</th><th>Grid</th></tr>
+                    </tfoot>
+                    <tbody>
+                        <tr>
+                        <td></td><td><b>{{results.graph_data.0.seriesName}}</b></td><td><b>{{results.graph_data.1.seriesName}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Max</td><td>{{results.stats.max.0}}</td><td>{{results.stats.max.1}}</td>
+                        </tr>
+                        <tr>
+                            <td>Min</td><td>{{results.stats.min.0}}</td><td>{{results.stats.min.1}}</td>
+                        </tr>
+                        <tr>
+                            <td>Mean</td><td>{{results.stats.mean.0}}</td><td>{{results.stats.mean.1}}</td>
+                        </tr>
+                        <tr>
+                            <td>Median</td><td>{{results.stats.median.0}}</td><td>{{results.stats.median.1}}</td>
+                        </tr>
+                        <tr>
+                            <td>SD</td><td>{{results.stats.std.0}}</td><td>{{results.stats.std.1}}</td>
+                        </tr>
+                        <tr>
+                            <td>Skew</td><td>{{results.stats.skew.0}}</td><td>{{results.stats.skew.1}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="dataTableInfo" id="dataTableInfo-1" style="display:none">
+                    Correlation Coefficients,
+                    {%for key_val in params_display_list%}
+                    {{key_val.0}} {{key_val.1}},
+                    {%endfor%}
                 </div>
-                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    {% include 'includes/chart-show-hide-legend.html'%}
-                </div>
-            </div>
-            <!--Chart-->
-            <div class="row" height="100%">
-                <div align="center" id="hc-container" width="100%"></div>
-                <script type="text/javascript">
-                    var graph_data = {{results.graph_data | safe_json}}
-                    generateTS_individual([0,1]);
-                </script>
-            </div>
-        </div><br /><!--main-graph-->
-        <!--TABLES-->
-        <div id="summary-table" align="center" style="display:block;">
-            <div class="dataTableInfo" id="dataTableInfo-0" style="display:none">
-            Statistics,
-            {%for key_val in params_display_list%}
-                {{key_val.0}} {{key_val.1}}, 
-            {%endfor%}
-            </div>
-            <table border="1" class="dataTable nowrap" id="dataTable-0" style="display_none">
-                <thead>
-                    <tr><th>Statistic</th><th>Station</th><th>Grid</th></tr>
-                </thead>
-                <tfoot>
-                    <tr><th>Statistic</th><th>Station</th><th>Grid</th></tr>
-                </tfoot>
-                <tbody>
-                    <tr>
-                    <td></td><td><b>{{results.graph_data.0.seriesName}}</b></td><td><b>{{results.graph_data.1.seriesName}}</b></td>
-                    </tr>
-                    <tr>
-                        <td>Max</td><td>{{results.stats.max.0}}</td><td>{{results.stats.max.1}}</td>
-                    </tr>
-                    <tr>
-                        <td>Min</td><td>{{results.stats.min.0}}</td><td>{{results.stats.min.1}}</td>
-                    </tr>
-                    <tr>
-                        <td>Mean</td><td>{{results.stats.mean.0}}</td><td>{{results.stats.mean.1}}</td>
-                    </tr>
-                    <tr>
-                        <td>Median</td><td>{{results.stats.median.0}}</td><td>{{results.stats.median.1}}</td>
-                    </tr>
-                    <tr>
-                        <td>SD</td><td>{{results.stats.std.0}}</td><td>{{results.stats.std.1}}</td>
-                    </tr>
-                    <tr>
-                        <td>Skew</td><td>{{results.stats.skew.0}}</td><td>{{results.stats.skew.1}}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="dataTableInfo" id="dataTableInfo-1" style="display:none">
-            Correlation Coefficients,
-            {%for key_val in params_display_list%}
-                {{key_val.0}} {{key_val.1}},
-            {%endfor%}
-            </div>
-            <table border="1" class="dataTable nowrap" id="dataTable-1" style="display_none">
-                <thead>
-                    <tr><th>Coefficient</th><th>Value</th></tr>
-                </thead>
-                <tfoot>
-                    <tr><th>Coefficient</th><th>Value</th></tr>
-                </tfoot>
-                <tbody> 
-                    <tr>
-                        <td>Pearson correlation coeff</td><td colspan="2">{{results.stats.pearsonc}}</td>
-                    </tr>
-                    <tr>
-                        <td>Pearson 2-tailed p-value</td><td colspan="2">{{results.stats.pearsonp}}</td>
-                    </tr>
-                    <tr>
-                        <td>Kolmogorov-Smirnov</td><td colspan="2">{{results.stats.ksc}}</td>
-                    </tr>
-                    <tr>
-                        <td>Kolmogorov-Smirnov p-value</td><td colspan="2">{{results.stats.ksp}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div><!--summary-table-->
-    </div><!--results-->
+                <table border="1" class="dataTable nowrap" id="dataTable-1" style="display_none">
+                    <thead><tr><th>Coefficient</th><th>Value</th></tr></thead>
+                    <tfoot><tr><th>Coefficient</th><th>Value</th></tr></tfoot>
+                    <tbody> 
+                        <tr><td>Pearson correlation coeff</td><td>{{results.stats.pearsonc}}</td></tr>
+                        <tr><td>Pearson 2-tailed p-value</td><td>{{results.stats.pearsonp}}</td></tr>
+                        <tr><td>Kolmogorov-Smirnov</td><td>{{results.stats.ksc}}</td></tr>
+                        <tr><td>Kolmogorov-Smirnov p-value</td><td>{{results.stats.ksp}}</td></tr>
+                    </tbody>
+                </table>
+            </div><!--summary-table-->
+        </div><!--results-->
     {% endif %}<!--if results.graph_data-->
     </div><!--col-sm-12-->   
-</div><!--end results-->
+</div><!--rows-->
 
 {%endblock%}
