@@ -82,6 +82,33 @@ $(document).ready(function () {
             }); //end dataTabel    
         }//end if not station_list
     });//end each
+
+    /*
+    FORM HELP TEXTS
+    */
+    $('.qmark').on('click', function(){
+        var id = $(this).attr('id');
+        var pop_up = $(this).next('div.pop-up')
+        pop_up.dialog({
+            position:{
+                my:'bottom left',
+                at:'top right',
+                of:'#' + id
+            },
+            title:'You can move and resize me!',
+            resizable: true,
+            modal: false,
+            width:'auto',
+            maxWidth: 600,
+            open: function () {
+                $(this).scrollTop(0);
+            }
+        });
+        $(".ui-icon").css("background-color", "#000000");
+        $(".ui-icon").css("background-color", "#ffffff");
+        pop_up.dialog('open');
+    });
+
     /*
     LINKED VARIABLE UPDATES
     */ 

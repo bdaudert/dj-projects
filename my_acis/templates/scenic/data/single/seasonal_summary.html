@@ -58,7 +58,7 @@
                     <label class="form-group-header">1. Define your region!</label> 
                     <div class="input-group">
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                            {% include 'includes/area_select.html'%}
+                            {% include 'includes/select-area.html'%}
                             <span class="input-group-addon"></span>
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -66,9 +66,9 @@
                         </div>
                     </div>
                     {%if initial.area_type == "location"%}
-                    <span  id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</span>
+                    <span  id="stn_finder" style="display:none">{% include 'includes/station-finder.html'%}</span>
                     {%else%}
-                    <span  id="stn_finder">{% include 'includes/station_finder.html'%}</span>
+                    <span  id="stn_finder">{% include 'includes/station-finder.html'%}</span>
                     {%endif%}
                 </div>
                 <div class="form-input-group form-group" align="center">
@@ -88,13 +88,13 @@
                     {%else%}
                     <span id="base_temp"  style="display:none">{% include 'includes/base_temperature.html'%}</span>
                     {%endif%}
-                    <span id="temp_summary">{% include 'includes/temporal_summary.html'%}<span>
+                    <span id="temp_summary">{% include 'includes/temporal-summary.html'%}<span>
                 </div>
                 <div class="form-input-group form-group" align="center">
                     <label class="form-group-header">4. Define your date ranges! </label>
                     <div class="input-group">
                          <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5"> 
-                            {% include 'includes/start_month_day.html'%}
+                            {% include 'includes/start-month-day.html'%}
                         </div>
                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                             <span class="input-group-addon"></span>
@@ -104,7 +104,7 @@
                         </div>
                     </div>
                     <div class="input-group">
-                        {% include 'includes/start_end_year.html'%}
+                        {% include 'includes/start-end-year.html'%}
                     </div>
                 </div>
                 <div class="form-group">

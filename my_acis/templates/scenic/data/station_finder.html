@@ -14,7 +14,7 @@
      <div id="Docu_area_of_interest">{% include 'includes/Docu_area_of_interest.html'%}</div>
      <div id="Docu_elements">{% include 'includes/Docu_elements.html'%}</div>
      <div id="Docu_element_constraints">{% include 'includes/Docu_element_constraints.html'%}</div>
-     <div id="Docu_start_end_date">{% include 'includes/Docu_start_end_date.html'%}</div>
+     <div id="Docu_start_end_date">{% include 'includes/Docu-start-end-date.html'%}</div>
      <div id="Docu_date_constraints">{% include 'includes/Docu_date_constraints.html'%}</div>
      <div id="Docu_el_date_constraints_examples">{% include 'includes/Docu_el_date_constraints_examples.html'%}</div>
 </div>
@@ -83,7 +83,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
         <!--Download form-->
         <div id="formDownload" class="form" style="display:none;">
-            {% include 'includes/station_finder_download_form.html'%}
+            {% include 'includes/station-finder-download-form.html'%}
         </div>
         <div id="offlineMessage"style="display:none;">
             {% include 'includes/offline_message.html'%}
@@ -113,7 +113,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
                     <label class="form-group-header">1. Define your region!</label> 
                     <div class="input-group">
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                            {% include 'includes/area_select.html'%}
+                            {% include 'includes/select-area.html'%}
                             <span class="input-group-addon"></span>
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -129,9 +129,9 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
                 <div class="form-input-group form-group" align="center">
                     <label class="form-group-header">4. Define your date ranges! </label>
                     <div class="input-group">                
-                        {% include 'includes/start_date.html'%}
+                        {% include 'includes/start-date.html'%}
                         <span class="input-group-addon"></span>
-                        {% include 'includes/end_date.html'%}
+                        {% include 'includes/end-date.html'%}
                     </div>
                     {% include 'includes/date_constraints.html'%}
                 </div>
@@ -192,7 +192,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
             <!-- Main Map-->
             {%if station_json and not run_done%}
             <div class="results">
-                {% include 'includes/station_finder_map.html'%} 
+                {% include 'includes/station-finder-map.html'%} 
             </div>
             {%endif%}
         </div><!--end col...-9-->
@@ -220,7 +220,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
                 {{key_val.0}} {{key_val.1}},
             {%endfor%}
             </div>
-            {% include 'includes/station_finder_map.html'%}
+            {% include 'includes/station-finder-map.html'%}
         </div><!--results-->
         {%endif%} 
     </div>

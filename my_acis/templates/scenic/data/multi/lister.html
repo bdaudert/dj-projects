@@ -14,7 +14,7 @@
     <div id="Docu_area_of_interest">{% include 'includes/Docu_area_of_interest.html'%}</div>
     <div id="Docu_data_type">{% include 'includes/Docu_data_type.html'%}</div>
     <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
-    <div id="Docu_temporal_resolution">{% include 'includes/Docu_temporal_resolution.html'%}</div>
+    <div id="Docu_temporal_resolution">{% include 'includes/Docu-temporal-resolution.html'%}</div>
     <div id="Docu_elements">{% include 'includes/Docu_elements.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
     <div id="Docu_add_degree_days">{% include 'includes/Docu_add_degree_days.html'%}</div>
@@ -22,7 +22,7 @@
     <div id="Docu_data_summary">{% include 'includes/Docu_data_summary.html'%}</div>
     <div id="Docu_show_flags">{% include 'includes/Docu_show_flags.html'%}</div>
     <div id="Docu_show_observation_time">{% include 'includes/Docu_show_observation_time.html'%}</div>
-    <div id="Docu_start_end_date">{% include 'includes/Docu_start_end_date.html'%}</div>
+    <div id="Docu_start_end_date">{% include 'includes/Docu-start-end-date.html'%}</div>
     <div id="Docu_data_format">{% include 'includes/Docu_data_format.html'%}</div>
     <div id="Docu_delimiter">{% include 'includes/Docu_delimiter.html'%}</div>
 </div><!--End how_to-->
@@ -61,7 +61,7 @@
                 <label class="form-group-header">1. Define your region!</label> 
                 <div class="input-group">
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        {% include 'includes/area_select.html'%}
+                        {% include 'includes/select-area.html'%}
                         <span class="input-group-addon"></span>
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -77,13 +77,13 @@
                     <span  id="grid_type">{% include 'includes/grids.html'%}</span>
                     <span class="input-group-addon"></span>
                     {% if initial.grid == "21"%}
-                    <span  id="temp_res">{% include 'includes/temporal_resolution.html'%}</span>
+                    <span  id="temp_res">{% include 'includes/temporal-resolution.html'%}</span>
                     {%else%}
-                    <span  id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</span>
+                    <span  id="temp_res" style="display:none">{% include 'includes/temporal-resolution.html'%}</span>
                     {%endif%}
                     {%else%}
                     <span  id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
-                    <span  id="temp_res" style="display:none">{% include 'includes/temporal_resolution.html'%}</span>
+                    <span  id="temp_res" style="display:none">{% include 'includes/temporal-resolution.html'%}</span>
                     {%endif%}
                 </div>
                 <div class="input-group">
@@ -109,40 +109,40 @@
                 <label class="form-group-header">3. What analysis do you want to run?</label>
                 <span  id="data_summ">{% include 'includes/data_summary.html'%}</span>
                 {%if initial.data_summary == "none"%}
-                <span id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</span>
-                <span id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</span>
+                <span id="temp_summary" style="display:none">{% include 'includes/temporal-summary.html'%}</span>
+                <span id="spat_summary" style="display:none">{% include 'includes/spatial-summary.html'%}</span>
                 <div class="input-group">
-                    <span  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</span>
+                    <span  id="start_wind" style="display:none;">{% include 'includes/start-window.html'%}</span>
                     <span class="input-group-addon"></span>
-                    <span  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</span>
+                    <span  id="end_wind" style="display:none;">{% include 'includes/end-window.html'%}</span>
                 </div>
                 {%endif%}
                 {%if initial.data_summary == "temporal_summary"%}
-                <span id="temp_summary">{% include 'includes/temporal_summary.html'%}</span>
-                <span id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</span>
+                <span id="temp_summary">{% include 'includes/temporal-summary.html'%}</span>
+                <span id="spat_summary" style="display:none">{% include 'includes/spatial-summary.html'%}</span>
                 <div class="input-group">
-                    <span  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</span>
+                    <span  id="start_wind" style="display:none;">{% include 'includes/start-window.html'%}</span>
                     <span class="input-group-addon"></span>
-                    <span  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</span>
+                    <span  id="end_wind" style="display:none;">{% include 'includes/end-window.html'%}</span>
                 </div>
                 {%endif%}
                 {%if initial.data_summary == "spatial_summary"%}
-                <span id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</span>
-                <span id="spat_summary" style="display:block">{% include 'includes/spatial_summary.html'%}</span>
+                <span id="temp_summary" style="display:none">{% include 'includes/temporal-summary.html'%}</span>
+                <span id="spat_summary" style="display:block">{% include 'includes/spatial-summary.html'%}</span>
                 <div class="input-group">
-                    <span  id="start_wind" style="display:none;">{% include 'includes/start_window.html'%}</span>
+                    <span  id="start_wind" style="display:none;">{% include 'includes/start-window.html'%}</span>
                     <span class="input-group-addon"></span>
-                    <span  id="end_wind" style="display:none;">{% include 'includes/end_window.html'%}</span>
+                    <span  id="end_wind" style="display:none;">{% include 'includes/end-window.html'%}</span>
                 </div>
                 {%endif%}
                 {%if initial.data_summary == "windowed_data"%}
                 <div class="input-group">
-                    <span  id="start_wind" style="display:block;">{% include 'includes/start_window.html'%}</span>
+                    <span  id="start_wind" style="display:block;">{% include 'includes/start-window.html'%}</span>
                     <span class="input-group-addon"></span>
-                    <span  id="end_wind" style="display:block;">{% include 'includes/end_window.html'%}</span>
+                    <span  id="end_wind" style="display:block;">{% include 'includes/end-window.html'%}</span>
                 </div>
-                <span id="temp_summary" style="display:none">{% include 'includes/temporal_summary.html'%}</span>
-                <span id="spat_summary" style="display:none">{% include 'includes/spatial_summary.html'%}</span>
+                <span id="temp_summary" style="display:none">{% include 'includes/temporal-summary.html'%}</span>
+                <span id="spat_summary" style="display:none">{% include 'includes/spatial-summary.html'%}</span>
                 {%endif%}
                 <div class="input-group">
                 {%if initial.data_type == "station" and initial.data_summary == "none"%}
@@ -164,9 +164,9 @@
             <div class="form-input-group form-group" align="center">
                 <label class="form-group-header">4. Define your date ranges! </label>
                 <div class="input-group">
-                    {% include 'includes/start_date.html'%}
+                    {% include 'includes/start-date.html'%}
                     <span class="input-group-addon"></span>
-                    {% include 'includes/end_date.html'%}
+                    {% include 'includes/end-date.html'%}
                 </div>
             </div>
             <div class="form-input-group form-group" align="center">

@@ -18,7 +18,7 @@
     <div id="Docu_degree_days">{% include 'includes/Docu_degree_days.html'%}</div>
     <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
     <div id="Docu_temporal_summary">{% include 'includes/Docu_temporal_summary.html'%}</div>
-    <div id="Docu_start_end_date">{% include 'includes/Docu_start_end_date.html'%}</div>
+    <div id="Docu_start_end_date">{% include 'includes/Docu-start-end-date.html'%}</div>
 </div><!--End how_to-->
 
 <!--Hidden variables-->
@@ -53,7 +53,7 @@
                 <label class="form-group-header">1. Define your region!</label>
                 <div class="input-group">
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        {% include 'includes/area_select.html'%}
+                        {% include 'includes/select-area.html'%}
                         <span class="input-group-addon"></span>
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -85,7 +85,7 @@
                 </div>
                 <div class="input-group">
                     <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span>
-                    <span id="temp_summary">{% include 'includes/temporal_summary.html'%}</span>
+                    <span id="temp_summary">{% include 'includes/temporal-summary.html'%}</span>
                     <!--<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
                     </div>
                     <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
@@ -99,13 +99,13 @@
                 <label class="form-group-header">3. Define your date ranges! </label>
                 <div class="input-group">
                     <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                        {% include 'includes/start_date.html'%}
+                        {% include 'includes/start-date.html'%}
                     </div>
                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                         <span class="input-group-addon"></span>
                     </div>
                     <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                        {% include 'includes/end_date.html'%}
+                        {% include 'includes/end-date.html'%}
                     </div>
                 </div>
             </div>

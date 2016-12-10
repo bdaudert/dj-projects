@@ -30,7 +30,7 @@
     <div id="Docu_area_statistic">{% include 'includes/Docu_area_statistic.html'%}</div>
     <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
-    <div id="Docu_temporal_summary">{% include 'includes/Docu_temporal_summary.html'%}</div> 
+    <div id="Docu_temporal_summary">{% include 'includes/Docu_temporal-summary.html'%}</div> 
 </div>
 
 <!--Tool Info/Howto-->
@@ -67,18 +67,18 @@
         <tr class="grid" id="grid_type" style="display:table-row;">{% include 'includes/grids_historic.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/year.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/season.html'%}</tr>
-        <tr class="station_grid" style="display:none">{% include 'includes/area_select.html'%}</tr>
+        <tr class="station_grid" style="display:none">{% include 'includes/select-area.html'%}</tr>
         <tr class="station_grid" style="display:table-row;" id="area" valign="bottom">{% include 'includes/area.html'%}</tr>
         <tr class="station_grid" style="display:table-row">{% include 'includes/area_reduce.html'%}</tr>
         <tr class="station_grid" style="display:table-row">{% include 'includes/area_statistic.html'%}</tr>
         <tr class="station_grid" style="display:table-row">{% include 'includes/element.html'%}</tr>
         <tr class="station_grid" style="display:table-row;">{% include 'includes/units.html'%}</tr>
-        <tr id="temp_summary" style="display:table-row">{% include 'includes/temporal_summary.html'%}</tr>
+        <tr id="temp_summary" style="display:table-row">{% include 'includes/temporal-summary.html'%}</tr>
         <tr style="display:none;">{% include 'includes/data_format.html'%}</tr>
         <tr style="display:none;">{% include 'includes/delimiter.html'%}</tr>
         <tr style="display:none;">{% include 'includes/out_file.html'%}</tr>
-        <tr style="display:none;" class="un">{% include 'includes/user_name.html'%}</tr>
-        <tr style="display:none;" class="ue">{% include 'includes/user_email.html'%}</tr>
+        <tr style="display:none;" class="un">{% include 'includes/user-name.html'%}</tr>
+        <tr style="display:none;" class="ue">{% include 'includes/user-email.html'%}</tr>
         </table>
         <input type="hidden" name="app_name" value="monthly_spatial_summary">
         <!--Hidden chart vars-->

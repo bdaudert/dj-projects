@@ -131,13 +131,11 @@ img.app_img {
 .trigger {
     white-space: nowrap;
 }
-
 .pop-up {
   display:none;
   text-align:left;
   padding:1%;
   background:#f2dede;
-  border:2px solid grey;
   z-index:10;
   max-width:80%
 }

@@ -62,7 +62,7 @@
                     <label class="form-group-header">1. Define your region!</label> 
                     <div class="input-group">
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                            {% include 'includes/area_select.html'%}
+                            {% include 'includes/select-area.html'%}
                             <span class="input-group-addon"></span>
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -70,9 +70,9 @@
                         </div>
                     </div>
                     {%if initial.area_type == "location"%} 
-                    <span  id="stn_finder" style="display:none">{% include 'includes/station_finder.html'%}</span>
+                    <span  id="stn_finder" style="display:none">{% include 'includes/station-finder.html'%}</span>
                     {%else%}
-                    <span  id="stn_finder">{% include 'includes/station_finder.html'%}</span>
+                    <span  id="stn_finder">{% include 'includes/station-finder.html'%}</span>
                     {%endif%}
                 </div>
                 <div class="form-input-group form-group" align="center">
@@ -93,7 +93,7 @@
                     <span id="base_temp"  style="display:none">{% include 'includes/base_temperature.html'%}</span>
                     {%endif%}
                     <div class="input-group">
-                        <span style="display:none" >{% include 'includes/statistic_period.html'%}</span>
+                        <span style="display:none" >{% include 'includes/statistic-period.html'%}</span>
                         <span >{% include 'includes/monthly_summary_statistic.html'%}</span>
                         {%if initial.statistic == "ndays"%}
                         <span id="threshold_type" >{% include 'includes/number_of_days.html'%}</span>
@@ -122,7 +122,7 @@
                 </div>
                 <div class="form-input-group form-group" align="center">
                     <label class="form-group-header">2. Choose your year range!</label>
-                    {% include 'includes/start_end_year.html'%}
+                    {% include 'includes/start-end-year.html'%}
                 </div>
                 <div class="form-input-group form-group" align="center">
                     <div class="input-group">
