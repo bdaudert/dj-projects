@@ -1,16 +1,9 @@
-{%if need_gridpoint_map%}
-    <div id="GridpointsMap" style="display:block">
-        {% include 'includes/zoom-to-button.html'%}
-        <div id="map-gridpoints"></div>
-    </div>
+<div id="zoom-to" {%if not need_gridpoints_map%} style="display:none;"{%endif%}>{% include 'includes/zoom-to-button.html'%}</div>
+<div id="GridpointsMap" {%if not need_gridpoints_map%}style="display:none;"{%endif%}>
+    <div id="map-gridpoints"></div>
     {%if initial.locations %}
-        <script type="text/javascript">initialize_grid_points_map("{{initial.locations}}");</script>
+    <script type="text/javascript">initialize_grid_points_map("{{initial.locations}}");</script>
     {% else %}
-        <script type="text/javascript">initialize_grid_points_map();</script>
+    <script type="text/javascript">initialize_grid_points_map();</script>
     {% endif %}
-{%else%}
-    <div id="GridpointsMap" style="display:none">
-        {% include 'includes/zoom-to-button.html'%}
-        <div id="map-gridpoints"></div>
-    </div>
-{%endif%}
+</div>

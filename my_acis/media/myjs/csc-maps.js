@@ -410,7 +410,7 @@ function initialize_station_finder() {
 
         $('#map_legend').append(tr);
         //Adjust map bounds
-        var bounds = new google.maps.LatLngBounds();
+        var map_bounds = new google.maps.LatLngBounds();
 
         //Create info window
         infowindow = new google.maps.InfoWindow({
@@ -468,7 +468,7 @@ function initialize_station_finder() {
             marker.sids = c.sids;
             marker.sid = c.sid;
             //Fit map to encompass all markers
-            bounds.extend(latlon);
+            map_bounds.extend(latlon);
 
             var avbl_elements = '<br /><b>' + c.available_elements[0][1] + '</b><br />';
             //var avbl_elements = '<br />'
@@ -583,6 +583,7 @@ function initialize_station_finder() {
             }
         }); //end each
         window.markers = markers;
+        sf_map.fitBounds(map_bounds);
         window.sf_map = sf_map;
         dataTable.draw();
         /*
@@ -781,7 +782,6 @@ function initialize_station_finder() {
             }
         };
         //var markerCluster = new MarkerClusterer(sf_map, markers);
-        sf_map.fitBounds(bounds);
         //google.maps.event.trigger(window.sf_map, 'resize');
     });//close getjson
     //Resize to show map
@@ -1120,11 +1120,11 @@ function initialize_polygon_map(poly) {
     });
     google.maps.event.addListener(drawingManager, 'drawingmode_changed', deleteSelectedShape);
 
-    //setSelection(shape_init);
+    setSelection(shape_init);
     shape_init.setMap(map);
     //FIX ME NOT SURE WHY MAP ZOOM --) on stn finder
-    if (map.getZoom() == 0){map.setZoom(6);};
     map.fitBounds(shape_bounds);
+    if(map.getZoom() == 0){map.setZoom(5);}
     //map.panToBounds(shape_bounds); 
     drawingManager.setMap(map);
     window.map = map;
@@ -1132,6 +1132,7 @@ function initialize_polygon_map(poly) {
     var h = $(window).height();
     $('#map-polygon').css('height', (h / 2));
     setTimeout(function(){google.maps.event.trigger(map, 'resize');},500);
+    window.map.fitBounds(shape_bounds);
 }
 
 function initialize_map_overlay(map_id,poly) {
@@ -1163,6 +1164,7 @@ function initialize_map_overlay(map_id,poly) {
     //Resize to show map
     var h = $(window).height();
     $('#' + map_id).css('height', (h / 2));
+    console.log(h);
     google.maps.event.trigger(map, 'resize');
     map.setCenter(center);
     map.fitBounds(bounds);

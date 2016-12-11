@@ -759,6 +759,7 @@ def multi_lister(request):
     #MAIN APP
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
+    context['need_overlay_map'] = False
     if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
         initial = DJANGOUtils.set_initial(request,app_name)
         context['initial'] = initial
@@ -1294,7 +1295,6 @@ def station_finder(request):
         else:
             response_data = json.dumps({'large_request':'True'})
         #Submit large request
-        #os.remove(settings.DATA_REQUEST_BASE_DIR + 'SFDownloadTest_params.json')
         json_dict = copy.deepcopy(form_cleaned)
         json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
         WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, json_dict)
@@ -1337,7 +1337,7 @@ def station_finder(request):
         form = DJANGOUtils.set_form(request,clean=False)
         form_cleaned = DJANGOUtils.set_form(request,clean=True)
         fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date']
-        form_error = check_form(form_cleaned, fields_to_check)
+        form_error = check_form(form, fields_to_check)
         if form_error:
             context['form_error'] = form_error
             return render_to_response(url, context, context_instance=RequestContext(request))

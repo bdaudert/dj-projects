@@ -33,7 +33,7 @@ label.form-group-header {
     text-align:center;
 }
 
-p.error {
+p.error, div.error {
     color:#FF007F;
 }
 
@@ -55,7 +55,7 @@ table#map_legend {
     background:#dedede;
     border:2px solid grey;
     width:100%;
-    min-width:100%;
+    /*min-width:100%;*/
     max-width:100%;
 }
 
@@ -135,7 +135,6 @@ img.app_img {
   display:none;
   text-align:left;
   padding:1%;
-  background:#f2dede;
   z-index:10;
   max-width:80%
 }
@@ -143,7 +142,7 @@ img.app_img {
 .main-form {
     background-color:#cedce2;
     border: 2px solid #aec6cf;
-    padding:0.5%;
+    padding:0.5% 0% 0.5% 0.5%;
 }
 
 .main-form-button {
@@ -154,9 +153,11 @@ img.app_img {
     background-color:#aec6cf;
 }
 
+/*
 .form-group {
-    padding:1% 0%;
+    padding:1% 1%;
 }
+*/
 
 .modal-ts {
     width:50%;
@@ -173,16 +174,15 @@ img.app_img {
 
 .form-input-group {
     background-color:#aec6cf;
-    width:100%;
-    /*
-    position:relative;
-    left:4%;
-    */
+    width:98%;
+    padding:1%;
 }
 
+/*
 .input-group {
-    padding:0;
+    padding:1%;
 }
+*/
 
 .sub-input-group{
     border:1px solid #3b5998;
@@ -194,10 +194,13 @@ img.app_img {
 .input-group-addon {
     background-color:#aec6cf;
     border:none;
+    max-width:20px;
 }
 
 #addon-2 {
     background-color:#cedce2;
+    border:none;
+    max-width:20px;
 }
 
 .station_list   {

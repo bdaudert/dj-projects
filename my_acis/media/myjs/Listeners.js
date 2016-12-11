@@ -88,8 +88,8 @@ $(document).ready(function () {
     */
     $('.qmark').on('click', function(){
         var id = $(this).attr('id');
-        var pop_up = $(this).next('div.pop-up')
-        pop_up.dialog({
+        var pop_up = $('#' + id).next('div.pop-up')
+        $(pop_up).dialog({
             position:{
                 my:'bottom left',
                 at:'top right',
@@ -102,13 +102,17 @@ $(document).ready(function () {
             maxWidth: 600,
             open: function () {
                 $(this).scrollTop(0);
+            },
+            close: function () {
+               $(pop_up).dialog('destroy'); 
             }
         });
-        $(".ui-icon").css("background-color", "#000000");
+        $(".ui-widget-content").css("background-color", "#f2dede");
+        $(".ui-widget-header").css("color", "#000000");
+        $(".ui-widget-header").css("background-color", "#f7ebeb");
+        $(".ui-icon").css("background-color", "#f7ebeb");
         $(".ui-icon").css("background-color", "#ffffff");
-        pop_up.dialog('open');
     });
-
     /*
     LINKED VARIABLE UPDATES
     */ 
@@ -977,11 +981,12 @@ $(document).ready(function () {
     depending on area type
     */
     //resets overlay map if same region is chosen
+    /*
     $('.area_type').on('mouseup', function() {
         if ($(this).val().inList(['basin','county_warning_area', 'county','climate_division'])){
             $('.area_type').trigger("change");
         } 
-    });
+    });*/
     $('.area_type').on('keydown change', function(){
         //Set area form field
         set_area($(this)); //form_utils function
@@ -1399,23 +1404,23 @@ $(document).ready(function () {
     $('#StationFinderDownloadForm').on('submit', function(event){
         show_loading_gif()
         event.preventDefault();
-        var form_data = $('#DataForm :input, #StationFinderDownloadForm :input').serialize();
+        $('#formDownload').dialog('close');
+        //var form_data = $('#DataForm :input, #StationFinderDownloadForm :input').serialize();
+        var form_data = $('#DataForm, #StationFinderDownloadForm').serialize();
         var jqxhr = $.ajax({
             url:'',
             method: "POST",
             data: form_data,
         })
-        .done(function(response) {
+        .done(function(response) {       
             response = JSON.parse(response);
             if ('form_error_download' in response){
-                $('#formErrorDownload').html(response['form_error_download']);
-                $('#formErrorDownload').css('display','block');
+                 $('#formDownload').dialog('open');
+                $('.formErrorDownload').html(response['form_error_download']);
+                $('.formErrorDownload').css('display','block');
             }
             else{
-                $("#formDownload").dialog('close');
-                $('#formErrorDownload').css('display','none');
-                //$('#offlineMessage').css('display','block');
-                //alert($('#offlineMessage').html());
+                $('.formErrorDownload').css('display','none');
                 ShowPopupDocu('offlineMessage');
             }
             hide_loading_gif();

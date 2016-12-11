@@ -113,7 +113,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
                     <label class="form-group-header">1. Define your region!</label> 
                     <div class="input-group">
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                            {% include 'includes/select-area.html'%}
+                            {% include 'includes/area-type.html'%}
                             <span class="input-group-addon"></span>
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -152,16 +152,12 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
             <!--Form Errors and search parameter section-->
             {%if form_error%}
             <div class="form_error results">
-                <p class="bg-error">ERROR: Please correct the form error(s) highlighted in red!</p>
-                {%for field_id, err  in form_error.items%}
-                    <script type="text/javascript">highlight_form_field("{{field_id}}","{{err}}")</script>
-                {%endfor%}
+                {% include 'includes/form_error.html'%}
             </div>
             {%endif%} 
 
             <!--Maps-->
             {%if need_polygon_map%}
-                <div id="zoom-to">{% include 'includes/zoom-to-button.html'%}</div>
                 <div id="PolyMap" style="display:block;">
                     <div id="map-polygon" style="display:block;"></div>
                     {%if initial.shape%}
@@ -170,7 +166,6 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
                         <script type="text/javascript">initialize_polygon_map();</script>
                     {%endif%}
             {%else%}
-                <div id="zoom-to" style="display:none;">{% include 'includes/zoom-to-button.html'%}</div>
                 <div id="PolyMap" style="display:none;">
                 <div id="map-polygon" style="display:none;"></div>
             {%endif%}
@@ -215,11 +210,6 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
                 {%if key_val.0 == "Variables"%}<br />{%endif%}
             {%endfor%}
             </h3><br />
-            <div class="dataTableInfo" id="dataTableInfo-0" style="display:none">
-            {%for key_val in params_display_list%}
-                {{key_val.0}} {{key_val.1}},
-            {%endfor%}
-            </div>
             {% include 'includes/station-finder-map.html'%}
         </div><!--results-->
         {%endif%} 

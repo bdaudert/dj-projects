@@ -151,18 +151,28 @@ function ShowPopupDocu(DivId){
         var bootstrapButton = $.fn.button.noConflict();
         $.fn.bootstrapBtn = bootstrapButton;
     }catch(e){};
+    var wWidth = $(window).width();
+    if (DivId == 'formDownload'){
+        var dWidth = wWidth * 0.3;
+    }
+    else{
+        var dWidth = wWidth * 0.4;
+    }
     $( '#' + DivId ).dialog({
         title:'You can move and resize me!',
         resizable: true,
         modal: false,
         width:'auto',
-        maxWidth: 600,
         open: function () {
             $(this).scrollTop(0);
+        },
+        create: function( event, ui ) {
+            // Set maxWidth
+            $(this).css("maxWidth", dWidth);
         }
     });
+    $(".ui-dialog").css("z-index", 10);
     $(".ui-widget-content").css("background-color", "#dedede");
-    $(".ui-widget-content").css("border", "2px solid #292929");
     $(".ui-widget-header").css("color", "#000000");
     $(".ui-widget-header").css("background-color", "#ffffff");
     $(".ui-icon").css("background-color", "#000000");

@@ -1,16 +1,9 @@
-{%if not hide_bbox_map%}
-    <div id="BBoxMap" style="display:block;">
-        {% include 'includes/zoom-to-button.html'%}
-        <div id="map-bbox"></div>
-        {%if initial.bounding_box%}
-            <script type="text/javascript">initialize_bbox_map("{{initial.bounding_box}}");</script>
-        {%else%}
-            <script type="text/javascript">initialize_bbox_map();</script>
-        {%endif%}
-    </div>
-{%else%}
-    <div id="BBoxMap" style="display:none;">
-        {% include 'includes/zoom-to-button.html'%}
-        <div id="map-bbox"></div>
-    </div>
-{%endif%}
+<div id="zoom-to" {%if not need_bbox_map%} style="display:none;"{%endif%}>{% include 'includes/zoom-to-button.html'%}</div>
+<div id="BBoxMap" {%if not need_bbox_map%} style="display:none;"{%endif%}>
+    <div id="map-bbox"></div>
+    {%if initial.bounding_box%}
+        <script type="text/javascript">initialize_bbox_map("{{initial.bounding_box}}");</script>
+    {%else%}
+        <script type="text/javascript">initialize_bbox_map();</script>
+    {%endif%}
+</div>
