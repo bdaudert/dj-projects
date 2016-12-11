@@ -144,7 +144,11 @@ img.app_img {
     border: 2px solid #aec6cf;
     padding:0.5% 0% 0.5% 0.5%;
 }
-
+.overlay-form {
+    background-color:#aec6cf;
+    border:1px solid black;
+    width:100%;
+}
 .main-form-button {
     width:100%;
 }

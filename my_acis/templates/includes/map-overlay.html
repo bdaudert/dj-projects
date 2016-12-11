@@ -1,6 +1,6 @@
 <div id="OverlayMap" {%if not need_overlay_map %} style="display:none;"{%endif%}>
     <div id="formOverlay">
-        <form id="overlayForm" class="overlay-form inline" role="form" action="" method="post" onsubmit="show_loading()">{% csrf_token %}
+        <form id="overlayForm" class="overlay-form" role="form" action="" method="post" onsubmit="show_loading()">{% csrf_token %}
             <div class="form-input-group form-group">
                 <div class="input-group">
                     <div id="zoom-to" {%if not need_overlay_map %} style="display:none;"{%endif%}>
