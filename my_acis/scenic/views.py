@@ -1271,6 +1271,7 @@ def station_finder(request):
         'title': settings.APPLICATIONS[app_name][0],
         'app_url': app_url
     }
+    context['need_overlay_map'] = False
     #Overlay maps
     if 'formOverlay' in request.POST:
         initial = DJANGOUtils.set_initial(request,'map_overlay')

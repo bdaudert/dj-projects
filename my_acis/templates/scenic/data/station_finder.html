@@ -157,33 +157,10 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
             {%endif%} 
 
             <!--Maps-->
-            {%if need_polygon_map%}
-                <div id="PolyMap" style="display:block;">
-                    <div id="map-polygon" style="display:block;"></div>
-                    {%if initial.shape%}
-                        <script type="text/javascript">initialize_polygon_map("{{initial.shape}}");</script>
-                    {%else%}
-                        <script type="text/javascript">initialize_polygon_map();</script>
-                    {%endif%}
-            {%else%}
-                <div id="PolyMap" style="display:none;">
-                <div id="map-polygon" style="display:none;"></div>
-            {%endif%}
-            </div><!--end PolyMap-->
-
+            <!--Polygon map-->
+            {% include 'includes/map-polygon.html'%}
             <!--Overlay maps-->
-            {%if need_overlay_map%}
-            <div id="OverlayMap">{% include 'includes/overlay_map.html'%}</div>
-            <div id="map-overlay"></div>
-            <div id="content-window"></div>
-            <script type="text/javascript">initialize_map_overlays()</script>
-            {%else%}
-            <div id="OverlayMap" style="display:none;">{% include 'includes/overlay_map.html'%}</div>
-            <div id="map-overlay" style="display:none;"></div>
-            <div id="content-window" style="display:none;"></div>
-            {%endif%}
-            <!--end map section-->
-
+            {% include 'includes/map-overlay.html'%}
             <!-- Main Map-->
             {%if station_json and not run_done%}
             <div class="results">
