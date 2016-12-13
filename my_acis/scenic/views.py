@@ -60,7 +60,6 @@ def test(request):
 
     import sys
     sys.path.insert(0, '/usr/local/google_appengine')
-    context['xx'] = sys.path
     import ee
     from oauth2client.contrib.appengine import AppAssertionCredentials
     from oauth2client.service_account import ServiceAccountCredentials
@@ -147,6 +146,7 @@ def dashboard(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_nurl
     }
     #Find mon, year to locate snotel map
@@ -180,6 +180,7 @@ def howto(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
     app_urls = {};app_names = {};param_urls = {}
@@ -239,6 +240,7 @@ def projections(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
     return render_to_response(url, context, context_instance=RequestContext(request))
@@ -249,6 +251,7 @@ def resources(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
     return render_to_response(url, context, context_instance=RequestContext(request))
@@ -288,6 +291,7 @@ def data_home(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
     return render_to_response(url, context, context_instance=RequestContext(request))
@@ -298,6 +302,7 @@ def single_point_prods(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
     #Link from other apps
@@ -323,6 +328,7 @@ def multi_point_prods(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
     #Link from other apps
@@ -343,11 +349,12 @@ def sw_networks(request):
     return render_to_response('scenic/data/sw_networks.html', context, context_instance=RequestContext(request))
 
 def download(request):
+    app_name = request.GET.get('app_name', None)
     context = {
         'title': 'Download',
+        'app_name':app_name,
         'icon':'ToolProduct.png'
     }
-    app_name = request.GET.get('app_name', None)
     json_file_name = request.GET.get('json_file', None)
     json_file = settings.TEMP_DIR + json_file_name
     json_in_file_name = json_file_name
@@ -387,6 +394,7 @@ def single_lister(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
     initial = DJANGOUtils.set_initial(request,app_name)
@@ -468,7 +476,7 @@ def single_lister(request):
             #req['data'].insert(0,header)
             req['data'] = [req['data']]
         if not req['data'] and not req['smry']:
-            req['error'] = {'error':'No data found for these parameters.'}
+            req['error'] = 'No data found for these parameters.'
             context['results'] = req
             return render_to_response(url, context, context_instance=RequestContext(request))
         context['run_done'] = True
@@ -521,6 +529,7 @@ def intraannual(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
 
@@ -612,6 +621,7 @@ def seasonal_summary(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
     #Download button pressed
@@ -650,7 +660,6 @@ def seasonal_summary(request):
     if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
         form = DJANGOUtils.set_form(initial,clean = False)
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
-        context['xx'] = form_cleaned
         element_short = WRCCUtils.elements_to_table_headers(form['element'],form['units'])[0]
         results = {
             'data_indices':[0],
@@ -694,6 +703,7 @@ def multi_lister(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
     #Overlay maps
@@ -702,7 +712,7 @@ def multi_lister(request):
         #AJAX
         kml_file_path = DJANGOUtils.create_kml_file(initial['area_type'], initial['overlay_state'])
         if kml_file_path[0:5] == 'ERROR':
-            response_data = json.dumps({'error':kml_file_path})
+            response_data = json.dumps({'overlay_error':kml_file_path})
         else:
             response_data = json.dumps({'kml_file_path':kml_file_path})
         response = set_ajax_response(response_data)
@@ -785,7 +795,6 @@ def multi_lister(request):
 
         #Small Data request
         req = {}
-        context['xx'] = form_cleaned
         if 'locations' in form_cleaned.keys():
             req =  WRCCUtils.request_and_format_multiple_gridpoints(form_cleaned)
         else:
@@ -881,6 +890,7 @@ def temporal_summary(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
     json_file = request.GET.get('json_file', None)
@@ -990,6 +1000,7 @@ def monthly_spatial_summary(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
     initial  = DJANGOUtils.set_initial(request,app_name)
@@ -1036,6 +1047,7 @@ def spatial_summary(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
     #Overlay maps
@@ -1044,7 +1056,7 @@ def spatial_summary(request):
         #AJAX
         kml_file_path = DJANGOUtils.create_kml_file(initial['area_type'], initial['overlay_state'])
         if kml_file_path[0:5] == 'ERROR':
-            response_data = json.dumps({'error':kml_file_path})
+            response_data = json.dumps({'overlay_error':kml_file_path})
         else:
             response_data = json.dumps({'kml_file_path':kml_file_path})
         response = set_ajax_response(response_data)
@@ -1158,7 +1170,6 @@ def spatial_summary(request):
             req = WRCCUtils.request_and_format_multiple_gridpoints(form_cleaned)
         else:
             req = WRCCUtils.request_and_format_data(form_cleaned)
-        context['xx'] = form_cleaned
         if not req['smry'] and req['data']:
             results['smry'] = req['data']
         else:
@@ -1256,10 +1267,12 @@ def spatial_summary(request):
 
 
 def climate_engine(request):
+    app_name = 'climate_engine'
     context = {
-        'title': ''
+        'title': '',
+        'app_name':app_name
     }
-    context['initial'] = {'app_name':'climate_engine'}
+    context['initial'] = {'app_name':app_name}
     return render_to_response('scenic/data/climate_engine.html', context, context_instance=RequestContext(request))
 
 
@@ -1269,6 +1282,7 @@ def station_finder(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
     context['need_overlay_map'] = False
@@ -1278,7 +1292,7 @@ def station_finder(request):
         #AJAX
         kml_file_path = DJANGOUtils.create_kml_file(initial['area_type'], initial['overlay_state'])
         if kml_file_path[0:5] == 'ERROR':
-            response_data = json.dumps({'error':kml_file_path})
+            response_data = json.dumps({'overlay_error':kml_file_path})
         else:
             response_data = json.dumps({'kml_file_path':kml_file_path})
         response = set_ajax_response(response_data)
@@ -1306,7 +1320,6 @@ def station_finder(request):
     from subprocess import call
     call(["touch", settings.TEMP_DIR + "Empty.json"])
     #Set up initial map (NV stations)
-    #context['station_json'] = 'NV_stn.json'
     initial = DJANGOUtils.set_initial(request, app_name)
     context['initial'] = initial
 
@@ -1326,10 +1339,11 @@ def station_finder(request):
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_file_name, json_dict)
         context['params_json'] = json_file_name
         if 'error' in station_json.keys():
-            context['error'] = station_json['error']
+            results = {'error':station_json['error']}
+            context['results'] = results
         if 'stations' not in station_json.keys() or  station_json['stations'] == []:
-            context['error'] = "No stations found for these search parameters."
-        context['station_json'] = f_name
+            context['results'] = {'error':'No stations found for these search parameters.'}
+        context['results'] = {'station_json':f_name}
         header_keys = WRCCUtils.set_display_keys(app_name, initial)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,initial)
 
@@ -1338,7 +1352,7 @@ def station_finder(request):
         form = DJANGOUtils.set_form(request,clean=False)
         form_cleaned = DJANGOUtils.set_form(request,clean=True)
         fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date']
-        form_error = check_form(form, fields_to_check)
+        form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
             return render_to_response(url, context, context_instance=RequestContext(request))
@@ -1373,12 +1387,12 @@ def station_finder(request):
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_file_name, json_dict)
 
         if 'error' in station_json.keys():
-            context['error'] = station_json['error']
+            results = {'error':station_json['error']}
+            context['results'] = results
         if 'stations' not in station_json.keys() or  station_json['stations'] == []:
-            context['error'] = "No stations found for these search parameters."
-        context['station_json'] = f_name
+            context['results'] = {'error':'No stations found for these search parameters.'}
+        context['results'] = {'station_json':f_name}
         context['run_done'] = True
-        context['results'] = True
         header_keys = WRCCUtils.set_display_keys(app_name, initial)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,initial)
         context['form_cleaned']= form_cleaned
@@ -1428,6 +1442,7 @@ def data_comparison(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
     initial = DJANGOUtils.set_initial(request,'data_comparison')
@@ -1465,6 +1480,7 @@ def monthly_summary(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
     initial = DJANGOUtils.set_initial(request, app_name)
@@ -1601,6 +1617,7 @@ def climatology(request):
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
         'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
         'app_url': app_url
     }
     initial= DJANGOUtils.set_initial(request, app_name)

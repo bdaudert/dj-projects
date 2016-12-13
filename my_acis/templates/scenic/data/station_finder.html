@@ -67,7 +67,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 
 <!--Hidden variables-->
 <!---Hidden variables-->
-<input type="hidden" id="app_name" name="app_name" value="station_finder">
+<input type="hidden" id="app_name" name="app_name" value="{{app_name}}">
 <input type="hidden" id="data_type" name="data_type" value="station">
 <!--Overlay map parameters-->
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
@@ -155,14 +155,25 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
                 {% include 'includes/form_error.html'%}
             </div>
             {%endif%} 
-
+            <!--Request error-->
+            {%if results.error%}
+            <div class="results"><p class="error">{{results.error}}</p></div>
+            {%endif%}
+            <!--No data found-->
+            {%if  run_done and  not results.station_json %}
+            <div class="results">{% include 'includes/no_results.html'%}</div>
+            {%endif%}
             <!--Maps-->
             <!--Polygon map-->
             {% include 'includes/map-polygon.html'%}
             <!--Overlay maps-->
             {% include 'includes/map-overlay.html'%}
+            <!--No data found-->
+            {%if  run_done and  not results.station_json %}
+            <div class="results">{% include 'includes/no_results.html'%}</div>
+            {%endif%}
             <!-- Main Map-->
-            {%if station_json and not run_done%}
+            {%if results.station_json and not run_done%}
             <div class="results">
                 {% include 'includes/station-finder-map.html'%} 
             </div>
@@ -174,19 +185,14 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 <!--Main Results-->
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
-        <!--Map error-->
-        {% if error %}
-            <p class="error results">{{ error }}</p>
-        {%endif%} 
         <!--Map and Station List-->
-        {% if station_json and run_done%}
+        {% if results.station_json and run_done and not results.error%}
         <div class="results">
-            <h3 align="center" style="max-width:95%;">
+            <p align="center" style="max-width:95%;">
             {%for key_val in params_display_list%}
-                <b>{{key_val.0}}</b>: {{key_val.1}};
-                {%if key_val.0 == "Variables"%}<br />{%endif%}
+                <b>{{key_val.0}}</b>: {{key_val.1}};<br />
             {%endfor%}
-            </h3><br />
+            </p><br />
             {% include 'includes/station-finder-map.html'%}
         </div><!--results-->
         {%endif%} 

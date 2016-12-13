@@ -207,8 +207,8 @@ function initialize_grid_point_map(loc) {
     //Resize to show map
     var h = $(window).height();
     $('#GridpointMap').css('display','block');
-    $('#GridpointMap').css('height', (2*h/3));
-    $('#map-gridpoint').css('height', (2*h/3));
+    $('#GridpointMap').css('height', (h*0.55));
+    $('#map-gridpoint').css('height', (h*0.55));
     google.maps.event.trigger(map, 'resize');
 }//close initialize_grid_point_map
 
@@ -786,7 +786,7 @@ function initialize_station_finder() {
     });//close getjson
     //Resize to show map
     var h = $(window).height(); 
-    $('#map-station-finder').css('height', (2*h/3));
+    $('#map-station-finder').css('height', (h*0.55));
 }//close initialize_station_finder
 
 function my_boxclick(box, category){
@@ -874,7 +874,7 @@ function initialize_bbox_map(bbox) {
     $('#BBoxMap').css('display','block');
     //Resize to show map
     var h = $(window).height();
-    $('#map-bbox').css('height', (2*h/3));
+    $('#map-bbox').css('height', (0.55*h));
     setTimeout(function(){google.maps.event.trigger(map, 'resize');},500);
 }   
 
@@ -1130,7 +1130,7 @@ function initialize_polygon_map(poly) {
     window.map = map;
     //Resize to show map
     var h = $(window).height();
-    $('#map-polygon').css('height', (2*h/3));
+    $('#map-polygon').css('height', (0.55*h));
     setTimeout(function(){google.maps.event.trigger(map, 'resize');},500);
     window.map.fitBounds(shape_bounds);
 }
@@ -1163,8 +1163,7 @@ function initialize_map_overlay(map_id,poly) {
     });
     //Resize to show map
     var h = $(window).height();
-    $('#' + map_id).css('height', (2*h/3));
-    console.log(h);
+    $('#' + map_id).css('height', (0.55*h));
     google.maps.event.trigger(map, 'resize');
     map.setCenter(center);
     map.fitBounds(bounds);
@@ -1232,7 +1231,7 @@ function initialize_map_overlays() {
     };
     //Resize to show map
     var h = $(window).height();
-    $('#map-overlay').css('height', (2*h/3));
+    $('#map-overlay').css('height', (0.55*h));
     google.maps.event.trigger(map, 'resize');
 }
 

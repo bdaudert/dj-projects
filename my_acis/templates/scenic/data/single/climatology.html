@@ -24,7 +24,7 @@
         </div>
 
 <!--Hidden variables-->
-<input type="hidden" id="app_name" name="app_name" value="climatology">
+<input type="hidden" id="app_name" name="app_name" value="{{app_name}}">
 <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
 <input type="hidden" id="JSON_DIR" name="JSON_DIR" value="{{JSON_DIR}}">
 <!--Set up autofill-->
@@ -146,13 +146,13 @@
                 <div id="hc-container{{forloop.counter0}}" style="height:50%;" align="center"></div>
                 <script type="text/javascript" src="{{ MEDIA_URL }}myjs/hc-sodsumm.js"></script>
                 
-                <h3>
+                <p>
                 {%if tab != 'pcpn' and tab != 'snow'%}
                 <p>{{headers|lookup:tab|safe}}&nbsp;&nbsp;</p>
                 {%else%}
                 <p>{{headers.prsn|safe}}&nbsp;&nbsp;</p>
                 {%endif%}<!--end if tab != 'snow'-->
-                </h3>
+                </p>
                 </br>
                 <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" style="display:none;">
                 {% for key_val in params_display_list %}

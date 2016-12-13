@@ -89,6 +89,8 @@ $(document).ready(function () {
     $('.qmark').on('click', function(){
         var id = $(this).attr('id');
         var pop_up = $('#' + id).next('div.pop-up')
+        var max_height = $(window).height()*0.5, 
+            max_width = $(window).width()*0.3;
         $(pop_up).dialog({
             position:{
                 my:'bottom left',
@@ -99,14 +101,19 @@ $(document).ready(function () {
             resizable: true,
             modal: false,
             width:'auto',
-            maxWidth: 600,
+            height:'auto',
+            maxHeight:max_height,
+            maxWidth:max_width,
             open: function () {
                 $(this).scrollTop(0);
             },
+            /*
             close: function () {
                $(pop_up).dialog('destroy'); 
-            }
+            }*/
         });
+        //$(pop_up).css('overflow','auto');
+
         $(".ui-widget-content").css("background-color", "#f2dede");
         $(".ui-widget-header").css("color", "#000000");
         $(".ui-widget-header").css("background-color", "#f7ebeb");
@@ -1385,8 +1392,8 @@ $(document).ready(function () {
         })
         .done(function(response) {
             response = JSON.parse(response);
-            if ('error' in response){
-                $('.ajax_error').html(response['error'])
+            if ('overlay_error' in response){
+                $('.ajax_error').html(response['overlay_error'])
             }
             else{
                 $('#kml_file_path').val(response['kml_file_path']);

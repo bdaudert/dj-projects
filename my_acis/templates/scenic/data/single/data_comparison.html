@@ -21,8 +21,7 @@
 </div>
 
 <!--Hidden variables-->
-<input type="hidden" id="app_name" name="app_name" value="data_comparison">
-
+<input type="hidden" id="app_name" name="app_name" value="{{app_name}}">
 
 <!--Button row-->
 {% include 'includes/button-row.html'%}
@@ -63,9 +62,13 @@
                     <span class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
                     {%endif%}
                     <div class="input-group">
-                        {% include 'includes/element.html'%}
-                        <span class="input-group-addon"></span>
-                        {% include 'includes/units.html'%}
+                       <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            {% include 'includes/element.html'%}
+                            <span class="input-group-addon"></span>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            {% include 'includes/units.html'%}
+                        </div>  
                     </div>
                     {%if initial.element == "gdd" or initial.element == "hdd" or initial.element == "gdd"%}
                     <span id="base_temp" >{% include 'includes/base_temperature.html'%}</span>

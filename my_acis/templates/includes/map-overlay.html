@@ -2,11 +2,11 @@
     <div id="formOverlay">
         <form id="overlayForm" class="overlay-form" role="form" action="" method="post" onsubmit="show_loading()">{% csrf_token %}
             <div class="form-input-group form-group">
-                <div class="input-group">
+                <div class="input-group" >
                     <div id="zoom-to" {%if not need_overlay_map %} style="display:none;"{%endif%}>
                     {% include 'includes/zoom-to-button.html'%}</div>
                     <span class="input-group-addon"></span>    
-                    <select class="overlay_state form-control" name="overlay_state" id="overlay_state" style="max-width:20%;">
+                    <select class="overlay_state form-control" name="overlay_state" id="overlay_state" style="max-width:50%;">
                     {%for opt, name in initial.form_options.state%}
                         <option value="{{opt}}" {%if initial.overlay_state == opt%} selected{%endif%}>
                         {{name}}</option>

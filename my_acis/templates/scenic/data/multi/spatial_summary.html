@@ -6,11 +6,10 @@
 
 {% block content %} 
 <!--Hidden variables-->
-
+<input type="hidden" id="app_name" name="app_name" value="{{app_name}}">
 <input type="hidden" id="host" name="host" value="{{host}}">
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
 <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-<input type="hidden" id="app_name" name="app_name" value="{{initial.app_name}}">
 
 <!--Set up autofill-->
 
@@ -82,8 +81,6 @@
                 <div class="input-group">
                     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8"> 
                         {% include 'includes/elements.html'%}
-                    </div>
-                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
                         <span class="input-group-addon"></span>
                     </div>
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
@@ -194,11 +191,11 @@
         {%if not results.error%}
         <div class="results">
             <!--Paramaters and Data list-->
-            <h3> 
+            <p> 
             {%for key_val in params_display_list%}
-                <b>{{key_val.0}}</b>: {{key_val.1}};
+                <b>{{key_val.0}}</b>: {{key_val.1}};<br />
             {%endfor%}
-            </h3><br />
+            </p><br />
 
             <!--Buttons-->
             <div class="row button-row">

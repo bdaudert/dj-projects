@@ -1,6 +1,6 @@
     <div>
-    {%if station_json and not error and not form_error and not need_overlay_map%}
-        <input type="hidden" id="station_json" name="variable" value="{{station_json}}">
+    {%if results.station_json and not error and not form_error and not need_overlay_map%}
+        <input type="hidden" id="station_json" name="variable" value="{{results.station_json}}">
         <input type="hidden" id="metadata_keys_str" name="metadata_keys_str" value="{{initial.metadata_keys_str}}">
         <div class="sf_map" align="center">
             <button class="btn btn-primary obtain_sf_data">

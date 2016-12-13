@@ -79,9 +79,13 @@
                     <span class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
                     {%endif%}
                     <div class="input-group">
-                        {% include 'includes/element.html'%}
-                        <span class="input-group-addon"></span>
-                        {% include 'includes/units.html'%}
+                        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            {% include 'includes/element.html'%}
+                            <span class="input-group-addon"></span>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            {% include 'includes/units.html'%}
+                        </div> 
                     </div>
                     {%if initial.element == "gdd" or initial.element == "hdd" or initial.element == "gdd"%}
                     <span id="base_temp" >{% include 'includes/base_temperature.html'%}</span>
@@ -168,11 +172,11 @@
             </div> 
             <!--CHART-->
             <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-                <h3>
+                <p>
                 {%for key_val in params_display_list%}
-                    <b>{{key_val.0}}</b>: {{key_val.1}}; 
+                    <b>{{key_val.0}}</b>: {{key_val.1}};<br />
                 {%endfor%}
-                </h3><br />
+                </p><br />
                 <!--CHART-->
                 <div id="main-graph">
                     <!--Chart Layers-->

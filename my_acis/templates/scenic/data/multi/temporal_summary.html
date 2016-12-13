@@ -22,7 +22,7 @@
 </div><!--End how_to-->
 
 <!--Hidden variables-->
-<input type="hidden" id="app_name" name="app_name" value="temporal_summary">
+<input type="hidden" id="app_name" name="app_name" value="{{app_name}}">
 <input type="hidden" id="data_type" name="data_type" value="grid">
 <input type="hidden" id="area_type" name="area_type" value="{{area_type}}">
 <input type="hidden" id="host" name="host" value="{{host}}">
@@ -66,11 +66,9 @@
                 <div class="input-group">
                     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8"> 
                         {% include 'includes/elements.html'%}
-                    </div>
-                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
                         <span class="input-group-addon"></span>
                     </div>
-                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                         {% include 'includes/units.html'%}
                     </div>
                 </div>

@@ -302,7 +302,7 @@ $(document).click(function(e){
     if( e.target.title != 'Help'){
         $('.pop-up').css('display','none');
     }
- });
+});
 
 //Shows documentation in pop up box upon hover
 $(function() {

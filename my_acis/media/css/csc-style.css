@@ -131,7 +131,9 @@ img.app_img {
 .trigger {
     white-space: nowrap;
 }
+
 .pop-up {
+  background-color: #f2dede;
   display:none;
   text-align:left;
   padding:1%;
@@ -178,6 +180,12 @@ img.app_img {
     padding:1%;
 }
 
+.input-group > [class*="col-"] {
+    padding:0% 0% 0% 1%;
+    float:left;
+}
+
+
 /*
 .input-group {
     padding:1%;
@@ -202,6 +210,7 @@ img.app_img {
     border:none;
     max-width:20px;
 }
+
 
 .station_list   {
     white-space:nowrap;

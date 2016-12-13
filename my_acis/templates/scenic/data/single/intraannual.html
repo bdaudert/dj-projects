@@ -20,8 +20,7 @@
 </div><!--End how_to-->
 
 <!---Hidden variables-->
-<input type="hidden" id="app_name" name="app_name" value="intraannual">
-
+<input type="hidden" id="app_name" name="app_name" value="{{app_name}}">
 <!--Set up autofill-->
 {%if initial.autofill_list %}
     <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
@@ -79,9 +78,13 @@
                     <span class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
                     {%endif%}
                     <div class="input-group">
-                        {% include 'includes/element.html'%}
-                        <span class="input-group-addon"></span>
-                        {% include 'includes/units.html'%}
+                        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            {% include 'includes/element.html'%}
+                            <span class="input-group-addon"></span>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            {% include 'includes/units.html'%}
+                        </div>
                     </div>
                     <div class="input-group">
                         {% include 'includes/calculation.html'%}
@@ -103,17 +106,17 @@
         </div><!--col-sm-4-->
         <!--Main: Errors/maps-->
         <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-            <!--Form errors and search parameter section-->
+            <!--Form error-->
             {%if form_error%}
             <div class="results">
                 {% include 'includes/form_error.html'%}
             </div>
             {%endif%}
+            <!--Request error-->
             {%if results.error%}
-            <div class="results">
-                <p class="error">ERROR: {{results.error}}</p>
-            </div>
+            <div class="results"><p class="error">{{results.error}}</p></div>
             {%endif%}
+            <!--Parameter or request error--> 
             {%if  run_done and  not results.data %}
             <div class="results">
                 {% include 'includes/no_results.html'%}
@@ -155,11 +158,11 @@
                 </div><!--DataList--> 
             </div><!--col-sm-3-->
             <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-                <h3>
+                <p>
                 {%for key_val in params_display_list%}
-                    <b>{{key_val.0}}</b>: {{key_val.1}};
+                    <b>{{key_val.0}}</b>: {{key_val.1}};<br />
                 {%endfor%}
-                </h3>
+                </p>
                 <!--CHART-->
                 <div id="main-graph" class="chart">
                     <!--Chart Layers-->

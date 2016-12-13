@@ -7,7 +7,7 @@
 {% block content %} 
 
 <!--Documentation-->
-<div class="docu" id="tool_info" style="display:none;">
+<div id="tool_info" style="display:none;">
     {% include 'includes/Docu_app_multi_lister.html'%}
 </div>
 <div id="how_to" style="display:none;">
@@ -28,7 +28,7 @@
 </div><!--End how_to-->
 
 <!---Hidden variables-->
-<input type="hidden" id="app_name" name="app_name" value="multi_lister">
+<input type="hidden" id="app_name" name="app_name" value="{{app_name}}">
 <!--For maps-->
 <input type="hidden" id="host" name="host" value="{{initial.host}}">
 <input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
@@ -39,8 +39,7 @@
 
 <!--Button row-->
 {% include 'includes/button-row.html'%}
-
- <!--FORM/MAP/ERRORS-->
+<!--FORM/MAP/ERRORS-->
 {% if not results.data and not results.smry%}
 <div id="top_of_page">
 {%else%}
@@ -71,7 +70,11 @@
             </div>
             <div class="form-input-group form-group" align="center">
                 <label class="form-group-header">2. Choose your dataset!</label>
-                {% include 'includes/data_type.html'%}
+                <div class="input-group">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        {% include 'includes/data_type.html'%}
+                    </div>
+                </div>
                 <div class="input-group">
                     {%if initial.data_type == "grid"%}        
                     <span  id="grid_type">{% include 'includes/grids.html'%}</span>
@@ -85,41 +88,39 @@
                     <span  id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
                     <span  id="temp_res" style="display:none">{% include 'includes/temporal-resolution.html'%}</span>
                     {%endif%}
-                </div>
+                </div><br />
                 <div class="input-group">
                     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8"> 
                         {% include 'includes/elements.html'%}
+                        <span class="input-group-addon"></span>
                     </div>
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        <span class="input-group-addon"></span>
                         {% include 'includes/units.html'%}
                     </div>
-                </div>
+                </div><br />
                 <div class="input-group">
-                    <span  id="add">{% include 'includes/add_degree_days.html'%}</span>
-                    <span class="input-group-addon"></span>
+                    <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                        <span  id="add">{% include 'includes/add_degree_days.html'%}</span>
+                        <span class="input-group-addon"></span>
+                    </div>
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
                     {%if initial.add_degree_days == "T"%}
-                    <span id="dd">{% include 'includes/degree_days.html'%}</span>
+                        <span id="dd">{% include 'includes/degree_days.html'%}</span>
                     {%else%}
-                    <span id="dd" style="display:none">{% include 'includes/degree_days.html'%}</span>
+                        <span id="dd" style="display:none">{% include 'includes/degree_days.html'%}</span>
                     {%endif%}
+                    </div>
                 </div>
             </div>
             <div class="form-input-group form-group" align="center">
                 <label class="form-group-header">3. What analysis do you want to run?</label>
-                <span  id="data_summ">{% include 'includes/data_summary.html'%}</span>
-                {%if initial.data_summary == "none"%}
-                <span id="temp_summary" style="display:none">{% include 'includes/temporal-summary.html'%}</span>
-                <span id="spat_summary" style="display:none">{% include 'includes/spatial-summary.html'%}</span>
                 <div class="input-group">
-                    <span  id="start_wind" style="display:none;">{% include 'includes/start-window.html'%}</span>
+                    <span  id="data_summ">{% include 'includes/data_summary.html'%}</span>
                     <span class="input-group-addon"></span>
-                    <span  id="end_wind" style="display:none;">{% include 'includes/end-window.html'%}</span>
-                </div>
-                {%endif%}
                 {%if initial.data_summary == "temporal_summary"%}
-                <span id="temp_summary">{% include 'includes/temporal-summary.html'%}</span>
-                <span id="spat_summary" style="display:none">{% include 'includes/spatial-summary.html'%}</span>
+                    <span id="temp_summary">{% include 'includes/temporal-summary.html'%}</span>
+                    <span id="spat_summary" style="display:none">{% include 'includes/spatial-summary.html'%}</span>
+                </div>
                 <div class="input-group">
                     <span  id="start_wind" style="display:none;">{% include 'includes/start-window.html'%}</span>
                     <span class="input-group-addon"></span>
@@ -127,8 +128,9 @@
                 </div>
                 {%endif%}
                 {%if initial.data_summary == "spatial_summary"%}
-                <span id="temp_summary" style="display:none">{% include 'includes/temporal-summary.html'%}</span>
-                <span id="spat_summary" style="display:block">{% include 'includes/spatial-summary.html'%}</span>
+                    <span id="temp_summary" style="display:none">{% include 'includes/temporal-summary.html'%}</span>
+                    <span id="spat_summary" style="display:block">{% include 'includes/spatial-summary.html'%}</span>
+                </div>
                 <div class="input-group">
                     <span  id="start_wind" style="display:none;">{% include 'includes/start-window.html'%}</span>
                     <span class="input-group-addon"></span>
@@ -136,24 +138,34 @@
                 </div>
                 {%endif%}
                 {%if initial.data_summary == "windowed_data"%}
+                    <span id="temp_summary" style="display:none">{% include 'includes/temporal-summary.html'%}</span>
+                    <span id="spat_summary" style="display:none">{% include 'includes/spatial-summary.html'%}</span>
+                </div>
                 <div class="input-group">
                     <span  id="start_wind" style="display:block;">{% include 'includes/start-window.html'%}</span>
                     <span class="input-group-addon"></span>
                     <span  id="end_wind" style="display:block;">{% include 'includes/end-window.html'%}</span>
                 </div>
-                <span id="temp_summary" style="display:none">{% include 'includes/temporal-summary.html'%}</span>
-                <span id="spat_summary" style="display:none">{% include 'includes/spatial-summary.html'%}</span>
+                {%endif%}
+                {%if initial.data_summary == "none"%}
+                    <span id="temp_summary" style="display:none">{% include 'includes/temporal-summary.html'%}</span>
+                    <span id="spat_summary" style="display:none">{% include 'includes/spatial-summary.html'%}</span>
+                </div>
+                <div class="input-group">
+                    <span  id="start_wind" style="display:none;">{% include 'includes/start-window.html'%}</span>
+                    <span class="input-group-addon"></span>
+                    <span  id="end_wind" style="display:none;">{% include 'includes/end-window.html'%}</span>
+                </div>
                 {%endif%}
                 <div class="input-group">
                 {%if initial.data_type == "station" and initial.data_summary == "none"%}
-                    <span  id="flags" style="display:block">{% include 'includes/show_flags.html'%}</span>
+                    <span  id="flags">{% include 'includes/show_flags.html'%}</span>
                     <span class="input-group-addon"></span>
-                    <span  id="obs_time" style="display:block">{% include 'includes/show_observation_time.html'%}</span>
-                    
+                    <span  id="obs_time">{% include 'includes/show_observation_time.html'%}</span>
                 {%elif initial.data_type == "station" and initial.data_summary == "windowed_data"%}
-                    <span  id="flags" style="display:block">{% include 'includes/show_flags.html'%}</span>
+                    <span  id="flags">{% include 'includes/show_flags.html'%}</span>
                     <span class="input-group-addon"></span>
-                    <span  id="obs_time" style="display:block">{% include 'includes/show_observation_time.html'%}</span>
+                    <span  id="obs_time">{% include 'includes/show_observation_time.html'%}</span>
                 {%else%}
                     <span  id="flags" style="display:none">{% include 'includes/show_flags.html'%}</span>
                     <span class="input-group-addon"></span>
@@ -172,7 +184,9 @@
             <div class="form-input-group form-group" align="center">
                 <label class="form-group-header">5. Output</label>
                 <div class="input-group">
-                    <span  style="display:block;">{% include 'includes/data_format.html'%}</span>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <span>{% include 'includes/data_format.html'%}</span>
+                    </div>
                     {%if initial.data_format == "html"%}
                     <span class="input-group-addon"></span>
                     <span id="out_format" class="out_format" style="display:none;">{% include 'includes/output_format.html'%}</span>
@@ -215,17 +229,20 @@
             <div style="display:none" class="ajax_error"></div>
             <!--Shape file upload form-->
             <div>{% include 'includes/upload_shape_file.html'%}</div>
-            <!--Request errors or results arrow-->
+            <!--Form error-->
             {%if form_error%}
             <div class="results" align="center">
                 {% include 'includes/form_error.html'%}
             </div>
             {%endif%}
-
+            <!--Parameter or request error-->
             {%if  run_done and not results.data and not results.smry %}
-            <div class="results" align="center">
-            {% include 'includes/no_results.html'%}
-            </div>
+            <div class="results">{% include 'includes/no_results.html'%}</div>
+            {%else%}
+            <!--Request error-->
+            {%if results.error%}
+            <div class="results"><p class="error">{{results.error}}</p></div>
+            {%endif%} 
             {%endif%}
             <!--Map section-->
             <!--Overlay maps-->
@@ -235,93 +252,77 @@
         </div><!--col-sm-8-->
     </div><!--row-->
 </div><!--top_of_page-->
-
+<br />
 <!--Results-->
 <!--Main Results-->
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        {%if results %}
+        {%if results.data or results.smry %}
         <div class="results" align="center">    
             <!--Data-->
-            <table id="main-table" align="center">
-                <td align="center"> 
-                {%if results.data or results.smry %}
-                <div align="left" style="max-width:100%;word-wrap:break-word;">
-                {%for key_val in params_display_list%}
-                    <b>{{key_val.0}}</b>: {{key_val.1}}; 
-                {%endfor%}
-                </div><br />
-                {%endif%}
-               
-                <!--NO SUMMARY DATA--> 
-                {% if not results.error and results.data and not results.smry %}
-                {% if initial.data_type == "station" %}
-                <p class="message" align="left" style="max-width:70%;word-wrap:break-word;">
-                    ACIS Data Flags: M,-9999 = Missing, T = Trace, S = Subsequent, A = Accumulated
-                </p><br />
-                {% endif%}
-
-                <!--lOOP over results-->
-                {% for point_data in results.data %}
-                <h3>
-                <b>METADATA</b>:<br />
+            <p align="center">
+            {%for key_val in params_display_list%}
+                <b>{{key_val.0}}</b>: {{key_val.1}};<br /> 
+            {%endfor%}
+            </p><br />
+            {% if not results.error and results.data %}
+            {% if initial.data_type == "station" %}
+            <p class="message" align="center">
+                ACIS Data Flags: M,-9999 = Missing, T = Trace, S = Subsequent, A = Accumulated
+            </p><br />
+            {% endif%}
+            <!--lOOP over results-->
+            {% for point_data in results.data %}
+            <p><b>Metadata</b>:<br />
                 {% for meta_list in results.meta|lookup:forloop.counter0 %}
-                    <b>{{meta_list.0}}</b>: {{meta_list.1}}
+                <b>{{meta_list.0}}</b>: {{meta_list.1}};<br />
                 {%endfor%}
-                </h3>
-                <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" style="display:none;">
-                {% for meta_list in results.meta|lookup:forloop.counter0 %}
-                    {{meta_list.0}} {{meta_list.1}},
-                {%endfor%}
-                </div>
-                <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}">
-                {%for data in point_data%}
-                {%if forloop.counter0 == 0%}
-                    <thead>
-                        <tr>{%for d in data%}<th>{{d}}</th>{%endfor%}</tr>
-                    </thead>
-                    <tfoot>
-                        <tr>{%for d in data%}<th>{{d}}</th>{%endfor%}</tr>
-                    </tfoot>
-                    <tbody>
-                    {%else%}
-                        <tr>{%for d in data%}<td>{{d}}</td>{%endfor%}</tr>
-                    {%endif%}
-                    {%endfor%}
-                    </tbody>
-                </table>
-                {% endfor %}
-                {%endif%}<!--if not results.error and results.data and not results.smry-->
-                <!--SUMMARY DATA-->
-                {%if not results.error and results.smry%}
-                <table class="dataTable" id="dataTable-0" border="1"  width="800px">
-                {%for s_data in results.smry%}
-                {%if forloop.counter0 == 0%}
-                    <thead><tr>
-                    {%for s in s_data%}
-                        <th>{{s}}</th>
-                    {%endfor%}
-                    </tr></thead>
-                    <tfoot><tr>
-                    {%for s in s_data%}
-                        <th>{{s}}</th>
-                    {%endfor%}
-                    </tr></tfoot>
-                    <tbody>
-                {%else%}
-                        <tr>
-                        {%for s in s_data%}
-                            <td>{{s}}</td>
-                        {%endfor%}
-                        </tr>
-                {%endif%}
-                {%endfor%}
-                    </tbody>
-            </table>
+            </p>
+            <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" style="display:none;">
+            {%for key_val in params_display_list%}
+                <b>{{key_val.0}}</b>: {{key_val.1}},
+            {%endfor%}
+            </div>
+           <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}" border="1">
+            {%for data in point_data%}
+            {%if forloop.counter0 == 0%}
+                <thead>
+                    <tr>{%for d in data%}<th>{{d}}</th>{%endfor%}</tr>
+                </thead>
+                <tfoot>
+                    <tr>{%for d in data%}<th>{{d}}</th>{%endfor%}</tr>
+                </tfoot>
+                <tbody>
+            {%else%}
+                <tr>{%for d in data%}<td>{{d}}</td>{%endfor%}</tr>
             {%endif%}
-            </td></table><!--End printable table-->
+            {%endfor%}
+                </tbody>
+            </table>
+            {% endfor %}<!--point_data-->
+            {%endif%}
+            <!--SUMMARY DATA-->
+            {%if not results.error and results.smry%}
+            <div class="dataTableInfo" id="dataTableInfo-0" style="display:none;">
+            {%for key_val in params_display_list%}
+                <b>{{key_val.0}}</b>: {{key_val.1}},
+            {%endfor%}
+            </div>
+            <table class="dataTable" id="dataTable-0" border="1">
+            {%for s_data in results.smry%}
+            {%if forloop.counter0 == 0%}
+                <thead><tr>{%for s in s_data%}<th>{{s}}</th>{%endfor%}</tr></thead>
+                <tfoot><tr>{%for s in s_data%}<th>{{s}}</th>{%endfor%}</tr></tfoot>
+                <tbody>
+            {%else%}
+                <tr>{%for s in s_data%}<td>{{s}}</td>{%endfor%}</tr>
+            {%endif%}
+            {%endfor%}
+                </tbody>
+            </table>
+            {%endif%}<!--if not results.error and results.smry-->
         </div><!--results-->
-    {%endif%}<!--if results-->
+    {%endif%}<!--if results.data or results.smry-->
     </div><!--col-xs-12-->
 </div><!--row-->
 {%endblock%}

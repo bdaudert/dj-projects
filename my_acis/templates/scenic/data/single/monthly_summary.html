@@ -26,8 +26,7 @@
     <div id="Docu_departure_from_averages">{% include 'includes/Docu_departure_from_averages.html'%}</div>
 </div>
 <!--Hidden variables-->
-<input type="hidden" id="app_name" name="app_name" value="monthly_summary">
-
+<input type="hidden" id="app_name" name="app_name" value="{{app_name}}">
 <!--Set up autofill-->
 {%if initial.autofill_list %}
     <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
@@ -83,9 +82,13 @@
                     <span class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
                     {%endif%}
                     <div class="input-group">
-                        {% include 'includes/element.html'%}
-                        <span class="input-group-addon"></span>
-                        {% include 'includes/units.html'%}
+                        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            {% include 'includes/element.html'%}
+                            <span class="input-group-addon"></span>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            {% include 'includes/units.html'%}
+                        </div>
                     </div>
                     {%if initial.element == "gdd" or initial.element == "hdd" or initial.element == "gdd"%}
                     <span id="base_temp" >{% include 'includes/base_temperature.html'%}</span>
@@ -184,14 +187,11 @@
             </div><br /><br />
             <!--Main table -->
             <div id="main-table" align="center">
-                <h3>
+                <p>
                 {%for key_val in results.header%}
-                    <b>{{key_val.0}}</b>: {{key_val.1}}
-                    {%if key_val.0 != "Start Year" and key_val.0 != "Variable"%}
-                        <br />
-                    {%endif%}
+                    <b>{{key_val.0}}</b>: {{key_val.1}}<br />
                 {%endfor%}
-                </h3>
+                </p>
                 
                 {% if results.element == "evap"%} 
                 <p><b>A note about Evaporation: </b><br />
@@ -230,14 +230,11 @@ Many stations do not measure pan evaporation during winter months. A "0.00" tota
             </div><!--End div="main-table"-->
             <div id="summary-table" align="center">
                 <!--Summary Table-->
-                <h3>
+                <p>
                 {%for key_val in results.header%}
-                    <b>{{key_val.0}}</b>: {{key_val.1}}
-                    {%if key_val.0 != "Start Year" and key_val.0 != "Variable"%}
-                        <br />
-                    {%endif%}
+                    <b>{{key_val.0}}</b>: {{key_val.1}};<br />
                 {%endfor%}
-                </h3>  
+                </p>  
 
                 <h3>Summary:</h3>
                 <div class="dataTableInfo" id="dataTableInfo-1" style="display:none">
