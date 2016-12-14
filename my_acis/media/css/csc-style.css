@@ -148,7 +148,7 @@ img.app_img {
 }
 .overlay-form {
     background-color:#aec6cf;
-    border:1px solid black;
+    /*border:1px solid black;*/
     width:100%;
 }
 .main-form-button {

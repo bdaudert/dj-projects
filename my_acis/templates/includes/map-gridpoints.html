@@ -1,4 +1,6 @@
-<div id="zoom-to" {%if not need_gridpoints_map%} style="display:none;"{%endif%}>{% include 'includes/zoom-to-button.html'%}</div>
+<div class="zoom-to"  id="zoom-to-map-gridpoints" {%if not need_gridpoints_map%} style="display:none;"{%endif%}>
+    {% include 'includes/zoom-to-button.html'%}
+</div>
 <div id="GridpointsMap" {%if not need_gridpoints_map%}style="display:none;"{%endif%}>
     <div id="map-gridpoints"></div>
     {%if initial.locations %}

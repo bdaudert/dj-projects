@@ -163,15 +163,15 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
             {%if  run_done and  not results.station_json %}
             <div class="results">{% include 'includes/no_results.html'%}</div>
             {%endif%}
-            <!--Maps-->
-            <!--Polygon map-->
-            {% include 'includes/map-polygon.html'%}
-            <!--Overlay maps-->
-            {% include 'includes/map-overlay.html'%}
             <!--No data found-->
             {%if  run_done and  not results.station_json %}
             <div class="results">{% include 'includes/no_results.html'%}</div>
             {%endif%}
+            <!--Maps-->
+            <!--Polygon map-->
+            {% include 'includes/map-polygon.html'%}
+            <!--Overlay maps-->
+            {% include 'includes/map-overlay.html'%} 
             <!-- Main Map-->
             {%if results.station_json and not run_done%}
             <div class="results">
