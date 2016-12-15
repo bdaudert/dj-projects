@@ -158,6 +158,7 @@ img.app_img {
 .side-form {
     background-color:#aec6cf;
     border: 1px solid black;
+    padding:1%;
 }
 
 /*
@@ -177,7 +178,7 @@ img.app_img {
 .form-input-group {
     background-color:#aec6cf;
     width:98%;
-    padding:1%;
+    padding:1% 1% 1% 1%;
 }
 
 .input-group > [class*="col-"] {
@@ -202,7 +203,8 @@ img.app_img {
 .input-group-addon {
     background-color:#aec6cf;
     border:none;
-    max-width:20px;
+    max-width:2%;
+    max-height:1%;
 }
 
 #addon-2 {
@@ -224,7 +226,7 @@ img.app_img {
 /*MAPS*/
 .map-options {
     background-color:#aec6cf;
-    padding:1%;
+    border:1px solid black;
 }
 
 #map-gridpoint, #map-overlay, #map-polygon, #map-bbox {
@@ -248,9 +250,17 @@ img.app_img {
     min-width:100%;
     min-height:50%;
 }
-
+/*
 #loading, #load, #loading-image, #load-image {
     z-index: 1000;
+}
+*/
+.col-loading {
+    text-align:center;
+    position:fixed;
+    top: 50%;
+    left: 0%;
+    z-index:1000;
 }
 
 /*bootstrap overrides

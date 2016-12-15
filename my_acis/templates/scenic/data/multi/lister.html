@@ -99,17 +99,13 @@
                     </div>
                 </div><br />
                 <div class="input-group">
-                    <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
-                        <span  id="add">{% include 'includes/add_degree_days.html'%}</span>
-                        <span class="input-group-addon"></span>
-                    </div>
-                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                    <span  id="add">{% include 'includes/add_degree_days.html'%}</span>
+                    <span class="input-group-addon"></span>
                     {%if initial.add_degree_days == "T"%}
-                        <span id="dd">{% include 'includes/degree_days.html'%}</span>
+                    <span id="dd">{% include 'includes/degree_days.html'%}</span>
                     {%else%}
-                        <span id="dd" style="display:none">{% include 'includes/degree_days.html'%}</span>
+                    <span id="dd" style="display:none">{% include 'includes/degree_days.html'%}</span>
                     {%endif%}
-                    </div>
                 </div>
             </div>
             <div class="form-input-group form-group" align="center">
@@ -265,7 +261,7 @@
                 <b>{{key_val.0}}</b>: {{key_val.1}};<br /> 
             {%endfor%}
             </p><br />
-            {% if not results.error and results.data %}
+            {% if not results.error and results.data  and not results.smry%}
             {% if initial.data_type == "station" %}
             <p class="message" align="center">
                 ACIS Data Flags: M,-9999 = Missing, T = Trace, S = Subsequent, A = Accumulated
@@ -279,9 +275,12 @@
                 {%endfor%}
             </p>
             <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" style="display:none;">
-            {%for key_val in params_display_list%}
-                <b>{{key_val.0}}</b>: {{key_val.1}},
+            {% for meta_list in results.meta|lookup:forloop.counter0 %}
+            {%if meta_list.0 != "Station ID/Network List"%}
+                <b>{{meta_list.0}}</b>: {{meta_list.1}},
+            {%endif%}
             {%endfor%}
+ 
             </div>
            <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}" border="1">
             {%for data in point_data%}

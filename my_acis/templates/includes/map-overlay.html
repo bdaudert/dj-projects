@@ -1,15 +1,14 @@
-<div id="OverlayMap" {%if not need_overlay_map %} style="display:none;"{%endif%}>
+<div class="map-options" id="OverlayMap" {%if not need_overlay_map %} style="display:none;"{%endif%}>
     <form id="overlayForm" class="overlay-form" role="form" action="" method="post" onsubmit="show_loading()">{% csrf_token %}
         <div class="form-input-group form-group">
-            <div class="input-group" >
-                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+            <div class="input-group" style="vertical-align:middle;">
+                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 col-middle">
                 <div class="zoom-to"  id="zoom-to-map-overlay" {%if not need_overlay_map %} style="display:none;"{%endif%}>
                     {% include 'includes/zoom-to-button.html'%}
                 </div>
-                <span class="input-group-addon"></span> 
+                <span class="input-group-addon"></span>
                 </div>
-                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                <br />
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-middle">
                 <select class="overlay_state form-control" name="overlay_state" id="overlay_state">
                 {%for opt, name in initial.form_options.state%}
                     <option value="{{opt}}" {%if initial.overlay_state == opt%} selected{%endif%}>

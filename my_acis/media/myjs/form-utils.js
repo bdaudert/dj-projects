@@ -964,6 +964,8 @@ function update_maps(area_field){
     var id = area_field.id;
     var val = area_field.value;
     if (id == 'shape'){
+        $('.zoom-to').css('display','none');
+        $('#zoom-to-map-polygon').css('display','block');
         $('#PolyMap').css('display','block');
         initialize_polygon_map(val);
     }
@@ -1043,18 +1045,20 @@ function update_maps(area_field){
                     });
                     //Find state from name and update overlay state
                     var state = 'none';
-                    if (id == 'county' || id == 'climate_division') {
+                    if (id.inList(['county','climate_division'])){
                         state = item.state.toLowerCase();
                     }
                     if (id == 'county_warning_area'){
                         //var state = val.split(', ')[0].split(' ')[1].slice(0,2).toLowerCase();
                         state = item.name.split(', ')[1].toLowerCase();
                     }
-                    if (state != 'none'){
-                        document.getElementById('overlay_state').value = state 
+                    if (state && state != 'none'){
+                        $('overlay_state').val(state); 
                         document.querySelector('#overlay_state [value="' + state + '"]').selected = true;
                     }
+                    /*
                     else {
+                        console.log('YPO')
                         //Can't find the state
                         ols = document.getElementsByName('overlay_state');
                         for (idx =0;idx < ols.length;idx++){
@@ -1064,6 +1068,7 @@ function update_maps(area_field){
                             catch(e){}
                         }
                     }
+                    */
                     //Update new map
                     initialize_map_overlay('map-overlay', poly); 
                     break

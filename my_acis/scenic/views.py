@@ -775,6 +775,7 @@ def multi_lister(request):
         context['initial'] = initial
         form = DJANGOUtils.set_form(initial,clean=False)
         form_cleaned = DJANGOUtils.set_form(initial)
+        context['xx'] = form_cleaned
         #Check for form errors
         fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)

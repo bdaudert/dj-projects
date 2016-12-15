@@ -152,23 +152,25 @@ function ShowPopupDocu(DivId){
         $.fn.bootstrapBtn = bootstrapButton;
     }catch(e){};
     var wWidth = $(window).width();
-    if (DivId == 'formDownload'){
-        var dWidth = wWidth * 0.3;
-    }
-    else{
-        var dWidth = wWidth * 0.4;
+    var max_height = $(window).height()*0.6, 
+        max_width = wWidth * 0.8;
+    if (DivId.inList(['formDownload','largeRequestForm'])){
+        var max_width = wWidth * 0.3;
     }
     $( '#' + DivId ).dialog({
+        position:{
+            my:'center',
+            at:'center',
+            of:window
+        },
         title:'You can move and resize me!',
         resizable: true,
         modal: false,
         width:'auto',
-        open: function () {
-            $(this).scrollTop(0);
-        },
-        create: function( event, ui ) {
-            // Set maxWidth
-            $(this).css("maxWidth", dWidth);
+        height:'auto',
+        create: function(){
+            $(this).css("maxWidth", max_width);
+            $(this).css("maxHeight", max_height);
         }
     });
     $(".ui-dialog").css("z-index", 10);
@@ -296,13 +298,6 @@ function ShowSodsummTab(divId){
         }
     });
 }
-
-//Hide all pop-ups if user clicks anywhere but a trigger/help title
-$(document).click(function(e){
-    if( e.target.title != 'Help'){
-        $('.pop-up').css('display','none');
-    }
-});
 
 //Shows documentation in pop up box upon hover
 $(function() {

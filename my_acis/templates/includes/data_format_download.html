@@ -8,7 +8,7 @@
             $("#ht_data_format").load("{{HTML_URL}}/Docu_help_texts.html #ht_data_format");
         </script>
     </div>
-    <select class="data_format" name="data_format" onchange="update_value(this.value);">
+    <select class="data_format form-control" name="data_format" onchange="update_value(this.value);">
     {%for opt, name in initial.form_options.data_format%}
     {%if opt != "html"%}
         <option value="{{opt}}" {%if opt == "xl"%}selected{%endif%}

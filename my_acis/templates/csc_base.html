@@ -122,8 +122,10 @@
         </div><!--container-fluid-->
     </nav>
 
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bg-info img-rounded page-title">
+    <div class="row" align="center">
+        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+        </div>
+        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 img-rounded page-title">
             {%if title%}
             <h1 class="lead display-1">{{title}}</h1>
             {%else%}
@@ -132,9 +134,11 @@
                 </h4>
             {%endif%}
         </div>
+        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+        </div>
     </div><br />
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="text-align:center;">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-loading">
            <!--Loading image-->
             <div id="loading" style="align:center;vertical-align:center;">
                 <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />

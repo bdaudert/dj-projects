@@ -88,32 +88,31 @@ $(document).ready(function () {
     */
     $('.qmark').on('click', function(){
         var id = $(this).attr('id');
-        var pop_up = $('#' + id).next('div.pop-up')
-        var max_height = $(window).height()*0.5, 
-            max_width = $(window).width()*0.3;
+        var pop_up = $('#' + id).next('div.pop-up');
+        var max_height = $(window).height()*0.3, 
+            max_width = $(window).width()*0.2;
         $(pop_up).dialog({
             position:{
                 my:'bottom left',
                 at:'top right',
                 of:'#' + id
             },
-            title:'You can move and resize me!',
+            title:'You can move me!',
             resizable: true,
             modal: false,
             width:'auto',
             height:'auto',
-            maxHeight:max_height,
-            maxWidth:max_width,
             open: function () {
                 $(this).scrollTop(0);
             },
-            /*
+            create: function(){
+                $(this).css("maxWidth", max_width);
+                $(this).css("maxHeight", max_height);
+            },
             close: function () {
-               $(pop_up).dialog('destroy'); 
-            }*/
-        });
-        //$(pop_up).css('overflow','auto');
-
+               $(pop_up).dialog('destroy');
+            }
+        }).height('auto').width('auto');
         $(".ui-widget-content").css("background-color", "#f2dede");
         $(".ui-widget-header").css("color", "#000000");
         $(".ui-widget-header").css("background-color", "#f7ebeb");
@@ -1441,9 +1440,10 @@ $(document).ready(function () {
     $('#LargeRequestForm').on('submit', function(event){
         show_loading_gif();
         event.preventDefault();
+        $('#formLargeRequest').dialog('close');
         //All extra input variables are linked and updated in the DataForm
         //Note need hidded vars user_name, email, delimiter, etx in main form
-        var form_data = $('#DataForm :input, #LargeRequestForm :input[name="formLargeRequest"]').serialize(); 
+        var form_data = $('#DataForm.main-form, #LargeRequestForm').serialize(); 
         hide_loading_gif();
         var jqxhr = $.ajax({
             url:'',
@@ -1453,12 +1453,13 @@ $(document).ready(function () {
         .done(function(response) {
             response = JSON.parse(response);
             if ('form_error' in response){
-                $('#formErrorLargeRequest').html(response['form_error']);
-                $('#formErrorLargeRequest').css('display','block');
+                $('#formLargeRequest').dialog('open');
+                $('.formErrorLargeRequest').html(response['form_error']);
+                $('.formErrorLargeRequest').css('display','block');
             }
             else{
                 $("#largeRequestForm").dialog('close');
-                $('#formErrorLargeRequest').css('display','none');
+                $('.formErrorLargeRequest').css('display','none');
                 //$('#offlineMessage').css('display','block');
                 ShowPopupDocu('offlineMessage');
 
@@ -1467,6 +1468,6 @@ $(document).ready(function () {
         .fail(function(jqXHR) {
             hide_loading_gif();
             $('.ajax_error').html(get_ajax_error(jqXHR.status));
-       }) 
+       })
     });
 });
