@@ -15,7 +15,7 @@
 <div id="how_to" style="display:none;">
     <div id="Docu_location">{% include 'includes/Docu_location.html'%}</div>
     <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
-    <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
+    <div id="Docu_variable">{% include 'includes/Docu_variable.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div> 
     <div id="Docu_start_end_date">{% include 'includes/Docu-start-end-date.html'%}</div>
 </div>
@@ -63,14 +63,14 @@
                     {%endif%}
                     <div class="input-group">
                        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-                            {% include 'includes/element.html'%}
+                            {% include 'includes/variable.html'%}
                             <span class="input-group-addon"></span>
                         </div>
                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                             {% include 'includes/units.html'%}
                         </div>  
                     </div>
-                    {%if initial.element == "gdd" or initial.element == "hdd" or initial.element == "gdd"%}
+                    {%if initial.variable == "gdd" or initial.variable == "hdd" or initial.variable == "gdd"%}
                     <span id="base_temp" >{% include 'includes/base_temperature.html'%}</span>
                     {%else%}
                     <span id="base_temp"  style="display:none">{% include 'includes/base_temperature.html'%}</span>

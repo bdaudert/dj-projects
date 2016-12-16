@@ -8,20 +8,20 @@ function set_style(color, fontSize, fontWeight, align) {
     return style;
 }
 
-function set_plot_color(element){
-    if (element == 'maxt'){
+function set_plot_color(variable){
+    if (variable == 'maxt'){
         var p_color = '#660066';
     }
-    if (element == 'mint'){
+    if (variable == 'mint'){
         var p_color = '#0000FF';
     }
-    if (element == 'pcpn' || element == 'evap' || element == 'wdmv' || element == 'pet'){
+    if (variable == 'pcpn' || variable == 'evap' || variable == 'wdmv' || variable == 'pet'){
         var p_color = '#008000';
     }
-    if (element == 'snow' || element == 'snwd'){
+    if (variable == 'snow' || variable == 'snwd'){
         var p_color = '#800080';
     }
-    if (element == 'hdd' || element == 'cdd' || element == 'gdd'){
+    if (variable == 'hdd' || variable == 'cdd' || variable == 'gdd'){
         var p_color = '#00FFFF';
     }
     return p_color
@@ -253,7 +253,7 @@ function set_barchart_axis_properties(data,plotline_no,axis){
 }
 
 //axis property function for more complex graphs
-function set_y_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis_min, element,statistic, dep_from_ave,plotline_no){
+function set_y_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis_min, variable,statistic, dep_from_ave,plotline_no){
     var props = {
         'axisMin':data_min,
         'axisMax':data_max,
@@ -270,7 +270,7 @@ function set_y_axis_properties(data_max,vertical_axis_max, data_min, vertical_ax
         return props; 
     }
     //Override data_min if necessary
-    if ((element == 'snow' || element == 'snwd' || element == 'pcpn') && 
+    if ((variable == 'snow' || variable == 'snwd' || variable == 'pcpn') && 
     (statistic !='ndays' && statistic !='sd' && dep_from_ave=='F')) {
         props.axisMin = 0.0;
     }

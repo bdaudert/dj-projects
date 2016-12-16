@@ -1,4 +1,4 @@
-//Function to determine if element is in list
+//Function to determine if variable is in list
 String.prototype.inList=function(list){
    return ( list.indexOf(this.toString()) != -1)
 }
@@ -276,7 +276,7 @@ function initialize_station_finder() {
     var station_json = TMP_URL + j_f;
     var start_date = $('#start_date').val();
     var end_date = $('#end_date').val();
-    var el_string = $('#elements').val().join(',');
+    var el_string = $('#variables').val().join(',');
     var dataTable; 
     if ( $.fn.dataTable.isDataTable( '#station_list' ) ) {
         dataTable = $('#station_list').DataTable();
@@ -470,16 +470,16 @@ function initialize_station_finder() {
             //Fit map to encompass all markers
             map_bounds.extend(latlon);
 
-            var avbl_elements = '<br /><b>' + c.available_elements[0][1] + '</b><br />';
-            //var avbl_elements = '<br />'
+            var avbl_variables = '<br /><b>' + c.available_variables[0][1] + '</b><br />';
+            //var avbl_variables = '<br />'
             var greg_flag = false;
-            var dr = c.available_elements[0][1];
-            for (var i=0;i<c.available_elements.length;i++){
-                if (c.available_elements[i][1].toString() != dr.toString()){
-                    dr = c.available_elements[i][1];
-                    avbl_elements += '<b>' + c.available_elements[i][1] + '</b><br />';
+            var dr = c.available_variables[0][1];
+            for (var i=0;i<c.available_variables.length;i++){
+                if (c.available_variables[i][1].toString() != dr.toString()){
+                    dr = c.available_variables[i][1];
+                    avbl_variables += '<b>' + c.available_variables[i][1] + '</b><br />';
                 }
-                avbl_elements += c.available_elements[i][0] + '<br />'     
+                avbl_variables += c.available_variables[i][0] + '<br />'     
             }
             var metadict = {
                 'name':String(c.name),
@@ -489,14 +489,14 @@ function initialize_station_finder() {
                 'networks':String(c.stn_networks),
                 'll':String(c.ll),
                 'elev':String(c.elevation),
-                'valid_daterange':String(avbl_elements)
+                'valid_daterange':String(avbl_variables)
             }
             var data_portal_href = '/csc/scenic/data/single/lister/'+
             '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid; 
             var app_portal_href = '/csc/scenic/data/single/'+
             '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid;
-            data_portal_href = data_portal_href + '&elements=' + el_string;
-            app_portal_href = app_portal_href + '&elements=' + el_string;
+            data_portal_href = data_portal_href + '&variables=' + el_string;
+            app_portal_href = app_portal_href + '&variables=' + el_string;
             data_portal_href = data_portal_href + '&start_date=' + start_date;
             app_portal_href = app_portal_href + '&start_date=' + start_date; 
             data_portal_href = data_portal_href + '&end_date=' + end_date;
@@ -512,7 +512,7 @@ function initialize_station_finder() {
                 '<b>Station ID: </b>' + c.sid + '<br/>' +
                 '<b>Network: </b>' + c.stn_network + '<br/>' +
                 '<b>State, Elev ft, Lon, Lat: </b>' + c.state + ', ' + c.elevation + ', ' + c.lon + ', ' +c.lat +'<br/>' +
-                '<b>Available elements with date range: </b>' + avbl_elements + '<br />' +
+                '<b>Available variables with date range: </b>' + avbl_variables + '<br />' +
                 '</div>';
             marker.contentString = contentString;
 
@@ -633,7 +633,7 @@ function initialize_station_finder() {
                     }
                 }
             }
-            //Remove trailing comma and set html element
+            //Remove trailing comma and set html variable
             station_ids_str = station_ids_str.replace(/,\s*$/, "");
             /*
             if (station_ids_str){
@@ -713,7 +713,7 @@ function initialize_station_finder() {
                 }
                 dataTable.draw();
             }
-            //Remove trailing comma and set html element
+            //Remove trailing comma and set html variable
             station_ids_str = station_ids_str.replace(/,\s*$/, "");
             //station_ids_str = station_ids_str.substring(0,station_ids_str.length - 1);
             $('#station_ids').val(station_ids_str);
@@ -763,7 +763,7 @@ function initialize_station_finder() {
                 }
             }
             dataTable.draw();
-            //Remove trailing comma and set html element
+            //Remove trailing comma and set html variable
             /*
             if (station_ids_str){
                 station_ids_str = station_ids_str.substring(0,station_ids_str.length - 1);

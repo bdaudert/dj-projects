@@ -381,10 +381,10 @@ $(document).ready(function () {
     /*
     ELEMENT(S) CHANGE
     */
-    $('#elements').on('change', function(){
+    $('#variables').on('change', function(){
         //Update chart indices string
         if ($('#chart_indices_string').length){
-            var count = $("#elements :selected").length;
+            var count = $("#variables :selected").length;
             var indices = ''
             for (var i=0;i<count;i++){
                 indices+=String(i) + ',';
@@ -394,7 +394,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#element').on('change', function(){
+    $('#variable').on('change', function(){
         //Set monthly statistic for monthly_summary
         var sum_els = ['pcpn','snow','evap','pet'];
         if ($(this).val().inList(sum_els)){
@@ -729,10 +729,10 @@ $(document).ready(function () {
                 $('#dd').css('display','block');
             }
         }
-        //Disable elements if prism
+        //Disable variables if prism
         var non_prism_els = ['gdd','hdd','cdd'];
         var station_only_els = ['obst','snow','snwd','evap','wdmv'];
-        $("#elements option").each(function(){
+        $("#variables option").each(function(){
             //Check if prism data, disable degree days
             if ($('#grid').val() == '21' && $(this).val().inList(non_prism_els)){
                 $(this).attr('disabled',true);
@@ -790,7 +790,7 @@ $(document).ready(function () {
     DATA TYPE
     Sets form fields according to data_type (station/grid)
     Affected form fields are
-    elements
+    variables
     grid
     */
     $('.data_type').on('change keyup', function(){
@@ -807,8 +807,8 @@ $(document).ready(function () {
             }
         }
         update_value($(this).val()); //form_utils function
-        //Set the elements
-        set_elements();
+        //Set the variables
+        set_variables();
         
         //var station_only_els = ['obst','snow','snwd','evap','wdmv'];
         //var non_prism_els = ['gdd','hdd','cdd'];
@@ -864,8 +864,8 @@ $(document).ready(function () {
             $('#area_type option[value="location"]').attr('disabled',true);
             //Show add degree day option    
             $('#add').css('display','block');
-            $("#elements option").each(function(){
-                //Enable all elements
+            $("#variables option").each(function(){
+                //Enable all variables
                 $(this).attr('disabled',false);
             });
             //Hide flags/obs time
@@ -923,7 +923,7 @@ $(document).ready(function () {
     MONTHLY SUMMARIES THRESHOLDS FOR NDAYS
     */
     //lean up needed
-    $('#element').on('change', function(){
+    $('#variable').on('change', function(){
         set_BaseTemp($(this).val());
         var lgb = '';
         if ( $('#less_greater_or_between').length){
@@ -953,7 +953,7 @@ $(document).ready(function () {
         }
     });
     $('#less_greater_or_between').on('change', function(){
-        var threshes = set_threshes($('#element').val()).split(',');
+        var threshes = set_threshes($('#variable').val()).split(',');
         var lgb = $(this).val();
         if (lgb == 'b'){ 
             $('#threshold_low_for_between').val(threshes[2]);
@@ -1009,7 +1009,7 @@ $(document).ready(function () {
                 $('#stn_finder').css('display','block');
             }
         }
-        set_elements();
+        set_variables();
         set_map($(this)); //form_utils function
         update_value($(this).val()); //form_utils function
         if ($(this).val() == 'shape_file'){
@@ -1443,7 +1443,7 @@ $(document).ready(function () {
         $('#formLargeRequest').dialog('close');
         //All extra input variables are linked and updated in the DataForm
         //Note need hidded vars user_name, email, delimiter, etx in main form
-        var form_data = $('#DataForm.main-form, #LargeRequestForm').serialize(); 
+        var form_data = $('#DataFor, #LargeRequestForm').serialize(); 
         hide_loading_gif();
         var jqxhr = $.ajax({
             url:'',

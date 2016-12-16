@@ -306,7 +306,7 @@ function isPrime (n){
 }
 
 
-function find_max(vals,element,statistic){
+function find_max(vals,variable,statistic){
     var max = null;
     try{
         max = Math.max.apply(Math,vals);
@@ -318,9 +318,9 @@ function find_max(vals,element,statistic){
     return max;
 }
 
-function find_min(vals, element,statistic, dep_from_ave){
+function find_min(vals, variable,statistic, dep_from_ave){
     var min = null;
-    if ((element == 'snow' || element == 'snwd' || element == 'pcpn' || element == 'evap' || element == 'wdmv') && (statistic !='ndays' && statistic !='sd' && dep_from_ave=='F')) {
+    if ((variable == 'snow' || variable == 'snwd' || variable == 'pcpn' || variable == 'evap' || variable == 'wdmv') && (statistic !='ndays' && statistic !='sd' && dep_from_ave=='F')) {
         min = 0.0;
     }
     else{

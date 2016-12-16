@@ -2,10 +2,10 @@
 
 <font class="message">Variables</font>
 <select style="max-height:200px;width:200px" multiple id='chart_indices' name="chart_selector">
-{% for el in results.elements%}
+{% for var in results.variables%}
     <option value={{forloop.counter0}} 
     {%if forloop.counter0|is_in:initial.chart_indices_string %} selected{%endif%}> 
-     {{el}} 
+     {{var}} 
     </option>
 {%endfor%}
 </select>

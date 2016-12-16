@@ -1,6 +1,6 @@
 {% extends "csc_base.html" %}
 
-<meta name="keywords" content="station finder, map, by date range, by element, station data, historic data,application, product, tool">
+<meta name="keywords" content="station finder, map, by date range, by variable, station data, historic data,application, product, tool">
 <meta name="description" content="SW-CKN Generates graphs of monthly averages">
 
 {%load my_scenic_filters%}
@@ -12,8 +12,8 @@
 </div>
 <div id="how_to" style="display:none;">
      <div id="Docu_area_of_interest">{% include 'includes/Docu_area_of_interest.html'%}</div>
-     <div id="Docu_elements">{% include 'includes/Docu_elements.html'%}</div>
-     <div id="Docu_element_constraints">{% include 'includes/Docu_element_constraints.html'%}</div>
+     <div id="Docu_variables">{% include 'includes/Docu_variables.html'%}</div>
+     <div id="Docu_variable_constraints">{% include 'includes/Docu_variable_constraints.html'%}</div>
      <div id="Docu_start_end_date">{% include 'includes/Docu-start-end-date.html'%}</div>
      <div id="Docu_date_constraints">{% include 'includes/Docu_date_constraints.html'%}</div>
      <div id="Docu_el_date_constraints_examples">{% include 'includes/Docu_el_date_constraints_examples.html'%}</div>
@@ -123,8 +123,8 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
                 </div>
                 <div class="form-input-group form-group" align="center">
                     <label class="form-group-header">2. Choose your dataset!</label>
-                    {% include 'includes/elements.html'%}
-                    {% include 'includes/element_constraints.html'%}
+                    {% include 'includes/variables.html'%}
+                    {% include 'includes/variable_constraints.html'%}
                 </div>
                 <div class="form-input-group form-group" align="center">
                     <label class="form-group-header">4. Define your date ranges! </label>

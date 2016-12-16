@@ -14,7 +14,7 @@
 <div id="how_to" style="display:none;">
     <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
     <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
-    <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
+    <div id="Docu_variable">{% include 'includes/Docu_variable.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
     <div id="Docu_base_temperature">{% include 'includes/Docu_base_temperature.html'%}</div> 
     <div id="Docu_statistic_period" style="display:none">{% include 'includes/Docu_statistic_period.html'%}</div>
@@ -83,14 +83,14 @@
                     {%endif%}
                     <div class="input-group">
                         <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-                            {% include 'includes/element.html'%}
+                            {% include 'includes/variable.html'%}
                             <span class="input-group-addon"></span>
                         </div>
                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                             {% include 'includes/units.html'%}
                         </div>
                     </div>
-                    {%if initial.element == "gdd" or initial.element == "hdd" or initial.element == "gdd"%}
+                    {%if initial.variable == "gdd" or initial.variable == "hdd" or initial.variable == "gdd"%}
                     <span id="base_temp" >{% include 'includes/base_temperature.html'%}</span>
                     {%else%}
                     <span id="base_temp"  style="display:none">{% include 'includes/base_temperature.html'%}</span>
@@ -193,7 +193,7 @@
                 {%endfor%}
                 </p>
                 
-                {% if results.element == "evap"%} 
+                {% if results.variable == "evap"%} 
                 <p><b>A note about Evaporation: </b><br />
                     Standard daily pan evaporation is measured using the four-foot diameter Class A evaporation pan. The pan water level reading is adjusted when precipitation is measure to obtain the actual evaporation. Most Class A pans are installed above ground, allowing effects such as radiation on the side walls and heat exchanges with the pan material. These effects tend to increase the evaporation totals. The amounts can then be adjusted by multiplying the totals b 0.70 or 0.80 to more closely estimate the evaporation from naturally existing surfaces such as a shallow lake, wet soil or other moist natural surfaces.
 Many stations do not measure pan evaporation during winter months. A "0.00" total indicates no measurement is taken. 

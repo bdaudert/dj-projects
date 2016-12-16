@@ -101,7 +101,7 @@ function printNode(ID){
 }
 
 
-//Highlights node by setting border, hides  all elements of class DivClass
+//Highlights node by setting border, hides  all variables of class DivClass
 //and unsets the boder of all other nodes of same class type
 function HighLight(node,DivClass,DivId) {
     //node is qmark, divclass is 'docu', DivId is corresponding docu;
@@ -630,8 +630,8 @@ function set_sodxtrmts_series_data_summary(datadict,initial,initial_graph,series
 
     //Find data min/max
     if (values.length > 0){
-        results.data_max = find_max(values,datadict.element,datadict.initial.statistic);
-        results.data_min = find_min(values,datadict.element,datadict.initial.statistic,datadict.initial.departures_from_averages);
+        results.data_max = find_max(values,datadict.variable,datadict.initial.statistic);
+        results.data_min = find_min(values,datadict.variable,datadict.initial.statistic,datadict.initial.departures_from_averages);
     }
     //Override max/min if needed
     if (initial_graph.vertical_axis_max != "Use default") { 

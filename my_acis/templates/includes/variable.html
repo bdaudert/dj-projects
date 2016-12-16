@@ -1,17 +1,17 @@
 {%load my_scenic_filters%}
 <div class="form-group">
-    <label for="element">Variable</label>
-    <img class="qmark" id="qmark-element" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <label for="variable">Variable</label>
+    <img class="qmark" id="qmark-variable" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
     <div class="pop-up">
-        <div id="ht_element"></div>
+        <div id="ht_variable"></div>
         <script type="text/javascript">                        
-        $("#ht_element").load("{{HTML_URL}}Docu_help_texts.html #ht_element");
+        $("#ht_variable").load("{{HTML_URL}}Docu_help_texts.html #ht_variable");
         </script>
     </div>
-    <select class="form-control" id="element" name="element">
-    {%for opt, name in initial.form_options.element%}
+    <select class="form-control" id="variable" name="variable">
+    {%for opt, name in initial.form_options.variable%}
         <option value="{{opt}}" 
-        {%if initial.element == opt%}selected{%endif%}
+        {%if initial.variable == opt%}selected{%endif%}
         {%if initial.data_type == "grid" and opt|is_in:'obst,snow,snwd,evap,wdmv,pet,dtr'%}disabled{%endif%}
         {%if initial.app_name == "data_comparison" and opt|is_in:'obst,snow,snwd,evap,wdmv,pet,dtr'%}disabled{%endif%}
         {%if initial.app_name != "monthly_summary" and opt|is_in:'pet,dtr'%}disabled{%endif%}

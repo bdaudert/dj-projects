@@ -1,7 +1,7 @@
 //------------------------
 // General function for monthly_summary
 //------------------------
-//Function to determine if element is in list
+//Function to determine if variable is in list
 String.prototype.inList=function(list){
    return ( list.indexOf(this.toString()) != -1)
 }
@@ -15,7 +15,7 @@ function generateTS_individual(chart_indices) {
     Generates highcarts figure
     Required Args:
         chart_indices: indices of data to be plotted,
-        if not given, we pick it up from html element chart_indices
+        if not given, we pick it up from html variable chart_indices
     */
     var args = arguments,
         datadict = graph_data; //template_variable
@@ -95,8 +95,8 @@ function generateTS_individual(chart_indices) {
         }
     }];
    
-    //When plotting multiple elements, change title/subtitle
-    //And add yAxis for each element
+    //When plotting multiple variables, change title/subtitle
+    //And add yAxis for each variable
     if (app_name == 'spatial_summary'){
         if (chart_indices.length > 1){
             //Change chart title/subtitle
@@ -191,7 +191,7 @@ function generateTS_individual(chart_indices) {
             data: datadict[idx].data
         }
         //link to approprate axis if we are
-        //plotting multiple elements
+        //plotting multiple variables
         if (app_name == 'spatial_summary' && idx > 0) {
             s['yAxis'] = i;
         }
@@ -204,11 +204,11 @@ function generateTS_individual(chart_indices) {
             s['threshold'] = ave_data[0][1].toFixed(2);
             s['color'] = 'blue';
             s['negativeColor'] = 'red';
-            if ($('#element').length && $('#element').val().inList(['maxt','mint','avgt','obst'])){
+            if ($('#variable').length && $('#variable').val().inList(['maxt','mint','avgt','obst'])){
                 s['color'] = 'red';
                 s['negativeColor'] = 'blue';
             }
-            if ($('#element').length && $('#element').val().inList(['gdd','hdd','cdd'])){
+            if ($('#variable').length && $('#variable').val().inList(['gdd','hdd','cdd'])){
                 s['color'] = 'green';
                 s['negativeColor'] = 'goldenrod';
             }
@@ -505,7 +505,7 @@ function generateTS_smry(chart_indices) {
     Generates highcarts figure
     Required Args:
         chart_indices: indices of data to be plotted,
-            if not given, we pick it up from html element chart_indices 
+            if not given, we pick it up from html variable chart_indices 
     */
     var args = arguments,
         datadict = graph_data; //template_variable

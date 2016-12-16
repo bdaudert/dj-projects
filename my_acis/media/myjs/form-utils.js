@@ -8,7 +8,7 @@ Array.prototype.indexOf = function(obj, start) {
      return -1;
 }
 
-//Function to determine if element is in list
+//Function to determine if variable is in list
 String.prototype.inList=function(list){
    return ( list.indexOf(this.toString()) != -1)
 }
@@ -38,8 +38,8 @@ function showLargeRequestForm(){
 // [client side code for showing/hiding content]
 function ShowHideTopOfPage(){
     /*
-    Deals with google map issue in hidden elements
-    Maps in hidden elements get mangled
+    Deals with google map issue in hidden variables
+    Maps in hidden variables get mangled
     when the hidden property changes to visible
     If div is shown and contains map, 
     the map needs to be re-initialized
@@ -369,10 +369,10 @@ function set_area(area_type_node){
     /*
     UPDATED
     Sets the label and form content
-    of the area form element
+    of the area form variable
     according to area_type
     Also adjusts autofill list 
-    and area form element helptext
+    and area form variable helptext
     */
     var lv, html_text, area_type = area_type_node.val(),i, pop_id,
         st, state, selected = ' ', kml_file_path = null;
@@ -426,17 +426,17 @@ function set_area(area_type_node){
     pop_id.append(div);
 }
 
-function set_elements(){
+function set_variables(){
     var non_prism_els = ['gdd','hdd','cdd'];
     var station_only_els = ['obst','snow','snwd','evap','wdmv','dtr','pet'];
     var el_opts,el;
-    if ($('#elements').length){
-        el = $("#elements");
-        el_opts = $("#elements option");
+    if ($('#variables').length){
+        el = $("#variables");
+        el_opts = $("#variables option");
     }
-    if ($('#element').length){
-        el = $("#element");
-        el_opts = $("#element option");
+    if ($('#variable').length){
+        el = $("#variable");
+        el_opts = $("#variable option");
     }
 
     el_opts.each(function(){
@@ -589,7 +589,7 @@ function set_map(node){
     var area_type, TMP_URL,state,kml_file_path;
     //Get TMP env variable (defined in templates/csc_base.html)
     area_type = node.val();
-    //Update hidden elements
+    //Update hidden variables
     if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
         TMP_URL = $('#TMP_URL').val();
         state = $('#overlay_state').val();
@@ -641,7 +641,7 @@ function set_map(node){
 
 function addHidden(theForm, name, value) {
     /*
-    Create a hidden input element with name and value and append it to theForm
+    Create a hidden input variable with name and value and append it to theForm
     */
     var input = document.createElement('input');
     input.type = 'hidden';
@@ -669,7 +669,7 @@ function setHiddenFields(fromFormID, toFormID) {
     $('#' + fromFormID + ' input, #' + fromFormID + ' select').each(
     function(){
         var name = $(this).attr('name');
-        //Only save form elements that do not exists in toForm
+        //Only save form variables that do not exists in toForm
         if (!name.inList(ff) && name.substring(0,4) != 'form'){
             var input = document.createElement('input');
             input.type = 'hidden';
@@ -702,36 +702,6 @@ function save_form_options(formID,hiddenID){
         $('#' + formID + ' select').each(function(){
             vals.push($(this).val());
             $('#' + hiddenID).val(vals.join(';'));
-        });
-    }
-}
-
-
-function set_form_options(formID, hiddenID){
-    /*
-    function called on load of page
-    to retrieve all cached form fields and repopulate
-    form fields
-    This is part of solution for backbutton issue:
-    Dynamic javascript form fields are not cached
-    */
-    var form_selects = $('#' + hiddenID).val().split(';');
-    if ($('#' + hiddenID).length){
-        idx = -1;
-        /*
-        $('#' + formID + ' input').each(function(){
-            idx+=1;
-            $(this).val(form_selects[idx]);
-        });
-        */
-        $('#' + formID + ' select').each(function(){
-            idx+=1;
-            if ($(this).attr('id') == 'elements'){
-                $(this).val(form_selects[idx].split(','));
-            }
-            else{
-                $(this).val(form_selects[idx]);
-            }
         });
     }
 }
@@ -773,41 +743,6 @@ function reset_options(){
     }  
 }
 
-function update_elements(node){
-    /*
-    Dynamic forms are not updated in browser cache
-    This function updates the elements field
-    which is a multiple select field list that
-    behaves in ways that can't be caught by the udate_value function above, 
-    which only deals with string variables
-    The passing of variables from/to html, django views and javascript
-    is done via strings. 
-    To deal with element lists, we need to use an element_strings object
-    and convert accordingly.
-    */
-    var els = []
-    var options = node.options;
-    for (var idx=0;idx<options.length;idx++) {
-        if (options[idx].selected) {
-            els.push(options[idx].value);
-            //document.getElementById('elements').options[idx].selected = true;
-            /*
-            el_nodes = document.getElementsByName('elements');
-            for (i=0;i<el_nodes.length;i++){
-                el_nodes[i].options[idx].selected = true;
-            }
-            */
-        }
-    }
-    if ($('#elements_string').length){
-        var elements_string = els.join();
-        var el_strings = document.getElementsByClassName('elements_string');
-        for (idx=0;idx<el_strings.length;idx++){
-            el_strings[idx].value = elements_string;
-        }
-    }
-}
-
 //Show "Loading image"
 function show_loading(){
     /*
@@ -843,7 +778,7 @@ function highlight_form_field(field_id, err){
     $('#' + field_id).parents('div[class^="form-group"]').append(err_div);
 }
 
-function set_threshes(element){
+function set_threshes(variable){
     /*
     Sets sodxtrmts thresholds
     */
@@ -854,7 +789,7 @@ function set_threshes(element){
             threshes = '2.5,0.25, 0.25,2.5';
         }
     }
-    if (element == 'avgt' || element == 'dtr' || element == 'obst'){
+    if (variable == 'avgt' || variable == 'dtr' || variable == 'obst'){
         threshes = '65,65,40,65';
         if ($('#units').length){
             u = document.getElementById('units').value;
@@ -863,7 +798,7 @@ function set_threshes(element){
             }
         }
     }
-    if (element == 'maxt'){
+    if (variable == 'maxt'){
         threshes = '40,90,65,80';
         if ($('#units').length){
             u = document.getElementById('units').value;
@@ -872,7 +807,7 @@ function set_threshes(element){
             }
         }
     }
-    if (element == 'mint'){
+    if (variable == 'mint'){
         threshes = '32,70,32,40';
         if ($('#units').length){
             u = document.getElementById('units').value;
@@ -881,7 +816,7 @@ function set_threshes(element){
             }
         }
     }
-    if (element == 'hdd' || element == 'gdd' || element == 'cdd'){
+    if (variable == 'hdd' || variable == 'gdd' || variable == 'cdd'){
         threshes = '10,30,10,30';
         if ($('#units').length){
             u = document.getElementById('units').value;
@@ -890,7 +825,7 @@ function set_threshes(element){
             }
         }
     }
-    if (element == 'wdmv'){
+    if (variable == 'wdmv'){
         threshes = '100,200,100,200';
         if ($('#units').length){
             u = document.getElementById('units').value;
@@ -902,13 +837,13 @@ function set_threshes(element){
     return threshes;
 }
 
-function set_BaseTemp(element){
+function set_BaseTemp(variable){
     /*
     sets sodxtrmts base temperatures for degree day calculations.
     */
-    if (element =='hdd' || element =='cdd' || element=='gdd'){
+    if (variable =='hdd' || variable =='cdd' || variable=='gdd'){
         $('#base_temp').css('display', 'block');
-        if (element == 'hdd' || element == 'cdd'){
+        if (variable == 'hdd' || variable == 'cdd'){
             $('#base_temperature').val('65');
         }
         else{
@@ -1107,91 +1042,3 @@ function update_maps(area_field){
     }
 }
 
-
-function set_grid_and_els(node, gridRowId){
-    /*
-    sets grid type and elements.
-    If temporal resolution is monthly or yearly, only allow PRISM data grid and PRISM elements
-    else allow all
-    */
-    var tbl_row_grid = document.getElementById(gridRowId);
-    var tbl_row_els = document.getElementById('Els');
-    var cell1_grid = tbl_row_grid.firstChild.nextSibling.nextSibling.nextSibling;
-    var cell1_els = tbl_row_els.firstChild.nextSibling.nextSibling.nextSibling;
-    var maxt_selected = '';
-    var mint_selected = '';
-    var pcpn_selected = '';
-    var els_select = document.getElementById('elements');
-    for (i=0;i<els_select.options.length;i++) {
-        if (els_select.options[i].selected) {
-            el_name = els_select.options[i].value;
-            if (el_name == "maxt"){maxt_selected ='selected';}
-            if (el_name == "mint"){mint_selected ='selected';}
-            if (el_name == "pcpn"){pcpn_selected ='selected';}
-        }
-    }
-    if (node.value == "mly" || node.value == "yly"){
-        cell1_grid.innerHTML='<select id="grid" name="grid">' +
-        '<option value="21" selected>PRISM(1895-Present)</option>'+ 
-        '</select>';
-        cell1_els.innerHTML = '<select id="elements" name="elements"' + 
-        ' multiple onchange="update_elements(this)">' +
-        '<option value="maxt" ' + maxt_selected +'>Maximum Temperature</option>' + 
-        '<option value="mint" ' + mint_selected + '>Minimum Temperature</option>' +
-        '<option value="pcpn" ' + pcpn_selected +'>Precipitation</option>' +
-        '</select>';
-        //hide degree day rows and setadd_degree_days to 'F'
-        document.getElementById('add_degree_days').value='F'
-        //document.getElementById('add_degree_days').options[1].selected = true;
-        document.getElementById('add').style.display = "none";
-        document.getElementById('dd').style.display = "none"; 
-    }
-    else{
-        cell1_grid.innerHTML='<select id="grid" name="grid">' +
-        '<option value="1" selected>NRCC Interpolated(1950-Present)</option>' +
-        '<option value="3">NRCC Int. Hi-Res(2007-Present)</option>' +
-        '<option value="21">PRISM(1981-Present)</option>' +
-        '<option value="4">CRCM+NCEP(1970-2000,2040-2070)</option>' +
-        '<option value="5">CRCM+CCSM(1970-2000,2040-2070)</option>' +
-        '<option value="6">CRCM+CCSM3(1970-2000,2040-2070)</option>' +
-        '<option value="7">HRM3+NCEP(1970-2000,2040-2070)</option>' +
-        '<option value="8">HRM3+HadCM3(1970-2000,2040-2070)</option>' +
-        '<option value="9">MM5I+NCEP(1970-2000,2040-2070)</option>' +
-        '<option value="10">MM5I+CCSM(1970-2000,2040-2070)</option>' +
-        '<option value="11">RCM3+NCEP(1970-2000,2040-2070)</option>' +
-        '<option value="12">RCM3+CGCM3(1970-2000,2040-2070)</option>' +
-        '<option value="13">RCM3+GFDL(1970-2000,2040-2070)</option>' +
-        '<option value="14">WRFG+NCEP(1970-2000,2040-2070)</option>' +
-        '<option value="15">WRFG+CCSM(1970-2000,2040-2070)</option>' +
-        '<option value="16">WRFG+CGCM3(1970-2000,2040-2070)</option>' +
-        '</select>';
-        cell1_els.innerHTML = '<select id="elements" name="elements"' +  
-        ' multiple onchange="update_elements(this)">' +
-        '<option value="maxt" ' + maxt_selected +'>Maximum Temperature</option>' +
-        '<option value="mint" ' + mint_selected +'>Minimum Temperature</option>' +
-        '<option value="avgt">Average Temperature</option>' +
-        '<option value="pcpn" ' + maxt_selected +'>Precipitation</option>' +
-        '<option value="avgt">Average Temperature</option>' +
-        '<option value="hdd">Heating Degree Days(65F/18.3C)</option>' +
-        '<option value="cdd">Cooling Degree Days(65F/18.3C)</option>' +
-        '<option value="gdd">Growing Degree Days(50F/10C)</option>' +
-        '</select>';
-        //Show degree day row
-        $('#add').css('display','block');
-    }
-}
-//Delete? replaced by set_smry
-function set_data_summary(node, rowId_t, rowId_s){
-    if (node.value == 'spatial_summary'){
-        $('#' + rowId_s).css('display','block');
-        $('#' + rowId_t).css('display','none');
-    }
-    else if (node.value =='temporal_summary'){
-        $('#' + rowId_s).css('display','none');
-        $('#' + rowId_t).css('display','block');
-    }
-    else{
-        $('#' + rowId_s).css('display','none');
-        $('#' + rowId_t).css('display','none');
-    }
-}

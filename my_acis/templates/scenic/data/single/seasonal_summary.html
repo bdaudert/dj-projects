@@ -12,7 +12,7 @@
 <div id="how_to" style="display:none;">
     <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
     <div id="Docu_grids">{% include 'includes/Docu_grids_historic.html'%}</div>
-    <div id="Docu_element">{% include 'includes/Docu_element.html'%}</div>
+    <div id="Docu_variable">{% include 'includes/Docu_variable.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
     <div id="Docu_temporal_summary">{% include 'includes/Docu_temporal_summary.html'%}</div>
     <div id="Docu_start_month_day">{% include 'includes/Docu_start_month_day.html'%}</div>
@@ -80,14 +80,14 @@
                     {%endif%}
                     <div class="input-group">
                         <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-                            {% include 'includes/element.html'%}
+                            {% include 'includes/variable.html'%}
                             <span class="input-group-addon"></span>
                         </div>
                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                             {% include 'includes/units.html'%}
                         </div> 
                     </div>
-                    {%if initial.element == "gdd" or initial.element == "hdd" or initial.element == "gdd"%}
+                    {%if initial.variable == "gdd" or initial.variable == "hdd" or initial.variable == "gdd"%}
                     <span id="base_temp" >{% include 'includes/base_temperature.html'%}</span>
                     {%else%}
                     <span id="base_temp"  style="display:none">{% include 'includes/base_temperature.html'%}</span>
@@ -158,10 +158,10 @@
                 </div>
                  <table border="1" class="dataTable nowrap" id="dataTable-0">
                     <thead>
-                        <tr><th>Year</th><th>{{results.element_short}}</th></tr>
+                        <tr><th>Year</th><th>{{results.variable_short}}</th></tr>
                     </thead>
                     <tfoot>
-                        <tr><th>Year</th><th>{{results.element_short}}</th></tr>
+                        <tr><th>Year</th><th>{{results.variable_short}}</th></tr>
                     </tfoot>
                     <tbody>
                     {%for date_data in results.data%}

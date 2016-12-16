@@ -190,7 +190,7 @@ def howto(request):
     p_url = app_url + '?'
     p_url+='area_type=shape'
     p_url+='&shape=-120.15,39.2,-120.02,39.27,-119.9,39.21,-119.92,38.96,-120.02,38.91,-120.15,38.97,-120.18,39.11'
-    p_url+='&elements=mint,pcpn&elements_constraints=all'
+    p_url+='&variables=mint,pcpn&variables_constraints=all'
     p_url+='&start_date=19300101&end_date=20141231&dates_constraints=all'
     app_urls['station_finder'] = app_url
     param_urls['station_finder'] = p_url
@@ -201,7 +201,7 @@ def howto(request):
     p_url+='area_type=county'
     p_url+='&county=Washoe, 32031'
     p_url+='&data_type=station'
-    p_url+='&elements=maxt,mint,avgt,obst'
+    p_url+='&variables=maxt,mint,avgt,obst'
     p_url+='&start_date=19900101&end_date=' + yesterday
     p_url+='&data_summary=none'
     p_url+='&show_flags=F&show_observation_time=T'
@@ -213,7 +213,7 @@ def howto(request):
     #Gallery: MONTHLY SUMMARIES
     app_url = settings.APPLICATIONS['monthly_summary'][1]
     p_url = app_url + '?'
-    p_url+='area_type=station_id&station_id=269171&element=maxt'
+    p_url+='area_type=station_id&station_id=269171&variable=maxt'
     p_url+='&start_year=POR&end_year=POR'
     p_url+='&statistic=mmax'
     app_urls['monthly_summary'] = app_url
@@ -223,7 +223,7 @@ def howto(request):
     app_url = settings.APPLICATIONS['spatial_summary'][1]
     p_url = app_url + '?'
     p_url+='area_type=shape&shape=-120.77,36.84,-120.6,36.78,-120.54,36.71,-120.63,36.63,-120.76,36.77'
-    p_url+='&spatial_summary=mean&elements=maxt,mint,avgt&grid=1&start_date=20150301&end_date=20150331'
+    p_url+='&spatial_summary=mean&variables=maxt,mint,avgt&grid=1&start_date=20150301&end_date=20150331'
     p_url+='&data_type=grid&grid=1'
     app_urls['spatial_summary'] = app_url
     param_urls['spatial_summary'] = p_url
@@ -306,10 +306,10 @@ def single_point_prods(request):
         'app_url': app_url
     }
     #Link from other apps
-    if request.method == 'GET' and ('elements' in request.GET or 'element' in request.GET):
+    if request.method == 'GET' and ('variables' in request.GET or 'variable' in request.GET):
         #set link params
         init = {}
-        get_params = ['station_id','elements', 'start_date','end_date']
+        get_params = ['station_id','variables', 'start_date','end_date']
         for item in request.GET:
             if str(item) not in get_params and str(item) != 'area_type':
                 get_params.append(str(item))
@@ -332,7 +332,7 @@ def multi_point_prods(request):
         'app_url': app_url
     }
     #Link from other apps
-    if request.method == 'GET' and ('elements' in request.GET or 'element' in request.GET):
+    if request.method == 'GET' and ('variables' in request.GET or 'variable' in request.GET):
         #set link params
         for app in ['multi_lister', 'spatial_summary', 'temporal_summary']:
             initial = DJANGOUtils.set_initial(request, app)
@@ -437,7 +437,7 @@ def single_lister(request):
 
     #MAIN APP
     #Data request submitted
-    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'variables' in request.GET):
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
         form = DJANGOUtils.set_form(initial, clean = False)
         #Check form fields
@@ -566,7 +566,7 @@ def intraannual(request):
     #MAIN APP
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
-    if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'variable' in request.GET):
         form = DJANGOUtils.set_form(initial,clean = False)
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
         year_txt_data, year_graph_data, climoData, percentileData = WRCCUtils.get_single_intraannual_data(form_cleaned)
@@ -579,7 +579,7 @@ def intraannual(request):
         header_keys = WRCCUtils.set_display_keys(app_name, form)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
         results = {
-            'element_short': form['element'],
+            'variable_short': form['variable'],
             'data_indices':range(len(year_txt_data)),
             'data':year_txt_data,
             'target_year':int(form_cleaned['target_year']),
@@ -657,13 +657,13 @@ def seasonal_summary(request):
     #MAIN APP
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
-    if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'variable' in request.GET):
         form = DJANGOUtils.set_form(initial,clean = False)
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
-        element_short = WRCCUtils.elements_to_table_headers(form['element'],form['units'])[0]
+        variable_short = WRCCUtils.variables_to_table_headers(form['variable'],form['units'])[0]
         results = {
             'data_indices':[0],
-            'element_short':element_short,
+            'variable_short':variable_short,
             'data':[],
             'error':''
         }
@@ -770,7 +770,7 @@ def multi_lister(request):
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
     context['need_overlay_map'] = False
-    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'variables' in request.GET):
         initial = DJANGOUtils.set_initial(request,app_name)
         context['initial'] = initial
         form = DJANGOUtils.set_form(initial,clean=False)
@@ -912,7 +912,7 @@ def temporal_summary(request):
     if initial['area_type'] != 'bounding_box':
         context['hide_bbox_map'] = True
     #Link from other page
-    if request.method == 'GET' and 'elements' in request.GET:
+    if request.method == 'GET' and 'variables' in request.GET:
         form_cleaned = DJANGOUtils.set_form(request,clean=True)
         form = DJANGOUtils.set_form(request,clean=False)
         header_keys = WRCCUtils.set_display_keys(app_name, form_cleaned)
@@ -939,8 +939,8 @@ def temporal_summary(request):
                     break
 
         #Form Check
-        fields_to_check = ['start_date', 'end_date','degree_days', 'cmap', form['area_type'], 'elements']
-        #fields_to_check = ['start_date', 'end_date','degree_days',form['area_type'], 'elements']
+        fields_to_check = ['start_date', 'end_date','degree_days', 'cmap', form['area_type'], 'variables']
+        #fields_to_check = ['start_date', 'end_date','degree_days',form['area_type'], 'variables']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -969,15 +969,15 @@ def temporal_summary(request):
             'temporal_summary':form['temporal_summary'],
             'elems':[]
             }
-        for el_idx,element in enumerate(form_cleaned['elements']):
+        for el_idx,variable in enumerate(form_cleaned['variables']):
             pms = copy.deepcopy(params)
             a_el_dict = {
-                'name':element,
+                'name':variable,
                 'smry':form_cleaned['temporal_summary'],
                 'smry_only':1
             }
             if pms['units'] == 'metric':
-                if element in ['pcpn','snow','snwd']:
+                if variable in ['pcpn','snow','snwd']:
                     a_el_dict['units'] = 'mm'
                 else:
                     a_el_dict['units'] = 'degreeC'
@@ -1007,7 +1007,7 @@ def monthly_spatial_summary(request):
     initial  = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
 
-    if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'variable' in request.GET):
         #Set form and initial
         form = DJANGOUtils.set_form(initial, clean=False)
         form_cleaned = DJANGOUtils.set_form(initial)
@@ -1110,12 +1110,12 @@ def spatial_summary(request):
 
     initial  = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
-    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'variables' in request.GET):
         #Set form and initial
         form = DJANGOUtils.set_form(initial, clean=False)
         form_cleaned = DJANGOUtils.set_form(initial)
         #Form Check
-        fields_to_check = [form['area_type'],'start_date', 'end_date','degree_days', 'elements']
+        fields_to_check = [form['area_type'],'start_date', 'end_date','degree_days', 'variables']
         #,'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
@@ -1179,32 +1179,32 @@ def spatial_summary(request):
 
         #format data for highcarts
         graph_data = []
-        for el_idx, element in enumerate(form_cleaned['elements']):
-            el_data = WRCCUtils.extract_highcarts_data_spatial_summary(req['smry'],el_idx, element,form_cleaned)
-            GraphDictWriter = WRCCClasses.GraphDictWriter(form_cleaned, el_data, element = element)
+        for el_idx, variable in enumerate(form_cleaned['variables']):
+            el_data = WRCCUtils.extract_highcarts_data_spatial_summary(req['smry'],el_idx, variable,form_cleaned)
+            GraphDictWriter = WRCCClasses.GraphDictWriter(form_cleaned, el_data, variable = variable)
             datadict = GraphDictWriter.write_dict()
             graph_data.append(datadict)
 
         results['graph_data'] = graph_data
 
-        elements = []
-        for el in form_cleaned['elements']:
+        variables = []
+        for el in form_cleaned['variables']:
             el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
-            el_name = WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long']
+            el_name = WRCCData.ACIS_variableS_DICT[el_strip]['name_long']
             if base_temp is not None:
                 el_name+= str(base_temp)
-            elements.append(el_name)
-        results['elements'] = elements
+            variables.append(el_name)
+        results['variables'] = variables
         #Pick up chart indices from previous run
         chart_indices_list = str(initial['chart_indices_string']).split(',')
         #Check that these indices exist in new run
         chart_indices = []
         for idx in chart_indices_list:
-            if idx < len(graph_data) and initial['chart_elements'][int(idx)] in form_cleaned['elements']:
-                new_idx = form_cleaned['elements'].index(initial['chart_elements'][int(idx)])
+            if idx < len(graph_data) and initial['chart_variables'][int(idx)] in form_cleaned['variables']:
+                new_idx = form_cleaned['variables'].index(initial['chart_variables'][int(idx)])
                 chart_indices.append(new_idx)
         if not chart_indices:
-            chart_indices = [idx for idx in range(len(form_cleaned['elements']))]
+            chart_indices = [idx for idx in range(len(form_cleaned['variables']))]
         results['chart_indices'] = chart_indices
         context['results'] = results
         context['run_done'] = True
@@ -1326,11 +1326,11 @@ def station_finder(request):
     context['initial'] = initial
 
     #Set up maps if needed
-    if request.method == "GET" and not 'elements' in request.GET:
+    if request.method == "GET" and not 'variables' in request.GET:
         #Generate initial map
         by_type = 'state'; val = 'nv'
         date_range = [initial['start_date'],initial['end_date']]
-        el_date_constraints = initial['elements_constraints'] + '_' + initial['dates_constraints']
+        el_date_constraints = initial['variables_constraints'] + '_' + initial['dates_constraints']
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=['1','2','4'],time_range=date_range, constraints=el_date_constraints)
         #Write json file for link to data lister
         json_dict = copy.deepcopy(initial)
@@ -1349,7 +1349,7 @@ def station_finder(request):
         header_keys = WRCCUtils.set_display_keys(app_name, initial)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,initial)
 
-    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'variables' in request.GET):
         #Turn request object into python dict
         form = DJANGOUtils.set_form(request,clean=False)
         form_cleaned = DJANGOUtils.set_form(request,clean=True)
@@ -1358,22 +1358,22 @@ def station_finder(request):
         if form_error:
             context['form_error'] = form_error
             return render_to_response(url, context, context_instance=RequestContext(request))
-        #Convert element list to var majors
+        #Convert variable list to var majors
         el_vX_list = []
-        for el_idx, element in enumerate(form_cleaned['elements']):
-            el,base_temp = WRCCUtils.get_el_and_base_temp(element)
-            if element in ['pet','dtr']:
+        for el_idx, variable in enumerate(form_cleaned['variables']):
+            el,base_temp = WRCCUtils.get_el_and_base_temp(variable)
+            if variable in ['pet','dtr']:
                 el_vX_list.append('1')
                 el_vX_list.append('2')
             else:
-                el_vX_list.append(str(WRCCData.ACIS_ELEMENTS_DICT[el]['vX']))
+                el_vX_list.append(str(WRCCData.ACIS_variableS_DICT[el]['vX']))
         #Make unique
         el_vX_list = list(set(el_vX_list))
         #Set up params for station_json generation
         by_type = WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['area_type']]
         val = form_cleaned[by_type]
         date_range = [form_cleaned['start_date'],form_cleaned['end_date']]
-        el_date_constraints = form_cleaned['elements_constraints'] + '_' + form_cleaned['dates_constraints']
+        el_date_constraints = form_cleaned['variables_constraints'] + '_' + form_cleaned['dates_constraints']
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=el_date_constraints)
         #Write to file for map generation
         station_ids = WRCCUtils.get_station_ids('/tmp/' + f_name)
@@ -1490,7 +1490,7 @@ def monthly_summary(request):
 
     #Set graph and plot options
     #Time Serie Table Generation and graph if desired
-    if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'variable' in request.GET):
         form = DJANGOUtils.set_form(initial,clean=False)
         form_cleaned = DJANGOUtils.set_form(initial,clean=True)
         #Form sanity check
@@ -1503,7 +1503,7 @@ def monthly_summary(request):
         data_params = {
             'start_date':form_cleaned['start_year'],
             'end_date':form_cleaned['end_year'],
-            'element':form_cleaned['element']
+            'variable':form_cleaned['variable']
         }
         if 'location' in form_cleaned.keys():
             data_params['location'] = form_cleaned['location']
@@ -1566,7 +1566,7 @@ def monthly_summary(request):
                 'dataTableInfo':dataTableInfo,
                 'chart_indices':'0',
                 'smry':'individual',
-                'element':data_params['element'],
+                'variable':data_params['variable'],
                 'running_mean_years':'5',
                 'show_range': False,
                 'data': [['Yr'] + header_list + ['An', 'F']] + data[0][0:-6],
@@ -1645,7 +1645,7 @@ def climatology(request):
         data_params = {
                 'start_date':form['start_year'],
                 'end_date':form['end_year'],
-                'element':form['summary_type']
+                'variable':form['summary_type']
                 }
         app_params = {
                 'el_type':form['summary_type'],
@@ -1819,9 +1819,9 @@ def run_external_script(cmd):
 ####################
 def set_sodxtrmts_head(form):
     #Define Header Order:
-    header_order =['start_year', 'end_year', '','element']
+    header_order =['start_year', 'end_year', '','variable']
     #Additional headere items
-    if form['element'] in ['gdd', 'hdd', 'cdd']:header_order+=['base_temperature']
+    if form['variable'] in ['gdd', 'hdd', 'cdd']:header_order+=['base_temperature']
     header_order+=['statistic']
     if form['departures_from_averages'] == 'T':
          header_order+=['departures_from_averages', '']
@@ -1844,9 +1844,9 @@ def set_sodxtrmts_head(form):
     #Define SCHTUPID header
     header = []
     for key in header_order:
-        if key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'statistic', 'elements','element']:
+        if key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'statistic', 'variables','variable']:
             header.append([WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[str(form[key])]])
-            if key == 'element':
+            if key == 'variable':
                 if form['units'] == 'metric':
                      units = WRCCData.UNITS_METRIC[str(form[key])]
                 else:
@@ -1940,11 +1940,11 @@ def set_params_for_shape_queries(search_params):
         'grid':search_params['grid'],
         'meta':'ll,elev',
     }
-    #find element parameter
-    if 'element' in search_params.keys():
-        params['elems'] = search_params['element']
-    elif 'elements' in search_params.keys():
-         params['elems'] = search_params['elements']
+    #find variable parameter
+    if 'variable' in search_params.keys():
+        params['elems'] = search_params['variable']
+    elif 'variables' in search_params.keys():
+         params['elems'] = search_params['variables']
     #Find search area parameters, shape and bounding box if needed
 
     #key, val, acis_param, name_long, search_type = WRCCUtils.get_search_area_values(search_params, 'gridded')
@@ -2039,7 +2039,7 @@ def generate_sodsumm_graphics(results, tab, table, units):
                 legend = ['Base 13', 'Base 14', 'Base 16', 'Base 18', 'Base 21']
             else:
                 legend = ['Base 55', 'Base 57', 'Base 60', 'Base 65', 'Base 70']
-        table_name_long = WRCCData.ACIS_ELEMENTS_DICT[table]['name_long']  + '(' + U + ')'
+        table_name_long = WRCCData.ACIS_variableS_DICT[table]['name_long']  + '(' + U + ')'
         graph_data = [[] for i in range(5)]
         for i in range(5):
             for k in range(len(cats)):
@@ -2055,7 +2055,7 @@ def generate_sodsumm_graphics(results, tab, table, units):
             Units = 'Fahrenheit'
             U = 'F'
         colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-        table_name_long = WRCCData.ACIS_ELEMENTS_DICT[table]['name_long'] + '(' + U + ')'
+        table_name_long = WRCCData.ACIS_variableS_DICT[table]['name_long'] + '(' + U + ')'
         if units == 'metric':
             legend = ['Base 4', 'Base 7', 'Base 10', 'Base 13', 'Base 16']
         else:
@@ -2142,12 +2142,12 @@ def generate_sodsumm_graphics(results, tab, table, units):
 #Display and search params
 ##############################
 def set_el_string_and_list(form):
-    if not 'elements' in form.keys() and not 'element' in form.keys() and not 'elements_string' in form.keys():
+    if not 'variables' in form.keys() and not 'variable' in form.keys() and not 'variables_string' in form.keys():
         return '', []
-    if 'element' in form.keys():
-        form_els = form['element']
-    if 'elements' in form.keys():
-        form_els = form['elements']
+    if 'variable' in form.keys():
+        form_els = form['variable']
+    if 'variables' in form.keys():
+        form_els = form['variables']
     if isinstance(form_els,list):
         el_list = [str(el) for el in form_els]
         el_string = ''
@@ -2162,7 +2162,7 @@ def set_el_string_and_list(form):
         return el_string, el_list
     else:
         try:
-            el_string = form['elements_string'].replace('  ','')
+            el_string = form['variables_string'].replace('  ','')
             el_list = el_string.split(',')
         except:
             return '', []
