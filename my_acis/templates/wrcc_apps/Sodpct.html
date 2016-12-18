@@ -46,7 +46,7 @@
     <p>
         <b>STATION</b>: {{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}})</br>
         <b>START YEAR - END YEAR</b>: {{start_year}} - {{end_year}}</br>
-        <b>ELEMENT</b>: {{element}} ({{units}})</br>
+        <b>ELEMENT</b>: {{variable}} ({{units}})</br>
         <b>INDIVIDUAL OBSERVATIONS FOR THE  {{number_days_ahead}}  DAY(S) STARTING ON THE LISTED DATE</b></br>
         {%if threshold%}
         <b>VALUES {{op}} THAN {{threshold}} ONLY.</b>
@@ -58,7 +58,7 @@
     {%else%}
     <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" style="display:none">
         {{station_names|lookup:stn|safe}}({{station_ids|lookup:stn|safe}}),
-        {{element}} ({{units}}),
+        {{variable}} ({{units}}),
         percentiles {{start_year}}-{{end_year}}
         {%if threshold%}
         values_{{op}}_than_{{threshold}}

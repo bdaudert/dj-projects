@@ -34,13 +34,13 @@
 <table class="dataTable nowrap" id="dataTable-0" border=1>
     <thead><tr>
        <th>STATION</th><th>START</th><th>END</th>
-        {%for el in elements%}
+        {%for el in variables%}
         <th>{{el}}</th>
         {%endfor%} 
     </tr></thead>
     <tfoot><tr>
        <th>STATION</th><th>START</th><th>END</th>
-        {%for el in elements%}
+        {%for el in variables%}
         <th>{{el}}</th>
         {%endfor%} 
     </tr></tfoot>
@@ -48,7 +48,7 @@
         {%for stn, stn_vals in results.items %}
             <tr>
             <td>{{stn_vals.station_id}}</td><td>{{stn_vals.start}}</td><td>{{stn_vals.end}}</td>
-            {%for el in elements %}
+            {%for el in variables %}
                 <td>{{stn_vals|lookup:el|safe}}</td>
             {%endfor%}
             </tr>

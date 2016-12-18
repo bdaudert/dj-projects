@@ -320,6 +320,7 @@ function generateTS_individual(chart_indices) {
     //Clear old plot
     //$('#hc-container').contents().remove();
     //CHART
+    var h = $(window).height();
     var basicOptions = {
         //------------------------
         //  CHART PROPERTIES
@@ -327,14 +328,15 @@ function generateTS_individual(chart_indices) {
         chart: {
             renderTo: 'hc-container',
             type:  chartType,
+            height:h*0.7,
             marginTop:100,
             zoomType: 'x',
             spacingBottom: 30,
             spacingTop: 10,
             spacingLeft: 10,
             spacingRight: 10,
-            borderWidth:1,
-            borderColor: '#000000',
+            //borderWidth:1,
+            //borderColor: '#000000',
             plotBorderColor: '#000000',
             plotBorderWidth:1
         },
@@ -616,7 +618,7 @@ function generateTS_smry(chart_indices) {
     //Clear old plot
     $('#hc-container').contents().remove();
     //CHART
-    
+    var h = $(window).height(); 
     var basicOptions = {
         //------------------------
         //  CHART PROPERTIES
@@ -624,14 +626,15 @@ function generateTS_smry(chart_indices) {
         chart: {
             renderTo: 'hc-container',
             type:  chartType,
+            height:h*0.7,
             marginTop:100,
             zoomType: 'x',
             spacingBottom: 30,
             spacingTop: 10,
             spacingLeft: 10,
             spacingRight: 10,
-            borderWidth:1,
-            borderColor: '#000000',
+            //borderWidth:1,
+            //borderColor: '#000000',
             plotBorderColor: '#000000',
             plotBorderWidth:1
         },

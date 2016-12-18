@@ -247,8 +247,8 @@
             {% include 'includes/map-polygon.html'%}
         </div><!--col-sm-8-->
     </div><!--row-->
+    <br />
 </div><!--top_of_page-->
-<br />
 <!--Results-->
 <!--Main Results-->
 <div class="row">
@@ -275,6 +275,11 @@
                 {%endfor%}
             </p>
             <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" style="display:none;">
+            {%for key_val in params_display_list%}
+            {%if key_val.0 != "Data Summary"%}
+                <b>{{key_val.0}}</b>: {{key_val.1}};<br />
+            {%endif%}
+            {%endfor%} 
             {% for meta_list in results.meta|lookup:forloop.counter0 %}
             {%if meta_list.0 != "Station ID/Network List"%}
                 <b>{{meta_list.0}}</b>: {{meta_list.1}},

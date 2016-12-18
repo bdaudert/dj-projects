@@ -310,16 +310,18 @@ def single_point_prods(request):
         #set link params
         init = {}
         get_params = ['station_id','variables', 'start_date','end_date']
+        get_initial = {}
         for item in request.GET:
             if str(item) not in get_params and str(item) != 'area_type':
                 get_params.append(str(item))
+            get_initial[str(item)] = request.GET[item]
         user_params = WRCCUtils.form_to_display_list(get_params,request.GET)
         context['user_params'] = user_params
         for app in ['single_lister', 'monthly_summary', 'climatology','data_comparison', 'seasonal_summary', 'intraannual']:
-            initial= DJANGOUtils.set_initial(request, app)
+            #initial= DJANGOUtils.set_initial(request, app)
+            initial= DJANGOUtils.set_initial(get_initial, app)
             p_str = WRCCUtils.set_url_params(initial)
             context['url_params_' + app] =  p_str
-
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def multi_point_prods(request):
@@ -892,7 +894,8 @@ def temporal_summary(request):
     context = {
         'title': settings.APPLICATIONS[app_name][0],
         'app_name':app_name,
-        'app_url': app_url
+        'app_url': app_url,
+        'need_bbox_map':False
     }
     json_file = request.GET.get('json_file', None)
     #Check if we are coming in from other page, e.g. Gridded Data
@@ -909,8 +912,8 @@ def temporal_summary(request):
     initial_plot = DJANGOUtils.set_map_plot_options(request)
     join_initials(initial, initial_plot)
     context['initial'] = initial
-    if initial['area_type'] != 'bounding_box':
-        context['hide_bbox_map'] = True
+    if initial['area_type'] == 'bounding_box':
+        context['need_bbox_map'] = True
     #Link from other page
     if request.method == 'GET' and 'variables' in request.GET:
         form_cleaned = DJANGOUtils.set_form(request,clean=True)
@@ -919,7 +922,7 @@ def temporal_summary(request):
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
 
     if 'formMap' in request.POST:
-        context['hide_bbox_map'] = True
+        context['need_bbox_map'] = False
         form = DJANGOUtils.set_initial(request, app_name)
         #form = DJANGOUtils.set_form(request, clean=False)
         form_cleaned = DJANGOUtils.set_form(request)
@@ -1190,7 +1193,7 @@ def spatial_summary(request):
         variables = []
         for el in form_cleaned['variables']:
             el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
-            el_name = WRCCData.ACIS_variableS_DICT[el_strip]['name_long']
+            el_name = WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long']
             if base_temp is not None:
                 el_name+= str(base_temp)
             variables.append(el_name)
@@ -1366,7 +1369,7 @@ def station_finder(request):
                 el_vX_list.append('1')
                 el_vX_list.append('2')
             else:
-                el_vX_list.append(str(WRCCData.ACIS_variableS_DICT[el]['vX']))
+                el_vX_list.append(str(WRCCData.ACIS_ELEMENTS_DICT[el]['vX']))
         #Make unique
         el_vX_list = list(set(el_vX_list))
         #Set up params for station_json generation
@@ -2039,7 +2042,7 @@ def generate_sodsumm_graphics(results, tab, table, units):
                 legend = ['Base 13', 'Base 14', 'Base 16', 'Base 18', 'Base 21']
             else:
                 legend = ['Base 55', 'Base 57', 'Base 60', 'Base 65', 'Base 70']
-        table_name_long = WRCCData.ACIS_variableS_DICT[table]['name_long']  + '(' + U + ')'
+        table_name_long = WRCCData.ACIS_ELEMENTS_DICT[table]['name_long']  + '(' + U + ')'
         graph_data = [[] for i in range(5)]
         for i in range(5):
             for k in range(len(cats)):
@@ -2055,7 +2058,7 @@ def generate_sodsumm_graphics(results, tab, table, units):
             Units = 'Fahrenheit'
             U = 'F'
         colors = ['#87CEFA', '#00FFFF', '#14D8FF', '#143BFF', '#8A14FF']
-        table_name_long = WRCCData.ACIS_variableS_DICT[table]['name_long'] + '(' + U + ')'
+        table_name_long = WRCCData.ACIS_ELEMENTS_DICT[table]['name_long'] + '(' + U + ')'
         if units == 'metric':
             legend = ['Base 4', 'Base 7', 'Base 10', 'Base 13', 'Base 16']
         else:

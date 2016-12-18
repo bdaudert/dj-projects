@@ -41,7 +41,7 @@
     <b>MON</b>: Month</br>
     <b>DAY</b>: Day</br>
     <b>AVGT</b>: Multi-year non-smoothed average of the indicated quantity</br>
-    <b>EXTRM</b>: Extreme value of indicated quantity for this day of year(<b>LO</b>W for mint, <b>HI</b>GH for all other elements)</br>
+    <b>EXTRM</b>: Extreme value of indicated quantity for this day of year(<b>LO</b>W for mint, <b>HI</b>GH for all other variables)</br>
     <b>YEAR</b>: Latest year of occurrence of the extreme value</br>
     <b>NO</b>: Number of years with data for this day of year.</br>
     <b>UNITS</b>: English (inches and degrees F)</br>
@@ -57,14 +57,14 @@
     {%for el, el_data in stn_data.items%}
         <div style="display:none" class="dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}">
             {{station_names|lookup:stn|safe}}({{station_ids|lookup:stn|safe}}),
-            {{elements|lookup:el|safe}},
+            {{variables|lookup:el|safe}},
             averages_and_extremes {{start_date}}-{{end_date}}
         </div>
         <table class="dataTable nowrap" id="dataTable-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" border=1>
         <thead>
-        <tr><th colspan=8>{{elements|lookup:el|safe}}</th></tr>
+        <tr><th colspan=8>{{variables|lookup:el|safe}}</th></tr>
         <tr>
-        {%if elements|lookup:el == "pcpn" or elements|lookup:el == "snow" or elements|lookup:el == "snwd"%}
+        {%if variables|lookup:el == "pcpn" or variables|lookup:el == "snow" or variables|lookup:el == "snwd"%}
         <th>MON</th><th>DAY</th><th>AVGT</th><th>NO</th><th>HI</th><th>YEAR</th>
         {%else%}
         <th>MON</th><th>DAY</th><th>AVGT</th><th>NO</th><th>HI</th><th>YEAR</th><th>LO</th><th>YEAR</th>
@@ -73,7 +73,7 @@
         </thead>
         <tfoot>
         <tr>
-        {%if elements|lookup:el == "pcpn" or elements|lookup:el == "snow" or elements|lookup:el == "snwd"%}
+        {%if variables|lookup:el == "pcpn" or variables|lookup:el == "snow" or variables|lookup:el == "snwd"%}
         <th>MON</th><th>DAY</th><th>AVGT</th><th>NO</th><th>HI</th><th>YEAR</th>
         {%else%}
         <th>MON</th><th>DAY</th><th>AVGT</th><th>NO</th><th>HI</th><th>YEAR</th><th>LO</th><th>YEAR</th> 
@@ -83,7 +83,7 @@
         <tbody>
         {%for vals in el_data %}
             <tr>
-            {%if elements|lookup:el == "pcpn" or elements|lookup:el == "snow" or elements|lookup:el == "snwd"%}
+            {%if variables|lookup:el == "pcpn" or variables|lookup:el == "snow" or variables|lookup:el == "snwd"%}
                 <td>{{vals.0}}</td><td>{{vals.1}}</td><td>{{vals.2}}</td><td>{{vals.3}}</td><td>{{vals.4}}</td><td>{{vals.5}}</td>
             {%else%}
                 <td>{{vals.0}}</td><td>{{vals.1}}</td><td>{{vals.2}}</td><td>{{vals.3}}</td><td>{{vals.4}}</td><td>{{vals.5}}</td><td>{{vals.6}}</td><td>{{vals.7}}</td>

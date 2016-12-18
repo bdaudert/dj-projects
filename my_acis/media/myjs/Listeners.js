@@ -102,12 +102,13 @@ $(document).ready(function () {
             modal: false,
             width:'auto',
             height:'auto',
+            maxHeight:max_height,
             open: function () {
                 $(this).scrollTop(0);
             },
             create: function(){
                 $(this).css("maxWidth", max_width);
-                $(this).css("maxHeight", max_height);
+                //$(this).css("maxHeight", max_height);
             },
             close: function () {
                $(pop_up).dialog('destroy');
@@ -156,6 +157,10 @@ $(document).ready(function () {
     /*  
     Zoom To Location on map
     */
+    $('zoombutton').on('click', function(){
+        zoomToLocation();
+    });
+
     $("#address").focus(function(){
         if ($(this).val() == 'Place/Location'){
             $(this).val('');
@@ -987,12 +992,11 @@ $(document).ready(function () {
     depending on area type
     */
     //resets overlay map if same region is chosen
-    /*
     $('.area_type').on('mouseup', function() {
         if ($(this).val().inList(['basin','county_warning_area', 'county','climate_division'])){
             $('.area_type').trigger("change");
         } 
-    });*/
+    });
     $('.area_type').on('keydown change', function(){
         //Set area form field
         set_area($(this)); //form_utils function
@@ -1443,7 +1447,7 @@ $(document).ready(function () {
         $('#formLargeRequest').dialog('close');
         //All extra input variables are linked and updated in the DataForm
         //Note need hidded vars user_name, email, delimiter, etx in main form
-        var form_data = $('#DataFor, #LargeRequestForm').serialize(); 
+        var form_data = $('#DataForm, #LargeRequestForm').serialize(); 
         hide_loading_gif();
         var jqxhr = $.ajax({
             url:'',

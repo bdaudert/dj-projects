@@ -1,8 +1,9 @@
+<!--
 <div class="zoom-to"  id="zoom-to-map-bbox" {%if not need_bbox_map%} style="display:none;"{%endif%}>
     {% include 'includes/zoom-to-button.html'%}
-</div>
+</div>-->
 <div id="BBoxMap" {%if not need_bbox_map%} style="display:none;"{%endif%}>
-    <div id="map-bbox"></div>
+    <div id="map-bbox" {%if not need_bbox_map%} style="display:none;"{%endif%}></div>
     {%if initial.bounding_box%}
         <script type="text/javascript">initialize_bbox_map("{{initial.bounding_box}}");</script>
     {%else%}

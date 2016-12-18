@@ -33,7 +33,7 @@
 {%for stn, stn_data in results.items %}
     <p>
         <b>STATION</b>:{{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}})</br>
-        <b>ELEMENT</b>: {{element}} ({{units}})</br>
+        <b>ELEMENT</b>: {{variable}} ({{units}})</br>
         <b>STATISTIC</b>: {{statistic}}<br />
         {%if departure_from_averages == "Yes"%}<br />
         <b>DEPARTURES FROM AVERAGES</b>{%endif%}</br>
@@ -50,7 +50,7 @@
     </p></br>
     <div class="stronger dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" style="display:none;">
         {{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}}),
-        {{element}} ({{units}}),
+        {{variable}} ({{units}}),
         {{statistic}},{%if departure_from_averages == "Yes"%}, DEPARTURES FROM AVERAGES{%endif%},
         max_missing_days_{{max_missing_days}}
     </div>            

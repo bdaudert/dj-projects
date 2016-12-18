@@ -3,41 +3,10 @@ String.prototype.inList=function(list){
    return ( list.indexOf(this.toString()) != -1)
 }
 
+
 //function precise_round(num,decimals){
 //return Math.round(num*Math.pow(10,decimals))/Math.pow(10,decimals);
 //}
-function zoomToLocation() {
-    var address = document.getElementById('address').value;
-    var geocoder = new google.maps.Geocoder(); 
-    geocoder.geocode( { 'address': address}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-           window.map.setCenter(results[0].geometry.location);
-           window.map.setZoom(7);
-           if (window.marker){
-                window.marker.setPosition(results[0].geometry.location);
-                var lat = results[0].geometry.location.lat();
-                var lon = results[0].geometry.location.lng();
-                var infowindow = infowindow = new google.maps.InfoWindow({
-                    content: '<div id="MarkerWindow" ' + 
-                    'style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
-                    '<p><b>Lat: </b>' + lat + '<br/>'+
-                    '<b>Lon: </b>' + lon + '<br/>' +
-                    '</div>',
-                    maxWidth: 100
-                });
-                infowindow.open(window.map, window.marker);
-                if ($('#location').length) {
-                    $('#location').val(String(lon) + ',' + String(lat));
-                }
-            }
-        } 
-        else {
-            alert('Geocode was not successful for the following reason: ' + status);
-        }
-  });
-}
-
-
 
 function printMapControl(controlDiv,map_div){
   // Set CSS for the control border.
@@ -267,26 +236,24 @@ var boxclick;
 var show;
 var hide;
 function initialize_station_finder() {
-    var geocoder = new google.maps.Geocoder();
-    var JSON_URL = $("#JSON_URL").val();
-    var TMP_URL = $("#TMP_URL").val();
-    var j_f = $("#station_json").val();
-    var metadata_keys_str = $('#metadata_keys_str').val();
-    var metadata_keys = String(metadata_keys_str).split(',');
-    var station_json = TMP_URL + j_f;
-    var start_date = $('#start_date').val();
-    var end_date = $('#end_date').val();
-    var el_string = $('#variables').val().join(',');
-    var dataTable; 
+    var geocoder = new google.maps.Geocoder(),
+        JSON_URL = $("#JSON_URL").val(),TMP_URL = $("#TMP_URL").val(),
+        j_f = $("#station_json").val(),
+        metadata_keys_str = $('#metadata_keys_str').val(),
+        metadata_keys = String(metadata_keys_str).split(','),
+        station_json = TMP_URL + j_f,
+        start_date = $('#start_date').val(),end_date = $('#end_date').val(),
+        el_list = $('#variables').val(), el_string = el_list.join(','),
+        dataTable, dataTableInfo, L, header, l_short; 
     if ( $.fn.dataTable.isDataTable( '#station_list' ) ) {
         dataTable = $('#station_list').DataTable();
     }
     else {
-        var dataTableInfo = $.trim(String($('.dataTableInfo').text()).replace('/^\s*\n/gm', ''));
-        var L = dataTableInfo.split('\n'), newL = [];
-        var header = '';
+        dataTableInfo = $.trim(String($('.dataTableInfo').text()).replace('/^\s*\n/gm', ''));
+        L = dataTableInfo.split('\n'), newL = [];
+        header = '';
         for (var k =0;k<L.length;k++){
-            var l_short = $.trim(L[k]).replace(/;/g, ' ');
+            l_short = $.trim(L[k]).replace(/;/g, ' ');
             newL.push(l_short);
             header += l_short;
         }
@@ -495,19 +462,26 @@ function initialize_station_finder() {
             '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid; 
             var app_portal_href = '/csc/scenic/data/single/'+
             '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid;
+            for (var k =0;k<el_list.length;k++){
+                data_portal_href = data_portal_href + '&variables=' + el_list[k];
+                app_portal_href = app_portal_href + '&variables=' + el_list[k];
+            }
+            /*
             data_portal_href = data_portal_href + '&variables=' + el_string;
             app_portal_href = app_portal_href + '&variables=' + el_string;
+            */
+
             data_portal_href = data_portal_href + '&start_date=' + start_date;
             app_portal_href = app_portal_href + '&start_date=' + start_date; 
             data_portal_href = data_portal_href + '&end_date=' + end_date;
             app_portal_href = app_portal_href + '&end_date=' + end_date; 
-            var data_portal_link = '<button onclick="window.open(\'' + data_portal_href + '\')">Get Data</button>';
-            var app_portal_link = '<button onclick="window.open(\'' + app_portal_href + '\')">Run Analysis</button>';
-            //var data_portal_link = '<button onclick="window.location.href=\'' + data_portal_href +'\'">Get Data</button>';
-            //var app_portal_link = '<button onclick="window.location.href=\'' + app_portal_href +'\'">Run Analysis</button>';
-            var contentString = '<div id="MarkerWindow">'+
-                data_portal_link + '<br />' +
-                app_portal_link + '<br />' +
+            var data_portal_link = '<button class="btn-info" onclick="window.open(\'' + data_portal_href + '\')">Get Data</button>';
+            var app_portal_link = '<button class="btn-info"onclick="window.open(\'' + app_portal_href + '\')">Run Analysis</button>';
+            var contentString = '<div id="MarkerWindow" class="row">'+
+                '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">' + 
+                data_portal_link + '</div>' +
+                '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">' +
+                app_portal_link + '</div><br />' +
                 '<b>Name: </b><font color="#FF007F">' + c.name + '</font><br/>'+
                 '<b>Station ID: </b>' + c.sid + '<br/>' +
                 '<b>Network: </b>' + c.stn_network + '<br/>' +
@@ -813,11 +787,42 @@ function initialize_bbox_map(bbox) {
         mapTypeId: google.maps.MapTypeId.HYBRID
     }
     map = new google.maps.Map(document.getElementById('map-bbox'), mapOptions);
+
+    // Create the DIV to hold the control and call the CenterControl()
+    // constructor passing in this DIV.
+    function CustomDeleteButton(controlDiv, map) {
+
+        // Set CSS for the control border.
+        var controlUI = document.createElement('div');
+        controlUI.style.backgroundColor = '#fff';
+        controlUI.style.cursor = 'pointer';
+        controlUI.style.marginTop = '6px';
+        controlUI.title = 'Delete the shape from map';
+        controlDiv.appendChild(controlUI);
+        // Set CSS for the control interior.
+        var controlText = document.createElement('div');
+        controlText.style.fontSize = '16px';
+        controlText.style.paddingLeft = '5px';
+        controlText.style.paddingRight = '5px';
+        //controlText.innerHTML ='<span class="glyphicon glyphicon-remove-circle"style="font-size:1.5em;" title="Delete from Map"></span>'
+        controlText.innerHTML = '<b><font size="large">X</font></b>';
+        controlUI.appendChild(controlText);
+
+        // Setup the click event listeners: simply set the map to Chicago.
+        controlUI.addEventListener('click', function() {
+            rect.setMap(null);
+        });
+    }
+    var centerControlDiv = document.createElement('div');
+    var centerControl = new CustomDeleteButton(centerControlDiv, map);
+    centerControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
+
     var rectangleOptions = {
         editable: true,
         draggable: true,
         fillColor: "#0000FF",
-        fillOpacity: 0.1,
+        fillOpacity: 0.4,
         strokeColor: "#0000FF",
         strokeWeight: 1
     }
@@ -835,7 +840,7 @@ function initialize_bbox_map(bbox) {
             google.maps.drawing.OverlayType.RECTANGLE
         ],
         drawingControlOptions: {
-            position: google.maps.ControlPosition.TOP_LEFT,
+            position: google.maps.ControlPosition.TOP_CENTER,
             drawingModes: [
             google.maps.drawing.OverlayType.RECTANGLE
             ]
@@ -850,32 +855,34 @@ function initialize_bbox_map(bbox) {
             rect.setMap(null);
         }
         rect = e.overlay;
-        var bounds=e.overlay.getBounds();
+        var rect_bounds=e.overlay.getBounds();
         //set new bounding box
-        var w = precise_round(bounds.getSouthWest().lng(),2);
-        var s = precise_round(bounds.getSouthWest().lat(),2);
-        var e = precise_round(bounds.getNorthEast().lng(),2);
-        var n = precise_round(bounds.getNorthEast().lat(),2);
+        var w = precise_round(rect_bounds.getSouthWest().lng(),2);
+        var s = precise_round(rect_bounds.getSouthWest().lat(),2);
+        var e = precise_round(rect_bounds.getNorthEast().lng(),2);
+        var n = precise_round(rect_bounds.getNorthEast().lat(),2);
         //document.getElementById("bbox").value = w + ',' + s + ',' + e + ',' + n;
         document.getElementById("bounding_box").value = w + ',' + s + ',' + e + ',' + n; 
     });
     google.maps.event.addListener(rect, 'bounds_changed', function() {
-        var bounds=rect.getBounds();
+        var rect_bounds=rect.getBounds();
         //set new bounding box
-        var w = precise_round(bounds.getSouthWest().lng(),2);
-        var s = precise_round(bounds.getSouthWest().lat(),2);
-        var e = precise_round(bounds.getNorthEast().lng(),2);
-        var n = precise_round(bounds.getNorthEast().lat(),2);
+        var w = precise_round(rect_bounds.getSouthWest().lng(),2);
+        var s = precise_round(rect_bounds.getSouthWest().lat(),2);
+        var e = precise_round(rect_bounds.getNorthEast().lng(),2);
+        var n = precise_round(rect_bounds.getNorthEast().lat(),2);
         document.getElementById("bounding_box").value = w + ',' + s + ',' + e + ',' + n;
     });
     drawingManager.setMap(map);
-    var bounds = rect.getBounds();
-    map.fitBounds(bounds);
-    $('#BBoxMap').css('display','block');
+    var rect_bounds = rect.getBounds();
+    map.fitBounds(rect_bounds);
     //Resize to show map
     var h = $(window).height();
     $('#map-bbox').css('height', (0.55*h));
     setTimeout(function(){google.maps.event.trigger(map, 'resize');},500);
+    if(map.getZoom() == 0){map.setZoom(5);}
+    window.map = map
+    window.map.fitBounds(rect_bounds);
 }   
 
 function initialize_polygon_map(poly) {
@@ -984,13 +991,24 @@ function initialize_polygon_map(poly) {
             });
         }
     }
+    //MAP
+    var myLatlng = new google.maps.LatLng(parseFloat(poly_list[1]),parseFloat(poly_list[0]));
+    var map = new google.maps.Map(document.getElementById('map-polygon'), {
+        zoom: 6,
+        center: myLatlng,
+        mapTypeId: google.maps.MapTypeId.HYBRID,
+        //disableDefaultUI: true,
+        zoomControl: true
+    });
+    // Create the DIV to hold the control and call the CenterControl()
+    // constructor passing in this DIV.
     function CustomDeleteButton(controlDiv, map) {
 
         // Set CSS for the control border.
         var controlUI = document.createElement('div');
         controlUI.style.backgroundColor = '#fff';
         controlUI.style.cursor = 'pointer';
-        controlUI.style.marginTop = '6px'; 
+        controlUI.style.marginTop = '6px';
         controlUI.title = 'Delete the shape from map';
         controlDiv.appendChild(controlUI);
         // Set CSS for the control interior.
@@ -1006,18 +1024,7 @@ function initialize_polygon_map(poly) {
         controlUI.addEventListener('click', function() {
             deleteSelectedShape()
         });
-    }  
-    //MAP
-    var myLatlng = new google.maps.LatLng(parseFloat(poly_list[1]),parseFloat(poly_list[0]));
-    var map = new google.maps.Map(document.getElementById('map-polygon'), {
-        zoom: 6,
-        center: myLatlng,
-        mapTypeId: google.maps.MapTypeId.HYBRID,
-        //disableDefaultUI: true,
-        zoomControl: true
-    });
-    // Create the DIV to hold the control and call the CenterControl()
-    // constructor passing in this DIV.
+    }
     var centerControlDiv = document.createElement('div');
     var centerControl = new CustomDeleteButton(centerControlDiv, map);
     centerControlDiv.index = 1;
@@ -1025,7 +1032,7 @@ function initialize_polygon_map(poly) {
     
     var polyOptions = {
       strokeWeight: 0,
-      fillOpacity: 0.45,
+      fillOpacity: 0.4,
       editable: true,
       draggable:true,
       fillColor: "#1E90FF",
@@ -1196,8 +1203,8 @@ function initialize_map_overlays() {
     function useTheData(doc) {
         geoXmlDoc = doc[0];
         if (!geoXmlDoc || !geoXmlDoc.placemarks) return;
-        var defaultStyle = {fillColor: "#0000FF", strokeColor: "#0000FF", fillOpacity: 0.1};
-        var highlightStyle = {fillColor: "#0000FF", strokeColor: "#0000FF", fillOpacity: 0.5};
+        var defaultStyle = {fillColor: "#0000FF", strokeColor: "#0000FF", fillOpacity: 0.4};
+        var highlightStyle = {fillColor: "#0000FF", strokeColor: "#0000FF", fillOpacity: 0.6};
         var bounds = new google.maps.LatLngBounds();
         for (var i = 0; i < geoXmlDoc.placemarks.length; i++) {
             //get first layer and display in area form filed
@@ -1243,7 +1250,7 @@ function add_polygon_to_map(map, ll_coords){
     if (coords.length == 3){
         var circle = new google.maps.Circle({
             strokeColor: '#0000FF',
-            strokeOpacity: 0.8,
+            strokeOpacity: 0.4,
             strokeWeight: 2,
             fillColor: '#ADD8E6',
             center: {lat: parseFloat(coords[1]), lng: parseFloat(coords[0])},
@@ -1266,7 +1273,7 @@ function add_polygon_to_map(map, ll_coords){
         var poly = new google.maps.Polygon({
             paths: poly_path,
             strokeColor: '#0000FF',
-            strokeOpacity: 0.8,
+            strokeOpacity: 0.4,
             strokeWeight: 2,
             coords:poly_path,
             fillColor:'#ADD8E6',
@@ -1300,7 +1307,7 @@ function add_state_to_map(map,val) {
                 var poly = new google.maps.Polygon({
                     paths: poly_path,
                     strokeColor: '#0000FF',
-                    strokeOpacity: 0.8,
+                    strokeOpacity: 0.4,
                     strokeWeight: 3,
                     coords:poly_path,
                     area_type: 'state',
@@ -1355,7 +1362,7 @@ function add_kml_layer_to_map(map, id, val){
                     var poly = new google.maps.Polygon({
                         paths: poly_path,
                         strokeColor: '#0000FF',
-                        strokeOpacity: 0.8,
+                        strokeOpacity: 0.4,
                         strokeWeight: 3,
                         coords:poly_path,
                         area_type: id,

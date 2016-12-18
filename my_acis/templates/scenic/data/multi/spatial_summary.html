@@ -201,14 +201,47 @@
             <div class="row button-row">
                 <!--Buttons-->
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                          <input class="btn btn-success" id="show_hide_data" type='button' value='Hide Data'>
                     </div>
-                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                         <input class="btn btn-success" id="show_hide_graph" type='button' value='Hide Graph'>
                     </div>
                 </div>
             </div><br /><br />
+
+            {%if results.graph_data%}
+            <!--Plot-->
+            <div id="main-graph" align="center" width="98%">
+               <!--Chart Layers-->
+                <div class="row chart-layers">
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        {% include 'includes/chart-indices-spatial-summary.html'%}
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            {% include 'includes/chart-type.html'%}
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            {% include 'includes/chart-running-mean-days.html'%}
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        {% include 'includes/chart-average.html'%}
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        {% include 'includes/chart-show-hide-legend.html'%}
+                    </div>
+                </div>
+                <!--Chart-->
+                <div class="row">
+                    <div id="hc-container" width="90%"></div>
+                    <script type="text/javascript">
+                        var graph_data = {{results.graph_data | safe_json}};
+                        generateTS_individual();
+                    </script>
+                </div>
+            </div><!--main-graph-->
+            {%endif%}<!--end if results.graph_data-->
+            <br /><br />
             <div id="main-table" align="center">
                 <!--Data List-->
                 <div class="dataTableInfo" id="dataTableInfo-0" style="display:none;">
@@ -233,38 +266,6 @@
                     </tbody>
                 </table>
             </div><!--main-table-->
-
-            {%if results.graph_data%}
-            <!--Plot-->
-            <div id="main-graph" style="display:block">
-               <!--Chart Layers-->
-                <div class="row chart-layers">
-                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        {% include 'includes/chart-indices-spatial-summary.html'%}
-                    </div>
-                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                            {% include 'includes/chart-type.html'%}
-                    </div>
-                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                            {% include 'includes/chart-running-mean-years.html'%}
-                    </div>
-                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                        {% include 'includes/chart-average.html'%}
-                    </div>
-                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                        {% include 'includes/chart-show-hide-legend.html'%}
-                    </div>
-                </div>
-                <!--Chart-->
-                <div class="row">                
-                    <div id="hc-container" height="100%"></div>
-                    <script type="text/javascript">
-                        var graph_data = {{results.graph_data | safe_json}};
-                        generateTS_individual();
-                    </script>
-                </div>
-            </div><!--main-graph-->
-            {%endif%}<!--end if results.graph_data-->
         </div><!--results-->
     {%endif%}<!--end if not results.error-->
     {%endif%}<!--end if results.data or results.smry -->

@@ -4,6 +4,37 @@ String.prototype.rsplit = function(sep, maxsplit) {
     return maxsplit ? [ split.slice(0, -maxsplit).join(sep) ].concat(split.slice(-maxsplit)) : split;
 }
 
+function zoomToLocation() {
+    var address = document.getElementById('address').value;
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+           window.map.setCenter(results[0].geometry.location);
+           window.map.setZoom(7);
+           if (window.marker){
+                window.marker.setPosition(results[0].geometry.location);
+                var lat = results[0].geometry.location.lat();
+                var lon = results[0].geometry.location.lng();
+                var infowindow = infowindow = new google.maps.InfoWindow({
+                    content: '<div id="MarkerWindow" ' +
+                    'style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
+                    '<p><b>Lat: </b>' + lat + '<br/>'+
+                    '<b>Lon: </b>' + lon + '<br/>' +
+                    '</div>',
+                    maxWidth: 100
+                });
+                infowindow.open(window.map, window.marker);
+                if ($('#location').length) {
+                    $('#location').val(String(lon) + ',' + String(lat));
+                }
+            }
+        }
+        else {
+            alert('Geocode was not successful for the following reason: ' + status);
+        }
+  });
+}
+
 function inrange(min,number,max){
     if ( !isNaN(number) && (number >= min) && (number <= max) ){
         return true;

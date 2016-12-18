@@ -175,17 +175,17 @@
         </div><!--col-sm-8-->
     </div><!--row-->
 </div><!--top_of_page-->
-
+<br />
 <!--Results-->
 <!--Main Results-->
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
     {%if figure_files%}
     <div class="results" align="center"> 
-        <p class="message" align="center" style="text-align:left;max-width:400px;word-wrap:break-word;">
+        <p class="message" align="center" style="text-align:center;">
             <b>PARAMETERS</b>:<br />
             {%for key_val in params_display_list%}
-            <b>{{key_val.0}}</b>: {{key_val.1}}; 
+            <b>{{key_val.0}}</b>: {{key_val.1}}<br /> 
             {%endfor%}
         </p>
 

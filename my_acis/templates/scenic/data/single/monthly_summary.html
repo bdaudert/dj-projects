@@ -164,7 +164,7 @@
         <!--Gridpoint map-->
         {% include 'includes/map-gridpoint.html'%}
         </div><!--col-sm-8-->
-    </div><!--row-->
+    </div><!--row--><br />
 </div><!--top_of_page-->
 <!--Main Results-->
 <div class="row">
@@ -185,27 +185,83 @@
                     </div>
                 </div>
             </div><br /><br />
+
+            <!--Header-->
+            <p>
+            {%for key_val in results.header%}
+            {%if key_val.0 == "Variable"%}
+                <b>{{key_val.0}}</b>: {{key_val.1}}
+            {%elif key_val.0 == "Start Year"%}
+                <b>{{key_val.1}}</b>
+            {%elif key_val.0 == "End Year"%}
+                -- <b>{{key_val.1}}</b><br />
+            {%elif key_val.0 == "Units" or key_val.0 == "Base Temperature"%}
+                &nbsp;({{key_val.1}})<br />
+            {%else%}
+                <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+            {%endif%}
+            {%endfor%}
+            </p>
+    
+            {% if results.variable == "evap"%} 
+            <p><b>A note about Evaporation: </b><br />
+                Standard daily pan evaporation is measured using the four-foot diameter Class A evaporation pan. The pan water level reading is adjusted when precipitation is measure to obtain the actual evaporation. Most Class A pans are installed above ground, allowing effects such as radiation on the side walls and heat exchanges with the pan material. These effects tend to increase the evaporation totals. The amounts can then be adjusted by multiplying the totals b 0.70 or 0.80 to more closely estimate the evaporation from naturally existing surfaces such as a shallow lake, wet soil or other moist natural surfaces.
+Many stations do not measure pan evaporation during winter months. A "0.00" total indicates no measurement is taken. 
+            </p>
+            {%endif%}               
+ 
+            <p><b>Missing values</b><br />
+             Letters after data values show number of missing days;after annual values show missing months.<br />  
+            Value is displayed but not used in calculations if user-specified missing day criterion exceeded.<br />
+            (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
+
+
+            {%if results.graph_data%}
+            <!--CHART-->
+            <div class="row results">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div id="main-graph" style="display:block" width="100%">
+                        <!--Chart Layers-->
+                        <div class="row chart-layers">
+                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                {% include 'includes/chart-indices-monthly-summary.html'%}
+                            </div>
+                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                                    {% include 'includes/chart-type.html'%}
+                            </div>
+                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                                    {% include 'includes/chart-running-mean-years.html'%}
+                            </div>
+                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                                {% include 'includes/chart-range.html'%}
+                            </div>
+                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                                {% include 'includes/chart-show-hide-legend.html'%}
+                            </div>
+                        </div>
+                        <!--Chart-->
+                        <div class="row">
+                            <div align="center" id="hc-container"></div>
+                            {% if initial.chart_summary == "individual"%}
+                            <script type="text/javascript">
+                                var graph_data = {{results.graph_data | safe_json}};
+                                generateTS_individual();
+                            </script>
+                            {%else%}
+                            <script type="text/javascript">
+                                var graph_data = {{results.graph_data | safe_json}};
+                                generateTS_smry();
+                            </script>
+                            {%endif%}
+                        </div><!--row-->
+                    </div><!--main-graph-->
+                </div><!--col-sm-12-->
+            </div><!--row-->
+            <br />
+        {%endif%}<!--end if results.graph_data-->
+
             <!--Main table -->
             <div id="main-table" align="center">
-                <p>
-                {%for key_val in results.header%}
-                    <b>{{key_val.0}}</b>: {{key_val.1}}<br />
-                {%endfor%}
-                </p>
-                
-                {% if results.variable == "evap"%} 
-                <p><b>A note about Evaporation: </b><br />
-                    Standard daily pan evaporation is measured using the four-foot diameter Class A evaporation pan. The pan water level reading is adjusted when precipitation is measure to obtain the actual evaporation. Most Class A pans are installed above ground, allowing effects such as radiation on the side walls and heat exchanges with the pan material. These effects tend to increase the evaporation totals. The amounts can then be adjusted by multiplying the totals b 0.70 or 0.80 to more closely estimate the evaporation from naturally existing surfaces such as a shallow lake, wet soil or other moist natural surfaces.
-Many stations do not measure pan evaporation during winter months. A "0.00" total indicates no measurement is taken. 
-                </p>
-                {%endif%}               
- 
-                <p><b>Missing values</b><br />
-                 Letters after data values show number of missing days;after annual values show missing months.<br />  
-                Value is displayed but not used in calculations if user-specified missing day criterion exceeded.<br />
-                (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
-                   
-                <!--main table-->
                 <div class="dataTableInfo" id="dataTableInfo-0" style="display:none">
                 {%for key_val in results.header%}
                     {%if key_val%} {{key_val.0}} {{key_val.1}},{%endif%}
@@ -229,13 +285,24 @@ Many stations do not measure pan evaporation during winter months. A "0.00" tota
                 </table>
             </div><!--End div="main-table"-->
             <div id="summary-table" align="center">
-                <!--Summary Table-->
+                <!--Header-->
                 <p>
                 {%for key_val in results.header%}
-                    <b>{{key_val.0}}</b>: {{key_val.1}};<br />
+                {%if key_val.0 == "Variable"%}
+                    <b>{{key_val.0}}</b>: {{key_val.1}}
+                {%elif key_val.0 == "Start Year"%}
+                    <b>{{key_val.1}}</b>
+                {%elif key_val.0 == "End Year"%}
+                     -- <b>{{key_val.1}}</b><br />
+                {%elif key_val.0 == "Units" or key_val.0 == "Base Temperature"%}
+                    &nbsp;({{key_val.1}})<br />
+                {%else%}
+                    <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+                {%endif%}
                 {%endfor%}
-                </p>  
+                </p>
 
+                <!--Summary Table-->
                 <h3>Summary:</h3>
                 <div class="dataTableInfo" id="dataTableInfo-1" style="display:none">
                 {%for key_val in results.header%}
@@ -274,49 +341,6 @@ Many stations do not measure pan evaporation during winter months. A "0.00" tota
                     </tbody>
                 </table>
             </div><!--end summary-table-->
-
-            {%if results.graph_data%}
-            <!--CHART-->
-            <div class="row results">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div id="main-graph" style="display:block" width="100%">
-                        <!--Chart Layers-->
-                        <div class="row chart-layers">
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                {% include 'includes/chart-indices-monthly-summary.html'%}
-                            </div>
-                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                    {% include 'includes/chart-type.html'%}
-                            </div>
-                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                    {% include 'includes/chart-running-mean-years.html'%}
-                            </div>
-                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                {% include 'includes/chart-range.html'%}
-                            </div>
-                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                {% include 'includes/chart-show-hide-legend.html'%}
-                            </div>
-                        </div>
-                        <!--Chart-->
-                        <div class="row">
-                            <div align="center" id="hc-container" width="100%" height="100%"></div>
-                            {% if initial.chart_summary == "individual"%}
-                            <script type="text/javascript">
-                                var graph_data = {{results.graph_data | safe_json}};
-                                generateTS_individual();
-                            </script>
-                            {%else%}
-                            <script type="text/javascript">
-                                var graph_data = {{results.graph_data | safe_json}};
-                                generateTS_smry();
-                            </script>
-                            {%endif%}
-                        </div><!--row-->
-                    </div><!--main-graph-->
-                </div><!--col-sm-12-->
-            </div><!--row-->
-        {%endif%}<!--end if results.graph_data-->
         </div><!--results-->
     {%endif%}<!--End results.data-->
     </div><!--col-xs-12-->

@@ -392,7 +392,7 @@ function set_area(area_type_node){
     //Set new area form input
     if (area_type != 'state'){
         html_text = '<input type="text" id="' + area_type + '" name="'+
-        area_type +'" value="' +  lv.value + '" class ="area form-control"';
+        area_type +'" value="' +  lv.value + '" class="area form-control"';
         if (lv.autofill_list != '') {
             html_text+=' list="' + lv.autofill_list + '"';
         }
@@ -400,7 +400,7 @@ function set_area(area_type_node){
     }
     else{
         html_text = '<select id="' + area_type + '" name="'+ area_type + 
-        ' class = "area form-control">';
+        ' class="area form-control">';
         for (i=0;i< state_choices.length;i++){  
             st = state_choices[i];
             state = state_names[st];
@@ -412,7 +412,7 @@ function set_area(area_type_node){
                 if (st == 'nv'){selected = ' selected';}
                 else {selected = ' ';}
             } 
-            html_text= html_text + '<option' + selected + ' value="' + st +'">' + state + '</option>';
+            html_text= html_text + '<option class="area"' + selected + ' value="' + st +'">' + state + '</option>';
         }
         html_text = html_text + '</select>'
     }
@@ -920,6 +920,7 @@ function update_maps(area_field){
         $('.zoom-to').css('display','none');
         $('#zoom-to-map-bbox').css('display','block');
         $('#BBoxMap').css('display','block');
+        $('#map-bbox').css('display','block');
         initialize_bbox_map(val);
     }
     else if (id == 'county' || id == 'county_warning_area' || id == 'climate_division' || id == 'basin'){ 
