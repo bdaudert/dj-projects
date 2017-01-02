@@ -429,7 +429,7 @@ function set_area(area_type_node){
 function set_variables(){
     var non_prism_els = ['gdd','hdd','cdd'];
     var station_only_els = ['obst','snow','snwd','evap','wdmv','dtr','pet'];
-    var el_opts,el;
+    var el_opts = null,el = null;
     if ($('#variables').length){
         el = $("#variables");
         el_opts = $("#variables option");
@@ -439,39 +439,41 @@ function set_variables(){
         el_opts = $("#variable option");
     }
 
-    el_opts.each(function(){
-        //Check if prism data, disable degree days
-        if ($('#data_type').val() == 'station' || $('#area_type').val().inList['station_id','station_ids']){
-            if ($(this).val() == 'pet'  || $(this).val() == 'dtr'){
-                if ($('#app_name').val().inList(['monthly_summary','station_finder'])){
-                     $(this).attr('disabled',false);
+    if (el_opts){
+        el_opts.each(function(){
+            //Check if prism data, disable degree days
+            if ($('#data_type').val() == 'station' || $('#area_type').val().inList['station_id','station_ids']){
+                if ($(this).val() == 'pet'  || $(this).val() == 'dtr'){
+                    if ($('#app_name').val().inList(['monthly_summary','station_finder'])){
+                         $(this).attr('disabled',false);
+                    }
+                    else{
+                        $(this).attr('disabled',true);
+                    }
                 }
                 else{
-                    $(this).attr('disabled',true);
+                    $(this).attr('disabled',false);
                 }
             }
-            else{
-                $(this).attr('disabled',false);
-            }
-        }
-    
-        if ($('#data_type').val() == 'grid' || $('#area_type').val().inList(['location','locations'])){
-            if ($('#grid').val() == '21' && $(this).val().inList(non_prism_els)){
-                $(this).attr('disabled',true);
-                if (el.val() == $(this).val()){
-                    el.val('pcpn');
-                }
-            }
-            else{
-                if ($(this).val().inList(station_only_els)){
+        
+            if ($('#data_type').val() == 'grid' || $('#area_type').val().inList(['location','locations'])){
+                if ($('#grid').val() == '21' && $(this).val().inList(non_prism_els)){
                     $(this).attr('disabled',true);
                     if (el.val() == $(this).val()){
                         el.val('pcpn');
                     }
                 }
+                else{
+                    if ($(this).val().inList(station_only_els)){
+                        $(this).attr('disabled',true);
+                        if (el.val() == $(this).val()){
+                            el.val('pcpn');
+                        }
+                    }
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 

@@ -7,8 +7,8 @@
 {%block content %}
 
 <!--Documentation-->
-<div align="left" id="Docu_app_station_finder" style="display:none;">
-    {% include 'includes/Docu_app_station_finder.html'%}
+<div align="left" id="Docu_page_station_finder" style="display:none;">
+    {% include 'includes/Docu_page_station_finder.html'%}
 </div>
 <div class="docu" id="Docu_page_single_point_prods" style="display:none;">
     {% include 'includes/Docu_page_single_point_prods.html'%}
@@ -25,7 +25,7 @@
         <div class="bg-info main-col inside inside-full-height">
         <h3 align="center">
             <a href="{{DATA_URL}}station_finder/">Station Finder</a>
-            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_station_finder')"><br />
+            <img class="qmark" alt="Click me!" title="Help" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_station_finder')"><br />
             <small align="left">{% include 'includes/Docu_popup_station_finder.html'%}</small>
         </h3>
         </div>

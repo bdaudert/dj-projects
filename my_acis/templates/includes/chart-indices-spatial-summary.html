@@ -1,6 +1,12 @@
 {%load my_scenic_filters%}
-
-<font class="message">Variables</font>
+<div id="chart_indices">
+{% for var in results.variables%}
+<input type="checkbox" name="chart_indices"  class="chart_indices" value={{forloop.counter0}} 
+    {% if 0|is_in:initial.chart_indices_string%} checked {% endif %}>{{var}}
+    {%if forloop.counter|divisibleby:2%}<br />{%endif%}
+{%endfor%}
+</div>
+<!--
 <select style="max-height:200px;width:200px" multiple id='chart_indices' name="chart_selector">
 {% for var in results.variables%}
     <option value={{forloop.counter0}} 
@@ -8,4 +14,4 @@
      {{var}} 
     </option>
 {%endfor%}
-</select>
+</select>-->

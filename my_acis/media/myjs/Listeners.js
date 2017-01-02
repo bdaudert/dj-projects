@@ -23,10 +23,10 @@ $(document).ready(function () {
             $(dT).DataTable({
                 'dom': 'Bfrtip',
                 'paging': false,
-                'scrollY': 400,
-                'scrollCollapse': true,
-                'scrollX': 'auto',
-                'autoWidth':false,
+                //'scrollY': 400,
+                //'scrollCollapse': true,
+                //'scrollX': 'auto',
+                //'autoWidth':false,
                 'oLanguage': {
                     'sSearch': 'Filter:',
                 }, 
@@ -79,10 +79,11 @@ $(document).ready(function () {
                     },
                     'colvis'
                 ]
-            }); //end dataTabel    
+            }).fnAdjustColumnSizing( false ); //end dataTabel    
         }//end if not station_list
     });//end each
-
+    //Prevent misalignment of header/footer on  show/hide
+    $('.dataTable').wrap('<div class="dataTables_scroll" />');
     /*
     FORM HELP TEXTS
     */
@@ -1195,7 +1196,7 @@ $(document).ready(function () {
         }
     });
     //Monthly summary dynamic chart updates
-    $('#chart_indices, #chart_summary').on('change keyup', function(){
+    $('.chart_indices, #chart_summary').on('change keyup', function(){
         smry = 'individual';
         if ($('#chart_summary').length) {
             smry = $('#chart_summary').val();
@@ -1210,9 +1211,10 @@ $(document).ready(function () {
         if ($(this).attr('id') == 'chart_summary'){
             $('.chart_summary').val($(this).val());
         }
-        if ($(this).attr('id') == 'chart_indices'){
+        if ($(this).attr('class') == 'chart_indices'){
             var index_string = '';
-            $("#chart_indices :selected").each(function(){
+            //$("#chart_indices :selected").each(function(){
+            $(".chart_indices :checked").each(function(){
                 index_string+=$(this).val() + ','; 
             });
             index_string = index_string.substring(0,index_string.length - 1);

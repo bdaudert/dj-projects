@@ -106,11 +106,18 @@ img.app_img {
     border:1px solid black;
 }
 
+.dataTables_scroll {
+    position:relative;
+    overflow:auto;
+}
+
 .chart-layers {
     border:2px solid black;
     background-color:#aec6cf;
     font-size:small;
-    padding: 1% 0%;
+    padding: 1% 1%;
+    margin:0;
+    /*width:99.8%;*/
 }
 
 .results {

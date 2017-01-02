@@ -168,6 +168,7 @@
                 <div id="main-graph" class="chart">
                     <!--Chart Layers-->
                     <div class="row chart-layers">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                             {% include 'includes/chart-percentiles.html'%}
                         </div>
@@ -182,10 +183,12 @@
                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                             {% include 'includes/chart-show-hide-legend.html'%}
                         </div>
+                    </div>
                     </div> 
                     <!--Chart-->
                     <div class="row" height="100%">
-                            <div align="right" id="hc-container" width="100%"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div align="right" id="hc-container" width="90%"></div>
                             <script type="text/javascript">
                                 var graph_data = {{results.graph_data | safe_json}};
                                 var cp_data = {{results.cp_data | safe_json }};

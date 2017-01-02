@@ -25,7 +25,12 @@ function generateTS_individual(chart_indices) {
     }
     catch(e){}
     switch (arguments.length) { // <-- 0 is number of required arguments
-        case 0: var chart_indices = $('#chart_indices').val();
+        case 0: {
+            var chart_indices = [];
+            $('#chart_indices input:checked').each(function() {
+                chart_indices.push($(this).val());
+            });
+        }
     }
     //Convert daat indices to list
     if (typeof chart_indices == 'string'){
@@ -512,7 +517,13 @@ function generateTS_smry(chart_indices) {
     var args = arguments,
         datadict = graph_data; //template_variable
     switch (arguments.length) { // <-- 0 is number of required arguments
-        case 0: var chart_indices = $('#chart_indices').val();
+        //case 0: var chart_indices = $('#chart_indices').val();
+        case 0: {
+            var chart_indices = [];
+            $('#chart_indices input:checked').each(function() {
+                chart_indices.push($(this).val());
+            });
+        }
     }
     //Convert daat indices to list
     if (typeof chart_indices == 'string'){

@@ -170,7 +170,7 @@
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
     {%if results.data%}
-        <div class="results" align="center">
+        <div class="results" >
             <div class="row button-row">
                 <!--Buttons-->
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -211,135 +211,140 @@ Many stations do not measure pan evaporation during winter months. A "0.00" tota
             {%endif%}               
  
             <p><b>Missing values</b><br />
-             Letters after data values show number of missing days;after annual values show missing months.<br />  
-            Value is displayed but not used in calculations if user-specified missing day criterion exceeded.<br />
+             Letters after data values show number of missing days.<br />  
+             Letters after annual values indicate number of missing months.<br />
             (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
 
 
             {%if results.graph_data%}
             <!--CHART-->
-            <div class="row results">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div id="main-graph" style="display:block" width="100%">
-                        <!--Chart Layers-->
-                        <div class="row chart-layers">
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                {% include 'includes/chart-indices-monthly-summary.html'%}
-                            </div>
-                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                    {% include 'includes/chart-type.html'%}
-                            </div>
-                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                    {% include 'includes/chart-running-mean-years.html'%}
-                            </div>
-                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                {% include 'includes/chart-range.html'%}
-                            </div>
-                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                {% include 'includes/chart-show-hide-legend.html'%}
-                            </div>
+            <div id="main-graph" align="center">
+                <!--Chart Layers-->
+                <div class="row chart-layers">
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <div class="row" height="50%">
+                            {% include 'includes/chart-smry-monthly-summary.html'%}
                         </div>
-                        <!--Chart-->
-                        <div class="row">
-                            <div align="center" id="hc-container"></div>
-                            {% if initial.chart_summary == "individual"%}
-                            <script type="text/javascript">
-                                var graph_data = {{results.graph_data | safe_json}};
-                                generateTS_individual();
-                            </script>
-                            {%else%}
-                            <script type="text/javascript">
-                                var graph_data = {{results.graph_data | safe_json}};
-                                generateTS_smry();
-                            </script>
-                            {%endif%}
-                        </div><!--row-->
-                    </div><!--main-graph-->
-                </div><!--col-sm-12-->
-            </div><!--row-->
+                        <div class="row" height="50%">
+                            {% include 'includes/chart-indices-monthly-summary.html'%}
+                        </div>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <div class="row" height="50%">
+                            {% include 'includes/chart-running-mean-years.html'%}
+                        </div>
+                        <div class="row" height="50%">
+                            {% include 'includes/chart-range.html'%}
+                        </div>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <div class="row" height="50%">
+                        {% include 'includes/chart-show-hide-legend.html'%}
+                        </div>
+                        <div class="row" height="50%">
+                        {% include 'includes/chart-type.html'%}
+                        </div>
+                    </div>
+                </div>
+                <!--Chart-->
+                <div class="row">
+                    <div id="hc-container" style="width:97%"></div>
+                    {% if initial.chart_summary == "individual"%}
+                    <script type="text/javascript">
+                        var graph_data = {{results.graph_data | safe_json}};
+                        generateTS_individual();
+                    </script>
+                    {%else%}
+                    <script type="text/javascript">
+                        var graph_data = {{results.graph_data | safe_json}};
+                        generateTS_smry();
+                    </script>
+                    {%endif%}
+                </div><!--row-->
+            </div><!--main-graph-->
             <br />
         {%endif%}<!--end if results.graph_data-->
 
-            <!--Main table -->
-            <div id="main-table" align="center">
-                <div class="dataTableInfo" id="dataTableInfo-0" style="display:none">
-                {%for key_val in results.header%}
-                    {%if key_val%} {{key_val.0}} {{key_val.1}},{%endif%}
+        <!--Main table -->
+        <div id="main-table" align="center">
+            <div class="dataTableInfo" id="dataTableInfo-0" style="display:none">
+            {%for key_val in results.header%}
+                {%if key_val%} {{key_val.0}} {{key_val.1}},{%endif%}
+            {%endfor%}
+            </div>
+            <table class="dataTable smallFont nowrap" id="dataTable-0" border=1>
+            {%for yr_data in results.data%}
+            {%if forloop.counter0 == 0%}
+                <thead><tr align="left">{%for dat in yr_data %}<td>{{dat}}</td>{%endfor%}</tr></thead>
+                <tfoot><tr align="left">{%for dat in yr_data%}<td>{{dat}}</td>{%endfor%}</tr></tfoot>
+                <tbody>
+            {%else%}
+                <tr>
+                {%for dat in yr_data%}
+                    <td>{{dat}}</td>
                 {%endfor%}
-                </div>
-                <table class="dataTable smallFont nowrap" id="dataTable-0" border=1>
-                {%for yr_data in results.data%}
+                </tr>
+            {%endif%}
+            {%endfor%}
+            </tbody>
+            </table>
+        </div><!--End div="main-table"-->
+        <div id="summary-table" align="center">
+            <!--Header-->
+            <p>
+            {%for key_val in results.header%}
+            {%if key_val.0 == "Variable"%}
+                <b>{{key_val.0}}</b>: {{key_val.1}}
+            {%elif key_val.0 == "Start Year"%}
+                <b>{{key_val.1}}</b>
+            {%elif key_val.0 == "End Year"%}
+                 -- <b>{{key_val.1}}</b><br />
+            {%elif key_val.0 == "Units" or key_val.0 == "Base Temperature"%}
+                &nbsp;({{key_val.1}})<br />
+            {%else%}
+                <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+            {%endif%}
+            {%endfor%}
+            </p>
+
+            <!--Summary Table-->
+            <h3>Summary:</h3>
+            <div class="dataTableInfo" id="dataTableInfo-1" style="display:none">
+            {%for key_val in results.header%}
+                {%if key_val%}  {{key_val.0}} {{key_val.1}}, {%endif%}
+            {%endfor%}
+            </div>
+            <table border="1" class="dataTable smallFont nowrap" id="dataTable-1">
+                {%for s_data in results.data_summary%}
+                {%if forloop.counter0 <= 6%}
                 {%if forloop.counter0 == 0%}
-                    <thead><tr align="left">{%for dat in yr_data %}<td>{{dat}}</td>{%endfor%}</tr></thead>
-                    <tfoot><tr align="left">{%for dat in yr_data%}<td>{{dat}}</td>{%endfor%}</tr></tfoot>
-                    <tbody>
-                {%else%}
-                    <tr>
-                    {%for dat in yr_data%}
-                        <td>{{dat}}</td>
+                    <thead><tr>
+                    {%for s in s_data%}
+                    {%if forloop.counter == 1%}
+                        <th>{{s}}</th>
+                    {%else%}
+                        {%if forloop.counter|divisibleby:2%}<th>{{s}}{%endif%}
+                        {%if not forloop.counter|divisibleby:2%}{{s}}</th>{%endif%}
+                    {%endif%}
                     {%endfor%}
-                    </tr>
+                    </tr></thead>
+                    <tbody>
+                    {%else%}
+                        <tr>
+                        {%for s in s_data%}
+                        {%if forloop.counter == 1%}
+                            <td>{{s}}</td>
+                        {%else%}
+                        {%if forloop.counter|divisibleby:2%}<td>{{s}}{%endif%}
+                        {%if not forloop.counter|divisibleby:2%}{{s}}</td>{%endif%}
+                        {%endif%}
+                        {%endfor%}
+                        </tr>
+                    {%endif%}
                 {%endif%}
                 {%endfor%}
                 </tbody>
-                </table>
-            </div><!--End div="main-table"-->
-            <div id="summary-table" align="center">
-                <!--Header-->
-                <p>
-                {%for key_val in results.header%}
-                {%if key_val.0 == "Variable"%}
-                    <b>{{key_val.0}}</b>: {{key_val.1}}
-                {%elif key_val.0 == "Start Year"%}
-                    <b>{{key_val.1}}</b>
-                {%elif key_val.0 == "End Year"%}
-                     -- <b>{{key_val.1}}</b><br />
-                {%elif key_val.0 == "Units" or key_val.0 == "Base Temperature"%}
-                    &nbsp;({{key_val.1}})<br />
-                {%else%}
-                    <b>{{key_val.0}}</b>: {{key_val.1}}<br />
-                {%endif%}
-                {%endfor%}
-                </p>
-
-                <!--Summary Table-->
-                <h3>Summary:</h3>
-                <div class="dataTableInfo" id="dataTableInfo-1" style="display:none">
-                {%for key_val in results.header%}
-                    {%if key_val%}  {{key_val.0}} {{key_val.1}}, {%endif%}
-                {%endfor%}
-                </div>
-                <table border="1" class="dataTable smallFont nowrap" id="dataTable-1">
-                    {%for s_data in results.data_summary%}
-                    {%if forloop.counter0 <= 6%}
-                    {%if forloop.counter0 == 0%}
-                        <thead><tr>
-                        {%for s in s_data%}
-                        {%if forloop.counter == 1%}
-                            <th>{{s}}</th>
-                        {%else%}
-                            {%if forloop.counter|divisibleby:2%}<th>{{s}}{%endif%}
-                            {%if not forloop.counter|divisibleby:2%}{{s}}</th>{%endif%}
-                        {%endif%}
-                        {%endfor%}
-                        </tr></thead>
-                        <tbody>
-                        {%else%}
-                            <tr>
-                            {%for s in s_data%}
-                            {%if forloop.counter == 1%}
-                                <td>{{s}}</td>
-                            {%else%}
-                            {%if forloop.counter|divisibleby:2%}<td>{{s}}{%endif%}
-                            {%if not forloop.counter|divisibleby:2%}{{s}}</td>{%endif%}
-                            {%endif%}
-                            {%endfor%}
-                            </tr>
-                        {%endif%}
-                    {%endif%}
-                    {%endfor%}
-                    </tbody>
-                </table>
+            </table>
             </div><!--end summary-table-->
         </div><!--results-->
     {%endif%}<!--End results.data-->

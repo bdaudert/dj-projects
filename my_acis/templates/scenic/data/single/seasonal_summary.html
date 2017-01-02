@@ -183,14 +183,9 @@
                     <!--Chart Layers-->
                     <div class="row chart-layers">
                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                            <div class="row">
-                                {% include 'includes/chart-type.html'%}
-                            </div>
-                            <div class="row">
-                                {% include 'includes/chart-threshold.html'%}
-                            </div>
+                            {% include 'includes/chart-threshold.html'%}
                         </div>
-                        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                             <div class="row" height="50%">
                                 {% include 'includes/chart-running-mean-years.html'%}
                             </div>
@@ -198,13 +193,18 @@
                                 {% include 'includes/chart-average.html'%}
                             </div>
                         </div>
-                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                            {% include 'includes/chart-show-hide-legend.html'%}
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <div class="row">
+                                {% include 'includes/chart-show-hide-legend.html'%}
+                            </div>
+                            <div class="row">
+                                {% include 'includes/chart-type.html'%}
+                            </div> 
                         </div>
                     </div><!--row chart-layers--> 
                     <!--Chart-->
                     <div class="row" height="100%">
-                        <div align="center" id="hc-container" width="100%"></div>
+                        <div align="center" id="hc-container" style="width:96%;float:right;"></div>
                         <script type="text/javascript">
                             var graph_data = {{results.graph_data | safe_json}};
                             var data_indices = {{ results.data_indices |safe }}

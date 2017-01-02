@@ -321,9 +321,14 @@ function ShowSodsummTab(divId){
         if (id == divId){
             $(this).css('display','block');
             $('#nav-' + id).addClass('active');
-            setTimeout(function(){$(window).resize();},1000);
+            var h = $(window).height();
+            var w = $(window).width();
+            $('.hc-container').css('width', w*0.7);
+            $('.hc-container').css('height', h*0.5);
+            $(document).ready(function(){$(window).resize();});
+            //setTimeout(function(){$(window).resize();},1000);
         }
-        else{
+        else {
             $(this).css('display','none');
             $('#nav-' + id).removeClass('active');
         }

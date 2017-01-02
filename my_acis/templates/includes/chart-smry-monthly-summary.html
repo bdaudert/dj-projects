@@ -1,18 +1,19 @@
-<font class="message">Summary: </font>
-<select id="chart_summary" name="chart_selector">
-    {%if initial.statistic_period == "monthly"%}
-    <option value="individual" 
-    {% if initial.chart_summary == "individual" %} selected{%endif%}>
-    Plot individual months</option>
-    {%endif%}
-    {%if initial.statistic_period == "weekly"%}
-    <option value="individual"
-    {% if initial.chart_summary == "individual" %} selected{%endif%}>
-    Plot individual weeks</option>
-    {%endif%}
-    <option value="max" {% if initial.chart_summary == "max" %} selected{%endif%}>Maximum</option>
-    <option value="min" {% if initial.chart_summary == "min" %} selected{%endif%}>Minimum</option>
-    <option value="mean" {% if initial.chart_summary == "mean" %} selected{%endif%}>Mean</option>
-    <option value="median" {% if initial.chart_summary == "median" %} selected{%endif%}>Median</option>
-    <option value="sum" {% if initial.chart_summary == "sum" %} selected{%endif%}>Sum</option>
-</select>
+<div class="form-group">
+    <select class="form-control" id="chart_summary" name="chart_selector" style="max-width:50%;margin-left:10%">
+        {%if initial.statistic_period == "monthly"%}
+        <option value="individual" 
+        {% if initial.chart_summary == "individual" %} selected{%endif%}>
+        Plot individual months</option>
+        {%endif%}
+        {%if initial.statistic_period == "weekly"%}
+        <option value="individual"
+        {% if initial.chart_summary == "individual" %} selected{%endif%}>
+        Plot individual weeks</option>
+        {%endif%}
+        <option value="max" {% if initial.chart_summary == "max" %} selected{%endif%}>Maximum</option>
+        <option value="min" {% if initial.chart_summary == "min" %} selected{%endif%}>Minimum</option>
+        <option value="mean" {% if initial.chart_summary == "mean" %} selected{%endif%}>Mean</option>
+        <option value="median" {% if initial.chart_summary == "median" %} selected{%endif%}>Median</option>
+        <option value="sum" {% if initial.chart_summary == "sum" %} selected{%endif%}>Sum</option>
+    </select>
+</div>

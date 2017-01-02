@@ -151,11 +151,13 @@
                 </div>
                 <!--Chart-->
                 <div class="row" height="100%">
-                    <div align="center" id="hc-container" width="100%"></div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div align="center" id="hc-container" width="90%"></div>
                     <script type="text/javascript">
                         var graph_data = {{results.graph_data | safe_json}}
                         generateTS_individual([0,1]);
                     </script>
+                    </div>
                 </div>
             </div><br /><!--main-graph-->
             <!--TABLES-->

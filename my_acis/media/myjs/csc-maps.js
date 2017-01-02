@@ -822,7 +822,7 @@ function initialize_bbox_map(bbox) {
         editable: true,
         draggable: true,
         fillColor: "#0000FF",
-        fillOpacity: 0.4,
+        fillOpacity: 0.3,
         strokeColor: "#0000FF",
         strokeWeight: 1
     }
@@ -1032,7 +1032,7 @@ function initialize_polygon_map(poly) {
     
     var polyOptions = {
       strokeWeight: 0,
-      fillOpacity: 0.4,
+      fillOpacity: 0.3,
       editable: true,
       draggable:true,
       fillColor: "#1E90FF",
@@ -1137,7 +1137,7 @@ function initialize_polygon_map(poly) {
     window.map = map;
     //Resize to show map
     var h = $(window).height();
-    $('#map-polygon').css('height', (0.55*h));
+    $('#map-polygon').css('height', (h*0.55));
     setTimeout(function(){google.maps.event.trigger(map, 'resize');},500);
     window.map.fitBounds(shape_bounds);
 }
@@ -1203,7 +1203,7 @@ function initialize_map_overlays() {
     function useTheData(doc) {
         geoXmlDoc = doc[0];
         if (!geoXmlDoc || !geoXmlDoc.placemarks) return;
-        var defaultStyle = {fillColor: "#0000FF", strokeColor: "#0000FF", fillOpacity: 0.4};
+        var defaultStyle = {fillColor: "#0000FF", strokeColor: "#0000FF", fillOpacity: 0.3};
         var highlightStyle = {fillColor: "#0000FF", strokeColor: "#0000FF", fillOpacity: 0.6};
         var bounds = new google.maps.LatLngBounds();
         for (var i = 0; i < geoXmlDoc.placemarks.length; i++) {
@@ -1250,7 +1250,7 @@ function add_polygon_to_map(map, ll_coords){
     if (coords.length == 3){
         var circle = new google.maps.Circle({
             strokeColor: '#0000FF',
-            strokeOpacity: 0.4,
+            strokeOpacity: 0.3,
             strokeWeight: 2,
             fillColor: '#ADD8E6',
             center: {lat: parseFloat(coords[1]), lng: parseFloat(coords[0])},
@@ -1273,7 +1273,7 @@ function add_polygon_to_map(map, ll_coords){
         var poly = new google.maps.Polygon({
             paths: poly_path,
             strokeColor: '#0000FF',
-            strokeOpacity: 0.4,
+            strokeOpacity: 0.3,
             strokeWeight: 2,
             coords:poly_path,
             fillColor:'#ADD8E6',
@@ -1307,7 +1307,7 @@ function add_state_to_map(map,val) {
                 var poly = new google.maps.Polygon({
                     paths: poly_path,
                     strokeColor: '#0000FF',
-                    strokeOpacity: 0.4,
+                    strokeOpacity: 0.3,
                     strokeWeight: 3,
                     coords:poly_path,
                     area_type: 'state',
@@ -1362,7 +1362,7 @@ function add_kml_layer_to_map(map, id, val){
                     var poly = new google.maps.Polygon({
                         paths: poly_path,
                         strokeColor: '#0000FF',
-                        strokeOpacity: 0.4,
+                        strokeOpacity: 0.3,
                         strokeWeight: 3,
                         coords:poly_path,
                         area_type: id,
