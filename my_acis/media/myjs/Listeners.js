@@ -79,7 +79,7 @@ $(document).ready(function () {
                     },
                     'colvis'
                 ]
-            }).fnAdjustColumnSizing( false ); //end dataTabel    
+            }); //end dataTable 
         }//end if not station_list
     });//end each
     //Prevent misalignment of header/footer on  show/hide
@@ -1362,6 +1362,14 @@ $(document).ready(function () {
         myChart.redraw();
     });
 
+    //Resize sodsumm charts if tab is clicked
+    // fix dimensions of chart that was in a hidden element
+    $(document).on( 'shown.bs.tab', 'a[data-toggle="tab"]', function (e) { // on tab selection event
+        $( ".hc-container" ).each(function() { // target each element with the .contains-chart class
+            var chart = $(this).highcharts(); // target the chart itself
+            chart.reflow() // reflow that chart
+        });
+    }); 
 
     //MAPS
     $('#station_list tbody').on('click', 'tr', function(){

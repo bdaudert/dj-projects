@@ -183,7 +183,7 @@ function ShowPopupDocu(DivId){
         $.fn.bootstrapBtn = bootstrapButton;
     }catch(e){};
     var wWidth = $(window).width();
-    var max_height = $(window).height()*0.6, 
+    var max_height = $(window).height()*0.7, 
         max_width = wWidth * 0.8;
     if (DivId.inList(['formDownload','largeRequestForm'])){
         var max_width = wWidth * 0.3;

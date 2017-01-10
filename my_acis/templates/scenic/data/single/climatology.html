@@ -144,7 +144,7 @@
             <!-- TAB results -->
             {%for tab in tab_list%} 
             <div class="sodsumm-tab" id={{tab}} {%if forloop.counter != 1%}style="display:none"{%endif%}>
-                <div class="hc-container" id="hc-container{{forloop.counter0}}" align="center"></div>
+                <div class="hc-container" id="hc-container{{forloop.counter0}}" align="center" width="100%"></div>
                 <script type="text/javascript" src="{{ MEDIA_URL }}myjs/hc-sodsumm.js"></script>
                 
                 <p>

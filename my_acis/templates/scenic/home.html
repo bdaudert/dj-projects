@@ -6,6 +6,9 @@
 {%block content %}
 
 <!--Documentation-->
+<div class="docu" id="Docu_station_data" style="display:none;">
+    {% include 'includes/Docu_station_data.html'%}
+</div>
 <div class="docu" id="Docu_networks" style="display:none;">
     {% include 'includes/Docu_networks.html'%}
 </div>
@@ -16,11 +19,26 @@
     {% include 'includes/Docu_NRCC_INT.html'%}
 </div>  
 <div class="docu" id="Docu_LOCA" style="display:none;">
-    {% include 'includes/Docu_LOCA.html'%}
+    {% include 'includes/Docu_short_LOCA.html'%}
 </div>
 <div class="docu" id="Docu_NARCCAP" style="display:none;">
-    {% include 'includes/Docu_NARCCAP.html'%}
+    {% include 'includes/Docu_short_NARCCAP.html'%}
+</div>
+<div class="docu" id="Docu_LANDSAT" style="display:none;">
+    {% include 'includes/Docu_LANDSAT.html'%}
+</div>
+<div class="docu" id="Docu_MODIS" style="display:none;">
+    {% include 'includes/Docu_MODIS.html'%}
+</div>
+<div class="docu" id="Docu_popup_station_finder" style="display:none;">
+    {% include 'includes/Docu_popup_station_finder.html'%}
+</div>
+<div class="docu" id="Docu_popup_single_point_prods" style="display:none;">
+    {% include 'includes/Docu_popup_single_point_prods.html'%}
 </div> 
+<div class="docu" id="Docu_popup_multi_point_prods" style="display:none;">
+    {% include 'includes/Docu_popup_multi_point_prods.html'%}
+</div>
 
 <div class="row row-height">
     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-height">

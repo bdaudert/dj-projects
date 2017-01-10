@@ -559,7 +559,7 @@ function initialize_station_finder() {
         window.markers = markers;
         sf_map.fitBounds(map_bounds);
         window.sf_map = sf_map;
-        dataTable.draw();
+        //dataTable.draw();
         /*
         On zoom change reset the markers
         Note: zoom_changed event fires before the bounds have been recalculated. 
