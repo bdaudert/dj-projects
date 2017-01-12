@@ -7,57 +7,68 @@
 {%block content %}
 
 <!--Documentation-->
-<div align="left" id="Docu_page_station_finder" style="display:none;">
-    {% include 'includes/Docu_page_station_finder.html'%}
+<div class="docu" id="Docu_station_data" style="display:none;">
+    {% include 'includes/Docu_station_data.html'%}
 </div>
-<div class="docu" id="Docu_page_single_point_prods" style="display:none;">
-    {% include 'includes/Docu_page_single_point_prods.html'%}
+<div class="docu" id="Docu_networks" style="display:none;">
+    {% include 'includes/Docu_networks.html'%}
 </div>
-<div class="docu" id="Docu_page_multi_point_prods" style="display:none;">
-    {% include 'includes/Docu_page_multi_point_prods.html'%}
+<div class="docu" id="Docu_PRISM" style="display:none;">
+    {% include 'includes/Docu_PRISM.html'%}
 </div>
-<div class="docu" id="Docu_app_climate_engine" style="display:none;">
-    {% include 'includes/Docu_app_climate_engine.html'%}
+<div class="docu" id="Docu_NRCC_INT" style="display:none;">
+    {% include 'includes/Docu_NRCC_INT.html'%}
+</div>
+<div class="docu" id="Docu_LOCA" style="display:none;">
+    {% include 'includes/Docu_short_LOCA.html'%}
+</div>
+<div class="docu" id="Docu_NARCCAP" style="display:none;">
+    {% include 'includes/Docu_short_NARCCAP.html'%}
+</div>
+<div class="docu" id="Docu_LANDSAT" style="display:none;">
+    {% include 'includes/Docu_LANDSAT.html'%}
+</div>
+<div class="docu" id="Docu_MODIS" style="display:none;">
+    {% include 'includes/Docu_MODIS.html'%}
+</div>
+<div align="left" id="Docu_page_remote_sensing_data" style="display:none;">
+    {% include 'includes/Docu_page_remote_sensing_data.html'%}
+</div>
+<div class="docu" id="Docu_page_climate_data" style="display:none;">
+    {% include 'includes/Docu_page_climate_data.html'%}
+</div>
+<div class="docu" id="Docu_page_projections" style="display:none;">
+    {% include 'includes/Docu_page_projections.html'%}
 </div>
 
 <div class="row row-height">
-    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-height">
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-height">
         <div class="bg-info main-col inside inside-full-height">
-        <h3 align="center">
-            <a href="{{DATA_URL}}station_finder/">Station Finder</a>
-            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_station_finder')"><br />
-            <small align="left">{% include 'includes/Docu_popup_station_finder.html'%}</small>
-        </h3>
+        <h1 align="center">
+            <a href="{{DATA_URL}}climate_data/">Climate Data</a>
+            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_climate_data')"><br />
+            <small align="left">{% include 'includes/Docu_popup_climate_data.html'%}</small>
+        </h1>
         </div>
     </div>
-    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-height">
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-height">
         <div class="bg-info main-col inside inside-full-height">
-        <h3 align="center">
-            <a href="{{DATA_URL}}single/">Single Point<br />Products</a>
-            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_single_point_prods')">
+        <h1 align="center">
+            <a href="{{DATA_URL}}remote_sensing_data/">Remote Sensing<br />Data</a>
+            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_remote_sensing_data')">
             <br />
-            <small align="left">{% include 'includes/Docu_popup_single_point_prods.html'%}</small>
-        </h3>
+            <small align="left">{% include 'includes/Docu_popup_remote_sensing_data.html'%}</small>
+        </h1>
         </div>
     </div>
-    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-height">
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-height">
         <div class="bg-info main-col inside inside-full-height">
-        <h3 align="center">
-            <a href="{{DATA_URL}}multi/">Multi Point<br />Products</a>
-            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_multi_point_prods')">
+        <h1 align="center">
+            <a href="{{DATA_URL}}projections/">Climate Projections</a>
+            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_projections')">
             <br />
-            <small align="left">{% include 'includes/Docu_popup_multi_point_prods.html'%}</small>
-        </h3>
-        </div>
-    </div>
-    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-height">
-        <div class="bg-info main-col inside inside-full-height">
-        <h3 align="center">
-            <a href="{{DATA_URL}}climate_engine/">Climate Engine</a>
-            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_climate_engine')">
-            <br />
-            <small align="left">{% include 'includes/Docu_popup_climate_engine.html' %}</small>
-        </h3>
+            <small align="left">{% include 'includes/Docu_popup_projections.html'%}</small>
+        </h1>
         </div>
     </div>
 </div>

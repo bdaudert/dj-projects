@@ -77,32 +77,39 @@
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="{{DATA_URL}}" tabindex="0" data-toggle="dropdown" data-submenu>DATA ACCESS <span class="caret"></span></a>
+                    <a href="{{DATA_URL}}" tabindex="0" data-toggle="dropdown" data-submenu>DATA<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{DATA_URL}}">Overview</a></li>
-                        <li><a href="{{DATA_URL}}station_finder/">Station Finder</a></li>
+                        <li><a href="{{DATA_URL}}">OVERVIEW</a></li>
                         <li class="dropdown-submenu">
-                            <a tabindex="0" href="">Single Point Products</a>
+                            <a href="{{DATA_URL}}climate_data/">CLIMATE DATA</a>
                             <ul class="dropdown-menu">
-                                <li><a tabindex="0" href="{{DATA_URL}}single/lister/">Data Lister</a></li>
-                                <li><a tabindex="0" href="{{DATA_URL}}single/monthly_summary/">Monthly Summary</a></li>
-                                <li><a tabindex="0" href="{{DATA_URL}}single/seasonal_summary/">Seasonal Summary</a></li>
-                                <li><a tabindex="0" href="{{DATA_URL}}single/intraannual/">Single-Year Time Series</a></li>
-                                <li><a tabindex="0" href="{{DATA_URL}}single/data_comparison/">Grid/Station Data Comparison</a></li>
-                                <li><a tabindex="0" href="{{DATA_URL}}single/climatology/">Climatology</a></li>
-                            </ul>
+                                <li><a href="{{DATA_URL}}climate_data/">Overview</a></li>
+                                <li><a href="{{DATA_URL}}climate_data/station_finder/">Station Finder</a></li>
+                                <li class="dropdown-submenu">
+                                    <a tabindex="0" href="">Single Point Products</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a tabindex="0" href="{{DATA_URL}}climate_data/single/lister/">Data Lister</a></li>
+                                        <li><a tabindex="0" href="{{DATA_URL}}climate_data/single/monthly_summary/">Monthly Summary</a></li>
+                                        <li><a tabindex="0" href="{{DATA_URL}}climate_data/single/seasonal_summary/">Seasonal Summary</a></li>
+                                        <li><a tabindex="0" href="{{DATA_URL}}climate_data/single/intraannual/">Single-Year Time Series</a></li>
+                                        <li><a tabindex="0" href="{{DATA_URL}}climate_data/single/data_comparison/">Grid/Station Data Comparison</a></li>
+                                        <li><a tabindex="0" href="{{DATA_URL}}climate_data/single/climatology/">Climatology</a></li>
+                                    </ul>
+                                </li>
+                            <li class="dropdown-submenu">
+                                <a tabindex="-1" href="{{DATA_URL}}climate_data/multi/">Multi Point Products </a>
+                                <ul class="dropdown-menu">
+                                  <li><a tabindex="0" href="{{DATA_URL}}climate_data/multi/lister/">Data Lister</a></li>
+                                  <li><a href="{{DATA_URL}}climate_data/multi/spatial_summary/">Spatial Summary</a></li>
+                                  <li><a href="{{DATA_URL}}climate_data/multi/temporal_summary/">Temporal Summary</a></li>
+                                </ul>
+                            </li>
+                          </ul><!--ul dropdown menu-->
                         </li>
-                    <li class="dropdown-submenu">
-                        <a tabindex="-1" href="{{DATA_URL}}multi/">Multi Point Products </a>
-                        <ul class="dropdown-menu">
-                          <li><a tabindex="0" href="{{DATA_URL}}multi/lister/">Data Lister</a></li>
-                          <li><a href="{{DATA_URL}}multi/spatial_summary/">Spatial Summary</a></li>
-                          <li><a href="{{DATA_URL}}multi/temporal_summary/">Temporal Summary</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="{{DATA_URL}}climate_engine/">Climate Engine</a></li>
-                  </ul><!--ul dropdown menu-->
-                </li> <!-- .dropdown -->
+                        <li><a href="{{DATA_URL}}remote_sensing_data/">REMOTE SENSING DATA</a></li>
+                        <li><a href="{{DATA_URL}}projections/">CLIMATE PROJECTIONS (LOCA, etc)</a></li>
+                    </ul>
+                </li>
                 <li class="dropdown">
                     <a href="{{SCENIC_URL}}dashboard/" tabindex="0" data-toggle="dropdown" data-submenu>DASHBOARD <span class="caret"></span></i></a>
                     <ul class="dropdown-menu">
