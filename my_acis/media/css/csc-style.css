@@ -270,6 +270,29 @@ img.app_img {
     z-index:1000;
 }
 
+#ee_iframe {
+    width: 2000px;
+    height: 1350px;
+    /*
+    width:100%;
+    height:100%;
+    */
+    border: 0;
+    
+
+    -ms-transform: scale(0.48);
+    -moz-transform: scale(0.48);
+    -o-transform: scale(0.48);
+    -webkit-transform: scale(0.48);
+    transform: scale(0.48);
+
+    -ms-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    -o-transform-origin: 0 0;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
+
 /*bootstrap overrides
 /* USAGE
 <div class="row">
@@ -295,16 +318,6 @@ img.app_img {
   background: -ms-linear-gradient(top, #eef7fb 0%, #ededed 100%);
 }
 
-/*
-.inside {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  background: #d9edf7;
-  background: -webkit-gradient(linear, left top, left bottom,color-stop(0%, #eef7fb), color-stop(100%, #ededed));
-  background: -moz-linear-gradient(top, #eef7fb 0%, #ededed 100%);
-  background: -ms-linear-gradient(top, #eef7fb 0%, #ededed 100%);
-}
-*/
 .inside-full-height {
   /*
   // if you want to give content full height give him height: 100%;

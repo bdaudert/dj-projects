@@ -32,24 +32,8 @@
     <div id="Docu_temporal_summary">{% include 'includes/Docu_temporal-summary.html'%}</div> 
 </div>
 
-<!--Tool Info/Howto-->
-<table>
-<td valign="bottom" width="45%">
-    <input type="submit" value="Start Over" onclick="window.location='{{DATA_URL}}multi/monthly_spatial_summary'"/>
-    <!--
-    {%if results.graph_data or results.smry%}
-        <input type="submit" value="Change Options" onclick="ShowHideTopOfPage()">
-    {%endif%} --> 
-</td>
-<td valign="top" width="55%" align="left">
-    <table>
-    <tr>
-    <td><div id=tool_info_head>{% include 'includes/Button_tool_info.html'%}</div></td>
-    <td><div id="how_to_head">{% include 'includes/Button_how_to.html'%}</div></td>
-    </tr>
-    </table>
-</td>
-</table>
+<!--Button row-->
+{% include 'includes/button-row.html'%}
 
 <!--Form-->
 <!--

@@ -182,7 +182,8 @@ $(document).ready(function () {
     /*
     DATE CHANGES
     */
-    $('#start_date, #end_date').bind('change', function(){
+    $('#start_date, #end_date').on('change', function(){
+        console.log('YOOOO!!')
         //Set start/end window according to dates
         if ($('#start_window').length || $('#end_window').length){
             var date_eight = $(this).val().replace(/\-/g,'').replace(/\//g,'').replace(/\:/g,'');
@@ -191,13 +192,13 @@ $(document).ready(function () {
             ds = ds.slice(0,4) + '-' + ds.slice(4,6) + '-' +  ds.slice(6,8);
             var de = $('#end_date').val().replace(/\-/g,'').replace(/\//g,'').replace(/\:/g,'');
             de = de.slice(0,4) + '-' + de.slice(4,6) + '-' +  de.slice(6,8)
-            if (date_eight.length == 8 || date_eight == 'por'){
+            if (date_eight.length == 8 || date_eight.toLowerCase() == 'por'){
                 if ($(this).attr('id') == 'start_date'){
-                    if ($(this).val() == 'por' && $('#end_date').val() == 'por'){
+                    if ($(this).val().toLowerCase() == 'por' && $('#end_date').val().toLowerCase() == 'por'){
                         $('#start_window').val('01-01');
                         $('#end_window').val('01-31');
                     }
-                    if ($(this).val() == 'por' && $('#end_date').val() != 'por'){
+                    if ($(this).val().toLowerCase() == 'por' && $('#end_date').val().toLowerCase() != 'por'){
                         var d = new Date(de);
                         //Weird lag of one day in js Date
                         d.setDate(d.getDate() + 1);
@@ -206,7 +207,7 @@ $(document).ready(function () {
                         var dd = ('0' + d.getDate().toString()).slice(-2);
                         $('#start_window').val(mm + '-' + dd);
                     } 
-                    if ($(this).val() != 'por'){
+                    if ($(this).val().toLowerCase() != 'por'){
                         var d = new Date(ds);
                         //Weird lag of one day in js Date
                         d.setDate(d.getDate() + 1);
@@ -216,11 +217,11 @@ $(document).ready(function () {
                     }
                 }
                 else{
-                    if ($(this).val() == 'por' && $('#start_date').val() == 'por'){
+                    if ($(this).val().toLowerCase() == 'por' && $('#start_date').val().toLowerCase() == 'por'){
                         $('#start_window').val('01-01');
                         $('#end_window').val('01-31');
                     }
-                    if ($(this).val() == 'por' && $('#start_date').val() != 'por'){
+                    if ($(this).val().toLowerCase() == 'por' && $('#start_date').val().toLowerCase() != 'por'){
                         var d = new Date(ds);
                         //Weird lag of one day in js Date
                         d.setDate(d.getDate() + 1); 
@@ -229,7 +230,7 @@ $(document).ready(function () {
                         var dd = ('0' + d.getDate().toString()).slice(-2);
                         $('#end_window').val(mm + '-' + dd);
                     }
-                    if ($(this).val() != 'por'){
+                    if ($(this).val().toLowerCase() != 'por'){
                         var d = new Date(de);
                         //Weird lag of one day in js Date
                         d.setDate(d.getDate() + 1); 

@@ -147,7 +147,7 @@ def dashboard(request):
     context = {
         'title': settings.APPLICATIONS[app_name][0],
         'app_name':app_name,
-        'app_url': app_nurl
+        'app_url': app_url
     }
     #Find mon, year to locate snotel map
     year = str(datetime.datetime.today().year)
@@ -464,6 +464,7 @@ def single_lister(request):
     if 'formData' in request.POST or (request.method == 'GET' and 'variables' in request.GET):
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
         form = DJANGOUtils.set_form(initial, clean = False)
+        context['xx'] = form_cleaned
         #Check form fields
         fields_to_check = [form_cleaned['area_type'],'start_date','end_date','start_window','end_window','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)
