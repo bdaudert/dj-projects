@@ -459,6 +459,20 @@ def single_lister(request):
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
 
+    if request.method == 'GET' and 'projection' in request.GET:
+        '''
+        Link from projection page
+            override some options
+        '''
+        new_init = {
+            'area_type':'location',
+            'location':'-119,39',
+            'grid':'22'
+        }
+        initial = DJANGOUtils.set_initial(new_init, app_name)
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
+
     #MAIN APP
     #Data request submitted
     if 'formData' in request.POST or (request.method == 'GET' and 'variables' in request.GET):
@@ -588,6 +602,20 @@ def intraannual(request):
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
 
+    if request.method == 'GET' and 'projection' in request.GET:
+        '''
+        Link from projection page
+            override some options
+        '''
+        new_init = {
+            'area_type':'location',
+            'location':'-119,39',
+            'grid':'22'
+        }
+        initial = DJANGOUtils.set_initial(new_init, app_name)
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
+
     #MAIN APP
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
@@ -678,6 +706,20 @@ def seasonal_summary(request):
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
+
+    if request.method == 'GET' and 'projection' in request.GET:
+        '''
+        Link from projection page
+            override some options
+        '''
+        new_init = {
+            'area_type':'location',
+            'location':'-119,39',
+            'grid':'22'
+        }
+        initial = DJANGOUtils.set_initial(new_init, app_name)
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
 
     #MAIN APP
     initial = DJANGOUtils.set_initial(request,app_name)
@@ -790,6 +832,19 @@ def multi_lister(request):
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
+
+    if request.method == 'GET' and 'projection' in request.GET:
+        '''
+        Link from projection page
+            override some options
+        '''
+        new_init = {
+            'data_type':'grid',
+            'grid':'22'
+        }
+        initial = DJANGOUtils.set_initial(new_init, app_name)
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
 
     #MAIN APP
     initial = DJANGOUtils.set_initial(request,app_name)
@@ -1134,6 +1189,20 @@ def spatial_summary(request):
         response = set_ajax_response(response_data)
         return response
 
+    if request.method == 'GET' and 'projection' in request.GET:
+        '''
+        Link from projection page
+            override some options
+        '''
+        new_init = {
+            'data_type':'grid',
+            'grid':'22'
+        }
+        initial = DJANGOUtils.set_initial(new_init, app_name)
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
+
+    #MAIN APP
     initial  = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
     if 'formData' in request.POST or (request.method == 'GET' and 'variables' in request.GET):
@@ -1476,11 +1545,26 @@ def data_comparison(request):
     initial = DJANGOUtils.set_initial(request,'data_comparison')
     context['initial'] = initial
     context['need_gridpoint_map'] = True
+
+    if request.method == 'GET' and 'projection' in request.GET:
+        '''
+        Link from projection page
+            override some options
+        '''
+        new_init = {
+            'area_type':'location',
+            'location':'-119,39',
+            'grid':'22'
+        }
+        initial = DJANGOUtils.set_initial(new_init, app_name)
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
+
     if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
         context['form_message'] = True
-        form = DJANGOUtils.set_form(request, clean=False)
+        form = DJANGOUtils.set_form(initial, clean=False)
         form['app_name'] = 'data_comparison'
-        form_cleaned = DJANGOUtils.set_form(request, clean=True)
+        form_cleaned = DJANGOUtils.set_form(initial, clean=True)
         form_cleaned['app_name'] = 'data_comparison'
         DC = WRCCClasses.DataComparer(form)
         gdata,sdata,dist = DC.get_data()
@@ -1514,8 +1598,20 @@ def monthly_summary(request):
     initial = DJANGOUtils.set_initial(request, app_name)
     context['initial'] = initial
 
-    #Set graph and plot options
-    #Time Serie Table Generation and graph if desired
+    if request.method == 'GET' and 'projection' in request.GET:
+        '''
+        Link from projection page
+            override some options
+        '''
+        new_init = {
+            'area_type':'location',
+            'location':'-119,39',
+            'grid':'22'
+        }
+        initial = DJANGOUtils.set_initial(new_init, app_name)
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
+
     if 'formData' in request.POST or (request.method == 'GET' and 'variable' in request.GET):
         form = DJANGOUtils.set_form(initial,clean=False)
         form_cleaned = DJANGOUtils.set_form(initial,clean=True)
@@ -1650,9 +1746,26 @@ def climatology(request):
     }
     initial= DJANGOUtils.set_initial(request, app_name)
     context['initial'] = initial
+    if request.method == 'GET' and 'projection' in request.GET:
+        '''
+        Link from projection page
+            override some options
+        '''
+        new_init = {
+            'area_type':'location',
+            'location':'-119,39',
+            'grid':'22',
+            'summary_type':'temp'
+        }
+        initial = DJANGOUtils.set_initial(new_init, app_name)
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
+
     if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
-        form = DJANGOUtils.set_form(request,clean=False)
-        form_cleaned = DJANGOUtils.set_form(request,clean=True)
+        form = DJANGOUtils.set_form(initial,clean=False)
+        form_cleaned = DJANGOUtils.set_form(initial,clean=True)
+        #form = DJANGOUtils.set_form(request,clean=False)
+        #form_cleaned = DJANGOUtils.set_form(request,clean=True)
         #Set up page header params
         if 'station_id' in form.keys():
             context['station_name'] = form['station_id']
