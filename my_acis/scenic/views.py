@@ -1440,7 +1440,8 @@ def station_finder(request):
             context['results'] = results
         if 'stations' not in station_json.keys() or  station_json['stations'] == []:
             context['results'] = {'error':'No stations found for these search parameters.'}
-        context['results'] = {'station_json':f_name}
+        if 'stations' in station_json.keys() and station_json['stations']:
+            context['results'] = {'station_json':f_name}
         header_keys = WRCCUtils.set_display_keys(app_name, initial)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,initial)
 
@@ -1488,7 +1489,8 @@ def station_finder(request):
             context['results'] = results
         if 'stations' not in station_json.keys() or  station_json['stations'] == []:
             context['results'] = {'error':'No stations found for these search parameters.'}
-        context['results'] = {'station_json':f_name}
+        if 'stations' in station_json.keys() and station_json['stations']:
+            context['results'] = {'station_json':f_name}
         context['run_done'] = True
         header_keys = WRCCUtils.set_display_keys(app_name, initial)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,initial)

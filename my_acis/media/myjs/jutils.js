@@ -318,15 +318,19 @@ function ShowSodsummTab(divId){
     var id;
     $('.sodsumm-tab').each(function(){
         id = $(this).attr('id');
+        var hc_container = $('#' + id + ' div:first-child').attr('id');
         if (id == divId){
             $(this).css('display','block');
             $('#nav-' + id).addClass('active');
             var h = $(window).height();
             var w = $(window).width();
-            $('.hc-container').css('width', w*0.7);
-            $('.hc-container').css('height', h*0.5);
-            $(document).ready(function(){$(window).resize();});
-            //setTimeout(function(){$(window).resize();},1000);
+            $('#' + hc_container).css('width', w*0.8);
+            $('#' + hc_container).css('height', h*0.6);
+            console.log('Reflowing ' + String(hc_container));
+            var chart = $('#' + hc_container).highcharts();
+            setTimeout(function () {
+                chart.reflow();
+            });
         }
         else {
             $(this).css('display','none');

@@ -4,9 +4,6 @@ String.prototype.inList=function(list){
 }
 
 
-//function precise_round(num,decimals){
-//return Math.round(num*Math.pow(10,decimals))/Math.pow(10,decimals);
-//}
 
 function printMapControl(controlDiv,map_div){
   // Set CSS for the control border.
@@ -263,7 +260,7 @@ function initialize_station_finder() {
             'paging': false,
             'scrollY': 400,
             'scrollCollapse': true,
-            'scrollX': 'auto',
+            'scrollX': true,
             'buttons': [
                 {
                     'extend':'csvHtml5',
@@ -312,6 +309,7 @@ function initialize_station_finder() {
             ]
         });
     };
+ 
     //Read in stn data json file
     $.getJSON(station_json, function(data) {
         //for (first in data.stations) var ll = new google.maps.LatLng(first.lat,first.lon);
@@ -458,9 +456,9 @@ function initialize_station_finder() {
                 'elev':String(c.elevation),
                 'valid_daterange':String(avbl_variables)
             }
-            var data_portal_href = '/csc/scenic/data/single/lister/'+
+            var data_portal_href = '/csc/scenic/data/climate_data/single/lister/'+
             '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid; 
-            var app_portal_href = '/csc/scenic/data/single/'+
+            var app_portal_href = '/csc/scenic/data/climate_data/single/'+
             '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid;
             for (var k =0;k<el_list.length;k++){
                 data_portal_href = data_portal_href + '&variables=' + el_list[k];
@@ -502,7 +500,7 @@ function initialize_station_finder() {
             tbl_row.attr('name', c.name);
             tbl_row.attr('id', marker_count - 1);
             tbl_row.attr('lat',c.lat);
-            tbl_row.attr('lat',c.lon);
+            tbl_row.attr('lon',c.lon);
             var td, tdArray=[], rowNode,row_attrs; tableDataRow = [];
             //tableDataRow = {};
             if ( metadata_keys && metadata_keys.length >0){
@@ -761,6 +759,8 @@ function initialize_station_finder() {
     //Resize to show map
     var h = $(window).height(); 
     $('#map-station-finder').css('height', (h*0.55));
+    //Prevent misalignment of header/footer on  show/hide
+    $('.dataTable').wrap('<div class="dataTables_scroll" />');
 }//close initialize_station_finder
 
 function my_boxclick(box, category){
@@ -993,6 +993,8 @@ function initialize_polygon_map(poly) {
     }
     //MAP
     var myLatlng = new google.maps.LatLng(parseFloat(poly_list[1]),parseFloat(poly_list[0]));
+    var h = $(window).height();
+    $('#map-polygon').css('height', (h*0.55));
     var map = new google.maps.Map(document.getElementById('map-polygon'), {
         zoom: 6,
         center: myLatlng,
@@ -1135,11 +1137,15 @@ function initialize_polygon_map(poly) {
     //map.panToBounds(shape_bounds); 
     drawingManager.setMap(map);
     window.map = map;
+    shape_init.setMap(window.map);
+    window.map.fitBounds(shape_bounds);
+    
+    /*
     //Resize to show map
     var h = $(window).height();
     $('#map-polygon').css('height', (h*0.55));
     setTimeout(function(){google.maps.event.trigger(map, 'resize');},500);
-    window.map.fitBounds(shape_bounds);
+    */
 }
 
 function initialize_map_overlay(map_id,poly) {

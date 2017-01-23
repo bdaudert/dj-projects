@@ -1363,15 +1363,6 @@ $(document).ready(function () {
         myChart.redraw();
     });
 
-    //Resize sodsumm charts if tab is clicked
-    // fix dimensions of chart that was in a hidden element
-    $(document).on( 'shown.bs.tab', 'a[data-toggle="tab"]', function (e) { // on tab selection event
-        $( ".hc-container" ).each(function() { // target each element with the .contains-chart class
-            var chart = $(this).highcharts(); // target the chart itself
-            chart.reflow() // reflow that chart
-        });
-    }); 
-
     //MAPS
     $('#station_list tbody').on('click', 'tr', function(){
         infowindow.close();
@@ -1380,14 +1371,6 @@ $(document).ready(function () {
         var bounds = window.sf_map.getBounds();
         bounds.extend(new google.maps.LatLng(parseFloat($(this).attr('lat')), parseFloat($(this).attr('lon'))));
     });
-    /*
-    $('#station_list').on('mouseover', 'tr', function(){
-        $(this).css('backgroundColor', "#8FBC8F");
-    });
-    $('#station_list').on('mouseout', 'tr', function(){
-         $(this).css('backgroundColor',"#282828");
-    });
-    */
     /***************
     AJAX CALLS
     ****************/
