@@ -259,10 +259,12 @@ function initialize_station_finder() {
             'dom': 'Bfrtip',
             'paging': false,
             'scrollY': 400,
+            /*
             'bScrollCollapse': true,
             'sScrollX':'100%',
             'scrollX':true,
             'sScrollXInner': '99.2%',
+            */
             'aaSorting':[],
             'oLanguage': {
                 'sSearch': 'Filter:',
@@ -776,8 +778,10 @@ function initialize_station_finder() {
     //Resize to show map
     var h = $(window).height(); 
     $('#map-station-finder').css('height', (h*0.55));
+    /*
     //Prevent misalignment of header/footer on  show/hide
     $('.dataTable').wrap('<div class="dataTables_scroll" />');
+    */
 }//close initialize_station_finder
 
 function my_boxclick(box, category){
