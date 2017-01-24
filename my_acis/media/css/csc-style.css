@@ -107,7 +107,7 @@ img.app_img {
 }
 
 .dataTables_scroll {
-    position:relative;
+    /*position:relative;*/
     overflow:auto;
 }
 

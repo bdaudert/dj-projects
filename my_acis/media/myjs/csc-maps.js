@@ -259,8 +259,14 @@ function initialize_station_finder() {
             'dom': 'Bfrtip',
             'paging': false,
             'scrollY': 400,
-            'scrollCollapse': true,
-            'scrollX': true,
+            'bScrollCollapse': true,
+            'sScrollX':'100%',
+            'scrollX':true,
+            'sScrollXInner': '99.2%',
+            'aaSorting':[],
+            'oLanguage': {
+                'sSearch': 'Filter:',
+            },
             'buttons': [
                 {
                     'extend':'csvHtml5',
@@ -554,20 +560,28 @@ function initialize_station_finder() {
                 }
             }
         }); //end each
-        window.markers = markers;
         sf_map.fitBounds(map_bounds);
-        window.sf_map = sf_map;
         //dataTable.draw();
+        google.maps.event.addListener(sf_map, 'tilesloaded', function() {
+            // Called on initial map load.
+            this.zoomChanged = false;
+            google.maps.event.clearListeners(sf_map, 'tilesloaded');
+        });
         /*
         On zoom change reset the markers
         Note: zoom_changed event fires before the bounds have been recalculated. 
         To bind bounds_changed and work with markers/map stuff we need to work with both, 
         zoom_changed and bounds_changed  
         */
+        google.maps.event.addListenerOnce(sf_map,"bounds_changed",function() {
+            //Do nothing
+            this.zoomChanged = false;
+        });
         google.maps.event.addListener(sf_map,"zoom_changed",function() {
             this.zoomChanged = true;
         });
-        google.maps.event.addListener(sf_map,"bounds_changed",function() {
+
+        google.maps.event.addListener(sf_map,"idle",function() {
             if (this.zoomChanged) {
                 this.zoomChanged = false;
             }
@@ -607,14 +621,11 @@ function initialize_station_finder() {
             }
             //Remove trailing comma and set html variable
             station_ids_str = station_ids_str.replace(/,\s*$/, "");
-            /*
-            if (station_ids_str){
-                station_ids_str = station_ids_str.substring(0,station_ids_str.length - 2);
-            }
-            */
             //Update hidden var inf formDownload of sttaion_finder.html
             $('#station_ids_string').val(station_ids_str);
-            dataTable.draw();
+            try {
+                dataTable.draw();
+            }catch(e){};
         });  
         // == shows all markers of a particular category, and ensures the checkbox is checked and write station_list==
         show = function(category) {
@@ -683,7 +694,9 @@ function initialize_station_finder() {
                         }
                     }
                 }
-                dataTable.draw();
+                try {
+                    dataTable.draw();
+                }catch(e){};
             }
             //Remove trailing comma and set html variable
             station_ids_str = station_ids_str.replace(/,\s*$/, "");
@@ -734,7 +747,9 @@ function initialize_station_finder() {
                     }
                 }
             }
-            dataTable.draw();
+            try {
+                dataTable.draw();
+            }catch(e){};
             //Remove trailing comma and set html variable
             /*
             if (station_ids_str){
@@ -755,6 +770,8 @@ function initialize_station_finder() {
         };
         //var markerCluster = new MarkerClusterer(sf_map, markers);
         //google.maps.event.trigger(window.sf_map, 'resize');
+        window.markers = markers;
+        window.sf_map = sf_map;
     });//close getjson
     //Resize to show map
     var h = $(window).height(); 
@@ -1081,7 +1098,7 @@ function initialize_polygon_map(poly) {
         } 
         shape_init = new google.maps.Polygon($.extend({},polyOptions,shape_init_opts));
     }
-
+    var mz = map.getZoom();
     google.maps.event.addListener(shape_init, "dragend", function(){
         var len = selectedShape.getPath().getLength();
         var htmlStr = '';
@@ -1119,6 +1136,10 @@ function initialize_polygon_map(poly) {
     });
     //drawingManager.setMap(map);
     //Event handlers
+     google.maps.event.addListener(map, 'tilesloaded', function() {
+        //shape_bounds = map.getBounds();
+        google.maps.event.clearListeners(map, 'tilesloaded');
+    });
     google.maps.event.addListener(drawingManager, 'overlaycomplete', function(e) {
         deleteSelectedShape();
         // Switch back to non-drawing mode after drawing a shape.
@@ -1131,21 +1152,15 @@ function initialize_polygon_map(poly) {
 
     setSelection(shape_init);
     shape_init.setMap(map);
-    //FIX ME NOT SURE WHY MAP ZOOM --) on stn finder
     map.fitBounds(shape_bounds);
-    if(map.getZoom() == 0){map.setZoom(5);}
+    //FIX ME NOT SURE WHY MAP ZOOM --) on stn finder
+    if(map.getZoom() == 0){map.setZoom(mz);}
     //map.panToBounds(shape_bounds); 
     drawingManager.setMap(map);
-    window.map = map;
-    shape_init.setMap(window.map);
-    window.map.fitBounds(shape_bounds);
-    
-    /*
     //Resize to show map
-    var h = $(window).height();
-    $('#map-polygon').css('height', (h*0.55));
-    setTimeout(function(){google.maps.event.trigger(map, 'resize');},500);
-    */
+    //setTimeout(function(){google.maps.event.trigger(map, 'resize');},500);
+    window.map = map;
+    window.resizeTo($(window).width(), $(window).height());
 }
 
 function initialize_map_overlay(map_id,poly) {

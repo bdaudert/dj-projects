@@ -162,35 +162,35 @@
                 </div>  
                 <table class="dataTable" id="dataTable-{{forloop.counter0}}" width="90%">
                     {%if tab != "snow" and tab != "pcpn"%}
-                    {%for row in results|lookup:tab%}
-                    {%if forloop.counter0 == 0%}
-                    <thead>
-                        <tr>{%for val in row%}<th>{{val}}</th>{%endfor%}</tr>
-                    </thead>
-                    <tfoot>
-                        <tr>{%for val in row%}<th>{{val}}</th>{%endfor%}</tr>
-                    </tfoot>
-                    <tbody>
+                        {%for row in results|lookup:tab%}
+                            {%if forloop.counter0 == 0%}
+                            <thead>
+                            <tr>{%for val in row%}<th>{{val}}</th>{%endfor%}</tr>
+                            </thead>
+                            <tfoot>
+                            <tr>{%for val in row%}<th>{{val}}</th>{%endfor%}</tr>
+                            </tfoot>
+                            <tbody>
+                            {%else%}
+                            <tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr>
+                            {%endif%}
+                        {%endfor%}
+                        </tbody>
                     {%else%}
-                        <tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr>
-                    {%endif%}
-                    {%endfor%}
-                    </tbody>
-                    {%else%}
-                    {%for row in results.prsn%}
-                    {%if forloop.counter0 == 0%}
-                    <thead>
-                        <tr>{%for val in row%}<th>{{val}}</th>{%endfor%}</tr>
-                    </thead>
-                    <tfoot>
-                        <tr>{%for val in row%}<th>{{val}}</th>{%endfor%}</tr>
-                    </tfoot>
-                    <tbody>
-                    {%else%}
-                        <tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr>
-                    {%endif%}
-                    {%endfor%}
-                    </tbody>
+                        {%for row in results.prsn%}
+                            {%if forloop.counter0 == 0%}
+                            <thead>
+                            <tr>{%for val in row%}<th>{{val}}</th>{%endfor%}</tr>
+                            </thead>
+                            <tfoot>
+                            <tr>{%for val in row%}<th>{{val}}</th>{%endfor%}</tr>
+                            </tfoot>
+                            <tbody>
+                            {%else%}
+                            <tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr>
+                            {%endif%}
+                        {%endfor%}
+                        </tbody>
                     {%endif%}
                 </table>
             </div><!--sodsumm-tab-->

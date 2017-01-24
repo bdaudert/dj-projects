@@ -23,10 +23,7 @@ $(document).ready(function () {
             $(dT).DataTable({
                 'dom': 'Bfrtip',
                 'paging': false,
-                //'scrollY': 400,
-                //'scrollCollapse': true,
-                //'scrollX': 'auto',
-                //'autoWidth':false,
+                'aaSorting':[],
                 'oLanguage': {
                     'sSearch': 'Filter:',
                 }, 
@@ -83,7 +80,7 @@ $(document).ready(function () {
         }//end if not station_list
     });//end each
     //Prevent misalignment of header/footer on  show/hide
-    $('.dataTable').wrap('<div class="dataTables_scroll" />');
+    //$('.dataTable').wrap('<div class="dataTables_scroll" />');
     /*
     FORM HELP TEXTS
     */

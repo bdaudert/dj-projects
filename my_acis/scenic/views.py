@@ -1827,7 +1827,7 @@ def climatology(request):
             context['run_done']= True
             return render_to_response(url, context, context_instance=RequestContext(request))
         else:
-            results = dict(results[0])
+            results = results[0]
         context['results'] = results
         #Sodsumm table headers for html
         context['tab_names'] = WRCCData.TAB_NAMES_WITH_GRAPHICS[form['summary_type']]
