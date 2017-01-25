@@ -24,9 +24,10 @@
 </div>
 
 <div style="padding:5px;">
+    <p class="link" align="center" onclick="ShowHowtoDocu('Docu_faq_LOCA')">Localized Constructed Analogs (LOCA) FAQs</p>
     <div class="row">
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            <h2 class="bg-info" style="padding:1.7%;" align="center">Introduction</h2>
+            <h2 class="bg-success" style="padding:1.7%;" align="center">Introduction</h2>
             <p>
             Climate is an emergent product of Earth’s orbit, volcanic activity, atmospheric gases, and 
 energy transfers among air, water, and land. Climate models include equations that represent   
@@ -38,18 +39,19 @@ modeled data.
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             <div class="row">
-                <h2 class="bg-info" align="center">{% include 'includes/projections_data_access.html'%}</h2>
+                <h2 class="bg-success" style="padding:1.7%;" align="center">Data Access</h2>
             </div>
             <div class="row">
-                <h2 class="bg-info" align="center">{% include 'includes/projections_analysis_plots.html'%}</h2>
+                <h3 class="bg-info" align="center">{% include 'includes/projections_data_access.html'%}</h3>
+            </div>
+            <div class="row">
+                <h3 class="bg-info" align="center">{% include 'includes/projections_analysis_plots.html'%}</h3>
             </div>
         </div>
     <div>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <h2 class="bg-info" style="padding:1%;" align="center">LOCA (Localized Constructed Analogs)</h2>
-            <p class="link" align="center" onclick="ShowHowtoDocu('Docu_faq_LOCA')">LOCA FAQs</p>
-            <h2 align="center">Case studies for natural resource management</h2>
+            <h2 class="bg-success" style="padding:1%;" align="center">Case studies for natural resource management</h2>
             <!--
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-height">
                 <div class="bg-info main-col inside inside-full-height">
@@ -106,10 +108,6 @@ modeled data.
             </div> 
         </div><!--col-sm-12...-->
     </div><!--row-->
-    <div class="row">
-        <h2 align="center">LOCA Analysis Plots</h2>
-        <p>Coming Soon!</p>
-    </div>
 </div>
 
 {% endblock %}
