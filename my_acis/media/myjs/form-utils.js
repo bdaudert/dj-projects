@@ -186,7 +186,14 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
         //Don't change start/end dates
         if (year_or_date == 'year'){
             new_dates.start = new_dates.start.slice(0,4);
-            new_dates.end = new_dates.end.slice(0,4);
+            //new_dates.end = new_dates.end.slice(0,4);
+            var new_end = String(parseInt(new_dates.start.slice(0,4)) + 10)
+            if (new Date(new_end).getTime() < new Date(new_dates.end).getTime()){
+                new_dates.end = new_end
+            }
+            else{
+                new_dates.end = new_dates.end.slice(0,4);
+            }
             return new_dates;
         }    
         else{
@@ -207,7 +214,7 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
         var new_ds = new Date(new_dates.start);
         new_ds.setDate(new_ds.getDate() + 1);
         
-        //Set new end date to one year later than start date
+        //Set new end date to 10 years later than start date
         if (year_or_date == 'year'){
             if (ds_past <= new_ds <= de_past){
                 var d = grid_vd[grid][0][1];
@@ -217,7 +224,7 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
             }
         }
         else{
-            var d = String(parseInt(new_dates.start.slice(0,4)) + 1) + new_dates.start.slice(4,new_dates.start.length);
+            var d = String(parseInt(new_dates.start.slice(0,4)) + 10) + new_dates.start.slice(4,new_dates.start.length);
         }
         if (d == 'today'){
             d = convertDateToString(today,'-');
@@ -271,7 +278,8 @@ function set_year_range(){
     //Set new year dropdowns
     $('#start_year > option').remove();
     $('#end_year > option').remove();
-    var opt, i;
+    var opt, i, selected_date;
+    selected_year_end = String(parseInt(min_year.slice(0,4)) + 10)
     for (i=parseInt(min_year);i<=parseInt(max_year);i++){
         opt = '<option value="' + String(i) + '">' + String(i) + '</option>';
         $('#start_year').append(opt);
@@ -289,6 +297,7 @@ function set_year_range(){
             $('#start_year').append(opt);
             $('#end_year').append(opt);
     }
+    $('#end_year').val(String(selected_year_end));
 }
 
 function update_value(val){
@@ -904,7 +913,7 @@ function update_maps(area_field){
         $('.zoom-to').css('display','none');
         $('#zoom-to-map-polygon').css('display','block');
         $('#PolyMap').css('display','block');
-        initialize_polygon_map(val);
+        setTimeout(function(){initialize_polygon_map(val);},500);
     }
     else if (id == 'location'){
         $('.zoom-to').css('display','none');
@@ -996,7 +1005,6 @@ function update_maps(area_field){
                     }
                     /*
                     else {
-                        console.log('YPO')
                         //Can't find the state
                         ols = document.getElementsByName('overlay_state');
                         for (idx =0;idx < ols.length;idx++){

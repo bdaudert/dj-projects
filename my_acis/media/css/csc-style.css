@@ -262,11 +262,6 @@ img.app_img {
     min-width:100%;
     min-height:50%;
 }
-/*
-#loading, #load, #loading-image, #load-image {
-    z-index: 1000;
-}
-*/
 .col-loading {
     text-align:center;
     position:fixed;

@@ -460,6 +460,7 @@ $(document).ready(function () {
         Checks that start year < end year
         and lies within grid range
         */
+        console.log('YOOOOOO')
         var which = $(this).attr('id');
         var s_yr_int, e_yr_int, diff;
         var min_year, max_year, min_year_fut=null, max_year_fut=null;
@@ -855,6 +856,7 @@ $(document).ready(function () {
             if ($('#summary_type').length){
                 $('#summary_type option[value="all"]').attr('disabled',true);
                 $('#summary_type option[value="prsn"]').attr('disabled',true);
+                $('#summary_type option[value="pcpn"]').attr('disabled',true);
                 $('#summary_type option[value="both"]').attr('disabled',true);
                 $('#summary_type option[value="temp"]').attr('selected',true);
             }
@@ -881,6 +883,7 @@ $(document).ready(function () {
             if ($('#summary_type').length){
                 $('#summary_type option[value="all"]').attr('disabled',false);
                 $('#summary_type option[value="prsn"]').attr('disabled',false);
+                $('#summary_type option[value="pcpn"]').attr('disabled',true);
                 $('#summary_type option[value="both"]').attr('disabled',false);
                 $('#summary_type option[value="all"]').attr('selected',true);
             }            

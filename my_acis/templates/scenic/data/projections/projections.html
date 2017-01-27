@@ -3,6 +3,9 @@
 {% block content %}
 
 <!--Documentation-->
+<div class="docu" id="Docu_CCTAG_report" style="display:none;">
+    <iframe src={{MEDIA_URL}}img/CCTAG_ReportDraft.pdf width="650px" height="900px"></iframe>
+</div>
 <div class="docu" id="Docu_faq_LOCA" style="display:none;">
 {% include 'includes/Docu_faq_LOCA.html'%}
 </div>
@@ -35,6 +38,15 @@ the physical drivers of climate sufficiently to  make useful statistical predict
 and over long time periods. Solving the equations requires substantial amounts of observed or  
 modeled data.
             <p class="link" onclick="ShowHowtoDocu('Docu_howto_climate_primer')">Read more (Primer on climate data and global climate models).</p>
+            The 10 downscaled climate models that area available on SCENIC were chosen following a three step screening process.
+            <ol>
+                <li>Evaluation of the Global Climate Models at global scale</li>
+                <li>Evaluation of the Global Climate Models over teh Western United States</li>
+                <li>Evaluation of the Global Climate Models for the specific needs of the California Department of Water Resources </li>
+            </ol>
+            Read more here:
+            <p class="link" onclick="ShowHowtoDocu('Docu_CCTAG_report')">CCTAG Report.</p>
+            <a target="_blank" href="http://www.water.ca.gov/climatechange/cctag.cfm"><b>Climate Change Technical Advisory Group (CCTAG) Home Page</b></a>        
             </p>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">

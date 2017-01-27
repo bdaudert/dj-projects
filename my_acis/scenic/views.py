@@ -1796,6 +1796,8 @@ def climatology(request):
         if 'location' in form_cleaned.keys():
             data_params['loc'] = form_cleaned['location']
             data_params['grid'] = form_cleaned['grid']
+            app_params['loc'] = form_cleaned['location']
+            app_params['grid'] = form_cleaned['grid']
         if 'station_id' in form_cleaned.keys():
             data_params['sid'], name = WRCCUtils.find_id_and_name(form['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json')
         #Initialize Data Job class
@@ -2159,7 +2161,11 @@ def generate_sodsumm_graphics(results, tab, table, units):
                 if i == 3:k = 1 #mean high
                 if i == 4:k = 4 #high
                 try:
-                    graph_data[idx].append(float(row[k]))
+                    val = float(row[k])
+                    if abs(val + 99.0)<0.000001 or abs(val + 9999.0)<0.00001 or abs(val - 9999.0)<0.00001:
+                        graph_data[idx].append(None)
+                    else:
+                        graph_data[idx].append(val)
                 except:
                     graph_data[idx].append(None)
     elif tab in ['hdd', 'cdd']:
@@ -2185,7 +2191,11 @@ def generate_sodsumm_graphics(results, tab, table, units):
         for i in range(5):
             for k in range(len(cats)):
                 try:
-                    graph_data[i].append(float(results[table][i+1][k+1]))
+                    val = float(results[table][i+1][k+1])
+                    if abs(val + 99.0)<0.000001 or abs(val + 9999.0)<0.00001 or abs(val - 9999.0)<0.00001:
+                        graph_data[i].append(None)
+                    else:
+                        graph_data[i].append(val)
                 except:
                     graph_data[i].append(None)
     elif tab == 'gdd':
@@ -2205,7 +2215,11 @@ def generate_sodsumm_graphics(results, tab, table, units):
         for i in range(5):
             for k in range(len(cats)):
                 try:
-                    graph_data[i].append(float(results[table][2*i+1][k+2]))
+                    val = float(results[table][2*i+1][k+2])
+                    if abs(val + 99.0)<0.000001 or abs(val + 9999.0)<0.00001 or abs(val - 9999.0)<0.00001:
+                        graph_data[i].append(None)
+                    else:
+                        graph_data[i].append(val)
                 except:
                     graph_data[i].append(None)
     elif tab == 'corn':
@@ -2225,7 +2239,11 @@ def generate_sodsumm_graphics(results, tab, table, units):
         graph_data =[[]]
         for k in range(len(cats)):
             try:
-                graph_data[0].append(float(results[table][1][k+2]))
+                val = float(results[table][1][k+2])
+                if abs(val + 99.0)<0.000001 or abs(val + 9999.0)<0.00001 or abs(val - 9999.0)<0.00001:
+                    graph_data[0].append(None)
+                else:
+                    graph_data[0].append(val)
             except:
                 graph_data[0].append(None)
     elif  tab == 'pcpn':
@@ -2245,7 +2263,11 @@ def generate_sodsumm_graphics(results, tab, table, units):
                 if i == 1:k=1
                 if i == 2:k=2
                 try:
-                    graph_data[i].append(float(row[k]))
+                    val = float(row[k])
+                    if abs(val + 99.0)<0.000001 or abs(val + 9999.0)<0.00001 or abs(val - 9999.0)<0.00001:
+                        graph_data[i].append(None)
+                    else:
+                        graph_data[i].append(val)
                 except:
                     graph_data[i].append(None)
     elif tab == 'snow':
@@ -2264,7 +2286,11 @@ def generate_sodsumm_graphics(results, tab, table, units):
                 if i == 0:k=12
                 if i == 1:k=13
                 try:
-                    graph_data[i].append(float(row[k]))
+                    val = float(row[k])
+                    if abs(val + 99.0)<0.000001 or abs(val + 9999.0)<0.00001 or abs(val - 9999.0)<0.00001:
+                        graph_data[i].append(None)
+                    else:
+                        graph_data[i].append(val)
                 except:
                     graph_data[i].append(None)
     table_dict = {
