@@ -23,10 +23,24 @@ $(document).ready(function () {
             $(dT).DataTable({
                 'dom': 'Bfrtip',
                 'paging': false,
+                'scrollX': 'auto',
+                'autoWidth':false,
+                'scrollY': 600,
+                'scrollCollapse': true,
                 'aaSorting':[],
                 'oLanguage': {
                     'sSearch': 'Filter:',
                 }, 
+                'columnDefs': [{
+                    'targets': "_all",
+                    'render': function (data, type, full, meta) {
+                        if (type === 'copy') {
+                            var api = new $.fn.dataTable.Api(meta.settings);
+                            data = $(api.column(meta.col).header()).text() + ": " + data;
+                        }
+                        return data;
+                    }
+                }],
                 'buttons': [
                     {
                         'extend':'csvHtml5',
@@ -44,12 +58,56 @@ $(document).ready(function () {
                         'exportOptions': {
                             'columns': ':visible'
                         },
+                        customize: function (xlsx) {
+                            var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                            var numrows = 1;
+                            var clR = $('row', sheet);
+
+                            //update Row
+                            clR.each(function () {
+                                var attr = $(this).attr('r');
+                                var ind = parseInt(attr);
+                                ind = ind + numrows;
+                                $(this).attr("r",ind);
+                            });
+
+                            // Create row before data
+                            $('row c', sheet).each(function () {
+                                var attr = $(this).attr('r');
+                                var pre = attr.substring(0, 1);
+                                var ind = parseInt(attr.substring(1, attr.length));
+                                ind = ind + numrows;
+                                $(this).attr("r", pre + ind);
+                            });
+
+                            function Addrow(index,data) {
+                                msg='<row r="'+index+'">'
+                                for(i=0;i<data.length;i++){
+                                    var key=data[i].key;
+                                    var value=data[i].value;
+                                    msg += '<c t="inlineStr" r="' + key + index + '">';
+                                    msg += '<is>';
+                                    msg +=  '<t>'+value+'</t>';
+                                    msg+=  '</is>';
+                                    msg+='</c>';
+                                }
+                                msg += '</row>';
+                                return msg;
+                            }
+                            //insert
+                            //var r1 = Addrow(1, [{ key: 'A', value: '' }, { key: 'B', value: '' }]);
+                            var r1 = Addrow(1, [{ key: 'A', value: header }]);
+                            sheet.childNodes[0].childNodes[1].innerHTML = r1 + sheet.childNodes[0].childNodes[1].innerHTML;
+                        }
+                        /*
+                        #This works!!
                         'customize': function(xlsx){
                             var sheet = xlsx.xl.worksheets['sheet1.xml'];
                             var first_row = $('c[r=A1] t', sheet).text();
                             $('c[r=A1] t', sheet).text(header);
                             //Move each row down to make room for header
                         }
+                        */
                     },
                     {
                         'extend':'pdfHtml5',
@@ -70,10 +128,27 @@ $(document).ready(function () {
                     {
                         'extend':'copy',
                         'title': dataTableInfo,
+                        'text':'Copy Table',
                         'exportOptions': {
                             'columns': ':visible'
+                        },
+                        'customize': function(doc){
+                            return dataTableInfo + '\n' + doc;
                         }
                     },
+                    /*
+                    {
+                        'extend': 'copyHtml5',
+                        'text': 'Copy Selected Rows',
+                        'title': dataTableInfo,
+                        'header': false,
+                        'exportOptions': {
+                            'modifier': {
+                                'selected': true
+                            },
+                            'orthogonal': 'copy'
+                        }
+                    },*/
                     'colvis'
                 ]
             }); //end dataTable 

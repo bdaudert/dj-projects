@@ -94,7 +94,11 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
 {% if not run_done%}
 <div id="top_of_page">
 {%else%}
-<div id="top_of_page" style="display:none">
+    {% if results.station_json and not results.error%}
+        <div id="top_of_page" style="display:none">
+    {%else%}
+        <div id="top_of_page">
+    {%endif%}
 {%endif%}
     <!--FORM/MAP/ERRORS-->
     <div class="row" height="100%">
@@ -160,7 +164,7 @@ $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks_short.html #Docu_Short_RAWS");
             <div class="results"><p class="error">{{results.error}}</p></div>
             {%endif%}
             <!--No data found-->
-            {%if  run_done and  not results.station_json %}
+            {%if  run_done and  not results.station_json and not results.error%}
             <div class="results">{% include 'includes/no_results.html'%}</div>
             {%endif%}
             <!--Maps-->

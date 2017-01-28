@@ -286,11 +286,54 @@ function initialize_station_finder() {
                     'exportOptions': {
                         'columns': ':visible'
                     },
+                    customize: function (xlsx) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                        var numrows = 1;
+                        var clR = $('row', sheet);
+
+                        //update Row
+                        clR.each(function () {
+                            var attr = $(this).attr('r');
+                            var ind = parseInt(attr);
+                            ind = ind + numrows;
+                            $(this).attr("r",ind);
+                        });
+
+                        // Create row before data
+                        $('row c', sheet).each(function () {
+                            var attr = $(this).attr('r');
+                            var pre = attr.substring(0, 1);
+                            var ind = parseInt(attr.substring(1, attr.length));
+                            ind = ind + numrows;
+                            $(this).attr("r", pre + ind);
+                        });
+
+                        function Addrow(index,data) {
+                            msg='<row r="'+index+'">'
+                            for(i=0;i<data.length;i++){
+                                var key=data[i].key;
+                                var value=data[i].value;
+                                msg += '<c t="inlineStr" r="' + key + index + '">';
+                                msg += '<is>';
+                                msg +=  '<t>'+value+'</t>';
+                                msg+=  '</is>';
+                                msg+='</c>';
+                            }
+                            msg += '</row>';
+                            return msg;
+                        }
+                        //insert
+                        //var r1 = Addrow(1, [{ key: 'A', value: '' }, { key: 'B', value: '' }]);
+                        var r1 = Addrow(1, [{ key: 'A', value: header }]);
+                        sheet.childNodes[0].childNodes[1].innerHTML = r1 + sheet.childNodes[0].childNodes[1].innerHTML;
+                    } 
+                    /*
                     'customize': function(xlsx){
                         var sheet = xlsx.xl.worksheets['sheet1.xml'];
                         var first_row = $('c[r=A1] t', sheet).text();
                         $('c[r=A1] t', sheet).text(header);
                     }
+                    */
                 },
                 {
                     'extend':'pdfHtml5',

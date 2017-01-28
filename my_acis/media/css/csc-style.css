@@ -107,9 +107,23 @@ img.app_img {
     word-wrap:break-word;
     text-align:left;
 }
-.dataTable {
+table.dataTable {
     border:1px solid black;
 }
+
+
+table.smallFont{
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+table.smallFont td, th{
+    font-size:10px;
+    font-style:bold;
+    white-space: nowrap;
+    padding:0px;
+}
+
 
 .dataTables_scroll {
     /*position:relative;*/
