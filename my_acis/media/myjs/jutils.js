@@ -232,6 +232,12 @@ function ShowPopupDocu(DivId){
         create: function(){
             $(this).css("maxWidth", max_width);
             $(this).css("maxHeight", max_height);
+        },
+        open: function() {
+            $(this).closest(".ui-dialog")
+            .find(".ui-dialog-titlebar-close")
+            .removeClass("ui-dialog-titlebar-close")
+            .html("<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>");
         }
     });
     $(".ui-dialog").css("z-index", 10);

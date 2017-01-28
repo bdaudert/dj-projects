@@ -176,8 +176,12 @@ $(document).ready(function () {
             width:'auto',
             height:'auto',
             maxHeight:max_height,
-            open: function () {
+            open: function() {
                 $(this).scrollTop(0);
+                $(this).closest(".ui-dialog")
+                .find(".ui-dialog-titlebar-close")
+                .removeClass("ui-dialog-titlebar-close")
+                .html("<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>");
             },
             create: function(){
                 $(this).css("maxWidth", max_width);
