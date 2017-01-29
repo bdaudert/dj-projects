@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "wrcc_base.html" %}
 
 {% block content %}
 
@@ -53,33 +53,33 @@
 
     <h3>Creating a conda environment for Earthengine API</h3>
     <p class="info">This will allow you to create your own python environment with versions of
-    python packages that match  the versions on the app engine server. in the example below we creat the env ee-python. It will be installed by conda in $(PATH_TO_ANACONDA_INSTALLATION)/envs</p>
+    python packages that match  the versions on the app engine server. in the example below we creat the env ee-env. It will be installed by conda in $(PATH_TO_ANACONDA_INSTALLATION)/envs</p>
 
     <pre class="code">
-    conda create -n ee-python python=2.7
-    source activate ee-python
+    conda create -n ee-env python=2.7
+    source activate ee-env
     </pre>
 
     <p class="info">Now that you have set up this basic python env, you will need to install some packages there that Earthengine needs in this environment</p>
 
     <pre class="code">
-    conda install httplib2 oauth2client jinja2 webapp2  cryptography numpy=1.6.2 
+    conda install httplib2 oauth2client jinja2 cryptography numpy=1.6.2 
     pip install earthengine-api
     </pre>
 
-    <p class="info">To use the Launcher with this environment, make sure the python path in the lunacher is set correctly: go to GoogleAppEngineLauncher--> Preferences --> Python Path. Enter $(PATH_TO_ANACONDA_INSTALLATION)/envs/ee-python/bin/python2.7. <b>Make sure to hit Enter for the changes to take effect</b> If you are using dev_appserver.py from the commandline, make sure that you sourced the environment before running it: <pre class="code">source ee-python</pre></p>
+    <p class="info">To use the Launcher with this environment, make sure the python path in the lunacher is set correctly: go to GoogleAppEngineLauncher--> Preferences --> Python Path. Enter $(PATH_TO_ANACONDA_INSTALLATION)/envs/ee-env/bin/python2.7. <b>Make sure to hit Enter for the changes to take effect</b> If you are using dev_appserver.py from the commandline, make sure that you sourced the environment before running it: <pre class="code">source ee-env</pre></p>
 
 
     <h3>Set up the Hello World project</h3>
     <a target="_blank" href="https://cloud.google.com/appengine/docs/python/quickstart">Quickstart for Python App Engine Standard Environment</a>
 
     <h3>Setting up project libraries</h3>
-    <p class="info">Alternatively, you can set up your own library ($(PROJECT_DIR)/lib) directly in the project directory and install earthengine-api there.
+    <p class="info">Alternatively, you can set up your own library ($(PROJECT_DIR)/ee-lib) directly in the project directory and install earthengine-api there.
     This should help you avoid version differences between your local machine and the appengine server. It also was the only way I could take care of the oauth2client issue I ran into the last time I installed the EE software. This issue is described <a target="_blank" href="https://github.com/google/oauth2client/issues/401">here</a> and also <a target="_blank" href="https://github.com/google/earthengine-api/issues/5">here</a></p>
     
     <pre class="code">
     cd $(PROJECT_DIR)
-    pip install earthengine-api -t ./lib
+    pip install earthengine-api -t ./ee-lib
     </pre>
     
     <p class="info">Create or modify the appengine_config.py and add these lines:</p>
@@ -87,14 +87,14 @@
     <pre class="code">
     from google.appengine.ext import vendor
 
-    vendor.add('lib')
+    vendor.add('ee-lib')
     </pre>
 
     <p class="info">You may need to install pycrypto again and you may need to revert back to an earlier version of oauth2client.</p>
 
     <pre class="code">
-    pip install pycrypto -t ./lib 
-    pip install oauth2client==1.5.2 -t ./lib   
+    pip install pycrypto -t ./ee-lib 
+    pip install oauth2client==1.5.2 -t ./ee-lib   
     </pre>
 </td>
 </table>

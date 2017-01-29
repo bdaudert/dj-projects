@@ -1,34 +1,32 @@
-{% extends "base.html" %}
+{% extends "wrcc_base.html" %}
 
 {% block content %}
+
+<h1 align="center">{{title}}</h1>
 
 <p align="center">You are here
 <a href="/csc/documentation/">DOCUMENTATION></a>
 <a href="/csc/documentation/acis/">ACIS</a>
 </p>
 
+<div class="row">
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div class="bg-info main-col">
+        <h1>
+            <a href="{{URL_PREFIX}}documentation/acis/grid_acis/">GridACIS</a>
+            <small>Gridded Data Documentation (Internal)</small>
+        </h1>
+        </div>
+    </div>
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div class="bg-info main-col">
+        <h1>
+            <a href="{{URL_PREFIX}}documentation/acis/subdaily_acis/">SubDailyACIS</a>
+            <small>Information on sub-daily Data in ACIS (Internal)</small>
+        </h1>
+        </div>
+    </div>
+</div>
 
-<table>
-<td valign="top" width="20%">
-    <br /> <br /> <br /><br />
-    <table class="navbar">
-    <tr><td valign="top">
-    <a href="{{URL_PREFIX}}documentation/acis/grid_acis/" class="trigger_hover">GridACIS</a>
-    <div class="pop-up" id="GridACIS">
-    <p><font size="4">Gridded Data Documentation (Internal)</font></p>
-    </div>
-    </td></tr>
-    <tr><td valign="top">
-    <a href="{{URL_PREFIX}}documentation/acis/subdaily_acis/" class="trigger_hover">SubDailyACIS</a>
-    <div class="pop-up" id="SubDailyACIS">
-    <p><font size="4">Information on sub-daily Data in ACIS (Internal)</font></p>
-    </div>
-    </td></tr>
-    </table>
-</td>
-<td valign="top" width="80%">
-<h1 align="center">{{title}}</h1>
-<a target="_blank" href="http://hprcc0.unl.edu/rcc-acis/index.html"><img style="border:1px solid blue;" src="/csc/media/img/ACIS_HOME.png"></a>
-</td>
-</table>
+<a target="_blank" href="http://www.rcc-acis.org/"><img style="border:1px solid blue;">ACIS Home</a>
 {% endblock %}

@@ -4,43 +4,67 @@
 <meta name="description" content="SCENIC Home">
 
 {%block content %}
-    <table class="dash" cellspacing="10px" align="center">
-        <tr>
-        <td><a class="trigger_hover" href="{{DATA_URL}}"><b><font size="3">DATA ACCESS</font></b></a>
-            <div class="pop-up" style="display:none;" align="left">
-                {% include 'includes/Docu_popup_data_access.html'%}
-            </div>
-        </td>
-        <td><a class="trigger_hover" href="{{SCENIC_URL}}dashboard/"><b><font size="4">DASHBOARD</font></b></a>
-            <div class="pop-up" style="display:none;" align="left">
-                {% include 'includes/Docu_popup_dashboard.html'%}
-            </div>
-        </td>
-        <td><a class="trigger_hover" href="{{SCENIC_URL}}howto/"><b><font size="4">HOW TO</font></b></a>
-            <div class="pop-up" style="display:none;" align="left">
-                {% include 'includes/Docu_popup_howto.html'%}
-            </div>
-        </td>
-        </tr>
-        <tr>
-            <td>
-                <a href="{{DATA_URL}}"><img alt="DataPortal" title="DataPortal" class="front_dash_img" src="{{MEDIA_URL}}img/DataPortal.png"></a>
-                <div class="pop-up" style="display:none;" align="left">
-                    {% include 'includes/Docu_popup_data_access.html'%}
-                </div> 
-            </td>
-            <td>
-                <a href="{{SCENIC_URL}}dashboard/"><img alt="Dashboard" title="Dashboard" class="front_dash_img" src="{{MEDIA_URL}}img/Dashboard.png"></a>
-                <div class="pop-up" style="display:none;" align="left">
-                    {% include 'includes/Docu_popup_dashboard.html'%}
-                </div>
-            </td>
-            <td>
-                <a href="{{SCENIC_URL}}howto/"><img alt="Gallery" title="Gallery" class="front_dash_img" src="{{MEDIA_URL}}img/Gallery.png"></a>
-                <div class="pop-up" style="display:none;" align="left">
-                    {% include 'includes/Docu_popup_howto.html'%}
-                </div>
-            </td>
-        </tr>
-    </table>
+
+<!--Documentation-->
+<div class="docu" id="Docu_station_data" style="display:none;">
+    {% include 'includes/Docu_station_data.html'%}
+</div>
+<div class="docu" id="Docu_networks" style="display:none;">
+    {% include 'includes/Docu_networks.html'%}
+</div>
+<div class="docu" id="Docu_PRISM" style="display:none;">
+    {% include 'includes/Docu_PRISM.html'%}
+</div> 
+<div class="docu" id="Docu_NRCC_INT" style="display:none;">
+    {% include 'includes/Docu_NRCC_INT.html'%}
+</div>  
+<div class="docu" id="Docu_LOCA" style="display:none;">
+    {% include 'includes/Docu_short_LOCA.html'%}
+</div>
+<div class="docu" id="Docu_NARCCAP" style="display:none;">
+    {% include 'includes/Docu_short_NARCCAP.html'%}
+</div>
+<div class="docu" id="Docu_LANDSAT" style="display:none;">
+    {% include 'includes/Docu_LANDSAT.html'%}
+</div>
+<div class="docu" id="Docu_MODIS" style="display:none;">
+    {% include 'includes/Docu_MODIS.html'%}
+</div>
+<div class="docu" id="Docu_popup_station_finder" style="display:none;">
+    {% include 'includes/Docu_popup_station_finder.html'%}
+</div>
+<div class="docu" id="Docu_popup_single_point_prods" style="display:none;">
+    {% include 'includes/Docu_popup_single_point_prods.html'%}
+</div> 
+<div class="docu" id="Docu_popup_multi_point_prods" style="display:none;">
+    {% include 'includes/Docu_popup_multi_point_prods.html'%}
+</div>
+
+<div class="row row-height">
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-height">
+        <div class="bg-info main-col inside inside-full-height">
+        <h1 align="center">
+            <a href="{{DATA_URL}}">Data</a><br />
+            <small align="left">{% include 'includes/Docu_popup_data_access.html'%}</small>
+        </h1>
+        </div>
+    </div>
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-height">
+        <div class="bg-info main-col inside inside-full-height">
+        <h1 align="center">
+            <a href="{{DATA_URL}}climate_data/">Analysis Tools</a><br />
+            <small align="left">{% include 'includes/Docu_popup_analysis_tools.html'%}</small>
+        </h1>
+        </div>
+    </div>
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-height">
+        <div class="bg-info main-col inside inside-full-height">
+        <h1 align="center">
+            <a href="{{DASHBOARD_URL}}">Monitoring Tools</a><br />
+            <small align="left">{% include 'includes/Docu_popup_dashboard.html'%}</small>
+        </h1>
+        </div>
+    </div>
+</div>
+
 {%endblock content%}

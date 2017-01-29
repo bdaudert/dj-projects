@@ -1,0 +1,19 @@
+{%load my_scenic_filters%}
+<div class="form-group">
+    <label for="spatial_summary">Spatial{%if app_name == "spatial_summary"%} Summary{%endif%}</label>
+    <img class="qmark" id="qmark-spatial_summary" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <div class="pop-up">
+        <div id="ht_spatial_summary"></div>
+        <script type="text/javascript">                        
+            $("#ht_spatial_summary").load("{{HTML_URL}}/Docu_help_texts.html #ht_spatial_summary");
+        </script>
+    </div>
+ 
+    <select id="spatial_summary" class="form-control" name="spatial_summary" onchange="update_value(this.value)">
+        {% for opt, name in initial.form_options.spatial_summary%}
+            <option value="{{opt}}" 
+            {%if initial.spatial_summary == opt%} selected{%endif%}
+            {%if opt == "median"%}disabled{%endif%}>{{name}}</option>
+        {%endfor%} 
+    </select>
+</div>

@@ -1,0 +1,8 @@
+<div class="form-group">
+    <select name="chart_selector" class="chart_type input-sm" id="chart_type">
+    {% for opt, name in initial.form_options.chart_type%}
+        <option value="{{opt}}" {%if initial.chart_type == opt%} selected{%endif%}>{{name}}</option>
+    {%endfor%}
+    </select>
+</div>
+                  

@@ -1,20 +1,25 @@
-        <td id="{{initial.area_type_label}}">{{initial.area_type_label}}:</td>
-        <td>
-            {%if initial.area_type == "state"%}
-                 <select name="state" id="state" onchange="update_value(this.value) &update_maps(this)">
-                {%for st, name in initial.form_options.state%}
-                    <option value="{{st}}" {%if initial.state == st%} selected{%endif%}>
-                    {{name}}</option>
-                {%endfor%} 
-            {%else%}
-                <input type="text" class="area" size="30" id="{{initial.area_type}}" name="{{initial.area_type}}"
-                value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" onchange="update_value(this.value) &update_maps(this)"></td>
-            {%endif%}
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up" id="area-pop-up">
-            <div id="ht_{{initial.area_type}}"></div>
-            <script type="text/javascript">                        
+<div class="form-group">
+    <label id="area-type-label" for="area">{{initial.area_type_label}}</label>
+    <img class="qmark" id="qmark-area" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <div class="pop-up" id="area-pop-up">
+        <div id="ht_{{initial.area_type}}"></div>
+        <script type="text/javascript">                        
             $("#ht_{{initial.area_type}}").load("{{MEDIA_URL}}html/Docu_help_texts.html #ht_{{initial.area_type}}");
-            </script>
-        </div>
-        </td>
+        </script>
+    </div>
+    <span id="area-type-form-input"> 
+    {%if initial.area_type == "state"%}
+        <select class="area form-control" name="{{initial.area_type}}" id="{{initial.area_type}}" 
+        onchange="update_value(this.value) &update_maps(this)">
+        {%for st, name in initial.form_options.state%}
+            <option value="{{st}}" {%if initial.state == st%} selected{%endif%}>
+            {{name}}</option>
+        {%endfor%}
+        </select>
+    {%else%}
+        <input type="text" class="area form-control" size="30" id="{{initial.area_type}}" name="{{initial.area_type}}"
+            value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" 
+            onchange="update_value(this.value) &update_maps(this)">
+    {%endif%} 
+    </span>      
+</div> 

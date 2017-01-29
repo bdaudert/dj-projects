@@ -1,20 +1,24 @@
 <div id="uploadShapeFile" style="display:none;">
-    <p class="message">Only shape files of simple polygons without holes are supported.<br />
-    Analysis is performed one polygon at the time.<br />
-    Upload all shape files (.shp, .prj, etc.) and choose the polygon ID.<br />
-    e.g., if polygon ID = 1, the first polygon in the file will be uploaded.
+    <p class="bg-info" style="border:1px solid black;padding:5px;">Only shape files of simple polygons without holes are supported.<br />
+        Analysis is performed one polygon at the time.<br />
+        Upload all shape files (.shp, .prj, etc.) and choose the polygon ID.<br />
+        e.g., if polygon ID = 1, the first polygon in the file will be uploaded.
     </p>
-    <form id="formShapeFile" method="post" action="" enctype="multipart/form-data" onsubmit="show_loading() & setHiddenFields('DataForm', $(this).attr('id'));">{% csrf_token %}
-    <table class="form" align="left">
-      <tr><td>
-      <!--Some shapefiles need the shx and mauby some other files to be opened properly-->
-      <!--Select shapefiles: <input type="file" id="choose_file" name="file">-->
-      Select shapefiles: <input type="file" id="choose_files" name="files" multiple>
-      </td></tr>
-      <tr><td align="left">
-      Select Polygon ID<input type="number" name="feature_id"  value={{initial.feature_id}}>
-      </td></tr>
-    </table>
-    <input type="submit" value="Upload" name="formShapeFile">
+    <form id="formShapeFile" method="post" action="" enctype="multipart/form-data" 
+    role="form"
+    onsubmit="show_loading() & setHiddenFields('DataForm', $(this).attr('id'));">{% csrf_token %}
+    <div class="form-group">
+        <label for="files">Select shapefiles</label>
+        <input class="form-control" type="file" id="choose_files" name="files" multiple>
+    </div>
+    <div class="form-group">
+        <label for="feature_id">Select Polygon ID</label>
+        <input class="form-control" type="number" name="feature_id"  value={{initial.feature_id}}>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formShapeFile">
+            Upload
+        </button> 
+    </div>
     </form>
 </div>

@@ -1,16 +1,15 @@
-        <td>Image Size: </td>
-        <td>
-            <select id="image_size" name="image_size" onchange="update_value(this.value)">
-            {%for opt, name in initial.form_options.image_size%}
-                <option value="{{opt}}" {%if initial.image_size == opt%}selected{%endif%}>{{name}}</option>
-            {%endfor%} 
-            </select>
-        </td>
-        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_image_size"></div>
-            <script type="text/javascript">
-            $("#ht_image_size").load("{{HTML_URL}}/Docu_help_texts.html #ht_image_size");
-            </script>
-        </div>
-        </td>
+<div class="form-group">
+    <label for="image_size">Image Size</label>
+    <img class="qmark" id="qmark-image_size" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <div class="pop-up">
+        <div id="ht_image_size"></div>
+        <script type="text/javascript">
+        $("#ht_image_size").load("{{HTML_URL}}/Docu_help_texts.html #ht_image_size");
+        </script>
+    </div>            
+    <select class="form-control" id="image_size" name="image_size" onchange="update_value(this.value)">
+    {%for opt, name in initial.form_options.image_size%}
+        <option value="{{opt}}" {%if initial.image_size == opt%}selected{%endif%}>{{name}}</option>
+    {%endfor%} 
+    </select>
+</div>

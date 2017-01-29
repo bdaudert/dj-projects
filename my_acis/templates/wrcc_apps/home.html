@@ -1,5 +1,5 @@
 
-{% extends "base.html" %}
+{% extends "wrcc_base.html" %}
 
 
 {% block content %}
@@ -24,103 +24,103 @@
     <table align="center"> 
     <td class="unpadded" align="right">
     <!-- Site navigation menu -->
-    <ul class="navbar">
+    <ul class="doc-navbar">
      <li>
-     <a href="{{URL_PREFIX}}wrcc_apps/Sodrun/" class="trigger_hover">SODRUN</a>
+     <a href="{{URL_PREFIX}}wrcc_apps/Sodrun/" class="">SODRUN</a>
      <div class="pop-up" id="sr">
        <p><font size="4">Computes runs of consecutive days meeting certain criteria.</font></p>
      </div>&nbsp;&nbsp;&nbsp;
      <img onclick="ShowPopupDocu('Docu_Sodrun')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
      </li><li>
-     <a href="{{URL_PREFIX}}wrcc_apps/Sodrunr/" class="trigger_hover">SODRUNR</a>
+     <a href="{{URL_PREFIX}}wrcc_apps/Sodrunr/" class="">SODRUNR</a>
      <div class="pop-up" id="srr">
        <p><font size="4">Computes runs of consecutive days meeting certain criteria.</font></p>
      </div>
      <img onclick="ShowPopupDocu('Docu_Sodrunr')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
      </li><li>
-     <a href="{{URL_PREFIX}}wrcc_apps/Sodlist/" class="trigger_hover">SODLIST</a>
+     <a href="{{URL_PREFIX}}wrcc_apps/Sodlist/" class="">SODLIST</a>
      <div class="pop-up" id="sl">
      <p><font size="4">Summary of the day (SOD) data lister.</font></p>
      </div>&nbsp;&nbsp;&nbsp;
      <img onclick="ShowPopupDocu('Docu_Sodlist')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
      </li><li>
-     <a href="{{URL_PREFIX}}wrcc_apps/Sodmonline/" class="trigger_hover">SODMONLINE</a>
+     <a href="{{URL_PREFIX}}wrcc_apps/Sodmonline/" class="">SODMONLINE</a>
      <div class="pop-up" id="sm">
-     <p><font size="4">Lists all the days of a month, one element, on a single line. Steps through all years chronologically.</font></p>
+     <p><font size="4">Lists all the days of a month, one variable, on a single line. Steps through all years chronologically.</font></p>
      </div>&nbsp;&nbsp;&nbsp;
      <img onclick="ShowPopupDocu('Docu_Sodmonline')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
      </li>
      <li>
-     <a href="{{URL_PREFIX}}wrcc_apps/Sodmonlinemy/" class="trigger_hover">SODMONLINEMY</a>
+     <a href="{{URL_PREFIX}}wrcc_apps/Sodmonlinemy/" class="">SODMONLINEMY</a>
      <div class="pop-up" id="smy">
-     <p><font size="4">Lists all the days of a month, one element, on a single line. Organized by month, then by year:  all Jans, all Febs, all Mars, etc.</font></p>
+     <p><font size="4">Lists all the days of a month, one variable, on a single line. Organized by month, then by year:  all Jans, all Febs, all Mars, etc.</font></p>
      </div>&nbsp;&nbsp;&nbsp;
      <img onclick="ShowPopupDocu('Docu_Sodmonlinemy')"  alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
      </li>
      <!--
      <li>
-     <a href="{{URL_PREFIX}}wrcc_apps/Sodcnv/" class="trigger_hover">SODCNV</a>
+     <a href="{{URL_PREFIX}}wrcc_apps/Sodcnv/" class="">SODCNV</a>
      <div class="pop-up" id="cnv">
      <p><font size="4">Converts to a character file; for internal use.</font></p>
      </div>&nbsp;&nbsp;&nbsp;
      <img onclick="ShowPopupDocu('Docu_Sodcnv')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
      </li>-->
      <li>
-     <a href="{{URL_PREFIX}}wrcc_apps/Sodsum/" class="trigger_hover">SODSUM</a>
+     <a href="{{URL_PREFIX}}wrcc_apps/Sodsum/" class="">SODSUM</a>
      <div class='pop-up' id="ss">
      <p><font size="4">Reads station data and provides report on completeness.</font></p>
      </div>&nbsp;&nbsp;&nbsp;
      <img onclick="ShowPopupDocu('Docu_Sodsum')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
      </li><li>
-     <a href="{{URL_PREFIX}}wrcc_apps/Soddyrec/" class="trigger_hover">SODDYREC</a>
+     <a href="{{URL_PREFIX}}wrcc_apps/Soddyrec/" class="">SODDYREC</a>
      <div class='pop-up' id="sdr">
      <p><font size="4">Finds daily records.</font></p>
      </div>&nbsp;&nbsp;&nbsp;
      <img onclick="ShowPopupDocu('Docu_Soddyrec')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
      </li><li>
-     <a href="{{URL_PREFIX}}wrcc_apps/Soddynorm/" class="trigger_hover">SODDYNORM</a>
+     <a href="{{URL_PREFIX}}wrcc_apps/Soddynorm/" class="">SODDYNORM</a>
      <div class='pop-up' id='sdn'>
      <p><font size="4">Finds daily normals for maxt, mint, pcpn using either a Gaussian filter or a running mean.</font></p>
      </div>&nbsp;&nbsp;&nbsp;
      <img onclick="ShowPopupDocu('Docu_Soddynorm')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
      </li><li>
-     <a href="{{URL_PREFIX}}wrcc_apps/Soddd/" class="trigger_hover">SODDD</a>
+     <a href="{{URL_PREFIX}}wrcc_apps/Soddd/" class="">SODDD</a>
      <div class='pop-up' id='sdd'>
      <p><font size="4">Finds degree day information from the SOD data set.</font></p>
      </div>&nbsp;&nbsp;&nbsp;
      <img onclick="ShowPopupDocu('Docu_Soddd')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
      </li><li>
-     <a href="{{URL_PREFIX}}wrcc_apps/Sodpad/" class="trigger_hover">SODPAD</a>
+     <a href="{{URL_PREFIX}}wrcc_apps/Sodpad/" class="">SODPAD</a>
      <div class='pop-up' id='sdd'>
      <p><font size="4">Reads in daily precipitation data and computes the number of times that a range of threshold amounts was equaled.</font></p>
      </div>&nbsp;&nbsp;&nbsp;
      <img onclick="ShowPopupDocu('Docu_Sodpad')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
      </li><li>
-     <a href="{{URL_PREFIX}}wrcc_apps/Sodsumm/" class="trigger_hover">SODSUMM</a>
+     <a href="{{URL_PREFIX}}wrcc_apps/Sodsumm/" class="">SODSUMM</a>
      <div class='pop-up' id='sdd'>
      <p><font size="4">Summarizes various climate data in MICIS (Midwest Climate Information System) format.</font></p>
      </div>&nbsp;&nbsp;&nbsp;
      <img onclick="ShowPopupDocu('Docu_Sodsumm')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
      </li><li>
-     <a href="{{URL_PREFIX}}wrcc_apps/Sodpct/" class="trigger_hover">SODPCT</a>
+     <a href="{{URL_PREFIX}}wrcc_apps/Sodpct/" class="">SODPCT</a>
      <div class='pop-up' id='sdd'>
-     <p><font size="4">Determines percentiles of distributions of climate elements.</font></p>
+     <p><font size="4">Determines percentiles of distributions of climate variables.</font></p>
      </div>&nbsp;&nbsp;&nbsp;
      <img onclick="ShowPopupDocu('Docu_Sodpct')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30"> 
      </li><li>
-     <a href="{{URL_PREFIX}}wrcc_apps/Sodthr/" class="trigger_hover">SODTHR</a>
+     <a href="{{URL_PREFIX}}wrcc_apps/Sodthr/" class="">SODTHR</a>
      <div class='pop-up' id='sdthr'>
-     <p><font size="4">Finds latest or earliest occurrences of element data above or below threshold.</font></p>
+     <p><font size="4">Finds latest or earliest occurrences of variable data above or below threshold.</font></p>
      </div>&nbsp;&nbsp;&nbsp;
      <img onclick="ShowPopupDocu('Docu_Sodthr')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
      </li><li>
-     <a href="{{URL_PREFIX}}wrcc_apps/Sodxtrmts/" class="trigger_hover">SODXTRMTS</a>
+     <a href="{{URL_PREFIX}}wrcc_apps/Sodxtrmts/" class="">SODXTRMTS</a>
      <div class='pop-up' id='sdxtrmts'>
      <p><font size="4">Produces monthly and annual time series of a large number of properties derived from SOD data.</font></p>
      </div>&nbsp;&nbsp;&nbsp;
      <img onclick="ShowPopupDocu('Docu_Sodxtrmts')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
      </li><li>
-     <a href="{{URL_PREFIX}}wrcc_apps/Sodpiii/" class="trigger_hover">SODPIII</a>
+     <a href="{{URL_PREFIX}}wrcc_apps/Sodpiii/" class="">SODPIII</a>
      <div class='pop-up' id='sdpiii'>
      <p><font size="4">Calculates annual time series of extreme values of a climate variable.</font></p>
      </div>&nbsp;&nbsp;&nbsp;

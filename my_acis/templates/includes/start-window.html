@@ -1,0 +1,11 @@
+<div class="form-group">
+    <label for="start_window">Start</label>
+    <img class="qmark" id="qmark-start_window" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <div class="pop-up">
+        <div id="ht_start_window"></div>
+        <script type="text/javascript">                        
+            $("#ht_start_window").load("{{HTML_URL}}/Docu_help_texts.html #ht_start_window");
+        </script>
+    </div>        
+    <input type="text" id="start_window" class="form-control" name="start_window" value="{{initial.start_window}}" onchange="update_value(this.value);">
+</div>

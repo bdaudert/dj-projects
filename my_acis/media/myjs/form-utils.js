@@ -8,7 +8,7 @@ Array.prototype.indexOf = function(obj, start) {
      return -1;
 }
 
-//Function to determine if element is in list
+//Function to determine if variable is in list
 String.prototype.inList=function(list){
    return ( list.indexOf(this.toString()) != -1)
 }
@@ -16,7 +16,7 @@ String.prototype.inList=function(list){
 function showLargeRequestForm(){
     if ($('#app_name').val() == 'multi_lister'){
         if ($('#data_summary').val().inList(['none','windowed_data'])){
-            $('.out_format').css('display','table-row');
+            $('.out_format').css('display','block');
         }
         else{
             $('.out_format').css('display','none');
@@ -30,7 +30,7 @@ function showLargeRequestForm(){
 
     }
     else{
-        $('.delim').css('display','table-row');
+        $('.delim').css('display','block');
     }
     ShowPopupDocu('largeRequestForm');
 }
@@ -38,8 +38,8 @@ function showLargeRequestForm(){
 // [client side code for showing/hiding content]
 function ShowHideTopOfPage(){
     /*
-    Deals with google map issue in hidden elements
-    Maps in hidden elements get mangled
+    Deals with google map issue in hidden variables
+    Maps in hidden variables get mangled
     when the hidden property changes to visible
     If div is shown and contains map, 
     the map needs to be re-initialized
@@ -66,11 +66,17 @@ function ShowHideTopOfPage(){
         if ($('#bounding_box').length ){
             update_maps(document.getElementById('bounding_box'));
         }
+        $(window).resize();
     }
-     $('#top_of_page').toggle();
-     if (window.map){
-        google.maps.event.trigger(window.map, 'resize');
-     }
+    /*
+    if (window.map){
+        google.maps.event.addListenerOnce(window.map, 'idle', function() {
+            $('#top_of_page').hide();
+            google.maps.event.trigger(window.map, 'resize');
+        });
+    }
+    */
+    $('#top_of_page').toggle();
 }
 
 function set_back_date(date_string,number){
@@ -180,7 +186,14 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
         //Don't change start/end dates
         if (year_or_date == 'year'){
             new_dates.start = new_dates.start.slice(0,4);
-            new_dates.end = new_dates.end.slice(0,4);
+            //new_dates.end = new_dates.end.slice(0,4);
+            var new_end = String(parseInt(new_dates.start.slice(0,4)) + 10)
+            if (new Date(new_end).getTime() < new Date(new_dates.end).getTime()){
+                new_dates.end = new_end
+            }
+            else{
+                new_dates.end = new_dates.end.slice(0,4);
+            }
             return new_dates;
         }    
         else{
@@ -201,7 +214,7 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
         var new_ds = new Date(new_dates.start);
         new_ds.setDate(new_ds.getDate() + 1);
         
-        //Set new end date to one year later than start date
+        //Set new end date to 10 years later than start date
         if (year_or_date == 'year'){
             if (ds_past <= new_ds <= de_past){
                 var d = grid_vd[grid][0][1];
@@ -211,7 +224,7 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
             }
         }
         else{
-            var d = String(parseInt(new_dates.start.slice(0,4)) + 1) + new_dates.start.slice(4,new_dates.start.length);
+            var d = String(parseInt(new_dates.start.slice(0,4)) + 10) + new_dates.start.slice(4,new_dates.start.length);
         }
         if (d == 'today'){
             d = convertDateToString(today,'-');
@@ -265,7 +278,8 @@ function set_year_range(){
     //Set new year dropdowns
     $('#start_year > option').remove();
     $('#end_year > option').remove();
-    var opt, i;
+    var opt, i, selected_date;
+    selected_year_end = String(parseInt(min_year.slice(0,4)) + 10)
     for (i=parseInt(min_year);i<=parseInt(max_year);i++){
         opt = '<option value="' + String(i) + '">' + String(i) + '</option>';
         $('#start_year').append(opt);
@@ -283,26 +297,7 @@ function set_year_range(){
             $('#start_year').append(opt);
             $('#end_year').append(opt);
     }
-}
-
-function showHideTableRowClass(class_name, show_or_hide){
-    $('.' + class_name).each(function(){
-        if (show_or_hide == 'hide'){
-            $(this).css('display','none');
-        }
-        if (show_or_hide == 'show'){
-            $(this).css('display','table-row');
-        }
-    });
-}
-
-function showHideTableRowId(id_name,show_or_hide){
-    if (show_or_hide == 'hide'){
-        $('#' + id_name).css('display','none');
-    }
-    if (show_or_hide == 'show'){
-            $('#' + id_name).css('display','table-row');
-    }
+    $('#end_year').val(String(selected_year_end));
 }
 
 function update_value(val){
@@ -344,64 +339,6 @@ function set_area_defaults(area_type, kml_file_path){
     */
     lv.label = area_defaults[area_type][0]
     lv.value = area_defaults[area_type][1]
-    /*
-    if (area_type == 'station_id'){
-        lv.label = 'Station ID';
-        lv.value ='RENO TAHOE INTL AP, 266779';
-    }
-    if (area_type == 'station_ids'){
-        lv.label = 'Station IDs';
-        lv.value ='266779,050848';
-    }
-    if (area_type == 'location'){
-        lv.label = 'Location (lon,lat)';
-        lv.value = '-119,39';
-    }
-    if (area_type == 'locations'){
-        lv.label = 'Locations (lon,lat pairs)';
-        lv.value = '-119,39,-119.1,39.1';
-    }
-    if (area_type == 'county'){
-        lv.label ='County';
-        if (lv.value == null){
-            lv.value ='Churchill County, 32001';
-        }
-    }
-    if (area_type == 'climate_division'){
-        lv.label ='Climate Division';
-        if (lv.value == null){
-            lv.value ='Northwestern, NV01';
-        }
-    }
-    if (area_type == 'county_warning_area'){
-        lv.label ='County Warning Area';
-        if (lv.value == null){
-            lv.value ='Las Vegas, NV, VEF';
-        }
-    }
-    if (area_type == 'basin'){
-        lv.label ='Basin';
-        if (lv.value == null){
-            lv.value ='Hot Creek-Railroad Valleys, 16060012';
-        }
-    }
-    if (area_type == 'state'){
-        lv.label ='State';
-        lv.value ='nv';
-    }
-    if (area_type == 'bounding_box'){
-        lv.label ='Bounding Box';
-        lv.value ='-115,34,-114,35';
-    }
-    if (area_type == 'shape'){
-        lv.label ='Custom Shape';
-        lv.value ='-115,34, -115, 35,-114,35, -114, 34';
-    }
-    if (area_type == 'shape_file'){
-        lv.label ='Custom Shape';
-        lv.value ='';
-    }
-    */
     return lv;
 }
 
@@ -437,11 +374,18 @@ function set_autofill(datalist){
 }
 
 
-function set_area(row_id, node){
-    var lv, html_text, cell0,cell1,div;
-    //Update area default 
-    var area_type = node.val()
-    kml_file_path = null
+function set_area(area_type_node){
+    /*
+    UPDATED
+    Sets the label and form content
+    of the area form variable
+    according to area_type
+    Also adjusts autofill list 
+    and area form variable helptext
+    */
+    var lv, html_text, area_type = area_type_node.val(),i, pop_id,
+        st, state, selected = ' ', kml_file_path = null;
+
     if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
         TMP_URL = $('#TMP_URL').val();
         state = $('#overlay_state').val();
@@ -452,23 +396,21 @@ function set_area(row_id, node){
     if (area_type.inList(['basin','county','county_warning_area','climate_division','station_id'])) {
         set_autofill(lv.autofill_list);
     }
-    //Update row_id
-    cell0 = $('#' + row_id +  ' td:first-child');
-    html_text = lv.label + ': ';
-    cell0.html(html_text);
-    cell1 = cell0.next('td');
-    if (node.val() != 'state'){
-        html_text = '<input type="text" id="' + node.val() + '" name="'+
-        node.val() +'" value="' +  lv.value + '"';
+    //Set new area label
+    $('#area-type-label').html(lv.label);
+    //Set new area form input
+    if (area_type != 'state'){
+        html_text = '<input type="text" id="' + area_type + '" name="'+
+        area_type +'" value="' +  lv.value + '" class="area form-control"';
         if (lv.autofill_list != '') {
             html_text+=' list="' + lv.autofill_list + '"';
         }
         html_text+=' onchange="update_value(this.value) & update_maps(this)" >';
     }
     else{
-        var st, state, selected = ' ';
-        html_text = '<select id="' + node.val() + '" name="'+ node.val() + '">';
-        for (var i=0;i< state_choices.length;i++){  
+        html_text = '<select id="' + area_type + '" name="'+ area_type + 
+        ' class="area form-control">';
+        for (i=0;i< state_choices.length;i++){  
             st = state_choices[i];
             state = state_names[st];
             if ($('#overlay_state').length){
@@ -479,82 +421,78 @@ function set_area(row_id, node){
                 if (st == 'nv'){selected = ' selected';}
                 else {selected = ' ';}
             } 
-            html_text= html_text + '<option' + selected + ' value="' + st +'">' + state + '</option>';
+            html_text= html_text + '<option class="area"' + selected + ' value="' + st +'">' + state + '</option>';
         }
         html_text = html_text + '</select>'
     }
-    cell1.html(html_text) ;   
+    $('#area-type-form-input').html(html_text) ;   
+    //Set newq help text
     pop_id = $('#area-pop-up');
     pop_id.html('');
     div = $("<div>");
-    div.attr('id','ht_' + node.val());
-    $(div).load('/csc/media/html/Docu_help_texts.html #ht_' + node.val());
+    div.attr('id','ht_' + area_type);
+    $(div).load('/csc/media/html/Docu_help_texts.html #ht_' + area_type);
     pop_id.append(div);
 }
 
-function set_elements(){
+function set_variables(){
     var non_prism_els = ['gdd','hdd','cdd'];
     var station_only_els = ['obst','snow','snwd','evap','wdmv','dtr','pet'];
-    var el_opts,el;
-    if ($('#elements').length){
-        el = $("#elements");
-        el_opts = $("#elements option");
+    var el_opts = null,el = null;
+    if ($('#variables').length){
+        el = $("#variables");
+        el_opts = $("#variables option");
     }
-    if ($('#element').length){
-        el = $("#element");
-        el_opts = $("#element option");
+    if ($('#variable').length){
+        el = $("#variable");
+        el_opts = $("#variable option");
     }
 
-    el_opts.each(function(){
-        //Check if prism data, disable degree days
-        if ($('#data_type').val() == 'station' || $('#area_type').val().inList['station_id','station_ids']){
-            if ($(this).val() == 'pet'  || $(this).val() == 'dtr'){
-                if ($('#app_name').val().inList(['monthly_summary','station_finder'])){
-                     $(this).attr('disabled',false);
+    if (el_opts){
+        el_opts.each(function(){
+            //Check if prism data, disable degree days
+            if ($('#data_type').val() == 'station' || $('#area_type').val().inList['station_id','station_ids']){
+                if ($(this).val() == 'pet'  || $(this).val() == 'dtr'){
+                    if ($('#app_name').val().inList(['monthly_summary','station_finder'])){
+                         $(this).attr('disabled',false);
+                    }
+                    else{
+                        $(this).attr('disabled',true);
+                    }
                 }
                 else{
-                    $(this).attr('disabled',true);
+                    $(this).attr('disabled',false);
                 }
             }
-            else{
-                $(this).attr('disabled',false);
-            }
-        }
-    
-        if ($('#data_type').val() == 'grid' || $('#area_type').val().inList(['location','locations'])){
-            if ($('#grid').val() == '21' && $(this).val().inList(non_prism_els)){
-                $(this).attr('disabled',true);
-                if (el.val() == $(this).val()){
-                    el.val('pcpn');
-                }
-            }
-            else{
-                if ($(this).val().inList(station_only_els)){
+        
+            if ($('#data_type').val() == 'grid' || $('#area_type').val().inList(['location','locations'])){
+                if ($('#grid').val() == '21' && $(this).val().inList(non_prism_els)){
                     $(this).attr('disabled',true);
                     if (el.val() == $(this).val()){
                         el.val('pcpn');
                     }
                 }
+                else{
+                    if ($(this).val().inList(station_only_els)){
+                        $(this).attr('disabled',true);
+                        if (el.val() == $(this).val()){
+                            el.val('pcpn');
+                        }
+                    }
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 
 //Functions to hide and show maps
 //Used in set_map function
-function hide_grid_point_map(){
+function hide_gridpoint_map(){
     if ($('#GridpointMap').length){
         $('#GridpointMap').css('display','none');
-    }
-    if ($('#map-gridpoint').length){
         $('#map-gridpoint').css('display','none');
-    }
-    if ($('#address').length){
-        $('#address').css('display','none');
-    }
-    if ($('#zoombutton').length){
-        $('#zoombutton').css('display','none');
+        $('#zoom-to-map-gridpoint').css('display','none');
     }
 }
 
@@ -562,8 +500,7 @@ function show_gridpoint_map(){
     //Show gridpoint map
     $('#GridpointMap').css('display','block');
     $('#map-gridpoint').css('display','block');
-    $('#address').css('display','inline');
-    $('#zoombutton').css('display','inline'); 
+    $('#zoom-to-map-gridpoint').css('display','block');
     if ($('#location').length){
         initialize_grid_point_map($('#location').val());
     }
@@ -573,11 +510,31 @@ function show_gridpoint_map(){
 
 }
 
+function hide_gridpoints_map(){
+    if ($('#GridpointsMap').length){
+        $('#map-gridpoints').css('display','none');
+        $('#GridpointsMap').css('display','none');
+        $('#zoom-to-map-gridpoints').css('display','none');
+    }
+}
+
+function show_gridpoints_map(){
+    //Show gridpoint map
+    $('#GridpointsMap').css('display','block');
+    $('#map-gridpoints').css('display','block');
+    $('#zoom-to-map-gridpoints').css('display','block');
+    if ($('#locations').length){
+        initialize_grid_points_map($('#locations').val());
+    }
+    else{
+        initialize_grid_points_map();
+    }
+}
+
 function show_bbox_map() {
-    $('#address').css('display','inline');
-    $('#zoombutton').css('display','inline');
     $('#BBoxMap').css('display','block');
     $('#map-bbox').css('display','block');
+    $('#zoom-to-map-bbox').css('display','block');
     if ($('#bounding_box').length){
         initialize_bbox_map($('#bounding_box').val());
     }
@@ -589,20 +546,16 @@ function show_bbox_map() {
 function hide_bbox_map(){
     if ($('#BBoxMap').length){
         $('#BBoxMap').css('display','none');
-    }
-    if ($('#map-bbox').length){
         $('#map-bbox').css('display','none');
+        $('#zoom-to-map-bbox').css('display','none');
     }
-    $('#address').css('display','none');
-    $('#zoombutton').css('display','none');
 }
 
 function hide_overlay_map(){
     if ($('#OverlayMap').length){
         $('#OverlayMap').css('display','none');
-    }
-    if ($('#map-overlay').length){    
         $('#map-overlay').css('display','none');
+        $('#zoom-to-map-overlay').css('display','none');
     }
     if ($('#content-window').length){    
         $('#content-window').css('display','none');
@@ -613,6 +566,7 @@ function show_overlay_map(){
     //Show overlay map 
     $('#OverlayMap').css('display','block');
     $('#map-overlay').css('display','block');
+    $('#zoom-to-map-overlay').css('display','block');
     $('#content-window').css('display','block');
     initialize_map_overlays();
 }
@@ -620,19 +574,15 @@ function show_overlay_map(){
 function hide_polygon_map(){
     if ($('#PolyMap').length){
         $('#PolyMap').css('display','none');
-    }
-    if ($('#map-polygon').length){
         $('#map-polygon').css('display','none');
+        $('#zoom-to-map-polygon').css('display','none');
     }
-    $('#address').css('display','none');
-    $('#zoombutton').css('display','none');
 }
 
 function show_polygon_map(){
     $('#PolyMap').css('display','block');
     $('#map-polygon').css('display','block');
-    $('#address').css('display','inline');
-    $('#zoombutton').css('display','inline');
+    $('#zoom-to-map-polygon').css('display','block');
     if ($('#shape').length){
         initialize_polygon_map($('#shape').val());
     }
@@ -650,7 +600,7 @@ function set_map(node){
     var area_type, TMP_URL,state,kml_file_path;
     //Get TMP env variable (defined in templates/csc_base.html)
     area_type = node.val();
-    //Update hidden elements
+    //Update hidden variables
     if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
         TMP_URL = $('#TMP_URL').val();
         state = $('#overlay_state').val();
@@ -662,36 +612,47 @@ function set_map(node){
     //Set up maps for display
     if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
         hide_polygon_map();
-        hide_grid_point_map();
+        hide_gridpoint_map();
+        hide_gridpoints_map();
         show_overlay_map();
     } 
     else if (area_type == 'shape') {
         hide_overlay_map();
-        hide_grid_point_map();
+        hide_gridpoint_map();
+        hide_gridpoints_map();
         show_polygon_map();
     }
     else if (area_type.inList(['location'])){
         hide_overlay_map();
         hide_polygon_map();
         show_gridpoint_map();
+        hide_gridpoints_map();
+    }
+    else if (area_type.inList(['locations'])){
+        hide_overlay_map();
+        hide_polygon_map();
+        hide_gridpoint_map();
+        show_gridpoints_map();
     }
     else if (area_type == 'bounding_box'){
         hide_overlay_map();
         hide_polygon_map();
-        hide_grid_point_map();
+        hide_gridpoint_map();
+        hide_gridpoints_map();
         show_bbox_map();
     }
     else {
         hide_overlay_map();
         hide_polygon_map();
-        hide_grid_point_map();
+        hide_gridpoint_map();
+        hide_gridpoints_map();
         hide_bbox_map();
     }
 }
 
 function addHidden(theForm, name, value) {
     /*
-    Create a hidden input element with name and value and append it to theForm
+    Create a hidden input variable with name and value and append it to theForm
     */
     var input = document.createElement('input');
     input.type = 'hidden';
@@ -719,7 +680,7 @@ function setHiddenFields(fromFormID, toFormID) {
     $('#' + fromFormID + ' input, #' + fromFormID + ' select').each(
     function(){
         var name = $(this).attr('name');
-        //Only save form elements that do not exists in toForm
+        //Only save form variables that do not exists in toForm
         if (!name.inList(ff) && name.substring(0,4) != 'form'){
             var input = document.createElement('input');
             input.type = 'hidden';
@@ -752,36 +713,6 @@ function save_form_options(formID,hiddenID){
         $('#' + formID + ' select').each(function(){
             vals.push($(this).val());
             $('#' + hiddenID).val(vals.join(';'));
-        });
-    }
-}
-
-
-function set_form_options(formID, hiddenID){
-    /*
-    function called on load of page
-    to retrieve all cached form fields and repopulate
-    form fields
-    This is part of solution for backbutton issue:
-    Dynamic javascript form fields are not cached
-    */
-    var form_selects = $('#' + hiddenID).val().split(';');
-    if ($('#' + hiddenID).length){
-        idx = -1;
-        /*
-        $('#' + formID + ' input').each(function(){
-            idx+=1;
-            $(this).val(form_selects[idx]);
-        });
-        */
-        $('#' + formID + ' select').each(function(){
-            idx+=1;
-            if ($(this).attr('id') == 'elements'){
-                $(this).val(form_selects[idx].split(','));
-            }
-            else{
-                $(this).val(form_selects[idx]);
-            }
         });
     }
 }
@@ -823,74 +754,12 @@ function reset_options(){
     }  
 }
 
-
-function set_likelihood_thresholds(node){
-    var options = node.options;
-    var threshes, thresh_low, thresh_high, thresh_id, el, html_el,html_tr;
-    for (var idx=0;idx<options.length;idx++) {
-        el = options[idx].value;
-        threshes = set_threshes(el).split(',');
-        thresh_low = threshes[2];
-        thresh_high = threshes[3];
-        thresh_id = el + '_threshold';
-        html_tr = document.getElementById(thresh_id);
-        if (options[idx].selected) {
-            html_tr.style.display="table-row";
-            thresh_id = el + '_threshold_low';
-            html_el = document.getElementById(thresh_id);
-            html_el.value = thresh_low;
-            thresh_id = el + '_threshold_high';
-            html_el = document.getElementById(thresh_id);
-            html_el.value = thresh_high;
-        }
-        else {
-            html_tr.style.display="none";
-        }
-    } 
-}
-
-function update_elements(node){
-    /*
-    Dynamic forms are not updated in browser cache
-    This function updates the elements field
-    which is a multiple select field list that
-    behaves in ways that can't be caught by the udate_value function above, 
-    which only deals with string variables
-    The passing of variables from/to html, django views and javascript
-    is done via strings. 
-    To deal with element lists, we need to use an element_strings object
-    and convert accordingly.
-    */
-    var els = []
-    var options = node.options;
-    for (var idx=0;idx<options.length;idx++) {
-        if (options[idx].selected) {
-            els.push(options[idx].value);
-            //document.getElementById('elements').options[idx].selected = true;
-            /*
-            el_nodes = document.getElementsByName('elements');
-            for (i=0;i<el_nodes.length;i++){
-                el_nodes[i].options[idx].selected = true;
-            }
-            */
-        }
-    }
-    if ($('#elements_string').length){
-        var elements_string = els.join();
-        var el_strings = document.getElementsByClassName('elements_string');
-        for (idx=0;idx<el_strings.length;idx++){
-            el_strings[idx].value = elements_string;
-        }
-    }
-}
-
 //Show "Loading image"
 function show_loading(){
     /*
     Shows moving loading gif after form submit
     */
-    var IMG_URL = document.getElementById('IMG_URL').value;
-    $("#loading-image").attr("src",IMG_URL +"LoadingGreen.gif");
+    $("#loading-image").attr("src","/csc/media/img/LoadingGreen.gif");
     $("#loading").show("fast");
     //this.preventDefault();
     var form = $(this).unbind('submit');
@@ -910,74 +779,17 @@ function hide_loading_gif() {
    $("#loading").hide();
 }
 
-function show_hide_opts(rowClass){
-    /*
-    displays all rowClass table rows
-    */
-    var trs = document.getElementsByClassName(rowClass);
-    //Show all or none
-    if (trs[0].style.display == 'none'){
-        var disp = "table-row";
-        if ($('#show_plot_opts').length){
-            document.getElementById('show_plot_opts').value = 'T';
-        }
-    }
-    else{
-        var disp = "none";
-        if ($('#show_plot_opts').length){
-            document.getElementById('show_plot_opts').value = 'F';
-        }
-    }
-    for (idx=0;idx<trs.length;idx++){
-        trs[idx].style.display = disp;
-    }
-}
-
-function show_opts(rowClass){
-    /*
-    displays all rowClass table rows
-    */
-    var trs = document.getElementsByClassName(rowClass);
-    if ($('#show_plot_opts').length){
-        document.getElementById('show_plot_opts').value = 'T';
-    }
-    //Show all or none
-    for (idx=0;idx<trs.length;idx++){
-        trs[idx].style.display = 'table-row';
-    }
-}
-
-function hide_opts(rowClass){
-    /*
-    hide all rowClass table rows
-    */
-    var trs = document.getElementsByClassName(rowClass);
-    if ($('#show_plot_opts').length){
-        document.getElementById('show_plot_opts').value = 'T';
-    }
-    //Show all or none
-    for (idx=0;idx<trs.length;idx++){
-        trs[idx].style.display = 'none';
-        if ($('#show_plot_opts').length){
-            document.getElementById('show_plot_opts').value = 'T';
-        }
-    }
-}
-
-
-function highlight_form_field(td_id, err){
-
+function highlight_form_field(field_id, err){
     // Highlights form field and displays error message err
     //if user fills out form incorrectly
-    var td = document.getElementById(td_id);
-    var tr = td.parentNode;
-    var new_tr = document.createElement('tr');
-    new_tr.setAttribute('class','form_error');
-    new_tr.innerHTML = '<td></td><font color="red">' + err + '</font><td></td><td></td>';
-    tr.parentNode.insertBefore(new_tr, tr.nextSibling);
+    var err_div = $('<div />', {
+        class: 'form_error',
+        html: '<font color="red">' + err + '</font>'
+    });
+    $('#' + field_id).parents('div[class^="form-group"]').append(err_div);
 }
 
-function set_threshes(element){
+function set_threshes(variable){
     /*
     Sets sodxtrmts thresholds
     */
@@ -988,7 +800,7 @@ function set_threshes(element){
             threshes = '2.5,0.25, 0.25,2.5';
         }
     }
-    if (element == 'avgt' || element == 'dtr' || element == 'obst'){
+    if (variable == 'avgt' || variable == 'dtr' || variable == 'obst'){
         threshes = '65,65,40,65';
         if ($('#units').length){
             u = document.getElementById('units').value;
@@ -997,7 +809,7 @@ function set_threshes(element){
             }
         }
     }
-    if (element == 'maxt'){
+    if (variable == 'maxt'){
         threshes = '40,90,65,80';
         if ($('#units').length){
             u = document.getElementById('units').value;
@@ -1006,7 +818,7 @@ function set_threshes(element){
             }
         }
     }
-    if (element == 'mint'){
+    if (variable == 'mint'){
         threshes = '32,70,32,40';
         if ($('#units').length){
             u = document.getElementById('units').value;
@@ -1015,7 +827,7 @@ function set_threshes(element){
             }
         }
     }
-    if (element == 'hdd' || element == 'gdd' || element == 'cdd'){
+    if (variable == 'hdd' || variable == 'gdd' || variable == 'cdd'){
         threshes = '10,30,10,30';
         if ($('#units').length){
             u = document.getElementById('units').value;
@@ -1024,7 +836,7 @@ function set_threshes(element){
             }
         }
     }
-    if (element == 'wdmv'){
+    if (variable == 'wdmv'){
         threshes = '100,200,100,200';
         if ($('#units').length){
             u = document.getElementById('units').value;
@@ -1036,13 +848,13 @@ function set_threshes(element){
     return threshes;
 }
 
-function set_BaseTemp(element){
+function set_BaseTemp(variable){
     /*
     sets sodxtrmts base temperatures for degree day calculations.
     */
-    if (element =='hdd' || element =='cdd' || element=='gdd'){
-        $('#base_temp').css('display', 'table-row');
-        if (element == 'hdd' || element == 'cdd'){
+    if (variable =='hdd' || variable =='cdd' || variable=='gdd'){
+        $('#base_temp').css('display', 'block');
+        if (variable == 'hdd' || variable == 'cdd'){
             $('#base_temperature').val('65');
         }
         else{
@@ -1054,85 +866,35 @@ function set_BaseTemp(element){
 
 function set_delimiter(data_format_node, divId){
     if (data_format_node.value == 'clm' ||  data_format_node.value == 'dlm' || data_format_node.value == 'html'){ 
-        document.getElementById(divId).style.display = "table-row";
+        $('#' + divId).css('display', 'block');
     }
     else if (data_format_node.value == 'xl'){
-        document.getElementById(divId).style.display = "none";
+        $('#' + divId).css('display', 'none');
     }
 }
 
 function set_delimiter_and_output_file(data_format_node, delim_divId, out_file_divId){
     if (data_format_node.value == 'clm' ||  data_format_node.value == 'dlm'){
-        document.getElementById(delim_divId).style.display = "table-row";
+        $('#' + delim_divId).css('display', 'block');
     }
     else if (data_format_node.value == 'xl' || data_format_node.value == 'html'){
-        document.getElementById(delim_divId).style.display = "none";
+        $('#' + delim_divId).css('display', 'none');
     }
     if (data_format_node.value == 'clm' ||  data_format_node.value == 'dlm' || data_format_node.value == 'xl'){
-        document.getElementById(out_file_divId).style.display = "table-row";
+        $('#' + out_file_divId).css('display', 'block');
     }
     else if (data_format_node.value == 'html'){
-        document.getElementById(out_file_divId).style.display = "none";
+        $('#' + out_file_divId).css('display', 'none');
     }
 }
 
-function show_if_true(node, rowClass){
-    /*
-    if node.value=true, shows all table rows of class name rowClass
-    if node.value=fals, hides all table rows of class name rowClass
-    */
-    var trs = document.getElementsByClassName(rowClass);
+
+function show_div_if_true(node, divId){
     if (node.value == 'T'){
-        var disp = "table-row";
-        if ($('#Arrow').length){ 
-            //Hide Sodxtrmts downarrow
-            document.getElementById('Arrow').style.display="none"; 
-        }      
+        $('#' + divId).css('display', 'block');
     }
     else{
-        var disp = "none";
-        //Show Sodxtrmts downarrow
-        if ($('#Arrow').length){       
-            document.getElementById('Arrow').style.display="block";
-        }
-    }
-    for (idx=0;idx<trs.length;idx++){
-        trs[idx].style.display = disp;
-    }
-}
-
-
-function show_div_if_true(node, divID){
-    if (node.value == 'T'){
-        document.getElementById(divID).style.display = "table-row";
-    }
-    else{
-        document.getElementById(divID).style.display = "none";
-    }
-}
-
-//Sodxtrmts util hide or show formGraph
-function show_formGraph(TF, rowClass) {
-    var trs = document.getElementsByClassName(rowClass);
-    if (TF == 'T'){
-        var disp = "table-row";
-    }
-    else{
-        var disp = "none";
-    }
-    for (idx=0;idx<trs.length;idx++){
-        trs[idx].style.display = disp;
-    }
-}
-
-//Sodxtrmts util hide or show formGraph
-function hide_formGraph(rowClass) {
-    var trs = document.getElementsByClassName(rowClass);
-    for (idx=0;idx<trs.length;idx++){
-        trs[idx].style.display = "none";
-    }
-    if ($('#generate_graph_row').length){
-        document.getElementById('generate_graph_row').style.display = "none";
+        $('#' + divId).css('display', 'none');
     }
 }
 
@@ -1148,21 +910,33 @@ function update_maps(area_field){
     var id = area_field.id;
     var val = area_field.value;
     if (id == 'shape'){
+        $('.zoom-to').css('display','none');
+        $('#zoom-to-map-polygon').css('display','block');
         $('#PolyMap').css('display','block');
-        $('#map-polygon').css('display','block');
-        initialize_polygon_map(val);
+        setTimeout(function(){initialize_polygon_map(val);},500);
     }
     else if (id == 'location'){
+        $('.zoom-to').css('display','none');
+        $('#zoom-to-map-gridpoint').css('display','block');
         $('#GridointMap').css('display','block');
-        $('#map-gridpoint').css('display','block');
+        initialize_grid_point_map(val);
+    }
+    else if (id == 'locations'){
+        $('.zoom-to').css('display','none');
+        $('#zoom-to-map-gridpoints').css('display','block');
+        $('#GridointsMap').css('display','block');
         initialize_grid_point_map(val);
     }
     else if (id == 'bounding_box'){
+        $('.zoom-to').css('display','none');
+        $('#zoom-to-map-bbox').css('display','block');
         $('#BBoxMap').css('display','block');
         $('#map-bbox').css('display','block');
         initialize_bbox_map(val);
     }
     else if (id == 'county' || id == 'county_warning_area' || id == 'climate_division' || id == 'basin'){ 
+        $('.zoom-to').css('display','none');
+        $('#zoom-to-map-overlay').css('display','block');
         $('#OverlayMap').css('display','block');
         $('#map-overlay').css('display','block');
         $('#content-window').css('display','block');
@@ -1218,17 +992,18 @@ function update_maps(area_field){
                     });
                     //Find state from name and update overlay state
                     var state = 'none';
-                    if (id == 'county' || id == 'climate_division') {
+                    if (id.inList(['county','climate_division'])){
                         state = item.state.toLowerCase();
                     }
                     if (id == 'county_warning_area'){
                         //var state = val.split(', ')[0].split(' ')[1].slice(0,2).toLowerCase();
                         state = item.name.split(', ')[1].toLowerCase();
                     }
-                    if (state != 'none'){
-                        document.getElementById('overlay_state').value = state 
+                    if (state && state != 'none'){
+                        $('overlay_state').val(state); 
                         document.querySelector('#overlay_state [value="' + state + '"]').selected = true;
                     }
+                    /*
                     else {
                         //Can't find the state
                         ols = document.getElementsByName('overlay_state');
@@ -1239,24 +1014,34 @@ function update_maps(area_field){
                             catch(e){}
                         }
                     }
+                    */
                     //Update new map
                     initialize_map_overlay('map-overlay', poly); 
                     break
                 }
             }
         });
+        if (window.map){
+            google.maps.event.addListenerOnce(window.map, 'idle', function() {
+                google.maps.event.trigger(window.map, 'resize');
+            });
+            //google.maps.event.trigger(window.map, 'resize');
+        };
     }
     else{
         //Hide all maps
-        if ($('#GridpointMap').length && $('#GridpointMap').css('display')!='none'){
+        $('.zoom-to').css('display','none');
+        if ($('#GridpointMap').length){
             $('#GridpointMap').css('display','none');
-            $('#map-gridpoint').css('display','none');
         }
-        if ($('#PolyMap').length && $('#PolyMap').css('display')!='none'){
+        if ($('#GridpointsMap').length){
+            $('#GridpointsMap').css('display','none');
+        }
+        if ($('#PolyMap').length){
             $('#PolytMap').css('display','none');
             $('#map-polygon').css('display','none');
         }
-        if ($('#OverlayMap').length && $('#OverlayMap').css('display')!='none'){
+        if ($('#OverlayMap').length){
             $('#OverlayMap').css('display','none');
             $('#map-overlay').css('display','none');
             $('#content-window').css('display','none');
@@ -1264,96 +1049,7 @@ function update_maps(area_field){
         }
         if ($('#BBoxMap').length && $('#BBoxMap').css('display')!='none'){
             $('#BBoxMap').css('display','none');
-            $('#map-bbox').css('display','none');
         }
     }
 }
 
-
-function set_grid_and_els(node, gridRowId){
-    /*
-    sets grid type and elements.
-    If temporal resolution is monthly or yearly, only allow PRISM data grid and PRISM elements
-    else allow all
-    */
-    var tbl_row_grid = document.getElementById(gridRowId);
-    var tbl_row_els = document.getElementById('Els');
-    var cell1_grid = tbl_row_grid.firstChild.nextSibling.nextSibling.nextSibling;
-    var cell1_els = tbl_row_els.firstChild.nextSibling.nextSibling.nextSibling;
-    var maxt_selected = '';
-    var mint_selected = '';
-    var pcpn_selected = '';
-    var els_select = document.getElementById('elements');
-    for (i=0;i<els_select.options.length;i++) {
-        if (els_select.options[i].selected) {
-            el_name = els_select.options[i].value;
-            if (el_name == "maxt"){maxt_selected ='selected';}
-            if (el_name == "mint"){mint_selected ='selected';}
-            if (el_name == "pcpn"){pcpn_selected ='selected';}
-        }
-    }
-    if (node.value == "mly" || node.value == "yly"){
-        cell1_grid.innerHTML='<select id="grid" name="grid">' +
-        '<option value="21" selected>PRISM(1895-Present)</option>'+ 
-        '</select>';
-        cell1_els.innerHTML = '<select id="elements" name="elements"' + 
-        ' multiple onchange="update_elements(this)">' +
-        '<option value="maxt" ' + maxt_selected +'>Maximum Temperature</option>' + 
-        '<option value="mint" ' + mint_selected + '>Minimum Temperature</option>' +
-        '<option value="pcpn" ' + pcpn_selected +'>Precipitation</option>' +
-        '</select>';
-        //hide degree day rows and setadd_degree_days to 'F'
-        document.getElementById('add_degree_days').value='F'
-        //document.getElementById('add_degree_days').options[1].selected = true;
-        document.getElementById('add').style.display = "none";
-        document.getElementById('dd').style.display = "none"; 
-    }
-    else{
-        cell1_grid.innerHTML='<select id="grid" name="grid">' +
-        '<option value="1" selected>NRCC Interpolated(1950-Present)</option>' +
-        '<option value="3">NRCC Int. Hi-Res(2007-Present)</option>' +
-        '<option value="21">PRISM(1981-Present)</option>' +
-        '<option value="4">CRCM+NCEP(1970-2000,2040-2070)</option>' +
-        '<option value="5">CRCM+CCSM(1970-2000,2040-2070)</option>' +
-        '<option value="6">CRCM+CCSM3(1970-2000,2040-2070)</option>' +
-        '<option value="7">HRM3+NCEP(1970-2000,2040-2070)</option>' +
-        '<option value="8">HRM3+HadCM3(1970-2000,2040-2070)</option>' +
-        '<option value="9">MM5I+NCEP(1970-2000,2040-2070)</option>' +
-        '<option value="10">MM5I+CCSM(1970-2000,2040-2070)</option>' +
-        '<option value="11">RCM3+NCEP(1970-2000,2040-2070)</option>' +
-        '<option value="12">RCM3+CGCM3(1970-2000,2040-2070)</option>' +
-        '<option value="13">RCM3+GFDL(1970-2000,2040-2070)</option>' +
-        '<option value="14">WRFG+NCEP(1970-2000,2040-2070)</option>' +
-        '<option value="15">WRFG+CCSM(1970-2000,2040-2070)</option>' +
-        '<option value="16">WRFG+CGCM3(1970-2000,2040-2070)</option>' +
-        '</select>';
-        cell1_els.innerHTML = '<select id="elements" name="elements"' +  
-        ' multiple onchange="update_elements(this)">' +
-        '<option value="maxt" ' + maxt_selected +'>Maximum Temperature</option>' +
-        '<option value="mint" ' + mint_selected +'>Minimum Temperature</option>' +
-        '<option value="avgt">Average Temperature</option>' +
-        '<option value="pcpn" ' + maxt_selected +'>Precipitation</option>' +
-        '<option value="avgt">Average Temperature</option>' +
-        '<option value="hdd">Heating Degree Days(65F/18.3C)</option>' +
-        '<option value="cdd">Cooling Degree Days(65F/18.3C)</option>' +
-        '<option value="gdd">Growing Degree Days(50F/10C)</option>' +
-        '</select>';
-        //Show degree day row
-        document.getElementById('add').style.display = "table-row";
-    }
-}
-//Delete? replaced by set_smry
-function set_data_summary(node, rowId_t, rowId_s){
-    if (node.value == 'spatial_summary'){
-        document.getElementById(rowId_s).style.display = 'table-row';
-        document.getElementById(rowId_t).style.display = 'none';
-    }
-    else if (node.value =='temporal_summary'){
-        document.getElementById(rowId_s).style.display = 'none';
-        document.getElementById(rowId_t).style.display = 'table-row';
-    }
-    else{
-        document.getElementById(rowId_s).style.display = 'none';
-        document.getElementById(rowId_t).style.display = 'none';
-    }
-}

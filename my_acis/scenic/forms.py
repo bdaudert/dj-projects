@@ -60,7 +60,7 @@ select_grid_by_CHOICES = (
     ('point', 'Point Location'),
     ('county', 'County FIPS code'),
     ('climdiv', 'Climate Division'),
-    ('cwa', 'County Warning Area (CWA)'),
+    ('cwa', 'Cnty Warn. Area (CWA)'),
     ('basin', 'Basin'),
     ('state', 'State'),
     ('bbox', 'Bounding Box'),
@@ -70,7 +70,7 @@ select_grid_by_CHOICES = (
 SEARCH_AREA_CHOICES = (
     ('county', 'County FIPS code'),
     ('climdiv', 'Climate Division'),
-    ('cwa', 'County Warning Area (CWA)'),
+    ('cwa', 'Cnty Warn. Area (CWA)'),
     ('basin', 'Basin')
 )
 
@@ -122,7 +122,7 @@ ACIS_ELEMENT_CHOICES_SHORT = (
 GRID_FIND_CHOICES = (
         ('county', 'County FIPS code'),
         ('climdiv', 'Climate Division'),
-        ('cwa', 'County Warning Area (CWA)'),
+        ('cwa', 'Cnty Warn. Area (CWA)'),
         ('basin', 'Basin'),
         ('state', 'State'),
         ('bbox', 'Bounding Box'),
@@ -135,7 +135,7 @@ STN_FIND_CHOICES = (
         ('stnids', 'Comma separated list of stations '),
         ('county', 'County FIPS code'),
         ('climdiv', 'Climate Division'),
-        ('cwa', 'County Warning Area (CWA)'),
+        ('cwa', 'Cnty Warn. Area (CWA)'),
         ('basin', 'Basin'),
         ('state', 'State'),
         ('bbox', 'Bounding Box'),
@@ -147,7 +147,7 @@ STN_FIND_CHOICES_SHORT = (
         ('sw_states', 'Southwest US'),
         ('county', 'County FIPS code'),
         ('climdiv', 'Climate Division'),
-        ('cwa', 'County Warning Area (CWA)'),
+        ('cwa', 'Cnty Warn. Area (CWA)'),
         ('basin', 'Basin'),
         ('state', 'State'),
         ('states', 'Multiple States'),

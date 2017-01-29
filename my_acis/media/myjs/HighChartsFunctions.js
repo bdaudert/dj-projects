@@ -106,4 +106,3 @@ function getRunningMean(chart,num) {
         data:[[ext.min, average],[ext.max, average]]
     });
 }
-

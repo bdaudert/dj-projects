@@ -1,10 +1,13 @@
-    <td>Greater Than</td>
-    <td><input type="text" id="threshold_for_greater_than" name="threshold_for_greater_than" value={{initial.threshold_for_greater_than}}></td>
-    <td><img alt="Click me!" title="Help" src="/csc/media/img/QMark.png" class="trigger">
+<div class="form-group">
+    <label for="threshold_for_greater_than">Greater Than</label>
+    <img class="qmark" id="qmark-threshold_for_greater_than" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
     <div class="pop-up">
         <div id="ht_g"></div>
         <script type="text/javascript">                        
         $("#ht_g").load("{{HTML_URL}}Docu_help_texts.html #ht_g");
         </script>
-    </div>
-    </td>
+    </div> 
+    <input class="form-control" type="text" 
+    id="threshold_for_greater_than" name="threshold_for_greater_than" 
+    value={{initial.threshold_for_greater_than}}>
+</div>

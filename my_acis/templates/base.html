@@ -8,15 +8,23 @@
 {% if title %} ] {% endif %}
 </title>
 {%load my_wrcc_apps_filters%}
-<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/csc-style.css"></link>
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/wrcc-style.css"></link>
 <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
 <!-- jquery -->
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+<!--Bootstrap-->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="{{MEDIA_URL}}dist/css/bootstrap-submenu.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" defer></script>
+<script src="{{MEDIA_URL}}dist/js/bootstrap-submenu.min.js" defer></script>
+
 <!--My js-->
-<script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}js/wrcc_appsListeners.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}myjs/jutils.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}myjs/wrcc_appsListeners.js"></script>
 <!--jQuery datatables-->
 <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/jquery.dataTables.css" />
 <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/buttons.dataTables.css" />
@@ -26,7 +34,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
 <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
 <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
-<!--<script src="{{ MEDIA_URL }}js/buttons.html5.min.js"></script>-->
 <script src="{{ MEDIA_URL }}js/buttons.html5.min.js"></script>
 <script src="{{ MEDIA_URL }}js/buttons.print.min.js"></script>
 <script src="{{ MEDIA_URL }}js/buttons.colVis.min.js"></script>
@@ -79,38 +86,53 @@ $(document).ready(function() {
 
 <body {% if bodyclass %}class="{% block bodyclass %}{% endblock %}" {% endif %} {% if bodyid %} id="{% block bodyid %}{% endblock %}"{% endif %}>
 <div class="container">
-    <!-- Header -->
-	<h1 align="center">BRITTA'S WRCC-CSC PAGES</h1>
+    <!--nav bootstrap-->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type='button' class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="sr-only">Toggle Navigation</span> 
+                </button>
+            </div><!--navbar-header-->
 
-    <div id="menu">
-    <ul id="nav-top">
-        <li><a href="/csc"><font size="3">HOME</font></a></li>
-        <li><a href="/csc/scenic/"><font size="3">SCENIC</font></a></li>
-        <li><a href="/csc/wrcc_meta/"><font size="3">WRCC-METADATA</font></a></li>
-        <li><a href="/csc/wrcc_apps/"><font size="3">WRCC-APPLICATIONS</font></a>
-             <ul>
-                <li><a href="/csc/wrcc_apps/Sodrun/">Sodrun</a></li>
-                <li><a href="/csc/wrcc_apps/Sodrunr/">Sodrunr</a></li>
-                <li><a href="/csc/wrcc_apps/Sodlist/">Sodlist</a></li>
-                <li><a href="/csc/wrcc_apps/Sodmonline/">Sodmonline</a></li>
-                <li><a href="/csc/wrcc_apps/Sodmonlinemy/">Sodmonlinemy</a></li>
-                <li><a href="/csc/wrcc_apps/Sodsum/">Sodsum</a></li>
-                <li><a href="/csc/wrcc_apps/Soddyrec/">Soddyrec</a></li>
-                <li><a href="/csc/wrcc_apps/Soddynorm/">Soddynorm</a></li>
-                <li><a href="/csc/wrcc_apps/Soddd/">Soddd</a></li>
-                <li><a href="/csc/wrcc_apps/Sodpad/">Sodpad</a></li>
-                <li><a href="/csc/wrcc_apps/Sodsumm/">Sodsumm</a></li>
-                <li><a href="/csc/wrcc_apps/Sodpct/">Sodpct</a></li>
-                <li><a href="/csc/wrcc_apps/Sodthr/">Sodthr</a></li>
-                <li><a href="/csc/wrcc_apps/Sodxtrmts/">Sodxtrmts</a></li>
-                <li><a href="/csc/wrcc_apps/Sodpiii/">Sodpiii</a></li>
-            </ul>
-        </li>
-        <li><a href="/csc/documentation/"><font size="3">DOCUMENTATION</font></a></li>
-    </ul>
-    </div>
+            <div class="collapse navbar-collapse">
+                <div class="header-banner nav-header">
+                    <h1 class="bg-info" align="center">WRCC Internal Pages</h1>
+                </div>
+                
+                <ul class="nav navbar-nav">
+                <li><a href="/csc/">HOME</a></li>
+                <li><a href="/csc/scenic/">SCENIC</a></li>
+                <li><a href="/csc/wrcc_meta/">WRCC-METADATA</a></li>
+                <li><a href="/csc/documentation/">DOCUMENTATION</a></li>                
+                <li class="dropdown">
+                    <a href="/csc/wrcc_apps/" tabindex="0" data-toggle="dropdown" data-submenu>WRCC-APPLICATIONS <span class="caret"></span></a> 
+                    <ul class="dropdown-menu">
+                        <li><a href="/csc/wrcc_apps/Sodrun/">Sodrun</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodrunr/">Sodrunr</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodlist/">Sodlist</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodmonline/">Sodmonline</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodmonlinemy/">Sodmonlinemy</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodsum/">Sodsum</a></li>
+                        <li><a href="/csc/wrcc_apps/Soddyrec/">Soddyrec</a></li>
+                        <li><a href="/csc/wrcc_apps/Soddynorm/">Soddynorm</a></li>
+                        <li><a href="/csc/wrcc_apps/Soddd/">Soddd</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodpad/">Sodpad</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodsumm/">Sodsumm</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodpct/">Sodpct</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodthr/">Sodthr</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodxtrmts/">Sodxtrmts</a></li>
+                        <li><a href="/csc/wrcc_apps/Sodpiii/">Sodpiii</a></li>
+                    </ul>
+                </li>
+                </ul> <!-- .nav .navbar-nav -->
+            </div><!-- /.navbar-collapse -->
+        </div><!--container-fluid-->
+    </nav>
 
-    <div class="content">
     {% block content %}
         <br /><br /><br />
         <p style="color:red;font-size:20px;" align="center"><b>PROVIDING EASY ACCESS TO CLIMATE DATA AND PRODUCTS</b>
@@ -119,11 +141,10 @@ $(document).ready(function() {
 
         
     {% endblock content %}
-    </div> <!-- END content -->
 
     {% block footer %}
         <div id="footer" align="center">{% include 'includes/Footer_WRCC.html'%}</div>
     {% endblock footer%}
-</div><!-- END container -->
+</div><!-- END scenic-container -->
 </body>
 </html>

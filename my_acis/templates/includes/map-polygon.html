@@ -1,0 +1,8 @@
+<div id="PolyMap" {%if not need_polygon_map%}style="display:none;"{%endif%}>
+    <div id="map-polygon"></div>
+    {%if initial.shape%}
+        <script type="text/javascript">initialize_polygon_map("{{initial.shape}}");</script>
+    {%else%}
+        <script type="text/javascript">initialize_polygon_map();</script>
+    {%endif%}
+</div><!--end PolyMap-->

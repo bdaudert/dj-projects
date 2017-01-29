@@ -1,0 +1,17 @@
+<div class="form-group">
+    <label for="variables_constraints">Stations that have</label>
+    <img class="qmark" id="qmark-variables_constraints" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <div class="pop-up">
+        <div id="ht_variables_constraints"></div>
+        <script type="text/javascript">                        
+            $("#ht_variables_constraints").load("{{HTML_URL}}/Docu_help_texts.html #ht_variables_constraints");
+        </script>
+    </div>
+
+    <select class="form-control" id="variables_constraints" name="variables_constraints" 
+    onchange="update_value(this.value)">
+        {%for c, name in initial.form_options.variables_constraints%}
+            <option value="{{c}}" {%if initial.variables_constraints == c%}selected{%endif%}>{{name}}</option>
+        {%endfor%}
+    </select>
+</div>

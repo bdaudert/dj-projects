@@ -1,6 +1,5 @@
-<!DOCTYPE HTML>
-<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">-->
-<html xmlns="http://www.w3.org/1999/xhtml" lang="{% if LANGUAGE_CODE %}{{ LANGUAGE_CODE }}{% else %}en-US{% endif %}" xml:lang="{% if LANGUAGE_CODE %}{{ LANGUAGE_CODE }}{% else %}en-US{% endif %}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
     <title>SCENIC
@@ -10,135 +9,11 @@
     </title>
     {%load my_scenic_filters%}
 
-    <!--Google analytics-->
-    <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    ga('create', 'UA-44724757-2', 'dri.edu');
-    ga('require', 'linkid');
-    ga('send', 'pageview');
-    </script>
-
-    <meta name="keywords" content="climate,climate change,Southwest US,Soutwest CSC,Climate Science Center, Climate Knowledge">
-    <meta name="description" content="Southwest Climate and ENvironmental Information Collaborative">
-    <link type="text/css" href="{{ MEDIA_URL }}css/csc-style.css" rel="stylesheet"></link>
-    <!-- jquery -->
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-    <!--<script src="http://code.jquery.com/jquery-1.11.1.js"></script>-->
-    <script src="http://code.jquery.com/jquery-2.2.1.js"></script>
-    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <!--<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>-->
-    
-    <!--Bootstrap-->
-    <!--<link rel="stylesheet" href="{{MEDIA_URL}}css/bootstrap.css">
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
-    <!--jQuery datatables-->
-    <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/jquery.dataTables.css" />
-    <link rel="stylesheet" href="{{ MEDIA_URL }}css/jQueryDataTables/buttons.dataTables.css" />
-    
-    <script src="{{ MEDIA_URL }}js/jquery.dataTables.min.js"></script>
-    <script src="{{ MEDIA_URL }}js/dataTables.buttons.min.js"></script>
-    <script src="{{ MEDIA_URL }}js/buttons.flash.min.js"></script> 
-    <script src="{{ MEDIA_URL }}js/buttons.html5.min.js"></script>
-    <script src="{{ MEDIA_URL }}js/buttons.print.min.js"></script>
-    <script src="{{ MEDIA_URL }}js/buttons.colVis.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
-    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
-    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
-    
-    <!--
-    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.colVis.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
-    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
-    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
-    -->
-    
-    <!-- Britta's Javascript utilities -->
-    <script type="text/javascript" src="{{MEDIA_URL}}myjs/dataStore.js"></script>
-    <script type="text/javascript" src="{{MEDIA_URL}}myjs/jutils.js"></script>
-    <script type="text/javascript" src="{{MEDIA_URL}}myjs/graphics-utils.js"></script>
-    <script type="text/javascript" src="{{MEDIA_URL}}myjs/form-utils.js"></script>
-    <script type="text/javascript" src="{{MEDIA_URL}}myjs/hc-charts.js"></script>
-    <script type="text/javascript" src="{{MEDIA_URL}}myjs/data-utils.js"></script>
-    <script type="text/javascript" src="{{MEDIA_URL}}myjs/csc-maps.js"></script>
-    <script type="text/javascript" src="{{MEDIA_URL}}myjs/Listeners.js"></script>
-    <!-- Map API scripts and properties-->
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes, width=device-width" />
-    <!--
-    <script type="text/javascript"
-        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDIdA3G_Mv7P7OV9jqX2rzChCFu-ut23n0&sensor=true&libraries=drawing">
-    </script>-->
-    <script type="text/javascript"
-        src="http://maps.googleapis.com/maps/api/js?sensor=true&libraries=drawing">
-    </script>
-    <script type="text/javascript" src="{{MEDIA_URL}}js/polygon.min.js"></script>
-    <!--<script type="text/javascript" src="http://geoxml3.googlecode.com/svn/branches/polys/geoxml3.js"></script>
-    <script type="text/javascript" src="http://geoxml3.googlecode.com/svn/trunk/ProjectedOverlay.js"></script>-->
-    <script type="text/javascript" src="{{MEDIA_URL}}js/geoxml3.js"></script>
-    <script type="text/javascript" src="{{MEDIA_URL}}js/ProjectedOverlay.js"></script>
-
-    <!-- Highcharts graphics -->
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/highcharts-4.2.5.js"></script>
-    <!--<script src="http://code.highcharts.com/highcharts.js"></script>-->
-    <!--<script src="https://rawgithub.com/highslide-software/draggable-legend/master/draggable-legend.js"></script>-->
-    <script src="{{ MEDIA_URL }}js/draggable-legend.js"></script>
-    <!--<script src="http://code.highcharts.com/highcharts-more.js"></script>-->
-    <script src="{{ MEDIA_URL }}js/highcharts-more.js"></script>
-    <!--<script src="http://code.highcharts.com/modules/exporting.js"></script>-->
-    <script src="{{ MEDIA_URL }}js/exporting.js"></script>
-    <!--<script src="http://highslide-software.github.io/export-csv/export-csv.js"></script>-->
-    <script type="text/javascript" src="{{MEDIA_URL}}js/regression.js"></script>
-    <script type="text/javascript" src="{{MEDIA_URL}}js/HighChartsFunctions.js"></script>
-    <script type="text/javascript" src="{{MEDIA_URL}}js/generateHighChartsFigure.js"></script>
-    <!-- include greybox media for pop-up windows: WRCC links to anomaly maps -->
-    <!--<script type="text/javascript" src="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.js"></script>-->
-    <script type="text/javascript" src="{{MEDIA_URL}}js/greybox.js"></script>
-    <!--<link href="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.css" rel="stylesheet" type="text/css" media="all">-->
-    <link href="{{MEDIA_URL}}css/greybox.css" rel="stylesheet" type="text/css" media="all">
-
-
-    <!--Backbutton issue-->
-    <script type="text/javascript">
-    //$(document).ready(function () {
-    //This causes select options to go to default during processing.
-    //$(window).bind('beforeunload', function(e) {
-    $(window).bind('pageshow', function(e) { 
-        $("select").each(function () {
-            //var sel = $(this).find('option[selected]').val();
-            var sel = $(this).val();
-            if ($.isArray(sel)){
-                $.each(sel, function(i,val){
-                    $('option[value=' + val + ']').prop("selected", true);
-                });
-            }
-            else{
-                $(this).val($(this).find('option[selected]').val());
-            }
-        }); 
-        //$(this).val($(this).find('option[selected]').val()); 
-    });
-    </script>
-    
-    <!--Hide loading icon iupon page load-->
-    <script language="javascript" type="text/javascript">
-        //$(window).load(function() {
-        $(document).ready(function() {
-            $('#loading').hide(); 
-        });
-    </script>
-
+    <!--Load all scripts and style sheets-->
+    {% include 'includes/scripts.html'%}
 
     {% block extrahead %}{% endblock %}
     {% block extrastyle %}{% endblock %}
-
-
 
     <!--Django env variables from settings -->
     <!-- SCENIC DIRS-->
@@ -146,129 +21,144 @@
     <input type="hidden" id="BASE_DIR" name="variable" value="{{ BASE_DIR }}">
     <input type="hidden" id="SRC_BASE" name="variable" value="{{ SRC_BASE }}">
     <input type="hidden" id="JSON_DIR" name="variable" value="{{ JSON_DIR }}">
+    <input type="hidden" id="JSON_URL" name="variable" value="{{ JSON_URL }}">
     <input type="hidden" id="HTML_DIR" name="variable" value="{{ HTML_DIR }}">
     <input type="hidden" id="KML_DIR" name="variable" value="{{ KML_DIR }}">
     <input type="hidden" id="TMP_DIR" name="variable" value="{{ TMP_DIR }}">
+    <input type="hidden" id="TMP_URL" name="variable" value="{{ TMP_URL }}">
     <input type="hidden" id="TEMP" name="variable" value="{{ TEMP }}">
     <input type="hidden" id="LIB_PREFIX" name="variable" value="{{ LIB_PREFIX }}">
-    <!--SCENIC SERVER DIRS -->
-    <input type="hidden" id="STATIC_URL" name="variable" value="{{ STATIC_URL }}">
-    <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-    <input type="hidden" id="JSON_URL" name="variable" value="{{ JSON_URL }}">
-    <input type="hidden" id="HTML_URL" name="variable" value="{{ HTML_URL }}">
-    <input type="hidden" id="KML_URL" name="variable" value="{{ KML_URL }}">
-    <input type="hidden" id="TMP_URL" name="variable" value="{{ TMP_URL }}">
-    <input type="hidden" id="IMG_URL" name="variable" value="{{ IMG_URL }}">
-    <input type="hidden" id="URL_PREFIX" name="variable" value="{{ URL_PREFIX }}">
-    <input type="hidden" id="HOME_URL" name="variable" value="{{ HOME_URL }}">
-    <input type="hidden" id="SCENIC_URL" name="variable" value="{{ SCENIC_URL }}">
-    <input type="hidden" id="ABOUT_URL" name="variable" value="{{ ABOUT_URL }}">
-    <input type="hidden" id="WHAT_URL" name="variable" value="{{ WHAT_URL }}">
-    <input type="hidden" id="WHO_URL" name="variable" value="{{ WHO_URL }}">
-    <input type="hidden" id="CONTACT_URL" name="variable" value="{{ CONTACT_URL }}">
-    <input type="hidden" id="DASH_URL" name="variable" value="{{ DASH_URL }}">
-    <input type="hidden" id="DATA_URL" name="variable" value="{{ DATA_URL }}">
+
+
+    
 </head>
 
-<!--deals with back button issue... only works in Chrome and badly at that--> 
-<!--<body onbeforeunload="reset_options()">-->
 
 <body>
-
 <div class="container">
-    <!-- Header -->
-   <div>
-        <img width="100%" style="padding:0;margin:0;" src="{{ MEDIA_URL }}img/SCENIC.png">
-   </div><!--End id wrap-->
+    <!--nav bootstrap-->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid bg-info">
+            <div class="navbar-header">
+                <button type='button' class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="sr-only">Toggle Navigation</span> 
+                </button>
+            </div><!--navbar-header-->
 
-    <!-- Nav bar at top of page-->
-    <div id="nav-top">
-        <li><a href="{{HOME_URL}}"><font size="3">HOME</font></a></li>
-        <li><a href="{{ABOUT_URL}}"><font size="3">ABOUT US</font></a>
-            <ul class="l1">
-            <li><a href="{{ABOUT_URL}}#overview">Overview</a></li>
-            <li><a href="{{ABOUT_URL}}#data">Available Datasets</a></li>
-            <li><a href="{{ABOUT_URL}}#contact_us">Contact Us</a></li>
-            <li><a href="{{ABOUT_URL}}#links">Links</a></li>
-            </ul>
-        </li>
-        <li><a href="{{DATA_URL}}"><font size="3">DATA ACCESS</font></a>
-            <ul>
-            <li><a href="{{DATA_URL}}station_finder/">Station Finder</a></li>
-            <li><a href="{{DATA_URL}}single/">Single-Point Products</a>
-                <ul>
-                <li><a href="{{DATA_URL}}single/lister/">Data Lister</a></li>
-                <li><a href="{{DATA_URL}}single/monthly_summary/">Monthly Summary</a></li>
-                <li><a href="{{DATA_URL}}single/yearly_summary/">Yearly Summary</a></li>
-                <li><a href="{{DATA_URL}}single/intraannual/">Single-Year Time Series</a></li>
-                <li><a href="{{DATA_URL}}single/data_comparison/">Grid/Station Data Comparison</a></li>
-                <li><a href="{{DATA_URL}}single/climatology/">Climatology</a></li>
-                </ul>
-            </li>
-            <li><a href="{{DATA_URL}}multi/">Multi-Point Products</a>
-                <ul>
-                <li><a href="{{DATA_URL}}multi/lister/">Data Lister</a></li>
-                <li><a href="{{DATA_URL}}multi/spatial_summary/">Spatial Summary</a></li>
-                <li><a href="{{DATA_URL}}multi/temporal_summary/">Temporal Summary</a></li>
-                </ul>
-            </li>
-            <li><a href="{{DATA_URL}}climate_engine/">Climate Engine</a></li>
-            </ul>
-        </li>
-        <li><a href="{{SCENIC_URL}}dashboard/"><font size="3">DASHBOARD</font></a>
-            <ul>
-            <li><a href="{{SCENIC_URL}}dashboard#weather">Weather</a></li>
-            <li><a href="{{SCENIC_URL}}dashboard#temperatures">Temperatures</a></li>
-            <li><a href="{{SCENIC_URL}}dashboard#precipitation">Precipitation</a></li>
-            <li><a href="{{SCENIC_URL}}dashboard#drought">Drought</a></li>
-            <li><a href="{{SCENIC_URL}}dashboard#water">Water</a></li>
-            <li><a href="{{SCENIC_URL}}dashboard#snow">Snow</a></li>
-            <li><a href="{{SCENIC_URL}}dashboard#projections">Projections</a></li>
-            </ul>
-        </li>
-        <li><a href="{{SCENIC_URL}}howto"><font size="3">HOW TO</font></a></li>
-        <!--<li><a href="{{SCENIC_URL}}resources"><font size="3">RESOURCES</font></a></li>-->
-    </div>
-    <div class="content">
-        <table width="960px">
-        <td width="300px" valign="top">
-            <p class="message">Recommended browsers: Chrome, FF, IE9+</p>
-        </td>
-        <td width="440px" align="center">
-            <h1 align="center" class="tiltle">{{title}}</h1>
-        </td>
-        <td width="230px" valign="top" align="right">
-            <div class="searchbox">
-            <!-- Search Box -->
-            <form target="_blank"  method="get" action="http://www.google.com/search">
-            <div id="searchbox">
-            <table border="0">
-            <tr>
-            <td colspan="2"><input type="text"   name="q" size="25" maxlength="255"/></td>
-            <td><input type="submit" value="Search" /></td>
-            </tr>
-            <tr>
-            <td><input type="radio"  name="sitesearch" value="http://wrcc.dri.edu/csc/scenic/" checked />This Site</td>
-            <td><input type="radio"  name="sitesearch" value="" />The Web</td>
-            <td></td>
-            </tr>
-            </table>
-            </div><!--End id searchbox-->
-            </form>
-            </div><!--End class searchbox--> 
-        </td>
-        </table>
-        <!--Loading image-->
-        <div id="loading">
-        <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />
+            <div class="collapse navbar-collapse">
+                <div class="header-banner nav-header">
+                    <img class="img-responsive" width="100%" height="5%" style="padding-top:3%" src="{{ MEDIA_URL }}img/SCENIC_NEW.png">
+                </div>
+                <!--contact buttons-->
+                <span style="float:right;padding:2px 0px">
+                <a class="btn btn-primary" href="mailto:scenic@dri.edu" target="_top">Send Feedback</a>
+                <a class="btn btn-primary" href="{{ABOUT_URL}}#contact_us">Contact Us</a>
+                <!--Search Box-->
+                <form target="_blank"  method="get" action="http://www.google.com/search" style="display: inline;">
+                    <input type="text"   name="q" size="25" maxlength="255"/>
+                    <input type="submit" value="Search" />
+                    <input type="radio" style="display:none;"  name="sitesearch" value="http://wrcc.dri.edu/csc/scenic/" checked />
+                </form>
+                </span> 
+                
+                <ul class="nav navbar-nav">
+                <li><a href="{{HOME_URL}}">HOME</a></li>
+                <li class="dropdown">
+                    <a href="{{ABOUT_URL}}" tabindex="0" data-toggle="dropdown" data-submenu>ABOUT US <span class="caret"></span></i></a> 
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ABOUT_URL}}#overview">Overview</a></li>
+                        <li><a href="{{ABOUT_URL}}#data">Available Datasets</a></li>
+                        <li><a href="{{ABOUT_URL}}#contact_us">Contact Us</a></li>
+                        <li><a href="{{ABOUT_URL}}#links">Links</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="{{DATA_URL}}" tabindex="0" data-toggle="dropdown" data-submenu>DATA<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{DATA_URL}}">OVERVIEW</a></li>
+                        <li class="dropdown-submenu">
+                            <a href="{{DATA_URL}}climate_data/">CLIMATE DATA</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{DATA_URL}}climate_data/">Overview</a></li>
+                                <li><a href="{{DATA_URL}}climate_data/station_finder/">Station Finder</a></li>
+                                <li class="dropdown-submenu">
+                                    <a tabindex="0" href="">Single Point Products</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a tabindex="0" href="{{DATA_URL}}climate_data/single/lister/">Data Lister</a></li>
+                                        <li><a tabindex="0" href="{{DATA_URL}}climate_data/single/monthly_summary/">Monthly Summary</a></li>
+                                        <li><a tabindex="0" href="{{DATA_URL}}climate_data/single/seasonal_summary/">Seasonal Summary</a></li>
+                                        <li><a tabindex="0" href="{{DATA_URL}}climate_data/single/intraannual/">Single-Year Time Series</a></li>
+                                        <li><a tabindex="0" href="{{DATA_URL}}climate_data/single/data_comparison/">Grid/Station Data Comparison</a></li>
+                                        <li><a tabindex="0" href="{{DATA_URL}}climate_data/single/climatology/">Climatology</a></li>
+                                    </ul>
+                                </li>
+                            <li class="dropdown-submenu">
+                                <a tabindex="-1" href="{{DATA_URL}}climate_data/multi/">Multi Point Products </a>
+                                <ul class="dropdown-menu">
+                                  <li><a tabindex="0" href="{{DATA_URL}}climate_data/multi/lister/">Data Lister</a></li>
+                                  <li><a href="{{DATA_URL}}climate_data/multi/spatial_summary/">Spatial Summary</a></li>
+                                  <li><a href="{{DATA_URL}}climate_data/multi/temporal_summary/">Temporal Summary</a></li>
+                                </ul>
+                            </li>
+                          </ul><!--ul dropdown menu-->
+                        </li>
+                        <li><a href="{{DATA_URL}}remote_sensing_data/">REMOTE SENSING DATA</a></li>
+                        <li><a href="{{DATA_URL}}projections/">CLIMATE PROJECTIONS</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="{{SCENIC_URL}}dashboard/" tabindex="0" data-toggle="dropdown" data-submenu>DASHBOARD <span class="caret"></span></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{SCENIC_URL}}dashboard#weather">Weather</a></li>
+                        <li><a href="{{SCENIC_URL}}dashboard#temperatures">Temperatures</a></li>
+                        <li><a href="{{SCENIC_URL}}dashboard#precipitation">Precipitation</a></li>
+                        <li><a href="{{SCENIC_URL}}dashboard#drought">Drought</a></li>
+                        <li><a href="{{SCENIC_URL}}dashboard#water">Water</a></li>
+                        <li><a href="{{SCENIC_URL}}dashboard#snow">Snow</a></li>
+                        <li><a href="{{SCENIC_URL}}dashboard#projections">Projections</a></li>
+                    </ul>
+                </li>
+                <li><a href="{{SCENIC_URL}}howto">HOW TO</a></li>
+                
+              </ul> <!-- .nav .navbar-nav -->
+            </div><!-- /.navbar-collapse -->
+        </div><!--container-fluid-->
+    </nav>
+
+    <div class="row" align="center">
+        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
         </div>
-        {% block content %}
-        {% endblock content%}
+        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 img-rounded page-title">
+            {%if title%}
+            <h1 class="lead display-1">{{title}}</h1>
+            {%else%}
+                <h4 class="lead display-1">
+                    {% include 'includes/SCENIC_mission_statement.html'%}
+                </h4>
+            {%endif%}
+        </div>
+        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+        </div>
+    </div><br />
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-loading">
+           <!--Loading image-->
+            <div id="loading" style="align:center;vertical-align:center;">
+                <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />
+            </div> 
+        </div>
+    </div>
 
-        {% block footer %}
+    {% block content %}
+
+    {% endblock content%}
+
+    {% block footer %}
         <div id="footer" align="center">{% include 'includes/Footer_SCENIC.html'%}</div>
-        {% endblock footer %}
-    </div><!-- END content --> 
-</div><!-- END container -->
+    {% endblock footer %}
+</div><!--end container-->
 </body>
 </html>

@@ -1,0 +1,11 @@
+<div class="form-group">
+    <label for="user_email"><font color="DarkViolet">Email</font></label>
+    <img class="qmark" id="qmark-user_email" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <div class="pop-up">
+        <div id="ht_user_email"></div>
+        <script type="text/javascript">                        
+            $("#ht_user_email").load("{{HTML_URL}}/Docu_help_texts.html #ht_user_email");
+        </script>
+    </div>
+    <input type="text" class="user_email form-control" name="user_email" value="{{initial.user_email}}" onchange="update_value(this.value);">
+</div>

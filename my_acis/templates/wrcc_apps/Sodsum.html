@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "wrcc_base.html" %}
 
 <head>
 <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script>
@@ -7,77 +7,80 @@
 {%load my_wrcc_apps_filters%}
 
 {% block content %}
-
-<h1 align='center'>{{title}}</h1>
+<div class="docu" id="Docu_Sodsum" style="display:none;">{% include 'includes/Docu_sodsum.html'%}</div>
+<h1 align='center'>{{title}}
+<img onclick="ShowPopupDocu('Docu_Sodsum')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
+</h1>
      <table border=0 align="right">
 	  <form id="form1" method="post" action="">{% csrf_token %}
-         <table style="width:50%; height:100%; background-color:#cce5cc" class="sortable">{{ form|safe }}</table>
-         <input type="submit" value="Select" name="{{app_name}}"/>
+         <table class="sortable form">{{ form|safe }}</table>
+         <input type="submit" value="Submit" name="{{app_name}}"/>
          </form>
      </table>
 </br>
 </br>
 
-{%if elements %}
-<!--<p align='left'>-->
-<div class="dataTableInfo"  align="left" style="max-width:95%;word-wrap:break-word;">
-<b>SUMMARY-OF-THE-DAY STATISTICS: Last date considered : {{results.0.end}}</b>
-START - First date in record (YYMMDD)</br>
-END   - Last  date in record (YYMMDD)</br>
-POSBL - Possible number of observations</br>
-PRSNT - Total number of days present in the record</br>
-LNGPR - Largest number of consecutive observations</br>
-MISSG - Total number of missing days</br>
-LNGMS - Most consecutive missing observations</br>
-A day is considered present if any element is reported.</br>
-NAME is the latest name of the station in the history file.</br>
+{%if results%}
+<div class="results">
+<p>
+    <b>Last date considered</b>: {{results.0.end}}</br />
+    <b>START</b>: First date in record (YYMMDD)</br>
+    <b>END</b>: Last  date in record (YYMMDD)</br>
+</p>
+
+<div style="display:none" class="dataTableInfo" id="dataTableInfo-0">
+    Station_records_by_variable
 </div>
-</br>
-</br>
-
-<table class="dataTable nowrap"  border="1" width="760px" cellspacing="0" cellpadding="0">
-<thead><tr>
-   <th>STATION</th><th>START</th><th>END</th>
-    {%for el in elements%}
-    <th>{{el}}</th>
-    {%endfor%} 
-</tr></thead>
-<tfoot><tr>
-   <th>STATION</th><th>START</th><th>END</th>
-    {%for el in elements%}
-    <th>{{el}}</th>
-    {%endfor%} 
-</tr></tfoot>
-<tbody>
-    {%for stn, stn_vals in results.items %}
-        <tr>
-        <td>{{stn_vals.station_id}}</td><td>{{stn_vals.start}}</td><td>{{stn_vals.end}}</td>
-        {%for el in elements %}
-            <td>{{stn_vals|lookup:el|safe}}</td>
+<table class="dataTable nowrap" id="dataTable-0" border=1>
+    <thead><tr>
+       <th>STATION</th><th>START</th><th>END</th>
+        {%for el in variables%}
+        <th>{{el}}</th>
+        {%endfor%} 
+    </tr></thead>
+    <tfoot><tr>
+       <th>STATION</th><th>START</th><th>END</th>
+        {%for el in variables%}
+        <th>{{el}}</th>
+        {%endfor%} 
+    </tr></tfoot>
+    <tbody>
+        {%for stn, stn_vals in results.items %}
+            <tr>
+            <td>{{stn_vals.station_id}}</td><td>{{stn_vals.start}}</td><td>{{stn_vals.end}}</td>
+            {%for el in variables %}
+                <td>{{stn_vals|lookup:el|safe}}</td>
+            {%endfor%}
+            </tr>
         {%endfor%}
-        </tr>
+    </tbody>
+</table>
+</ br>
+</ br>
+
+<div style="display:none" class="dataTableInfo" id="dataTableInfo-1">
+    Station_records_general_information
+    
+</div>
+<table class="dataTable nowrap" id="dataTable-1" border=1>
+    <thead><tr>
+        <th>NUMBER</th><th>NAME</th><th>START</th><th>END</th>
+        <th>POSSIBLE</th><th>PRESENT</th><th>LARGEST CONSECUTIVE</th>
+        <th>MISSING</th><th>LARGEST CONSECUTIVE MISSING</th>
+    </tr></thead>
+    <tfoot><tr>
+        <th>NUMBER</th><th>NAME</th><th>START</th><th>END</th>
+        <th>POSSIBLE</th><th>PRESENT</th><th>LARGEST CONSECUTIVE</th>
+        <th>MISSING</th><th>LARGEST CONSECUTIVE MISSING</th> 
+    </tr></tfoot>
+    <tbody>
+    {%for stn, stn_vals in results.items %}
+    <tr>
+    <td>{{stn_vals.station_id}}</td><td>{{stn_vals.station_name}}</td><td>{{stn_vals.start}}</td><td>{{stn_vals.end}}</td><td>{{stn_vals.PSBL}}</td><td>{{stn_vals.PRSNT}}</td><td>{{stn_vals.LNGPR}}</td><td>{{stn_vals.MISSG}}</td><td>{{stn_vals.LNGMS}}</td>
+    </tr>
     {%endfor%}
-</tbody>
+    </tbody>
 </table>
-</ br>
-</ br>
-
-<table class="dataTable nowrap"  border="1" width="760px" cellspacing="0" cellpadding="0">
-<thead><tr>
-    <th>NUMBER</th><th>NAME</th><th>START</th><th>END</th><th>POSBL</th><th>PRSNT</th><th>LNGPR</th><th>MISSG</th><th>LNGMS</th>
-</tr></thead>
-<tfoot><tr>
-    <th>NUMBER</th><th>NAME</th><th>START</th><th>END</th><th>POSBL</th><th>PRSNT</th><th>LNGPR</th><th>MISSG</th><th>LNGMS</th>
-</tr></tfoot>
-<tbody>
-{%for stn, stn_vals in results.items %}
-<tr>
-<td>{{stn_vals.station_id}}</td><td>{{stn_vals.station_name}}</td><td>{{stn_vals.start}}</td><td>{{stn_vals.end}}</td><td>{{stn_vals.PSBL}}</td><td>{{stn_vals.PRSNT}}</td><td>{{stn_vals.LNGPR}}</td><td>{{stn_vals.MISSG}}</td><td>{{stn_vals.LNGMS}}</td>
-</tr>
-{%endfor%}
-</tbody>
-</table>
-
-{%endif%}
-
+</div><!--results-->
+{%endif%}<!--end results-->
 {% endblock %}

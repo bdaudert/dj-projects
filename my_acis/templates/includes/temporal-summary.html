@@ -1,0 +1,19 @@
+{%load my_scenic_filters%}
+<div class="form-group">
+    <label for="temporal_summary">Temporal
+    {%if app_name == 'temporal_summary' or app_name == 'seasonal_summary'%} Summary{%endif%}</label>
+    <img class="qmark" id="qmark-temporal_summary" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <div class="pop-up">
+        <div id="ht_temporal_summary"></div>
+        <script type="text/javascript">                        
+            $("#ht_temporal_summary").load("{{HTML_URL}}/Docu_help_texts.html #ht_temporal_summary");
+        </script>
+    </div>    
+    <select id="temporal_summary" class="form-control" name="temporal_summary" onchange="update_value(this.value)">
+        {% for opt, name in initial.form_options.temporal_summary%}
+            <option value="{{opt}}" 
+            {%if initial.temporal_summary == opt%} selected{%endif%}
+            {%if opt == "median"%}disabled{%endif%}>{{name}}</option>
+        {%endfor%}
+    </select>
+</div>

@@ -1,12 +1,14 @@
-{% extends "base.html" %}
+{% extends "wrcc_base.html" %}
 {%load my_wrcc_meta_filters%}
 {% block content %}
-
-<h1 align='center'>{{title}}</h1>
+<div class="docu" id="Docu_Sodxtrmts" style="display:none;">{% include 'includes/Docu_sodxtrmts.html'%}</div>
+<h1 align='center'>{{title}}
+<img onclick="ShowPopupDocu('Docu_Sodxtrmts')" alt="Help" title="Help" src="{{ MEDIA_URL }}img/QMark.png" width="30" height="30">
+</h1>
 <div id='stn_selection'>
      <table border=0 align="right">
 	  <form id="form1" method="post" action="">{% csrf_token %}
-         <table style="width:50%; height:100%; background-color:#cce5cc" class="sortable">{{ form1|safe }}</table>
+         <table class="sortable form">{{ form1|safe }}</table>
          <input type="submit" value="Select" name="stn_selection"/>
          </form>
      </table>
@@ -16,7 +18,7 @@
 <div id="form2div">
 	<table border=0 align="right">
 	<form id="form2" method="post" action="">{% csrf_token %}
-	  <table style="width:50%; height:100%; background-color:#cce5cc" class="sortable">{{ form2|safe }}</table>
+	  <table class="form">{{ form2|safe }}</table>
 	  <input type="submit" value="Submit" name="app_form"/>
 	</form>
   </table>
@@ -27,41 +29,52 @@
 
 
 {%if results %}
-  {%for stn, stn_data in results.items %}
-    <p class="stronger" style="color:darkblue; font-size:large">LOCATION:{{station_names|lookup:stn|safe}}&nbsp;&nbsp;STATION: {{station_ids|lookup:stn|safe}}</br>
-    START YEAR {{start_year}} END YEAR {{end_year}}</br>
-    START MONTH {{start_month}}</br>
-    ELEMENT {{element}} UNITS {{units}}</br>
-    ANALYSIS TYPE {{statistic}}</br>
-    MAXIMUM NUMBER OF DAYS ALLOWED MISSING {{max_missing_days}}</br>
-    FREQUENCY ANALYSIS {{frequency_analysis}}</br>
-    DEPARTURES FROM AVERAGES {{departure_from_averages}}</br>
-    </p></br>
+<div class="results">
+{%for stn, stn_data in results.items %}
+    <p>
+        <b>STATION</b>:{{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}})</br>
+        <b>ELEMENT</b>: {{variable}} ({{units}})</br>
+        <b>STATISTIC</b>: {{statistic}}<br />
+        {%if departure_from_averages == "Yes"%}<br />
+        <b>DEPARTURES FROM AVERAGES</b>{%endif%}</br>
+        <b>MAXIMUM NUMBER OF DAYS ALLOWED MISSING</b> {{max_missing_days}}
+    </p>
     {%if not stn_data%}
-    <p style="color:red">NO STATION DATA FOUND!</p></br>
+        <p style="color:red">NO STATION DATA FOUND!</p></br>
     {%else%}
-      <p>
-      a = 1 day missing, b = 2 days missing, c = 3 days, ..etc..,</br> 
-      z = 26 or more days missing, A = Accumulations present </br>
-      Long-term means based on columns; thus, the monthly row may not</br> 
-      sum (or average) to the long-term annual value.</br>
-      </p></br>
-      <table cellpadding="0">
-        <tr>
-        <td><font size="+2">YEARS</font></td>{%for mon in month_list%}<td colspan="2"><font size="+2">{{mon}}<font size="+2"></td>{%endfor%}
-        </tr>
-         {%for cat in stn_data %}
-         {%if cat.0 == "MEAN" %}
-         <tr>{%for dat in cat%}<td></td>{%endfor%}</tr>
-         <tr>{%for dat in cat%}<td></td>{%endfor%}</tr>
-         {%endif%}
-         <tr>
-         {%for dat in cat%}
-         <td>{{dat}}</td>
-         {%endfor%}
-         </tr>
-         {%endfor%}
-       </table>
+    <p>
+        a = 1 day missing, b = 2 days missing, c = 3 days, ..etc..,</br> 
+        z = 26 or more days missing, A = Accumulations present </br>
+        Long-term means based on columns; thus, the monthly row may not</br> 
+        sum (or average) to the long-term annual value.</br>
+    </p></br>
+    <div class="stronger dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" style="display:none;">
+        {{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}}),
+        {{variable}} ({{units}}),
+        {{statistic}},{%if departure_from_averages == "Yes"%}, DEPARTURES FROM AVERAGES{%endif%},
+        max_missing_days_{{max_missing_days}}
+    </div>            
+    <table class="dataTable nowrap" id="dataTable-{{forloop.counter0}}" border="1" width="760px" cellspacing="0" cellpadding="0">
+            <thead><tr>
+                <td>Year</td>{%for mon in month_list%}<td>{{mon}}</td><td>Flag</td>{%endfor%}
+            </tr></thead>
+            <tfoot><tr>
+                <td>Year</td>{%for mon in month_list%}<td>{{mon}}</td><td>Flag</td>{%endfor%}
+            </tr></tfoot>
+            <tbody>
+            {%for cat in stn_data %}
+                {%if cat.0 == "MEAN" %}
+                    <tr>{%for dat in cat%}<td></td>{%endfor%}</tr>
+                    <tr>{%for dat in cat%}<td></td>{%endfor%}</tr>
+                {%endif%}
+                <tr>
+                {%for dat in cat%}
+                    <td>{{dat}}</td>
+                {%endfor%}
+                </tr>
+            {%endfor%}
+            </tbody>
+        </table>
 
        {%if fa_results|lookup:stn|safe %}
        <p class="stronger" style="color:darkblue; font-size:large">
@@ -86,6 +99,7 @@
     {%endif%}
     </br>
   {%endfor%}
-{%endif%}
+</div><!--results-->
+{%endif%}<!--end if results-->
 
 {% endblock %}

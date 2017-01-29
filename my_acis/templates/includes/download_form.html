@@ -1,21 +1,20 @@
-       {%load my_scenic_filters%}
-        <form method="post" action="" id="formDownload">{% csrf_token %}
-        <table id="tableDownload">
-        <tr valign="top">{% include 'includes/data_format_download.html'%}</tr>
-        {%if initial.data_summary == "none" or initial.data_summary == "windowed_data"%}
-        <tr valign="top"id="out_format" class="out_format" style="display:table-row">
-        {%else%}
-        <tr valign="top"id="out_format" class="out_format" style="display:none">
-        {%endif%}{% include 'includes/output_format.html'%}</tr>
-        <!--Only show when format is clm or dlm, don't show if xl-->
-        {%if initial.data_format|is_in:'xl,html'%}
-        <tr valign="top" id="delim" class="delim" style="display:none;">
-        {%else%}
-        <tr valign="top"id="delim" class="delim">
-        {%endif%}{% include 'includes/delimiter.html'%}</tr>
-        <tr class="out_file" id="out_file" valign="top">{% include 'includes/out_file.html'%}</tr>
-        </table>
-        <input type="hidden" name="formDownload">
-        <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
-        <input type="submit" value="Download">
-        </form>
+{%load my_scenic_filters%}
+<form method="post" action="" id="formDownload">{% csrf_token %}
+    {% include 'includes/data_format_download.html'%}
+    <span id="out_format" class="out_format" 
+    {%if initial.data_summary != "none" and initial.data_summary != "windowed_data"%}
+    style="display:none"{%endif%}>
+    {% include 'includes/output_format.html'%}</span>
+    <!--Only show when format is clm or dlm, don't show if xl-->
+    <span id="delim" class="delim" {%if initial.data_format|is_in:'xl,html'%}style="display:none;"{%endif%}>
+    {% include 'includes/delimiter.html'%}
+    </span>
+    <span class="out_file" id="out_file" valign="top">{% include 'includes/out_file.html'%}</span>
+    <input type="hidden" name="formDownload">
+    <input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+    <div class="form-group">
+        <button type="submit" class="btn btn-sm btn-primary" name="Downlaod" style="width:100%">
+        Download
+        </button>
+    </div> 
+</form>

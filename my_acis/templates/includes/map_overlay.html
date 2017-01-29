@@ -1,16 +1,15 @@
-        <td>Overlays:</td>
-        <td>
-            <select id="map_ol" name="map_ol" onchange="update_value(this.value)">
-            {%for opt, name in initial.form_options.map_overlay%}
-                <option value="{{opt}}" {%if initial.map_overlay == opt%}selected{%endif%}>{{name}}</option>
-            {%endfor%} 
-            </select>
-        </td>
-        <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_map_ol"></div>
-            <script type="text/javascript">                        
-            $("#ht_map_ol").load("{{HTML_URL}}/Docu_help_texts.html #ht_map_ol");
-            </script>
-        </div>
-        </td>
+<div class="form-group">
+    <label for="map_ol">Overlays</label>
+    <img class="qmark" id="qmark-map_ol" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <div class="pop-up">
+        <div id="ht_map_ol"></div>
+        <script type="text/javascript">                        
+        $("#ht_map_ol").load("{{HTML_URL}}/Docu_help_texts.html #ht_map_ol");
+        </script>
+    </div>
+    <select class="form-control" id="map_ol" name="map_ol" onchange="update_value(this.value)">
+    {%for opt, name in initial.form_options.map_overlay%}
+        <option value="{{opt}}" {%if initial.map_overlay == opt%}selected{%endif%}>{{name}}</option>
+    {%endfor%} 
+    </select>
+</div>

@@ -1,16 +1,15 @@
-    <td>Find stations that have data for:</td>
-    <td>
-        <select id="dates_constraints" name="dates_constraints" onchange="update_value(this.value)">
-        {%for c, name in initial.form_options.dates_constraints%}
-            <option value="{{c}}" {%if initial.dates_constraints == c%}selected{%endif%}>{{name}}</option>
-        {%endfor%}
-        </select>
-    </td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+<div class="form-group">
+    <label for="dates_constraints">Stations with data for</label>
+    <img class="qmark" id="qmark-dates_constraints" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
     <div class="pop-up">
         <div id="ht_dates_constraints"></div>
         <script type="text/javascript">                        
             $("#ht_dates_constraints").load("{{HTML_URL}}/Docu_help_texts.html #ht_dates_constraints");
         </script>
     </div>
-    </td>
+    <select class="form-control" id="dates_constraints" name="dates_constraints" onchange="update_value(this.value)">
+        {%for c, name in initial.form_options.dates_constraints%}
+            <option value="{{c}}" {%if initial.dates_constraints == c%}selected{%endif%}>{{name}}</option>
+        {%endfor%}
+    </select>
+</div>

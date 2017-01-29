@@ -1,0 +1,85 @@
+<div autofocus></div>
+<div id="About_multi_prods">
+    <p class="error">What can you find here?</p>
+    <b>Data Listers</b><br/>
+    <ul>
+    <li>Access to data listers for an area of interest 
+        <ul>
+            <li>Daily Data (all datasets)</li>
+            <li>Monthly/Yearly Data (PRISM only)</li>
+        </ul>
+    </li>
+    </ul>
+    Available Data Formats: .xls, .dat, .txt, html(prints to screen).<br /><br />
+    <b>Data Analysis Tools</b>
+    <ul>
+    <li>Spatial Summaries (Time Series over area)
+    <ul>
+    <li>Maximum</li>
+    <li>Minimum</li>
+    <li>Mean</li>
+    <li>Sum</li>    
+    </ul> 
+    </li>
+    <li>Temporal Summaries (Maps)
+    <ul>
+    <li>Maximum</li>
+    <li>Minimum</li>
+    <li>Mean</li>
+    <li>Sum</li>
+    </ul>
+    </li>
+    </ul>
+    <b>Area options</b><br />
+    <ul>
+    <li>county, county warning area</li>
+    <li>climate division, drainage basin</li>
+    <li>custom polygon, circle or bounding box</li>
+    </ul>
+    <p class="error">What datasets are available?</p>
+    <p><b>1. Historic Station Data</b></p>
+    <b>Observed Quantities </b><br />
+    Maximum Temperature (F/C), Minimum Temperature (F/C),<br />Observation Time Temperature (F/C)<br />
+    Snowfall (in/mm), Snow Depth (in/mm)<br />
+    <b>Derived Quantities </b><br />
+    Average Temperature (F/C), Heating/Cooling/Growing Degree Days (F/C)<br /><br />
+
+    <b>Station Networks </b><br />
+    <ul>
+    <li><a class="pop_link" target="_blank" href="http://www.ncdc.noaa.gov/homr/"><font color="#0000FF">WBAN</font></a></li>
+    <li><a class="pop_link" target="_blank" href="http://www.nws.noaa.gov/om/coop/"><font color="#0000FF">COOP</font></a></li>
+    <li><a class="pop_link" target="_blank" href="http://www.ncdc.noaa.gov/oa/climate/ghcn-daily/"><font color="#0000FF">GHCN</font></a></li>
+    <li><a class="pop_link" target="_blank" href="http://www.icao.int/Pages/default.aspx"><font color="#0000FF">ICAO</font></a></li>
+    <li><a class="pop_link" target="_blank" href="http://www.weather.gov/"><font color="#0000FF">NWSLI</font></a></li>
+    <li><a class="pop_link" target="_blank" href="http://www.faa.gov/"><font color="#0000FF">FAA</font></a></li>
+    <li><a class="pop_link" target="_blank" href="http://www.wmo.int/pages/index_en.html"><font color="#0000FF">WMO</font></a></li>
+    <li><a class="pop_link" target="_blank" href="http://www.cocorahs.org/"><font color="#0000FF">CoCoRaHS</font></a></li>
+    <li><a class="pop_link" target="_blank" href="http://threadex.rcc-acis.org/"><font color="#0000FF">ThreadEx</font></a></li>
+    </ul>
+    All data sets are made available through the ACIS system.<br />
+    <a class="pop_link" target="_blank" href="http://www.rcc-acis.org/"><font color="#0000FF">ACIS Home Page</font></a></p>
+    <p><b>2. Gridded Data</b></p>
+    <b>Observed Quantities </b><br />
+    Maximum Temperature (F/C), Minimum Temperature (F/C)<br />
+    <b>Derived Quantities </b><br />
+    Heating/Cooling/Growing Degree Days (F/C)<br /><br />
+
+    <b>Gridded datasets:</b><br />
+    <p class="pop_link" onClick="ShowHide('Docu_NRCC_INT')"><u>NRCC Interpolated</u></p>
+        <div id="Docu_NRCC_INT" style="display:none;">{% include 'includes/Docu_NRCC_INT.html'%}</div>
+    <p class="pop_link" onClick="ShowHide('Docu_NRCC_INT_HI')"><u>NRCC Interpolated Hi-Res</u></p>
+        <div id="Docu_NRCC_INT_HI" style="display:none;">{% include 'includes/Docu_NRCC_INT_HI_RES.html'%}</div>
+    <p class="pop_link" onClick="ShowHide('Docu_PRISM')"><u>PRISM</u></p>
+        <div id="Docu_PRISM" style="display:none;">{% include 'includes/Docu_PRISM.html'%}</div>
+    <p class="pop_link" onClick="ShowHide('Docu_CRCM')"><u>NARCCAP - CRCM</u></p>
+        <div id="Docu_CRCM" style="display:none;">{% include 'includes/Docu_CRCM.html'%}</div>
+    <p class="pop_link" onClick="ShowHide('Docu_HRM3')"><u>NARCCAP - HRM3</u></p>
+        <div id="Docu_HRM3" style="display:none;">{% include 'includes/Docu_HRM3.html'%}</div>
+    <p class="pop_link" onClick="ShowHide('Docu_MM5I')"><u>NARCCAP - MM5I</u></p>
+        <div id="Docu_MM5I" style="display:none;">{% include 'includes/Docu_MM5I.html'%}</div>
+    <p class="pop_link" onClick="ShowHide('Docu_RCM3')"><u>NARCCAP - RCM3</u></p>
+        <div id="Docu_RCM3" style="display:none;">{% include 'includes/Docu_RCM3.html'%}</div>
+    <p class="pop_link" onClick="ShowHide('Docu_WRFG')"><u>NARCCAP - WRFG</u></p>
+        <div id="Docu_WRFG" style="display:none;">{% include 'includes/Docu_WRFG.html'%}</div>
+</div>
+

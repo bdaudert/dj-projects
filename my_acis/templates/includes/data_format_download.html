@@ -1,20 +1,19 @@
-        {%load my_scenic_filters%}
-        <td>Data Format: </td>
-        <td>
-        <select class="data_format" name="data_format" onchange="update_value(this.value);">
-        {%for opt, name in initial.form_options.data_format%}
-            {%if opt != "html"%}
-            <option value="{{opt}}" {%if opt == "xl"%}selected{%endif%}
-            >{{name}}</option>
-            {%endif%}
-        {%endfor%}
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
+{%load my_scenic_filters%}
+<div class="form-group">
+    <label for="data_format">Data Format</label>
+    <img class="qmark" id="qmark-data_format" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">        
+    <div class="pop-up">
         <div id="ht_data_format"></div>
         <script type="text/javascript">                        
             $("#ht_data_format").load("{{HTML_URL}}/Docu_help_texts.html #ht_data_format");
         </script>
-        </div>
-        </td>
+    </div>
+    <select class="data_format form-control" name="data_format" onchange="update_value(this.value);">
+    {%for opt, name in initial.form_options.data_format%}
+    {%if opt != "html"%}
+        <option value="{{opt}}" {%if opt == "xl"%}selected{%endif%}
+        >{{name}}</option>
+    {%endif%}
+    {%endfor%}
+    </select>
+</div>

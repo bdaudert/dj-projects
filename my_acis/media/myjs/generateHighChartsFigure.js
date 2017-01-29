@@ -1,7 +1,7 @@
 //------------------------
 // General function for monthly_summary
 //------------------------
-//Function to determine if element is in list
+//Function to determine if variable is in list
 String.prototype.inList=function(list){
    return ( list.indexOf(this.toString()) != -1)
 }
@@ -9,22 +9,28 @@ String.prototype.inList=function(list){
 var myChart;
 var downloadMenu = $.extend(true,[],Highcharts.getOptions().exporting.buttons.contextButton.menuItems.splice(2));
 
+
 function generateTS_individual(chart_indices) {
     /*
     Generates highcarts figure
     Required Args:
         chart_indices: indices of data to be plotted,
-        if not given, we pick it up from html element chart_indices
+        if not given, we pick it up from html variable chart_indices
     */
-    var args = arguments;
-    var datadict = graph_data; //template_variable
+    var args = arguments,
+        datadict = graph_data; //template_variable
     try{
         var climoData = cp_data.climoData;
         var percentileData = cp_data.percentileData;
     }
     catch(e){}
     switch (arguments.length) { // <-- 0 is number of required arguments
-        case 0: var chart_indices = $('#chart_indices').val();
+        case 0: {
+            var chart_indices = [];
+            $('#chart_indices input:checked').each(function() {
+                chart_indices.push($(this).val());
+            });
+        }
     }
     //Convert daat indices to list
     if (typeof chart_indices == 'string'){
@@ -53,7 +59,7 @@ function generateTS_individual(chart_indices) {
     var axisFontSize = '16px';
     var labelsFontSize = '16px';
     //Set params according to application 
-    if (app_name == 'monthly_summary' || app_name =='yearly_summary'){
+    if (app_name == 'monthly_summary' || app_name =='seasonal_summary'){
         var date_format = '%Y';
         if ( $('#statistic').length && $('#statistic').val() == 'ndays'){
             var yLabelmain = 'days';
@@ -94,8 +100,8 @@ function generateTS_individual(chart_indices) {
         }
     }];
    
-    //When plotting multiple elements, change title/subtitle
-    //And add yAxis for each element
+    //When plotting multiple variables, change title/subtitle
+    //And add yAxis for each variable
     if (app_name == 'spatial_summary'){
         if (chart_indices.length > 1){
             //Change chart title/subtitle
@@ -190,24 +196,24 @@ function generateTS_individual(chart_indices) {
             data: datadict[idx].data
         }
         //link to approprate axis if we are
-        //plotting multiple elements
+        //plotting multiple variables
         if (app_name == 'spatial_summary' && idx > 0) {
             s['yAxis'] = i;
         }
-        //Set threshold for yearly_summary
+        //Set threshold for seasonal_summary
         if (app_name != 'intraannual'){
             var ave_data = compute_average(datadict[idx].data);
         }
-        if (app_name == 'yearly_summary'){
+        if (app_name == 'seasonal_summary'){
             //Precip/Snow/Evap colors
             s['threshold'] = ave_data[0][1].toFixed(2);
             s['color'] = 'blue';
             s['negativeColor'] = 'red';
-            if ($('#element').length && $('#element').val().inList(['maxt','mint','avgt','obst'])){
+            if ($('#variable').length && $('#variable').val().inList(['maxt','mint','avgt','obst'])){
                 s['color'] = 'red';
                 s['negativeColor'] = 'blue';
             }
-            if ($('#element').length && $('#element').val().inList(['gdd','hdd','cdd'])){
+            if ($('#variable').length && $('#variable').val().inList(['gdd','hdd','cdd'])){
                 s['color'] = 'green';
                 s['negativeColor'] = 'goldenrod';
             }
@@ -231,7 +237,7 @@ function generateTS_individual(chart_indices) {
         //Deal with skinny bar bug
         if (chartType == 'column'){
             s['stacking'] = null;
-            if (app_name == 'monthly_summary' || app_name =='yearly_summary'){
+            if (app_name == 'monthly_summary' || app_name =='seasonal_summary'){
                 s['pointRange'] = 1 * 24 * 3600*1000*365;
             }
             else{
@@ -252,7 +258,7 @@ function generateTS_individual(chart_indices) {
         if (running_mean_period != '0'){
             var rm_data =compute_running_mean(datadict[idx].data, parseInt(running_mean_period));
             var r_name = running_mean_period + '-';
-            if (app_name == 'monthly_summary' || app_name == 'yearly_summary'){
+            if (app_name == 'monthly_summary' || app_name == 'seasonal_summary'){
                     r_name+='year Running Mean ';
             }
             else{
@@ -290,8 +296,8 @@ function generateTS_individual(chart_indices) {
             };
             series_data.push(a);
         }
-        //Set average as initial threshold for yearly_summary
-        if (app_name == 'yearly_summary'){
+        //Set average as initial threshold for seasonal_summary
+        if (app_name == 'seasonal_summary'){
             $('#chart_threshold').val(ave_data[0][1].toFixed(2));
         }
         //Range
@@ -319,6 +325,7 @@ function generateTS_individual(chart_indices) {
     //Clear old plot
     //$('#hc-container').contents().remove();
     //CHART
+    var h = $(window).height();
     var basicOptions = {
         //------------------------
         //  CHART PROPERTIES
@@ -326,15 +333,16 @@ function generateTS_individual(chart_indices) {
         chart: {
             renderTo: 'hc-container',
             type:  chartType,
-            marginTop: 100,
+            height:h*0.7,
+            marginTop:100,
             zoomType: 'x',
             spacingBottom: 30,
             spacingTop: 10,
             spacingLeft: 10,
             spacingRight: 10,
-            borderWidth:1,
-            borderColor: '#006666',
-            plotBorderColor: '#346691',
+            //borderWidth:1,
+            //borderColor: '#000000',
+            plotBorderColor: '#000000',
             plotBorderWidth:1
         },
         credits: {
@@ -496,7 +504,7 @@ function generateTS_individual(chart_indices) {
             //------------------------
             series: series_data
     } //end basicOptions
-    myChart = new Highcharts.Chart(basicOptions); 
+    myChart = new Highcharts.Chart(basicOptions);
 }
 
 function generateTS_smry(chart_indices) {
@@ -504,12 +512,18 @@ function generateTS_smry(chart_indices) {
     Generates highcarts figure
     Required Args:
         chart_indices: indices of data to be plotted,
-            if not given, we pick it up from html element chart_indices 
+            if not given, we pick it up from html variable chart_indices 
     */
-    var args = arguments;
-    var datadict = graph_data; //template_variable
+    var args = arguments,
+        datadict = graph_data; //template_variable
     switch (arguments.length) { // <-- 0 is number of required arguments
-        case 0: var chart_indices = $('#chart_indices').val();
+        //case 0: var chart_indices = $('#chart_indices').val();
+        case 0: {
+            var chart_indices = [];
+            $('#chart_indices input:checked').each(function() {
+                chart_indices.push($(this).val());
+            });
+        }
     }
     //Convert daat indices to list
     if (typeof chart_indices == 'string'){
@@ -615,7 +629,7 @@ function generateTS_smry(chart_indices) {
     //Clear old plot
     $('#hc-container').contents().remove();
     //CHART
-    
+    var h = $(window).height(); 
     var basicOptions = {
         //------------------------
         //  CHART PROPERTIES
@@ -623,14 +637,16 @@ function generateTS_smry(chart_indices) {
         chart: {
             renderTo: 'hc-container',
             type:  chartType,
+            height:h*0.7,
+            marginTop:100,
             zoomType: 'x',
             spacingBottom: 30,
             spacingTop: 10,
             spacingLeft: 10,
             spacingRight: 10,
-            borderWidth:1,
-            borderColor: '#006666',
-            plotBorderColor: '#346691',
+            //borderWidth:1,
+            //borderColor: '#000000',
+            plotBorderColor: '#000000',
             plotBorderWidth:1
         },
         credits: {
@@ -812,4 +828,3 @@ function generateTS_smry(chart_indices) {
     }//end basicOptions
     myChart=new Highcharts.Chart(basicOptions);
 }
-

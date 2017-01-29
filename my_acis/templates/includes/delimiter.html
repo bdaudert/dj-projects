@@ -1,16 +1,15 @@
-        <td>Delimiter:</td>
-        <td>
-        <select class="delimiter" name="delimiter" onchange="update_value(this.value)">
-        {%for opt, name in initial.form_options.delimiter%}
-            <option value="{{opt}}" {%if initial.delimiter == opt%}selected{%endif%}>{{name}}</option>
-        {%endfor%}
-        </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
+<div class="form-group">
+    <label for="delimiter">Delimiter</label>
+    <img class="qmark" id="qmark-delimiter" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <div class="pop-up">
         <div id="ht_delimiter"></div>
         <script type="text/javascript">                        
             $("#ht_delimiter").load("{{HTML_URL}}/Docu_help_texts.html #ht_delimiter");
         </script>
-        </div>
-        </td>
+    </div>    
+    <select class="delimiter form-control" name="delimiter" onchange="update_value(this.value)">
+        {%for opt, name in initial.form_options.delimiter%}
+            <option value="{{opt}}" {%if initial.delimiter == opt%}selected{%endif%}>{{name}}</option>
+        {%endfor%}
+    </select>
+</div>

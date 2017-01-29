@@ -1,18 +1,17 @@
-    <td>Number of Days: </td>
-    <td>
-        <select id="less_greater_or_between" name="less_greater_or_between">
-        {% for opt, name in initial.form_options.less_greater_or_between%}
-                <option value="{{opt}}" 
-                {%if initial.less_greater_or_between == opt%} selected{%endif%}
-                >{{name}}</option>
-            {%endfor%} 
-        </select>
-    </td>
-    <td><img alt="Click me!" title="Help" src="/csc/media/img/QMark.png" class="trigger">
+<div class="form-group">
+    <label for="less_greater_or_between">Thresholds</label>
+    <img class="qmark" id="qmark-number_of_days" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
     <div class="pop-up">
         <div id="ht_lgb"></div>
         <script type="text/javascript">                        
         $("#ht_lgb").load("{{HTML_URL}}Docu_help_texts.html #ht_lgb");
         </script>
-    </div>
-    </td>
+    </div> 
+    <select class="form-control" id="less_greater_or_between" name="less_greater_or_between">
+    {% for opt, name in initial.form_options.less_greater_or_between%}
+        <option value="{{opt}}" 
+        {%if initial.less_greater_or_between == opt%} selected{%endif%}
+        >{{name}}</option>
+    {%endfor%} 
+    </select>
+</div>

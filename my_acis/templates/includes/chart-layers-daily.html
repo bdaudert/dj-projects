@@ -1,0 +1,14 @@
+<font class="message">Layers: </font>
+<input name="chart_selector" id="show_running_mean" value="runmean" class="chart-layer" type="checkbox"
+{%if initial.show_running_mean == "T"%}
+    checked
+{%endif%}
+/>
+Running Mean Days
+<input type="text" name="chart_selector" id="running_mean_period" class="chart-layer" size="1" value="{{initial.running_mean_days}}">
+<input name="chart_selector" id="show_average" class="chart-layer" value="average" type="checkbox"
+{%if initial.show_average == "T"%}
+    checked
+{%endif%}
+/>
+Average

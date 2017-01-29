@@ -6,7 +6,7 @@
 <a href="{{HOME_URL}}">Home></a>
 <a href="{{SCENIC_URL}}download/">Download</a></p>
 
-    <div class="center-left">
+    <div align="center">
        <div id='form0'>
             <form method="post" action="">{% csrf_token %}
             <table class="form" >
@@ -29,7 +29,7 @@
 
     
 
-    <div class="center">
+    <div align="center">
         {%if response%}
             {{response}}
         {%endif%}

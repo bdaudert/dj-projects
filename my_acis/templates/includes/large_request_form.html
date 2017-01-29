@@ -1,26 +1,63 @@
 {%load my_scenic_filters%}
-<form id="LargeRequestForm" method="post" action="">{% csrf_token %}
-<p class="message">Large requests will be processed offline. <br />
-Please enter your name and email address and click <br />
-"Submit request" to submit your request.
-</p>
-<table class="form" id="tableLargeRequestForm">
-    {%if show_extra_download_fields%}
+<form class="side-form" id="LargeRequestForm" method="post" action="">{% csrf_token %}
+    <input type="hidden" name="formLargeRequest" value="">
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" style="width:100%">
+        Submit</button>
+    </div> 
+    <div class="formErrorLargeRequest" class="error" style="display:none"></div>
+    <p class="message bg-info" style="border:1px solid black;padding:5px;">Large requests will be processed offline. <br />
+    Please enter your name and email address and click <br />
+    "Submit request" to submit your request.
+    </p>
+    
+    <div class="form-group"> 
         {%if initial.app_name == "multi_lister" and initial.data_summary|is_in:'none,windowed_data' %}
-        <tr id="out_format" class="out_format" style="display:table-row;">{% include 'includes/output_format.html'%}</tr>
-        {%endif%}
-        <tr valign="top">{% include 'includes/data_format_download.html'%}</tr>
-        {%if initial.data_format|is_in:'xl,html'%}
-        <tr valign="top" id="delim" class="delim" style="display:none;">
+        <div class="input-group">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <span class="out_file" id="out_file" valign="top">{% include 'includes/out_file.html'%}</span>
+                <span class="input-group-addon"></span>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <span id="out_format" class="out_format">{% include 'includes/output_format.html'%}</span>
+            </div>
+        </div>
         {%else%}
-        <tr valign="top"id="delim" class="delim">
-        {%endif%}{% include 'includes/delimiter.html'%}</tr>
-        <tr class="out_file" id="out_file" valign="top">{% include 'includes/out_file.html'%}</tr>
-    {%endif%}
-    <tr class="un">{% include 'includes/user_name.html'%}</tr>
-    <tr class="ue">{% include 'includes/user_email.html'%}</tr>
-</table>
-<input type="hidden" name="formLargeRequest" value="">
-<div id="formErrorLargeRequest" class="error" style="display:none"></div>
-<input class="largeRequestsFormSubmit" type="submit" value="Submit request" name="formLargeRequest"/>
+        <div class="input-group">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <span class="out_file" id="out_file" valign="top">{% include 'includes/out_file.html'%}</span>
+                <span class="input-group-addon"></span>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <span id="out_format" class="out_format" style="display:none;">{% include 'includes/output_format.html'%}</span>
+            </div>            
+        </div>
+        {%endif%}
+        
+        <div class="input-group">
+            <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                {% include 'includes/data_format_download.html'%}
+                <span class="input-group-addon"></span>
+            </div>
+            <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+            {%if initial.data_format|is_in:'xl,html'%}
+                <span valign="top" id="delim" class="delim" style="display:none;">{% include 'includes/delimiter.html'%}</span>
+            {%else%}
+            <span valign="top"id="delim" class="delim">{% include 'includes/delimiter.html'%}</span>
+                {%endif%}
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="input-group">
+            <span class="un">{% include 'includes/user-name.html'%}</span>
+            <span class="input-group-addon"></span>
+            <span class="ue">{% include 'includes/user-email.html'%}</span>
+        </div>
+    </div>
+    <div class="formErrorLargeRequest" class="error" style="display:none"></div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" style="width:100%">
+        Submit</button>
+    </div> 
 </form>

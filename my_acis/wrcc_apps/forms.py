@@ -141,7 +141,7 @@ STN_FIND_CHOICES = (
         ('stnids', 'Comma separated list of stations '),
         ('county', 'County FIPS code'),
         ('climdiv', 'Climate Division'),
-        ('cwa', 'County Warning Area (CWA)'),
+        ('cwa', 'Cnty Warn. Area (CWA)'),
         ('basin', 'Basin'),
         ('state', 'State'),
         ('bbox', 'Bounding Box'),
@@ -153,7 +153,7 @@ STN_FIND_CHOICES_SODDYREC = (
        ('stnids', 'Comma separated list of stations '),
 )
 
-#sodsumm element choices
+#sodsumm variable choices
 SMM_ELEMENT_CHOICES = (
         ('all', '[maxt, mint, avgt, pcpn, snow,hdd, cdd, gdd]'),
         ('tmp', '[maxt, mint]'),
@@ -164,7 +164,7 @@ SMM_ELEMENT_CHOICES = (
     )
 
 #sodxtrmts choices
-#Note: element choices are the same as for sodmonline(my)
+#Note: variable choices are the same as for sodmonline(my)
 SX_ANALYSIS_CHOICES = (
         ('mmax', 'Monthly Maximum'),
         ('mmin', 'Monthly Minimum'),
@@ -292,7 +292,7 @@ class SodrunForm(forms.Form):
     #station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
     start_date = MyDateField(max_length=8, min_length=8, required = False, initial='20120101', help_text="yyyymmdd")
     end_date = MyDateField(max_length=8, min_length=8, required = False, initial=today, help_text="yyyymmdd")
-    element = forms.ChoiceField(choices=SR_ELEMENT_CHOICES, initial='pcpn')
+    variable = forms.ChoiceField(choices=SR_ELEMENT_CHOICES, initial='pcpn')
     aeb = forms.ChoiceField(choices=AEB_CHOICES, initial ='A' )
     threshold = forms.IntegerField(initial=0)
     min_run = forms.IntegerField(required=False, initial=1)
@@ -325,7 +325,7 @@ class SodmonlineForm(forms.Form):
     station_id = forms.CharField(initial='266779')
     start_date = MyDateField(max_length=4, initial='2012', help_text="yyyy")
     end_date = forms.CharField(max_length=4, initial='2012', help_text="yyyy")
-    element = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
+    variable = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
     units = forms.ChoiceField(choices=TMP_UNIT_CHOICE, initial='english')
     #number_of_characters = forms.ChoiceField(choices=DIGIT_CHOICES, initial='3')
 
@@ -334,7 +334,7 @@ class SodmonlinemyForm(forms.Form):
     #station_id = forms.CharField(max_length=6, min_length=6, initial='266779')
     start_date = MyDateField(max_length=4, min_length=4, initial='2012', help_text="yyyymmdd")
     end_date = MyDateField(max_length=4, min_length=4, initial='2012', help_text="yyyymmdd")
-    element = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
+    variable = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
     #output_file = forms.CharField(max_length=256, required=False)
     units = forms.ChoiceField(choices=TMP_UNIT_CHOICE, initial=' ')
 
@@ -343,7 +343,7 @@ class SodsumForm(forms.Form):
     station_ids = MultiStnField(initial='266779,103732')
     start_date = MyDateField(max_length=8, required = False, initial='20120101', help_text="yyyymmdd")
     end_date = MyDateField(max_length=8, required = False, initial=today, help_text="yyyymmdd")
-    element = forms.ChoiceField(choices=SS_ELEMENT_CHOICES, initial='multi')
+    variable = forms.ChoiceField(choices=SS_ELEMENT_CHOICES, initial='multi')
 
 #class to determine method of station selection used insubsequent forms
 class Sod0Form(forms.Form):
@@ -361,7 +361,7 @@ class Sod0Form(forms.Form):
             self.fields['skip_days'] = forms.BooleanField(initial=False, required=False)
             self.fields['truncate'] = forms.BooleanField(initial=False, required=False)
         if app_name == 'Sodpct':
-            self.fields['element'] = forms.ChoiceField(choices=PCT_ELEMENT_CHOICES, initial='pcpn')
+            self.fields['variable'] = forms.ChoiceField(choices=PCT_ELEMENT_CHOICES, initial='pcpn')
             self.fields['individual_averages'] = forms.ChoiceField(choices=([('I','Individual'), ('A','Day Sums or Averages'),]), required=False, initial='I')
             self.fields['threshold'] = forms.DecimalField(required=False, initial=-9999.0)
         if app_name == 'Sodthr':
@@ -370,7 +370,7 @@ class Sod0Form(forms.Form):
             self.fields['number_of_thresholds']= forms.IntegerField(min_value=1,max_value=10, initial=1)
         if app_name == 'Sodxtrmts':
             self.fields['statistic'] = forms.ChoiceField(choices=SX_ANALYSIS_CHOICES, initial='mave')
-            self.fields['element'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='maxt')
+            self.fields['variable'] = forms.ChoiceField(choices=SXTR_ELEMENT_CHOICES, initial='maxt')
             self.fields['frequency_analysis'] = forms.ChoiceField(choices = ([('T', 'True'),('F', 'False'),]), initial = 'F',widget=forms.HiddenInput())
         if app_name == 'Sodpiii':
             self.fields['skew'] = forms.ChoiceField(choices=([('as','Areal Skew'), ('ss','Station Skew'), ]), initial='ss')
@@ -424,17 +424,17 @@ class SodForm(forms.Form):
 
         if app_name in ['Sodrun', 'Sodrunr']:
             if app_name == 'Sodrunr':
-                self.fields['element'] = forms.ChoiceField(choices=SRR_ELEMENT_CHOICES, initial='range')
+                self.fields['variable'] = forms.ChoiceField(choices=SRR_ELEMENT_CHOICES, initial='range')
                 self.fields['aeb'] = forms.ChoiceField(choices=AEB_CHOICES, initial ='A' )
                 self.fields['threshold'] = forms.IntegerField(initial=40)
             else:
-                self.fields['element'] = forms.ChoiceField(choices=SR_ELEMENT_CHOICES, initial='pcpn')
+                self.fields['variable'] = forms.ChoiceField(choices=SR_ELEMENT_CHOICES, initial='pcpn')
                 self.fields['aeb'] = forms.ChoiceField(choices=AEB_CHOICES, initial ='A' )
                 self.fields['threshold'] = forms.IntegerField(initial=0)
             self.fields['minimum_run'] = forms.IntegerField(required=False, initial=1)
             self.fields['verbose'] = forms.BooleanField(required=False, initial=False)
         elif app_name == 'Soddyrec':
-            self.fields['element'] = forms.ChoiceField(choices=SDR_ELEMENT_CHOICES, initial='all')
+            self.fields['variable'] = forms.ChoiceField(choices=SDR_ELEMENT_CHOICES, initial='all')
         elif app_name == 'Soddynorm':
             self.fields['filter_type'] = forms.ChoiceField(choices=([('gauss','Gaussian'), ('rm','Running Mean'), ]), initial='rm', required = False)
             self.fields['number_of_days'] = forms.ChoiceField(choices=((str(n), n) for n in range(1,32)), initial = '1')
@@ -461,15 +461,15 @@ class SodForm(forms.Form):
                 self.fields['truncation_lower_limit'] = forms.IntegerField(initial=30, required=False)
         elif app_name == 'Sodsumm':
             self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False)
-            self.fields['element'] = forms.ChoiceField(choices=SDMM_ELEMENT_CHOICES, initial='all')
+            self.fields['variable'] = forms.ChoiceField(choices=SDMM_ELEMENT_CHOICES, initial='all')
         elif app_name == 'Sodcnv':
             self.fields['start_window'] = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
             self.fields['end_window'] = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
         elif app_name in ['Sodmonline', 'Sodmonlinemy']:
-            self.fields['element'] = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
+            self.fields['variable'] = forms.ChoiceField(choices=SM_ELEMENT_CHOICES, initial='pcpn')
             self.fields['units'] = forms.ChoiceField(choices=TMP_UNIT_CHOICE, initial=' ')
         elif app_name in ['Sodrun', 'Sodrunr']:
-            self.fields['element'] = forms.ChoiceField(choices=SR_ELEMENT_CHOICES, initial='pcpn')
+            self.fields['variable'] = forms.ChoiceField(choices=SR_ELEMENT_CHOICES, initial='pcpn')
             self.fields['aeb'] = forms.ChoiceField(choices=AEB_CHOICES, initial ='A' )
             self.fields['threshold'] = forms.IntegerField(initial=0)
             self.fields['min_run'] = forms.IntegerField(required=False, initial=1)
@@ -477,13 +477,13 @@ class SodForm(forms.Form):
             self.fields['verbose'] = forms.BooleanField(required=False, initial=False)
         elif app_name == 'Sodpct':
             threshold = kwargs.get('initial', {}).get('threshold', None)
-            element = kwargs.get('initial', {}).get('element', None)
+            variable = kwargs.get('initial', {}).get('variable', None)
             individual_averages = kwargs.get('initial', {}).get('individual_averages', None)
             if threshold is None:threshold = self.data.get('threshold')
-            if element is None:element = self.data.get('element')
+            if variable is None:variable = self.data.get('variable')
             if individual_averages is None:individual_averages = self.data.get('individual_averages')
-            self.fields['element'] = forms.CharField(initial=element)
-            self.fields['element'].widget.attrs['readonly'] = 'readonly'
+            self.fields['variable'] = forms.CharField(initial=variable)
+            self.fields['variable'].widget.attrs['readonly'] = 'readonly'
             self.fields['individual_averages'] = forms.CharField(initial=individual_averages)
             self.fields['individual_averages'].widget.attrs['readonly'] = 'readonly'
             self.fields['threshold'] = forms.DecimalField(initial=threshold)
@@ -491,9 +491,9 @@ class SodForm(forms.Form):
             #self.fields['threshold'] = forms.DecimalField(label=threshold)
             if threshold is not None:
                 self.fields['threshold_ab'] = forms.ChoiceField(choices=([('a','Above'), ('b','Below'),]))
-            if element in ['hdd', 'cdd', 'gdd']:
+            if variable in ['hdd', 'cdd', 'gdd']:
                 self.fields['base_temperature'] = forms.IntegerField(initial=65)
-                if element == 'gdd':
+                if variable == 'gdd':
                     self.fields['min_temperature'] = forms.IntegerField(initial=50)
                     self.fields['max_temperature'] = forms.IntegerField(initial=80)
             if individual_averages == 'I':
@@ -507,7 +507,7 @@ class SodForm(forms.Form):
             if number_of_thresholds is None: number_of_thresholds = self.data.get('number_of_thresholds')
             if custom_tables is None:custom_tables = self.data.get('custom_tables')
 
-            self.fields['element'] = forms.ChoiceField(choices=SDTHR_ELEMENT_CHOICES, required=False, initial='mint')
+            self.fields['variable'] = forms.ChoiceField(choices=SDTHR_ELEMENT_CHOICES, required=False, initial='mint')
             if custom_tables == 'T':
                 self.fields['interval_start'] = forms.CharField(max_length=4, min_length=4, required = False, initial='0101')
                 self.fields['interval_end'] = forms.CharField(max_length=4, min_length=4, required = False, initial='1231')
@@ -530,26 +530,26 @@ class SodForm(forms.Form):
             #self.fields['custom_tables'].widget.attrs['readonly'] = 'readonly'
         elif app_name == 'Sodxtrmts':
             statistic = kwargs.get('initial', {}).get('statistic', None)
-            element = kwargs.get('initial', {}).get('element', None)
+            variable = kwargs.get('initial', {}).get('variable', None)
             frequency_analysis = kwargs.get('initial', {}).get('frequency_analysis', None)
-            if element is None:element = self.data.get('element')
+            if variable is None:variable = self.data.get('variable')
             if statistic is None:statistic = self.data.get('statistic')
             if frequency_analysis is None:frequency_analysis = self.data.get('frequency_analysis')
             self.fields['frequency_analysis'] = forms.CharField(initial=frequency_analysis)
             self.fields['frequency_analysis'].widget.attrs['readonly'] = 'readonly'
             if frequency_analysis == 'T':
                 self.fields['frequency_analysis_type'] = forms.ChoiceField(choices=F_ANALYSIS_CHOICES, required=False, initial='p')
-            self.fields['element'] = forms.CharField(initial=element)
-            self.fields['element'].widget.attrs['readonly'] = 'readonly'
-            if element in ['hdd', 'cdd', 'gdd']:
+            self.fields['variable'] = forms.CharField(initial=variable)
+            self.fields['variable'].widget.attrs['readonly'] = 'readonly'
+            if variable in ['hdd', 'cdd', 'gdd']:
                 self.fields['base_temperature'] = forms.IntegerField(initial=65)
             if statistic == 'ndays':
                 self.fields['less_greater_or_between'] = forms.ChoiceField(choices=([('l','Less Than'), ('g','Greater Than'),('b','Between'), ]), initial='b')
                 self.fields['threshold_for_less_or_greater'] = forms.DecimalField(initial = 0.0)
                 self.fields['threshold_low_for_between'] = forms.DecimalField(initial = 0.0)
                 self.fields['threshold_high_for_between'] = forms.DecimalField(initial = 1.0)
-            self.fields['element'] = forms.CharField(initial=element)
-            self.fields['element'].widget.attrs['readonly'] = 'readonly'
+            self.fields['variable'] = forms.CharField(initial=variable)
+            self.fields['variable'].widget.attrs['readonly'] = 'readonly'
             self.fields['statistic'] = forms.CharField(initial=statistic)
             self.fields['statistic'].widget.attrs['readonly'] = 'readonly'
             self.fields['max_missing_days'] = forms.IntegerField(initial=5, required=False)
@@ -575,11 +575,11 @@ class SodForm(forms.Form):
             self.fields['pct_average'] = forms.CharField(initial=pct_average,widget=forms.HiddenInput())
             #self.fields['pct_average'].widget.attrs['readonly'] = 'readonly'
             if skew == 'as' or cv == 'acv' or mean == 'am' or pct_average == 'apct':
-                #self.fields['element'] = forms.CharField(initial='pcpn')
-                #self.fields['element'].widget.attrs['readonly'] = 'readonly'
-                self.fields['element'] = forms.ChoiceField(choices=PIII_ELEMENT_CHOICES, initial='maxt')
+                #self.fields['variable'] = forms.CharField(initial='pcpn')
+                #self.fields['variable'].widget.attrs['readonly'] = 'readonly'
+                self.fields['variable'] = forms.ChoiceField(choices=PIII_ELEMENT_CHOICES, initial='maxt')
             else:
-                self.fields['element'] = forms.ChoiceField(choices=PIII_ELEMENT_CHOICES, initial='maxt')
+                self.fields['variable'] = forms.ChoiceField(choices=PIII_ELEMENT_CHOICES, initial='maxt')
             if skew == 'ss' or cv == 'scv' or mean == 'sm' or pct_average == 'spct':
                 self.fields['mean_temperatures']= forms.ChoiceField(choices = ([('b', 'Below Average'),('a', 'Above Average'), ('n', 'None'),]), initial = 'None')
             self.fields['days'] = forms.CharField(initial=days)

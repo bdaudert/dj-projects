@@ -1,0 +1,73 @@
+    <form class="form-horizontal" id="StationFinderDownloadForm" method="post" action="">{% csrf_token %}
+        <input type="hidden" name="station_json" value="{{station_json}}">
+        <div class="form-group">
+            <div class="error formErrorDownload" style="display:none;font-size:large;"></div>
+            <!--Need this since serialize does not include button-->
+            <input type="hidden" name="formDownload" value="">
+            <input type="hidden" id="station_ids_string" name="station_ids_string" value="{{initial.station_ids_string}}">
+            <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formDownload" style="width:100%">
+            Get Data</button>
+        </div>
+        <div class="form-group form-input-group">
+            <div class="input-group" style="padding:0% 3%">
+                <div  id="data_summ">{% include 'includes/data_summary.html'%}</div>
+                <span class="input-group-addon"></span>
+                {%if initial.data_summary == "temporal_summary"%}
+                    <div id="temp_summary">{% include 'includes/temporal-summary.html'%}</div>
+                {%else%}
+                    <div id="temp_summary"  style="display:none">{% include 'includes/temporal-summary.html'%}</div>
+                {%endif%}
+                {%if initial.data_summary == "spatial_summary"%}
+                    <div id="spat_summary">{% include 'includes/spatial-summary.html'%}</div>
+                {%else%}
+                    <div id="spat_summary"  style="display:none">{% include 'includes/spatial-summary.html'%}</div>
+                {%endif%}
+                {%if initial.data_summary == "windowed_data"%}
+                    <div id="start_wind" >{% include 'includes/start-window.html'%}</div>
+                    <div  id="end_wind" >{% include 'includes/end-window.html'%}</div>
+                {%else%}
+                    <div  id="start_wind" style="display:none;">{% include 'includes/start-window.html'%}</div>
+                    <div  id="end_wind" style="display:none;">{% include 'includes/end-window.html'%}</div>
+                {%endif%}
+            </div>
+        </div>
+        <div class="form-group form-input-group">
+            <div class="input-group" style="padding:0% 3%">    
+                {% include 'includes/data_format.html'%}
+                <span class="input-group-addon"></span>
+                {%if initial.data_format == "xl" or initial.data_format == "html"%}
+                <div id="delim" class="delim" style="display:none;">{% include 'includes/delimiter.html'%}</div>
+                {%else%}
+                <div id="delim" class="delim" >{% include 'includes/delimiter.html'%}</div>
+                {%endif%}
+            </div>
+        </div>
+        <div class="form-group form-input-group">
+            <div class="input-group" style="padding:0% 3%">
+            {%if initial.data_format == "html"%}
+                <div id="out_format" class="out_format" style="display:none;">{% include 'includes/output_format.html'%}</div>
+            {%else%}
+                <div id="out_format" class="out_format" >{% include 'includes/output_format.html'%}</div>
+            {%endif%} 
+            </div>
+        </div>
+        <div class="form-group form-input-group">
+            <div class="input-group" style="padding:0% 3%">
+                {% include 'includes/units.html'%}
+                <span class="input-group-addon"></span>
+                <div id="out_file" class="out_file" >{% include 'includes/out_file.html'%}</div>
+            </div>
+        </div>
+        <div class="form-group form-input-group">
+            <div class="input-group" style="padding:0% 3%">
+                <div id="un"  >{% include 'includes/user-name.html'%}</div>
+                <span class="input-group-addon"></span>
+                <div id="ue"  >{% include 'includes/user-email.html'%}</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="error formErrorDownload" style="display:none;font-size:large;"></div>
+            <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formDownload" style="width:100%">
+            Get Data</button>
+        </div>
+    </form>

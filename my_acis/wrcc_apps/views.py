@@ -165,20 +165,20 @@ def sodsum(request, app_name):
                 'sids':form.cleaned_data['station_ids'],
                 'start_date':form.cleaned_data['start_date'],
                 'end_date':form.cleaned_data['end_date'],
-                'element':form.cleaned_data['element']
+                'variable':form.cleaned_data['variable']
                 }
         app_params ={}
         SS_wrapper = WRCCWrappers.Wrapper('Sodsum', data_params, app_specific_params=app_params)
         data = SS_wrapper.get_data()
         results = data
         results = SS_wrapper.run_app(data)
-        context['elements'] = data['elements']
+        context['variables'] = data['variables']
     context['results']= dict(results)
     return render_to_response('wrcc_apps/Sodsum.html', context, context_instance=RequestContext(request))
 
 def sods(request, app_name):
-    units = {'pcpn':'Hundredths of Inches', 'snow':'Tenths of Inches', 'snwd': 'Inches', 'maxt':'Whole Degrees', 'mint':'Whole Degrees',\
-             'avgt':'Whole Degrees', 'dtr':'Whole Degrees', 'hdd':'Days', 'cdd':'Days','gdd':'Days'}
+    units = {'pcpn':'Hundredths of Inches', 'snow':'Tenths of Inches', 'snwd': 'Inches', 'maxt':'F', 'mint':'F',\
+             'avgt':'F', 'dtr':'F', 'hdd':'-', 'cdd':'-','gdd':'-'}
     months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
     context = {
     'title': '%s' % app_name,
@@ -202,14 +202,14 @@ def sods(request, app_name):
                 'skip_days':form1.cleaned_data['skip_days'], 'truncate':form1.cleaned_data['truncate'] }
             elif app_name == 'Sodpct':
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
-                'threshold':form1.cleaned_data['threshold'], 'element':form1.cleaned_data['element'], \
+                'threshold':form1.cleaned_data['threshold'], 'variable':form1.cleaned_data['variable'], \
                 'individual_averages': form1.cleaned_data['individual_averages'] }
             elif app_name == 'Sodthr':
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
                 'custom_tables':form1.cleaned_data['custom_tables'],'number_of_thresholds': form1.cleaned_data['number_of_thresholds']}
             elif app_name == 'Sodxtrmts':
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
-                'statistic':form1.cleaned_data['statistic'], 'element':form1.cleaned_data['element'], \
+                'statistic':form1.cleaned_data['statistic'], 'variable':form1.cleaned_data['variable'], \
                 'frequency_analysis':form1.cleaned_data['frequency_analysis'],'statistic_period':'monthly'}
             elif app_name == 'Sodpiii':
                 initial = {'app_name':app_name, 'station_selection':station_selection,\
@@ -243,40 +243,63 @@ def sods(request, app_name):
             if vd is not None and len(vd) == 2:
                 form2.cleaned_data['start_date'] = vd[0]
                 form2.cleaned_data['end_date'] = vd[1]
-            (data, dates, elements, station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
+            (data, dates, variables, station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
             #get contexts for the different apps and run data application
             if app_name in ['Sodrun', 'Sodrunr']:
-                if elements == ['maxt', 'mint']:
+                if variables == ['maxt', 'mint']:
                     context['el'] = 'range'
                 else:
-                    context['el'] = str(elements[0])
+                    context['el'] = str(variables[0])
                 if form2.cleaned_data['aeb'] == 'A':
                     context['op'] = '>'
+                    context['op_name'] = 'gt'
                 elif form2.cleaned_data['aeb'] == 'B':
                     context['op'] = '<'
+                    context['op_name'] = 'lt'
                 else:
                     context['op'] = '='
+                    context['op_name'] = 'eq'
                 context['thresh'] = form2.cleaned_data['threshold']
                 context['dur'] = form2.cleaned_data['minimum_run']
-                app_args = {'app_name': app_name, 'data':data,'dates':dates,'elements':elements,\
+                app_args = {'app_name': app_name, 'data':data,'dates':dates,'variables':variables,\
                 'station_ids':station_ids,'station_names':station_names,'op':context['op'],\
                 'thresh':context['thresh'], 'verbose': form2.cleaned_data['verbose'], 'minimum_run': form2.cleaned_data['minimum_run']}
+                #if form2.cleaned_data['verbose']:
+                context['verbose'] = form2.cleaned_data['verbose']
                 results = WRCCDataApps.Sodrun(**app_args)
+                summary = []
+                new_results = {}
+                for key in range(len(results.keys())):
+                    if results[key]:
+                        summary.append(results[key][-1])
+                        new_results[key] = results[key][0:len(results[key]) - 1]
+                    else:
+                        summary.append([])
+                        new_results[key] = []
+                context['summary'] = summary
+                results = new_results
             elif app_name == 'Soddynorm':
-                app_args = {'app_name': app_name, 'data':data,'dates':dates,'elements':elements,\
+                app_args = {'app_name': app_name, 'data':data,'dates':dates,'variables':variables,\
                 'station_ids':station_ids,'station_names':station_names,\
                 'filter_type':form2.cleaned_data['filter_type'],\
                 'filter_days':form2.cleaned_data['number_of_days']}
                 results = WRCCDataApps.Soddynorm(**app_args)
+                context['start_date'] = form2.cleaned_data['start_date']
+                context['end_date'] = form2.cleaned_data['end_date']
+                context['filter_type'] = form2.cleaned_data['filter_type']
+                if context['filter_type'] == 'rm':
+                    context['filter_type'] = 'running_mean'
+                context['filter_days'] = app_args['filter_days']
                 '''
-                results = run_data_app(app_name, data, dates, elements, station_ids, station_names, \
+                results = run_data_app(app_name, data, dates, variables, station_ids, station_names, \
                 form2.cleaned_data['filter_type'], form2.cleaned_data['number_of_days'])
                 '''
             elif app_name == 'Soddyrec':
-                app_args = {'app_name': app_name, 'data':data,'dates':dates,'elements':elements,\
+                app_args = {'app_name': app_name, 'data':data,'dates':dates,'variables':variables,\
                     'station_ids':station_ids,'station_names':station_names}
                 results = WRCCDataApps.Soddyrec(**app_args)
-                #context['data'] =results
+                context['start_date'] = form2.cleaned_data['start_date']
+                context['end_date'] = form2.cleaned_data['end_date']
             elif app_name == 'Soddd':
                 base_temp = form2.cleaned_data['base_temperature']
                 output_type = form2.cleaned_data['output_type']
@@ -289,7 +312,7 @@ def sods(request, app_name):
                 max_miss = form2.cleaned_data['max_missing_days']
                 ncdc_round = form2.cleaned_data['ncdc_roundoff']
                 context['ncdc_round'] = ncdc_round
-                app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
+                app_args = {'app_name':app_name,'data':data,'dates':dates,'variables':variables,\
                 'station_ids':station_ids,'station_names':station_names,\
                 'base_temp':base_temp, 'a_b':a_b,'output_type':output_type, \
                 'max_miss':max_miss, 'ncdc_round':ncdc_round}
@@ -320,7 +343,7 @@ def sods(request, app_name):
                     context['daily'] = 'yes'
                 results = run_data_app(**app_args)
             elif app_name == 'Sodpad':
-                app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
+                app_args = {'app_name':app_name,'data':data,'dates':dates,'variables':variables,\
                 'station_ids':station_ids,'station_names':station_names}
                 results = run_data_app(**app_args)
                 mon_dict = {}
@@ -333,8 +356,8 @@ def sods(request, app_name):
                 context['day'] = day_dict
                 context['durations'] ={ 1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:12,12:14,13:15,14:16,15:18,16:20,17:22,18:24,19:25,20:26,21:28,22:30}
             elif app_name == 'Sodsumm':
-                el_type  = form2.cleaned_data['element']
-                app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
+                el_type  = form2.cleaned_data['variable']
+                app_args = {'app_name':app_name,'data':data,'dates':dates,'variables':variables,\
                 'ids':station_ids,'station_names':station_names,'el_type':el_type, 'max_missing_days':form2.cleaned_data['max_missing_days']}
                 results = run_data_app(**app_args)
                 context['max_missing_days'] = form2.cleaned_data['max_missing_days']
@@ -352,7 +375,7 @@ def sods(request, app_name):
                     table_list = ['temp', 'prsn', 'hdd', 'cdd', 'gdd', 'corn']
                 context['headers'] = set_sodsumm_headers(table_list)
             elif app_name == 'Sodpct':
-                el_type = form2.cleaned_data['element']
+                el_type = form2.cleaned_data['variable']
                 if abs(form2.cleaned_data['threshold'] + 9999) < 0.05:
                     threshold = None
                 else:
@@ -383,7 +406,7 @@ def sods(request, app_name):
                     accumulate_over_season = form2.cleaned_data['accumulate_over_season']
                 else:
                     accumulate_over_season = None
-                app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
+                app_args = {'app_name':app_name,'data':data,'dates':dates,'variables':variables,\
                 'station_ids':station_ids,'station_names':station_names,'el_type':el_type,\
                 'ia':ia, 'number_days_ahead':number_days_ahead,'threshold':threshold, 'threshold_ab':threshold_ab, \
                 'base_temperature':base_temperature, 'min_temperature':min_temperature, \
@@ -399,13 +422,14 @@ def sods(request, app_name):
                 context['threshold'] = threshold
                 if threshold_ab == 'a':context['op'] = 'ABOVE'
                 if threshold_ab == 'b':context['op'] = 'BELOW'
-                context['element'] =  el_type
+                context['variable'] =  el_type
                 context['units'] = units[el_type]
                 context['individual_averages'] = ia
                 results = run_data_app(**app_args)
             elif app_name == 'Sodthr':
                 header = {}
-                el_type = form2.cleaned_data['element']
+                header_short = {}
+                el_type = form2.cleaned_data['variable']
                 start_year = dates[0][0:4]
                 end_year = dates[-1][0:4]
                 number_of_thresholds = form2.cleaned_data['number_of_thresholds']
@@ -420,12 +444,17 @@ def sods(request, app_name):
                         int(form2.cleaned_data['max_missing_days_first_and_last']), int(form2.cleaned_data['max_missing_days_differences']), \
                         str(form2.cleaned_data['above_or_below']), str(form2.cleaned_data['latest_or_earliest_for_period_1']), \
                         str(form2.cleaned_data['latest_or_earliest_for_period_2']))
+                        header_short[k] = set_sodthr_headers(k, el_type, str(form2.cleaned_data['interval_start']), \
+                        str(form2.cleaned_data['midpoint']),str(form2.cleaned_data['interval_end']), start_year, end_year, \
+                        int(form2.cleaned_data['max_missing_days_first_and_last']), int(form2.cleaned_data['max_missing_days_differences']), \
+                        str(form2.cleaned_data['above_or_below']), str(form2.cleaned_data['latest_or_earliest_for_period_1']), \
+                        str(form2.cleaned_data['latest_or_earliest_for_period_2']))
                     #Find list of thresholds, and time_series_booleans
                     for k in range(int(number_of_thresholds)):
                         thresholds.append(float(form2.cleaned_data['threshold_%s' % str(k)]))
                         time_series.append(form2.cleaned_data['time_series_%s' % str(k)])
                     #set application arguments
-                    app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
+                    app_args = {'app_name':app_name,'data':data,'dates':dates,'variables':variables,\
                     'station_ids':station_ids,'station_names':station_names,'el_type':el_type, 'custom_tables':True, \
                     'interval_start':form2.cleaned_data['interval_start'], 'midpoint':form2.cleaned_data['midpoint'], \
                     'interval_end':form2.cleaned_data['interval_end'], 'thresholds': thresholds, 'time_series': time_series, \
@@ -436,13 +465,18 @@ def sods(request, app_name):
                     #set headers
                     for k in range(3):
                         header[k] = set_sodthr_headers(k, el_type, '0101', '0731',  '1231', start_year, \
-                        end_year, 10, 10, 'BELOW', 'latest','earliest')
-                    app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
+                            end_year, 10, 10, 'BELOW', 'latest','earliest')
+                        header_short[k] = set_sodthr_headers_short(k, el_type, '0101', '0731',  '1231', start_year, \
+                            end_year, 10, 10, 'BELOW', 'latest','earliest')
+                    app_args = {'app_name':app_name,'data':data,'dates':dates,'variables':variables,\
                     'station_ids':station_ids,'station_names':station_names,'el_type':el_type, 'custom_tables':False}
                 context['header'] = header
+                context['header_short'] = header_short
                 results = run_data_app(**app_args)
             elif app_name == 'Sodxtrmts':
-                context['element'] = form2.cleaned_data['element']
+                context['variable'] = form2.cleaned_data['variable']
+                context['units'] = units[form2.cleaned_data['variable']]
+                if form2.cleaned_data['variable'] in ['pcpn','snow','snwd']:context['units'] = 'Inches'
                 context['max_missing_days'] = form2.cleaned_data['max_missing_days']
                 context['start_month'] = WRCCData.NUMBER_TO_MONTH_NAME[form2.cleaned_data['start_month']]
                 mon_start = int(form2.cleaned_data['start_month'].lstrip('0'))
@@ -460,10 +494,10 @@ def sods(request, app_name):
                     'app_name':app_name,
                     'data':data,
                     'dates':dates,
-                    'elements':elements,
+                    'variables':variables,
                     'station_ids':station_ids,
                     'station_names':station_names,
-                    'element':form2.cleaned_data['element'],
+                    'variable':form2.cleaned_data['variable'],
                     'max_missing_days':form2.cleaned_data['max_missing_days'],
                     'start_month': form2.cleaned_data['start_month'],
                     'statistic_period':'monthly',
@@ -481,7 +515,7 @@ def sods(request, app_name):
                         app_args['threshold_high_for_between'] = form2.cleaned_data['threshold_high_for_between']
                     else:
                         app_args['threshold_for_less_or_greater'] = form2.cleaned_data['threshold_for_less_or_greater']
-                if form2.cleaned_data['element'] in ['hdd', 'gdd', 'cdd']:
+                if form2.cleaned_data['variable'] in ['hdd', 'gdd', 'cdd']:
                     app_args['base_temperature'] = form2.cleaned_data['base_temperature']
                 context['app_arg'] = app_args
                 results = WRCCDataApps.Sodxtrmts(**app_args)
@@ -490,20 +524,22 @@ def sods(request, app_name):
                 lisdur = [ '6 Hrs', '12 Hrs', '1 Day', '2 Days', '3 Days', \
                         '4 Days', '5 Days', '6 Days', '7 Days', '8 Days', '9 Days', \
                         '10 Days', '15 Days', '20 Days', '25 Days', '30 Days']
-                context['el_type'] = form2.cleaned_data['element']
-                context['units'] = units[form2.cleaned_data['element']]
+                context['el_type'] = form2.cleaned_data['variable']
+                context['units'] = units[form2.cleaned_data['variable']]
                 context['start_year'] = form2.cleaned_data['start_date'][0:4]
                 context['end_year'] = str(int(form2.cleaned_data['end_date'][0:4]) - 1)
                 context['start_month'] = form2.cleaned_data['start_date'][4:6]
+                context['start_date'] = form2.cleaned_data['start_date']
+                context['end_date'] = form2.cleaned_data['end_date']
                 context['end_month'] = form2.cleaned_data['end_date'][4:6]
-                app_args = {'app_name':app_name,'data':data,'dates':dates,'elements':elements,\
+                app_args = {'app_name':app_name,'data':data,'dates':dates,'variables':variables,\
                 'station_ids':station_ids,'station_names':station_names, \
-                'el_type':form2.cleaned_data['element'], 'skew':form2.cleaned_data['skew'], \
+                'el_type':form2.cleaned_data['variable'], 'skew':form2.cleaned_data['skew'], \
                 'cv':form2.cleaned_data['cv'], 'mean': form2.cleaned_data['mean'], \
                 'pct_average':form2.cleaned_data['pct_average'], \
                 'value_subsequent':form2.cleaned_data['value_subsequent'], \
                 'value_missing':form2.cleaned_data['value_missing'],'days':form2.cleaned_data['days']}
-                if form2.cleaned_data['element'] == 'avgt':
+                if form2.cleaned_data['variable'] == 'avgt':
                     app_args['ab'] = form2.cleaned_data['mean_temperatures']
                 duration = {}
                 if form2.cleaned_data['days'] == 'i':
@@ -543,7 +579,7 @@ def sods(request, app_name):
                 else:
                     context['end_year'] = str(int(dates[-1][0:4])+1)
             context['num_yrs'] = int(dates[-1][0:4]) - int(dates[0][0:4])+1
-            context['elements'] = dict([(k,v) for k,v in enumerate(elements)])
+            context['variables'] = dict([(k,v) for k,v in enumerate(variables)])
             context['data'] = dict(data)
             context['station_ids'] = dict([(k,v) for k,v in enumerate(station_ids)])
             context['station_names'] = dict([(k,v) for k,v in enumerate(station_names)])
@@ -591,64 +627,99 @@ def run_data_app(app_name,*args, **kwargs):
 def set_sodthr_headers(tbl_idx, el, int_start, midpoint,  int_end, start_year, end_year, days_miss_1, days_miss_2, ab, le_1, le_2):
     lines = []
     if tbl_idx == 0:
-        lines.append('PROBABILITY OF <b>%s</b> DATE OF <b>%s %s</b></br>' % (le_1, el, ab))
-        lines.append('THE INDICATED THRESHOLD VALUE (DEGREES F).</br>')
-        lines.append('DURING THE FOLLOWING INTERVAL:</br>')
+        lines.append('PROBABILITY OF <b>%s</b> DATE OF <b>%s %s</b></br>' % (le_1.upper(), el.upper(), ab))
         lines.append('START MONTH-DAY: <b>%s</b>  END MONTH-DAY:  <b>%s</b>' % (int_start, midpoint))
         lines.append('YEARS USED:  <b>%s -  %s</b> </br>' % (start_year, end_year))
-        lines.append('WITH NO MORE THAN  <b>%i</b> MISSING DAYS DURING THE INTERVAL.</br>' % days_miss_1)
-        lines.append('[ -01-01 ] INDICATES NON-OCCURRENCE OF THE THRESHOLD</br>')
     elif tbl_idx == 1:
-        lines.append('PROBABILITY OF <b>%s</b> DATE OF <b>%s %s</b></br>' % (le_2, el, ab))
-        lines.append('THE INDICATED THRESHOLD VALUE (DEGREES F).</br>')
-        lines.append('DURING THE FOLLOWING INTERVAL:</br>')
+        lines.append('PROBABILITY OF <b>%s</b> DATE OF <b>%s %s</b></br>' % (le_2.upper(), el.upper(), ab))
         lines.append('START MONTH-DAY: <b>%s</b>  END MONTH-DAY:  <b>%s</b>' % (midpoint, int_end))
         lines.append('YEARS USED:  <b>%s -  %s</b> </br>' % (start_year, end_year))
-        lines.append('WITH NO MORE THAN  <b>%i</b> MISSING DAYS DURING THE INTERVAL.</br>' % days_miss_1)
-        lines.append('[ -01-01 ] INDICATES NON-OCCURRENCE OF THE THRESHOLD</br>')
     else:
         lines.append('PROBABILITY OF NO MORE THAN THE INDICATED NUMBER OF DAYS (I.E., PERCENTILE)</br>')
         lines.append('---  BETWEEN  ---</br>')
-        lines.append('(1) THE <b>%s</b> DATE OF <b>%s %s</b></br>' % (le_1, el, ab))
-        lines.append('THE INDICATED THRESHOLD VALUE (DEGREES F) DURING</br>')
+        lines.append('(1) THE <b>%s</b> DATE OF <b>%s %s</b></br>' % (le_1.upper(), el.upper(), ab))
         lines.append('THE  FIRST INTERVAL ---      START MONTH-DAY: <b>%s</b> END MONTH-DAY:  <b>%s</b> </br>'  % (int_start, midpoint))
         lines.append('---  AND  ---</br>')
-        lines.append('(2) THE <b>%s</b> DATE OF <b>%s %s</b></br>' % (le_2, el, ab))
+        lines.append('(2) THE <b>%s</b> DATE OF <b>%s %s</b></br>' % (le_2.upper(), el.upper(), ab))
         lines.append('THE SAME THRESHOLD VALUE (DEGREES F) DURING</br>')
         lines.append('THE  SECOND INTERVAL ---      START MONTH-DAY: <b>%s</b> END MONTH-DAY:  <b>%s</b> </br>'  % (midpoint, int_end))
         lines.append('YEARS USED:  <b>%s -  %s</b> </br>' % (start_year, end_year))
-        lines.append('WITH NO MORE THAN  <b>%i</b> MISSING DAYS DURING THE TWO INTERVALS COMBINED.</br>' % days_miss_2)
-        lines.append('[ 367.0 ] INDICATES NON-OCCURRENCE OF THE THRESHOLD</br>')
-
     return "\n".join(lines)
+
+def set_sodthr_headers_short(tbl_idx, el, int_start, midpoint,  int_end, start_year, end_year, days_miss_1, days_miss_2, ab, le_1, le_2):
+    lines = []
+    if tbl_idx == 0:
+        lines.append('perc_of_%s_date_of_%s_%s' % (le_1, el, ab))
+        lines.append(start_year + int_start + '-' + end_year + midpoint)
+    elif tbl_idx == 1:
+        lines.append('perc_of_%s_date_of_%s_%s' % (le_2, el, ab))
+        lines.append(start_year + int_start + '-' + end_year + midpoint)
+    elif tbl_idx == 2:
+        lines.append('perc_of_numdays_between_%s_and_%s_date_of_%s_%s' % (le_1,le_2, el, ab))
+        lines.append(start_year + int_start + '-' + end_year + midpoint)
+    return "_".join(lines)
+
+'''
+def set_sodsumm_headers(table_list):
+    headers = {}
+    def set_header(table):
+        rows = []
+        if table == 'temp':
+            rows.append('<tr><th colspan="16"> Temperature Statistics:</th></tr>')
+            rows.append('<tr><th colspan="2"></th><th colspan="4">Averages, </th><th colspan="4">Daily Extremes, </th><th colspan="4">Mean Extremes, </th><th colspan="2"> >= =<  =<  =< </th></tr>')
+        elif table == 'prsn':
+            rows.append('<tr><th colspan="15">Precipitation/Snow Statistics:</th></tr>')
+            rows.append('<tr><th colspan="6">Total Precipitation, </th><th colspan="2">Precipitation, </th><th colspan="3">Total Snowfall, </th><th colspan="4">#Days Precip</th></tr>')
+
+        elif table == 'hdd':
+            rows.append('<tr><th colspan="14">Heating degree days:</th></tr>')
+            rows.append('<tr><td colspan="14">Output is rounded, unlike NCDC values, which round input.</td></tr>')
+            rows.append('<tr><td colspan="14">Degree Days to selected Base Temperatures(F)</td></tr>')
+        elif table == 'cdd':
+            rows.append('<tr><th colspan="14">Cooling degree days:</th></tr>')
+            rows.append('<tr><td colspan="14">Output is rounded, unlike NCDC values, which round input.</td></tr>')
+            rows.append('<tr><td colspan="14">Degree Days to selected Base Temperatures(F)</td></tr>')
+        elif table == 'gdd':
+            rows.append('<tr><th colspan="15">Growing degree days:</th></tr>')
+            rows.append('<tr><td colspan="15">Output is rounded, unlike NCDC values, which round input.</td>')
+            rows.append('<tr><td colspan="15">Growing Degree Days to selected Base Temperatures(F)</td></tr>')
+        elif table == 'corn':
+            rows.append('<tr><th colspan="15">Corn Growing Degree Days</th></tr>')
+        return "\n".join(rows)
+
+    for table in table_list:
+         headers[table] = set_header(table)
+    return headers
+'''
 
 def set_sodsumm_headers(table_list):
     headers = {}
     def set_header(table):
         rows = []
         if table == 'temp':
-            rows.append('<th colspan="16"> Temperature Statistics:</th>')
-            rows.append('<th colspan="2"></th><th colspan="4">Averages, </th><th colspan="4">Daily Extremes, </th><th colspan="4">Mean Extremes, </th><th colspan="2"> >= =<  =<  =< </th>')
+            rows.append('Temperatures:')
+            rows.append('Averages (Max/Min/Mean), Daily Extremes, Mean Extremes, >= =<  =<  =<')
         elif table == 'prsn':
-            rows.append('<th colspan="15">Precipitation/Snow Statistics:</th>')
-            rows.append('<th colspan="6">Total Precipitation, </th><th colspan="2">Precipitation, </th><th colspan="3">Total Snowfall, </th><th colspan="4">#Days Precip</th>')
+            rows.append('Precipitation, Snow:')
+            rows.append('Total Precipitation, Precipitation, Total Snowfall, #Days Precip')
 
         elif table == 'hdd':
-            rows.append('<th colspan="14">Heating degree days:</th>')
-            rows.append('<tr><td colspan="14">Output is rounded, unlike NCDC values, which round input.</td></tr>')
-            rows.append('<tr><td colspan="14">Degree Days to selected Base Temperatures(F)</td></tr>')
+            rows.append('Heating degree days:')
+            #rows.append('Output is rounded, unlike NCDC values, which round input.')
+            #rows.append('Degree Days to selected Base Temperatures(F)')
         elif table == 'cdd':
-            rows.append('<th colspan="14">Cooling degree days:</th>')
-            rows.append('<tr><td colspan="14">Output is rounded, unlike NCDC values, which round input.</td></tr>')
-            rows.append('<tr><td colspan="14">Degree Days to selected Base Temperatures(F)</td></tr>')
+            rows.append('Cooling degree days:')
+            #rows.append('Output is rounded, unlike NCDC values, which round input.')
+            #rows.append('Degree Days to selected Base Temperatures(F)')
         elif table == 'gdd':
-            rows.append('<th colspan="15">Growing degree days:</th>')
-            rows.append('<tr><td colspan="15">Output is rounded, unlike NCDC values, which round input.</td>')
-            rows.append('<tr><td colspan="15">Growing Degree Days to selected Base Temperatures(F)</td></tr>')
+            rows.append('Growing degree days:')
+            #rows.append('Output is rounded, unlike NCDC values, which round input.')
+            #rows.append('Growing Degree Days to selected Base Temperatures(F)')
         elif table == 'corn':
-            rows.append('<th colspan="15">Corn Growing Degree Days</th>')
+            rows.append('Corn growing degree days:')
         return "\n".join(rows)
 
     for table in table_list:
          headers[table] = set_header(table)
     return headers
+

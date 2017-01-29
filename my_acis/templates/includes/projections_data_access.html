@@ -1,0 +1,41 @@
+<!--nav bootstrap-->
+<nav class="navbar">
+    <div class="container-fluid bg-info">
+        <div class="navbar-header">
+            <button type='button' class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="sr-only">Toggle Navigation</span> 
+            </button>
+        </div><!--navbar-header-->
+
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="" tabindex="0" data-toggle="dropdown" data-submenu>LOCA Data Tools<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-submenu">
+                            <a tabindex="-1" target="_blank" href="{{DATA_URL}}climate_data/single/">Single Point Products</a>
+                            <ul class="dropdown-menu">
+                                <li><a tabindex="0" target="_blank" href="{{DATA_URL}}climate_data/single/lister/?projection=True">Data Lister</a></li>
+                                <li><a tabindex="0" target="_blank" href="{{DATA_URL}}climate_data/single/monthly_summary/?projection=True">Monthly Summary</a></li>
+                                <li><a tabindex="0" target="_blank" href="{{DATA_URL}}climate_data/single/seasonal_summary/?projection=True">Seasonal Summary</a></li>
+                                <li><a tabindex="0" target="_blank" href="{{DATA_URL}}climate_data/single/intraannual/?projection=True">Single-Year Time Series</a></li>
+                                <li><a tabindex="0" target="_blank" href="{{DATA_URL}}climate_data/single/data_comparison/?projection=True">Grid/Station Data Comparison</a></li>
+                                <li><a tabindex="0" target="_blank" href="{{DATA_URL}}climate_data/single/climatology/?projection=True">Climatology</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a tabindex="-1" target="_blank" href="{{DATA_URL}}climate_data/multi/">Multi Point Products </a>
+                            <ul class="dropdown-menu">
+                                <li><a tabindex="0" target="_blank" href="{{DATA_URL}}climate_data/multi/lister/?projection=True">Data Lister</a></li>
+                                <li><a target="_blank" href="{{DATA_URL}}climate_data/multi/spatial_summary/?projection=True">Spatial Summary</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul> <!-- .nav .navbar-nav -->
+        </div><!-- /.navbar-collapse -->
+    </div><!--container-fluid-->
+</nav>

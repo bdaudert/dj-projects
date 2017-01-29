@@ -77,13 +77,13 @@ function BarChart() {
             }
         }, //end defaults
         //Functions
-        set_yAxis_props: function(data_max,data_min, element) {
+        set_yAxis_props: function(data_max,data_min, variable) {
             //uses set_y_axis_properties from graph_utils.js
-            return set_y_axis_properties(data_max,'Use default', data_min, 'Use default',element,'mave','F',10.0);
+            return set_y_axis_properties(data_max,'Use default', data_min, 'Use default',variable,'mave','F',10.0);
         },
-        set_plotColor: function(element){
+        set_plotColor: function(variable){
             //uses set_plot_color from graph_utils.js
-            return set_plot_color(element);
+            return set_plot_color(variable);
         },
         // here you'll merge the defauls with the object options
         init: function(options) {

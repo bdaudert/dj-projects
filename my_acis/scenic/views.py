@@ -60,7 +60,6 @@ def test(request):
 
     import sys
     sys.path.insert(0, '/usr/local/google_appengine')
-    context['xx'] = sys.path
     import ee
     from oauth2client.contrib.appengine import AppAssertionCredentials
     from oauth2client.service_account import ServiceAccountCredentials
@@ -139,12 +138,17 @@ def contact_us(request):
     url = settings.APPLICATIONS['contact_us'][2]
     return render_to_response(url, context, context_instance=RequestContext(request))
 
+
+
 def dashboard(request):
+    app_name = 'dashboard'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
     context = {
-        'title': settings.APPLICATIONS['dashboard'][0],
-        'icon':'Dashboard.png'
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
     }
-    url = settings.APPLICATIONS['dashboard'][2]
     #Find mon, year to locate snotel map
     year = str(datetime.datetime.today().year)
     month = str(datetime.datetime.today().month)
@@ -170,51 +174,15 @@ def dashboard(request):
     context['year_short_wy'] = '%s%s' % (year_wy[-2], year_wy[-1])
     return render_to_response(url, context, context_instance=RequestContext(request))
 
-def gallery(request):
-    context = {
-        'title': settings.APPLICATIONS['gallery'][0],
-    }
-    url = settings.APPLICATIONS['gallery'][2]
-    app_urls = {};app_names = {};param_urls = {}
-
-    #Gallery: FINDING A POINT/AREA OF INETREST
-    app_url = settings.APPLICATIONS['station_finder'][1]
-    p_url = app_url + '?'
-    p_url+='area_type=county&county=Sierra,%2006091'
-    p_url+='&elements=mint,pcpn&elements_constraints=all'
-    p_url+='&start_date=19300101&end_date=20141231&dates_constraints=all'
-    app_urls['station_finder'] = app_url
-    param_urls['station_finder'] = p_url
-    app_names['station_finder'] = settings.APPLICATIONS['station_finder'][0]
-    #Gallery: EXTREMES (monthly_summary ndays)
-    app_url = settings.APPLICATIONS['monthly_summary'][1]
-    p_url = app_url + '?'
-    #p_url+='area_type=location&location=-120.44,39.32&element=mint&grid=1&start_year=1970&end_year=2000'
-    p_url+='area_type=station_id&station_id=048218&element=mint&start_year=POR&end_year=POR'
-    p_url+='&statistic=ndays&less_greater_or_between=l&threshold_for_less_than=32&chart_indices_string=3,4,5'
-    app_urls['extremes'] = app_url
-    param_urls['extremes'] = p_url
-    app_names['extremes'] = settings.APPLICATIONS['monthly_summary'][0]
-    #Gallery: SUMMARIZING SPATIAL DATA (spatial_summary)
-    app_url = settings.APPLICATIONS['spatial_summary'][1]
-    p_url = app_url + '?'
-    p_url+='area_type=shape&shape=-120.77,36.84,-120.6,36.78,-120.54,36.71,-120.63,36.63,-120.76,36.77'
-    p_url+='&spatial_summary=mean&elements=maxt,mint,avgt&grid=1&start_date=20150301&end_date=20150331'
-    p_url+='&data_type=grid&grid=1'
-    app_urls['spatial_summary'] = app_url
-    param_urls['spatial_summary'] = p_url
-    app_names['spatial_summary'] = settings.APPLICATIONS['spatial_summary'][0]
-    #Set context variables
-    context['app_urls'] = app_urls
-    context['app_names'] = app_names
-    context['param_urls'] = param_urls
-    return render_to_response(url, context, context_instance=RequestContext(request))
-
 def howto(request):
+    app_name = 'howto'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
     context = {
-        'title': settings.APPLICATIONS['howto'][0],
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
     }
-    url = settings.APPLICATIONS['howto'][2]
     app_urls = {};app_names = {};param_urls = {}
 
     #HOWTO: STATION FINDER
@@ -222,7 +190,7 @@ def howto(request):
     p_url = app_url + '?'
     p_url+='area_type=shape'
     p_url+='&shape=-120.15,39.2,-120.02,39.27,-119.9,39.21,-119.92,38.96,-120.02,38.91,-120.15,38.97,-120.18,39.11'
-    p_url+='&elements=mint,pcpn&elements_constraints=all'
+    p_url+='&variables=mint,pcpn&variables_constraints=all'
     p_url+='&start_date=19300101&end_date=20141231&dates_constraints=all'
     app_urls['station_finder'] = app_url
     param_urls['station_finder'] = p_url
@@ -233,7 +201,7 @@ def howto(request):
     p_url+='area_type=county'
     p_url+='&county=Washoe, 32031'
     p_url+='&data_type=station'
-    p_url+='&elements=maxt,mint,avgt,obst'
+    p_url+='&variables=maxt,mint,avgt,obst'
     p_url+='&start_date=19900101&end_date=' + yesterday
     p_url+='&data_summary=none'
     p_url+='&show_flags=F&show_observation_time=T'
@@ -245,7 +213,7 @@ def howto(request):
     #Gallery: MONTHLY SUMMARIES
     app_url = settings.APPLICATIONS['monthly_summary'][1]
     p_url = app_url + '?'
-    p_url+='area_type=station_id&station_id=269171&element=maxt'
+    p_url+='area_type=station_id&station_id=269171&variable=maxt'
     p_url+='&start_year=POR&end_year=POR'
     p_url+='&statistic=mmax'
     app_urls['monthly_summary'] = app_url
@@ -255,7 +223,7 @@ def howto(request):
     app_url = settings.APPLICATIONS['spatial_summary'][1]
     p_url = app_url + '?'
     p_url+='area_type=shape&shape=-120.77,36.84,-120.6,36.78,-120.54,36.71,-120.63,36.63,-120.76,36.77'
-    p_url+='&spatial_summary=mean&elements=maxt,mint,avgt&grid=1&start_date=20150301&end_date=20150331'
+    p_url+='&spatial_summary=mean&variables=maxt,mint,avgt&grid=1&start_date=20150301&end_date=20150331'
     p_url+='&data_type=grid&grid=1'
     app_urls['spatial_summary'] = app_url
     param_urls['spatial_summary'] = p_url
@@ -266,11 +234,26 @@ def howto(request):
     context['param_urls'] = param_urls
     return render_to_response(url, context, context_instance=RequestContext(request))
 
-def resources(request):
+def projections(request):
+    app_name = 'projections'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
     context = {
-        'title': settings.APPLICATIONS['resources'][0],
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
     }
-    url = settings.APPLICATIONS['resources'][2]
+    return render_to_response(url, context, context_instance=RequestContext(request))
+
+def resources(request):
+    app_name = 'resources'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
+    }
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def upload_test(request):
@@ -302,42 +285,78 @@ def upload_test(request):
         context['poly_ll'] = poly_ll
     return render_to_response('scenic/upload_test.html', context, context_instance=RequestContext(request))
 
-def data_home(request):
+def remote_sensing_data(request):
+    app_name = 'remote_sensing_data'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
     context = {
-        'title': settings.APPLICATIONS['data_home'][0],
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
     }
-    url = settings.APPLICATIONS['data_home'][2],
+    return render_to_response(url, context, context_instance=RequestContext(request))
+
+def data(request):
+    app_name = 'data'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
+    }
+    return render_to_response(url, context, context_instance=RequestContext(request))
+
+def climate_data(request):
+    app_name = 'climate_data'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
+    }
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def single_point_prods(request):
+    app_name = 'single_point_prods'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
     context = {
-        'title': settings.APPLICATIONS['single_point_prods'][0],
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
     }
-    url = settings.APPLICATIONS['single_point_prods'][2]
     #Link from other apps
-    if request.method == 'GET' and ('elements' in request.GET or 'element' in request.GET):
+    if request.method == 'GET' and ('variables' in request.GET or 'variable' in request.GET):
         #set link params
         init = {}
-        get_params = ['station_id','elements', 'start_date','end_date']
+        get_params = ['station_id','variables', 'start_date','end_date']
+        get_initial = {}
         for item in request.GET:
             if str(item) not in get_params and str(item) != 'area_type':
                 get_params.append(str(item))
+            get_initial[str(item)] = request.GET[item]
         user_params = WRCCUtils.form_to_display_list(get_params,request.GET)
         context['user_params'] = user_params
-        for app in ['single_lister', 'monthly_summary', 'climatology','data_comparison', 'yearly_summary', 'intraannual']:
-            initial= DJANGOUtils.set_initial(request, app)
+        for app in ['single_lister', 'monthly_summary', 'climatology','data_comparison', 'seasonal_summary', 'intraannual']:
+            #initial= DJANGOUtils.set_initial(request, app)
+            initial= DJANGOUtils.set_initial(get_initial, app)
             p_str = WRCCUtils.set_url_params(initial)
             context['url_params_' + app] =  p_str
-
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def multi_point_prods(request):
+    app_name = 'multi_point_prods'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
     context = {
-        'title': settings.APPLICATIONS['multi_point_prods'][0],
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
     }
-    url = settings.APPLICATIONS['multi_point_prods'][2]
     #Link from other apps
-    if request.method == 'GET' and ('elements' in request.GET or 'element' in request.GET):
+    if request.method == 'GET' and ('variables' in request.GET or 'variable' in request.GET):
         #set link params
         for app in ['multi_lister', 'spatial_summary', 'temporal_summary']:
             initial = DJANGOUtils.set_initial(request, app)
@@ -354,11 +373,12 @@ def sw_networks(request):
     return render_to_response('scenic/data/sw_networks.html', context, context_instance=RequestContext(request))
 
 def download(request):
+    app_name = request.GET.get('app_name', None)
     context = {
         'title': 'Download',
+        'app_name':app_name,
         'icon':'ToolProduct.png'
     }
-    app_name = request.GET.get('app_name', None)
     json_file_name = request.GET.get('json_file', None)
     json_file = settings.TEMP_DIR + json_file_name
     json_in_file_name = json_file_name
@@ -394,10 +414,13 @@ def download(request):
 
 def single_lister(request):
     app_name = 'single_lister'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
+    }
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
 
@@ -436,11 +459,26 @@ def single_lister(request):
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
 
+    if request.method == 'GET' and 'projection' in request.GET:
+        '''
+        Link from projection page
+            override some options
+        '''
+        new_init = {
+            'area_type':'location',
+            'location':'-119,39',
+            'grid':'22'
+        }
+        initial = DJANGOUtils.set_initial(new_init, app_name)
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
+
     #MAIN APP
     #Data request submitted
-    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'variables' in request.GET):
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
         form = DJANGOUtils.set_form(initial, clean = False)
+        context['xx'] = form_cleaned
         #Check form fields
         fields_to_check = [form_cleaned['area_type'],'start_date','end_date','start_window','end_window','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -448,7 +486,7 @@ def single_lister(request):
             context['form_error'] = form_error
             if form_cleaned['area_type'] == 'location':
                 #Only show gridpoint map if area caused form_error
-                if 'Location (lon,lat)' in form_error.keys():
+                if 'Gridpoint' in form_error.keys():
                     context['need_gridpoint_map'] = True
             return render_to_response(url, context, context_instance=RequestContext(request))
         #Data requests
@@ -477,7 +515,7 @@ def single_lister(request):
             #req['data'].insert(0,header)
             req['data'] = [req['data']]
         if not req['data'] and not req['smry']:
-            req['error'] = {'error':'No data found for these parameters.'}
+            req['error'] = 'No data found for these parameters.'
             context['results'] = req
             return render_to_response(url, context, context_instance=RequestContext(request))
         context['run_done'] = True
@@ -526,10 +564,13 @@ def single_lister(request):
 
 def intraannual(request):
     app_name = 'intraannual'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
+    }
 
     #Download button pressed
     if 'formDownload' in request.POST:
@@ -561,10 +602,24 @@ def intraannual(request):
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
 
+    if request.method == 'GET' and 'projection' in request.GET:
+        '''
+        Link from projection page
+            override some options
+        '''
+        new_init = {
+            'area_type':'location',
+            'location':'-119,39',
+            'grid':'22'
+        }
+        initial = DJANGOUtils.set_initial(new_init, app_name)
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
+
     #MAIN APP
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
-    if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'variable' in request.GET):
         form = DJANGOUtils.set_form(initial,clean = False)
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
         year_txt_data, year_graph_data, climoData, percentileData = WRCCUtils.get_single_intraannual_data(form_cleaned)
@@ -577,7 +632,7 @@ def intraannual(request):
         header_keys = WRCCUtils.set_display_keys(app_name, form)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
         results = {
-            'element_short': form['element'],
+            'variable_short': form['variable'],
             'data_indices':range(len(year_txt_data)),
             'data':year_txt_data,
             'target_year':int(form_cleaned['target_year']),
@@ -613,13 +668,15 @@ def intraannual(request):
 
     return render_to_response(url, context, context_instance=RequestContext(request))
 
-def yearly_summary(request):
-    app_name = 'yearly_summary'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
+def seasonal_summary(request):
+    app_name = 'seasonal_summary'
     url = settings.APPLICATIONS[app_name][2]
-
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
+    }
     #Download button pressed
     if 'formDownload' in request.POST:
         form = DJANGOUtils.set_form(request,clean=False)
@@ -650,22 +707,35 @@ def yearly_summary(request):
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
 
+    if request.method == 'GET' and 'projection' in request.GET:
+        '''
+        Link from projection page
+            override some options
+        '''
+        new_init = {
+            'area_type':'location',
+            'location':'-119,39',
+            'grid':'22'
+        }
+        initial = DJANGOUtils.set_initial(new_init, app_name)
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
+
     #MAIN APP
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
-    if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'variable' in request.GET):
         form = DJANGOUtils.set_form(initial,clean = False)
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
-        context['xx'] = form_cleaned
-        element_short = WRCCUtils.elements_to_table_headers(form['element'],form['units'])[0]
+        variable_short = WRCCUtils.variables_to_table_headers(form['variable'],form['units'])[0]
         results = {
             'data_indices':[0],
-            'element_short':element_short,
+            'variable_short':variable_short,
             'data':[],
             'error':''
         }
         #Data request
-        year_data, hc_data = WRCCUtils.get_single_yearly_summary_data(form_cleaned)
+        year_data, hc_data = WRCCUtils.get_single_seasonal_summary_data(form_cleaned)
         context['run_done'] = True
         header_keys = WRCCUtils.set_display_keys(app_name, form)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
@@ -696,18 +766,20 @@ def yearly_summary(request):
 
 def multi_lister(request):
     app_name = 'multi_lister'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
-
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
+    }
     #Overlay maps
     if 'formOverlay' in request.POST:
         initial = DJANGOUtils.set_initial(request,'map_overlay')
         #AJAX
         kml_file_path = DJANGOUtils.create_kml_file(initial['area_type'], initial['overlay_state'])
         if kml_file_path[0:5] == 'ERROR':
-            response_data = json.dumps({'error':kml_file_path})
+            response_data = json.dumps({'overlay_error':kml_file_path})
         else:
             response_data = json.dumps({'kml_file_path':kml_file_path})
         response = set_ajax_response(response_data)
@@ -761,14 +833,29 @@ def multi_lister(request):
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
 
+    if request.method == 'GET' and 'projection' in request.GET:
+        '''
+        Link from projection page
+            override some options
+        '''
+        new_init = {
+            'data_type':'grid',
+            'grid':'22'
+        }
+        initial = DJANGOUtils.set_initial(new_init, app_name)
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
+
     #MAIN APP
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
-    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+    context['need_overlay_map'] = False
+    if 'formData' in request.POST or (request.method == 'GET' and 'variables' in request.GET):
         initial = DJANGOUtils.set_initial(request,app_name)
         context['initial'] = initial
         form = DJANGOUtils.set_form(initial,clean=False)
         form_cleaned = DJANGOUtils.set_form(initial)
+        context['xx'] = form_cleaned
         #Check for form errors
         fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -789,7 +876,6 @@ def multi_lister(request):
 
         #Small Data request
         req = {}
-        context['xx'] = form_cleaned
         if 'locations' in form_cleaned.keys():
             req =  WRCCUtils.request_and_format_multiple_gridpoints(form_cleaned)
         else:
@@ -881,10 +967,14 @@ def multi_lister(request):
 
 def temporal_summary(request):
     app_name = 'temporal_summary'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url,
+        'need_bbox_map':False
+    }
     json_file = request.GET.get('json_file', None)
     #Check if we are coming in from other page, e.g. Gridded Data
     #Set initial accordingly
@@ -900,17 +990,17 @@ def temporal_summary(request):
     initial_plot = DJANGOUtils.set_map_plot_options(request)
     join_initials(initial, initial_plot)
     context['initial'] = initial
-    if initial['area_type'] != 'bounding_box':
-        context['hide_bbox_map'] = True
+    if initial['area_type'] == 'bounding_box':
+        context['need_bbox_map'] = True
     #Link from other page
-    if request.method == 'GET' and 'elements' in request.GET:
+    if request.method == 'GET' and 'variables' in request.GET:
         form_cleaned = DJANGOUtils.set_form(request,clean=True)
         form = DJANGOUtils.set_form(request,clean=False)
         header_keys = WRCCUtils.set_display_keys(app_name, form_cleaned)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
 
     if 'formMap' in request.POST:
-        context['hide_bbox_map'] = True
+        context['need_bbox_map'] = False
         form = DJANGOUtils.set_initial(request, app_name)
         #form = DJANGOUtils.set_form(request, clean=False)
         form_cleaned = DJANGOUtils.set_form(request)
@@ -930,8 +1020,8 @@ def temporal_summary(request):
                     break
 
         #Form Check
-        fields_to_check = ['start_date', 'end_date','degree_days', 'cmap', form['area_type'], 'elements']
-        #fields_to_check = ['start_date', 'end_date','degree_days',form['area_type'], 'elements']
+        fields_to_check = ['start_date', 'end_date','degree_days', 'cmap', form['area_type'], 'variables']
+        #fields_to_check = ['start_date', 'end_date','degree_days',form['area_type'], 'variables']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
@@ -960,15 +1050,15 @@ def temporal_summary(request):
             'temporal_summary':form['temporal_summary'],
             'elems':[]
             }
-        for el_idx,element in enumerate(form_cleaned['elements']):
+        for el_idx,variable in enumerate(form_cleaned['variables']):
             pms = copy.deepcopy(params)
             a_el_dict = {
-                'name':element,
+                'name':variable,
                 'smry':form_cleaned['temporal_summary'],
                 'smry_only':1
             }
             if pms['units'] == 'metric':
-                if element in ['pcpn','snow','snwd']:
+                if variable in ['pcpn','snow','snwd']:
                     a_el_dict['units'] = 'mm'
                 else:
                     a_el_dict['units'] = 'degreeC'
@@ -983,18 +1073,22 @@ def temporal_summary(request):
         context['JSON_URL'] = settings.TMP_URL
         context['figure_files'] = figure_files
         context['run_done'] = True
+        context['results'] = True
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 def monthly_spatial_summary(request):
     app_name = 'monthly_spatial_summary'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
+    }
     initial  = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
 
-    if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'variable' in request.GET):
         #Set form and initial
         form = DJANGOUtils.set_form(initial, clean=False)
         form_cleaned = DJANGOUtils.set_form(initial)
@@ -1031,19 +1125,20 @@ def monthly_spatial_summary(request):
 
 def spatial_summary(request):
     app_name = 'spatial_summary'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
-
-
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
+    }
     #Overlay maps
     if 'formOverlay' in request.POST:
         initial = DJANGOUtils.set_initial(request,'map_overlay')
         #AJAX
         kml_file_path = DJANGOUtils.create_kml_file(initial['area_type'], initial['overlay_state'])
         if kml_file_path[0:5] == 'ERROR':
-            response_data = json.dumps({'error':kml_file_path})
+            response_data = json.dumps({'overlay_error':kml_file_path})
         else:
             response_data = json.dumps({'kml_file_path':kml_file_path})
         response = set_ajax_response(response_data)
@@ -1094,14 +1189,28 @@ def spatial_summary(request):
         response = set_ajax_response(response_data)
         return response
 
+    if request.method == 'GET' and 'projection' in request.GET:
+        '''
+        Link from projection page
+            override some options
+        '''
+        new_init = {
+            'data_type':'grid',
+            'grid':'22'
+        }
+        initial = DJANGOUtils.set_initial(new_init, app_name)
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
+
+    #MAIN APP
     initial  = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
-    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'variables' in request.GET):
         #Set form and initial
         form = DJANGOUtils.set_form(initial, clean=False)
         form_cleaned = DJANGOUtils.set_form(initial)
         #Form Check
-        fields_to_check = [form['area_type'],'start_date', 'end_date','degree_days', 'elements']
+        fields_to_check = [form['area_type'],'start_date', 'end_date','degree_days', 'variables']
         #,'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
@@ -1157,7 +1266,6 @@ def spatial_summary(request):
             req = WRCCUtils.request_and_format_multiple_gridpoints(form_cleaned)
         else:
             req = WRCCUtils.request_and_format_data(form_cleaned)
-        context['xx'] = form_cleaned
         if not req['smry'] and req['data']:
             results['smry'] = req['data']
         else:
@@ -1166,32 +1274,32 @@ def spatial_summary(request):
 
         #format data for highcarts
         graph_data = []
-        for el_idx, element in enumerate(form_cleaned['elements']):
-            el_data = WRCCUtils.extract_highcarts_data_spatial_summary(req['smry'],el_idx, element,form_cleaned)
-            GraphDictWriter = WRCCClasses.GraphDictWriter(form_cleaned, el_data, element = element)
+        for el_idx, variable in enumerate(form_cleaned['variables']):
+            el_data = WRCCUtils.extract_highcarts_data_spatial_summary(req['smry'],el_idx, variable,form_cleaned)
+            GraphDictWriter = WRCCClasses.GraphDictWriter(form_cleaned, el_data, variable = variable)
             datadict = GraphDictWriter.write_dict()
             graph_data.append(datadict)
 
         results['graph_data'] = graph_data
 
-        elements = []
-        for el in form_cleaned['elements']:
+        variables = []
+        for el in form_cleaned['variables']:
             el_strip, base_temp = WRCCUtils.get_el_and_base_temp(el)
             el_name = WRCCData.ACIS_ELEMENTS_DICT[el_strip]['name_long']
             if base_temp is not None:
                 el_name+= str(base_temp)
-            elements.append(el_name)
-        results['elements'] = elements
+            variables.append(el_name)
+        results['variables'] = variables
         #Pick up chart indices from previous run
         chart_indices_list = str(initial['chart_indices_string']).split(',')
         #Check that these indices exist in new run
         chart_indices = []
         for idx in chart_indices_list:
-            if idx < len(graph_data) and initial['chart_elements'][int(idx)] in form_cleaned['elements']:
-                new_idx = form_cleaned['elements'].index(initial['chart_elements'][int(idx)])
+            if idx < len(graph_data) and initial['chart_variables'][int(idx)] in form_cleaned['variables']:
+                new_idx = form_cleaned['variables'].index(initial['chart_variables'][int(idx)])
                 chart_indices.append(new_idx)
         if not chart_indices:
-            chart_indices = [idx for idx in range(len(form_cleaned['elements']))]
+            chart_indices = [idx for idx in range(len(form_cleaned['variables']))]
         results['chart_indices'] = chart_indices
         context['results'] = results
         context['run_done'] = True
@@ -1255,27 +1363,33 @@ def spatial_summary(request):
 
 
 def climate_engine(request):
+    app_name = 'climate_engine'
     context = {
-        'title': ''
+        'title': '',
+        'app_name':app_name
     }
-    context['initial'] = {'app_name':'climate_engine'}
+    context['initial'] = {'app_name':app_name}
     return render_to_response('scenic/data/climate_engine.html', context, context_instance=RequestContext(request))
 
 
 def station_finder(request):
     app_name = 'station_finder'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
-
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
+    }
+    context['need_overlay_map'] = False
+    context['need_polygon_map'] = False
     #Overlay maps
     if 'formOverlay' in request.POST:
         initial = DJANGOUtils.set_initial(request,'map_overlay')
         #AJAX
         kml_file_path = DJANGOUtils.create_kml_file(initial['area_type'], initial['overlay_state'])
         if kml_file_path[0:5] == 'ERROR':
-            response_data = json.dumps({'error':kml_file_path})
+            response_data = json.dumps({'overlay_error':kml_file_path})
         else:
             response_data = json.dumps({'kml_file_path':kml_file_path})
         response = set_ajax_response(response_data)
@@ -1293,7 +1407,6 @@ def station_finder(request):
         else:
             response_data = json.dumps({'large_request':'True'})
         #Submit large request
-        #os.remove(settings.DATA_REQUEST_BASE_DIR + 'SFDownloadTest_params.json')
         json_dict = copy.deepcopy(form_cleaned)
         json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
         WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, json_dict)
@@ -1304,16 +1417,15 @@ def station_finder(request):
     from subprocess import call
     call(["touch", settings.TEMP_DIR + "Empty.json"])
     #Set up initial map (NV stations)
-    #context['station_json'] = 'NV_stn.json'
     initial = DJANGOUtils.set_initial(request, app_name)
     context['initial'] = initial
 
     #Set up maps if needed
-    if request.method == "GET" and not 'elements' in request.GET:
+    if request.method == "GET" and not 'variables' in request.GET:
         #Generate initial map
         by_type = 'state'; val = 'nv'
         date_range = [initial['start_date'],initial['end_date']]
-        el_date_constraints = initial['elements_constraints'] + '_' + initial['dates_constraints']
+        el_date_constraints = initial['variables_constraints'] + '_' + initial['dates_constraints']
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=['1','2','4'],time_range=date_range, constraints=el_date_constraints)
         #Write json file for link to data lister
         json_dict = copy.deepcopy(initial)
@@ -1324,27 +1436,29 @@ def station_finder(request):
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_file_name, json_dict)
         context['params_json'] = json_file_name
         if 'error' in station_json.keys():
-            context['error'] = station_json['error']
+            results = {'error':station_json['error']}
+            context['results'] = results
         if 'stations' not in station_json.keys() or  station_json['stations'] == []:
-            context['error'] = "No stations found for these search parameters."
-        context['station_json'] = f_name
+            context['results'] = {'error':'No stations found for these search parameters.'}
+        if 'stations' in station_json.keys() and station_json['stations']:
+            context['results'] = {'station_json':f_name}
         header_keys = WRCCUtils.set_display_keys(app_name, initial)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,initial)
 
-    if 'formData' in request.POST or (request.method == 'GET' and 'elements' in request.GET):
+    if 'formData' in request.POST or (request.method == 'GET' and 'variables' in request.GET):
         #Turn request object into python dict
         form = DJANGOUtils.set_form(request,clean=False)
         form_cleaned = DJANGOUtils.set_form(request,clean=True)
-        fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date', 'elements']
+        fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date']
         form_error = check_form(form_cleaned, fields_to_check)
         if form_error:
             context['form_error'] = form_error
             return render_to_response(url, context, context_instance=RequestContext(request))
-        #Convert element list to var majors
+        #Convert variable list to var majors
         el_vX_list = []
-        for el_idx, element in enumerate(form_cleaned['elements']):
-            el,base_temp = WRCCUtils.get_el_and_base_temp(element)
-            if element in ['pet','dtr']:
+        for el_idx, variable in enumerate(form_cleaned['variables']):
+            el,base_temp = WRCCUtils.get_el_and_base_temp(variable)
+            if variable in ['pet','dtr']:
                 el_vX_list.append('1')
                 el_vX_list.append('2')
             else:
@@ -1355,7 +1469,7 @@ def station_finder(request):
         by_type = WRCCData.ACIS_TO_SEARCH_AREA[form_cleaned['area_type']]
         val = form_cleaned[by_type]
         date_range = [form_cleaned['start_date'],form_cleaned['end_date']]
-        el_date_constraints = form_cleaned['elements_constraints'] + '_' + form_cleaned['dates_constraints']
+        el_date_constraints = form_cleaned['variables_constraints'] + '_' + form_cleaned['dates_constraints']
         station_json, f_name = AcisWS.station_meta_to_json(by_type, val, el_list=el_vX_list,time_range=date_range, constraints=el_date_constraints)
         #Write to file for map generation
         station_ids = WRCCUtils.get_station_ids('/tmp/' + f_name)
@@ -1371,10 +1485,12 @@ def station_finder(request):
         WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_file_name, json_dict)
 
         if 'error' in station_json.keys():
-            context['error'] = station_json['error']
+            results = {'error':station_json['error']}
+            context['results'] = results
         if 'stations' not in station_json.keys() or  station_json['stations'] == []:
-            context['error'] = "No stations found for these search parameters."
-        context['station_json'] = f_name
+            context['results'] = {'error':'No stations found for these search parameters.'}
+        if 'stations' in station_json.keys() and station_json['stations']:
+            context['results'] = {'station_json':f_name}
         context['run_done'] = True
         header_keys = WRCCUtils.set_display_keys(app_name, initial)
         context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,initial)
@@ -1420,18 +1536,37 @@ def station_finder(request):
 
 
 def data_comparison(request):
+    app_name = 'data_comparison'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
     context = {
-        'title': settings.APPLICATIONS['data_comparison'][0]
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
     }
-    url = settings.APPLICATIONS['data_comparison'][2]
-
     initial = DJANGOUtils.set_initial(request,'data_comparison')
     context['initial'] = initial
+    context['need_gridpoint_map'] = True
+
+    if request.method == 'GET' and 'projection' in request.GET:
+        '''
+        Link from projection page
+            override some options
+        '''
+        new_init = {
+            'area_type':'location',
+            'location':'-119,39',
+            'grid':'22'
+        }
+        initial = DJANGOUtils.set_initial(new_init, app_name)
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
+
     if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
         context['form_message'] = True
-        form = DJANGOUtils.set_form(request, clean=False)
+        form = DJANGOUtils.set_form(initial, clean=False)
         form['app_name'] = 'data_comparison'
-        form_cleaned = DJANGOUtils.set_form(request, clean=True)
+        form_cleaned = DJANGOUtils.set_form(initial, clean=True)
         form_cleaned['app_name'] = 'data_comparison'
         DC = WRCCClasses.DataComparer(form)
         gdata,sdata,dist = DC.get_data()
@@ -1442,8 +1577,11 @@ def data_comparison(request):
             'distance':dist
         }
         results['graph_data'] = DC.get_graph_data(gdata,sdata)
+        context['need_gridpoint_map'] = False
         results['stats'] = DC.get_statistics(results['graph_data'][0],results['graph_data'][1])
         context['results'] = results
+        header_keys = WRCCUtils.set_display_keys(app_name, form_cleaned)
+        context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
     return render_to_response(url, context, context_instance=RequestContext(request))
 
 #######################
@@ -1452,17 +1590,31 @@ def data_comparison(request):
 
 def monthly_summary(request):
     app_name = 'monthly_summary'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
-
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
+    }
     initial = DJANGOUtils.set_initial(request, app_name)
     context['initial'] = initial
 
-    #Set graph and plot options
-    #Time Serie Table Generation and graph if desired
-    if 'formData' in request.POST or (request.method == 'GET' and 'element' in request.GET):
+    if request.method == 'GET' and 'projection' in request.GET:
+        '''
+        Link from projection page
+            override some options
+        '''
+        new_init = {
+            'area_type':'location',
+            'location':'-119,39',
+            'grid':'22'
+        }
+        initial = DJANGOUtils.set_initial(new_init, app_name)
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
+
+    if 'formData' in request.POST or (request.method == 'GET' and 'variable' in request.GET):
         form = DJANGOUtils.set_form(initial,clean=False)
         form_cleaned = DJANGOUtils.set_form(initial,clean=True)
         #Form sanity check
@@ -1475,7 +1627,7 @@ def monthly_summary(request):
         data_params = {
             'start_date':form_cleaned['start_year'],
             'end_date':form_cleaned['end_year'],
-            'element':form_cleaned['element']
+            'variable':form_cleaned['variable']
         }
         if 'location' in form_cleaned.keys():
             data_params['location'] = form_cleaned['location']
@@ -1538,6 +1690,7 @@ def monthly_summary(request):
                 'dataTableInfo':dataTableInfo,
                 'chart_indices':'0',
                 'smry':'individual',
+                'variable':data_params['variable'],
                 'running_mean_years':'5',
                 'show_range': False,
                 'data': [['Yr'] + header_list + ['An', 'F']] + data[0][0:-6],
@@ -1586,16 +1739,35 @@ def monthly_summary(request):
 
 def climatology(request):
     app_name = 'climatology'
-    context = {
-        'title': settings.APPLICATIONS[app_name][0]
-    }
     url = settings.APPLICATIONS[app_name][2]
-
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
+    }
     initial= DJANGOUtils.set_initial(request, app_name)
     context['initial'] = initial
+    if request.method == 'GET' and 'projection' in request.GET:
+        '''
+        Link from projection page
+            override some options
+        '''
+        new_init = {
+            'area_type':'location',
+            'location':'-119,39',
+            'grid':'22',
+            'summary_type':'temp'
+        }
+        initial = DJANGOUtils.set_initial(new_init, app_name)
+        context['initial'] = initial
+        return render_to_response(url, context, context_instance=RequestContext(request))
+
     if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
-        form = DJANGOUtils.set_form(request,clean=False)
-        form_cleaned = DJANGOUtils.set_form(request,clean=True)
+        form = DJANGOUtils.set_form(initial,clean=False)
+        form_cleaned = DJANGOUtils.set_form(initial,clean=True)
+        #form = DJANGOUtils.set_form(request,clean=False)
+        #form_cleaned = DJANGOUtils.set_form(request,clean=True)
         #Set up page header params
         if 'station_id' in form.keys():
             context['station_name'] = form['station_id']
@@ -1614,7 +1786,7 @@ def climatology(request):
         data_params = {
                 'start_date':form['start_year'],
                 'end_date':form['end_year'],
-                'element':form['summary_type']
+                'variable':form['summary_type']
                 }
         app_params = {
                 'el_type':form['summary_type'],
@@ -1624,6 +1796,8 @@ def climatology(request):
         if 'location' in form_cleaned.keys():
             data_params['loc'] = form_cleaned['location']
             data_params['grid'] = form_cleaned['grid']
+            app_params['loc'] = form_cleaned['location']
+            app_params['grid'] = form_cleaned['grid']
         if 'station_id' in form_cleaned.keys():
             data_params['sid'], name = WRCCUtils.find_id_and_name(form['station_id'], settings.MEDIA_DIR + '/json/US_station_id.json')
         #Initialize Data Job class
@@ -1643,6 +1817,8 @@ def climatology(request):
         if not data or not dates_list:
             results = {}
             context['run_done']= True
+            header_keys = WRCCUtils.set_display_keys(app_name, form_cleaned)
+            context['params_display_list'] = WRCCUtils.form_to_display_list(header_keys,form)
             return render_to_response(url, context, context_instance=RequestContext(request))
         #Run application
         App = WRCCClasses.SODApplication('Sodsumm', data, app_specific_params=app_params)
@@ -1653,7 +1829,7 @@ def climatology(request):
             context['run_done']= True
             return render_to_response(url, context, context_instance=RequestContext(request))
         else:
-            results = dict(results[0])
+            results = results[0]
         context['results'] = results
         #Sodsumm table headers for html
         context['tab_names'] = WRCCData.TAB_NAMES_WITH_GRAPHICS[form['summary_type']]
@@ -1753,12 +1929,12 @@ def check_form(form, fields_to_check):
         err = checker(form)
         if err:
             if field in ['start_year','end_year']:
-                if form['app_name'] in ['intraannual','yearly_summary','monthly_summary','climatology']:
+                if form['app_name'] in ['intraannual','seasonal_summary','monthly_summary','climatology']:
                     form_error['Year Range'] = err
                 else:
-                    form_error[WRCCData.DISPLAY_PARAMS[field]] = err
+                    form_error[field] = err
             else:
-                form_error[WRCCData.DISPLAY_PARAMS[field]] = err
+                form_error[field] = err
             #Stop at first error
             break
     return form_error
@@ -1786,9 +1962,9 @@ def run_external_script(cmd):
 ####################
 def set_sodxtrmts_head(form):
     #Define Header Order:
-    header_order =['start_year', 'end_year', '','element']
+    header_order =['start_year', 'end_year', '','variable']
     #Additional headere items
-    if form['element'] in ['gdd', 'hdd', 'cdd']:header_order+=['base_temperature']
+    if form['variable'] in ['gdd', 'hdd', 'cdd']:header_order+=['base_temperature']
     header_order+=['statistic']
     if form['departures_from_averages'] == 'T':
          header_order+=['departures_from_averages', '']
@@ -1811,9 +1987,9 @@ def set_sodxtrmts_head(form):
     #Define SCHTUPID header
     header = []
     for key in header_order:
-        if key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'statistic', 'elements','element']:
+        if key in ['less_greater_or_between','frequency_analysis_type','frequency_analysis', 'departures_from_averages', 'statistic', 'variables','variable']:
             header.append([WRCCData.DISPLAY_PARAMS[key], WRCCData.DISPLAY_PARAMS[str(form[key])]])
-            if key == 'element':
+            if key == 'variable':
                 if form['units'] == 'metric':
                      units = WRCCData.UNITS_METRIC[str(form[key])]
                 else:
@@ -1836,13 +2012,36 @@ def set_sodxtrmts_head(form):
         header.insert(1,['Grid', WRCCData.GRID_CHOICES[form['grid']][0]])
     return header
 
-
 def set_sodsumm_headers(table_list):
     headers = {}
     def set_header(table):
         rows = []
         if table == 'temp':
-            rows.append('<th colspan="16"> <b>Tempearture Statistics</b></th>')
+            rows.append('<b>Temperature Statistics</b>')
+            rows.append('Averages -- Daily Extremes -- Mean Extremes -- Number of Days')
+        if table == 'prsn':
+            rows.append('<b>Precipitation/Snow Statistics</b>')
+            rows.append('Total Precipitation -- Number of Days -- Total Snowfall')
+        if table == 'hdd':
+            rows.append('<b>Heating Degree Days</b>')
+            rows.append('Degree Days to selected Base Temperatures')
+        if table == 'cdd':
+            rows.append('<b>Cooling Degree Days</b>')
+            rows.append('Degree Days to selected Base Temperatures')
+        if table == 'corn':
+            rows.append('<b>Corn Growing Degree Days</b>')
+        return "\n".join(rows)
+
+    for table in table_list:
+         headers[table] = set_header(table)
+    return headers
+'''
+def set_sodsumm_headers(table_list):
+    headers = {}
+    def set_header(table):
+        rows = []
+        if table == 'temp':
+            rows.append('<th colspan="16"> <b>Temperature Statistics</b></th>')
             rows.append('<tr><td colspan="5">-------</td><td colspan="5">Averages</td><td colspan="4">-----------Daily Extremes </td><td colspan="4">----------------Mean Extremes </td><td colspan="4">-----------Number of Days</td></tr>')
         elif table == 'prsn':
             rows.append('<th colspan="15"><b>Precipitation/Snow Statistics</b></th>')
@@ -1867,7 +2066,7 @@ def set_sodsumm_headers(table_list):
     for table in table_list:
          headers[table] = set_header(table)
     return headers
-
+'''
 ######################
 #Data
 #####################
@@ -1884,11 +2083,11 @@ def set_params_for_shape_queries(search_params):
         'grid':search_params['grid'],
         'meta':'ll,elev',
     }
-    #find element parameter
-    if 'element' in search_params.keys():
-        params['elems'] = search_params['element']
-    elif 'elements' in search_params.keys():
-         params['elems'] = search_params['elements']
+    #find variable parameter
+    if 'variable' in search_params.keys():
+        params['elems'] = search_params['variable']
+    elif 'variables' in search_params.keys():
+         params['elems'] = search_params['variables']
     #Find search area parameters, shape and bounding box if needed
 
     #key, val, acis_param, name_long, search_type = WRCCUtils.get_search_area_values(search_params, 'gridded')
@@ -1962,7 +2161,11 @@ def generate_sodsumm_graphics(results, tab, table, units):
                 if i == 3:k = 1 #mean high
                 if i == 4:k = 4 #high
                 try:
-                    graph_data[idx].append(float(row[k]))
+                    val = float(row[k])
+                    if abs(val + 99.0)<0.000001 or abs(val + 9999.0)<0.00001 or abs(val - 9999.0)<0.00001:
+                        graph_data[idx].append(None)
+                    else:
+                        graph_data[idx].append(val)
                 except:
                     graph_data[idx].append(None)
     elif tab in ['hdd', 'cdd']:
@@ -1988,7 +2191,11 @@ def generate_sodsumm_graphics(results, tab, table, units):
         for i in range(5):
             for k in range(len(cats)):
                 try:
-                    graph_data[i].append(float(results[table][i+1][k+1]))
+                    val = float(results[table][i+1][k+1])
+                    if abs(val + 99.0)<0.000001 or abs(val + 9999.0)<0.00001 or abs(val - 9999.0)<0.00001:
+                        graph_data[i].append(None)
+                    else:
+                        graph_data[i].append(val)
                 except:
                     graph_data[i].append(None)
     elif tab == 'gdd':
@@ -2008,7 +2215,11 @@ def generate_sodsumm_graphics(results, tab, table, units):
         for i in range(5):
             for k in range(len(cats)):
                 try:
-                    graph_data[i].append(float(results[table][2*i+1][k+2]))
+                    val = float(results[table][2*i+1][k+2])
+                    if abs(val + 99.0)<0.000001 or abs(val + 9999.0)<0.00001 or abs(val - 9999.0)<0.00001:
+                        graph_data[i].append(None)
+                    else:
+                        graph_data[i].append(val)
                 except:
                     graph_data[i].append(None)
     elif tab == 'corn':
@@ -2028,7 +2239,11 @@ def generate_sodsumm_graphics(results, tab, table, units):
         graph_data =[[]]
         for k in range(len(cats)):
             try:
-                graph_data[0].append(float(results[table][1][k+2]))
+                val = float(results[table][1][k+2])
+                if abs(val + 99.0)<0.000001 or abs(val + 9999.0)<0.00001 or abs(val - 9999.0)<0.00001:
+                    graph_data[0].append(None)
+                else:
+                    graph_data[0].append(val)
             except:
                 graph_data[0].append(None)
     elif  tab == 'pcpn':
@@ -2048,7 +2263,11 @@ def generate_sodsumm_graphics(results, tab, table, units):
                 if i == 1:k=1
                 if i == 2:k=2
                 try:
-                    graph_data[i].append(float(row[k]))
+                    val = float(row[k])
+                    if abs(val + 99.0)<0.000001 or abs(val + 9999.0)<0.00001 or abs(val - 9999.0)<0.00001:
+                        graph_data[i].append(None)
+                    else:
+                        graph_data[i].append(val)
                 except:
                     graph_data[i].append(None)
     elif tab == 'snow':
@@ -2067,7 +2286,11 @@ def generate_sodsumm_graphics(results, tab, table, units):
                 if i == 0:k=12
                 if i == 1:k=13
                 try:
-                    graph_data[i].append(float(row[k]))
+                    val = float(row[k])
+                    if abs(val + 99.0)<0.000001 or abs(val + 9999.0)<0.00001 or abs(val - 9999.0)<0.00001:
+                        graph_data[i].append(None)
+                    else:
+                        graph_data[i].append(val)
                 except:
                     graph_data[i].append(None)
     table_dict = {
@@ -2086,12 +2309,12 @@ def generate_sodsumm_graphics(results, tab, table, units):
 #Display and search params
 ##############################
 def set_el_string_and_list(form):
-    if not 'elements' in form.keys() and not 'element' in form.keys() and not 'elements_string' in form.keys():
+    if not 'variables' in form.keys() and not 'variable' in form.keys() and not 'variables_string' in form.keys():
         return '', []
-    if 'element' in form.keys():
-        form_els = form['element']
-    if 'elements' in form.keys():
-        form_els = form['elements']
+    if 'variable' in form.keys():
+        form_els = form['variable']
+    if 'variables' in form.keys():
+        form_els = form['variables']
     if isinstance(form_els,list):
         el_list = [str(el) for el in form_els]
         el_string = ''
@@ -2106,7 +2329,7 @@ def set_el_string_and_list(form):
         return el_string, el_list
     else:
         try:
-            el_string = form['elements_string'].replace('  ','')
+            el_string = form['variables_string'].replace('  ','')
             el_list = el_string.split(',')
         except:
             return '', []

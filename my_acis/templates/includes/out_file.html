@@ -1,10 +1,11 @@
-        <td>Output File Name:</td>
-        <td><input type="text" class="output_file_name" name="output_file_name" value="{{initial.output_file_name}}" onchange="update_value(this.value)"></td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
+<div class="form-group">
+    <label for="output_file_name">Output File Name</label>
+    <img class="qmark" id="qmark-out-file" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <div class="pop-up">
         <div id="ht_output_file_name"></div>
         <script type="text/javascript">                        
             $("#ht_output_file_name").load("{{HTML_URL}}/Docu_help_texts.html #ht_output_file_name");
         </script>
-        </div>
-        </td>
+    </div>    
+    <input type="text" class="output_file_name form-control" name="output_file_name" value="{{initial.output_file_name}}" onchange="update_value(this.value)">
+</div>

@@ -8,20 +8,20 @@ function set_style(color, fontSize, fontWeight, align) {
     return style;
 }
 
-function set_plot_color(element){
-    if (element == 'maxt'){
+function set_plot_color(variable){
+    if (variable == 'maxt'){
         var p_color = '#660066';
     }
-    if (element == 'mint'){
+    if (variable == 'mint'){
         var p_color = '#0000FF';
     }
-    if (element == 'pcpn' || element == 'evap' || element == 'wdmv' || element == 'pet'){
+    if (variable == 'pcpn' || variable == 'evap' || variable == 'wdmv' || variable == 'pet'){
         var p_color = '#008000';
     }
-    if (element == 'snow' || element == 'snwd'){
+    if (variable == 'snow' || variable == 'snwd'){
         var p_color = '#800080';
     }
-    if (element == 'hdd' || element == 'cdd' || element == 'gdd'){
+    if (variable == 'hdd' || variable == 'cdd' || variable == 'gdd'){
         var p_color = '#00FFFF';
     }
     return p_color
@@ -253,7 +253,7 @@ function set_barchart_axis_properties(data,plotline_no,axis){
 }
 
 //axis property function for more complex graphs
-function set_y_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis_min, element,statistic, dep_from_ave,plotline_no){
+function set_y_axis_properties(data_max,vertical_axis_max, data_min, vertical_axis_min, variable,statistic, dep_from_ave,plotline_no){
     var props = {
         'axisMin':data_min,
         'axisMax':data_max,
@@ -270,7 +270,7 @@ function set_y_axis_properties(data_max,vertical_axis_max, data_min, vertical_ax
         return props; 
     }
     //Override data_min if necessary
-    if ((element == 'snow' || element == 'snwd' || element == 'pcpn') && 
+    if ((variable == 'snow' || variable == 'snwd' || variable == 'pcpn') && 
     (statistic !='ndays' && statistic !='sd' && dep_from_ave=='F')) {
         props.axisMin = 0.0;
     }
@@ -481,84 +481,6 @@ function set_plotLines(data_max, data_min, tickInterval, options_dict){
     else{
         return plotLines;
     }
-}
-
-//Sodxtrmts Utils
-function set_sodxtrmts_x_plotlines(data,major_grid, minor_grid){
-    /*
-    Data is of form
-    [[yr1, dat1],[yr2,dat2], ...] 
-    where yr in acis format yyyy
-    */
-    var results = {
-        'plotLines':[],
-        'tickPositions':[],
-        'axisMin':null,
-        'axisMax':null
-    };
-    if (!data.length){return results;}
-    results.axisMin = parseInt(data[0][0]);
-    results.axisMax = parseInt(data[data.length - 1][0]);
-    //Start with step for minor grid
-    var step = 1, 
-    div = find_largest_divisor(data.length);
-    if (minor_grid == 'F' && major_grid == "T"){
-        if (data.length % 2 == 0){
-            //Even number of data points
-            step = 2;
-        }
-        else {
-            //Odd number of data points
-            if (div == data.length){
-                step = 1;
-            }
-            else {
-                step = data.length / div;
-            }
-        }
-    }
-    else if (major_grid == "F" && minor_grid == "F"){
-        step = data.length - 1;
-    }
-    //Adjust step if dataset is large
-    if (data.length > 50 && data.length <= 100){
-        if (minor_grid == 'T'){
-            step = 5;
-        }
-        if (major_grid == 'T' && minor_grid == 'F'){
-            step = 10;
-        }
-    }
-    else if (data.length > 100){
-        if (minor_grid == 'T'){
-            step = 10;
-        }
-        if (major_grid == 'T' && minor_grid == 'F'){
-            step = 20;
-        }
-    }
-    if (parseInt(data[data.length - 1][0]) % step != 0){
-        results.axisMax = find_closest_larger(parseInt(data[data.length - 1][0]),step);
-    }
-    var pls = set_plotlines(data,step,'x');
-    //convert to Date
-    for (var pl_idx=0;pl_idx<pls.length;pl_idx++) {
-        var pl ={};
-        for (var key in pls[pl_idx]){
-            pl[key] = pls[pl_idx][key];
-        }
-        pl.value = Date.UTC(pls[pl_idx].value,0,1);
-        if (major_grid =='F' && minor_grid == 'F'){
-            if (pl_idx ==0 || pl_idx == pls.length -1){
-                    results.plotLines.push(pl);
-            }
-        }
-        else {
-            results.plotLines.push(pl);
-        }
-        results.tickPositions.push(pl.value);
-    }
-    return results; 
 }
 
 function componentToHex(c) {

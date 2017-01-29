@@ -1,95 +1,202 @@
 $(document).ready(function () {
-    var dataTableInfo = $.trim(String($('.dataTableInfo').text()).replace('/^\s*\n/gm', ''));
-    var L = dataTableInfo.split('\n'), newL = [];
-    var header = '';
-    for (var k =0;k<L.length;k++){
-        //remove spaces
-        var l_short = $.trim(L[k]).replace(/;/g, ' ');
-        newL.push(l_short);
-        header += l_short;
-    }
-    dataTableInfo = newL.join(' ');
-    
-    //Note, this interferes when station finder 
-    if ( !$.fn.dataTable.isDataTable( '#station_list' ) ) {
-        //Initialize Data Tables
-        $('.dataTable').DataTable({
-            'dom': 'Bfrtip',
-            'paging': false,
-            'scrollY': 400,
-            'scrollCollapse': true,
-            'scrollX': 'auto',
-            'autoWidth':false,
-            'oLanguage': {
-                'sSearch': 'Filter:',
-            }, 
-            'buttons': [
-                {
-                    'extend':'csvHtml5',
-                    'title':dataTableInfo,
-                    'exportOptions': {
-                        'columns': ':visible'
+    //Bootstrap nav menue
+    $('[data-submenu]').submenupicker();
+    var dataTables = $('.dataTable'), id;
+    dataTables.each(function(index, dT){
+        if ( !$.fn.dataTable.isDataTable( '#station_list' ) ) {
+            //Get table info = file name
+            var dataTableInfo = 'dataTable';
+            id = $(this).attr('id').split('-')[1];
+            if ($('#dataTableInfo-' + id).length){
+                dataTableInfo = $.trim(String($('#dataTableInfo-' + id).text()).replace('/^\s*\n/gm', ''));
+                var L = dataTableInfo.split('\n'), newL = [];
+                var header = '';
+                for (var k =0;k<L.length;k++){
+                    //remove spaces
+                    var l_short = $.trim(L[k]).replace(/;/g, ' ');
+                    newL.push(l_short);
+                    header += l_short;
+                }
+                dataTableInfo = newL.join(' ');
+            }
+            //Create dataTable
+            $(dT).DataTable({
+                'dom': 'Bfrtip',
+                'paging': false,
+                'scrollX': 'auto',
+                'autoWidth':false,
+                'scrollY': 600,
+                'scrollCollapse': true,
+                'aaSorting':[],
+                'oLanguage': {
+                    'sSearch': 'Filter:',
+                }, 
+                'columnDefs': [{
+                    'targets': "_all",
+                    'render': function (data, type, full, meta) {
+                        if (type === 'copy') {
+                            var api = new $.fn.dataTable.Api(meta.settings);
+                            data = $(api.column(meta.col).header()).text() + ": " + data;
+                        }
+                        return data;
+                    }
+                }],
+                'buttons': [
+                    {
+                        'extend':'csvHtml5',
+                        'title':dataTableInfo,
+                        'exportOptions': {
+                            'columns': ':visible'
+                        },
+                        'customize': function(doc){
+                            return dataTableInfo + '\n' + doc;
+                        } 
                     },
-                    'customize': function(doc){
-                        return dataTableInfo + '\n' + doc;
-                    } 
-                },
-                {
-                    'extend':'excelHtml5',
-                    'title':dataTableInfo,
-                    'exportOptions': {
-                        'columns': ':visible'
-                    },
-                    'customize': function(xlsx){
-                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                        //console.log(sheet);
-                        var first_row = $('c[r=A1] t', sheet).text();
-                        $('c[r=A1] t', sheet).text(header);
-                        //Move each row down to make room for header
+                    {
+                        'extend':'excelHtml5',
+                        'title':dataTableInfo,
+                        'exportOptions': {
+                            'columns': ':visible'
+                        },
+                        customize: function (xlsx) {
+                            var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                            var numrows = 1;
+                            var clR = $('row', sheet);
+
+                            //update Row
+                            clR.each(function () {
+                                var attr = $(this).attr('r');
+                                var ind = parseInt(attr);
+                                ind = ind + numrows;
+                                $(this).attr("r",ind);
+                            });
+
+                            // Create row before data
+                            $('row c', sheet).each(function () {
+                                var attr = $(this).attr('r');
+                                var pre = attr.substring(0, 1);
+                                var ind = parseInt(attr.substring(1, attr.length));
+                                ind = ind + numrows;
+                                $(this).attr("r", pre + ind);
+                            });
+
+                            function Addrow(index,data) {
+                                msg='<row r="'+index+'">'
+                                for(i=0;i<data.length;i++){
+                                    var key=data[i].key;
+                                    var value=data[i].value;
+                                    msg += '<c t="inlineStr" r="' + key + index + '">';
+                                    msg += '<is>';
+                                    msg +=  '<t>'+value+'</t>';
+                                    msg+=  '</is>';
+                                    msg+='</c>';
+                                }
+                                msg += '</row>';
+                                return msg;
+                            }
+                            //insert
+                            //var r1 = Addrow(1, [{ key: 'A', value: '' }, { key: 'B', value: '' }]);
+                            var r1 = Addrow(1, [{ key: 'A', value: header }]);
+                            sheet.childNodes[0].childNodes[1].innerHTML = r1 + sheet.childNodes[0].childNodes[1].innerHTML;
+                        }
                         /*
-                        var clRows = $('row', sheet);
-                        clRows.each(function () {
-                            var attr = $(this).attr('r');
-                            var ind = parseInt(attr);
-                            ind = ind + 1;
-                            $(this).attr('r',ind);
-                        });
-                        //Insert header
-                        var h_row = '<row r="1">';
-                        h_row += '<c t="inlineStr" r="A1" s="42"><is><t>';
-                        h_row += header + '</t></is></c>';
-                        //sheet.childNodes[0].childNodes[1].innerHTML = h_row + sheet.childNodes[0].childNodes[1].innerHTML; 
-                        $('c[r=A1] t', sheet).text(' C OO aS');
+                        #This works!!
+                        'customize': function(xlsx){
+                            var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                            var first_row = $('c[r=A1] t', sheet).text();
+                            $('c[r=A1] t', sheet).text(header);
+                            //Move each row down to make room for header
+                        }
                         */
-                    }
-                },
-                {
-                    'extend':'pdfHtml5',
-                    'title': dataTableInfo,
-                    'orientation': 'landscape',
-                    'pageSize':'A4',
-                    'exportOptions': {
-                        'columns': ':visible'
-                    }
-                },
-                {
-                    'extend':'print',
-                    'title': dataTableInfo,
-                    'exportOptions': {
-                        'columns': ':visible'
-                    }
-                },
-                {
-                    'extend':'copy',
-                    'title': dataTableInfo,
-                    'exportOptions': {
-                        'columns': ':visible'
-                    }
-                },
-                'colvis'
-            ]
-        });
-    }
+                    },
+                    {
+                        'extend':'pdfHtml5',
+                        'title': dataTableInfo,
+                        'orientation': 'landscape',
+                        'pageSize':'A4',
+                        'exportOptions': {
+                            'columns': ':visible'
+                        }
+                    },
+                    {
+                        'extend':'print',
+                        'title': dataTableInfo,
+                        'exportOptions': {
+                            'columns': ':visible'
+                        }
+                    },
+                    {
+                        'extend':'copy',
+                        'title': dataTableInfo,
+                        'text':'Copy Table',
+                        'exportOptions': {
+                            'columns': ':visible'
+                        },
+                        'customize': function(doc){
+                            return dataTableInfo + '\n' + doc;
+                        }
+                    },
+                    /*
+                    {
+                        'extend': 'copyHtml5',
+                        'text': 'Copy Selected Rows',
+                        'title': dataTableInfo,
+                        'header': false,
+                        'exportOptions': {
+                            'modifier': {
+                                'selected': true
+                            },
+                            'orthogonal': 'copy'
+                        }
+                    },*/
+                    'colvis'
+                ]
+            }); //end dataTable 
+        }//end if not station_list
+    });//end each
+    //Prevent misalignment of header/footer on  show/hide
+    //$('.dataTable').wrap('<div class="dataTables_scroll" />');
+    /*
+    FORM HELP TEXTS
+    */
+    $('.qmark').on('click', function(){
+        var id = $(this).attr('id');
+        var pop_up = $('#' + id).next('div.pop-up');
+        var max_height = $(window).height()*0.3, 
+            max_width = $(window).width()*0.2;
+        $(pop_up).dialog({
+            position:{
+                my:'bottom left',
+                at:'top right',
+                of:'#' + id
+            },
+            title:'You can move me!',
+            resizable: true,
+            modal: false,
+            width:'auto',
+            height:'auto',
+            maxHeight:max_height,
+            open: function() {
+                $(this).scrollTop(0);
+                $(this).closest(".ui-dialog")
+                .find(".ui-dialog-titlebar-close")
+                .removeClass("ui-dialog-titlebar-close")
+                .html("<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>");
+            },
+            create: function(){
+                $(this).css("maxWidth", max_width);
+                //$(this).css("maxHeight", max_height);
+            },
+            close: function () {
+               $(pop_up).dialog('destroy');
+            }
+        }).height('auto').width('auto');
+        $(".ui-widget-content").css("background-color", "#f2dede");
+        $(".ui-widget-header").css("color", "#000000");
+        $(".ui-widget-header").css("background-color", "#f7ebeb");
+        $(".ui-icon").css("background-color", "#f7ebeb");
+        $(".ui-icon").css("background-color", "#ffffff");
+    });
     /*
     LINKED VARIABLE UPDATES
     */ 
@@ -123,10 +230,14 @@ $(document).ready(function () {
     });
 
 
-
+    
     /*  
     Zoom To Location on map
     */
+    $('zoombutton').on('click', function(){
+        zoomToLocation();
+    });
+
     $("#address").focus(function(){
         if ($(this).val() == 'Place/Location'){
             $(this).val('');
@@ -134,7 +245,7 @@ $(document).ready(function () {
     });
 
     $('#address').bind("enterKey",function(e){
-        zoomToLocation();//in csc-maps
+        zoomToLocation();
     });
     $('#address').keyup(function(e){
         if(e.keyCode == 13)
@@ -142,12 +253,13 @@ $(document).ready(function () {
             $(this).trigger("enterKey");
          }
     });
-    
+ 
 
     /*
     DATE CHANGES
     */
     $('#start_date, #end_date').on('change', function(){
+        console.log('YOOOO!!')
         //Set start/end window according to dates
         if ($('#start_window').length || $('#end_window').length){
             var date_eight = $(this).val().replace(/\-/g,'').replace(/\//g,'').replace(/\:/g,'');
@@ -226,24 +338,24 @@ $(document).ready(function () {
             $('.delim').css('display','none');
             $('.out_file').css('display','none');
             if ($('#station_json').val() !=''){
-                $('.sf_map').css('display','table-row');
+                $('.sf_map').css('display','block');
             }
             else{
                 $('.sf_map').css('display','none');
             }
         }
         if ($(this).val() == 'table'){
-            $('#meta_keys').css('display','table-row');
+            $('#meta_keys').css('display','block');
             $('#data_format').val('html');//Default is excel
-            $('#dat_format').css('display','table-row');
+            $('#dat_format').css('display','block');
             if ($('.data_format').val().inList(['dlm','clm'])){
-                $('.delim').css('display','table-row');
+                $('.delim').css('display','block');
             }
             else{
                 $('.delim').css('display','none');
             }
             if ($('#data_format').val() != 'html'){
-                $('.out_file').css('display','table-row');
+                $('.out_file').css('display','block');
             }
             else{
                 $('.out_file').css('display','none');
@@ -256,16 +368,16 @@ $(document).ready(function () {
     */
     $('.data_format').on('change', function(){
         if ($(this).val().inList(['clm','dlm'])){
-            $('.delim').css('display','table-row');
+            $('.delim').css('display','block');
          }
          else{
             $('.delim').css('display','none');
 
          }
          if ($(this).val().inList(['clm','dlm','xl'])){
-            $('.out_file').css('display','table-row'); 
+            $('.out_file').css('display','block'); 
             if ($('#data_summary').val() == 'none' || $('#data_summary').val() == 'windowed_data'){
-                $('.out_format').css('display','table-row');
+                $('.out_format').css('display','block');
             }
             else{
                 $('.out_format').css('display','none');
@@ -289,7 +401,7 @@ $(document).ready(function () {
         //Set output_format if data_format not html and no data summary
         if ($(this).val() == 'none' || $(this).val() == 'windowed_data'){
             if ($('.data_format').val() != 'html'){
-                $('.out_format').css('display','table-row');
+                $('.out_format').css('display','block');
             }
             else{
                 $('.out_format').css('display','none');
@@ -302,12 +414,12 @@ $(document).ready(function () {
         if ($(this).val() == 'windowed_data'){
             $('#spat_summary').css('display','none');
             $('#temp_summary').css('display','none');
-            $('#start_wind').css('display','table-row');
-            $('#end_wind').css('display','table-row');
+            $('#start_wind').css('display','block');
+            $('#end_wind').css('display','block');
             //If data_type is station show flags/obs_time
             if ($('#data_type').length && $('#data_type').val() == 'station'){
-                $('#flags').css('display','table-row');
-                $('#obs_time').css('display','table-row');
+                $('#flags').css('display','block');
+                $('#obs_time').css('display','block');
             }
             else{
                 $('#flags').css('display','none');
@@ -316,12 +428,12 @@ $(document).ready(function () {
         }
         else if ($(this).val() == 'spatial_summary' || $(this).val() == 'temporal_summary'){
             if ($(this).val() == 'spatial_summary'){
-                $('#spat_summary').css('display','table-row');
+                $('#spat_summary').css('display','block');
                 $('#temp_summary').css('display','none');
             }
             else{
                 $('#spat_summary').css('display','none');
-                $('#temp_summary').css('display','table-row');
+                $('#temp_summary').css('display','block');
             }
             
             //Hide windowed data options
@@ -338,8 +450,8 @@ $(document).ready(function () {
             $('#end_wind').css('display','none');
             //If data_type is station show flags/obs_time
             if ($('#data_type').length && $('#data_type').val() == 'station'){
-                $('#flags').css('display','table-row');
-                $('#obs_time').css('display','table-row');
+                $('#flags').css('display','block');
+                $('#obs_time').css('display','block');
             }
             else{
                 $('#flags').css('display','none');
@@ -352,10 +464,10 @@ $(document).ready(function () {
     /*
     ELEMENT(S) CHANGE
     */
-    $('#elements').on('change', function(){
+    $('#variables').on('change', function(){
         //Update chart indices string
         if ($('#chart_indices_string').length){
-            var count = $("#elements :selected").length;
+            var count = $("#variables :selected").length;
             var indices = ''
             for (var i=0;i<count;i++){
                 indices+=String(i) + ',';
@@ -365,7 +477,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#element').on('change', function(){
+    $('#variable').on('change', function(){
         //Set monthly statistic for monthly_summary
         var sum_els = ['pcpn','snow','evap','pet'];
         if ($(this).val().inList(sum_els)){
@@ -427,6 +539,7 @@ $(document).ready(function () {
         Checks that start year < end year
         and lies within grid range
         */
+        console.log('YOOOOOO')
         var which = $(this).attr('id');
         var s_yr_int, e_yr_int, diff;
         var min_year, max_year, min_year_fut=null, max_year_fut=null;
@@ -629,52 +742,23 @@ $(document).ready(function () {
         if ($('#app_name').val() == 'station_finder'){
             if ($('#display').val() == 'table'){
                 if (!form_field_id.inList(['display','data_format', 'delimiter','output_file_name'])){
-                    $('.results').each(function() {
-                        $(this).css('display','none');
-                    });
+                    $('.results').css('display','none');
                 }
             } 
             else{
                  if ($(this).attr('id') != 'display'){
-                    $('.results').each(function() {
-                        $(this).css('display','none');
-                    });
+                    $('.results').css('display','none');
                 }
             }
         }
         else{
-            $('.results').each(function() {
-                $(this).css('display','none');
-            });
+            $('.results').css('display','none');
         }
         //Hide appropriate form errors
         //Start and end date may have correlated errors
-        $('#form_error').css('display','none');
+        $('.form_error').css('display','none');
         if ($('#back_button_error').length){
             $('#back_button_error').css('display','none');
-        }
-        if ($(this).parent().parent().next().attr('class') == 'form_error'){
-            $(this).parent().parent().next().css('display','none');
-        }
-        if ($(this).attr('id') == 'start_date'){
-            if ($('#end_date').parent().parent().next().attr('class') == 'form_error'){
-                $('#end_date').parent().parent().next().css('display','none');
-            }
-        }
-        if ($(this).attr('id') == 'end_date'){
-            if ($('#start_date').parent().parent().next().attr('class') == 'form_error'){
-                $('#start_date').parent().parent().next().css('display','none');
-            }
-        }
-        if ($(this).attr('id') == 'start_year'){
-            if ($('#end_year').parent().parent().next().attr('class') == 'form_error'){
-                $('#end_year').parent().parent().next().css('display','none');
-            }
-        }
-        if ($(this).attr('id') == 'end_date'){
-            if ($('#start_year').parent().parent().next().attr('class') == 'form_error'){
-                $('#start_year').parent().parent().next().css('display','none');
-            }
         }
     });
     
@@ -683,7 +767,12 @@ $(document).ready(function () {
     */    
     $('#plot_opts_button').on('click', function(){
         if ($('.plOpts:first').css('display') == 'none'){ 
-            $('.plOpts').css('display','table-row');
+            if ($(this).val().inList(['image_size','cmap'])){
+                $('.plOpts').css('display','inline-block');
+            }
+            else{
+                $('.plOpts').css('display','block');
+            }
             
         }
         else {   
@@ -698,18 +787,7 @@ $(document).ready(function () {
     */
     $('.obtain_sf_data').on('click', function(){
         ShowPopupDocu('formDownload');
-        //$('#formDownload').css('display','block');
         $('.data_format option[value="html"]').attr('disabled', true);
-        /*
-        if ($('#formDownload').css('display') == 'none'){
-            $('.data_format option[value="html"]').attr('disabled', true);
-            $('#formDownload').css('display','block');
-        }
-        else{
-            $('#formDownload').css('display','none');
-            $('.data_format option[value="html"]').attr('disabled', false);
-        }
-        */
     });
     
     /*
@@ -720,7 +798,7 @@ $(document).ready(function () {
     $('#grid').on('change keyup', function(){
         if ($(this).val() == '21'){
             if ($('#temp_res').length){
-                $('#temp_res').css('display','table-row');
+                $('#temp_res').css('display','block');
             }
             //Hide special degree day options
             $('#add').css('display','none');
@@ -730,15 +808,15 @@ $(document).ready(function () {
             if ($('#temp_res').length){
                 $('#temp_res').css('display','none');
             }
-             $('#add').css('display','table-row');
+             $('#add').css('display','block');
             if ($('#add_degree_days').val() == 'T'){
-                $('#dd').css('display','table-row');
+                $('#dd').css('display','block');
             }
         }
-        //Disable elements if prism
+        //Disable variables if prism
         var non_prism_els = ['gdd','hdd','cdd'];
         var station_only_els = ['obst','snow','snwd','evap','wdmv'];
-        $("#elements option").each(function(){
+        $("#variables option").each(function(){
             //Check if prism data, disable degree days
             if ($('#grid').val() == '21' && $(this).val().inList(non_prism_els)){
                 $(this).attr('disabled',true);
@@ -796,7 +874,7 @@ $(document).ready(function () {
     DATA TYPE
     Sets form fields according to data_type (station/grid)
     Affected form fields are
-    elements
+    variables
     grid
     */
     $('.data_type').on('change keyup', function(){
@@ -809,12 +887,12 @@ $(document).ready(function () {
                 $('#stn_finder').css('display','none');
             }
             else{
-                $('#stn_finder').css('display','table-row'); 
+                $('#stn_finder').css('display','block'); 
             }
         }
         update_value($(this).val()); //form_utils function
-        //Set the elements
-        set_elements();
+        //Set the variables
+        set_variables();
         
         //var station_only_els = ['obst','snow','snwd','evap','wdmv'];
         //var non_prism_els = ['gdd','hdd','cdd'];
@@ -832,16 +910,16 @@ $(document).ready(function () {
                 $('#dd').css('display','none');
             }
             else {
-                $('#add').css('display','table-row');
+                $('#add').css('display','block');
                 if ($('#add_degree_days').val() == 'T'){
-                    $('#dd').css('display','table-row');
+                    $('#dd').css('display','block');
                 }
             }
             //Hide flags/obs time
             $('#flags').css('display','none');
             $('#obs_time').css('display','none')
             //Show grid
-            $('#grid_type').css('display','table-row');
+            $('#grid_type').css('display','block');
             //Change POR to date or vice versa
             if ($('#start_year').length){
                 if ($('#start_year').val().toUpperCase() == 'POR'){
@@ -857,6 +935,7 @@ $(document).ready(function () {
             if ($('#summary_type').length){
                 $('#summary_type option[value="all"]').attr('disabled',true);
                 $('#summary_type option[value="prsn"]').attr('disabled',true);
+                $('#summary_type option[value="pcpn"]').attr('disabled',true);
                 $('#summary_type option[value="both"]').attr('disabled',true);
                 $('#summary_type option[value="temp"]').attr('selected',true);
             }
@@ -869,20 +948,21 @@ $(document).ready(function () {
             $('#area_type option[value="locations"]').attr('disabled',true);
             $('#area_type option[value="location"]').attr('disabled',true);
             //Show add degree day option    
-            $('#add').css('display','table-row');
-            $("#elements option").each(function(){
-                //Enable all elements
+            $('#add').css('display','block');
+            $("#variables option").each(function(){
+                //Enable all variables
                 $(this).attr('disabled',false);
             });
             //Hide flags/obs time
-            $('#flags').css('display','table-row');
-            //$('#obs_time').css('display','table-row')
+            $('#flags').css('display','block');
+            //$('#obs_time').css('display','block')
             //Show grid
             $('#grid_type').css('display','none');
             //Enable snow from climatology summary type
             if ($('#summary_type').length){
                 $('#summary_type option[value="all"]').attr('disabled',false);
                 $('#summary_type option[value="prsn"]').attr('disabled',false);
+                $('#summary_type option[value="pcpn"]').attr('disabled',true);
                 $('#summary_type option[value="both"]').attr('disabled',false);
                 $('#summary_type option[value="all"]').attr('selected',true);
             }            
@@ -892,50 +972,44 @@ $(document).ready(function () {
     /*
     MONTHLY SUMMARIES LISTENERS
     */
-    $('img#show_hide_graph, img#show_hide_summary, img#show_hide_data').on('click', function(){
-        var id = $(this).attr('id');
-        if (id == 'show_hide_graph'){
-            if ($('#user_graph').css('display') == 'none'){
-                $('#user_graph').css('display', 'block');
-                $('#printable_table').css('display', 'none');
-                $('#data_summary_table').css('display', 'none');
-            }
-            else{
-                $('#user_graph').css('display', 'none');
-            }
+    $('#show_hide_graph').on('click', function(){
+        if ($(this).val() == 'Show Graph'){
+            $('#main-graph').css('display','block');
+            setTimeout(function(){},1000);
+            $(window).resize();
+            $(this).val('Hide Graph');
         }
-        if (id == 'show_hide_summary'){
-            if ($('#data_summary_table').css('display') == 'none'){
-                $('#user_graph').css('display', 'none');
-                $('#printable_table').css('display', 'none');
-                $('#data_summary_table').css('display', 'block');
-            }
-            else{
-                $('#data_summary_table').css('display', 'none');
-            }
-        }
-        if (id == 'show_hide_data'){
-            if ($('#printable_table').css('display') == 'none'){
-                $('#user_graph').css('display', 'none');
-                $('#printable_table').css('display', 'block');
-                $('#data_summary_table').css('display', 'none');
-            }
-            else{
-                if ($('#user_graph').css('display') == 'none') {
-                    $('#printable_table').css('display', 'none');
-                }
-                else {
-                    $('#printable_table').css('display', 'block');
-                    $('#user_graph').css('display', 'none');
-                }
-            }
+        else{
+            $('#main-graph').css('display','none');
+            $(this).val('Show Graph');
         }
     });
+    $('#show_hide_summary').on('click', function(){
+        if ($(this).val() == 'Show Summary'){
+            $('#summary-table').css('display', 'block');
+            $(this).val('Hide Summary');
+        }
+        else{
+            $('#summary-table').css('display', 'none');
+            $(this).val('Show Summary');
+        }
+    });
+    $('#show_hide_data').on('click', function(){
+        if ($(this).val() == 'Show Data'){
+            $('#main-table').css('display', 'block');
+            $(this).val('Hide Data');
+        }
+        else{
+            $('#main-table').css('display', 'none');
+            $(this).val('Show Data');
+        }
+    });
+
     /*
     MONTHLY SUMMARIES THRESHOLDS FOR NDAYS
     */
     //lean up needed
-    $('#element').on('change', function(){
+    $('#variable').on('change', function(){
         set_BaseTemp($(this).val());
         var lgb = '';
         if ( $('#less_greater_or_between').length){
@@ -951,11 +1025,11 @@ $(document).ready(function () {
     });
     $('#statistic').on('change', function(){
         if ($(this).val() == 'ndays'){ 
-            $('#threshold_type').css('display','table-row');
+            $('#threshold_type').css('display','block');
             var lgb = $('#less_greater_or_between').val();
-            if (lgb == 'b'){$('#threshold_between').css('display','table-row');}
-            if (lgb == 'l'){$('#threshold_below').css('display','table-row');}
-            if (lgb == 'g'){$('#threshold_above').css('display','table-row');}
+            if (lgb == 'b'){$('#threshold_between').css('display','block');}
+            if (lgb == 'l'){$('#threshold_below').css('display','block');}
+            if (lgb == 'g'){$('#threshold_above').css('display','block');}
         }
         else{
             $('#threshold_type').css('display','none');
@@ -965,24 +1039,24 @@ $(document).ready(function () {
         }
     });
     $('#less_greater_or_between').on('change', function(){
-        var threshes = set_threshes($('#element').val()).split(',');
+        var threshes = set_threshes($('#variable').val()).split(',');
         var lgb = $(this).val();
         if (lgb == 'b'){ 
             $('#threshold_low_for_between').val(threshes[2]);
             $('#threshold_high_for_between').val(threshes[3]);
-            $('#threshold_between').css('display','table-row');
+            $('#threshold_between').css('display','block');
             $('#threshold_below').css('display','none');
             $('#threshold_above').css('display','none');
         }   
         if (lgb == 'l'){ 
             $('#threshold_for_less_than').val(threshes[0]);
-            $('#threshold_below').css('display','table-row');
+            $('#threshold_below').css('display','block');
             $('#threshold_between').css('display','none');
             $('#threshold_above').css('display','none');
         }
         if (lgb == 'g'){
             $('#threshold_for_greater_than').val(threshes[1]);
-            $('#threshold_above').css('display','table-row');
+            $('#threshold_above').css('display','block');
             $('#threshold_between').css('display','none');
             $('#threshold_below').css('display','none');
         }
@@ -998,17 +1072,29 @@ $(document).ready(function () {
     Sets maps and area form field
     depending on area type
     */
+    //resets overlay map if same region is chosen
+    $('.area_type').on('mouseup', function() {
+        if ($(this).val().inList(['basin','county_warning_area', 'county','climate_division'])){
+            $('.area_type').trigger("change");
+        } 
+    });
     $('.area_type').on('keydown change', function(){
         //Set area form field
-        set_area('area',$(this)); //form_utils function
+        set_area($(this)); //form_utils function
         /*need to change data type for single apps*/
         if ($(this).val().inList(['location','locations'])){
             $('#data_type').val('grid');
+            if ($('#stn_finder').length){
+                $('#stn_finder').css('display','none');
+            }
         }
         else if ($(this).val()== 'station_id'){
             $('#data_type').val('station');
+            if ($('#stn_finder').length){
+                $('#stn_finder').css('display','block');
+            }
         }
-        set_elements();
+        set_variables();
         set_map($(this)); //form_utils function
         update_value($(this).val()); //form_utils function
         if ($(this).val() == 'shape_file'){
@@ -1027,7 +1113,7 @@ $(document).ready(function () {
         }
         //Change start/end years
         var app_name = $('#app_name').val();
-        if (app_name.inList(['yearly_summary','intraannual','monthly_summary','climatology'])){
+        if (app_name.inList(['seasonal_summary','intraannual','monthly_summary','climatology'])){
             //Set range dropdown values
             set_year_range()
             //Update target year for intra
@@ -1054,19 +1140,19 @@ $(document).ready(function () {
             $('#flags').css('display','none');
         }
         else{
-            $('#obs_time').css('display','table-row');
-            $('#flags').css('display','table-row'); 
+            $('#obs_time').css('display','block');
+            $('#flags').css('display','block'); 
         }
         //Single app specific
         //Show/Hide grid form field and station finder form_field
         var date_vals = null;
         if ($(this).val() == 'station_id'){
             $('#grid_type').css('display','none');
-            $('#stn_finder').css('station_finder','table-row');
+            $('#stn_finder').css('station_finder','block');
             date_vals = set_dates_for_station('station_id', start, end,p);
         }
         if ($(this).val().inList(['location','locations'])){
-            $('#grid_type').css('display','table-row');
+            $('#grid_type').css('display','block');
             date_vals = set_dates_for_grid($('#grid').val(),start, end,p);
         }
         if ($('#app_name').val() == 'station_finder' && $(this).val() != 'station_id'){
@@ -1077,7 +1163,10 @@ $(document).ready(function () {
             $('#end_' + p).val(date_vals.end);
         }
     });
-  
+    $('#location').on('change', function(){
+        MAP_APP.Utils.update_marker_on_map($(this).val());
+    });
+
     /*
     DYNAMIC HIGHCHARTS
     */
@@ -1187,7 +1276,7 @@ $(document).ready(function () {
         }
     });
     //Monthly summary dynamic chart updates
-    $('#chart_indices, #chart_summary').on('change keyup', function(){
+    $('.chart_indices, #chart_summary').on('change keyup', function(){
         smry = 'individual';
         if ($('#chart_summary').length) {
             smry = $('#chart_summary').val();
@@ -1202,9 +1291,10 @@ $(document).ready(function () {
         if ($(this).attr('id') == 'chart_summary'){
             $('.chart_summary').val($(this).val());
         }
-        if ($(this).attr('id') == 'chart_indices'){
+        if ($(this).attr('class') == 'chart_indices'){
             var index_string = '';
-            $("#chart_indices :selected").each(function(){
+            //$("#chart_indices :selected").each(function(){
+            $(".chart_indices :checked").each(function(){
                 index_string+=$(this).val() + ','; 
             });
             index_string = index_string.substring(0,index_string.length - 1);
@@ -1213,7 +1303,7 @@ $(document).ready(function () {
 
     });
 
-    //Threshold for yearly_summary
+    //Threshold for seasonal_summary
     $('#chart_threshold').on('change keyup', function(){
         var thresh = $(this).val();
         for (var i = 0; i < myChart.series.length; i++) {
@@ -1352,88 +1442,14 @@ $(document).ready(function () {
         myChart.redraw();
     });
 
-
     //MAPS
     $('#station_list tbody').on('click', 'tr', function(){
         infowindow.close();
         infowindow.setContent($(this).attr('cString'));
-        infowindow.open(window.map, window.markers[parseInt($(this).attr('id'))]);
-        var bounds = window.map.getBounds();
+        infowindow.open(window.sf_map, window.markers[parseInt($(this).attr('id'))]);
+        var bounds = window.sf_map.getBounds();
         bounds.extend(new google.maps.LatLng(parseFloat($(this).attr('lat')), parseFloat($(this).attr('lon'))));
     });
-    $('#station_list').on('mouseover', 'tr', function(){
-        $(this).css('backgroundColor', "#8FBC8F");
-    });
-    $('#station_list').on('mouseout', 'tr', function(){
-         $(this).css('backgroundColor',"#FFEFD5");
-    });
-
-    /***************
-    EXPORTING TABLES (CSV, EXCEL)
-    ****************/
-    function exportTable($table, filename, type) {
-        /*
-        Download table data to csv or excel (type)
-        */
-        var $header = $table.find('tr:has(th)');
-        var $rows = $table.find('tr:has(td)');
-        
-        // Temporary delimiter characters unlikely to be typed by keyboard
-        // This is to avoid accidentally splitting the actual contents
-        var tmpColDelim = String.fromCharCode(11); // vertical tab character
-        var tmpRowDelim = String.fromCharCode(0); // null character
-        // actual delimiter characters for CSV format
-        if (type == 'csv'){
-            var colDelim = '","';
-            var rowDelim = '"\r\n"';
-        }
-        if (type == 'excel'){
-            var colDelim = '" "';
-            var rowDelim = '"\r\n"';
-        }
-        //Grab header        
-        var csv = '"' + $header.map(function (i, row) {
-            var $row = $(row),$cols = $row.find('th');
-
-            return $cols.map(function (j, col) {
-                var $col = $(col),text = $col.text();
-                return text.replace(/"/g, '""'); // escape double quotes
-
-            }).get().join(tmpColDelim);
-
-            }).get().join(tmpRowDelim)
-                .split(tmpRowDelim).join(rowDelim)
-                .split(tmpColDelim).join(colDelim) + rowDelim + '"';
-        // Grab text from table into CSV formatted string
-        //csv+= '"' + $rows.map(function (i, row) {
-        csv+= $rows.map(function (i, row) {
-            var $row = $(row),$cols = $row.find('td');
-
-            return $cols.map(function (j, col) {
-                var $col = $(col),text = $col.text();
-                return text.replace(/"/g, '""'); // escape double quotes
-
-            }).get().join(tmpColDelim);
-
-            }).get().join(tmpRowDelim)
-                .split(tmpRowDelim).join(rowDelim)
-                .split(tmpColDelim).join(colDelim) + '"';
-
-        // Data URI
-        if (type == 'csv'){
-            var Data = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
-        }
-        if (type == 'excel'){
-            var Data = 'data:application/vnd.ms-excel,' + encodeURIComponent(csv);
-        } 
-        $(this)
-            .attr({
-            'download': filename,
-                'href': Data,
-                'target': '_blank'
-        }); 
-    }  
-
     /***************
     AJAX CALLS
     ****************/
@@ -1452,8 +1468,8 @@ $(document).ready(function () {
         })
         .done(function(response) {
             response = JSON.parse(response);
-            if ('error' in response){
-                $('.ajax_error').html(response['error'])
+            if ('overlay_error' in response){
+                $('.ajax_error').html(response['overlay_error'])
             }
             else{
                 $('#kml_file_path').val(response['kml_file_path']);
@@ -1466,178 +1482,28 @@ $(document).ready(function () {
             $('.ajax_error').html(get_ajax_error(jqXHR.status));
        }) 
     });
-    /* 
-    //MonthlySpatialSummary
-    $('#MonthlySpatialSummaryDataForm').on('submit', function(event){
-        show_loading_gif()
-        event.preventDefault();
-        var form_data = $('#MonthlySpatialSummaryDataForm :input').serialize();
-        var jqxhr = $.ajax({
-            url:'',
-            method: "POST",
-            data: form_data,
-        })
-        .done(function(response) {
-            response = JSON.parse(response);
-            //Errror Handling
-            if ('form_error' in response){
-                err = 'ERROR: Please correct the form error(s) highlighted in red!';
-                $('#formError').html(err);
-                $('#formError').css('display','block');
-                for (var key in response['form_error']){
-                    highlight_form_field(key,response[key]);
-                }
-            }
-            else{
-                $('#formError').css('display','none');
-            }
-            if ('results' in response && 'error' in response['results']){
-                $('#resultsError').html(response['results']['error']);
-                $('#resultsError').css('display','block');
-            }
-            else{
-                $('#resultsError').css('display','none');
-            }
-            if ('results' in response && !'data' in response['results'] && !'smry' in response['results']){
-                $('#noResultsError').css('display','block');
-            }
-            else{
-                $('#noResultsError').css('display','none');
-            }
-            //Display data
-            if ('results' in response && 'smry' in response['results']){
-                hide_loading_gif();
-                //Header
-                var h_idx, header = '';
-                if ('params_display_list' in response){
-                    for (h_idx=0; h_idx < response['params_display_list'].length;h_idx++){
-                        header+='<b>' + response['params_display_list'][h_idx][0] + '</b>: ';
-                        header+=response['params_display_list'][h_idx][1] + ';'
-                    }
-                    $('#TableHeader').html(header);
-                    $('#TableHeader').css('display','block');
-                }
-                //Data Table
-                if ($('#DataTable').length){
-                    $('#DataTable').remove();
-                }
-                //Write new table
-                var dataTable = $('<table/>');
-                dataTable.addClass('smallFont').addClass('nowrap');
-                dataTable.attr('border','1');
-                dataTable.attr('width','100%');
-                dataTable.attr('id','DataTable');
-                
-                var row, row_idx, td, td_idx;
-                for (row_idx = 0;row_idx < response['results']['smry'].length;row_idx++){
-                    row = '<tr>';
-                    for (td_idx = 0;td_idx< response['results']['smry'][row_idx].length;td_idx++){
-                        row+='<td>' + response['results']['smry'][row_idx][td_idx]+ '</td>'
-                    }
-                    row+='</tr>'
-                    if (row_idx == 0){
-                        dataTable.append('<thead>');
-                        dataTable.append(row);
-                        dataTable.append('</thead>');
-                        dataTable.append('<tbody>');
-                    }
-                    else if (row_idx == response['results']['smry'].length - 1){
-                        dataTable.append('<tfoot>');
-                        dataTable.append(row);
-                        dataTable.append('</tfoot>');
-                    }
-                    else {
-                        dataTable.append(row);
-                    }
-                }
-                dataTable.append('</tbody>')
-                //Make visible
-                $('#tableContainer').append(dataTable);
-                $('#tableContainer').css('display','block'); 
-                //Make it a dataTable
-                //$('#DataTable').DataTable({
-                dataTable.DataTable({
-                    'dom': 'Bfrtip',
-                    'paging': false,
-                    'scrollY': 400,
-                    'scrollCollapse': true,
-                    'scrollX': 'auto',
-                    'autoWidth':false,
-                    'buttons': [
-                        {
-                            'extend':'csvHtml5',
-                            'title':dataTableInfo,
-                            'exportOptions': {
-                                'columns': ':visible'
-                            }
-                        },
-                        {
-                            'extend':'excelHtml5',
-                            'title':dataTableInfo,
-                            'exportOptions': {
-                                'columns': ':visible'
-                            }
-                        },
-                        {
-                            'extend':'pdfHtml5',
-                            'title': dataTableInfo,
-                            'orientation': 'landscape',
-                            'pageSize':'A4',
-                            'exportOptions': {
-                                'columns': ':visible'
-                            }
-                        },
-                        {
-                            'extend':'print',
-                            'title': dataTableInfo,
-                            'exportOptions': {
-                                'columns': ':visible'
-                            }
-                        },
-                        {
-                            'extend':'copy',
-                            'title': dataTableInfo,
-                            'exportOptions': {
-                                'columns': ':visible'
-                            }
-                        },
-                        'colvis'
-                    ]
-                });
-            }
-            else{
-                $('#TableHeader').css('display','none');
-                $('#tableContainer').css('display','none');
-            }
-        })
-        .fail(function(jqXHR) {
-            hide_loading_gif();
-            $('.ajax_error').html(get_ajax_error(jqXHR.status));
-       })  
-    });
-    */
 
     //Station Finder data download
     $('#StationFinderDownloadForm').on('submit', function(event){
         show_loading_gif()
         event.preventDefault();
-        var form_data = $('#DataForm :input, #StationFinderDownloadForm :input').serialize();
+        $('#formDownload').dialog('close');
+        //var form_data = $('#DataForm :input, #StationFinderDownloadForm :input').serialize();
+        var form_data = $('#DataForm, #StationFinderDownloadForm').serialize();
         var jqxhr = $.ajax({
             url:'',
             method: "POST",
             data: form_data,
         })
-        .done(function(response) {
+        .done(function(response) {       
             response = JSON.parse(response);
             if ('form_error_download' in response){
-                $('#formErrorDownload').html(response['form_error_download']);
-                $('#formErrorDownload').css('display','block');
+                 $('#formDownload').dialog('open');
+                $('.formErrorDownload').html(response['form_error_download']);
+                $('.formErrorDownload').css('display','block');
             }
             else{
-                $("#formDownload").dialog('close');
-                $('#formErrorDownload').css('display','none');
-                //$('#offlineMessage').css('display','block');
-                //alert($('#offlineMessage').html());
+                $('.formErrorDownload').css('display','none');
                 ShowPopupDocu('offlineMessage');
             }
             hide_loading_gif();
@@ -1651,9 +1517,10 @@ $(document).ready(function () {
     $('#LargeRequestForm').on('submit', function(event){
         show_loading_gif();
         event.preventDefault();
+        $('#formLargeRequest').dialog('close');
         //All extra input variables are linked and updated in the DataForm
         //Note need hidded vars user_name, email, delimiter, etx in main form
-        var form_data = $('#DataForm :input, #LargeRequestForm :input[name="formLargeRequest"]').serialize(); 
+        var form_data = $('#DataForm, #LargeRequestForm').serialize(); 
         hide_loading_gif();
         var jqxhr = $.ajax({
             url:'',
@@ -1663,12 +1530,13 @@ $(document).ready(function () {
         .done(function(response) {
             response = JSON.parse(response);
             if ('form_error' in response){
-                $('#formErrorLargeRequest').html(response['form_error']);
-                $('#formErrorLargeRequest').css('display','block');
+                $('#formLargeRequest').dialog('open');
+                $('.formErrorLargeRequest').html(response['form_error']);
+                $('.formErrorLargeRequest').css('display','block');
             }
             else{
                 $("#largeRequestForm").dialog('close');
-                $('#formErrorLargeRequest').css('display','none');
+                $('.formErrorLargeRequest').css('display','none');
                 //$('#offlineMessage').css('display','block');
                 ShowPopupDocu('offlineMessage');
 
@@ -1677,73 +1545,6 @@ $(document).ready(function () {
         .fail(function(jqXHR) {
             hide_loading_gif();
             $('.ajax_error').html(get_ajax_error(jqXHR.status));
-       }) 
-    });
-
-    /*
-    //Other data downloads
-    $('#formDownload').on('submit', function(event){
-        show_loading_gif()
-        event.preventDefault();
-        var form_data = $('#formDownload :input').serialize();
-        var jqxhr = $.ajax({
-            url:'',
-            method: "POST",
-            data: form_data,
-        })
-        .done(function(response) {
-                hide_loading_gif();
-            }    
-        })
-        .fail(function(jqXHR) {
-            hide_loading_gif();
-            $('.ajax_error').html(get_ajax_error(jqXHR.status));
        })
     });
-    */
-    
-    /*
-    $('.DataForm').on('submit', function(event){
-        show_loading_gif()
-        event.preventDefault();
-        
-        //var form = $(this).parents('form:first');
-        var form_data = $('#DataForm :input').serialize();
-        var jqxhr = $.ajax({
-            url:'',
-            method: "POST",
-            data: form_data,
-        })
-        .done(function(response) {
-            try{
-                response = JSON.parse(response);
-            }
-            catch(e){response = {'submitForm':true}}
-            if ('form_error' in response){
-                $.each( response['form_error'], function(key,val){
-                    highlight_form_field(key,val);
-                });
-            }
-            if ('large_request' in response){
-                showLargeRequestForm();
-            }
-            
-            if ('submitForm' in response){
-                $('#DataForm').removeClass('DataForm');
-                $('<input>').attr({
-                    type: 'hidden',
-                    id: 'submitFormToDjango',
-                    name: 'submitFormToDjango'
-                }).appendTo($('#DataForm'));
-                //$('#DataForm').submit();
-                
-            }    
-            hide_loading_gif();
-        })
-        .fail(function(jqXHR) {
-            hide_loading_gif();
-            $('.ajax_error').html(get_ajax_error(jqXHR.status));
-       })
-    });
-    */
 });

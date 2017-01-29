@@ -1,18 +1,17 @@
 {%load my_scenic_filters%}
-    <td>Calculation: </td>
-    <td>
-        <select id="calculation" name="calculation">
-         {%for opt, name in initial.form_options.calculation%}
-            <option value="{{opt}}" {%if initial.calculation == opt%}selected{%endif%}>{{name}}</option>
-        {%endfor%} 
-        </select>
-    </td>
-    <td><img alt="Click me!" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
+<div class="form-group">
+    <label for="calculation">Calculation</label>
+    <img class="qmark" id="qmark-calculation" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
     <div class="pop-up">
         <div id="ht_calculation"></div>
         <script type="text/javascript">                        
         $("#ht_calculation").load("{{HTML_URL}}Docu_help_texts.html #ht_calculation");
         </script>
     </div>
-    </td>
+    <select class="form-control" id="calculation" name="calculation">
+    {%for opt, name in initial.form_options.calculation%}
+        <option value="{{opt}}" {%if initial.calculation == opt%}selected{%endif%}>{{name}}</option>
+    {%endfor%} 
+    </select>
+</div>
 

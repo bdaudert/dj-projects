@@ -1,16 +1,15 @@
-        <td>Show Flags: </td>
-        <td>
-            <select id="show_flags" name="show_flags" onchange="update_value(this.value)">
-            {%for opt, name in initial.form_options.show_flags%}
-                <option value="{{opt}}" {%if initial.show_flags == opt%}selected{%endif%}>{{name}}</option>
-            {%endfor%} 
-            </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_show_flags"></div>
-            <script type="text/javascript">                        
-            $("#ht_show_flags").load("{{HTML_URL}}/Docu_help_texts.html #ht_show_flags");
-            </script>
-        </div>
-        </td>
+<div class="form-group">
+    <label for="show_flags">Show Flags</label>
+    <img class="qmark" id="qmark-flags" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <div class="pop-up">
+        <div id="ht_show_flags"></div>
+        <script type="text/javascript">                        
+        $("#ht_show_flags").load("{{HTML_URL}}/Docu_help_texts.html #ht_show_flags");
+        </script>
+    </div>
+    <select id="show_flags" class="form-control" name="show_flags" onchange="update_value(this.value)">
+    {%for opt, name in initial.form_options.show_flags%}
+        <option value="{{opt}}" {%if initial.show_flags == opt%}selected{%endif%}>{{name}}</option>
+    {%endfor%} 
+    </select>
+</div>

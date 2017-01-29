@@ -1,16 +1,14 @@
-       <td>Areas within state:</td>
-        <td>
-            <select class="area_reduce" id="area_reduce" name="area_reduce">
-            {%for opt, name in initial.form_options.area_reduce%}
-            <option value="{{opt}}" {%if initial.area_reduce == opt%}selected{%endif%}
-            >{{name}}</option>
-            {%endfor%}
-            </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div id="Docu_area_reduce" class="pop-up"></div>
-        <script type="text/javascript">                        
-            $("#Docu_area_reduce").load("{{HTML_URL}}/Docu_help_texts.html #ht_area_reduce");
-        </script>
-        </td>
-
+<div class="form-group">
+    <label for="area_reduce">Areas within state:</label>
+    <img class="qmark" id="qmark-area-reduce" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <div id="Docu_area_reduce" class="pop-up"></div>
+    <script type="text/javascript">                        
+        $("#Docu_area_reduce").load("{{HTML_URL}}/Docu_help_texts.html #ht_area_reduce");
+    </script>
+    <select class="area_reduce" id="area_reduce" name="area_reduce">
+    {%for opt, name in initial.form_options.area_reduce%}
+        <option value="{{opt}}" {%if initial.area_reduce == opt%}selected{%endif%}
+        >{{name}}</option>
+    {%endfor%}
+    </select>
+</div>

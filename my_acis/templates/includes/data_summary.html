@@ -1,18 +1,17 @@
-       <td>Data Summary: </td>
-        <td>
-            <select id="data_summary" name="data_summary" onchange="update_value(this.value);">
-            {%for opt, name in initial.form_options.data_summary%}
-                <option value="{{opt}}" {%if initial.data_summary == opt%} selected{%endif%}
-                {%if initial.app_name == "single_lister" and opt == 'spatial_summary'%}disabled{%endif%}
-                >{{name}}</option>
-            {%endfor%} 
-            </select>
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_data_summary"></div>
-            <script type="text/javascript">                        
+<div class="form-group">
+    <label for="data_summary">Summary</label>
+    <img class="qmark" id="qmark-data_summary" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <div class="pop-up">
+        <div id="ht_data_summary"></div>
+        <script type="text/javascript">                        
             $("#ht_data_summary").load("{{HTML_URL}}/Docu_help_texts.html #ht_data_summary");
-            </script>
-        </div>
-        </td>
+        </script>
+    </div>
+    <select id="data_summary" class="form-control" name="data_summary" onchange="update_value(this.value);">
+        {%for opt, name in initial.form_options.data_summary%}
+            <option value="{{opt}}" {%if initial.data_summary == opt%} selected{%endif%}
+            {%if initial.app_name == "single_lister" and opt == 'spatial_summary'%}disabled{%endif%}
+            >{{name}}</option>
+        {%endfor%} 
+    </select>
+</div>

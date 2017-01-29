@@ -1,0 +1,11 @@
+<div class="form-group">
+    <label for="user_name"><font color="DarkViolet">Name</font></label>
+    <img class="qmark" id="qmark-user_name" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <div class="pop-up">
+        <div id="ht_user_name"></div>
+        <script type="text/javascript">                        
+            $("#ht_user_name").load("{{HTML_URL}}/Docu_help_texts.html #ht_user_name");
+        </script>
+    </div>    
+    <input type="text" class="user_name form-control" name="user_name" value="{{initial.user_name}}" onchange="update_value(this.value);">
+</div>

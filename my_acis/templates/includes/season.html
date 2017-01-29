@@ -1,17 +1,16 @@
 {%load my_scenic_filters%}
-        <td id="season">Month/Season: </td>
-        <td>
-            <select id="season" name="season" class="season">
-            {% for opt, name in initial.form_options.season%}
-                <option value="{{opt}}" {%if initial.season == opt%} selected{%endif%}>{{name}}</option>
-            {%endfor%} 
-            <select>            
-        </td>
-        <td><img alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png" class="trigger">
-        <div class="pop-up">
-            <div id="ht_season_season"></div>
-            <script type="text/javascript">                        
+<div class="form-group">
+    <label for="season">Season</label>
+    <img class="qmark" id="qmark-season" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <div class="pop-up">
+        <div id="ht_season_season"></div>
+        <script type="text/javascript">                        
             $("#ht_season").load("{{HTML_URL}}/Docu_help_texts.html #ht_season");
-            </script>
-        </div>
-        </td>
+        </script>
+    </div>
+    <select id="season" name="season" class="season">
+    {% for opt, name in initial.form_options.season%}
+        <option value="{{opt}}" {%if initial.season == opt%} selected{%endif%}>{{name}}</option>
+    {%endfor%} 
+    <select>            
+</div>

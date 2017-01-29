@@ -1,0 +1,47 @@
+    <div>
+    {%if results.station_json and not error and not form_error and not need_overlay_map%}
+        <input type="hidden" id="station_json" name="variable" value="{{results.station_json}}">
+        <input type="hidden" id="metadata_keys_str" name="metadata_keys_str" value="{{initial.metadata_keys_str}}">
+        <div class="sf_map" align="center">
+            <button class="btn btn-primary obtain_sf_data">
+                Obtain Data for stations displayed
+            </button>
+        </div> 
+        <div class="sf_map">
+            <table id="map_legend"></table>
+        </div>
+        <div class="sf_map">
+            <div class="map-station-finder" id="map-station-finder"></div>
+        </div>
+        <div class="sf_map" align="center">
+            <button class="btn btn-primary obtain_sf_data">
+                Obtain Data for stations displayed
+            </button> 
+        </div><br />
+        <div class="station_list">
+            <div class="dataTableInfo" id="dataTableInfo-0" style="display:none">
+            {%for key_val in params_display_list%}
+                {{key_val.0}} {{key_val.1}},
+            {%endfor%}
+            </div> 
+            <table id="station_list" id="dataTable-0" border=1>
+            <thead><tr>
+            {%for meta_name in initial.metadata_names%}
+                <th>{{meta_name}}</th>
+            {%endfor%}
+            </tr></thead>
+            <tfoot><tr>
+            {%for meta_name in initial.metadata_names%}
+                <th>{{meta_name}}</th>
+            {%endfor%}
+            </tr></tfoot>
+            <tbody></tbody></table>
+        </div> 
+        <!--Execute js script to generate map and station list-->
+        <script type="text/javascript">
+            $(document).ready(function () {
+                initialize_station_finder();
+            });
+         </script>
+    {%endif%}<!--end if  station_json and not error and not form_error and not need_overlay_map-->
+    </div>
