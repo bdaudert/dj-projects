@@ -190,7 +190,7 @@
             <p>
             {%for key_val in results.header%}
             {%if key_val.0 == "Variable"%}
-                <b>{{key_val.0}}</b>: {{key_val.1}}
+                <b>{{key_val.0}}</b> {{key_val.1}}
             {%elif key_val.0 == "Start Year"%}
                 <b>{{key_val.1}}</b>
             {%elif key_val.0 == "End Year"%}
@@ -198,7 +198,7 @@
             {%elif key_val.0 == "Units" or key_val.0 == "Base Temperature"%}
                 &nbsp;({{key_val.1}})<br />
             {%else%}
-                <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+                <b>{{key_val.0}}</b> {{key_val.1}}<br />
             {%endif%}
             {%endfor%}
             </p>
@@ -294,7 +294,7 @@ Many stations do not measure pan evaporation during winter months. A "0.00" tota
             <p>
             {%for key_val in results.header%}
             {%if key_val.0 == "Variable"%}
-                <b>{{key_val.0}}</b>: {{key_val.1}}
+                <b>{{key_val.0}}</b> {{key_val.1}}
             {%elif key_val.0 == "Start Year"%}
                 <b>{{key_val.1}}</b>
             {%elif key_val.0 == "End Year"%}
@@ -302,7 +302,7 @@ Many stations do not measure pan evaporation during winter months. A "0.00" tota
             {%elif key_val.0 == "Units" or key_val.0 == "Base Temperature"%}
                 &nbsp;({{key_val.1}})<br />
             {%else%}
-                <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+                <b>{{key_val.0}}</b> {{key_val.1}}<br />
             {%endif%}
             {%endfor%}
             </p>

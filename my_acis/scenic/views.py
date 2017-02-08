@@ -1972,9 +1972,9 @@ def set_sodxtrmts_head(form):
         header_order+=['']
     if form['statistic'] == 'ndays':
         if form['less_greater_or_between'] == 'l':
-            header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
+            header_order+=['less_greater_or_between','threshold_for_less_than','']
         elif form['less_greater_or_between'] == 'g':
-            header_order+=['less_greater_or_between','threshold_for_less_or_greater','']
+            header_order+=['less_greater_or_between','threshold_for_greater_than','']
         else: #between
             header_order+=['less_greater_or_between','threshold_low_for_between','threshold_high_for_between','']
     header_order+=['max_missing_days']

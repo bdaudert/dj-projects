@@ -383,8 +383,10 @@ function set_area(area_type_node){
     Also adjusts autofill list 
     and area form variable helptext
     */
+    //Empty the old area option
+    $('#area-form-input').empty();
     var lv, html_text, area_type = area_type_node.val(),i, pop_id,
-        st, state, selected = ' ', kml_file_path = null;
+        st, state, is_selected = '', kml_file_path = null;
 
     if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
         TMP_URL = $('#TMP_URL').val();
@@ -406,26 +408,34 @@ function set_area(area_type_node){
             html_text+=' list="' + lv.autofill_list + '"';
         }
         html_text+=' onchange="update_value(this.value) & update_maps(this)" >';
+        $('#area-form-input').html(html_text);
     }
     else{
-        html_text = '<select id="' + area_type + '" name="'+ area_type + 
-        ' class="area form-control">';
+        var select, opt;
+        html_text = '<select id="' + area_type + '" name="'+ area_type + '" class="area form-control">';
+        html_text+=' onchange="update_value(this.value) & update_maps(this)" />';
+        select = $(html_text);
         for (i=0;i< state_choices.length;i++){  
             st = state_choices[i];
             state = state_names[st];
             if ($('#overlay_state').length){
-                if (st == $('#overlay_state').val()){selected = ' selected';}
-                else{selected = ' ';}
+                if (st == $('#overlay_state').val()){is_selected = ' selected';}
+                else{is_selected = '';}
             }
             else{
-                if (st == 'nv'){selected = ' selected';}
-                else {selected = ' ';}
+                if (st == 'nv'){is_selected = ' selected';}
+                else {is_selected = '';}
             } 
-            html_text= html_text + '<option class="area"' + selected + ' value="' + st +'">' + state + '</option>';
+            //opt = '<option' + selected + ' value="' + st +'">' + state + '</option>';
+            if (is_selected){
+                $('<option />', {value: st, text: state}).attr('selected','selected').appendTo(select);
+            }
+            else{
+                $('<option />', {value: st, text: state}).appendTo(select);
+            }
         }
-        html_text = html_text + '</select>'
+        select.appendTo('#area-form-input');
     }
-    $('#area-type-form-input').html(html_text) ;   
     //Set newq help text
     pop_id = $('#area-pop-up');
     pop_id.html('');
