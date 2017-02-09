@@ -266,9 +266,6 @@ function set_year_range(){
             min_year_fut = grid_vd[grid][1][0].slice(0,4);
             max_year_fut = grid_vd[grid][1][1].slice(0,4);
         }
-        //Set new year dropdowns
-        $('#start_year > option').remove();
-        $('#end_year > option').remove();
     }
     if ($('#area_type').val() == 'station_id'){
         //AJAX call to get vd of stations
@@ -623,39 +620,39 @@ function set_map(node){
     if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
         hide_polygon_map();
         hide_gridpoint_map();
-        hide_gridpoints_map();
+        //hide_gridpoints_map();
         show_overlay_map();
     } 
     else if (area_type == 'shape') {
         hide_overlay_map();
         hide_gridpoint_map();
-        hide_gridpoints_map();
+        //hide_gridpoints_map();
         show_polygon_map();
     }
     else if (area_type.inList(['location'])){
         hide_overlay_map();
         hide_polygon_map();
         show_gridpoint_map();
-        hide_gridpoints_map();
+        //hide_gridpoints_map();
     }
     else if (area_type.inList(['locations'])){
         hide_overlay_map();
         hide_polygon_map();
         hide_gridpoint_map();
-        show_gridpoints_map();
+        //show_gridpoints_map();
     }
     else if (area_type == 'bounding_box'){
         hide_overlay_map();
         hide_polygon_map();
         hide_gridpoint_map();
-        hide_gridpoints_map();
+        //hide_gridpoints_map();
         show_bbox_map();
     }
     else {
         hide_overlay_map();
         hide_polygon_map();
         hide_gridpoint_map();
-        hide_gridpoints_map();
+        //hide_gridpoints_map();
         hide_bbox_map();
     }
 }
