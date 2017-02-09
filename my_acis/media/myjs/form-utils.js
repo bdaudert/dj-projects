@@ -294,6 +294,7 @@ function set_year_range(){
             $('#start_year').append(opt);
             $('#end_year').append(opt);
     }
+    $('#start_year').val(min_year);
     $('#end_year').val(String(selected_year_end));
 }
 

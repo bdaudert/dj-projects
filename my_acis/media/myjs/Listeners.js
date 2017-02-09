@@ -590,7 +590,12 @@ $(document).ready(function () {
         }
         //Update mn/max_year and target year
         if ($('#app_name').val() == 'intraannual'){
-            $('.target_year').val($('#start_year').val());
+            if ($('#start_year').val().toLowerCase()!='por'){
+                $('.target_year').val($('#start_year').val());
+            }
+            else{
+                $('.target_year').val($('#min_year').val());
+            }
         }
         if ($('#season').length){
             var d = new Date();
@@ -834,7 +839,12 @@ $(document).ready(function () {
             set_year_range()
             //Update target year for intra
             if ($('#app_name').val() == 'intraannual'){
-                $('.target_year').val($('#min_year').val());
+                if ($('#start_year').val().toLowerCase()!='por'){
+                    $('.target_year').val($('#start_year').val());
+                }
+                else{
+                    $('.target_year').val($('#min_year').val());
+                }
             }
         }
         if ($('#start_date').length && $('#end_date').length){
@@ -1114,8 +1124,14 @@ $(document).ready(function () {
             //Set range dropdown values
             set_year_range()
             //Update target year for intra
+            console.log($('#start_year').val());
             if (app_name == 'intraannual'){
-                $('.target_year').val($('#min_year').val());
+                if ($('#start_year').val().toLowerCase()!='por'){
+                    $('.target_year').val($('#start_year').val());
+                }
+                else{
+                    $('.target_year').val($('#min_year').val());
+                }
             }
         }
         if (app_name == 'climatology'){
