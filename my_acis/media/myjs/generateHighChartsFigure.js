@@ -52,7 +52,12 @@ function generateTS_individual(chart_indices) {
         var chartTitle = datadict[chart_indices[0]].title + ';' + datadict[chart_indices[1]].title; 
     }
     else{
-        var chartTitle = datadict[chart_indices[0]].title;
+        if (chart_indices.length){
+            var chartTitle = datadict[chart_indices[0]].title;
+        }
+        else{
+            var chartTitle = '';
+        }
     }
     var subTitle = datadict[chart_indices[0]].subTitle;
     //Set font size

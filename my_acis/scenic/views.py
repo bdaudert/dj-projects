@@ -1929,10 +1929,13 @@ def check_form(form, fields_to_check):
         err = checker(form)
         if err:
             if field in ['start_year','end_year']:
+                form_error[field] = err
+                '''
                 if form['app_name'] in ['intraannual','seasonal_summary','monthly_summary','climatology']:
                     form_error['Year Range'] = err
                 else:
                     form_error[field] = err
+                '''
             else:
                 form_error[field] = err
             #Stop at first error

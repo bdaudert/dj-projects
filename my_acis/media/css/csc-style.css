@@ -159,12 +159,12 @@ table.smallFont td, th{
 }
 
 .pop-up {
-  background-color: #f2dede;
-  display:none;
-  text-align:left;
-  padding:1%;
-  z-index:10;
-  max-width:80%
+    /*background-color:#dedede;*/
+    display:none;
+    text-align:left;
+    padding:1%;
+    z-index:10;
+    max-width:80%
 }
 
 .main-form {

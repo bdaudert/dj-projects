@@ -965,16 +965,19 @@ function initialize_polygon_map(poly) {
             selectedShape.setEditable(false);
             selectedShape = null;
         }
+        window.polygon = null;
     }
     function setSelection(shape) {
         clearSelection();
         selectedShape = shape;
         shape.setEditable(true);
         shape.setDraggable(true);
+        window.polygon = shape;
     }
     function deleteSelectedShape() {
         if (selectedShape) {
             selectedShape.setMap(null);
+            window.polygon = null;
         }
         drawingManager.setOptions({
             //drawingMode: google.maps.drawing.OverlayType.POLYGON,
@@ -1207,6 +1210,7 @@ function initialize_polygon_map(poly) {
     //Resize to show map
     //setTimeout(function(){google.maps.event.trigger(map, 'resize');},500);
     window.map = map;
+    window.polygon = shape_init
     window.resizeTo($(window).width(), $(window).height());
 }
 

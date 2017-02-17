@@ -58,6 +58,10 @@ function zoomToLocation() {
                     $('#location').val(String(lon) + ',' + String(lat));
                 }
             }
+            if (window.polygon){
+                window.polygon.setMap(null);
+                $('#shape').val('');
+            }
         }
         else {
             alert('Geocode was not successful for the following reason: ' + status);
@@ -234,12 +238,14 @@ function ShowPopupDocu(DivId){
             $(this).css("maxHeight", max_height);
         },
         open: function() {
+            //$(this).scrollTop(0);
             $(this).closest(".ui-dialog")
             .find(".ui-dialog-titlebar-close")
             .removeClass("ui-dialog-titlebar-close")
             .html("<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>");
         }
     });
+    //$( '#' + DivId ).scrollTop(0);
     $(".ui-dialog").css("z-index", 10);
     $(".ui-widget-content").css("background-color", "#dedede");
     $(".ui-widget-header").css("color", "#000000");
@@ -254,10 +260,13 @@ function ShowHowtoDocu(DivId){
         resizable: true,
         modal: false,
         width:700,
+        /*
         open: function () {
             $(this).scrollTop(0);
-        }
+        }*/
     });
+    //$( '#' + DivId ).scrollTop(0);
+    $(".ui-dialog").css("z-index", 10);
     $(".ui-widget-content").css("background-color", "#dedede");
     $(".ui-widget-content").css("border", "2px solid #292929");
     $(".ui-widget-header").css("color", "#000000");

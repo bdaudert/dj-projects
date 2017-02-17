@@ -1,3 +1,6 @@
+<div class="zoom-to"  id="zoom-to-map-polygon" {%if not need_polygon_map%} style="display:none;"{%endif%}>
+    {% include 'includes/zoom-to-button.html'%}
+</div>
 <div id="PolyMap" {%if not need_polygon_map%}style="display:none;"{%endif%}>
     <div id="map-polygon"></div>
     {%if initial.shape%}

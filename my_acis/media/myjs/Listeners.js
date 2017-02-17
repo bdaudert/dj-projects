@@ -1,4 +1,28 @@
 $(document).ready(function () {
+    /*
+    WARNING: This REALLY messes things up!!!!
+    //Only show each popup once
+    $('body').bind('click', function(e) {
+        if ($(e.target).hasClass('qmark') || $(e.target).hasClass('docu') || $(e.target).hasClass('pop-up')){
+            $(':ui-dialog').each(function(){
+                if ($(this) == $(e.target).next("div.ui-dialog")){
+                    $(this).dialog('open');
+                }
+                else{
+                    if($(this).dialog('isOpen')){
+                        $(this).dialog('close');
+                    }
+                }
+            });
+        }
+        else{
+            $(':ui-dialog').each(function(){
+                if($(this).dialog('isOpen')){
+                    $(this).dialog('close');
+                }
+            });
+        }
+    });*/
     //Bootstrap nav menue
     $('[data-submenu]').submenupicker();
     var dataTables = $('.dataTable'), id;
@@ -191,10 +215,12 @@ $(document).ready(function () {
                $(pop_up).dialog('destroy');
             }
         }).height('auto').width('auto');
-        $(".ui-widget-content").css("background-color", "#f2dede");
+        $(pop_up).scrollTop(0);
+        $(".ui-dialog").css("z-index", 10);
+        $(".ui-widget-content").css("background-color", "#dedede");
         $(".ui-widget-header").css("color", "#000000");
-        $(".ui-widget-header").css("background-color", "#f7ebeb");
-        $(".ui-icon").css("background-color", "#f7ebeb");
+        $(".ui-widget-header").css("background-color", "#ffffff");
+        $(".ui-icon").css("background-color", "#000000");
         $(".ui-icon").css("background-color", "#ffffff");
     });
     /*
