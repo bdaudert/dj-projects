@@ -1,28 +1,4 @@
 $(document).ready(function () {
-    /*
-    WARNING: This REALLY messes things up!!!!
-    //Only show each popup once
-    $('body').bind('click', function(e) {
-        if ($(e.target).hasClass('qmark') || $(e.target).hasClass('docu') || $(e.target).hasClass('pop-up')){
-            $(':ui-dialog').each(function(){
-                if ($(this) == $(e.target).next("div.ui-dialog")){
-                    $(this).dialog('open');
-                }
-                else{
-                    if($(this).dialog('isOpen')){
-                        $(this).dialog('close');
-                    }
-                }
-            });
-        }
-        else{
-            $(':ui-dialog').each(function(){
-                if($(this).dialog('isOpen')){
-                    $(this).dialog('close');
-                }
-            });
-        }
-    });*/
     //Bootstrap nav menue
     $('[data-submenu]').submenupicker();
     var dataTables = $('.dataTable'), id;
@@ -184,6 +160,12 @@ $(document).ready(function () {
     FORM HELP TEXTS
     */
     $('.qmark').on('click', function(){
+        //Close all dialogs that happen to be open
+        $(':ui-dialog').each(function(){
+            if ($(this).dialog('isOpen')){
+                $(this).dialog('destroy');
+            }   
+        });
         var id = $(this).attr('id');
         var pop_up = $('#' + id).next('div.pop-up');
         var max_height = $(window).height()*0.3, 

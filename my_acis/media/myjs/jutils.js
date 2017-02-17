@@ -212,16 +212,24 @@ function HighLight(node,DivClass,DivId) {
 }
 
 function ShowPopupDocu(DivId){
+    console.log('YO');
+    //Close all dialogs that happen to be open
+    $(':ui-dialog').each(function(){
+        if ($(this).dialog('isOpen')){
+            $(this).dialog('destroy');
+        }
+    });
     try {
         var bootstrapButton = $.fn.button.noConflict();
         $.fn.bootstrapBtn = bootstrapButton;
     }catch(e){};
     var wWidth = $(window).width();
-    var max_height = $(window).height()*0.7, 
-        max_width = wWidth * 0.8;
+    var max_height = $(window).height()*0.6, 
+        max_width = wWidth * 0.6;
     if (DivId.inList(['formDownload','largeRequestForm'])){
         var max_width = wWidth * 0.3;
     }
+    //Open the dialog
     $( '#' + DivId ).dialog({
         position:{
             my:'center',
@@ -238,14 +246,17 @@ function ShowPopupDocu(DivId){
             $(this).css("maxHeight", max_height);
         },
         open: function() {
-            //$(this).scrollTop(0);
+            $(this).scrollTop(0);
             $(this).closest(".ui-dialog")
             .find(".ui-dialog-titlebar-close")
             .removeClass("ui-dialog-titlebar-close")
             .html("<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>");
+        },
+        close: function () {
+            $(this).dialog('destroy');
         }
     });
-    //$( '#' + DivId ).scrollTop(0);
+    $( '#' + DivId ).scrollTop(0);
     $(".ui-dialog").css("z-index", 10);
     $(".ui-widget-content").css("background-color", "#dedede");
     $(".ui-widget-header").css("color", "#000000");
@@ -253,45 +264,6 @@ function ShowPopupDocu(DivId){
     $(".ui-icon").css("background-color", "#000000");
     $(".ui-icon").css("background-color", "#ffffff");
 }
-
-function ShowHowtoDocu(DivId){
-    $( '#' + DivId ).dialog({
-        title:'You can move and resize me!',
-        resizable: true,
-        modal: false,
-        width:700,
-        /*
-        open: function () {
-            $(this).scrollTop(0);
-        }*/
-    });
-    //$( '#' + DivId ).scrollTop(0);
-    $(".ui-dialog").css("z-index", 10);
-    $(".ui-widget-content").css("background-color", "#dedede");
-    $(".ui-widget-content").css("border", "2px solid #292929");
-    $(".ui-widget-header").css("color", "#000000");
-    $(".ui-widget-header").css("background-color", "#ffffff");
-    //$(".ui-icon").css("background-color", "#ffffff");
-}
-
-
-function ShowNetworkDocu(NetWork){
-    var title = NetWork.replace('Docu_',''); 
-    $( '#' + NetWork ).dialog({
-        title:title,
-        position: {
-            my:'center',
-            at:'center top',
-            of:'#map_legend'
-        }
-    });
-}
-
-function HideNetworkDocu(NetWork){
-    $(".ui-dialog-content").dialog("close");
-}
-
-
 
 function Toggle(node){
     IMG_URL = document.getElementById('IMG_URL').value;
