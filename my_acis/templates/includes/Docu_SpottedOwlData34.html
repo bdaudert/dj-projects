@@ -1,0 +1,27 @@
+{%load my_scenic_filters%}
+
+<h1 align="center">Number of days exceeding 34F, Mar 1 - Sep 30</h1>
+
+{%for yr in 1985|make_range:2025%}
+<div class="row" style="max-width:95%;">
+    <h2 align="center">Year: {{yr}}</h2> 
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <h3 align="center">Emission Scenario rcp4.5</h3>
+            <img style="padding:1%;max-width:98%;" src="{{MEDIA_URL}}img//SpottedOwl/SEASONAL/rcp4.5/pngs/maxt_gt34_{{yr}}_rcp4.5.png"><br />
+            <div align="center">
+                <a href="{{MEDIA_URL}}img//SpottedOwl/SEASONAL/rcp4.5/geotiffs/maxt_gt34_{{yr}}_rcp4.5.tiff" target="_blank">Download the geotiff</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <h3 align="center">Emission Scenario rcp8.5</h3>
+            <img style="padding:1%;max-width:98%;" src="{{MEDIA_URL}}img//SpottedOwl/SEASONAL/rcp8.5/pngs/maxt_gt34_{{yr}}_rcp8.5.png">
+            <div align="center">
+                <a align="center" href="{{MEDIA_URL}}img//SpottedOwl/SEASONAL/rcp8.5/geotiffs/maxt_gt34_{{yr}}_rcp8.5.tiff" target="_blank">Download the geotiff</a>
+            </div>
+        </div>
+    </div>
+</div>
+{%endfor%}
