@@ -143,6 +143,8 @@
         </div><!--col-sm-4--><br />
         <!--Main: Errors/maps-->
         <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+             <!--Ajax Error-->
+            <div class="ajax_error error"></div> 
             {%if not results.data and run_done%}
             <div class="results" align="center">
                 {% include 'includes/no_results.html'%}

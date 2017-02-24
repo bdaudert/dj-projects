@@ -267,7 +267,6 @@ $(document).ready(function () {
     DATE CHANGES
     */
     $('#start_date, #end_date').on('change', function(){
-        console.log('YOOOO!!')
         //Set start/end window according to dates
         if ($('#start_window').length || $('#end_window').length){
             var date_eight = $(this).val().replace(/\-/g,'').replace(/\//g,'').replace(/\:/g,'');
@@ -1115,33 +1114,6 @@ $(document).ready(function () {
         if ($(this).val() == 'shape_file'){
             ShowPopupDocu('uploadShapeFile');
         }
-        var start='9999-99-99', end= '9999-99-99';
-        if ($('#start_date').length && $('#end_date').length){
-            start = $('#start_date').val();
-            end = $('#end_date').val();
-            p = 'date';
-        }
-        if ($('#start_year').length && $('#end_year').length){
-            start = $('#start_year').val();
-            end = $('#end_year').val();
-            p = 'year';
-        }
-        //Change start/end years
-        var app_name = $('#app_name').val();
-        if (app_name.inList(['seasonal_summary','intraannual','monthly_summary','climatology'])){
-            //Set range dropdown values
-            set_year_range()
-            //Update target year for intra
-            console.log($('#start_year').val());
-            if (app_name == 'intraannual'){
-                if ($('#start_year').val().toLowerCase()!='por'){
-                    $('.target_year').val($('#start_year').val());
-                }
-                else{
-                    $('.target_year').val($('#min_year').val());
-                }
-            }
-        }
         if (app_name == 'climatology'){
             if ($(this).val() == 'location'){
                 if ($('#summary_type').val().inList(['all','both'])){
@@ -1165,12 +1137,26 @@ $(document).ready(function () {
             $('#flags').css('display','block'); 
         }
         //Single app specific
+        //Deal with dates AND
         //Show/Hide grid form field and station finder form_field
+        var start='9999-99-99', end= '9999-99-99';
+        if ($('#start_date').length && $('#end_date').length){
+            start = $('#start_date').val();
+            end = $('#end_date').val();
+            p = 'date';
+        }
+        if ($('#start_year').length && $('#end_year').length){
+            start = $('#start_year').val();
+            end = $('#end_year').val();
+            p = 'year';
+        }
         var date_vals = null;
         if ($(this).val() == 'station_id'){
             $('#grid_type').css('display','none');
             $('#stn_finder').css('station_finder','block');
-            date_vals = set_dates_for_station('station_id', start, end,p);
+            //Trigger ajax call to find valid daterange of station
+            //This call also sets the year range or start/end dates appropriately
+            $('#station_id').trigger('change');    
         }
         if ($(this).val().inList(['location','locations'])){
             $('#grid_type').css('display','block');
@@ -1183,7 +1169,25 @@ $(document).ready(function () {
             $('#start_' + p).val(date_vals.start);
             $('#end_' + p).val(date_vals.end);
         }
+        //Change start/end yearsi and set year ranges
+        var app_name = $('#app_name').val();
+        if (app_name.inList(['seasonal_summary','intraannual','monthly_summary','climatology'])){
+            //Set range dropdown values
+            set_year_range(start=$('#start_year').val(),end=$('#end_year').val());
+            //Update target year for intra
+            console.log($('#start_year').val());
+            if (app_name == 'intraannual'){
+                if ($('#start_year').val().toLowerCase()!='por'){
+                    $('.target_year').val($('#start_year').val());
+                }
+                else{
+                    $('.target_year').val($('#min_year').val());
+                }
+            }
+        }
+
     });
+
     $('#location').on('change', function(){
         MAP_APP.Utils.update_marker_on_map($(this).val());
     });
@@ -1474,12 +1478,88 @@ $(document).ready(function () {
     /***************
     AJAX CALLS
     ****************/
+    //STATION_ID Change --> Find POR of station
+    $('#station_id').on('change', function(){
+        $('.ajax_error').html();
+        waitingDialog.show('Finding date range for station', {dialogSize: 'sm', progressType: 'warning'});
+        var el_list = [], el_tupe = null; 
+        if ($('#variables').length){
+            el_list = $('#variables').val();
+            el_tuple = el_list + "";
+        }   
+        if ($('#variable').length){
+            el_list = [$('#variable').val()];
+            el_tuple = $('#variable').val();
+        }
+        var form_data = 'station_id_change=True';
+        form_data+='&csrfmiddlewaretoken=' + $("[name=csrfmiddlewaretoken]").val();
+        form_data+='&station_id=' + $(this).val();
+        form_data+='&el_tuple=' + el_tuple;
+        form_data+='&max_or_min=min';
+        var new_url = window.location.href.split('?')[0] + form_data;
+        var jqxhr = $.ajax({
+            url:'',
+            method: "POST",
+            data: form_data
+        })
+        .done(function(response) {
+            response = JSON.parse(response);
+            //console.log(response);
+            var station_start_date = response['start_date'],
+                station_end_date = response['end_date'];
+            $('#min_date').val(station_start_date);
+            $('#max_date').val(station_end_date);
+            $('#min_year').val(station_start_date.slice(0,4));
+            $('#max_year').val(station_end_date.slice(0,4));
+            if (station_start_date.inList(['9999-99-99','']) || station_end_date.inList(['9999-99-99',''])){
+                var stn_finder_link = '<a target="blank" href="http://www.wrcc.dri.edu/csc/scenic/data/climate_data/station_finder/">Station Finder</a>';
+                var err = 'Could not find valid date range for this station and chosen variables.<br />'
+                err+='Please check the ';
+                err+= stn_finder_link;
+                err+=' to find stations for your region and date ranges.';
+                $('.ajax_error').html(err);
+            }
+            else {
+                if ($('#app_name').val().inList(['intraannual','seasonal_summary','monthly_summary','climatology'])){
+                 set_year_range(start=String(station_start_date).slice(0,4),end=String(station_end_date).slice(0,4));
+                }
+                if ($('#app_name').val().inList(['single_lister'])){
+                    var form_start_date = $('#start_date').val();
+                    var form_end_date = $('#end_date').val();
+                    if (new Date(station_start_date) > new Date(form_start_date)){
+                        $('#start_date').val(station_start_date);
+                    }
+                    if (new Date(station_end_date) < new Date(form_end_date)){
+                        $('#end_date').val(station_end_date);
+                    }
+                    if (new Date(station_end_date) < new Date(form_start_date)){
+                        $('#start_date').val(station_start_date);
+                        $('#end_date').val(station_end_date);
+                        //alert('Start/End dates changed to valid date range for this station: ' + station_start_date + ' - ' + station_end_date);
+                    }
+                    if (new Date(station_start_date) > new Date(form_end_date))
+{
+                        $('#start_date').val(station_start_date);
+                        $('#end_date').val(station_end_date);
+                        //alert('Start/End dates changed to valid date range for this station: ' + station_start_date + ' - ' + station_end_date);
+                    }
+
+                }
+            }
+            waitingDialog.hide();
+        })
+        .fail(function(jqXHR) {
+            $('.ajax_error').html(get_ajax_error(jqXHR.status));
+            waitingDialog.hide();
+       }) 
+    });
+
     //OVERLAY_STATES
     $('#overlay_state').on('change', function(){
+        waitingDialog.show('Processing', {dialogSize: 'sm', progressType: 'warning'});
         $('.overlay_state').val($(this).val());
         //$('#overlayForm').on('submit', function(event){
         //event.preventDefault();
-        show_loading_gif() 
         var form_data = $("#overlayForm").serialize();
         form_data+='&area_type=' + $('#area_type').val();
         var jqxhr = $.ajax({
@@ -1496,17 +1576,17 @@ $(document).ready(function () {
                 $('#kml_file_path').val(response['kml_file_path']);
                 initialize_map_overlays();
             }
-            hide_loading_gif();
+            waitingDialog.hide();
         })
         .fail(function(jqXHR) {
-            hide_loading_gif();
             $('.ajax_error').html(get_ajax_error(jqXHR.status));
+            waitingDialog.hide();
        }) 
     });
 
     //Station Finder data download
     $('#StationFinderDownloadForm').on('submit', function(event){
-        show_loading_gif()
+        waitingDialog.show('Processing', {dialogSize: 'sm', progressType: 'warning'});
         event.preventDefault();
         $('#formDownload').dialog('close');
         //var form_data = $('#DataForm :input, #StationFinderDownloadForm :input').serialize();
@@ -1527,22 +1607,21 @@ $(document).ready(function () {
                 $('.formErrorDownload').css('display','none');
                 ShowPopupDocu('offlineMessage');
             }
-            hide_loading_gif();
+            waitingDialog.hide();
         })
         .fail(function(jqXHR) {
-            hide_loading_gif();
             $('.ajax_error').html(get_ajax_error(jqXHR.status));
+            waitingDialog.hide();
        })
     });
     //Large requests
     $('#LargeRequestForm').on('submit', function(event){
-        show_loading_gif();
+        waitingDialog.show('Processing', {dialogSize: 'sm', progressType: 'warning'});
         event.preventDefault();
         $('#formLargeRequest').dialog('close');
         //All extra input variables are linked and updated in the DataForm
         //Note need hidded vars user_name, email, delimiter, etx in main form
         var form_data = $('#DataForm, #LargeRequestForm').serialize(); 
-        hide_loading_gif();
         var jqxhr = $.ajax({
             url:'',
             method: "POST",
@@ -1562,10 +1641,11 @@ $(document).ready(function () {
                 ShowPopupDocu('offlineMessage');
 
             }
+            waitingDialog.hide();
         })
         .fail(function(jqXHR) {
-            hide_loading_gif();
             $('.ajax_error').html(get_ajax_error(jqXHR.status));
+            waitingDialog.hide();
        })
     });
 });

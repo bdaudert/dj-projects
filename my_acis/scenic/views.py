@@ -424,6 +424,41 @@ def single_lister(request):
     initial = DJANGOUtils.set_initial(request,app_name)
     context['initial'] = initial
 
+    if 'station_id_change' in request.POST:
+        '''
+        Find valid daterange or this station
+        '''
+        station_id = request.POST.get('station_id')
+        sid, stn_name = WRCCUtils.find_id_and_name(station_id,settings.MEDIA_DIR +'json/US_station_id.json')
+        element_list = request.POST.get('el_tuple','maxt,mint,pcpn').replace(', ',',').split(',')
+        mx_or_mn = request.POST.get('max_or_min','min')
+        vd = WRCCUtils.find_valid_daterange(sid,el_list=element_list, max_or_min=mx_or_mn)
+        if len(vd) != 2:
+            #response_data = json.dumps({'start_date':'9999-99-99','end_date':'9999-99-99'})
+            r =  {
+                'start_date':'9999-99-99',
+                'end_date':'9999-99-99',
+                'sid':sid,
+                'vd':vd,
+                'element_list':element_list,
+                'mx_or_mn':mx_or_mn
+            }
+            response_data = json.dumps(r)
+        else:
+            if len(vd[0]) == 8:vd[0] = WRCCUtils.format_date_string(vd[0],'-')
+            if len(vd[1]) == 8:vd[1] = WRCCUtils.format_date_string(vd[1],'-')
+            #response_data = json.dumps({'start_date':vd[0],'end_date':vd[1]})
+            r =  {
+                'start_date':vd[0],
+                'end_date':vd[1],
+                'sid':sid,
+                'element_list':element_list,
+                'mx_or_mn':mx_or_mn
+            }
+            response_data = json.dumps(r)
+        response = set_ajax_response(response_data)
+        return response
+
     if 'formDownload' in request.POST:
         form = DJANGOUtils.set_form(request,clean=False)
         json_file = request.POST.get('json_file', None)
@@ -478,7 +513,6 @@ def single_lister(request):
     if 'formData' in request.POST or (request.method == 'GET' and 'variables' in request.GET):
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
         form = DJANGOUtils.set_form(initial, clean = False)
-        context['xx'] = form_cleaned
         #Check form fields
         fields_to_check = [form_cleaned['area_type'],'start_date','end_date','start_window','end_window','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -571,6 +605,41 @@ def intraannual(request):
         'app_name':app_name,
         'app_url': app_url
     }
+
+    if 'station_id_change' in request.POST:
+        '''
+        Find valid daterange or this station
+        '''
+        station_id = request.POST.get('station_id')
+        sid, stn_name = WRCCUtils.find_id_and_name(station_id,settings.MEDIA_DIR +'json/US_station_id.json')
+        element_list = request.POST.get('el_tuple','maxt,mint,pcpn').replace(', ',',').split(',')
+        mx_or_mn = request.POST.get('max_or_min','min')
+        vd = WRCCUtils.find_valid_daterange(sid,el_list=element_list, max_or_min=mx_or_mn)
+        if len(vd) != 2:
+            #response_data = json.dumps({'start_date':'9999-99-99','end_date':'9999-99-99'})
+            r =  {
+                'start_date':'9999-99-99',
+                'end_date':'9999-99-99',
+                'sid':sid,
+                'vd':vd,
+                'element_list':element_list,
+                'mx_or_mn':mx_or_mn
+            }
+            response_data = json.dumps(r)
+        else:
+            if len(vd[0]) == 8:vd[0] = WRCCUtils.format_date_string(vd[0],'-')
+            if len(vd[1]) == 8:vd[1] = WRCCUtils.format_date_string(vd[1],'-')
+            #response_data = json.dumps({'start_date':vd[0],'end_date':vd[1]})
+            r =  {
+                'start_date':vd[0],
+                'end_date':vd[1],
+                'sid':sid,
+                'element_list':element_list,
+                'mx_or_mn':mx_or_mn
+            }
+            response_data = json.dumps(r)
+        response = set_ajax_response(response_data)
+        return response
 
     #Download button pressed
     if 'formDownload' in request.POST:
@@ -677,6 +746,42 @@ def seasonal_summary(request):
         'app_name':app_name,
         'app_url': app_url
     }
+
+    if 'station_id_change' in request.POST:
+        '''
+        Find valid daterange or this station
+        '''
+        station_id = request.POST.get('station_id')
+        sid, stn_name = WRCCUtils.find_id_and_name(station_id,settings.MEDIA_DIR +'json/US_station_id.json')
+        element_list = request.POST.get('el_tuple','maxt,mint,pcpn').replace(', ',',').split(',')
+        mx_or_mn = request.POST.get('max_or_min','min')
+        vd = WRCCUtils.find_valid_daterange(sid,el_list=element_list, max_or_min=mx_or_mn)
+        if len(vd) != 2:
+            #response_data = json.dumps({'start_date':'9999-99-99','end_date':'9999-99-99'})
+            r =  {
+                'start_date':'9999-99-99',
+                'end_date':'9999-99-99',
+                'sid':sid,
+                'vd':vd,
+                'element_list':element_list,
+                'mx_or_mn':mx_or_mn
+            }
+            response_data = json.dumps(r)
+        else:
+            if len(vd[0]) == 8:vd[0] = WRCCUtils.format_date_string(vd[0],'-')
+            if len(vd[1]) == 8:vd[1] = WRCCUtils.format_date_string(vd[1],'-')
+            #response_data = json.dumps({'start_date':vd[0],'end_date':vd[1]})
+            r =  {
+                'start_date':vd[0],
+                'end_date':vd[1],
+                'sid':sid,
+                'element_list':element_list,
+                'mx_or_mn':mx_or_mn
+            }
+            response_data = json.dumps(r)
+        response = set_ajax_response(response_data)
+        return response
+
     #Download button pressed
     if 'formDownload' in request.POST:
         form = DJANGOUtils.set_form(request,clean=False)
@@ -1421,7 +1526,7 @@ def station_finder(request):
     context['initial'] = initial
 
     #Set up maps if needed
-    if request.method == "GET" and not 'variables' in request.GET:
+    if request.method == "GET" and not 'variables' in request.GET and not 'station_id' in request.GET:
         #Generate initial map
         by_type = 'state'; val = 'nv'
         date_range = [initial['start_date'],initial['end_date']]
@@ -1600,6 +1705,41 @@ def monthly_summary(request):
     initial = DJANGOUtils.set_initial(request, app_name)
     context['initial'] = initial
 
+    if 'station_id_change' in request.POST:
+        '''
+        Find valid daterange or this station
+        '''
+        station_id = request.POST.get('station_id')
+        sid, stn_name = WRCCUtils.find_id_and_name(station_id,settings.MEDIA_DIR +'json/US_station_id.json')
+        element_list = request.POST.get('el_tuple','maxt,mint,pcpn').replace(', ',',').split(',')
+        mx_or_mn = request.POST.get('max_or_min','min')
+        vd = WRCCUtils.find_valid_daterange(sid,el_list=element_list, max_or_min=mx_or_mn)
+        if len(vd) != 2:
+            #response_data = json.dumps({'start_date':'9999-99-99','end_date':'9999-99-99'})
+            r =  {
+                'start_date':'9999-99-99',
+                'end_date':'9999-99-99',
+                'sid':sid,
+                'vd':vd,
+                'element_list':element_list,
+                'mx_or_mn':mx_or_mn
+            }
+            response_data = json.dumps(r)
+        else:
+            if len(vd[0]) == 8:vd[0] = WRCCUtils.format_date_string(vd[0],'-')
+            if len(vd[1]) == 8:vd[1] = WRCCUtils.format_date_string(vd[1],'-')
+            #response_data = json.dumps({'start_date':vd[0],'end_date':vd[1]})
+            r =  {
+                'start_date':vd[0],
+                'end_date':vd[1],
+                'sid':sid,
+                'element_list':element_list,
+                'mx_or_mn':mx_or_mn
+            }
+            response_data = json.dumps(r)
+        response = set_ajax_response(response_data)
+        return response
+
     if request.method == 'GET' and 'projection' in request.GET:
         '''
         Link from projection page
@@ -1748,6 +1888,42 @@ def climatology(request):
     }
     initial= DJANGOUtils.set_initial(request, app_name)
     context['initial'] = initial
+
+    if 'station_id_change' in request.POST:
+        '''
+        Find valid daterange or this station
+        '''
+        station_id = request.POST.get('station_id')
+        sid, stn_name = WRCCUtils.find_id_and_name(station_id,settings.MEDIA_DIR +'json/US_station_id.json')
+        element_list = request.POST.get('el_tuple','maxt,mint,pcpn').replace(', ',',').split(',')
+        mx_or_mn = request.POST.get('max_or_min','min')
+        vd = WRCCUtils.find_valid_daterange(sid,el_list=element_list, max_or_min=mx_or_mn)
+        if len(vd) != 2:
+            #response_data = json.dumps({'start_date':'9999-99-99','end_date':'9999-99-99'})
+            r =  {
+                'start_date':'9999-99-99',
+                'end_date':'9999-99-99',
+                'sid':sid,
+                'vd':vd,
+                'element_list':element_list,
+                'mx_or_mn':mx_or_mn
+            }
+            response_data = json.dumps(r)
+        else:
+            if len(vd[0]) == 8:vd[0] = WRCCUtils.format_date_string(vd[0],'-')
+            if len(vd[1]) == 8:vd[1] = WRCCUtils.format_date_string(vd[1],'-')
+            #response_data = json.dumps({'start_date':vd[0],'end_date':vd[1]})
+            r =  {
+                'start_date':vd[0],
+                'end_date':vd[1],
+                'sid':sid,
+                'element_list':element_list,
+                'mx_or_mn':mx_or_mn
+            }
+            response_data = json.dumps(r)
+        response = set_ajax_response(response_data)
+        return response
+
     if request.method == 'GET' and 'projection' in request.GET:
         '''
         Link from projection page

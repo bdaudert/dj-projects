@@ -250,7 +250,7 @@ function set_dates_for_grid(grid,start_date,end_date,year_or_date){
     }
 }
 
-function set_year_range(){
+function set_year_range(start=null,end=null){
     /*Set date range for drop downs for year range*/
     var today = new Date();
     var today_str = convertDateToString(today, '-')
@@ -268,15 +268,20 @@ function set_year_range(){
         }
     }
     if ($('#area_type').val() == 'station_id'){
-        //AJAX call to get vd of stations
-        min_year = '1850';
-        max_year = today_yr;
+        if (!start){min_year = '1850';}
+        else {min_year = start;}
+
+        if (!end){max_year = today_yr;}
+        else{max_year = end}
     }
     //Set new year dropdowns
     $('#start_year > option').remove();
     $('#end_year > option').remove();
     var opt, i, selected_date;
-    selected_year_end = String(parseInt(min_year.slice(0,4)) + 10)
+    var selected_year_end = String(parseInt(min_year.slice(0,4)) + 10);
+    if (parseInt(selected_year_end) > parseInt(max_year)){
+        selected_year_end = max_year;
+    }
     for (i=parseInt(min_year);i<=parseInt(max_year);i++){
         opt = '<option value="' + String(i) + '">' + String(i) + '</option>';
         $('#start_year').append(opt);
@@ -294,8 +299,18 @@ function set_year_range(){
             $('#start_year').append(opt);
             $('#end_year').append(opt);
     }
-    $('#start_year').val(min_year);
-    $('#end_year').val(String(selected_year_end));
+    if (!start){
+        $('#start_year').val(min_year);
+    }
+    else{
+        $('#start_year').val(start);
+    }
+    if (!end){
+        $('#end_year').val(String(selected_year_end));
+    }
+    else {
+        $('#end_year').val(end);
+    }
 }
 
 function update_value(val){
@@ -763,10 +778,12 @@ function reset_options(){
 }
 
 //Show "Loading image"
-function show_loading(){
+function show_loading(msg="Processing"){
     /*
-    Shows moving loading gif after form submit
+    Shows process bar with custom message msg
     */
+    waitingDialog.show(msg, {dialogSize: 'sm', progressType: 'warning'});
+    /*
     $("#loading-image").attr("src","/csc/media/img/LoadingGreen.gif");
     $("#loading").show("fast");
     //this.preventDefault();
@@ -775,16 +792,11 @@ function show_loading(){
         form.submit();
         $("#loading").hide();
     }, 27000);
+    */
 }
 
-function show_loading_gif(){
-   $("#loading-image").attr("src","/csc/media/img/LoadingGreen.gif");
-   $("#loading").show("fast"); 
-}
-
-function hide_loading_gif() {
-    $("#loading-image").attr("src","/csc/media/img/LoadingGreen.gif");
-   $("#loading").hide();
+function hide_loading(){
+    waitingDialog.hide();
 }
 
 function highlight_form_field(field_id, err){

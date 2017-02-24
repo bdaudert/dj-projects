@@ -212,7 +212,6 @@ function HighLight(node,DivClass,DivId) {
 }
 
 function ShowPopupDocu(DivId){
-    console.log('YO');
     //Close all dialogs that happen to be open
     $(':ui-dialog').each(function(){
         if ($(this).dialog('isOpen')){
