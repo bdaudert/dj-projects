@@ -68,14 +68,6 @@ function ShowHideTopOfPage(){
         }
         $(window).resize();
     }
-    /*
-    if (window.map){
-        google.maps.event.addListenerOnce(window.map, 'idle', function() {
-            $('#top_of_page').hide();
-            google.maps.event.trigger(window.map, 'resize');
-        });
-    }
-    */
     $('#top_of_page').toggle();
 }
 

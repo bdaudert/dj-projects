@@ -162,7 +162,7 @@
                     {{key_val.0}} {{key_val.1}},
                 {% endfor %}
                 </div>  
-                <table class="dataTable" id="dataTable-{{forloop.counter0}}" width="90%">
+                <table class="dataTable" id="dataTable-{{forloop.counter0}}" width="90%" style="cellpadding:0;cellspacing:0;border-collapse:collapse;">
                     {%if tab != "snow" and tab != "pcpn"%}
                         {%for row in results|lookup:tab%}
                             {%if forloop.counter0 == 0%}
@@ -174,7 +174,11 @@
                             </tfoot>
                             <tbody>
                             {%else%}
-                            <tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr>
+                            {%if row.0 == "December"%}
+                                <tr class="border_bottom">{%for val in row%}<td>{{val}}</td>{%endfor%}</tr>
+                            {%else%}
+                                <tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr>
+                            {%endif%}
                             {%endif%}
                         {%endfor%}
                         </tbody>
@@ -189,7 +193,11 @@
                             </tfoot>
                             <tbody>
                             {%else%}
-                            <tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr>
+                            {%if row.0 == "December"%}
+                                <tr class="border_bottom">{%for val in row%}<td>{{val}}</td>{%endfor%}</tr>
+                            {%else%}
+                                <tr>{%for val in row%}<td>{{val}}</td>{%endfor%}</tr>
+                            {%endif%}
                             {%endif%}
                         {%endfor%}
                         </tbody>

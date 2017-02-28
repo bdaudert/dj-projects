@@ -1486,6 +1486,7 @@ def station_finder(request):
         'app_name':app_name,
         'app_url': app_url
     }
+    context['run_done'] = False
     context['need_overlay_map'] = False
     context['need_polygon_map'] = False
     #Overlay maps

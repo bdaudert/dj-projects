@@ -828,7 +828,9 @@ function initialize_station_finder() {
 }//close initialize_station_finder
 
 function my_boxclick(box, category){
+    waitingDialog.show('Processing', {dialogSize: 'sm', progressType: 'warning'});
     boxclick(box, category);
+    waitingDialog.hide();
 }
 
 function initialize_bbox_map(bbox) {
