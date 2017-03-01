@@ -183,7 +183,7 @@
                 <!--CHART-->
                 <div id="main-graph">
                     <!--Chart Layers-->
-                    <div class="row chart-layers">
+                    <div class="row" style="width:99.3%;border:2px solid black;padding:1% 0%;">
                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                             {% include 'includes/chart-threshold.html'%}
                         </div>
@@ -206,7 +206,7 @@
                     </div><!--row chart-layers--> 
                     <!--Chart-->
                     <div class="row" height="100%">
-                        <div align="center" id="hc-container" style="width:96%;float:right;"></div>
+                        <div align="center" id="hc-container" style="width:96%;"></div>
                         <script type="text/javascript">
                             var graph_data = {{results.graph_data | safe_json}};
                             var data_indices = {{ results.data_indices |safe }}

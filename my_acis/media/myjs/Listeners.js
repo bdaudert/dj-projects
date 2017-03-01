@@ -242,7 +242,7 @@ $(document).ready(function () {
     /*  
     Zoom To Location on map
     */
-    $('zoombutton').on('click', function(){
+    $('#zoombutton').on('click', function(){
         zoomToLocation();
     });
 
@@ -596,7 +596,7 @@ $(document).ready(function () {
 
         }
         //Update mn/max_year and target year
-        if ($('#app_name').val() == 'intraannual'){
+        if ($('#app_name').val() == 'single_year'){
             if ($('#start_year').val().toLowerCase()!='por'){
                 $('.target_year').val($('#start_year').val());
             }
@@ -845,7 +845,7 @@ $(document).ready(function () {
             p = 'year';
             set_year_range()
             //Update target year for intra
-            if ($('#app_name').val() == 'intraannual'){
+            if ($('#app_name').val() == 'single_year'){
                 if ($('#start_year').val().toLowerCase()!='por'){
                     $('.target_year').val($('#start_year').val());
                 }
@@ -1171,12 +1171,12 @@ $(document).ready(function () {
         }
         //Change start/end yearsi and set year ranges
         var app_name = $('#app_name').val();
-        if (app_name.inList(['seasonal_summary','intraannual','monthly_summary','climatology'])){
+        if (app_name.inList(['seasonal_summary','single_year','monthly_summary','climatology'])){
             //Set range dropdown values
             set_year_range(start=$('#start_year').val(),end=$('#end_year').val());
             //Update target year for intra
             console.log($('#start_year').val());
-            if (app_name == 'intraannual'){
+            if (app_name == 'single_year'){
                 if ($('#start_year').val().toLowerCase()!='por'){
                     $('.target_year').val($('#start_year').val());
                 }
@@ -1520,7 +1520,7 @@ $(document).ready(function () {
                 $('.ajax_error').html(err);
             }
             else {
-                if ($('#app_name').val().inList(['intraannual','seasonal_summary','monthly_summary','climatology'])){
+                if ($('#app_name').val().inList(['single_year','seasonal_summary','monthly_summary','climatology'])){
                  set_year_range(start=String(station_start_date).slice(0,4),end=String(station_end_date).slice(0,4));
                 }
                 if ($('#app_name').val().inList(['single_lister'])){

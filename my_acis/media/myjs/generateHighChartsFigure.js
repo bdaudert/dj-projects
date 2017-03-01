@@ -73,7 +73,7 @@ function generateTS_individual(chart_indices) {
             var yLabelmain = datadict[0].elUnits;
         }
     }
-    if (app_name  == 'spatial_summary' || app_name == 'data_comparison' || app_name =='intraannual'){
+    if (app_name  == 'spatial_summary' || app_name == 'data_comparison' || app_name =='single_year'){
         var date_format = '%Y-%m-%d';
         if (app_name == 'data_comparison'){
             var yLabelmain = datadict[0].yLabel;
@@ -135,8 +135,8 @@ function generateTS_individual(chart_indices) {
     }
     
     //Define series data
-    //Intraannual climo and precentile data
-    if (app_name == 'intraannual'){
+    //Single-Year climo and precentile data
+    if (app_name == 'single_year'){
         //Find target_year
         if ($('#target_year_figure').length){
             var target_year = $('#target_year_figure').val();
@@ -206,7 +206,7 @@ function generateTS_individual(chart_indices) {
             s['yAxis'] = i;
         }
         //Set threshold for seasonal_summary
-        if (app_name != 'intraannual'){
+        if (app_name != 'single_year'){
             var ave_data = compute_average(datadict[idx].data);
         }
         if (app_name == 'seasonal_summary'){
@@ -223,7 +223,7 @@ function generateTS_individual(chart_indices) {
                 s['negativeColor'] = 'goldenrod';
             }
         }
-        if (app_name == 'intraannual'){
+        if (app_name == 'single_year'){
             if (String($('#start_year').val()).toLowerCase() == 'por'){
                 var sy = $('#min_year').val();
             }
@@ -250,7 +250,7 @@ function generateTS_individual(chart_indices) {
             }
         }
         series_data.push(s);
-        if (app_name == 'intraannual'){
+        if (app_name == 'single_year'){
             if (parseInt(sy) + idx === parseInt(target_year)){
                 series_data.push(climo);
                 for (j=0;j < perc.length;j++){
@@ -287,7 +287,7 @@ function generateTS_individual(chart_indices) {
         //Average over period
         var v = false;
         if ($('#show_average').length && $('#show_average').is(':checked')){v = true;};
-        if (app_name != 'intraannual'){
+        if (app_name != 'single_year'){
             var a = {
                 visible:v,
                 id: 'average_' + s_id,
@@ -306,7 +306,7 @@ function generateTS_individual(chart_indices) {
             $('#chart_threshold').val(ave_data[0][1].toFixed(2));
         }
         //Range
-        if (app_name != 'intraannual'){
+        if (app_name != 'single_year'){
             var range_data = compute_range(datadict[idx].data);
             var v = false;
             if ($('#show_range').is(':checked')){v = true;};
@@ -614,7 +614,7 @@ function generateTS_smry(chart_indices) {
     //Range
     var v = false
     if ($('#show_range').is(':checked')){v = true;}
-    if (app_name != 'intraannual'){
+    if (app_name != 'single_year'){
         var range_data = compute_range(smry_data.data);
         var r = {
             visible:v,

@@ -339,7 +339,7 @@ def single_point_prods(request):
             get_initial[str(item)] = request.GET[item]
         user_params = WRCCUtils.form_to_display_list(get_params,request.GET)
         context['user_params'] = user_params
-        for app in ['single_lister', 'monthly_summary', 'climatology','data_comparison', 'seasonal_summary', 'intraannual']:
+        for app in ['single_lister', 'monthly_summary', 'climatology','data_comparison', 'seasonal_summary', 'single_year']:
             #initial= DJANGOUtils.set_initial(request, app)
             initial= DJANGOUtils.set_initial(get_initial, app)
             p_str = WRCCUtils.set_url_params(initial)
@@ -596,8 +596,8 @@ def single_lister(request):
             context['json_file'] = json_file
     return render_to_response(url, context, context_instance=RequestContext(request))
 
-def intraannual(request):
-    app_name = 'intraannual'
+def single_year(request):
+    app_name = 'single_year'
     url = settings.APPLICATIONS[app_name][2]
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
@@ -691,7 +691,7 @@ def intraannual(request):
     if 'formData' in request.POST or (request.method == 'GET' and 'variable' in request.GET):
         form = DJANGOUtils.set_form(initial,clean = False)
         form_cleaned = DJANGOUtils.set_form(initial,clean = True)
-        year_txt_data, year_graph_data, climoData, percentileData = WRCCUtils.get_single_intraannual_data(form_cleaned)
+        year_txt_data, year_graph_data, climoData, percentileData = WRCCUtils.get_single_single_year_data(form_cleaned)
         if not year_txt_data:
             results = {
                 'error':'No data found for these parameters!'
@@ -2108,7 +2108,7 @@ def check_form(form, fields_to_check):
             if field in ['start_year','end_year']:
                 form_error[field] = err
                 '''
-                if form['app_name'] in ['intraannual','seasonal_summary','monthly_summary','climatology']:
+                if form['app_name'] in ['single_year','seasonal_summary','monthly_summary','climatology']:
                     form_error['Year Range'] = err
                 else:
                     form_error[field] = err
