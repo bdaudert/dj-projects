@@ -182,13 +182,13 @@
                 <div class="input-group">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <span>{% include 'includes/data_format.html'%}</span>
+                        {%if initial.data_format == "html"%}
+                        <span class="input-group-addon"></span>
+                        <span id="out_format" class="out_format" style="display:none;">{% include 'includes/output_format.html'%}</span>
+                        {%else%}
+                        <span id="out_format" class="out_format" style="display:block;">{% include 'includes/output_format.html'%}</span>
+                        {%endif%}
                     </div>
-                    {%if initial.data_format == "html"%}
-                    <span class="input-group-addon"></span>
-                    <span id="out_format" class="out_format" style="display:none;">{% include 'includes/output_format.html'%}</span>
-                    {%else%}
-                    <span id="out_format" class="out_format" style="display:inline;">{% include 'includes/output_format.html'%}</span>
-                    {%endif%}
                 </div>
                 <div class="input-group">
                     {%if initial.data_format == "dlm" or initial.data_format == "clm"%}
