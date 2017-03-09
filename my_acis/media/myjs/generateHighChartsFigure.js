@@ -285,9 +285,10 @@ function generateTS_individual(chart_indices) {
             series_data.push(rm);            
         }
         //Average over period
-        var v = false;
+        var v = false, col = '#000000';
         if ($('#show_average').length && $('#show_average').is(':checked')){v = true;};
         if (app_name != 'single_year'){
+            if (s_id != 0){col = '#ff0000'}
             var a = {
                 visible:v,
                 id: 'average_' + s_id,
@@ -295,7 +296,7 @@ function generateTS_individual(chart_indices) {
                 showInLegend:v,
                 type:'line',
                 lineWidth:1,
-                color:'#ff0000',
+                color:col,
                 data: ave_data,
                 linkedTo: s_id
             };
@@ -607,7 +608,7 @@ function generateTS_smry(chart_indices) {
         showInLegend:v,
         type:'line',
         lineWidth:1,
-        color:'#ff0000',
+        color:'#000000',
         data: ave_data
     };
     series_data.push(a);

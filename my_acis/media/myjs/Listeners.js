@@ -1556,10 +1556,8 @@ $(document).ready(function () {
 
     //OVERLAY_STATES
     $('#overlay_state').on('change', function(){
-        waitingDialog.show('Processing', {dialogSize: 'sm', progressType: 'warning'});
+        waitingDialog.show('Loading layers', {dialogSize: 'sm', progressType: 'warning'});
         $('.overlay_state').val($(this).val());
-        //$('#overlayForm').on('submit', function(event){
-        //event.preventDefault();
         var form_data = $("#overlayForm").serialize();
         form_data+='&area_type=' + $('#area_type').val();
         var jqxhr = $.ajax({

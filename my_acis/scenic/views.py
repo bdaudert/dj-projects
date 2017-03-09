@@ -539,14 +539,13 @@ def single_lister(request):
         #Overide data with windowed data if desired
         if 'data_summary' in form.keys() and form['data_summary'] == 'windowed_data':
             d = req['data'][0]
-            #header = d[0]
+            header = d[0]
             sd = form_cleaned['start_date']
             ed = form_cleaned['end_date']
             sw = form_cleaned['start_window']
             ew = form_cleaned['end_window']
-            #req['data'] = WRCCUtils.get_window_data(d, sd, ed, sw, ew)
             req['data'] = WRCCUtils.get_windowed_data(d, sd, ed, sw, ew)
-            #req['data'].insert(0,header)
+            req['data'].insert(0,header)
             req['data'] = [req['data']]
         if not req['data'] and not req['smry']:
             req['error'] = 'No data found for these parameters.'
