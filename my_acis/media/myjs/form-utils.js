@@ -15,10 +15,12 @@ String.prototype.inList=function(list){
 
 function set_dates(){
     var max_date = '9999-99-99', min_date = '9999-99-99',
-        max_year = '9999', min_year = '9999', vd, vd_fut= ['9999-99-99','9999-99-99'];
-    if ($('#data_type').val() == 'station'){
+        max_year = '9999', min_year = '9999', 
+        vd = ['9999-99-99','9999-99-99'], vd_fut= ['9999-99-99','9999-99-99'];
+    if ($('#data_type').val() == 'station' || $('#area_type').val() == 'station_id'){
         if ($('#area_type').val() == 'station_id'){
-            vd = find_station_vd();
+            find_station_vd();
+            vd = [$('#min_date').val(),$('#min_date').val()]
         }
     }
     else{
@@ -26,14 +28,17 @@ function set_dates(){
             vd = grid_vd[String($('#grid').val())][0]
             if (grid_vd[String($('#grid').val())].length > 1 && grid_vd[String($('#grid').val())][1]){
                 vd_fut = grid_vd[String($('#grid').val())][1];
+                if (!vd_fut){vd_fut= ['9999-99-99','9999-99-99'];}
             }
         }
     }
+    console.log(vd);
     //Set new min max dates and dates
     if (!vd[0].inList(['9999-99-99','']) &&  !vd[1].inList(['9999-99-99',''])){
         //Min max dates
         $('#min_date').val(vd[0]), $('#max_date').val(vd[1]);
         $('#min_year').val(vd[0]).slice(0,4), $('#max_year').val(vd[1]).slice(0,4);
+        $('#valid_daterange').css('display','block');
         $('#valid_daterange').html('Available: ' + $('#min_date').val() + ' - ' + $('#max_date').val());
         //Set dates
         if ($('#app_name').val().inList(['single_year','seasonal_summary','monthly_summary','climatology'])){
@@ -58,12 +63,18 @@ function set_dates(){
                 //alert('Start/End dates changed to valid date range for this station: ' + vd[0] + ' - ' + vd[1]);
             }
         }
-        
+    }
+    else{
+        alert('No valid daterange could be found!');
+        $('#valid_daterange').css('display','none');
     }
     if (!vd_fut[0].inList(['9999-99-99','']) &&  !vd_fut[1].inList(['9999-99-99',''])){
         $('#min_date_fut').val(vd_fut[0]), $('#max_date_fut').val(vd_fut[1]);
         $('#min_year_fut').val(vd_fut[0]).slice(0,4), $('#max_year_fut').val(vd_fut[1]).slice(0,4);
         $('#valid_daterange_fut').html('And: ' + $('#min_date_fut').val() + ' - ' + $('#max_date_fut').val());
+    }
+    else{
+        $('#valid_daterange').css('display','none');
     }
 }
 
@@ -82,9 +93,10 @@ function find_station_vd(){
     }
     var form_data = 'station_id_change=True';
     form_data+='&csrfmiddlewaretoken=' + $("[name=csrfmiddlewaretoken]").val();
-    form_data+='&station_id=' + $(this).val();
+    form_data+='&station_id=' + $('#station_id').val();
     form_data+='&el_tuple=' + el_tuple;
     form_data+='&max_or_min=min';
+    console.log(form_data);
     var new_url = window.location.href.split('?')[0] + form_data;
     var jqxhr = $.ajax({
         url:'',
@@ -96,14 +108,16 @@ function find_station_vd(){
         //console.log(response);
         var station_start_date = response['start_date'],
             station_end_date = response['end_date'];
-        vd = [station_start_date,station_end_date];
+        $('#min_date').val(station_start_date), $('#max_date').val(station_end_date);
+        $('#min_year').val(station_start_date.slice(0,4)), $('#max_year').val(station_end_date.slice(0,4));
         waitingDialog.hide();
     })
     .fail(function(jqXHR) {
         $('.ajax_error').html(get_ajax_error(jqXHR.status));
         waitingDialog.hide();
-   }) 
-   return vd;
+        $('#min_date').val('9999-99-99'), $('#max_date').val('9999-99-99');
+        $('#min_year').val('9999'), $('#max_year').val('9999');
+   })
 }
 
 function showLargeRequestForm(){
