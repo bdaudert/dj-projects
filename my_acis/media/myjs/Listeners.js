@@ -1093,6 +1093,7 @@ $(document).ready(function () {
         } 
     });
     $('.area_type').on('keydown change', function(){
+        set_max_min_dates()
         //Set area form field
         set_area($(this)); //form_utils function
         /*need to change data type for single apps*/
@@ -1107,7 +1108,19 @@ $(document).ready(function () {
             if ($('#stn_finder').length){
                 $('#stn_finder').css('display','block');
             }
+            //$('#station_id').trigger("change");
         }
+        /*
+        if ($('#min_date').val() != '9999-99-99' && $('#max_date').val() != '9999-99-99'){ 
+            if ($('#valid_daterange').length){
+                $('#valid_daterange').css('display','block');
+                $('#valid_daterange').html('Available: ' + $('#min_date').val() + ' - ' + $('#max_date').val());
+            }
+        }
+        else{
+            if ($('#valid_daterange').length){$('#valid_daterange').css('display','none');}
+        }
+        */
         set_variables();
         set_map($(this)); //form_utils function
         update_value($(this).val()); //form_utils function
@@ -1480,6 +1493,8 @@ $(document).ready(function () {
     ****************/
     //STATION_ID Change --> Find POR of station
     $('#station_id').on('change', function(){
+        set_dates();
+        /*
         $('.ajax_error').html();
         waitingDialog.show('Finding date range for station', {dialogSize: 'sm', progressType: 'warning'});
         var el_list = [], el_tupe = null; 
@@ -1496,6 +1511,7 @@ $(document).ready(function () {
         form_data+='&station_id=' + $(this).val();
         form_data+='&el_tuple=' + el_tuple;
         form_data+='&max_or_min=min';
+        console.log(form_data);
         var new_url = window.location.href.split('?')[0] + form_data;
         var jqxhr = $.ajax({
             url:'',
@@ -1505,8 +1521,8 @@ $(document).ready(function () {
         .done(function(response) {
             response = JSON.parse(response);
             //console.log(response);
-            var station_start_date = response['start_date'],
-                station_end_date = response['end_date'];
+            var station_start_date = convertDate(response['start_date'],'-'),
+                station_end_date = convertDate(response['end_date'],'-');
             $('#min_date').val(station_start_date);
             $('#max_date').val(station_end_date);
             $('#min_year').val(station_start_date.slice(0,4));
@@ -1518,8 +1534,13 @@ $(document).ready(function () {
                 err+= stn_finder_link;
                 err+=' to find stations for your region and date ranges.';
                 $('.ajax_error').html(err);
+                if ($('#valid_daterange').length){$('#valid_daterange').css('display','none');}
             }
             else {
+                if ($('#valid_daterange').length){
+                    $('#valid_daterange').css('display','block');
+                    $('#valid_daterange').html('Available: ' + station_start_date + ' - ' + station_end_date);
+                }
                 if ($('#app_name').val().inList(['single_year','seasonal_summary','monthly_summary','climatology'])){
                  set_year_range(start=String(station_start_date).slice(0,4),end=String(station_end_date).slice(0,4));
                 }
@@ -1535,7 +1556,6 @@ $(document).ready(function () {
                     if (new Date(station_end_date) < new Date(form_start_date)){
                         $('#start_date').val(station_start_date);
                         $('#end_date').val(station_end_date);
-                        //alert('Start/End dates changed to valid date range for this station: ' + station_start_date + ' - ' + station_end_date);
                     }
                     if (new Date(station_start_date) > new Date(form_end_date))
 {
@@ -1552,6 +1572,7 @@ $(document).ready(function () {
             $('.ajax_error').html(get_ajax_error(jqXHR.status));
             waitingDialog.hide();
        }) 
+       */
     });
 
     //OVERLAY_STATES

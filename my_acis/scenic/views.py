@@ -1488,6 +1488,42 @@ def station_finder(request):
     context['run_done'] = False
     context['need_overlay_map'] = False
     context['need_polygon_map'] = False
+
+    if 'station_id_change' in request.POST:
+        '''
+        Find valid daterange or this station
+        '''
+        station_id = request.POST.get('station_id')
+        sid, stn_name = WRCCUtils.find_id_and_name(station_id,settings.MEDIA_DIR +'json/US_station_id.json')
+        element_list = request.POST.get('el_tuple','maxt,mint,pcpn').replace(', ',',').split(',')
+        mx_or_mn = request.POST.get('max_or_min','min')
+        vd = WRCCUtils.find_valid_daterange(sid,el_list=element_list, max_or_min=mx_or_mn)
+        if len(vd) != 2:
+            #response_data = json.dumps({'start_date':'9999-99-99','end_date':'9999-99-99'})
+            r =  {
+                'start_date':'9999-99-99',
+                'end_date':'9999-99-99',
+                'sid':sid,
+                'vd':vd,
+                'element_list':element_list,
+                'mx_or_mn':mx_or_mn
+            }
+            response_data = json.dumps(r)
+        else:
+            if len(vd[0]) == 8:vd[0] = WRCCUtils.format_date_string(vd[0],'-')
+            if len(vd[1]) == 8:vd[1] = WRCCUtils.format_date_string(vd[1],'-')
+            #response_data = json.dumps({'start_date':vd[0],'end_date':vd[1]})
+            r =  {
+                'start_date':vd[0],
+                'end_date':vd[1],
+                'sid':sid,
+                'element_list':element_list,
+                'mx_or_mn':mx_or_mn
+            }
+            response_data = json.dumps(r)
+        response = set_ajax_response(response_data)
+        return response
+
     #Overlay maps
     if 'formOverlay' in request.POST:
         initial = DJANGOUtils.set_initial(request,'map_overlay')

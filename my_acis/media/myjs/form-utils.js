@@ -13,6 +13,99 @@ String.prototype.inList=function(list){
    return ( list.indexOf(this.toString()) != -1)
 }
 
+function set_dates(){
+    var max_date = '9999-99-99', min_date = '9999-99-99',
+        max_year = '9999', min_year = '9999', vd, vd_fut= ['9999-99-99','9999-99-99'];
+    if ($('#data_type').val() == 'station'){
+        if ($('#area_type').val() == 'station_id'){
+            vd = find_station_vd();
+        }
+    }
+    else{
+        if ($('#grid').length){
+            vd = grid_vd[String($('#grid').val())][0]
+            if (grid_vd[String($('#grid').val())].length > 1 && grid_vd[String($('#grid').val())][1]){
+                vd_fut = grid_vd[String($('#grid').val())][1];
+            }
+        }
+    }
+    //Set new min max dates and dates
+    if (!vd[0].inList(['9999-99-99','']) &&  !vd[1].inList(['9999-99-99',''])){
+        //Min max dates
+        $('#min_date').val(vd[0]), $('#max_date').val(vd[1]);
+        $('#min_year').val(vd[0]).slice(0,4), $('#max_year').val(vd[1]).slice(0,4);
+        $('#valid_daterange').html('Available: ' + $('#min_date').val() + ' - ' + $('#max_date').val());
+        //Set dates
+        if ($('#app_name').val().inList(['single_year','seasonal_summary','monthly_summary','climatology'])){
+         set_year_range(start=String(vd[0]).slice(0,4),end=String(vd[1]).slice(0,4));
+        }
+        else {
+            var form_start_date = $('#start_date').val(),form_end_date = $('#end_date').val();
+            if (new Date(vd[0]) > new Date(form_start_date)){
+                $('#start_date').val(vd[0]);
+            }
+            if (new Date(vd[1]) < new Date(form_end_date)){
+                $('#end_date').val(vd[1]);
+            }
+            if (new Date(vd[1]) < new Date(form_start_date)){
+                $('#start_date').val(vd[0]);
+                $('#end_date').val(vd[1]);
+                //alert('Start/End dates changed to valid date range for this station: ' + vd[0] + ' - ' + vd[1]);
+            }
+            if (new Date(vd[0]) > new Date(form_end_date)){
+                $('#start_date').val(vd[0]);
+                $('#end_date').val(vd[1]);
+                //alert('Start/End dates changed to valid date range for this station: ' + vd[0] + ' - ' + vd[1]);
+            }
+        }
+        
+    }
+    if (!vd_fut[0].inList(['9999-99-99','']) &&  !vd_fut[1].inList(['9999-99-99',''])){
+        $('#min_date_fut').val(vd_fut[0]), $('#max_date_fut').val(vd_fut[1]);
+        $('#min_year_fut').val(vd_fut[0]).slice(0,4), $('#max_year_fut').val(vd_fut[1]).slice(0,4);
+        $('#valid_daterange_fut').html('And: ' + $('#min_date_fut').val() + ' - ' + $('#max_date_fut').val());
+    }
+}
+
+function find_station_vd(){
+    var vd = ['9999-99-99','9999-99-99']
+    $('.ajax_error').html();
+    waitingDialog.show('Finding date range for station', {dialogSize: 'sm', progressType: 'warning'});
+    var el_list = [], el_tupe = null; 
+    if ($('#variables').length){
+        el_list = $('#variables').val();
+        el_tuple = el_list + "";
+    }   
+    if ($('#variable').length){
+        el_list = [$('#variable').val()];
+        el_tuple = $('#variable').val();
+    }
+    var form_data = 'station_id_change=True';
+    form_data+='&csrfmiddlewaretoken=' + $("[name=csrfmiddlewaretoken]").val();
+    form_data+='&station_id=' + $(this).val();
+    form_data+='&el_tuple=' + el_tuple;
+    form_data+='&max_or_min=min';
+    var new_url = window.location.href.split('?')[0] + form_data;
+    var jqxhr = $.ajax({
+        url:'',
+        method: "POST",
+        data: form_data
+    })
+    .done(function(response) {
+        response = JSON.parse(response);
+        //console.log(response);
+        var station_start_date = response['start_date'],
+            station_end_date = response['end_date'];
+        vd = [station_start_date,station_end_date];
+        waitingDialog.hide();
+    })
+    .fail(function(jqXHR) {
+        $('.ajax_error').html(get_ajax_error(jqXHR.status));
+        waitingDialog.hide();
+   }) 
+   return vd;
+}
+
 function showLargeRequestForm(){
     if ($('#app_name').val() == 'multi_lister'){
         if ($('#data_summary').val().inList(['none','windowed_data'])){

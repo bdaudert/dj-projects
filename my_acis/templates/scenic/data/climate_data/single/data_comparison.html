@@ -79,6 +79,18 @@
                 <div class="form-input-group form-group" align="center">
                     <label class="form-group-header">4. Define your date ranges! </label>
                     <div class="input-group">
+                        <div id="valid_daterange" class="error"
+                        {%if initial.min_date == '9999-99-99' or initial.max_date == '9999-99-99'%}
+                        style="display:none;"
+                        {%endif%}>Available: {{initial.min_date}} - {{initial.max_date}}</div>
+                    </div> 
+                    <div class="input-group">
+                        <div id="valid_daterange_fut" class="error"
+                        {%if initial.min_date_fut == '9999' or initial.max_date_fut == '9999'%}
+                        style="display:none;"
+                        {%endif%}>And: {{initial.min_date_fut}} - {{initial.max_date_fut}}</div>
+                    </div> 
+                    <div class="input-group">
                         {% include 'includes/start-date.html'%}
                         <span class="input-group-addon"></span>
                         {% include 'includes/end-date.html'%}
