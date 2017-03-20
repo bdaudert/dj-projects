@@ -237,10 +237,10 @@ def sods(request, app_name):
                 if 'stnid' in form2.cleaned_data.keys():
                     stn_id = form2.cleaned_data['stn_id']
                 if 'start_date' in form2.cleaned_data.keys() and form2.cleaned_data['start_date'].upper() == 'POR':
-                        vd = WRCCUtils.find_valid_daterange(stn_id, max_or_min='max')
+                    vd = WRCCUtils.find_valid_daterange(stn_id, max_or_min='max')
                 if 'end_date' in form2.cleaned_data.keys() and form2.cleaned_data['end_date'].upper() == 'POR' and vd is None:
-                        vd = WRCCUtils.find_valid_daterange(stn_id, max_or_min='max')
-            if vd is not None and len(vd) == 2:
+                    vd = WRCCUtils.find_valid_daterange(stn_id, max_or_min='max')
+            if vd and isinstance(vd, list) and len(vd) == 2:
                 form2.cleaned_data['start_date'] = vd[0]
                 form2.cleaned_data['end_date'] = vd[1]
             (data, dates, variables, station_ids, station_names) = AcisWS.get_sod_data(form2.cleaned_data, app_name)
