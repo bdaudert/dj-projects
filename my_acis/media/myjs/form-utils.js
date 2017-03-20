@@ -87,6 +87,9 @@ function set_grid_dates(){
     if (String($('#grid').val()) == '21' && $('#temporal_resolution').val() != 'dly'){
         vd[0] = '1895-01-01';
     }
+    else{
+        vd[0] = '1981-01-01';
+    }
     if (grid_vd[String($('#grid').val())].length > 1 && grid_vd[String($('#grid').val())][1]){
         vd_fut = grid_vd[String($('#grid').val())][1];
         if (!vd_fut){vd_fut= ['9999-99-99','9999-99-99'];}
