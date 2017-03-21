@@ -21,45 +21,22 @@ function set_max_min_dates(vd,vd_fut=['9999-99-99','9999-99-99']){
     //Set new min max dates and dates
     //Min max dates
     $('#min_date').val(vd[0]), $('#max_date').val(vd[1]);
-    $('#min_year').val(vd[0]).slice(0,4), $('#max_year').val(vd[1]).slice(0,4);
+    $('#min_year').val(vd[0].slice(0,4)), $('#max_year').val(vd[1].slice(0,4));
     $('#min_date_fut').val(vd_fut[0]), $('#max_date_fut').val(vd_fut[1]);
-    $('#min_year_fut').val(vd_fut[0]).slice(0,4), $('#max_year_fut').val(vd_fut[1]).slice(0,4);
-    /*
-    if (vd[0] != '9999-99-99' &&  vd[1] != '9999-99-99'){
-        
-        //Set dates
-        if ($('#app_name').val().inList(['single_year','seasonal_summary','monthly_summary','climatology'])){
-         //set_year_range(start=String(vd[0]).slice(0,4),end=String(vd[1]).slice(0,4));
-        }
-        else {
-            var form_start_date = $('#start_date').val(),form_end_date = $('#end_date').val();
-            if (new Date(vd[0]) > new Date(form_start_date)){
-                $('#start_date').val(vd[0]);
-            }
-            if (new Date(vd[1]) < new Date(form_end_date)){
-                $('#end_date').val(vd[1]);
-            }
-            if (new Date(vd[1]) < new Date(form_start_date)){
-                $('#start_date').val(vd[0]);
-                $('#end_date').val(vd[1]);
-                //alert('Start/End dates changed to valid date range for this station: ' + vd[0] + ' - ' + vd[1]);
-            }
-            if (new Date(vd[0]) > new Date(form_end_date)){
-                $('#start_date').val(vd[0]);
-                $('#end_date').val(vd[1]);
-                //alert('Start/End dates changed to valid date range for this station: ' + vd[0] + ' - ' + vd[1]);
-            }
-        }
-    }
-    */
+    $('#min_year_fut').val(vd_fut[0].slice(0,4)), $('#max_year_fut').val(vd_fut[1].slice(0,4));
 }
 
 function set_vd(vd, vd_fut=['9999-99-99','9999-99-99']){
     var min_date='9999-99-99', max_date='9999-99-99';
-    if ($('#min_date').length){min_date = $('#min_date').val();}
-    if ($('#max_date').length){min_date = $('#max_date').val();}
-    if (!$('#min_date').length && $('#min_year').length){min_date = $('#min_year').val();}
-    if (!$('#max_date').length && $('#max_year').length){max_date = $('#max_year').val();}
+    if (vd !=['9999-99-99','9999-99-99']){
+        min_date = vd[0], max_date = vd[1];
+    }
+    else{
+        if ($('#min_date').length){min_date = $('#min_date').val();}
+        if ($('#max_date').length){max_date = $('#max_date').val();}
+        if (!$('#min_date').length && $('#min_year').length){min_date = $('#min_year').val();}
+        if (!$('#max_date').length && $('#max_year').length){max_date = $('#max_year').val();}
+    }
     if (vd[0] != '9999-99-99' &&  vd[1] != '9999-99-99'){
         $('#valid_daterange').css('display','block');
         $('#valid_daterange').html('Available: ' + min_date + ' - ' + max_date);
@@ -67,16 +44,22 @@ function set_vd(vd, vd_fut=['9999-99-99','9999-99-99']){
     else{
         $('#valid_daterange').css('display','none');
     }
+    //Furture dates
     if (vd_fut[0] != '9999-99-99' && vd_fut[1] != '9999-99-99'){
-        var min_date_fut, max_date_fut;
+        var min_date_fut = vd_fut[0], max_date_fut = vd_fut[1];
+    }
+    else{
         if ($('#min_date_fut').length){min_date_fut = $('#min_date_fut').val();}
         if ($('#max_date_fut').length){min_date_fut = $('#max_date_fut').val();}
         if (!$('#min_date_fut').length && $('#min_year_fut').length){min_date_fut = $('#min_year_fut').val();}
         if (!$('#max_date_fut').length && $('#max_year_fut').length){max_date_fut = $('#max_year_fut').val();}
-        $('#valid_daterange_fut').html('And: ' + min_date_fut + ' - ' + max_date_fut);
+    }
+    if (min_date_fut.inList(['9999-99-99','9999']) || max_date_fut.inList(['9999-99-99','9999'])){
+        $('#valid_daterange_fut').css('display','none');
     }
     else{
-        $('#valid_daterange_fut').css('display','none');
+        $('#valid_daterange_fut').css('display','block');
+        $('#valid_daterange_fut').html('And: ' + min_date_fut + ' - ' + max_date_fut);            
     }
 }
 
@@ -111,9 +94,9 @@ function set_grid_dates(){
             vd[0] = '1981-01-01';
         }
     }
-    if (grid_vd[String($('#grid').val())].length > 1 && grid_vd[String($('#grid').val())][1]){
+    vd_fut= ['9999-99-99','9999-99-99'];
+    if (grid_vd[String($('#grid').val())].length > 1 && grid_vd[String($('#grid').val())][1].length > 0){
         vd_fut = grid_vd[String($('#grid').val())][1];
-        if (!vd_fut){vd_fut= ['9999-99-99','9999-99-99'];}
     }
     set_max_min_dates(vd,vd_fut);
     set_vd(vd,vd_fut);
@@ -131,6 +114,18 @@ function ajax_set_station_vd(){
     Sets max/min dates and valid daterange
     Checks that form dates lie in valid daterange
     */
+    //Check if the station vd has already been computed in this session
+    var vd = ['9999-99-99','9999-99-99'];
+    if (window.vd_stations.indexOf($('#station_id').val()) != -1){
+        //vd was already computed
+        var idx =  window.vd_stations.indexOf($('#station_id').val());
+        vd = window.vd_stations_vds[idx];
+        console.log(vd);
+        set_max_min_dates(vd);
+        set_vd(vd);
+        check_station_form_dates();
+        return;
+    }
     var vd = ['9999-99-99','9999-99-99']
     $('.ajax_error').html();
     waitingDialog.show('Finding date range for station', {dialogSize: 'sm', progressType: 'warning'});
@@ -158,14 +153,23 @@ function ajax_set_station_vd(){
         response = JSON.parse(response);
         set_max_min_dates(response['vd']);
         set_vd(response['vd']);
-        check_station_form_dates();
+        if ($('#start_year').length && $('#end_year').length){
+            set_year_range();
+        }
+        check_station_form_dates(); 
+        //Update global vars that hold station valid dateranges comoputed in this session
+        window.vd_stations.push($('#station_id').val());
+        window.vd_stations_vds.push(response['vd']);
         waitingDialog.hide();
     })
     .fail(function(jqXHR) {
         $('.ajax_error').html(get_ajax_error(jqXHR.status));
-        waitingDialog.hide();
         set_max_min_dates(['9999-99-99','9999-99-99']);
         set_vd(['9999-99-99','9999-99-99']);
+        //Update global vars that hold station valid dateranges comoputed in this session
+        vd_stations.push($('#station_id').val());
+        vd_stations_vds.push(['9999-99-99','9999-99-99']);
+        waitingDialog.hide();
    })
 }
 
@@ -438,42 +442,32 @@ function check_grid_form_dates(){
     } 
 }
 
-function set_year_range(start=null,end=null){
+function set_year_range(){
     /*Set date range for drop downs for year range*/
     var today = new Date();
     var today_str = convertDateToString(today, '-')
     var today_yr = today_str.slice(0,4); 
     var max_year = $('#max_year').val(), min_year = $('#min_year').val(), 
         min_year_fut = $('#min_year_fut').val(), max_year_fut = $('#max_year_fut').val();
-    /*
-    if ($('#area_type').val() == 'location'){
-        var grid = $('#grid').val();
-        min_year = grid_vd[grid][0][0].slice(0,4);
-        max_year = grid_vd[grid][0][1].slice(0,4);
-        var min_year_fut = min_year, max_year_fut = min_year;
-        //Check for projections and set future dates
-        if (grid_vd[grid][1].length == 2){
-            min_year_fut = grid_vd[grid][1][0].slice(0,4);
-            max_year_fut = grid_vd[grid][1][1].slice(0,4);
-        }
-    }
-    */
-    if (!start){start = min_year;}
-    if (!end){end = max_year;}
+    var start_year_val = $('#start_year').val(), end_year_val = $('#end_year').val(); 
+    //Sanity check on selected values
+    if (parseInt(start_year_val) < parseInt(min_year) || parseInt(start_year_val) > parseInt(max_year)){
+        start_year_val = min_year;
+    } 
+    end_year_val = String(parseInt(start_year_val) + 10);
+    if (parseInt(end_year_val) > parseInt(max_year) || parseInt(end_year_val) < parseInt(min_year)){
+        end_year_val = max_year;
+    } 
     //Set new year dropdowns
     $('#start_year > option').remove();
     $('#end_year > option').remove();
-    var opt, i, selected_date;
-    var selected_year_end = String(parseInt(min_year.slice(0,4)) + 10);
-    if (parseInt(selected_year_end) > parseInt(max_year)){
-        selected_year_end = max_year;
-    }
+    var opt, i;
     for (i=parseInt(min_year);i<=parseInt(max_year);i++){
         opt = '<option value="' + String(i) + '">' + String(i) + '</option>';
         $('#start_year').append(opt);
         $('#end_year').append(opt);
     }
-    if (min_year_fut && max_year_fut){
+    if (min_year_fut != '9999' && max_year_fut != '9999'){
         for (i=parseInt(min_year_fut);i<=parseInt(max_year_fut);i++){
             opt = '<option value="' + String(i) + '">' + String(i) + '</option>';
             $('#start_year').append(opt);
@@ -485,18 +479,8 @@ function set_year_range(start=null,end=null){
             $('#start_year').append(opt);
             $('#end_year').append(opt);
     }
-    if (!start){
-        $('#start_year').val(min_year);
-    }
-    else{
-        $('#start_year').val(start);
-    }
-    if (!end){
-        $('#end_year').val(String(selected_year_end));
-    }
-    else {
-        $('#end_year').val(end);
-    }
+    $('#start_year').val(start_year_val); 
+    $('#end_year').val(end_year_val); 
 }
 
 function update_value(val){

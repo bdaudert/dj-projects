@@ -15,9 +15,7 @@
     <div class="input-group">
         <select class="year form-control" id="start_year" name="start_year">
         <!--Future dates for grids-->
-        {%if initial.station_id%}
-            <option value="POR"{% if initial.start_year == "POR"%}selected{%endif%}>POR</option>
-        {%endif%}
+        {%if initial.min_year_fut != "9999" and initial.max_year_fut != "9999"%}
         {%for yr in initial.min_year_fut|make_range:initial.max_year_fut%}
             <option value="{{yr}}" 
             {% if initial.location%} 
@@ -27,6 +25,7 @@
             {%endif%}
             {% if initial.start_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
         {%endfor%}
+        {%endif%}
         <!--Past dates-->
         {%for yr in initial.min_year|make_range:initial.max_year%}
             <option value="{{yr}}" {% if initial.start_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
@@ -37,6 +36,7 @@
         
         <select class="year form-control" id="end_year" name="end_year">
         <!--Future dates for grids-->
+        {%if initial.min_year_fut != "9999" and initial.max_year_fut != "9999"%}
         {%for yr in initial.min_year_fut|make_range_reversed:initial.max_year_fut%}
             <option value="{{yr}}" 
             {% if initial.location%} 
@@ -46,13 +46,11 @@
             {%endif%}
             {% if initial.end_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
         {%endfor%}
+        {%endif%}
         <!--Past dates-->
-        {%for yr in initial.start_year|make_range_reversed:initial.max_year%}  
+        {%for yr in initial.min_year|make_range:initial.max_year%}  
             <option value="{{yr}}" {% if initial.end_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
         {%endfor%}
-        {%if initial.station_id%}
-            <option value="POR"{% if initial.end_year == "POR"%}selected{%endif%}>POR</option>
-        {%endif%}
         </select>
     </div><!--input-group-->
 </div><!--form-group-->
