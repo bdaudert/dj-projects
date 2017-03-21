@@ -838,9 +838,9 @@ $(document).ready(function () {
         });
         //Set dates
         set_grid_dates();
-
+        //Intraannual target year
         if ($('#start_year').length && $('#end_year').length){
-            set_year_range();
+            //set_year_range();
             //Update target year for intra
             if ($('#app_name').val() == 'single_year'){
                 if ($('#start_year').val().toLowerCase()!='por'){
@@ -859,7 +859,6 @@ $(document).ready(function () {
     */
     $('#temporal_resolution').on('change', function(){
         set_grid_dates();
-        //check_grid_form_dates();
     });
 
     /*
@@ -1082,17 +1081,33 @@ $(document).ready(function () {
     $('.area_type').on('keydown change', function(){
         if ($(this).val().inList(['station_id','station_ids'])){
             $('#data_type').val('station');
-            $('#data_type').trigger('change');
+            //$('#data_type').trigger('change');
         }
         if ($(this).val().inList(['location','locations'])){
             $('#data_type').val('grid');
-            $('#data_type').trigger('change');
+            //$('#data_type').trigger('change');
         }
         //Set area form field
         set_area($(this)); //form_utils function
         set_variables();
         set_map($(this)); //form_utils function
         update_value($(this).val()); //form_utils function
+        //Set the dates
+        if ($('#data_type').val() == 'station'){
+            if ($(this).val() == 'station_id'){
+                //Ajax call to fiond valid daterange 
+                //and set max/min and valid dateranges
+                ajax_set_station_vd();
+            }
+            else{
+                //No max min dates for multi station requests
+                //Set to 1850-01-01 to present
+                set_station_dates();
+            }
+        }
+        if ($('#data_type').val() == 'grid'){
+            set_grid_dates();
+        }
         if ($(this).val() == 'shape_file'){
             ShowPopupDocu('uploadShapeFile');
         }
@@ -1118,31 +1133,20 @@ $(document).ready(function () {
             $('#obs_time').css('display','block');
             $('#flags').css('display','block'); 
         }
-        //Show/Hide stn finder link and set dates for grid/station 
+        //Show/Hide stn finder link 
         if ($('#data_type').val() == 'station'){
             $('#grid_type').css('display','none');
             $('#stn_finder').css('station_finder','block');
-            if ($(this).val() == 'station_id'){
-                //Ajax call to fiond valid daterange 
-                //and set max/min and valid dateranges
-                ajax_set_station_vd();
-            }
-            else{
-                //No max min dates for multi station requests
-                //Set to 1850-01-01 to present
-                set_station_dates();
-            }
         }
         if ($('#data_type').val() == 'grid'){
             $('#grid_type').css('display','block');
             $('#stn_finder').css('station_finder','none');
-            set_grid_dates();
         }
         //Change start/end years and set year ranges
         var app_name = $('#app_name').val();
         if (app_name.inList(['seasonal_summary','single_year','monthly_summary','climatology'])){
             //Set range dropdown values
-            set_year_range(start=$('#start_year').val(),end=$('#end_year').val());
+            //set_year_range(start=$('#start_year').val(),end=$('#end_year').val());
 
             //Update target year for intra
             if (app_name == 'single_year'){
@@ -1448,7 +1452,6 @@ $(document).ready(function () {
     ****************/
     //STATION_ID Change --> Find POR of station
     $('#station_id').on('change', function(){
-        console.log('ID CHANGE TRIGGERED');
         //AJAX call to find station vd, set max_min_dates and show valid daterange
         ajax_set_station_vd();
         /*
