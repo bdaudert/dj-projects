@@ -76,7 +76,7 @@ function set_station_dates(){
     if ($('#start_year').length && $('#end_year').length){
         set_year_range();
     }
-    check_station_form_dates();
+    check_form_dates();
 }
 
 function set_grid_dates(){
@@ -103,7 +103,7 @@ function set_grid_dates(){
     if ($('#start_year').length && $('#end_year').length){
         set_year_range();
     }
-    check_grid_form_dates();
+    check_form_dates();
 }
 
 
@@ -120,10 +120,9 @@ function ajax_set_station_vd(){
         //vd was already computed
         var idx =  window.vd_stations.indexOf($('#station_id').val());
         vd = window.vd_stations_vds[idx];
-        console.log(vd);
         set_max_min_dates(vd);
         set_vd(vd);
-        check_station_form_dates();
+        check_form_dates();
         return;
     }
     var vd = ['9999-99-99','9999-99-99']
@@ -156,7 +155,7 @@ function ajax_set_station_vd(){
         if ($('#start_year').length && $('#end_year').length){
             set_year_range();
         }
-        check_station_form_dates(); 
+        check_form_dates(); 
         //Update global vars that hold station valid dateranges comoputed in this session
         window.vd_stations.push($('#station_id').val());
         window.vd_stations_vds.push(response['vd']);
@@ -246,187 +245,84 @@ function set_back_date(date_string,number){
     return year + '-' + mm + '-' + dd;
 }
 
-function check_station_form_dates(){
+function check_form_dates(){
     /*
     Function that checks if start/end_date lie within
-    valid daterange for area_type. If not, new dates are set.
+    valid daterange.If not, new dates are set.
     Returns: 
         new_dates.start: new start date or start year
         new_dates.end: new end date or end year
     */
-    var start_date, end_date, year_or_date;
+    var start_date, end_date, year_or_date, 
+        ds_past = de_past = ds_fut = de_fut = '9999-99-99',
+        today = new Date(), today_string = convertDateToString(today,'-');
     if ($('#start_year').length && $('#end_year').length){
         start_date = $('#start_year').val();
         end_date = $('#end_year').val();
         year_or_date = 'year';
+        ds_past = $('#min_year').val() + '-01-01';
+        de_past = $('#max_year').val() + today_string.slice(4,today_string.length);
+        ds_fut = $('#min_year_fut').val() + '-01-01';
+        de_fut = $('#max_year_fut').val() + today_string.slice(4,today_string.length);
     }
     if ($('#start_date').length && $('#end_date').length){
         start_date = $('#start_date').val();
         end_date = $('#end_date').val();
         year_or_date = 'date';
+        ds_past = $('#min_date').val(), de_past = $('#max_date').val();
+        ds_fut = $('#min_date_fut').val(), de_fut = $('#max_date_fut').val();
     }
     if ($('#year').length){
         start_date = $('#year').val();
         end_date = $('#year').val();
         year_or_date = 'year';
-    } 
-    var area_type = $('#area_type').val(),today = new Date(),
-        today_string = convertDateToString(today,'-'), new_dates,
-        s = DateStringToJSDateString(start_date), e = DateStringToJSDateString(end_date);
-    /*
-    if (area_type == 'station_id'){
-        s = 'POR', e = 'POR';
+        ds_past = $('#min_year').val() + '-01-01';
+        de_past = $('#max_year').val() + today_string.slice(4,today_string.length);
+        ds_fut = $('#min_year_fut').val() + '-01-01';
+        de_fut = $('#max_year_fut').val() + today_string.slice(4,today_string.length);
     }
-    */
-    if (area_type != 'station_id'){
-        if (end_date.toLowerCase() == 'por'){
-            e = set_back_date(today_string,0);
-        }
-        if (start_date.toLowerCase() == 'por'){
-            s = set_back_date(e,-14);
-        }   
-        if (year_or_date == 'year'){
-            s = s.slice(0,4);
-            e = e.slice(0,4);
-        }
+    //Sanity check on form dates
+    var s = start_date, e = end_date;
+    if ($('station_id').length && (s.toLowerCase() == 'por' && s.toLowerCase() == 'por')){
+        return;
     }
-    new_dates = {
-        'start': s,
-        'end': e
-    }
-    //Set the new dates
-    $('#start_' + year_or_date).val(new_dates.start);
-    $('#end_' + year_or_date).val(new_dates.end);
-    if ($('#year').length){
-        $('#year').val(new_dates.start);
-    } 
-}
-
-function check_grid_form_dates(){
-    /*
-    Function that checks if start/end_date lie within
-    valid daterange for grid. If not, new dates are set.
-    Returns: 
-        new_dates.start: new start date or start year
-        new_dates.end: new end date or end year
-    */
-    var start_date, end_date, year_or_date;
-    if ($('#start_year').length && $('#end_year').length){
-        start_date = $('#start_year').val();
-        end_date = $('#end_year').val();
-        year_or_date = 'year';
-    }
-    if ($('#start_date').length && $('#end_date').length){
-        start_date = $('#start_date').val();
-        end_date = $('#end_date').val();
-        year_or_date = 'date';
-    }
-    if ($('#year').length){
-        start_date = $('#year').val();
-        end_date = $('#year').val();
-        year_or_date = 'year';
-    }
-    var grid = $('#grid').val(),
-        today = new Date(), today_string = convertDateToString(today,'-'),
-        s = start_date, e = end_date;
-    if (s.toLowerCase() == 'por'){s = grid_vd[grid][0][0];}
-    if (e.toLowerCase() == 'por'){e = grid_vd[grid][0][1];} 
+    if (s.toLowerCase() == 'por'){s = ds_past}
+    if (e.toLowerCase() == 'por'){e = de_past} 
     if (s.length == 4){s = s + '-01-01';}
     if (e.length == 4){e = e + today_string.slice(4,today_string.length);}
     var new_dates = {
         'start': s,
         'end': e
     }
-    //Set new min/max_years for grid
-    var ds = new Date(s), de = new Date(e);
-    //Funkyness with js dates
-    //lag in data
-    var ds_past = new Date(grid_vd[grid][0][0]);
-    $('#min_year').val(grid_vd[grid][0][0].slice(0,4));
-    //Update hidden var
-    $('#max_year').val(grid_vd[grid][0][1].slice(0,4));
-    var de_past = new Date(grid_vd[grid][0][1]);
-    de_past.setDate(de_past.getDate() + 1);
-    if (grid_vd[grid][1].length == 2){
-        var ds_fut = new Date(grid_vd[grid][1][0]);
-        //Update hidden var
-        $('#min_year_fut').val(grid_vd[grid][1][0].slice(0,4));
-        ds_fut.setDate(ds_fut.getDate() + 1);
-        var de_fut = new Date(grid_vd[grid][1][1]);
-        //Update hidden var
-        $('#max_year_fut').val(grid_vd[grid][1][1].slice(0,4));
-        de_fut.setDate(de_fut.getDate() + 1);
-    }
-    else{
-        //Set bogus future dates for easy coding of checks
-        var ds_fut = ds_past, de_fut = de_past;
-        $('#max_year_fut').val('9999');
-        $('#min_year_fut').val('9999-99-99');
-    }
-    /*
-    //Special case prism monthly/yearly
-    if (grid == '21'){
-        if ($('#temp_res').length && ($('#temporal_resolution').val == 'mly' || $('#temporal_resolution').val == 'yly')){
-            ds_past = new Date('1895-01-01');
-            ds_past.setDate(ds_past.getDate() + 1);
-            de_past = today;
-            ds_fut = new Date('1895-01-01');
-            ds_fut.setDate(ds_fut.getDate() + 1);
-            de_fut = today;
-        }
-    }
-    */
-    if ((ds_past <= ds && de <= de_past) || (ds_fut <= ds && de <= de_fut)){
-        //Don't change start/end dates
-        if (year_or_date == 'year'){
-            new_dates.start = new_dates.start.slice(0,4);
-            //new_dates.end = new_dates.end.slice(0,4);
-            var new_end = String(parseInt(new_dates.start.slice(0,4)) + 10)
-            if (new Date(new_end).getTime() < new Date(new_dates.end).getTime()){
-                new_dates.end = new_end
-            }
-            else{
-                new_dates.end = new_dates.end.slice(0,4);
-            }
+    //Set new min/max_years
+    var j_ds = new Date(s), j_de = new Date(e), 
+        j_ds_past = new Date(ds_past), j_de_past = new Date(de_past)
+        j_ds_fut = new Date(ds_fut), j_de_fut = new Date(de_fut)
+    //Quirkiness in js dates
+    j_ds.setDate(j_ds.getDate() + 1), j_de.setDate(j_de.getDate() + 1);
+    j_ds_past.setDate(j_ds_past.getDate() + 1), j_de_past.setDate(j_de_past.getDate() + 1);
+    j_ds_fut.setDate(j_ds_fut.getDate() + 1), j_de_fut.setDate(j_de_fut.getDate() + 1);
+    if (ds_fut != '9999-99-99' || de_fut != '9999-99-99'){
+        //Only check past dates
+        if ( !(j_ds_past <= j_ds && j_de <= j_de_past) ){
+            if (j_ds < j_ds_past || j_ds > j_de_past){new_dates.start = ds_past;}
+            if (j_de > j_de_past || j_de < j_ds_past){new_dates.end = de_past;}
         }
     }
     else{
-        //Set new start date
-        if (ds < ds_past){
-            new_dates.start = grid_vd[grid][0][0]; 
-        }
-        if (ds > de_past &&  ds < ds_fut){
-            new_dates.start = grid_vd[grid][0][0];
-        }
-        if (ds > de_fut){
-            new_dates.start = grid_vd[grid][0][0];
-        }
-        var new_ds = new Date(new_dates.start);
-        new_ds.setDate(new_ds.getDate() + 1);
-        
-        //Set new end date to 10 years later than start date
-        if (year_or_date == 'year'){
-            if (ds_past <= new_ds <= de_past){
-                var d = grid_vd[grid][0][1];
+        //Need to check future dates too
+        if (!(j_ds_past <= j_ds && j_de <= j_de_past) || (j_ds_fut <= j_ds && j_de <= j_de_fut)){
+            //Dates are not in valid daterage
+            if (!(j_ds_fut <= j_ds && j_de <= j_de_fut)){
+                //Set dates to past dates
+                if (j_ds < j_ds_past || j_ds > j_de_past){new_dates.start = ds_past; }
+                if (j_de > j_de_past || j_de < j_ds_past){new_dates.end = de_past;}        
             }
-            else {
-                var d = grid_vd[grid][1][1];
+            else if (!(j_ds_past <= j_ds && j_de <= j_de_past)){
+                //Set dates to future dates
+                if (j_ds < j_ds_fut || j_ds > j_de_fut){new_dates.start = ds_fut; }
+                if (j_de > j_de_fut || j_de < j_ds_fut){new_dates.end = de_fut;}            
             }
-        }
-        else{
-            var d = String(parseInt(new_dates.start.slice(0,4)) + 10) + new_dates.start.slice(4,new_dates.start.length);
-        }
-        if (d == 'today'){
-            d = convertDateToString(today,'-');
-        }
-        if (de < ds_past){
-            new_dates.end = d; 
-        }
-        if (de > de_past && de < ds_fut){
-            new_dates.end = d;
-        }
-        if (de > de_fut){
-            new_dates.end = d;
         }
     }
     //Check if we only want to return years

@@ -1099,9 +1099,11 @@ $(document).ready(function () {
             //Multi apps, no change in data type
             if ($('#data_type').val() == 'station'){
                 if ($(this).val() == 'station_id'){
-                //Ajax call to fiond valid daterange 
-                //and set max/min and valid dateranges
-                ajax_set_station_vd();
+                    //Ajax call to fiond valid daterange 
+                    //and set max/min and valid dateranges
+                    if ($('#station_id').val() != ''){
+                        ajax_set_station_vd();
+                    }
                 }
                 else{
                     //No max min dates for multi station requests
@@ -1454,9 +1456,12 @@ $(document).ready(function () {
     AJAX CALLS
     ****************/
     //STATION_ID Change --> Find POR of station
-    $('#station_id').on('change', function(){
-        //AJAX call to find station vd, set max_min_dates and show valid daterange
-        ajax_set_station_vd();
+    //$('#station_id').on('change',function(){
+    $('span#area-form-input').on('change','input:text', function () {
+        if ($(this).attr('id') == 'station_id'){
+            //AJAX call to find station vd, set max_min_dates and show valid daterange
+            ajax_set_station_vd();
+        }
     });
 
     //OVERLAY_STATES
