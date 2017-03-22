@@ -286,8 +286,10 @@ function check_form_dates(){
     if ($('station_id').length && (s.toLowerCase() == 'por' && s.toLowerCase() == 'por')){
         return;
     }
-    if (s.toLowerCase() == 'por'){s = ds_past}
-    if (e.toLowerCase() == 'por'){e = de_past} 
+    if (s.toLowerCase() == 'por'){s = ds_past;}
+    if (e.toLowerCase() == 'por'){e = de_past;} 
+    if (s == '9999-99-99' || s == '9999'){s = ds_past;}
+    if (e == '9999-99-99' || e == '9999'){e = de_past;}
     if (s.length == 4){s = s + '-01-01';}
     if (e.length == 4){e = e + today_string.slice(4,today_string.length);}
     var new_dates = {
