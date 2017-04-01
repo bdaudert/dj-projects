@@ -137,6 +137,10 @@ function ajax_set_station_vd(){
         el_list = [$('#variable').val()];
         el_tuple = $('#variable').val();
     }
+    if ($('#summary_type').length){
+        el_list = ['maxt','mint','pcpn'];
+        el_tuple = el_list + "";
+    } 
     var form_data = 'station_id_change=True';
     form_data+='&csrfmiddlewaretoken=' + $("[name=csrfmiddlewaretoken]").val();
     form_data+='&station_id=' + $('#station_id').val();
@@ -170,28 +174,6 @@ function ajax_set_station_vd(){
         vd_stations_vds.push(['9999-99-99','9999-99-99']);
         waitingDialog.hide();
    })
-}
-
-function showLargeRequestForm(){
-    if ($('#app_name').val() == 'multi_lister'){
-        if ($('#data_summary').val().inList(['none','windowed_data'])){
-            $('.out_format').css('display','block');
-        }
-        else{
-            $('.out_format').css('display','none');
-        }
-    }
-    else{
-        $('.out_format').css('display','none');
-    }
-    if ($('.data_format').val().inList(['xl','html'])){
-        $('.delim').css('display','none');
-
-    }
-    else{
-        $('.delim').css('display','block');
-    }
-    ShowPopupDocu('largeRequestForm');
 }
 
 // [client side code for showing/hiding content]
@@ -851,16 +833,6 @@ function show_loading(msg="Processing"){
     Shows process bar with custom message msg
     */
     waitingDialog.show(msg, {dialogSize: 'sm', progressType: 'warning'});
-    /*
-    $("#loading-image").attr("src","/csc/media/img/LoadingGreen.gif");
-    $("#loading").show("fast");
-    //this.preventDefault();
-    var form = $(this).unbind('submit');
-    setTimeout(function(){
-        form.submit();
-        $("#loading").hide();
-    }, 27000);
-    */
 }
 
 function hide_loading(){

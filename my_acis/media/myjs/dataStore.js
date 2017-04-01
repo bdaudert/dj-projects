@@ -1,14 +1,14 @@
 function convertDate(date, sep){
-        var yr = String(date.getFullYear());
-        var mon = String(date.getMonth()+1);
-        var day = String(date.getDate());
-        if (String(mon).length == 1){
-            mon = '0' + mon;
-        }
-        if (String(day).length == 1){
-            day = '0' + day;
-        }
-        return yr + sep + mon + sep + day;
+    var yr = String(date.getFullYear());
+    var mon = String(date.getMonth()+1);
+    var day = String(date.getDate());
+    if (String(mon).length == 1){
+        mon = '0' + mon;
+    }
+    if (String(day).length == 1){
+        day = '0' + day;
+    }
+    return yr + sep + mon + sep + day;
 }
 var tdy = new Date();
 var tdy_string = convertDate(tdy,'-');
@@ -34,7 +34,6 @@ for (var grid_id=22;grid_id<=41;grid_id++) {
     //grid_vd[String(grid_id)] = [['1950-01-01','2005-12-31'],['2006-01-01','2099-12-31']];
     grid_vd[String(grid_id)] = [['1950-01-01','2099-12-31'],[]];
 }
-
 var station_finder_metadata ={
     'name':'Name',
     'state':'State',
@@ -45,7 +44,6 @@ var station_finder_metadata ={
     'networks':'Networks',
     'valid_daterange':'Valid Daterange'
 }
-
 var area_defaults = {
     'station_id':['Station ID','RENO TAHOE INTL AP, 266779'],
     'station_ids':['Station IDs','266779,050848'],
@@ -60,11 +58,7 @@ var area_defaults = {
     'shape':['Custom Shape','-120.3,38.89,-120.3,40.12,-118.89,40.21,-118.89,38.89'],
     'shape_file':['Custom Shape',''],
 }
-
-
-
 var state_choices = ['ak', 'al', 'ar', 'as', 'az', 'ca', 'co', 'ct', 'dc', 'de', 'fl', 'fm', 'ga', 'gu', 'hi', 'ia', 'id', 'il', 'in', 'ks', 'ky', 'la', 'ma', 'md', 'me', 'mh', 'mi', 'mn', 'mo', 'mp', 'ms', 'mt', 'nc', 'nd', 'ne', 'nh', 'nj', 'nm', 'nv', 'ny', 'oh', 'ok', 'or', 'pa', 'pr', 'pw', 'ri', 'sc', 'sd', 'tn', 'tx', 'ut', 'va', 'vt', 'wa', 'wi', 'wv', 'wy', 'as']
-
 var state_names = {
  'ak':'Alabama', 
  'al':'Alaska', 

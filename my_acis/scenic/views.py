@@ -25,20 +25,6 @@ import AcisWS, WRCCDataApps, WRCCClasses, WRCCData, WRCCFormCheck
 import WRCCToReplace
 import scenic.forms as forms
 
-#Code to clean out data_request dir
-'''
-    import os, shutil
-    folder = '/tmp/data_requests'
-    for the_file in os.listdir(folder):
-        file_path = os.path.join(folder, the_file)
-        try:
-            if os.path.isfile(file_path):
-                os.unlink(file_path)
-            #elif os.path.isdir(file_path): shutil.rmtree(file_path)
-        except Exception, e:
-            pass
-'''
-
 #Set dates
 today = WRCCUtils.set_back_date(0)
 today_year = today[0:4]
@@ -52,47 +38,6 @@ yrs_ago = WRCCUtils.set_back_date(3660)[0:4]
 ############################################
 ###PAGES
 ############################################
-def test(request):
-    context = {
-        'title': 'Southwest Climate and ENvironmental Information Collaborative',
-    }
-    #from oauth2client.service_account import ServiceAccountCredentials
-
-    import sys
-    sys.path.insert(0, '/usr/local/google_appengine')
-    import ee
-    from oauth2client.contrib.appengine import AppAssertionCredentials
-    from oauth2client.service_account import ServiceAccountCredentials
-
-    EE_CREDENTIALS = ServiceAccountCredentials(settings.EE_ACCOUNT, settings.EE_PRIVATE_KEY_FILE)
-    ee.Initialize(EE_CREDENTIALS, settings.EE_URL)
-    '''
-    EE_URL = 'https://earthengine.googleapis.com'
-
-    # The service account email address authorized by your Google contact.
-    # Set up a service account as described here:
-    # https://sites.google.com/site/earthengineapidocs/creating-oauth2-service-account
-    EE_ACCOUNT = '386022915265-jmvio1gv6v8g8ractm946thtcvbpfnuf@developer.gserviceaccount.com'
-
-    # The private key associated with your service account in Privacy Enhanced
-    # Email format (.pem suffix).  To convert a private key from the RSA format
-    # (.p12 suffix) to .pem, run the openssl command like this:
-    # openssl pkcs12 -in downloaded-privatekey.p12 -nodes -nocerts > privatekey.pem
-    EE_PRIVATE_KEY_FILE = '/www/apps/csc/dj-projects/my_acis/ee-lib/EE.pem'
-    EE_CREDENTIALS = ee.ServiceAccountCredentials(EE_ACCOUNT, EE_PRIVATE_KEY_FILE)
-    ee.Initialize(EE_CREDENTIALS, EE_URL)
-    #ee.Initialize()
-    image = ee.Image('srtm90_v4')
-    request['ee_img_info'] = image.getInfo()
-    '''
-    return render_to_response('scenic/ee-test.html', context, context_instance=RequestContext(request))
-
-def download_map(request):
-    context = {
-        'title': 'Your Map',
-    }
-    return render_to_response('scenic/download_map.html', context, context_instance=RequestContext(request))
-
 def home(request):
     context = {
         'title': settings.APPLICATIONS['home'][0],
@@ -113,32 +58,6 @@ def about(request):
     }
     url = settings.APPLICATIONS['about'][2]
     return render_to_response(url, context, context_instance=RequestContext(request))
-
-def who_we_are(request):
-    context = {
-        'title': settings.APPLICATIONS['who_we_are'][0],
-        'icon':'AboutUs.png'
-    }
-    url = settings.APPLICATIONS['who_we_are'][2]
-    return render_to_response(url, context, context_instance=RequestContext(request))
-
-def what_we_do(request):
-    context = {
-        'title': settings.APPLICATIONS['what_we_do'][0],
-        'icon':'AboutUs.png'
-    }
-    url = settings.APPLICATIONS['what_we_do'][2]
-    return render_to_response(url, context, context_instance=RequestContext(request))
-
-def contact_us(request):
-    context = {
-        'title': settings.APPLICATIONS['contact_us'][0],
-        'icon':'AboutUs.png'
-    }
-    url = settings.APPLICATIONS['contact_us'][2]
-    return render_to_response(url, context, context_instance=RequestContext(request))
-
-
 
 def dashboard(request):
     app_name = 'dashboard'
@@ -184,7 +103,6 @@ def howto(request):
         'app_url': app_url
     }
     app_urls = {};app_names = {};param_urls = {}
-
     #HOWTO: STATION FINDER
     app_url = settings.APPLICATIONS['station_finder'][1]
     p_url = app_url + '?'
@@ -244,46 +162,6 @@ def projections(request):
         'app_url': app_url
     }
     return render_to_response(url, context, context_instance=RequestContext(request))
-
-def resources(request):
-    app_name = 'resources'
-    url = settings.APPLICATIONS[app_name][2]
-    app_url = settings.APPLICATIONS[app_name][1]
-    context = {
-        'title': settings.APPLICATIONS[app_name][0],
-        'app_name':app_name,
-        'app_url': app_url
-    }
-    return render_to_response(url, context, context_instance=RequestContext(request))
-
-def upload_test(request):
-    context = {
-        'title': 'Shapefile upload test'
-    }
-    initial = {
-        'files':'',
-        'feature_id':0
-    }
-    context['initial'] = initial
-    if 'upload' in request.POST:
-        initial['files'] = request.FILES.getlist('files')
-        initial['feature_id'] = request.POST['feature_id']
-        #Write all files to /tmp dir
-        #Identify .shp file
-        shp_file = None
-        for shape_file in initial['files']:
-            if str(shape_file).split('.')[-1] == 'shp':
-                shp_file = '/tmp/' + str(shape_file)
-            with open('/tmp/' + str(shape_file),'wb+') as dest:
-                for chunk in shape_file.chunks():
-                    dest.write(chunk)
-        if shp_file is None:
-            context['error'] = 'No .shp file was uploaded'
-            return render_to_response('scenic/upload_test.html', context, context_instance=RequestContext(request))
-        context['shp_file'] = shp_file
-        poly_ll = WRCCUtils.shapefile_to_ll('test', shp_file, initial['feature_id'])
-        context['poly_ll'] = poly_ll
-    return render_to_response('scenic/upload_test.html', context, context_instance=RequestContext(request))
 
 def remote_sensing_data(request):
     app_name = 'remote_sensing_data'
@@ -363,54 +241,6 @@ def multi_point_prods(request):
             p_str = WRCCUtils.set_url_params(initial)
             context['url_params_' + app] =  p_str
     return render_to_response(url, context, context_instance=RequestContext(request))
-
-
-def sw_networks(request):
-    context = {
-        'title': 'Southwest Networks',
-        'icon':'DataPortal.png'
-    }
-    return render_to_response('scenic/data/sw_networks.html', context, context_instance=RequestContext(request))
-
-def download(request):
-    app_name = request.GET.get('app_name', None)
-    context = {
-        'title': 'Download',
-        'app_name':app_name,
-        'icon':'ToolProduct.png'
-    }
-    json_file_name = request.GET.get('json_file', None)
-    json_file = settings.TEMP_DIR + json_file_name
-    json_in_file_name = json_file_name
-    tab = request.GET.get('tab', None)
-    form0 = forms.DownloadForm()
-    context['form0'] = form0
-    if 'form0' in request.POST:
-        form0 = set_as_form(request,'DownloadForm')
-        context['form0'] = form0
-        if form0.is_valid():
-            #context['data_dict'] = form0.cleaned_data
-            data_format = form0.cleaned_data['data_format']
-            delimiter = form0.cleaned_data['delimiter']
-            output_file_name = form0.cleaned_data['output_file_name']
-            #If Sodsumm, we need to fine the right data set
-            if app_name == 'Sodsumm':
-                json_data = WRCCUtils.load_json_data_from_file(json_file)
-                #find the correct data set corresponding to the tab name
-                for idx, data_dict in enumerate(json_data):
-                    if data_dict['table_name'] == tab:
-                        #context['data_dict'] = data_dict
-                        #Overwrite json_in_file
-                        json_in_file_name = json_file_name + '_in'
-                        WRCCUtils.load_data_to_json_file(settings.TEMP_DIR + json_in_file_name, data_dict)
-                        break
-            DDJ = WRCCToReplace.DownloadDataJob(app_name,data_format,delimiter, output_file_name, request=request, json_in_file=settings.TEMP_DIR + json_in_file_name)
-            if data_format in ['clm', 'dlm','xl']:
-                return DDJ.write_to_file()
-            else:
-                response = DDJ.write_to_file()
-                context['response'] = response
-    return render_to_response('scenic/download.html', context, context_instance=RequestContext(request))
 
 def single_lister(request):
     app_name = 'single_lister'
@@ -802,13 +632,13 @@ def multi_lister(request):
     if 'formLargeRequest' in request.POST:
         form_cleaned = DJANGOUtils.set_form(request,clean=True)
         form_error = check_form(form_cleaned, ['user_email'])
+        response_data = json.dumps({'no_form_error':'True'})
         if form_error:
-            response_data = json.dumps({'form_error':'Not a valid email address!'})
+            response_data = json.dumps({'form_error':'Please enter a valid email address and resubmit!'})
         else:
-            response_data = json.dumps({'yo':'yo'})
-        #Process request offline
-        json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
-        WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
+            #Process request offline
+            json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
+            WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
         response = set_ajax_response(response_data)
         return response
 
@@ -869,7 +699,6 @@ def multi_lister(request):
         context['initial'] = initial
         form = DJANGOUtils.set_form(initial,clean=False)
         form_cleaned = DJANGOUtils.set_form(initial)
-        context['xx'] = form_cleaned
         #Check for form errors
         fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date','degree_days']
         form_error = check_form(form_cleaned, fields_to_check)
@@ -1188,18 +1017,16 @@ def spatial_summary(request):
             ExcelWriter.write_to_file()
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
-
-
     if 'formLargeRequest' in request.POST:
         form_cleaned = DJANGOUtils.set_form(request,clean=True)
         form_error = check_form(form_cleaned, ['user_email'])
+        response_data = json.dumps({'no_form_error':'True'})
         if form_error:
-            response_data = json.dumps({'form_error':'Not a valid email address!'})
+            response_data = json.dumps({'form_error':'Please enter a valid email address and resubmit!'})
         else:
-            response_data = json.dumps({'yo':'yo'})
-        #Process request offline
-        json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
-        WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
+            #Process request offline
+            json_file = form_cleaned['output_file_name'] + settings.PARAMS_FILE_EXTENSION
+            WRCCUtils.load_data_to_json_file(settings.DATA_REQUEST_BASE_DIR +json_file, form_cleaned)
         response = set_ajax_response(response_data)
         return response
 
@@ -1928,9 +1755,6 @@ def climatology(request):
             return DDJ.write_to_file()
 
     return render_to_response(url, context, context_instance=RequestContext(request))
-
-
-
 ##############################
 #Utlities
 ##############################
@@ -1957,7 +1781,6 @@ def set_ajax_response(response_data):
         content_type="application/json"
     )
     return response
-
 ###########
 #General
 ###########
@@ -1976,12 +1799,6 @@ def check_form(form, fields_to_check):
         if err:
             if field in ['start_year','end_year']:
                 form_error[field] = err
-                '''
-                if form['app_name'] in ['single_year','seasonal_summary','monthly_summary','climatology']:
-                    form_error['Year Range'] = err
-                else:
-                    form_error[field] = err
-                '''
             else:
                 form_error[field] = err
             #Stop at first error
@@ -2005,7 +1822,6 @@ def run_external_script(cmd):
     import subprocess
     out, err = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
     return out, err
-
 ###################
 #Headers
 ####################
@@ -2084,38 +1900,6 @@ def set_sodsumm_headers(table_list):
     for table in table_list:
          headers[table] = set_header(table)
     return headers
-'''
-def set_sodsumm_headers(table_list):
-    headers = {}
-    def set_header(table):
-        rows = []
-        if table == 'temp':
-            rows.append('<th colspan="16"> <b>Temperature Statistics</b></th>')
-            rows.append('<tr><td colspan="5">-------</td><td colspan="5">Averages</td><td colspan="4">-----------Daily Extremes </td><td colspan="4">----------------Mean Extremes </td><td colspan="4">-----------Number of Days</td></tr>')
-        elif table == 'prsn':
-            rows.append('<th colspan="15"><b>Precipitation/Snow Statistics</b></th>')
-            rows.append('<tr><td colspan="6">----------------------Total Precipitation </td><td colspan="2">---------------------------</td><td colspan="2">Number of Days</td><td colspan="3">----------------Total Snowfall</td></tr>')
-
-        elif table == 'hdd':
-            rows.append('<th colspan="14"><b>Heating degree days</b></th>')
-            rows.append('<tr><td colspan="14">Output is rounded, unlike NCDC values, which round input.</td></tr>')
-            rows.append('<tr><td colspan="14">Degree Days to selected Base Temperatures</td></tr>')
-        elif table == 'cdd':
-            rows.append('<th colspan="14"><b>Cooling degree days</b></th>')
-            rows.append('<tr><td colspan="14">Output is rounded, unlike NCDC values, which round input.</td></tr>')
-            rows.append('<tr><td colspan="14">Degree Days to selected Base Temperatures(F)</td></tr>')
-        elif table == 'gdd':
-            rows.append('<th colspan="15"><b>Growing degree days</b></th>')
-            rows.append('<tr><td colspan="15">Output is rounded, unlike NCDC values, which round input.</td>')
-            rows.append('<tr><td colspan="15">Growing Degree Days to selected Base Temperatures</td></tr>')
-        elif table == 'corn':
-            rows.append('<th colspan="15"><b>Corn Growing Degree Days</b></th>')
-        return "\n".join(rows)
-
-    for table in table_list:
-         headers[table] = set_header(table)
-    return headers
-'''
 ######################
 #Data
 #####################
@@ -2181,7 +1965,6 @@ def set_params_for_shape_queries(search_params):
         except:
             pass
     return params, shape_type,shape_coords,PointIn,poly
-
 ######################
 #Graphics generation
 ######################
@@ -2353,7 +2136,6 @@ def generate_sodsumm_graphics(results, tab, table, units):
         'table_data':results[table]
         }
     return table_dict
-
 #############################
 #Display and search params
 ##############################
@@ -2382,15 +2164,12 @@ def set_el_string_and_list(form):
             el_list = el_string.split(',')
         except:
             return '', []
-
 ##################
 #Initialization
 ###################
-
 def join_dicts(d, d_1):
     for key, val in d_1.iteritems():
         d[key]=val
-
 
 def join_initials(initial,initial_2):
     #combine the graph options with the plot options

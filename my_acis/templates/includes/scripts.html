@@ -30,22 +30,22 @@
     <script src="{{ MEDIA_URL }}js/jquery-3.1.0.min.js"></script>
     <!--<script src="http://code.jquery.com/jquery-3.1.0.min.js"></script>-->
     <!--progress window-->
-    <script src="{{MEDIA_URL}}js/waitingDialog.js"></script>
+    <script async src="{{MEDIA_URL}}js/waitingDialog.js"></script>
 
     <!--jQuery datatables-->
     <script src="{{ MEDIA_URL }}js/jquery.dataTables.min.js"></script>
     <script src="{{ MEDIA_URL }}js/dataTables.buttons.min.js"></script>
-    <script src="{{ MEDIA_URL }}js/buttons.flash.min.js"></script> 
-    <script src="{{ MEDIA_URL }}js/buttons.html5.min.js"></script>
-    <script src="{{ MEDIA_URL }}js/buttons.print.min.js"></script>
-    <script src="{{ MEDIA_URL }}js/buttons.colVis.min.js"></script>
+    <script async src="{{ MEDIA_URL }}js/buttons.flash.min.js"></script> 
+    <script async src="{{ MEDIA_URL }}js/buttons.html5.min.js"></script>
+    <script async src="{{ MEDIA_URL }}js/buttons.print.min.js"></script>
+    <script async src="{{ MEDIA_URL }}js/buttons.colVis.min.js"></script>
     <!--FIX ME: these all break if copied from the online links-->
     <!--<script src="{{ MEDIA_URL }}js/jszip.min-2.5.0.js"></script>-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
     <!--<script src="{{ MEDIA_URL }}js/pdfmake.min-0.1.20.js"></script>-->
-    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script async src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
     <!--<script src="{{ MEDIA_URL }}js/vfs_fonts-0.1.18.js"></script>-->
-    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script async src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
 
     <!--
     <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
@@ -72,15 +72,11 @@
 
 
     <!-- Britta's Javascript utilities -->
-    <script type="text/javascript" src="{{ MEDIA_URL }}myjs/dataStore.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}myjs/jutils.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}myjs/graphics-utils.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}myjs/form-utils.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}myjs/hc-charts.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}myjs/data-utils.js"></script>
+    <script type="text/javascript" src="{{MEDIA_URL}}myjs/dataStore.js"></script>
+    <script type="text/javascript" src="{{MEDIA_URL}}myjs/jutils.js"></script>
+    <script type="text/javascript" src="{{MEDIA_URL}}myjs/form-utils.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}myjs/csc-maps.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}myjs/Listeners.js"></script>
-    <script type="text/javascript" src="{{MEDIA_URL}}myjs/MapFunctions.js"></script> 
     <script type="text/javascript"
         src="http://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAP_API_KEY}}&libraries=drawing">
     </script>
@@ -101,17 +97,4 @@
     <script src="{{ MEDIA_URL }}js/exporting.js"></script>
     <!--<script src="http://highslide-software.github.io/export-csv/export-csv.js"></script>-->
     <script type="text/javascript" src="{{MEDIA_URL}}js/regression.js"></script>
-    <script type="text/javascript" src="{{MEDIA_URL}}myjs/HighChartsFunctions.js"></script>
-    <script type="text/javascript" src="{{MEDIA_URL}}myjs/generateHighChartsFigure.js"></script>
-    <!-- include greybox media for popup windows: WRCC links to anomaly maps -->
-    <!--<script type="text/javascript" src="http://www.wrcc.dri.edu/wrccpub/media/greybox/greybox.js"></script>-->
-    <script type="text/javascript" src="{{MEDIA_URL}}myjs/greybox.js"></script>
-    <link href="{{MEDIA_URL}}css/greybox.css" rel="stylesheet" type="text/css" media="all">
-
-    <!--Hide loading icon iupon page load-->
-    <script language="javascript" type="text/javascript">
-        //$(window).load(function() {
-        $(document).ready(function() {
-            $('#loading').hide(); 
-        });
-    </script>
+    <script type="text/javascript" src="{{MEDIA_URL}}myjs/highcharts-functions.js"></script>

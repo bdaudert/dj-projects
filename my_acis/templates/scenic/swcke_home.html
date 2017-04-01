@@ -10,11 +10,6 @@
     <!-- ** Britta'sJavascript ** -->
     <script type="text/javascript" src="{{ MEDIA_URL }}js/jutils.js"></script> 
     <input type="hidden" id="MEDIA_URL" name="variable" value="{{ MEDIA_URL }}">
-    <script language="javascript" type="text/javascript">
-        $(window).load(function() {
-        $('#loading').hide();
-        });
-    </script>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="5;url=/csc/scenic/">
 </head>
@@ -22,10 +17,6 @@
 <body>
 
 <div class="scenci-container">
-    <!--Loading image-->
-    <div id="loading">
-    <img id="loading-image" src="{{ MEDIA_URL }}img/LoadingGreen.gif" alt="Loading..." />
-    </div>
     <img src="{{ MEDIA_URL }}img/SWBanner.png">
 
     <!-- Note: don't tell people to `click` the link, just tell them that it is a link. -->

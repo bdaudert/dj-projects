@@ -149,8 +149,7 @@
             {%for tab in tab_list%} 
             <div class="sodsumm-tab" id={{tab}} {%if forloop.counter != 1%}style="display:none"{%endif%}>
                 <div class="hc-container" id="hc-container{{forloop.counter0}}" align="center" width="100%"></div>
-                <script type="text/javascript" src="{{ MEDIA_URL }}myjs/hc-sodsumm.js"></script>
-                
+                <script type="text/javascript">generateSodsummChart({{forloop.counter0}})</script>
                 <p>
                 {%if tab != 'pcpn' and tab != 'snow'%}
                 <p>{{headers|lookup:tab|safe}}&nbsp;&nbsp;</p>

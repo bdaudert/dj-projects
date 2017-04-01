@@ -235,21 +235,6 @@ $(document).ready(function () {
         $('.user_email').val($(this).val());
     });
 
-    $(".popup_map").click(function(ev){ 
-        // Let alt-clicks and non-left clicks (which != 1) do their thing
-        if ( ev.shiftKey || ev.ctrlKey || ev.altKey || ev.metaKey || ev.which != 1 ) {
-            return true;
-        }
-        var url = this.getAttribute("href");
-        var title = $(this).text();
-        var width = 792 + 20;
-        var height = 700 + 40;
-        GB_show(title, url, height, width);
-        return false;
-    });
-
-
-    
     /*  
     Zoom To Location on map
     */
@@ -1526,26 +1511,28 @@ $(document).ready(function () {
     $('#LargeRequestForm').on('submit', function(event){
         waitingDialog.show('Processing', {dialogSize: 'sm', progressType: 'warning'});
         event.preventDefault();
-        $('#formLargeRequest').dialog('close');
+        $('#largeRequestForm').dialog('close');
         //All extra input variables are linked and updated in the DataForm
         //Note need hidded vars user_name, email, delimiter, etx in main form
-        var form_data = $('#DataForm, #LargeRequestForm').serialize(); 
+        var form_data = $('#LargeRequestForm, #DataForm').serialize();
         var jqxhr = $.ajax({
-            url:'',
+            url: '',
             method: "POST",
             data: form_data,
         })
         .done(function(response) {
-            response = JSON.parse(response);
-            if ('form_error' in response){
-                $('#formLargeRequest').dialog('open');
-                $('.formErrorLargeRequest').html(response['form_error']);
+            resp = JSON.parse(response);
+            if ('form_error' in resp){
+                //$('#largeRequestForm').css('display','block');
+                $('.formErrorLargeRequest').html(resp['form_error']);
                 $('.formErrorLargeRequest').css('display','block');
+                ShowPopupDocu('largeRequestForm');
             }
             else{
-                $("#largeRequestForm").dialog('close');
+                $('.formErrorLargeRequest').html();
                 $('.formErrorLargeRequest').css('display','none');
-                //$('#offlineMessage').css('display','block');
+                $('#largeRequestForm').css('display','none');
+                $('.formErrorLargeRequest').css('display','none');
                 ShowPopupDocu('offlineMessage');
 
             }
