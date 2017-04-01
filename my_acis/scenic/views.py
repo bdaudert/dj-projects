@@ -1765,7 +1765,7 @@ def find_station_vd(request):
     station_id = request.POST.get('station_id')
     sid, stn_name = WRCCUtils.find_id_and_name(station_id,settings.MEDIA_DIR +'json/US_station_id.json')
     element_list = request.POST.get('el_tuple','maxt,mint,pcpn').replace(', ',',').split(',')
-    mx_or_mn = request.POST.get('max_or_min','min')
+    mx_or_mn = request.POST.get('max_or_min','max')
     vd = WRCCUtils.find_valid_daterange(sid,el_list=element_list, max_or_min=mx_or_mn)
     r =  {
         'vd':vd
