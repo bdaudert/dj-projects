@@ -200,6 +200,26 @@ function HighLight(node,DivClass,DivId) {
     }
 }
 
+function create_ajax_no_vd_response(station_id){
+    var today = new Date(),
+        today_string = convertDateToString(today,'-')
+    var station_finder_link = '/csc/scenic/data/climate_data/station_finder/?area_type=station_id';
+    station_finder_link+='&station_id=' + station_id;
+    station_finder_link+='&variables=maxt&variables=mint&variables=pcpn';
+    station_finder_link+='&variables=snow&variables=snwd&variables=gdd&variables=hdd&variables=cdd';
+    station_finder_link+='&start_date=1850-01-01&end_date=' + today_string;
+    station_finder_link+='&variables_constraints=any&dates_constraints=any';
+    var html ='<p class="error large">'; 
+    html+=station_id + ' has no data for the chosen variable(s)!</p>';
+    html+= '<p class="bg-info large" style="border:1px solid black;padding:5px;">';
+    html+='Please uss the <a class="link" target="_blank" href="' + station_finder_link + '">Station Finder</a>';
+    html+=' to find valid variables and date ranges.<p>'
+    $(document.body).append('<div id="no_vd"></div>');
+    $('#no_vd').html(html);
+    $('#no_vd').css('display','none') 
+    return 'no_vd';
+}
+
 function ShowPopupDocu(DivId){
     //Close all dialogs that happen to be open
     $(':ui-dialog').each(function(){

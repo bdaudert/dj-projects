@@ -1298,7 +1298,9 @@ def station_finder(request):
         form = DJANGOUtils.set_form(request,clean=False)
         form_cleaned = DJANGOUtils.set_form(request,clean=True)
         fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date']
-        form_error = check_form(form_cleaned, fields_to_check)
+        context['xx'] = form_cleaned
+        #form_error = check_form(form_cleaned, fields_to_check)
+        form_error = None
         if form_error:
             context['form_error'] = form_error
             return render_to_response(url, context, context_instance=RequestContext(request))
@@ -1768,7 +1770,8 @@ def find_station_vd(request):
     mx_or_mn = request.POST.get('max_or_min','max')
     vd = WRCCUtils.find_valid_daterange(sid,el_list=element_list, max_or_min=mx_or_mn)
     r =  {
-        'vd':vd
+        'vd':vd,
+        'station_id':station_id
     }
     response_data = json.dumps(r)
     return response_data

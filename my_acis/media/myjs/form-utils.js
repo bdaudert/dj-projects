@@ -129,6 +129,7 @@ function ajax_set_station_vd(){
     $('.ajax_error').html();
     waitingDialog.show('Finding date range for station', {dialogSize: 'sm', progressType: 'warning'});
     var el_list = [], el_tupe = null; 
+    var response, station_id, station_finder_link; 
     if ($('#variables').length){
         el_list = $('#variables').val();
         el_tuple = el_list + "";
@@ -154,6 +155,7 @@ function ajax_set_station_vd(){
     })
     .done(function(response) {
         response = JSON.parse(response);
+        station_id = response['station_id'];
         set_max_min_dates(response['vd']);
         set_vd(response['vd']);
         if ($('#start_year').length && $('#end_year').length){
@@ -164,6 +166,12 @@ function ajax_set_station_vd(){
         window.vd_stations.push($('#station_id').val());
         window.vd_stations_vds.push(response['vd']);
         waitingDialog.hide();
+        //Notify the user if no vd
+        if (response['vd'][0] == '9999-99-99' || response['vd'][1] == '9999-99-99'){
+            div_id = create_ajax_no_vd_response(station_id);
+            ShowPopupDocu(div_id);
+        }
+        
     })
     .fail(function(jqXHR) {
         $('.ajax_error').html(get_ajax_error(jqXHR.status));

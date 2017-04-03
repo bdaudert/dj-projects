@@ -42,6 +42,10 @@ p.error, div.error {
     color:#FF007F;
 }
 
+.large {
+    font-size:large;
+}
+
 /* Tables */
 table.dashboard {
     width:100%;
