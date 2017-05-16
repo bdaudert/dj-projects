@@ -234,7 +234,7 @@ function ShowPopupDocu(DivId){
     var wWidth = $(window).width();
     var max_height = $(window).height()*0.6, 
         max_width = wWidth * 0.6;
-    if (DivId.inList(['formDownload','largeRequestForm'])){
+    if (DivId == 'formDownload' || DivId == 'largeRequestForm'){
         var max_width = wWidth * 0.3;
     }
     //Open the dialog

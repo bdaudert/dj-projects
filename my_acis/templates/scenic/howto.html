@@ -1,8 +1,12 @@
 {% extends "csc_base.html" %}
 
 {% block content %}
-
     <!--Documentation-->
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
+    <div class="docu" id="Docu_howto_scenic_manual" style="display:none;">
+        <iframe src="{{MEDIA_URL}}img/Docu_howto_scenic_manual.pdf" width="70%" height="100%"></iframe>
+    </div>
     <div class="docu" id="Docu_howto_station_finder" style="display:none;">
         {% include 'includes/Docu_howto_station_finder.html'%}
     </div>
@@ -13,7 +17,7 @@
         {% include 'includes/Docu_howto_monthly_summary.html'%}
     </div>
     <div class="docu" id="Docu_howto_climate_primer" style="display:none;">
-        <iframe src={{MEDIA_URL}}img/Docu_howto_climate_primer.pdf width="650px" height="900px"></iframe>
+        <iframe src={{MEDIA_URL}}img/Docu_howto_climate_primer.pdf width="70%" height="100%"></iframe>
     </div>
     <div class="docu" id="Docu_howto_scenic_data" style="display:none;">
         {% include 'includes/Docu_howto_scenic_data.html'%}
@@ -25,11 +29,24 @@
     <div class="docu" id="Docu_howto_LOCA" style="display:none;">
         {% include 'includes/Docu_howto_LOCA.html'%}
     </div>
+    <div>
+</div>
 
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
             <div class="bg-primary full-col">
-                <h2>Data Documentation</h2>
+                <h2>About SCENIC</h2>
+            </div>
+            <div class="bg-info">
+            <p class="error">This document is under development!</p>
+            <p class="lead link bg-info" onclick="ShowPopupDocu('Docu_howto_scenic_manual')">
+                SCENIC User Guide
+            </p>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
+            <div class="bg-primary full-col">
+                <h2>About Data</h2>
             </div>
             <div class="bg-info">             
             <p class="lead link bg-info" onclick="ShowPopupDocu('Docu_howto_scenic_data')">
