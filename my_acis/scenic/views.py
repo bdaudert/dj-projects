@@ -59,8 +59,8 @@ def about(request):
     url = settings.APPLICATIONS['about'][2]
     return render_to_response(url, context, context_instance=RequestContext(request))
 
-def dashboard(request):
-    app_name = 'dashboard'
+def monitoring(request):
+    app_name = 'monitoring'
     url = settings.APPLICATIONS[app_name][2]
     app_url = settings.APPLICATIONS[app_name][1]
     context = {

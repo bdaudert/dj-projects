@@ -96,7 +96,7 @@ img.app_img {
 }
 .page-title {
     text-align:center;
-    box-shadow:5px 5px #828e94;
+    /*box-shadow:5px 5px #828e94;*/
     background: #d9edf7;
     background: -webkit-gradient(linear, left top, left bottom,color-stop(0%, #eef7fb), color-stop(100%, #ededed));
     background: -moz-linear-gradient(top, #eef7fb 0%, #ededed 100%);

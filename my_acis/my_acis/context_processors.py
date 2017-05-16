@@ -28,6 +28,6 @@ def get_urls(request):
             'SCENIC_URL':settings.SCENIC_URL,
             'ABOUT_URL':settings.ABOUT_URL,
             'DATA_URL':settings.DATA_URL,
-            'DASHBOARD_URL':settings.DASHBOARD_URL
+            'MONITORING_URL':settings.MONITORING_URL
             }
 
